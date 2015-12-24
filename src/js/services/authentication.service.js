@@ -5,8 +5,8 @@
             .module('app')
             .factory('AuthenticationService', AuthenticationService);
 
-    AuthenticationService.$inject = ['$http', '$cookieStore', '$rootScope', '$timeout','$window'];
-    function AuthenticationService($http, $cookieStore, $rootScope, $timeout,$window) {
+    AuthenticationService.$inject = ['$http', '$cookieStore', '$rootScope', '$window'];
+    function AuthenticationService($http, $cookieStore, $rootScope, $window) {
         var service = {};
 
         service.Login = Login;

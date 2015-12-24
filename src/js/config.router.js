@@ -6,6 +6,7 @@
 angular.module('app')
         .run(run)
         .config(config);
+
 config.$inject = ['$stateProvider', '$urlRouterProvider', 'JQ_CONFIG'];
 function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
     $urlRouterProvider
