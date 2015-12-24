@@ -119,6 +119,8 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
 
         if (restrictedPage && !loggedIn) {
             $location.path('/access/signin');
+        } else if (!restrictedPage && loggedIn) {
+            $location.path('/app/org_list');
         }
     });
 }
