@@ -106,7 +106,7 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
 
-    $rootScope.IRISAdminServiceUrl = 'http://localhost/Angular_Projects/ahana_php/branches/IRIS-service/IRISADMIN/web/v1';
+    $rootScope.IRISAdminServiceUrl = 'http://ahana.local/IRIS-service/IRISADMIN/web/v1';
 
     $rootScope.globals = $cookieStore.get('globals') || {};
     if ($window.sessionStorage.access_token) {
