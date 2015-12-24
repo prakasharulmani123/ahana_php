@@ -4,6 +4,10 @@
 namespace common\models;
 
 use Yii;
+use yii\base\NotSupportedException;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
+use yii\web\IdentityInterface;
 
 /**
  * This is the model class for table "co_super_admin".
@@ -18,7 +22,7 @@ use Yii;
  * @property integer $modified_by
  * @property string $modified_at
  */
-class CoSuperAdmin extends \yii\db\ActiveRecord {
+class CoSuperAdmin extends ActiveRecord implements IdentityInterface {
 
     /**
      * @inheritdoc
