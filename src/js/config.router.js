@@ -46,18 +46,11 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
             })
             .state('app.org_list', {
                 url: '/org_list',
-                views: {
-                    '': {
-                        templateUrl: 'tpl/org_list.html'
-                    },
-                    'footer': {
-                        templateUrl: 'tpl/layout_footer_fullwidth.html'
-                    }
-                },
+                templateUrl: 'tpl/org_list.html',
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load(['js/controllers/chart.js']);
+                            return $ocLazyLoad.load(['js/controllers/org_list.js']);
                         }]
                 }
             })
