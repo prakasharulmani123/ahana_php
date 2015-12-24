@@ -3,7 +3,7 @@
 namespace IRISADMIN\modules\v1\controllers;
 
 use Yii;
-use common\models\LoginForm;
+use common\models\IrisLoginForm;
 use IRISADMIN\models\ContactForm;
 use yii\filters\ContentNegotiator;
 use yii\web\Response;
@@ -46,7 +46,7 @@ class UserController extends Controller {
     }
 
     public function actionLogin() {
-        $model = new LoginForm();
+        $model = new IrisLoginForm();
 
         if ($model->load(Yii::$app->getRequest()->getBodyParams(), '') && $model->login()) {
             return ['success' => true,'access_token' => Yii::$app->user->identity->getAuthKey()];

@@ -14,6 +14,9 @@ return [
             'basePath' => '@app/modules/v1',
             'class' => 'IRISADMIN\modules\v1\Module',
         ],
+        'gii' => [
+            'class' => 'yii\gii\Module',
+        ],
     ],
     'components' => [
         'user' => [

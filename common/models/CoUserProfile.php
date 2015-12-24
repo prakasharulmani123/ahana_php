@@ -1,0 +1,107 @@
+<?php
+
+namespace common\models;
+
+use Yii;
+
+/**
+ * This is the model class for table "co_user_profile".
+ *
+ * @property integer $user_id
+ * @property integer $tenant_id
+ * @property string $title_code
+ * @property string $name
+ * @property string $designation
+ * @property string $address
+ * @property integer $city_id
+ * @property integer $state_id
+ * @property string $zip
+ * @property integer $country_id
+ * @property string $contact1
+ * @property string $contact2
+ * @property string $mobile
+ * @property string $email
+ * @property integer $speciality_id
+ * @property string $care_provider
+ * @property string $status
+ * @property integer $created_by
+ * @property string $created_at
+ * @property integer $modified_by
+ * @property string $modified_at
+ *
+ * @property CoLogin[] $coLogins
+ * @property CoTenant $tenant
+ */
+class CoUserProfile extends \yii\db\ActiveRecord
+{
+    /**
+     * @inheritdoc
+     */
+    public static function tableName()
+    {
+        return 'co_user_profile';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return [
+            [['tenant_id', 'name', 'created_by'], 'required'],
+            [['tenant_id', 'city_id', 'state_id', 'country_id', 'speciality_id', 'created_by', 'modified_by'], 'integer'],
+            [['title_code', 'care_provider', 'status'], 'string'],
+            [['created_at', 'modified_at'], 'safe'],
+            [['name', 'contact1', 'contact2', 'mobile', 'email'], 'string', 'max' => 50],
+            [['designation'], 'string', 'max' => 25],
+            [['address'], 'string', 'max' => 100],
+            [['zip'], 'string', 'max' => 20]
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+            'user_id' => 'User ID',
+            'tenant_id' => 'Tenant ID',
+            'title_code' => 'Title Code',
+            'name' => 'Name',
+            'designation' => 'Designation',
+            'address' => 'Address',
+            'city_id' => 'City ID',
+            'state_id' => 'State ID',
+            'zip' => 'Zip',
+            'country_id' => 'Country ID',
+            'contact1' => 'Contact1',
+            'contact2' => 'Contact2',
+            'mobile' => 'Mobile',
+            'email' => 'Email',
+            'speciality_id' => 'Speciality ID',
+            'care_provider' => 'Care Provider',
+            'status' => 'Status',
+            'created_by' => 'Created By',
+            'created_at' => 'Created At',
+            'modified_by' => 'Modified By',
+            'modified_at' => 'Modified At',
+        ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCoLogins()
+    {
+        return $this->hasMany(CoLogin::className(), ['user_id' => 'user_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTenant()
+    {
+        return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
+    }
+}
