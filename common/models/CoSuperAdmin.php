@@ -1,4 +1,3 @@
-
 <?php
 
 namespace common\models;
@@ -74,14 +73,14 @@ class CoSuperAdmin extends ActiveRecord implements IdentityInterface {
      * @inheritdoc
      */
     public static function findIdentity($id) {
-        return static::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE]);
+        return static::findOne(['id' => $id]);
     }
 
     /**
      * @inheritdoc
      */
     public static function findIdentityByAccessToken($token, $type = null) {
-        return static::findOne(['auth_key' => $token]);
+        return static::findOne(['authtoken' => $token]);
     }
 
     /**
@@ -91,7 +90,7 @@ class CoSuperAdmin extends ActiveRecord implements IdentityInterface {
      * @return static|null
      */
     public static function findByUsername($username) {
-        return static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE]);
+        return static::findOne(['username' => $username]);
     }
 
     /**
@@ -106,8 +105,7 @@ class CoSuperAdmin extends ActiveRecord implements IdentityInterface {
         }
 
         return static::findOne([
-                    'password_reset_token' => $token,
-                    'status' => self::STATUS_ACTIVE,
+                    'password_reset_token' => $token
         ]);
     }
 
@@ -138,7 +136,7 @@ class CoSuperAdmin extends ActiveRecord implements IdentityInterface {
      * @inheritdoc
      */
     public function getAuthKey() {
-        return $this->auth_key;
+        return $this->authtoken;
     }
 
     /**
@@ -155,7 +153,7 @@ class CoSuperAdmin extends ActiveRecord implements IdentityInterface {
      * @return boolean if password provided is valid for current user
      */
     public function validatePassword($password) {
-        return Yii::$app->security->validatePassword($password, $this->password_hash);
+        return Yii::$app->security->validatePassword($password, $this->password);
     }
 
     /**
@@ -164,14 +162,14 @@ class CoSuperAdmin extends ActiveRecord implements IdentityInterface {
      * @param string $password
      */
     public function setPassword($password) {
-        $this->password_hash = Yii::$app->security->generatePasswordHash($password);
+        $this->password = Yii::$app->security->generatePasswordHash($password);
     }
 
     /**
      * Generates "remember me" authentication key
      */
     public function generateAuthKey() {
-        $this->auth_key = Yii::$app->security->generateRandomString();
+        $this->authtoken = Yii::$app->security->generateRandomString();
     }
 
     /**
