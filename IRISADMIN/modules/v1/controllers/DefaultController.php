@@ -8,7 +8,6 @@ class DefaultController extends Controller
 {
     public function actionIndex()
     {
-        echo "AAAAAAA"; exit;
-        return $this->render('index');
+        echo "Ahana IRISAdmin Web Service V1";
     }
 }
