@@ -63,11 +63,11 @@ class CoSuperAdmin extends ActiveRecord implements IdentityInterface {
     /**
      * @inheritdoc
      */
-    public function behaviors() {
-        return [
-            TimestampBehavior::className(),
-        ];
-    }
+//    public function behaviors() {
+//        return [
+//            TimestampBehavior::className(),
+//        ];
+//    }
 
     /**
      * @inheritdoc

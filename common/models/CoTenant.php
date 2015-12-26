@@ -46,7 +46,7 @@ class CoTenant extends ActiveRecord
     public function rules()
     {
         return [
-//            [['tenant_guid', 'tenant_name', 'slug', 'created_by'], 'required'],
+            [['tenant_name'], 'required'],
             [['tenant_city', 'tenant_state', 'tenant_country', 'created_by', 'modified_by'], 'integer'],
             [['status'], 'string'],
             [['created_at', 'modified_at'], 'safe'],
