@@ -48,11 +48,15 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                 url: '/org_list',
                 templateUrl: 'tpl/org_list.html',
                 resolve: {
-                    deps: ['$ocLazyLoad',
-                        function ($ocLazyLoad) {
-                            return $ocLazyLoad.load(['js/controllers/org_list.js']);
-                        }]
-                }
+                      deps: ['$ocLazyLoad',
+                        function( $ocLazyLoad ){
+                          return $ocLazyLoad.load('smart-table').then(
+                              function(){
+                                  return $ocLazyLoad.load('js/controllers/org_list.js');
+                              }
+                          );
+                      }]
+                  }
             })
             .state('app.dashboard-v1', {
                 url: '/dashboard-v1',
