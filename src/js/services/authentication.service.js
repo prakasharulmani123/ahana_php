@@ -17,7 +17,7 @@
 
         function Login(username, password, callback) {
             var response;
-            $http.post($rootScope.IRISAdminServiceUrl + '/user/login', {username: username, password: password})
+            $http.post($rootScope.IRISAdminServiceUrl + '/users/login', {username: username, password: password})
                     .success(function (response) {
                         callback(response);
                     }, function (x) {
@@ -28,7 +28,7 @@
 
         function SetCredentials(secToken) {
             $window.sessionStorage.access_token = secToken;
-            $http.defaults.headers.common['Authorization'] = 'Basic ' + secToken; // jshint ignore:line
+            $http.defaults.headers.common['Authorization'] = 'Bearer ' + secToken; // jshint ignore:line
         }
 
         function ClearCredentials() {
