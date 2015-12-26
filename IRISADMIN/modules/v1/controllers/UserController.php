@@ -22,7 +22,7 @@ class UserController extends Controller {
         $behaviors = parent::behaviors();
         $behaviors['authenticator'] = [
             'class' => HttpBearerAuth::className(),
-            'only' => ['dashboard'],
+            'only' => ['myidentity'],
         ];
         $behaviors['contentNegotiator'] = [
             'class' => ContentNegotiator::className(),
@@ -30,17 +30,7 @@ class UserController extends Controller {
                 'application/json' => Response::FORMAT_JSON,
             ],
         ];
-        $behaviors['access'] = [
-            'class' => AccessControl::className(),
-            'only' => ['dashboard'],
-            'rules' => [
-                [
-                    'actions' => ['dashboard'],
-                    'allow' => true,
-                    'roles' => ['@'],
-                ],
-            ],
-        ];
+
         return $behaviors;
     }
 
@@ -54,7 +44,7 @@ class UserController extends Controller {
         }
     }
 
-    public function actionDashboard() {
+    public function actionMyidentity() {
         $response = [
             'username' => Yii::$app->user->identity->username,
             'access_token' => Yii::$app->user->identity->getAuthKey(),

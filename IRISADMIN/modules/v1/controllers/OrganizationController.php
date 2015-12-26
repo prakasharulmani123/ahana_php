@@ -32,17 +32,7 @@ class OrganizationController extends ActiveController {
                 'application/json' => Response::FORMAT_JSON,
             ],
         ];
-//        $behaviors['access'] = [
-//            'class' => AccessControl::className(),
-//            'only' => ['dashboard'],
-//            'rules' => [
-//                [
-//                    'actions' => ['index','create','view','update','delete'],
-//                    'allow' => true,
-//                    'roles' => ['@'],
-//                ],
-//            ],
-//        ];
+
         return $behaviors;
     }
 
