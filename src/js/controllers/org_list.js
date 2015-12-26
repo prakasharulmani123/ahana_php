@@ -1,4 +1,4 @@
-app.controller('OrganizationController', ['$scope', '$timeout', '$http', function($scope, $timeout, $http) {
+app.controller('OrganizationController', ['$scope', '$timeout', '$http', function ($scope, $timeout, $http) {
 //  $scope.rowCollectionBasic = [
 //      {firstName: 'Laurent', lastName: 'Renard', birthDate: new Date('1987-05-21'), balance: 102, email: 'whatever@gmail.com'},
 //      {firstName: 'Blandine', lastName: 'Faivre', birthDate: new Date('1987-04-25'), balance: -2323.22, email: 'oufblandou@gmail.com'},
@@ -42,16 +42,16 @@ app.controller('OrganizationController', ['$scope', '$timeout', '$http', functio
 //      $scope.rowCollection.push(generateRandomItem(id));
 //  }
 
-  //copy the references (you could clone ie angular.copy but then have to go through a dirty checking for the matches)
+        //copy the references (you could clone ie angular.copy but then have to go through a dirty checking for the matches)
 //  $scope.displayedCollection = [].concat($scope.rowCollection);
 
-  //add to the real data holder
+        //add to the real data holder
 //  $scope.addRandomItem = function addRandomItem() {
 //      $scope.rowCollection.push(generateRandomItem(id));
 //      id++;
 //  };
 
-  //remove to the real data holder
+        //remove to the real data holder
 //  $scope.removeItem = function(row) {
 //      var index = $scope.rowCollection.indexOf(row);
 //      if (index !== -1) {
@@ -59,39 +59,46 @@ app.controller('OrganizationController', ['$scope', '$timeout', '$http', functio
 //      }
 //  }
 
-  //  pagination
-//  $scope.itemsByPage=10;
-//
-//  $scope.rowCollectionPage = [];
-//  for (var j = 0; j < 200; j++) {
-//    $scope.rowCollectionPage.push(generateRandomItem(j));
+        //  pagination
+        $scope.rowCollection = [];  // base collection
+        $scope.itemsByPage = 1;
+        $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
+        // Display Data
+        $http.get('api/groups').success(function (usr) {
+            $scope.rowCollection = usr;
+            $scope.displayedCollection = [].concat($scope.rowCollection);
+            console.log($scope.rowCollection);
+        })
+                .error(function () {
+                    $scope.error = "An Error has occured while loading posts!";
+
+                });
+
+        // pip
+//  var promise = null;
+//  $scope.isLoading = false;
+//  $scope.rowCollectionPip = [];
+//  $scope.getPage = function() {
+//      $http.get('api/groups').success(function(data) {
+//        $scope.rowCollectionPip = data;
+//      });
+////    $scope.rowCollectionPip=[];
+////    for (var j = 0; j < 20; j++) {
+////      $scope.rowCollectionPip.push(generateRandomItem(j));
+////    }
 //  }
+//
+//  $scope.callServer = function getData(tableState) {
+//      //here you could create a query string from tableState
+//      //fake ajax call
+//      $scope.isLoading = true;
+//
+//      $timeout(function () {
+//          $scope.getPage();
+//          $scope.isLoading = false;
+//      }, 2000);
+//  };
+//
+// $scope.getPage();
 
-  // pip
-  var promise = null;
-  $scope.isLoading = false;
-  $scope.rowCollectionPip = [];
-  $scope.getPage = function() {
-      $http.get('api/groups').success(function(data) {
-        $scope.rowCollectionPip = data;
-      });
-//    $scope.rowCollectionPip=[];
-//    for (var j = 0; j < 20; j++) {
-//      $scope.rowCollectionPip.push(generateRandomItem(j));
-//    }
-  }
-
-  $scope.callServer = function getData(tableState) {
-      //here you could create a query string from tableState
-      //fake ajax call
-      $scope.isLoading = true;
-
-      $timeout(function () {
-          $scope.getPage();
-          $scope.isLoading = false;
-      }, 2000);
-  };
-
- $scope.getPage();
-
-}]);
+    }]);
