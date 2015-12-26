@@ -1,4 +1,4 @@
-app.controller('OrganizationController', ['$scope', '$timeout', '$http', function ($scope, $timeout, $http) {
+app.controller('OrganizationController', ['$rootScope','$scope', '$timeout', '$http', function ($rootScope,$scope, $timeout, $http) {
 //  $scope.rowCollectionBasic = [
 //      {firstName: 'Laurent', lastName: 'Renard', birthDate: new Date('1987-05-21'), balance: 102, email: 'whatever@gmail.com'},
 //      {firstName: 'Blandine', lastName: 'Faivre', birthDate: new Date('1987-04-25'), balance: -2323.22, email: 'oufblandou@gmail.com'},
@@ -61,18 +61,19 @@ app.controller('OrganizationController', ['$scope', '$timeout', '$http', functio
 
         //  pagination
         $scope.rowCollection = [];  // base collection
-        $scope.itemsByPage = 1;
+        $scope.itemsByPage = 10;
         $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
         // Display Data
-        $http.get('api/groups').success(function (usr) {
-            $scope.rowCollection = usr;
-            $scope.displayedCollection = [].concat($scope.rowCollection);
-            console.log($scope.rowCollection);
-        })
-                .error(function () {
-                    $scope.error = "An Error has occured while loading posts!";
+        $http.get($rootScope.IRISAdminServiceUrl+'/organizations')
+            .success(function (usr) {
+                $scope.rowCollection = usr;
+                $scope.displayedCollection = [].concat($scope.rowCollection);
+//                console.log($scope.rowCollection);
+            })
+            .error(function () {
+                $scope.error = "An Error has occured while loading posts!";
 
-                });
+            });
 
         // pip
 //  var promise = null;

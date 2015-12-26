@@ -8,7 +8,7 @@
         <table st-table="displayedCollection"  st-safe-src="rowCollection" class="table table-striped">
             <thead>
                 <tr>
-                    <th st-sort="organizationName">Organization Name</th>
+                    <th st-sort="tenant_name">Organization Name</th>
                     <th st-sort="lastName">Address</th>
                     <th st-sort="birthDate">City</th>
                     <th st-sort="balance">State</th>
@@ -17,7 +17,7 @@
                 </tr>
                 <tr>
                     <th>
-                        <input st-search="'organizationName'" placeholder="search for organizationname" class="input-sm form-control" type="search"/>
+                        <input st-search="'tenant_name'" placeholder="search for organizationname" class="input-sm form-control" type="search"/>
                     </th>
                     <th colspan="5">
                         <input st-search placeholder="global search" class="input-sm form-control" type="search"/>
@@ -26,11 +26,11 @@
             </thead>
             <tbody ng-hide="isLoading">
                 <tr ng-repeat="row in displayedCollection">
-                    <td>{{row.organizationName}}</td>
-                    <td>{{row.address}}</td>
-                    <td>{{row.city}}</td>
-                    <td>{{row.state}}</td>
-                    <td>{{row.country}}</td>
+                    <td>{{row.tenant_name}}</td>
+                    <td>{{row.tenant_address}}</td>
+                    <td>{{row.tenant_city}}</td>
+                    <td>{{row.tenant_state}}</td>
+                    <td>{{row.tenant_country}}</td>
                     <td>
                         <button class="btn btn-xs" data-placement="top" data-content="{{row.email}}" bs-popover type="button">
                             <i class="fa fa-eye"></i>
@@ -59,7 +59,7 @@
                         <tr>
                             <th st-sort="RoleID">first name</th>
                             <th st-sort="Name">last name</th>
-        
+
                         </tr>
                         <tr>
                             <th>
@@ -123,9 +123,9 @@
           </tbody>
         </table>
       </div>
-    
+
       <div class="panel panel-default">
-        <div class="panel-heading">Format data & cell templating</div>  
+        <div class="panel-heading">Format data & cell templating</div>
         <table st-table="rowCollectionBasic" class="table table-bordered table-striped">
           <thead>
           <tr>
@@ -158,7 +158,7 @@
           </tbody>
         </table>
       </div>
-    
+
       <div class="panel panel-default">
         <div class="panel-heading">Search/filter data</div>
         <div class="panel-body">
@@ -199,7 +199,7 @@
           </tbody>
         </table>
       </div>
-    
+
       <div class="panel panel-default">
         <div class="panel-heading">Client side Pagination</div>
         <div class="panel-body">

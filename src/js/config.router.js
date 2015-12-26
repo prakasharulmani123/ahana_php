@@ -108,7 +108,7 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
 
     $rootScope.globals = $cookieStore.get('globals') || {};
     if ($window.sessionStorage.access_token) {
-        $http.defaults.headers.common['Authorization'] = 'Basic ' + $window.sessionStorage.access_token; // jshint ignore:line
+        $http.defaults.headers.common['Authorization'] = 'Bearer ' + $window.sessionStorage.access_token; // jshint ignore:line
     }
 
     $rootScope.$on('$locationChangeStart', function (event, next, current) {
