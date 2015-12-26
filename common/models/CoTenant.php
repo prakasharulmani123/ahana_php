@@ -3,7 +3,7 @@
 namespace common\models;
 
 use Yii;
-
+use yii\db\ActiveRecord;
 /**
  * This is the model class for table "co_tenant".
  *
@@ -30,7 +30,7 @@ use Yii;
  * @property CoRole[] $coRoles
  * @property CoUserProfile[] $coUserProfiles
  */
-class CoTenant extends \yii\db\ActiveRecord
+class CoTenant extends ActiveRecord
 {
     /**
      * @inheritdoc
@@ -46,7 +46,7 @@ class CoTenant extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['tenant_guid', 'tenant_name', 'slug', 'created_by'], 'required'],
+//            [['tenant_guid', 'tenant_name', 'slug', 'created_by'], 'required'],
             [['tenant_city', 'tenant_state', 'tenant_country', 'created_by', 'modified_by'], 'integer'],
             [['status'], 'string'],
             [['created_at', 'modified_at'], 'safe'],
