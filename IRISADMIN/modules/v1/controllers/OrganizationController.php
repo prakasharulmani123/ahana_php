@@ -59,4 +59,23 @@ class OrganizationController extends ActiveController {
         }
     }
 
+    //Organization save with multiple records.
+    public function actionCreate() {
+        $model = new $this->modelClass;
+        if ($model->load(Yii::$app->request->post())) {
+            if ($model->save()) {
+                $tenant_id = $model->tenant_id;
+                if ($tenant_id) {
+                    
+                    /* save records to another table with tenant id */
+//                    $employee->attributes = $model->attributes;
+//                    $employee->save();
+                }
+                return ['success' => true, 'access_token' => Yii::$app->user->identity->getAuthKey()];
+            } else {
+                
+            }
+        }
+    }
+
 }
