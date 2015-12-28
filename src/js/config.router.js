@@ -46,17 +46,27 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
             })
             .state('app.org_list', {
                 url: '/org_list',
-                templateUrl: 'tpl/org_list.html',
+                templateUrl: 'tpl/organization/index.html',
                 resolve: {
                       deps: ['$ocLazyLoad',
                         function( $ocLazyLoad ){
                           return $ocLazyLoad.load('smart-table').then(
                               function(){
-                                  return $ocLazyLoad.load('js/controllers/org_list.js');
+                                  return $ocLazyLoad.load('js/controllers/org.js');
                               }
                           );
                       }]
                   }
+            })
+            .state('app.org_new', {
+                url: '/org_new',
+                templateUrl: 'tpl/organization/create.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['js/controllers/org.js']);
+                        }]
+                }
             })
             .state('app.dashboard-v1', {
                 url: '/dashboard-v1',
