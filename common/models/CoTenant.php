@@ -11,9 +11,9 @@ use yii\db\ActiveRecord;
  * @property string $tenant_guid
  * @property string $tenant_name
  * @property string $tenant_address
- * @property integer $tenant_city
- * @property integer $tenant_state
- * @property integer $tenant_country
+ * @property integer $tenant_city_id
+ * @property integer $tenant_state_id
+ * @property integer $tenant_country_id
  * @property string $tenant_contact1
  * @property string $tenant_contact2
  * @property string $tenant_fax
@@ -47,7 +47,7 @@ class CoTenant extends ActiveRecord
     {
         return [
             [['tenant_name'], 'required'],
-            [['tenant_city', 'tenant_state', 'tenant_country', 'created_by', 'modified_by'], 'integer'],
+            [['tenant_city_id', 'tenant_state_id', 'tenant_country_id', 'created_by', 'modified_by'], 'integer'],
             [['status'], 'string'],
             [['created_at', 'modified_at'], 'safe'],
             [['tenant_guid', 'tenant_name', 'tenant_fax', 'tenant_email', 'tenant_url', 'slug'], 'string', 'max' => 50],
@@ -67,9 +67,9 @@ class CoTenant extends ActiveRecord
             'tenant_guid' => 'Tenant Guid',
             'tenant_name' => 'Tenant Name',
             'tenant_address' => 'Tenant Address',
-            'tenant_city' => 'Tenant City',
-            'tenant_state' => 'Tenant State',
-            'tenant_country' => 'Tenant Country',
+            'tenant_city_id' => 'Tenant City',
+            'tenant_state_id' => 'Tenant State',
+            'tenant_country_id' => 'Tenant Country',
             'tenant_contact1' => 'Tenant Contact1',
             'tenant_contact2' => 'Tenant Contact2',
             'tenant_fax' => 'Tenant Fax',
