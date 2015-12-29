@@ -100,4 +100,44 @@ class CoTenant extends ActiveRecord
     {
         return $this->hasMany(CoUserProfile::className(), ['tenant_id' => 'tenant_id']);
     }
+    
+    public function getCoMasterCity() {
+        return $this->hasOne(CoMasterCity::className(), ['city_id' => 'tenant_city_id']);
+    }
+    
+    public function getCoMasterState() {
+        return $this->hasOne(CoMasterState::className(), ['state_id' => 'tenant_state_id']);
+    }
+    
+    public function getCoMasterCountry() {
+        return $this->hasOne(CoMasterCountry::className(), ['country_id' => 'tenant_country_id']);
+    }
+
+    public function fields() {
+        return [
+            'tenant_id',
+            'tenant_name',
+            'tenant_address',
+            'tenant_city_id',
+            'tenant_state_id',
+            'tenant_country_id',
+            'tenant_city_name' => function ($model) {
+                return (isset($model->coMasterCity) ? $model->coMasterCity->city_name : '-');
+            },
+            'tenant_state_name' => function ($model) {
+                return (isset($model->coMasterState) ? $model->coMasterState->state_name : '-');
+            },
+            'tenant_country_name' => function ($model) {
+                return (isset($model->coMasterCountry) ? $model->coMasterCountry->country_name : '-');
+            }
+        ];
+    }
+    
+//    public function extraFields() {
+//        parent::extraFields();
+//        return ['tenant_city_name' => function ($model) {
+//                return $model->coMasterCity->city_name;
+//            }
+//        ];
+//    }
 }
