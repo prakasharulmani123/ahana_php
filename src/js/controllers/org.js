@@ -37,6 +37,8 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                 }
         );
 
+        $scope.title_codes = [{value: 'Mr.', label: 'Mr.'},{value: 'Mrs.', label: 'Mrs.'},{value: 'Miss.', label: 'Miss.'},{value: 'Dr.', label: 'Dr.'}];
+
         $scope.updateState = function () {
             $scope.availableStates = [];
             $scope.availableCities = [];
@@ -66,20 +68,48 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
             });
         }
 
+        $scope.updateState2 = function () {
+            $scope.availableStates2 = [];
+            $scope.availableCities2 = [];
+            
+            angular.forEach($scope.states, function (value) {
+                if (value.countryId == $scope.data.User.country_id) {
+                    var obj = {
+                        value: value.value,
+                        label: value.label
+                    };
+                    $scope.availableStates2.push(obj);
+                }
+            });
+        }
+
+        $scope.updateCity2 = function () {
+            $scope.availableCities2 = [];
+
+            angular.forEach($scope.cities, function (value) {
+                if (value.stateId == $scope.data.User.state_id) {
+                    var obj = {
+                        value: value.value,
+                        label: value.label
+                    };
+                    $scope.availableCities2.push(obj);
+                }
+            });
+        }
+
         $scope.saveForm = function (mode) {
             $scope.errorData = "";
             $scope.successMessage = "";
-            if ($scope.form.$valid) {
+//            if ($scope.form.$valid) {
                 $http({
                     url: $rootScope.IRISAdminServiceUrl + '/organizations/saveorg',
                     method: "POST",
                     data: $scope.data
                 }).then(
                         function (response) {
-                            console.log(response.data.success);
                             if (response.data.success === true) {
                                 if (mode === 'edit') {
-                                    $scope.successMessage = "Room updated successfully";
+                                    $scope.successMessage = "Organization updated successfully";
                                     $timeout(function () {
                                         $state.go('app.org_list');
                                     }, 1000)
@@ -93,11 +123,11 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                                 }
                             }
                             else {
-                                $scope.errorData = response.data;
+                                $scope.errorData = response.data.message;
                             }
                         }
                 )
-            }
+//            }
         };
 
         $scope.submitForm = function () {
