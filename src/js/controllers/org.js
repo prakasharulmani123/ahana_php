@@ -37,12 +37,12 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                 }
         );
 
-        $scope.title_codes = [{value: 'Mr.', label: 'Mr.'},{value: 'Mrs.', label: 'Mrs.'},{value: 'Miss.', label: 'Miss.'},{value: 'Dr.', label: 'Dr.'}];
+        $scope.title_codes = [{value: 'Mr.', label: 'Mr.'}, {value: 'Mrs.', label: 'Mrs.'}, {value: 'Miss.', label: 'Miss.'}, {value: 'Dr.', label: 'Dr.'}];
 
         $scope.updateState = function () {
             $scope.availableStates = [];
             $scope.availableCities = [];
-            
+
             angular.forEach($scope.states, function (value) {
                 if (value.countryId == $scope.data.Tenant.tenant_country_id) {
                     var obj = {
@@ -71,7 +71,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
         $scope.updateState2 = function () {
             $scope.availableStates2 = [];
             $scope.availableCities2 = [];
-            
+
             angular.forEach($scope.states, function (value) {
                 if (value.countryId == $scope.data.User.country_id) {
                     var obj = {
@@ -98,45 +98,83 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
         }
 
         $scope.saveForm = function (mode) {
+            console.log($scope.items);
+            return false;
             $scope.errorData = "";
             $scope.successMessage = "";
 //            if ($scope.form.$valid) {
-                $http({
-                    url: $rootScope.IRISAdminServiceUrl + '/organizations/saveorg',
-                    method: "POST",
-                    data: $scope.data
-                }).then(
-                        function (response) {
-                            if (response.data.success === true) {
-                                if (mode === 'edit') {
-                                    $scope.successMessage = "Organization updated successfully";
-                                    $timeout(function () {
-                                        $state.go('app.org_list');
-                                    }, 1000)
-                                }
-                                else {
-                                    $scope.successMessage = "Organization saved successfully";
-                                    $scope.data = {};
-                                    $timeout(function () {
-                                        $state.go('app.org_list');
-                                    }, 1000)
-                                }
+            $http({
+                url: $rootScope.IRISAdminServiceUrl + '/organizations/saveorg',
+                method: "POST",
+                data: $scope.data
+            }).then(
+                    function (response) {
+                        if (response.data.success === true) {
+                            if (mode === 'edit') {
+                                $scope.successMessage = "Organization updated successfully";
+                                $timeout(function () {
+                                    $state.go('app.org_list');
+                                }, 1000)
                             }
                             else {
-                                $scope.errorData = response.data.message;
+                                $scope.successMessage = "Organization saved successfully";
+                                $scope.data = {};
+                                $timeout(function () {
+                                    $state.go('app.org_list');
+                                }, 1000)
                             }
                         }
-                )
+                        else {
+                            $scope.errorData = response.data.message;
+                        }
+                    }
+            )
 //            }
         };
 
-        $scope.submitForm = function () {
-            console.log("posting data....");
-            formData = $scope.tenant;
-            console.log(formData);
-            $http.post($rootScope.IRISAdminServiceUrl + '/organizations', JSON.stringify(data)).success(function () {/*success callback*/
-            });
-        };
+        $scope.resouce_id = [];
+        $scope.bag = [{
+                label: 'Hats',
+                value: 'attt',
+                children: [
+                    {label: 'Flat cap', value: 'attt'},
+                    {label: 'Fedora', value: 'attt'},
+                    {label: 'Baseball', value: 'attt'},
+                    {label: 'Top hat', value: 'attt'},
+                    {label: 'Gatsby', value: 'attt'}
+                ]
+            }, {
+                label: 'Pens',
+                children: [
+                    {label: 'Flat cap', value: 'attt'},
+                    {label: 'Fedora', value: 'attt'},
+                    {label: 'Baseball', value: 'attt'},
+                    {label: 'Top hat', value: 'attt'},
+                    {label: 'Gatsby', value: 'attt'}
+                ]
+            }, {
+                label: 'Whiskey',
+                children: [
+                    {label: 'Flat cap', value: 'attt'},
+                    {label: 'Fedora', value: 'attt'},
+                    {label: 'Baseball', value: 'attt'},
+                    {label: 'Top hat', value: 'attt'},
+                    {label: 'Gatsby', value: 'attt'}
+                ]
+            }];
+
+        $scope.otherAwesomeCallback = function (node, isSelected, tree) {
+            if (isSelected) {
+                $scope.resouce_id.push(node.value);
+            } else {
+                var index = $scope.resouce_id.indexOf(node.value);
+                if (index != -1) {
+                    $scope.resouce_id.splice(index, 1);
+                }
+            }
+            console.log($scope.resouce_id);
+        }
+
 
 
 //  $scope.rowCollectionBasic = [

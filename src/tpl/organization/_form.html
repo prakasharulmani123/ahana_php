@@ -1,4 +1,4 @@
-<div class="wrapper-md ng-scope" ng-controller="OrganizationController">
+<div class="wrapper-md ng-scope" ng-controller="OrganizationController as org">
     <div ng-include="'tpl/blocks/alert.html'">
         {% include 'tpl/blocks/alert.html' %}
     </div>
@@ -121,24 +121,19 @@
                             <div class="panel-heading font-bold">Module Rights</div>
                             <div class="panel-body">
 
-                                <div ui-tree>
-                                    <ol ui-tree-nodes="" ng-model="list">
-                                        <li ng-repeat="item in list" ui-tree-node>
-                                            <div ui-tree-handle>
-                                                {{item.title}}
-                                            </div>
-                                            <ol ui-tree-nodes="" ng-model="item.items">
-                                                <li ng-repeat="subItem in item.items" ui-tree-node>
-                                                    <div ui-tree-handle>
-                                                        {{subItem.title}}
-                                                    </div>
-                                                </li>
-                                            </ol>
-                                        </li>
-                                    </ol>
-                                </div>
+                                <div 
+                                    ivh-treeview="bag"
+                                    ivh-treeview-on-cb-change="otherAwesomeCallback(ivhNode, ivhIsSelected, ivhTree)"
+                                    ivh-treeview-default-selected-state="false"
+                                    ivh-treeview-selected-attribute="isSelected"
+                                    ></div>
 
                             </div>
+                            <ul>
+            <li data-ng-repeat="x in bag">
+                {{ x.label + ', ' + x.value }}
+             </li>
+    </ul>
                         </div>
                     </div>
                     <div class="col-sm-6">
