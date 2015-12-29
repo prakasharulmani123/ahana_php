@@ -1,12 +1,6 @@
-app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$http', function ($rootScope, $scope, $timeout, $http) {
-        
-        $http.get($rootScope.IRISAdminServiceUrl + "/default/get-city-list").then(
-                function (response) {
-                    console.log(response);
-                    $scope.cities = response;
-                }
-        );
+app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$http', '$state', function ($rootScope, $scope, $timeout, $http, $state) {
 
+        //Index Page
         //  pagination
         $scope.rowCollection = [];  // base collection
         $scope.itemsByPage = 10;
@@ -23,17 +17,67 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
 
                 });
 
+
+        // Form Page
+        $scope.country = [];
+
+        $http.get($rootScope.IRISAdminServiceUrl + "/default/get-country-list").then(
+                function (response) {
+                    $scope.countries = response.data.countryList;
+                }
+        );
+        $http.get($rootScope.IRISAdminServiceUrl + "/default/get-state-list").then(
+                function (response) {
+                    $scope.states = response.data.stateList;
+                }
+        );
+        $http.get($rootScope.IRISAdminServiceUrl + "/default/get-city-list").then(
+                function (response) {
+                    $scope.cities = response.data.cityList;
+                }
+        );
+
+        $scope.updateState = function () {
+            $scope.availableStates = [];
+            $scope.availableCities = [];
+            
+            angular.forEach($scope.states, function (value) {
+                if (value.countryId == $scope.data.Tenant.tenant_country_id) {
+                    var obj = {
+                        value: value.value,
+                        label: value.label
+                    };
+                    $scope.availableStates.push(obj);
+                }
+            });
+        }
+
+        $scope.updateCity = function () {
+            $scope.availableCities = [];
+
+            angular.forEach($scope.cities, function (value) {
+                if (value.stateId == $scope.data.Tenant.tenant_state_id) {
+                    var obj = {
+                        value: value.value,
+                        label: value.label
+                    };
+                    $scope.availableCities.push(obj);
+                }
+            });
+        }
+
         $scope.saveForm = function (mode) {
             $scope.errorData = "";
             $scope.successMessage = "";
             if ($scope.form.$valid) {
                 $http({
-                    url: $rootScope.IRISAdminServiceUrl + '/organizations',
+                    url: $rootScope.IRISAdminServiceUrl + '/organizations/saveorg',
                     method: "POST",
                     data: $scope.data
                 }).then(
                         function (response) {
-                            if (response.data.Status === 'Ok') {
+                            console.log(response.data.success);
+                            if (response.data.success === true) {
                                 if (mode === 'edit') {
                                     $scope.successMessage = "Room updated successfully";
                                     $timeout(function () {
@@ -51,8 +95,6 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                             else {
                                 $scope.errorData = response.data;
                             }
-                            console.log(response);
-                            return false;
                         }
                 )
             }
