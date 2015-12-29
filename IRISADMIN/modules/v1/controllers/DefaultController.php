@@ -2,10 +2,12 @@
 
 namespace IRISADMIN\modules\v1\controllers;
 
-use yii\web\Controller;
+use common\models\CoMasterCity;
+use common\models\CoMasterCountry;
+use common\models\CoMasterState;
 use yii\filters\ContentNegotiator;
+use yii\web\Controller;
 use yii\web\Response;
-use yii\web\HttpException;
 
 class DefaultController extends Controller {
 
@@ -26,8 +28,30 @@ class DefaultController extends Controller {
         echo "Ahana IRISAdmin Web Service V1";
     }
 
-    public function actionGetCityList() {
-        return \common\models\CoMasterCity::getCitylist();
+    public function actionGetCountryList() {
+        $list = array();
+        $data = CoMasterCountry::getCountrylist();
+        foreach ($data as $value => $label) {
+            $list[] = array('value' => $value, 'label' => $label);
+        }
+        return ['countryList' => $list];
     }
 
+    public function actionGetStateList() {
+        $list = array();
+        $datas = CoMasterState::find()->all();
+        foreach ($datas as $data) {
+            $list[] = array('value' => $data->state_id, 'label' => $data->state_name, 'countryId' => $data->country_id);
+        }
+        return ['stateList' => $list];
+    }
+    
+    public function actionGetCityList() {
+        $list = array();
+        $datas = CoMasterCity::find()->all();
+        foreach ($datas as $data) {
+            $list[] = array('value' => $data->city_id, 'label' => $data->city_name, 'stateId' => $data->state_id);
+        }
+        return ['cityList' => $list];
+    }
 }

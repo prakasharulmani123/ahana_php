@@ -2,13 +2,14 @@
 
 namespace IRISADMIN\modules\v1\controllers;
 
+use common\models\CoTenant;
 use Yii;
-use yii\filters\ContentNegotiator;
-use yii\web\Response;
-use yii\rest\ActiveController;
-use yii\filters\auth\HttpBearerAuth;
 use yii\data\ActiveDataProvider;
+use yii\filters\auth\HttpBearerAuth;
+use yii\filters\ContentNegotiator;
+use yii\rest\ActiveController;
 use yii\web\HttpException;
+use yii\web\Response;
 
 /**
  * OrganizationController implements the CRUD actions for CoTenant model.
@@ -59,21 +60,14 @@ class OrganizationController extends ActiveController {
         }
     }
 
-    //Organization save with multiple records.
-    public function actionCreate() {
-        $model = new $this->modelClass;
-        if ($model->load(Yii::$app->request->post())) {
+    public function actionSaveorg() {
+        if (!empty(Yii::$app->request->post())) {
+            $model = new CoTenant();
+            $model->attributes = Yii::$app->request->post('Tenant');
             if ($model->save()) {
-                $tenant_id = $model->tenant_id;
-                if ($tenant_id) {
-                    
-                    /* save records to another table with tenant id */
-//                    $employee->attributes = $model->attributes;
-//                    $employee->save();
-                }
-                return ['success' => true, 'access_token' => Yii::$app->user->identity->getAuthKey()];
-            } else {
-                
+                return ['success' => true];
+            }else{
+                return ['success' => false, 'message' => $model->getFirstErrors()];
             }
         }
     }

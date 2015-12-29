@@ -2,13 +2,15 @@
 
 namespace common\models;
 
-use Yii;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "co_master_country".
  *
  * @property integer $country_id
- * @property string $country name
+ * @property string $country_name
  * @property string $status
  * @property integer $created_by
  * @property string $created_at
@@ -17,39 +19,36 @@ use Yii;
  *
  * @property CoMasterState[] $coMasterStates
  */
-class CoMasterCountry extends \yii\db\ActiveRecord
-{
+class CoMasterCountry extends ActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'co_master_country';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            [['country name', 'created_by'], 'required'],
+            [['country_name', 'created_by'], 'required'],
             [['status'], 'string'],
             [['created_by', 'modified_by'], 'integer'],
             [['created_at', 'modified_at'], 'safe'],
-            [['country name'], 'string', 'max' => 50],
-            [['country name'], 'unique']
+            [['country_name'], 'string', 'max' => 50],
+            [['country_name'], 'unique']
         ];
     }
 
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'country_id' => 'Country ID',
-            'country name' => 'Country Name',
+            'country_name' => 'Country Name',
             'status' => 'Status',
             'created_by' => 'Created By',
             'created_at' => 'Created At',
@@ -59,10 +58,13 @@ class CoMasterCountry extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getCoMasterStates()
-    {
+    public function getCoMasterStates() {
         return $this->hasMany(CoMasterState::className(), ['country_id' => 'country_id']);
+    }
+
+    public static function getCountrylist() {
+        return ArrayHelper::map(self::find()->all(), 'country_id', 'country_name');
     }
 }
