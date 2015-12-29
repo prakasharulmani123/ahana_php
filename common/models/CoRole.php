@@ -34,7 +34,7 @@ class CoRole extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['tenant_id', 'description', 'created_by'], 'required'],
+            [['description'], 'required'],
             [['tenant_id', 'created_by', 'modified_by'], 'integer'],
             [['status'], 'string'],
             [['created_at', 'modified_at'], 'safe'],
@@ -50,7 +50,7 @@ class CoRole extends \yii\db\ActiveRecord
         return [
             'role_id' => 'Role ID',
             'tenant_id' => 'Tenant ID',
-            'description' => 'Description',
+            'description' => 'Role',
             'status' => 'Status',
             'created_by' => 'Created By',
             'created_at' => 'Created At',

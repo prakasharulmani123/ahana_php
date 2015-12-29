@@ -38,7 +38,7 @@ class CoLogin extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'username', 'password', 'created_by'], 'required'],
+            [['username', 'password'], 'required'],
             [['user_id', 'created_by', 'modified_by'], 'integer'],
             [['created_at', 'modified_at', 'activation_date', 'Inactivation_date'], 'safe'],
             [['username', 'password', 'password_reset_token', 'auth_token'], 'string', 'max' => 255]
@@ -72,5 +72,15 @@ class CoLogin extends \yii\db\ActiveRecord
     public function getUser()
     {
         return $this->hasOne(CoUserProfile::className(), ['user_id' => 'user_id']);
+    }
+    
+    public function setPassword($password)
+    {
+        $this->password = Yii::$app->security->generatePasswordHash($password);
+    }
+    
+    public function beforeSave($insert) {
+        $this->setPassword($this->password);
+        return parent::beforeSave($insert);
     }
 }

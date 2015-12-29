@@ -48,7 +48,7 @@ class CoUserProfile extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['tenant_id', 'name', 'created_by'], 'required'],
+            [['name'], 'required'],
             [['tenant_id', 'city_id', 'state_id', 'country_id', 'speciality_id', 'created_by', 'modified_by'], 'integer'],
             [['title_code', 'care_provider', 'status'], 'string'],
             [['created_at', 'modified_at'], 'safe'],

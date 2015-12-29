@@ -2,11 +2,15 @@
 
 namespace IRISADMIN\modules\v1\controllers;
 
+use common\models\CoLogin;
+use common\models\CoRole;
 use common\models\CoTenant;
+use common\models\CoUserProfile;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\filters\auth\HttpBearerAuth;
 use yii\filters\ContentNegotiator;
+use yii\helpers\Html;
 use yii\rest\ActiveController;
 use yii\web\HttpException;
 use yii\web\Response;
@@ -63,12 +67,44 @@ class OrganizationController extends ActiveController {
     public function actionSaveorg() {
         if (!empty(Yii::$app->request->post())) {
             $model = new CoTenant();
+            $model->scenario = 'create';
             $model->attributes = Yii::$app->request->post('Tenant');
-            if ($model->save()) {
+
+            $role_model = new CoRole();
+            $role_model->attributes = Yii::$app->request->post('Role');
+
+            $user_model = new CoUserProfile();
+            $user_model->attributes = Yii::$app->request->post('User');
+
+            $login_model = new CoLogin();
+            $login_model->attributes = Yii::$app->request->post('Login');
+
+            $valid = $model->validate();
+            $valid = $role_model->validate() && $valid;
+            $valid = $user_model->validate() && $valid;
+            $valid = $login_model->validate() && $valid;
+
+            if ($valid) {
+                $model->save(false);
+                
+                $role_model->tenant_id = $model->tenant_id;
+                $role_model->created_by = -1;
+                $role_model->save(false);
+
+                $user_model->tenant_id = $model->tenant_id;
+                $user_model->created_by = -1;
+                $user_model->save(false);
+
+                $login_model->user_id = $user_model->user_id;
+                $login_model->created_by = -1;
+                $login_model->save(false);
+                
                 return ['success' => true];
-            }else{
-                return ['success' => false, 'message' => $model->getFirstErrors()];
+            } else {
+                return ['success' => false, 'message' => Html::errorSummary([$model, $role_model, $user_model, $login_model])];
             }
+        } else {
+            return ['success' => false, 'message' => 'Please Fill the Form'];
         }
     }
 
