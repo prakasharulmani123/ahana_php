@@ -2,11 +2,12 @@
 
 namespace IRISADMIN\modules\v1\controllers;
 
-use app\models\CoRolePermissions;
+use app\models\CoRolesResources;
 use common\models\CoLogin;
 use common\models\CoRole;
 use common\models\CoTenant;
-use common\models\CoUserProfile;
+use common\models\CoUser;
+use common\models\CoUsersRoles;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\filters\auth\HttpBearerAuth;
@@ -74,7 +75,7 @@ class OrganizationController extends ActiveController {
             $role_model = new CoRole();
             $role_model->attributes = Yii::$app->request->post('Role');
 
-            $user_model = new CoUserProfile();
+            $user_model = new CoUser();
             $user_model->attributes = Yii::$app->request->post('User');
 
             $login_model = new CoLogin();
@@ -100,11 +101,19 @@ class OrganizationController extends ActiveController {
                 $login_model->created_by = -1;
                 $login_model->save(false);
 
+                $user_role_model = new CoUsersRoles();
+                $user_role_model->attributes = array(
+                    'tenant_id' => $model->tenant_id,
+                    'user_id' => $user_model->user_id,
+                    'role_id' => $role_model->role_id,
+                );
+                $user_role_model->save(false);
+            
                 if (Yii::$app->request->post('Module')) {
                     $resources = Yii::$app->request->post('Module')['resource_ids'];
                     if (!empty($resources)) {
                         foreach ($resources as $resource_id) {
-                            $resource_model = new CoRolePermissions();
+                            $resource_model = new CoRolesResources();
                             $resource_model->attributes = array(
                                 'tenant_id' => $model->tenant_id,
                                 'role_id' => $role_model->role_id,
@@ -127,11 +136,20 @@ class OrganizationController extends ActiveController {
     
     public function actionGetorg() {
         if (!empty(Yii::$app->request->get('id'))) {
+            $return = array();
             $id = Yii::$app->request->get('id');
-            $org = CoTenant::find()->where(['tenant_id' => $id]);
-            echo '<pre>';
-            print_r($org);
-            exit;
+            
+            $organization = CoTenant::find()->where(['tenant_id' => $id])->one();
+            $userProf = CoUser::find()->where(['tenant_id' => $id, 'created_by' => -1])->one();
+            $role = CoRole::find()->where(['tenant_id' => $id, 'created_by' => -1])->one();
+            
+            $return['Tenant'] = $organization->attributes;
+            $return['User'] = $userProf->attributes;
+            $return['Role'] = $userProf->r;
+            
+            return ['success' => true, 'return' => $return];
+        }else{
+            return ['success' => false, 'message' => 'Invalid Access'];
         }
     }
 

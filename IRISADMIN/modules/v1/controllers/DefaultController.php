@@ -2,7 +2,7 @@
 
 namespace IRISADMIN\modules\v1\controllers;
 
-use app\models\CoResources;
+use common\models\CoResources;
 use common\models\CoMasterCity;
 use common\models\CoMasterCountry;
 use common\models\CoMasterState;
