@@ -20,6 +20,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
 
 
         // Form Page
+//        $scope.data = [];
         $scope.country = [];
 
         $http.get($rootScope.IRISAdminServiceUrl + "/default/get-country-list").then(
@@ -162,8 +163,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
             }).then(
                     function (response) {
                         if (response.data.success === true) {
-                            console.log(response.data);
-//                            $scope.data = response.data.floor;
+                            $scope.data = response.data.return;
                         }
                         else {
                             $scope.errorData = response.data;
