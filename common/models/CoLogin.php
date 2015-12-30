@@ -20,7 +20,7 @@ use Yii;
  * @property string $activation_date
  * @property string $Inactivation_date
  *
- * @property CoUserProfile $user
+ * @property CoUser $user
  */
 class CoLogin extends \yii\db\ActiveRecord
 {
@@ -71,7 +71,7 @@ class CoLogin extends \yii\db\ActiveRecord
      */
     public function getUser()
     {
-        return $this->hasOne(CoUserProfile::className(), ['user_id' => 'user_id']);
+        return $this->hasOne(CoUser::className(), ['user_id' => 'user_id']);
     }
     
     public function setPassword($password)

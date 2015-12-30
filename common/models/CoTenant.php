@@ -28,7 +28,7 @@ use yii\db\ActiveRecord;
  * @property string $modified_at
  *
  * @property CoRole[] $coRoles
- * @property CoUserProfile[] $coUserProfiles
+ * @property CoUser[] $coUserProfiles
  */
 class CoTenant extends ActiveRecord
 {
@@ -97,9 +97,9 @@ class CoTenant extends ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getCoUserProfiles()
+    public function getCoUsers()
     {
-        return $this->hasMany(CoUserProfile::className(), ['tenant_id' => 'tenant_id']);
+        return $this->hasMany(CoUser::className(), ['tenant_id' => 'tenant_id']);
     }
     
     public function getCoMasterCity() {

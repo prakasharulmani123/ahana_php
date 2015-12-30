@@ -5,7 +5,7 @@ namespace common\models;
 use Yii;
 
 /**
- * This is the model class for table "co_user_profile".
+ * This is the model class for table "co_user".
  *
  * @property integer $user_id
  * @property integer $tenant_id
@@ -32,14 +32,14 @@ use Yii;
  * @property CoLogin[] $coLogins
  * @property CoTenant $tenant
  */
-class CoUserProfile extends \yii\db\ActiveRecord
+class CoUser extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'co_user_profile';
+        return 'co_user';
     }
 
     /**
