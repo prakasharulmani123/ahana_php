@@ -2,10 +2,11 @@
 
 namespace IRISADMIN\modules\v1\controllers;
 
-use common\models\CoResources;
 use common\models\CoMasterCity;
 use common\models\CoMasterCountry;
 use common\models\CoMasterState;
+use common\models\CoResources;
+use common\models\CoRolesResources;
 use Yii;
 use yii\filters\ContentNegotiator;
 use yii\web\Controller;
@@ -71,17 +72,7 @@ class DefaultController extends Controller {
     }
 
     public function actionGetModuleTree() {
-        $list = array();
-        $parents = CoResources::find()->where(['parent_id' => null])->orderBy(['resource_name' => 'ASC'])->all();
-        foreach ($parents as $key => $parent) {
-            $list[$key] = array('label' => $parent->resource_name, 'value' => $parent->resource_id);
-
-            $childs = CoResources::find()->where(['parent_id' => $parent->resource_id])->orderBy(['resource_name' => 'ASC'])->all();
-            foreach ($childs as $cKey => $child) {
-                $list[$key]['items'][$cKey] = array('label' => $child->resource_name, 'value' => $child->resource_id);
-            }
-        }
-        return ['moduleList' => $list];
+        return ['moduleList' => CoRolesResources::getModuleTree()];
     }
 
     public function actionTesting() {

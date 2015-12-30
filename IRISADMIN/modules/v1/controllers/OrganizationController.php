@@ -2,7 +2,7 @@
 
 namespace IRISADMIN\modules\v1\controllers;
 
-use app\models\CoRolesResources;
+use common\models\CoRolesResources;
 use common\models\CoLogin;
 use common\models\CoRole;
 use common\models\CoTenant;
@@ -106,6 +106,7 @@ class OrganizationController extends ActiveController {
                     'tenant_id' => $model->tenant_id,
                     'user_id' => $user_model->user_id,
                     'role_id' => $role_model->role_id,
+                    'created_by' => -1
                 );
                 $user_role_model->save(false);
             
@@ -137,17 +138,20 @@ class OrganizationController extends ActiveController {
     public function actionGetorg() {
         if (!empty(Yii::$app->request->get('id'))) {
             $return = array();
-            $id = Yii::$app->request->get('id');
+            $tenant_id = Yii::$app->request->get('id');
             
-            $organization = CoTenant::find()->where(['tenant_id' => $id])->one();
-            $userProf = CoUser::find()->where(['tenant_id' => $id, 'created_by' => -1])->one();
-            $role = CoRole::find()->where(['tenant_id' => $id, 'created_by' => -1])->one();
+            $organization = CoTenant::find()->where(['tenant_id' => $tenant_id])->one();
+            $userProf = CoUser::find()->where(['tenant_id' => $tenant_id, 'created_by' => -1])->one();
+            $user_role = CoUsersRoles::find()->where(['tenant_id' => $tenant_id, 'user_id' => $userProf->user_id])->one();
+            $login = CoLogin::find()->where(['user_id' => $userProf->user_id])->one();
+            $login->password = '';
             
             $return['Tenant'] = $organization->attributes;
             $return['User'] = $userProf->attributes;
-            $return['Role'] = $userProf->r;
+            $return['Role'] = $user_role->role->attributes;
+            $return['Login'] = $login->attributes;
             
-            return ['success' => true, 'return' => $return];
+            return ['success' => true, 'return' => $return, 'modules' => CoRolesResources::getModuletreeByRole($tenant_id, $user_role->role_id)];
         }else{
             return ['success' => false, 'message' => 'Invalid Access'];
         }

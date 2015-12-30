@@ -60,4 +60,11 @@ class CoResources extends \yii\db\ActiveRecord {
         return $this->hasMany(CoRolesResources::className(), ['resource_id' => 'resource_id']);
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getChild() {
+        return $this->hasMany(self::className(), ['parent_id' => 'resource_id']);
+    }
+
 }
