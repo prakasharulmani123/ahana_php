@@ -11,6 +11,12 @@
                 {% include 'tpl/organization/_form.html' %}
             </div>
         </div>
+        <div class="row">
+            <div class="col-sm-12 text-center">
+                <button class="btn btn-primary" type="submit" ng-click="saveForm('edit')">Save</button>
+                <button class="btn btn-black" type="button" ui-sref="app.org_list" onclick="javascript:void(0)">Back</button>
+            </div>
+        </div>
     </form>
 </div>
 

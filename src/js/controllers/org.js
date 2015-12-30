@@ -20,7 +20,6 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
 
 
         // Form Page
-//        $scope.data = [];
         $scope.country = [];
 
         $http.get($rootScope.IRISAdminServiceUrl + "/default/get-country-list").then(
@@ -39,11 +38,15 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                 }
         );
 
-        $http.get($rootScope.IRISAdminServiceUrl + "/default/get-module-tree").then(
-                function (response) {
-                    $scope.modules = response.data.moduleList;
-                }
-        );
+        if($state.current.name == 'app.org_new'){
+            
+            $http.get($rootScope.IRISAdminServiceUrl + "/default/get-module-tree").then(
+                    function (response) {
+                        $scope.modules = response.data.moduleList;
+                    }
+            );
+        }
+
 
         $scope.title_codes = [{value: 'Mr.', label: 'Mr.'}, {value: 'Mrs.', label: 'Mrs.'}, {value: 'Miss.', label: 'Miss.'}, {value: 'Dr.', label: 'Dr.'}];
 
@@ -51,8 +54,9 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
             $scope.availableStates = [];
             $scope.availableCities = [];
 
+            _that = this;
             angular.forEach($scope.states, function (value) {
-                if (value.countryId == $scope.data.Tenant.tenant_country_id) {
+                if (value.countryId == _that.data.Tenant.tenant_country_id) {
                     var obj = {
                         value: value.value,
                         label: value.label
@@ -64,9 +68,10 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
 
         $scope.updateCity = function () {
             $scope.availableCities = [];
-
+            
+            _that = this;
             angular.forEach($scope.cities, function (value) {
-                if (value.stateId == $scope.data.Tenant.tenant_state_id) {
+                if (value.stateId == _that.data.Tenant.tenant_state_id) {
                     var obj = {
                         value: value.value,
                         label: value.label
@@ -80,8 +85,9 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
             $scope.availableStates2 = [];
             $scope.availableCities2 = [];
 
+            _that = this;
             angular.forEach($scope.states, function (value) {
-                if (value.countryId == $scope.data.User.country_id) {
+                if (value.countryId == _that.data.User.country_id) {
                     var obj = {
                         value: value.value,
                         label: value.label
@@ -94,8 +100,9 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
         $scope.updateCity2 = function () {
             $scope.availableCities2 = [];
 
+            _that = this;
             angular.forEach($scope.cities, function (value) {
-                if (value.stateId == $scope.data.User.state_id) {
+                if (value.stateId == _that.data.User.state_id) {
                     var obj = {
                         value: value.value,
                         label: value.label
@@ -120,16 +127,17 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                     });
                 }
             });
-            if (typeof $scope.data != "undefined") {
-                $scope.data.Module = [];
-                $scope.data.Module = {'resource_ids': $scope.moduleList};
+            if (typeof this.data != "undefined") {
+                this.data.Module = [];
+                this.data.Module = {'resource_ids': $scope.moduleList};
             }
 
+            _that = this;
 //            if ($scope.form.$valid) {
             $http({
                 url: $rootScope.IRISAdminServiceUrl + '/organizations/saveorg',
                 method: "POST",
-                data: $scope.data
+                data: _that.data
             }).then(
                     function (response) {
                         if (response.data.success === true) {
@@ -156,6 +164,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
         };
 
         $scope.loadForm = function () {
+            _that = this;
             $scope.errorData = "";
             $http({
                 url: $rootScope.IRISAdminServiceUrl + "/organization/getorg?id=" + $state.params.id,
@@ -163,7 +172,13 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
             }).then(
                     function (response) {
                         if (response.data.success === true) {
-                            $scope.data = response.data.return;
+                            alert('update');
+                            _that.data = response.data.return;
+                            $scope.updateState();
+                            $scope.updateCity();
+                            $scope.updateState2();
+                            $scope.updateCity2();
+                            $scope.modules = response.data.modules;
                         }
                         else {
                             $scope.errorData = response.data;

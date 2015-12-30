@@ -48,15 +48,15 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                 url: '/org_list',
                 templateUrl: 'tpl/organization/index.html',
                 resolve: {
-                      deps: ['$ocLazyLoad',
-                        function( $ocLazyLoad ){
-                          return $ocLazyLoad.load('smart-table').then(
-                              function(){
-                                  return $ocLazyLoad.load('js/controllers/org.js');
-                              }
-                          );
-                      }]
-                  }
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('smart-table').then(
+                                    function () {
+                                        return $ocLazyLoad.load('js/controllers/org.js');
+                                    }
+                            );
+                        }]
+                }
             })
             .state('app.org_new', {
                 url: '/org_new',

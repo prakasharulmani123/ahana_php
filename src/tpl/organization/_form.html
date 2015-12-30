@@ -119,9 +119,16 @@
 
                         <div 
                             ivh-treeview="modules"
+                            ivh-treeview-children-attribute="'items'"
+                            ivh-treeview-validate="true"
+                            ></div>
+<!--                        <div 
+                            ivh-treeview="modules"
+                            ivh-treeview-validate="true"
                             ivh-treeview-selected-attribute="'isSelected'"
                             ivh-treeview-children-attribute="'items'"
-                            ></div>
+                            ivh-treeview-default-selected-state="false"
+                            ></div>-->
 
                     </div>
 
@@ -216,11 +223,5 @@
             </div>
         </div>
 
-    </div>
-</div>
-<div class="row">
-    <div class="col-sm-12 text-center">
-        <button class="btn btn-primary" type="submit" ng-click="saveForm('add')">Save</button>
-        <button class="btn btn-black" type="button" ui-sref="app.org_list" onclick="javascript:void(0)">Back</button>
     </div>
 </div>
