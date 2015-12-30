@@ -122,6 +122,7 @@ class CoTenant extends ActiveRecord
             'tenant_city_id',
             'tenant_state_id',
             'tenant_country_id',
+            'status',
             'tenant_city_name' => function ($model) {
                 return (isset($model->coMasterCity) ? $model->coMasterCity->city_name : '-');
             },
@@ -136,9 +137,6 @@ class CoTenant extends ActiveRecord
     
 //    public function extraFields() {
 //        parent::extraFields();
-//        return ['tenant_city_name' => function ($model) {
-//                return $model->coMasterCity->city_name;
-//            }
-//        ];
+//        return ['coMasterCity', 'coMasterState', 'coMasterCountry'];
 //    }
 }

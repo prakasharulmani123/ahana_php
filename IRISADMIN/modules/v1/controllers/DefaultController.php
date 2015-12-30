@@ -5,6 +5,7 @@ namespace IRISADMIN\modules\v1\controllers;
 use common\models\CoMasterCity;
 use common\models\CoMasterCountry;
 use common\models\CoMasterState;
+use Yii;
 use yii\filters\ContentNegotiator;
 use yii\web\Controller;
 use yii\web\Response;
@@ -45,7 +46,7 @@ class DefaultController extends Controller {
         }
         return ['stateList' => $list];
     }
-    
+
     public function actionGetCityList() {
         $list = array();
         $datas = CoMasterCity::find()->all();
@@ -54,4 +55,18 @@ class DefaultController extends Controller {
         }
         return ['cityList' => $list];
     }
+
+    public function actionChangeStatus() {
+        if (!empty(Yii::$app->request->post())) {
+            $post = Yii::$app->request->post();
+            $modelName = $post['model'];
+            $primaryKey = $post['id'];
+            $modelClass = "common\\models\\$modelName";
+            $model = $modelClass::findOne($primaryKey);
+            $model->status = 1 - $model->status;
+            $model->save(false);
+            return ['success' => "ok"];
+        }
+    }
+
 }
