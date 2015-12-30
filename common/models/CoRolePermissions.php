@@ -5,7 +5,7 @@ namespace common\models;
 use Yii;
 
 /**
- * This is the model class for table "co_role_permissions".
+ * This is the model class for table "co_roles_resources".
  *
  * @property integer $role_perm_id
  * @property integer $tenant_id
@@ -20,14 +20,14 @@ use Yii;
  * @property CoRole $role
  * @property CoTenant $tenant
  */
-class CoRolePermissions extends \yii\db\ActiveRecord
+class CoRolesResources extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'co_role_permissions';
+        return 'co_roles_resources';
     }
 
     /**

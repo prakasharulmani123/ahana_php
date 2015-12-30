@@ -15,7 +15,7 @@ use Yii;
  * @property integer $modified_by
  * @property string $modified_at
  *
- * @property CoRolePermissions[] $coRolePermissions
+ * @property CoRolesResources[] $coRolePermissions
  */
 class CoResources extends \yii\db\ActiveRecord {
 
@@ -56,8 +56,8 @@ class CoResources extends \yii\db\ActiveRecord {
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getCoRolePermissions() {
-        return $this->hasMany(CoRolePermissions::className(), ['resource_id' => 'resource_id']);
+    public function getCoRolesResources() {
+        return $this->hasMany(CoRolesResources::className(), ['resource_id' => 'resource_id']);
     }
 
 }
