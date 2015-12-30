@@ -38,7 +38,7 @@ return [
             'showScriptName' => false,
             'rules' => [
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/user'], 'extraPatterns' => ['POST login' => 'login']],
-                ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/organization'], 'extraPatterns' => ['GET search' => 'search', 'POST saveorg' => 'saveorg']],
+                ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/organization'], 'extraPatterns' => ['GET search' => 'search', 'POST saveorg' => 'saveorg', 'GET getorg' => 'getorg']],
             ],
         ],
         'log' => [

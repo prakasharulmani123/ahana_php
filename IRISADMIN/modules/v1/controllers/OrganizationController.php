@@ -124,5 +124,15 @@ class OrganizationController extends ActiveController {
             return ['success' => false, 'message' => 'Please Fill the Form'];
         }
     }
+    
+    public function actionGetorg() {
+        if (!empty(Yii::$app->request->get('id'))) {
+            $id = Yii::$app->request->get('id');
+            $org = CoTenant::find()->where(['tenant_id' => $id]);
+            echo '<pre>';
+            print_r($org);
+            exit;
+        }
+    }
 
 }
