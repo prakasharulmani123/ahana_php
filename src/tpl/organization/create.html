@@ -1,6 +1,15 @@
 <div class="bg-light lter b-b wrapper-md ng-scope">
     <h1 class="m-n font-thin h3">Create Organization</h1>
 </div>
-<div ng-include="'tpl/organization/_form.html'">
-    {% include 'tpl/organization/_form.html' %}
+<div class="wrapper-md ng-scope" ng-controller="OrganizationController as org">
+    <div ng-include="'tpl/blocks/alert.html'">
+        {% include 'tpl/blocks/alert.html' %}
+    </div>
+    <form name="form" class="bs-example form-horizontal ng-pristine ng-valid form-validation" novalidate="">
+        <div>
+            <div ng-include="'tpl/organization/_form.html'">
+                {% include 'tpl/organization/_form.html' %}
+            </div>
+        </div>
+    </form>
 </div>

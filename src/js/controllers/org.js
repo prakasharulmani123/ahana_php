@@ -38,6 +38,12 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                 }
         );
 
+        $http.get($rootScope.IRISAdminServiceUrl + "/default/get-module-tree").then(
+                function (response) {
+                    $scope.modules = response.data.moduleList;
+                }
+        );
+
         $scope.title_codes = [{value: 'Mr.', label: 'Mr.'}, {value: 'Mrs.', label: 'Mrs.'}, {value: 'Miss.', label: 'Miss.'}, {value: 'Dr.', label: 'Dr.'}];
 
         $scope.updateState = function () {
@@ -98,11 +104,26 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
             });
         }
 
+
         $scope.saveForm = function (mode) {
-            console.log($scope.items);
-            return false;
             $scope.errorData = "";
             $scope.successMessage = "";
+
+            $scope.moduleList = [];
+            angular.forEach($scope.modules, function (parent) {
+                if (parent.isSelected == true || parent.__ivhTreeviewIndeterminate == true) {
+                    $scope.moduleList.push(parent.value);
+                    angular.forEach(parent.items, function (child) {
+                        if (child.isSelected == true)
+                            $scope.moduleList.push(child.value);
+                    });
+                }
+            });
+            if (typeof $scope.data != "undefined") {
+                $scope.data.Module = [];
+                $scope.data.Module = {'resource_ids': $scope.moduleList};
+            }
+
 //            if ($scope.form.$valid) {
             $http({
                 url: $rootScope.IRISAdminServiceUrl + '/organizations/saveorg',
@@ -133,49 +154,24 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
 //            }
         };
 
-        $scope.resouce_id = [];
-        $scope.bag = [{
-                label: 'Hats',
-                value: 'attt',
-                children: [
-                    {label: 'Flat cap', value: 'attt'},
-                    {label: 'Fedora', value: 'attt'},
-                    {label: 'Baseball', value: 'attt'},
-                    {label: 'Top hat', value: 'attt'},
-                    {label: 'Gatsby', value: 'attt'}
-                ]
-            }, {
-                label: 'Pens',
-                children: [
-                    {label: 'Flat cap', value: 'attt'},
-                    {label: 'Fedora', value: 'attt'},
-                    {label: 'Baseball', value: 'attt'},
-                    {label: 'Top hat', value: 'attt'},
-                    {label: 'Gatsby', value: 'attt'}
-                ]
-            }, {
-                label: 'Whiskey',
-                children: [
-                    {label: 'Flat cap', value: 'attt'},
-                    {label: 'Fedora', value: 'attt'},
-                    {label: 'Baseball', value: 'attt'},
-                    {label: 'Top hat', value: 'attt'},
-                    {label: 'Gatsby', value: 'attt'}
-                ]
-            }];
-
-        $scope.otherAwesomeCallback = function (node, isSelected, tree) {
-            if (isSelected) {
-                $scope.resouce_id.push(node.value);
-            } else {
-                var index = $scope.resouce_id.indexOf(node.value);
-                if (index != -1) {
-                    $scope.resouce_id.splice(index, 1);
-                }
-            }
-            console.log($scope.resouce_id);
-        }
-
+        $scope.loadForm = function () {
+            alert('yes');
+            $scope.errorData = "";
+            $http({
+                url: $rootScope.IRISAdminServiceUrl + "/organization/get-org?id=" + $state.params.id,
+                method: "GET"
+            }).then(
+                    function (response) {
+                        if (response.data.success === true) {
+                            console.log(response.data);
+//                            $scope.data = response.data.floor;
+                        }
+                        else {
+                            $scope.errorData = response.data;
+                        }
+                    }
+            )
+        };
 
 
 //  $scope.rowCollectionBasic = [

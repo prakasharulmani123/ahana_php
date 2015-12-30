@@ -68,6 +68,16 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
+            .state('app.org_edit', {
+                url: '/org_edit/{id}',
+                templateUrl: 'tpl/organization/update.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['js/controllers/org.js']);
+                        }]
+                }
+            })
             .state('app.dashboard-v1', {
                 url: '/dashboard-v1',
                 templateUrl: 'tpl/app_dashboard_v1.html',

@@ -20,7 +20,7 @@
                     <th st-sort="balance">State</th>
                     <th>Country</th>
                     <th>Email</th>
-                    <th>Status</th>
+                    <th>Action</th>
                 </tr>
                 <tr>
                     <th>
@@ -45,6 +45,7 @@
                         <a ng-href="mailto:{{row.email}}">email</a>
                     </td>
                     <td>
+<a ui-sref="app.org_edit({id: '{{row.tenant_id}}'})">Edit</a>
                         <label class="i-checks "> 
                             <input type="checkbox" checked="" ng-true-value="'1'" ng-false-value="'0'" name="status" ng-model="row.status" ng-change='updateStatus("CoTenant", row.tenant_id)'> 
                             <i></i>
