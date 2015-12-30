@@ -155,10 +155,9 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
         };
 
         $scope.loadForm = function () {
-            alert('yes');
             $scope.errorData = "";
             $http({
-                url: $rootScope.IRISAdminServiceUrl + "/organization/get-org?id=" + $state.params.id,
+                url: $rootScope.IRISAdminServiceUrl + "/organization/getorg?id=" + $state.params.id,
                 method: "GET"
             }).then(
                     function (response) {
