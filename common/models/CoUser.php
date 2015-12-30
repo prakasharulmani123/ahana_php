@@ -32,21 +32,19 @@ use Yii;
  * @property CoLogin[] $coLogins
  * @property CoTenant $tenant
  */
-class CoUser extends \yii\db\ActiveRecord
-{
+class CoUser extends \yii\db\ActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'co_user';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['name'], 'required'],
             [['tenant_id', 'city_id', 'state_id', 'country_id', 'speciality_id', 'created_by', 'modified_by'], 'integer'],
@@ -62,8 +60,7 @@ class CoUser extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'user_id' => 'User ID',
             'tenant_id' => 'Tenant ID',
@@ -92,16 +89,29 @@ class CoUser extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getCoLogins()
-    {
+    public function getCoLogins() {
         return $this->hasMany(CoLogin::className(), ['user_id' => 'user_id']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getTenant()
-    {
+    public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
+
+    public function behaviors() {
+        return [
+            \cornernote\linkall\LinkAllBehavior::className(),
+        ];
+    }
+
+    public function getUsersRoles() {
+        return $this->hasMany(CoUsersRoles::className(), ['user_id' => 'user_id']);
+    }
+
+    public function getRoles() {
+        return $this->hasMany(CoRole::className(), ['role_id' => 'role_id'])->via('usersRoles');
+    }
+
 }

@@ -84,4 +84,30 @@ class DefaultController extends Controller {
         return ['moduleList' => $list];
     }
 
+    public function actionTesting() {
+        $user = new \common\models\CoUser;
+        $user->tenant_id = 18;
+        $user->name = 'Nadesh';
+        $user->save(false);
+
+        $role = new \common\models\CoRole;
+        $role->tenant_id = 18;
+        $role->description = 'Nadesh_role';
+        $role->save(false);
+
+        $user->link('roles', $role);
+        return ['success' => 'Ok'];
+    }
+
+    public function actionExample() {
+        $user = \common\models\CoUser::findOne(10);
+        $roles = [\common\models\CoRole::findOne(8)];
+
+        $extraColumns = ['tenant_id' => '18']; // extra columns to be saved to the many to many table
+        $unlink = true; // unlink tags not in the list
+        $delete = true; // delete unlinked tags
+
+        $user->linkAll('roles', $roles, $extraColumns, $unlink, $delete);
+    }
+
 }
