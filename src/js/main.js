@@ -3,8 +3,8 @@
 /* Controllers */
 
 angular.module('app')
-        .controller('AppCtrl', ['$scope', '$translate', '$localStorage', '$window', '$rootScope', '$state', '$cookieStore',
-            function ($scope, $translate, $localStorage, $window, $rootScope, $state, $cookieStore) {
+        .controller('AppCtrl', ['$scope', '$translate', '$localStorage', '$window', '$rootScope', '$state', '$cookieStore', 'CommonService',
+            function ($scope, $translate, $localStorage, $window, $rootScope, $state, $cookieStore, CommonService) {
                 // add 'ie' classes to html
                 var isIE = !!navigator.userAgent.match(/MSIE/i);
                 isIE && angular.element($window.document.body).addClass('ie');
@@ -61,6 +61,13 @@ angular.module('app')
                     delete $window.sessionStorage.access_token;
                     $window.location.reload();
                 };
+
+                //Change Status
+                $scope.updateStatus = function (modelName, primaryKey) {
+                    $scope.service = CommonService;
+                    $scope.service.ChangeStatus(modelName, primaryKey);
+                }
+
 
                 function isSmartDevice($window)
                 {

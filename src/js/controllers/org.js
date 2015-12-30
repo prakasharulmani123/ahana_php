@@ -6,6 +6,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
         $scope.itemsByPage = 10;
         $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
         // Display Data
+//        $http.get($rootScope.IRISAdminServiceUrl + '/organizations?expand=coMasterCity,coMasterState,coMasterCountry')
         $http.get($rootScope.IRISAdminServiceUrl + '/organizations')
                 .success(function (usr) {
                     $scope.rowCollection = usr;

@@ -20,6 +20,7 @@
                     <th st-sort="balance">State</th>
                     <th>Country</th>
                     <th>Email</th>
+                    <th>Status</th>
                 </tr>
                 <tr>
                     <th>
@@ -41,7 +42,14 @@
                         <button class="btn btn-xs" data-placement="top" data-content="{{row.email}}" bs-popover type="button">
                             <i class="fa fa-eye"></i>
                         </button>
-                        <a ng-href="mailto:{{row.email}}">email</a></td>
+                        <a ng-href="mailto:{{row.email}}">email</a>
+                    </td>
+                    <td>
+                        <label class="i-checks "> 
+                            <input type="checkbox" checked="" ng-true-value="'1'" ng-false-value="'0'" name="status" ng-model="row.status" ng-change='updateStatus("CoTenant", row.tenant_id)'> 
+                            <i></i>
+                        </label>
+                    </td>
                 </tr>
             </tbody>
             <tbody ng-show="isLoading">
