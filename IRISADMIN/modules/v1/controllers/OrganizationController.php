@@ -2,6 +2,7 @@
 
 namespace IRISADMIN\modules\v1\controllers;
 
+use app\models\CoRolePermissions;
 use common\models\CoLogin;
 use common\models\CoRole;
 use common\models\CoTenant;
@@ -86,7 +87,7 @@ class OrganizationController extends ActiveController {
 
             if ($valid) {
                 $model->save(false);
-                
+
                 $role_model->tenant_id = $model->tenant_id;
                 $role_model->created_by = -1;
                 $role_model->save(false);
@@ -98,6 +99,22 @@ class OrganizationController extends ActiveController {
                 $login_model->user_id = $user_model->user_id;
                 $login_model->created_by = -1;
                 $login_model->save(false);
+
+                if (Yii::$app->request->post('Module')) {
+                    $resources = Yii::$app->request->post('Module')['resource_ids'];
+                    if (!empty($resources)) {
+                        foreach ($resources as $resource_id) {
+                            $resource_model = new CoRolePermissions();
+                            $resource_model->attributes = array(
+                                'tenant_id' => $model->tenant_id,
+                                'role_id' => $role_model->role_id,
+                                'resource_id' => $resource_id,
+                                'created_by' => -1
+                            );
+                            $resource_model->save(false);
+                        }
+                    }
+                }
                 
                 return ['success' => true];
             } else {

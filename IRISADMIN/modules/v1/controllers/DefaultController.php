@@ -2,6 +2,7 @@
 
 namespace IRISADMIN\modules\v1\controllers;
 
+use app\models\CoResources;
 use common\models\CoMasterCity;
 use common\models\CoMasterCountry;
 use common\models\CoMasterState;
@@ -56,7 +57,7 @@ class DefaultController extends Controller {
         return ['cityList' => $list];
     }
 
-    public function actionChangeStatus() {
+public function actionChangeStatus() {
         if (!empty(Yii::$app->request->post())) {
             $post = Yii::$app->request->post();
             $modelName = $post['model'];
@@ -67,6 +68,20 @@ class DefaultController extends Controller {
             $model->save(false);
             return ['success' => "ok"];
         }
+    }
+
+    public function actionGetModuleTree() {
+        $list = array();
+        $parents = CoResources::find()->where(['parent_id' => null])->orderBy(['resource_name' => 'ASC'])->all();
+        foreach ($parents as $key => $parent) {
+            $list[$key] = array('label' => $parent->resource_name, 'value' => $parent->resource_id);
+            
+            $childs = CoResources::find()->where(['parent_id' => $parent->resource_id])->orderBy(['resource_name' => 'ASC'])->all();
+            foreach ($childs as $cKey => $child) {
+                $list[$key]['items'][$cKey] = array('label' => $child->resource_name, 'value' => $child->resource_id);
+            }
+        }
+        return ['moduleList' => $list];
     }
 
 }
