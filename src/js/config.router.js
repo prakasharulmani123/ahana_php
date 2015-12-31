@@ -52,7 +52,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load('smart-table').then(
                                     function () {
-                                        return $ocLazyLoad.load('js/controllers/org.js');
+                                        return $ocLazyLoad.load('tpl/organization/org.js');
                                     }
                             );
                         }]
@@ -64,7 +64,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['js/controllers/org.js']);
+                            return uiLoad.load(['tpl/organization/org.js']);
                         }]
                 }
             })
@@ -74,7 +74,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['js/controllers/org.js']);
+                            return uiLoad.load(['tpl/organization/org.js']);
                         }]
                 }
             })
@@ -119,12 +119,13 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                 }
             })
 }
-run.$inject = ['$rootScope', '$state', '$stateParams', '$location', '$cookieStore', '$http', '$window'];
-function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $window) {
+run.$inject = ['$rootScope', '$state', '$stateParams', '$location', '$cookieStore', '$http', '$window', 'CommonService'];
+function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $window, CommonService) {
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
 
     $rootScope.IRISAdminServiceUrl = 'http://ahana.local/IRIS-service/IRISADMIN/web/v1';
+    $rootScope.commonService = CommonService;
 
     $rootScope.globals = $cookieStore.get('globals') || {};
     if ($window.sessionStorage.access_token) {

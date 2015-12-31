@@ -20,26 +20,23 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
 
 
         // Form Page
-        $scope.country = [];
+        $rootScope.commonService.GetCountryList(function (response) {
+            $scope.countries = response.countryList;
+        });
 
-        $http.get($rootScope.IRISAdminServiceUrl + "/default/get-country-list").then(
-                function (response) {
-                    $scope.countries = response.data.countryList;
-                }
-        );
-        $http.get($rootScope.IRISAdminServiceUrl + "/default/get-state-list").then(
-                function (response) {
-                    $scope.states = response.data.stateList;
-                }
-        );
-        $http.get($rootScope.IRISAdminServiceUrl + "/default/get-city-list").then(
-                function (response) {
-                    $scope.cities = response.data.cityList;
-                }
-        );
+        $rootScope.commonService.GetStateList(function (response) {
+            $scope.states = response.stateList;
+        });
 
-        if($state.current.name == 'app.org_new'){
-            
+        $rootScope.commonService.GetCityList(function (response) {
+            $scope.cities = response.cityList;
+        });
+
+        $rootScope.commonService.GetTitleCodes(function (response) {
+            $scope.title_codes = response;
+        });
+
+        if ($state.current.name == 'app.org_new') {
             $http.get($rootScope.IRISAdminServiceUrl + "/default/get-module-tree").then(
                     function (response) {
                         $scope.modules = response.data.moduleList;
@@ -47,8 +44,6 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
             );
         }
 
-
-        $scope.title_codes = [{value: 'Mr.', label: 'Mr.'}, {value: 'Mrs.', label: 'Mrs.'}, {value: 'Miss.', label: 'Miss.'}, {value: 'Dr.', label: 'Dr.'}];
 
         $scope.updateState = function () {
             $scope.availableStates = [];
@@ -68,7 +63,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
 
         $scope.updateCity = function () {
             $scope.availableCities = [];
-            
+
             _that = this;
             angular.forEach($scope.cities, function (value) {
                 if (value.stateId == _that.data.Tenant.tenant_state_id) {
@@ -114,10 +109,12 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
 
 
         $scope.saveForm = function (mode) {
+            _that = this;
+
             $scope.errorData = "";
             $scope.successMessage = "";
-
             $scope.moduleList = [];
+
             angular.forEach($scope.modules, function (parent) {
                 if (parent.isSelected == true || parent.__ivhTreeviewIndeterminate == true) {
                     $scope.moduleList.push(parent.value);
@@ -131,17 +128,35 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                 this.data.Module = [];
                 this.data.Module = {'resource_ids': $scope.moduleList};
             }
+            
+            if (mode == 'add') {
+                post_url = $rootScope.IRISAdminServiceUrl + '/organizations/createorg';
+                post_data = _that.data;
+            } else {
+                post_url = $rootScope.IRISAdminServiceUrl + '/organizations/updateorg';
+                if (mode == 'Tenant') {
+                    post_data = {Tenant: this.data.Tenant};
+                }else if (mode == 'Role') {
+                    post_data = {Role: this.data.Role};
+                }else if (mode == 'Login') {
+                    post_data = {Login: this.data.Login};
+                }else if (mode == 'User') {
+                    post_data = {User: this.data.User};
+                }else if (mode == 'Module') {
+                    this.data.Module['role_id'] = this.data.Role.role_id;
+                    this.data.Module['tenant_id'] = this.data.Tenant.tenant_id;
+                    post_data = {Module: this.data.Module};
+                }
+            }
 
-            _that = this;
-//            if ($scope.form.$valid) {
             $http({
-                url: $rootScope.IRISAdminServiceUrl + '/organizations/saveorg',
                 method: "POST",
-                data: _that.data
+                url: post_url,
+                data: post_data
             }).then(
                     function (response) {
                         if (response.data.success === true) {
-                            if (mode === 'edit') {
+                            if (mode !== 'add') {
                                 $scope.successMessage = "Organization updated successfully";
                                 $timeout(function () {
                                     $state.go('app.org_list');
@@ -160,7 +175,6 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                         }
                     }
             )
-//            }
         };
 
         $scope.loadForm = function () {
@@ -172,7 +186,6 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
             }).then(
                     function (response) {
                         if (response.data.success === true) {
-                            alert('update');
                             _that.data = response.data.return;
                             $scope.updateState();
                             $scope.updateCity();
@@ -187,92 +200,10 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
             )
         };
 
-
-//  $scope.rowCollectionBasic = [
-//      {firstName: 'Laurent', lastName: 'Renard', birthDate: new Date('1987-05-21'), balance: 102, email: 'whatever@gmail.com'},
-//      {firstName: 'Blandine', lastName: 'Faivre', birthDate: new Date('1987-04-25'), balance: -2323.22, email: 'oufblandou@gmail.com'},
-//      {firstName: 'Francoise', lastName: 'Frere', birthDate: new Date('1955-08-27'), balance: 42343, email: 'raymondef@gmail.com'}
-//  ];
-
-//  $scope.removeRow = function(row) {
-//      var index = $scope.rowCollectionBasic.indexOf(row);
-//      if (index !== -1) {
-//          $scope.rowCollectionBasic.splice(index, 1);
-//      }
-//  };
-
-//  $scope.predicates = ['firstName', 'lastName', 'birthDate', 'balance', 'email'];
-//  $scope.selectedPredicate = $scope.predicates[0];
-
-//  var firstnames = ['Laurent', 'Blandine', 'Olivier', 'Max'];
-//  var lastnames = ['Renard', 'Faivre', 'Frere', 'Eponge'];
-//  var dates = ['1987-05-21', '1987-04-25', '1955-08-27', '1966-06-06'];
-//  var id = 1;
-
-//  function generateRandomItem(id) {
-//
-//      var firstname = firstnames[Math.floor(Math.random() * 3)];
-//      var lastname = lastnames[Math.floor(Math.random() * 3)];
-//      var birthdate = dates[Math.floor(Math.random() * 3)];
-//      var balance = Math.floor(Math.random() * 2000);
-//
-//      return {
-//          id: id,
-//          firstName: firstname,
-//          lastName: lastname,
-//          birthDate: new Date(birthdate),
-//          balance: balance
-//      }
-//  }
-
-//  $scope.rowCollection = [];
-//
-//  for (id; id < 5; id++) {
-//      $scope.rowCollection.push(generateRandomItem(id));
-//  }
-
-        //copy the references (you could clone ie angular.copy but then have to go through a dirty checking for the matches)
-//  $scope.displayedCollection = [].concat($scope.rowCollection);
-
-        //add to the real data holder
-//  $scope.addRandomItem = function addRandomItem() {
-//      $scope.rowCollection.push(generateRandomItem(id));
-//      id++;
-//  };
-
-        //remove to the real data holder
-//  $scope.removeItem = function(row) {
-//      var index = $scope.rowCollection.indexOf(row);
-//      if (index !== -1) {
-//          $scope.rowCollection.splice(index, 1);
-//      }
-//  }
-
-        // pip
-//  var promise = null;
-//  $scope.isLoading = false;
-//  $scope.rowCollectionPip = [];
-//  $scope.getPage = function() {
-//      $http.get('api/groups').success(function(data) {
-//        $scope.rowCollectionPip = data;
-//      });
-////    $scope.rowCollectionPip=[];
-////    for (var j = 0; j < 20; j++) {
-////      $scope.rowCollectionPip.push(generateRandomItem(j));
-////    }
-//  }
-//
-//  $scope.callServer = function getData(tableState) {
-//      //here you could create a query string from tableState
-//      //fake ajax call
-//      $scope.isLoading = true;
-//
-//      $timeout(function () {
-//          $scope.getPage();
-//          $scope.isLoading = false;
-//      }, 2000);
-//  };
-//
-// $scope.getPage();
-
+        $scope.removeRow = function (row) {
+            var index = $scope.rowCollectionBasic.indexOf(row);
+            if (index !== -1) {
+                $scope.rowCollectionBasic.splice(index, 1);
+            }
+        };
     }]);
