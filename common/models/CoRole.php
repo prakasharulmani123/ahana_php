@@ -2,8 +2,8 @@
 
 namespace common\models;
 
-use Yii;
-
+use cornernote\linkall\LinkAllBehavior;
+use yii\db\ActiveRecord;
 /**
  * This is the model class for table "co_role".
  *
@@ -18,7 +18,7 @@ use Yii;
  *
  * @property CoTenant $tenant
  */
-class CoRole extends \yii\db\ActiveRecord
+class CoRole extends ActiveRecord
 {
     /**
      * @inheritdoc
@@ -65,5 +65,19 @@ class CoRole extends \yii\db\ActiveRecord
     public function getTenant()
     {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
+    }
+    
+    public function behaviors() {
+        return [
+            LinkAllBehavior::className(),
+        ];
+    }
+
+    public function getRolesResources() {
+        return $this->hasMany(CoRolesResources::className(), ['role_id' => 'role_id']);
+    }
+
+    public function getResources() {
+        return $this->hasMany(CoResources::className(), ['resource_id' => 'resource_id'])->via('rolesResources');
     }
 }

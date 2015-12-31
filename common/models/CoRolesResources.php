@@ -86,17 +86,17 @@ class CoRolesResources extends ActiveRecord {
         
         foreach ($tree as $key => $parent) {
             if(in_array($parent['value'], $role_resources_ids)){
-//                $tree[$key]['selected'] = true;
+//                $tree[$key]['isSelected'] = true;
                 
                 foreach ($parent['items'] as $cKey => $child) {
                     if(in_array($child['value'], $role_resources_ids)){
-                        $tree[$key]['items'][$cKey]['selected'] = true;
+                        $tree[$key]['items'][$cKey]['isSelected'] = true;
                     }else{
-                        $tree[$key]['items'][$cKey]['selected'] = false;
+                        $tree[$key]['items'][$cKey]['isSelected'] = false;
                     }
                 }
             }else{
-//                $tree[$key]['selected'] = false;
+//                $tree[$key]['isSelected'] = false;
             }
         }
         return $tree;
@@ -109,7 +109,7 @@ class CoRolesResources extends ActiveRecord {
             $tree[$key] = array('label' => $parent->resource_name, 'value' => $parent->resource_id);
 
             foreach ($parent->child as $cKey => $child) {
-                $tree[$key]['items'][$cKey] = array('label' => $child->resource_name, 'value' => $child->resource_id, 'selected' => true);
+                $tree[$key]['items'][$cKey] = array('label' => $child->resource_name, 'value' => $child->resource_id);
             }
         }
         return $tree;

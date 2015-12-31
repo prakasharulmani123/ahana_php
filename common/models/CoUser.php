@@ -2,7 +2,9 @@
 
 namespace common\models;
 
-use Yii;
+use cornernote\linkall\LinkAllBehavior;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "co_user".
@@ -32,7 +34,7 @@ use Yii;
  * @property CoLogin[] $coLogins
  * @property CoTenant $tenant
  */
-class CoUser extends \yii\db\ActiveRecord {
+class CoUser extends ActiveRecord {
 
     /**
      * @inheritdoc
@@ -47,6 +49,7 @@ class CoUser extends \yii\db\ActiveRecord {
     public function rules() {
         return [
             [['name'], 'required'],
+            [['title_code', 'name', 'designation', 'mobile', 'email'], 'required', 'on' => 'saveorg'],
             [['tenant_id', 'city_id', 'state_id', 'country_id', 'speciality_id', 'created_by', 'modified_by'], 'integer'],
             [['title_code', 'care_provider', 'status'], 'string'],
             [['created_at', 'modified_at'], 'safe'],
@@ -87,14 +90,14 @@ class CoUser extends \yii\db\ActiveRecord {
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getCoLogins() {
         return $this->hasMany(CoLogin::className(), ['user_id' => 'user_id']);
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
@@ -102,7 +105,7 @@ class CoUser extends \yii\db\ActiveRecord {
 
     public function behaviors() {
         return [
-            \cornernote\linkall\LinkAllBehavior::className(),
+            LinkAllBehavior::className(),
         ];
     }
 
