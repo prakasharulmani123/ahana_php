@@ -33,7 +33,7 @@
                 </tr>
             </thead>
             <tbody ng-hide="isLoading">
-                <tr ng-repeat="row in displayedCollection">
+                <tr ng-repeat="row in displayedCollection | orderBy: tenant_name">
                     <td>{{row.tenant_name}}</td>
                     <td>{{row.tenant_address}}</td>
                     <td>{{row.tenant_city_name}}</td>
@@ -51,7 +51,7 @@
                             <i></i>
                         </label>
                     </td>
-                    <td><a ui-sref="app.org_edit({id: '{{row.tenant_id}}'})">Edit</a></td>
+                    <td><a title="Edit" ui-sref="app.org_edit({id: '{{row.tenant_id}}'})"><i class="fa fa-pencil"></i></a></td>
                 </tr>
             </tbody>
             <tbody ng-show="isLoading">

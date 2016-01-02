@@ -76,7 +76,7 @@
                             <div class="form-group">
                                 <label class="col-lg-2 control-label">Email</label>
                                 <div class="col-lg-10">
-                                    <input type="email" placeholder="abc@abc.com" class="form-control" ng-model="data.Tenant.tenant_email">
+                                    <input type="text" placeholder="abc@abc.com" class="form-control" ng-model="data.Tenant.tenant_email">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -127,18 +127,9 @@
 
                                     <div 
                                         ivh-treeview="modules"
-                                        ivh-treeview-children-attribute="'items'"
-                                        ivh-treeview-selected-attribute="'isSelected'"
-                                        ivh-treeview-validate="true"
+                                         ivh-treeview-default-selected-state="false"
+                                    ivh-treeview-expand-to-depth="2"
                                         ></div>
-                                    <!--                        <div 
-                                                                ivh-treeview="modules"
-                                                                ivh-treeview-validate="true"
-                                                                ivh-treeview-selected-attribute="'isSelected'"
-                                                                ivh-treeview-children-attribute="'items'"
-                                                                ivh-treeview-default-selected-state="false"
-                                                                ></div>-->
-
                                 </div>
 
                             </div>
@@ -170,7 +161,7 @@
                                     <div class="form-group">
                                         <label class="col-lg-3 control-label">Email *</label>
                                         <div class="col-lg-9">
-                                            <input type="email" placeholder="Email" class="form-control" ng-model="data.User.email" required>
+                                            <input type="text" placeholder="Email" class="form-control" ng-model="data.User.email" required>
                                         </div>
                                     </div>
                                     <div class="form-group">

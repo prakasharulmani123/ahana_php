@@ -107,7 +107,19 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
             });
         }
 
+        sanitizeVariable = function (data) {
+            var result = {};
+            angular.forEach(data, function (value, key) {
+                if (typeof value == "undefined") {
+                    result[key] = '';
+                } else {
+                    result[key] = value;
+                }
+            }, result);
+            return result;
+        }
 
+        //Save Both Add & Update Data
         $scope.saveForm = function (mode) {
             _that = this;
 
@@ -116,10 +128,10 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
             $scope.moduleList = [];
 
             angular.forEach($scope.modules, function (parent) {
-                if (parent.isSelected == true || parent.__ivhTreeviewIndeterminate == true) {
+                if (parent.selected == true || parent.__ivhTreeviewIndeterminate == true) {
                     $scope.moduleList.push(parent.value);
-                    angular.forEach(parent.items, function (child) {
-                        if (child.isSelected == true)
+                    angular.forEach(parent.children, function (child) {
+                        if (child.selected == true)
                             $scope.moduleList.push(child.value);
                     });
                 }
@@ -128,36 +140,36 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                 this.data.Module = [];
                 this.data.Module = {'resource_ids': $scope.moduleList};
             }
-            
+
             if (mode == 'add') {
                 post_url = $rootScope.IRISAdminServiceUrl + '/organizations/createorg';
                 post_data = _that.data;
             } else {
                 post_url = $rootScope.IRISAdminServiceUrl + '/organizations/updateorg';
-                if (mode == 'Tenant') {
-                    post_data = {Tenant: this.data.Tenant};
-                }else if (mode == 'Role') {
-                    post_data = {Role: this.data.Role};
-                }else if (mode == 'Login') {
-                    post_data = {Login: this.data.Login};
-                }else if (mode == 'User') {
-                    post_data = {User: this.data.User};
-                }else if (mode == 'Module') {
+                if (mode == 'Organization') {
+                    post_data = {Tenant: sanitizeVariable(this.data.Tenant)};
+                } else if (mode == 'Role') {
+                    post_data = {Role: sanitizeVariable(this.data.Role)};
+                } else if (mode == 'Login') {
+                    post_data = {Login: sanitizeVariable(this.data.Login)};
+                } else if (mode == 'User') {
+                    post_data = {User: sanitizeVariable(this.data.User)};
+                } else if (mode == 'Module') {
                     this.data.Module['role_id'] = this.data.Role.role_id;
                     this.data.Module['tenant_id'] = this.data.Tenant.tenant_id;
-                    post_data = {Module: this.data.Module};
+                    post_data = {Module: sanitizeVariable(this.data.Module)};
                 }
             }
-
+            
             $http({
                 method: "POST",
                 url: post_url,
-                data: post_data
+                data: post_data,
             }).then(
                     function (response) {
                         if (response.data.success === true) {
                             if (mode !== 'add') {
-                                $scope.successMessage = "Organization updated successfully";
+                                $scope.successMessage = mode + " updated successfully";
                                 $timeout(function () {
                                     $state.go('app.org_list');
                                 }, 1000)
@@ -177,6 +189,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
             )
         };
 
+        //Get Data for update Form
         $scope.loadForm = function () {
             _that = this;
             $scope.errorData = "";
