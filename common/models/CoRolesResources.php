@@ -86,22 +86,27 @@ class CoRolesResources extends ActiveRecord {
         
         foreach ($tree as $key => $parent) {
             if(in_array($parent['value'], $role_resources_ids)){
-//                $tree[$key]['isSelected'] = true;
-                
-                foreach ($parent['items'] as $cKey => $child) {
+                $tot = $checked = $unchecked = 0;
+                foreach ($parent['children'] as $cKey => $child) {
                     if(in_array($child['value'], $role_resources_ids)){
-                        $tree[$key]['items'][$cKey]['isSelected'] = true;
+                        $tree[$key]['children'][$cKey]['selected'] = true;
+                        $checked++;
                     }else{
-                        $tree[$key]['items'][$cKey]['isSelected'] = false;
+                        $unchecked++;
                     }
+                    $tot++;
                 }
-            }else{
-//                $tree[$key]['isSelected'] = false;
+                
+                if($tot == $checked)
+                    $tree[$key]['selected'] = true;
+                if($checked > 0 && $unchecked > 0)
+                    $tree[$key]['__ivhTreeviewIndeterminate'] = true;
             }
         }
         return $tree;
     }
 
+    // *** Used in some other functions ***
     public static function getModuleTree() {
         $tree = array();
         $parents = CoResources::find()->where(['parent_id' => null])->orderBy(['resource_name' => 'ASC'])->all();
@@ -109,7 +114,7 @@ class CoRolesResources extends ActiveRecord {
             $tree[$key] = array('label' => $parent->resource_name, 'value' => $parent->resource_id);
 
             foreach ($parent->child as $cKey => $child) {
-                $tree[$key]['items'][$cKey] = array('label' => $child->resource_name, 'value' => $child->resource_id);
+                $tree[$key]['children'][$cKey] = array('label' => $child->resource_name, 'value' => $child->resource_id);
             }
         }
         return $tree;

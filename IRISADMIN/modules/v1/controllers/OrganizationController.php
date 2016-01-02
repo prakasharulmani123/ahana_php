@@ -76,6 +76,7 @@ class OrganizationController extends ActiveController {
             $role_model->attributes = Yii::$app->request->post('Role');
 
             $user_model = new CoUser();
+            $user_model->scenario = 'saveorg';
             $user_model->attributes = Yii::$app->request->post('User');
 
             $login_model = new CoLogin();
@@ -129,7 +130,7 @@ class OrganizationController extends ActiveController {
 
     public function actionUpdateorg() {
         if (!empty(Yii::$app->request->post())) {
-
+            
             if (Yii::$app->request->post('Tenant')) {
                 $model = CoTenant::findOne(['tenant_id' => Yii::$app->request->post('Tenant')['tenant_id']]);
                 $model->attributes = Yii::$app->request->post('Tenant');
@@ -190,9 +191,9 @@ class OrganizationController extends ActiveController {
             $login->password = '';
 
             $return['Tenant'] = $this->excludeColumns($organization->attributes);
-            $return['User'] = $userProf->attributes;
-            $return['Role'] = $user_role->role->attributes;
-            $return['Login'] = $login->attributes;
+            $return['User'] = $this->excludeColumns($userProf->attributes);
+            $return['Role'] = $this->excludeColumns($user_role->role->attributes);
+            $return['Login'] = $this->excludeColumns($login->attributes);
 
             return ['success' => true, 'return' => $return, 'modules' => CoRolesResources::getModuletreeByRole($tenant_id, $user_role->role_id)];
         } else {
@@ -201,10 +202,10 @@ class OrganizationController extends ActiveController {
     }
 
     public function excludeColumns($attrs) {
-        $exclude_cols = ['created_by'];
-        foreach ($attrs as $key => $attr) {
-            if (in_array($attr, $exclude_cols))
-                unset($attrs[$key]);
+        $exclude_cols = ['created_by', 'created_at', 'modified_by', 'modified_at', 'password_reset_token', 'auth_token', 'care_provider', 'speciality_id', 'Inactivation_date', 'activation_date'];
+        foreach ($attrs as $col => $val) {
+            if (in_array($col, $exclude_cols))
+                unset($attrs[$col]);
         }
         return $attrs;
     }

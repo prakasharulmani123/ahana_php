@@ -1,9 +1,13 @@
 <?php
 
-namespace common\models;
+use common\models\CoMasterCity;
+use common\models\CoMasterCountry;
+use common\models\CoMasterState;
+use common\models\CoRole;
+use common\models\CoUser;
+use yii\db\ActiveQuery;
 
-use Yii;
-use yii\db\ActiveRecord;
+namespace common\models;
 /**
  * This is the model class for table "co_tenant".
  *
@@ -30,21 +34,19 @@ use yii\db\ActiveRecord;
  * @property CoRole[] $coRoles
  * @property CoUser[] $coUserProfiles
  */
-class CoTenant extends ActiveRecord
-{
+class CoTenant extends RActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'co_tenant';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['tenant_name', 'tenant_city_id', 'tenant_state_id', 'tenant_country_id', 'tenant_address'], 'required'],
             [['tenant_city_id', 'tenant_state_id', 'tenant_country_id', 'created_by', 'modified_by'], 'integer'],
@@ -60,8 +62,7 @@ class CoTenant extends ActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'tenant_id' => 'ID',
             'tenant_guid' => 'Guid',
@@ -86,29 +87,27 @@ class CoTenant extends ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getCoRoles()
-    {
+    public function getCoRoles() {
         return $this->hasMany(CoRole::className(), ['tenant_id' => 'tenant_id']);
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getCoUsers()
-    {
+    public function getCoUsers() {
         return $this->hasMany(CoUser::className(), ['tenant_id' => 'tenant_id']);
     }
-    
+
     public function getCoMasterCity() {
         return $this->hasOne(CoMasterCity::className(), ['city_id' => 'tenant_city_id']);
     }
-    
+
     public function getCoMasterState() {
         return $this->hasOne(CoMasterState::className(), ['state_id' => 'tenant_state_id']);
     }
-    
+
     public function getCoMasterCountry() {
         return $this->hasOne(CoMasterCountry::className(), ['country_id' => 'tenant_country_id']);
     }
@@ -133,7 +132,7 @@ class CoTenant extends ActiveRecord
             }
         ];
     }
-    
+
 //    public function extraFields() {
 //        parent::extraFields();
 //        return ['coMasterCity', 'coMasterState', 'coMasterCountry'];
