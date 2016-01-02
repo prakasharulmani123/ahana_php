@@ -68,7 +68,8 @@ class OrganizationController extends ActiveController {
     }
 
     public function actionCreateorg() {
-        if (!empty(Yii::$app->request->post())) {
+        $post = Yii::$app->request->post();
+        if (!empty($post)) {
             $model = new CoTenant();
             $model->attributes = Yii::$app->request->post('Tenant');
 
@@ -129,7 +130,8 @@ class OrganizationController extends ActiveController {
     }
 
     public function actionUpdateorg() {
-        if (!empty(Yii::$app->request->post())) {
+        $post = Yii::$app->request->post();
+        if (!empty($post)) {
             
             if (Yii::$app->request->post('Tenant')) {
                 $model = CoTenant::findOne(['tenant_id' => Yii::$app->request->post('Tenant')['tenant_id']]);
@@ -180,9 +182,9 @@ class OrganizationController extends ActiveController {
     }
 
     public function actionGetorg() {
-        if (!empty(Yii::$app->request->get('id'))) {
+        $tenant_id = Yii::$app->request->get('id');
+        if (!empty($tenant_id)) {
             $return = array();
-            $tenant_id = Yii::$app->request->get('id');
 
             $organization = CoTenant::find()->where(['tenant_id' => $tenant_id])->one();
             $userProf = CoUser::find()->where(['tenant_id' => $tenant_id, 'created_by' => -1])->one();

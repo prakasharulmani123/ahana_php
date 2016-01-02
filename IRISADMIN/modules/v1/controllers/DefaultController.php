@@ -59,8 +59,8 @@ class DefaultController extends Controller {
     }
 
     public function actionChangeStatus() {
-        if (!empty(Yii::$app->request->post())) {
-            $post = Yii::$app->request->post();
+        $post = Yii::$app->request->post();
+        if (!empty($post)) {
             $modelName = $post['model'];
             $primaryKey = $post['id'];
             $modelClass = "common\\models\\$modelName";
