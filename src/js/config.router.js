@@ -42,7 +42,13 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
             .state('app', {
                 abstract: true,
                 url: '/app',
-                templateUrl: 'tpl/app.html'
+                templateUrl: 'tpl/app.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function( $ocLazyLoad){
+                          return $ocLazyLoad.load('toaster');
+                      }]
+                }
             })
             .state('app.org_list', {
                 url: '/org_list',
@@ -124,7 +130,13 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
 
-    $rootScope.IRISAdminServiceUrl = 'http://ahana.local/IRIS-service/IRISADMIN/web/v1';
+    var serviceUrl = '';
+    if($location.host() == 'ahana.local' || $location.host() == 'localhost'){
+        serviceUrl = 'http://ahana.local/IRIS-service/IRISADMIN/web/v1'
+    }else if($location.host() == 'demo.arkinfotec.in'){
+        serviceUrl = 'http://demo.arkinfotec.in/ahana/demo/IRIS-service/IRISADMIN/web/v1'
+    }
+    $rootScope.IRISAdminServiceUrl = serviceUrl;
     $rootScope.commonService = CommonService;
 
     $rootScope.globals = $cookieStore.get('globals') || {};

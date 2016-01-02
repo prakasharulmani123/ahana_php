@@ -16,8 +16,10 @@ function CommonService($http, $rootScope, $window, $q) {
 
     function ChangeStatus(modelName, primaryKey) {
         var response;
+        $('.butterbar').removeClass('hide').addClass('active');
         $http.post($rootScope.IRISAdminServiceUrl + '/default/change-status', {model: modelName, id: primaryKey})
                 .success(function (response) {
+                    $('.butterbar').removeClass('active').addClass('hide');
                 }, function (x) {
                     response = {success: false, message: 'Server Error'};
                 });

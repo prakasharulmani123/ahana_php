@@ -1,4 +1,4 @@
-app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$http', '$state', function ($rootScope, $scope, $timeout, $http, $state) {
+app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'toaster', function ($rootScope, $scope, $timeout, $http, $state, toaster) {
 
         //Index Page
         //  pagination
@@ -161,13 +161,16 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                 }
             }
             
+            $('.butterbar').removeClass('hide').addClass('active');
             $http({
                 method: "POST",
                 url: post_url,
                 data: post_data,
             }).then(
                     function (response) {
+                        $('.butterbar').removeClass('active').addClass('hide');
                         if (response.data.success === true) {
+
                             if (mode !== 'add') {
                                 $scope.successMessage = mode + " updated successfully";
                                 $timeout(function () {
@@ -175,6 +178,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                                 }, 1000)
                             }
                             else {
+                                $scope.steps.percent = 100;
                                 $scope.successMessage = "Organization saved successfully";
                                 $scope.data = {};
                                 $timeout(function () {
@@ -219,4 +223,5 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                 $scope.rowCollectionBasic.splice(index, 1);
             }
         };
+        
     }]);
