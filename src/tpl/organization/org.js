@@ -193,6 +193,37 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
             )
         };
 
+        $scope.validateForm = function (mode) {
+            _that = this;
+
+            $scope.errorData = "";
+            $scope.successMessage = "";
+
+            if (mode == 'Organization') {
+                post_data = {Tenant: sanitizeVariable(this.data.Tenant)};
+            } else if (mode == 'Role') {
+                post_data = {Role: sanitizeVariable(this.data.Role)};
+            } else if (mode == 'Login') {
+                post_data = {Login: sanitizeVariable(this.data.Login)};
+            } else if (mode == 'User') {
+                post_data = {User: sanitizeVariable(this.data.User)};
+            }
+            
+            $('.butterbar').removeClass('hide').addClass('active');
+            $http({
+                method: "POST",
+                url: $rootScope.IRISAdminServiceUrl + '/organizations/validateorg',
+                data: post_data,
+            }).then(
+                    function (response) {
+                        $('.butterbar').removeClass('active').addClass('hide');
+                        if (response.data.success === false) {
+                            $scope.errorData = response.data.message;
+                        }
+                    }
+            )
+        };
+
         //Get Data for update Form
         $scope.loadForm = function () {
             _that = this;
