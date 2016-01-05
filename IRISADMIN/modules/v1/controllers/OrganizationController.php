@@ -40,6 +40,23 @@ class OrganizationController extends ActiveController {
         return $behaviors;
     }
 
+    public function actions() {
+        $actions = parent::actions();
+        $actions['index']['prepareDataProvider'] = [$this, 'prepareDataProvider'];
+       
+        return $actions;
+    }
+
+    public function prepareDataProvider() {
+        /* @var $modelClass \yii\db\BaseActiveRecord */
+        $modelClass = $this->modelClass;
+
+        return new ActiveDataProvider([
+            'query' => $modelClass::find(),
+            'pagination' => false,
+        ]);
+    }
+
     public function actionSearch() {
         if (!empty($_GET)) {
             $model = new $this->modelClass;
