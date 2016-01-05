@@ -132,7 +132,7 @@ class OrganizationController extends ActiveController {
     public function actionUpdateorg() {
         $post = Yii::$app->request->post();
         if (!empty($post)) {
-            
+
             if (Yii::$app->request->post('Tenant')) {
                 $model = CoTenant::findOne(['tenant_id' => Yii::$app->request->post('Tenant')['tenant_id']]);
                 $model->attributes = Yii::$app->request->post('Tenant');
@@ -210,6 +210,42 @@ class OrganizationController extends ActiveController {
                 unset($attrs[$col]);
         }
         return $attrs;
+    }
+
+    public function actionValidateorg() {
+        $post = Yii::$app->request->post();
+        if (!empty($post)) {
+            if (isset($post['Tenant'])) {
+                $model = new CoTenant();
+                $model->attributes = Yii::$app->request->post('Tenant');
+            }
+
+            if (isset($post['Role'])) {
+                $model = new CoRole();
+                $model->attributes = Yii::$app->request->post('Role');
+            }
+
+            if (isset($post['Login'])) {
+                $model = new CoLogin();
+                $model->attributes = Yii::$app->request->post('Login');
+            }
+
+            if (isset($post['User'])) {
+                $model = new CoUser();
+                $model->attributes = Yii::$app->request->post('CoUser');
+            }
+
+
+            $valid = $model->validate();
+
+            if ($valid) {
+                return ['success' => true];
+            } else {
+                return ['success' => false, 'message' => Html::errorSummary([$model])];
+            }
+        } else {
+            return ['success' => false, 'message' => 'Please Fill the Form'];
+        }
     }
 
 }
