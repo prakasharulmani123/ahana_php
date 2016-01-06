@@ -4,7 +4,7 @@ namespace IRISORG\modules\v1\controllers;
 
 use common\models\LoginForm;
 use common\models\PasswordResetRequestForm;
-use IRISADMIN\models\ResetPasswordForm;
+use common\models\ResetPasswordForm;
 use IRISORG\models\ContactForm;
 use Yii;
 use yii\base\InvalidParamException;
@@ -13,7 +13,6 @@ use yii\filters\auth\HttpBearerAuth;
 use yii\filters\ContentNegotiator;
 use yii\helpers\Html;
 use yii\rest\Controller;
-use yii\web\BadRequestHttpException;
 use yii\web\Response;
 
 /**
@@ -56,7 +55,7 @@ class UserController extends Controller {
         if ($model->load(Yii::$app->getRequest()->getBodyParams(), '') && $model->login()) {
             return ['success' => true, 'access_token' => Yii::$app->user->identity->getAuthKey()];
         } elseif (!$model->validate()) {
-            return ['success' => false, 'message' => $model->getFirstErrors()];
+            return ['success' => false, 'message' => Html::errorSummary([$model])];
         }
     }
 
@@ -98,7 +97,7 @@ class UserController extends Controller {
     public function actionRequestPasswordReset() {
         $model = new PasswordResetRequestForm();
         $model->attributes = Yii::$app->request->post();
-        
+
         if ($model->validate()) {
             if ($model->sendEmail()) {
                 return ['success' => true, 'message' => 'A reset link sent to your email address. Check your mail.'];
@@ -110,19 +109,47 @@ class UserController extends Controller {
         }
     }
 
-    public function actionResetPassword($token) {
+    public function actionCheckResetPassword() {
+        $token = Yii::$app->request->post('token');
+        if ($token) {
+            return $this->checktoken($token);
+        } else {
+            return ['success' => false, 'message' => 'Invalid Access'];
+        }
+    }
+
+    public function actionResetPassword() {
+        $post = Yii::$app->request->post();
+        if ($post) {
+            $check_token = $this->checktoken($post['password_reset_token'], true);
+
+            if ($check_token['success']) {
+                $model = $check_token['model'];
+                $model->attributes = $post;
+
+                if ($model->validate() && $model->resetPassword()) {
+                    return ['success' => true, 'message' => 'New password was saved. You will be redirected to Login Page within 10 seconds.'];
+                } else {
+                    return ['success' => false, 'message' => Html::errorSummary([$model])];
+                }
+            } else {
+                return ['success' => false, 'message' => 'Invalid Access'];
+            }
+        } else {
+            return ['success' => true];
+        }
+    }
+
+    protected function checktoken($token, $ret_model = false) {
         try {
             $model = new ResetPasswordForm($token);
+            if ($ret_model)
+                return ['success' => true, 'model' => $model];
+            else
+                return ['success' => true];
         } catch (InvalidParamException $e) {
-            throw new BadRequestHttpException($e->getMessage());
+            return ['success' => false, 'message' => $e->getMessage()];
         }
-        if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword()) {
-            Yii::$app->getSession()->setFlash('success', 'New password was saved.');
-            return $this->goHome();
-        }
-        return $this->render('resetPassword', [
-                    'model' => $model,
-        ]);
     }
 
 }

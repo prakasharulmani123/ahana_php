@@ -1,10 +1,8 @@
 <?php
-namespace IRISADMIN\models;
+namespace common\models;
 
-use common\models\User;
 use yii\base\InvalidParamException;
 use yii\base\Model;
-use Yii;
 
 /**
  * Password reset form
@@ -12,9 +10,10 @@ use Yii;
 class ResetPasswordForm extends Model
 {
     public $password;
+    public $repeat_password;
 
     /**
-     * @var \common\models\User
+     * @var User
      */
     private $_user;
 
@@ -24,14 +23,14 @@ class ResetPasswordForm extends Model
      *
      * @param  string                          $token
      * @param  array                           $config name-value pairs that will be used to initialize the object properties
-     * @throws \yii\base\InvalidParamException if token is empty or not valid
+     * @throws InvalidParamException if token is empty or not valid
      */
     public function __construct($token, $config = [])
     {
         if (empty($token) || !is_string($token)) {
             throw new InvalidParamException('Password reset token cannot be blank.');
         }
-        $this->_user = User::findByPasswordResetToken($token);
+        $this->_user = CoLogin::findByPasswordResetToken($token);
         if (!$this->_user) {
             throw new InvalidParamException('Wrong password reset token.');
         }
@@ -44,8 +43,9 @@ class ResetPasswordForm extends Model
     public function rules()
     {
         return [
-            ['password', 'required'],
+            [['password', 'repeat_password'], 'required'],
             ['password', 'string', 'min' => 6],
+            ['repeat_password', 'compare', 'compareAttribute' => 'password', 'operator' => '==', 'message' => 'Password Must be equal'],
         ];
     }
 

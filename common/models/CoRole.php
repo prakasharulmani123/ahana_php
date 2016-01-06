@@ -67,19 +67,12 @@ class CoRole extends ActiveRecord
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
     
-     public function behaviors() {
+    public function behaviors() {
         return [
-            'timestamp' => [
-                'class' => 'yii\behaviors\TimestampBehavior',
-                'attributes' => [
-                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'modified_at'],
-                    ActiveRecord::EVENT_BEFORE_UPDATE => ['modified_at'],
-                ],
-            ],
             LinkAllBehavior::className(),
         ];
     }
-    
+
     public function getRolesResources() {
         return $this->hasMany(CoRolesResources::className(), ['role_id' => 'role_id']);
     }
