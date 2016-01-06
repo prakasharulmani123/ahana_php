@@ -67,7 +67,7 @@ class CoRole extends ActiveRecord
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
     
-    public function behaviors() {
+    public function behaviors() { 
         return [
             LinkAllBehavior::className(),
         ];
