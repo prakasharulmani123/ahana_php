@@ -4,8 +4,8 @@
 // signin controller
 app.controller('SigninFormController', SignInForm);
 
-SignInForm.$inject = ['$scope', '$state', 'AuthenticationService', '$http', '$rootScope'];
-function SignInForm($scope, $state, AuthenticationService, $http, $rootScope) {
+SignInForm.$inject = ['$scope', '$state', 'AuthenticationService', '$http', '$rootScope', '$location', '$timeout'];
+function SignInForm($scope, $state, AuthenticationService, $http, $rootScope, $location, $timeout) {
     $scope.user = {};
     $scope.authError = null;
 
@@ -23,20 +23,40 @@ function SignInForm($scope, $state, AuthenticationService, $http, $rootScope) {
     };
 
     $scope.passwordrequest = function () {
-        $scope.authError = null;
         $http({
             method: "POST",
             url: $rootScope.IRISOrgServiceUrl + '/user/request-password-reset',
             data: {email: $scope.email},
         }).then(
                 function (response) {
-                        console.log(response);
-                        if (response.data.success === true) {
-                           $scope.successMessage = response.data.message; 
-                            $scope.errorData = '';
-                        }else{
-                            $scope.errorData = response.data.message;
-                        }
+                    if (response.data.success === true) {
+                        $scope.successMessage = response.data.message;
+                        $scope.errorData = '';
+                        $scope.email = '';
+                    } else {
+                        $scope.errorData = response.data.message;
+                    }
+                }
+        )
+    };
+
+    $scope.resetpassword = function () {
+        $http({
+            method: "POST",
+            url: $rootScope.IRISOrgServiceUrl + '/user/reset-password',
+            data: {password: $scope.password, password_reset_token: $location.search().token, repeat_password: $scope.repeat_password},
+        }).then(
+                function (response) {
+                    if (response.data.success === true) {
+                        $scope.password = $scope.repeat_password = '';
+                        $scope.successMessage = response.data.message;
+                        $scope.errorData = '';
+                        $timeout(function () {
+                            $state.go('access.signin');
+                        }, 10000)
+                    } else {
+                        $scope.errorData = response.data.message;
+                    }
                 }
         )
     };

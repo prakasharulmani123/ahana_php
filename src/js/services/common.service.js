@@ -11,6 +11,7 @@ function CommonService($http, $rootScope, $window, $q) {
     service.GetStateList = GetStateList;
     service.GetCityList = GetCityList;
     service.GetTitleCodes = GetTitleCodes;
+    service.GetPasswordResetAccess = GetPasswordResetAccess;
     
     return service;
 
@@ -53,6 +54,18 @@ function CommonService($http, $rootScope, $window, $q) {
         var response;
 
         $http.get($rootScope.IRISOrgServiceUrl + '/default/get-city-list')
+                .success(function (response) {
+                    callback(response);
+                }, function (x) {
+                    response = {success: false, message: 'Server Error'};
+                    callback(response);
+                });
+    }
+
+    function GetPasswordResetAccess(token, callback) {
+        var response;
+
+        $http.post($rootScope.IRISOrgServiceUrl + '/user/check-reset-password', {'token': token})
                 .success(function (response) {
                     callback(response);
                 }, function (x) {

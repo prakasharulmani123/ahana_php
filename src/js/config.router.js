@@ -110,45 +110,31 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-            
-            //Roles Module
-            .state('app.roles', {
-                url: '/roles',
-                templateUrl: 'tpl/roles/index.html',
+            .state('app.inpatient', {
+                url: '/inpatient',
+                templateUrl: 'tpl/inpatient.html',
+                controller: 'XeditableCtrl',
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('smart-table').then(
+                            return $ocLazyLoad.load('xeditable').then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/roles/roles.js');
+                                        return $ocLazyLoad.load('js/controllers/xeditable.js');
                                     }
                             );
                         }]
                 }
             })
-            .state('app.role_create', {
-                url: '/role_create',
-                templateUrl: 'tpl/roles/create.html',
+            .state('app.outpatient', {
+                url: '/outpatient',
+                templateUrl: 'tpl/outpatient.html',
+                controller: 'XeditableCtrl',
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('smart-table').then(
+                            return $ocLazyLoad.load('xeditable').then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/roles/roles.js');
-                                    }
-                            );
-                        }]
-                }
-            })
-            .state('app.role_update', {
-                url: '/role_update/{id}',
-                templateUrl: 'tpl/roles/update.html',
-                resolve: {
-                    deps: ['$ocLazyLoad',
-                        function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('smart-table').then(
-                                    function () {
-                                        return $ocLazyLoad.load('tpl/roles/roles.js');
+                                        return $ocLazyLoad.load('js/controllers/xeditable.js');
                                     }
                             );
                         }]
@@ -176,8 +162,13 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
 
     $rootScope.$on('$locationChangeStart', function (event, next, current) {
         if ($location.path() == '/access/resetpwd') {
-            console.log($stateParams);
-            alert($stateParams);
+            var token = $location.search().token;
+            $rootScope.commonService.GetPasswordResetAccess(token, function (response) {
+                if(response.success === false){
+//                    $scope.authError = response.message;
+                    $location.path('/access/signin');
+                }
+            });
         } else {
             var restrictedPage = $.inArray($location.path(), ['/access/signin', '/access/forgotpwd', '/access/resetpwd']) === -1;
             var loggedIn = $window.sessionStorage.access_token || false;
