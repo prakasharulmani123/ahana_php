@@ -56,6 +56,7 @@ class LoginForm extends Model
     public function login()
     {
         if ($this->validate()) {
+            $this->setToken();
             return Yii::$app->user->login($this->getUser()/*, $this->rememberMe ? 3600 * 24 * 30 : 0*/);
         } else {
             return false;
@@ -71,6 +72,15 @@ class LoginForm extends Model
     {
         if ($this->_user === false) {
             $this->_user = CoLogin::findByUsername($this->username);
+        }
+
+        return $this->_user;
+    }
+    
+    public function setToken() {
+        if ($this->_user !== false) {
+            $this->_user->authtoken = base64_encode($this->_user->username.time().rand(1000, 9999));
+            $this->_user->save(false);
         }
 
         return $this->_user;
