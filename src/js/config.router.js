@@ -110,31 +110,45 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-            .state('app.inpatient', {
-                url: '/inpatient',
-                templateUrl: 'tpl/inpatient.html',
-                controller: 'XeditableCtrl',
+            
+            //Roles Module
+            .state('app.roles', {
+                url: '/roles',
+                templateUrl: 'tpl/roles/index.html',
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('xeditable').then(
+                            return $ocLazyLoad.load('smart-table').then(
                                     function () {
-                                        return $ocLazyLoad.load('js/controllers/xeditable.js');
+                                        return $ocLazyLoad.load('tpl/roles/roles.js');
                                     }
                             );
                         }]
                 }
             })
-            .state('app.outpatient', {
-                url: '/outpatient',
-                templateUrl: 'tpl/outpatient.html',
-                controller: 'XeditableCtrl',
+            .state('app.role_create', {
+                url: '/role_create',
+                templateUrl: 'tpl/roles/create.html',
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('xeditable').then(
+                            return $ocLazyLoad.load('smart-table').then(
                                     function () {
-                                        return $ocLazyLoad.load('js/controllers/xeditable.js');
+                                        return $ocLazyLoad.load('tpl/roles/roles.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            .state('app.role_update', {
+                url: '/role_update/{id}',
+                templateUrl: 'tpl/roles/update.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('smart-table').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/roles/roles.js');
                                     }
                             );
                         }]
