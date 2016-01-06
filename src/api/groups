@@ -1,0 +1,20 @@
+[
+    {
+        "id": "1",
+        "organizationName": "Organization",
+        "address": "Test",
+        "city": "2015-12-12",
+        "state": "state1",
+        "country": "country1",
+        "email": "test@gmail.com"
+    },
+    {
+        "id": "1",
+        "organizationName": "Organization2",
+        "address": "Test",
+        "city": "2015-12-12",
+        "state": "state2",
+        "country": "country2",
+        "email": "test2@gmail.com"
+    }
+]
