@@ -140,6 +140,49 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
+            
+            .state('app.roles', {
+                url: '/roles',
+                templateUrl: 'tpl/roles/index.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('smart-table').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/roles/roles.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            .state('app.role_create', {
+                url: '/role_create',
+                templateUrl: 'tpl/roles/create.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('smart-table').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/roles/roles.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            .state('app.role_update', {
+                url: '/role_update',
+                templateUrl: 'tpl/roles/update.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('smart-table').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/roles/roles.js');
+                                    }
+                            );
+                        }]
+                }
+            })
 }
 run.$inject = ['$rootScope', '$state', '$stateParams', '$location', '$cookieStore', '$http', '$window', 'CommonService'];
 function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $window, CommonService) {
