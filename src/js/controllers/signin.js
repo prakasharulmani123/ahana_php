@@ -4,11 +4,11 @@
 // signin controller
 app.controller('SigninFormController', SignInForm);
 
-SignInForm.$inject = ['$scope', '$state', 'AuthenticationService'];
-function SignInForm($scope, $state, AuthenticationService) {
+SignInForm.$inject = ['$scope', '$state', 'AuthenticationService', '$http', '$rootScope'];
+function SignInForm($scope, $state, AuthenticationService, $http, $rootScope) {
     $scope.user = {};
     $scope.authError = null;
-    
+
     $scope.login = function () {
         $scope.authError = null;
         // Try to login
@@ -20,6 +20,25 @@ function SignInForm($scope, $state, AuthenticationService) {
                 $scope.authError = response.message;
             }
         });
+    };
+
+    $scope.passwordrequest = function () {
+        $scope.authError = null;
+        $http({
+            method: "POST",
+            url: $rootScope.IRISOrgServiceUrl + '/user/request-password-reset',
+            data: {email: $scope.email},
+        }).then(
+                function (response) {
+                        console.log(response);
+                        if (response.data.success === true) {
+                           $scope.successMessage = response.data.message; 
+                            $scope.errorData = '';
+                        }else{
+                            $scope.errorData = response.data.message;
+                        }
+                }
+        )
     };
 
 }

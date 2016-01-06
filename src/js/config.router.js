@@ -29,7 +29,23 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
             })
             .state('access.forgotpwd', {
                 url: '/forgotpwd',
-                templateUrl: 'tpl/page_forgotpwd.html'
+                templateUrl: 'tpl/page_forgotpwd.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['js/controllers/signin.js']);
+                        }]
+                }
+            })
+            .state('access.resetpwd', {
+                url: '/resetpwd?token=',
+                templateUrl: 'tpl/page_resetpwd.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['js/controllers/signin.js']);
+                        }]
+                }
             })
             .state('access.logout', {
                 url: '/forgotpwd',
@@ -45,9 +61,9 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                 templateUrl: 'tpl/app.html',
                 resolve: {
                     deps: ['$ocLazyLoad',
-                        function( $ocLazyLoad){
-                          return $ocLazyLoad.load('toaster');
-                      }]
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('toaster');
+                        }]
                 }
             })
             .state('app.org_list', {
@@ -131,9 +147,9 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
     $rootScope.$stateParams = $stateParams;
 
     var serviceUrl = '';
-    if($location.host() == 'ahana.local' || $location.host() == 'localhost'){
+    if ($location.host() == 'ahana.local' || $location.host() == 'localhost') {
         serviceUrl = 'http://ahana.local/IRIS-service/IRISORG/web/v1'
-    }else if($location.host() == 'demo.arkinfotec.in'){
+    } else if ($location.host() == 'demo.arkinfotec.in') {
         serviceUrl = 'http://demo.arkinfotec.in/ahana/demo/IRIS-service/IRISORG/web/v1'
     }
     $rootScope.IRISOrgServiceUrl = serviceUrl;
@@ -145,13 +161,17 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
     }
 
     $rootScope.$on('$locationChangeStart', function (event, next, current) {
-        var restrictedPage = $.inArray($location.path(), ['/access/signin']) === -1;
-        var loggedIn = $window.sessionStorage.access_token || false;
-
-        if (restrictedPage && !loggedIn) {
-            $location.path('/access/signin');
-        } else if (!restrictedPage && loggedIn) {
-            $location.path('/app/org_list');
+        if ($location.path() == '/access/resetpwd') {
+            console.log($stateParams);
+            alert($stateParams);
+        } else {
+            var restrictedPage = $.inArray($location.path(), ['/access/signin', '/access/forgotpwd', '/access/resetpwd']) === -1;
+            var loggedIn = $window.sessionStorage.access_token || false;
+            if (restrictedPage && !loggedIn) {
+                $location.path('/access/signin');
+            } else if (!restrictedPage && loggedIn) {
+                $location.path('/app/org_list');
+            }
         }
     });
 }
