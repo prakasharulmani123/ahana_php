@@ -36,6 +36,9 @@ use yii\db\ActiveRecord;
  */
 class CoUser extends ActiveRecord {
 
+    const STATUS_ACTIVE = '1';
+    const STATUS_INACTIVE = '0';
+
     /**
      * @inheritdoc
      */
@@ -93,8 +96,8 @@ class CoUser extends ActiveRecord {
     /**
      * @return ActiveQuery
      */
-    public function getCoLogins() {
-        return $this->hasMany(CoLogin::className(), ['user_id' => 'user_id']);
+    public function getLogin() {
+        return $this->hasOne(CoLogin::className(), ['user_id' => 'user_id']);
     }
 
     /**

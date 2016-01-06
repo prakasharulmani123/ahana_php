@@ -1,7 +1,7 @@
 <?php
-namespace IRISADMIN\models;
+namespace common\models;
 
-use common\models\User;
+use Yii;
 use yii\base\Model;
 
 /**
@@ -21,8 +21,8 @@ class PasswordResetRequestForm extends Model
             ['email', 'required'],
             ['email', 'email'],
             ['email', 'exist',
-                'targetClass' => '\common\models\User',
-                'filter' => ['status' => User::STATUS_ACTIVE],
+                'targetClass' => '\common\models\CoUser',
+                'filter' => ['status' => CoUser::STATUS_ACTIVE],
                 'message' => 'There is no user with such email.'
             ],
         ];
@@ -36,21 +36,23 @@ class PasswordResetRequestForm extends Model
     public function sendEmail()
     {
         /* @var $user User */
-        $user = User::findOne([
-            'status' => User::STATUS_ACTIVE,
+        $user = CoUser::findOne([
+            'status' => CoUser::STATUS_ACTIVE,
             'email' => $this->email,
         ]);
+        
+        $user = $user->login;
 
         if ($user) {
-            if (!User::isPasswordResetTokenValid($user->password_reset_token)) {
+            if (!CoLogin::isPasswordResetTokenValid($user->password_reset_token)) {
                 $user->generatePasswordResetToken();
             }
 
             if ($user->save()) {
-                return \Yii::$app->mailer->compose(['html' => 'passwordResetToken-html', 'text' => 'passwordResetToken-text'], ['user' => $user])
-                    ->setFrom([\Yii::$app->params['supportEmail'] => \Yii::$app->name . ' robot'])
+                return Yii::$app->mailer->compose(['html' => 'passwordResetToken-html', 'text' => 'passwordResetToken-text'], ['user' => $user])
+                    ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
                     ->setTo($this->email)
-                    ->setSubject('Password reset for ' . \Yii::$app->name)
+                    ->setSubject('Password reset for ' . Yii::$app->name)
                     ->send();
             }
         }
