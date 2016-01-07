@@ -2,7 +2,7 @@
     <h1 class="m-n font-thin h3">Roles</h1>
 </div>
 
-<div class="wrapper-md" ng-controller="RolesController">
+<div class="wrapper-md" ng-controller="RolesController" ng-init="loadRolesList()">
 
     <div ng-include="'tpl/blocks/alert.html'">
         {% include 'tpl/blocks/alert.html' %}
@@ -10,6 +10,9 @@
 
     <div class="panel panel-default">
         <div class="panel-body">
+            <button class="btn btn-sm btn-grey" ng-click="loadRolesList()"> 
+                &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
+            </button>
             <button ng-click="$state.go('app.role_create')" class="btn btn-sm btn-info pull-right">
                 <i class="fa fa-plus"></i> &nbsp; Add new role
             </button>
@@ -38,7 +41,7 @@
                             <i class="fa fa-pencil"></i>
                         </a>&nbsp;&nbsp;&nbsp;
                         <a title="Delete" ui-sref="app.role_update({id: '{{row.role_id}}'})">
-                            <i class="fa fa-times"></i>
+                            <i class="fa fa-trash"></i>
                         </a>
                     </td>
                 </tr>
