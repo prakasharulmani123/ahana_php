@@ -3,8 +3,6 @@
 namespace common\models;
 
 use Yii;
-use yii\base\NotSupportedException;
-use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
@@ -59,30 +57,6 @@ class CoSuperAdmin extends ActiveRecord implements IdentityInterface {
             'modified_at' => 'Modified At',
         ];
     }
-
-    /**
-     * @inheritdoc
-     */
-//    public function behaviors() {
-//        return [
-//            [
-//                'class' => BlameableBehavior::className(),
-//                'createdByAttribute' => 'created_by',
-//                'updatedByAttribute' => 'modified_by',
-//                'value' => function ($event) {
-//                    $code = '-1';
-////                    if(!empty($this->owner))
-//                }
-//            ],
-//            'timestamp' => [
-//                'class' => 'yii\behaviors\TimestampBehavior',
-//                'attributes' => [
-//                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'modified_at'],
-//                    ActiveRecord::EVENT_BEFORE_UPDATE => ['modified_at'],
-//                ],
-//            ],
-//        ];
-//    }
 
     /**
      * @inheritdoc
@@ -199,6 +173,10 @@ class CoSuperAdmin extends ActiveRecord implements IdentityInterface {
      */
     public function removePasswordResetToken() {
         $this->password_reset_token = null;
+    }
+    
+    public function getUser_id() {
+        return 0 - $this->su_id;
     }
 
 }

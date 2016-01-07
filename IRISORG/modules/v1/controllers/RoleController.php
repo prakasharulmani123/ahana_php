@@ -67,7 +67,6 @@ class RoleController extends ActiveController {
 
             if ($valid) {
                 $model->tenant_id = Yii::$app->user->identity->user->tenant_id;
-                $model->created_by = Yii::$app->user->identity->user->user_id;
                 $model->save(false);
 
                 return ['success' => true];

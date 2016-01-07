@@ -11,6 +11,7 @@ use common\models\CoUser;
 use common\models\CoUsersRoles;
 use Yii;
 use yii\data\ActiveDataProvider;
+use yii\db\BaseActiveRecord;
 use yii\filters\auth\HttpBearerAuth;
 use yii\filters\ContentNegotiator;
 use yii\helpers\Html;
@@ -48,7 +49,7 @@ class OrganizationController extends ActiveController {
     }
 
     public function prepareDataProvider() {
-        /* @var $modelClass \yii\db\BaseActiveRecord */
+        /* @var $modelClass BaseActiveRecord */
         $modelClass = $this->modelClass;
 
         return new ActiveDataProvider([
@@ -109,20 +110,17 @@ class OrganizationController extends ActiveController {
                 $model->save(false);
 
                 $role_model->tenant_id = $model->tenant_id;
-                $role_model->created_by = -1;
                 $role_model->save(false);
 
                 $user_model->tenant_id = $model->tenant_id;
-                $user_model->created_by = -1;
                 $user_model->save(false);
 
                 $login_model->user_id = $user_model->user_id;
-                $login_model->created_by = -1;
                 $login_model->save(false);
 
                 $user = $user_model;
                 $roles = [$role_model];
-                $extraColumns = ['tenant_id' => $model->tenant_id, 'created_by' => -1]; // extra columns to be saved to the many to many table
+                $extraColumns = ['tenant_id' => $model->tenant_id, 'created_by' => Yii::$app->user->identity->user_id]; // extra columns to be saved to the many to many table
                 $unlink = true; // unlink tags not in the list
                 $delete = true; // delete unlinked tags
                 $user->linkAll('roles', $roles, $extraColumns, $unlink, $delete);
@@ -131,7 +129,7 @@ class OrganizationController extends ActiveController {
                     $resource_id = Yii::$app->request->post('Module')['resource_ids'];
                     $role = $role_model;
                     $resources = CoResources::find()->where(['in', 'resource_id', $resource_id])->all();
-                    $extraColumns = ['tenant_id' => $model->tenant_id, 'created_by' => -1]; // extra columns to be saved to the many to many table
+                    $extraColumns = ['tenant_id' => $model->tenant_id, 'created_by' => Yii::$app->user->identity->user_id]; // extra columns to be saved to the many to many table
                     $unlink = true; // unlink tags not in the list
                     $delete = true; // delete unlinked tags
                     $role->linkAll('resources', $resources, $extraColumns, $unlink, $delete);
@@ -180,7 +178,7 @@ class OrganizationController extends ActiveController {
                 $model = CoRole::findOne(['role_id' => Yii::$app->request->post('Module')['role_id']]);
                 ;
                 $resources = CoResources::find()->where(['in', 'resource_id', $resource_id])->all();
-                $extraColumns = ['tenant_id' => Yii::$app->request->post('Module')['tenant_id'], 'created_by' => -1]; // extra columns to be saved to the many to many table
+                $extraColumns = ['tenant_id' => Yii::$app->request->post('Module')['tenant_id'], 'created_by' => Yii::$app->user->identity->user_id]; // extra columns to be saved to the many to many table
                 $unlink = true; // unlink tags not in the list
                 $delete = true; // delete unlinked tags
                 $model->linkAll('resources', $resources, $extraColumns, $unlink, $delete);
@@ -204,7 +202,7 @@ class OrganizationController extends ActiveController {
             $return = array();
 
             $organization = CoTenant::find()->where(['tenant_id' => $tenant_id])->one();
-            $userProf = CoUser::find()->where(['tenant_id' => $tenant_id, 'created_by' => -1])->one();
+            $userProf = CoUser::find()->where(['tenant_id' => $tenant_id, 'created_by' => Yii::$app->user->identity->user_id])->one();
             $user_role = CoUsersRoles::find()->where(['tenant_id' => $tenant_id, 'user_id' => $userProf->user_id])->one();
             $login = CoLogin::find()->where(['user_id' => $userProf->user_id])->one();
             $login->password = '';
