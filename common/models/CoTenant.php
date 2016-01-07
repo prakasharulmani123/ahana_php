@@ -1,13 +1,10 @@
 <?php
 
-use common\models\CoMasterCity;
-use common\models\CoMasterCountry;
-use common\models\CoMasterState;
-use common\models\CoRole;
-use common\models\CoUser;
+namespace common\models;
+
+use common\models\query\CoTenantQuery;
 use yii\db\ActiveQuery;
 
-namespace common\models;
 /**
  * This is the model class for table "co_tenant".
  *
@@ -131,6 +128,10 @@ class CoTenant extends RActiveRecord {
                 return (isset($model->coMasterCountry) ? $model->coMasterCountry->country_name : '-');
             }
         ];
+    }
+
+    public static function find() {
+        return new CoTenantQuery(get_called_class());
     }
 
 //    public function extraFields() {

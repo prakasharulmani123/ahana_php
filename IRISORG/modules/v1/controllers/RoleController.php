@@ -52,7 +52,7 @@ class RoleController extends ActiveController {
         $modelClass = $this->modelClass;
 
         return new ActiveDataProvider([
-            'query' => $modelClass::find()->tenant(),
+            'query' => $modelClass::find()->tenant()->orderBy(['created_at' => SORT_DESC]),
             'pagination' => false,
         ]);
     }

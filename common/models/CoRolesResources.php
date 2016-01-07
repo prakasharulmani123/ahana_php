@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\models\query\CoRolesResourcesQuery;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
@@ -16,6 +17,7 @@ use yii\db\ActiveRecord;
  * @property string $created_at
  * @property integer $modified_by
  * @property string $modified_at
+ * @property string $status
  *
  * @property CoResources $resource
  * @property CoRole $role
@@ -37,8 +39,9 @@ class CoRolesResources extends ActiveRecord {
     public function rules() {
         return [
             [['tenant_id', 'role_id', 'resource_id'], 'required'],
+            [['status'], 'string'],
             [['tenant_id', 'role_id', 'resource_id', 'created_by', 'modified_by'], 'integer'],
-            [['created_at', 'modified_at'], 'safe']
+            [['created_at', 'modified_at', 'status'], 'safe']
         ];
     }
 
@@ -81,7 +84,7 @@ class CoRolesResources extends ActiveRecord {
 
     public static function getModuletreeByRole($tenant_id, $role_id) {
         $tree = self::getModuleTree();
-        $role_resources_ids = CoRolesResources::find()->select(['GROUP_CONCAT(resource_id) AS resource_ids'])->where(['tenant_id' => $tenant_id, 'role_id' => $role_id])->one();
+        $role_resources_ids = self::find()->select(['GROUP_CONCAT(resource_id) AS resource_ids'])->where(['role_id' => $role_id, 'tenant_id' => $tenant_id, 'status' => '1'])->one();
         $role_resources_ids = explode(',', $role_resources_ids->resource_ids);
         
         foreach ($tree as $key => $parent) {
@@ -119,4 +122,9 @@ class CoRolesResources extends ActiveRecord {
         }
         return $tree;
     }
+    
+    public static function find() {
+        return new CoRolesResourcesQuery(get_called_class());
+    }
+
 }

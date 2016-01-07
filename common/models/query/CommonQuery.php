@@ -24,7 +24,7 @@ class CommonQuery extends ActiveQuery {
         return $this->andWhere(['tenant_id' => $tenant_id]);
     }
 
-    public function status($status = 1) {
+    public function status($status = '1') {
         return $this->andWhere(['status' => $status]);
     }
 

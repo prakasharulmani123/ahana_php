@@ -53,7 +53,7 @@ class OrganizationController extends ActiveController {
         $modelClass = $this->modelClass;
 
         return new ActiveDataProvider([
-            'query' => $modelClass::find(),
+            'query' => $modelClass::find()->orderBy(['created_at' => SORT_DESC]),
             'pagination' => false,
         ]);
     }
@@ -176,12 +176,21 @@ class OrganizationController extends ActiveController {
             if (Yii::$app->request->post('Module')) {
                 $resource_id = Yii::$app->request->post('Module')['resource_ids'];
                 $model = CoRole::findOne(['role_id' => Yii::$app->request->post('Module')['role_id']]);
-                ;
+                
                 $resources = CoResources::find()->where(['in', 'resource_id', $resource_id])->all();
-                $extraColumns = ['tenant_id' => Yii::$app->request->post('Module')['tenant_id'], 'created_by' => Yii::$app->user->identity->user_id]; // extra columns to be saved to the many to many table
+                $extraColumns = ['tenant_id' => Yii::$app->request->post('Module')['tenant_id'], 'created_by' => Yii::$app->user->identity->user_id, 'status' => '1']; // extra columns to be saved to the many to many table
                 $unlink = true; // unlink tags not in the list
                 $delete = true; // delete unlinked tags
                 $model->linkAll('resources', $resources, $extraColumns, $unlink, $delete);
+                
+                //For Update Status
+                $role_resources = CoRolesResources::find()->tenant(Yii::$app->request->post('Module')['tenant_id'])->where(['role_id' => Yii::$app->request->post('Module')['role_id']])->all();
+                foreach ($role_resources as $role_resource) {
+                    if($role_resource->status != '1'){
+                        $role_resource->updateAttributes(['status' => '1']);
+                    }
+                }
+                
                 return ['success' => true];
             }
 
@@ -202,7 +211,7 @@ class OrganizationController extends ActiveController {
         if (!empty($tenant_id)) {
             $return = array();
 
-            $organization = CoTenant::find()->where(['tenant_id' => $tenant_id])->one();
+            $organization = CoTenant::find()->tenant($tenant_id)->one();
             $userProf = CoUser::find()->where(['tenant_id' => $tenant_id, 'created_by' => Yii::$app->user->identity->user_id])->one();
             $user_role = CoUsersRoles::find()->where(['tenant_id' => $tenant_id, 'user_id' => $userProf->user_id])->one();
             $login = CoLogin::find()->where(['user_id' => $userProf->user_id])->one();

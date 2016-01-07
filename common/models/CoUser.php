@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\models\query\CoUserQuery;
 use cornernote\linkall\LinkAllBehavior;
 use yii\db\ActiveQuery;
 
@@ -123,4 +124,7 @@ class CoUser extends RActiveRecord {
         return $this->hasMany(CoRole::className(), ['role_id' => 'role_id'])->via('usersRoles');
     }
 
+    public static function find() {
+        return new CoUserQuery(get_called_class());
+    }
 }
