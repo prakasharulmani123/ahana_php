@@ -66,7 +66,6 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-            
             .state('configuration.roles', {
                 url: '/roles',
                 templateUrl: 'tpl/roles/index.html',
@@ -85,13 +84,9 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                 url: '/role_create',
                 templateUrl: 'tpl/roles/create.html',
                 resolve: {
-                    deps: ['$ocLazyLoad',
-                        function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('smart-table').then(
-                                    function () {
-                                        return $ocLazyLoad.load('tpl/roles/roles.js');
-                                    }
-                            );
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/roles/roles.js']);
                         }]
                 }
             })
@@ -99,14 +94,21 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                 url: '/role_update/{id}',
                 templateUrl: 'tpl/roles/update.html',
                 resolve: {
-                    deps: ['$ocLazyLoad',
-                        function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('smart-table').then(
-                                    function () {
-                                        return $ocLazyLoad.load('tpl/roles/roles.js');
-                                    }
-                            );
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/roles/roles.js']);
                         }]
+                }
+            })
+            .state('configuration.organization', {
+                url: '/organization',
+                templateUrl: 'tpl/organization/index.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/organization/org.js']);
+                        }]
+
                 }
             })
 }
