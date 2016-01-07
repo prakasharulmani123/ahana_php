@@ -111,6 +111,40 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
 
                 }
             })
+            .state('configuration.registration', {
+                url: '/registration',
+                templateUrl: 'tpl/registration/index.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('smart-table').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/registration/registration.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            .state('configuration.user_create', {
+                url: '/user_create',
+                templateUrl: 'tpl/registration/create.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/registration/registration.js']);
+                        }]
+                }
+            })
+            .state('configuration.user_update', {
+                url: '/user_update/{id}',
+                templateUrl: 'tpl/registration/update.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/registration/registration.js']);
+                        }]
+                }
+            })
 }
 run.$inject = ['$rootScope', '$state', '$stateParams', '$location', '$cookieStore', '$http', '$window', 'CommonService'];
 function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $window, CommonService) {
