@@ -9,16 +9,13 @@
     </div>
 
     <div class="panel panel-default">
-        <div class="panel-heading">
-            Role Details
-        </div>
         <div class="panel-body">
             <button ng-click="$state.go('app.role_create')" class="btn btn-sm btn-info pull-right">
                 <i class="fa fa-plus"></i> &nbsp; Add new role
             </button>
         </div>
 
-        <table st-table="displayedCollection"  st-safe-src="rowCollection" class="table  table-bordered table-striped">
+        <table st-table="displayedCollection"  st-safe-src="rowCollection" class="table table-bordered table-striped">
             <thead>
                 <tr>
                     <th st-sort="description">Description</th>

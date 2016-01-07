@@ -170,7 +170,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                 }
             })
             .state('app.role_update', {
-                url: '/role_update',
+                url: '/role_update/{id}',
                 templateUrl: 'tpl/roles/update.html',
                 resolve: {
                     deps: ['$ocLazyLoad',
