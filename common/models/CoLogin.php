@@ -3,8 +3,11 @@
 namespace common\models;
 
 use Yii;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
+use yii\db\Expression;
 use yii\web\IdentityInterface;
 
 /**
@@ -25,22 +28,42 @@ use yii\web\IdentityInterface;
  *
  * @property CoUser $user
  */
-class CoLogin extends ActiveRecord implements IdentityInterface{
+class CoLogin extends ActiveRecord implements IdentityInterface {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'co_login';
+    }
+
+    public function behaviors() {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'modified_at'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['modified_at'],
+                ],
+                'value' => new Expression('NOW()')
+            ],
+            [
+                'class' => BlameableBehavior::className(),
+                'updatedByAttribute' => 'modified_by',
+                'value' => function ($event) {
+                    return Yii::$app->user->identity->user_id;
+                }
+            ],
+        ];
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['username', 'password'], 'required'],
+//            [['username', 'password'], 'string', 'min' => 6],
             [['user_id', 'created_by', 'modified_by'], 'integer'],
             [['created_at', 'modified_at', 'activation_date', 'Inactivation_date'], 'safe'],
             [['username', 'password', 'password_reset_token', 'authtoken'], 'string', 'max' => 255]
@@ -50,8 +73,7 @@ class CoLogin extends ActiveRecord implements IdentityInterface{
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'login_id' => 'Login ID',
             'user_id' => 'User ID',
@@ -71,16 +93,15 @@ class CoLogin extends ActiveRecord implements IdentityInterface{
     /**
      * @return ActiveQuery
      */
-    public function getUser()
-    {
+    public function getUser() {
         return $this->hasOne(CoUser::className(), ['user_id' => 'user_id']);
     }
-    
+
 //    public function beforeSave($insert) {
 //        $this->setPassword($this->password);
 //        return parent::beforeSave($insert);
 //    }
-    
+
     /**
      * @inheritdoc
      */
@@ -197,4 +218,5 @@ class CoLogin extends ActiveRecord implements IdentityInterface{
     public function removePasswordResetToken() {
         $this->password_reset_token = null;
     }
+
 }

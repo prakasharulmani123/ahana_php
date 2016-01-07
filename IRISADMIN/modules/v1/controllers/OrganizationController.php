@@ -198,6 +198,7 @@ class OrganizationController extends ActiveController {
 
     public function actionGetorg() {
         $tenant_id = Yii::$app->request->get('id');
+        
         if (!empty($tenant_id)) {
             $return = array();
 

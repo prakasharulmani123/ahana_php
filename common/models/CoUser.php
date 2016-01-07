@@ -4,7 +4,6 @@ namespace common\models;
 
 use cornernote\linkall\LinkAllBehavior;
 use yii\db\ActiveQuery;
-use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "co_user".
@@ -34,7 +33,7 @@ use yii\db\ActiveRecord;
  * @property CoLogin[] $coLogins
  * @property CoTenant $tenant
  */
-class CoUser extends ActiveRecord {
+class CoUser extends RActiveRecord {
 
     const STATUS_ACTIVE = '1';
     const STATUS_INACTIVE = '0';
@@ -108,9 +107,12 @@ class CoUser extends ActiveRecord {
     }
 
     public function behaviors() {
-        return [
+        $extend = [
             LinkAllBehavior::className(),
         ];
+
+        $behaviour = array_merge(parent::behaviors(), $extend);
+        return $behaviour;
     }
 
     public function getUsersRoles() {
