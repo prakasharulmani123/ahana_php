@@ -51,7 +51,8 @@ class CoLogin extends ActiveRecord implements IdentityInterface {
                 'class' => BlameableBehavior::className(),
                 'updatedByAttribute' => 'modified_by',
                 'value' => function ($event) {
-                    return Yii::$app->user->identity->user_id;
+                    if(isset(Yii::$app->user->identity->user_id))
+                        return Yii::$app->user->identity->user_id;
                 }
             ],
         ];

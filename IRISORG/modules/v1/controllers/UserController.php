@@ -2,27 +2,46 @@
 
 namespace IRISORG\modules\v1\controllers;
 
+use common\models\CoUser;
 use common\models\LoginForm;
 use common\models\PasswordResetRequestForm;
 use common\models\ResetPasswordForm;
 use IRISORG\models\ContactForm;
 use Yii;
 use yii\base\InvalidParamException;
+use yii\data\ActiveDataProvider;
+use yii\db\BaseActiveRecord;
 use yii\filters\AccessControl;
 use yii\filters\auth\HttpBearerAuth;
 use yii\filters\ContentNegotiator;
 use yii\helpers\Html;
-use yii\rest\Controller;
+use yii\rest\ActiveController;
 use yii\web\Response;
 
 /**
  * User controller
  */
-class UserController extends Controller {
+class UserController extends ActiveController {
 
+    public $modelClass = 'common\models\CoUser';
     /**
      * @inheritdoc
      */
+//    public function behaviors() {
+//        $behaviors = parent::behaviors();
+//        $behaviors['authenticator'] = [
+//            'class' => HttpBearerAuth::className()
+//        ];
+//        $behaviors['contentNegotiator'] = [
+//            'class' => ContentNegotiator::className(),
+//            'formats' => [
+//                'application/json' => Response::FORMAT_JSON,
+//            ],
+//        ];
+//
+//        return $behaviors;
+//    }
+    
     public function behaviors() {
         $behaviors = parent::behaviors();
         $behaviors['authenticator'] = [
@@ -49,6 +68,22 @@ class UserController extends Controller {
         return $behaviors;
     }
 
+    public function actions() {
+        $actions = parent::actions();
+        $actions['index']['prepareDataProvider'] = [$this, 'prepareDataProvider'];
+        return $actions;
+    }
+
+    public function prepareDataProvider() {
+        /* @var $modelClass BaseActiveRecord */
+        $modelClass = $this->modelClass;
+
+        return new ActiveDataProvider([
+            'query' => $modelClass::find()->orderBy(['created_at' => SORT_DESC]),
+            'pagination' => false,
+        ]);
+    }
+    
     public function actionLogin() {
         $model = new LoginForm();
 
@@ -152,4 +187,43 @@ class UserController extends Controller {
         }
     }
 
+    public function actionCreateuser() {
+        $post = Yii::$app->request->post();
+        if (!empty($post)) {
+            $model = new CoUser();
+            $model->scenario = 'saveorg';
+            $model->attributes = $post;
+
+            $valid = $model->validate();
+            if ($valid) {
+                $model->save(false);
+
+                return ['success' => true];
+            } else {
+                return ['success' => false, 'message' => Html::errorSummary([$model])];
+            }
+        } else {
+            return ['success' => false, 'message' => 'Please Fill the Form'];
+        }
+    }
+    
+    public function actionUpdaterole() {
+        $post = Yii::$app->request->post();
+        if (!empty($post)) {
+            $model = CoUser::find($post['user_id'])->one();
+            $model->scenario = 'saveorg';
+            $model->attributes = $post;
+
+            $valid = $model->validate();
+
+            if ($valid) {
+                $model->save(false);
+                return ['success' => true];
+            } else {
+                return ['success' => false, 'message' => Html::errorSummary([$model])];
+            }
+        } else {
+            return ['success' => false, 'message' => 'Please Fill the Form'];
+        }
+    }
 }

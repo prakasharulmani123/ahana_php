@@ -71,7 +71,7 @@ class CoUser extends RActiveRecord {
         return [
             'user_id' => 'User ID',
             'tenant_id' => 'Tenant ID',
-            'title_code' => 'Title Code',
+            'title_code' => 'Prefix',
             'name' => 'Name',
             'designation' => 'Designation',
             'address' => 'Address',

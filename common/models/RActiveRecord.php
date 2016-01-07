@@ -24,15 +24,17 @@ class RActiveRecord extends ActiveRecord {
                 'class' => BlameableBehavior::className(),
                 'updatedByAttribute' => 'modified_by',
                 'value' => function ($event) {
-                    return Yii::$app->user->identity->user_id;
+                    if (isset(Yii::$app->user->identity->user_id))
+                        return Yii::$app->user->identity->user_id;
                 }
             ],
         ];
     }
 
     public function beforeSave($insert) {
-        if (Yii::$app->user->identity->user_id > 0) {
-            $this->tenant_id = Yii::$app->user->identity->user->tenant_id;
+        if (isset(Yii::$app->user->identity) && Yii::$app->user->identity->user_id > 0) {
+            $this->tenant_id = 18;
+//            $this->tenant_id = Yii::$app->user->identity->user->tenant_id;
         }
         return parent::beforeSave($insert);
     }
