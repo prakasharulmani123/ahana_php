@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\models\query\CoRoleQuery;
 use cornernote\linkall\LinkAllBehavior;
 use yii\db\ActiveQuery;
 
@@ -64,11 +65,15 @@ class CoRole extends RActiveRecord {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
 
+    public static function find() {
+        return new CoRoleQuery(get_called_class());
+    }
+
     public function behaviors() {
         $extend = [
             LinkAllBehavior::className(),
         ];
-        
+
         $behaviour = array_merge(parent::behaviors(), $extend);
         return $behaviour;
     }

@@ -52,7 +52,7 @@ class RoleController extends ActiveController {
         $modelClass = $this->modelClass;
 
         return new ActiveDataProvider([
-            'query' => $modelClass::find()->where('tenant_id = :tenant_id', [':tenant_id' => \Yii::$app->user->identity->user->tenant_id]),
+            'query' => $modelClass::find()->tenant(),
             'pagination' => false,
         ]);
     }
@@ -64,9 +64,7 @@ class RoleController extends ActiveController {
             $model->attributes = $post;
 
             $valid = $model->validate();
-
             if ($valid) {
-                $model->tenant_id = Yii::$app->user->identity->user->tenant_id;
                 $model->save(false);
 
                 return ['success' => true];

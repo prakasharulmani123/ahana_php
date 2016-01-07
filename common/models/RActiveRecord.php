@@ -29,6 +29,13 @@ class RActiveRecord extends ActiveRecord {
             ],
         ];
     }
-    
-    //////
+
+    public function beforeSave($insert) {
+        if (Yii::$app->user->identity->user_id > 0) {
+            $this->tenant_id = Yii::$app->user->identity->user->tenant_id;
+        }
+        return parent::beforeSave($insert);
+    }
+
+
 }
