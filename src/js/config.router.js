@@ -111,7 +111,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
 
                 }
             })
-            .state('configuration.registration', {
+		.state('configuration.registration', {
                 url: '/registration',
                 templateUrl: 'tpl/registration/index.html',
                 resolve: {
@@ -143,6 +143,17 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         function (uiLoad) {
                             return uiLoad.load(['tpl/registration/registration.js']);
                         }]
+                }
+            })
+            .state('configuration.organizationModule', {
+                url: '/organizationModule',
+                templateUrl: 'tpl/organization_module/index.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/organization_module/org_module.js']);
+                        }]
+
                 }
             })
 }
