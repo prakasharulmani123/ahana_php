@@ -99,7 +99,7 @@
                                     </div>
                                 </div>
                                 <div class="pull-right m-t m-b">
-                                    <button type="submit" class="btn btn-default btn-rounded" ng-click="validateForm('Organization')">Next</button>
+                                    <button type="submit" class="btn btn-default btn-rounded" ng-click="validateForm('Organization', 2);">Next</button>
                                     <!--<button type="submit" class="btn btn-default btn-rounded" ng-disabled="step1.$invalid" ng-click="steps.step2 = true">Next</button>-->
                                 </div>
                             </div>
@@ -122,7 +122,7 @@
                                 </div>
                                 <div class="pull-right m-t m-b">
                                     <button type="button" class="btn btn-default btn-rounded" ng-click="steps.step1 = true">Prev</button>
-                                    <button type="submit" class="btn btn-default btn-rounded" ng-disabled="step2.$invalid" ng-click="steps.step3 = true">Next</button>
+                                    <button type="submit" class="btn btn-default btn-rounded" ng-click="validateForm('Role', 3);">Next</button>
                                 </div>
                             </div>
                         </div>
@@ -149,7 +149,7 @@
                                 </div>
                                 <div class="pull-right m-t m-b">
                                     <button type="button" class="btn btn-default btn-rounded" ng-click="steps.step2 = true">Prev</button>
-                                    <button type="submit" class="btn btn-default btn-rounded" ng-disabled="step3.$invalid"  ng-click="steps.step4 = true">Next</button>
+                                    <button type="submit" class="btn btn-default btn-rounded" ng-click="validateForm('Login', 4);">Next</button>
                                 </div>
                             </div>
                         </div>
@@ -270,7 +270,7 @@
 
                                 <div class="pull-right m-t m-b">
                                     <button type="button" class="btn btn-default btn-rounded" ng-click="steps.step4 = true">Prev</button>
-                                    <button class="btn btn-primary btn-rounded" type="submit" ng-disabled="step5.$invalid" ng-click="saveForm('add')">Save</button>
+                                    <button class="btn btn-primary btn-rounded" type="submit" ng-click="saveForm('add')">Save</button>
                                 </div>
 
                             </div>

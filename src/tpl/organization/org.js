@@ -160,7 +160,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                     post_data = {Module: sanitizeVariable(this.data.Module)};
                 }
             }
-            
+
             $('.butterbar').removeClass('hide').addClass('active');
             $http({
                 method: "POST",
@@ -193,7 +193,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
             )
         };
 
-        $scope.validateForm = function (mode) {
+        $scope.validateForm = function (mode, next_step) {
             _that = this;
 
             $scope.errorData = "";
@@ -208,7 +208,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
             } else if (mode == 'User') {
                 post_data = {User: sanitizeVariable(this.data.User)};
             }
-            
+
             $('.butterbar').removeClass('hide').addClass('active');
             $http({
                 method: "POST",
@@ -219,6 +219,18 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                         $('.butterbar').removeClass('active').addClass('hide');
                         if (response.data.success === false) {
                             $scope.errorData = response.data.message;
+                        } else {
+                            switch (next_step) {
+                                case 2:
+                                    $scope.steps.step2 = true;
+                                    break;
+                                case 3:
+                                    $scope.steps.step3 = true;
+                                    break;
+                                case 4:
+                                    $scope.steps.step4 = true;
+                                    break;
+                            }
                         }
                     }
             )
@@ -254,5 +266,5 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                 $scope.rowCollectionBasic.splice(index, 1);
             }
         };
-        
+
     }]);
