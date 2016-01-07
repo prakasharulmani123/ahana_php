@@ -153,3 +153,7 @@ h3, .h3 {
 {
 	margin-top:90px;
 }
+
+.navbar-brand {
+  float: left;
+}
