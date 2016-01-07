@@ -44,14 +44,14 @@ app.controller('RolesController', ['$rootScope', '$scope', '$timeout', '$http', 
                             if (mode !== 'add') {
                                 $scope.successMessage = " Role updated successfully";
                                 $timeout(function () {
-                                    $state.go('app.roles');
+                                    $state.go('configuration.roles');
                                 }, 1000)
                             }
                             else {
                                 $scope.successMessage = "Role saved successfully";
                                 $scope.data = {};
                                 $timeout(function () {
-                                    $state.go('app.roles');
+                                    $state.go('configuration.roles');
                                 }, 1000)
                             }
                         }

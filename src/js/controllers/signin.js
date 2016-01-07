@@ -15,7 +15,7 @@ function SignInForm($scope, $state, AuthenticationService, $http, $rootScope, $l
         AuthenticationService.Login($scope.user.username, $scope.user.password, function (response) {
             if (response.success) {
                 AuthenticationService.SetCredentials(response.access_token);
-                $state.go('app.org_list');
+                $state.go('configuration.roles');
             } else {
                 $scope.authError = response.message;
             }

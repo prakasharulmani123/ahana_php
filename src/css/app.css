@@ -5313,3 +5313,27 @@ a.text-#000000:hover {
 .margin-bottom-20{
   margin-bottom: 20px;
 }
+
+.app-aside2 {
+  width: 225px;
+}
+
+.app-content2, .app-footer2 {
+  margin-left: 225px;
+}
+
+.navi ul.nav li {
+  text-align:left;
+}
+
+.navi ul.nav li a > i {
+  width: 15px;
+}
+
+.navi ul.nav li li a {
+  padding-left: 15px;
+}
+
+.nav-sub > li > a:hover {
+  padding-left: 11px !important;
+}

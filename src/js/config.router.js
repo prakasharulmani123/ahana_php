@@ -55,10 +55,10 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                 url: '/404',
                 templateUrl: 'tpl/page_404.html'
             })
-            .state('app', {
+            .state('configuration', {
                 abstract: true,
-                url: '/app',
-                templateUrl: 'tpl/app.html',
+                url: '/configuration',
+                templateUrl: 'tpl/configuration.html',
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
@@ -66,82 +66,8 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-            .state('app.org_list', {
-                url: '/org_list',
-                templateUrl: 'tpl/organization/index.html',
-                resolve: {
-                    deps: ['$ocLazyLoad',
-                        function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('smart-table').then(
-                                    function () {
-                                        return $ocLazyLoad.load('tpl/organization/org.js');
-                                    }
-                            );
-                        }]
-                }
-            })
-            .state('app.org_new', {
-                url: '/org_new',
-                templateUrl: 'tpl/organization/create.html',
-                resolve: {
-                    deps: ['uiLoad',
-                        function (uiLoad) {
-                            return uiLoad.load(['tpl/organization/org.js']);
-                        }]
-                }
-            })
-            .state('app.org_edit', {
-                url: '/org_edit/{id}',
-                templateUrl: 'tpl/organization/update.html',
-                resolve: {
-                    deps: ['uiLoad',
-                        function (uiLoad) {
-                            return uiLoad.load(['tpl/organization/org.js']);
-                        }]
-                }
-            })
-            .state('app.dashboard-v1', {
-                url: '/dashboard-v1',
-                templateUrl: 'tpl/app_dashboard_v1.html',
-                resolve: {
-                    deps: ['$ocLazyLoad',
-                        function ($ocLazyLoad) {
-                            return $ocLazyLoad.load(['js/controllers/chart.js']);
-                        }]
-                }
-            })
-            .state('app.inpatient', {
-                url: '/inpatient',
-                templateUrl: 'tpl/inpatient.html',
-                controller: 'XeditableCtrl',
-                resolve: {
-                    deps: ['$ocLazyLoad',
-                        function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('xeditable').then(
-                                    function () {
-                                        return $ocLazyLoad.load('js/controllers/xeditable.js');
-                                    }
-                            );
-                        }]
-                }
-            })
-            .state('app.outpatient', {
-                url: '/outpatient',
-                templateUrl: 'tpl/outpatient.html',
-                controller: 'XeditableCtrl',
-                resolve: {
-                    deps: ['$ocLazyLoad',
-                        function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('xeditable').then(
-                                    function () {
-                                        return $ocLazyLoad.load('js/controllers/xeditable.js');
-                                    }
-                            );
-                        }]
-                }
-            })
             
-            .state('app.roles', {
+            .state('configuration.roles', {
                 url: '/roles',
                 templateUrl: 'tpl/roles/index.html',
                 resolve: {
@@ -155,7 +81,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-            .state('app.role_create', {
+            .state('configuration.role_create', {
                 url: '/role_create',
                 templateUrl: 'tpl/roles/create.html',
                 resolve: {
@@ -169,7 +95,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-            .state('app.role_update', {
+            .state('configuration.role_update', {
                 url: '/role_update/{id}',
                 templateUrl: 'tpl/roles/update.html',
                 resolve: {
