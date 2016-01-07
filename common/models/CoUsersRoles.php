@@ -2,7 +2,9 @@
 
 namespace common\models;
 
-use Yii;
+use common\models\query\CoUsersRolesQuery;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "co_users_roles".
@@ -20,7 +22,7 @@ use Yii;
  * @property CoRole $role
  * @property CoTenant $tenant
  */
-class CoUsersRoles extends \yii\db\ActiveRecord
+class CoUsersRoles extends ActiveRecord
 {
     /**
      * @inheritdoc
@@ -60,7 +62,7 @@ class CoUsersRoles extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getUser()
     {
@@ -68,7 +70,7 @@ class CoUsersRoles extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getRole()
     {
@@ -76,10 +78,14 @@ class CoUsersRoles extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getTenant()
     {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
+    }
+    
+    public static function find() {
+        return new CoUsersRolesQuery(get_called_class());
     }
 }

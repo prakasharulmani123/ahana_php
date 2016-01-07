@@ -2,7 +2,9 @@
 
 namespace IRISORG\modules\v1\controllers;
 
+use common\models\CoRolesResources;
 use common\models\CoTenant;
+use common\models\CoUsersRoles;
 use Yii;
 use yii\filters\auth\HttpBearerAuth;
 use yii\filters\ContentNegotiator;
@@ -46,6 +48,15 @@ class OrganizationController extends ActiveController {
         } else {
             return ['success' => false, 'message' => 'Invalid Access'];
         }
+    }
+
+    public function actionGetorgmodules() {
+        $user_id = Yii::$app->user->identity->user->user_id;
+        $user_role = CoUsersRoles::find()->tenant()->where(['user_id' => $user_id])->one();
+
+        $role_resources= CoRolesResources::find()->tenant()->where(['role_id' => $user_role->role_id])->all();
+        
+        return ['success' => true, 'modules' => $role_resources];
     }
 
 }

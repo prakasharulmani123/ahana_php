@@ -126,5 +126,22 @@ class CoRolesResources extends ActiveRecord {
     public static function find() {
         return new CoRolesResourcesQuery(get_called_class());
     }
+    
+    public function fields() {
+        return [
+            'role_perm_id',
+            'tenant_id',
+            'role_id',
+            'resource_id',
+            'status',
+            'created_by',
+            'created_at',
+            'modified_by',
+            'modified_at',
+            'resource_name' => function ($model) {
+                return (isset($model->resource) ? $model->resource->resource_name : '-');
+            },
+        ];
+    }
 
 }
