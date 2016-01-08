@@ -124,7 +124,7 @@ class CoUser extends RActiveRecord {
         return $this->hasMany(CoRole::className(), ['role_id' => 'role_id'])->via('usersRoles');
     }
 
-    public static function find() {
-        return new CoUserQuery(get_called_class());
-    }
+//    public static function find() {
+//        return new CoUserQuery(get_called_class());
+//    }
 }

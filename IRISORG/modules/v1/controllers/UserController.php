@@ -2,6 +2,7 @@
 
 namespace IRISORG\modules\v1\controllers;
 
+use common\models\CoLogin;
 use common\models\CoUser;
 use common\models\LoginForm;
 use common\models\PasswordResetRequestForm;
@@ -11,7 +12,6 @@ use Yii;
 use yii\base\InvalidParamException;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
-use yii\filters\AccessControl;
 use yii\filters\auth\HttpBearerAuth;
 use yii\filters\ContentNegotiator;
 use yii\helpers\Html;
@@ -42,11 +42,12 @@ class UserController extends ActiveController {
 //        return $behaviors;
 //    }
     
+    
     public function behaviors() {
         $behaviors = parent::behaviors();
         $behaviors['authenticator'] = [
             'class' => HttpBearerAuth::className(),
-            'only' => ['dashboard'],
+            'only' => ['dashboard', 'createuser', 'updateuser', 'getuser', 'getlogin', 'updatelogin'],
         ];
         $behaviors['contentNegotiator'] = [
             'class' => ContentNegotiator::className(),
@@ -54,17 +55,17 @@ class UserController extends ActiveController {
                 'application/json' => Response::FORMAT_JSON,
             ],
         ];
-        $behaviors['access'] = [
-            'class' => AccessControl::className(),
-            'only' => ['dashboard'],
-            'rules' => [
-                [
-                    'actions' => ['dashboard'],
-                    'allow' => true,
-                    'roles' => ['@'],
-                ],
-            ],
-        ];
+//        $behaviors['access'] = [
+//            'class' => AccessControl::className(),
+//            'only' => ['dashboard'],
+//            'rules' => [
+//                [
+//                    'actions' => ['dashboard'],
+//                    'allow' => true,
+//                    'roles' => ['@'],
+//                ],
+//            ],
+//        ];
         return $behaviors;
     }
 
@@ -207,15 +208,15 @@ class UserController extends ActiveController {
         }
     }
     
-    public function actionUpdaterole() {
+    public function actionUpdateuser() {
         $post = Yii::$app->request->post();
         if (!empty($post)) {
-            $model = CoUser::find($post['user_id'])->one();
+            $model = CoUser::find()->where(['user_id' => $post['user_id']])->one();
             $model->scenario = 'saveorg';
             $model->attributes = $post;
 
             $valid = $model->validate();
-
+            
             if ($valid) {
                 $model->save(false);
                 return ['success' => true];
@@ -225,5 +226,57 @@ class UserController extends ActiveController {
         } else {
             return ['success' => false, 'message' => 'Please Fill the Form'];
         }
+    }
+    
+     public function actionGetuser() {
+        $id = Yii::$app->request->get('id');
+        if (!empty($id)) {
+            $data = CoUser::find()->where(['user_id' => $id])->one();
+            $return = $this->excludeColumns($data->attributes);
+            return ['success' => true, 'return' => $return];
+        } else {
+            return ['success' => false, 'message' => 'Invalid Access'];
+        }
+    }
+
+     public function actionGetlogin() {
+        $id = Yii::$app->request->get('id');
+        if (!empty($id)) {
+            $data = CoLogin::find()->where(['user_id' => $id])->one();
+            $return = empty($data) ? [] : $this->excludeColumns($data->attributes);
+            
+            return ['success' => true, 'return' => $return];
+        } else {
+            return ['success' => false, 'message' => 'Invalid Access'];
+        }
+    }
+
+    public function actionUpdatelogin() {
+        $post = Yii::$app->request->post();
+        if (!empty($post)) {
+            $model = CoLogin::find()->where(['user_id' => $post['user_id']])->one();
+            $model = empty($model) ? new CoLogin : $model;
+            $model->attributes = $post;
+
+            $valid = $model->validate();
+            
+            if ($valid) {
+                $model->save(false);
+                return ['success' => true];
+            } else {
+                return ['success' => false, 'message' => Html::errorSummary([$model])];
+            }
+        } else {
+            return ['success' => false, 'message' => 'Please Fill the Form'];
+        }
+    }
+    
+    protected function excludeColumns($attrs) {
+        $exclude_cols = ['created_by', 'created_at', 'modified_by', 'modified_at'];
+        foreach ($attrs as $col => $val) {
+            if (in_array($col, $exclude_cols))
+                unset($attrs[$col]);
+        }
+        return $attrs;
     }
 }

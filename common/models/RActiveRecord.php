@@ -33,8 +33,7 @@ class RActiveRecord extends ActiveRecord {
 
     public function beforeSave($insert) {
         if (isset(Yii::$app->user->identity) && Yii::$app->user->identity->user_id > 0) {
-            $this->tenant_id = 18;
-//            $this->tenant_id = Yii::$app->user->identity->user->tenant_id;
+            $this->tenant_id = Yii::$app->user->identity->user->tenant_id;
         }
         return parent::beforeSave($insert);
     }
