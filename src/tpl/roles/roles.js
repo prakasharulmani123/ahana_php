@@ -75,7 +75,7 @@ app.controller('RolesController', ['$rootScope', '$scope', '$timeout', '$http', 
                             $scope.data = response.data.return;
                         }
                         else {
-                            $scope.errorData = response.data;
+                            $scope.errorData = response.data.message;
                         }
                     }
             )

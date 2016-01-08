@@ -5,14 +5,14 @@ angular.module('app').factory('CommonService', CommonService);
 CommonService.$inject = ['$http', '$rootScope', '$window', '$q'];
 function CommonService($http, $rootScope, $window, $q) {
     var service = {};
-    
+
     service.ChangeStatus = ChangeStatus;
     service.GetCountryList = GetCountryList;
     service.GetStateList = GetStateList;
     service.GetCityList = GetCityList;
     service.GetTitleCodes = GetTitleCodes;
     service.GetPasswordResetAccess = GetPasswordResetAccess;
-    
+
     return service;
 
     function ChangeStatus(modelName, primaryKey) {
@@ -25,7 +25,7 @@ function CommonService($http, $rootScope, $window, $q) {
                     response = {success: false, message: 'Server Error'};
                 });
     }
-    
+
     function GetCountryList(callback) {
         var response;
 

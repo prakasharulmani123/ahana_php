@@ -156,6 +156,16 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
 
                 }
             })
+            .state('configuration.login_update', {
+                url: '/login_update/{id}',
+                templateUrl: 'tpl/registration/login_update.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/registration/registration.js']);
+                        }]
+                }
+            })
 }
 run.$inject = ['$rootScope', '$state', '$stateParams', '$location', '$cookieStore', '$http', '$window', 'CommonService'];
 function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $window, CommonService) {
