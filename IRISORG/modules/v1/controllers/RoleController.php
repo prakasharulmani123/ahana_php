@@ -79,7 +79,7 @@ class RoleController extends ActiveController {
     public function actionUpdaterole() {
         $post = Yii::$app->request->post();
         if (!empty($post)) {
-            $model = CoRole::find($post['role_id'])->one();
+            $model = CoRole::findOne($post['role_id']);
             $model->attributes = $post;
 
             $valid = $model->validate();
@@ -98,7 +98,7 @@ class RoleController extends ActiveController {
     public function actionGetrole() {
         $id = Yii::$app->request->get('id');
         if (!empty($id)) {
-            $data = CoRole::find($id)->one();
+            $data = CoRole::findOne($id);
             $return = $this->excludeColumns($data->attributes);
             return ['success' => true, 'return' => $return];
         } else {
