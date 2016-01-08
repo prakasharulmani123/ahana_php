@@ -105,6 +105,11 @@ class RoleController extends ActiveController {
             return ['success' => false, 'message' => 'Invalid Access'];
         }
     }
+    
+    public function actionGetactiverolesbytenant() {
+        $roles = CoRole::find()->tenant()->status("1")->all(); 
+        return ['success' => true, 'roles' => $roles];
+    }
 
     protected function excludeColumns($attrs) {
         $exclude_cols = ['created_by', 'created_at', 'modified_by', 'modified_at'];

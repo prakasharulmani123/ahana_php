@@ -33,6 +33,7 @@ class OrganizationController extends ActiveController {
         return $behaviors;
     }
 
+    //role_rights.js
     public function actionGetorg() {
         $tenant_id = Yii::$app->user->identity->user->tenant_id;
         if (!empty($tenant_id)) {
@@ -44,19 +45,27 @@ class OrganizationController extends ActiveController {
             $return['state'] = $organization->coMasterState->state_name;
             $return['country'] = $organization->coMasterCountry->country_name;
 
-            return ['success' => true, 'return' => $return];
+            return ['success' => true, 'return' => $return, 'modules' => CoRolesResources::getModuletreeByTenant($tenant_id)];
         } else {
             return ['success' => false, 'message' => 'Invalid Access'];
         }
     }
 
+    //org_module.js
     public function actionGetorgmodules() {
         $user_id = Yii::$app->user->identity->user->user_id;
         $user_role = CoUsersRoles::find()->tenant()->where(['user_id' => $user_id])->one();
 
-        $role_resources= CoRolesResources::find()->tenant()->where(['role_id' => $user_role->role_id])->all();
-        
+        $role_resources = CoRolesResources::find()->tenant()->where(['role_id' => $user_role->role_id])->all();
+
         return ['success' => true, 'modules' => $role_resources];
     }
+
+//    public function actionGetorgwithmodules() {
+//        $tenant_id = Yii::$app->user->identity->user->tenant_id;
+//        $organization = CoTenant::find()->tenant()->one();
+//        $return = $this->excludeColumns($organization->attributes);
+//        return ['success' => true, 'return' => $return, 'modules' => CoRolesResources::getModuletreeByRole($tenant_id, $user_role->role_id)];
+//    }
 
 }
