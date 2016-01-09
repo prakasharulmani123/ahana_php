@@ -102,6 +102,7 @@ class RoleController extends ActiveController {
         }
     }
     
+    //role_rights.js
     public function actionGetactiverolesbytenant() {
         $roles = CoRole::find()->tenant()->status("1")->all(); 
         return ['success' => true, 'roles' => $roles];
