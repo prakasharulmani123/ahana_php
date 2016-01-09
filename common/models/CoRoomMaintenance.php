@@ -33,7 +33,7 @@ class CoRoomMaintenance extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['tenant_id', 'maintain_name', 'created_by'], 'required'],
+            [['maintain_name'], 'required'],
             [['tenant_id', 'created_by', 'modified_by'], 'integer'],
             [['status'], 'string'],
             [['created_at', 'modified_at'], 'safe'],
@@ -49,7 +49,7 @@ class CoRoomMaintenance extends RActiveRecord {
         return [
             'maintain_id' => 'Maintain ID',
             'tenant_id' => 'Tenant ID',
-            'maintain_name' => 'Maintain Name',
+            'maintain_name' => 'Room Maintain Name',
             'status' => 'Status',
             'created_by' => 'Created By',
             'created_at' => 'Created At',
