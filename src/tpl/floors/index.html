@@ -21,17 +21,17 @@
         <table st-table="displayedCollection"  st-safe-src="rowCollection" class="table table-bordered table-striped">
             <thead>
                 <tr>
-                    <th st-sort="floor_code">Floor code</th>
                     <th st-sort="floor_name">Floor name</th>
+                    <th st-sort="floor_code">Floor code</th>
                     <th>Status</th>
                     <th>Action</th>
                 </tr>
                 <tr>
                     <th>
-                        <input st-search="'floor_code'" placeholder="search for floor code" class="input-sm form-control" type="search"/>
+                        <input st-search="'floor_name'" placeholder="search for floor name" class="input-sm form-control" type="search"/>
                     </th>
                     <th>
-                        <input st-search="'floor_name'" placeholder="search for floor name" class="input-sm form-control" type="search"/>
+                        <input st-search="'floor_code'" placeholder="search for floor code" class="input-sm form-control" type="search"/>
                     </th>
                     <th colspan="2">&nbsp;</th>
                 </tr>
@@ -39,10 +39,10 @@
             <tbody ng-hide="isLoading">
                 <tr ng-repeat="row in displayedCollection| orderBy: floor_code">
                     <td>
-                        {{row.floor_code}}
+                        {{row.floor_name}}
                     </td>
                     <td>
-                        {{row.floor_name}}
+                        {{row.floor_code}}
                     </td>
                     <td>
                         <label class="i-checks "> 
@@ -54,7 +54,7 @@
                         <a title="Edit" ui-sref="configuration.floor_update({id: '{{row.floor_id}}'})">
                             <i class="fa fa-pencil"></i>
                         </a>&nbsp;&nbsp;&nbsp;
-                        <a title="Delete" ui-sref="configuration.floor_update({id: '{{row.floor_id}}'})">
+                        <a title="Delete" ng-click="removeRow(row)">
                             <i class="fa fa-trash"></i>
                         </a>
                     </td>

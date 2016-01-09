@@ -26,59 +26,83 @@ app.controller('FloorsController', ['$rootScope', '$scope', '$timeout', '$http',
             $scope.successMessage = "";
 
             if (mode == 'add') {
-                post_url = $rootScope.IRISOrgServiceUrl + '/floors/createfloor';
+                post_url = $rootScope.IRISOrgServiceUrl + '/floors';
+                method = 'POST';
+                succ_msg = 'Floor saved successfully';
             } else {
-                post_url = $rootScope.IRISOrgServiceUrl + '/floors/updatefloor';
+                post_url = $rootScope.IRISOrgServiceUrl + '/floors/' + _that.data.floor_id;
+                method = 'PUT';
+                succ_msg = 'Floor updated successfully';
             }
 
             $('.butterbar').removeClass('hide').addClass('active');
             $http({
-                method: "POST",
+                method: method,
                 url: post_url,
                 data: _that.data,
-            }).then(
+            }).success(
                     function (response) {
                         $('.butterbar').removeClass('active').addClass('hide');
-                        if (response.data.success === true) {
+                        $scope.successMessage = succ_msg;
+                        $scope.data = {};
+                        $timeout(function () {
+                            $state.go('configuration.floors');
+                        }, 1000)
 
-                            if (mode !== 'add') {
-                                $scope.successMessage = " Floor updated successfully";
-                                $timeout(function () {
-                                    $state.go('configuration.floors');
-                                }, 1000)
-                            }
-                            else {
-                                $scope.successMessage = "Floor saved successfully";
-                                $scope.data = {};
-                                $timeout(function () {
-                                    $state.go('configuration.floors');
-                                }, 1000)
-                            }
-                        }
-                        else {
-                            $scope.errorData = response.data.message;
-                        }
                     }
-            )
+            ).error(function (data, status) {
+                $('.butterbar').removeClass('active').addClass('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
         };
 
         //Get Data for update Form
         $scope.loadForm = function () {
+            $('.butterbar').removeClass('hide').addClass('active');
             _that = this;
             $scope.errorData = "";
             $http({
-                url: $rootScope.IRISOrgServiceUrl + "/floor/getfloor?id=" + $state.params.id,
+                url: $rootScope.IRISOrgServiceUrl + "/floors/" + $state.params.id,
                 method: "GET"
-            }).then(
+            }).success(
                     function (response) {
-                        if (response.data.success === true) {
-                            $scope.data = response.data.return;
-                        }
-                        else {
-                            $scope.errorData = response.data.message;
-                        }
+                        $('.butterbar').removeClass('active').addClass('hide');
+                        $scope.data = response;
                     }
-            )
+            ).error(function (data, status) {
+                $('.butterbar').removeClass('active').addClass('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
         };
 
+        //Delete
+        $scope.removeRow = function (row) {
+            var conf = confirm('Are you sure to delete ?');
+            if (conf) {
+                var index = $scope.displayedCollection.indexOf(row);
+                if (index !== -1) {
+                    $http({
+                        url: $rootScope.IRISOrgServiceUrl + "/floor/remove",
+                        method: "POST",
+                        data: {id: row.floor_id}
+                    }).then(
+                            function (response) {
+                                if (response.data.success === true) {
+                                    $scope.data = response.data.return;
+                                    $scope.displayedCollection.splice(index, 1);
+                                }
+                                else {
+                                    $scope.errorData = response.data.message;
+                                }
+                            }
+                    )
+                }
+            }
+        };
     }]);
