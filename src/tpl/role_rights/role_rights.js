@@ -1,6 +1,6 @@
 'use strict';
 /* Controllers */
-app.controller('RolesRightsController', ['$scope', '$http', '$filter', '$state', '$rootScope', '$timeout', function ($scope, $http, $filter, $state, $rootScope, $timeout) {
+app.controller('RolesRightsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', function ($rootScope, $scope, $timeout, $http, $state) {
 
         //Get my organization details
         $http({
@@ -14,7 +14,7 @@ app.controller('RolesRightsController', ['$scope', '$http', '$filter', '$state',
                         $scope.modules = response.data.modules;
                     }
                     else {
-                        $scope.organizationErrorData = response.data;
+                        $scope.errorData = response.data.message;
                     }
                 }
         );
@@ -29,89 +29,92 @@ app.controller('RolesRightsController', ['$scope', '$http', '$filter', '$state',
                         $scope.roles = response.data.roles;
                     }
                     else {
-                        $scope.rolesErrorData = response.data;
+                        $scope.errorData = response.data.message;
                     }
                 }
         );
 
-        
-//        $http({
-//            url: path + "rest/secure/common/getAllOrganizationModule",
-//            method: "GET"
-//        }).then(
-//                function (response) {
-//                    if (response.data.Status === 'Ok') {
-//                        $scope.modules = response.data.organizationModuleDetails;
-//                    }
-//                    else {
-//                        $scope.moduleErrorData = response.data;
-//                    }
-//                }
-//        );
-//
-//        $scope.getSavedRights = function () {
-//            $scope.errorData = "";
-//            $scope.successMessage = "";
-//            $http.get(path + "rest/secure/user/getSavedRightsByRoleOid?roleOid=" + $scope.data.roleOid).then(
-//                    function (response) {
-//                        if (response.data.Status === 'Ok') {
-//                            $scope.selectedModules = response.data.rightsDetails;
-//                        }
-//                        else {
-//                            $scope.selectedModules = []
-//                        }
-//                    }
-//            )
-//        }
-//        
+        $scope.sanitizeVariable = function (data) {
+            var result = {};
+            angular.forEach(data, function (value, key) {
+                if (typeof value == "undefined") {
+                    result[key] = '';
+                } else {
+                    result[key] = value;
+                }
+            }, result);
+            return result;
+        }
 
-//
-//        $scope.selectedModules = [];
-//        $scope.toggleSelection = function toggleSelection(module) {
-//            var index = $scope.selectedModules.indexOfObjectWithProperty('oid', module.oid);
-//            if (index > -1) {
-//                // Is currently selected, so remove it
-//                $scope.selectedModules.splice(index, 1);
-//            }
-//            else {
-//                // Is currently unselected, so add it
-//                $scope.selectedModules.push(module);
-//            }
-//        };
-//        
-//        $scope.saveRoleRights = function () {
-//            $scope.errorData = "";
-//            $scope.successMessage = "";
-//            var selectedRoleModules = [];
-//            angular.forEach($scope.selectedModules, function (value, key) {
-//                selectedRoleModules.push(value.oid);
-//            }
-//            );
-//            var data = {
-//                'roleOid': $scope.data.roleOid,
-//                'organizationOid': $scope.data.organizationOid,
-//                'moduleOids': selectedRoleModules.join(",")
-//            };
-//            if ($scope.roleRightsForm.$valid) {
-//                $http({
-//                    url: path + "rest/secure/user/saveRoleRights",
-//                    method: "POST",
-//                    data: data
-//                }).then(
-//                        function (response) {
-//                            if (response.data.Status === 'Ok') {
-//                                $scope.successMessage = "Role rights saved successfully";
-//                                $scope.selectedModules = [];
-//                                $scope.data = {organizationOid: $scope.organization.oid};
-//                            }
-//                            else {
-//                                $scope.errorData = response.data;
-//                            }
-//                        }
-//                )
-//            }
-//        };
-//        
+        $scope.getSavedRights = function () {
+            $scope.errorData = "";
+            $scope.successMessage = "";
+            $('.butterbar').removeClass('hide').addClass('active');
+            $http({
+                method: "POST",
+                url: $rootScope.IRISOrgServiceUrl + '/organization/getorgmodulesbyrole',
+                data: this.data,
+            }).then(
+                    function (response) {
+                        $('.butterbar').removeClass('active').addClass('hide');
+                        if (response.data.success === true) {
+                            $scope.modules = response.data.modules;
+                        }
+                        else {
+                            $scope.errorData = response.data.message;
+                        }
+                    }
+            )
+        }
+
+        $scope.saveRoleRights = function () {
+            $scope.errorData = "";
+            $scope.successMessage = "";
+            $scope.moduleList = [];
+
+            angular.forEach($scope.modules, function (parent) {
+                if (parent.selected == true || parent.__ivhTreeviewIndeterminate == true) {
+                    $scope.moduleList.push(parent.value);
+                    angular.forEach(parent.children, function (child) {
+                        if (child.selected == true)
+                            $scope.moduleList.push(child.value);
+                    });
+                }
+            });
+
+            if (typeof this.data != "undefined") {
+                this.data.Module = [];
+                this.data.Module = {'resource_ids': $scope.moduleList};
+            }
+
+            this.data.Module['role_id'] = this.data.role_id;
+            this.data.Module['tenant_id'] = this.data.tenant_id;
+
+            var post_data = {Module: $scope.sanitizeVariable(this.data.Module)};
+
+            $('.butterbar').removeClass('hide').addClass('active');
+            $http({
+                method: "POST",
+                url: $rootScope.IRISOrgServiceUrl + '/organization/updaterolerights',
+                data: post_data,
+            }).then(
+                    function (response) {
+                        $('.butterbar').removeClass('active').addClass('hide');
+                        if (response.data.success === true) {
+                            $scope.successMessage = "Organization saved successfully";
+                            $scope.data = {};
+                            $timeout(function () {
+                                $state.go('configuration.roleRights');
+                            }, 1000)
+                        }
+                        else {
+                            $scope.errorData = response.data.message;
+                        }
+                    }
+            )
+
+        };
+        
 //        $scope.reset = function () {
 //            $scope.errorData = "";
 //            $scope.selectedModules = [];
