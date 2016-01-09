@@ -178,6 +178,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                                     }
                             );
                         }]
+
                 }
             })
             //CONFIGURATION ROLES MODULES ASSIGN
@@ -202,14 +203,18 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-            //CONFIGURATION FLOOR
+		//CONFIGURATION FLOOR
             .state('configuration.floors', {
                 url: '/floors',
                 templateUrl: 'tpl/floors/index.html',
                 resolve: {
-                    deps: ['uiLoad',
-                        function (uiLoad) {
-                            return uiLoad.load(['tpl/floors/floors.js']);
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('smart-table').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/floors/floors.js');
+                                    }
+                            );
                         }]
                 }
             })
@@ -233,7 +238,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-
+            
             //Room Maintenance
             .state('configuration.roomMaintenance', {
                 url: '/roomMaintenance',
@@ -269,14 +274,18 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-            //CONFIGURATION WARD
+		//CONFIGURATION WARD
             .state('configuration.wards', {
                 url: '/wards',
                 templateUrl: 'tpl/wards/index.html',
                 resolve: {
-                    deps: ['uiLoad',
-                        function (uiLoad) {
-                            return uiLoad.load(['tpl/wards/wards.js']);
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('smart-table').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/wards/wards.js');
+                                    }
+                            );
                         }]
                 }
             })
@@ -300,8 +309,77 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-            
-            //Room Types
+		//CONFIGURATION ROOM CHARGE CATEGORY
+            .state('configuration.roomChargeCategory', {
+                url: '/roomChargeCategory',
+                templateUrl: 'tpl/room_charge_category/index.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('smart-table').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/room_charge_category/room_charge_category.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            .state('configuration.roomChargeCategoryCreate', {
+                url: '/roomChargeCategoryCreate',
+                templateUrl: 'tpl/room_charge_category/create.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/room_charge_category/room_charge_category.js']);
+                        }]
+                }
+            })
+            .state('configuration.roomChargeCategoryUpdate', {
+                url: '/roomChargeCategoryUpdate/{id}',
+                templateUrl: 'tpl/room_charge_category/update.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/room_charge_category/room_charge_category.js']);
+                        }]
+                }
+            })
+		//CONFIGURATION ROOM CHARGE CATEGORY ITEM
+            .state('configuration.roomChargeCategoryItem', {
+                url: '/roomChargeCategoryItem',
+                templateUrl: 'tpl/room_charge_category_item/index.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('smart-table').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/room_charge_category_item/room_charge_category_item.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            .state('configuration.roomChargeCategoryItemCreate', {
+                url: '/roomChargeCategoryItemCreate',
+                templateUrl: 'tpl/room_charge_category_item/create.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/room_charge_category_item/room_charge_category_item.js']);
+                        }]
+                }
+            })
+            .state('configuration.roomChargeCategoryItemUpdate', {
+                url: '/roomChargeCategoryItemUpdate/{id}',
+                templateUrl: 'tpl/room_charge_category_item/update.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/room_charge_category_item/room_charge_category_item.js']);
+                        }]
+                }
+            })
+//Room Types
             .state('configuration.roomType', {
                 url: '/roomType',
                 templateUrl: 'tpl/room_type/index.html',
