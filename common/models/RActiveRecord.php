@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\models\behaviors\SoftDelete;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
@@ -28,6 +29,13 @@ class RActiveRecord extends ActiveRecord {
                         return Yii::$app->user->identity->user_id;
                 }
             ],
+            'softDelete' => [
+                'class' => SoftDelete::className(),
+                // these are the default values, which you can omit
+                'attribute' => 'deleted_at',
+                'value' => null, // this is the same format as in TimestampBehavior
+                'safeMode' => true, // this processes '$model->delete()' calls as soft-deletes
+            ],
         ];
     }
 
@@ -37,6 +45,4 @@ class RActiveRecord extends ActiveRecord {
         }
         return parent::beforeSave($insert);
     }
-
-
 }

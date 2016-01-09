@@ -37,6 +37,7 @@ return [
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/user'], 'extraPatterns' => ['POST login' => 'login', 'POST createuser' => 'createuser', 'POST updateuser' => 'updateuser', 'GET getuser' => 'getuser', 'GET getlogin' => 'getlogin', 'POST updatelogin' => 'updatelogin', 'GET getusernamebytenant' => 'getusernamebytenant', 'POST assignroles' => 'assignroles']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/role'], 'extraPatterns' => ['POST createrole' => 'createrole', 'POST updaterole' => 'updaterole', 'GET getrole' => 'getrole', 'GET getactiverolesbytenant' => 'getactiverolesbytenant', 'GET getmyroles' => 'getmyroles']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/organization'], 'extraPatterns' => ['GET getorg' => 'getorg', 'GET getorgmodules' => 'getorgmodules', 'POST updaterolerights' => 'updaterolerights', 'POST getorgmodulesbyrole' => 'getorgmodulesbyrole']],
+                ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/floor'], 'extraPatterns' => ['POST remove' => 'remove']],
             ],
         ],
         'log' => [
@@ -49,7 +50,7 @@ return [
             ],
         ],
         'errorHandler' => [
-            'errorAction' => 'v1/site/error',
+            'errorAction' => 'v1/default/error',
         ],
     ],
     'params' => $params,

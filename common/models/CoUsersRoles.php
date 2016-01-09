@@ -52,13 +52,14 @@ class CoUsersRoles extends ActiveRecord
     {
         return [
             'user_role_id' => 'User Role ID',
-            'tenant_id' => 'Tenant ID',
-            'user_id' => 'User ID',
-            'role_id' => 'Role ID',
+            'tenant_id' => 'Organization',
+            'user_id' => 'User',
+            'role_id' => 'Role',
             'created_by' => 'Created By',
             'created_at' => 'Created At',
             'modified_by' => 'Modified By',
             'modified_at' => 'Modified At',
+            'role_ids' => 'Roles',
         ];
     }
 

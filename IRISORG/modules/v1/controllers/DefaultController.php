@@ -81,4 +81,11 @@ class DefaultController extends Controller {
         return ['tenantList' => $list];
     }
 
+    public function actionError() {
+        $exception = Yii::$app->errorHandler->exception;
+        if ($exception !== null) {
+            return ['success' => false, 'message' => "Error {$exception->statusCode} : {$exception->getMessage()} !!!"];
+        }
+    }
+
 }

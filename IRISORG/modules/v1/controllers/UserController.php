@@ -14,6 +14,7 @@ use Yii;
 use yii\base\InvalidParamException;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
+use yii\db\Expression;
 use yii\filters\auth\HttpBearerAuth;
 use yii\filters\ContentNegotiator;
 use yii\helpers\Html;
@@ -304,12 +305,14 @@ class UserController extends ActiveController {
 
     public function actionAssignroles() {
         $post = Yii::$app->request->post();
-        if (!empty($post)) {
-
+        $tenant_id = Yii::$app->user->identity->user->tenant_id;
+        
+        if (!empty($post) && !empty($tenant_id)) {
             $model = new CoUsersRoles;
+            $model->tenant_id = $tenant_id;
             $model->scenario = 'roleassign';
             $model->attributes = $post;
-
+            
             if ($model->validate()) {
                 $user = CoUser::find()->where(['user_id' => $post['user_id']])->one();
                 
@@ -317,10 +320,11 @@ class UserController extends ActiveController {
                     $roles[] = CoRole::find()->where(['role_id' => $role_id])->one();
                 }
                 
-                $extraColumns = ['tenant_id' => $post['tenant_id'], 'created_by' => Yii::$app->user->identity->user_id]; // extra columns to be saved to the many to many table
+                $extraColumns = ['tenant_id' => $tenant_id, 'modified_by' => Yii::$app->user->identity->user_id, 'modified_at' => new Expression('NOW()')]; // extra columns to be saved to the many to many table
                 $unlink = true; // unlink tags not in the list
                 $delete = true; // delete unlinked tags
                 $user->linkAll('roles', $roles, $extraColumns, $unlink, $delete);
+                return ['success' => true];
             } else {
                 return ['success' => false, 'message' => Html::errorSummary([$model])];
             }
