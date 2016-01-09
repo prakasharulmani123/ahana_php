@@ -24,12 +24,16 @@ class CommonQuery extends ActiveQuery {
         return $this->andWhere(['tenant_id' => $tenant_id]);
     }
 
-    public function status($status = '1', $delete_status = 0) {
-        return $this->andWhere(['status' => $status, 'status' => $delete_status]);
+    public function status($status = '1') {
+        return $this->andWhere(['status' => $status]);
     }
 
-    public function deleted($delete_status = 1) {
-        return $this->andWhere(['status' => $delete_status]);
+    public function active() {
+        return $this->andWhere(['deleted_at' => null]);
+    }
+
+    public function deleted() {
+        return $this->andWhere('deleted_at  IS NOT NULL');
     }
 
 }

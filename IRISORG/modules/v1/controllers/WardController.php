@@ -2,7 +2,7 @@
 
 namespace IRISORG\modules\v1\controllers;
 
-use common\models\CoFloor;
+use common\models\CoWard;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -12,11 +12,11 @@ use yii\rest\ActiveController;
 use yii\web\Response;
 
 /**
- * FloorController implements the CRUD actions for CoTenant model.
+ * WardController implements the CRUD actions for CoTenant model.
  */
-class FloorController extends ActiveController {
+class WardController extends ActiveController {
 
-    public $modelClass = 'common\models\CoFloor';
+    public $modelClass = 'common\models\CoWard';
 
     public function behaviors() {
         $behaviors = parent::behaviors();
@@ -53,7 +53,7 @@ class FloorController extends ActiveController {
     public function actionRemove() {
         $id = Yii::$app->getRequest()->post('id');
         if($id){
-            $model = CoFloor::find()->where(['floor_id' => $id])->one();
+            $model = CoWard::find()->where(['ward_id' => $id])->one();
             $model->remove();
             return ['success' => true];
         }

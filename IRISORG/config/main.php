@@ -39,6 +39,7 @@ return [
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/organization'], 'extraPatterns' => ['GET getorg' => 'getorg', 'GET getorgmodules' => 'getorgmodules', 'POST updaterolerights' => 'updaterolerights', 'POST getorgmodulesbyrole' => 'getorgmodulesbyrole']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/roommaintenance']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/floor'], 'extraPatterns' => ['POST remove' => 'remove']],
+                ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/ward'], 'extraPatterns' => ['POST remove' => 'remove']],
             ],
         ],
         'log' => [
