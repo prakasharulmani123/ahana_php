@@ -77,10 +77,10 @@ class FloorController extends ActiveController {
         
         $list = array();
         $data = CoFloor::getFloorList($tenant, $status, $deleted);
-        foreach ($data as $value => $label) {
-            $list[] = array('value' => $value, 'label' => $label);
-        }
-        return ['floorList' => $list];
+//        foreach ($data as $value => $label) {
+//            $list[] = array('value' => $value, 'label' => $label);
+//        }
+        return ['floorList' => $data];
     }
 
 }
