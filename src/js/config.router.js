@@ -170,11 +170,14 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                 url: '/organizationModule',
                 templateUrl: 'tpl/organization_module/index.html',
                 resolve: {
-                    deps: ['uiLoad',
-                        function (uiLoad) {
-                            return uiLoad.load(['tpl/organization_module/org_module.js']);
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('smart-table').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/organization_module/org_module.js');
+                                    }
+                            );
                         }]
-
                 }
             })
             //CONFIGURATION ROLES MODULES ASSIGN
@@ -199,7 +202,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-		//CONFIGURATION FLOOR
+            //CONFIGURATION FLOOR
             .state('configuration.floors', {
                 url: '/floors',
                 templateUrl: 'tpl/floors/index.html',
@@ -230,7 +233,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-            
+
             //Room Maintenance
             .state('configuration.roomMaintenance', {
                 url: '/roomMaintenance',
@@ -257,7 +260,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                 }
             })
             .state('configuration.roomMaintenanceUpdate', {
-                url: '/roomMaintenanceUpdate',
+                url: '/roomMaintenanceUpdate/{id}',
                 templateUrl: 'tpl/room_maintenance/update.html',
                 resolve: {
                     deps: ['uiLoad',

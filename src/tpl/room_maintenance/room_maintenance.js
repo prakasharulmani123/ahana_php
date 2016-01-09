@@ -17,68 +17,68 @@ app.controller('RoomMaintenanceController', ['$rootScope', '$scope', '$timeout',
                         $scope.error = "An Error has occured while loading Room Maintenance!";
                     });
         };
+        
+        //Save Both Add & Update Data
+        $scope.saveForm = function (mode) {
+            _that = this;
 
-//        //Save Both Add & Update Data
-//        $scope.saveForm = function (mode) {
-//            _that = this;
-//
-//            $scope.errorData = "";
-//            $scope.successMessage = "";
-//
-//            if (mode == 'add') {
-//                post_url = $rootScope.IRISOrgServiceUrl + '/floors/createfloor';
-//            } else {
-//                post_url = $rootScope.IRISOrgServiceUrl + '/floors/updatefloor';
-//            }
-//
-//            $('.butterbar').removeClass('hide').addClass('active');
-//            $http({
-//                method: "POST",
-//                url: post_url,
-//                data: _that.data,
-//            }).then(
-//                    function (response) {
-//                        $('.butterbar').removeClass('active').addClass('hide');
-//                        if (response.data.success === true) {
-//
-//                            if (mode !== 'add') {
-//                                $scope.successMessage = " Floor updated successfully";
-//                                $timeout(function () {
-//                                    $state.go('configuration.floors');
-//                                }, 1000)
-//                            }
-//                            else {
-//                                $scope.successMessage = "Floor saved successfully";
-//                                $scope.data = {};
-//                                $timeout(function () {
-//                                    $state.go('configuration.floors');
-//                                }, 1000)
-//                            }
-//                        }
-//                        else {
-//                            $scope.errorData = response.data.message;
-//                        }
-//                    }
-//            )
-//        };
-//
-//        //Get Data for update Form
-//        $scope.loadForm = function () {
-//            _that = this;
-//            $scope.errorData = "";
-//            $http({
-//                url: $rootScope.IRISOrgServiceUrl + "/floor/getfloor?id=" + $state.params.id,
-//                method: "GET"
-//            }).then(
-//                    function (response) {
-//                        if (response.data.success === true) {
-//                            $scope.data = response.data.return;
-//                        }
-//                        else {
-//                            $scope.errorData = response.data.message;
-//                        }
-//                    }
-//            )
-//        };
+            $scope.errorData = "";
+            $scope.successMessage = "";
+
+            if (mode == 'add') {
+                post_url = $rootScope.IRISOrgServiceUrl + '/roommaintenances';
+                method = 'POST';
+                succ_msg = 'Room Maintenance saved successfully';
+            } else {
+                post_url = $rootScope.IRISOrgServiceUrl + '/roommaintenances/' + _that.data.maintain_id;
+                method = 'PUT';
+                succ_msg = 'Room Maintenance updated successfully';
+            }
+
+            $('.butterbar').removeClass('hide').addClass('active');
+            $http({
+                method: method,
+                url: post_url,
+                data: _that.data,
+            }).success(
+                    function (response) {
+                        $('.butterbar').removeClass('active').addClass('hide');
+                        $scope.successMessage = succ_msg;
+                        $scope.data = {};
+                        $timeout(function () {
+                            $state.go('configuration.roomMaintenance');
+                        }, 1000)
+
+                    }
+            ).error(function (data, status) {
+                $('.butterbar').removeClass('active').addClass('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        };
+
+        //Get Data for update Form
+        $scope.loadForm = function () {
+            $('.butterbar').removeClass('hide').addClass('active');
+            _that = this;
+            $scope.errorData = "";
+            $http({
+                url: $rootScope.IRISOrgServiceUrl + "/roommaintenances/" + $state.params.id,
+                method: "GET"
+            }).success(
+                    function (response) {
+                        $('.butterbar').removeClass('active').addClass('hide');
+                        $scope.data = response;
+                    }
+            ).error(function (data, status) {
+                $('.butterbar').removeClass('active').addClass('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        };
 
     }]);
