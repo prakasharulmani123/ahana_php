@@ -2,20 +2,16 @@
 
 namespace IRISORG\modules\v1\controllers;
 
-use common\models\CoLogin;
-use common\models\CoResources;
 use common\models\CoRole;
-use common\models\CoRolesResources;
-use common\models\CoTenant;
-use common\models\CoUser;
 use common\models\CoUsersRoles;
 use Yii;
 use yii\data\ActiveDataProvider;
+use yii\db\BaseActiveRecord;
 use yii\filters\auth\HttpBearerAuth;
 use yii\filters\ContentNegotiator;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\rest\ActiveController;
-use yii\web\HttpException;
 use yii\web\Response;
 
 /**
@@ -48,7 +44,7 @@ class RoleController extends ActiveController {
     }
 
     public function prepareDataProvider() {
-        /* @var $modelClass \yii\db\BaseActiveRecord */
+        /* @var $modelClass BaseActiveRecord */
         $modelClass = $this->modelClass;
 
         return new ActiveDataProvider([
@@ -109,6 +105,17 @@ class RoleController extends ActiveController {
     public function actionGetactiverolesbytenant() {
         $roles = CoRole::find()->tenant()->status("1")->all(); 
         return ['success' => true, 'roles' => $roles];
+    }
+    
+    public function actionGetmyroles() {
+        $id = Yii::$app->request->get('id');
+        if (!empty($id)) {
+            $roles = CoUsersRoles::find()->tenant()->where(['user_id' => $id])->all();
+//            $roles = ArrayHelper::map($data, 'role_id', 'role_id');
+            return ['success' => true, 'roles' => $roles];
+        } else {
+            return ['success' => false, 'message' => 'Invalid Access'];
+        }
     }
 
     protected function excludeColumns($attrs) {

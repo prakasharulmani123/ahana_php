@@ -24,6 +24,7 @@ use yii\db\ActiveRecord;
  */
 class CoUsersRoles extends ActiveRecord
 {
+    public $role_ids;
     /**
      * @inheritdoc
      */
@@ -38,9 +39,9 @@ class CoUsersRoles extends ActiveRecord
     public function rules()
     {
         return [
-//            [['tenant_id', 'user_id', 'role_id'], 'required'],
+            [['tenant_id', 'user_id', 'role_ids'], 'required', 'on' => 'roleassign'],
             [['tenant_id', 'user_id', 'role_id', 'created_by', 'modified_by'], 'integer'],
-            [['created_at', 'modified_at'], 'safe']
+            [['created_at', 'modified_at', 'role_ids'], 'safe']
         ];
     }
 

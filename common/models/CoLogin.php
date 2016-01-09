@@ -127,6 +127,10 @@ class CoLogin extends ActiveRecord implements IdentityInterface {
         return static::findOne(['username' => $username]);
     }
 
+    public static function findByUsernameAndTenant($username, $tenant) {
+        return static::find()->joinWith(['user'])->where(['username' => $username, 'co_user.tenant_id' => $tenant])->one();
+    }
+
     /**
      * Finds user by password reset token
      *

@@ -3,7 +3,9 @@
 namespace IRISORG\modules\v1\controllers;
 
 use common\models\CoLogin;
+use common\models\CoRole;
 use common\models\CoUser;
+use common\models\CoUsersRoles;
 use common\models\LoginForm;
 use common\models\PasswordResetRequestForm;
 use common\models\ResetPasswordForm;
@@ -24,6 +26,7 @@ use yii\web\Response;
 class UserController extends ActiveController {
 
     public $modelClass = 'common\models\CoUser';
+
     /**
      * @inheritdoc
      */
@@ -41,13 +44,13 @@ class UserController extends ActiveController {
 //
 //        return $behaviors;
 //    }
-    
-    
+
+
     public function behaviors() {
         $behaviors = parent::behaviors();
         $behaviors['authenticator'] = [
             'class' => HttpBearerAuth::className(),
-            'only' => ['dashboard', 'createuser', 'updateuser', 'getuser', 'getlogin', 'updatelogin'],
+            'only' => ['dashboard', 'createuser', 'updateuser', 'getuser', 'getlogin', 'updatelogin', 'getuserdata', 'getusernamebytenant', 'assignroles'],
         ];
         $behaviors['contentNegotiator'] = [
             'class' => ContentNegotiator::className(),
@@ -84,7 +87,23 @@ class UserController extends ActiveController {
             'pagination' => false,
         ]);
     }
-    
+
+    public function actionGetuserdata() {
+        $model = CoUser::find()->orderBy(['created_at' => SORT_DESC])->all();
+        $data = [];
+        foreach ($model as $key => $user) {
+            $data[$key] = $user->attributes;
+            if (empty($user->login)) {
+                $data[$key]['login_link_btn'] = 'btn btn-sm btn-info';
+                $data[$key]['login_link_text'] = 'Create';
+            } else {
+                $data[$key]['login_link_btn'] = 'btn btn-sm btn-primary';
+                $data[$key]['login_link_text'] = 'Update';
+            }
+        }
+        return $data;
+    }
+
     public function actionLogin() {
         $model = new LoginForm();
 
@@ -207,7 +226,7 @@ class UserController extends ActiveController {
             return ['success' => false, 'message' => 'Please Fill the Form'];
         }
     }
-    
+
     public function actionUpdateuser() {
         $post = Yii::$app->request->post();
         if (!empty($post)) {
@@ -216,7 +235,7 @@ class UserController extends ActiveController {
             $model->attributes = $post;
 
             $valid = $model->validate();
-            
+
             if ($valid) {
                 $model->save(false);
                 return ['success' => true];
@@ -227,8 +246,8 @@ class UserController extends ActiveController {
             return ['success' => false, 'message' => 'Please Fill the Form'];
         }
     }
-    
-     public function actionGetuser() {
+
+    public function actionGetuser() {
         $id = Yii::$app->request->get('id');
         if (!empty($id)) {
             $data = CoUser::find()->where(['user_id' => $id])->one();
@@ -239,13 +258,20 @@ class UserController extends ActiveController {
         }
     }
 
-     public function actionGetlogin() {
+    public function actionGetlogin() {
         $id = Yii::$app->request->get('id');
         if (!empty($id)) {
-            $data = CoLogin::find()->where(['user_id' => $id])->one();
-            $return = empty($data) ? [] : $this->excludeColumns($data->attributes);
-            
-            return ['success' => true, 'return' => $return];
+            $user = CoUser::find()->where(['user_id' => $id])->one();
+
+            if (!empty($user)) {
+                $data = $user->login;
+                $return = empty($data) ? [] : $this->excludeColumns($data->attributes);
+                $return['name'] = $user->name;
+
+                return ['success' => true, 'return' => $return];
+            } else {
+                return ['success' => false, 'message' => 'Invalid Access'];
+            }
         } else {
             return ['success' => false, 'message' => 'Invalid Access'];
         }
@@ -259,7 +285,7 @@ class UserController extends ActiveController {
             $model->attributes = $post;
 
             $valid = $model->validate();
-            
+
             if ($valid) {
                 $model->save(false);
                 return ['success' => true];
@@ -270,7 +296,39 @@ class UserController extends ActiveController {
             return ['success' => false, 'message' => 'Please Fill the Form'];
         }
     }
-    
+
+    public function actionGetusernamebytenant() {
+        $list = CoUser::find()->tenant()->status()->all();
+        return ['userList' => $list];
+    }
+
+    public function actionAssignroles() {
+        $post = Yii::$app->request->post();
+        if (!empty($post)) {
+
+            $model = new CoUsersRoles;
+            $model->scenario = 'roleassign';
+            $model->attributes = $post;
+
+            if ($model->validate()) {
+                $user = CoUser::find()->where(['user_id' => $post['user_id']])->one();
+                
+                foreach ($post['role_ids'] as $role_id) {
+                    $roles[] = CoRole::find()->where(['role_id' => $role_id])->one();
+                }
+                
+                $extraColumns = ['tenant_id' => $post['tenant_id'], 'created_by' => Yii::$app->user->identity->user_id]; // extra columns to be saved to the many to many table
+                $unlink = true; // unlink tags not in the list
+                $delete = true; // delete unlinked tags
+                $user->linkAll('roles', $roles, $extraColumns, $unlink, $delete);
+            } else {
+                return ['success' => false, 'message' => Html::errorSummary([$model])];
+            }
+        } else {
+            return ['success' => false, 'message' => 'Please Fill the Form'];
+        }
+    }
+
     protected function excludeColumns($attrs) {
         $exclude_cols = ['created_by', 'created_at', 'modified_by', 'modified_at'];
         foreach ($attrs as $col => $val) {
@@ -279,4 +337,5 @@ class UserController extends ActiveController {
         }
         return $attrs;
     }
+
 }

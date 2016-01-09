@@ -5,6 +5,7 @@ namespace IRISORG\modules\v1\controllers;
 use common\models\CoMasterCity;
 use common\models\CoMasterCountry;
 use common\models\CoMasterState;
+use common\models\CoTenant;
 use Yii;
 use yii\filters\ContentNegotiator;
 use yii\web\Controller;
@@ -69,6 +70,15 @@ class DefaultController extends Controller {
             $model->save(false);
             return ['success' => "ok"];
         }
+    }
+
+    public function actionGetTenantList() {
+        $list = array();
+        $data = CoTenant::getTenantlist();
+        foreach ($data as $value => $label) {
+            $list[] = array('value' => $value, 'label' => $label);
+        }
+        return ['tenantList' => $list];
     }
 
 }

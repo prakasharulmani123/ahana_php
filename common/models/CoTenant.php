@@ -4,6 +4,7 @@ namespace common\models;
 
 use common\models\query\CoTenantQuery;
 use yii\db\ActiveQuery;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "co_tenant".
@@ -134,6 +135,9 @@ class CoTenant extends RActiveRecord {
         return new CoTenantQuery(get_called_class());
     }
 
+    public static function getTenantlist() {
+        return ArrayHelper::map(self::find()->all(), 'tenant_id', 'tenant_name');
+    }
 //    public function extraFields() {
 //        parent::extraFields();
 //        return ['coMasterCity', 'coMasterState', 'coMasterCountry'];

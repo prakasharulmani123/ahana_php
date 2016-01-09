@@ -5,6 +5,7 @@ namespace common\models;
 use common\models\query\CoUserQuery;
 use cornernote\linkall\LinkAllBehavior;
 use yii\db\ActiveQuery;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "co_user".
@@ -124,7 +125,11 @@ class CoUser extends RActiveRecord {
         return $this->hasMany(CoRole::className(), ['role_id' => 'role_id'])->via('usersRoles');
     }
 
-//    public static function find() {
-//        return new CoUserQuery(get_called_class());
-//    }
+    public static function find() {
+        return new CoUserQuery(get_called_class());
+    }
+    
+    public static function getMyUserlist() {
+        return ArrayHelper::map(self::find()->tenant()->status()->all(), 'user_id', 'name');
+    }
 }
