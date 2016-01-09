@@ -6,6 +6,7 @@
                 <select class="form-control" name="Floor" ng-model="data.floor_id" ng-options="floor.value as floor.label for floor in floors | orderBy: label" required>
                     <option value="">Select Floor</option>
                 </select>
+                {{floors}}
             </div>
         </div>
         <div class="line line-dashed b-b line-lg "></div>
