@@ -53,7 +53,7 @@ class RoomchargeitemController extends ActiveController {
     public function actionRemove() {
         $id = Yii::$app->getRequest()->post('id');
         if($id){
-            $model = CoRoomChargeItem::find()->where(['charge_cat_id' => $id])->one();
+            $model = CoRoomChargeItem::find()->where(['charge_item_id' => $id])->one();
             $model->remove();
             return ['success' => true];
         }

@@ -2,8 +2,8 @@
 
 namespace common\models;
 
+use common\models\query\CoRoomChargeItemQuery;
 use yii\db\ActiveQuery;
-use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "co_room_charge_item".
@@ -83,5 +83,19 @@ class CoRoomChargeItem extends RActiveRecord
     public function getChargeCat()
     {
         return $this->hasOne(CoRoomChargeCategory::className(), ['charge_cat_id' => 'charge_cat_id']);
+    }
+    
+    public static function find() {
+        return new CoRoomChargeItemQuery(get_called_class());
+    }
+    
+    public function fields() {
+        $extend = [
+            'charge_cat_name' => function ($model) {
+                return (isset($model->chargeCat) ? $model->chargeCat->charge_cat_name : '-');
+            },
+        ];
+        $fields = array_merge(parent::fields(), $extend);
+        return $fields;
     }
 }
