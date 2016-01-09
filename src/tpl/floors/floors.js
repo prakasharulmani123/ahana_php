@@ -94,7 +94,6 @@ app.controller('FloorsController', ['$rootScope', '$scope', '$timeout', '$http',
                     }).then(
                             function (response) {
                                 if (response.data.success === true) {
-                                    $scope.data = response.data.return;
                                     $scope.displayedCollection.splice(index, 1);
                                 }
                                 else {
