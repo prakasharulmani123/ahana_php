@@ -8,7 +8,7 @@ app.controller('RoomChargeCategoryItemsController', ['$rootScope', '$scope', '$t
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
 
             // Get data's from service
-            $http.get($rootScope.IRISOrgServiceUrl + '/roomchargecategoryitem')
+            $http.get($rootScope.IRISOrgServiceUrl + '/roomchargeitems')
                     .success(function (roomChargeCategoryItems) {
                         $scope.rowCollection = roomChargeCategoryItems;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
@@ -95,7 +95,7 @@ app.controller('RoomChargeCategoryItemsController', ['$rootScope', '$scope', '$t
                 var index = $scope.displayedCollection.indexOf(row);
                 if (index !== -1) {
                     $http({
-                        url: $rootScope.IRISOrgServiceUrl + "/roomchargecategoryitem/remove",
+                        url: $rootScope.IRISOrgServiceUrl + "/roomchargeitem/remove",
                         method: "POST",
                         data: {id: row.charge_item_id}
                     }).then(
