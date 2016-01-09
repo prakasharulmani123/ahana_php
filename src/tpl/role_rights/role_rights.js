@@ -2,7 +2,20 @@
 /* Controllers */
 app.controller('RolesRightsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', function ($rootScope, $scope, $timeout, $http, $state) {
 
-        //Get my organization details
+        //sanitize all the variables
+        $scope.sanitizeVariable = function (data) {
+            var result = {};
+            angular.forEach(data, function (value, key) {
+                if (typeof value == "undefined") {
+                    result[key] = '';
+                } else {
+                    result[key] = value;
+                }
+            }, result);
+            return result;
+        }
+
+        //Get my organization details with all modules
         $http({
             url: $rootScope.IRISOrgServiceUrl + '/organization/getorg',
             method: "GET"
@@ -19,7 +32,7 @@ app.controller('RolesRightsController', ['$rootScope', '$scope', '$timeout', '$h
                 }
         );
 
-        //Get Organization Roles
+        //Get Organization active roles
         $http({
             url: $rootScope.IRISOrgServiceUrl + '/role/getactiverolesbytenant',
             method: "GET"
@@ -34,18 +47,7 @@ app.controller('RolesRightsController', ['$rootScope', '$scope', '$timeout', '$h
                 }
         );
 
-        $scope.sanitizeVariable = function (data) {
-            var result = {};
-            angular.forEach(data, function (value, key) {
-                if (typeof value == "undefined") {
-                    result[key] = '';
-                } else {
-                    result[key] = value;
-                }
-            }, result);
-            return result;
-        }
-
+        //Get Rolewise rights
         $scope.getSavedRights = function () {
             $scope.errorData = "";
             $scope.successMessage = "";
@@ -67,6 +69,7 @@ app.controller('RolesRightsController', ['$rootScope', '$scope', '$timeout', '$h
             )
         }
 
+        // Assign Role rights 
         $scope.saveRoleRights = function () {
             $scope.errorData = "";
             $scope.successMessage = "";
@@ -112,12 +115,6 @@ app.controller('RolesRightsController', ['$rootScope', '$scope', '$timeout', '$h
                         }
                     }
             )
-
         };
         
-//        $scope.reset = function () {
-//            $scope.errorData = "";
-//            $scope.selectedModules = [];
-//            $scope.data = {organizationOid: $scope.organization.oid};
-//        }
     }]);

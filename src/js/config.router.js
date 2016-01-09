@@ -60,6 +60,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                 url: '/404',
                 templateUrl: 'tpl/page_404.html'
             })
+
             .state('configuration', {
                 abstract: true,
                 url: '/configuration',
@@ -198,7 +199,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-            //CONFIGURATION FLOOR
+		//CONFIGURATION FLOOR
             .state('configuration.floors', {
                 url: '/floors',
                 templateUrl: 'tpl/floors/index.html',
@@ -229,6 +230,42 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
+            
+            //Room Maintenance
+            .state('configuration.roomMaintenance', {
+                url: '/roomMaintenance',
+                templateUrl: 'tpl/room_maintenance/index.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('smart-table').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/room_maintenance/room_maintenance.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            .state('configuration.roomMaintenanceCreate', {
+                url: '/roomMaintenanceCreate',
+                templateUrl: 'tpl/room_maintenance/create.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/room_maintenance/room_maintenance.js']);
+                        }]
+                }
+            })
+            .state('configuration.roomMaintenanceUpdate', {
+                url: '/roomMaintenanceUpdate',
+                templateUrl: 'tpl/room_maintenance/update.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/room_maintenance/room_maintenance.js']);
+                        }]
+                }
+            })
 }
 run.$inject = ['$rootScope', '$state', '$stateParams', '$location', '$cookieStore', '$http', '$window', 'CommonService'];
 function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $window, CommonService) {
@@ -253,7 +290,7 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
         if ($location.path() == '/access/resetpwd') {
             var token = $location.search().token;
             $rootScope.commonService.GetPasswordResetAccess(token, function (response) {
-                if(response.success === false){
+                if (response.success === false) {
 //                    $scope.authError = response.message;
                     $location.path('/access/signin');
                 }

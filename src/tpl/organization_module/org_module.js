@@ -4,7 +4,7 @@ app.controller('OrganizationModulesController', ['$rootScope', '$scope', '$timeo
         $scope.loadOrganizationModulesList = function () {
             // pagination set up
             $scope.rowCollection = [];  // base collection
-            $scope.itemsByPage = 1; // No.of records per page
+            $scope.itemsByPage = 10; // No.of records per page
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
 
             // Get data's from service
