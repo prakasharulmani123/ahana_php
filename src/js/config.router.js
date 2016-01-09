@@ -269,7 +269,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-		//CONFIGURATION WARD
+            //CONFIGURATION WARD
             .state('configuration.wards', {
                 url: '/wards',
                 templateUrl: 'tpl/wards/index.html',
@@ -297,6 +297,78 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                     deps: ['uiLoad',
                         function (uiLoad) {
                             return uiLoad.load(['tpl/wards/wards.js']);
+                        }]
+                }
+            })
+            
+            //Room Types
+            .state('configuration.roomType', {
+                url: '/roomType',
+                templateUrl: 'tpl/room_type/index.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('smart-table').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/room_type/room_type.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            .state('configuration.roomTypeCreate', {
+                url: '/roomTypeCreate',
+                templateUrl: 'tpl/room_type/create.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/room_type/room_type.js']);
+                        }]
+                }
+            })
+            .state('configuration.roomTypeUpdate', {
+                url: '/roomTypeUpdate/{id}',
+                templateUrl: 'tpl/room_type/update.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/room_type/room_type.js']);
+                        }]
+                }
+            })
+            
+            //Room
+            .state('configuration.room', {
+                url: '/room',
+                templateUrl: 'tpl/room/index.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('smart-table').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/room/room.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            .state('configuration.roomCreate', {
+                url: '/roomCreate',
+                templateUrl: 'tpl/room/create.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/room/room.js']);
+                        }]
+                }
+            })
+            .state('configuration.roomUpdate', {
+                url: '/roomUpdate/{id}',
+                templateUrl: 'tpl/room/update.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/room/room.js']);
                         }]
                 }
             })
