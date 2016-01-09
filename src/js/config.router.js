@@ -266,6 +266,37 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
+		//CONFIGURATION WARD
+            .state('configuration.wards', {
+                url: '/wards',
+                templateUrl: 'tpl/wards/index.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/wards/wards.js']);
+                        }]
+                }
+            })
+            .state('configuration.ward_create', {
+                url: '/ward_create',
+                templateUrl: 'tpl/wards/create.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/wards/wards.js']);
+                        }]
+                }
+            })
+            .state('configuration.ward_update', {
+                url: '/ward_update/{id}',
+                templateUrl: 'tpl/wards/update.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/wards/wards.js']);
+                        }]
+                }
+            })
 }
 run.$inject = ['$rootScope', '$state', '$stateParams', '$location', '$cookieStore', '$http', '$window', 'CommonService'];
 function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $window, CommonService) {
