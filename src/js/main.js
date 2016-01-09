@@ -68,6 +68,17 @@ angular.module('app')
                     $scope.service.ChangeStatus(modelName, primaryKey);
                 }
 
+                //error Summary
+                $scope.errorSummary = function (error) {
+                    var html = '<div><p>Please fix the following errors:</p><ul>';
+                    angular.forEach(error, function (error) {
+                        html += '<li>'+error.message+'</li>';
+                    });
+
+                    html += '</ul></div>';
+                    return html;
+                }
+
 
                 function isSmartDevice($window)
                 {

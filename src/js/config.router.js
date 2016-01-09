@@ -17,6 +17,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                 url: '/access',
                 template: '<div ui-view class="fade-in-right-big smooth"></div>'
             })
+            //SIGNIN
             .state('access.signin', {
                 url: '/signin',
                 templateUrl: 'tpl/page_signin.html',
@@ -27,6 +28,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
+            //FORGOT PASSWORD
             .state('access.forgotpwd', {
                 url: '/forgotpwd',
                 templateUrl: 'tpl/page_forgotpwd.html',
@@ -37,6 +39,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
+            //RESET PASSWORD
             .state('access.resetpwd', {
                 url: '/resetpwd?token=',
                 templateUrl: 'tpl/page_resetpwd.html',
@@ -47,10 +50,12 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
+            //LOGOUT
             .state('access.logout', {
                 url: '/forgotpwd',
                 templateUrl: 'tpl/page_forgotpwd.html'
             })
+            //404 PAGE
             .state('access.404', {
                 url: '/404',
                 templateUrl: 'tpl/page_404.html'
@@ -66,6 +71,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
+            //CONFIGURATION ROLES
             .state('configuration.roles', {
                 url: '/roles',
                 templateUrl: 'tpl/roles/index.html',
@@ -100,6 +106,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
+            //ORGANIZATION VIEW
             .state('configuration.organization', {
                 url: '/organization',
                 templateUrl: 'tpl/organization/index.html',
@@ -111,7 +118,8 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
 
                 }
             })
-		.state('configuration.registration', {
+            //CONFIGURATION USER REGISTRATION
+            .state('configuration.registration', {
                 url: '/registration',
                 templateUrl: 'tpl/registration/index.html',
                 resolve: {
@@ -145,6 +153,18 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
+            //CONFIGURATION LOGIN UPDATE
+            .state('configuration.login_update', {
+                url: '/login_update/{id}',
+                templateUrl: 'tpl/registration/login_update.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/registration/registration.js']);
+                        }]
+                }
+            })
+            //CONFIGURATION MODULES
             .state('configuration.organizationModule', {
                 url: '/organizationModule',
                 templateUrl: 'tpl/organization_module/index.html',
@@ -156,16 +176,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
 
                 }
             })
-            .state('configuration.login_update', {
-                url: '/login_update/{id}',
-                templateUrl: 'tpl/registration/login_update.html',
-                resolve: {
-                    deps: ['uiLoad',
-                        function (uiLoad) {
-                            return uiLoad.load(['tpl/registration/registration.js']);
-                        }]
-                }
-            })
+            //CONFIGURATION ROLES MODULES ASSIGN
             .state('configuration.roleRights', {
                 url: '/roleRights',
                 templateUrl: 'tpl/role_rights/index.html',
@@ -176,6 +187,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
+            //CONFIGURATION USERS ROLES ASSIGN
             .state('configuration.userRoles', {
                 url: '/userRoles',
                 templateUrl: 'tpl/user_roles/index.html',
@@ -183,6 +195,37 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                     deps: ['uiLoad',
                         function (uiLoad) {
                             return uiLoad.load(['tpl/user_roles/user_roles.js']);
+                        }]
+                }
+            })
+            //CONFIGURATION FLOOR
+            .state('configuration.floors', {
+                url: '/floors',
+                templateUrl: 'tpl/floors/index.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/floors/floors.js']);
+                        }]
+                }
+            })
+            .state('configuration.floor_create', {
+                url: '/floor_create',
+                templateUrl: 'tpl/floors/create.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/floors/floors.js']);
+                        }]
+                }
+            })
+            .state('configuration.floor_update', {
+                url: '/floor_update/{id}',
+                templateUrl: 'tpl/floors/update.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/floors/floors.js']);
                         }]
                 }
             })
