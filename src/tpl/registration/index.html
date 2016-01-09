@@ -26,7 +26,7 @@
                     <th st-sort="designation">Designation</th>
                     <th st-sort="mobile">Mobile</th>
                     <th st-sort="email">Email</th>
-                    <th>Set Login</th>
+                    <th>Login Credentials</th>
                     <th>Action</th>
                 </tr>
                 <tr>
@@ -58,9 +58,7 @@
                         {{row.email}}
                     </td>
                     <td align="center" class="text-center">
-                        <a title="Login Update" class="btn btn-sm btn-primary" ui-sref="configuration.login_update({id: '{{row.user_id}}'})">
-                            Login
-                        </a>
+                        <a title="{{row.login_link_text}}" class="{{row.login_link_btn}}" ui-sref="configuration.login_update({id: '{{row.user_id}}'})">{{row.login_link_text}}</a>
                     </td>
                     <td>
                         <a title="Edit" ui-sref="configuration.user_update({id: '{{row.user_id}}'})">

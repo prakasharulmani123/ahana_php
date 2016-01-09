@@ -12,6 +12,7 @@ function CommonService($http, $rootScope, $window, $q) {
     service.GetCityList = GetCityList;
     service.GetTitleCodes = GetTitleCodes;
     service.GetPasswordResetAccess = GetPasswordResetAccess;
+    service.GetTenantList = GetTenantList;
 
     return service;
 
@@ -77,5 +78,17 @@ function CommonService($http, $rootScope, $window, $q) {
     function GetTitleCodes(callback) {
         var response = [{value: 'Mr.', label: 'Mr.'}, {value: 'Mrs.', label: 'Mrs.'}, {value: 'Miss.', label: 'Miss.'}, {value: 'Dr.', label: 'Dr.'}];
         callback(response);
+    }
+    
+    function GetTenantList(callback) {
+        var response;
+
+        $http.get($rootScope.IRISOrgServiceUrl + '/default/get-tenant-list')
+                .success(function (response) {
+                    callback(response);
+                }, function (x) {
+                    response = {success: false, message: 'Server Error'};
+                    callback(response);
+                });
     }
 }

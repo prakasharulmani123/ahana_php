@@ -12,7 +12,7 @@ angular.module('app')
 
                 // config
                 $scope.app = {
-                    name: 'Ahana HMS',
+                    name: 'IRIS',
                     version: '',
                     // for chart colors
                     color: {

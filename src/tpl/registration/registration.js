@@ -1,4 +1,24 @@
 app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'toaster', function ($rootScope, $scope, $timeout, $http, $state, toaster) {
+        
+        //Index Page
+        $scope.loadList = function () {
+            // pagination set up
+            $scope.rowCollection = [];  // base collection
+            $scope.itemsByPage = 10; // No.of records per page
+            $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
+
+            // Get data's from service
+            $http.get($rootScope.IRISOrgServiceUrl + '/user/getuserdata')
+                    .success(function (roles) {
+                        $scope.rowCollection = roles;
+                        $scope.displayedCollection = [].concat($scope.rowCollection);
+                    })
+                    .error(function () {
+                        $scope.error = "An Error has occured while loading roles!";
+                    });
+        };
+
+        //For User Form
         $rootScope.commonService.GetTitleCodes(function (response) {
             $scope.title_codes = response;
         });
@@ -45,24 +65,7 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
                 }
             });
         }
-        //Index Page
-        $scope.loadList = function () {
-            // pagination set up
-            $scope.rowCollection = [];  // base collection
-            $scope.itemsByPage = 10; // No.of records per page
-            $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
-
-            // Get data's from service
-            $http.get($rootScope.IRISOrgServiceUrl + '/user')
-                    .success(function (roles) {
-                        $scope.rowCollection = roles;
-                        $scope.displayedCollection = [].concat($scope.rowCollection);
-                    })
-                    .error(function () {
-                        $scope.error = "An Error has occured while loading roles!";
-                    });
-        };
-
+        
         //Save Both Add & Update Data
         $scope.saveForm = function (mode) {
             _that = this;
@@ -169,7 +172,7 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
                         $('.butterbar').removeClass('active').addClass('hide');
                         if (response.data.success === true) {
                             $scope.successMessage = "Login saved successfully";
-                            $scope.data = {};
+//                            $scope.data = {};
                             $timeout(function () {
                                 $state.go('configuration.registration');
                             }, 1000)
@@ -194,11 +197,18 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
         }
 
         //For Datepicker
-        $scope.open = function ($event) {
+        $scope.open = function ($event, mode) {
             $event.preventDefault();
             $event.stopPropagation();
 
-            $scope.opened = true;
+            switch (mode) {
+                case 'opened1':
+                    $scope.opened1 = true;
+                    break;
+                case 'opened2':
+                    $scope.opened2 = true;
+                    break;
+            }
         };
 
     }]);

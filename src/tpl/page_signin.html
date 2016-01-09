@@ -5,9 +5,7 @@
             <strong>Sign in to get in touch</strong>
         </div>
         <form name="form" class="form-validation">
-            <div class="text-danger wrapper text-center" ng-show="authError">
-                {{authError}}
-            </div>
+            <div class="alert ng-isolate-scope alert-danger alert-dismissable" ng-show="authError" ng-bind-html="authError"></div>
             <div class="list-group list-group-sm">
                 <div class="list-group-item">
                     <input type="text" placeholder="Username" class="form-control no-border" ng-model="user.username" required>
@@ -15,6 +13,12 @@
                 <div class="list-group-item">
                     <input type="password" placeholder="Password" class="form-control no-border" ng-model="user.password" required>
                 </div>
+                <div class="list-group-item">
+                    <select class="form-control" name="Country" ng-model="user.tenant_id" ng-options="tenant.value as tenant.label for tenant in tenants | orderBy: label" required>
+                        <option value="">Select Organization</option>
+                    </select>
+                </div>
+
             </div>
             <button type="submit" class="btn btn-lg btn-primary btn-block" ng-click="login()" ng-disabled='form.$invalid'>Log in</button>
             <div class="text-center m-t m-b"><a ui-sref="access.forgotpwd" href="#/access/forgotpwd">Forgot password?</a></div>

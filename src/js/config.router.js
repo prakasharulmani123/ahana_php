@@ -176,6 +176,16 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
+            .state('configuration.userRoles', {
+                url: '/userRoles',
+                templateUrl: 'tpl/user_roles/index.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/user_roles/user_roles.js']);
+                        }]
+                }
+            })
 }
 run.$inject = ['$rootScope', '$state', '$stateParams', '$location', '$cookieStore', '$http', '$window', 'CommonService'];
 function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $window, CommonService) {

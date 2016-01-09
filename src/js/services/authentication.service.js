@@ -15,9 +15,9 @@
 
         return service;
 
-        function Login(username, password, callback) {
+        function Login(username, password, tenant_id, callback) {
             var response;
-            $http.post($rootScope.IRISOrgServiceUrl + '/user/login', {username: username, password: password})
+            $http.post($rootScope.IRISOrgServiceUrl + '/user/login', {username: username, password: password, tenant_id: tenant_id})
                     .success(function (response) {
                         callback(response);
                     }, function (x) {

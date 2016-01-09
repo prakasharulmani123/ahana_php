@@ -9,10 +9,13 @@ function SignInForm($scope, $state, AuthenticationService, $http, $rootScope, $l
     $scope.user = {};
     $scope.authError = null;
 
+    $rootScope.commonService.GetTenantList(function (response) {
+        $scope.tenants = response.tenantList;
+    });
     $scope.login = function () {
         $scope.authError = null;
         // Try to login
-        AuthenticationService.Login($scope.user.username, $scope.user.password, function (response) {
+        AuthenticationService.Login($scope.user.username, $scope.user.password, $scope.user.tenant_id, function (response) {
             if (response.success) {
                 AuthenticationService.SetCredentials(response.access_token);
                 $state.go('configuration.roles');
