@@ -132,4 +132,20 @@ class CoUser extends RActiveRecord {
     public static function getMyUserlist() {
         return ArrayHelper::map(self::find()->tenant()->status()->all(), 'user_id', 'name');
     }
+    
+//    public function fields() {
+//        $extend = [
+//            'username' => function ($model) {
+//                return (isset($model->login) ? $model->login->username : '-');
+//            },
+//            'activation_date' => function ($model) {
+//                return (isset($model->login) ? $model->login->activation_date : '-');
+//            },
+//            'Inactivation_date' => function ($model) {
+//                return (isset($model->login) ? $model->login->Inactivation_date : '-');
+//            },
+//        ];
+//        $fields = array_merge(parent::fields(), $extend);
+//        return $fields;
+//    }
 }

@@ -97,9 +97,15 @@ class UserController extends ActiveController {
             if (empty($user->login)) {
                 $data[$key]['login_link_btn'] = 'btn btn-sm btn-info';
                 $data[$key]['login_link_text'] = 'Create';
+                $data[$key]['username'] = '-';
+                $data[$key]['activation_date'] = '-';
+                $data[$key]['Inactivation_date'] = '-';
             } else {
                 $data[$key]['login_link_btn'] = 'btn btn-sm btn-primary';
                 $data[$key]['login_link_text'] = 'Update';
+                $data[$key]['username'] = $user->login->username;
+                $data[$key]['activation_date'] = $user->login->activation_date;
+                $data[$key]['Inactivation_date'] = $user->login->Inactivation_date;
             }
         }
         return $data;
