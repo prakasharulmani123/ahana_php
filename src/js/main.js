@@ -79,6 +79,15 @@ angular.module('app')
                     return html;
                 }
 
+                //show/hide Load bar
+                $scope.loadbar = function (mode) {
+                    if(mode == 'show'){
+                        $('.butterbar').removeClass('hide').addClass('active');
+                    }else if(mode == 'hide'){
+                        $('.butterbar').removeClass('active').addClass('hide');
+                    }
+                }
+
 
                 function isSmartDevice($window)
                 {

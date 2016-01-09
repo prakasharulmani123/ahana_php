@@ -31,14 +31,14 @@ app.controller('RolesController', ['$rootScope', '$scope', '$timeout', '$http', 
                 post_url = $rootScope.IRISOrgServiceUrl + '/roles/updaterole';
             }
 
-            $('.butterbar').removeClass('hide').addClass('active');
+            $scope.loadbar('show');
             $http({
                 method: "POST",
                 url: post_url,
                 data: _that.data,
             }).then(
                     function (response) {
-                        $('.butterbar').removeClass('active').addClass('hide');
+                        $scope.loadbar('hide');
                         if (response.data.success === true) {
 
                             if (mode !== 'add') {

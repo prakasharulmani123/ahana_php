@@ -1,5 +1,5 @@
 app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'toaster', function ($rootScope, $scope, $timeout, $http, $state, toaster) {
-        
+
         //Index Page
         $scope.loadList = function () {
             // pagination set up
@@ -19,21 +19,23 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
         };
 
         //For User Form
-        $rootScope.commonService.GetTitleCodes(function (response) {
-            $scope.title_codes = response;
-        });
+        $scope.initForm = function () {
+            $rootScope.commonService.GetTitleCodes(function (response) {
+                $scope.title_codes = response;
+            });
 
-        $rootScope.commonService.GetCountryList(function (response) {
-            $scope.countries = response.countryList;
-        });
+            $rootScope.commonService.GetCountryList(function (response) {
+                $scope.countries = response.countryList;
+            });
 
-        $rootScope.commonService.GetStateList(function (response) {
-            $scope.states = response.stateList;
-        });
+            $rootScope.commonService.GetStateList(function (response) {
+                $scope.states = response.stateList;
+            });
 
-        $rootScope.commonService.GetCityList(function (response) {
-            $scope.cities = response.cityList;
-        });
+            $rootScope.commonService.GetCityList(function (response) {
+                $scope.cities = response.cityList;
+            });
+        }
 
         $scope.updateState2 = function () {
             $scope.availableStates2 = [];
@@ -65,7 +67,7 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
                 }
             });
         }
-        
+
         //Save Both Add & Update Data
         $scope.saveForm = function (mode) {
             _that = this;
@@ -79,14 +81,14 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
                 post_url = $rootScope.IRISOrgServiceUrl + '/user/updateuser';
             }
 
-            $('.butterbar').removeClass('hide').addClass('active');
+            $scope.loadbar('show');
             $http({
                 method: "POST",
                 url: post_url,
                 data: _that.data,
             }).then(
                     function (response) {
-                        $('.butterbar').removeClass('active').addClass('hide');
+                        $scope.loadbar('hide');
                         if (response.data.success === true) {
 
                             if (mode !== 'add') {
@@ -162,14 +164,14 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
             $scope.errorData = "";
             $scope.successMessage = "";
 
-            $('.butterbar').removeClass('hide').addClass('active');
+            $scope.loadbar('show');
             $http({
                 method: "POST",
                 url: $rootScope.IRISOrgServiceUrl + '/users/updatelogin',
                 data: sanitizeVariable(_that.data),
             }).then(
                     function (response) {
-                        $('.butterbar').removeClass('active').addClass('hide');
+                        $scope.loadbar('hide');
                         if (response.data.success === true) {
                             $scope.successMessage = "Login saved successfully";
 //                            $scope.data = {};

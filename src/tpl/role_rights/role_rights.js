@@ -51,14 +51,14 @@ app.controller('RolesRightsController', ['$rootScope', '$scope', '$timeout', '$h
         $scope.getSavedRights = function () {
             $scope.errorData = "";
             $scope.successMessage = "";
-            $('.butterbar').removeClass('hide').addClass('active');
+            $scope.loadbar('show');
             $http({
                 method: "POST",
                 url: $rootScope.IRISOrgServiceUrl + '/organization/getorgmodulesbyrole',
                 data: this.data,
             }).then(
                     function (response) {
-                        $('.butterbar').removeClass('active').addClass('hide');
+                        $scope.loadbar('hide');
                         if (response.data.success === true) {
                             $scope.modules = response.data.modules;
                         }
@@ -95,14 +95,14 @@ app.controller('RolesRightsController', ['$rootScope', '$scope', '$timeout', '$h
 
             var post_data = {Module: $scope.sanitizeVariable(this.data.Module)};
 
-            $('.butterbar').removeClass('hide').addClass('active');
+            $scope.loadbar('show');
             $http({
                 method: "POST",
                 url: $rootScope.IRISOrgServiceUrl + '/organization/updaterolerights',
                 data: post_data,
             }).then(
                     function (response) {
-                        $('.butterbar').removeClass('active').addClass('hide');
+                        $scope.loadbar('hide');
                         if (response.data.success === true) {
                             $scope.successMessage = "Organization saved successfully";
                             $scope.data = {};

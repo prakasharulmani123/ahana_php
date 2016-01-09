@@ -67,14 +67,14 @@ app.controller('UserRolesController', ['$scope', '$http', '$filter', '$state', '
             }
 
             var _that = this;
-            $('.butterbar').removeClass('hide').addClass('active');
+            $scope.loadbar('show');
             $http({
                 method: "POST",
                 url: $rootScope.IRISOrgServiceUrl + '/user/assignroles',
                 data: _that.data,
             }).then(
                     function (response) {
-                        $('.butterbar').removeClass('active').addClass('hide');
+                        $scope.loadbar('hide');
                         if (response.data.success === true) {
                             $scope.successMessage = "Roles assigned successfully";
                         }

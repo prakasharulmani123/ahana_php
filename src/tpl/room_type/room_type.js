@@ -35,14 +35,14 @@ app.controller('RoomTypesController', ['$rootScope', '$scope', '$timeout', '$htt
                 succ_msg = 'Roomtype updated successfully';
             }
 
-            $('.butterbar').removeClass('hide').addClass('active');
+            $scope.loadbar('show');
             $http({
                 method: method,
                 url: post_url,
                 data: _that.data,
             }).success(
                     function (response) {
-                        $('.butterbar').removeClass('active').addClass('hide');
+                        $scope.loadbar('hide');
                         $scope.successMessage = succ_msg;
                         $scope.data = {};
                         $timeout(function () {
@@ -51,7 +51,7 @@ app.controller('RoomTypesController', ['$rootScope', '$scope', '$timeout', '$htt
 
                     }
             ).error(function (data, status) {
-                $('.butterbar').removeClass('active').addClass('hide');
+                $scope.loadbar('hide');
                 if (status == 422)
                     $scope.errorData = $scope.errorSummary(data);
                 else
@@ -61,7 +61,7 @@ app.controller('RoomTypesController', ['$rootScope', '$scope', '$timeout', '$htt
 
         //Get Data for update Form
         $scope.loadForm = function () {
-            $('.butterbar').removeClass('hide').addClass('active');
+            $scope.loadbar('show');
             _that = this;
             $scope.errorData = "";
             $http({
@@ -69,11 +69,11 @@ app.controller('RoomTypesController', ['$rootScope', '$scope', '$timeout', '$htt
                 method: "GET"
             }).success(
                     function (response) {
-                        $('.butterbar').removeClass('active').addClass('hide');
+                        $scope.loadbar('hide');
                         $scope.data = response;
                     }
             ).error(function (data, status) {
-                $('.butterbar').removeClass('active').addClass('hide');
+                $scope.loadbar('hide');
                 if (status == 422)
                     $scope.errorData = $scope.errorSummary(data);
                 else

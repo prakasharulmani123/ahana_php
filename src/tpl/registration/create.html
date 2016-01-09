@@ -7,7 +7,7 @@
             {% include 'tpl/blocks/alert.html' %}
         </div>
         <div class="row">
-            <div class="col-sm-12" ng-init="data.formrole = 'add'">
+            <div class="col-sm-12" ng-init="data.formrole = 'add'; initForm();">
                 <form name="userForm" class="form-horizontal form-validation" novalidate="">
                     <div ng-include="'tpl/registration/_form.html'">
                         {% include 'tpl/registration/_form.html' %}
