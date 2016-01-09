@@ -124,59 +124,6 @@ class CoRolesResources extends ActiveRecord {
         return $tree;
     }
 
-    public static function getModuletreeByTenant($tenant_id) {
-        $role_resources_ids = self::find()->select(['GROUP_CONCAT(resource_id) AS resource_ids'])->where(['tenant_id' => $tenant_id])->orderBy(['resource_id' => 'ASC'])->one();
-        $role_resources_ids = explode(',', $role_resources_ids->resource_ids);
-
-        $tree = array();
-        foreach ($role_resources_ids as $key => $value) {
-            $tenantModule = CoResources::find()->where(['resource_id' => $value, 'parent_id' => NULL])->one();
-            if (!empty($tenantModule)) {
-                //            echo '<pre>';
-//            print_r($tenantModule);
-//            exit;
-
-                $tree[$key] = array('label' => $tenantModule->resource_name, 'value' => $tenantModule->resource_id);
-//            echo '<pre>';
-//            print_r($tree);
-//            print_r($tree);
-//            exit;
-
-                foreach ($tenantModule->child as $cKey => $child) {
-                    if (in_array($child->resource_id, $role_resources_ids)) {
-                        $tree[$key]['children'][$cKey] = array('label' => $child->resource_name, 'value' => $child->resource_id);
-                    }
-                }
-            }
-        }
-        
-
-
-        foreach ($tree as $key => $parent) {
-            if (in_array($parent['value'], $role_resources_ids)) {
-                $tot = $checked = $unchecked = 0;
-                foreach ($parent['children'] as $cKey => $child) {
-                    if (in_array($child['value'], $role_resources_ids)) {
-                        $tree[$key]['children'][$cKey]['selected'] = true;
-                        $checked++;
-                    } else {
-                        $unchecked++;
-                    }
-                    $tot++;
-                }
-
-                if ($tot == $checked)
-                    $tree[$key]['selected'] = true;
-                if ($checked > 0 && $unchecked > 0)
-                    $tree[$key]['__ivhTreeviewIndeterminate'] = true;
-            }
-        }
-//        echo '<pre>';
-//        print_r($tree);
-//        exit;
-        return $tree;
-    }
-
     public static function find() {
         return new CoRolesResourcesQuery(get_called_class());
     }
