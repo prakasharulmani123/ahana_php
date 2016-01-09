@@ -2,7 +2,7 @@
 
 namespace IRISORG\modules\v1\controllers;
 
-use common\models\CoFloor;
+use common\models\CoRoomChargeCategory;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -12,11 +12,11 @@ use yii\rest\ActiveController;
 use yii\web\Response;
 
 /**
- * FloorController implements the CRUD actions for CoTenant model.
+ * RoomChargeCategoryController implements the CRUD actions for CoTenant model.
  */
-class FloorController extends ActiveController {
+class RoomchargecategoryController extends ActiveController {
 
-    public $modelClass = 'common\models\CoFloor';
+    public $modelClass = 'common\models\CoRoomChargeCategory';
 
     public function behaviors() {
         $behaviors = parent::behaviors();
@@ -49,38 +49,34 @@ class FloorController extends ActiveController {
             'pagination' => false,
         ]);
     }
-    
+
     public function actionRemove() {
         $id = Yii::$app->getRequest()->post('id');
-        if($id){
-            $model = CoFloor::find()->where(['floor_id' => $id])->one();
+        if ($id) {
+            $model = CoRoomChargeCategory::find()->where(['charge_cat_id' => $id])->one();
             $model->remove();
             return ['success' => true];
         }
     }
-    
-    public function actionGetfloorlist() {
-        $tenant = null;
-        $status = '1';
-        $deleted = false;
-        
+
+    public function actionGetroomchargecategorylist() {
         $get = Yii::$app->getRequest()->get();
-        
-        if(isset($get['tenant']))
+
+        if (isset($get['tenant']))
             $tenant = $get['tenant'];
-        
-        if(isset($get['status']))
+
+        if (isset($get['status']))
             $status = strval($get['status']);
-        
-        if(isset($get['deleted']))
+
+        if (isset($get['deleted']))
             $deleted = $get['deleted'] == 'true';
-        
+
         $list = array();
-        $data = CoFloor::getFloorList($tenant, $status, $deleted);
+        $data = CoRoomChargeCategory::getRoomChargeCateogrylist($tenant, $status, $deleted);
         foreach ($data as $value => $label) {
             $list[] = array('value' => $value, 'label' => $label);
         }
-        return ['floorList' => $list];
+        return ['categoryList' => $list];
     }
 
 }

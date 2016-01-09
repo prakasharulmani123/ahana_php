@@ -111,14 +111,7 @@ class CoTenant extends RActiveRecord {
     }
 
     public function fields() {
-        return [
-            'tenant_id',
-            'tenant_name',
-            'tenant_address',
-            'tenant_city_id',
-            'tenant_state_id',
-            'tenant_country_id',
-            'status',
+        $extend = [
             'tenant_city_name' => function ($model) {
                 return (isset($model->coMasterCity) ? $model->coMasterCity->city_name : '-');
             },
@@ -129,8 +122,10 @@ class CoTenant extends RActiveRecord {
                 return (isset($model->coMasterCountry) ? $model->coMasterCountry->country_name : '-');
             }
         ];
+        $fields = array_merge(parent::fields(), $extend);
+        return $fields;
     }
-
+    
     public static function find() {
         return new CoTenantQuery(get_called_class());
     }

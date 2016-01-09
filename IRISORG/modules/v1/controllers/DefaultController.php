@@ -2,9 +2,11 @@
 
 namespace IRISORG\modules\v1\controllers;
 
+use common\models\CoFloor;
 use common\models\CoMasterCity;
 use common\models\CoMasterCountry;
 use common\models\CoMasterState;
+use common\models\CoRoomChargeCategory;
 use common\models\CoTenant;
 use Yii;
 use yii\filters\ContentNegotiator;
