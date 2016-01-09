@@ -87,6 +87,6 @@ class CoFloor extends RActiveRecord {
         else
             $list = self::find()->tenant($tenant)->deleted()->all();
 
-        return ArrayHelper::map($list, 'floor_id', 'floor_name');
+        return $list;
     }
 }

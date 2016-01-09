@@ -89,6 +89,6 @@ class CoRoomChargeCategory extends RActiveRecord {
         else
             $list = self::find()->tenant($tenant)->deleted()->all();
         
-        return ArrayHelper::map($list, 'charge_cat_id', 'charge_cat_name');
+        return $list;
     }
 }

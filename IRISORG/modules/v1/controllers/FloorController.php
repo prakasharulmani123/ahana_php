@@ -75,12 +75,7 @@ class FloorController extends ActiveController {
         if(isset($get['deleted']))
             $deleted = $get['deleted'] == 'true';
         
-        $list = array();
-        $data = CoFloor::getFloorList($tenant, $status, $deleted);
-//        foreach ($data as $value => $label) {
-//            $list[] = array('value' => $value, 'label' => $label);
-//        }
-        return ['floorList' => $data];
+        return ['floorList' => CoFloor::getFloorList($tenant, $status, $deleted)];
     }
 
 }

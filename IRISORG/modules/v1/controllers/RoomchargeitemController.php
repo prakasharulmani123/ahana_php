@@ -14,7 +14,7 @@ use yii\web\Response;
 /**
  * RoomChargeItemController implements the CRUD actions for CoTenant model.
  */
-class RoomchargecategoryController extends ActiveController {
+class RoomchargeitemController extends ActiveController {
 
     public $modelClass = 'common\models\CoRoomChargeItem';
 

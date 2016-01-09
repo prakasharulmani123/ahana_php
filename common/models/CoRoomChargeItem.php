@@ -39,7 +39,7 @@ class CoRoomChargeItem extends RActiveRecord
     public function rules()
     {
         return [
-            [['tenant_id', 'charge_item_name', 'charge_item_code', 'charge_cat_id', 'created_by'], 'required'],
+            [['charge_item_name', 'charge_cat_id'], 'required'],
             [['tenant_id', 'charge_cat_id', 'created_by', 'modified_by'], 'integer'],
             [['charge_item_description', 'status'], 'string'],
             [['created_at', 'modified_at'], 'safe'],
@@ -60,7 +60,7 @@ class CoRoomChargeItem extends RActiveRecord
             'charge_item_name' => 'Charge Item Name',
             'charge_item_code' => 'Charge Item Code',
             'charge_item_description' => 'Charge Item Description',
-            'charge_cat_id' => 'Charge Cat ID',
+            'charge_cat_id' => 'Charge Category',
             'status' => 'Status',
             'created_by' => 'Created By',
             'created_at' => 'Created At',

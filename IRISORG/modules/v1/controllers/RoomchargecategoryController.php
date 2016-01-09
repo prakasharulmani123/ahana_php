@@ -71,12 +71,7 @@ class RoomchargecategoryController extends ActiveController {
         if (isset($get['deleted']))
             $deleted = $get['deleted'] == 'true';
 
-        $list = array();
-        $data = CoRoomChargeCategory::getRoomChargeCateogrylist($tenant, $status, $deleted);
-        foreach ($data as $value => $label) {
-            $list[] = array('value' => $value, 'label' => $label);
-        }
-        return ['categoryList' => $list];
+        return ['categoryList' => CoRoomChargeCategory::getRoomChargeCateogrylist($tenant, $status, $deleted)];
     }
 
 }
