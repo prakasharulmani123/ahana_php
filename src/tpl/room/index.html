@@ -1,0 +1,89 @@
+<div class="bg-light lter b-b wrapper-md">
+    <h1 class="m-n font-thin h3">Rooms</h1>
+</div>
+
+<div class="wrapper-md" ng-controller="RoomController" ng-init="loadRoomsList()">
+
+    <div ng-include="'tpl/blocks/alert.html'">
+        {% include 'tpl/blocks/alert.html' %}
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <button class="btn btn-sm btn-grey" ng-click="loadRoomsList()"> 
+                &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
+            </button>
+            <button ng-click="$state.go('configuration.roomCreate')" class="btn btn-sm btn-info pull-right">
+                <i class="fa fa-plus"></i> &nbsp; Add new Room
+            </button>
+        </div>
+
+        <table st-table="displayedCollection"  st-safe-src="rowCollection" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th st-sort="ward_name">Ward name</th>
+                    <th st-sort="bed_name">Room name</th>
+                    <th st-sort="occupied_status">Occupancy Status</th>
+                    <th st-sort="maintain_name">Maintenance Status</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+                <tr>
+                    <th>
+                        <input st-search="'ward_name'" placeholder="search for ward name" class="input-sm form-control" type="search"/>
+                    </th>
+                    <th>
+                        <input st-search="'bed_name'" placeholder="search for room name" class="input-sm form-control" type="search"/>
+                    </th>
+                    <th>
+                        <input st-search="'occupied_status'" placeholder="search for occupied status" class="input-sm form-control" type="search"/>
+                    </th>
+                    <th>
+                        <input st-search="'maintain_name'" placeholder="search for maintain name" class="input-sm form-control" type="search"/>
+                    </th>
+                    <th colspan="2">&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody ng-hide="isLoading">
+                <tr ng-repeat="row in displayedCollection| orderBy: bed_name">
+                    <td>
+                        {{row.ward_name}}
+                    </td>
+                    <td>
+                        {{row.bed_name}}
+                    </td>
+                    <td>
+                        {{row.occupied_status}}
+                    </td>
+                    <td>
+                        {{row.maintain_name}}
+                    </td>
+                    <td>
+                        <label class="i-checks "> 
+                            <input type="checkbox" checked="" ng-true-value="'1'" ng-false-value="'0'" name="status" ng-model="row.status" ng-change='updateStatus("CoRoom", row.room_id)'> 
+                            <i></i>
+                        </label>
+                    </td>                    
+                    <td>
+                        <a title="Edit" ui-sref="configuration.roomUpdate({id: '{{row.room_id}}'})">
+                            <i class="fa fa-pencil"></i>
+                        </a>&nbsp;&nbsp;&nbsp;
+                    </td>
+                </tr>
+            </tbody>
+            <tbody ng-show="isLoading">
+                <tr>
+                    <td colspan="6" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="6" class="text-center">
+                        <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7"></div>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+
+    </div>
+</div>
