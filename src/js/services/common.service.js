@@ -122,10 +122,10 @@ function CommonService($http, $rootScope, $window, $q) {
                 });
     }
 
-	function GetRoomChargeItemList(tenant, sts, del_sts, callback) {
+    function GetRoomChargeItemList(tenant, sts, del_sts, callback) {
         var response;
 
-        $http.get($rootScope.IRISOrgServiceUrl + '/roomchargeitem/getroomchargeitemlist?tenant='+tenant+'&status='+sts+'&deleted='+del_sts)
+        $http.get($rootScope.IRISOrgServiceUrl + '/roomchargeitem/getroomchargeitemlist?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts)
                 .success(function (response) {
                     callback(response);
                 }, function (x) {
@@ -133,11 +133,11 @@ function CommonService($http, $rootScope, $window, $q) {
                     callback(response);
                 });
     }
-    
+
     function GetRoomTypeList(tenant, sts, del_sts, callback) {
         var response;
 
-        $http.get($rootScope.IRISOrgServiceUrl + '/roomtype/getroomtypelist?tenant='+tenant+'&status='+sts+'&deleted='+del_sts)
+        $http.get($rootScope.IRISOrgServiceUrl + '/roomtype/getroomtypelist?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts)
                 .success(function (response) {
                     callback(response);
                 }, function (x) {
@@ -157,7 +157,7 @@ function CommonService($http, $rootScope, $window, $q) {
                     callback(response);
                 });
     }
-    
+
     function GetRoomMaintenanceList(tenant, sts, del_sts, callback) {
         var response;
 
