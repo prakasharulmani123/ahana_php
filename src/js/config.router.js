@@ -485,6 +485,31 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
+            //Room and Room Type
+            .state('configuration.roomTypeRoom', {
+                url: '/roomTypeRoom',
+                templateUrl: 'tpl/room_types_rooms/index.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('smart-table').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/room_types_rooms/room_types_rooms.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            .state('configuration.roomTypeRoomUpdate', {
+                url: '/roomTypeRoomUpdate/{room_id}',
+                templateUrl: 'tpl/room_types_rooms/update.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/room_types_rooms/room_types_rooms.js']);
+                        }]
+                }
+            })
 }
 run.$inject = ['$rootScope', '$state', '$stateParams', '$location', '$cookieStore', '$http', '$window', 'CommonService'];
 function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $window, CommonService) {
