@@ -40,13 +40,13 @@ class CoRoomChargeItem extends RActiveRecord
     public function rules()
     {
         return [
-            [['charge_item_name', 'charge_cat_id'], 'required'],
-            [['tenant_id', 'charge_cat_id', 'created_by', 'modified_by'], 'integer'],
+            [['charge_item_name'], 'required'],
+            [['tenant_id', 'created_by', 'modified_by'], 'integer'],
             [['charge_item_description', 'status'], 'string'],
             [['created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['charge_item_name'], 'string', 'max' => 50],
             [['charge_item_code'], 'string', 'max' => 10],
-            [['charge_item_name', 'tenant_id', 'charge_cat_id', 'deleted_at'], 'unique', 'targetAttribute' => ['charge_item_name', 'tenant_id', 'charge_cat_id', 'deleted_at'], 'message' => 'The combination has already been taken.']
+            [['charge_item_name', 'tenant_id', 'deleted_at'], 'unique', 'targetAttribute' => ['charge_item_name', 'tenant_id', 'deleted_at'], 'message' => 'The combination has already been taken.']
         ];
     }
 
@@ -81,24 +81,24 @@ class CoRoomChargeItem extends RActiveRecord
     /**
      * @return ActiveQuery
      */
-    public function getChargeCat()
-    {
-        return $this->hasOne(CoRoomChargeCategory::className(), ['charge_cat_id' => 'charge_cat_id']);
-    }
+//    public function getChargeCat()
+//    {
+//        return $this->hasOne(CoRoomChargeCategory::className(), ['charge_cat_id' => 'charge_cat_id']);
+//    }
     
     public static function find() {
         return new CoRoomChargeItemQuery(get_called_class());
     }
     
-    public function fields() {
-        $extend = [
-            'charge_cat_name' => function ($model) {
-                return (isset($model->chargeCat) ? $model->chargeCat->charge_cat_name : '-');
-            },
-        ];
-        $fields = array_merge(parent::fields(), $extend);
-        return $fields;
-    }
+//    public function fields() {
+//        $extend = [
+//            'charge_cat_name' => function ($model) {
+//                return (isset($model->chargeCat) ? $model->chargeCat->charge_cat_name : '-');
+//            },
+//        ];
+//        $fields = array_merge(parent::fields(), $extend);
+//        return $fields;
+//    }
     
     public static function getRoomChargeItemlist($tenant = null, $status = '1', $deleted = false) {
         if(!$deleted)

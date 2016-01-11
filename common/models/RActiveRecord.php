@@ -34,7 +34,7 @@ class RActiveRecord extends ActiveRecord {
                 // these are the default values, which you can omit
                 'attribute' => 'deleted_at',
                 'value' => null, // this is the same format as in TimestampBehavior
-                'safeMode' => true, // this processes '$model->delete()' calls as soft-deletes
+                'safeMode' => false, // this processes '$model->delete()' calls as soft-deletes
             ],
         ];
     }
