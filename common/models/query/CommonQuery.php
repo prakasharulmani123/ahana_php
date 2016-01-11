@@ -29,11 +29,11 @@ class CommonQuery extends ActiveQuery {
     }
 
     public function active() {
-        return $this->andWhere(['deleted_at' => null]);
+        return $this->andWhere(['deleted_at' => '0000-00-00 00:00:00']);
     }
 
     public function deleted() {
-        return $this->andWhere('deleted_at IS NOT NULL');
+        return $this->andWhere('deleted_at ="0000-00-00 00:00:00"');
     }
 
 }
