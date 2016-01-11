@@ -17,6 +17,8 @@ function CommonService($http, $rootScope, $window, $q) {
     service.GetRoomChargeCategoryList = GetRoomChargeCategoryList;
     service.GetRoomChargeItemList = GetRoomChargeItemList;
     service.GetRoomTypeList = GetRoomTypeList;
+    service.GetWardList = GetWardList;
+    service.GetRoomMaintenanceList = GetRoomMaintenanceList;
 
     return service;
 
@@ -83,7 +85,7 @@ function CommonService($http, $rootScope, $window, $q) {
         var response = [{value: 'Mr.', label: 'Mr.'}, {value: 'Mrs.', label: 'Mrs.'}, {value: 'Miss.', label: 'Miss.'}, {value: 'Dr.', label: 'Dr.'}];
         callback(response);
     }
-    
+
     function GetTenantList(callback) {
         var response;
 
@@ -95,11 +97,11 @@ function CommonService($http, $rootScope, $window, $q) {
                     callback(response);
                 });
     }
-    
+
     function GetFloorList(tenant, sts, del_sts, callback) {
         var response;
 
-        $http.get($rootScope.IRISOrgServiceUrl + '/floor/getfloorlist?tenant='+tenant+'&status='+sts+'&deleted='+del_sts)
+        $http.get($rootScope.IRISOrgServiceUrl + '/floor/getfloorlist?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts)
                 .success(function (response) {
                     callback(response);
                 }, function (x) {
@@ -107,11 +109,11 @@ function CommonService($http, $rootScope, $window, $q) {
                     callback(response);
                 });
     }
-    
+
     function GetRoomChargeCategoryList(tenant, sts, del_sts, callback) {
         var response;
 
-        $http.get($rootScope.IRISOrgServiceUrl + '/roomchargecategory/getroomchargecategorylist?tenant='+tenant+'&status='+sts+'&deleted='+del_sts)
+        $http.get($rootScope.IRISOrgServiceUrl + '/roomchargecategory/getroomchargecategorylist?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts)
                 .success(function (response) {
                     callback(response);
                 }, function (x) {
@@ -119,8 +121,8 @@ function CommonService($http, $rootScope, $window, $q) {
                     callback(response);
                 });
     }
-    
-    function GetRoomChargeItemList(tenant, sts, del_sts, callback) {
+
+	function GetRoomChargeItemList(tenant, sts, del_sts, callback) {
         var response;
 
         $http.get($rootScope.IRISOrgServiceUrl + '/roomchargeitem/getroomchargeitemlist?tenant='+tenant+'&status='+sts+'&deleted='+del_sts)
@@ -136,6 +138,30 @@ function CommonService($http, $rootScope, $window, $q) {
         var response;
 
         $http.get($rootScope.IRISOrgServiceUrl + '/roomtype/getroomtypelist?tenant='+tenant+'&status='+sts+'&deleted='+del_sts)
+                .success(function (response) {
+                    callback(response);
+                }, function (x) {
+                    response = {success: false, message: 'Server Error'};
+                    callback(response);
+                });
+    }
+
+    function GetWardList(tenant, sts, del_sts, callback) {
+        var response;
+
+        $http.get($rootScope.IRISOrgServiceUrl + '/ward/getwardlist?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts)
+                .success(function (response) {
+                    callback(response);
+                }, function (x) {
+                    response = {success: false, message: 'Server Error'};
+                    callback(response);
+                });
+    }
+    
+    function GetRoomMaintenanceList(tenant, sts, del_sts, callback) {
+        var response;
+
+        $http.get($rootScope.IRISOrgServiceUrl + '/roommaintenance/getmaintenancelist?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts)
                 .success(function (response) {
                     callback(response);
                 }, function (x) {

@@ -203,7 +203,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-		//CONFIGURATION FLOOR
+            //CONFIGURATION FLOOR
             .state('configuration.floors', {
                 url: '/floors',
                 templateUrl: 'tpl/floors/index.html',
@@ -238,7 +238,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-            
+
             //Room Maintenance
             .state('configuration.roomMaintenance', {
                 url: '/roomMaintenance',
@@ -274,7 +274,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-		//CONFIGURATION WARD
+            //CONFIGURATION WARD
             .state('configuration.wards', {
                 url: '/wards',
                 templateUrl: 'tpl/wards/index.html',
@@ -309,7 +309,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-		//CONFIGURATION ROOM CHARGE CATEGORY
+            //CONFIGURATION ROOM CHARGE CATEGORY
             .state('configuration.roomChargeCategory', {
                 url: '/roomChargeCategory',
                 templateUrl: 'tpl/room_charge_category/index.html',
@@ -344,7 +344,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-		//CONFIGURATION ROOM CHARGE CATEGORY ITEM
+            //CONFIGURATION ROOM CHARGE CATEGORY ITEM
             .state('configuration.roomChargeCategoryItem', {
                 url: '/roomChargeCategoryItem',
                 templateUrl: 'tpl/room_charge_category_item/index.html',
@@ -379,7 +379,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-//Room Types
+            //Room Types
             .state('configuration.roomType', {
                 url: '/roomType',
                 templateUrl: 'tpl/room_type/index.html',
@@ -414,7 +414,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-            
+
             //Room
             .state('configuration.room', {
                 url: '/room',
