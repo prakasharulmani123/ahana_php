@@ -88,4 +88,13 @@ class CoWard extends RActiveRecord {
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
     }
+    
+    public static function getWardList($tenant = null, $status = '1', $deleted = false) {
+        if(!$deleted)
+            $list = self::find()->tenant($tenant)->status($status)->active()->all();
+        else
+            $list = self::find()->tenant($tenant)->deleted()->all();
+
+        return $list;
+    }
 }

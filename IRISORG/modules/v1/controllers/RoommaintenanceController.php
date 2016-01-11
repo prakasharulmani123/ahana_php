@@ -2,6 +2,8 @@
 
 namespace IRISORG\modules\v1\controllers;
 
+use common\models\CoRoomMaintenance;
+use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
 use yii\filters\auth\HttpBearerAuth;
@@ -54,6 +56,25 @@ class RoommaintenanceController extends ActiveController {
                 unset($attrs[$col]);
         }
         return $attrs;
+    }
+
+    public function actionGetmaintenancelist() {
+        $tenant = null;
+        $status = '1';
+        $deleted = false;
+
+        $get = Yii::$app->getRequest()->get();
+
+        if (isset($get['tenant']))
+            $tenant = $get['tenant'];
+
+        if (isset($get['status']))
+            $status = strval($get['status']);
+
+        if (isset($get['deleted']))
+            $deleted = $get['deleted'] == 'true';
+
+        return ['maintenanceList' => CoRoomMaintenance::getMaintenanceList($tenant, $status, $deleted)];
     }
 
 }

@@ -2,7 +2,7 @@
 
 namespace IRISORG\modules\v1\controllers;
 
-use common\models\CoWard;
+use common\models\CoRoom;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -14,9 +14,9 @@ use yii\web\Response;
 /**
  * WardController implements the CRUD actions for CoTenant model.
  */
-class WardController extends ActiveController {
+class RoomController extends ActiveController {
 
-    public $modelClass = 'common\models\CoWard';
+    public $modelClass = 'common\models\CoRoom';
 
     public function behaviors() {
         $behaviors = parent::behaviors();
@@ -53,28 +53,9 @@ class WardController extends ActiveController {
     public function actionRemove() {
         $id = Yii::$app->getRequest()->post('id');
         if($id){
-            $model = CoWard::find()->where(['ward_id' => $id])->one();
+            $model = CoRoom::find()->where(['ward_id' => $id])->one();
             $model->remove();
             return ['success' => true];
         }
-    }
-    
-    public function actionGetwardlist() {
-        $tenant = null;
-        $status = '1';
-        $deleted = false;
-        
-        $get = Yii::$app->getRequest()->get();
-        
-        if(isset($get['tenant']))
-            $tenant = $get['tenant'];
-        
-        if(isset($get['status']))
-            $status = strval($get['status']);
-        
-        if(isset($get['deleted']))
-            $deleted = $get['deleted'] == 'true';
-        
-        return ['wardList' => CoWard::getWardList($tenant, $status, $deleted)];
     }
 }
