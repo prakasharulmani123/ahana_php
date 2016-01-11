@@ -1,4 +1,4 @@
-app.controller('RoomMaintenanceController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'toaster', function ($rootScope, $scope, $timeout, $http, $state, toaster) {
+app.controller('RoomMaintenanceController', ['$rootScope', '$scope', '$timeout', '$http', '$state', function ($rootScope, $scope, $timeout, $http, $state) {
 
         //Index Page
         $scope.loadRoomMaintenanceList = function () {

@@ -7,11 +7,13 @@
             {% include 'tpl/blocks/alert.html' %}
         </div>
         <div class="row">
-            <div class="col-sm-12" ng-init="data.formtype = 'add'; data.status = '1'">
-                <form name="roomChargeCategoryForm" class="form-horizontal form-validation" novalidate="">
+            <div class="col-sm-12" ng-init="data.formtype = 'add';
+                            data.status = '1';">
+                <form editable-form name="tableform" name="roomChargeCategoryForm" class="form-horizontal form-validation" onaftersave="saveForm('add')" novalidate="">
                     <div ng-include="'tpl/room_charge_category/_form.html'">
                         {% include 'tpl/room_charge_category/_form.html' %}
                     </div>
+
                 </form>
             </div>
         </div>

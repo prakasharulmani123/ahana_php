@@ -316,7 +316,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('smart-table').then(
+                            return $ocLazyLoad.load('xeditable').then(
                                     function () {
                                         return $ocLazyLoad.load('tpl/room_charge_category/room_charge_category.js');
                                     }
@@ -328,19 +328,27 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                 url: '/roomChargeCategoryCreate',
                 templateUrl: 'tpl/room_charge_category/create.html',
                 resolve: {
-                    deps: ['uiLoad',
-                        function (uiLoad) {
-                            return uiLoad.load(['tpl/room_charge_category/room_charge_category.js']);
-                        }]
+                    deps: ['$ocLazyLoad',
+                        function( $ocLazyLoad ){
+                          return $ocLazyLoad.load('xeditable').then(
+                              function(){
+                                  return $ocLazyLoad.load('tpl/room_charge_category/room_charge_category.js');
+                              }
+                          );
+                      }]
                 }
             })
             .state('configuration.roomChargeCategoryUpdate', {
                 url: '/roomChargeCategoryUpdate/{id}',
                 templateUrl: 'tpl/room_charge_category/update.html',
                 resolve: {
-                    deps: ['uiLoad',
-                        function (uiLoad) {
-                            return uiLoad.load(['tpl/room_charge_category/room_charge_category.js']);
+                    deps: ['$ocLazyLoad',
+                         function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('xeditable').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/room_charge_category/room_charge_category.js');
+                                    }
+                            );
                         }]
                 }
             })

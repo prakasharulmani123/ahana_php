@@ -1,4 +1,4 @@
-app.controller('FloorsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'toaster', function ($rootScope, $scope, $timeout, $http, $state, toaster) {
+app.controller('FloorsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', function ($rootScope, $scope, $timeout, $http, $state) {
 
         //Index Page
         $scope.loadFloorsList = function () {

@@ -1,4 +1,4 @@
-app.controller('RoomChargeCategoryItemsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'toaster', function ($rootScope, $scope, $timeout, $http, $state, toaster) {
+app.controller('RoomChargeCategoryItemsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', function ($rootScope, $scope, $timeout, $http, $state) {
 
         //Index Page
         $scope.loadRoomChargeCategoryItemsList = function () {
@@ -20,9 +20,9 @@ app.controller('RoomChargeCategoryItemsController', ['$rootScope', '$scope', '$t
         
         //For Form
         $scope.initForm = function () {
-            $rootScope.commonService.GetRoomChargeCategoryList('', '1', false, function (response) {
-                $scope.categories = response.categoryList;
-            });
+//            $rootScope.commonService.GetRoomChargeCategoryList('', '1', false, function (response) {
+//                $scope.categories = response.categoryList;
+//            });
         }
 
         //Save Both Add & Update Data
