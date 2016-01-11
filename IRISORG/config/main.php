@@ -43,7 +43,7 @@ return [
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/roomchargecategory']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/roomchargeitem']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/roomtype'], 'extraPatterns' => ['POST remove' => 'remove']],
-                ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/room']],
+                ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/room'], 'extraPatterns' => ['GET getrooms' => 'getrooms', 'GET getroomandroomtypes' => 'getroomandroomtypes', 'POST assignroomtypes' => 'assignroomtypes']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/roomcharge'], 'extraPatterns' => ['POST remove' => 'remove']],
             ],
         ],

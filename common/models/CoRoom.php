@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\models\query\CoRoomQuery;
+use cornernote\linkall\LinkAllBehavior;
 use yii\db\ActiveQuery;
 
 /**
@@ -64,6 +65,15 @@ class CoRoom extends RActiveRecord {
             'modified_at' => 'Modified At',
         ];
     }
+    
+    public function behaviors() {
+        $extend = [
+            LinkAllBehavior::className(),
+        ];
+
+        $behaviour = array_merge(parent::behaviors(), $extend);
+        return $behaviour;
+    }
 
     /**
      * @return ActiveQuery
@@ -101,6 +111,14 @@ class CoRoom extends RActiveRecord {
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
+    }
+
+    public function getRoomTypesRooms() {
+        return $this->hasMany(CoRoomTypesRooms::className(), ['room_id' => 'room_id']);
+    }
+
+    public function getRoomTypes() {
+        return $this->hasMany(CoRoomType::className(), ['room_type_id' => 'room_type_id'])->via('roomTypesRooms');
     }
 
 }
