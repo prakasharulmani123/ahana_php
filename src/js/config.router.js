@@ -450,6 +450,41 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
+            //Room Charge
+            .state('configuration.roomCharge', {
+                url: '/roomCharge',
+                templateUrl: 'tpl/room_charge/index.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('smart-table').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/room_charge/room_charge.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            .state('configuration.roomChargeCreate', {
+                url: '/roomChargeCreate',
+                templateUrl: 'tpl/room_charge/create.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/room_charge/room_charge.js']);
+                        }]
+                }
+            })
+            .state('configuration.roomChargeUpdate', {
+                url: '/roomChargeUpdate/{id}',
+                templateUrl: 'tpl/room_charge/update.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/room_charge/room_charge.js']);
+                        }]
+                }
+            })
 }
 run.$inject = ['$rootScope', '$state', '$stateParams', '$location', '$cookieStore', '$http', '$window', 'CommonService'];
 function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $window, CommonService) {
