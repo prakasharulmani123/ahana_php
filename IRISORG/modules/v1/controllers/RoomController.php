@@ -2,8 +2,6 @@
 
 namespace IRISORG\modules\v1\controllers;
 
-use common\models\CoRoom;
-use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
 use yii\filters\auth\HttpBearerAuth;
@@ -50,12 +48,4 @@ class RoomController extends ActiveController {
         ]);
     }
     
-    public function actionRemove() {
-        $id = Yii::$app->getRequest()->post('id');
-        if($id){
-            $model = CoRoom::find()->where(['ward_id' => $id])->one();
-            $model->remove();
-            return ['success' => true];
-        }
-    }
 }
