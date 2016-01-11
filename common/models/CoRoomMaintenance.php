@@ -16,6 +16,7 @@ use yii\db\ActiveQuery;
  * @property string $created_at
  * @property integer $modified_by
  * @property string $modified_at
+ * @property string $deleted_at
  *
  * @property CoTenant $tenant
  */
@@ -36,9 +37,9 @@ class CoRoomMaintenance extends RActiveRecord {
             [['maintain_name'], 'required'],
             [['tenant_id', 'created_by', 'modified_by'], 'integer'],
             [['status'], 'string'],
-            [['created_at', 'modified_at'], 'safe'],
+            [['created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['maintain_name'], 'string', 'max' => 50],
-            [['tenant_id', 'maintain_name'], 'unique', 'targetAttribute' => ['tenant_id', 'maintain_name'], 'message' => 'The combination of Tenant ID and Maintain Name has already been taken.']
+            [['tenant_id', 'maintain_name', 'deleted_at'], 'unique', 'targetAttribute' => ['tenant_id', 'maintain_name', 'deleted_at'], 'message' => 'The combination of Tenant ID and Maintain Name has already been taken.']
         ];
     }
 

@@ -42,7 +42,7 @@ class CoFloor extends RActiveRecord {
             [['created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['floor_name'], 'string', 'max' => 50],
             [['floor_code'], 'string', 'max' => 2],
-            [['floor_name', 'tenant_id'], 'unique', 'targetAttribute' => ['floor_name', 'tenant_id'], 'message' => 'The combination of Tenant ID and Floor Name has already been taken.']
+            [['floor_name', 'tenant_id', 'deleted_at'], 'unique', 'targetAttribute' => ['floor_name', 'tenant_id', 'deleted_at'], 'message' => 'The combination of Tenant ID and Floor Name has already been taken.']
         ];
     }
 

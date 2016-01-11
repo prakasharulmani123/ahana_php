@@ -44,6 +44,7 @@ return [
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/roomchargeitem']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/roomtype'], 'extraPatterns' => ['POST remove' => 'remove']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/room'], 'extraPatterns' => ['POST remove' => 'remove']],
+                ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/roomcharge'], 'extraPatterns' => ['POST remove' => 'remove']],
             ],
         ],
         'log' => [

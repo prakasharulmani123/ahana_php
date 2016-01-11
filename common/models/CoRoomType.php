@@ -40,7 +40,7 @@ class CoRoomType extends RActiveRecord {
             [['status'], 'string'],
             [['created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['room_type_name'], 'string', 'max' => 50],
-            [['tenant_id', 'room_type_name'], 'unique', 'targetAttribute' => ['tenant_id', 'room_type_name'], 'message' => 'The combination of Tenant ID and Room Type Name has already been taken.']
+            [['tenant_id', 'room_type_name', 'deleted_at'], 'unique', 'targetAttribute' => ['tenant_id', 'room_type_name', 'deleted_at'], 'message' => 'The combination of Tenant ID and Room Type Name has already been taken.']
         ];
     }
 
@@ -79,4 +79,12 @@ class CoRoomType extends RActiveRecord {
         return new CoRoomTypeQuery(get_called_class());
     }
 
+    public static function getRoomTypelist($tenant = null, $status = '1', $deleted = false) {
+        if(!$deleted)
+            $list = self::find()->tenant($tenant)->status($status)->active()->all();
+        else
+            $list = self::find()->tenant($tenant)->deleted()->all();
+        
+        return $list;
+    }
 }

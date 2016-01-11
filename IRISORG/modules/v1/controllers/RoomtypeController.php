@@ -67,4 +67,18 @@ class RoomtypeController extends ActiveController {
         }
     }
 
+    public function actionGetroomtypelist() {
+        $get = Yii::$app->getRequest()->get();
+
+        if (isset($get['tenant']))
+            $tenant = $get['tenant'];
+
+        if (isset($get['status']))
+            $status = strval($get['status']);
+
+        if (isset($get['deleted']))
+            $deleted = $get['deleted'] == 'true';
+
+        return ['roomtypeList' => CoRoomType::getRoomTypelist($tenant, $status, $deleted)];
+    }
 }

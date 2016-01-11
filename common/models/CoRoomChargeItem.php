@@ -19,6 +19,7 @@ use yii\db\ActiveQuery;
  * @property string $created_at
  * @property integer $modified_by
  * @property string $modified_at
+ * @property string $deleted_at
  *
  * @property CoTenant $tenant
  * @property CoRoomChargeCategory $chargeCat
@@ -42,10 +43,10 @@ class CoRoomChargeItem extends RActiveRecord
             [['charge_item_name', 'charge_cat_id'], 'required'],
             [['tenant_id', 'charge_cat_id', 'created_by', 'modified_by'], 'integer'],
             [['charge_item_description', 'status'], 'string'],
-            [['created_at', 'modified_at'], 'safe'],
+            [['created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['charge_item_name'], 'string', 'max' => 50],
             [['charge_item_code'], 'string', 'max' => 10],
-            [['charge_item_name', 'tenant_id', 'charge_cat_id'], 'unique', 'targetAttribute' => ['charge_item_name', 'tenant_id', 'charge_cat_id'], 'message' => 'The combination of Tenant ID, Charge Item Name and Charge Cat ID has already been taken.']
+            [['charge_item_name', 'tenant_id', 'charge_cat_id', 'deleted_at'], 'unique', 'targetAttribute' => ['charge_item_name', 'tenant_id', 'charge_cat_id', 'deleted_at'], 'message' => 'The combination has already been taken.']
         ];
     }
 
@@ -97,5 +98,14 @@ class CoRoomChargeItem extends RActiveRecord
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
+    }
+    
+    public static function getRoomChargeItemlist($tenant = null, $status = '1', $deleted = false) {
+        if(!$deleted)
+            $list = self::find()->tenant($tenant)->status($status)->active()->all();
+        else
+            $list = self::find()->tenant($tenant)->deleted()->all();
+        
+        return $list;
     }
 }

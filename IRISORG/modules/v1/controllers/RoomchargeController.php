@@ -2,7 +2,7 @@
 
 namespace IRISORG\modules\v1\controllers;
 
-use common\models\CoRoomChargeItem;
+use common\models\CoRoomCharge;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -12,11 +12,11 @@ use yii\rest\ActiveController;
 use yii\web\Response;
 
 /**
- * RoomChargeItemController implements the CRUD actions for CoTenant model.
+ * RoomChargeController implements the CRUD actions for CoTenant model.
  */
-class RoomchargeitemController extends ActiveController {
+class RoomchargeController extends ActiveController {
 
-    public $modelClass = 'common\models\CoRoomChargeItem';
+    public $modelClass = 'common\models\CoRoomCharge';
 
     public function behaviors() {
         $behaviors = parent::behaviors();
@@ -53,24 +53,9 @@ class RoomchargeitemController extends ActiveController {
     public function actionRemove() {
         $id = Yii::$app->getRequest()->post('id');
         if($id){
-            $model = CoRoomChargeItem::find()->where(['charge_item_id' => $id])->one();
+            $model = CoRoomCharge::find()->where(['charge_id' => $id])->one();
             $model->remove();
             return ['success' => true];
         }
-    }
-    
-    public function actionGetroomchargeitemlist() {
-        $get = Yii::$app->getRequest()->get();
-
-        if (isset($get['tenant']))
-            $tenant = $get['tenant'];
-
-        if (isset($get['status']))
-            $status = strval($get['status']);
-
-        if (isset($get['deleted']))
-            $deleted = $get['deleted'] == 'true';
-
-        return ['chargeitemList' => CoRoomChargeItem::getRoomChargeItemlist($tenant, $status, $deleted)];
     }
 }

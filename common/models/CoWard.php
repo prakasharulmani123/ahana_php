@@ -39,7 +39,7 @@ class CoWard extends RActiveRecord {
             [['status'], 'string'],
             [['created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['ward_name'], 'string', 'max' => 50],
-            [['tenant_id', 'ward_name'], 'unique', 'targetAttribute' => ['tenant_id', 'ward_name'], 'message' => 'The combination of Tenant ID and Ward Name has already been taken.']
+            [['tenant_id', 'ward_name', 'deleted_at'], 'unique', 'targetAttribute' => ['tenant_id', 'ward_name', 'deleted_at'], 'message' => 'The combination of Tenant ID and Ward Name has already been taken.']
         ];
     }
 

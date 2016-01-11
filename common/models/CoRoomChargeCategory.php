@@ -43,7 +43,7 @@ class CoRoomChargeCategory extends RActiveRecord {
             [['created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['charge_cat_name'], 'string', 'max' => 50],
             [['charge_cat_code'], 'string', 'max' => 10],
-            [['tenant_id', 'charge_cat_name'], 'unique', 'targetAttribute' => ['tenant_id', 'charge_cat_name'], 'message' => 'The combination of Tenant ID and Charge Cat Name has already been taken.']
+            [['tenant_id', 'charge_cat_name', 'deleted_at'], 'unique', 'targetAttribute' => ['tenant_id', 'charge_cat_name', 'deleted_at'], 'message' => 'The combination of Tenant ID and Charge Cat Name has already been taken.']
         ];
     }
 
