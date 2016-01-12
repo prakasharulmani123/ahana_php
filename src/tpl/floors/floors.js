@@ -85,6 +85,7 @@ app.controller('FloorsController', ['$rootScope', '$scope', '$timeout', '$http',
         $scope.removeRow = function (row) {
             var conf = confirm('Are you sure to delete ?');
             if (conf) {
+                $scope.loadbar('show');
                 var index = $scope.displayedCollection.indexOf(row);
                 if (index !== -1) {
                     $http({
@@ -93,8 +94,10 @@ app.controller('FloorsController', ['$rootScope', '$scope', '$timeout', '$http',
                         data: {id: row.floor_id}
                     }).then(
                             function (response) {
+                                $scope.loadbar('hide');
                                 if (response.data.success === true) {
                                     $scope.displayedCollection.splice(index, 1);
+                                    $scope.loadFloorsList();
                                 }
                                 else {
                                     $scope.errorData = response.data.message;

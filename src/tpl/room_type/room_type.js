@@ -85,6 +85,7 @@ app.controller('RoomTypesController', ['$rootScope', '$scope', '$timeout', '$htt
         $scope.removeRow = function (row) {
             var conf = confirm('Are you sure to delete ?');
             if (conf) {
+                $scope.loadbar('show');
                 var index = $scope.displayedCollection.indexOf(row);
                 if (index !== -1) {
                     $http({
@@ -93,8 +94,10 @@ app.controller('RoomTypesController', ['$rootScope', '$scope', '$timeout', '$htt
                         data: {id: row.room_type_id}
                     }).then(
                             function (response) {
+                                $scope.loadbar('hide');
                                 if (response.data.success === true) {
                                     $scope.displayedCollection.splice(index, 1);
+                                    $scope.loadRoomTypesList();
                                 }
                                 else {
                                     $scope.errorData = response.data.message;

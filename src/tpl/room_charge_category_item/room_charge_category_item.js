@@ -17,7 +17,7 @@ app.controller('RoomChargeCategoryItemsController', ['$rootScope', '$scope', '$t
                         $scope.error = "An Error has occured while loading roomChargeCategoryItems!";
                     });
         };
-        
+
         //For Form
         $scope.initForm = function () {
 //            $rootScope.commonService.GetRoomChargeCategoryList('', '1', false, function (response) {
@@ -92,6 +92,7 @@ app.controller('RoomChargeCategoryItemsController', ['$rootScope', '$scope', '$t
         $scope.removeRow = function (row) {
             var conf = confirm('Are you sure to delete ?');
             if (conf) {
+                $scope.loadbar('show');
                 var index = $scope.displayedCollection.indexOf(row);
                 if (index !== -1) {
                     $http({
@@ -100,6 +101,7 @@ app.controller('RoomChargeCategoryItemsController', ['$rootScope', '$scope', '$t
                         data: {id: row.charge_item_id}
                     }).then(
                             function (response) {
+                                $scope.loadbar('hide');
                                 if (response.data.success === true) {
                                     $scope.displayedCollection.splice(index, 1);
                                 }

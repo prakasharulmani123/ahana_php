@@ -8,7 +8,7 @@
         </div>
         <div class="row">
             <div class="col-sm-12" ng-init="data.formtype = 'update'; loadForm();" novalidate="">
-                <form editable-form name="tableform" name="roomChargeCategoryForm" class="form-horizontal form-validation" onaftersave="saveForm('update')">
+                <form editable-form name="tableform" name="roomChargeCategoryForm" class="form-horizontal form-validation" onaftersave="saveForm('update')" editable-form shown="true">
                      <input type="hidden" ng-model="data.charge_cat_id">
                     <div ng-include="'tpl/room_charge_category/_form.html'">
                         {% include 'tpl/room_charge_category/_form.html' %}
