@@ -18,16 +18,22 @@ DROP TABLE IF EXISTS `co_alert`;
 
 CREATE TABLE `co_alert` (
   `alert_id` int(11) NOT NULL AUTO_INCREMENT,
+  `tenant_id` int(11) NOT NULL,
   `alert_name` varchar(50) NOT NULL,
   `status` enum('0','1') DEFAULT '1',
   `created_by` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modified_by` int(11) DEFAULT NULL,
   `modified_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`alert_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `deleted_at` timestamp NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`alert_id`),
+  UNIQUE KEY `CoAlertUnique` (`tenant_id`,`alert_name`,`deleted_at`),
+  CONSTRAINT `FK_co_alert_tenant` FOREIGN KEY (`tenant_id`) REFERENCES `co_tenant` (`tenant_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 /*Data for the table `co_alert` */
+
+insert  into `co_alert`(`alert_id`,`tenant_id`,`alert_name`,`status`,`created_by`,`created_at`,`modified_by`,`modified_at`,`deleted_at`) values (1,18,'New 111','1',1,'2016-01-12 17:59:46',1,'2016-01-12 18:05:05','0000-00-00 00:00:00');
 
 /*Table structure for table `co_allied_charge` */
 
@@ -68,11 +74,11 @@ CREATE TABLE `co_floor` (
   UNIQUE KEY `FloorNameUnique` (`floor_name`,`tenant_id`,`deleted_at`),
   KEY `FK_co_floor_tenant` (`tenant_id`),
   CONSTRAINT `FK_co_floor_tenant` FOREIGN KEY (`tenant_id`) REFERENCES `co_tenant` (`tenant_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 
 /*Data for the table `co_floor` */
 
-insert  into `co_floor`(`floor_id`,`tenant_id`,`floor_name`,`floor_code`,`status`,`created_by`,`created_at`,`modified_by`,`modified_at`,`deleted_at`) values (2,18,'asdsd','AA','1',1,'2016-01-09 12:37:26',1,'2016-01-09 12:37:26','2016-01-09 16:03:13'),(3,18,'ASAAA11','AA','1',1,'2016-01-09 12:37:41',1,'2016-01-09 13:32:49','2016-01-09 15:54:15'),(4,1,'test','EE','0',1,'2016-01-09 16:03:23',1,'2016-01-09 16:46:46','0000-00-00 00:00:00'),(5,18,'New','FL','1',1,'2016-01-09 19:31:41',1,'2016-01-09 19:31:41','0000-00-00 00:00:00');
+insert  into `co_floor`(`floor_id`,`tenant_id`,`floor_name`,`floor_code`,`status`,`created_by`,`created_at`,`modified_by`,`modified_at`,`deleted_at`) values (2,18,'asdsd','AA','1',1,'2016-01-09 12:37:26',1,'2016-01-09 12:37:26','2016-01-09 16:03:13'),(3,18,'ASAAA11','AA','1',1,'2016-01-09 12:37:41',1,'2016-01-09 13:32:49','2016-01-09 15:54:15'),(4,1,'test','EE','0',1,'2016-01-09 16:03:23',1,'2016-01-09 16:46:46','0000-00-00 00:00:00'),(5,18,'New','FL','1',1,'2016-01-09 19:31:41',1,'2016-01-09 19:31:41','0000-00-00 00:00:00'),(6,18,'Floor 2',NULL,'1',1,'2016-01-12 12:45:15',1,'2016-01-12 12:45:15','0000-00-00 00:00:00'),(7,18,'Floor 3',NULL,'1',1,'2016-01-12 12:45:31',1,'2016-01-12 12:45:31','2016-01-12 12:45:39');
 
 /*Table structure for table `co_login` */
 
@@ -98,7 +104,7 @@ CREATE TABLE `co_login` (
 
 /*Data for the table `co_login` */
 
-insert  into `co_login`(`login_id`,`user_id`,`username`,`password`,`password_reset_token`,`authtoken`,`created_by`,`created_at`,`modified_by`,`modified_at`,`activation_date`,`Inactivation_date`) values (1,1,'123123','$2y$13$f1.ldgwKkkr8GcHPoSmrou4sXjLpJTaQlGxgXnmqS0ubWJvu0/yLu',NULL,'MTIzMTIzMTQ1MjQ4OTI5Mjc0MTg=',0,'2015-12-29 12:40:15',NULL,'2016-01-11 10:44:52',NULL,NULL),(2,2,'test','$2y$13$z5IIhq7WgWa.mttlXvPfU.rj7ECjwe0XO0qYotm/KGYGVLofIGW7q',NULL,NULL,-1,'2015-12-29 13:27:23',NULL,NULL,NULL,NULL),(6,6,'test','$2y$13$26z8fSgBVSaDk6dSc4tEouKnZSoYbMxq/4rBobSP/QSQfBvdvTNFW',NULL,NULL,-1,'2015-12-30 17:04:14',NULL,NULL,NULL,NULL),(7,7,'123123','$2y$13$UuCYLvsFlDJ8z4c4rQ1HjOborIk4kQSn/BUZN3o4IQXVZXh3yuqSK',NULL,NULL,-1,'2015-12-30 20:29:03',NULL,NULL,NULL,NULL),(8,8,'123123','$2y$13$43E8tZWtjPeBgmNSPyT9J.D5eaI0YzYhz6gcDIPIivUiAnfhxIdsm',NULL,NULL,-1,'2015-12-30 20:29:03',NULL,NULL,NULL,NULL),(9,9,'123123','$2y$13$1y2enmiOKrzYyjqcFwVUE.8RCejtYcGZZL4jm98Wk3wE9CCMR3Ymu',NULL,NULL,-1,'2015-12-30 20:29:03',NULL,NULL,NULL,NULL),(10,10,'123123','$2y$13$012PM43tycVN7OcYlB/0x.fdiI61LZUtIozbAxKhnWbr1IyFDBcRi',NULL,NULL,-1,'2015-12-30 20:29:03',NULL,NULL,NULL,NULL),(11,11,'123123','$2y$13$MTPatpVSg6AKyJZS0ClJcucw1aRwGnFyfTn.W2QURueLyRU6GHF3K',NULL,NULL,-1,'2015-12-30 20:29:03',NULL,NULL,NULL,NULL),(12,12,'test','$2y$13$3HYt/nfAibfzt7d.CHnDKOpmYuyMq8lFsU6ZpvAgZyfRsTvRtEZz.',NULL,NULL,-1,'2015-12-30 20:43:30',NULL,NULL,NULL,NULL),(13,13,'sdfsdf','$2y$13$eq47HcHN6RRpmsuZFScU2u23AfUZp47a2taPaTh3ZkLaoMN7c1fOC',NULL,NULL,-1,'2015-12-30 20:50:23',NULL,NULL,NULL,NULL),(15,15,'tester','$2y$13$9FPvHeqEZGuIvcifzJVs4.w5iX6ZY.ezbqQ1u0.F8l.lYrfemR/ym',NULL,NULL,-1,'2015-12-31 19:28:42',NULL,NULL,NULL,NULL),(16,16,'test','$2y$13$1.GJ18v3tsxpv/pQ4mZq6u3ShXkHIosNo.KFzIo4r3YEP.TQ83L4i',NULL,NULL,-1,'2016-01-02 15:07:37',NULL,NULL,NULL,NULL),(17,17,'test','$2y$13$Rh4dpklxDBQyC3q9JtCf2.N334ZUVjq2XDwUq7mmYpvypWCWfL8Xi',NULL,NULL,-1,'2016-01-02 15:52:35',NULL,NULL,NULL,NULL),(18,18,'test','$2y$13$38DMc9wOBSj.gMx8oFfAv.hrHH1frzKERGTY1.pSLYv6kJT61Zmr.',NULL,NULL,-1,'2016-01-02 16:03:13',NULL,NULL,NULL,NULL),(19,19,'test','$2y$13$jbSCihxnnDHl8gLkYPdteO/XtRWrKEHQnlL2l5cvh1Lj1z1W55pPS',NULL,NULL,-1,'2016-01-02 18:20:39',NULL,NULL,NULL,NULL),(20,20,'test','$2y$13$2rWaKGPs0CPD5UGgsuaOoumTt8cz7AKjKjD6Zg/oAylVT9lJpiyRe',NULL,NULL,-1,'2016-01-02 19:16:53',NULL,NULL,NULL,NULL),(21,21,'test','123123',NULL,NULL,0,'2016-01-07 12:15:40',NULL,NULL,NULL,NULL),(22,22,'aaaa','aaa',NULL,NULL,0,'2016-01-07 16:00:58',NULL,NULL,NULL,NULL),(23,23,'aaaa','aaa',NULL,NULL,0,'2016-01-07 16:03:32',NULL,NULL,NULL,NULL),(24,24,'aaaa','aaa',NULL,NULL,0,'2016-01-07 16:09:30',NULL,NULL,NULL,NULL),(25,25,'aaaa','aaa',NULL,NULL,0,'2016-01-07 16:11:01',NULL,NULL,NULL,NULL),(26,26,'aaaa','aaa',NULL,NULL,-1,'2016-01-07 16:12:48',1,'2016-01-08 12:56:42','2016-01-04','2016-01-07'),(29,27,'123123','123123',NULL,NULL,1,'2016-01-08 13:50:32',1,'2016-01-08 13:50:32',NULL,NULL);
+insert  into `co_login`(`login_id`,`user_id`,`username`,`password`,`password_reset_token`,`authtoken`,`created_by`,`created_at`,`modified_by`,`modified_at`,`activation_date`,`Inactivation_date`) values (1,1,'123123','$2y$13$f1.ldgwKkkr8GcHPoSmrou4sXjLpJTaQlGxgXnmqS0ubWJvu0/yLu',NULL,'MTIzMTIzMTQ1MjU5ODE5NzI0NjM=',0,'2015-12-29 12:40:15',NULL,'2016-01-12 16:59:57',NULL,NULL),(2,2,'test','$2y$13$z5IIhq7WgWa.mttlXvPfU.rj7ECjwe0XO0qYotm/KGYGVLofIGW7q',NULL,NULL,-1,'2015-12-29 13:27:23',NULL,NULL,NULL,NULL),(6,6,'test','$2y$13$26z8fSgBVSaDk6dSc4tEouKnZSoYbMxq/4rBobSP/QSQfBvdvTNFW',NULL,NULL,-1,'2015-12-30 17:04:14',NULL,NULL,NULL,NULL),(7,7,'123123','$2y$13$UuCYLvsFlDJ8z4c4rQ1HjOborIk4kQSn/BUZN3o4IQXVZXh3yuqSK',NULL,NULL,-1,'2015-12-30 20:29:03',NULL,NULL,NULL,NULL),(8,8,'123123','$2y$13$43E8tZWtjPeBgmNSPyT9J.D5eaI0YzYhz6gcDIPIivUiAnfhxIdsm',NULL,NULL,-1,'2015-12-30 20:29:03',NULL,NULL,NULL,NULL),(9,9,'123123','$2y$13$1y2enmiOKrzYyjqcFwVUE.8RCejtYcGZZL4jm98Wk3wE9CCMR3Ymu',NULL,NULL,-1,'2015-12-30 20:29:03',NULL,NULL,NULL,NULL),(10,10,'123123','$2y$13$012PM43tycVN7OcYlB/0x.fdiI61LZUtIozbAxKhnWbr1IyFDBcRi',NULL,NULL,-1,'2015-12-30 20:29:03',NULL,NULL,NULL,NULL),(11,11,'123123','$2y$13$MTPatpVSg6AKyJZS0ClJcucw1aRwGnFyfTn.W2QURueLyRU6GHF3K',NULL,NULL,-1,'2015-12-30 20:29:03',NULL,NULL,NULL,NULL),(12,12,'test','$2y$13$3HYt/nfAibfzt7d.CHnDKOpmYuyMq8lFsU6ZpvAgZyfRsTvRtEZz.',NULL,NULL,-1,'2015-12-30 20:43:30',NULL,NULL,NULL,NULL),(13,13,'sdfsdf','$2y$13$eq47HcHN6RRpmsuZFScU2u23AfUZp47a2taPaTh3ZkLaoMN7c1fOC',NULL,NULL,-1,'2015-12-30 20:50:23',NULL,NULL,NULL,NULL),(15,15,'tester','$2y$13$9FPvHeqEZGuIvcifzJVs4.w5iX6ZY.ezbqQ1u0.F8l.lYrfemR/ym',NULL,NULL,-1,'2015-12-31 19:28:42',NULL,NULL,NULL,NULL),(16,16,'test','$2y$13$1.GJ18v3tsxpv/pQ4mZq6u3ShXkHIosNo.KFzIo4r3YEP.TQ83L4i',NULL,NULL,-1,'2016-01-02 15:07:37',NULL,NULL,NULL,NULL),(17,17,'test','$2y$13$Rh4dpklxDBQyC3q9JtCf2.N334ZUVjq2XDwUq7mmYpvypWCWfL8Xi',NULL,NULL,-1,'2016-01-02 15:52:35',NULL,NULL,NULL,NULL),(18,18,'test','$2y$13$38DMc9wOBSj.gMx8oFfAv.hrHH1frzKERGTY1.pSLYv6kJT61Zmr.',NULL,NULL,-1,'2016-01-02 16:03:13',NULL,NULL,NULL,NULL),(19,19,'test','$2y$13$jbSCihxnnDHl8gLkYPdteO/XtRWrKEHQnlL2l5cvh1Lj1z1W55pPS',NULL,NULL,-1,'2016-01-02 18:20:39',NULL,NULL,NULL,NULL),(20,20,'test','$2y$13$2rWaKGPs0CPD5UGgsuaOoumTt8cz7AKjKjD6Zg/oAylVT9lJpiyRe',NULL,NULL,-1,'2016-01-02 19:16:53',NULL,NULL,NULL,NULL),(21,21,'test','123123',NULL,NULL,0,'2016-01-07 12:15:40',NULL,NULL,NULL,NULL),(22,22,'aaaa','aaa',NULL,NULL,0,'2016-01-07 16:00:58',NULL,NULL,NULL,NULL),(23,23,'aaaa','aaa',NULL,NULL,0,'2016-01-07 16:03:32',NULL,NULL,NULL,NULL),(24,24,'aaaa','aaa',NULL,NULL,0,'2016-01-07 16:09:30',NULL,NULL,NULL,NULL),(25,25,'aaaa','aaa',NULL,NULL,0,'2016-01-07 16:11:01',NULL,NULL,NULL,NULL),(26,26,'aaaa','aaa',NULL,NULL,-1,'2016-01-07 16:12:48',1,'2016-01-08 12:56:42','2016-01-04','2016-01-07'),(29,27,'123123','123123',NULL,NULL,1,'2016-01-08 13:50:32',1,'2016-01-08 13:50:32',NULL,NULL);
 
 /*Table structure for table `co_master_city` */
 
@@ -106,6 +112,7 @@ DROP TABLE IF EXISTS `co_master_city`;
 
 CREATE TABLE `co_master_city` (
   `city_id` int(11) NOT NULL AUTO_INCREMENT,
+  `tenant_id` int(11) DEFAULT NULL,
   `state_id` int(11) NOT NULL,
   `city_name` varchar(50) NOT NULL,
   `status` enum('0','1') DEFAULT '1',
@@ -113,14 +120,16 @@ CREATE TABLE `co_master_city` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modified_by` int(11) DEFAULT NULL,
   `modified_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`city_id`),
+  UNIQUE KEY `CoMasterCityUnique` (`tenant_id`,`state_id`,`city_name`,`deleted_at`),
   KEY `FK_co_master_city_state` (`state_id`),
   CONSTRAINT `FK_co_master_city_state` FOREIGN KEY (`state_id`) REFERENCES `co_master_state` (`state_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 
 /*Data for the table `co_master_city` */
 
-insert  into `co_master_city`(`city_id`,`state_id`,`city_name`,`status`,`created_by`,`created_at`,`modified_by`,`modified_at`) values (1,1,'Madurai','1',1,'2015-12-28 15:07:51',NULL,NULL),(2,1,'Chennai','1',1,'2015-12-28 16:21:17',NULL,NULL),(3,2,'Cochin','1',1,'2015-12-28 17:31:33',NULL,NULL);
+insert  into `co_master_city`(`city_id`,`tenant_id`,`state_id`,`city_name`,`status`,`created_by`,`created_at`,`modified_by`,`modified_at`,`deleted_at`) values (1,NULL,1,'Madurai','1',1,'2015-12-28 15:07:51',NULL,NULL,'0000-00-00 00:00:00'),(2,NULL,1,'Chennai','1',1,'2015-12-28 16:21:17',NULL,NULL,'0000-00-00 00:00:00'),(3,NULL,2,'Cochin','1',1,'2015-12-28 17:31:33',NULL,NULL,'0000-00-00 00:00:00'),(4,18,3,'Madurai','1',1,'2016-01-12 17:03:36',1,'2016-01-12 18:06:13','0000-00-00 00:00:00'),(7,18,1,'aaa','1',1,'2016-01-12 17:21:20',1,'2016-01-12 17:21:20','2016-01-12 17:21:25');
 
 /*Table structure for table `co_master_country` */
 
@@ -128,19 +137,21 @@ DROP TABLE IF EXISTS `co_master_country`;
 
 CREATE TABLE `co_master_country` (
   `country_id` int(10) NOT NULL AUTO_INCREMENT,
+  `tenant_id` int(11) DEFAULT NULL,
   `country_name` varchar(50) NOT NULL,
   `status` enum('0','1') DEFAULT '1',
   `created_by` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modified_by` int(11) DEFAULT NULL,
   `modified_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`country_id`),
-  UNIQUE KEY `CountryNameUnique` (`country_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+  UNIQUE KEY `CountryNameUnique` (`country_name`,`tenant_id`,`deleted_at`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
 /*Data for the table `co_master_country` */
 
-insert  into `co_master_country`(`country_id`,`country_name`,`status`,`created_by`,`created_at`,`modified_by`,`modified_at`) values (1,'India','1',1,'2015-12-28 15:07:32',NULL,NULL),(2,'Pakistan','1',1,'2015-12-28 17:30:39',NULL,NULL);
+insert  into `co_master_country`(`country_id`,`tenant_id`,`country_name`,`status`,`created_by`,`created_at`,`modified_by`,`modified_at`,`deleted_at`) values (1,NULL,'India','1',1,'2015-12-28 15:07:32',NULL,NULL,'0000-00-00 00:00:00'),(2,18,'Pakistann','1',1,'2015-12-28 17:30:39',1,'2016-01-12 14:00:24','0000-00-00 00:00:00'),(4,18,'test','1',1,'2016-01-12 13:56:55',1,'2016-01-12 18:07:44','0000-00-00 00:00:00'),(5,18,'testss','1',1,'2016-01-12 13:57:12',1,'2016-01-12 13:57:12','2016-01-12 13:58:43');
 
 /*Table structure for table `co_master_state` */
 
@@ -148,6 +159,7 @@ DROP TABLE IF EXISTS `co_master_state`;
 
 CREATE TABLE `co_master_state` (
   `state_id` int(11) NOT NULL AUTO_INCREMENT,
+  `tenant_id` int(11) DEFAULT NULL,
   `country_id` int(11) NOT NULL,
   `state_name` varchar(50) NOT NULL,
   `status` enum('0','1') DEFAULT '1',
@@ -155,14 +167,16 @@ CREATE TABLE `co_master_state` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modified_by` int(11) DEFAULT NULL,
   `modified_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`state_id`),
+  UNIQUE KEY `CoMasterStateNameUnique` (`tenant_id`,`country_id`,`state_name`,`deleted_at`),
   KEY `FK_co_master_state_country` (`country_id`),
   CONSTRAINT `FK_co_master_state_country` FOREIGN KEY (`country_id`) REFERENCES `co_master_country` (`country_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
 /*Data for the table `co_master_state` */
 
-insert  into `co_master_state`(`state_id`,`country_id`,`state_name`,`status`,`created_by`,`created_at`,`modified_by`,`modified_at`) values (1,1,'Tamil Nadu','1',1,'2015-12-28 15:07:43',NULL,NULL),(2,1,'Kerala','1',1,'2015-12-28 17:30:49',NULL,NULL),(3,2,'Islamabad','1',1,'2015-12-28 17:31:13',NULL,NULL);
+insert  into `co_master_state`(`state_id`,`tenant_id`,`country_id`,`state_name`,`status`,`created_by`,`created_at`,`modified_by`,`modified_at`,`deleted_at`) values (1,NULL,1,'Tamil Nadu','1',1,'2015-12-28 15:07:43',NULL,NULL,'0000-00-00 00:00:00'),(2,NULL,1,'Kerala','1',1,'2015-12-28 17:30:49',NULL,NULL,'0000-00-00 00:00:00'),(3,NULL,2,'Islamabad','1',1,'2015-12-28 17:31:13',NULL,NULL,'0000-00-00 00:00:00'),(4,18,1,'Test','1',1,'2016-01-12 15:44:25',1,'2016-01-12 18:07:08','0000-00-00 00:00:00'),(6,18,1,'Tester','1',1,'2016-01-12 15:47:54',1,'2016-01-12 15:49:00','2016-01-12 16:22:25');
 
 /*Table structure for table `co_patient_category` */
 
@@ -172,14 +186,13 @@ CREATE TABLE `co_patient_category` (
   `patient_cat_id` int(11) NOT NULL AUTO_INCREMENT,
   `tenant_id` int(11) NOT NULL,
   `patient_cat_name` varchar(50) NOT NULL,
-  `patient_cat_label` varchar(10) DEFAULT NULL,
   `patient_cat_color` varchar(10) NOT NULL,
-  `patient_cat_activate_time` time DEFAULT NULL,
   `status` enum('0','1') DEFAULT '1',
   `created_by` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modified_by` int(11) DEFAULT NULL,
   `modified_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`patient_cat_id`),
   KEY `FK_co_patient_category_tenant` (`tenant_id`),
   CONSTRAINT `FK_co_patient_category_tenant` FOREIGN KEY (`tenant_id`) REFERENCES `co_tenant` (`tenant_id`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -357,7 +370,7 @@ CREATE TABLE `co_room_charge_category` (
 
 /*Data for the table `co_room_charge_category` */
 
-insert  into `co_room_charge_category`(`charge_cat_id`,`tenant_id`,`charge_cat_name`,`charge_cat_code`,`charge_cat_description`,`status`,`created_by`,`created_at`,`modified_by`,`modified_at`,`deleted_at`) values (1,18,'123123 AAAA','123123','33123123','1',1,'2016-01-09 18:27:21',1,'2016-01-09 18:31:20','2016-01-09 18:33:08'),(2,18,'test','test','test','1',1,'2016-01-09 18:33:29',NULL,'2016-01-09 18:33:40','2016-01-11 12:18:30'),(4,18,'Allied Charges','AL','Allied Charges','1',1,'2016-01-11 12:23:01',1,'2016-01-11 13:05:09','0000-00-00 00:00:00'),(9,18,'Professional Charge',NULL,'Professional Charge','1',1,'2016-01-11 13:38:57',1,'2016-01-11 13:38:57','0000-00-00 00:00:00'),(10,18,'test',NULL,'aaaa','1',1,'2016-01-11 16:48:23',1,'2016-01-11 16:48:23','0000-00-00 00:00:00'),(11,18,'asdsd',NULL,'dasdsadsad','1',1,'2016-01-11 18:12:01',1,'2016-01-11 18:12:01','0000-00-00 00:00:00'),(12,18,'asdsad',NULL,'dsad','1',1,'2016-01-11 18:13:28',1,'2016-01-11 18:13:28','0000-00-00 00:00:00'),(13,18,'asdsdas','asdsad','dsadsd','1',1,'2016-01-11 18:14:32',1,'2016-01-11 18:41:07','0000-00-00 00:00:00');
+insert  into `co_room_charge_category`(`charge_cat_id`,`tenant_id`,`charge_cat_name`,`charge_cat_code`,`charge_cat_description`,`status`,`created_by`,`created_at`,`modified_by`,`modified_at`,`deleted_at`) values (1,18,'123123 AAAA','123123','33123123','1',1,'2016-01-09 18:27:21',1,'2016-01-09 18:31:20','2016-01-09 18:33:08'),(2,18,'test','test','test','1',1,'2016-01-09 18:33:29',NULL,'2016-01-09 18:33:40','2016-01-11 12:18:30'),(4,18,'Allied Charges','AL','Allied Charges','1',1,'2016-01-11 12:23:01',1,'2016-01-11 13:05:09','0000-00-00 00:00:00'),(9,18,'Professional Charge',NULL,'Professional Charge','1',1,'2016-01-11 13:38:57',1,'2016-01-12 19:19:37','0000-00-00 00:00:00'),(11,18,'asdsd',NULL,'dasdsadsad','1',1,'2016-01-11 18:12:01',1,'2016-01-11 18:12:01','2016-01-12 12:42:17'),(12,18,'asdsad',NULL,'dsad','1',1,'2016-01-11 18:13:28',1,'2016-01-12 11:51:52','2016-01-12 12:41:12'),(13,18,'asdsdas','asdsad','dsadsd','1',1,'2016-01-11 18:14:32',1,'2016-01-12 11:51:20','2016-01-12 12:41:09');
 
 /*Table structure for table `co_room_charge_item` */
 
@@ -401,15 +414,16 @@ CREATE TABLE `co_room_charge_subcategory` (
   `modified_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`charge_subcat_id`),
+  UNIQUE KEY `CoRoomChargeSubCategoryUnique` (`tenant_id`,`charge_cat_id`,`charge_subcat_name`,`deleted_at`),
   KEY `co_room_cat_tenant` (`tenant_id`),
   KEY `FK_co_room_charge_subcategory_category` (`charge_cat_id`),
   CONSTRAINT `FK_co_room_charge_subcategory_category` FOREIGN KEY (`charge_cat_id`) REFERENCES `co_room_charge_category` (`charge_cat_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_co_room_subcat_tenant` FOREIGN KEY (`tenant_id`) REFERENCES `co_tenant` (`tenant_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=latin1;
 
 /*Data for the table `co_room_charge_subcategory` */
 
-insert  into `co_room_charge_subcategory`(`charge_subcat_id`,`tenant_id`,`charge_cat_id`,`charge_subcat_name`,`status`,`created_by`,`created_at`,`modified_by`,`modified_at`,`deleted_at`) values (10,18,13,'111111','1',1,'2016-01-11 18:14:33',1,'2016-01-11 18:41:07','0000-00-00 00:00:00'),(11,18,13,'adadasdsad','1',1,'2016-01-11 18:41:08',1,'2016-01-11 18:41:08','0000-00-00 00:00:00');
+insert  into `co_room_charge_subcategory`(`charge_subcat_id`,`tenant_id`,`charge_cat_id`,`charge_subcat_name`,`status`,`created_by`,`created_at`,`modified_by`,`modified_at`,`deleted_at`) values (11,18,13,'ccccccccc','1',1,'2016-01-11 18:41:08',1,'2016-01-12 11:51:21','0000-00-00 00:00:00'),(13,18,13,'bbbbbbbbb','1',1,'2016-01-12 11:17:19',1,'2016-01-12 11:51:21','0000-00-00 00:00:00'),(15,18,13,'ddddddddddd','1',1,'2016-01-12 11:51:21',1,'2016-01-12 11:51:21','0000-00-00 00:00:00'),(16,18,12,'test','1',1,'2016-01-12 11:51:52',1,'2016-01-12 11:51:52','0000-00-00 00:00:00'),(19,18,9,'bbbbbb','1',1,'2016-01-12 19:17:38',1,'2016-01-12 19:18:08','2016-01-12 19:18:17'),(20,18,9,'ccccc','1',1,'2016-01-12 19:18:08',1,'2016-01-12 19:19:37','0000-00-00 00:00:00'),(23,18,9,'aaasd','1',1,'2016-01-12 19:19:37',1,'2016-01-12 19:19:37','0000-00-00 00:00:00');
 
 /*Table structure for table `co_room_maintenance` */
 
@@ -468,7 +482,7 @@ CREATE TABLE `co_room_types_rooms` (
   `created_by` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `modified_by` int(11) DEFAULT NULL,
-  `modified_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `modified_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`room_type_room_id`),
   KEY `FK_room_types_rooms_tenane` (`tenant_id`),
   KEY `FK_room_types_rooms` (`room_type_id`),
@@ -493,12 +507,15 @@ CREATE TABLE `co_speciality` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modified_by` int(11) DEFAULT NULL,
   `modified_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`speciality_id`),
   KEY `co_speciality_tenant` (`tenant_id`),
   CONSTRAINT `FK_co_speciality_tenant` FOREIGN KEY (`tenant_id`) REFERENCES `co_tenant` (`tenant_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 /*Data for the table `co_speciality` */
+
+insert  into `co_speciality`(`speciality_id`,`tenant_id`,`speciality_name`,`status`,`created_by`,`created_at`,`modified_by`,`modified_at`,`deleted_at`) values (1,18,'Test','1',1,'2016-01-12 13:00:01',1,'2016-01-12 13:00:01','0000-00-00 00:00:00');
 
 /*Table structure for table `co_super_admin` */
 
