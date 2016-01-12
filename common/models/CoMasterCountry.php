@@ -10,6 +10,7 @@ use yii\helpers\ArrayHelper;
  * This is the model class for table "co_master_country".
  *
  * @property integer $country_id
+ * @property integer $tenant_id
  * @property string $country_name
  * @property string $status
  * @property integer $created_by
@@ -35,8 +36,8 @@ class CoMasterCountry extends ActiveRecord {
         return [
             [['country_name', 'created_by'], 'required'],
             [['status'], 'string'],
-            [['created_by', 'modified_by'], 'integer'],
-            [['created_at', 'modified_at'], 'safe'],
+            [['created_by', 'modified_by', 'tenant_id'], 'integer'],
+            [['created_at', 'modified_at', 'tenant_id'], 'safe'],
             [['country_name'], 'string', 'max' => 50],
             [['country_name'], 'unique']
         ];
@@ -48,6 +49,7 @@ class CoMasterCountry extends ActiveRecord {
     public function attributeLabels() {
         return [
             'country_id' => 'Country ID',
+            'tenant_id' => 'Org',
             'country_name' => 'Country Name',
             'status' => 'Status',
             'created_by' => 'Created By',
@@ -66,5 +68,9 @@ class CoMasterCountry extends ActiveRecord {
 
     public static function getCountrylist() {
         return ArrayHelper::map(self::find()->all(), 'country_id', 'country_name');
+    }
+    
+    public function getTenant() {
+        return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
 }
