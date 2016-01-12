@@ -70,13 +70,14 @@ app.controller('RoomChargeCategorysController', ['$rootScope', '$scope', '$timeo
                             }
                         });
 
+                        //Delete Subcategories
                         angular.forEach($scope.deletedsubcategories, function (del) {
                             $http({
-                                url: $rootScope.IRISOrgServiceUrl + "/roomchargesubcategories/" + del,
-                                method: "DELETE",
+                                url: $rootScope.IRISOrgServiceUrl + "/roomchargesubcategory/remove",
+                                method: "POST",
+                                data: {id: del}
                             });
                         });
-                        //Delete Subcategories
                         $scope.loadbar('hide');
                         $scope.successMessage = succ_msg;
                         $scope.data = {};
