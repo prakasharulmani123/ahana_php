@@ -697,6 +697,46 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                 }
             })
 
+            //Patient Category
+            .state('configuration.patientCategories', {
+                url: '/patientCategories',
+                templateUrl: 'tpl/patient_categories/index.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('smart-table').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/patient_categories/patient_category.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            .state('configuration.patientCategoryCreate', {
+                url: '/patientCategoryCreate',
+                templateUrl: 'tpl/patient_categories/create.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('smart-table').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/patient_categories/patient_category.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            .state('configuration.patientCategoryUpdate', {
+                url: '/patientCategoryUpdate/{id}',
+                templateUrl: 'tpl/patient_categories/update.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/patient_categories/patient_category.js']);
+                        }]
+                }
+            })
+
 }
 run.$inject = ['$rootScope', '$state', '$stateParams', '$location', '$cookieStore', '$http', '$window', 'CommonService'];
 function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $window, CommonService) {
