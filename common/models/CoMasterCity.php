@@ -2,7 +2,8 @@
 
 namespace common\models;
 
-use Yii;
+use common\models\query\CoCityQuery;
+use yii\db\ActiveQuery;
 use yii\helpers\ArrayHelper;
 
 
@@ -10,6 +11,7 @@ use yii\helpers\ArrayHelper;
  * This is the model class for table "co_master_city".
  *
  * @property integer $city_id
+ * @property integer $tenant_id
  * @property integer $state_id
  * @property string $city_name
  * @property string $status
@@ -17,10 +19,11 @@ use yii\helpers\ArrayHelper;
  * @property string $created_at
  * @property integer $modified_by
  * @property string $modified_at
+ * @property string $deleted_at
  *
  * @property CoMasterState $state
  */
-class CoMasterCity extends \yii\db\ActiveRecord
+class CoMasterCity extends RActiveRecord
 {
     /**
      * @inheritdoc
@@ -36,10 +39,10 @@ class CoMasterCity extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['state_id', 'city_name', 'created_by'], 'required'],
-            [['state_id', 'created_by', 'modified_by'], 'integer'],
+            [['state_id', 'city_name'], 'required'],
+            [['state_id', 'created_by', 'modified_by', 'tenant_id'], 'integer'],
             [['status'], 'string'],
-            [['created_at', 'modified_at'], 'safe'],
+            [['created_at', 'modified_at', 'tenant_id', 'deleted_at'], 'safe'],
             [['city_name'], 'string', 'max' => 50]
         ];
     }
@@ -51,8 +54,8 @@ class CoMasterCity extends \yii\db\ActiveRecord
     {
         return [
             'city_id' => 'City ID',
-            'state_id' => 'State ID',
-            'city_name' => 'City Name',
+            'state_id' => 'State',
+            'city_name' => 'City',
             'status' => 'Status',
             'created_by' => 'Created By',
             'created_at' => 'Created At',
@@ -62,7 +65,7 @@ class CoMasterCity extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getState()
     {
@@ -71,5 +74,29 @@ class CoMasterCity extends \yii\db\ActiveRecord
     
     public static function getCitylist() {
         return ArrayHelper::map(self::find()->all(), 'city_id', 'city_name');
+    }
+    
+    public function getTenant() {
+        return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
+    }
+    
+    public static function find() {
+        return new CoCityQuery(get_called_class());
+    }
+    
+    public function fields() {
+        $extend = [
+            'country_id' => function ($model) {
+                return (isset($model->state->country) ? $model->state->country->country_id : '-');
+            },
+            'country_name' => function ($model) {
+                return (isset($model->state->country) ? $model->state->country->country_name : '-');
+            },
+            'state_name' => function ($model) {
+                return (isset($model->state) ? $model->state->state_name : '-');
+            },
+        ];
+        $fields = array_merge(parent::fields(), $extend);
+        return $fields;
     }
 }

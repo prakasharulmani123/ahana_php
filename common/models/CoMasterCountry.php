@@ -2,8 +2,8 @@
 
 namespace common\models;
 
+use common\models\query\CoCountryQuery;
 use yii\db\ActiveQuery;
-use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -20,7 +20,7 @@ use yii\helpers\ArrayHelper;
  *
  * @property CoMasterState[] $coMasterStates
  */
-class CoMasterCountry extends ActiveRecord {
+class CoMasterCountry extends RActiveRecord {
 
     /**
      * @inheritdoc
@@ -34,12 +34,12 @@ class CoMasterCountry extends ActiveRecord {
      */
     public function rules() {
         return [
-            [['country_name', 'created_by'], 'required'],
+            [['country_name'], 'required'],
             [['status'], 'string'],
             [['created_by', 'modified_by', 'tenant_id'], 'integer'],
             [['created_at', 'modified_at', 'tenant_id'], 'safe'],
             [['country_name'], 'string', 'max' => 50],
-            [['country_name'], 'unique']
+            [['tenant_id', 'country_name', 'deleted_at'], 'unique', 'targetAttribute' => ['tenant_id', 'country_name', 'deleted_at'], 'message' => 'The combination has already been taken.']
         ];
     }
 
@@ -72,5 +72,9 @@ class CoMasterCountry extends ActiveRecord {
     
     public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
+    }
+    
+    public static function find() {
+        return new CoCountryQuery(get_called_class());
     }
 }

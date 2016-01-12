@@ -2,12 +2,14 @@
 
 namespace common\models;
 
-use Yii;
+use common\models\query\CoStateQuery;
+use yii\db\ActiveQuery;
 
 /**
  * This is the model class for table "co_master_state".
  *
  * @property integer $state_id
+ * @property integer $tenant_id
  * @property integer $country_id
  * @property string $state_name
  * @property string $status
@@ -15,11 +17,12 @@ use Yii;
  * @property string $created_at
  * @property integer $modified_by
  * @property string $modified_at
+ * @property string $deleted_at
  *
  * @property CoMasterCity[] $coMasterCities
  * @property CoMasterCountry $country
  */
-class CoMasterState extends \yii\db\ActiveRecord
+class CoMasterState extends RActiveRecord
 {
     /**
      * @inheritdoc
@@ -35,10 +38,10 @@ class CoMasterState extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['country_id', 'state_name', 'created_by'], 'required'],
-            [['country_id', 'created_by', 'modified_by'], 'integer'],
+            [['country_id', 'state_name'], 'required'],
+            [['country_id', 'created_by', 'modified_by', 'tenant_id'], 'integer'],
             [['status'], 'string'],
-            [['created_at', 'modified_at'], 'safe'],
+            [['created_at', 'modified_at', 'deleted_at', 'tenant_id'], 'safe'],
             [['state_name'], 'string', 'max' => 50]
         ];
     }
@@ -61,7 +64,7 @@ class CoMasterState extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getCoMasterCities()
     {
@@ -69,10 +72,28 @@ class CoMasterState extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getCountry()
     {
         return $this->hasOne(CoMasterCountry::className(), ['country_id' => 'country_id']);
+    }
+    
+    public function getTenant() {
+        return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
+    }
+    
+    public static function find() {
+        return new CoStateQuery(get_called_class());
+    }
+    
+    public function fields() {
+        $extend = [
+            'country_name' => function ($model) {
+                return (isset($model->country) ? $model->country->country_name : '-');
+            },
+        ];
+        $fields = array_merge(parent::fields(), $extend);
+        return $fields;
     }
 }
