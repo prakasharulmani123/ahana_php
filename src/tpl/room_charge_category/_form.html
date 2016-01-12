@@ -50,7 +50,7 @@
                     </tr>
                 </table>
                 <div class="btn-form">
-                    <button type="button" ng-click="tableform.$show();" class="btn btn-default pull-left btn-info">Edit</button>
+                    <!--<button type="button" ng-click="tableform.$show();" class="btn btn-default pull-left btn-info">Edit</button>-->
                     &nbsp;
                     <button type="button" ng-click="tableform.$show(); addRow()" class="btn btn-default pull-left btn-primary">Add Row</button>
                 </div>
@@ -60,7 +60,7 @@
     <footer class="panel-footer text-right bg-light lter">
         <button class="btn m-b-xs  btn-success " >Save</button>
         &nbsp;
-        <button class="btn m-b-xs  btn-dark" ng-click="$state.go('configuration.roomChargeCategory')"><i class="fa fa-times"></i> Cancel</button>
+        <button type="button" class="btn m-b-xs  btn-dark" ng-click="$state.go('configuration.roomChargeCategory')"><i class="fa fa-times"></i> Cancel</button>
         &nbsp;
     </footer>
 </div>

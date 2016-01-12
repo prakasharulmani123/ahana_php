@@ -554,6 +554,148 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
+            //CONFIGURATION MASTER COUNTRY
+            .state('configuration.countries', {
+                url: '/countries',
+                templateUrl: 'tpl/countries/index.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('smart-table').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/countries/countries.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            .state('configuration.countryCreate', {
+                url: '/countryCreate',
+                templateUrl: 'tpl/countries/create.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/countries/countries.js']);
+                        }]
+                }
+            })
+            .state('configuration.countryUpdate', {
+                url: '/countryUpdate/{id}',
+                templateUrl: 'tpl/countries/update.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/countries/countries.js']);
+                        }]
+                }
+            })
+            //CONFIGURATION MASTER STATE
+            .state('configuration.states', {
+                url: '/states',
+                templateUrl: 'tpl/states/index.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('smart-table').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/states/states.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            .state('configuration.stateCreate', {
+                url: '/stateCreate',
+                templateUrl: 'tpl/states/create.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/states/states.js']);
+                        }]
+                }
+            })
+            .state('configuration.stateUpdate', {
+                url: '/stateUpdate/{id}',
+                templateUrl: 'tpl/states/update.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/states/states.js']);
+                        }]
+                }
+            })
+            //CONFIGURATION MASTER CITY
+            .state('configuration.cities', {
+                url: '/cities',
+                templateUrl: 'tpl/cities/index.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('smart-table').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/cities/cities.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            .state('configuration.cityCreate', {
+                url: '/cityCreate',
+                templateUrl: 'tpl/cities/create.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/cities/cities.js']);
+                        }]
+                    
+                }
+            })
+            .state('configuration.cityUpdate', {
+                url: '/cityUpdate/{id}',
+                templateUrl: 'tpl/cities/update.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/cities/cities.js']);
+                        }]
+                }
+            })
+            //CONFIGURATION ALERTS
+            .state('configuration.alerts', {
+                url: '/alerts',
+                templateUrl: 'tpl/alerts/index.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('smart-table').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/alerts/alerts.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            .state('configuration.alertCreate', {
+                url: '/alertCreate',
+                templateUrl: 'tpl/alerts/create.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/alerts/alerts.js']);
+                        }]
+                    
+                }
+            })
+            .state('configuration.alertUpdate', {
+                url: '/alertUpdate/{id}',
+                templateUrl: 'tpl/alerts/update.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/alerts/alerts.js']);
+                        }]
+                }
+            })
 
 }
 run.$inject = ['$rootScope', '$state', '$stateParams', '$location', '$cookieStore', '$http', '$window', 'CommonService'];
