@@ -53,7 +53,7 @@ class RoomchargesubcategoryController extends ActiveController {
     public function actionRemove() {
         $id = Yii::$app->getRequest()->post('id');
         if ($id) {
-            $model = CoRoomChargeSubcategory::find()->where(['charge_cat_id' => $id])->one();
+            $model = CoRoomChargeSubcategory::find()->where(['charge_subcat_id' => $id])->one();
             $model->remove();
             return ['success' => true];
         }
