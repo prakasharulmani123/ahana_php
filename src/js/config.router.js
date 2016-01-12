@@ -329,13 +329,13 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                 templateUrl: 'tpl/room_charge_category/create.html',
                 resolve: {
                     deps: ['$ocLazyLoad',
-                        function( $ocLazyLoad ){
-                          return $ocLazyLoad.load('xeditable').then(
-                              function(){
-                                  return $ocLazyLoad.load('tpl/room_charge_category/room_charge_category.js');
-                              }
-                          );
-                      }]
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('xeditable').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/room_charge_category/room_charge_category.js');
+                                    }
+                            );
+                        }]
                 }
             })
             .state('configuration.roomChargeCategoryUpdate', {
@@ -343,7 +343,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                 templateUrl: 'tpl/room_charge_category/update.html',
                 resolve: {
                     deps: ['$ocLazyLoad',
-                         function ($ocLazyLoad) {
+                        function ($ocLazyLoad) {
                             return $ocLazyLoad.load('xeditable').then(
                                     function () {
                                         return $ocLazyLoad.load('tpl/room_charge_category/room_charge_category.js');
@@ -518,6 +518,43 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
+
+            //Speciality
+            .state('configuration.specialities', {
+                url: '/specialities',
+                templateUrl: 'tpl/specialities/index.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('smart-table').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/specialities/speciality.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            .state('configuration.specialityCreate', {
+                url: '/specialityCreate',
+                templateUrl: 'tpl/specialities/create.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/specialities/speciality.js']);
+                        }]
+                }
+            })
+            .state('configuration.specialityUpdate', {
+                url: '/specialityUpdate/{id}',
+                templateUrl: 'tpl/specialities/update.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/specialities/speciality.js']);
+                        }]
+                }
+            })
+
 }
 run.$inject = ['$rootScope', '$state', '$stateParams', '$location', '$cookieStore', '$http', '$window', 'CommonService'];
 function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $window, CommonService) {
