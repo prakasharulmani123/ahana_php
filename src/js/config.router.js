@@ -736,6 +736,45 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
+            //CONFIGURATION CHARGES FOR CATEGORY
+            .state('configuration.chargePerCategory', {
+                url: '/charge_per_category',
+                templateUrl: 'tpl/charge_per_category/index.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('smart-table').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/charge_per_category/charge_per_category.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            .state('configuration.chargePerCategoryCreate', {
+                url: '/chargePerCategoryCreate',
+                templateUrl: 'tpl/charge_per_category/create.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('smart-table').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/charge_per_category/charge_per_category.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            .state('configuration.chargePerCategoryUpdate', {
+                url: '/chargePerCategoryUpdate/{id}',
+                templateUrl: 'tpl/charge_per_category/update.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/charge_per_category/charge_per_category.js']);
+                        }]
+                }
+            })
 
 }
 run.$inject = ['$rootScope', '$state', '$stateParams', '$location', '$cookieStore', '$http', '$window', 'CommonService'];

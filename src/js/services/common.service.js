@@ -15,10 +15,12 @@ function CommonService($http, $rootScope, $window, $q) {
     service.GetTenantList = GetTenantList;
     service.GetFloorList = GetFloorList;
     service.GetRoomChargeCategoryList = GetRoomChargeCategoryList;
+    service.GetRoomChargeSubCategoryList = GetRoomChargeSubCategoryList;
     service.GetRoomChargeItemList = GetRoomChargeItemList;
     service.GetRoomTypeList = GetRoomTypeList;
     service.GetWardList = GetWardList;
     service.GetRoomMaintenanceList = GetRoomMaintenanceList;
+    service.GetPatientCateogryList = GetPatientCateogryList;
 
     return service;
 
@@ -122,6 +124,18 @@ function CommonService($http, $rootScope, $window, $q) {
                 });
     }
 
+    function GetRoomChargeSubCategoryList(tenant, sts, del_sts, cat_id, callback) {
+        var response;
+
+        $http.get($rootScope.IRISOrgServiceUrl + '/roomchargesubcategory/getroomchargesubcategorylist?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts + '&cat_id=' + cat_id)
+                .success(function (response) {
+                    callback(response);
+                }, function (x) {
+                    response = {success: false, message: 'Server Error'};
+                    callback(response);
+                });
+    }
+
     function GetRoomChargeItemList(tenant, sts, del_sts, callback) {
         var response;
 
@@ -169,4 +183,17 @@ function CommonService($http, $rootScope, $window, $q) {
                     callback(response);
                 });
     }
+    
+    function GetPatientCateogryList(tenant, sts, del_sts, callback) {
+        var response;
+
+        $http.get($rootScope.IRISOrgServiceUrl + '/patientcategory/getpatientcategorylist?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts)
+                .success(function (response) {
+                    callback(response);
+                }, function (x) {
+                    response = {success: false, message: 'Server Error'};
+                    callback(response);
+                });
+    }
+
 }
