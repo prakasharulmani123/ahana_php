@@ -46,7 +46,7 @@ return [
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/roomtype'], 'extraPatterns' => ['POST remove' => 'remove']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/room'], 'extraPatterns' => ['GET getrooms' => 'getrooms', 'GET getroomandroomtypes' => 'getroomandroomtypes', 'POST assignroomtypes' => 'assignroomtypes']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/roomcharge'], 'extraPatterns' => ['POST remove' => 'remove']],
-                ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/speciality']],
+                ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/speciality'], 'extraPatterns' => ['GET getspecialitylist' => 'getspecialitylist']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/patientcategory']],
             ],
         ],
