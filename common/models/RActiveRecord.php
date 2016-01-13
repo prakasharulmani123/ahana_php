@@ -40,7 +40,7 @@ class RActiveRecord extends ActiveRecord {
     }
 
     public function beforeSave($insert) {
-        if (isset(Yii::$app->user->identity) && Yii::$app->user->identity->user_id > 0) {
+        if (isset(Yii::$app->user->identity) && Yii::$app->user->identity->user_id > 0 && $this->hasAttribute('tenant_id')) {
             $this->tenant_id = Yii::$app->user->identity->user->tenant_id;
         }
         return parent::beforeSave($insert);
