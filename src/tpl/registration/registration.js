@@ -35,6 +35,10 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
             $rootScope.commonService.GetCityList(function (response) {
                 $scope.cities = response.cityList;
             });
+            
+            $rootScope.commonService.GetSpecialityList('', '1', false, function (response) {
+                $scope.specialities = response.specialityList;
+            });
         }
 
         $scope.updateState2 = function () {

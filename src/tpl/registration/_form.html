@@ -53,6 +53,20 @@
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="form-group">
+                    <label class="col-lg-2 control-label">Care Provider</label>
+                    <div class="col-lg-10">
+                        <div class="input-group m-b">
+                            <span class="input-group-addon">
+                                <input type="checkbox" ng-model="data.care_provider" ng-true-value="'1'" ng-false-value="'0'" >
+                            </span>
+                            <select class="form-control" ng-model="data.speciality_id" ng-disabled="data.care_provider == '0'" ng-options="speciality.speciality_id as speciality.speciality_name for speciality in specialities | orderBy: speciality_name">
+                                <option value="">Select Speciality</option>
+                            </select>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="col-lg-2 control-label">Address</label>
                     <div class="col-lg-10">
                         <textarea placeholder="Address" class="form-control" ng-model="data.address"></textarea>
