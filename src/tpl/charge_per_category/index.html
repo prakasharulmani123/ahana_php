@@ -1,0 +1,112 @@
+<div class="bg-light lter b-b wrapper-md">
+    <h1 class="m-n font-thin h3">Charges for Category</h1>
+</div>
+
+<div class="wrapper-md" ng-controller="ChargePerCategoriesController" ng-init="loadChargePerCategoriesList()">
+
+    <div ng-include="'tpl/blocks/alert.html'">
+        {% include 'tpl/blocks/alert.html' %}
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <button class="btn btn-sm btn-grey" ng-click="loadChargePerCategoriesList()"> 
+                &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
+            </button>
+            <button ng-click="$state.go('configuration.chargePerCategoryCreate')" class="btn btn-sm btn-info pull-right">
+                <i class="fa fa-plus"></i> &nbsp; Add new Charges for Category
+            </button>
+        </div>
+
+        <table st-table="displayedCollection"  st-safe-src="rowCollection" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>
+                        <button type="button" ng-click="ctrl.expandAll(allExpanded = !allExpanded)">
+                            <span ng-bind="allExpanded ? '-' : '+ '"></span>
+                        </button>
+                    </th>
+                    <th st-sort="charge_cat_name">Category</th>
+                    <th st-sort="charge_code_name">Code / Names</th>
+                    <th st-sort="charge_default">Default</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat-start="row in displayedCollection| orderBy: charge_cat_name">
+                    <td>
+                        <button ng-click="expanded = !expanded" expand>
+                            <span ng-bind="expanded ? '-' : '+ '"></span>
+                        </button>
+                    </td>
+                    <td>
+                        {{row.charge_cat_name}}
+                    </td>
+                    <td>
+                        {{row.charge_code_name}}
+                    </td>
+                    <td>
+                        {{row.charge_default}}
+                    </td>
+
+                </tr>
+                <tr ng-repeat-end ng-show="expanded">
+                    <td></td>
+                    <td colspan="3">
+                        <table class="table table-condensed table-bordered">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50%;">Out-Patient Department</th>
+                                    <th style="width: 30%;">Amount</th>
+                                    <th style="width: 20%;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="subcat in allSubCategories" ng-if="subcat.charge_id == row.charge_id && subcat.charge_type == 'OP'">
+                                    <td>{{subcat.op_dept}}</td>
+                                    <td>{{subcat.charge_amount}}</td>
+                                    <td>
+                                        <a title="Edit" ui-sref="configuration.roomChargeCategoryUpdate({id: '{{row.sub_charge_id}}'})">
+                                            <i class="fa fa-pencil"></i>
+                                        </a>&nbsp;&nbsp;&nbsp;
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table class="table table-condensed table-bordered">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50%;">In-Patient Department</th>
+                                    <th style="width: 30%;">Amount</th>
+                                    <th style="width: 20%;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="subcat in allSubCategories" ng-if="subcat.charge_id == row.charge_id && subcat.charge_type == 'IP'">
+                                    <td>{{subcat.ip_dept}}</td>
+                                    <td>{{subcat.charge_amount}}</td>
+                                    <td>
+                                        <a title="Edit" ui-sref="configuration.roomChargeCategoryUpdate({id: '{{row.sub_charge_id}}'})">
+                                            <i class="fa fa-pencil"></i>
+                                        </a>&nbsp;&nbsp;&nbsp;
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+<!--    <script type="text/ng-template" id="myModalContent.html">
+        <div ng-include="'tpl/modal.html'"></div>
+    </script>
+    <div class="panel-heading b-b b-light">Modal</div>
+    <div class="panel-body">
+        <button class="btn btn-success" ng-click="open()">Open me!</button>
+        <button class="btn btn-default" ng-click="open('lg')">Large modal</button>
+        <button class="btn btn-default" ng-click="open('sm')">Small modal</button>
+    </div>-->
+
+</div>
