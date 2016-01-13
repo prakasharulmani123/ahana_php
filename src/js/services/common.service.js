@@ -21,6 +21,7 @@ function CommonService($http, $rootScope, $window, $q) {
     service.GetWardList = GetWardList;
     service.GetRoomMaintenanceList = GetRoomMaintenanceList;
     service.GetPatientCateogryList = GetPatientCateogryList;
+    service.GetChargePerSubCategoryList = GetChargePerSubCategoryList;
     service.GetSpecialityList = GetSpecialityList;
 
     return service;
@@ -184,7 +185,7 @@ function CommonService($http, $rootScope, $window, $q) {
                     callback(response);
                 });
     }
-    
+
     function GetPatientCateogryList(tenant, sts, del_sts, callback) {
         var response;
 
@@ -196,7 +197,20 @@ function CommonService($http, $rootScope, $window, $q) {
                     callback(response);
                 });
     }
-    
+
+    function GetChargePerSubCategoryList(del_sts, cat_id, callback) {
+        var response;
+
+        $http.get($rootScope.IRISOrgServiceUrl + '/chargepersubcategory/getchargepersubcategorylist?deleted=' + del_sts + '&cat_id=' + cat_id)
+//        $http.get($rootScope.IRISOrgServiceUrl + '/chargepersubcategory/getroomchargesubcategorylist?deleted=' + del_sts + '&cat_id=' + cat_id)
+                .success(function (response) {
+                    callback(response);
+                }, function (x) {
+                    response = {success: false, message: 'Server Error'};
+                    callback(response);
+                });
+    }
+
     function GetSpecialityList(tenant, sts, del_sts, callback) {
         var response;
 
