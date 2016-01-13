@@ -75,9 +75,18 @@ class CoRoomChargeSubcategory extends RActiveRecord {
     public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
-    
+
     public static function find() {
         return new CoRoomChargeSubcategoryQuery(get_called_class());
+    }
+
+    public static function getRoomChargeSubCateogrylist($tenant = null, $status = '1', $deleted = false, $cat_id = null) {
+        if (!$deleted)
+            $list = self::find()->tenant($tenant)->status($status)->categoryid($cat_id)->active()->all();
+        else
+            $list = self::find()->tenant($tenant)->deleted()->categoryid($cat_id)->all();
+
+        return $list;
     }
 
 }

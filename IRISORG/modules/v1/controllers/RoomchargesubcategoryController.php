@@ -58,4 +58,23 @@ class RoomchargesubcategoryController extends ActiveController {
             return ['success' => true];
         }
     }
+    
+    public function actionGetroomchargesubcategorylist() {
+        $get = Yii::$app->getRequest()->get();
+
+        if (isset($get['tenant']))
+            $tenant = $get['tenant'];
+
+        if (isset($get['status']))
+            $status = strval($get['status']);
+
+        if (isset($get['deleted']))
+            $deleted = $get['deleted'] == 'true';
+
+        if (isset($get['cat_id']))
+            $cat_id = $get['cat_id'];
+
+        return ['subcategoryList' => CoRoomChargeSubcategory::getRoomChargeSubCateogrylist($tenant, $status, $deleted, $cat_id)];
+    }
+
 }
