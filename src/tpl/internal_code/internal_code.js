@@ -34,7 +34,6 @@ app.controller('InternalCodeController', ['$scope', '$http', '$filter', '$state'
                     function (response) {
                         $scope.loadbar('hide');
                         $scope.successMessage = succ_msg;
-                        $scope.data = {};
                         $timeout(function () {
                             $state.go('configuration.internalCode');
                         }, 1000)
