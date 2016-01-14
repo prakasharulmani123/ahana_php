@@ -51,6 +51,7 @@ return [
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/chargepercategory']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/chargepersubcategory'], 'extraPatterns' => ['GET getroomchargesubcategorylist' => 'getroomchargesubcategorylist']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/internalcode'], 'extraPatterns' => ['GET getinternalcode' => 'getinternalcode']],
+                ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/doctorschedule'], 'extraPatterns' => ['POST remove' => 'remove']],
             ],
         ],
         'log' => [
