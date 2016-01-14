@@ -1,0 +1,39 @@
+<div class="bg-light lter b-b wrapper-md">
+    <h1 class="m-n h3">Bill No Prefix</h1>
+</div>
+
+<div class="wrapper-md">
+    <div ng-controller="InternalCodeController">
+
+        <div ng-include="'tpl/blocks/alert.html'">
+            {% include 'tpl/blocks/alert.html' %}
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <form name="internalCodeForm" class="form-horizontal form-validation">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Code Prefix * </label>
+                                <div class="col-sm-9">
+                                    <input type="hidden" ng-model="data.internal_code_id">
+                                    <input type="text" ng-model="data.code_prefix" maxlength="50" class="form-control" placeholder="Code prefix">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Code Start No * </label>
+                                <div class="col-sm-9">
+                                    <input type="text" number-mask ="" ng-model="data.code" maxlength="50" class="form-control" placeholder="Code start no">
+                                </div>
+                            </div>
+                        </div>
+                        <footer class="panel-footer text-right bg-light lter">
+                            <button class="btn m-b-xs  btn-success " ng-click="saveForm(data.formtype)">Save</button>&nbsp;
+                        </footer>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
