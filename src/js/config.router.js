@@ -647,7 +647,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         function (uiLoad) {
                             return uiLoad.load(['tpl/cities/cities.js']);
                         }]
-                    
+
                 }
             })
             .state('configuration.cityUpdate', {
@@ -683,7 +683,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         function (uiLoad) {
                             return uiLoad.load(['tpl/alerts/alerts.js']);
                         }]
-                    
+
                 }
             })
             .state('configuration.alertUpdate', {
@@ -775,7 +775,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-            
+
             //Bill-No Prefix
             .state('configuration.internalCode', {
                 url: '/internalCode',
@@ -784,6 +784,36 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                     deps: ['uiLoad',
                         function (uiLoad) {
                             return uiLoad.load(['tpl/internal_code/internal_code.js']);
+                        }]
+                }
+            })
+
+            //CONFIGURATION DOCTOR SCHEDULE
+            .state('configuration.docSchedule', {
+                url: '/docSchedule',
+                templateUrl: 'tpl/doctor_schedule/index.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('xeditable').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/doctor_schedule/doctor_schedule.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            .state('configuration.docScheduleCreate', {
+                url: '/docScheduleCreate',
+                templateUrl: 'tpl/doctor_schedule/create.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('xeditable').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/doctor_schedule/doctor_schedule.js');
+                                    }
+                            );
                         }]
                 }
             })

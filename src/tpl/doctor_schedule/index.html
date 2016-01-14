@@ -1,0 +1,107 @@
+<div class="bg-light lter b-b wrapper-md">
+    <h1 class="m-n font-thin h3">Doctor Scheduling</h1>
+</div>
+<div class="wrapper-md" ng-controller="DoctorSchedulesController" ng-init="loadDoctorSchedulesList()">
+    <div ng-include="'tpl/blocks/alert.html'">
+        {% include 'tpl/blocks/alert.html' %}
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <button class="btn btn-sm btn-grey" ng-click="loadDoctorSchedulesList()">
+                &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp;
+            </button>
+            <button ng-click="$state.go('configuration.docScheduleCreate')" class="btn btn-sm btn-info pull-right">
+                <i class="fa fa-plus"></i> &nbsp; Add Doctor Schedule
+            </button>
+        </div>
+        <table st-table="displayedCollection"  st-safe-src="rowCollection" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>
+                        <button type="button" ng-click="ctrl.expandAll(allExpanded = !allExpanded)">
+                            <span ng-bind="allExpanded ? '-' : '+ '"></span>
+                        </button>
+                    </th>
+                    <th st-sort="charge_cat_name">Charge Category name</th>
+                    <th st-sort="charge_cat_description">Charge Category Description</th>
+                    <th st-sort="charge_cat_code">Charge Category Code</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat-start="row in displayedCollection| orderBy: charge_cat_name">
+                    <td>
+                        <button ng-click="expanded = !expanded" expand>
+                            <span ng-bind="expanded ? '-' : '+ '"></span>
+                        </button>
+                    </td>
+                    <td>
+                        {{row.charge_cat_name}}
+                    </td>
+                    <td>
+                        {{row.charge_cat_description}}
+                    </td>
+                    <td>
+                        {{row.charge_cat_code}}
+                    </td>
+                    <td>
+                        <label class="i-checks ">
+                            <input type="checkbox" checked="" ng-true-value="'1'" ng-false-value="'0'" name="status" ng-model="row.status" ng-change='updateStatus("CoDoctorSchedule", row.charge_cat_id)'>
+                            <i></i>
+                        </label>
+                    </td>
+                    <td>
+                        <a title="Edit" ui-sref="configuration.DoctorScheduleUpdate({id: '{{row.charge_cat_id}}'})">
+                            <i class="fa fa-pencil"></i>
+                        </a>&nbsp;&nbsp;&nbsp;
+                        <a title="Delete" ng-click="removeRow(row)">
+                            <i class="fa fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                <tr ng-repeat-end ng-show="expanded">
+                    <td></td>
+                    <td colspan="3">
+                        <table class="table table-condensed table-bordered">
+                            <thead>
+                                <tr>
+                                    <th style='width: 70%'>Sub Categories</th>
+                                    <th style='width: 30%'>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="subcat in row.subcategories">
+                                    <td>
+                                        <span editable-text="subcat.charge_subcat_name" e-name="charge_subcat_name" e-form="rowform" onbeforesave="checkInput($data)">
+                                            {{subcat.charge_subcat_name|| 'empty' }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <form editable-form name="rowform" onbeforesave="updateName($data, subcat.charge_subcat_id, row.charge_cat_id, subcat.temp_charge_cat_id)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == subcat">
+                                            <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-sm btn-primary">
+                                                save
+                                            </button>
+                                            <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()" class="btn btn-sm btn-default">
+                                                cancel
+                                            </button>
+                                        </form>
+                                        <div class="buttons" ng-show="!rowform.$visible">
+                                            <button class="btn btn-sm btn-info" ng-click="rowform.$show()">Edit</button>
+                                            &nbsp;&nbsp;
+                                            <button class="btn btn-sm btn-danger" ng-click="deleteSubRow(row.charge_cat_id, subcat.charge_subcat_id, subcat.temp_charge_cat_id);">Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="btn-form">
+                            <button type="button" ng-click="rowform.$show(); addSubRow(row.charge_cat_id)" class="btn btn-default pull-left btn-primary">Add Row</button>
+                        </div>
+                    </td>
+                    <td colspan="2"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
