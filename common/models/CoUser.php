@@ -31,6 +31,7 @@ use yii\helpers\ArrayHelper;
  * @property string $created_at
  * @property integer $modified_by
  * @property string $modified_at
+ * @property string $deleted_at
  *
  * @property CoLogin[] $coLogins
  * @property CoTenant $tenant
@@ -57,7 +58,7 @@ class CoUser extends RActiveRecord {
             [['title_code', 'name', 'designation', 'mobile', 'email'], 'required', 'on' => 'saveorg'],
             [['tenant_id', 'city_id', 'state_id', 'country_id', 'speciality_id', 'created_by', 'modified_by'], 'integer'],
             [['title_code', 'care_provider', 'status'], 'string'],
-            [['created_at', 'modified_at'], 'safe'],
+            [['created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['name', 'contact1', 'contact2', 'mobile', 'email'], 'string', 'max' => 50],
             [['designation'], 'string', 'max' => 25],
             [['address'], 'string', 'max' => 100],

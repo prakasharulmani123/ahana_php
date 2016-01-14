@@ -40,7 +40,9 @@ class CoChargePerCategory extends RActiveRecord {
             [['tenant_id', 'charge_cat_id', 'charge_code_id', 'created_by', 'modified_by'], 'integer'],
             [['charge_cat_type'], 'string'],
             [['created_at', 'modified_at', 'deleted_at'], 'safe'],
-            [['charge_default'], 'string', 'max' => 255]
+            [['charge_default'], 'string', 'max' => 255],
+//            [['charge_cat_id', 'charge_code_id', 'tenant_id'], 'unique', 'message' => 'The combination has already been taken.'],
+            [['charge_cat_id'], 'unique', 'targetAttribute' => ['charge_cat_id', 'charge_code_id', 'tenant_id'], 'message' => 'The combination has already been taken.']
         ];
     }
 
@@ -90,13 +92,24 @@ class CoChargePerCategory extends RActiveRecord {
         return $this->hasOne(CoRoomChargeSubcategory::className(), ['charge_subcat_id' => 'charge_code_id']);
     }
     
+    public function getUser()
+    {
+        return $this->hasOne(CoUser::className(), ['user_id' => 'charge_code_id']);
+    }
+    
     public function fields() {
         $extend = [
             'charge_cat_name' => function ($model) {
-                return (isset($model->roomchargecategory) ? $model->roomchargecategory->charge_cat_name : '-');
+                if($model->charge_cat_type == 'C')
+                    return (isset($model->roomchargecategory) ? $model->roomchargecategory->charge_cat_name : '-');
+                if($model->charge_cat_type == 'P' && $model->charge_cat_id == -1)
+                    return 'Professional Charge';
             },
             'charge_code_name' => function ($model) {
-                return (isset($model->roomchargesubcategory) ? $model->roomchargesubcategory->charge_subcat_name : '-');
+                if($model->charge_cat_type == 'C')
+                    return (isset($model->roomchargesubcategory) ? $model->roomchargesubcategory->charge_subcat_name : '-');
+                if($model->charge_cat_type == 'P' && $model->charge_cat_id == -1)
+                    return (isset($model->user) ? $model->user->name : '-');
             },
         ];
         $fields = array_merge(parent::fields(), $extend);

@@ -51,7 +51,7 @@ class UserController extends ActiveController {
         $behaviors = parent::behaviors();
         $behaviors['authenticator'] = [
             'class' => HttpBearerAuth::className(),
-            'only' => ['dashboard', 'createuser', 'updateuser', 'getuser', 'getlogin', 'updatelogin', 'getuserdata', 'getusernamebytenant', 'assignroles'],
+            'only' => ['dashboard', 'createuser', 'updateuser', 'getuser', 'getlogin', 'updatelogin', 'getuserdata', 'getusernamebytenant', 'assignroles', 'getdoctorslist'],
         ];
         $behaviors['contentNegotiator'] = [
             'class' => ContentNegotiator::className(),

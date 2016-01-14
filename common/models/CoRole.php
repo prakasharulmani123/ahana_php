@@ -17,6 +17,7 @@ use yii\db\ActiveQuery;
  * @property string $created_at
  * @property integer $modified_by
  * @property string $modified_at
+ * @property string $deleted_at
  *
  * @property CoTenant $tenant
  */
@@ -37,7 +38,7 @@ class CoRole extends RActiveRecord {
             [['description'], 'required'],
             [['tenant_id', 'created_by', 'modified_by'], 'integer'],
             [['status'], 'string'],
-            [['created_at', 'modified_at'], 'safe'],
+            [['created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['description'], 'string', 'max' => 50]
         ];
     }

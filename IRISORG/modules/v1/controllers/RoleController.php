@@ -48,7 +48,7 @@ class RoleController extends ActiveController {
         $modelClass = $this->modelClass;
 
         return new ActiveDataProvider([
-            'query' => $modelClass::find()->tenant()->orderBy(['created_at' => SORT_DESC]),
+            'query' => $modelClass::find()->tenant()->active()->orderBy(['created_at' => SORT_DESC]),
             'pagination' => false,
         ]);
     }
@@ -126,6 +126,15 @@ class RoleController extends ActiveController {
                 unset($attrs[$col]);
         }
         return $attrs;
+    }
+    
+    public function actionRemove() {
+        $id = Yii::$app->getRequest()->post('id');
+        if($id){
+            $model = CoRole::find()->where(['role_id' => $id])->one();
+            $model->remove();
+            return ['success' => true];
+        }
     }
 
 }
