@@ -51,13 +51,22 @@ class InternalcodeController extends ActiveController {
     }
 
     public function actionGetinternalcode() {
-        $code_type = Yii::$app->request->get('code_type');
-        if (!empty($code_type)) {
-            $code = CoInternalCode::find()->tenant()->where(['code_type' => $code_type])->one();
-            return ['success' => true, 'code' => $code];
-        } else {
-            return ['success' => false, 'message' => 'Invalid Access'];
-        }
+        $tenant = null;
+        $status = '1';
+        $deleted = false;
+        
+        $get = Yii::$app->getRequest()->get();
+        
+        if(isset($get['tenant']))
+            $tenant = $get['tenant'];
+        
+        if(isset($get['status']))
+            $status = strval($get['status']);
+        
+        if(isset($get['deleted']))
+            $deleted = $get['deleted'] == 'true';
+        
+        return ['code' => CoInternalCode::getInternalCode($tenant, $status, $deleted)];
     }
 
     protected function excludeColumns($attrs) {
@@ -69,53 +78,4 @@ class InternalcodeController extends ActiveController {
         return $attrs;
     }
 
-//
-//    public function actionCreaterole() {
-//        $post = Yii::$app->request->post();
-//        if (!empty($post)) {
-//            $model = new CoRole();
-//            $model->attributes = $post;
-//
-//            $valid = $model->validate();
-//            if ($valid) {
-//                $model->save(false);
-//
-//                return ['success' => true];
-//            } else {
-//                return ['success' => false, 'message' => Html::errorSummary([$model])];
-//            }
-//        } else {
-//            return ['success' => false, 'message' => 'Please Fill the Form'];
-//        }
-//    }
-//
-//    public function actionUpdaterole() {
-//        $post = Yii::$app->request->post();
-//        if (!empty($post)) {
-//            $model = CoRole::findOne($post['role_id']);
-//            $model->attributes = $post;
-//
-//            $valid = $model->validate();
-//
-//            if ($valid) {
-//                $model->save(false);
-//                return ['success' => true];
-//            } else {
-//                return ['success' => false, 'message' => Html::errorSummary([$model])];
-//            }
-//        } else {
-//            return ['success' => false, 'message' => 'Please Fill the Form'];
-//        }
-//    }
-//
-//    public function actionGetrole() {
-//        $id = Yii::$app->request->get('id');
-//        if (!empty($id)) {
-//            $data = CoRole::findOne($id);
-//            $return = $this->excludeColumns($data->attributes);
-//            return ['success' => true, 'return' => $return];
-//        } else {
-//            return ['success' => false, 'message' => 'Invalid Access'];
-//        }
-//    }
 }
