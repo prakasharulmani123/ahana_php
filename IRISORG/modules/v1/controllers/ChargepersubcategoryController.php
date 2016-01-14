@@ -62,4 +62,13 @@ class ChargepersubcategoryController extends ActiveController {
         return ['subcategoryList' => CoChargePerSubcategory::getChargePerSubCateogrylist($deleted, $cat_id)];
     }
 
+    public function actionGetcustomlist() {
+        $lists = CoChargePerSubcategory::find()->orderBy(['charge_type' => SORT_ASC, 'charge_id' => SORT_ASC])->all();
+        $ret = [];
+        foreach ($lists as $key => $list) {
+            $ret[$list->charge_type][$list->charge->charge_code_id][$list->charge_link_id] = array('id' => $list->sub_charge_id, 'amount' => $list->charge_amount);
+        }
+        return $ret;
+    }
+
 }

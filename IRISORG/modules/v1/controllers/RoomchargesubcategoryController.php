@@ -77,4 +77,12 @@ class RoomchargesubcategoryController extends ActiveController {
         return ['subcategoryList' => CoRoomChargeSubcategory::getRoomChargeSubCateogrylist($tenant, $status, $deleted, $cat_id)];
     }
 
+    public function actionGetcustomlist() {
+        $lists = CoRoomChargeSubcategory::find()->tenant()->active()->orderBy(['charge_subcat_name' => SORT_ASC])->all();
+        $ret = [];
+        foreach ($lists as $key => $list) {
+            $ret[$list->charge_cat_id][$list->charge_subcat_id] = array('id' => $list->charge_subcat_id, 'name' => $list->charge_subcat_name);
+        }
+        return $ret;
+    }
 }
