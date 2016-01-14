@@ -23,22 +23,143 @@ app.controller('RoomChargeCategorysController', ['$rootScope', '$scope', '$timeo
                                 .success(function (roomChargeSubCategorys) {
                                     _all_sub_cat = roomChargeSubCategorys;
                                     $scope.allSubCategories = roomChargeSubCategorys;
+
+                                    angular.forEach($scope.displayedCollection, function (parent) {
+                                        parent.subcategories = [];
+                                        angular.forEach($scope.allSubCategories, function (sub) {
+                                            if (sub.charge_cat_id == parent.charge_cat_id) {
+                                                parent.subcategories.push(sub);
+                                            }
+                                        });
+                                    });
                                 })
                                 .error(function () {
                                     $scope.error = "An Error has occured while loading roomChargesubCategorys!";
                                 });
-                        angular.forEach(roomChargeCategorys, function (parent) {
-
-                        });
                         //End
                     })
                     .error(function () {
                         $scope.error = "An Error has occured while loading roomChargeCategorys!";
                     });
-                    
-//            $http.get($rootScope.IRISOrgServiceUrl + '/roomchargesubcategory/getcustomlist').success(function (data) {
-//                $scope.allSubCategories = data;
-//            });
+
+        };
+        
+        $scope.addSubRow = function (id) {
+            angular.forEach($scope.displayedCollection, function (parent) {
+                if (parent.charge_cat_id == id) {
+                    $scope.inserted = {
+                        temp_charge_cat_id: parent.subcategories.length + 1,
+                        charge_cat_id: id,
+                        charge_subcat_name: '',
+                    };
+                    parent.subcategories.push($scope.inserted);
+                    return;
+                }
+            });
+        };
+
+        $scope.updateName = function (data, id, charge_cat_id, temp_charge_cat_id) {
+            $scope.errorData = $scope.successMessage = '';
+            if (typeof data.charge_subcat_name != 'undefined') {
+                if (typeof id != 'undefined') {
+                    post_method = 'PUT';
+                    post_url = $rootScope.IRISOrgServiceUrl + '/roomchargesubcategories/' + id;
+                    succ_msg = 'ChargePerCategory Updated successfully';
+                } else {
+                    post_method = 'POST';
+                    post_url = $rootScope.IRISOrgServiceUrl + '/roomchargesubcategories';
+                    angular.extend(data, {charge_cat_id: charge_cat_id});
+                    succ_msg = 'ChargePerCategory saved successfully';
+                }
+                $http({
+                    method: post_method,
+                    url: post_url,
+                    data: data,
+                }).success(
+                        function (response) {
+                            $scope.loadbar('hide');
+                            $scope.successMessage = succ_msg;
+                            
+                            //Update Subcategory
+                            angular.forEach($scope.displayedCollection, function (parent) {
+                                if (parent.charge_cat_id == charge_cat_id) {
+                                    angular.forEach(parent.subcategories, function (sub) {
+                                        if (typeof temp_charge_cat_id != 'undefined') {
+                                            if (sub.temp_charge_cat_id == temp_charge_cat_id) {
+                                                var index = parent.subcategories.indexOf(sub);
+                                                parent.subcategories.splice(index, 1);
+                                                parent.subcategories.push(response);
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                ).error(function (data, status) {
+                    $scope.loadbar('hide');
+                    if (status == 422)
+                        $scope.errorData = $scope.errorSummary(data);
+                    else
+                        $scope.errorData = data.message;
+                });
+            }
+        };
+
+        $scope.deleteSubRow = function (charge_cat_id, charge_subcat_id, temp_charge_cat_id) {
+            //Remove Temp Row from Table
+            if (typeof temp_charge_cat_id != 'undefined') {
+                angular.forEach($scope.displayedCollection, function (parent) {
+                    if (parent.charge_cat_id == charge_cat_id) {
+                        angular.forEach(parent.subcategories, function (sub) {
+                            if (sub.temp_charge_cat_id == temp_charge_cat_id) {
+                                var index = parent.subcategories.indexOf(sub);
+                                parent.subcategories.splice(index, 1);
+                            }
+                        });
+                    }
+                });
+            }
+            //Remove Row from Table & DB
+            if (typeof charge_subcat_id != 'undefined') {
+                var conf = confirm('Are you sure to delete ?');
+                if (conf) {
+                    angular.forEach($scope.displayedCollection, function (parent) {
+                        if (parent.charge_cat_id == charge_cat_id) {
+                            angular.forEach(parent.subcategories, function (sub) {
+                                if (sub.charge_subcat_id == charge_subcat_id) {
+                                    var index = parent.subcategories.indexOf(sub);
+                                    $scope.loadbar('show');
+                                    if (index !== -1) {
+                                        $http({
+                                            url: $rootScope.IRISOrgServiceUrl + "/roomchargesubcategory/remove",
+                                            method: "POST",
+                                            data: {id: charge_subcat_id}
+                                        }).then(
+                                                function (response) {
+                                                    $scope.loadbar('hide');
+                                                    if (response.data.success === true) {
+                                                        parent.subcategories.splice(index, 1);
+                                                        $scope.successMessage = sub.charge_subcat_name + ' deleted successfully !!!';
+                                                    }
+                                                    else {
+                                                        $scope.errorData = response.data.message;
+                                                    }
+//                                                    $scope.loadRoomChargeCategorysList();
+                                                }
+                                        )
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }
+            }
+        };
+        //End
+        $scope.checkInput = function (data, id) {
+            if (data == '') {
+                return "Field should not be empty.";
+            }
         };
 
         //Save Both Add & Update Data
@@ -98,38 +219,6 @@ app.controller('RoomChargeCategorysController', ['$rootScope', '$scope', '$timeo
                     $scope.errorData = data.message;
             });
         };
-        
-        $scope.updateName = function (data, id, charge_cat_id) {
-            $scope.errorData = $scope.successMessage = '';
-            if (typeof data.charge_subcat_name != 'undefined') {
-                if (typeof id != 'undefined') {
-                    post_method = 'PUT';
-                    post_url = $rootScope.IRISOrgServiceUrl + '/roomchargesubcategories/' + id;
-                    succ_msg = 'ChargePerCategory Updated successfully';
-                } else {
-                    post_method = 'POST';
-                    post_url = $rootScope.IRISOrgServiceUrl + '/roomchargesubcategories';
-                    angular.extend(data, {charge_cat_id: charge_cat_id});
-                    succ_msg = 'ChargePerCategory saved successfully';
-                }
-                $http({
-                    method: post_method,
-                    url: post_url,
-                    data: data,
-                }).success(
-                        function (response) {
-                            $scope.loadbar('hide');
-                            $scope.successMessage = succ_msg;
-                        }
-                ).error(function (data, status) {
-                    $scope.loadbar('hide');
-                    if (status == 422)
-                        $scope.errorData = $scope.errorSummary(data);
-                    else
-                        $scope.errorData = data.message;
-                });
-            }
-        };
 
         //Get Data for update Form
         $scope.loadForm = function () {
@@ -186,6 +275,7 @@ app.controller('RoomChargeCategorysController', ['$rootScope', '$scope', '$timeo
                             function (response) {
                                 $scope.loadbar('hide');
                                 if (response.data.success === true) {
+                                    $scope.successMessage = row.charge_cat_name + ' deleted successfully !!!';
                                     $scope.displayedCollection.splice(index, 1);
                                 }
                                 else {
@@ -200,6 +290,7 @@ app.controller('RoomChargeCategorysController', ['$rootScope', '$scope', '$timeo
         // editable table
         $scope.subcategories = [];
         $scope.deletedsubcategories = [];
+
         // add Row
         $scope.addRow = function () {
             $scope.inserted = {
@@ -214,12 +305,6 @@ app.controller('RoomChargeCategorysController', ['$rootScope', '$scope', '$timeo
             if (id != '')
                 $scope.deletedsubcategories.push(id);
             $scope.subcategories.splice(index, 1);
-        };
-
-        $scope.checkInput = function (data, id) {
-            if (data == '') {
-                return "Field should not be empty.";
-            }
         };
 
         $scope.ctrl = {};
