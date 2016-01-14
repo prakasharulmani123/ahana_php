@@ -338,6 +338,29 @@ class UserController extends ActiveController {
             return ['success' => false, 'message' => 'Please Fill the Form'];
         }
     }
+    
+    public function actionGetdoctorslist() {
+        $tenant = null;
+        $status = '1';
+        $deleted = false;
+        $care_provider = '1';
+        
+        $get = Yii::$app->getRequest()->get();
+        
+        if(isset($get['tenant']))
+            $tenant = $get['tenant'];
+        
+        if(isset($get['status']))
+            $status = strval($get['status']);
+        
+        if(isset($get['deleted']))
+            $deleted = $get['deleted'] == 'true';
+        
+        if(isset($get['care_provider']))
+            $care_provider = $get['care_provider'];
+        
+        return ['doctorsList' => CoUser::getDoctorsList($tenant, $care_provider, $status, $deleted)];
+    }
 
     protected function excludeColumns($attrs) {
         $exclude_cols = ['created_by', 'created_at', 'modified_by', 'modified_at'];
@@ -347,5 +370,7 @@ class UserController extends ActiveController {
         }
         return $attrs;
     }
+    
+    
 
 }

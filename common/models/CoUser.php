@@ -94,6 +94,15 @@ class CoUser extends RActiveRecord {
         ];
     }
 
+    public function behaviors() {
+        $extend = [
+            LinkAllBehavior::className(),
+        ];
+
+        $behaviour = array_merge(parent::behaviors(), $extend);
+        return $behaviour;
+    }
+
     /**
      * @return ActiveQuery
      */
@@ -108,44 +117,52 @@ class CoUser extends RActiveRecord {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
 
-    public function behaviors() {
-        $extend = [
-            LinkAllBehavior::className(),
-        ];
-
-        $behaviour = array_merge(parent::behaviors(), $extend);
-        return $behaviour;
-    }
-
+    /**
+     * @return ActiveQuery
+     */
     public function getUsersRoles() {
         return $this->hasMany(CoUsersRoles::className(), ['user_id' => 'user_id']);
     }
 
+    /**
+     * @return ActiveQuery
+     */
     public function getRoles() {
         return $this->hasMany(CoRole::className(), ['role_id' => 'role_id'])->via('usersRoles');
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getSpeciality() {
+        return $this->hasOne(CoSpeciality::className(), ['speciality_id' => 'speciality_id']);
     }
 
     public static function find() {
         return new CoUserQuery(get_called_class());
     }
-    
+
+    public function fields() {
+        $extend = [
+            'speciality_name' => function ($model) {
+                return (isset($model->speciality) ? $model->speciality->speciality_name : '-');
+            },
+        ];
+        $fields = array_merge(parent::fields(), $extend);
+        return $fields;
+    }
+
     public static function getMyUserlist() {
         return ArrayHelper::map(self::find()->tenant()->status()->all(), 'user_id', 'name');
     }
-    
-//    public function fields() {
-//        $extend = [
-//            'username' => function ($model) {
-//                return (isset($model->login) ? $model->login->username : '-');
-//            },
-//            'activation_date' => function ($model) {
-//                return (isset($model->login) ? $model->login->activation_date : '-');
-//            },
-//            'Inactivation_date' => function ($model) {
-//                return (isset($model->login) ? $model->login->Inactivation_date : '-');
-//            },
-//        ];
-//        $fields = array_merge(parent::fields(), $extend);
-//        return $fields;
-//    }
+
+    public static function getDoctorsList($tenant = null, $care_provider = '1', $status = '1', $deleted = false) {
+        if (!$deleted)
+            $list = self::find()->tenant($tenant)->status($status)->active()->careprovider($care_provider)->all();
+        else
+            $list = self::find()->tenant($tenant)->deleted()->careprovider($care_provider)->all();
+
+        return $list;
+    }
+
 }
