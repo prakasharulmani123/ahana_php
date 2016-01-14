@@ -78,6 +78,9 @@ class CoRoomChargeCategory extends RActiveRecord {
         return $this->hasOne(CoRoomChargeCategory::className(), ['charge_cat_id' => 'charge_cat_id']);
     }
 
+    public function getRoomchargesubcategory() {
+        return $this->hasMany(CoRoomChargeSubcategory::className(), ['charge_cat_id' => 'charge_cat_id']);
+    }
 
     public static function find() {
         return new CoRoomChargeCategoryQuery(get_called_class());

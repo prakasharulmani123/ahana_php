@@ -55,6 +55,10 @@ class RoomchargecategoryController extends ActiveController {
         if ($id) {
             $model = CoRoomChargeCategory::find()->where(['charge_cat_id' => $id])->one();
             $model->remove();
+            
+            foreach ($model->roomchargesubcategory as $sub) {
+                $sub->remove();
+            }
             return ['success' => true];
         }
     }
