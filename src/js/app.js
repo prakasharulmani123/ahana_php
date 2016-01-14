@@ -16,7 +16,7 @@ angular.module('app', [
     'oc.lazyLoad',
     'pascalprecht.translate',
     'ivh.treeview',
-    'colorpicker.module'
+    'colorpicker.module',
 ]);
 
 

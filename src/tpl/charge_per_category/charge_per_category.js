@@ -52,6 +52,23 @@ app.controller('ChargePerCategoriesController', ['$rootScope', '$scope', '$timeo
             });
             $rootScope.commonService.GetRoomChargeSubCategoryList('', '1', false, '', function (response) {
                 $scope.sub_categories = response.subcategoryList;
+
+                //Load Doctor List
+                $http.get($rootScope.IRISOrgServiceUrl + '/user/getdoctorslist').success(function (response) {
+                    var insert_cat = {
+                        charge_cat_id: '-1',
+                        charge_cat_name: 'Professional Charges',
+                    };
+                    $scope.categories.push(insert_cat);
+                    angular.forEach(response.doctorsList, function (doctor) {
+                        var insert_subcat = {
+                            charge_subcat_id: doctor.user_id,
+                            charge_cat_id: '-1',
+                            charge_subcat_name: doctor.name,
+                        };
+                        $scope.sub_categories.push(insert_subcat);
+                    });
+                });
             });
             $rootScope.commonService.GetPatientCateogryList('', '1', false, function (response) {
                 $scope.patient_categories = [];
@@ -67,6 +84,8 @@ app.controller('ChargePerCategoriesController', ['$rootScope', '$scope', '$timeo
                     $scope.room_types.push(value);
                 });
             });
+
+
         }
 
         $scope.updateSubCateogry = function () {
@@ -98,6 +117,10 @@ app.controller('ChargePerCategoriesController', ['$rootScope', '$scope', '$timeo
                     succ_msg = 'ChargePerCategory updated successfully';
                 }
 
+                if (_that.data.charge_cat_id == -1) {
+                    _that.data.charge_cat_type = 'P';
+                }
+
                 $scope.loadbar('show');
 
                 $http({
@@ -108,23 +131,27 @@ app.controller('ChargePerCategoriesController', ['$rootScope', '$scope', '$timeo
                         function (response) {
                             form_datas = [];
                             angular.forEach($scope.patient_categories, function (value) {
-                                form_data = {};
-                                form_data.charge_id = response.charge_id;
-                                form_data.charge_type = 'OP';
-                                form_data.charge_link_id = value.patient_cat_id;
-                                form_data.charge_amount = value.amount;
+                                if (typeof value.amount != 'undefined' && value.amount != '') {
+                                    form_data = {};
+                                    form_data.charge_id = response.charge_id;
+                                    form_data.charge_type = 'OP';
+                                    form_data.charge_link_id = value.patient_cat_id;
+                                    form_data.charge_amount = value.amount;
 
-                                form_datas.push(form_data);
+                                    form_datas.push(form_data);
+                                }
                             });
 
                             angular.forEach($scope.room_types, function (value) {
-                                form_data = {};
-                                form_data.charge_id = response.charge_id;
-                                form_data.charge_type = 'IP';
-                                form_data.charge_link_id = value.room_type_id;
-                                form_data.charge_amount = value.amount;
+                                if (typeof value.amount !== 'undefined' && value.amount != '') {
+                                    form_data = {};
+                                    form_data.charge_id = response.charge_id;
+                                    form_data.charge_type = 'IP';
+                                    form_data.charge_link_id = value.room_type_id;
+                                    form_data.charge_amount = value.amount;
 
-                                form_datas.push(form_data);
+                                    form_datas.push(form_data);
+                                }
                             });
 
                             angular.forEach(form_datas, function (form_data) {
@@ -241,28 +268,28 @@ app.controller('ChargePerCategoriesController', ['$rootScope', '$scope', '$timeo
         };
 
         //Update Modal
-        $scope.open = function (size) {
-            var modalInstance = $modal.open({
-                templateUrl: 'myModalContent.html',
-                controller: 'ModalInstanceCtrl',
-                size: size,
-//                resolve: {
-//                    items: function () {
-//                        return 'test';
-//                    }
-//                }
-            });
-        };
+//        $scope.open = function (size) {
+//            var modalInstance = $modal.open({
+//                templateUrl: 'myModalContent.html',
+//                controller: 'ModalInstanceCtrl',
+//                size: size,
+////                resolve: {
+////                    items: function () {
+////                        return 'test';
+////                    }
+////                }
+//            });
+//        };
 
     }]);
 
-app.controller('ModalInstanceCtrl', ['$scope', '$modalInstance', function ($scope, $modalInstance) {
-
-        $scope.ok = function () {
-            $modalInstance.close($scope.selected.item);
-        };
-
-        $scope.cancel = function () {
-            $modalInstance.dismiss('cancel');
-        };
-    }]); 
+//app.controller('ModalInstanceCtrl', ['$scope', '$modalInstance', function ($scope, $modalInstance) {
+//
+//        $scope.ok = function () {
+//            $modalInstance.close($scope.selected.item);
+//        };
+//
+//        $scope.cancel = function () {
+//            $modalInstance.dismiss('cancel');
+//        };
+//    }]); 

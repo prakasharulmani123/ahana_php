@@ -81,4 +81,31 @@ app.controller('RolesController', ['$rootScope', '$scope', '$timeout', '$http', 
             )
         };
 
+        //Delete
+        $scope.removeRow = function (row) {
+            var conf = confirm('Are you sure to delete ?');
+            if (conf) {
+                $scope.loadbar('show');
+                var index = $scope.displayedCollection.indexOf(row);
+                if (index !== -1) {
+                    $http({
+                        url: $rootScope.IRISOrgServiceUrl + "/role/remove",
+                        method: "POST",
+                        data: {id: row.role_id}
+                    }).then(
+                            function (response) {
+                                $scope.loadbar('hide');
+                                if (response.data.success === true) {
+                                    $scope.successMessage = row.description + " deleted successfully";
+                                    $scope.displayedCollection.splice(index, 1);
+                                    $scope.loadRolesList();
+                                }
+                                else {
+                                    $scope.errorData = response.data.message;
+                                }
+                            }
+                    )
+                }
+            }
+        };
     }]);

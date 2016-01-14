@@ -757,7 +757,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('smart-table').then(
+                            return $ocLazyLoad.load(['xeditable', 'smart-table']).then(
                                     function () {
                                         return $ocLazyLoad.load('tpl/charge_per_category/charge_per_category.js');
                                     }
@@ -769,9 +769,13 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                 url: '/chargePerCategoryUpdate/{id}',
                 templateUrl: 'tpl/charge_per_category/update.html',
                 resolve: {
-                    deps: ['uiLoad',
-                        function (uiLoad) {
-                            return uiLoad.load(['tpl/charge_per_category/charge_per_category.js']);
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['xeditable', 'smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/charge_per_category/charge_per_category.js');
+                                    }
+                            );
                         }]
                 }
             })

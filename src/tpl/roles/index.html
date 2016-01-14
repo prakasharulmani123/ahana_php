@@ -40,9 +40,9 @@
                         <a title="Edit" ui-sref="configuration.role_update({id: '{{row.role_id}}'})">
                             <i class="fa fa-pencil"></i>
                         </a>&nbsp;&nbsp;&nbsp;
-                        <a title="Delete" ui-sref="configuration.role_update({id: '{{row.role_id}}'})">
-                            <i class="fa fa-trash"></i>
-                        </a>
+                        <a title="Delete" ng-click="removeRow(row)">
+                                <i class="fa fa-trash"></i>
+                            </a>
                     </td>
                 </tr>
             </tbody>

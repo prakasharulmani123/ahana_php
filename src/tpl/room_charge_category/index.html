@@ -1,5 +1,5 @@
 <div class="bg-light lter b-b wrapper-md">
-    <h1 class="m-n font-thin h3">Room Charge Categories</h1>
+    <h1 class="m-n font-thin h3">Charge Categories</h1>
 </div>
 <div class="wrapper-md" ng-controller="RoomChargeCategorysController" ng-init="loadRoomChargeCategorysList()">
     <div ng-include="'tpl/blocks/alert.html'">
@@ -11,7 +11,7 @@
                 &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
             </button>
             <button ng-click="$state.go('configuration.roomChargeCategoryCreate')" class="btn btn-sm btn-info pull-right">
-                <i class="fa fa-plus"></i> &nbsp; Add new Room Charge Category
+                <i class="fa fa-plus"></i> &nbsp; Add new Charge Category
             </button>
         </div>
         <table st-table="displayedCollection"  st-safe-src="rowCollection" class="table table-bordered table-striped">
