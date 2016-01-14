@@ -18,10 +18,8 @@ app.controller('RoomChargeCategorysController', ['$rootScope', '$scope', '$timeo
                         $scope.displayedCollection = [].concat($scope.rowCollection);
 
                         //Load All Subcategories
-                        var _all_sub_cat = {};
                         $http.get($rootScope.IRISOrgServiceUrl + '/roomchargesubcategory')
                                 .success(function (roomChargeSubCategorys) {
-                                    _all_sub_cat = roomChargeSubCategorys;
                                     $scope.allSubCategories = roomChargeSubCategorys;
 
                                     angular.forEach($scope.displayedCollection, function (parent) {
