@@ -23,6 +23,7 @@ function CommonService($http, $rootScope, $window, $q) {
     service.GetPatientCateogryList = GetPatientCateogryList;
     service.GetChargePerSubCategoryList = GetChargePerSubCategoryList;
     service.GetSpecialityList = GetSpecialityList;
+    service.GetInternalCodeList = GetInternalCodeList;
 
     return service;
 
@@ -215,6 +216,18 @@ function CommonService($http, $rootScope, $window, $q) {
         var response;
 
         $http.get($rootScope.IRISOrgServiceUrl + '/speciality/getspecialitylist?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts)
+                .success(function (response) {
+                    callback(response);
+                }, function (x) {
+                    response = {success: false, message: 'Server Error'};
+                    callback(response);
+                });
+    }
+    
+    function GetInternalCodeList(tenant, code_type, sts, del_sts, callback) {
+        var response;
+
+        $http.get($rootScope.IRISOrgServiceUrl + '/internalcode/getinternalcode?tenant=' + tenant + '&code_type=' + code_type +'&status=' + sts + '&deleted=' + del_sts)
                 .success(function (response) {
                     callback(response);
                 }, function (x) {

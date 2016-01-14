@@ -775,6 +775,18 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
+            
+            //Bill-No Prefix
+            .state('configuration.internalCode', {
+                url: '/internalCode',
+                templateUrl: 'tpl/internal_code/index.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/internal_code/internal_code.js']);
+                        }]
+                }
+            })
 
 }
 run.$inject = ['$rootScope', '$state', '$stateParams', '$location', '$cookieStore', '$http', '$window', 'CommonService'];
