@@ -743,7 +743,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('smart-table').then(
+                            return $ocLazyLoad.load(['xeditable', 'smart-table']).then(
                                     function () {
                                         return $ocLazyLoad.load('tpl/charge_per_category/charge_per_category.js');
                                     }

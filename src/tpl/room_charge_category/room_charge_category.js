@@ -35,6 +35,10 @@ app.controller('RoomChargeCategorysController', ['$rootScope', '$scope', '$timeo
                     .error(function () {
                         $scope.error = "An Error has occured while loading roomChargeCategorys!";
                     });
+                    
+//            $http.get($rootScope.IRISOrgServiceUrl + '/roomchargesubcategory/getcustomlist').success(function (data) {
+//                $scope.allSubCategories = data;
+//            });
         };
 
         //Save Both Add & Update Data
@@ -93,6 +97,38 @@ app.controller('RoomChargeCategorysController', ['$rootScope', '$scope', '$timeo
                 else
                     $scope.errorData = data.message;
             });
+        };
+        
+        $scope.updateName = function (data, id, charge_cat_id) {
+            $scope.errorData = $scope.successMessage = '';
+            if (typeof data.charge_subcat_name != 'undefined') {
+                if (typeof id != 'undefined') {
+                    post_method = 'PUT';
+                    post_url = $rootScope.IRISOrgServiceUrl + '/roomchargesubcategories/' + id;
+                    succ_msg = 'ChargePerCategory Updated successfully';
+                } else {
+                    post_method = 'POST';
+                    post_url = $rootScope.IRISOrgServiceUrl + '/roomchargesubcategories';
+                    angular.extend(data, {charge_cat_id: charge_cat_id});
+                    succ_msg = 'ChargePerCategory saved successfully';
+                }
+                $http({
+                    method: post_method,
+                    url: post_url,
+                    data: data,
+                }).success(
+                        function (response) {
+                            $scope.loadbar('hide');
+                            $scope.successMessage = succ_msg;
+                        }
+                ).error(function (data, status) {
+                    $scope.loadbar('hide');
+                    if (status == 422)
+                        $scope.errorData = $scope.errorSummary(data);
+                    else
+                        $scope.errorData = data.message;
+                });
+            }
         };
 
         //Get Data for update Form

@@ -1,4 +1,8 @@
-app.controller('ChargePerCategoriesController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$modal', function ($rootScope, $scope, $timeout, $http, $state, $modal) {
+app.controller('ChargePerCategoriesController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$modal', 'editableOptions', 'editableThemes', function ($rootScope, $scope, $timeout, $http, $state, $modal, editableOptions, editableThemes) {
+
+        editableThemes.bs3.inputClass = 'input-sm';
+        editableThemes.bs3.buttonsClass = 'btn-sm';
+        editableOptions.theme = 'bs3';
 
         //Index Page
         $scope.loadChargePerCategoriesList = function () {
@@ -12,19 +16,28 @@ app.controller('ChargePerCategoriesController', ['$rootScope', '$scope', '$timeo
                     .success(function (charge_per_categories) {
                         $scope.rowCollection = charge_per_categories;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
-
-//                        angular.forEach($scope.rowCollection, function (value) {
-//                            $rootScope.commonService.GetChargePerSubCategoryList(false, value.charge_id, function (response) {
-//                                $scope.displayedCollection.subcategories = response.subcategoryList;
-//                            });
-//                        });
                     })
                     .error(function () {
                         $scope.error = "An Error has occured while loading charges!";
                     });
 
-            $rootScope.commonService.GetChargePerSubCategoryList(false, '', function (response) {
-                $scope.allSubCategories = response.subcategoryList;
+            $rootScope.commonService.GetPatientCateogryList('', '1', false, function (response) {
+                $scope.patient_categories = [];
+                angular.forEach(response.patientcategoryList, function (value) {
+                    value.amount = '';
+                    $scope.patient_categories.push(value);
+                });
+            });
+            $rootScope.commonService.GetRoomTypeList('', '1', false, function (response) {
+                $scope.room_types = [];
+                angular.forEach(response.roomtypeList, function (value) {
+                    value.amount = '';
+                    $scope.room_types.push(value);
+                });
+            });
+
+            $http.get($rootScope.IRISOrgServiceUrl + '/chargepersubcategory/getcustomlist').success(function (data) {
+                $scope.allSubCategories = data;
             });
         };
         $scope.ctrl = {};
@@ -67,8 +80,7 @@ app.controller('ChargePerCategoriesController', ['$rootScope', '$scope', '$timeo
             });
         }
 
-
-        //Save Both Add & Update Data
+        //Save Both Add Data
         $scope.saveForm = function (mode) {
             if ($scope.chargeForm.$valid) {
                 _that = this;
@@ -144,6 +156,38 @@ app.controller('ChargePerCategoriesController', ['$rootScope', '$scope', '$timeo
                 return false;
             } else {
                 $scope.errorData = 'Please fill the required fields';
+            }
+        };
+
+        $scope.updateAmount = function (data, id, charge_id, charge_type, charge_link_id) {
+            $scope.errorData = $scope.successMessage = '';
+            if (typeof data.charge_amount != 'undefined') {
+                if (typeof id != 'undefined') {
+                    post_method = 'PUT';
+                    post_url = $rootScope.IRISOrgServiceUrl + '/chargepersubcategories/' + id;
+                    succ_msg = 'ChargePerCategory Updated successfully';
+                } else {
+                    post_method = 'POST';
+                    post_url = $rootScope.IRISOrgServiceUrl + '/chargepersubcategories';
+                    angular.extend(data, {charge_id: charge_id, charge_type: charge_type, charge_link_id: charge_link_id});
+                    succ_msg = 'ChargePerCategory saved successfully';
+                }
+                $http({
+                    method: post_method,
+                    url: post_url,
+                    data: data,
+                }).success(
+                        function (response) {
+                            $scope.loadbar('hide');
+                            $scope.successMessage = succ_msg;
+                        }
+                ).error(function (data, status) {
+                    $scope.loadbar('hide');
+                    if (status == 422)
+                        $scope.errorData = $scope.errorSummary(data);
+                    else
+                        $scope.errorData = data.message;
+                });
             }
         };
 

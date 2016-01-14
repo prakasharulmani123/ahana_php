@@ -36,7 +36,7 @@
                     </tr>
                     <tr ng-repeat="patient_category in patient_categories">
                         <td ng-bind-html="patient_category.patient_cat_name"></td>
-                        <td><input type="text" ng-model="patient_category.amount" maxlength="50" class="form-control" placeholder="" required number-mask="" /></td>
+                        <td><input type="text" ng-model="patient_category.amount" maxlength="50" class="form-control" placeholder="" number-mask="" /></td>
                     </tr>
                 </table>
             </div>
@@ -53,7 +53,7 @@
                     </tr>
                     <tr ng-repeat="room_type in room_types">
                         <td ng-bind-html="room_type.room_type_name"></td>
-                        <td><input type="text" ng-model="room_type.amount" maxlength="50" class="form-control" placeholder="" required number-mask="" /></td>
+                        <td><input type="text" ng-model="room_type.amount" maxlength="50" class="form-control" placeholder="" number-mask="" /></td>
                     </tr>
                 </table>
             </div>

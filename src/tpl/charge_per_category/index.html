@@ -61,15 +61,28 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr ng-repeat="subcat in allSubCategories" ng-if="subcat.charge_id == row.charge_id && subcat.charge_type == 'OP'">
-                                    <td>{{subcat.op_dept}}</td>
-                                    <td>{{subcat.charge_amount}}</td>
+                                <tr ng-repeat="op in patient_categories">
+                                    <td>{{op.patient_cat_name}}</td>
                                     <td>
-                                        <a title="Edit" ui-sref="configuration.roomChargeCategoryUpdate({id: '{{row.sub_charge_id}}'})">
-                                            <i class="fa fa-pencil"></i>
-                                        </a>&nbsp;&nbsp;&nbsp;
+                                        <span editable-text="allSubCategories['OP'][row.charge_code_id][op.patient_cat_id]['amount']" e-name="charge_amount" e-form="rowform" e-number-mask="">
+                                            {{ allSubCategories['OP'][row.charge_code_id][op.patient_cat_id]['amount'] || 'empty' }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <form editable-form name="rowform" onbeforesave="updateAmount($data, allSubCategories['OP'][row.charge_code_id][op.patient_cat_id]['id'], row.charge_id, 'OP', op.patient_cat_id)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == op">
+                                            <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-sm btn-primary">
+                                                save
+                                            </button>
+                                            <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()" class="btn btn-sm btn-default">
+                                                cancel
+                                            </button>
+                                        </form>
+                                        <div class="buttons" ng-show="!rowform.$visible">
+                                            <button class="btn btn-sm btn-info" ng-click="rowform.$show()">edit</button>
+                                        </div> 
                                     </td>
                                 </tr>
+                                
                             </tbody>
                         </table>
                         <table class="table table-condensed table-bordered">
@@ -81,13 +94,25 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr ng-repeat="subcat in allSubCategories" ng-if="subcat.charge_id == row.charge_id && subcat.charge_type == 'IP'">
-                                    <td>{{subcat.ip_dept}}</td>
-                                    <td>{{subcat.charge_amount}}</td>
+                                <tr ng-repeat="ip in room_types">
+                                    <td>{{ip.room_type_name}}</td>
                                     <td>
-                                        <a title="Edit" ui-sref="configuration.roomChargeCategoryUpdate({id: '{{row.sub_charge_id}}'})">
-                                            <i class="fa fa-pencil"></i>
-                                        </a>&nbsp;&nbsp;&nbsp;
+                                        <span editable-text="allSubCategories['IP'][row.charge_code_id][ip.room_type_id]['amount']" e-name="charge_amount" e-form="rowform" e-number-mask="">
+                                            {{ allSubCategories['IP'][row.charge_code_id][ip.room_type_id]['amount'] || 'empty' }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <form editable-form name="rowform" onbeforesave="updateAmount($data, allSubCategories['IP'][row.charge_code_id][ip.room_type_id]['id'])" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == ip">
+                                            <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-sm btn-primary">
+                                                save
+                                            </button>
+                                            <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()" class="btn btn-sm btn-default">
+                                                cancel
+                                            </button>
+                                        </form>
+                                        <div class="buttons" ng-show="!rowform.$visible">
+                                            <button class="btn btn-sm btn-info" ng-click="rowform.$show()">edit</button>
+                                        </div> 
                                     </td>
                                 </tr>
                             </tbody>
@@ -99,14 +124,14 @@
 
     </div>
 
-<!--    <script type="text/ng-template" id="myModalContent.html">
-        <div ng-include="'tpl/modal.html'"></div>
-    </script>
-    <div class="panel-heading b-b b-light">Modal</div>
-    <div class="panel-body">
-        <button class="btn btn-success" ng-click="open()">Open me!</button>
-        <button class="btn btn-default" ng-click="open('lg')">Large modal</button>
-        <button class="btn btn-default" ng-click="open('sm')">Small modal</button>
-    </div>-->
+    <!--    <script type="text/ng-template" id="myModalContent.html">
+            <div ng-include="'tpl/modal.html'"></div>
+        </script>
+        <div class="panel-heading b-b b-light">Modal</div>
+        <div class="panel-body">
+            <button class="btn btn-success" ng-click="open()">Open me!</button>
+            <button class="btn btn-default" ng-click="open('lg')">Large modal</button>
+            <button class="btn btn-default" ng-click="open('sm')">Small modal</button>
+        </div>-->
 
 </div>
