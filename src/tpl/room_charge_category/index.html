@@ -79,11 +79,12 @@
                                     </td>
                                     <td>
                                         <form editable-form name="rowform" onbeforesave="updateName($data, subcat.charge_subcat_id, row.charge_cat_id, subcat.temp_charge_cat_id)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == subcat">
-                                            <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-sm btn-primary">
-                                                save
+                                            <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-sm btn-success">
+                                                Save
                                             </button>
-                                            <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()" class="btn btn-sm btn-default">
-                                                cancel
+                                            &nbsp;&nbsp;
+                                            <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()" class="btn btn-sm btn-dark">
+                                                Cancel
                                             </button>
                                         </form>
                                         <div class="buttons" ng-show="!rowform.$visible">
