@@ -4,20 +4,74 @@
         <ul class="nav nav-sub dk">
             <li ui-sref-active="active"> <a ui-sref="configuration.organization"> <span>Organization</span> </a> </li>
             <li ui-sref-active="active"> <a ui-sref="configuration.organizationModule"> <span>Organization Module</span> </a> </li>
+        </ul>
+    </li>
+    <li> <a href class="auto"> <span class="pull-right text-muted"> <i class="fa fa-fw fa-angle-right text"></i> <i class="fa fa-fw fa-angle-down text-active"></i> </span> <i class="fa fa-hospital-o icon text-info-lter"></i> <span class="font-bold"> ADMINISTRATIVE MODULE</span> </a>
+        <ul class="nav nav-sub dk">
+            <li ui-sref-active="active"> <a ui-sref="configuration.roles"> <span> Roles </span> </a> </li>
+            <li ui-sref-active="active"> <a ui-sref="configuration.roleRights"> <span> Role Rights </span> </a> </li>
+            <li ui-sref-active="active"> <a ui-sref="configuration.userRoles"><span> User roles</span></a></li>
+            <li ui-sref-active="active"><a ui-sref="configuration.roomChargeCategory"><span> Charge Category</span></a></li>
+        </ul>
+    </li>
+    <li> <a href class="auto"> <span class="pull-right text-muted"> <i class="fa fa-fw fa-angle-right text"></i> <i class="fa fa-fw fa-angle-down text-active"></i> </span> <i class="fa fa-hospital-o icon text-info-lter"></i> <span class="font-bold"> USER MODULE</span> </a>
+        <ul class="nav nav-sub dk">
+            <li ui-sref-active="active"><a ui-sref="configuration.registration"><span> User Registration</span></a></li>
+        </ul>
+    </li>
+    <li> <a href class="auto"> <span class="pull-right text-muted"> <i class="fa fa-fw fa-angle-right text"></i> <i class="fa fa-fw fa-angle-down text-active"></i> </span> <i class="fa fa-hospital-o icon text-info-lter"></i> <span class="font-bold"> WARD MANAGEMENT</span> </a>
+        <ul class="nav nav-sub dk">
+            <li ui-sref-active="active"><a ui-sref="configuration.floors"><span> Floors</span></a></li>
+            <li ui-sref-active="active"><a ui-sref="configuration.wards"><span> Wards</span></a></li>
+            <li ui-sref-active="active"><a ui-sref="configuration.roomType"><span> Room Types </span></a></li>
+            <li ui-sref-active="active"><a ui-sref="configuration.room"><span> Room </span></a></li>
+            <li ui-sref-active="active"><a ui-sref="configuration.roomTypeRoom"><span> Room Type and Room </span></a></li>
+        </ul>
+    </li>
+    <li> <a href class="auto"> <span class="pull-right text-muted"> <i class="fa fa-fw fa-angle-right text"></i> <i class="fa fa-fw fa-angle-down text-active"></i> </span> <i class="fa fa-hospital-o icon text-info-lter"></i> <span class="font-bold"> CHARGES CONFIGURATION</span> </a>
+        <ul class="nav nav-sub dk">
+            <li ui-sref-active="active"><a ui-sref="configuration.roomCharge"><span> Room Charge</span></a></li>
+            <li ui-sref-active="active"><a ui-sref="configuration.roomMaintenance"><span> Room Maintenance</span></a></li>
+            <li ui-sref-active="active"><a ui-sref="configuration.chargePerCategory"><span> Charges for Category</span></a></li>
+        </ul>
+    </li>
+    <li> <a href class="auto"> <span class="pull-right text-muted"> <i class="fa fa-fw fa-angle-right text"></i> <i class="fa fa-fw fa-angle-down text-active"></i> </span> <i class="fa fa-hospital-o icon text-info-lter"></i> <span class="font-bold"> DOCTOR’S CONFIGURATION</span> </a>
+        <ul class="nav nav-sub dk">
+            <li ui-sref-active="active"><a ui-sref="configuration.docSchedule"><span> Doctors Schedule</span></a></li>
+            <li ui-sref-active="active"> <a ui-sref="configuration.specialities"><span> Specialities </span></a></li>
+        </ul>
+    </li>
+    <li> <a href class="auto"> <span class="pull-right text-muted"> <i class="fa fa-fw fa-angle-right text"></i> <i class="fa fa-fw fa-angle-down text-active"></i> </span> <i class="fa fa-hospital-o icon text-info-lter"></i> <span class="font-bold"> MISCELLANEOUS</span> </a>
+        <ul class="nav nav-sub dk">
+            <li ui-sref-active="active"><a ui-sref="configuration.alerts"><span> Alerts</span></a></li>
+            <li ui-sref-active="active"><a ui-sref="configuration.patientCategories"><span> Patient Category</span></a></li>
+            <li ui-sref-active="active"><a ui-sref="configuration.internalCode"><span> Bill-No Prefix </span></a></li>
+            <li ui-sref-active="active"><a ui-sref="configuration.countries"><span> Master Country </span></a></li>
+            <li ui-sref-active="active"><a ui-sref="configuration.states"><span> Master State</span></a></li>
+            <li ui-sref-active="active"><a ui-sref="configuration.cities"><span> Master City</span></a></li>
+        </ul>
+    </li>
+</ul>
+
+
+<!--<ul class="nav">
+    <li> <a href class="auto"> <span class="pull-right text-muted"> <i class="fa fa-fw fa-angle-right text"></i> <i class="fa fa-fw fa-angle-down text-active"></i> </span> <i class="fa fa-hospital-o icon text-info-lter"></i> <span class="font-bold"> Organization Module</span> </a>
+        <ul class="nav nav-sub dk">
+            <li ui-sref-active="active"> <a ui-sref="configuration.organization"> <span>Organization</span> </a> </li>
+            <li ui-sref-active="active"> <a ui-sref="configuration.organizationModule"> <span>Organization Module</span> </a> </li>
             <li ui-sref-active="active"> <a ui-sref="configuration.roles"> <span> Roles </span> </a> </li>
             <li ui-sref-active="active"> <a ui-sref="configuration.roleRights"> <span> Role Rights </span> </a> </li>
             <li ui-sref-active="active"> <a ui-sref="configuration.userRoles"><span> User roles</span></a></li>
             <li ui-sref-active="active"> <a ui-sref="configuration.specialities"><span> Specialities </span></a></li>
             <li ui-sref-active="active"><a ui-sref="configuration.registration"><span> User Registration</span></a></li>
-            <!--<li ui-sref-active="active"><a href="#"><span> </span></a></li>-->
+            <li ui-sref-active="active"><a href="#"><span> </span></a></li>
             <li ui-sref-active="active"><a ui-sref="configuration.floors"><span> Floors</span></a></li>
             <li ui-sref-active="active"><a ui-sref="configuration.wards"><span> Wards</span></a></li>
             <li ui-sref-active="active"><a ui-sref="configuration.roomMaintenance"><span> Room Maintenance</span></a></li>
-            <li ui-sref-active="active"><a ui-sref="configuration.roomChargeCategory"><span> Charge Category</span></a></li>
-            <li ui-sref-active="active"><a ui-sref="configuration.chargePerCategory"><span> Charges for Category</span></a></li>
+            <li ui-sref-active="active"><a ui-sref="configuration.roomChargeCategory"><span> Room Charge Category</span></a></li>
+            <li ui-sref-active="active"><a ui-sref="configuration.roomChargeCategoryItem"><span> Room Charge Category Item</span></a></li>
             <li ui-sref-active="active"><a ui-sref="configuration.roomType"><span> Room Types </span></a></li>
             <li ui-sref-active="active"><a ui-sref="configuration.room"><span> Room </span></a></li>
-            <li ui-sref-active="active"><a ui-sref="configuration.roomChargeCategoryItem"><span> Room Charge Category Item</span></a></li>
             <li ui-sref-active="active"><a ui-sref="configuration.roomCharge"><span> Room Charge</span></a></li>
             <li ui-sref-active="active"><a ui-sref="configuration.roomTypeRoom"><span> Room Type and Room </span></a></li>
             <li ui-sref-active="active"><a ui-sref="configuration.countries"><span> Master Country </span></a></li>
@@ -25,105 +79,6 @@
             <li ui-sref-active="active"><a ui-sref="configuration.cities"><span> Master City</span></a></li>
             <li ui-sref-active="active"><a ui-sref="configuration.alerts"><span> Alerts</span></a></li>
             <li ui-sref-active="active"><a ui-sref="configuration.patientCategories"><span> Patient Category</span></a></li>
-            <li ui-sref-active="active"><a ui-sref="configuration.internalCode"><span> Bill-No Prefix </span></a></li>
-            <li ui-sref-active="active"><a ui-sref="configuration.docSchedule"><span> Doctors Schedule</span></a></li>
         </ul>
     </li>
-
-<!--    <li ui-sref-active="active"> <a href class="auto"> <span class="pull-right text-muted"> <i class="fa fa-fw fa-angle-right text"></i> <i class="fa fa-fw fa-angle-down text-active"></i> </span> <i class="fa fa-building icon text-info-lter"></i> <span class="font-bold">Rooms Module</span> </a>
-        <ul class="nav nav-sub dk">
-            <li> <a href="#"> <span>  Floor</span> </a> </li>
-            <li> <a href="#"> <span>  Ward </span> </a> </li>
-            <li> <a href="#"> <span> Room </span> </a> </li>
-            <li><a href="#"><span> Room Types</span></a></li>
-            <li><a href="#"><span>Room And Bed Types</span></a></li>
-            <li><a href="#"><span>Room Maintenance</span></a></li>
-        </ul>
-    </li>
-
-    <li> <a href class="auto"> <span class="pull-right text-muted"> <i class="fa fa-fw fa-angle-right text"></i> <i class="fa fa-fw fa-angle-down text-active"></i> </span><i class="fa fa-medkit icon text-info-lter"></i> <span class="font-bold"> Charges Module</span> </a>
-        <ul class="nav nav-sub dk">
-            <li> <a href="#"> <span>   Room Charge Items</span> </a> </li>
-            <li> <a href="#"> <span>  Room Charges </span> </a> </li>
-            <li> <a href="#"> <span> Config Room Charge </span> </a> </li>
-            <li><a href="#"><span> Category Item For Charge</span></a></li>
-            <li><a href="#"><span>Charges For Category</span></a></li>
-        </ul>
-    </li>
-
-    <li> <a href class="auto"> <span class="pull-right text-muted"> <i class="fa fa-fw fa-angle-right text"></i> <i class="fa fa-fw fa-angle-down text-active"></i> </span><i class="fa fa-user-md icon text-info-lter"></i><span class="font-bold">Masters module</span> </a>
-        <ul class="nav nav-sub dk">
-            <li> <a href="#"> <span>    Procedures</span> </a> </li>
-            <li> <a href="#"> <span> Speciality </span> </a> </li>
-            <li> <a href="#"> <span>  Allied Charges </span> </a> </li>
-            <li><a href="#"><span>  Alert Type</span></a></li>
-            <li><a href="#"><span>Doctors Schedule</span></a></li>
-            <li><a href="#"><span> Patients Category</span></a></li>
-        </ul>
-    </li>-->
-</ul>
-<!--<ul class="nav">
-    <li>
-        <a href class="auto">
-            <span class="pull-right text-muted">
-                <i class="fa fa-fw fa-plus text"></i>
-                <i class="fa fa-fw fa-minus text-active"></i>
-            </span> <i class="fa fa-institution"></i> <span class="font-bold">Organization Module</span>
-        </a>
-        <ul class="nav nav-sub dk">
-            <li><a ui-sref="configuration.register">Patient Registration</a></li>
-            <li><a ui-sref="configuration.organization">Organization</a></li>
-            <li><a ui-sref="configuration.organizationModule">Organization Module</a></li>
-            <li><a ui-sref="configuration.roles">Roles</a></li>
-            <li><a ui-sref="configuration.roleRights">Role Rights</a></li>
-            <li><a ui-sref="configuration.userRole">User roles</a></li>
-            <li><a ui-sref="configuration.userRegistration">User Registration</a></li>
-            <li><a ui-sref="configuration.login">Login</a></li>
-        </ul>
-    </li>
-    <li>
-        <a href class="auto">
-            <span class="pull-right text-muted">
-                <i class="fa fa-fw fa-plus text"></i>
-                <i class="fa fa-fw fa-minus text-active"></i>
-            </span> <i class="fa fa-cubes"></i> <span class="font-bold">Rooms Module</span> </a>
-        <ul class="nav nav-sub dk">
-            <li><a ui-sref="app.floor">Floor</a></li>
-            <li><a ui-sref="app.ward">Ward</a></li>
-            <li><a ui-sref="app.room">Room</a></li>
-            <li><a ui-sref="app.roomType">Room Types</a></li>
-            <li><a ui-sref="app.roomBedTypes">Room And Bed Types</a></li>
-            <li><a ui-sref="app.roomMaintenance">Room Maintenance</a></li>
-        </ul>
-    </li>
-
-    <li>
-        <a href class="auto">
-            <span class="pull-right text-muted">
-                <i class="fa fa-fw fa-plus text"></i>
-                <i class="fa fa-fw fa-minus text-active"></i>
-            </span> <i class="fa fa-suitcase"></i> <span class="font-bold">Charges Module</span> </a>
-        <ul class="nav nav-sub dk">
-            <li><a ui-sref="app.roomChargeItems">Room Charge Items</a></li>
-            <li><a ui-sref="app.roomCharges">Room Charges</a></li>
-            <li><a ui-sref="app.configRoomCharges">Config Room Charge</a></li>
-            <li><a ui-sref="app.accountHead">Category Item For Charge</a></li>
-            <li><a ui-sref="app.chargesForCategory">Charges For Category</a></li>
-        </ul>
-    </li>
-    <li>
-        <a href class="auto">
-            <span class="pull-right text-muted">
-                <i class="fa fa-fw fa-plus text"></i>
-                <i class="fa fa-fw fa-minus text-active"></i>
-            </span> <i class="fa fa-wrench"></i> <span class="font-bold">Masters module</span> </a>
-        <ul class="nav nav-sub dk">
-            <li><a ui-sref="app.procedures">Procedures</a></li>
-            <li><a ui-sref="app.speciality">Speciality</a></li>
-            <li><a ui-sref="app.alliedCharges">Allied Charges</a></li>
-            <li><a ui-sref="app.alertType">Alert Type</a></li>
-            <li><a ui-sref="app.doctorSchedule">Doctors Schedule</a></li>
-            <li><a ui-sref="app.patientCategory">Patients Category</a></li>
-        </ul>
-    </li>
-</ul> / list -->
+</ul>-->

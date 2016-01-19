@@ -35,7 +35,7 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
             $rootScope.commonService.GetCityList(function (response) {
                 $scope.cities = response.cityList;
             });
-            
+
             $rootScope.commonService.GetSpecialityList('', '1', false, function (response) {
                 $scope.specialities = response.specialityList;
             });
@@ -217,4 +217,12 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
             }
         };
 
+        $scope.toggleMin = function () {
+            $scope.minDate = $scope.minDate ? null : new Date();
+        };
+        $scope.toggleMin();
+        
+        $scope.disabled = function(date, mode) {
+    return mode === 'day' && (date.getDay() === 0 || date.getDay() === 6);
+  };
     }]);
