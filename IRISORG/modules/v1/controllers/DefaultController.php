@@ -2,12 +2,14 @@
 
 namespace IRISORG\modules\v1\controllers;
 
-use common\models\CoFloor;
+use common\models\CoLogin;
 use common\models\CoMasterCity;
 use common\models\CoMasterCountry;
 use common\models\CoMasterState;
-use common\models\CoRoomChargeCategory;
+use common\models\CoResources;
+use common\models\CoRolesResources;
 use common\models\CoTenant;
+use common\models\CoUsersRoles;
 use Yii;
 use yii\filters\ContentNegotiator;
 use yii\web\Controller;
@@ -88,6 +90,39 @@ class DefaultController extends Controller {
         if ($exception !== null) {
             return ['success' => false, 'message' => "Error {$exception->statusCode} : {$exception->getMessage()} !!!"];
         }
+    }
+
+    public function actionGetnavigation() {
+        $get = Yii::$app->request->get();
+        $login = CoLogin::find()->where(['authtoken' => $get['token']])->one();
+
+        $users_roles = CoUsersRoles::find()->select(['GROUP_CONCAT(role_id) AS role_ids, tenant_id'])->where(['user_id' => $login->user_id])->one();
+        $role_ids = explode(',', $users_roles->role_ids);
+
+        $role_resources = CoRolesResources::find()->select(['GROUP_CONCAT(resource_id) AS resource_ids'])->where(['IN', 'role_id', $role_ids])->andWhere(['tenant_id' => $users_roles->tenant_id])->one();
+        $resource_ids = explode(',', $role_resources->resource_ids);
+
+        $menus = CoRolesResources::getModuleTreeByResourcename($get['resourceName']);
+
+        foreach ($menus as $key => $menu) {
+            if (in_array($menu['value'], $resource_ids)) {
+                foreach ($menu['children'] as $ckey => $child) {
+                    if (in_array($child['value'], $resource_ids)) {
+                        foreach ($child['children'] as $ckey2 => $child2) {
+                            if (!in_array($child2['value'], $resource_ids)) {
+                                unset($menus[$key]['children'][$ckey]['children'][$ckey2]);
+                            }
+                        }
+                    } else {
+                        unset($menus[$key]['children'][$ckey]);
+                    }
+                }
+            } else {
+                unset($menus[$key]);
+            }
+        }
+
+        return ['navigation' => $menus[0]['children']];
     }
 
 }

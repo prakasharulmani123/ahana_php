@@ -99,6 +99,26 @@ class CoRolesResources extends ActiveRecord {
                         $unchecked++;
                     }
                     $tot++;
+                    
+                    $tot2 = $checked2 = $unchecked2 = 0;
+
+                    foreach ($child['children'] as $cKey2 => $child2) {
+                        if (in_array($child2['value'], $role_resources_ids)) {
+                            $tree[$key]['children'][$cKey]['children'][$cKey2]['selected'] = true;
+                            $checked2++;
+                            $checked++;
+                        } else {
+                            $unchecked2++;
+                            $unchecked++;
+                        }
+                        $tot++;
+                        $tot2++;
+                    }
+
+                    if ($tot2 == $checked2)
+                        $tree[$key]['children'][$cKey]['selected'] = true;
+                    if ($checked2 > 0 && $unchecked2 > 0)
+                        $tree[$key]['children'][$cKey]['__ivhTreeviewIndeterminate'] = true;
                 }
 
                 if ($tot == $checked)
@@ -119,6 +139,25 @@ class CoRolesResources extends ActiveRecord {
 
             foreach ($parent->child as $cKey => $child) {
                 $tree[$key]['children'][$cKey] = array('label' => $child->resource_name, 'value' => $child->resource_id);
+                foreach ($child->child as $cKey2 => $child2) {
+                    $tree[$key]['children'][$cKey]['children'][$cKey2] = array('label' => $child2->resource_name, 'value' => $child2->resource_id);
+                }
+            }
+        }
+        return $tree;
+    }
+    
+    public static function getModuleTreeByResourcename($resource_name) {
+        $tree = array();
+        $parents = CoResources::find()->where(['resource_name' => $resource_name])->orderBy(['resource_name' => 'ASC'])->all();
+        foreach ($parents as $key => $parent) {
+            $tree[$key] = array('label' => $parent->resource_name, 'value' => $parent->resource_id, 'url' => $parent->resource_url);
+
+            foreach ($parent->child as $cKey => $child) {
+                $tree[$key]['children'][$cKey] = array('label' => $child->resource_name, 'value' => $child->resource_id, 'url' => $child->resource_url);
+                foreach ($child->child as $cKey2 => $child2) {
+                    $tree[$key]['children'][$cKey]['children'][$cKey2] = array('label' => $child2->resource_name, 'value' => $child2->resource_id, 'url' => $child2->resource_url);
+                }
             }
         }
         return $tree;
