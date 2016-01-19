@@ -2,6 +2,7 @@ app.controller('FloorsController', ['$rootScope', '$scope', '$timeout', '$http',
 
         //Index Page
         $scope.loadFloorsList = function () {
+            $scope.isLoading = true;
             // pagination set up
             $scope.rowCollection = [];  // base collection
             $scope.itemsByPage = 10; // No.of records per page
@@ -10,6 +11,7 @@ app.controller('FloorsController', ['$rootScope', '$scope', '$timeout', '$http',
             // Get data's from service
             $http.get($rootScope.IRISOrgServiceUrl + '/floor')
                     .success(function (floors) {
+                        $scope.isLoading = false;
                         $scope.rowCollection = floors;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
                     })
@@ -83,7 +85,7 @@ app.controller('FloorsController', ['$rootScope', '$scope', '$timeout', '$http',
 
         //Delete
         $scope.removeRow = function (row) {
-            var conf = confirm('Are you sure to delete ?');
+            var conf = confirm('Are you sure to delete ? \nNote: All the wards & Rooms under this floor will also be deleted !!!');
             if (conf) {
                 $scope.loadbar('show');
                 var index = $scope.displayedCollection.indexOf(row);

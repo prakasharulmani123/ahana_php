@@ -2,6 +2,7 @@ app.controller('SpecialitiesController', ['$rootScope', '$scope', '$timeout', '$
 
         //Index Page
         $scope.loadSpecialitiesList = function () {
+            $scope.isLoading = true;
             // pagination set up
             $scope.rowCollection = [];  // base collection
             $scope.itemsByPage = 10; // No.of records per page
@@ -10,6 +11,7 @@ app.controller('SpecialitiesController', ['$rootScope', '$scope', '$timeout', '$
             // Get data's from service
             $http.get($rootScope.IRISOrgServiceUrl + '/speciality')
                     .success(function (specialities) {
+                        $scope.isLoading = false;
                         $scope.rowCollection = specialities;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
                     })
@@ -96,7 +98,7 @@ app.controller('SpecialitiesController', ['$rootScope', '$scope', '$timeout', '$
                                 if (response.data.success === true) {
                                     $scope.displayedCollection.splice(index, 1);
                                     $scope.loadSpecialitiesList();
-                                    
+
                                 }
                                 else {
                                     $scope.errorData = response.data.message;

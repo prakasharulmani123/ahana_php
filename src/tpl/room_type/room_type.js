@@ -2,6 +2,7 @@ app.controller('RoomTypesController', ['$rootScope', '$scope', '$timeout', '$htt
 
         //Index Page
         $scope.loadRoomTypesList = function () {
+            $scope.isLoading = true;
             // pagination set up
             $scope.rowCollection = [];  // base collection
             $scope.itemsByPage = 10; // No.of records per page
@@ -10,6 +11,7 @@ app.controller('RoomTypesController', ['$rootScope', '$scope', '$timeout', '$htt
             // Get data's from service
             $http.get($rootScope.IRISOrgServiceUrl + '/roomtype')
                     .success(function (roomtypes) {
+                        $scope.isLoading = false;
                         $scope.rowCollection = roomtypes;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
                     })

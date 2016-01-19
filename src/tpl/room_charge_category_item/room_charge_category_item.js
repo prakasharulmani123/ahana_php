@@ -2,6 +2,7 @@ app.controller('RoomChargeCategoryItemsController', ['$rootScope', '$scope', '$t
 
         //Index Page
         $scope.loadRoomChargeCategoryItemsList = function () {
+            $scope.isLoading = true;
             // pagination set up
             $scope.rowCollection = [];  // base collection
             $scope.itemsByPage = 10; // No.of records per page
@@ -10,6 +11,7 @@ app.controller('RoomChargeCategoryItemsController', ['$rootScope', '$scope', '$t
             // Get data's from service
             $http.get($rootScope.IRISOrgServiceUrl + '/roomchargeitems')
                     .success(function (roomChargeCategoryItems) {
+                        $scope.isLoading = false;
                         $scope.rowCollection = roomChargeCategoryItems;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
                     })

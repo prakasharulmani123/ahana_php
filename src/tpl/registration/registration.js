@@ -2,6 +2,7 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
 
         //Index Page
         $scope.loadList = function () {
+                        $scope.isLoading = true;
             // pagination set up
             $scope.rowCollection = [];  // base collection
             $scope.itemsByPage = 10; // No.of records per page
@@ -10,6 +11,7 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
             // Get data's from service
             $http.get($rootScope.IRISOrgServiceUrl + '/user/getuserdata')
                     .success(function (roles) {
+                        $scope.isLoading = false;
                         $scope.rowCollection = roles;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
                     })

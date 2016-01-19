@@ -2,6 +2,7 @@ app.controller('PatientCategoriesController', ['$rootScope', '$scope', '$timeout
 
         //Index Page
         $scope.loadPatientCategoriesList = function () {
+            $scope.isLoading = true;
             // pagination set up
             $scope.rowCollection = [];  // base collection
             $scope.itemsByPage = 10; // No.of records per page
@@ -10,6 +11,7 @@ app.controller('PatientCategoriesController', ['$rootScope', '$scope', '$timeout
             // Get data's from service
             $http.get($rootScope.IRISOrgServiceUrl + '/patientcategory')
                     .success(function (patientcategories) {
+                        $scope.isLoading = false;
                         $scope.rowCollection = patientcategories;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
                     })

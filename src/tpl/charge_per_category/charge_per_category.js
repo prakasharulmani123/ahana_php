@@ -6,6 +6,7 @@ app.controller('ChargePerCategoriesController', ['$rootScope', '$scope', '$timeo
 
         //Index Page
         $scope.loadChargePerCategoriesList = function () {
+            $scope.isLoading = true;
             // pagination set up
             $scope.rowCollection = [];  // base collection
             $scope.itemsByPage = 10; // No.of records per page
@@ -14,6 +15,7 @@ app.controller('ChargePerCategoriesController', ['$rootScope', '$scope', '$timeo
             // Get data's from service
             $http.get($rootScope.IRISOrgServiceUrl + '/chargepercategory')
                     .success(function (charge_per_categories) {
+                        $scope.isLoading = false;
                         $scope.rowCollection = charge_per_categories;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
                     })
@@ -110,17 +112,19 @@ app.controller('ChargePerCategoriesController', ['$rootScope', '$scope', '$timeo
                 if (mode == 'add') {
                     post_url = $rootScope.IRISOrgServiceUrl + '/chargepercategories';
                     method = 'POST';
-                    succ_msg = 'ChargePerCategory saved successfully';
+                    succ_msg = 'Charges for Category saved successfully';
                 } else {
                     post_url = $rootScope.IRISOrgServiceUrl + '/chargepercategories/' + _that.data.charge_id;
                     method = 'PUT';
-                    succ_msg = 'ChargePerCategory updated successfully';
+                    succ_msg = 'Charges for Category updated successfully';
                 }
 
                 if (_that.data.charge_cat_id == -1) {
                     _that.data.charge_cat_type = 'P';
+                }else{
+                    _that.data.charge_cat_type = 'C';
                 }
-
+                
                 $scope.loadbar('show');
 
                 $http({
@@ -192,12 +196,12 @@ app.controller('ChargePerCategoriesController', ['$rootScope', '$scope', '$timeo
                 if (typeof id != 'undefined') {
                     post_method = 'PUT';
                     post_url = $rootScope.IRISOrgServiceUrl + '/chargepersubcategories/' + id;
-                    succ_msg = 'ChargePerCategory Updated successfully';
+                    succ_msg = 'Charges for Category Updated successfully';
                 } else {
                     post_method = 'POST';
                     post_url = $rootScope.IRISOrgServiceUrl + '/chargepersubcategories';
                     angular.extend(data, {charge_id: charge_id, charge_type: charge_type, charge_link_id: charge_link_id});
-                    succ_msg = 'ChargePerCategory saved successfully';
+                    succ_msg = 'Charges for Category saved successfully';
                 }
                 $http({
                     method: post_method,

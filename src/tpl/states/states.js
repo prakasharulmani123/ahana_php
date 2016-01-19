@@ -2,6 +2,7 @@ app.controller('StatesController', ['$rootScope', '$scope', '$timeout', '$http',
 
         //Index Page
         $scope.loadStatesList = function () {
+            $scope.isLoading = true;
             // pagination set up
             $scope.rowCollection = [];  // base collection
             $scope.itemsByPage = 10; // No.of records per page
@@ -10,6 +11,7 @@ app.controller('StatesController', ['$rootScope', '$scope', '$timeout', '$http',
             // Get data's from service
             $http.get($rootScope.IRISOrgServiceUrl + '/state')
                     .success(function (states) {
+                        $scope.isLoading = false;
                         $scope.rowCollection = states;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
                     })

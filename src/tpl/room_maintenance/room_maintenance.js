@@ -2,6 +2,7 @@ app.controller('RoomMaintenanceController', ['$rootScope', '$scope', '$timeout',
 
         //Index Page
         $scope.loadRoomMaintenanceList = function () {
+            $scope.isLoading = true;
             // pagination set up
             $scope.rowCollection = [];  // base collection
             $scope.itemsByPage = 10; // No.of records per page
@@ -10,6 +11,7 @@ app.controller('RoomMaintenanceController', ['$rootScope', '$scope', '$timeout',
             // Get data's from service
             $http.get($rootScope.IRISOrgServiceUrl + '/roommaintenance')
                     .success(function (roommaintenance) {
+                        $scope.isLoading = false;
                         $scope.rowCollection = roommaintenance;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
                     })
@@ -17,7 +19,7 @@ app.controller('RoomMaintenanceController', ['$rootScope', '$scope', '$timeout',
                         $scope.error = "An Error has occured while loading Room Maintenance!";
                     });
         };
-        
+
         //Save Both Add & Update Data
         $scope.saveForm = function (mode) {
             _that = this;

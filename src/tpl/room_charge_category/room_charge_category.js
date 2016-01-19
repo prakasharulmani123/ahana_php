@@ -6,6 +6,7 @@ app.controller('RoomChargeCategorysController', ['$rootScope', '$scope', '$timeo
 
         //Index Page
         $scope.loadRoomChargeCategorysList = function () {
+            $scope.isLoading = true;
             // pagination set up
             $scope.rowCollection = [];  // base collection
             $scope.itemsByPage = 10; // No.of records per page
@@ -14,6 +15,7 @@ app.controller('RoomChargeCategorysController', ['$rootScope', '$scope', '$timeo
             // Get data's from service
             $http.get($rootScope.IRISOrgServiceUrl + '/roomchargecategory')
                     .success(function (roomChargeCategorys) {
+                        $scope.isLoading = false;
                         $scope.rowCollection = roomChargeCategorys;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
 
@@ -41,7 +43,7 @@ app.controller('RoomChargeCategorysController', ['$rootScope', '$scope', '$timeo
                     });
 
         };
-        
+
         $scope.addSubRow = function (id) {
             angular.forEach($scope.displayedCollection, function (parent) {
                 if (parent.charge_cat_id == id) {
@@ -77,7 +79,7 @@ app.controller('RoomChargeCategorysController', ['$rootScope', '$scope', '$timeo
                         function (response) {
                             $scope.loadbar('hide');
                             $scope.successMessage = succ_msg;
-                            
+
                             //Update Subcategory
                             angular.forEach($scope.displayedCollection, function (parent) {
                                 if (parent.charge_cat_id == charge_cat_id) {

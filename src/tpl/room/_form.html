@@ -3,7 +3,7 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">Ward Name * </label>
             <div class="col-sm-9">
-                <select class="form-control" ng-model="data.ward_id" ng-options="ward.ward_id as ward.ward_name for ward in wards | orderBy: ward_name" required>
+                <select class="form-control" ng-model="data.ward_id" ng-options="ward.ward_id as ward.ward_name for ward in wards | orderBy: ward_name">
                     <option value="">Select Ward</option>
                 </select>
             </div>
@@ -13,7 +13,7 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">Room Maintenance Type * </label>
             <div class="col-sm-9">
-                <select class="form-control" ng-model="data.maintain_id" ng-options="maintenance.maintain_id as maintenance.maintain_name for maintenance in maintenances | orderBy: maintain_name" required>
+                <select class="form-control" ng-model="data.maintain_id" ng-options="maintenance.maintain_id as maintenance.maintain_name for maintenance in maintenances | orderBy: maintain_name">
                     <option value="">Select Room Maintenance Type</option>
                 </select>
             </div>

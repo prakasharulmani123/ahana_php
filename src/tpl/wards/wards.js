@@ -90,7 +90,7 @@ app.controller('WardsController', ['$rootScope', '$scope', '$timeout', '$http', 
 
         //Delete
         $scope.removeRow = function (row) {
-            var conf = confirm('Are you sure to delete ?');
+            var conf = confirm('Are you sure to delete ? \nNote: All the Rooms under this ward will also be deleted !!!');
             if (conf) {
                 $scope.loadbar('show');
                 var index = $scope.displayedCollection.indexOf(row);
