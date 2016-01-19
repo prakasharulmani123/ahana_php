@@ -84,13 +84,13 @@ class UserController extends ActiveController {
         $modelClass = $this->modelClass;
 
         return new ActiveDataProvider([
-            'query' => $modelClass::find()->orderBy(['created_at' => SORT_DESC]),
+            'query' => $modelClass::find()->tenant()->active()->orderBy(['created_at' => SORT_DESC]),
             'pagination' => false,
         ]);
     }
 
     public function actionGetuserdata() {
-        $model = CoUser::find()->orderBy(['created_at' => SORT_DESC])->all();
+        $model = CoUser::find()->tenant()->active()->orderBy(['created_at' => SORT_DESC])->all();
         $data = [];
         foreach ($model as $key => $user) {
             $data[$key] = $user->attributes;
