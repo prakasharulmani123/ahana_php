@@ -42,6 +42,19 @@ app.controller('DoctorSchedulesController', ['$rootScope', '$scope', '$timeout',
 
         };
 
+        //For Form
+        $scope.initForm = function () {
+            $rootScope.commonService.GetDoctorList('', '1', false, '1', function (response) {
+                $scope.doctors = response.doctorsList;
+            });
+            $rootScope.commonService.GetDayList(function (response) {
+                $scope.days = response;
+                angular.forEach($scope.days, function (day) {
+                    day.checked = '';
+                });
+            });
+        }
+
         $scope.addSubRow = function (id) {
             angular.forEach($scope.displayedCollection, function (parent) {
                 if (parent.charge_cat_id == id) {
@@ -154,8 +167,8 @@ app.controller('DoctorSchedulesController', ['$rootScope', '$scope', '$timeout',
             }
         };
         //End
-        $scope.checkInput = function (data, id) {
-            if (data == '') {
+        $scope.checkInput = function (data) {
+            if (typeof data === 'undefined' || data == '') {
                 return "Field should not be empty.";
             }
         };
@@ -176,6 +189,13 @@ app.controller('DoctorSchedulesController', ['$rootScope', '$scope', '$timeout',
                 method = 'PUT';
                 succ_msg = 'DoctorSchedule updated successfully';
             }
+
+            console.log($scope.timings);
+            _that.data.custom_day = [];
+            angular.forEach($scope.days, function (day) {
+                if (day.checked == true)
+                    _that.data.custom_day.push(day.value);
+            });
 
             $scope.loadbar('show');
             $http({
@@ -286,23 +306,27 @@ app.controller('DoctorSchedulesController', ['$rootScope', '$scope', '$timeout',
         };
 
         // editable table
-        $scope.subcategories = [];
-        $scope.deletedsubcategories = [];
-
+            $scope.timings = [{
+                    time_in: '',
+                    time_out: '',
+                    checked: '',
+                }];
+            $scope.deletedsubcategories = [];
         // add Row
         $scope.addRow = function () {
             $scope.inserted = {
-                charge_subcat_id: '',
-                charge_subcat_name: '',
+                time_in: '',
+                time_out: '',
+                checked: '',
             };
-            $scope.subcategories.push($scope.inserted);
+            $scope.timings.push($scope.inserted);
         };
 
         // remove Row
-        $scope.removeSubcat = function (index, id) {
+        $scope.removeTime = function (index, id) {
             if (id != '')
                 $scope.deletedsubcategories.push(id);
-            $scope.subcategories.splice(index, 1);
+            $scope.timings.splice(index, 1);
         };
 
         $scope.ctrl = {};

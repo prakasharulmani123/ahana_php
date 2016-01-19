@@ -3,30 +3,92 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">Doctor *</label>
             <div class="col-sm-9">
-                <input type="text" ng-model="data.charge_cat_name" maxlength="50" name="DoctorScheduleName" class="form-control" placeholder="Room Charge Category Name">
+                <select class="form-control" ng-model="data.user_id" ng-options="user.user_id as user.name for user in doctors | orderBy: name">
+                    <option value="">Select Doctor</option>
+                </select>
             </div>
         </div>
         <div class="line line-dashed b-b line-lg "></div>
         <div class="form-group">
             <label class="col-sm-3 control-label">Select Day * </label>
             <div class="col-sm-9">
-                <select class="form-control" name="Floor" ng-model="data.floor_id" ng-options="floor.floor_id as floor.floor_name for floor in floors | orderBy: floor_name" required>
-                    <option value="">Select Floor</option>
-                </select>
+                <div class="radio">
+                    <label class="i-checks">
+                        <input type="radio" name="type" value="A" checked>
+                        <i></i>
+                        All Day
+                    </label>
+                </div>
+                <div class="radio">
+                    <label class="i-checks">
+                        <input type="radio" name="type" value="C">
+                        <i></i>
+                        Custom
+                    </label>
+                </div>
             </div>
         </div>
         <div class="line line-dashed b-b line-lg "></div>
         <div class="form-group">
-            <label class="col-sm-3 control-label">Timing</label>
+            <label class="col-sm-3 control-label">Days</label>
             <div class="col-sm-9">
-                <input type="text" ng-model="data.charge_cat_code" maxlength="50" name="DoctorScheduleName" class="form-control" placeholder="Room Charge Category Code">
+                <div class="panel panel-default">
+<!--                    <div class="panel-heading">
+                        Choose Days
+                    </div>-->
+                    <div class="table-responsive">
+                        <table class="table table-striped b-t b-light">
+                            <tbody>
+                                <tr ng-repeat="day in days">
+                                    <td style="width:20px;"><label class="i-checks m-b-none"><input type="checkbox" ng-model="day.checked"><i></i></label></td>
+                                    <td>{{day.label}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="line line-dashed b-b line-lg "></div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Timings</label>
+            <div class="col-sm-9">
+                <table class="table table-bordered table-hover table-condensed bg-white-only">
+                    <tr style="font-weight: bold">
+                        <td style="width:35%">Time In</td>
+                        <td style="width:35%">Time Out</td>
+                        <td style="width:30%"><span>Action</span></td>
+                    </tr>
+                    <tr ng-repeat="timing in timings">
+                        <td>
+                            <!-- editable username (text with validation) -->
+                            <span editable-text="timing.schedule_time_in" e-name="schedule_time_in" e-form="nameform" onbeforesave="checkInput($data)">
+                                {{ timing.time_in || 'empty' }}
+                            </span>
+                        </td>
+                        <td>
+                            <!-- editable username (text with validation) -->
+                            <span editable-text="timing.schedule_time_out" e-name="schedule_time_out" e-form="nameform" onbeforesave="checkInput($data)">
+                                {{ timing.time_out || 'empty' }}
+                            </span>
+                        </td>
+                        <td>
+                            <button type="button" ng-click="removeTime($index, timing.schedule_time_out)" class="btn btn-sm btn-danger pull-right">Delete</button>
+                        </td>
+                    </tr>
+                </table>
+                <div class="btn-form">
+                    <!--<button type="button" ng-click="tableform.$show();" class="btn btn-default pull-left btn-info">Edit</button>-->
+                    &nbsp;
+                    <button type="button" ng-click="tableform.$show(); addRow()" class="btn btn-default pull-left btn-primary">Add Row</button>
+                </div>
             </div>
         </div>
     </div>
     <footer class="panel-footer text-right bg-light lter">
         <button class="btn m-b-xs  btn-success " >Save</button>
         &nbsp;
-        <button type="button" class="btn m-b-xs  btn-dark" ng-click="$state.go('configuration.DoctorSchedule')"><i class="fa fa-times"></i> Cancel</button>
+        <button type="button" class="btn m-b-xs  btn-dark" ng-click="$state.go('configuration.docSchedule')"><i class="fa fa-times"></i> Cancel</button>
         &nbsp;
     </footer>
 </div>

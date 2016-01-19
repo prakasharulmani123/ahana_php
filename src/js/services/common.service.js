@@ -24,6 +24,8 @@ function CommonService($http, $rootScope, $window, $q) {
     service.GetChargePerSubCategoryList = GetChargePerSubCategoryList;
     service.GetSpecialityList = GetSpecialityList;
     service.GetInternalCodeList = GetInternalCodeList;
+    service.GetDoctorList = GetDoctorList;
+    service.GetDayList = GetDayList;
 
     return service;
 
@@ -234,6 +236,23 @@ function CommonService($http, $rootScope, $window, $q) {
                     response = {success: false, message: 'Server Error'};
                     callback(response);
                 });
+    }
+    
+    function GetDoctorList(tenant, sts, del_sts, care_provider, callback) {
+        var response;
+
+        $http.get($rootScope.IRISOrgServiceUrl + '/user/getdoctorslist?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts + '&care_provider=' + care_provider)
+                .success(function (response) {
+                    callback(response);
+                }, function (x) {
+                    response = {success: false, message: 'Server Error'};
+                    callback(response);
+                });
+    }
+    
+    function GetDayList(callback) {
+        var response = [{value: '1', label: 'Monday'}, {value: '2', label: 'Tuesday'}, {value: '3', label: 'Wednesday'}, {value: '4', label: 'Thursday'}, {value: '5', label: 'Friday'}, {value: '6', label: 'Saturday'}, {value: '7', label: 'Sunday'}];
+        callback(response);
     }
 
 }

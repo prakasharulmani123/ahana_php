@@ -56,7 +56,7 @@ app.controller('ChargePerCategoriesController', ['$rootScope', '$scope', '$timeo
                 $scope.sub_categories = response.subcategoryList;
 
                 //Load Doctor List
-                $http.get($rootScope.IRISOrgServiceUrl + '/user/getdoctorslist').success(function (response) {
+                $rootScope.commonService.GetDoctorList('', '1', false, '1', function (response) {
                     var insert_cat = {
                         charge_cat_id: '-1',
                         charge_cat_name: 'Professional Charges',
