@@ -3,8 +3,8 @@
 /* Controllers */
 
 angular.module('app')
-        .controller('AppCtrl', ['$scope', '$translate', '$localStorage', '$window', '$rootScope', '$state', '$cookieStore', 'CommonService',
-            function ($scope, $translate, $localStorage, $window, $rootScope, $state, $cookieStore, CommonService) {
+        .controller('AppCtrl', ['$scope', '$translate', '$localStorage', '$window', '$rootScope', '$state', '$cookieStore', '$http', 'CommonService',
+            function ($scope, $translate, $localStorage, $window, $rootScope, $state, $cookieStore, $http, CommonService) {
                 // add 'ie' classes to html
                 var isIE = !!navigator.userAgent.match(/MSIE/i);
                 isIE && angular.element($window.document.body).addClass('ie');
@@ -72,7 +72,7 @@ angular.module('app')
                 $scope.errorSummary = function (error) {
                     var html = '<div><p>Please fix the following errors:</p><ul>';
                     angular.forEach(error, function (error) {
-                        html += '<li>'+error.message+'</li>';
+                        html += '<li>' + error.message + '</li>';
                     });
 
                     html += '</ul></div>';
@@ -81,9 +81,9 @@ angular.module('app')
 
                 //show/hide Load bar
                 $scope.loadbar = function (mode) {
-                    if(mode == 'show'){
+                    if (mode == 'show') {
                         $('.butterbar').removeClass('hide').addClass('active');
-                    }else if(mode == 'hide'){
+                    } else if (mode == 'hide') {
                         $('.butterbar').removeClass('active').addClass('hide');
                     }
                 }
@@ -95,6 +95,17 @@ angular.module('app')
                     var ua = $window['navigator']['userAgent'] || $window['navigator']['vendor'] || $window['opera'];
                     // Checks for iOs, Android, Blackberry, Opera Mini, and Windows mobile devices
                     return (/iPhone|iPod|iPad|Silk|Android|BlackBerry|Opera Mini|IEMobile/).test(ua);
+                }
+
+                $scope.navigationMenu = '';
+                $scope.getNavigationMenu = function (resourceName) {
+                    $http.get($rootScope.IRISOrgServiceUrl + '/default/getnavigation?token=' + $window.sessionStorage.access_token+ '&resourceName='+resourceName)
+                            .success(function (response) {
+                                $scope.navigationMenu = response.navigation;
+                            })
+                            .error(function () {
+                                $scope.error = "An Error has occured while loading posts!";
+                            });
                 }
 
             }]);

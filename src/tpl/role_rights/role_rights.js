@@ -79,8 +79,13 @@ app.controller('RolesRightsController', ['$rootScope', '$scope', '$timeout', '$h
                 if (parent.selected == true || parent.__ivhTreeviewIndeterminate == true) {
                     $scope.moduleList.push(parent.value);
                     angular.forEach(parent.children, function (child) {
-                        if (child.selected == true)
+                        if (child.selected == true || child.__ivhTreeviewIndeterminate == true)
                             $scope.moduleList.push(child.value);
+
+                        angular.forEach(child.children, function (child2) {
+                            if (child2.selected == true || child2.__ivhTreeviewIndeterminate == true)
+                                $scope.moduleList.push(child2.value);
+                        });
                     });
                 }
             });
@@ -116,5 +121,5 @@ app.controller('RolesRightsController', ['$rootScope', '$scope', '$timeout', '$h
                     }
             )
         };
-        
+
     }]);
