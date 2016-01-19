@@ -48,7 +48,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
         $scope.updateState = function () {
             $scope.availableStates = [];
             $scope.availableCities = [];
-
+            
             _that = this;
             angular.forEach($scope.states, function (value) {
                 if (value.countryId == _that.data.Tenant.tenant_country_id) {
@@ -195,18 +195,21 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
 
         $scope.validateForm = function (mode, next_step) {
             _that = this;
+            post_data = [];
 
             $scope.errorData = "";
             $scope.successMessage = "";
 
-            if (mode == 'Organization') {
-                post_data = {Tenant: sanitizeVariable(this.data.Tenant)};
-            } else if (mode == 'Role') {
-                post_data = {Role: sanitizeVariable(this.data.Role)};
-            } else if (mode == 'Login') {
-                post_data = {Login: sanitizeVariable(this.data.Login)};
-            } else if (mode == 'User') {
-                post_data = {User: sanitizeVariable(this.data.User)};
+            if (typeof this.data != "undefined") {
+                if (mode == 'Organization') {
+                    post_data = {Tenant: sanitizeVariable(this.data.Tenant)};
+                } else if (mode == 'Role') {
+                    post_data = {Role: sanitizeVariable(this.data.Role)};
+                } else if (mode == 'Login') {
+                    post_data = {Login: sanitizeVariable(this.data.Login)};
+                } else if (mode == 'User') {
+                    post_data = {User: sanitizeVariable(this.data.User)};
+                }
             }
 
             $('.butterbar').removeClass('hide').addClass('active');

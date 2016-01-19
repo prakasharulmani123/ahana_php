@@ -77,4 +77,5 @@ angular.module('app')
                     return (/iPhone|iPod|iPad|Silk|Android|BlackBerry|Opera Mini|IEMobile/).test(ua);
                 }
 
+                $scope.onlyLetters = /^[a-zA-Z0-9]*$/;
             }]);
