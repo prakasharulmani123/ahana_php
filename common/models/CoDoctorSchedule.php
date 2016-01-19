@@ -25,6 +25,9 @@ use common\models\query\CoDoctorScheduleQuery;
  */
 class CoDoctorSchedule extends RActiveRecord
 {
+    public $time_in;
+    public $time_out;
+    public $custom_day;
     /**
      * @inheritdoc
      */
@@ -39,10 +42,10 @@ class CoDoctorSchedule extends RActiveRecord
     public function rules()
     {
         return [
-            [['tenant_id', 'user_id', 'schedule_day', 'schedule_time_in', 'schedule_time_out', 'created_by'], 'required'],
+            [['tenant_id', 'user_id', 'custom_day', 'time_in', 'time_out'], 'required'],
             [['tenant_id', 'user_id', 'created_by', 'modified_by'], 'integer'],
             [['schedule_day'], 'string'],
-            [['schedule_time_in', 'schedule_time_out', 'created_at', 'modified_at', 'deleted_at'], 'safe']
+            [['schedule_time_in', 'schedule_time_out', 'created_at', 'modified_at', 'deleted_at', 'time_in', 'time_out', 'custom_day'], 'safe']
         ];
     }
 
@@ -53,8 +56,8 @@ class CoDoctorSchedule extends RActiveRecord
     {
         return [
             'schedule_id' => 'Schedule ID',
-            'tenant_id' => 'Tenant ID',
-            'user_id' => 'User ID',
+            'tenant_id' => 'Tenant',
+            'user_id' => 'Doctor',
             'schedule_day' => 'Schedule Day',
             'schedule_time_in' => 'Schedule Time In',
             'schedule_time_out' => 'Schedule Time Out',
@@ -63,6 +66,8 @@ class CoDoctorSchedule extends RActiveRecord
             'modified_at' => 'Modified At',
             'modified_by' => 'Modified By',
             'deleted_at' => 'Deleted At',
+            'time_in' => 'Schedule Time In',
+            'time_out' => 'Schedule Time Out',
         ];
     }
 
