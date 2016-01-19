@@ -36,7 +36,7 @@ class CoChargePerCategory extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['charge_code_id'], 'required'],
+            [['charge_code_id', 'charge_cat_id'], 'required'],
             [['tenant_id', 'charge_cat_id', 'charge_code_id', 'created_by', 'modified_by'], 'integer'],
             [['charge_cat_type'], 'string'],
             [['created_at', 'modified_at', 'deleted_at'], 'safe'],
@@ -54,9 +54,9 @@ class CoChargePerCategory extends RActiveRecord {
             'charge_id' => 'Charge ID',
             'tenant_id' => 'Tenant ID',
             'charge_cat_type' => 'Charge Cat Type',
-            'charge_cat_id' => 'Charge Cat ID',
-            'charge_code_id' => 'Charge Code ID',
-            'charge_default' => 'Charge Default',
+            'charge_cat_id' => 'Category',
+            'charge_code_id' => 'Code/Names',
+            'charge_default' => 'Default',
             'created_at' => 'Created At',
             'created_by' => 'Created By',
             'modified_at' => 'Modified At',

@@ -75,6 +75,13 @@ class CoWard extends RActiveRecord {
         return $this->hasOne(CoFloor::className(), ['floor_id' => 'floor_id']);
     }
 
+    /**
+     * @return ActiveQuery
+     */
+    public function getRoom() {
+        return $this->hasMany(CoRoom::className(), ['ward_id' => 'ward_id']);
+    }
+
     public static function find() {
         return new CoWardQuery(get_called_class());
     }

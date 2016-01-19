@@ -49,32 +49,41 @@ class FloorController extends ActiveController {
             'pagination' => false,
         ]);
     }
-    
+
     public function actionRemove() {
         $id = Yii::$app->getRequest()->post('id');
-        if($id){
+        if ($id) {
             $model = CoFloor::find()->where(['floor_id' => $id])->one();
             $model->remove();
+            
+            //Remove all related records
+            foreach ($model->coWards as $ward) {
+                $ward->remove();
+                foreach ($ward->room as $room) {
+                    $room->remove();
+                }
+            }
+            //
             return ['success' => true];
         }
     }
-    
+
     public function actionGetfloorlist() {
         $tenant = null;
         $status = '1';
         $deleted = false;
-        
+
         $get = Yii::$app->getRequest()->get();
-        
-        if(isset($get['tenant']))
+
+        if (isset($get['tenant']))
             $tenant = $get['tenant'];
-        
-        if(isset($get['status']))
+
+        if (isset($get['status']))
             $status = strval($get['status']);
-        
-        if(isset($get['deleted']))
+
+        if (isset($get['deleted']))
             $deleted = $get['deleted'] == 'true';
-        
+
         return ['floorList' => CoFloor::getFloorList($tenant, $status, $deleted)];
     }
 
