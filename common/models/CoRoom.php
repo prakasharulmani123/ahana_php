@@ -108,6 +108,9 @@ class CoRoom extends RActiveRecord {
             'maintain_name' => function ($model) {
                 return (isset($model->maintain) ? $model->maintain->maintain_name : '-');
             },
+            'roomstatus' => function ($model) {
+                return (isset($model->roomstatus) ? $model->roomstatus : '-');
+            },
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
@@ -121,4 +124,7 @@ class CoRoom extends RActiveRecord {
         return $this->hasMany(CoRoomType::className(), ['room_type_id' => 'room_type_id'])->via('roomTypesRooms');
     }
 
+    public function getRoomstatus() {
+        return ($this->occupied_status == 0) ? 'Vacant' : 'Occupied';
+    }
 }
