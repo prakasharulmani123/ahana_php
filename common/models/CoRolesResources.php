@@ -99,7 +99,7 @@ class CoRolesResources extends ActiveRecord {
                         $unchecked++;
                     }
                     $tot++;
-                    
+
                     $tot2 = $checked2 = $unchecked2 = 0;
 
                     foreach ($child['children'] as $cKey2 => $child2) {
@@ -146,18 +146,15 @@ class CoRolesResources extends ActiveRecord {
         }
         return $tree;
     }
-    
+
     public static function getModuleTreeByResourcename($resource_name) {
         $tree = array();
-        $parents = CoResources::find()->where(['resource_name' => $resource_name])->orderBy(['resource_name' => 'ASC'])->all();
-        foreach ($parents as $key => $parent) {
-            $tree[$key] = array('label' => $parent->resource_name, 'value' => $parent->resource_id, 'url' => $parent->resource_url);
-
-            foreach ($parent->child as $cKey => $child) {
-                $tree[$key]['children'][$cKey] = array('label' => $child->resource_name, 'value' => $child->resource_id, 'url' => $child->resource_url);
-                foreach ($child->child as $cKey2 => $child2) {
-                    $tree[$key]['children'][$cKey]['children'][$cKey2] = array('label' => $child2->resource_name, 'value' => $child2->resource_id, 'url' => $child2->resource_url);
-                }
+        $parents = CoResources::find()->where(['resource_name' => $resource_name])->one();
+        $tree[0] = array('label' => $parents->resource_name, 'value' => $parents->resource_id, 'url' => $parents->resource_url);
+        foreach ($parents->child as $cKey => $child) {
+            $tree[0]['children'][$cKey] = array('label' => $child->resource_name, 'value' => $child->resource_id, 'url' => $child->resource_url);
+            foreach ($child->child as $cKey2 => $child2) {
+                $tree[0]['children'][$cKey]['children'][$cKey2] = array('label' => $child2->resource_name, 'value' => $child2->resource_id, 'url' => $child2->resource_url);
             }
         }
         return $tree;
