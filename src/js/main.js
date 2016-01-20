@@ -99,7 +99,7 @@ angular.module('app')
 
                 $scope.navigationMenu = '';
                 $scope.getNavigationMenu = function (resourceName) {
-                    $http.get($rootScope.IRISOrgServiceUrl + '/default/getnavigation?token=' + $window.sessionStorage.access_token+ '&resourceName='+resourceName)
+                    $http.get($rootScope.IRISOrgServiceUrl + '/default/getnavigation?token=' + $window.sessionStorage.access_token + '&resourceName=' + resourceName)
                             .success(function (response) {
                                 $scope.navigationMenu = response.navigation;
                             })
