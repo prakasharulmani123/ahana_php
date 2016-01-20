@@ -3,7 +3,9 @@
 namespace IRISORG\modules\v1\controllers;
 
 use common\models\CoDoctorSchedule;
+use common\models\CoRoomChargeCategory;
 use Yii;
+use yii\bootstrap\Html;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
 use yii\filters\auth\HttpBearerAuth;
@@ -62,4 +64,34 @@ class DoctorscheduleController extends ActiveController {
             return ['success' => true];
         }
     }
+
+    public function actionCreateschedule() {
+        $post = Yii::$app->getRequest()->post();
+
+        $model = new CoDoctorSchedule();
+        $model->attributes = array(
+            'user_id' => isset($post['user_id']) ? $post['user_id'] : '',
+            'custom_day' => isset($post['custom_day']) ? $post['custom_day'] : '',
+            'timings' => isset($post['timings']) ? $post['timings'] : '',
+        );
+        $valid = $model->validate();
+        if (!$valid)
+            return ['success' => false, 'message' => Html::errorSummary([$model])];
+
+        foreach ($post['custom_day'] as $day) {
+            if ($day['checked'] == 1) {
+                foreach ($post['timings'] as $timing) {
+                    $model = new CoDoctorSchedule();
+                    $model->attributes = array(
+                        'user_id' => $post['user_id'],
+                        'schedule_day' => $day['value'],
+                        'schedule_time_in' => $timing['schedule_time_in'],
+                        'schedule_time_out' => $timing['schedule_time_out'],
+                    );
+                    $model->save(false);
+                }
+            }
+        }
+    }
+
 }
