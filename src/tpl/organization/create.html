@@ -24,36 +24,36 @@
                             <div class="col-sm-6">
 
                                 <div class="form-group">
-                                    <label class="col-lg-2 control-label">Name *</label>
-                                    <div class="col-lg-10">
+                                    <label class="col-lg-4 control-label">Organization Name *</label>
+                                    <div class="col-lg-8">
                                         <input type="text" placeholder="Name" class="form-control" ng-model="data.Tenant.tenant_name" required>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-lg-2 control-label">Address *</label>
-                                    <div class="col-lg-10">
+                                    <label class="col-lg-4 control-label">Organization Address *</label>
+                                    <div class="col-lg-8">
                                         <textarea type="text" placeholder="Address" class="form-control" ng-model="data.Tenant.tenant_address" required></textarea>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-lg-2 control-label">Country *</label>
-                                    <div class="col-lg-10">
+                                    <label class="col-lg-4 control-label">Country *</label>
+                                    <div class="col-lg-8">
                                         <select class="form-control" name="Country" ng-model="data.Tenant.tenant_country_id" ng-options="country.value as country.label for country in countries | orderBy: label" data-ng-change="updateState(); data.Tenant.tenant_state_id = ''; data.Tenant.tenant_city_id = '';" required>
                                             <option value="">Select Country</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-lg-2 control-label">State *</label>
-                                    <div class="col-lg-10">
+                                    <label class="col-lg-4 control-label">State *</label>
+                                    <div class="col-lg-8">
                                         <select class="form-control" name="State" ng-model="data.Tenant.tenant_state_id" ng-options="state.value as state.label for state in availableStates | orderBy: label" data-ng-change="updateCity(); data.Tenant.tenant_city_id = '';" required>
                                             <option value="">Select State</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-lg-2 control-label">City *</label>
-                                    <div class="col-lg-10">
+                                    <label class="col-lg-4 control-label">City *</label>
+                                    <div class="col-lg-8">
                                         <select class="form-control" name="City" ng-model="data.Tenant.tenant_city_id" ng-options="city.value as city.label for city in availableCities | orderBy: label" required>
                                             <option value="">Select City</option>
                                         </select>
@@ -63,38 +63,38 @@
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label class="col-lg-2 control-label">Contact1</label>
-                                    <div class="col-lg-10">
+                                    <label class="col-lg-4 control-label">Contact1 *</label>
+                                    <div class="col-lg-8">
                                         <input type="text" placeholder="Contact1" class="form-control" ng-model="data.Tenant.tenant_contact1" only-digits="">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-lg-2 control-label">Contact2</label>
-                                    <div class="col-lg-10">
+                                    <label class="col-lg-4 control-label">Contact2</label>
+                                    <div class="col-lg-8">
                                         <input type="text" placeholder="Contact2" class="form-control" ng-model="data.Tenant.tenant_contact2" only-digits="">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-lg-2 control-label">Fax</label>
-                                    <div class="col-lg-10">
+                                    <label class="col-lg-4 control-label">Fax</label>
+                                    <div class="col-lg-8">
                                         <input type="text" placeholder="Fax" class="form-control" ng-model="data.Tenant.tenant_fax" only-digits="">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-lg-2 control-label">Mobile</label>
-                                    <div class="col-lg-10">
+                                    <label class="col-lg-4 control-label">Mobile</label>
+                                    <div class="col-lg-8">
                                         <input type="text" placeholder="Mobile" class="form-control" ng-model="data.Tenant.tenant_mobile" only-digits="">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-lg-2 control-label">Email</label>
-                                    <div class="col-lg-10">
+                                    <label class="col-lg-4 control-label">Email *</label>
+                                    <div class="col-lg-8">
                                         <input type="email" placeholder="abc@abc.com" class="form-control" ng-model="data.Tenant.tenant_email">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-lg-2 control-label">Website</label>
-                                    <div class="col-lg-10">
+                                    <label class="col-lg-4 control-label">Website</label>
+                                    <div class="col-lg-8">
                                         <input type="url" placeholder="http://abc.com" class="form-control" ng-model="data.Tenant.tenant_url">
                                     </div>
                                 </div>
@@ -115,8 +115,8 @@
                             <div class="col-sm-6">
 
                                 <div class="form-group">
-                                    <label class="col-lg-2 control-label">Role *</label>
-                                    <div class="col-lg-10">
+                                    <label class="col-lg-4 control-label">Role *</label>
+                                    <div class="col-lg-8">
                                         <input type="text" placeholder="Role" class="form-control" ng-model="data.Role.description" required>
                                     </div>
                                 </div>
@@ -136,14 +136,14 @@
                         <div class="col-sm-12">
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label class="col-lg-2 control-label">Username *</label>
-                                    <div class="col-lg-10">
+                                    <label class="col-lg-4 control-label">Username *</label>
+                                    <div class="col-lg-8">
                                         <input type="text" placeholder="Username" class="form-control" ng-model="data.Login.username" ng-trim="false" ng-change="data.Login.username = data.Login.username.split(' ').join('')" required>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-lg-2 control-label">Password *</label>
-                                    <div class="col-lg-10">
+                                    <label class="col-lg-4 control-label">Password *</label>
+                                    <div class="col-lg-8">
                                         <input type="password" placeholder="Password" class="form-control" ng-model="data.Login.password" value="" required ng-trim="false" ng-change="data.Login.password = data.Login.password.split(' ').join('')">
                                     </div>
                                 </div>
@@ -186,83 +186,83 @@
                             <div class="col-sm-6">
 
                                 <div class="form-group">
-                                    <label class="col-lg-2 control-label">Prefix *</label>
-                                    <div class="col-lg-10">
+                                    <label class="col-lg-4 control-label">Prefix *</label>
+                                    <div class="col-lg-8">
                                         <select class="form-control" name="Title" ng-model="data.User.title_code" ng-options="title_code.value as title_code.label for title_code in title_codes" required>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-lg-2 control-label">Name *</label>
-                                    <div class="col-lg-10">
+                                    <label class="col-lg-4 control-label">Name *</label>
+                                    <div class="col-lg-8">
                                         <input type="text" placeholder="Name" class="form-control" ng-model="data.User.name" required>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-lg-2 control-label">Designation *</label>
-                                    <div class="col-lg-10">
+                                    <label class="col-lg-4 control-label">Designation *</label>
+                                    <div class="col-lg-8">
                                         <input type="text" placeholder="Designation" class="form-control" ng-model="data.User.designation" required>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-lg-2 control-label">Email *</label>
-                                    <div class="col-lg-10">
+                                    <label class="col-lg-4 control-label">Email *</label>
+                                    <div class="col-lg-8">
                                         <input type="email" placeholder="Email" class="form-control" ng-model="data.User.email" required>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-lg-2 control-label">Mobile *</label>
-                                    <div class="col-lg-10">
+                                    <label class="col-lg-4 control-label">Mobile *</label>
+                                    <div class="col-lg-8">
                                         <input type="text" placeholder="Mobile" class="form-control" ng-model="data.User.mobile" required only-digits="">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-lg-2 control-label">Contact1</label>
-                                    <div class="col-lg-10">
+                                    <label class="col-lg-4 control-label">Contact1</label>
+                                    <div class="col-lg-8">
                                         <input type="text" placeholder="Contact1" class="form-control" ng-model="data.User.contact1" only-digits="">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-lg-2 control-label">Contact2</label>
-                                    <div class="col-lg-10">
+                                    <label class="col-lg-4 control-label">Contact2</label>
+                                    <div class="col-lg-8">
                                         <input type="text" placeholder="Contact2" class="form-control" ng-model="data.User.contact2" only-digits="">
                                     </div>
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label class="col-lg-2 control-label">Address</label>
-                                    <div class="col-lg-10">
+                                    <label class="col-lg-4 control-label">Address</label>
+                                    <div class="col-lg-8">
                                         <textarea placeholder="Address" class="form-control" ng-model="data.User.address"></textarea>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-lg-2 control-label">Country</label>
-                                    <div class="col-lg-10">
+                                    <label class="col-lg-4 control-label">Country</label>
+                                    <div class="col-lg-8">
                                         <select class="form-control" name="Country" ng-model="data.User.country_id" ng-options="country.value as country.label for country in countries | orderBy: label" data-ng-change="updateState2(); data.User.state_id = ''; data.User.city_id = '';">
                                             <option value="">Select Country</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-lg-2 control-label">State</label>
-                                    <div class="col-lg-10">
+                                    <label class="col-lg-4 control-label">State</label>
+                                    <div class="col-lg-8">
                                         <select class="form-control" name="State" ng-model="data.User.state_id" ng-options="state.value as state.label for state in availableStates2 | orderBy: label" data-ng-change="updateCity2(); data.User.city_id = '';">
                                             <option value="">Select State</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-lg-2 control-label">City</label>
-                                    <div class="col-lg-10">
+                                    <label class="col-lg-4 control-label">City</label>
+                                    <div class="col-lg-8">
                                         <select class="form-control" name="City" ng-model="data.User.city_id" ng-options="city.value as city.label for city in availableCities2 | orderBy: label">
                                             <option value="">Select City</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-lg-2 control-label">Zip</label>
-                                    <div class="col-lg-10">
+                                    <label class="col-lg-4 control-label">Zip</label>
+                                    <div class="col-lg-8">
                                         <input type="text" placeholder="Zip" class="form-control" ng-model="data.User.zip" only-digits="">
                                     </div>
                                 </div>

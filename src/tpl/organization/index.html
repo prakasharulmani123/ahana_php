@@ -40,10 +40,13 @@
                     <td>{{row.tenant_state_name}}</td>
                     <td>{{row.tenant_country_name}}</td>
                     <td>
-                        <button class="btn btn-xs" data-placement="top" data-content="{{row.email}}" bs-popover type="button">
-                            <i class="fa fa-eye"></i>
-                        </button>
-                        <a ng-href="mailto:{{row.email}}">email</a>
+                        
+                        <a ng-href="mailto:{{row.tenant_email}}">
+<!--                            <button class="btn btn-xs" data-placement="top" data-content="{{row.email}}" bs-popover type="button">
+                                <i class="fa fa-eye"></i>
+                            </button>-->
+                            email
+                        </a>
                     </td>
                     <td>
                         <label class="i-checks "> 
@@ -56,12 +59,12 @@
             </tbody>
             <tbody ng-show="isLoading">
                 <tr>
-                    <td colspan="6" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
+                    <td colspan="8" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
                 </tr>
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="6" class="text-center">
+                    <td colspan="8" class="text-center">
                         <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7"></div>
                     </td>
                 </tr>
