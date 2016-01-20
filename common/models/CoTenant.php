@@ -46,9 +46,10 @@ class CoTenant extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['tenant_name', 'tenant_city_id', 'tenant_state_id', 'tenant_country_id', 'tenant_address'], 'required'],
+            [['tenant_name', 'tenant_address', 'tenant_country_id', 'tenant_state_id', 'tenant_city_id', 'tenant_contact1', 'tenant_email'], 'required'],
             [['tenant_city_id', 'tenant_state_id', 'tenant_country_id', 'created_by', 'modified_by'], 'integer'],
             [['status'], 'string'],
+            [['tenant_email'], 'email'],
             [['created_at', 'modified_at'], 'safe'],
             [['tenant_guid', 'tenant_name', 'tenant_fax', 'tenant_email', 'tenant_url', 'slug'], 'string', 'max' => 50],
             [['tenant_address'], 'string', 'max' => 100],
@@ -64,8 +65,8 @@ class CoTenant extends RActiveRecord {
         return [
             'tenant_id' => 'ID',
             'tenant_guid' => 'Guid',
-            'tenant_name' => 'Name',
-            'tenant_address' => 'Address',
+            'tenant_name' => 'Organization Name',
+            'tenant_address' => 'Organization Address',
             'tenant_city_id' => 'City',
             'tenant_state_id' => 'State',
             'tenant_country_id' => 'Country',

@@ -2,16 +2,16 @@
 
 namespace IRISORG\modules\v1\controllers;
 
-use common\models\CoLogin;
 use common\models\CoMasterCity;
 use common\models\CoMasterCountry;
 use common\models\CoMasterState;
-use common\models\CoResources;
 use common\models\CoRolesResources;
 use common\models\CoTenant;
 use common\models\CoUsersRoles;
 use Yii;
+use yii\filters\auth\HttpBearerAuth;
 use yii\filters\ContentNegotiator;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\Response;
 
@@ -19,7 +19,10 @@ class DefaultController extends Controller {
 
     public function behaviors() {
         $behaviors = parent::behaviors();
-
+        $behaviors['authenticator'] = [
+            'class' => HttpBearerAuth::className(),
+            'only' => ['getnavigation'],
+        ];
         $behaviors['contentNegotiator'] = [
             'class' => ContentNegotiator::className(),
             'formats' => [
@@ -94,13 +97,15 @@ class DefaultController extends Controller {
 
     public function actionGetnavigation() {
         $get = Yii::$app->request->get();
-        $login = CoLogin::find()->where(['authtoken' => $get['token']])->one();
+        $user_id = Yii::$app->user->identity->user->user_id;
+        $tenant_id = Yii::$app->user->identity->user->tenant_id;
+//        $login = CoLogin::find()->where(['authtoken' => $get['token']])->one();
 
-        $users_roles = CoUsersRoles::find()->select(['GROUP_CONCAT(role_id) AS role_ids, tenant_id'])->where(['user_id' => $login->user_id])->one();
-        $role_ids = explode(',', $users_roles->role_ids);
+        $role_ids = ArrayHelper::map(CoUsersRoles::find()->where(['user_id' => $user_id])->all(), 'role_id','role_id');
+        $resource_ids = ArrayHelper::map(CoRolesResources::find()->where(['IN', 'role_id', $role_ids])->andWhere(['tenant_id' => $tenant_id])->all(), 'resource_id','resource_id');
 
-        $role_resources = CoRolesResources::find()->select(['GROUP_CONCAT(resource_id) AS resource_ids'])->where(['IN', 'role_id', $role_ids])->andWhere(['tenant_id' => $users_roles->tenant_id])->one();
-        $resource_ids = explode(',', $role_resources->resource_ids);
+//        $role_resources = CoRolesResources::find()->select(['GROUP_CONCAT(resource_id) AS resource_ids'])->where(['IN', 'role_id', $role_ids])->andWhere(['tenant_id' => $tenant_id])->one();
+//        $resource_ids = explode(',', $role_resources->resource_ids);
 
         $menus = CoRolesResources::getModuleTreeByResourcename($get['resourceName']);
 
