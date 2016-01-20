@@ -11,35 +11,46 @@ app.controller('DoctorSchedulesController', ['$rootScope', '$scope', '$timeout',
             $scope.itemsByPage = 10; // No.of records per page
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
 
-            // Get data's from service
-            $http.get($rootScope.IRISOrgServiceUrl + '/DoctorSchedule')
-                    .success(function (DoctorSchedules) {
-                        $scope.rowCollection = DoctorSchedules;
-                        $scope.displayedCollection = [].concat($scope.rowCollection);
+            //Load All Doctor schedules
+            $http.get($rootScope.IRISOrgServiceUrl + '/doctorschedule')
+                    .success(function (docSchedules) {
+                        var doctorSchedules = {};
+                        angular.forEach(docSchedules, function (sub) {
+                            if (typeof doctorSchedules[sub.user_id] == 'undefined') {
+                                doctorSchedules[sub.user_id] = {};
+                            }
+                            doctorSchedules[sub.user_id]['name'] = sub.doctor_name;
 
-                        //Load All Subcategories
-                        $http.get($rootScope.IRISOrgServiceUrl + '/roomchargesubcategory')
-                                .success(function (roomChargeSubCategorys) {
-                                    $scope.allSubCategories = roomChargeSubCategorys;
+                            if (typeof doctorSchedules[sub.user_id]['days'] == 'undefined') {
+                                doctorSchedules[sub.user_id]['days'] = {};
+                            }
 
-                                    angular.forEach($scope.displayedCollection, function (parent) {
-                                        parent.subcategories = [];
-                                        angular.forEach($scope.allSubCategories, function (sub) {
-                                            if (sub.charge_cat_id == parent.charge_cat_id) {
-                                                parent.subcategories.push(sub);
-                                            }
-                                        });
-                                    });
-                                })
-                                .error(function () {
-                                    $scope.error = "An Error has occured while loading roomChargesubCategorys!";
-                                });
-                        //End
+                            if (typeof doctorSchedules[sub.user_id]['days'][sub.schedule_day] == 'undefined') {
+                                doctorSchedules[sub.user_id]['days'][sub.schedule_day] = {};
+                            }
+                            doctorSchedules[sub.user_id]['days'][sub.schedule_day]['dayname'] = sub.available_day;
+
+                            if (typeof doctorSchedules[sub.user_id]['days'][sub.schedule_day]['timing'] == 'undefined') {
+                                doctorSchedules[sub.user_id]['days'][sub.schedule_day]['timing'] = {};
+                            }
+
+                            if (typeof doctorSchedules[sub.user_id]['days'][sub.schedule_day]['timing'][sub.schedule_id] == 'undefined') {
+                                doctorSchedules[sub.user_id]['days'][sub.schedule_day]['timing'][sub.schedule_id] = {};
+                            }
+
+                            doctorSchedules[sub.user_id]['days'][sub.schedule_day]['timing'][sub.schedule_id]['schedule_time_in'] = sub.schedule_time_in;
+                            doctorSchedules[sub.user_id]['days'][sub.schedule_day]['timing'][sub.schedule_id]['schedule_time_out'] = sub.schedule_time_out;
+                        });
+                        
+                        console.log(doctorSchedules);
+
+//                        $scope.rowCollection = doctorSchedules;
+//                        $scope.displayedCollection = [].concat($scope.rowCollection);
+                        $scope.displayedCollection = doctorSchedules;
                     })
                     .error(function () {
-                        $scope.error = "An Error has occured while loading DoctorSchedules!";
+                        $scope.error = "An Error has occured while loading roomChargesubCategorys!";
                     });
-
         };
 
         //For Form
@@ -332,5 +343,9 @@ app.controller('DoctorSchedulesController', ['$rootScope', '$scope', '$timeout',
         $scope.ctrl.expandAll = function (expanded) {
             $scope.$broadcast('onExpandAll', {expanded: expanded});
         };
+        
+        $scope.initTimepicker = function(){
+            $('.timepicker').timepicker();
+        }
 
     }]);
