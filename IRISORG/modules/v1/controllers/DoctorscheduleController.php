@@ -81,17 +81,34 @@ class DoctorscheduleController extends ActiveController {
         foreach ($post['custom_day'] as $day) {
             if ($day['checked'] == 1) {
                 foreach ($post['timings'] as $timing) {
-                    $model = new CoDoctorSchedule();
-                    $model->attributes = array(
+                    $attr = [
                         'user_id' => $post['user_id'],
                         'schedule_day' => $day['value'],
-                        'schedule_time_in' => $timing['schedule_time_in'],
-                        'schedule_time_out' => $timing['schedule_time_out'],
-                    );
-                    $model->save(false);
+                        'schedule_time_in' => date('H:i:s', strtotime($timing['schedule_time_in'])),
+                        'schedule_time_out' => date('H:i:s', strtotime($timing['schedule_time_out'])),
+                    ];
+                    
+                    $model = CoDoctorSchedule::find()->where($attr)->one();
+                    if (empty($model)) {
+                        $model = new CoDoctorSchedule();
+                        $model->attributes = $attr;
+                        $model->save(false);
+                    }
                 }
             }
         }
+    }
+    
+    
+    public function actionGetschedule() {
+         /* @var $modelClass BaseActiveRecord */
+        $modelClass = $this->modelClass;
+
+        return new ActiveDataProvider([
+//            'query' => CoDoctorSchedule::find()->groupBy($columns),
+            'query' => $modelClass::find()->tenant()->active()->groupBy(['user_id'])->orderBy(['created_at' => SORT_DESC]),
+            'pagination' => false,
+        ]);
     }
 
 }

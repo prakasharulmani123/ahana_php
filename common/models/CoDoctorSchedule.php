@@ -27,6 +27,7 @@ class CoDoctorSchedule extends RActiveRecord
 {
     public $timings;
     public $custom_day;
+    
     /**
      * @inheritdoc
      */
@@ -86,5 +87,21 @@ class CoDoctorSchedule extends RActiveRecord
 
     public static function find() {
         return new CoDoctorScheduleQuery(get_called_class());
+    }
+    
+    public function fields() {
+        $extend = [
+            'doctor_name' => function ($model) {
+                return (isset($model->user) ? $model->user->name : '-');
+            },
+            'available_day' => function ($model) {
+                return (isset($model->schedule_day) ? date('l', mktime(0,0,0,8,$model->schedule_day,2011)) : '-');
+            },
+            'available_time' => function ($model) {
+                return (isset($model->schedule_time_in) ? "{$model->schedule_time_in}-{$model->schedule_time_out}" : '-');
+            },
+        ];
+        $fields = array_merge(parent::fields(), $extend);
+        return $fields;
     }
 }
