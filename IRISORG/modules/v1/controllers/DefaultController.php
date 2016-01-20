@@ -99,13 +99,9 @@ class DefaultController extends Controller {
         $get = Yii::$app->request->get();
         $user_id = Yii::$app->user->identity->user->user_id;
         $tenant_id = Yii::$app->user->identity->user->tenant_id;
-//        $login = CoLogin::find()->where(['authtoken' => $get['token']])->one();
 
         $role_ids = ArrayHelper::map(CoUsersRoles::find()->where(['user_id' => $user_id])->all(), 'role_id','role_id');
         $resource_ids = ArrayHelper::map(CoRolesResources::find()->where(['IN', 'role_id', $role_ids])->andWhere(['tenant_id' => $tenant_id])->all(), 'resource_id','resource_id');
-
-//        $role_resources = CoRolesResources::find()->select(['GROUP_CONCAT(resource_id) AS resource_ids'])->where(['IN', 'role_id', $role_ids])->andWhere(['tenant_id' => $tenant_id])->one();
-//        $resource_ids = explode(',', $role_resources->resource_ids);
 
         $menus = CoRolesResources::getModuleTreeByResourcename($get['resourceName']);
 
