@@ -27,14 +27,19 @@
         }
 
         function SetCredentials(secToken) {
-            $window.sessionStorage.access_token = secToken;
+            $rootScope.globals = {
+                currentUser: {
+                    authdata: secToken
+                }
+            };
+
+            $cookieStore.put('globals', $rootScope.globals);
             $http.defaults.headers.common['Authorization'] = 'Bearer ' + secToken; // jshint ignore:line
         }
 
         function ClearCredentials() {
             $rootScope.globals = {};
             $cookieStore.remove('globals');
-            delete $window.sessionStorage.access_token;
             $http.defaults.headers.common.Authorization = 'Basic';
         }
     }

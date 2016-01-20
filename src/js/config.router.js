@@ -838,8 +838,8 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
     $rootScope.commonService = CommonService;
 
     $rootScope.globals = $cookieStore.get('globals') || {};
-    if ($window.sessionStorage.access_token) {
-        $http.defaults.headers.common['Authorization'] = 'Bearer ' + $window.sessionStorage.access_token; // jshint ignore:line
+    if ($rootScope.globals.currentUser) {
+        $http.defaults.headers.common['Authorization'] = 'Bearer ' + $rootScope.globals.currentUser.authdata; // jshint ignore:line
     }
 
     $rootScope.$on('$locationChangeStart', function (event, next, current) {
@@ -853,7 +853,7 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
             });
         } else {
             var restrictedPage = $.inArray($location.path(), ['/access/signin', '/access/forgotpwd', '/access/resetpwd']) === -1;
-            var loggedIn = $window.sessionStorage.access_token || false;
+            var loggedIn = Boolean($rootScope.globals.currentUser);
             if (restrictedPage && !loggedIn) {
                 $location.path('/access/signin');
             } else if (!restrictedPage && loggedIn) {

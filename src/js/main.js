@@ -54,11 +54,12 @@ angular.module('app')
                 }, true);
 
                 $scope.loggedIn = function () {
-                    return Boolean($window.sessionStorage.access_token);
+                    return Boolean($rootScope.globals.currentUser);
                 };
 
                 $scope.logout = function () {
-                    delete $window.sessionStorage.access_token;
+                    $rootScope.globals = {};
+                    $cookieStore.remove('globals');
                     $window.location.reload();
                 };
 
