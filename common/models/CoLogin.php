@@ -67,7 +67,8 @@ class CoLogin extends ActiveRecord implements IdentityInterface {
 //            [['username', 'password'], 'string', 'min' => 6],
             [['user_id', 'created_by', 'modified_by'], 'integer'],
             [['created_at', 'modified_at', 'activation_date', 'Inactivation_date'], 'safe'],
-            [['username', 'password', 'password_reset_token', 'authtoken'], 'string', 'max' => 255]
+            [['username', 'password', 'password_reset_token', 'authtoken'], 'string', 'max' => 255],
+            ['username', 'unique'],
         ];
     }
 
