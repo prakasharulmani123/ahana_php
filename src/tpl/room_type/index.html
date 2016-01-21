@@ -1,5 +1,5 @@
 <div class="bg-light lter b-b wrapper-md">
-    <h1 class="m-n font-thin h3">Room Types</h1>
+    <h1 class="m-n font-thin h3">Bed Types</h1>
 </div>
 
 <div class="wrapper-md" ng-controller="RoomTypesController" ng-init="loadRoomTypesList()">
@@ -14,20 +14,20 @@
                 &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
             </button>
             <button ng-click="$state.go('configuration.roomTypeCreate')" class="btn btn-sm btn-info pull-right">
-                <i class="fa fa-plus"></i> &nbsp; Add new item
+                <i class="fa fa-plus"></i> &nbsp; Add new bed type
             </button>
         </div>
 
         <table st-table="displayedCollection"  st-safe-src="rowCollection" class="table table-bordered table-striped">
             <thead>
                 <tr>
-                    <th st-sort="room_type_name">Room Type Name</th>
+                    <th st-sort="room_type_name">Bed Type</th>
                     <th>Status</th>
                     <th>Action</th>
                 </tr>
                 <tr>
                     <th>
-                        <input st-search="'room_type_name'" placeholder="search for room type name" class="input-sm form-control" type="search"/>
+                        <input st-search="'room_type_name'" placeholder="search for bed type" class="input-sm form-control" type="search"/>
                     </th>
                     <th colspan="2">&nbsp;</th>
                 </tr>

@@ -26,7 +26,7 @@
                     <th>Action</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody ng-hide="isLoading">
                 <tr ng-repeat-start="row in displayedCollection| orderBy: name">
                     <td>
                         <button ng-click="expanded = !expanded" expand>
@@ -37,10 +37,7 @@
                         {{row.name}}
                     </td>
                     <td>
-                        <a title="Edit" ui-sref="configuration.DoctorScheduleUpdate({id: '{{row.charge_cat_id}}'})">
-                            <i class="fa fa-pencil"></i>
-                        </a>&nbsp;&nbsp;&nbsp;
-                        <a title="Delete" ng-click="removeRow(row)">
+                        <a title="Delete" ng-click="deleteAllTimings(row.user_id);">
                             <i class="fa fa-trash"></i>
                         </a>
                     </td>
@@ -51,11 +48,11 @@
                         <table class="table table-condensed table-bordered">
                             <thead>
                                 <tr>
-                                    <th style='width: 70%'>Day</th>
-                                    <th style='width: 30%'>Timings</th>
+                                    <th style='width: 30%'>Day</th>
+                                    <th style='width: 70%'>Timings</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody ng-hide="isLoading">
                                 <tr ng-repeat="day in row.days| orderBy: dayname">
                                     <td>
                                         {{day.dayname}}
@@ -64,17 +61,38 @@
                                         <table class="table table-condensed table-bordered">
                                             <thead>
                                                 <tr>
-                                                    <th style='width: 70%'>Time In</th>
+                                                    <th style='width: 30%'>Time In</th>
                                                     <th style='width: 30%'>Time Out</th>
+                                                    <th style='width: 40%'>Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr ng-repeat="timing in day.timing">
                                                     <td>
-                                                        {{timing.schedule_time_in}}
+                                                        <span editable-text="timing.schedule_time_in" e-name="schedule_time_in" e-form="rowform" onbeforesave="checkInput($data)" onshow="initTimepicker();" e-class="timepicker">
+                                                            {{timing.schedule_time_in|| 'empty' }}
+                                                        </span>
                                                     </td>
                                                     <td>
-                                                        {{timing.schedule_time_out}}
+                                                        <span editable-text="timing.schedule_time_out" e-name="schedule_time_out" e-form="rowform" onbeforesave="checkInput($data)" onshow="initTimepicker();" e-class="timepicker">
+                                                            {{timing.schedule_time_out|| 'empty' }}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <form editable-form name="rowform" onbeforesave="updateTimings($data, timing.schedule_id)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == timing">
+                                                            <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-sm btn-success">
+                                                                Save
+                                                            </button>
+                                                            &nbsp;&nbsp;
+                                                            <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()" class="btn btn-sm btn-dark">
+                                                                Cancel
+                                                            </button>
+                                                        </form>
+                                                        <div class="buttons" ng-show="!rowform.$visible">
+                                                            <button class="btn btn-sm btn-info" ng-click="rowform.$show()">Edit</button>
+                                                            &nbsp;&nbsp;
+                                                            <button class="btn btn-sm btn-danger" ng-click="deleteTiming(timing.schedule_id, row.user_id, day.schedule_day);">Delete</button>
+                                                        </div> 
                                                     </td>
                                                 </tr>
                                             </tbody>

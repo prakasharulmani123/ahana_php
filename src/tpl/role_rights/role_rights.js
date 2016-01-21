@@ -109,7 +109,7 @@ app.controller('RolesRightsController', ['$rootScope', '$scope', '$timeout', '$h
                     function (response) {
                         $scope.loadbar('hide');
                         if (response.data.success === true) {
-                            $scope.successMessage = "Organization saved successfully";
+                            $scope.successMessage = "Role rights saved successfully";
                             $scope.data = {};
                             $timeout(function () {
                                 $state.go('configuration.roleRights');

@@ -63,10 +63,14 @@ angular.module('app')
                     $window.location.reload();
                 };
 
+
                 //Change Status
                 $scope.updateStatus = function (modelName, primaryKey) {
-                    $scope.service = CommonService;
-                    $scope.service.ChangeStatus(modelName, primaryKey);
+                    var conf = confirm('Changing status will hide this item...Do you wish to continue?');
+                    if (conf) {
+                        $scope.service = CommonService;
+                        $scope.service.ChangeStatus(modelName, primaryKey);
+                    }
                 }
 
                 //error Summary

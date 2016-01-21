@@ -799,7 +799,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('xeditable').then(
+                            return $ocLazyLoad.load(['xeditable']).then(
                                     function () {
                                         return $ocLazyLoad.load('tpl/doctor_schedule/doctor_schedule.js');
                                     }

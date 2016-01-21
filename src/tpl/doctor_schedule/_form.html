@@ -14,7 +14,7 @@
             <div class="col-sm-9">
                 <div class="radio">
                     <label class="i-checks">
-                        <input type="radio" name="type" value="A" checked ng-click="is_show = false;
+                        <input type="radio" ng-model="day_type.name" value="A" ng-click="is_show = false;
                                 checkDays(true);">
                         <i></i>
                         All Day
@@ -22,7 +22,7 @@
                 </div>
                 <div class="radio">
                     <label class="i-checks">
-                        <input type="radio" name="type" value="C" ng-click="is_show = true;
+                        <input type="radio" ng-model="day_type.name" value="C" ng-click="is_show = true;
                                 checkDays(false);">
                         <i></i>
                         Custom
@@ -100,4 +100,3 @@
     </footer>
 </div>
 
-<script src="js/jquery.timepicker.min.js"></script>
