@@ -86,5 +86,10 @@ class CoRole extends RActiveRecord {
     public function getResources() {
         return $this->hasMany(CoResources::className(), ['resource_id' => 'resource_id'])->via('rolesResources');
     }
+    
+    public static function getTenantSuperRole($tenant_id){
+        $tenant_super_role = self::find()->tenant($tenant_id)->superRole()->one();
+        return $tenant_super_role;
+    }
 
 }

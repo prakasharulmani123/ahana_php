@@ -51,7 +51,7 @@ class UserController extends ActiveController {
         $behaviors = parent::behaviors();
         $behaviors['authenticator'] = [
             'class' => HttpBearerAuth::className(),
-            'only' => ['dashboard', 'createuser', 'updateuser', 'getuser', 'getlogin', 'updatelogin', 'getuserdata', 'getusernamebytenant', 'assignroles', 'getdoctorslist'],
+            'only' => ['dashboard', 'createuser', 'updateuser', 'getuser', 'getlogin', 'updatelogin', 'getuserdata', 'getuserslistbyuser', 'assignroles', 'getdoctorslist'],
         ];
         $behaviors['contentNegotiator'] = [
             'class' => ContentNegotiator::className(),
@@ -90,7 +90,7 @@ class UserController extends ActiveController {
     }
 
     public function actionGetuserdata() {
-        $model = CoUser::find()->tenant()->active()->orderBy(['created_at' => SORT_DESC])->all();
+        $model = CoUser::find()->tenant()->active()->myUsers()->orderBy(['created_at' => SORT_DESC])->all();
         $data = [];
         foreach ($model as $key => $user) {
             $data[$key] = $user->attributes;
@@ -304,8 +304,8 @@ class UserController extends ActiveController {
         }
     }
 
-    public function actionGetusernamebytenant() {
-        $list = CoUser::find()->tenant()->status()->all();
+    public function actionGetuserslistbyuser() {
+        $list = CoUser::find()->tenant()->status()->active()->myUsers()->all();
         return ['userList' => $list];
     }
 

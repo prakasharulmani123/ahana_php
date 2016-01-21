@@ -83,6 +83,23 @@ class CoRolesResources extends ActiveRecord {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
 
+    // *** Used in some other functions ***
+    public static function getModuleTree() {
+        $tree = array();
+        $parents = CoResources::find()->where(['parent_id' => null])->orderBy(['resource_name' => 'ASC'])->all();
+        foreach ($parents as $key => $parent) {
+            $tree[$key] = array('label' => $parent->resource_name, 'value' => $parent->resource_id);
+
+            foreach ($parent->child as $cKey => $child) {
+                $tree[$key]['children'][$cKey] = array('label' => $child->resource_name, 'value' => $child->resource_id);
+                foreach ($child->child as $cKey2 => $child2) {
+                    $tree[$key]['children'][$cKey]['children'][$cKey2] = array('label' => $child2->resource_name, 'value' => $child2->resource_id);
+                }
+            }
+        }
+        return $tree;
+    }
+
     public static function getModuletreeByRole($tenant_id, $role_id) {
         $tree = self::getModuleTree();
         $role_resources_ids = self::find()->select(['GROUP_CONCAT(resource_id) AS resource_ids'])->where(['role_id' => $role_id, 'tenant_id' => $tenant_id, 'status' => '1'])->one();
@@ -130,23 +147,6 @@ class CoRolesResources extends ActiveRecord {
         return $tree;
     }
 
-    // *** Used in some other functions ***
-    public static function getModuleTree() {
-        $tree = array();
-        $parents = CoResources::find()->where(['parent_id' => null])->orderBy(['resource_name' => 'ASC'])->all();
-        foreach ($parents as $key => $parent) {
-            $tree[$key] = array('label' => $parent->resource_name, 'value' => $parent->resource_id);
-
-            foreach ($parent->child as $cKey => $child) {
-                $tree[$key]['children'][$cKey] = array('label' => $child->resource_name, 'value' => $child->resource_id);
-                foreach ($child->child as $cKey2 => $child2) {
-                    $tree[$key]['children'][$cKey]['children'][$cKey2] = array('label' => $child2->resource_name, 'value' => $child2->resource_id);
-                }
-            }
-        }
-        return $tree;
-    }
-
     public static function getModuleTreeByResourcename($resource_name) {
         $tree = array();
         $parents = CoResources::find()->where(['resource_name' => $resource_name])->one();
@@ -155,6 +155,81 @@ class CoRolesResources extends ActiveRecord {
             $tree[0]['children'][$cKey] = array('label' => $child->resource_name, 'value' => $child->resource_id, 'url' => $child->resource_url);
             foreach ($child->child as $cKey2 => $child2) {
                 $tree[0]['children'][$cKey]['children'][$cKey2] = array('label' => $child2->resource_name, 'value' => $child2->resource_id, 'url' => $child2->resource_url);
+            }
+        }
+        return $tree;
+    }
+
+    //Get Particular organization accessed modules tree
+    public static function getOrgModuletree($tenant_id, $super_roler_id) {
+        $tree = self::getModuleTree();
+        $role_resources_ids = self::find()->select(['GROUP_CONCAT(resource_id) AS resource_ids'])->where(['role_id' => $super_roler_id, 'tenant_id' => $tenant_id, 'status' => '1'])->one();
+        $role_resources_ids = explode(',', $role_resources_ids->resource_ids);
+
+        foreach ($tree as $key => $menu) {
+            if (in_array($menu['value'], $role_resources_ids)) {
+                foreach ($menu['children'] as $ckey => $child) {
+                    if (in_array($child['value'], $role_resources_ids)) {
+                        foreach ($child['children'] as $ckey2 => $child2) {
+                            if (!in_array($child2['value'], $role_resources_ids)) {
+                                unset($tree[$key]['children'][$ckey]['children'][$ckey2]);
+                            }
+                        }
+                    } else {
+                        unset($tree[$key]['children'][$ckey]);
+                    }
+                }
+            } else {
+                unset($tree[$key]);
+            }
+        }
+
+        return $tree;
+    }
+
+    //Get Particular organization accessed modules tree with role wise
+    public static function getOrgModuletreeByRole($tenant_id, $tenant_super_role_id, $role_id) {
+        $tree = self::getOrgModuletree($tenant_id, $tenant_super_role_id);
+        $role_resources_ids = self::find()->select(['GROUP_CONCAT(resource_id) AS resource_ids'])->where(['role_id' => $role_id, 'tenant_id' => $tenant_id, 'status' => '1'])->one();
+        $role_resources_ids = explode(',', $role_resources_ids->resource_ids);
+
+        foreach ($tree as $key => $parent) {
+            if (in_array($parent['value'], $role_resources_ids)) {
+                $tot = $checked = $unchecked = 0;
+                foreach ($parent['children'] as $cKey => $child) {
+                    if (in_array($child['value'], $role_resources_ids)) {
+                        $tree[$key]['children'][$cKey]['selected'] = true;
+                        $checked++;
+                    } else {
+                        $unchecked++;
+                    }
+                    $tot++;
+
+                    $tot2 = $checked2 = $unchecked2 = 0;
+
+                    foreach ($child['children'] as $cKey2 => $child2) {
+                        if (in_array($child2['value'], $role_resources_ids)) {
+                            $tree[$key]['children'][$cKey]['children'][$cKey2]['selected'] = true;
+                            $checked2++;
+                            $checked++;
+                        } else {
+                            $unchecked2++;
+                            $unchecked++;
+                        }
+                        $tot++;
+                        $tot2++;
+                    }
+
+                    if ($tot2 == $checked2)
+                        $tree[$key]['children'][$cKey]['selected'] = true;
+                    if ($checked2 > 0 && $unchecked2 > 0)
+                        $tree[$key]['children'][$cKey]['__ivhTreeviewIndeterminate'] = true;
+                }
+
+                if ($tot == $checked)
+                    $tree[$key]['selected'] = true;
+                if ($checked > 0 && $unchecked > 0)
+                    $tree[$key]['__ivhTreeviewIndeterminate'] = true;
             }
         }
         return $tree;

@@ -34,8 +34,8 @@ return [
             'enableStrictParsing' => false,
             'showScriptName' => false,
             'rules' => [
-                ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/user'], 'extraPatterns' => ['POST login' => 'login', 'POST createuser' => 'createuser', 'POST updateuser' => 'updateuser', 'GET getuser' => 'getuser', 'GET getlogin' => 'getlogin', 'POST updatelogin' => 'updatelogin', 'GET getusernamebytenant' => 'getusernamebytenant', 'POST assignroles' => 'assignroles']],
-                ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/role'], 'extraPatterns' => ['POST createrole' => 'createrole', 'POST updaterole' => 'updaterole', 'GET getrole' => 'getrole', 'GET getactiverolesbytenant' => 'getactiverolesbytenant', 'GET getmyroles' => 'getmyroles']],
+                ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/user'], 'extraPatterns' => ['POST login' => 'login', 'POST createuser' => 'createuser', 'POST updateuser' => 'updateuser', 'GET getuser' => 'getuser', 'GET getlogin' => 'getlogin', 'POST updatelogin' => 'updatelogin', 'GET getuserslistbyuser' => 'getuserslistbyuser', 'POST assignroles' => 'assignroles']],
+                ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/role'], 'extraPatterns' => ['POST createrole' => 'createrole', 'POST updaterole' => 'updaterole', 'GET getrole' => 'getrole', 'GET getactiverolesbyuser' => 'getactiverolesbyuser', 'GET getmyroles' => 'getmyroles']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/organization'], 'extraPatterns' => ['GET getorg' => 'getorg', 'GET getorgmodules' => 'getorgmodules', 'POST updaterolerights' => 'updaterolerights', 'POST getorgmodulesbyrole' => 'getorgmodulesbyrole']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/roommaintenance'], 'extraPatterns' => ['GET getmaintenancelist' => 'getmaintenancelist']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/floor'], 'extraPatterns' => ['POST remove' => 'remove']],
