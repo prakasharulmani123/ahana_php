@@ -29,14 +29,16 @@ function CommonService($http, $rootScope, $window, $q) {
 
     return service;
 
-    function ChangeStatus(modelName, primaryKey) {
+    function ChangeStatus(modelName, primaryKey, callback) {
         var response;
         $('.butterbar').removeClass('hide').addClass('active');
         $http.post($rootScope.IRISOrgServiceUrl + '/default/change-status', {model: modelName, id: primaryKey})
                 .success(function (response) {
                     $('.butterbar').removeClass('active').addClass('hide');
+                    callback(response);
                 }, function (x) {
                     response = {success: false, message: 'Server Error'};
+                    callback(response);
                 });
     }
 
@@ -225,11 +227,11 @@ function CommonService($http, $rootScope, $window, $q) {
                     callback(response);
                 });
     }
-    
+
     function GetInternalCodeList(tenant, code_type, sts, del_sts, callback) {
         var response;
 
-        $http.get($rootScope.IRISOrgServiceUrl + '/internalcode/getinternalcode?tenant=' + tenant + '&code_type=' + code_type +'&status=' + sts + '&deleted=' + del_sts)
+        $http.get($rootScope.IRISOrgServiceUrl + '/internalcode/getinternalcode?tenant=' + tenant + '&code_type=' + code_type + '&status=' + sts + '&deleted=' + del_sts)
                 .success(function (response) {
                     callback(response);
                 }, function (x) {
@@ -237,7 +239,7 @@ function CommonService($http, $rootScope, $window, $q) {
                     callback(response);
                 });
     }
-    
+
     function GetDoctorList(tenant, sts, del_sts, care_provider, callback) {
         var response;
 
@@ -249,7 +251,7 @@ function CommonService($http, $rootScope, $window, $q) {
                     callback(response);
                 });
     }
-    
+
     function GetDayList(callback) {
         var response = [{value: '1', label: 'Monday'}, {value: '2', label: 'Tuesday'}, {value: '3', label: 'Wednesday'}, {value: '4', label: 'Thursday'}, {value: '5', label: 'Friday'}, {value: '6', label: 'Saturday'}, {value: '7', label: 'Sunday'}];
         callback(response);
