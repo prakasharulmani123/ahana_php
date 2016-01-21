@@ -5,26 +5,28 @@ angular.module('app').factory('CommonService', CommonService);
 CommonService.$inject = ['$http', '$rootScope', '$window', '$q'];
 function CommonService($http, $rootScope, $window, $q) {
     var service = {};
-    
+
     service.ChangeStatus = ChangeStatus;
     service.GetCountryList = GetCountryList;
     service.GetStateList = GetStateList;
     service.GetCityList = GetCityList;
     service.GetTitleCodes = GetTitleCodes;
-    
+
     return service;
 
-    function ChangeStatus(modelName, primaryKey) {
+    function ChangeStatus(modelName, primaryKey, callback) {
         var response;
         $('.butterbar').removeClass('hide').addClass('active');
         $http.post($rootScope.IRISAdminServiceUrl + '/default/change-status', {model: modelName, id: primaryKey})
                 .success(function (response) {
                     $('.butterbar').removeClass('active').addClass('hide');
+                    callback(response);
                 }, function (x) {
                     response = {success: false, message: 'Server Error'};
+                    callback(response);
                 });
     }
-    
+
     function GetCountryList(callback) {
         var response;
 
