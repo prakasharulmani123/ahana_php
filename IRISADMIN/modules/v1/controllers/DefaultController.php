@@ -67,7 +67,7 @@ class DefaultController extends Controller {
             $model = $modelClass::findOne($primaryKey);
             $model->status = 1 - $model->status;
             $model->save(false);
-            return ['success' => "ok"];
+            return ['success' => "ok", 'sts' => $model->status];
         }
     }
 
