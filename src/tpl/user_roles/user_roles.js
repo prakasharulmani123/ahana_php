@@ -30,7 +30,7 @@ app.controller('UserRolesController', ['$scope', '$http', '$filter', '$state', '
 
         //Get Organization Users
         $http({
-            url: $rootScope.IRISOrgServiceUrl + '/user/getusernamebytenant',
+            url: $rootScope.IRISOrgServiceUrl + '/user/getuserslistbyuser',
             method: "GET"
         }).then(
                 function (response) {
@@ -41,7 +41,7 @@ app.controller('UserRolesController', ['$scope', '$http', '$filter', '$state', '
 
         //Get Organization Roles
         $http({
-            url: $rootScope.IRISOrgServiceUrl + '/role/getactiverolesbytenant',
+            url: $rootScope.IRISOrgServiceUrl + '/role/getactiverolesbyuser',
             method: "GET"
         }).then(
                 function (response) {

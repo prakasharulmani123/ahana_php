@@ -15,7 +15,7 @@ app.controller('RolesRightsController', ['$rootScope', '$scope', '$timeout', '$h
             return result;
         }
 
-        //Get my organization details with all modules
+        //Get my organization details with org modules
         $http({
             url: $rootScope.IRISOrgServiceUrl + '/organization/getorg',
             method: "GET"
@@ -34,7 +34,7 @@ app.controller('RolesRightsController', ['$rootScope', '$scope', '$timeout', '$h
 
         //Get Organization active roles
         $http({
-            url: $rootScope.IRISOrgServiceUrl + '/role/getactiverolesbytenant',
+            url: $rootScope.IRISOrgServiceUrl + '/role/getactiverolesbyuser',
             method: "GET"
         }).then(
                 function (response) {
