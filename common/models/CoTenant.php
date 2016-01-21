@@ -33,7 +33,7 @@ use yii\helpers\ArrayHelper;
  * @property CoUser[] $coUserProfiles
  */
 class CoTenant extends RActiveRecord {
-
+    
     /**
      * @inheritdoc
      */

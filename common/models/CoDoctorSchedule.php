@@ -2,8 +2,8 @@
 
 namespace common\models;
 
-use yii\db\ActiveQuery;
 use common\models\query\CoDoctorScheduleQuery;
+use yii\db\ActiveQuery;
 
 /**
  * This is the model class for table "co_doctor_schedule".
@@ -23,26 +23,25 @@ use common\models\query\CoDoctorScheduleQuery;
  * @property CoTenant $tenant
  * @property CoUser $user
  */
-class CoDoctorSchedule extends RActiveRecord
-{
+class CoDoctorSchedule extends RActiveRecord {
+
     public $timings;
     public $custom_day;
-    
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'co_doctor_schedule';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            [['tenant_id', 'user_id', 'custom_day', 'timings'], 'required'],
+            [['tenant_id', 'user_id'], 'required'],
+            [['custom_day', 'timings'], 'required', 'on' => 'create'],
             [['tenant_id', 'user_id', 'created_by', 'modified_by'], 'integer'],
             [['schedule_day'], 'string'],
             [['schedule_time_in', 'schedule_time_out', 'created_at', 'modified_at', 'deleted_at', 'custom_day', 'timings'], 'safe']
@@ -52,8 +51,7 @@ class CoDoctorSchedule extends RActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'schedule_id' => 'Schedule ID',
             'tenant_id' => 'Tenant',
@@ -72,30 +70,38 @@ class CoDoctorSchedule extends RActiveRecord
     /**
      * @return ActiveQuery
      */
-    public function getTenant()
-    {
+    public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getUser()
-    {
+    public function getUser() {
         return $this->hasOne(CoUser::className(), ['user_id' => 'user_id']);
     }
 
     public static function find() {
         return new CoDoctorScheduleQuery(get_called_class());
     }
-    
+
     public function fields() {
         $extend = [
             'doctor_name' => function ($model) {
                 return (isset($model->user) ? $model->user->name : '-');
             },
             'available_day' => function ($model) {
-                return (isset($model->schedule_day) ? date('l', mktime(0,0,0,8,$model->schedule_day,2011)) : '-');
+                if (isset($model->schedule_day)) {
+                    return ($model->schedule_day != '-1') ? date('l', mktime(0, 0, 0, 8, $model->schedule_day, 2011)) : 'All Day';
+                }else{
+                    return '-';
+                }
+            },
+            'time_in' => function ($model) {
+                return (isset($model->schedule_time_in) ? date('h:i a', strtotime($model->schedule_time_in)) : '-');
+            },
+            'time_out' => function ($model) {
+                return (isset($model->schedule_time_out) ? date('h:i a', strtotime($model->schedule_time_out)) : '-');
             },
             'available_time' => function ($model) {
                 return (isset($model->schedule_time_in) ? "{$model->schedule_time_in}-{$model->schedule_time_out}" : '-');
@@ -104,4 +110,12 @@ class CoDoctorSchedule extends RActiveRecord
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
     }
+    
+    public function beforeSave($insert) {
+        $this->schedule_time_in = date('H:i:s', strtotime($this->schedule_time_in));
+        $this->schedule_time_out = date('H:i:s', strtotime($this->schedule_time_out));
+        
+        return parent::beforeSave($insert);
+    }
+
 }

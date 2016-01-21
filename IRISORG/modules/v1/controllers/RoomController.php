@@ -68,7 +68,7 @@ class RoomController extends ActiveController {
     public function actionGetroomandroomtypes() {
         $id = Yii::$app->request->get('id');
         if (!empty($id)) {
-            $room = CoRoom::find()->tenant()->where(['room_id' => $id])->one();
+            $room = CoRoom::find()->tenant()->andWhere(['room_id' => $id])->one();
             $room_types = $room->roomTypesRooms;
             return ['success' => true, 'room' => $room, 'room_types' => $room_types];
         } else {

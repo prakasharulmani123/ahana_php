@@ -111,7 +111,7 @@ class RoleController extends ActiveController {
     public function actionGetmyroles() {
         $id = Yii::$app->request->get('id');
         if (!empty($id)) {
-            $roles = CoUsersRoles::find()->tenant()->where(['user_id' => $id])->all();
+            $roles = CoUsersRoles::find()->tenant()->andWhere(['user_id' => $id])->all();
 //            $roles = ArrayHelper::map($data, 'role_id', 'role_id');
             return ['success' => true, 'roles' => $roles];
         } else {

@@ -39,7 +39,7 @@ class OrganizationController extends ActiveController {
     public function actionGetorgmodules() {
         $user_id = Yii::$app->user->identity->user->user_id;
         $user_role = CoUsersRoles::find()->tenant()->where(['user_id' => $user_id])->one();
-        $role_resources = CoRolesResources::find()->tenant()->where(['role_id' => $user_role->role_id])->all();
+        $role_resources = CoRolesResources::find()->tenant()->andWhere(['role_id' => $user_role->role_id])->all();
         return ['success' => true, 'modules' => $role_resources];
     }
 
@@ -49,8 +49,7 @@ class OrganizationController extends ActiveController {
         if (!empty($tenant_id)) {
             $return = array();
             $organization = CoTenant::find()->where(['tenant_id' => $tenant_id])->one();
-            $return = $organization->attributes;
-            return ['success' => true, 'return' => $return, 'modules' => CoRolesResources::getModuleTree()];
+            return ['success' => true, 'return' => $organization, 'modules' => CoRolesResources::getModuleTree()];
         } else {
             return ['success' => false, 'message' => 'Invalid Access'];
         }

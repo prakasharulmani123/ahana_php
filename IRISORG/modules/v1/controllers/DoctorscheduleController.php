@@ -3,7 +3,6 @@
 namespace IRISORG\modules\v1\controllers;
 
 use common\models\CoDoctorSchedule;
-use common\models\CoRoomChargeCategory;
 use Yii;
 use yii\bootstrap\Html;
 use yii\data\ActiveDataProvider;
@@ -52,15 +51,22 @@ class DoctorscheduleController extends ActiveController {
         ]);
     }
 
+    public function actionRemoveall() {
+        $id = Yii::$app->getRequest()->post('id');
+        if ($id) {
+            $model = CoDoctorSchedule::find()->where(['user_id' => $id])->all();
+            foreach ($model as $docSch) {
+                $docSch->remove();
+            }
+            return ['success' => true];
+        }
+    }
+
     public function actionRemove() {
         $id = Yii::$app->getRequest()->post('id');
         if ($id) {
-            $model = CoRoomChargeCategory::find()->where(['charge_cat_id' => $id])->one();
+            $model = CoDoctorSchedule::find()->where(['schedule_id' => $id])->one();
             $model->remove();
-
-            foreach ($model->roomchargesubcategory as $sub) {
-                $sub->remove();
-            }
             return ['success' => true];
         }
     }
@@ -69,6 +75,8 @@ class DoctorscheduleController extends ActiveController {
         $post = Yii::$app->getRequest()->post();
 
         $model = new CoDoctorSchedule();
+        $model->scenario = 'create';
+
         $model->attributes = array(
             'user_id' => isset($post['user_id']) ? $post['user_id'] : '',
             'custom_day' => isset($post['custom_day']) ? $post['custom_day'] : '',
@@ -78,37 +86,38 @@ class DoctorscheduleController extends ActiveController {
         if (!$valid)
             return ['success' => false, 'message' => Html::errorSummary([$model])];
 
+//        if ($post['day_type'] == 'A') {
+//            $deleted = CoDoctorSchedule::find()->tenant()->where('user_id = :user_id and schedule_day != :schedule_day', ['user_id' => $post['user_id'], 'schedule_day' => '-1'])->all();
+//        } else if ($post['day_type'] == 'C') {
+//            $deleted = CoDoctorSchedule::find()->tenant()->where('user_id = :user_id and schedule_day = :schedule_day', ['user_id' => $post['user_id'], 'schedule_day' => '-1'])->all();
+//        }
+//        if (isset($deleted) && !empty($deleted)){
+//            foreach ($deleted as $delete) {
+//                $delete->delete();
+//            }
+//        }
         foreach ($post['custom_day'] as $day) {
             if ($day['checked'] == 1) {
                 foreach ($post['timings'] as $timing) {
+                    $day_value = $post['day_type'] == 'A' ? '-1' : $day['value'];
+
                     $attr = [
                         'user_id' => $post['user_id'],
-                        'schedule_day' => $day['value'],
+                        'schedule_day' => $day_value,
                         'schedule_time_in' => date('H:i:s', strtotime($timing['schedule_time_in'])),
                         'schedule_time_out' => date('H:i:s', strtotime($timing['schedule_time_out'])),
                     ];
-                    
-                    $model = CoDoctorSchedule::find()->where($attr)->one();
-                    if (empty($model)) {
-                        $model = new CoDoctorSchedule();
-                        $model->attributes = $attr;
-                        $model->save(false);
+
+                    $exists = CoDoctorSchedule::find()->tenant()->active()->andwhere($attr)->one();
+
+                    if (empty($exists)) {
+                        $new_model = new CoDoctorSchedule();
+                        $new_model->attributes = $attr;
+                        $new_model->save(false);
                     }
                 }
             }
         }
-    }
-    
-    
-    public function actionGetschedule() {
-         /* @var $modelClass BaseActiveRecord */
-        $modelClass = $this->modelClass;
-
-        return new ActiveDataProvider([
-//            'query' => CoDoctorSchedule::find()->groupBy($columns),
-            'query' => $modelClass::find()->tenant()->active()->groupBy(['user_id'])->orderBy(['created_at' => SORT_DESC]),
-            'pagination' => false,
-        ]);
     }
 
 }
