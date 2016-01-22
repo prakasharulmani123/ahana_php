@@ -3,7 +3,9 @@
 namespace IRISORG\modules\v1\controllers;
 
 use common\models\CoLogin;
+use common\models\CoResources;
 use common\models\CoRole;
+use common\models\CoRolesResources;
 use common\models\CoUser;
 use common\models\CoUsersRoles;
 use common\models\LoginForm;
@@ -51,7 +53,7 @@ class UserController extends ActiveController {
         $behaviors = parent::behaviors();
         $behaviors['authenticator'] = [
             'class' => HttpBearerAuth::className(),
-            'only' => ['dashboard', 'createuser', 'updateuser', 'getuser', 'getlogin', 'updatelogin', 'getuserdata', 'getuserslistbyuser', 'assignroles', 'getdoctorslist'],
+            'only' => ['dashboard', 'createuser', 'updateuser', 'getuser', 'getlogin', 'updatelogin', 'getuserdata', 'getuserslistbyuser', 'assignroles', 'getdoctorslist', 'checkstateaccess'],
         ];
         $behaviors['contentNegotiator'] = [
             'class' => ContentNegotiator::className(),
@@ -312,20 +314,20 @@ class UserController extends ActiveController {
     public function actionAssignroles() {
         $post = Yii::$app->request->post();
         $tenant_id = Yii::$app->user->identity->user->tenant_id;
-        
+
         if (!empty($post) && !empty($tenant_id)) {
             $model = new CoUsersRoles;
             $model->tenant_id = $tenant_id;
             $model->scenario = 'roleassign';
             $model->attributes = $post;
-            
+
             if ($model->validate()) {
                 $user = CoUser::find()->where(['user_id' => $post['user_id']])->one();
-                
+
                 foreach ($post['role_ids'] as $role_id) {
                     $roles[] = CoRole::find()->where(['role_id' => $role_id])->one();
                 }
-                
+
                 $extraColumns = ['tenant_id' => $tenant_id, 'modified_by' => Yii::$app->user->identity->user_id, 'modified_at' => new Expression('NOW()')]; // extra columns to be saved to the many to many table
                 $unlink = true; // unlink tags not in the list
                 $delete = true; // delete unlinked tags
@@ -338,27 +340,27 @@ class UserController extends ActiveController {
             return ['success' => false, 'message' => 'Please Fill the Form'];
         }
     }
-    
+
     public function actionGetdoctorslist() {
         $tenant = null;
         $status = '1';
         $deleted = false;
         $care_provider = '1';
-        
+
         $get = Yii::$app->getRequest()->get();
-        
-        if(isset($get['tenant']))
+
+        if (isset($get['tenant']))
             $tenant = $get['tenant'];
-        
-        if(isset($get['status']))
+
+        if (isset($get['status']))
             $status = strval($get['status']);
-        
-        if(isset($get['deleted']))
+
+        if (isset($get['deleted']))
             $deleted = $get['deleted'] == 'true';
-        
-        if(isset($get['care_provider']))
+
+        if (isset($get['care_provider']))
             $care_provider = $get['care_provider'];
-        
+
         return ['doctorsList' => CoUser::getDoctorsList($tenant, $care_provider, $status, $deleted)];
     }
 
@@ -370,7 +372,32 @@ class UserController extends ActiveController {
         }
         return $attrs;
     }
-    
-    
+
+    public function actionCheckstateaccess() {
+        $stateName = Yii::$app->request->post('stateName');
+        if ($stateName) {
+            return $this->checkstate($stateName);
+        } else {
+            return ['success' => false, 'message' => 'Invalid Access'];
+        }
+    }
+
+    protected function checkstate($stateName) {
+        $module = CoResources::find()->where(["resource_url" => $stateName])->one();
+        $resource_id = $module->resource_id;
+        
+        $tenant_id = Yii::$app->user->identity->user->tenant_id;
+        $user_id = Yii::$app->user->identity->user->user_id;
+        
+        $role_ids = CoUsersRoles::find()->select(['GROUP_CONCAT(role_id) AS role_ids'])->where(['tenant_id' => $tenant_id, 'user_id' => $user_id])->one();
+        $role_ids = explode(',', $role_ids->role_ids);
+        
+        $have_access = CoRolesResources::find()->tenant()->andWhere(['IN', 'role_id', $role_ids])->andWhere(["resource_id" => $resource_id])->one();
+        
+        if(!empty($have_access))
+            return ['success' => true];
+        else
+          return ['success' => false, 'message' => 'Invalid access'];  
+    }
 
 }
