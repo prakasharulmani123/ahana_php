@@ -1,32 +1,98 @@
 <div class="panel panel-default">
     <div class="panel-body">
         <div class="form-group">
-            <label class="col-sm-3 control-label">Floor Name * </label>
+            <label class="col-sm-3 control-label">Name * </label>
+            <div class="col-sm-5">
+                <input type="text" ng-model="data.PatPatient.patient_firstname" class="form-control" placeholder="First Name" >
+            </div>
+            <div class="col-sm-4">
+                <input type="text" ng-model="data.PatPatient.patient_lastname" class="form-control" placeholder="Last Name" >
+            </div>
+        </div>
+        <div class="line line-dashed b-b line-lg "></div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Gender *</label>
             <div class="col-sm-9">
-                <select class="form-control" name="Floor" ng-model="data.floor_id" ng-options="floor.floor_id as floor.floor_name for floor in floors | orderBy: floor_name">
-                    <option value="">Select Floor</option>
+                <label class="i-checks" ng-repeat="gender in genders">
+                    <input type="radio" checked="" value="{{gender.value}}" name="a" ng-model="data.PatPatient.patient_gender">
+                    <i></i>
+                    {{gender.label}}&nbsp; &nbsp;
+                </label>
+            </div>
+        </div>
+        <div class="line line-dashed b-b line-lg "></div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Age * </label>
+            <div class="col-sm-5">
+                <input type="text" ng-model="data.PatPatient.patient_dob" class="form-control" placeholder="DOB" >
+            </div>
+            <div class="col-sm-4">
+                <input type="text" ng-model="data.PatPatient.patient_age" class="form-control" placeholder="Age" >
+            </div>
+        </div>
+        <div class="line line-dashed b-b line-lg "></div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Address </label>
+            <div class="col-sm-9">
+                <input type="text" ng-model="data.PatPatientAddress.addr_current_address" class="form-control" placeholder="" >
+            </div>
+        </div>
+        <div class="line line-dashed b-b line-lg "></div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Place</label>
+            <div class="col-sm-3">
+                <select class="form-control" name="Country" ng-model="data.PatPatientAddress.addr_country_id" ng-options="country.value as country.label for country in countries | orderBy: label" ng-change="updateState2();
+                        data.PatPatient.state_id = '';
+                        data.PatPatient.city_id = '';">
+                    <option value="">Select Country</option>
+                </select>
+            </div>
+            <div class="col-sm-3">
+                <select class="form-control" name="State" ng-model="data.PatPatientAddress.addr_state_id" ng-options="state.value as state.label for state in availableStates2 | orderBy: label" ng-change="updateCity2();
+                        data.PatPatient.city_id = '';">
+                    <option value="">Select State</option>
+                </select>
+            </div>
+            <div class="col-sm-3">
+                <select class="form-control" name="City" ng-model="data.PatPatientAddress.addr_city_id" ng-options="city.value as city.label for city in availableCities2 | orderBy: label">
+                    <option value="">Select City</option>
                 </select>
             </div>
         </div>
         <div class="line line-dashed b-b line-lg "></div>
         <div class="form-group">
-            <label class="col-sm-3 control-label">Patient Name * </label>
+            <label class="col-sm-3 control-label">Mobile No * </label>
             <div class="col-sm-9">
-                <input type="text" ng-model="data.patient_name" maxlength="50" name="patientName" class="form-control" placeholder="Patient Name">
+                <input type="text" ng-model="data.PatPatient.patient_mobile" class="form-control" placeholder="" >
             </div>
         </div>
         <div class="line line-dashed b-b line-lg "></div>
         <div class="form-group">
-            <label class="col-sm-3 control-label">Status</label>
+            <label class="col-sm-3 control-label">Billing</label>patient_billing_type
             <div class="col-sm-9">
-                <label class="i-checks "> <input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" name="status" ng-model="data.status" ng-checked="data.status == '1'"> <i></i> </label> &nbsp; &nbsp;
+                <label class="i-checks" ng-repeat="bill_type in bill_types">
+                    <input type="radio" checked="" value="{{bill_type.value}}" name="b" ng-model="data.PatPatient.patient_bill_type">
+                    <i></i>
+                    {{bill_type.label}}&nbsp; &nbsp;
+                </label>
             </div>
         </div>
+        <div class="line line-dashed b-b line-lg "></div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Regi</label>
+            <div class="col-sm-9">
+                <select ng-model="data.PatPatient.patient_category_id" class="form-control" ng-options="category.patient_cat_id as category.patient_cat_name for category in categories | orderBy: patient_cat_name">
+                    <option value="">Select Category</option>
+                </select>
+            </div>
+        </div>
+
     </div>
     <footer class="panel-footer text-right bg-light lter">
-        <button class="btn m-b-xs  btn-success " ng-click="saveForm(data.formtype)">Save</button>
-        &nbsp;
-        <button class="btn m-b-xs  btn-dark" ng-click="$state.go('configuration.patients')"><i class="fa fa-times"></i> Cancel</button>
-        &nbsp;
+        <button class="btn m-b-xs  btn-success ">Register</button> &nbsp;
+        <button class="btn m-b-xs  btn-default"> Register & Book an appoinment</button>  &nbsp;
+        <button class="btn m-b-xs  btn-dark"> <i class="fa fa-times"></i> Cancel</button>  &nbsp;
     </footer>
 </div>
+
+

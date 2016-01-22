@@ -3,15 +3,15 @@
 <!-- / navbar -->
 
 <!-- Patient Detail Bar -->
-<div data-ng-include=" 'tpl/blocks/patient.topbar.html'"></div>
+<div data-ng-include=" 'tpl/blocks/patient.topbar.html'" ng-show="app.settings.patientTopBar"></div>
 <!-- / Patient Detail Bar -->
 
 <!-- menu -->
-<div data-ng-include=" 'tpl/blocks/aside.patient.html'" class="app-aside app-aside2 hidden-xs {{app.settings.asideColor}}"></div>
+<div data-ng-include=" 'tpl/blocks/aside.patient.html'" ng-show="app.settings.patientSideMenu" class="app-aside app-aside2 hidden-xs {{app.settings.asideColor}}"></div>
 <!-- / menu -->
 
 <!-- content -->
-<div class="app-content app-content2">
+<div class="{{app.settings.patientContentClass}}">
     <div ui-butterbar></div>
     <a href class="off-screen-toggle hide" ui-toggle-class="off-screen" data-target=".app-aside" ></a>
     <div class="app-content-body fade-in-up" ui-view></div>

@@ -34,7 +34,10 @@ angular.module('app')
                         asideFixed: false,
                         asideFolded: false,
                         asideDock: false,
-                        container: false
+                        container: false,
+                        patientTopBar: true,
+                        patientSideMenu: true,
+                        patientContentClass: 'app-content app-content2',
                     }
                 }
 

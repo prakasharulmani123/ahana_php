@@ -1,5 +1,9 @@
 app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', function ($rootScope, $scope, $timeout, $http, $state) {
-
+        
+        $scope.app.settings.patientTopBar = false;
+        $scope.app.settings.patientSideMenu = false;
+        $scope.app.settings.patientContentClass = 'app-content';
+        
         //Index Page
         $scope.loadPatientsList = function () {
             // pagination set up
@@ -23,8 +27,63 @@ app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http
             $rootScope.commonService.GetFloorList('', '1', false, function (response) {
                 $scope.floors = response.floorList;
             });
+            
+            $rootScope.commonService.GetGenderList(function (response) {
+                $scope.genders = response;
+            });
+            
+            $rootScope.commonService.GetPatientBillingList(function (response) {
+                $scope.bill_types = response;
+            });
+            
+            $rootScope.commonService.GetCountryList(function (response) {
+                $scope.countries = response.countryList;
+            });
+
+            $rootScope.commonService.GetStateList(function (response) {
+                $scope.states = response.stateList;
+            });
+
+            $rootScope.commonService.GetCityList(function (response) {
+                $scope.cities = response.cityList;
+            });
+            
+            $rootScope.commonService.GetPatientCateogryList('', '1', false, function (response) {
+                $scope.categories =  response.patientcategoryList;
+            });
         }
 
+        $scope.updateState2 = function () {
+            $scope.availableStates2 = [];
+            $scope.availableCities2 = [];
+
+            _that = this;
+            angular.forEach($scope.states, function (value) {
+                if (value.countryId == _that.data.PatPatientAddress.addr_country_id) {
+                    var obj = {
+                        value: value.value,
+                        label: value.label
+                    };
+                    $scope.availableStates2.push(obj);
+                }
+            });
+        }
+
+        $scope.updateCity2 = function () {
+            $scope.availableCities2 = [];
+
+            _that = this;
+            angular.forEach($scope.cities, function (value) {
+                if (value.stateId == _that.data.PatPatientAddress.addr_state_id) {
+                    var obj = {
+                        value: value.value,
+                        label: value.label
+                    };
+                    $scope.availableCities2.push(obj);
+                }
+            });
+        }
+        
         //Save Both Add & Update Data
         $scope.saveForm = function (mode) {
             _that = this;

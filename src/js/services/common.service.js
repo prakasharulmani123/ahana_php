@@ -27,6 +27,8 @@ function CommonService($http, $rootScope, $window, $q) {
     service.GetDoctorList = GetDoctorList;
     service.GetDayList = GetDayList;
     service.CheckStateAccess = CheckStateAccess;
+    service.GetGenderList = GetGenderList;
+    service.GetPatientBillingList = GetPatientBillingList;
 
     return service;
 
@@ -268,6 +270,16 @@ function CommonService($http, $rootScope, $window, $q) {
                     response = {success: false, message: 'Server Error'};
                     callback(response);
                 });
+    }
+
+    function GetGenderList(callback) {
+        var response = [{value: 'M', label: 'Male'}, {value: 'F', label: 'Female'}, {value: 'O', label: 'Other'}];
+        callback(response);
+    }
+
+    function GetPatientBillingList(callback) {
+        var response = [{value: 'N', label: 'Normal'}, {value: 'F', label: 'Free'}];
+        callback(response);
     }
 
 }
