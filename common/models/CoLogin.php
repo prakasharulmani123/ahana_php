@@ -100,7 +100,7 @@ class CoLogin extends ActiveRecord implements IdentityInterface {
     }
 
     public function beforeSave($insert) {
-        if($insert)
+//        if($insert)
             $this->setPassword($this->password);
         
         return parent::beforeSave($insert);
