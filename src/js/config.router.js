@@ -72,6 +72,12 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
+            //401 PAGE
+            .state('configuration.401', {
+                url: '/401',
+                templateUrl: 'tpl/page_401.html'
+            })
+
             //CONFIGURATION ROLES
             .state('configuration.roles', {
                 url: '/roles',
@@ -842,6 +848,17 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
         $http.defaults.headers.common['Authorization'] = 'Bearer ' + $rootScope.globals.currentUser.authdata; // jshint ignore:line
     }
 
+    $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+        var stateName = toState.name;
+        if (stateName) {
+            $rootScope.commonService.CheckStateAccess(stateName, function (response) {
+                if (response.success === false) {
+                    $state.go('configuration.401');
+                }
+            });
+        }
+    });
+
     $rootScope.$on('$locationChangeStart', function (event, next, current) {
         if ($location.path() == '/access/resetpwd') {
             var token = $location.search().token;
@@ -858,19 +875,19 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
                 $location.path('/access/signin');
             } else if (!restrictedPage && loggedIn) {
                 $location.path('/configuration/organization');
-            } else if (restrictedPage && loggedIn) {
-                var stateName = $rootScope.$state.current.name;
-                
-                if (stateName) {
-                    $rootScope.commonService.CheckStateAccess(stateName, function (response) {
-                        console.log(response);
-                        if (response.success === false) {
-                            $state.go('configuration.organization');
-                        }
-                    });
-                }
-
             }
         }
     });
+//
+//    $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+//        alert('stateChangeSuccess');
+//        var stateName = toState.name;
+//        if (stateName) {
+//            $rootScope.commonService.CheckStateAccess(stateName, function (response) {
+//                if (response.success === false) {
+//                    $state.go('configuration.organization');
+//                }
+//            });
+//        }
+//    });
 }
