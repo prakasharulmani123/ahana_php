@@ -53,7 +53,7 @@ class CoMasterState extends RActiveRecord
     {
         return [
             'state_id' => 'State ID',
-            'country_id' => 'Country ID',
+            'country_id' => 'Country Name',
             'state_name' => 'State Name',
             'status' => 'Status',
             'created_by' => 'Created By',

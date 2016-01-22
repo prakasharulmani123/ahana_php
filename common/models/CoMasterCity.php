@@ -54,8 +54,8 @@ class CoMasterCity extends RActiveRecord
     {
         return [
             'city_id' => 'City ID',
-            'state_id' => 'State',
-            'city_name' => 'City',
+            'state_id' => 'State Name',
+            'city_name' => 'City Name',
             'status' => 'Status',
             'created_by' => 'Created By',
             'created_at' => 'Created At',

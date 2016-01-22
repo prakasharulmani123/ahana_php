@@ -85,4 +85,32 @@ class RoomchargesubcategoryController extends ActiveController {
         }
         return $ret;
     }
+    
+    public function actionSaveallsubcategory() {
+        $post = Yii::$app->getRequest()->post();
+        
+        $valid = true;
+        foreach ($post['subcategories'] as $subcat) {
+            $model = CoRoomChargeSubcategory::find()->where(['charge_subcat_id' => $subcat['charge_subcat_id']])->one();
+            
+            if(empty($model)){
+                $model = new CoRoomChargeSubcategory;
+                $model->charge_cat_id = $post['charge_cat_id'];
+            }
+            $model->charge_subcat_name = $subcat['charge_subcat_name'];
+            $valid = $model->save() && $valid;
+        }
+        return ['success' => $valid]; 
+    }
+    
+    public function actionDeleteallsubcategory() {
+        $post = Yii::$app->getRequest()->post();
+        
+        $valid = true;
+        foreach ($post['subcategories'] as $subcat_id) {
+            $model = CoRoomChargeSubcategory::find()->where(['charge_subcat_id' => $subcat_id])->one();
+            $valid = $model->delete() && $valid;
+        }
+        return ['success' => $valid]; 
+    }
 }

@@ -71,4 +71,15 @@ class ChargepersubcategoryController extends ActiveController {
         return $ret;
     }
 
+    public function actionSaveallchargecategory() {
+        $post = Yii::$app->getRequest()->post();
+        
+        $valid = true;
+        foreach ($post['subcategories'] as $attr) {
+            $model = new CoChargePerSubcategory();
+            $model->attributes = $attr;
+            $valid = $model->save() && $valid;
+        }
+        return ['success' => $valid]; 
+    }
 }
