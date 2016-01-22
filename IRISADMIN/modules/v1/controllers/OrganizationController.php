@@ -44,7 +44,7 @@ class OrganizationController extends ActiveController {
     public function actions() {
         $actions = parent::actions();
         $actions['index']['prepareDataProvider'] = [$this, 'prepareDataProvider'];
-       
+
         return $actions;
     }
 
@@ -176,21 +176,21 @@ class OrganizationController extends ActiveController {
             if (Yii::$app->request->post('Module')) {
                 $resource_id = Yii::$app->request->post('Module')['resource_ids'];
                 $model = CoRole::findOne(['role_id' => Yii::$app->request->post('Module')['role_id']]);
-                
+
                 $resources = CoResources::find()->where(['in', 'resource_id', $resource_id])->all();
                 $extraColumns = ['tenant_id' => Yii::$app->request->post('Module')['tenant_id'], 'created_by' => Yii::$app->user->identity->user_id, 'status' => '1']; // extra columns to be saved to the many to many table
                 $unlink = true; // unlink tags not in the list
                 $delete = true; // delete unlinked tags
                 $model->linkAll('resources', $resources, $extraColumns, $unlink, $delete);
-                
+
                 //For Update Status
                 $role_resources = CoRolesResources::find()->tenant(Yii::$app->request->post('Module')['tenant_id'])->where(['role_id' => Yii::$app->request->post('Module')['role_id']])->all();
                 foreach ($role_resources as $role_resource) {
-                    if($role_resource->status != '1'){
+                    if ($role_resource->status != '1') {
                         $role_resource->updateAttributes(['status' => '1']);
                     }
                 }
-                
+
                 return ['success' => true];
             }
 
@@ -207,7 +207,7 @@ class OrganizationController extends ActiveController {
 
     public function actionGetorg() {
         $tenant_id = Yii::$app->request->get('id');
-        
+
         if (!empty($tenant_id)) {
             $return = array();
 
@@ -240,6 +240,7 @@ class OrganizationController extends ActiveController {
     public function actionValidateorg() {
         $post = Yii::$app->request->post();
         if (!empty($post)) {
+            $valid = true;
             if (isset($post['Tenant'])) {
                 $model = new CoTenant();
                 $model->attributes = Yii::$app->request->post('Tenant');
@@ -260,13 +261,21 @@ class OrganizationController extends ActiveController {
                 $model->attributes = Yii::$app->request->post('CoUser');
             }
 
+            $role = new CoRole();
+            if (isset($post['RoleLogin'])) {
+                $role->attributes = Yii::$app->request->post('Role');
+                $valid = $role->validate();
 
-            $valid = $model->validate();
+                $model = new CoLogin();
+                $model->attributes = Yii::$app->request->post('Login');
+            }
+
+            $valid = $model->validate() && $valid;
 
             if ($valid) {
                 return ['success' => true];
             } else {
-                return ['success' => false, 'message' => Html::errorSummary([$model])];
+                return ['success' => false, 'message' => Html::errorSummary([$model, $role])];
             }
         } else {
             return ['success' => false, 'message' => 'Please Fill the Form'];

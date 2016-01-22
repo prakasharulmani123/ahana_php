@@ -168,23 +168,38 @@ class CoRolesResources extends ActiveRecord {
 
         foreach ($tree as $key => $menu) {
             if (in_array($menu['value'], $role_resources_ids)) {
-                foreach ($menu['children'] as $ckey => $child) {
-                    if (in_array($child['value'], $role_resources_ids)) {
-                        foreach ($child['children'] as $ckey2 => $child2) {
-                            if (!in_array($child2['value'], $role_resources_ids)) {
-                                unset($tree[$key]['children'][$ckey]['children'][$ckey2]);
+                if (isset($menu['children'])) {
+                    foreach ($menu['children'] as $ckey => $child) {
+                        if (in_array($child['value'], $role_resources_ids)) {
+                            if (isset($child['children'])) {
+                                foreach ($child['children'] as $ckey2 => $child2) {
+                                    if (!in_array($child2['value'], $role_resources_ids)) {
+                                        unset($tree[$key]['children'][$ckey]['children'][$ckey2]);
+                                    }
+                                }
+                                $tree[$key]['children'][$ckey]['children'] = array_values($tree[$key]['children'][$ckey]['children']);
                             }
+                        } else {
+                            unset($tree[$key]['children'][$ckey]);
                         }
-                    } else {
-                        unset($tree[$key]['children'][$ckey]);
                     }
+                    $tree[$key]['children'] = array_values($tree[$key]['children']);
                 }
             } else {
                 unset($tree[$key]);
             }
         }
+        $tree = array_values($tree);
 
         return $tree;
+    }
+
+    public static function fix_keys($array) {
+        foreach ($array as $k => $val) {
+            if (is_array($val))
+                $array[$k] = self::fix_keys($val); //recurse
+        }
+        return array_values($array);
     }
 
     //Get Particular organization accessed modules tree with role wise
