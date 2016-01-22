@@ -66,14 +66,14 @@
                     <tr ng-repeat="timing in timings" ng-init="tableform.$show();">
                         <td>
                             <!-- editable username (text with validation) -->
-                            <span editable-text="timing.schedule_time_in" e-name="schedule_time_in" e-form="nameform" onbeforesave="checkInput($data)" onshow="initTimepicker();" e-class="timepicker">
+                            <span editable-text="timing.schedule_time_in" e-name="schedule_time_in" e-form="nameform" onbeforesave="checkInput($data)" onshow="initTimepicker();" e-class="timepicker" e-onkeydown="return false;">
                                 {{ timing.schedule_time_in || 'empty' }}
                             </span>
 
                         </td>
                         <td>
                             <!-- editable username (text with validation) -->
-                            <span editable-text="timing.schedule_time_out" e-name="schedule_time_out" e-form="nameform" onbeforesave="checkInput($data)" onshow="initTimepicker();" e-class="timepicker">
+                            <span editable-text="timing.schedule_time_out" e-name="schedule_time_out" e-form="nameform" onbeforesave="checkInput($data)" onshow="initTimepicker();" e-class="timepicker" e-onkeydown="return false;">
                                 {{ timing.schedule_time_out || 'empty' }}
                             </span>
                         </td>

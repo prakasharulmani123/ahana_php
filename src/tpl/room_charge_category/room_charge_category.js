@@ -1,4 +1,4 @@
-app.controller('RoomChargeCategorysController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes) {
+app.controller('RoomChargeCategorysController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$anchorScroll', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $anchorScroll) {
 
         editableThemes.bs3.inputClass = 'input-sm';
         editableThemes.bs3.buttonsClass = 'btn-sm';
@@ -186,29 +186,82 @@ app.controller('RoomChargeCategorysController', ['$rootScope', '$scope', '$timeo
                 data: _that.data,
             }).success(
                     function (response) {
-                        angular.forEach($scope.subcategories, function (sub) {
-                            sub.charge_cat_id = response.charge_cat_id;
-                            if (sub.charge_subcat_id == '') {
-                                $http.post($rootScope.IRISOrgServiceUrl + '/roomchargesubcategories', sub);
-                            } else {
-                                $http.put($rootScope.IRISOrgServiceUrl + '/roomchargesubcategories/' + sub.charge_subcat_id, sub);
-                            }
+
+                        //Save All Subcategories
+                        $http({
+                            method: 'POST',
+                            url: $rootScope.IRISOrgServiceUrl + '/roomchargesubcategory/saveallsubcategory',
+                            data: {'charge_cat_id': response.charge_cat_id, 'subcategories': $scope.subcategories},
+                        }).success(
+                                function (response) {
+                                    if (response.success == true) {
+
+                                        //Delete Subcategories
+                                        $http({
+                                            method: 'POST',
+                                            url: $rootScope.IRISOrgServiceUrl + '/roomchargesubcategory/deleteallsubcategory',
+                                            data: {'subcategories': $scope.deletedsubcategories},
+                                        }).success(
+                                                function (response) {
+                                                    $anchorScroll();
+                                                    if (response.success == true) {
+                                                        $scope.loadbar('hide');
+                                                        $scope.successMessage = succ_msg;
+                                                        $scope.data = {};
+                                                        $timeout(function () {
+                                                            $state.go('configuration.roomChargeCategory');
+                                                        }, 1000)
+                                                    } else {
+                                                        $scope.loadbar('hide');
+                                                        $scope.errorData = 'Failed to save subcategories';
+                                                    }
+
+                                                }
+                                        ).error(function (data, status) {
+                                            $anchorScroll();
+                                            $scope.loadbar('hide');
+                                            if (status == 422)
+                                                $scope.errorData = $scope.errorSummary(data);
+                                            else
+                                                $scope.errorData = data.message;
+                                        });
+
+
+                                    } else {
+                                        $scope.loadbar('hide');
+                                        $scope.errorData = 'Failed to save subcategories';
+                                    }
+
+                                }
+                        ).error(function (data, status) {
+                            $anchorScroll();
+                            $scope.loadbar('hide');
+                            if (status == 422)
+                                $scope.errorData = $scope.errorSummary(data);
+                            else
+                                $scope.errorData = data.message;
                         });
 
+                        return false;
+
+
+//                        angular.forEach($scope.subcategories, function (sub) {
+//                            sub.charge_cat_id = response.charge_cat_id;
+//                            if (sub.charge_subcat_id == '') {
+//                                $http.post($rootScope.IRISOrgServiceUrl + '/roomchargesubcategories', sub);
+//                            } else {
+//                                $http.put($rootScope.IRISOrgServiceUrl + '/roomchargesubcategories/' + sub.charge_subcat_id, sub);
+//                            }
+//                        });
+
                         //Delete Subcategories
-                        angular.forEach($scope.deletedsubcategories, function (del) {
-                            $http({
-                                url: $rootScope.IRISOrgServiceUrl + "/roomchargesubcategory/remove",
-                                method: "POST",
-                                data: {id: del}
-                            });
-                        });
-                        $scope.loadbar('hide');
-                        $scope.successMessage = succ_msg;
-                        $scope.data = {};
-                        $timeout(function () {
-                            $state.go('configuration.roomChargeCategory');
-                        }, 1000)
+//                        angular.forEach($scope.deletedsubcategories, function (del) {
+//                            $http({
+//                                url: $rootScope.IRISOrgServiceUrl + "/roomchargesubcategory/remove",
+//                                method: "POST",
+//                                data: {id: del}
+//                            });
+//                        });
 
                     }
             ).error(function (data, status) {

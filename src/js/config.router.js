@@ -828,6 +828,30 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                 }
             })
 
+            //PATIENT
+            .state('patient', {
+                abstract: true,
+                url: '/patient',
+                templateUrl: 'tpl/patient.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('toaster');
+                        }]
+                }
+            })
+            .state('patient.registration', {
+                url: '/registration',
+                templateUrl: 'tpl/patient_registration/create.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/patient_registration/patient_registration.js']);
+                        }]
+                }
+            })
+
+
 }
 run.$inject = ['$rootScope', '$state', '$stateParams', '$location', '$cookieStore', '$http', '$window', 'CommonService'];
 function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $window, CommonService) {
@@ -848,16 +872,16 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
         $http.defaults.headers.common['Authorization'] = 'Bearer ' + $rootScope.globals.currentUser.authdata; // jshint ignore:line
     }
 
-    $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-        var stateName = toState.name;
-        if (stateName) {
-            $rootScope.commonService.CheckStateAccess(stateName, function (response) {
-                if (response.success === false) {
-                    $state.go('configuration.401');
-                }
-            });
-        }
-    });
+//    $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+//        var stateName = toState.name;
+//        if (stateName) {
+//            $rootScope.commonService.CheckStateAccess(stateName, function (response) {
+//                if (response.success === false) {
+//                    $state.go('configuration.401');
+//                }
+//            });
+//        }
+//    });
 
     $rootScope.$on('$locationChangeStart', function (event, next, current) {
         if ($location.path() == '/access/resetpwd') {

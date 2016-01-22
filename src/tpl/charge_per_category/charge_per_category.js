@@ -1,4 +1,4 @@
-app.controller('ChargePerCategoriesController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$modal', 'editableOptions', 'editableThemes', function ($rootScope, $scope, $timeout, $http, $state, $modal, editableOptions, editableThemes) {
+app.controller('ChargePerCategoriesController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$modal', 'editableOptions', 'editableThemes', '$anchorScroll', function ($rootScope, $scope, $timeout, $http, $state, $modal, editableOptions, editableThemes, $anchorScroll) {
 
         editableThemes.bs3.inputClass = 'input-sm';
         editableThemes.bs3.buttonsClass = 'btn-sm';
@@ -121,10 +121,10 @@ app.controller('ChargePerCategoriesController', ['$rootScope', '$scope', '$timeo
 
                 if (_that.data.charge_cat_id == -1) {
                     _that.data.charge_cat_type = 'P';
-                }else{
+                } else {
                     _that.data.charge_cat_type = 'C';
                 }
-                
+
                 $scope.loadbar('show');
 
                 $http({
@@ -158,26 +158,47 @@ app.controller('ChargePerCategoriesController', ['$rootScope', '$scope', '$timeo
                                 }
                             });
 
-                            angular.forEach(form_datas, function (form_data) {
-                                $http.post($rootScope.IRISOrgServiceUrl + '/chargepersubcategories', form_data)
-                                        .error(function (data, status) {
-                                            $scope.loadbar('hide');
-                                            if (status == 422)
-                                                $scope.errorData = $scope.errorSummary(data);
-                                            else
-                                                $scope.errorData = data.message;
-                                            return false;
-                                        });
-                            });
+                            //Save all Subcategories
+                            $http.post($rootScope.IRISOrgServiceUrl + '/chargepersubcategory/saveallchargecategory', {'subcategories': form_datas})
+                                    .success(function (response) {
 
-                            $scope.loadbar('hide');
-                            $scope.successMessage = succ_msg;
-                            $scope.data = {};
-                            $timeout(function () {
-                                $state.go('configuration.chargePerCategory');
-                            }, 1000)
+                                        $anchorScroll();
+                                        if (response.success == true) {
+                                            $scope.loadbar('hide');
+                                            $scope.successMessage = succ_msg;
+                                            $scope.data = {};
+                                            $timeout(function () {
+                                                $state.go('configuration.chargePerCategory');
+                                            }, 1000)
+                                        } else {
+                                            $scope.loadbar('hide');
+                                            $scope.errorData = 'Failed to save subcategories';
+                                        }
+                                    })
+                                    .error(function (data, status) {
+                                        $scope.loadbar('hide');
+                                        if (status == 422)
+                                            $scope.errorData = $scope.errorSummary(data);
+                                        else
+                                            $scope.errorData = data.message;
+                                        return false;
+                                    });
+
+//                            angular.forEach(form_datas, function (form_data) {
+//                                $http.post($rootScope.IRISOrgServiceUrl + '/chargepersubcategories', form_data)
+//                                        .error(function (data, status) {
+//                                            $scope.loadbar('hide');
+//                                            if (status == 422)
+//                                                $scope.errorData = $scope.errorSummary(data);
+//                                            else
+//                                                $scope.errorData = data.message;
+//                                            return false;
+//                                        });
+//                            });
+
                         }
                 ).error(function (data, status) {
+                    $anchorScroll();
                     $scope.loadbar('hide');
                     if (status == 422)
                         $scope.errorData = $scope.errorSummary(data);

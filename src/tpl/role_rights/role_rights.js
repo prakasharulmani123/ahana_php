@@ -1,6 +1,6 @@
 'use strict';
 /* Controllers */
-app.controller('RolesRightsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', function ($rootScope, $scope, $timeout, $http, $state) {
+app.controller('RolesRightsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$anchorScroll', function ($rootScope, $scope, $timeout, $http, $state, $anchorScroll) {
 
         //sanitize all the variables
         $scope.sanitizeVariable = function (data) {
@@ -108,6 +108,7 @@ app.controller('RolesRightsController', ['$rootScope', '$scope', '$timeout', '$h
             }).then(
                     function (response) {
                         $scope.loadbar('hide');
+                        $anchorScroll();
                         if (response.data.success === true) {
                             $scope.successMessage = "Role rights saved successfully";
                             $scope.data = {};
