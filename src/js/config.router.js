@@ -858,6 +858,18 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
                 $location.path('/access/signin');
             } else if (!restrictedPage && loggedIn) {
                 $location.path('/configuration/organization');
+            } else if (restrictedPage && loggedIn) {
+                var stateName = $rootScope.$state.current.name;
+                
+                if (stateName) {
+                    $rootScope.commonService.CheckStateAccess(stateName, function (response) {
+                        console.log(response);
+                        if (response.success === false) {
+                            $state.go('configuration.organization');
+                        }
+                    });
+                }
+
             }
         }
     });

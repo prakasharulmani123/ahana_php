@@ -26,6 +26,7 @@ function CommonService($http, $rootScope, $window, $q) {
     service.GetInternalCodeList = GetInternalCodeList;
     service.GetDoctorList = GetDoctorList;
     service.GetDayList = GetDayList;
+    service.CheckStateAccess = CheckStateAccess;
 
     return service;
 
@@ -255,6 +256,18 @@ function CommonService($http, $rootScope, $window, $q) {
     function GetDayList(callback) {
         var response = [{value: '1', label: 'Monday'}, {value: '2', label: 'Tuesday'}, {value: '3', label: 'Wednesday'}, {value: '4', label: 'Thursday'}, {value: '5', label: 'Friday'}, {value: '6', label: 'Saturday'}, {value: '7', label: 'Sunday'}];
         callback(response);
+    }
+
+    function CheckStateAccess(stateName, callback) {
+        var response;
+
+        $http.post($rootScope.IRISOrgServiceUrl + '/user/checkstateaccess', {'stateName': stateName})
+                .success(function (response) {
+                    callback(response);
+                }, function (x) {
+                    response = {success: false, message: 'Server Error'};
+                    callback(response);
+                });
     }
 
 }
