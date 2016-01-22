@@ -120,21 +120,6 @@
                                         <input type="text" placeholder="Role" class="form-control" ng-model="data.Role.description" required>
                                     </div>
                                 </div>
-                                <div class="pull-right m-t m-b">
-                                    <button type="button" class="btn btn-default btn-rounded" ng-click="steps.step1 = true">Prev</button>
-                                    <button type="submit" class="btn btn-default btn-rounded" ng-click="validateForm('Role', 3);">Next</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </tab>
-            <tab heading="Login" disabled="step2.$invalid" active="steps.step3" select="steps.percent=60">
-                <form name="step3" class="bs-example form-horizontal ng-pristine ng-valid form-validation" novalidate="">
-                    <progressbar value="steps.percent" class="progress-xs" type="success"></progressbar>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="col-sm-6">
                                 <div class="form-group">
                                     <label class="col-lg-4 control-label">Username *</label>
                                     <div class="col-lg-8">
@@ -148,14 +133,41 @@
                                     </div>
                                 </div>
                                 <div class="pull-right m-t m-b">
-                                    <button type="button" class="btn btn-default btn-rounded" ng-click="steps.step2 = true">Prev</button>
-                                    <button type="submit" class="btn btn-default btn-rounded" ng-click="validateForm('Login', 4);">Next</button>
+                                    <button type="button" class="btn btn-default btn-rounded" ng-click="steps.step1 = true">Prev</button>
+                                    <button type="submit" class="btn btn-default btn-rounded" ng-click="validateForm('RoleLogin', 4);">Next</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </form>
             </tab>
+            <!--            <tab heading="Login" disabled="step2.$invalid" active="steps.step3" select="steps.percent=60">
+                            <form name="step3" class="bs-example form-horizontal ng-pristine ng-valid form-validation" novalidate="">
+                                <progressbar value="steps.percent" class="progress-xs" type="success"></progressbar>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="col-lg-4 control-label">Username *</label>
+                                                <div class="col-lg-8">
+                                                    <input type="text" placeholder="Username" class="form-control" ng-model="data.Login.username" ng-trim="false" ng-change="data.Login.username = data.Login.username.split(' ').join('')" required>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-lg-4 control-label">Password *</label>
+                                                <div class="col-lg-8">
+                                                    <input type="password" placeholder="Password" class="form-control" ng-model="data.Login.password" value="" required ng-trim="false" ng-change="data.Login.password = data.Login.password.split(' ').join('')">
+                                                </div>
+                                            </div>
+                                            <div class="pull-right m-t m-b">
+                                                <button type="button" class="btn btn-default btn-rounded" ng-click="steps.step2 = true">Prev</button>
+                                                <button type="submit" class="btn btn-default btn-rounded" ng-click="validateForm('Login', 4);">Next</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </tab>-->
             <tab heading="Module" disabled="step3.$invalid" active="steps.step4" select="steps.percent=80">
                 <form name="step4" class="bs-example form-horizontal ng-pristine ng-valid form-validation" novalidate="">
                     <progressbar value="steps.percent" class="progress-xs" type="success"></progressbar>
@@ -170,7 +182,7 @@
                                     ></div>
 
                                 <div class="pull-right m-t m-b">
-                                    <button type="button" class="btn btn-default btn-rounded" ng-click="steps.step3 = true">Prev</button>
+                                    <button type="button" class="btn btn-default btn-rounded" ng-click="steps.step2 = true">Prev</button>
                                     <button type="submit" class="btn btn-default btn-rounded" ng-click="steps.step5 = true">Next</button>
                                 </div>
                             </div>

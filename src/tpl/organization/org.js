@@ -163,6 +163,8 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                     this.data.Module['role_id'] = this.data.Role.role_id;
                     this.data.Module['tenant_id'] = this.data.Tenant.tenant_id;
                     post_data = {Module: sanitizeVariable(this.data.Module)};
+                } else if (mode == 'RoleLogin') {
+                    post_data = {Role: sanitizeVariable(this.data.Role), Login: sanitizeVariable(this.data.Login), RoleLogin: true};
                 }
             }
 
@@ -214,6 +216,8 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                     post_data = {Login: sanitizeVariable(this.data.Login)};
                 } else if (mode == 'User') {
                     post_data = {User: sanitizeVariable(this.data.User)};
+                } else if (mode == 'RoleLogin') {
+                    post_data = {Role: sanitizeVariable(this.data.Role), Login: sanitizeVariable(this.data.Login), RoleLogin: true};
                 }
             }
 
