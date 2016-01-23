@@ -29,6 +29,7 @@ function CommonService($http, $rootScope, $window, $q) {
     service.CheckStateAccess = CheckStateAccess;
     service.GetGenderList = GetGenderList;
     service.GetPatientBillingList = GetPatientBillingList;
+    service.GetPatientRegisterModelList = GetPatientRegisterModelList;
 
     return service;
 
@@ -279,6 +280,11 @@ function CommonService($http, $rootScope, $window, $q) {
 
     function GetPatientBillingList(callback) {
         var response = [{value: 'N', label: 'Normal'}, {value: 'F', label: 'Free'}];
+        callback(response);
+    }
+
+    function GetPatientRegisterModelList(callback) {
+        var response = [{value: 'NO', label: 'None'}, {value: 'OP', label: 'OP'}, {value: 'IP', label: 'IP'}];
         callback(response);
     }
 

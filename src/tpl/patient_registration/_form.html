@@ -2,10 +2,14 @@
     <div class="panel-body">
         <div class="form-group">
             <label class="col-sm-3 control-label">Name * </label>
-            <div class="col-sm-5">
-                <input type="text" ng-model="data.PatPatient.patient_firstname" class="form-control" placeholder="First Name" >
+            <div class="col-sm-2">
+                <select class="form-control" name="Country" ng-model="data.PatPatient.patient_title_code" ng-options="titleCode.value as titleCode.label for titleCode in titleCodes | orderBy: label">
+                </select>
             </div>
             <div class="col-sm-4">
+                <input type="text" ng-model="data.PatPatient.patient_firstname" class="form-control" placeholder="First Name" >
+            </div>
+            <div class="col-sm-3">
                 <input type="text" ng-model="data.PatPatient.patient_lastname" class="form-control" placeholder="Last Name" >
             </div>
         </div>
@@ -22,12 +26,17 @@
         </div>
         <div class="line line-dashed b-b line-lg "></div>
         <div class="form-group">
-            <label class="col-sm-3 control-label">Age * </label>
+            <label class="col-sm-3 control-label">DOB  </label>
             <div class="col-sm-5">
-                <input type="text" ng-model="data.PatPatient.patient_dob" class="form-control" placeholder="DOB" >
+                <div class="input-group">
+                    <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="data.PatPatient.patient_dob" is-open="$parent.opened" datepicker-options="dateOptions" close-text="Close" max-date="maxDate" date-disabled="disabled(date, mode)"/>
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                </div>
             </div>
             <div class="col-sm-4">
-                <input type="text" ng-model="data.PatPatient.patient_age" class="form-control" placeholder="Age" >
+                <input type="text" ng-model="data.PatPatient.patient_age" class="form-control" placeholder="Age" only-digits="" onkeydown="" ng-change="setDateEmpty()">
             </div>
         </div>
         <div class="line line-dashed b-b line-lg "></div>
@@ -42,14 +51,14 @@
             <label class="col-sm-3 control-label">Place</label>
             <div class="col-sm-3">
                 <select class="form-control" name="Country" ng-model="data.PatPatientAddress.addr_country_id" ng-options="country.value as country.label for country in countries | orderBy: label" ng-change="updateState2();
-                        data.PatPatient.state_id = '';
-                        data.PatPatient.city_id = '';">
+                        data.PatPatientAddress.addr_state_id = '';
+                        data.PatPatientAddress.addr_city_id = '';">
                     <option value="">Select Country</option>
                 </select>
             </div>
             <div class="col-sm-3">
                 <select class="form-control" name="State" ng-model="data.PatPatientAddress.addr_state_id" ng-options="state.value as state.label for state in availableStates2 | orderBy: label" ng-change="updateCity2();
-                        data.PatPatient.city_id = '';">
+                        data.PatPatientAddress.addr_city_id = '';">
                     <option value="">Select State</option>
                 </select>
             </div>
@@ -68,10 +77,10 @@
         </div>
         <div class="line line-dashed b-b line-lg "></div>
         <div class="form-group">
-            <label class="col-sm-3 control-label">Billing</label>patient_billing_type
+            <label class="col-sm-3 control-label">Billing</label>
             <div class="col-sm-9">
                 <label class="i-checks" ng-repeat="bill_type in bill_types">
-                    <input type="radio" checked="" value="{{bill_type.value}}" name="b" ng-model="data.PatPatient.patient_bill_type">
+                    <input type="radio" checked="" value="{{bill_type.value}}" name="b" ng-model="data.PatPatient.patient_billing_type">
                     <i></i>
                     {{bill_type.label}}&nbsp; &nbsp;
                 </label>
@@ -79,18 +88,29 @@
         </div>
         <div class="line line-dashed b-b line-lg "></div>
         <div class="form-group">
-            <label class="col-sm-3 control-label">Regi</label>
+            <label class="col-sm-3 control-label">Category</label>
             <div class="col-sm-9">
                 <select ng-model="data.PatPatient.patient_category_id" class="form-control" ng-options="category.patient_cat_id as category.patient_cat_name for category in categories | orderBy: patient_cat_name">
                     <option value="">Select Category</option>
                 </select>
             </div>
         </div>
+        <div class="line line-dashed b-b line-lg "></div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Register Mode</label>
+            <div class="col-sm-9">
+                <label class="i-checks" ng-repeat="mode in registerModes">
+                    <input type="radio" checked="" value="{{mode.value}}" name="c" ng-model="data.PatPatient.patient_reg_mode">
+                    <i></i>
+                    {{mode.label}}&nbsp; &nbsp;
+                </label>
+            </div>
+        </div>
 
     </div>
     <footer class="panel-footer text-right bg-light lter">
-        <button class="btn m-b-xs  btn-success ">Register</button> &nbsp;
-        <button class="btn m-b-xs  btn-default"> Register & Book an appoinment</button>  &nbsp;
+        <button class="btn m-b-xs  btn-success " ng-click="saveForm('add')">Register</button> &nbsp;
+<!--        <button class="btn m-b-xs  btn-default"> Register & Book an appoinment</button>  &nbsp;-->
         <button class="btn m-b-xs  btn-dark"> <i class="fa fa-times"></i> Cancel</button>  &nbsp;
     </footer>
 </div>

@@ -95,7 +95,7 @@ app.controller('RoomTypesRoomsController', ['$scope', '$http', '$filter', '$stat
                     function (response) {
                         $scope.loadbar('hide');
                         if (response.data.success === true) {
-                            $scope.successMessage = "Room Types assigned successfully";
+                            $scope.successMessage = "Bed Types assigned successfully";
                         }
                         else {
                             $scope.errorData = response.data.message;

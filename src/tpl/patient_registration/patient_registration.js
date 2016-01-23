@@ -1,9 +1,9 @@
 app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', function ($rootScope, $scope, $timeout, $http, $state) {
-        
+
         $scope.app.settings.patientTopBar = false;
         $scope.app.settings.patientSideMenu = false;
         $scope.app.settings.patientContentClass = 'app-content';
-        
+
         //Index Page
         $scope.loadPatientsList = function () {
             // pagination set up
@@ -23,19 +23,27 @@ app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http
         };
 
         //For Form
+        $scope.createInit = function () {
+//            $scope.data = {};
+//            $scope.data.PatPatient.patient_title_code = 'Mr.';
+//            $scope.data.PatPatient.patient_gender = 'M';
+//            $scope.data.PatPatient.patient_billing_type = 'N';
+//            $scope.data.PatPatient.patient_reg_mode = 'NO';
+        }
+        
         $scope.initForm = function () {
             $rootScope.commonService.GetFloorList('', '1', false, function (response) {
                 $scope.floors = response.floorList;
             });
-            
+
             $rootScope.commonService.GetGenderList(function (response) {
                 $scope.genders = response;
             });
-            
+
             $rootScope.commonService.GetPatientBillingList(function (response) {
                 $scope.bill_types = response;
             });
-            
+
             $rootScope.commonService.GetCountryList(function (response) {
                 $scope.countries = response.countryList;
             });
@@ -47,9 +55,17 @@ app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http
             $rootScope.commonService.GetCityList(function (response) {
                 $scope.cities = response.cityList;
             });
-            
+
+            $rootScope.commonService.GetPatientRegisterModelList(function (response) {
+                $scope.registerModes = response;
+            });
+
+            $rootScope.commonService.GetTitleCodes(function (response) {
+                $scope.titleCodes = response;
+            });
+
             $rootScope.commonService.GetPatientCateogryList('', '1', false, function (response) {
-                $scope.categories =  response.patientcategoryList;
+                $scope.categories = response.patientcategoryList;
             });
         }
 
@@ -83,23 +99,61 @@ app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http
                 }
             });
         }
-        
-        //Save Both Add & Update Data
+
+        $scope.open = function ($event) {
+            $event.preventDefault();
+            $event.stopPropagation();
+            $scope.opened = true;
+        };
+
+        var today = new Date();
+        today.setMonth(today.getMonth() + 6);
+        $scope.tre = today;
+
+        $scope.maxDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+//        $scope.today = function () {
+//            $scope.data = {};
+//            $scope.data.PatPatient.patient_dob = new Date();
+//        };
+//        $scope.today();
+
+        $scope.toggleMin = function () {
+            $scope.minDate = $scope.minDate ? null : new Date();
+        };
+        $scope.toggleMin();
+
+        $scope.disabled = function (date, mode) {
+            return mode === 'day' && (date.getDay() === 0 || date.getDay() === 6);
+        };
+
+        $scope.$watch('data.PatPatient.patient_dob', function (newValue, oldValue) {
+            if (newValue != '') {
+                $http({
+                    method: 'POST',
+                    url: $rootScope.IRISOrgServiceUrl + '/default/getagefromdate',
+                    data: {'date': newValue},
+                }).success(
+                        function (response) {
+                            $scope.data.PatPatient.patient_age = response.age;
+                        }
+                );
+            }
+        }, true);
+
+        $scope.setDateEmpty = function () {
+            $scope.data.PatPatient.patient_dob = '';
+        }
+
+        //Save Both Add Data
         $scope.saveForm = function (mode) {
             _that = this;
 
             $scope.errorData = "";
             $scope.successMessage = "";
 
-            if (mode == 'add') {
-                post_url = $rootScope.IRISOrgServiceUrl + '/patients';
-                method = 'POST';
-                succ_msg = 'Patient saved successfully';
-            } else {
-                post_url = $rootScope.IRISOrgServiceUrl + '/patients/' + _that.data.patient_id;
-                method = 'PUT';
-                succ_msg = 'Patient updated successfully';
-            }
+            post_url = $rootScope.IRISOrgServiceUrl + '/patient/registration';
+            method = 'POST';
+            succ_msg = 'Patient saved successfully';
 
             $scope.loadbar('show');
             $http({
@@ -109,11 +163,12 @@ app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http
             }).success(
                     function (response) {
                         $scope.loadbar('hide');
-                        $scope.successMessage = succ_msg;
-                        $scope.data = {};
-                        $timeout(function () {
-                            $state.go('configuration.patients');
-                        }, 1000)
+                        if (response.success == true) {
+                            $scope.successMessage = succ_msg;
+                            $scope.data = {};
+                        } else {
+                            $scope.errorData = response.message;
+                        }
 
                     }
             ).error(function (data, status) {
