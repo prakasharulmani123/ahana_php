@@ -6,17 +6,22 @@
                     <div class="row"> 
                         <div class="col-xs-12 col-sm-1 col-md-1"> <img src="img/patient-img.png"  alt="" /></div>
                         <div class="col-xs-4 col-sm-4 col-md-3"> 
-                            <a href="#">Mr. Patient Name</a> (35y) <br/>
-                            <span> AH12345 </span>
+                            <a href="#">
+                                {{app.patientDetail.patientTitleCode}} 
+                                {{app.patientDetail.patientName}} 
+                            </a> 
+                            (35y) 
+                            <br/>
+                            <span> {{app.patientDetail.patientId}}  </span>
                         </div>
                         <div class="col-xs-2 col-sm-2 col-md-2"> 
-                            MALE
+                            {{app.patientDetail.patientSex}}
                         </div>
                         <div class="col-xs-2 col-sm-2 col-md-2"> 
-                            DOA: 		10/01/2016
+                            DOA:{{app.patientDetail.patientDOA}}
                         </div>
                         <div class="col-xs-3 col-sm-3 col-md-3"> 
-                            Org : Ahana - Gandhi Nagar 
+                            Org : {{app.patientDetail.patientOrg}}
                         </div>
                     </div>
                 </div>

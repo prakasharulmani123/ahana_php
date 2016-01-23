@@ -38,6 +38,14 @@ angular.module('app')
                         patientTopBar: true,
                         patientSideMenu: true,
                         patientContentClass: 'app-content app-content2',
+                    },
+                    patientDetail: {
+                        patientTitleCode: '',
+                        patientName: '',
+                        patientId: '',
+                        patientSex: '',
+                        patientDOA: '',
+                        patientOrg: '',
                     }
                 }
 
