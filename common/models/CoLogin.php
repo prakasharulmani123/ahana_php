@@ -51,7 +51,7 @@ class CoLogin extends ActiveRecord implements IdentityInterface {
                 'class' => BlameableBehavior::className(),
                 'updatedByAttribute' => 'modified_by',
                 'value' => function ($event) {
-                    if(isset(Yii::$app->user->identity->user_id))
+                    if (isset(Yii::$app->user->identity->user_id))
                         return Yii::$app->user->identity->user_id;
                 }
             ],
@@ -97,13 +97,6 @@ class CoLogin extends ActiveRecord implements IdentityInterface {
      */
     public function getUser() {
         return $this->hasOne(CoUser::className(), ['user_id' => 'user_id']);
-    }
-
-    public function beforeSave($insert) {
-//        if($insert)
-            $this->setPassword($this->password);
-        
-        return parent::beforeSave($insert);
     }
 
     /**

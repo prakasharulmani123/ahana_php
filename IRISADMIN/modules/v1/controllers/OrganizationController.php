@@ -116,6 +116,7 @@ class OrganizationController extends ActiveController {
                 $user_model->save(false);
 
                 $login_model->user_id = $user_model->user_id;
+                $login_model->setPassword($login_model->password);
                 $login_model->save(false);
 
                 $user = $user_model;
@@ -163,6 +164,9 @@ class OrganizationController extends ActiveController {
             if (Yii::$app->request->post('Login')) {
                 $model = CoLogin::findOne(['login_id' => Yii::$app->request->post('Login')['login_id']]);
                 $model->attributes = Yii::$app->request->post('Login');
+                if(!empty($model->password))
+                    $model->setPassword($model->password);
+                
                 $valid = $model->validate();
             }
 
