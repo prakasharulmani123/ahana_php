@@ -100,8 +100,8 @@ class DefaultController extends Controller {
         $user_id = Yii::$app->user->identity->user->user_id;
         $tenant_id = Yii::$app->user->identity->user->tenant_id;
 
-        $role_ids = ArrayHelper::map(CoUsersRoles::find()->where(['user_id' => $user_id])->all(), 'role_id','role_id');
-        $resource_ids = ArrayHelper::map(CoRolesResources::find()->where(['IN', 'role_id', $role_ids])->andWhere(['tenant_id' => $tenant_id])->all(), 'resource_id','resource_id');
+        $role_ids = ArrayHelper::map(CoUsersRoles::find()->where(['user_id' => $user_id])->all(), 'role_id', 'role_id');
+        $resource_ids = ArrayHelper::map(CoRolesResources::find()->where(['IN', 'role_id', $role_ids])->andWhere(['tenant_id' => $tenant_id])->all(), 'resource_id', 'resource_id');
 
         $menus = CoRolesResources::getModuleTreeByResourcename($get['resourceName']);
 
@@ -124,6 +124,19 @@ class DefaultController extends Controller {
         }
 
         return ['navigation' => $menus[0]['children']];
+    }
+
+    public function actionGetagefromdate() {
+        $post = Yii::$app->request->post();
+        $age = '';
+        if (isset($post['date'])) {
+            $date = $post['date'];
+            $birthDate = date('m/d/Y', strtotime($post['date']));
+            $birthDate = explode("/", $birthDate);
+            $age = (date("md", date("U", mktime(0, 0, 0, $birthDate[0], $birthDate[1], $birthDate[2]))) > date("md") ? ((date("Y") - $birthDate[2]) - 1) : (date("Y") - $birthDate[2]));
+        }
+        
+        return ['age' => $age];
     }
 
 }

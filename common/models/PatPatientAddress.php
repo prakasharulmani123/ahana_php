@@ -1,10 +1,8 @@
 <?php
 
-use common\models\PatPatient;
-use common\models\RActiveRecord;
-use yii\db\ActiveQuery;
-
 namespace common\models;
+
+use Yii;
 
 /**
  * This is the model class for table "pat_patient_address".
@@ -21,9 +19,6 @@ namespace common\models;
  * @property integer $addr_perm_state_id
  * @property integer $addr_perm_city_id
  * @property string $addr_perm_zip
- * @property string $addr_contact_1
- * @property string $addr_contact_2
- * @property string $addr_mobile
  * @property integer $created_by
  * @property string $created_at
  * @property integer $modified_by
@@ -32,7 +27,7 @@ namespace common\models;
  *
  * @property PatPatient $patient
  */
-class PatPatientAddress extends RActiveRecord
+class PatPatientAddress extends \common\models\RActiveRecord
 {
     /**
      * @inheritdoc
@@ -48,12 +43,10 @@ class PatPatientAddress extends RActiveRecord
     public function rules()
     {
         return [
-            [['patient_id', 'addr_mobile', 'created_by'], 'required'],
             [['patient_id', 'addr_country_id', 'addr_state_id', 'addr_city_id', 'addr_perm_country_id', 'addr_perm_state_id', 'addr_perm_city_id', 'created_by', 'modified_by'], 'integer'],
             [['addr_current_address', 'addr_perm_address'], 'string'],
             [['created_at', 'modified_at', 'deleted_at'], 'safe'],
-            [['addr_zip', 'addr_perm_zip'], 'string', 'max' => 10],
-            [['addr_contact_1', 'addr_contact_2', 'addr_mobile'], 'string', 'max' => 50]
+            [['addr_zip', 'addr_perm_zip'], 'string', 'max' => 10]
         ];
     }
 
@@ -75,9 +68,6 @@ class PatPatientAddress extends RActiveRecord
             'addr_perm_state_id' => 'Addr Perm State ID',
             'addr_perm_city_id' => 'Addr Perm City ID',
             'addr_perm_zip' => 'Addr Perm Zip',
-            'addr_contact_1' => 'Addr Contact 1',
-            'addr_contact_2' => 'Addr Contact 2',
-            'addr_mobile' => 'Addr Mobile',
             'created_by' => 'Created By',
             'created_at' => 'Created At',
             'modified_by' => 'Modified By',
@@ -87,7 +77,7 @@ class PatPatientAddress extends RActiveRecord
     }
 
     /**
-     * @return ActiveQuery
+     * @return \yii\db\ActiveQuery
      */
     public function getPatient()
     {
