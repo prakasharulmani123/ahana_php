@@ -1,43 +1,24 @@
 <div class="panel panel-default">
-    <div class="panel-body"> 
-        <p> <h4>  <i class="fa fa-exclamation-triangle"></i> One or more particulars matching to existing patient records!  </h4></p>     
-        <div class="search-patientcont">
+    <div class="panel-body">
+        <p> <h4 ng-show="matchings.length == 0">  <i class="fa fa-exclamation-triangle"></i> No Matching Records!  </h4></p>     
+        <p> <h4 ng-show="matchings.length > 0">  <i class="fa fa-exclamation-triangle"></i> One or more particulars matching to existing patient records!  </h4></p>     
+        <div class="search-patientcont" ng-repeat="patient in matchings">
             <div class="row"> 
                 <div class="col-xs-12 col-sm-2 col-md-2"> <img src="img/man-icon.png"  alt="" /></div>
                 <div class="col-xs-12 col-sm-5 col-md-5"> 
                     <div class="row"> 
-                        <a href="#">Mr. PatIent name</a> (35y) <br/>
+                        <a href="#">{{patient.Patient.patient_title_code}} {{patient.Patient.patient_firstname}}</a> ({{patient.Patient.patient_age}}y) <br/>
                         AH12345 
-                        <p class="m-t"> No, 123, Lorem St. <br/> 
-                            Dolorsite main, <br/> 
-                            Madurai 123456 <br/> 
-                            Tamilnadu</p>
-                        <p>  <span> <b>Contact No.s</b> <br/> 
-                                +91 1234567890 (Primary)<br/> 
-                                +91 1234567890 (Secondary) </span></p>
-                    </div>
-                </div>
-                <div class="col-xs-12 col-sm-5 col-md-5"> 
-                    Last visited on <span> <b> 23-jan-2015 </b></span> <br/> 
-                    Consultation with <span> <b> Dr.Vikram </b> </span>
-                    <p class="m-t-xxl "> <button class="btn m-b-xs w-xs btn-info">BOOK</button></p>
-                </div>
-            </div>
-        </div>
-        <div class="search-patientcont">
-            <div class="row"> 
-                <div class="col-xs-12 col-sm-2 col-md-2"> <img src="img/man-icon2.png"  alt="" /></div>
-                <div class="col-xs-12 col-sm-5 col-md-5"> 
-                    <div class="row"> 
-                        <a href="#">Mr. PatIent name</a> (35y) <br/>
-                        AH12345 
-                        <p class="m-t"> No, 123, Lorem St. <br/> 
-                            Dolorsite main, <br/> 
-                            Madurai 123456 <br/> 
-                            Tamilnadu</p>
-                        <p>  <span> <b>Contact No.s</b> <br/> 
-                                +91 1234567890 (Primary)<br/> 
-                                +91 1234567890 (Secondary) </span></p>
+                        <p class="m-t"> 
+                            {{patient.PatientAddress.addr_current_address}} <br/> 
+                            {{patient.PatientAddress.city_name}} {{patient.PatientAddress.addr_zip}} <br/> 
+                            {{patient.PatientAddress.state_name}}</p>
+                        <p>  
+                            <span> 
+                                <b>Contact No.s</b> <br/> 
+                                {{patient.Patient.patient_mobile}}<br/> 
+                            </span>
+                        </p>
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-5 col-md-5"> 

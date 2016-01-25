@@ -24,13 +24,12 @@ app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http
 
         //For Form
         $scope.createInit = function () {
-//            $scope.data = {};
-//            $scope.data.PatPatient.patient_title_code = 'Mr.';
-//            $scope.data.PatPatient.patient_gender = 'M';
-//            $scope.data.PatPatient.patient_billing_type = 'N';
-//            $scope.data.PatPatient.patient_reg_mode = 'NO';
+            $scope.data.PatPatient.patient_title_code = 'Mr.';
+            $scope.data.PatPatient.patient_gender = 'M';
+            $scope.data.PatPatient.patient_billing_type = 'N';
+            $scope.data.PatPatient.patient_reg_mode = 'NO';
         }
-        
+
         $scope.initForm = function () {
             $rootScope.commonService.GetFloorList('', '1', false, function (response) {
                 $scope.floors = response.floorList;
@@ -130,7 +129,7 @@ app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http
             if (newValue != '') {
                 $http({
                     method: 'POST',
-                    url: $rootScope.IRISOrgServiceUrl + '/default/getagefromdate',
+                    url: $rootScope.IRISOrgServiceUrl + '/patient/getagefromdate',
                     data: {'date': newValue},
                 }).success(
                         function (response) {
@@ -138,6 +137,18 @@ app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http
                         }
                 );
             }
+        }, true);
+
+        $scope.$watch('data.PatPatient.patient_firstname', function (newValue, oldValue) {
+            $http({
+                method: 'POST',
+                url: $rootScope.IRISOrgServiceUrl + '/patient/search',
+                data: {'search': newValue},
+            }).success(
+                    function (response) {
+                        $scope.matchings = response.patients;
+                    }
+            );
         }, true);
 
         $scope.setDateEmpty = function () {
@@ -166,6 +177,7 @@ app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http
                         if (response.success == true) {
                             $scope.successMessage = succ_msg;
                             $scope.data = {};
+                            $scope.createInit();
                         } else {
                             $scope.errorData = response.message;
                         }
