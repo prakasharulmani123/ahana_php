@@ -1,14 +1,14 @@
 <?php
 namespace IRISADMIN\modules\v1\controllers;
 
-use Yii;
 use common\models\IrisLoginForm;
 use IRISADMIN\models\ContactForm;
-use yii\filters\ContentNegotiator;
-use yii\web\Response;
-use yii\filters\AccessControl;
-use yii\rest\Controller;
+use Yii;
 use yii\filters\auth\HttpBearerAuth;
+use yii\filters\ContentNegotiator;
+use yii\helpers\Html;
+use yii\rest\Controller;
+use yii\web\Response;
 
 /**
  * User controller
@@ -40,7 +40,7 @@ class UserController extends Controller {
         if ($model->load(Yii::$app->getRequest()->getBodyParams(), '') && $model->login()) {
             return ['success' => true,'access_token' => Yii::$app->user->identity->getAuthKey()];
         } elseif (!$model->validate()) {
-            return ['success' => false, 'message' => $model->getFirstErrors()];
+            return ['success' => false, 'message' => Html::errorSummary([$model])];
         }
     }
 

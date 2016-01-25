@@ -3,7 +3,6 @@
 namespace IRISORG\modules\v1\controllers;
 
 use common\models\CoPatient;
-use common\models\CoResources;
 use common\models\PatPatient;
 use common\models\PatPatientAddress;
 use Yii;
@@ -73,6 +72,7 @@ class PatientController extends ActiveController {
         $post = Yii::$app->getRequest()->post();
         if (!empty($post['PatPatient']) || !empty($post['PatPatientAddress'])) {
             $model = new PatPatient();
+            $addr_model = new PatPatientAddress();
 
             if (isset($post['PatPatient'])) {
                 $model->attributes = $post['PatPatient'];
@@ -82,7 +82,6 @@ class PatientController extends ActiveController {
                 }
             }
 
-            $addr_model = new PatPatientAddress();
             if (isset($post['PatPatientAddress'])) {
                 $addr_model->attributes = $post['PatPatientAddress'];
             }
@@ -103,6 +102,32 @@ class PatientController extends ActiveController {
         } else {
             return ['success' => false, 'message' => 'Please Fill the Form'];
         }
+    }
+    
+    public function actionSearch() {
+        $post = Yii::$app->getRequest()->post();
+        $patients = [];
+        $limit = 10;
+        
+        if(isset($post['search']) && !empty($post['search'])){
+            $lists = PatPatient::find()->tenant()->active()->andWhere("patient_firstname like :search")->addParams([':search'=> "%{$post['search']}%"])->limit($limit)->all();
+            
+            foreach ($lists as $key => $patient) {
+                $patients[$key]['Patient'] = $patient;
+                $patients[$key]['PatientAddress'] = $patient->patPatientAddress;
+            }
+        }
+        return ['patients' => $patients];
+    }
+    
+    public function actionGetagefromdate() {
+        $post = Yii::$app->request->post();
+        $age = '';
+        if (isset($post['date'])) {
+            $age = PatPatient::getPatientAge($post['date']);
+        }
+        
+        return ['age' => $age];
     }
 
 }

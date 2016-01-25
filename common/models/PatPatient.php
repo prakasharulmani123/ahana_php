@@ -1,11 +1,9 @@
 <?php
 
-use common\models\CoTenant;
-use common\models\PatPatientAddress;
-use common\models\RActiveRecord;
-use yii\db\ActiveQuery;
-
 namespace common\models;
+
+use common\models\query\PatPatientQuery;
+use yii\db\ActiveQuery;
 
 /**
  * This is the model class for table "pat_patient".
@@ -32,6 +30,8 @@ namespace common\models;
  * @property string $patient_type
  * @property string $patient_ref_hospital
  * @property string $patient_ref_id
+ * @property string $patient_mobile
+ * @property string $patient_bill_type
  * @property string $status
  * @property integer $created_by
  * @property string $created_at
@@ -56,15 +56,16 @@ class PatPatient extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['tenant_id', 'patient_title_code', 'patient_firstname', 'patient_gender', 'patient_reg_mode'], 'required'],
+            [['patient_title_code', 'patient_firstname', 'patient_gender', 'patient_reg_mode', 'patient_mobile'], 'required'],
             [['tenant_id', 'patient_care_taker', 'patient_category_id', 'created_by', 'modified_by'], 'integer'],
-            [['patient_reg_date', 'patient_dob', 'created_at', 'modified_at', 'deleted_at', 'patient_temp_dob'], 'safe'],
+            [['patient_reg_date', 'patient_dob', 'created_at', 'modified_at', 'deleted_at', 'patient_temp_dob', 'patient_mobile', 'patient_bill_type'], 'safe'],
             [['status'], 'string'],
             [['patient_title_code'], 'string', 'max' => 10],
             [['patient_firstname', 'patient_lastname', 'patient_relation_name', 'patient_care_taker_name', 'patient_occupation', 'patient_email', 'patient_ref_id'], 'string', 'max' => 50],
             [['patient_relation_code', 'patient_gender', 'patient_marital_status', 'patient_reg_mode', 'patient_type'], 'string', 'max' => 2],
             [['patient_blood_group'], 'string', 'max' => 5],
-            [['patient_ref_hospital'], 'string', 'max' => 255]
+            [['patient_ref_hospital'], 'string', 'max' => 255],
+            [['tenant_id', 'patient_firstname', 'patient_lastname'], 'unique', 'targetAttribute' => ['tenant_id', 'patient_firstname', 'patient_lastname'], 'message' => 'The combination of Tenant ID, Patient Firstname and Patient Lastname has already been taken.']
         ];
     }
 
@@ -94,6 +95,7 @@ class PatPatient extends RActiveRecord {
             'patient_type' => 'Type',
             'patient_ref_hospital' => 'Ref Hospital',
             'patient_ref_id' => 'Ref ID',
+            'patient_mobile' => 'Mobile',
             'status' => 'Status',
             'created_by' => 'Created By',
             'created_at' => 'Created At',
@@ -113,8 +115,8 @@ class PatPatient extends RActiveRecord {
     /**
      * @return ActiveQuery
      */
-    public function getPatPatientAddresses() {
-        return $this->hasMany(PatPatientAddress::className(), ['patient_id' => 'patient_id']);
+    public function getPatPatientAddress() {
+        return $this->hasOne(PatPatientAddress::className(), ['patient_id' => 'patient_id']);
     }
 
     public function beforeSave($insert) {
@@ -124,7 +126,36 @@ class PatPatient extends RActiveRecord {
         if (!empty($this->patient_temp_dob))
             $this->patient_temp_dob = date('Y-m-d', strtotime($this->patient_temp_dob));
 
+        if ($insert)
+            $this->patient_reg_date = date('Y-m-d H:i:s');
+
         return parent::beforeSave($insert);
+    }
+
+    public static function find() {
+        return new PatPatientQuery(get_called_class());
+    }
+
+    public function fields() {
+        $extend = [
+            'patient_age' => function ($model) {
+                $age = '';
+                if ($model->patient_dob != '')
+                    $age = self::getPatientAge($model->patient_dob);
+
+                if ($model->patient_temp_dob != '')
+                    $age = self::getPatientAge($model->patient_temp_dob);
+                return $age;
+            },
+        ];
+        $fields = array_merge(parent::fields(), $extend);
+        return $fields;
+    }
+
+    public static function getPatientAge($date) {
+        $birthDate = date('m/d/Y', strtotime($date));
+        $birthDate = explode("/", $birthDate);
+        return (date("md", date("U", mktime(0, 0, 0, $birthDate[0], $birthDate[1], $birthDate[2]))) > date("md") ? ((date("Y") - $birthDate[2]) - 1) : (date("Y") - $birthDate[2]));
     }
 
 }

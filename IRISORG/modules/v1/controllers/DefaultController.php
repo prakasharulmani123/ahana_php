@@ -126,17 +126,4 @@ class DefaultController extends Controller {
         return ['navigation' => $menus[0]['children']];
     }
 
-    public function actionGetagefromdate() {
-        $post = Yii::$app->request->post();
-        $age = '';
-        if (isset($post['date'])) {
-            $date = $post['date'];
-            $birthDate = date('m/d/Y', strtotime($post['date']));
-            $birthDate = explode("/", $birthDate);
-            $age = (date("md", date("U", mktime(0, 0, 0, $birthDate[0], $birthDate[1], $birthDate[2]))) > date("md") ? ((date("Y") - $birthDate[2]) - 1) : (date("Y") - $birthDate[2]));
-        }
-        
-        return ['age' => $age];
-    }
-
 }

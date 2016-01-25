@@ -54,7 +54,7 @@ class CoUser extends RActiveRecord {
     public function rules() {
         return [
             [['name'], 'required'],
-            [['email'], 'email'],
+            [['email'], 'email', 'message' => 'Invalid Email Format'],
             [['title_code', 'name', 'designation', 'mobile', 'email', 'address', 'country_id', 'state_id', 'city_id', 'zip'], 'required', 'on' => 'saveorg'],
             [['tenant_id', 'city_id', 'state_id', 'country_id', 'speciality_id', 'created_by', 'modified_by'], 'integer'],
             [['title_code', 'care_provider', 'status'], 'string'],
