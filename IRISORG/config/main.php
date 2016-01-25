@@ -57,6 +57,7 @@ return [
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/city'], 'extraPatterns' => ['POST remove' => 'remove']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/alert'], 'extraPatterns' => ['POST remove' => 'remove']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/patient'], 'extraPatterns' => ['POST remove' => 'remove', 'POST registration' => 'registration']],
+                ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/encounter'], 'extraPatterns' => ['POST remove' => 'remove', 'POST createappointment' => 'createappointment']],
             ],
         ],
         'log' => [
