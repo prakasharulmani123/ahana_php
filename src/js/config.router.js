@@ -860,8 +860,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-
-            //PATIENT APPOINTMENT
+		//PATIENT APPOINTMENT
             .state('patient.appointment', {
                 url: '/appointment/{id}',
                 templateUrl: 'tpl/patient_appointment/create.html',
@@ -873,6 +872,18 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                                         return $ocLazyLoad.load('tpl/patient_appointment/patient_appointment.js');
                                     }
                             );
+                        }]
+                }
+            })
+
+            // In-Patient - Admission
+            .state('patient.admission', {
+                url: '/admission/{patient_id}',
+                templateUrl: 'tpl/patient_admission/create.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/patient_admission/patient_admission.js']);
                         }]
                 }
             })
