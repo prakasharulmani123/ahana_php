@@ -1,6 +1,7 @@
 <?php
 namespace IRISORG\modules\v1\controllers;
 
+use common\models\PatAdmission;
 use common\models\PatAppoinment;
 use common\models\PatEncounter;
 use Yii;
@@ -93,6 +94,34 @@ class EncounterController extends ActiveController {
                 return ['success' => true];
             } else {
                 return ['success' => false, 'message' => Html::errorSummary([$model, $appt_model])];
+            }
+        } else {
+            return ['success' => false, 'message' => 'Please Fill the Form'];
+        }
+    }
+
+    public function actionCreateadmission() {
+        $post = Yii::$app->getRequest()->post();
+        if (!empty($post)) {
+            $model = new PatEncounter();
+            $admission_model = new PatAdmission();
+            
+            $model->encounter_type = "IP";
+            $model->attributes = $post['PatEncounter'];
+            $admission_model->attributes = $post['PatAdmission'];
+
+            $valid = $model->validate();
+            $valid = $admission_model->validate() && $valid;
+
+            if ($valid) {
+                $model->save(false);
+
+                $admission_model->encounter_id = $model->encounter_id;
+                $admission_model->save(false);
+
+                return ['success' => true];
+            } else {
+                return ['success' => false, 'message' => Html::errorSummary([$model, $admission_model])];
             }
         } else {
             return ['success' => false, 'message' => 'Please Fill the Form'];

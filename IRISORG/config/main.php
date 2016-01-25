@@ -44,7 +44,7 @@ return [
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/roomchargesubcategory'], 'extraPatterns' => ['POST remove' => 'remove', 'GET getroomchargesubcategorylist' => 'getroomchargesubcategorylist', 'POST saveallsubcategory' => 'saveallsubcategory', 'POST deleteallsubcategory' => 'deleteallsubcategory']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/roomchargeitem'], 'extraPatterns' => ['POST remove' => 'remove', 'GET getroomchargeitemlist' => 'getroomchargeitemlist']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/roomtype'], 'extraPatterns' => ['POST remove' => 'remove', 'GET getroomtypelist' => 'getroomtypelist']],
-                ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/room'], 'extraPatterns' => ['GET getrooms' => 'getrooms', 'GET getroomandroomtypes' => 'getroomandroomtypes', 'POST assignroomtypes' => 'assignroomtypes']],
+                ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/room'], 'extraPatterns' => ['GET getrooms' => 'getrooms', 'GET getroomandroomtypes' => 'getroomandroomtypes', 'POST assignroomtypes' => 'assignroomtypes', 'GET getroomlist' => 'getroomlist']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/roomcharge'], 'extraPatterns' => ['POST remove' => 'remove', 'GET getroomchargecategorylist' => 'getroomchargecategorylist']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/speciality'], 'extraPatterns' => ['GET getspecialitylist' => 'getspecialitylist']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/patientcategory'], 'extraPatterns' => ['GET getpatientcategorylist' => 'getpatientcategorylist']],
@@ -57,7 +57,7 @@ return [
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/city'], 'extraPatterns' => ['POST remove' => 'remove']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/alert'], 'extraPatterns' => ['POST remove' => 'remove']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/patient'], 'extraPatterns' => ['POST remove' => 'remove', 'POST registration' => 'registration']],
-                ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/encounter'], 'extraPatterns' => ['POST remove' => 'remove', 'POST createappointment' => 'createappointment']],
+                ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/encounter'], 'extraPatterns' => ['POST remove' => 'remove', 'POST createappointment' => 'createappointment', 'POST createadmission' => 'createadmission']],
             ],
         ],
         'log' => [

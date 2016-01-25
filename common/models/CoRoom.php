@@ -127,4 +127,13 @@ class CoRoom extends RActiveRecord {
     public function getRoomstatus() {
         return ($this->occupied_status == 0) ? 'Vacant' : 'Occupied';
     }
+    
+    public static function getRoomList($tenant = null, $status = '1', $deleted = false) {
+        if(!$deleted)
+            $list = self::find()->tenant($tenant)->status($status)->active()->all();
+        else
+            $list = self::find()->tenant($tenant)->deleted()->all();
+
+        return $list;
+    }
 }
