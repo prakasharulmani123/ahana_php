@@ -860,6 +860,18 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
+            
+            //PATIENT ENCOUNTER
+            .state('patient.encounter', {
+                url: '/encounter/{id}',
+                templateUrl: 'tpl/patient/encounters.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/patient/patient.js']);
+                        }]
+                }
+            })
 		//PATIENT APPOINTMENT
             .state('patient.appointment', {
                 url: '/appointment/{id}',

@@ -9,13 +9,13 @@
                 <form name="formValidate" class="form-horizontal form-validation">
                     <div class="panel panel-default">
                         <div class="panel-body">                    
-                            <div class="form-group">
+<!--                            <div class="form-group">
                                 <label class="col-sm-3 control-label">Patient ID  </label>
                                 <div class="col-sm-9">
                                     <p>  <b> {{data.patient_id}}  </b></p>
                                 </div>
                             </div>
-                            <div class="line line-dashed b-b line-lg "></div>
+                            <div class="line line-dashed b-b line-lg "></div>-->
 
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Registration Date:   </label>
@@ -26,9 +26,17 @@
                             <div class="line line-dashed b-b line-lg "></div>
 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">Title:   </label>
+                                <label class="col-sm-3 control-label">Name:   </label>
                                 <div class="col-sm-9">
-                                    <p> {{data.patient_title_code}} </p>
+                                    <p> {{data.patient_title_code}}{{data.patient_firstname}} </p>
+                                </div>
+                            </div>
+                            <div class="line line-dashed b-b line-lg "></div>
+
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Last Name:   </label>
+                                <div class="col-sm-9">
+                                    <p> {{data.patient_lastname}} </p>
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
@@ -36,15 +44,23 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label"> Sex: </label>
                                 <div class="col-sm-9">
-                                    <p>  {{data.patient_gender}}  </p>
+                                    <p>  {{app.patientDetail.patientSex}}  </p>
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">Care Taker :    </label>
+                                <label class="col-sm-3 control-label"> Age: </label>
                                 <div class="col-sm-9">
-                                    <p>  {{data.patient_care_taker_name}}  </p>
+                                    <p>  {{data.patient_age}}  </p>
+                                </div>
+                            </div>
+                            <div class="line line-dashed b-b line-lg "></div>
+
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label"> DOB: </label>
+                                <div class="col-sm-9">
+                                    <p>  {{data.patient_dob}}  </p>
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
@@ -58,17 +74,25 @@
                             <div class="line line-dashed b-b line-lg "></div>
 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">Occupation :     </label>
+                                <label class="col-sm-3 control-label">Billing :     </label>
                                 <div class="col-sm-9">
-                                    <p>{{data.patient_occupation}}</p>
+                                    <p>{{data.patient_bill_type}}</p>
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
-
+                            
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Category :     </label>
                                 <div class="col-sm-9">
-                                    <p>{{data.patient_category_id}}</p>
+                                    <p>{{data.patient_category}}</p>
+                                </div>
+                            </div>
+                            <div class="line line-dashed b-b line-lg "></div>
+                            
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Register Mode :     </label>
+                                <div class="col-sm-9">
+                                    <p>{{data.patient_reg_mode}}</p>
                                 </div>
                             </div>
                         </div>
@@ -81,67 +105,84 @@
                     <div class="panel panel-default">
                         <div class="panel-body">                    
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">Patient ID  </label>
+                                <label class="col-sm-3 control-label">Current Address  </label>
                                 <div class="col-sm-9">
-                                    <p>  <b> {{data.patient_id}}  </b></p>
+                                    <p>  {{data.address.addr_current_address}}</p>
+                                </div>
+                            </div>
+                            <div class="line line-dashed b-b line-lg "></div>
+                            
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Zip </label>
+                                <div class="col-sm-9">
+                                    <p>  {{data.address.addr_zip}}</p>
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">Registration Date:   </label>
+                                <label class="col-sm-3 control-label">City  </label>
                                 <div class="col-sm-9">
-                                    <p>  {{data.patient_reg_date}}  </p>
+                                    <p>  {{data.address.city_name}}</p>
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">Title:   </label>
+                                <label class="col-sm-3 control-label">State </label>
                                 <div class="col-sm-9">
-                                    <p> {{data.patient_title_code}} </p>
+                                    <p>  {{data.address.state_name}}</p>
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label"> Sex: </label>
+                                <label class="col-sm-3 control-label">Country </label>
                                 <div class="col-sm-9">
-                                    <p>  {{data.patient_gender}}  </p>
+                                    <p>  {{data.address.country_name}}</p>
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">Care Taker :    </label>
+                                <label class="col-sm-3 control-label">Permanent Address  </label>
                                 <div class="col-sm-9">
-                                    <p>  {{data.patient_care_taker_name}}  </p>
+                                    <p>  {{data.address.addr_perm_address}}</p>
+                                </div>
+                            </div>
+                            <div class="line line-dashed b-b line-lg "></div>
+                            
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Zip </label>
+                                <div class="col-sm-9">
+                                    <p>  {{data.address.addr_perm_zip}}</p>
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">Marital Status:    </label>
+                                <label class="col-sm-3 control-label">City  </label>
                                 <div class="col-sm-9">
-                                    <p> {{data.patient_marital_status}} </p>
+                                    <p>  {{data.address.perm_city_name}}</p>
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">Occupation :     </label>
+                                <label class="col-sm-3 control-label">State </label>
                                 <div class="col-sm-9">
-                                    <p>{{data.patient_occupation}}</p>
+                                    <p>  {{data.address.perm_state_name}}</p>
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">Category :     </label>
+                                <label class="col-sm-3 control-label">Country </label>
                                 <div class="col-sm-9">
-                                    <p>{{data.patient_category_id}}</p>
+                                    <p>  {{data.address.perm_country_name}}</p>
                                 </div>
                             </div>
+
                         </div>
 
                     </div>

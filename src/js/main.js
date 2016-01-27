@@ -46,6 +46,7 @@ angular.module('app')
                         patientSex: '',
                         patientDOA: '',
                         patientOrg: '',
+                        patientAge: '',
                     }
                 }
 

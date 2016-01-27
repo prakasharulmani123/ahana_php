@@ -2,8 +2,8 @@
 
 angular.module('app').factory('CommonService', CommonService);
 
-CommonService.$inject = ['$http', '$rootScope', '$window', '$q'];
-function CommonService($http, $rootScope, $window, $q) {
+CommonService.$inject = ['$http', '$rootScope', '$window', '$q', '$filter'];
+function CommonService($http, $rootScope, $window, $q, $filter) {
     var service = {};
 
     service.ChangeStatus = ChangeStatus;
@@ -32,6 +32,9 @@ function CommonService($http, $rootScope, $window, $q) {
     service.GetPatientRegisterModelList = GetPatientRegisterModelList;
     service.GetPatientAppointmentStatus = GetPatientAppointmentStatus;
     service.GetRoomList = GetRoomList;
+
+    service.GetLabelFromValue = GetLabelFromValue;
+    service.FoundVlaue = FoundVlaue;
 
     return service;
 
@@ -294,7 +297,7 @@ function CommonService($http, $rootScope, $window, $q) {
         var response = [{value: 'B', label: 'Booked'}, {value: 'A', label: 'Arrived'}];
         callback(response);
     }
-    
+
     function GetRoomList(tenant, sts, del_sts, callback) {
         var response;
 
@@ -307,4 +310,36 @@ function CommonService($http, $rootScope, $window, $q) {
                 });
     }
 
+    function GetLabelFromValue(val, func, callback) {
+        if (func == 'GetGenderList') {
+            $rootScope.commonService.GetGenderList(function (response) {
+                $rootScope.commonService.FoundVlaue(val, response, function (response2) {
+                    callback(response2);
+                });
+            });
+        }
+        if (func == 'GetPatientBillingList') {
+            $rootScope.commonService.GetPatientBillingList(function (response) {
+                $rootScope.commonService.FoundVlaue(val, response, function (response2) {
+                    callback(response2);
+                });
+            });
+        }
+        if (func == 'GetPatientRegisterModelList') {
+            $rootScope.commonService.GetPatientRegisterModelList(function (response) {
+                $rootScope.commonService.FoundVlaue(val, response, function (response2) {
+                    callback(response2);
+                });
+            });
+        }
+    }
+
+    function FoundVlaue(val, response, callback) {
+        var result;
+        var found = $filter('filter')(response, {value: val}, true);
+        if (found.length) {
+            result = found[0].label;
+        }
+        callback(result);
+    }
 }
