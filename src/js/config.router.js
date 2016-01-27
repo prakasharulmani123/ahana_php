@@ -866,9 +866,13 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                 url: '/encounter/{id}',
                 templateUrl: 'tpl/patient/encounters.html',
                 resolve: {
-                    deps: ['uiLoad',
-                        function (uiLoad) {
-                            return uiLoad.load(['tpl/patient/patient.js']);
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('smart-table').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/patient/patient.js');
+                                    }
+                            );
                         }]
                 }
             })

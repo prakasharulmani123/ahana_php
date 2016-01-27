@@ -17,6 +17,7 @@ angular.module('app', [
     'pascalprecht.translate',
     'ivh.treeview',
     'colorpicker.module',
+    'angular.filter'
 //    'LocalStorageModule',
 ]);
 
