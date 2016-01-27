@@ -1,4 +1,5 @@
 <?php
+
 namespace IRISORG\modules\v1\controllers;
 
 use common\models\PatAdmission;
@@ -12,7 +13,6 @@ use yii\filters\ContentNegotiator;
 use yii\helpers\Html;
 use yii\rest\ActiveController;
 use yii\web\Response;
-
 
 /**
  * EncounterController implements the CRUD actions for CoTenant model.
@@ -73,7 +73,7 @@ class EncounterController extends ActiveController {
         if (!empty($post)) {
             $model = new PatEncounter();
             $appt_model = new PatAppoinment();
-            
+
             $model_attr = array(
                 'patient_id' => (isset($post['patient_id']) ? $post['patient_id'] : ''),
                 'encounter_type' => 'OP',
@@ -105,7 +105,7 @@ class EncounterController extends ActiveController {
         if (!empty($post)) {
             $model = new PatEncounter();
             $admission_model = new PatAdmission();
-            
+
             $model->encounter_type = "IP";
             $model->attributes = $post['PatEncounter'];
             $admission_model->attributes = $post['PatAdmission'];
@@ -125,6 +125,29 @@ class EncounterController extends ActiveController {
             }
         } else {
             return ['success' => false, 'message' => 'Please Fill the Form'];
+        }
+    }
+
+    public function actionGetencounters() {
+        $get = Yii::$app->getRequest()->get();
+        
+        if (isset($get['id'])) {
+            $query = "Select * ";
+            $query .= "From v_encounter ";
+            $query .= "Where patient_id = {$get['id']} ";
+            
+            if(isset($get['type'])){
+                $date = date('Y-m-d');
+                $separtor = $get['type'] == 'Current' ? "=" : '<>';
+                $query .= "And date {$separtor} '{$date}' ";
+            }
+
+            $command = Yii::$app->db->createCommand($query);
+            $data = $command->queryAll();
+            
+            return ['success' => true, 'encounters' => $data];
+        } else {
+            return ['success' => false, 'message' => 'Invalid Access'];
         }
     }
 
