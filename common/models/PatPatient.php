@@ -119,6 +119,10 @@ class PatPatient extends RActiveRecord {
         return $this->hasOne(PatPatientAddress::className(), ['patient_id' => 'patient_id']);
     }
 
+    public function getPatientCategory() {
+        return $this->hasOne(CoPatientCategory::className(), ['patient_cat_id' => 'patient_category_id']);
+    }
+
     public function beforeSave($insert) {
         if (!empty($this->patient_dob))
             $this->patient_dob = date('Y-m-d', strtotime($this->patient_dob));
@@ -146,6 +150,22 @@ class PatPatient extends RActiveRecord {
                 if ($model->patient_temp_dob != '')
                     $age = self::getPatientAge($model->patient_temp_dob);
                 return $age;
+            },
+            'org_name' => function ($model) {
+                if (isset($this->tenant->tenant_name))
+                    return $this->tenant->tenant_name;
+            },
+            'doa' => function ($model) {
+                if (isset($model->patient_reg_date))
+                    return date('Y-m-d', strtotime($model->patient_reg_date));
+            },
+            'sex' => function ($model) {
+                if (isset($model->patient_reg_date))
+                    return date('Y-m-d', strtotime($model->patient_reg_date));
+            },
+            'patient_category' => function ($model) {
+                if (isset($model->patientCategory->patient_cat_name))
+                    return $model->patientCategory->patient_cat_name;
             },
         ];
         $fields = array_merge(parent::fields(), $extend);

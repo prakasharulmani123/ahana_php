@@ -130,4 +130,8 @@ class PatientController extends ActiveController {
         return ['age' => $age];
     }
 
+    public function actionGetpatientaddress() {
+        $get = Yii::$app->getRequest()->get();
+        return ['address' => PatPatientAddress::find()->where(['patient_id' => $get['id']])->one()];
+    }
 }
