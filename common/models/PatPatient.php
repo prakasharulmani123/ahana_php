@@ -9,6 +9,7 @@ use yii\db\ActiveQuery;
  * This is the model class for table "pat_patient".
  *
  * @property integer $patient_id
+ * @property integer $casesheetno
  * @property integer $tenant_id
  * @property string $patient_reg_date
  * @property string $patient_title_code
@@ -56,7 +57,7 @@ class PatPatient extends RActiveRecord {
     public function rules() {
         return [
             [['patient_title_code', 'patient_firstname', 'patient_gender', 'patient_reg_mode', 'patient_mobile'], 'required'],
-            [['tenant_id', 'patient_care_taker', 'patient_category_id', 'created_by', 'modified_by'], 'integer'],
+            [['casesheetno', 'tenant_id', 'patient_care_taker', 'patient_category_id', 'created_by', 'modified_by'], 'integer'],
             [['patient_reg_date', 'patient_dob', 'created_at', 'modified_at', 'deleted_at', 'patient_mobile', 'patient_bill_type'], 'safe'],
             [['status'], 'string'],
             [['patient_title_code'], 'string', 'max' => 10],
@@ -64,7 +65,8 @@ class PatPatient extends RActiveRecord {
             [['patient_relation_code', 'patient_gender', 'patient_marital_status', 'patient_reg_mode', 'patient_type'], 'string', 'max' => 2],
             [['patient_blood_group'], 'string', 'max' => 5],
             [['patient_ref_hospital'], 'string', 'max' => 255],
-            [['tenant_id', 'patient_firstname', 'patient_lastname'], 'unique', 'targetAttribute' => ['tenant_id', 'patient_firstname', 'patient_lastname'], 'message' => 'The combination of Tenant ID, Patient Firstname and Patient Lastname has already been taken.']
+            [['tenant_id', 'patient_firstname', 'patient_lastname'], 'unique', 'targetAttribute' => ['tenant_id', 'patient_firstname', 'patient_lastname'], 'message' => 'The combination of Tenant ID, Patient Firstname and Patient Lastname has already been taken.'],
+            [['casesheetno'], 'unique', 'message' => 'This cashsheetno has already been taken.']
         ];
     }
 

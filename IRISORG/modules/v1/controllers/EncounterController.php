@@ -89,6 +89,18 @@ class EncounterController extends ActiveController {
                 $model->save(false);
 
                 $appt_model->encounter_id = $model->encounter_id;
+
+                //If appointment status is A (Arrived), then save first B (Booked) record 
+                if ($appt_model->appt_status == "A") {
+                    $appt_model->appt_status = "B";
+                    $appt_model->save(false);
+
+                    $appt_model = new PatAppoinment();
+                    $appt_model->attributes = $post;
+                    $appt_model->encounter_id = $model->encounter_id;
+                    $appt_model->appt_status = "A";
+                }
+
                 $appt_model->save(false);
 
                 return ['success' => true];
@@ -174,13 +186,13 @@ class EncounterController extends ActiveController {
         $get = Yii::$app->getRequest()->get();
 
         $date = date('Y-m-d');
-        
+
         //Default Current OP
         $query = "DATE(encounter_date) = '{$date}'";
         if (isset($get['type'])) {
-            if($get['type'] == 'Previous')
+            if ($get['type'] == 'Previous')
                 $query = "DATE(encounter_date) < '{$date}'";
-            else if($get['type'] == 'Future')
+            else if ($get['type'] == 'Future')
                 $query = "DATE(encounter_date) > '{$date}'";
         }
 
@@ -197,7 +209,7 @@ class EncounterController extends ActiveController {
         return $model;
     }
 
-    public function actionGetencounterlistbypatient() {
+public function actionGetencounterlistbypatient() {
         $get = Yii::$app->getRequest()->get();
 
         if (isset($get['tenant']))
@@ -215,6 +227,24 @@ class EncounterController extends ActiveController {
         $model = PatEncounter::getEncounterListByPatient($tenant, $status, $deleted, $patient_id);
 
         return $model;
+    }
+
+    public function actionPatienthaveactiveencounter() {
+        $post = Yii::$app->getRequest()->post();
+        if (!empty($post)) {
+            $patient_id = $post['patient_id'];
+            $model = PatEncounter::find()
+                    ->tenant()
+                    ->status()
+                    ->andWhere(["patient_id" => $patient_id])
+                    ->one();
+            
+            if(!empty($model)){
+                return ['success' => true];
+            } else {
+                return ['success' => false];
+            }
+        }
     }
 
 }

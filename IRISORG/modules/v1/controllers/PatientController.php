@@ -95,7 +95,7 @@ class PatientController extends ActiveController {
                 $addr_model->patient_id = $model->patient_id;
                 $addr_model->save(false);
 
-                return ['success' => true];
+                return ['success' => true, 'patient_id' => $model->patient_id];
             } else {
                 return ['success' => false, 'message' => Html::errorSummary([$model, $addr_model])];
             }

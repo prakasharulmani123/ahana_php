@@ -119,5 +119,19 @@ class DoctorscheduleController extends ActiveController {
             }
         }
     }
+    
+    public function actionGetdoctortimeschedule(){
+        $post = Yii::$app->getRequest()->post();
+        if (!empty($post)) {
+            $doctor_id = $post['doctor_id'];
+            $schedule_day = $post['schedule_day'];
+            
+            $timerange = array();
+            $timerange["01:00:00"] = "01:00:00";
+            $timerange["02:00:00"] = "02:00:00";
+            
+            return ['success' => true, 'timerange' => $timerange];
+        }
+    }
 
 }

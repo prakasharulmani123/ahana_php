@@ -43,7 +43,7 @@ class PatAppoinment extends \common\models\RActiveRecord
     public function rules()
     {
         return [
-            [['patient_id', 'appoinment_date', 'appoinment_time', 'consultant_id', 'appt_status'], 'required'],
+            [['appoinment_date', 'appoinment_time', 'consultant_id', 'appt_status'], 'required'],
             [['tenant_id', 'patient_id', 'encounter_id', 'consultant_id', 'created_by', 'modified_by'], 'integer'],
             [['appoinment_date', 'appoinment_time', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['status'], 'string'],

@@ -16,7 +16,6 @@ use yii\db\ActiveQuery;
  * @property string $inactive_date
  * @property integer $finalize
  * @property integer $authorize
- * @property string $casesheetno
  * @property string $status
  * @property integer $created_by
  * @property string $created_at
@@ -42,12 +41,11 @@ class PatEncounter extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['patient_id', 'encounter_type', 'casesheetno'], 'required'],
+            [['patient_id', 'encounter_type'], 'required'],
             [['tenant_id', 'patient_id', 'finalize', 'authorize', 'created_by', 'modified_by'], 'integer'],
             [['encounter_date', 'inactive_date', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['status'], 'string'],
             [['encounter_type'], 'string', 'max' => 5],
-            [['casesheetno'], 'string', 'max' => 200]
         ];
     }
 
@@ -64,7 +62,6 @@ class PatEncounter extends RActiveRecord {
             'inactive_date' => 'Inactive Date',
             'finalize' => 'Finalize',
             'authorize' => 'Authorize',
-            'casesheetno' => 'Casesheetno',
             'status' => 'Status',
             'created_by' => 'Created By',
             'created_at' => 'Created At',
