@@ -97,9 +97,25 @@ class PatAdmission extends RActiveRecord {
     public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
-    
+
+    public function getConsultant() {
+        return $this->hasOne(CoUser::className(), ['user_id' => 'consultant_id']);
+    }
+
     public function getFloor() {
         return $this->hasOne(CoFloor::className(), ['floor_id' => 'floor_id']);
+    }
+
+    public function getWard() {
+        return $this->hasOne(CoWard::className(), ['ward_id' => 'ward_id']);
+    }
+    
+    public function getRoom() {
+        return $this->hasOne(CoRoom::className(), ['room_id' => 'room_id']);
+    }
+    
+    public function getRoomType() {
+        return $this->hasOne(CoRoomType::className(), ['room_type_id' => 'room_type_id']);
     }
 
 }
