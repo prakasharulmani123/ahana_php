@@ -28,21 +28,19 @@ use yii\db\ActiveQuery;
  * @property PatPatient $patient
  * @property CoTenant $tenant
  */
-class PatEncounter extends RActiveRecord
-{
+class PatEncounter extends RActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'pat_encounter';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['patient_id', 'encounter_type', 'casesheetno'], 'required'],
             [['tenant_id', 'patient_id', 'finalize', 'authorize', 'created_by', 'modified_by'], 'integer'],
@@ -56,8 +54,7 @@ class PatEncounter extends RActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'encounter_id' => 'Encounter ID',
             'tenant_id' => 'Tenant ID',
@@ -80,28 +77,57 @@ class PatEncounter extends RActiveRecord
     /**
      * @return ActiveQuery
      */
-    public function getPatAppoinments()
-    {
+    public function getPatAppoinments() {
         return $this->hasMany(PatAppoinment::className(), ['encounter_id' => 'encounter_id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getPatient()
-    {
+    public function getPatient() {
         return $this->hasOne(PatPatient::className(), ['patient_id' => 'patient_id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getTenant()
-    {
+    public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
-    
+
     public static function find() {
         return new PatEncounterQuery(get_called_class());
     }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getPatAdmissions() {
+        return $this->hasMany(PatAdmission::className(), ['encounter_id' => 'encounter_id']);
+    }
+    
+    /**
+     * @return ActiveQuery
+     */
+    public function getPatLiveAdmission() {
+        return $this->hasOne(PatAdmission::className(), ['encounter_id' => 'encounter_id'])->andWhere(['admission_status' => 'A'])->orderBy(['status_date'=>SORT_DESC]);
+    }
+    
+    public function fields() {
+        $extend = [
+            'patent' => function ($model) {
+                return (isset($model->patient) ? $model->patient : '-');
+            },
+            'liveAdmission' => function ($model) {
+                return (isset($model->patLiveAdmission) ? $model->patLiveAdmission : '-');
+            },
+            'floor_name' => function ($model) {
+                return (isset($model->patLiveAdmission->floor->floor_name) ? $model->patLiveAdmission->floor->floor_name : '-');
+            },
+                    
+        ];
+        $fields = array_merge(parent::fields(), $extend);
+        return $fields;
+    }
+
 }

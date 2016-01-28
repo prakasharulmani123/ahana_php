@@ -106,9 +106,15 @@ class EncounterController extends ActiveController {
             $model = new PatEncounter();
             $admission_model = new PatAdmission();
 
-            $model->encounter_type = "IP";
-            $model->attributes = $post['PatEncounter'];
-            $admission_model->attributes = $post['PatAdmission'];
+            if (isset($post['PatEncounter'])) {
+                $model->encounter_type = "IP";
+                $model->attributes = $post['PatEncounter'];
+            }
+
+            if (isset($post['PatAdmission'])) {
+                $admission_model->attributes = $post['PatAdmission'];
+                $model->encounter_date = $post['PatAdmission']['status_date'];
+            }
 
             $valid = $model->validate();
             $valid = $admission_model->validate() && $valid;
@@ -128,7 +134,7 @@ class EncounterController extends ActiveController {
         }
     }
 
-    public function actionGetencounters() {
+	public function actionGetencounters() {
         $get = Yii::$app->getRequest()->get();
         
         if (isset($get['id'])) {
@@ -149,6 +155,19 @@ class EncounterController extends ActiveController {
         } else {
             return ['success' => false, 'message' => 'Invalid Access'];
         }
+    }
+
+    public function actionInpatients() {
+        $model = PatEncounter::find()
+                ->tenant()
+                ->status()
+                ->encounterType("IP")
+                ->orderBy([
+	           'encounter_date'=>SORT_DESC,
+	        ])
+                ->all();
+        
+        return $model;
     }
 
 }

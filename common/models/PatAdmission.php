@@ -15,7 +15,7 @@ namespace common\models;
  * @property integer $tenant_id
  * @property integer $patient_id
  * @property integer $encounter_id
- * @property string $admission_date
+ * @property string $status_date
  * @property integer $consultant_id
  * @property integer $floor_id
  * @property integer $ward_id
@@ -46,9 +46,9 @@ class PatAdmission extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['tenant_id', 'patient_id'], 'required'],
+            [['status_date', 'consultant_id', 'floor_id', 'ward_id', 'room_id', 'room_type_id'], 'required'],
             [['tenant_id', 'patient_id', 'encounter_id', 'consultant_id', 'floor_id', 'ward_id', 'room_id', 'room_type_id', 'created_by', 'modified_by'], 'integer'],
-            [['admission_date', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
+            [['status_date', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['status'], 'string']
         ];
     }
@@ -62,12 +62,12 @@ class PatAdmission extends RActiveRecord {
             'tenant_id' => 'Tenant ID',
             'patient_id' => 'Patient ID',
             'encounter_id' => 'Encounter ID',
-            'admission_date' => 'Admission Date',
-            'consultant_id' => 'Consultant ID',
-            'floor_id' => 'Floor ID',
-            'ward_id' => 'Ward ID',
-            'room_id' => 'Room ID',
-            'room_type_id' => 'Room Type ID',
+            'status_date' => 'Admission Date',
+            'consultant_id' => 'Consultant',
+            'floor_id' => 'Floor',
+            'ward_id' => 'Ward',
+            'room_id' => 'Room',
+            'room_type_id' => 'Room Type',
             'status' => 'Status',
             'created_by' => 'Created By',
             'created_at' => 'Created At',
@@ -96,6 +96,10 @@ class PatAdmission extends RActiveRecord {
      */
     public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
+    }
+    
+    public function getFloor() {
+        return $this->hasOne(CoFloor::className(), ['floor_id' => 'floor_id']);
     }
 
 }
