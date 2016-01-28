@@ -78,7 +78,7 @@ class PatientController extends ActiveController {
                 $model->attributes = $post['PatPatient'];
                 if (isset($post['PatPatient']['patient_dob']) && isset($post['PatPatient']['patient_age']) && $post['PatPatient']['patient_dob'] == '' && $post['PatPatient']['patient_age']) {
                     $newdate = strtotime("-{$post['PatPatient']['patient_age']} year", strtotime(date('Y-m-d')));
-                    $model->patient_temp_dob = date('Y-m-d', $newdate);
+                    $model->patient_dob = date('Y-m-d', $newdate);
                 }
             }
 
@@ -128,6 +128,16 @@ class PatientController extends ActiveController {
         }
         
         return ['age' => $age];
+    }
+    
+    public function actionGetdatefromage() {
+        $post = Yii::$app->request->post();
+        $dob = '';
+        if (isset($post['age'])) {
+            $dob = PatPatient::getPatientBirthdate($post['age']);
+        }
+        
+        return ['dob' => $dob];
     }
 
     public function actionGetpatientaddress() {

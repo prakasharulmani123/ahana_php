@@ -19,7 +19,6 @@ use yii\db\ActiveQuery;
  * @property integer $patient_care_taker
  * @property string $patient_care_taker_name
  * @property string $patient_dob
- * @property string $patient_temp_dob
  * @property string $patient_gender
  * @property string $patient_marital_status
  * @property string $patient_occupation
@@ -58,7 +57,7 @@ class PatPatient extends RActiveRecord {
         return [
             [['patient_title_code', 'patient_firstname', 'patient_gender', 'patient_reg_mode', 'patient_mobile'], 'required'],
             [['tenant_id', 'patient_care_taker', 'patient_category_id', 'created_by', 'modified_by'], 'integer'],
-            [['patient_reg_date', 'patient_dob', 'created_at', 'modified_at', 'deleted_at', 'patient_temp_dob', 'patient_mobile', 'patient_bill_type'], 'safe'],
+            [['patient_reg_date', 'patient_dob', 'created_at', 'modified_at', 'deleted_at', 'patient_mobile', 'patient_bill_type'], 'safe'],
             [['status'], 'string'],
             [['patient_title_code'], 'string', 'max' => 10],
             [['patient_firstname', 'patient_lastname', 'patient_relation_name', 'patient_care_taker_name', 'patient_occupation', 'patient_email', 'patient_ref_id'], 'string', 'max' => 50],
@@ -127,9 +126,6 @@ class PatPatient extends RActiveRecord {
         if (!empty($this->patient_dob))
             $this->patient_dob = date('Y-m-d', strtotime($this->patient_dob));
 
-        if (!empty($this->patient_temp_dob))
-            $this->patient_temp_dob = date('Y-m-d', strtotime($this->patient_temp_dob));
-
         if ($insert)
             $this->patient_reg_date = date('Y-m-d H:i:s');
 
@@ -146,9 +142,6 @@ class PatPatient extends RActiveRecord {
                 $age = '';
                 if ($model->patient_dob != '')
                     $age = self::getPatientAge($model->patient_dob);
-
-                if ($model->patient_temp_dob != '')
-                    $age = self::getPatientAge($model->patient_temp_dob);
                 return $age;
             },
             'org_name' => function ($model) {
@@ -176,6 +169,10 @@ class PatPatient extends RActiveRecord {
         $birthDate = date('m/d/Y', strtotime($date));
         $birthDate = explode("/", $birthDate);
         return (date("md", date("U", mktime(0, 0, 0, $birthDate[0], $birthDate[1], $birthDate[2]))) > date("md") ? ((date("Y") - $birthDate[2]) - 1) : (date("Y") - $birthDate[2]));
+    }
+
+    public static function getPatientBirthdate($age) {
+        return date('Y-m-d', strtotime($age . ' years ago'));
     }
 
 }
