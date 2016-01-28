@@ -907,6 +907,22 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
+            
+            // Out-Patient
+            .state('patient.outPatients', {
+                url: '/outPatients',
+                templateUrl: 'tpl/out_patients/index.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('smart-table').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/out_patients/out_patients.js');
+                                    }
+                            );
+                        }]
+                }
+            })
 
             // In-Patient - Admission
             .state('patient.admission', {

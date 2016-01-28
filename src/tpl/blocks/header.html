@@ -21,7 +21,44 @@
         <form class="navbar-form navbar-form-sm navbar-left shift" ui-shift="prependTo" data-target=".navbar-collapse" role="search" ng-controller="PatientSearchController">
             <div class="form-group">
                 <div class="input-group">
-                    <input type="text" ng-model="patientselected" typeahead="patient_list.Patient.patient_firstname for patient_list in patient_lists | filter:$viewValue | limitTo:8" class="form-control input-sm bg-light no-border rounded padder" placeholder="Search....">
+                    <input type="text" ng-model="patientselected" typeahead-template-url="searchbox" typeahead="patient_list.Patient.patient_firstname for patient_list in patient_lists | filter:$viewValue | limitTo:8" class="form-control input-sm bg-light no-border rounded padder" placeholder="Search....">
+                    <ul class="search-patientcont ">
+                        <li>
+                            <div class="row"> 
+                                <div class="col-xs-12 col-sm-2 col-md-2"> <img alt="" src="img/man-icon.png"></div>
+                                <div class="col-xs-12 col-sm-5 col-md-5"> 
+                                    <div class="row ng-binding"> 
+                                        <a href="#" class="ng-binding">Mr. Prakah</a> (25y) <br>
+                                        <span class="pull-left">AH12345</span> 
+                                        <span class="pull-right">9698566651</span> 
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-sm-5 col-md-5 pull-right"> 
+                                    <button class="btn m-b-xs w-xs btn-info">BOOK</button>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="row"> 
+                                <div class="col-xs-12 col-sm-2 col-md-2"> <img alt="" src="img/man-icon.png"></div>
+                                <div class="col-xs-12 col-sm-5 col-md-5"> 
+                                    <div class="row ng-binding"> 
+                                        <a href="#" class="ng-binding">Mr. Prakah</a> (25y) <br>
+                                        <span class="pull-left">AH12345</span> 
+                                        <span class="pull-right">9698566651</span> 
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-sm-5 col-md-5 pull-right"> 
+                                    <button class="btn m-b-xs w-xs btn-info">BOOK</button>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="row"> 
+                                <button class="btn m-b-xs w-xs btn-primary">Register</button>
+                            </div>
+                        </li>
+                    </ul>
                     <span class="input-group-btn">
                         <button type="submit" class="btn btn-sm bg-light rounded" ng-click="goToPatient(1)"><i class="fa fa-search"></i></button>
                     </span> 
@@ -49,7 +86,7 @@
                 <a ui-sref="patient.inPatients" href="#/patient/inPatients"> In-Patient </a>
             </li>
             <li ui-sref-active="active">
-                <a ui-sref="app.outpatient" href="#/app/outpatient"> Out-Patients </a>
+                <a ui-sref="patient.outPatients" href="#/patient/outPatients"> Out-Patients </a>
             </li>
             <li ui-sref-active="active">
                 <a href="#">Pharmacy </a>
@@ -78,4 +115,11 @@
             });
         });
     })(jQuery);
+</script>
+
+<script type="text/ng-template" id="searchbox">
+   <a tabindex="-1" ui-sref="patient.encounter({id: 1})">
+      <i ng-class="'icon-'+match.model.type"></i>match.model
+      <span  ng-bind-html-unsafe="match.model.title | typeaheadHighlight:query"></span>
+   </a>
 </script>
