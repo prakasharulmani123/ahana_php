@@ -116,8 +116,15 @@ class PatEncounter extends RActiveRecord {
     /**
      * @return ActiveQuery
      */
-    public function getPatLiveAppointment() {
-        return $this->hasOne(PatAppoinment::className(), ['encounter_id' => 'encounter_id'])->andWhere('appt_status <> "S"')->orderBy(['appoinment_date'=>SORT_DESC]);
+    public function getPatLiveAppointmentBooking() {
+        return $this->hasOne(PatAppoinment::className(), ['encounter_id' => 'encounter_id'])->andWhere('appt_status = "B"')->orderBy(['created_at'=>SORT_DESC]);
+    }
+    
+    /**
+     * @return ActiveQuery
+     */
+    public function getPatLiveAppointmentArrival() {
+        return $this->hasOne(PatAppoinment::className(), ['encounter_id' => 'encounter_id'])->andWhere('appt_status = "A"')->orderBy(['created_at'=>SORT_DESC]);
     }
     
     public function fields() {
@@ -136,14 +143,17 @@ class PatEncounter extends RActiveRecord {
             'liveAdmission' => function ($model) {
                 return (isset($model->patLiveAdmission) ? $model->patLiveAdmission : '-');
             },
-            'liveAppointment' => function ($model) {
-                return (isset($model->patLiveAppointment) ? $model->patLiveAppointment : '-');
+            'liveAppointmentBooking' => function ($model) {
+                return (isset($model->patLiveAppointmentBooking) ? $model->patLiveAppointmentBooking : '-');
+            },
+            'liveAppointmentArrival' => function ($model) {
+                return (isset($model->patLiveAppointmentArrival) ? $model->patLiveAppointmentArrival : '-');
             },
             'room_name' => function ($model) {
                 return (isset($model->patLiveAdmission->room->bed_name) ? $model->patLiveAdmission->room->bed_name : '-');
             },
             'liveAppointmentConsultant' => function ($model) {
-                return (isset($model->patLiveAppointment->consultant) ? $model->patLiveAppointment->consultant : '-');
+                return (isset($model->patLiveAppointmentBooking->consultant) ? $model->patLiveAppointmentBooking->consultant : '-');
             },
             'room_type_name' => function ($model) {
                 return (isset($model->patLiveAdmission->roomType->room_type_name) ? $model->patLiveAdmission->roomType->room_type_name : '-');

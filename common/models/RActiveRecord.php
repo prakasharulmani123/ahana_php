@@ -53,8 +53,10 @@ class RActiveRecord extends ActiveRecord {
         return parent::beforeSave($insert);
     }
 
-    public static function timeAgo($time_ago) {
-        $cur_time = time();
+    public static function timeAgo($time_ago, $cur_time = NULL) {
+        if(is_null($cur_time))
+            $cur_time = time();
+        
         $time_elapsed = $cur_time - $time_ago;
         $seconds = $time_elapsed;
         $minutes = round($time_elapsed / 60);
