@@ -2,15 +2,14 @@
     <h1 class="m-n h3">In-Patient</h1>
 </div>
 
-
 <div class="wrapper-md" ng-controller="InPatientsController" ng-init="loadInPatientsList()">
     <div class="panel panel-default">
         <div class="row wrapper">
             <div class="col-sm-5 m-b-xs">
-
-                <button class="btn btn-sm btn-grey"> &nbsp; &nbsp; <i class="fa fa-repeat"></i>  &nbsp; &nbsp; </button>    
-
-                <div class="btn-group" dropdown is-open="status.isopen">
+                <button class="btn btn-sm btn-grey" ng-click="loadInPatientsList()"> 
+                    &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
+                </button>
+<!--                <div class="btn-group" dropdown is-open="status.isopen">
                     <button type="button" class=" btn btn-sm btn-grey" dropdown-toggle ng-disabled="disabled">
                         More &nbsp;&nbsp;<span class="caret"></span>
                     </button>
@@ -21,12 +20,11 @@
                         <li class="divider"></li>
                         <li><a href>Separated link</a></li>
                     </ul>
-                </div>        
+                </div>        -->
             </div>
-            <div class="col-sm-4">
-            </div>
+            <div class="col-sm-4"></div>
             <div class="col-sm-2 pull-right">
-                <div class="btn-group navbar-right" dropdown>
+<!--                <div class="btn-group navbar-right" dropdown>
                     <button type="button" class=" btn btn-sm no-bg" dropdown-toggle >
                         &nbsp;&nbsp;  <img src="img/actions-icon.png"  alt="" />
                     </button>
@@ -50,12 +48,10 @@
                         <li class="divider"></li>
                         <li><a href>Separated link</a></li>
                     </ul>
-                </div>
-
-
+                </div>-->
             </div>
         </div>
-        
+
         <div class="table-responsive in-patient-table">
             <table st-table="displayedCollection"  st-safe-src="rowCollection" class="table table-striped b-t b-light">
                 <thead>
@@ -66,16 +62,15 @@
                             </label>
                         </th>
                         <th style="width:40px;">&nbsp;</th>
-                        <th st-sort="floor_name">Patient</th>
+                        <th st-sort="patient_firstname">Patient</th>
                         <th>Case sheet#</th>
-                        <th>Admission<br>Date</th>
+                        <th>Admission Date</th>
                         <th>ROOM#</th>
-                        <th>Consultant</th>
                         <th style="width:150px;"> Actions </th>
                     </tr>
                 </thead>
                 <tbody ng-hide="isLoading">
-                    <tr ng-repeat="row in displayedCollection | orderBy: patient_firstname">
+                    <tr ng-repeat="row in displayedCollection| orderBy: patient_firstname">
                         <td align="center" valign="middle">
                             <label class="i-checks m-b-none">
                                 <input type="checkbox" name="post[]"><i></i>
@@ -86,17 +81,17 @@
                         </td>
                         <td>
                             <img class="pull-left" src="img/man-icon.png" width="49" height="49" alt="" />  
-                            <a href="#">{{row.patent.patient_title_code}}. {{row.patent.patient_firstname}} </a>(35y) <br/> 
+                            <a ui-sref="patient.view({id: '{{row.patent.patient_id}}'})">
+                                {{row.patent.patient_title_code}} {{row.patent.patient_firstname}} 
+                            </a>({{row.patent.patient_age}}y) <br/> 
                             {{row.patent.patient_id}}
                         </td>
                         <td>{{row.casesheetno}}</td>
                         <td>
-                            {{row.encounter_date}} <br/>  <span class="text-muted"> 10 Days ago </span>
+                            {{row.doe}} <br/>  <span class="text-muted"> {{row.doeTimeago}} </span>
                         </td>
-                        <td>{{row.floor_name}} <br/> <span class="text-muted"> {{row.liveAdmission.room_type_id}} </span> </td>
-                        <td>
-                            {{row.liveAdmission.consultant_id}}
-                        </td>
+                        <td>{{row.room_name}} <br/> <span class="text-muted"> {{row.room_type_name}} </span> </td>
+
                         <td> 
                             <div class="actions-icons-cont">  
                                 <a href="#">  <i tooltip="Cancel" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" class="fa fa-times-circle"></i>  </a>
