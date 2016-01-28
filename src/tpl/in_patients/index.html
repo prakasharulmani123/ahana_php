@@ -1,0 +1,162 @@
+<div class="bg-light lter b-b wrapper-md">
+    <h1 class="m-n h3">In-Patient</h1>
+</div>
+
+
+<div class="wrapper-md" ng-controller="InPatientsController" ng-init="loadInPatientsList()">
+    <div class="panel panel-default">
+        <div class="row wrapper">
+            <div class="col-sm-5 m-b-xs">
+
+                <button class="btn btn-sm btn-grey"> &nbsp; &nbsp; <i class="fa fa-repeat"></i>  &nbsp; &nbsp; </button>    
+
+                <div class="btn-group" dropdown is-open="status.isopen">
+                    <button type="button" class=" btn btn-sm btn-grey" dropdown-toggle ng-disabled="disabled">
+                        More &nbsp;&nbsp;<span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href>Action</a></li>
+                        <li><a href>Another action</a></li>
+                        <li><a href>Something else here</a></li>
+                        <li class="divider"></li>
+                        <li><a href>Separated link</a></li>
+                    </ul>
+                </div>        
+            </div>
+            <div class="col-sm-4">
+            </div>
+            <div class="col-sm-2 pull-right">
+                <div class="btn-group navbar-right" dropdown>
+                    <button type="button" class=" btn btn-sm no-bg" dropdown-toggle >
+                        &nbsp;&nbsp;  <img src="img/actions-icon.png"  alt="" />
+                    </button>
+                    <ul class="dropdown-menu" role="menu1">
+                        <li><a href>Action</a></li>
+                        <li><a href>Another action</a></li>
+                        <li><a href>Something else here</a></li>
+                        <li class="divider"></li>
+                        <li><a href>Separated link</a></li>
+                    </ul>
+                </div>
+
+                <div class="btn-group pull-right" dropdown>
+                    <button type="button" class=" btn btn-sm btn-grey" dropdown-toggle >
+                        &nbsp;&nbsp; Select &nbsp;&nbsp;<span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu1">
+                        <li><a href>Action</a></li>
+                        <li><a href>Another action</a></li>
+                        <li><a href>Something else here</a></li>
+                        <li class="divider"></li>
+                        <li><a href>Separated link</a></li>
+                    </ul>
+                </div>
+
+
+            </div>
+        </div>
+        
+        <div class="table-responsive in-patient-table">
+            <table st-table="displayedCollection"  st-safe-src="rowCollection" class="table table-striped b-t b-light">
+                <thead>
+                    <tr>
+                        <th width="21"  style="width:20px;">
+                            <label class="i-checks m-b-none">
+                                <input type="checkbox"><i></i>
+                            </label>
+                        </th>
+                        <th style="width:40px;">&nbsp;</th>
+                        <th st-sort="floor_name">Patient</th>
+                        <th>Case sheet#</th>
+                        <th>Admission<br>Date</th>
+                        <th>ROOM#</th>
+                        <th>Consultant</th>
+                        <th style="width:150px;"> Actions </th>
+                    </tr>
+                </thead>
+                <tbody ng-hide="isLoading">
+                    <tr ng-repeat="row in displayedCollection | orderBy: patient_firstname">
+                        <td align="center" valign="middle">
+                            <label class="i-checks m-b-none">
+                                <input type="checkbox" name="post[]"><i></i>
+                            </label>
+                        </td>
+                        <td align="center" valign="middle">
+                            <img class="pull-left" src="img/symbol1.png"  alt="" />
+                        </td>
+                        <td>
+                            <img class="pull-left" src="img/man-icon.png" width="49" height="49" alt="" />  
+                            <a href="#">{{row.patent.patient_title_code}}. {{row.patent.patient_firstname}} </a>(35y) <br/> 
+                            {{row.patent.patient_id}}
+                        </td>
+                        <td>{{row.casesheetno}}</td>
+                        <td>
+                            {{row.encounter_date}} <br/>  <span class="text-muted"> 10 Days ago </span>
+                        </td>
+                        <td>{{row.floor_name}} <br/> <span class="text-muted"> {{row.liveAdmission.room_type_id}} </span> </td>
+                        <td>
+                            {{row.liveAdmission.consultant_id}}
+                        </td>
+                        <td> 
+                            <div class="actions-icons-cont">  
+                                <a href="#">  <i tooltip="Cancel" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" class="fa fa-times-circle"></i>  </a>
+                                <span ng-controller="ModalDemoCtrl"><a href="#" ng-click="open()">  <i tooltip="Modify" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" class="fa fa-pencil"></i>   </a></span>
+                                <a href="#">  <i tooltip="Delete" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" class="fa fa-trash"></i>   </a>
+                                <span class="dropdown hidden-sm" dropdown>
+                                    <a href class="dropdown-toggle" dropdown-toggle>
+                                        <img src="img/actions-icon.png"  alt="" />
+                                    </a>
+                                    <!-- dropdown -->
+                                    <ul class="dropdown-menu ">
+                                        <li><a href="#"> Action 1</a></li>
+                                        <li><a href="#">  Action 2 </a></li>
+                                        <li><a href="#"> Action 3</a></li>
+                                        <li><a href="#">  Action 5</a></li>
+                                    </ul>
+                                    <!-- / dropdown -->
+                                </span>
+                            </div>  
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody ng-show="isLoading">
+                    <tr>
+                        <td colspan="8" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="8" class="text-center">
+                            <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7"></div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+
+        <!--        <footer class="panel-footer">
+                    <div class="row">
+                        <div class="col-sm-4 hidden-xs">
+        
+        
+                        </div>
+                        <div class="col-sm-4 text-center">
+                            <small class="text-muted inline m-t-sm m-b-sm">showing 20-30 of 50 items</small>
+                        </div>
+                        <div class="col-sm-4 text-right text-center-xs">                
+                            <ul class="pagination pagination-sm m-t-none m-b-none">
+                                <li><a href><i class="fa fa-chevron-left"></i></a></li>
+                                <li><a href>1</a></li>
+                                <li><a href>2</a></li>
+                                <li><a href>3</a></li>
+                                <li><a href>4</a></li>
+                                <li><a href>5</a></li>
+                                <li><a href><i class="fa fa-chevron-right"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </footer>-->
+    </div>
+
+</div>
