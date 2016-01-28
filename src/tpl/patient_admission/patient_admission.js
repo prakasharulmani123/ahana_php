@@ -4,6 +4,21 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
         $scope.app.settings.patientSideMenu = true;
         $scope.app.settings.patientContentClass = 'app-content';
 
+        //Index Page
+       
+        
+        $scope.initCanCreateAdmission = function () {
+            $http.post($rootScope.IRISOrgServiceUrl + '/encounter/patienthaveactiveencounter', {patient_id: $state.params.id})
+                    .success(function (response) {
+                        if(response.success == true){
+                            alert("This patient already have an active admission. You can't create a new admission");
+                            $state.go("patient.view", {id: $state.params.id});
+                        }
+                    }, function (x) {
+                        response = {success: false, message: 'Server Error'};
+                    });
+        }
+
         $scope.initForm = function () {
             $rootScope.commonService.GetDoctorList('', '1', false, '1', function (response) {
                 $scope.doctors = response.doctorsList;

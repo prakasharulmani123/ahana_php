@@ -22,14 +22,6 @@ app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http
                     });
         };
 
-        //For Form
-        $scope.createInit = function () {
-            $scope.data.PatPatient.patient_title_code = 'Mr.';
-            $scope.data.PatPatient.patient_gender = 'M';
-            $scope.data.PatPatient.patient_billing_type = 'N';
-            $scope.data.PatPatient.patient_reg_mode = 'NO';
-        }
-
         $scope.initForm = function () {
             $rootScope.commonService.GetFloorList('', '1', false, function (response) {
                 $scope.floors = response.floorList;
@@ -125,33 +117,7 @@ app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http
             return mode === 'day' && (date.getDay() === 0 || date.getDay() === 6);
         };
 
-        $scope.$watch('data.PatPatient.patient_dob', function (newValue, oldValue) {
-            if (newValue != '') {
-                $http({
-                    method: 'POST',
-                    url: $rootScope.IRISOrgServiceUrl + '/patient/getagefromdate',
-                    data: {'date': newValue},
-                }).success(
-                        function (response) {
-                            $scope.data.PatPatient.patient_age = response.age;
-                        }
-                );
-            }
-        }, true);
-        
-        $scope.$watch('data.PatPatient.patient_age', function (newValue, oldValue) {
-            if (parseInt(newValue) && !isNaN(newValue)) {
-                $http({
-                    method: 'POST',
-                    url: $rootScope.IRISOrgServiceUrl + '/patient/getdatefromage',
-                    data: {'age': newValue},
-                }).success(
-                        function (response) {
-                            $scope.data.PatPatient.patient_dob = response.dob;
-                        }
-                );
-            }
-        }, true);
+
 
         $scope.$watch('data.PatPatient.patient_firstname', function (newValue, oldValue) {
             $http({
@@ -166,13 +132,47 @@ app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http
         }, true);
 
         $scope.setDateEmpty = function () {
-            console.log(this);
             $scope.data.PatPatient.patient_dob = '';
+        }
+        
+        $scope.setAgeEmpty = function () {
+            $scope.data.PatPatient.patient_age = '';
+        }
+
+        $scope.getDOB = function () {
+            var newValue = this.data.PatPatient.patient_age;
+            if (parseInt(newValue) && !isNaN(newValue)) {
+                $http({
+                    method: 'POST',
+                    url: $rootScope.IRISOrgServiceUrl + '/patient/getdatefromage',
+                    data: {'age': newValue},
+                }).success(
+                        function (response) {
+                            $scope.data.PatPatient.patient_dob = response.dob;
+                        }
+                );
+            }
+        }
+
+        $scope.getAge = function () {
+            var newValue = this.data.PatPatient.patient_dob;
+            if (newValue != '') {
+                $http({
+                    method: 'POST',
+                    url: $rootScope.IRISOrgServiceUrl + '/patient/getagefromdate',
+                    data: {'date': newValue},
+                }).success(
+                        function (response) {
+                            $scope.data.PatPatient.patient_age = response.age;
+                        }
+                );
+            }
         }
 
         //Save Both Add Data
         $scope.saveForm = function (mode) {
             _that = this;
+            reg_mode = _that.data.PatPatient.patient_reg_mode;
 
             $scope.errorData = "";
             $scope.successMessage = "";
@@ -191,8 +191,16 @@ app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http
                         $scope.loadbar('hide');
                         if (response.success == true) {
                             $scope.successMessage = succ_msg;
-                            $scope.data = {};
-                            $scope.createInit();
+                            var patient_id = response.patient_id;
+                            $timeout(function () {
+                                if (reg_mode == "IP") {
+                                    $state.go('patient.admission', {id: patient_id});
+                                } else if (reg_mode == "OP") {
+                                    $state.go('patient.appointment', {id: patient_id});
+                                } else {
+                                    $state.go('patient.view', {id: patient_id});
+                                }
+                            }, 1000)
                         } else {
                             $scope.errorData = response.message;
                         }

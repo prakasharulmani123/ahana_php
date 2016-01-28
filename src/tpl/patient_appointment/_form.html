@@ -12,16 +12,20 @@
 
         <div class="form-group">
             <label class="col-sm-3 control-label">Date of Appointment * </label>
-            <div class="col-sm-4">
+            <div class="col-sm-9">
                 <div class="input-group w-md">
-                    <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="data.appoinment_date" is-open="$parent.opened" datepicker-options="dateOptions" close-text="Close"  min-date="minDate"/>
+                    <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="data.appoinment_date" is-open="$parent.opened" datepicker-options="dateOptions" close-text="Close"  min-date="minDate" ng-change="getTimeOfAppointment();"/>
                     <span class="input-group-btn">
                         <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                     </span>
                 </div>
             </div>
-            <label class="col-sm-2 control-label">Time of Appointment * </label>
-            <div class="col-sm-2">
+        </div>
+        <div class="line line-dashed b-b line-lg "></div>
+        
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Time of Appointment * </label>
+            <div class="col-sm-3">
                 <input type="text" ng-model="data.appoinment_time" class="timepicker form-control" placeholder="" onkeydown="return false;" ng-init="initTimepicker();">
             </div>
         </div>

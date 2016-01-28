@@ -4,6 +4,18 @@ app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http
         $scope.app.settings.patientSideMenu = true;
 //        $scope.app.settings.patientContentClass = 'app-content';
 
+        $scope.initCanCreateAppointment = function () {
+            $http.post($rootScope.IRISOrgServiceUrl + '/encounter/patienthaveactiveencounter', {patient_id: $state.params.id})
+                    .success(function (response) {
+                        if (response.success == true) {
+                            alert("This patient already have an active appointment. You can't create a new appointment");
+                            $state.go("patient.view", {id: $state.params.id});
+                        }
+                    }, function (x) {
+                        response = {success: false, message: 'Server Error'};
+                    });
+        }
+
         $scope.initForm = function () {
             //Load Doctor List
             $rootScope.commonService.GetDoctorList('', '1', false, '1', function (response) {
@@ -45,6 +57,17 @@ app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http
             $('.timepicker').timepicker();
         }
 
+        $scope.getTimeOfAppointment = function () {
+            if (this.data.consultant_id != '' && this.data.appoinment_date) {
+                $http.post($rootScope.IRISOrgServiceUrl + '/doctorschedule/getdoctortimeschedule', {doctor_id: this.data.consultant_id, schedule_day:this.data.appoinment_date})
+                        .success(function (response) {
+                            console.log(response);
+                        }, function (x) {
+                            response = {success: false, message: 'Server Error'};
+                        });
+            }
+        }
+
         //Save Both Add Data
         $scope.saveForm = function (mode) {
             _that = this;
@@ -68,7 +91,6 @@ app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http
                         if (response.success == true) {
                             $scope.successMessage = succ_msg;
                             $scope.data = {};
-                            $scope.createInit();
                         } else {
                             $scope.errorData = response.message;
                         }

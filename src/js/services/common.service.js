@@ -291,7 +291,7 @@ function CommonService($http, $rootScope, $window, $q, $filter) {
     }
 
     function GetPatientRegisterModelList(callback) {
-        var response = [{value: 'NO', label: 'None'}, {value: 'OP', label: 'OP'}, {value: 'IP', label: 'IP'}];
+        var response = [{value: 'OP', label: 'OP'}, {value: 'IP', label: 'IP'}, {value: 'NO', label: 'None'}];
         callback(response);
     }
 

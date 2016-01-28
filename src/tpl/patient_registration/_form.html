@@ -29,14 +29,14 @@
             <label class="col-sm-3 control-label">DOB  </label>
             <div class="col-sm-5">
                 <div class="input-group">
-                    <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="data.PatPatient.patient_dob" is-open="$parent.opened" datepicker-options="dateOptions" close-text="Close" max-date="maxDate" date-disabled="disabled(date, mode)"/>
+                    <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="data.PatPatient.patient_dob" is-open="$parent.opened" datepicker-options="dateOptions" close-text="Close" max-date="maxDate" date-disabled="disabled(date, mode)" ng-change="setAgeEmpty(); getAge();"/>
                     <span class="input-group-btn">
                         <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                     </span>
                 </div>
             </div>
             <div class="col-sm-4">
-                <input type="text" ng-model="data.PatPatient.patient_age" class="form-control" placeholder="Age" only-digits="" onkeydown="" ng-change="setDateEmpty()">
+                <input type="text" ng-model="data.PatPatient.patient_age" class="form-control" placeholder="Age" only-digits="" onkeydown="" ng-change="setDateEmpty(); getDOB();">
             </div>
         </div>
         <div class="line line-dashed b-b line-lg "></div>
