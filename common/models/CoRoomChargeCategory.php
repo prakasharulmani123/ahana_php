@@ -88,10 +88,19 @@ class CoRoomChargeCategory extends RActiveRecord {
     
     public static function getRoomChargeCateogrylist($tenant = null, $status = '1', $deleted = false) {
         if(!$deleted)
-            $list = self::find()->tenant($tenant)->status($status)->active()->all();
+            $list = self::find()->tenantWithNull($tenant)->status($status)->active()->all();
         else
-            $list = self::find()->tenant($tenant)->deleted()->all();
+            $list = self::find()->tenantWithNull($tenant)->deleted()->all();
         
         return $list;
+    }
+    
+    public static function getChargeListByCode($tenant = null, $status = '1', $deleted = false, $code = '') {
+        if(!$deleted)
+            $list = self::find()->tenantWithNull($tenant)->status($status)->active()->andWhere(['charge_cat_code' => $code])->one();
+        else
+            $list = self::find()->tenantWithNull($tenant)->deleted()->andWhere(['charge_cat_code' => $code])->one();
+        
+        return (isset($list->roomchargesubcategory)) ? $list->roomchargesubcategory : [];
     }
 }

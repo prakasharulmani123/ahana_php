@@ -197,4 +197,24 @@ class EncounterController extends ActiveController {
         return $model;
     }
 
+    public function actionGetencounterlistbypatient() {
+        $get = Yii::$app->getRequest()->get();
+
+        if (isset($get['tenant']))
+            $tenant = $get['tenant'];
+
+        if (isset($get['status']))
+            $status = strval($get['status']);
+
+        if (isset($get['deleted']))
+            $deleted = $get['deleted'] == 'true';
+
+        if (isset($get['patient_id']))
+            $patient_id = $get['patient_id'];
+
+        $model = PatEncounter::getEncounterListByPatient($tenant, $status, $deleted, $patient_id);
+
+        return $model;
+    }
+
 }

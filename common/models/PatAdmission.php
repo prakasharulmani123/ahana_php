@@ -48,7 +48,7 @@ class PatAdmission extends RActiveRecord {
         return [
             [['status_date', 'consultant_id', 'floor_id', 'ward_id', 'room_id', 'room_type_id'], 'required'],
             [['tenant_id', 'patient_id', 'encounter_id', 'consultant_id', 'floor_id', 'ward_id', 'room_id', 'room_type_id', 'created_by', 'modified_by'], 'integer'],
-            [['status_date', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
+            [['status_date', 'created_at', 'modified_at', 'deleted_at', 'status_date'], 'safe'],
             [['status'], 'string']
         ];
     }

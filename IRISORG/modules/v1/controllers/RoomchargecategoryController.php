@@ -45,7 +45,7 @@ class RoomchargecategoryController extends ActiveController {
         $modelClass = $this->modelClass;
 
         return new ActiveDataProvider([
-            'query' => $modelClass::find()->tenant()->active()->orderBy(['created_at' => SORT_DESC]),
+            'query' => $modelClass::find()->tenantWithNull()->active()->orderBy(['created_at' => SORT_DESC]),
             'pagination' => false,
         ]);
     }
@@ -76,6 +76,24 @@ class RoomchargecategoryController extends ActiveController {
             $deleted = $get['deleted'] == 'true';
 
         return ['categoryList' => CoRoomChargeCategory::getRoomChargeCateogrylist($tenant, $status, $deleted)];
+    }
+
+    public function actionGetchargelist() {
+        $get = Yii::$app->getRequest()->get();
+
+        if (isset($get['tenant']))
+            $tenant = $get['tenant'];
+
+        if (isset($get['status']))
+            $status = strval($get['status']);
+
+        if (isset($get['deleted']))
+            $deleted = $get['deleted'] == 'true';
+
+        if (isset($get['code']))
+            $code = $get['code'];
+
+        return ['categoryList' => CoRoomChargeCategory::getChargeListByCode($tenant, $status, $deleted, $code)];
     }
 
 }
