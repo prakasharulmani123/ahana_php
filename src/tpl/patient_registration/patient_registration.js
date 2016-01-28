@@ -138,6 +138,20 @@ app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http
                 );
             }
         }, true);
+        
+        $scope.$watch('data.PatPatient.patient_age', function (newValue, oldValue) {
+            if (parseInt(newValue) && !isNaN(newValue)) {
+                $http({
+                    method: 'POST',
+                    url: $rootScope.IRISOrgServiceUrl + '/patient/getdatefromage',
+                    data: {'age': newValue},
+                }).success(
+                        function (response) {
+                            $scope.data.PatPatient.patient_dob = response.dob;
+                        }
+                );
+            }
+        }, true);
 
         $scope.$watch('data.PatPatient.patient_firstname', function (newValue, oldValue) {
             $http({
@@ -152,6 +166,7 @@ app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http
         }, true);
 
         $scope.setDateEmpty = function () {
+            console.log(this);
             $scope.data.PatPatient.patient_dob = '';
         }
 
