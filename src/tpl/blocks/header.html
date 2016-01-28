@@ -24,7 +24,8 @@
                     <input type="text" ng-model="patientselected" typeahead="patient_list.Patient.patient_firstname for patient_list in patient_lists | filter:$viewValue | limitTo:8" class="form-control input-sm bg-light no-border rounded padder" placeholder="Search....">
                     <span class="input-group-btn">
                         <button type="submit" class="btn btn-sm bg-light rounded" ng-click="goToPatient(1)"><i class="fa fa-search"></i></button>
-                    </span> </div>
+                    </span> 
+                </div>
             </div>
         </form>
         <!-- / search form --> 
@@ -45,7 +46,7 @@
         <ul class="nav navbar-nav hidden-sm">
             <li><a href="#"> My Works </a></li>
             <li ui-sref-active="active">
-                <a ui-sref="app.inpatient" href="#/app/inpatient"> In-Patient </a>
+                <a ui-sref="patient.inPatients" href="#/patient/inPatients"> In-Patient </a>
             </li>
             <li ui-sref-active="active">
                 <a ui-sref="app.outpatient" href="#/app/outpatient"> Out-Patients </a>
