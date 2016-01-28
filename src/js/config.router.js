@@ -915,7 +915,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('smart-table').then(
+                            return $ocLazyLoad.load(['smart-table', 'xeditable']).then(
                                     function () {
                                         return $ocLazyLoad.load('tpl/out_patients/out_patients.js');
                                     }

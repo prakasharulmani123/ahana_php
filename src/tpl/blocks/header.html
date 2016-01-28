@@ -22,7 +22,7 @@
             <div class="form-group">
                 <div class="input-group">
                     <input type="text" ng-model="patientselected" typeahead-template-url="searchbox" typeahead="patient_list.Patient.patient_firstname for patient_list in patient_lists | filter:$viewValue | limitTo:8" class="form-control input-sm bg-light no-border rounded padder" placeholder="Search....">
-                    <ul class="search-patientcont ">
+                    <ul class="search-patientcont hide">
                         <li>
                             <div class="row"> 
                                 <div class="col-xs-12 col-sm-2 col-md-2"> <img alt="" src="img/man-icon.png"></div>
@@ -117,9 +117,9 @@
     })(jQuery);
 </script>
 
-<script type="text/ng-template" id="searchbox">
+<!--<script type="text/ng-template" id="searchbox">
    <a tabindex="-1" ui-sref="patient.encounter({id: 1})">
       <i ng-class="'icon-'+match.model.type"></i>match.model
       <span  ng-bind-html-unsafe="match.model.title | typeaheadHighlight:query"></span>
    </a>
-</script>
+</script>-->
