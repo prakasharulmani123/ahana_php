@@ -134,15 +134,15 @@ class EncounterController extends ActiveController {
         }
     }
 
-	public function actionGetencounters() {
+    public function actionGetencounters() {
         $get = Yii::$app->getRequest()->get();
-        
+
         if (isset($get['id'])) {
             $query = "Select * ";
             $query .= "From v_encounter ";
             $query .= "Where patient_id = {$get['id']} ";
-            
-            if(isset($get['type'])){
+
+            if (isset($get['type'])) {
                 $date = date('Y-m-d');
                 $separtor = $get['type'] == 'Current' ? "=" : '<>';
                 $query .= "And date {$separtor} '{$date}' ";
@@ -150,7 +150,7 @@ class EncounterController extends ActiveController {
 
             $command = Yii::$app->db->createCommand($query);
             $data = $command->queryAll();
-            
+
             return ['success' => true, 'encounters' => $data];
         } else {
             return ['success' => false, 'message' => 'Invalid Access'];
@@ -163,10 +163,37 @@ class EncounterController extends ActiveController {
                 ->status()
                 ->encounterType("IP")
                 ->orderBy([
-	           'encounter_date'=>SORT_DESC,
-	        ])
+                    'encounter_date' => SORT_DESC,
+                ])
                 ->all();
+
+        return $model;
+    }
+
+    public function actionOutpatients() {
+        $get = Yii::$app->getRequest()->get();
+
+        $date = date('Y-m-d');
         
+        //Default Current OP
+        $query = "DATE(encounter_date) = '{$date}'";
+        if (isset($get['type'])) {
+            if($get['type'] == 'Previous')
+                $query = "DATE(encounter_date) < '{$date}'";
+            else if($get['type'] == 'Future')
+                $query = "DATE(encounter_date) > '{$date}'";
+        }
+
+        $model = PatEncounter::find()
+                ->tenant()
+                ->status()
+                ->encounterType("OP")
+                ->andWhere($query)
+                ->orderBy([
+                    'encounter_date' => SORT_DESC,
+                ])
+                ->all();
+
         return $model;
     }
 
