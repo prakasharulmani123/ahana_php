@@ -832,13 +832,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
             .state('patient', {
                 abstract: true,
                 url: '/patient',
-                templateUrl: 'tpl/patient.html',
-                resolve: {
-                    deps: ['$ocLazyLoad',
-                        function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('toaster');
-                        }]
-                }
+                templateUrl: 'tpl/patient.html'
             })
             .state('patient.registration', {
                 url: '/registration',
@@ -932,6 +926,36 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                     deps: ['uiLoad',
                         function (uiLoad) {
                             return uiLoad.load(['tpl/patient_admission/patient_admission.js']);
+                        }]
+                }
+            })
+            //PATIENT PROCEDURE
+            .state('patient.procedure', {
+                url: '/procedure/{id}',
+                templateUrl: 'tpl/patient_procedure/procedures.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('smart-table').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/patient_procedure/procedure.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            //PATIENT ADD PROCEDURE
+            .state('patient.add_procedure', {
+                url: '/add_procedure/{id}/{enc_id}',
+                templateUrl: 'tpl/patient_procedure/add_procedure.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table', 'ui.select']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/patient_procedure/procedure.js');
+                                    }
+                            );
                         }]
                 }
             })

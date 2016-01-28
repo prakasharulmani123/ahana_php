@@ -79,7 +79,7 @@ angular.module('app')
                 //Change Status
                 $scope.updateStatus = function (modelName, primaryKey) {
                     $scope.service = CommonService;
-                    $scope.service.ChangeStatus(modelName, primaryKey, function(response){
+                    $scope.service.ChangeStatus(modelName, primaryKey, function (response) {
                         $scope.successMessage = 'Status changed successfully !!!';
                     });
                 }
@@ -123,5 +123,27 @@ angular.module('app')
                                 $scope.error = "An Error has occured while loading posts!";
                             });
                 }
+
+                $scope.loadPatientDetail = function () {
+                    // Get data's from service
+                    $http.get($rootScope.IRISOrgServiceUrl + '/patients/' + $state.params.id)
+                            .success(function (patient) {
+                                $scope.app.patientDetail.patientTitleCode = patient.patient_title_code;
+                                $scope.app.patientDetail.patientName = patient.patient_firstname;
+                                $scope.app.patientDetail.patientId = patient.patient_id;
+                                $scope.app.patientDetail.patientDOA = patient.doa;
+                                $scope.app.patientDetail.patientOrg = patient.org_name;
+                                $scope.app.patientDetail.patientAge = patient.patient_age;
+                                $rootScope.commonService.GetLabelFromValue(patient.patient_gender, 'GetGenderList', function (response) {
+                                    $scope.app.patientDetail.patientSex = response;
+                                });
+                                
+                                $scope.patientObj = patient;
+
+                            })
+                            .error(function () {
+                                $scope.error = "An Error has occured while loading patient!";
+                            });
+                };
 
             }]);

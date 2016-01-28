@@ -32,6 +32,8 @@ function CommonService($http, $rootScope, $window, $q, $filter) {
     service.GetPatientRegisterModelList = GetPatientRegisterModelList;
     service.GetPatientAppointmentStatus = GetPatientAppointmentStatus;
     service.GetRoomList = GetRoomList;
+    service.GetProcedureList = GetProcedureList;
+    service.GetEncounterListByPatient = GetEncounterListByPatient;
 
     service.GetLabelFromValue = GetLabelFromValue;
     service.FoundVlaue = FoundVlaue;
@@ -302,6 +304,30 @@ function CommonService($http, $rootScope, $window, $q, $filter) {
         var response;
 
         $http.get($rootScope.IRISOrgServiceUrl + '/room/getroomlist?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts)
+                .success(function (response) {
+                    callback(response);
+                }, function (x) {
+                    response = {success: false, message: 'Server Error'};
+                    callback(response);
+                });
+    }
+
+    function GetEncounterListByPatient(tenant, sts, del_sts, pat_id, callback) {
+        var response;
+
+        $http.get($rootScope.IRISOrgServiceUrl + '/encounter/getencounterlistbypatient?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts + '&patient_id=' + pat_id)
+                .success(function (response) {
+                    callback(response);
+                }, function (x) {
+                    response = {success: false, message: 'Server Error'};
+                    callback(response);
+                });
+    }
+
+    function GetProcedureList(tenant, sts, del_sts, callback) {
+        var response;
+
+        $http.get($rootScope.IRISOrgServiceUrl + '/roomchargecategory/getchargelist?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts + '&code=PRC')
                 .success(function (response) {
                     callback(response);
                 }, function (x) {
