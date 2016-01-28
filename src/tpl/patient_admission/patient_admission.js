@@ -3,11 +3,11 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
         $scope.app.settings.patientTopBar = true;
         $scope.app.settings.patientSideMenu = true;
         $scope.app.settings.patientContentClass = 'app-content';
-        
+
         //Index Page
         $scope.loadPatientDetail = function () {
             // Get data's from service
-            $http.get($rootScope.IRISOrgServiceUrl + '/patients/' + $state.params.patient_id)
+            $http.get($rootScope.IRISOrgServiceUrl + '/patients/' + $state.params.id)
                     .success(function (patient) {
                         $scope.app.patientDetail.patientTitleCode = patient.patient_title_code;
                         $scope.app.patientDetail.patientName = patient.patient_firstname;
@@ -15,7 +15,6 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
                         $scope.app.patientDetail.patientSex = patient.patient_gender;
                         $scope.app.patientDetail.patientDOA = patient.patient_reg_date;
                         $scope.app.patientDetail.patientOrg = patient.tenant_id;
-                        $scope.data = patient;
                     })
                     .error(function () {
                         $scope.error = "An Error has occured while loading patient!";
@@ -34,7 +33,7 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
             $rootScope.commonService.GetWardList('', '1', false, function (response) {
                 $scope.wards = response.wardList;
             });
-            
+
             $rootScope.commonService.GetRoomList('', '1', false, function (response) {
                 $scope.rooms = response.roomList;
             });
@@ -43,7 +42,7 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
                 $scope.roomTypes = response.roomtypeList;
             });
         }
-        
+
         //For Datepicker
         $scope.open = function ($event, mode) {
             $event.preventDefault();
@@ -92,19 +91,27 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
                 }
             });
         }
-        
+
         //Save Both Add Data
-        $scope.saveForm = function (mode) {
+        $scope.saveForm = function () {
             _that = this;
-            
+
             $scope.errorData = "";
             $scope.successMessage = "";
 
             post_url = $rootScope.IRISOrgServiceUrl + '/encounter/createadmission';
             method = 'POST';
             succ_msg = 'Admission saved successfully';
-            angular.extend(_that.data.PatAdmission, {patient_id: $scope.app.patientDetail.patientId});
-            angular.extend(_that.data.PatEncounter, {patient_id: $scope.app.patientDetail.patientId});
+
+            if (typeof (_that.data) != "undefined") {
+                if (_that.data.hasOwnProperty('PatAdmission')) {
+                    angular.extend(_that.data.PatAdmission, {patient_id: $scope.app.patientDetail.patientId});
+                }
+
+                if (_that.data.hasOwnProperty('PatEncounter')) {
+                    angular.extend(_that.data.PatEncounter, {patient_id: $scope.app.patientDetail.patientId});
+                }
+            }
 
             $scope.loadbar('show');
             $http({
@@ -131,6 +138,6 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
             });
         };
 
-        
+
 
     }]);

@@ -13,7 +13,7 @@
             <label class="col-sm-3 control-label">Date of admission * </label>
             <div class="col-sm-9">
                 <div class="input-group w-md">
-                    <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="data.PatEncounter.encounter_date" is-open="$parent.opened" datepicker-options="dateOptions" close-text="Close"  min-date="minDate"/>
+                    <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="data.PatAdmission.status_date" is-open="$parent.opened" datepicker-options="dateOptions" close-text="Close"  min-date="minDate"/>
                     <span class="input-group-btn">
                         <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                     </span>
@@ -23,17 +23,17 @@
         <div class="line line-dashed b-b line-lg "></div>
 
         <div class="form-group">
-            <label class="col-sm-3 control-label">Consultant</label>
+            <label class="col-sm-3 control-label">Consultant * </label>
             <div class="col-sm-9">
                 <select ng-model="data.PatAdmission.consultant_id" class="form-control" ng-options="user.user_id as user.name for user in doctors | orderBy: name">
-                    <option value="">Select</option>
+                    <option value="">Select Consultant</option>
                 </select>
             </div>
         </div>
         <div class="line line-dashed b-b line-lg "></div>
 
         <div class="form-group">
-            <label class="col-sm-3 control-label">Floors</label>
+            <label class="col-sm-3 control-label">Floors * </label>
             <div class="col-sm-9">
                 <select class="form-control"ng-model="data.PatAdmission.floor_id" ng-options="floor.floor_id as floor.floor_name for floor in floors | orderBy: floor_name" ng-change="updateWard();
                         data.PatAdmission.ward_id = '';
@@ -45,7 +45,7 @@
         <div class="line line-dashed b-b line-lg "></div>
 
         <div class="form-group">
-            <label class="col-sm-3 control-label">Wards</label>
+            <label class="col-sm-3 control-label">Wards * </label>
             <div class="col-sm-9">
                 <select class="form-control" ng-model="data.PatAdmission.ward_id" ng-options="ward.ward_id as ward.ward_name for ward in availableWards | orderBy: ward_name" ng-change="updateRoom();
                         data.PatAdmission.room_id = '';">
@@ -56,7 +56,7 @@
         <div class="line line-dashed b-b line-lg "></div>
 
         <div class="form-group">
-            <label class="col-sm-3 control-label">Rooms</label>
+            <label class="col-sm-3 control-label">Rooms * </label>
             <div class="col-sm-9">
                 <select class="form-control" ng-model="data.PatAdmission.room_id" ng-options="room.room_id as room.bed_name for room in availableRooms | orderBy: bed_name">
                     <option value="">Select Room</option>
@@ -66,7 +66,7 @@
         <div class="line line-dashed b-b line-lg "></div>
 
         <div class="form-group">
-            <label class="col-sm-3 control-label">Room Type</label>
+            <label class="col-sm-3 control-label">Room Type * </label>
             <div class="col-sm-9">
                 <select class="form-control" ng-model="data.PatAdmission.room_type_id" ng-options="roomType.room_type_id as roomType.room_type_name for roomType in roomTypes | orderBy: room_type_name">
                     <option value="">Select Room Type</option>
@@ -77,7 +77,7 @@
 
     </div>
     <footer class="panel-footer text-right bg-light lter">
-        <button class="btn m-b-xs  btn-success " ng-click="saveForm('add')">Save</button> &nbsp;
+        <button class="btn m-b-xs  btn-success " ng-click="saveForm()">Save</button> &nbsp;
     </footer>
 </div>
 

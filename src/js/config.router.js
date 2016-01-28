@@ -891,10 +891,26 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
+            
+            // In-Patient
+            .state('patient.inPatients', {
+                url: '/inPatients',
+                templateUrl: 'tpl/in_patients/index.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('smart-table').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/in_patients/in_patients.js');
+                                    }
+                            );
+                        }]
+                }
+            })
 
             // In-Patient - Admission
             .state('patient.admission', {
-                url: '/admission/{patient_id}',
+                url: '/admission/{id}',
                 templateUrl: 'tpl/patient_admission/create.html',
                 resolve: {
                     deps: ['uiLoad',
