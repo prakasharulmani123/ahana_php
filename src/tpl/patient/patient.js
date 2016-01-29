@@ -5,7 +5,7 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
         $scope.app.settings.patientContentClass = 'app-content';
 
         $scope.$watch('app.patientDetail.patientId', function (newValue, oldValue) {
-            if (newValue != '' && newValue != oldValue) {
+            if (newValue != '') {
                         $http.get($rootScope.IRISOrgServiceUrl + '/patient/getpatientaddress?id=' + $scope.patientObj.patient_id)
                                 .success(function (resp) {
                                     $scope.data = $scope.patientObj;
