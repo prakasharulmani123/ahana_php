@@ -235,6 +235,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                             switch (next_step) {
                                 case 2:
                                     $scope.steps.step2 = true;
+                                    element = $('#role_desc');
                                     break;
                                 case 3:
                                     $scope.steps.step3 = true;
@@ -243,6 +244,12 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                                     $scope.steps.step4 = true;
                                     break;
                             }
+                            $timeout(function () {
+                                if (typeof element != 'undefined') {
+                                    element.focus();
+                                    element.select();
+                                }
+                            }, 1000);
                         }
                     }
             )
@@ -278,5 +285,25 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                 $scope.rowCollectionBasic.splice(index, 1);
             }
         };
+
+        $scope.setFocus = function (step) {
+            switch (step) {
+                case 1:
+                    element = $('#tenant_name');
+                    break;
+                case 2:
+                    element = $('#role_desc');
+                    break;
+                case 5:
+                    element = $('#user_name');
+                    break;
+            }
+            $timeout(function () {
+                if (typeof element != 'undefined') {
+                    element.focus();
+//                    element.select();
+                }
+            }, 1000);
+        }
 
     }]);
