@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\models\query\PatProcedureQuery;
+use Yii;
 use yii\db\ActiveQuery;
 use yii\helpers\Json;
 
@@ -12,6 +13,7 @@ use yii\helpers\Json;
  * @property integer $proc_id
  * @property integer $tenant_id
  * @property integer $encounter_id
+ * @property integer $patient_id
  * @property integer $charge_subcat_id
  * @property string $proc_date
  * @property string $proc_consultant_ids
@@ -42,8 +44,8 @@ class PatProcedure extends RActiveRecord {
     public function rules() {
         return [
             [['charge_subcat_id', 'proc_date'], 'required'],
-            [['tenant_id', 'encounter_id', 'charge_subcat_id', 'created_by', 'modified_by'], 'integer'],
-            [['proc_date', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
+            [['tenant_id', 'encounter_id', 'charge_subcat_id', 'created_by', 'modified_by', 'patient_id'], 'integer'],
+            [['proc_date', 'created_at', 'modified_at', 'deleted_at', 'patient_id'], 'safe'],
             [['proc_consultant_ids', 'proc_description', 'status'], 'string']
         ];
     }
@@ -90,6 +92,10 @@ class PatProcedure extends RActiveRecord {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
 
+    public function getPatient() {
+        return $this->hasOne(PatPatient::className(), ['patient_id' => 'patient_id']);
+    }
+
     public static function find() {
         return new PatProcedureQuery(get_called_class());
     }
@@ -107,6 +113,36 @@ class PatProcedure extends RActiveRecord {
     public function setConsultId() {
         if (is_array($this->proc_consultant_ids))
             $this->proc_consultant_ids = Json::encode($this->proc_consultant_ids);
+    }
+
+    public function fields() {
+        $extend = [
+            'procedure_name' => function ($model) {
+                return isset($model->chargeCat) ? $model->chargeCat->charge_subcat_name : '-';
+            },
+            'doctors' => function ($model) {
+                if (isset($this->proc_consultant_ids) && is_array($this->proc_consultant_ids)) {
+                    $ids = implode(',', $this->proc_consultant_ids);
+
+                    $query = "SELECT GROUP_CONCAT(concat(title_code,name) SEPARATOR ', ') as doctors ";
+                    $query .= "From co_user ";
+                    $query .= "Where find_in_set(user_id, '$ids') > 0 ";
+
+                    $command = Yii::$app->db->createCommand($query);
+                    $data = $command->queryAll();
+                    return $data[0]['doctors'];
+                }
+            },
+        ];
+        $fields = array_merge(parent::fields(), $extend);
+        return $fields;
+    }
+
+    public function afterFind() {
+        if (is_string($this->proc_consultant_ids))
+            $this->proc_consultant_ids = Json::decode($this->proc_consultant_ids);
+
+        return parent::afterFind();
     }
 
 }

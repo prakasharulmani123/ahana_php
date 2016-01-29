@@ -2,6 +2,7 @@
 
 namespace IRISORG\modules\v1\controllers;
 
+use common\models\CoUser;
 use common\models\PatProcedure;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -49,14 +50,51 @@ class ProcedureController extends ActiveController {
             'pagination' => false,
         ]);
     }
-    
+
     public function actionRemove() {
         $id = Yii::$app->getRequest()->post('id');
-        if($id){
-            $model = PatProcedure::find()->where(['country_id' => $id])->one();
+        if ($id) {
+            $model = PatProcedure::find()->where(['proc_id' => $id])->one();
             $model->remove();
             return ['success' => true];
         }
     }
-    
+
+    public function actionGetprocedurebyencounter() {
+        $enc_id = Yii::$app->getRequest()->get('enc_id');
+
+        if (!empty($enc_id)) {
+            $model = PatProcedure::find()
+                    ->tenant()
+                    ->status()
+                    ->active()
+                    ->andWhere(['encounter_id' => $enc_id])
+                    ->orderBy([
+                        'proc_date' => SORT_DESC,
+                    ])
+                    ->all();
+        }
+
+        return $model;
+    }
+
+
+    public function actionGetconsultantsbyprocedure() {
+        $proc_id = Yii::$app->getRequest()->get('proc_id');
+
+        $consultants = [];
+        if (!empty($proc_id)) {
+            $model = PatProcedure::find()->where(['proc_id' => $proc_id])->one();
+            
+            if(!empty($model->proc_consultant_ids)){
+                foreach ($model->proc_consultant_ids as $key => $id) {
+                    $consultants[$key] = CoUser::find()->where(['user_id' => $id])->one();
+                }
+            }
+            
+        }
+
+        return $consultants;
+    }
+
 }
