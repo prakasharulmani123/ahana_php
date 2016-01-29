@@ -38,6 +38,7 @@ angular.module('app')
                         patientTopBar: true,
                         patientSideMenu: true,
                         patientContentClass: 'app-content app-content2',
+                        patientFooterClass: 'app-footer app-footer2',
                     },
                     patientDetail: {
                         patientTitleCode: '',
@@ -146,6 +147,11 @@ angular.module('app')
                             .error(function () {
                                 $scope.error = "An Error has occured while loading patient!";
                             });
+                };
+                $scope.goToRegistration = function () {
+                    // Get data's from service
+                    $scope.patientselected = '';
+                    $state.go('patient.registration');
                 };
 
             }]);
