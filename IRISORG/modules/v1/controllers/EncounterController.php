@@ -2,6 +2,7 @@
 
 namespace IRISORG\modules\v1\controllers;
 
+use common\models\CoRoom;
 use common\models\PatAdmission;
 use common\models\PatAppoinment;
 use common\models\PatEncounter;
@@ -77,6 +78,7 @@ class EncounterController extends ActiveController {
             $model_attr = array(
                 'patient_id' => (isset($post['patient_id']) ? $post['patient_id'] : ''),
                 'encounter_type' => 'OP',
+                'encounter_date' => $post['appoinment_date'],
             );
             $model->attributes = $model_attr;
 
@@ -125,7 +127,8 @@ class EncounterController extends ActiveController {
 
             if (isset($post['PatAdmission'])) {
                 $admission_model->attributes = $post['PatAdmission'];
-                $model->encounter_date = $post['PatAdmission']['status_date'];
+                if (isset($post['PatEncounter']['encounter_date']))
+                    $admission_model->status_date = $post['PatEncounter']['encounter_date'];
             }
 
             $valid = $model->validate();
@@ -209,7 +212,7 @@ class EncounterController extends ActiveController {
         return $model;
     }
 
-public function actionGetencounterlistbypatient() {
+    public function actionGetencounterlistbypatient() {
         $get = Yii::$app->getRequest()->get();
 
         if (isset($get['tenant']))
@@ -238,8 +241,8 @@ public function actionGetencounterlistbypatient() {
                     ->status()
                     ->andWhere(["patient_id" => $patient_id])
                     ->one();
-            
-            if(!empty($model)){
+
+            if (!empty($model)) {
                 return ['success' => true];
             } else {
                 return ['success' => false];

@@ -122,8 +122,11 @@ class RoomController extends ActiveController {
 
         if (isset($get['deleted']))
             $deleted = $get['deleted'] == 'true';
+        
+        if (isset($get['occupied_status']))
+            $occupied_status = $get['occupied_status'];
 
-        return ['roomList' => CoRoom::getRoomList($tenant, $status, $deleted)];
+        return ['roomList' => CoRoom::getRoomList($tenant, $status, $deleted, $occupied_status)];
     }
 
 }

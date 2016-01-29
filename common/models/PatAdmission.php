@@ -1,12 +1,8 @@
 <?php
 
-use common\models\CoTenant;
-use common\models\PatEncounter;
-use common\models\PatPatient;
-use common\models\RActiveRecord;
-use yii\db\ActiveQuery;
-
 namespace common\models;
+
+use yii\db\ActiveQuery;
 
 /**
  * This is the model class for table "pat_admission".
@@ -46,7 +42,7 @@ class PatAdmission extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['status_date', 'consultant_id', 'floor_id', 'ward_id', 'room_id', 'room_type_id'], 'required'],
+            [['consultant_id', 'floor_id', 'ward_id', 'room_id', 'room_type_id'], 'required'],
             [['tenant_id', 'patient_id', 'encounter_id', 'consultant_id', 'floor_id', 'ward_id', 'room_id', 'room_type_id', 'created_by', 'modified_by'], 'integer'],
             [['status_date', 'created_at', 'modified_at', 'deleted_at', 'status_date'], 'safe'],
             [['status'], 'string']
@@ -75,6 +71,17 @@ class PatAdmission extends RActiveRecord {
             'modified_at' => 'Modified At',
             'deleted_at' => 'Deleted At',
         ];
+    }
+
+    public function afterSave($insert, $changedAttributes) {
+        //Change room occupied status
+        if ($this->room_id) {
+            $room = CoRoom::find()->where(['room_id' => $this->room_id])->one();
+            $room->occupied_status = 1;
+            $room->save(false);
+        }
+
+        return parent::afterSave($insert, $changedAttributes);
     }
 
     /**
@@ -109,11 +116,11 @@ class PatAdmission extends RActiveRecord {
     public function getWard() {
         return $this->hasOne(CoWard::className(), ['ward_id' => 'ward_id']);
     }
-    
+
     public function getRoom() {
         return $this->hasOne(CoRoom::className(), ['room_id' => 'room_id']);
     }
-    
+
     public function getRoomType() {
         return $this->hasOne(CoRoomType::className(), ['room_type_id' => 'room_type_id']);
     }

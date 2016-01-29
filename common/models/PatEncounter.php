@@ -41,7 +41,7 @@ class PatEncounter extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['patient_id', 'encounter_type'], 'required'],
+            [['encounter_date'], 'required'],
             [['tenant_id', 'patient_id', 'finalize', 'authorize', 'created_by', 'modified_by'], 'integer'],
             [['encounter_date', 'inactive_date', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['status'], 'string'],

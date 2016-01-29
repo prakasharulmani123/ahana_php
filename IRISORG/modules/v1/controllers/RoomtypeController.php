@@ -3,6 +3,7 @@
 namespace IRISORG\modules\v1\controllers;
 
 use common\models\CoRoomType;
+use common\models\CoRoomTypesRooms;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -80,5 +81,14 @@ class RoomtypeController extends ActiveController {
             $deleted = $get['deleted'] == 'true';
 
         return ['roomtypeList' => CoRoomType::getRoomTypelist($tenant, $status, $deleted)];
+    }
+    
+    public function actionGetroomtypesroomslist() {
+        $get = Yii::$app->getRequest()->get();
+
+        if (isset($get['tenant']))
+            $tenant = $get['tenant'];
+
+        return ['roomtypesroomsList' => CoRoomTypesRooms::getRoomTypesRoomslist($tenant)];
     }
 }

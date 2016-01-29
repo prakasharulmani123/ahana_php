@@ -22,7 +22,7 @@ use yii\db\ActiveQuery;
  * @property CoTenant $tenant
  */
 class CoRoomTypesRooms extends RActiveRecord {
-    
+
     public $room_type_ids;
 
     /**
@@ -80,9 +80,27 @@ class CoRoomTypesRooms extends RActiveRecord {
     public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
-    
+
     public static function find() {
         return new CoRoomTypesRoomsQuery(get_called_class());
+    }
+
+    public static function getRoomTypesRoomslist($tenant = null) {
+        $list = self::find()->tenant($tenant)->all();
+        return $list;
+    }
+
+    public function fields() {
+        $extend = [
+            'bed_name' => function ($model) {
+                return (isset($model->room) ? $model->room->bed_name : '-');
+            },
+            'room_type_name' => function ($model) {
+                return (isset($model->roomType) ? $model->roomType->room_type_name : '-');
+            },
+        ];
+        $fields = array_merge(parent::fields(), $extend);
+        return $fields;
     }
 
 }

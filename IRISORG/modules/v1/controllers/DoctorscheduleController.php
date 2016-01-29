@@ -119,19 +119,50 @@ class DoctorscheduleController extends ActiveController {
             }
         }
     }
-    
-    public function actionGetdoctortimeschedule(){
+
+    public function actionGetdoctortimeschedule() {
         $post = Yii::$app->getRequest()->post();
+
         if (!empty($post)) {
-            $doctor_id = $post['doctor_id'];
-            $schedule_day = $post['schedule_day'];
-            
-            $timerange = array();
-            $timerange["01:00:00"] = "01:00:00";
-            $timerange["02:00:00"] = "02:00:00";
-            
-            return ['success' => true, 'timerange' => $timerange];
+            if (isset($post['doctor_id']) && isset($post['schedule_date']) && $post['doctor_id'] != '' && $post['schedule_date'] != '') {
+                $doctor_id = $post['doctor_id'];
+                $schedule_day = date('N', strtotime($post['schedule_date']));
+
+                $all_schedules = CoDoctorSchedule::find()
+                        ->where('schedule_day = :day', [':day' => $schedule_day])
+                        ->orWhere('schedule_day = :allday', [':allday' => "-1"])
+                        ->andWhere('user_id = :doctor_id', [':doctor_id' => $doctor_id])
+                        ->orderBy('schedule_time_in')
+                        ->all();
+
+                $timerange = array();
+                if (!empty($all_schedules)) {
+                    foreach ($all_schedules as $all_schedule) {
+                        $timerange = $timerange + self::getTimeScheduleSlots($all_schedule['schedule_time_in'], $all_schedule['schedule_time_out'], '5');
+                    }
+                }
+
+                return ['success' => true, 'timerange' => $timerange];
+            } else {
+                return ['success' => false];
+            }
+        } else {
+            return ['success' => false];
         }
+    }
+
+    public static function getTimeScheduleSlots($startTime, $endTime, $interval) {
+        $array_of_time = array();
+        $start_time = strtotime($startTime);
+        $end_time = strtotime($endTime);
+        $interval_mins = $interval * 60;
+
+        while ($start_time <= $end_time) {
+            $array_of_time[] = array("time" => date("H:i:s", $start_time));
+            $start_time += $interval_mins;
+        }
+
+        return $array_of_time;
     }
 
 }
