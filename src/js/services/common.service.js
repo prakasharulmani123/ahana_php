@@ -37,6 +37,7 @@ function CommonService($http, $rootScope, $window, $q, $filter) {
 
     service.GetLabelFromValue = GetLabelFromValue;
     service.FoundVlaue = FoundVlaue;
+    service.GetRoomTypesRoomsList = GetRoomTypesRoomsList;
 
     return service;
 
@@ -300,10 +301,10 @@ function CommonService($http, $rootScope, $window, $q, $filter) {
         callback(response);
     }
 
-    function GetRoomList(tenant, sts, del_sts, callback) {
+    function GetRoomList(tenant, sts, del_sts, occupied_status, callback) {
         var response;
 
-        $http.get($rootScope.IRISOrgServiceUrl + '/room/getroomlist?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts)
+        $http.get($rootScope.IRISOrgServiceUrl + '/room/getroomlist?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts  + '&occupied_status=' + occupied_status)
                 .success(function (response) {
                     callback(response);
                 }, function (x) {
@@ -367,5 +368,17 @@ function CommonService($http, $rootScope, $window, $q, $filter) {
             result = found[0].label;
         }
         callback(result);
+    }
+    
+    function GetRoomTypesRoomsList(tenant, callback) {
+        var response;
+
+        $http.get($rootScope.IRISOrgServiceUrl + '/roomtype/getroomtypesroomslist?tenant=' + tenant)
+                .success(function (response) {
+                    callback(response);
+                }, function (x) {
+                    response = {success: false, message: 'Server Error'};
+                    callback(response);
+                });
     }
 }

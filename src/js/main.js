@@ -47,6 +47,7 @@ angular.module('app')
                         patientDOA: '',
                         patientOrg: '',
                         patientAge: '',
+                        patientCasesheetno: '',
                     }
                 }
 
@@ -134,6 +135,7 @@ angular.module('app')
                                 $scope.app.patientDetail.patientDOA = patient.doa;
                                 $scope.app.patientDetail.patientOrg = patient.org_name;
                                 $scope.app.patientDetail.patientAge = patient.patient_age;
+                                $scope.app.patientDetail.patientCasesheetno = patient.casesheetno;
                                 $rootScope.commonService.GetLabelFromValue(patient.patient_gender, 'GetGenderList', function (response) {
                                     $scope.app.patientDetail.patientSex = response;
                                 });

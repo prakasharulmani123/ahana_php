@@ -1,19 +1,20 @@
 <div class="panel panel-default">
     <div class="panel-body">
 
-        <div class="form-group">
+<!--        <div class="form-group">
             <label class="col-sm-3 control-label">Case sheet no * </label>
             <div class="col-sm-9">
-                <input type="text" ng-model="data.PatPatient.casesheetno" class="form-control" placeholder="" >
+                <input type="text" ng-model="data.PatPatient.casesheetno" class="form-control" placeholder="" ng-if="$scope.app.patientDetail.patientCasesheetno == null">
+                <input type="text" readonly ng-model="data.PatPatient.casesheetno" class="form-control" placeholder="" ng-if="$scope.app.patientDetail.patientCasesheetno != null">
             </div>
         </div>
-        <div class="line line-dashed b-b line-lg "></div>
+        <div class="line line-dashed b-b line-lg "></div>-->
 
         <div class="form-group">
             <label class="col-sm-3 control-label">Date of admission * </label>
             <div class="col-sm-9">
                 <div class="input-group w-md">
-                    <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="data.PatAdmission.status_date" is-open="$parent.opened" datepicker-options="dateOptions" close-text="Close"  min-date="minDate"/>
+                    <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="data.PatEncounter.encounter_date" is-open="$parent.opened" datepicker-options="dateOptions" close-text="Close"  min-date="minDate"/>
                     <span class="input-group-btn">
                         <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                     </span>
@@ -37,7 +38,8 @@
             <div class="col-sm-9">
                 <select class="form-control"ng-model="data.PatAdmission.floor_id" ng-options="floor.floor_id as floor.floor_name for floor in floors | orderBy: floor_name" ng-change="updateWard();
                         data.PatAdmission.ward_id = '';
-                        data.PatAdmission.room_id = '';">
+                        data.PatAdmission.room_id = '';
+                        data.PatAdmission.room_type_id = '';">
                     <option value="">Select Floor</option>
                 </select>
             </div>
@@ -48,7 +50,8 @@
             <label class="col-sm-3 control-label">Wards * </label>
             <div class="col-sm-9">
                 <select class="form-control" ng-model="data.PatAdmission.ward_id" ng-options="ward.ward_id as ward.ward_name for ward in availableWards | orderBy: ward_name" ng-change="updateRoom();
-                        data.PatAdmission.room_id = '';">
+                        data.PatAdmission.room_id = '';
+                        data.PatAdmission.room_type_id = '';">
                     <option value="">Select Ward</option>
                 </select>
             </div>
@@ -58,7 +61,8 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">Rooms * </label>
             <div class="col-sm-9">
-                <select class="form-control" ng-model="data.PatAdmission.room_id" ng-options="room.room_id as room.bed_name for room in availableRooms | orderBy: bed_name">
+                <select class="form-control" ng-model="data.PatAdmission.room_id" ng-options="room.room_id as room.bed_name for room in availableRooms | orderBy: bed_name" ng-change="updateRoomType();
+                        data.PatAdmission.room_type_id = '';">
                     <option value="">Select Room</option>
                 </select>
             </div>
@@ -68,7 +72,7 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">Room Type * </label>
             <div class="col-sm-9">
-                <select class="form-control" ng-model="data.PatAdmission.room_type_id" ng-options="roomType.room_type_id as roomType.room_type_name for roomType in roomTypes | orderBy: room_type_name">
+                <select class="form-control" ng-model="data.PatAdmission.room_type_id" ng-options="roomType.room_type_id as roomType.room_type_name for roomType in availableRoomtypes | orderBy: room_type_name">
                     <option value="">Select Room Type</option>
                 </select>
             </div>

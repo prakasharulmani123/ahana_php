@@ -58,19 +58,23 @@ app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http
         }
 
         $scope.getTimeOfAppointment = function () {
-            if (this.data.consultant_id != '' && this.data.appoinment_date) {
-                $http.post($rootScope.IRISOrgServiceUrl + '/doctorschedule/getdoctortimeschedule', {doctor_id: this.data.consultant_id, schedule_day:this.data.appoinment_date})
-                        .success(function (response) {
-                            console.log(response);
-                        }, function (x) {
-                            response = {success: false, message: 'Server Error'};
-                        });
+            if (typeof (this.data) != "undefined") {
+                if (typeof (this.data.consultant_id) != 'undefined' && typeof (this.data.appoinment_date != 'undefined')) {
+                    $http.post($rootScope.IRISOrgServiceUrl + '/doctorschedule/getdoctortimeschedule', {doctor_id: this.data.consultant_id, schedule_date: this.data.appoinment_date})
+                            .success(function (response) {
+                                $scope.timeslots = response.timerange;
+                            }, function (x) {
+                                response = {success: false, message: 'Server Error'};
+                            });
+                }
             }
+
         }
 
         //Save Both Add Data
         $scope.saveForm = function (mode) {
             _that = this;
+            console.log(_that);
 
             $scope.errorData = "";
             $scope.successMessage = "";

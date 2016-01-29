@@ -4,9 +4,6 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
         $scope.app.settings.patientSideMenu = true;
         $scope.app.settings.patientContentClass = 'app-content';
 
-        //Index Page
-       
-        
         $scope.initCanCreateAdmission = function () {
             $http.post($rootScope.IRISOrgServiceUrl + '/encounter/patienthaveactiveencounter', {patient_id: $state.params.id})
                     .success(function (response) {
@@ -32,12 +29,16 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
                 $scope.wards = response.wardList;
             });
 
-            $rootScope.commonService.GetRoomList('', '1', false, function (response) {
+            $rootScope.commonService.GetRoomList('', '1', false, '0', function (response) {
                 $scope.rooms = response.roomList;
             });
 
             $rootScope.commonService.GetRoomTypeList('', '1', false, function (response) {
                 $scope.roomTypes = response.roomtypeList;
+            });
+            
+            $rootScope.commonService.GetRoomTypesRoomsList('', function (response) {
+                $scope.roomTypesRoomsList = response.roomtypesroomsList;
             });
         }
 
@@ -62,6 +63,7 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
         $scope.updateWard = function () {
             $scope.availableWards = [];
             $scope.availableRooms = [];
+            $scope.availableRoomtypes = [];
 
             _that = this;
             angular.forEach($scope.wards, function (value) {
@@ -77,6 +79,7 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
 
         $scope.updateRoom = function () {
             $scope.availableRooms = [];
+            $scope.availableRoomtypes = [];
 
             _that = this;
             angular.forEach($scope.rooms, function (value) {
@@ -86,6 +89,21 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
                         bed_name: value.bed_name
                     };
                     $scope.availableRooms.push(obj);
+                }
+            });
+        }
+        
+        $scope.updateRoomType = function () {
+            $scope.availableRoomtypes = [];
+
+            _that = this;
+            angular.forEach($scope.roomTypesRoomsList, function (value) {
+                if (value.room_id == _that.data.PatAdmission.room_id) {
+                    var obj = {
+                        room_type_id: value.room_type_id,
+                        room_type_name: value.room_type_name
+                    };
+                    $scope.availableRoomtypes.push(obj);
                 }
             });
         }
