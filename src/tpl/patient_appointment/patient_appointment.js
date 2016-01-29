@@ -68,13 +68,11 @@ app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http
                             });
                 }
             }
-
         }
 
         //Save Both Add Data
         $scope.saveForm = function (mode) {
             _that = this;
-            console.log(_that);
 
             $scope.errorData = "";
             $scope.successMessage = "";

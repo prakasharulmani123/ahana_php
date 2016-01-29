@@ -947,7 +947,22 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
             //PATIENT ADD PROCEDURE
             .state('patient.add_procedure', {
                 url: '/add_procedure/{id}/{enc_id}',
-                templateUrl: 'tpl/patient_procedure/add_procedure.html',
+                templateUrl: 'tpl/patient_procedure/create.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table', 'ui.select']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/patient_procedure/procedure.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            //PATIENT Edit PROCEDURE
+            .state('patient.edit_procedure', {
+                url: '/edit_procedure/{id}/{proc_id}',
+                templateUrl: 'tpl/patient_procedure/update.html',
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
