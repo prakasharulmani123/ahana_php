@@ -308,6 +308,7 @@ app.controller('TimepickerDemoCtrl', ['$scope', function ($scope) {
 app.controller('PatientSearchController', ['$scope', '$http', '$rootScope', '$state', function ($scope, $http, $rootScope, $state) {
         $scope.patient_lists = [];
         $scope.patientselected = '';
+        console.log(this.data);
 
 
         $scope.$watch('patientselected', function (newValue, oldValue) {
@@ -323,8 +324,13 @@ app.controller('PatientSearchController', ['$scope', '$http', '$rootScope', '$st
                 );
             }
         }, true);
-        
-        $scope.goToPatient = function(id){
+
+        $scope.goToPatient = function (id) {
             $state.go('patient.view', {'id': id});
         }
+
+        $scope.goToRegistration = function () {
+            $scope.patientselected = '';
+            $state.go('patient.registration');
+        };
     }]);

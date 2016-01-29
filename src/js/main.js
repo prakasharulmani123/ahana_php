@@ -150,11 +150,5 @@ angular.module('app')
                                 });
                     }
                 };
-                
-                $scope.goToRegistration = function () {
-                    // Get data's from service
-                    alert($scope.patientselected);
-                    $state.go('patient.registration');
-                };
 
             }]);
