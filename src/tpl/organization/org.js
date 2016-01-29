@@ -2,21 +2,23 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
 
         //Index Page
         //  pagination
-        $scope.rowCollection = [];  // base collection
-        $scope.itemsByPage = 10;
-        $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
-        // Display Data
-//        $http.get($rootScope.IRISAdminServiceUrl + '/organizations?expand=coMasterCity,coMasterState,coMasterCountry')
-        $http.get($rootScope.IRISAdminServiceUrl + '/organizations')
-                .success(function (usr) {
-                    $scope.rowCollection = usr;
-                    $scope.displayedCollection = [].concat($scope.rowCollection);
-//                console.log($scope.rowCollection);
-                })
-                .error(function () {
-                    $scope.error = "An Error has occured while loading posts!";
+        $scope.loadOrganizationsList = function () {
+            $scope.isLoading = true;
+            $scope.rowCollection = [];  // base collection
+            $scope.itemsByPage = 10;
+            $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
+            // Display Data
+            $http.get($rootScope.IRISAdminServiceUrl + '/organizations')
+                    .success(function (usr) {
+                        $scope.isLoading = false;
+                        $scope.rowCollection = usr;
+                        $scope.displayedCollection = [].concat($scope.rowCollection);
+                    })
+                    .error(function () {
+                        $scope.error = "An Error has occured while loading posts!";
 
-                });
+                    });
+        }
 
 
         // Form Page
