@@ -24,14 +24,18 @@
                     <!--<input type="text" ng-model="patientselected" typeahead="patient_list.Patient.patient_firstname for patient_list in patient_lists | filter:$viewValue | limitTo:8" class="form-control input-sm bg-light no-border rounded padder" placeholder="Search....">-->
                     <input type="text" ng-model="patientselected" class="form-control input-sm bg-light no-border rounded padder" placeholder="Search....">
                     <ul class="search-patientcont" ng-if="patientselected != ''">
-                        <li ng-repeat="patient_list in patient_lists">
+                        <li ng-repeat="patient in patient_lists">
                             <div class="row"> 
                                 <div class="col-xs-12 col-sm-2 col-md-2"> <img alt="" src="img/man-icon.png"></div>
                                 <div class="col-xs-12 col-sm-5 col-md-6"> 
                                     <div class="row ng-binding"> 
-                                        <a href="#" class="ng-binding">Mr. Prakah</a> <b>(25y) </b><br>
-                                        <span class="pull-left">AH12345</span> 
-                                        <span> &nbsp; &nbsp; 9698566651</span> 
+                                        <a href="#" ui-sref="patient.view({id: '{{patient.Patient.patient_id}}'})" class="ng-binding">
+                                            {{patient.Patient.patient_title_code}} {{patient.Patient.patient_firstname}}
+                                        </a> 
+                                        <b>({{patient.Patient.patient_age}}y) </b>
+                                        <br>
+                                        <span class="pull-left">{{patient.Patient.patient_id}}</span> 
+                                        <span> &nbsp; &nbsp; {{patient.Patient.patient_mobile}}</span> 
                                     </div>
                                 </div>
                                 <div class="col-xs-12 col-sm-5 col-md-4 pull-right right"> 
