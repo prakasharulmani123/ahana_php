@@ -3,21 +3,15 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
         $scope.$watch('app.patientDetail.patientId', function (newValue, oldValue) {
             if (newValue != '') {
                 $scope.data = $scope.patientObj;
-
-                $rootScope.commonService.GetLabelFromValue($scope.patientObj.patient_bill_type, 'GetPatientBillingList', function (response) {
-                    $scope.data.patient_bill_type = response;
-                });
-
-                $rootScope.commonService.GetLabelFromValue($scope.patientObj.patient_reg_mode, 'GetPatientRegisterModelList', function (response) {
-                    $scope.data.patient_reg_mode = response;
-                });
+                
+                $scope.updateState2();
+                $scope.updateCity2();
+                $scope.updateState();
+                $scope.updateCity();
             }
         }, true);
 
         $scope.initForm = function () {
-            $rootScope.commonService.GetFloorList('', '1', false, function (response) {
-                $scope.floors = response.floorList;
-            });
 
             $rootScope.commonService.GetGenderList(function (response) {
                 $scope.genders = response;
@@ -58,7 +52,7 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
 
             _that = this;
             angular.forEach($scope.states, function (value) {
-                if (value.countryId == _that.data.PatPatientAddress.addr_country_id) {
+                if (value.countryId == _that.data.address.addr_country_id) {
                     var obj = {
                         value: value.value,
                         label: value.label
@@ -73,12 +67,43 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
 
             _that = this;
             angular.forEach($scope.cities, function (value) {
-                if (value.stateId == _that.data.PatPatientAddress.addr_state_id) {
+                if (value.stateId == _that.data.address.addr_state_id) {
                     var obj = {
                         value: value.value,
                         label: value.label
                     };
                     $scope.availableCities2.push(obj);
+                }
+            });
+        }
+
+        $scope.updateState = function () {
+            $scope.availableStates = [];
+            $scope.availableCities = [];
+
+            _that = this;
+            angular.forEach($scope.states, function (value) {
+                if (value.countryId == _that.data.address.addr_perm_country_id) {
+                    var obj = {
+                        value: value.value,
+                        label: value.label
+                    };
+                    $scope.availableStates.push(obj);
+                }
+            });
+        }
+
+        $scope.updateCity = function () {
+            $scope.availableCities = [];
+
+            _that = this;
+            angular.forEach($scope.cities, function (value) {
+                if (value.stateId == _that.data.address.addr_perm_state_id) {
+                    var obj = {
+                        value: value.value,
+                        label: value.label
+                    };
+                    $scope.availableCities.push(obj);
                 }
             });
         }
@@ -126,7 +151,7 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
         $scope.setDateEmpty = function () {
             $scope.data.PatPatient.patient_dob = '';
         }
-        
+
         $scope.setAgeEmpty = function () {
             $scope.data.PatPatient.patient_age = '';
         }
@@ -219,6 +244,8 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
                     function (response) {
                         $scope.loadbar('hide');
                         $scope.data = response;
+                        $scope.updateState2();
+                        $scope.updateCity2();
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');
