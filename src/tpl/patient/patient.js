@@ -10,11 +10,15 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
                 $scope.data = $scope.patientObj;
 
                 $rootScope.commonService.GetLabelFromValue($scope.patientObj.patient_bill_type, 'GetPatientBillingList', function (response) {
-                    $scope.data.patient_bill_type = response;
+                    $scope.data.bill_type = response;
                 });
 
                 $rootScope.commonService.GetLabelFromValue($scope.patientObj.patient_reg_mode, 'GetPatientRegisterModelList', function (response) {
-                    $scope.data.patient_reg_mode = response;
+                    $scope.data.reg_mode = response;
+                });
+
+                $rootScope.commonService.GetLabelFromValue($scope.patientObj.patient_marital_status, 'GetMaritalStatus', function (response) {
+                    $scope.data.marital_status = response;
                 });
             }
         }, true);

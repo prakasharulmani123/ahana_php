@@ -1,13 +1,17 @@
-app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout', '$http', '$state', function ($rootScope, $scope, $timeout, $http, $state) {
+app.controller('PatientUpdateController', ['$rootScope', '$scope', '$http', '$anchorScroll', '$timeout', '$state', function ($rootScope, $scope, $http, $anchorScroll, $timeout, $state) {
+
+        $scope.app.settings.patientTopBar = true;
+        $scope.app.settings.patientSideMenu = true;
+//        $scope.app.settings.patientContentClass = 'app-content';
 
         $scope.$watch('app.patientDetail.patientId', function (newValue, oldValue) {
             if (newValue != '') {
-                $scope.data = $scope.patientObj;
+                $scope.data = {};
+                $scope.data.PatPatient = $scope.patientObj;
+                $scope.data.PatPatientAddress = $scope.patientObj.address;
                 
-                $scope.updateState2();
-                $scope.updateCity2();
-                $scope.updateState();
-                $scope.updateCity();
+                $scope.initForm();
+                
             }
         }, true);
 
@@ -27,10 +31,14 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
 
             $rootScope.commonService.GetStateList(function (response) {
                 $scope.states = response.stateList;
+                $scope.updateState2();
+                $scope.updateState();
             });
 
             $rootScope.commonService.GetCityList(function (response) {
                 $scope.cities = response.cityList;
+                $scope.updateCity2();
+                $scope.updateCity();
             });
 
             $rootScope.commonService.GetPatientRegisterModelList(function (response) {
@@ -39,6 +47,10 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
 
             $rootScope.commonService.GetTitleCodes(function (response) {
                 $scope.titleCodes = response;
+            });
+
+            $rootScope.commonService.GetMaritalStatus(function (response) {
+                $scope.maritalStatuses = response;
             });
 
             $rootScope.commonService.GetPatientCateogryList('', '1', false, function (response) {
@@ -52,7 +64,7 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
 
             _that = this;
             angular.forEach($scope.states, function (value) {
-                if (value.countryId == _that.data.address.addr_country_id) {
+                if (value.countryId == _that.data.PatPatientAddress.addr_country_id) {
                     var obj = {
                         value: value.value,
                         label: value.label
@@ -67,7 +79,7 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
 
             _that = this;
             angular.forEach($scope.cities, function (value) {
-                if (value.stateId == _that.data.address.addr_state_id) {
+                if (value.stateId == _that.data.PatPatientAddress.addr_state_id) {
                     var obj = {
                         value: value.value,
                         label: value.label
@@ -83,7 +95,7 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
 
             _that = this;
             angular.forEach($scope.states, function (value) {
-                if (value.countryId == _that.data.address.addr_perm_country_id) {
+                if (value.countryId == _that.data.PatPatientAddress.addr_perm_country_id) {
                     var obj = {
                         value: value.value,
                         label: value.label
@@ -98,7 +110,7 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
 
             _that = this;
             angular.forEach($scope.cities, function (value) {
-                if (value.stateId == _that.data.address.addr_perm_state_id) {
+                if (value.stateId == _that.data.PatPatientAddress.addr_perm_state_id) {
                     var obj = {
                         value: value.value,
                         label: value.label
@@ -134,19 +146,6 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
             return mode === 'day' && (date.getDay() === 0 || date.getDay() === 6);
         };
 
-
-
-        $scope.$watch('data.PatPatient.patient_firstname', function (newValue, oldValue) {
-            $http({
-                method: 'POST',
-                url: $rootScope.IRISOrgServiceUrl + '/patient/search',
-                data: {'search': newValue},
-            }).success(
-                    function (response) {
-                        $scope.matchings = response.patients;
-                    }
-            );
-        }, true);
 
         $scope.setDateEmpty = function () {
             $scope.data.PatPatient.patient_dob = '';
@@ -185,11 +184,22 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
                 );
             }
         }
+        
+        $scope.CopyAddress = function(){
+            if($scope.data.is_permanent){
+                $scope.data.PatPatientAddress.addr_perm_address = $scope.data.PatPatientAddress.addr_current_address;
+                $scope.data.PatPatientAddress.addr_perm_country_id = $scope.data.PatPatientAddress.addr_country_id;
+                $scope.data.PatPatientAddress.addr_perm_state_id = $scope.data.PatPatientAddress.addr_state_id;
+                $scope.data.PatPatientAddress.addr_perm_city_id = $scope.data.PatPatientAddress.addr_city_id;
+                $scope.data.PatPatientAddress.addr_perm_zip = $scope.data.PatPatientAddress.addr_zip;
+                $scope.updateState();
+                $scope.updateCity();
+            }
+        }
 
         //Save Both Add Data
         $scope.saveForm = function (mode) {
             _that = this;
-            reg_mode = _that.data.PatPatient.patient_reg_mode;
 
             $scope.errorData = "";
             $scope.successMessage = "";
@@ -205,18 +215,25 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
                 data: _that.data,
             }).success(
                     function (response) {
+                        $anchorScroll();
                         $scope.loadbar('hide');
                         if (response.success == true) {
                             $scope.successMessage = succ_msg;
-                            var patient_id = response.patient_id;
+                            
+                            $scope.app.patientDetail.patientTitleCode = response.patient.patient_title_code;
+                            $scope.app.patientDetail.patientName = response.patient.patient_firstname;
+                            $scope.app.patientDetail.patientId = response.patient.patient_id;
+                            $scope.app.patientDetail.patientDOA = response.patient.doa;
+                            $scope.app.patientDetail.patientOrg = response.patient.org_name;
+                            $scope.app.patientDetail.patientAge = response.patient.patient_age;
+                            $scope.app.patientDetail.patientCasesheetno = response.patient.casesheetno;
+                            $rootScope.commonService.GetLabelFromValue(response.patient.patient_gender, 'GetGenderList', function (response) {
+                                $scope.app.patientDetail.patientSex = response;
+                            });
+                            $scope.patientObj = response;
+                            
                             $timeout(function () {
-                                if (reg_mode == "IP") {
-                                    $state.go('patient.admission', {id: patient_id});
-                                } else if (reg_mode == "OP") {
-                                    $state.go('patient.appointment', {id: patient_id});
-                                } else {
-                                    $state.go('patient.view', {id: patient_id});
-                                }
+                                $state.go('patient.view', {id: response.patient_id});
                             }, 1000)
                         } else {
                             $scope.errorData = response.message;
@@ -232,54 +249,4 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
             });
         };
 
-        //Get Data for update Form
-        $scope.loadForm = function () {
-            $scope.loadbar('show');
-            _that = this;
-            $scope.errorData = "";
-            $http({
-                url: $rootScope.IRISOrgServiceUrl + "/patients/" + $state.params.id,
-                method: "GET"
-            }).success(
-                    function (response) {
-                        $scope.loadbar('hide');
-                        $scope.data = response;
-                        $scope.updateState2();
-                        $scope.updateCity2();
-                    }
-            ).error(function (data, status) {
-                $scope.loadbar('hide');
-                if (status == 422)
-                    $scope.errorData = $scope.errorSummary(data);
-                else
-                    $scope.errorData = data.message;
-            });
-        };
-
-        //Delete
-        $scope.removeRow = function (row) {
-            var conf = confirm('Are you sure to delete ? \nNote: All the Rooms under this patient will also be deleted !!!');
-            if (conf) {
-                $scope.loadbar('show');
-                var index = $scope.displayedCollection.indexOf(row);
-                if (index !== -1) {
-                    $http({
-                        url: $rootScope.IRISOrgServiceUrl + "/patient/remove",
-                        method: "POST",
-                        data: {id: row.patient_id}
-                    }).then(
-                            function (response) {
-                                $scope.loadbar('hide');
-                                if (response.data.success === true) {
-                                    $scope.displayedCollection.splice(index, 1);
-                                    $scope.loadPatientsList();
-                                }
-                                else {
-                                    $scope.errorData = response.data.message;
-                                }
-                            }
-                    )
-                }
-            }
-        };
     }]);

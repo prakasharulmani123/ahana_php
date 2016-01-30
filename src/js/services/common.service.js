@@ -11,6 +11,7 @@ function CommonService($http, $rootScope, $window, $q, $filter) {
     service.GetStateList = GetStateList;
     service.GetCityList = GetCityList;
     service.GetTitleCodes = GetTitleCodes;
+    service.GetMaritalStatus = GetMaritalStatus;
     service.GetPasswordResetAccess = GetPasswordResetAccess;
     service.GetTenantList = GetTenantList;
     service.GetFloorList = GetFloorList;
@@ -104,6 +105,11 @@ function CommonService($http, $rootScope, $window, $q, $filter) {
 
     function GetTitleCodes(callback) {
         var response = [{value: 'Mr.', label: 'Mr.'}, {value: 'Mrs.', label: 'Mrs.'}, {value: 'Miss.', label: 'Miss.'}, {value: 'Dr.', label: 'Dr.'}];
+        callback(response);
+    }
+
+    function GetMaritalStatus(callback) {
+        var response = [{value: 'S', label: 'Single'}, {value: 'M', label: 'Married'}, {value: 'D', label: 'Divorced'}, {value: 'W', label: 'Widowed'}];
         callback(response);
     }
 
@@ -354,6 +360,13 @@ function CommonService($http, $rootScope, $window, $q, $filter) {
         }
         if (func == 'GetPatientRegisterModelList') {
             $rootScope.commonService.GetPatientRegisterModelList(function (response) {
+                $rootScope.commonService.FoundVlaue(val, response, function (response2) {
+                    callback(response2);
+                });
+            });
+        }
+        if (func == 'GetMaritalStatus') {
+            $rootScope.commonService.GetMaritalStatus(function (response) {
                 $rootScope.commonService.FoundVlaue(val, response, function (response2) {
                     callback(response2);
                 });

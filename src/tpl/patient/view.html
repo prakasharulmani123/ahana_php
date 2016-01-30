@@ -1,6 +1,6 @@
 <div ng-controller="PatientController">
     <div class="bg-light lter b-b wrapper-md">
-        <h1 class="m-n h3">Details</h1>
+        <h1 class="m-n h3">View Details: {{data.patient_firstname}}</h1>
     </div>
 
     
@@ -77,7 +77,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Marital Status:    </label>
                                 <div class="col-sm-9">
-                                    <p> {{data.patient_marital_status}} </p>
+                                    <p> {{data.marital_status}} </p>
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
@@ -85,7 +85,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Billing :     </label>
                                 <div class="col-sm-9">
-                                    <p>{{data.patient_bill_type}}</p>
+                                    <p>{{data.bill_type}}</p>
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
@@ -101,7 +101,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Register Mode :     </label>
                                 <div class="col-sm-9">
-                                    <p>{{data.patient_reg_mode}}</p>
+                                    <p>{{data.reg_mode}}</p>
                                 </div>
                             </div>
                         </div>
