@@ -11,3 +11,7 @@ and open the template in the editor.
 .navi ul.pat_nav li {
   text-align: center !important;
 }
+
+.butterbar {
+  z-index: 1026;
+}

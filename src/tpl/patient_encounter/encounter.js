@@ -1,5 +1,10 @@
 app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$http', '$state', function ($rootScope, $scope, $timeout, $http, $state) {
 
+        $scope.app.settings.patientTopBar = true;
+        $scope.app.settings.patientSideMenu = true;
+        $scope.app.settings.patientContentClass = 'app-content';
+        $scope.app.settings.patientFooterClass = 'app-footer';
+        
         //Encounter Page
         $scope.loadPatientEncounters = function (type) {
             $scope.encounterView = type;

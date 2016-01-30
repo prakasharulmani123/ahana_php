@@ -1,5 +1,10 @@
 app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', function ($rootScope, $scope, $timeout, $http, $state) {
 
+        $scope.app.settings.patientTopBar = true;
+        $scope.app.settings.patientSideMenu = true;
+        $scope.app.settings.patientContentClass = 'app-content';
+        $scope.app.settings.patientFooterClass = 'app-footer';
+        
         $scope.initCanCreateAppointment = function () {
             $http.post($rootScope.IRISOrgServiceUrl + '/encounter/patienthaveactiveencounter', {patient_id: $state.params.id})
                     .success(function (response) {
