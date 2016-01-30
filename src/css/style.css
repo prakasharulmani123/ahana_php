@@ -319,8 +319,13 @@ h3, .h3 {
     color:#FFFFFF;
 }
 
+.search-patientcont span.admission_details
+{
+    color:#FFFFFF;
+}
 
-.search-patientcont  {
+
+.search-patientcont-header  {
     background-clip: padding-box;
     background-color: #fff;
     border: 1px solid rgba(0, 0, 0, 0.15);
@@ -339,26 +344,36 @@ h3, .h3 {
     width: 400px;
 }
 
-.search-patientcont li{
+.search-patientcont-header li{
     list-style:none;
     padding:10px 10px 5px 10px;
 }
 
-.search-patientcont img{
+.search-patientcont-header img{
     width: 100%;
     height: auto;
 }
 
-.search-patientcont span
+.search-patientcont-header span
 {
     color:#918e8e;
 }
 
-
-.search-patientcont b
+.search-patientcont-header b
 {
     color:#000000;
     font-weight: normal;
+}
+
+.search-patientcont-header span.admission_details
+{
+    color:#FFFFFF;
+}
+
+.search-patientcont-header a
+{
+    color:#0672ce;
+    text-transform:uppercase;
 }
 
 

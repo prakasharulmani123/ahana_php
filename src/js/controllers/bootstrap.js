@@ -326,11 +326,17 @@ app.controller('PatientSearchController', ['$scope', '$http', '$rootScope', '$st
         }, true);
 
         $scope.goToPatient = function (id) {
+            $scope.patientselected = '';
             $state.go('patient.view', {'id': id});
         }
 
         $scope.goToRegistration = function () {
             $scope.patientselected = '';
             $state.go('patient.registration');
+        };
+        
+        $scope.goToAppointment = function (patient_id) {
+            $scope.patientselected = '';
+            $state.go('patient.appointment', {'id': patient_id});
         };
     }]);
