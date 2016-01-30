@@ -162,6 +162,10 @@ class PatPatient extends RActiveRecord {
                 if (isset($model->patientCategory->patient_cat_name))
                     return $model->patientCategory->patient_cat_name;
             },
+            'address' => function ($model) {
+                if (isset($model->patPatientAddress))
+                    return $model->patPatientAddress;
+            },
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
