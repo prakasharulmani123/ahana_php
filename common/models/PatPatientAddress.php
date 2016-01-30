@@ -1,8 +1,13 @@
 <?php
 
-namespace common\models;
+use common\models\CoMasterCity;
+use common\models\CoMasterCountry;
+use common\models\CoMasterState;
+use common\models\PatPatient;
+use common\models\RActiveRecord;
+use yii\db\ActiveQuery;
 
-use Yii;
+namespace common\models;
 
 /**
  * This is the model class for table "pat_patient_address".
@@ -33,7 +38,7 @@ use Yii;
  * @property CoMasterState $addrPermState
  * @property CoMasterState $addrState
  */
-class PatPatientAddress extends \common\models\RActiveRecord {
+class PatPatientAddress extends RActiveRecord {
 
     /**
      * @inheritdoc
@@ -80,49 +85,49 @@ class PatPatientAddress extends \common\models\RActiveRecord {
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getAddrPermCity() {
         return $this->hasOne(CoMasterCity::className(), ['city_id' => 'addr_perm_city_id']);
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getPatient() {
         return $this->hasOne(PatPatient::className(), ['patient_id' => 'patient_id']);
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getAddrCity() {
         return $this->hasOne(CoMasterCity::className(), ['city_id' => 'addr_city_id']);
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getAddrCountry() {
         return $this->hasOne(CoMasterCountry::className(), ['country_id' => 'addr_country_id']);
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getAddrPermCountry() {
         return $this->hasOne(CoMasterCountry::className(), ['country_id' => 'addr_perm_country_id']);
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getAddrPermState() {
         return $this->hasOne(CoMasterState::className(), ['state_id' => 'addr_perm_state_id']);
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getAddrState() {
         return $this->hasOne(CoMasterState::className(), ['state_id' => 'addr_state_id']);
@@ -131,7 +136,7 @@ class PatPatientAddress extends \common\models\RActiveRecord {
     public function fields() {
         $extend = [
             'country_name' => function ($model) {
-                return (isset($model->addrCountry->country) ? $model->addrCountry->country->country_name : '-');
+                return (isset($model->addrCountry) ? $model->addrCountry->country_name : '-');
             },
             'state_name' => function ($model) {
                 return (isset($model->addrState) ? $model->addrState->state_name : '-');
@@ -140,7 +145,7 @@ class PatPatientAddress extends \common\models\RActiveRecord {
                 return (isset($model->addrCity) ? $model->addrCity->city_name : '-');
             },
             'perm_country_name' => function ($model) {
-                return (isset($model->addrPermCountry->country) ? $model->addrPermCountry->country->country_name : '-');
+                return (isset($model->addrPermCountry) ? $model->addrPermCountry->country_name : '-');
             },
             'perm_state_name' => function ($model) {
                 return (isset($model->addrPermState) ? $model->addrPermState->state_name : '-');

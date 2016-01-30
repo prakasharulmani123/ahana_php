@@ -65,7 +65,7 @@ class PatPatient extends RActiveRecord {
             [['patient_relation_code', 'patient_gender', 'patient_marital_status', 'patient_reg_mode', 'patient_type'], 'string', 'max' => 2],
             [['patient_blood_group'], 'string', 'max' => 5],
             [['patient_ref_hospital'], 'string', 'max' => 255],
-            [['tenant_id', 'patient_firstname', 'patient_lastname'], 'unique', 'targetAttribute' => ['tenant_id', 'patient_firstname', 'patient_lastname'], 'message' => 'The combination of Tenant ID, Patient Firstname and Patient Lastname has already been taken.'],
+            [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'patient_firstname', 'patient_lastname'], 'message' => 'The combination of Patient Firstname and Lastname has already been taken.'],
             [['casesheetno'], 'unique', 'message' => 'This cashsheetno has already been taken.']
         ];
     }

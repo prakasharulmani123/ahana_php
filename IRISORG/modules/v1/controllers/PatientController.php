@@ -73,6 +73,14 @@ class PatientController extends ActiveController {
         if (!empty($post['PatPatient']) || !empty($post['PatPatientAddress'])) {
             $model = new PatPatient();
             $addr_model = new PatPatientAddress();
+            
+            if(isset($post['PatPatient']['patient_id'])){
+                $patient = PatPatient::find()->where(['patient_id' => $post['PatPatient']['patient_id']])->one();
+                if(!empty($patient)){
+                    $model = $patient;
+                    $addr_model = $patient->patPatientAddress;
+                }
+            }
 
             if (isset($post['PatPatient'])) {
                 $model->attributes = $post['PatPatient'];
@@ -95,7 +103,7 @@ class PatientController extends ActiveController {
                 $addr_model->patient_id = $model->patient_id;
                 $addr_model->save(false);
 
-                return ['success' => true, 'patient_id' => $model->patient_id];
+                return ['success' => true, 'patient_id' => $model->patient_id, 'patient' => $model];
             } else {
                 return ['success' => false, 'message' => Html::errorSummary([$model, $addr_model])];
             }
