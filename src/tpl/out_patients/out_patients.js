@@ -2,7 +2,8 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
 
         $scope.app.settings.patientTopBar = false;
         $scope.app.settings.patientSideMenu = false;
-        $scope.app.settings.patientContentClass = 'app-content';
+        $scope.app.settings.patientContentClass = 'app-content app-content3';
+        $scope.app.settings.patientFooterClass = 'app-footer app-footer3';
         
         editableThemes.bs3.inputClass = 'input-sm';
     editableThemes.bs3.buttonsClass = 'btn-sm';

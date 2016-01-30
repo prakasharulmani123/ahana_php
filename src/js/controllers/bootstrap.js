@@ -308,8 +308,6 @@ app.controller('TimepickerDemoCtrl', ['$scope', function ($scope) {
 app.controller('PatientSearchController', ['$scope', '$http', '$rootScope', '$state', function ($scope, $http, $rootScope, $state) {
         $scope.patient_lists = [];
         $scope.patientselected = '';
-        console.log(this.data);
-
 
         $scope.$watch('patientselected', function (newValue, oldValue) {
             if (newValue != '') {
