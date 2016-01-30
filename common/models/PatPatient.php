@@ -124,6 +124,13 @@ class PatPatient extends RActiveRecord {
         return $this->hasOne(CoPatientCategory::className(), ['patient_cat_id' => 'patient_category_id']);
     }
 
+    /**
+     * @return ActiveQuery
+     */
+    public function getPatActiveEncounter() {
+        return $this->hasOne(PatEncounter::className(), ['patient_id' => 'patient_id'])->status()->orderBy(['encounter_date' => SORT_DESC]);
+    }
+
     public function beforeSave($insert) {
         if (!empty($this->patient_dob))
             $this->patient_dob = date('Y-m-d', strtotime($this->patient_dob));

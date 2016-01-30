@@ -115,6 +115,7 @@ class PatientController extends ActiveController {
             foreach ($lists as $key => $patient) {
                 $patients[$key]['Patient'] = $patient;
                 $patients[$key]['PatientAddress'] = $patient->patPatientAddress;
+                $patients[$key]['PatientActiveEncounter'] = $patient->patActiveEncounter;
             }
         }
         return ['patients' => $patients];
