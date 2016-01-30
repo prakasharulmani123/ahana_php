@@ -854,6 +854,17 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
+            //PATIENT UPDATE
+            .state('patient.update', {
+                url: '/update/{id}',
+                templateUrl: 'tpl/patient/update_patient.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/patient/patient_update.js']);
+                        }]
+                }
+            })
             
             //PATIENT ENCOUNTER
             .state('patient.encounter', {

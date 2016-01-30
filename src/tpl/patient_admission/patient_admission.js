@@ -1,9 +1,5 @@
 app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout', '$http', '$state', function ($rootScope, $scope, $timeout, $http, $state) {
 
-        $scope.app.settings.patientTopBar = true;
-        $scope.app.settings.patientSideMenu = true;
-        $scope.app.settings.patientContentClass = 'app-content';
-
         $scope.initCanCreateAdmission = function () {
             $http.post($rootScope.IRISOrgServiceUrl + '/encounter/patienthaveactiveencounter', {patient_id: $state.params.id})
                     .success(function (response) {

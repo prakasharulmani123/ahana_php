@@ -1,9 +1,5 @@
 app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$timeout', '$filter', function ($rootScope, $scope, $timeout, $http, $state, $timeout, $filter) {
 
-        $scope.app.settings.patientTopBar = true;
-        $scope.app.settings.patientSideMenu = true;
-        $scope.app.settings.patientContentClass = 'app-content';
-
         $scope.$watch('app.patientDetail.patientId', function (newValue, oldValue) {
             if (newValue != '') {
                 $rootScope.commonService.GetEncounterListByPatient('', '1', false, $scope.patientObj.patient_id, function (response) {

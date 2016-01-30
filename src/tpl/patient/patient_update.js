@@ -1,26 +1,18 @@
 app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout', '$http', '$state', function ($rootScope, $scope, $timeout, $http, $state) {
 
-        $scope.app.settings.patientTopBar = false;
-        $scope.app.settings.patientSideMenu = false;
-        $scope.app.settings.patientContentClass = 'app-content';
+        $scope.$watch('app.patientDetail.patientId', function (newValue, oldValue) {
+            if (newValue != '') {
+                $scope.data = $scope.patientObj;
 
-        //Index Page
-        $scope.loadPatientsList = function () {
-            // pagination set up
-            $scope.rowCollection = [];  // base collection
-            $scope.itemsByPage = 10; // No.of records per page
-            $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
+                $rootScope.commonService.GetLabelFromValue($scope.patientObj.patient_bill_type, 'GetPatientBillingList', function (response) {
+                    $scope.data.patient_bill_type = response;
+                });
 
-            // Get data's from service
-            $http.get($rootScope.IRISOrgServiceUrl + '/patient')
-                    .success(function (patients) {
-                        $scope.rowCollection = patients;
-                        $scope.displayedCollection = [].concat($scope.rowCollection);
-                    })
-                    .error(function () {
-                        $scope.error = "An Error has occured while loading patients!";
-                    });
-        };
+                $rootScope.commonService.GetLabelFromValue($scope.patientObj.patient_reg_mode, 'GetPatientRegisterModelList', function (response) {
+                    $scope.data.patient_reg_mode = response;
+                });
+            }
+        }, true);
 
         $scope.initForm = function () {
             $rootScope.commonService.GetFloorList('', '1', false, function (response) {

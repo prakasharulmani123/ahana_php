@@ -1,35 +1,27 @@
-<div ng-controller="PatientController">
-    <div class="bg-light lter b-b wrapper-md">
-        <h1 class="m-n h3">Details</h1>
-    </div>
+<div class="bg-light lter b-b wrapper-md">
+    <h1 class="m-n h3">Update Patient: {{data.patient_firstname}}</h1>
+</div>
 
-    
-    <div class="wrapper-md">
-        <div class="row">
-            <div class="col-sm-2"> 
-                <div class="btn-group btn-group-justified">
-                    <a class="btn btn-info" ui-sref="patient.update({id: {{$state.params.id}}})"><i class="fa fa-pencil"></i>  Update Patient</a>
-                </div>
-            </div>
-        </div>
-        <br />
+<div class="wrapper-md">
+    <div ng-controller="PatientRegisterController" ng-init="initForm();">
         <div class="row">
             <div class="col-sm-6">
                 <form name="formValidate" class="form-horizontal form-validation">
                     <div class="panel panel-default">
                         <div class="panel-body">                    
-                            <!--                            <div class="form-group">
-                                                            <label class="col-sm-3 control-label">Patient ID  </label>
-                                                            <div class="col-sm-9">
-                                                                <p>  <b> {{data.patient_id}}  </b></p>
-                                                            </div>
-                                                        </div>
-                                                        <div class="line line-dashed b-b line-lg "></div>-->
-
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Registration Date:   </label>
                                 <div class="col-sm-9">
-                                    <p>  {{data.patient_reg_date}}  </p>
+                                    <input type="text" ng-model="data.patient_reg_date" class="form-control" placeholder="" >
+                                </div>
+                            </div>
+                            <div class="line line-dashed b-b line-lg "></div>
+
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Title Code   </label>
+                                <div class="col-sm-9">
+                                    <select class="form-control" ng-model="data.PatPatient.patient_title_code" ng-options="titleCode.value as titleCode.label for titleCode in titleCodes | orderBy: label">
+                                    </select>
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
@@ -37,7 +29,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Name:   </label>
                                 <div class="col-sm-9">
-                                    <p> {{data.patient_title_code}}{{data.patient_firstname}} </p>
+                                    <input type="text" ng-model="data.patient_firstname" class="form-control" placeholder="" >
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
@@ -45,15 +37,19 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Last Name:   </label>
                                 <div class="col-sm-9">
-                                    <p> {{data.patient_lastname}} </p>
+                                    <input type="text" ng-model="data.patient_lastname" class="form-control" placeholder="" >
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label"> Sex: </label>
+                                <label class="col-sm-3 control-label"> Gender: </label>
                                 <div class="col-sm-9">
-                                    <p>  {{app.patientDetail.patientSex}}  </p>
+                                    <label class="i-checks" ng-repeat="gender in genders">
+                                        <input type="radio" checked="" value="{{gender.value}}" name="a" ng-model="data.PatPatient.patient_gender">
+                                        <i></i>
+                                        {{gender.label}}&nbsp; &nbsp;
+                                    </label>
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
@@ -61,7 +57,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label"> Age: </label>
                                 <div class="col-sm-9">
-                                    <p>  {{data.patient_age}}  </p>
+                                    <input type="text" ng-model="data.patient_age" class="form-control" placeholder="" >
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
@@ -69,7 +65,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label"> DOB: </label>
                                 <div class="col-sm-9">
-                                    <p>  {{data.patient_dob}}  </p>
+                                    <input type="text" ng-model="data.patient_dob" class="form-control" placeholder="" >
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
@@ -77,7 +73,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Marital Status:    </label>
                                 <div class="col-sm-9">
-                                    <p> {{data.patient_marital_status}} </p>
+                                    <input type="text" ng-model="data.patient_marital_status" class="form-control" placeholder="" >
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
@@ -85,7 +81,11 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Billing :     </label>
                                 <div class="col-sm-9">
-                                    <p>{{data.patient_bill_type}}</p>
+                                    <label class="i-checks" ng-repeat="bill_type in bill_types">
+                                        <input type="radio" checked="" value="{{bill_type.value}}" name="b" ng-model="data.PatPatient.patient_billing_type">
+                                        <i></i>
+                                        {{bill_type.label}}&nbsp; &nbsp;
+                                    </label>
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
@@ -93,15 +93,9 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Category :     </label>
                                 <div class="col-sm-9">
-                                    <p>{{data.patient_category}}</p>
-                                </div>
-                            </div>
-                            <div class="line line-dashed b-b line-lg "></div>
-
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">Register Mode :     </label>
-                                <div class="col-sm-9">
-                                    <p>{{data.patient_reg_mode}}</p>
+                                    <select ng-model="data.PatPatient.patient_category_id" class="form-control" ng-options="category.patient_cat_id as category.patient_cat_name for category in categories | orderBy: patient_cat_name">
+                                        <option value="">Select Category</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -116,7 +110,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Current Address  </label>
                                 <div class="col-sm-9">
-                                    <p>  {{data.address.addr_current_address}}</p>
+                                    <input type="text" ng-model="data.address.addr_current_address" class="form-control" placeholder="" >
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
@@ -124,15 +118,19 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Zip </label>
                                 <div class="col-sm-9">
-                                    <p>  {{data.address.addr_zip}}</p>
+                                    <input type="text" ng-model="data.address.addr_zip" class="form-control" placeholder="" >
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">City  </label>
+                                <label class="col-sm-3 control-label">Country  </label>
                                 <div class="col-sm-9">
-                                    <p>  {{data.address.city_name}}</p>
+                                    <select class="form-control" ng-model="data.PatPatientAddress.addr_country_id" ng-options="country.value as country.label for country in countries | orderBy: label" ng-change="updateState2();
+                                                    data.PatPatientAddress.addr_state_id = '';
+                                                    data.PatPatientAddress.addr_city_id = '';">
+                                        <option value="">Select Country</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
@@ -140,15 +138,20 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">State </label>
                                 <div class="col-sm-9">
-                                    <p>  {{data.address.state_name}}</p>
+                                    <select class="form-control" name="State" ng-model="data.PatPatientAddress.addr_state_id" ng-options="state.value as state.label for state in availableStates2 | orderBy: label" ng-change="updateCity2();
+                                                    data.PatPatientAddress.addr_city_id = '';">
+                                        <option value="">Select State</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">Country </label>
+                                <label class="col-sm-3 control-label">City </label>
                                 <div class="col-sm-9">
-                                    <p>  {{data.address.country_name}}</p>
+                                    <select class="form-control" name="City" ng-model="data.PatPatientAddress.addr_city_id" ng-options="city.value as city.label for city in availableCities2 | orderBy: label">
+                                        <option value="">Select City</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
@@ -156,7 +159,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Permanent Address  </label>
                                 <div class="col-sm-9">
-                                    <p>  {{data.address.addr_perm_address}}</p>
+                                    <input type="text" ng-model="data.address.addr_perm_address" class="form-control" placeholder="" >
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
@@ -164,15 +167,19 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Zip </label>
                                 <div class="col-sm-9">
-                                    <p>  {{data.address.addr_perm_zip}}</p>
+                                    <input type="text" ng-model="data.address.addr_perm_zip" class="form-control" placeholder="" >
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">City  </label>
+                                <label class="col-sm-3 control-label">Country  </label>
                                 <div class="col-sm-9">
-                                    <p>  {{data.address.perm_city_name}}</p>
+                                    <select class="form-control" ng-model="data.PatPatientAddress.addr_perm_country_id" ng-options="country.value as country.label for country in countries | orderBy: label" ng-change="updateState2();
+                                                    data.PatPatientAddress.addr_state_id = '';
+                                                    data.PatPatientAddress.addr_city_id = '';">
+                                        <option value="">Select Country</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
@@ -180,20 +187,23 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">State </label>
                                 <div class="col-sm-9">
-                                    <p>  {{data.address.perm_state_name}}</p>
+                                    <select class="form-control" name="State" ng-model="data.PatPatientAddress.addr_perm_state_id" ng-options="state.value as state.label for state in availableStates2 | orderBy: label" ng-change="updateCity2();
+                                                    data.PatPatientAddress.addr_city_id = '';">
+                                        <option value="">Select State</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">Country </label>
+                                <label class="col-sm-3 control-label">City </label>
                                 <div class="col-sm-9">
-                                    <p>  {{data.address.perm_country_name}}</p>
+                                    <select class="form-control" name="City" ng-model="data.PatPatientAddress.addr_perm_city_id" ng-options="city.value as city.label for city in availableCities2 | orderBy: label">
+                                        <option value="">Select City</option>
+                                    </select>
                                 </div>
                             </div>
-
                         </div>
-
                     </div>
                 </form>
             </div>
