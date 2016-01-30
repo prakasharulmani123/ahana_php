@@ -6,23 +6,15 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
 
         $scope.$watch('app.patientDetail.patientId', function (newValue, oldValue) {
             if (newValue != '') {
-                        $http.get($rootScope.IRISOrgServiceUrl + '/patient/getpatientaddress?id=' + $scope.patientObj.patient_id)
-                                .success(function (resp) {
-                                    $scope.data = $scope.patientObj;
-                                    $scope.data.address = resp.address;
+                $scope.data = $scope.patientObj;
 
-                                    $rootScope.commonService.GetLabelFromValue($scope.patientObj.patient_bill_type, 'GetPatientBillingList', function (response) {
-                                        $scope.data.patient_bill_type = response;
-                                    });
+                $rootScope.commonService.GetLabelFromValue($scope.patientObj.patient_bill_type, 'GetPatientBillingList', function (response) {
+                    $scope.data.patient_bill_type = response;
+                });
 
-                                    $rootScope.commonService.GetLabelFromValue($scope.patientObj.patient_reg_mode, 'GetPatientRegisterModelList', function (response) {
-                                        $scope.data.patient_reg_mode = response;
-                                    });
-
-                                })
-                                .error(function () {
-                                    $scope.error = "An Error has occured while loading patient address!";
-                                });
+                $rootScope.commonService.GetLabelFromValue($scope.patientObj.patient_reg_mode, 'GetPatientRegisterModelList', function (response) {
+                    $scope.data.patient_reg_mode = response;
+                });
             }
         }, true);
 

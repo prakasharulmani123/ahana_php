@@ -1,4 +1,4 @@
-app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$timeout', '$filter', function ($rootScope, $scope, $timeout, $http, $state, $timeout, $filter) {
+app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$timeout', '$filter', function ($rootScope, $scope, $timeout, $http, $state, $timeout, $filter) {
 
         $scope.app.settings.patientTopBar = true;
         $scope.app.settings.patientSideMenu = true;
@@ -80,7 +80,7 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
                 method = 'PUT';
                 succ_msg = 'Procedure updated successfully';
             }
-            
+
             $scope.loadbar('show');
             $http({
                 method: method,
@@ -144,22 +144,22 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
                 $scope.loadbar('show');
 //                var index = $scope.displayedCollection.indexOf(row);
 //                if (index !== -1) {
-                    $http({
-                        url: $rootScope.IRISOrgServiceUrl + "/procedure/remove",
-                        method: "POST",
-                        data: {id: id}
-                    }).then(
-                            function (response) {
-                                $scope.loadbar('hide');
-                                if (response.data.success === true) {
-                                    $scope.loadProceduresList();
-                                    $scope.successMessage = 'Procedure Deleted Successfully';
-                                }
-                                else {
-                                    $scope.errorData = response.data.message;
-                                }
+                $http({
+                    url: $rootScope.IRISOrgServiceUrl + "/procedure/remove",
+                    method: "POST",
+                    data: {id: id}
+                }).then(
+                        function (response) {
+                            $scope.loadbar('hide');
+                            if (response.data.success === true) {
+                                $scope.loadProceduresList();
+                                $scope.successMessage = 'Procedure Deleted Successfully';
                             }
-                    )
+                            else {
+                                $scope.errorData = response.data.message;
+                            }
+                        }
+                )
 //                }
             }
         };
