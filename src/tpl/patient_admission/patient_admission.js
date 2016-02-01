@@ -4,17 +4,39 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
         $scope.app.settings.patientSideMenu = true;
         $scope.app.settings.patientContentClass = 'app-content';
         $scope.app.settings.patientFooterClass = 'app-footer';
-        
-        $scope.initCanCreateAdmission = function () {
+
+        $scope.isPatientHaveActiveEncounter = function (callback) {
             $http.post($rootScope.IRISOrgServiceUrl + '/encounter/patienthaveactiveencounter', {patient_id: $state.params.id})
                     .success(function (response) {
-                        if(response.success == true){
-                            alert("This patient already have an active admission. You can't create a new admission");
-                            $state.go("patient.view", {id: $state.params.id});
-                        }
+                        callback(response);
                     }, function (x) {
                         response = {success: false, message: 'Server Error'};
+                        callback(response);
                     });
+        }
+
+        $scope.initCanCreateAdmission = function () {
+            $scope.isPatientHaveActiveEncounter(function (response) {
+                if (response.success == true) {
+                    alert("This patient already have an active admission. You can't create a new admission");
+                    $state.go("patient.view", {id: $state.params.id});
+                }
+            });
+        }
+
+        $scope.initCanSaveAdmission = function () {
+            $scope.isPatientHaveActiveEncounter(function (response) {
+                if (response.success == true) {
+                    if (response.model.encounter_id != $state.params.enc_id) {
+                        alert("This is not an active Encounter");
+                        $state.go("patient.encounter", {id: $state.params.id});
+                    }
+                }
+            });
+        }
+
+        $scope.initTransferForm = function () {
+            $scope.transferTypes = [{'value': 'TD', 'label': 'Consultant'}, {'value': 'TR', 'label': 'Room'}];
         }
 
         $scope.initForm = function () {
@@ -37,7 +59,11 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
             $rootScope.commonService.GetRoomTypeList('', '1', false, function (response) {
                 $scope.roomTypes = response.roomtypeList;
             });
-            
+
+            $rootScope.commonService.GetRoomTypesRoomsList('', function (response) {
+                $scope.roomTypesRoomsList = response.roomtypesroomsList;
+            });
+
             $rootScope.commonService.GetRoomTypesRoomsList('', function (response) {
                 $scope.roomTypesRoomsList = response.roomtypesroomsList;
             });
@@ -54,6 +80,11 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
                     break;
             }
         };
+
+        $scope.onTimeSet = function (newDate, oldDate) {
+            console.log(newDate);
+            console.log(oldDate);
+        }
 
         $scope.open = function ($event) {
             $event.preventDefault();
@@ -93,7 +124,7 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
                 }
             });
         }
-        
+
         $scope.updateRoomType = function () {
             $scope.availableRoomtypes = [];
 
@@ -135,6 +166,66 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
                 method: method,
                 url: post_url,
                 data: _that.data,
+            }).success(
+                    function (response) {
+                        $scope.loadbar('hide');
+                        if (response.success == true) {
+                            $scope.successMessage = succ_msg;
+                            $scope.data = {};
+                        } else {
+                            $scope.errorData = response.message;
+                        }
+
+                    }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        };
+
+        $scope.saveAdmissionForm = function (mode) {
+            _that = this;
+
+            $scope.errorData = "";
+            $scope.successMessage = "";
+
+            if (typeof (_that.data) != "undefined") {
+                if (_that.data.hasOwnProperty('PatAdmission')) {
+                    angular.extend(_that.data.PatAdmission, {patient_id: $scope.app.patientDetail.patientId, encounter_id: $state.params.enc_id});
+                }
+            }
+
+            post_url = $rootScope.IRISOrgServiceUrl + '/admissions';
+            method = 'POST';
+
+            //Discharge
+            if (mode == 'discharge') {
+                angular.extend(_that.data.PatAdmission, {consultant_id: 0, floor_id: 0, ward_id: 0, room_id: 0, room_type_id: 0});
+                succ_msg = 'Patient Discharged successfully';
+
+            } else if (mode == 'transfer') {
+                //Transfer
+                if (_that.data.PatAdmission.admission_status == 'TD') {
+                    angular.extend(_that.data.PatAdmission, {floor_id: 0, ward_id: 0, room_id: 0, room_type_id: 0});
+                    succ_msg = "Doctor Transfered successfully";
+
+                } else if (_that.data.PatAdmission.admission_status == 'TR') {
+                    angular.extend(_that.data.PatAdmission, {consultant_id: 0});
+                    succ_msg = "Room Transfered successfully";
+
+                }
+            }
+
+            _that.data.PatAdmission.status_date = moment(_that.data.PatAdmission.status_date).format('YYYY-MM-DD HH:mm:ss');
+
+            $scope.loadbar('show');
+            $http({
+                method: method,
+                url: post_url,
+                data: _that.data.PatAdmission,
             }).success(
                     function (response) {
                         $scope.loadbar('hide');

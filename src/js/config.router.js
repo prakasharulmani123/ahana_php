@@ -897,6 +897,38 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                 }
             })
             
+		//PATIENT TRANSFER
+            .state('patient.transfer', {
+                url: '/transfer/{id}/{enc_id}',
+                templateUrl: 'tpl/patient_admission/transfer.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('smart-table').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/patient_admission/patient_admission.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            
+		//PATIENT DISCHARGE
+            .state('patient.discharge', {
+                url: '/discharge/{id}/{enc_id}',
+                templateUrl: 'tpl/patient_admission/discharge.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('smart-table').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/patient_admission/patient_admission.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            
             // In-Patient
             .state('patient.inPatients', {
                 url: '/inPatients',
