@@ -127,15 +127,8 @@ class PatEncounter extends RActiveRecord {
     /**
      * @return ActiveQuery
      */
-    public function getPatCurrentAdmissionRoom() {
-        return $this->hasOne(PatAdmission::className(), ['encounter_id' => 'encounter_id'])->andWhere(['IN','admission_status', ['A', 'TR']])->orderBy(['created_at' => SORT_DESC]);
-    }
-    
-    /**
-     * @return ActiveQuery
-     */
-    public function getPatCurrentAdmissionDoctor() {
-        return $this->hasOne(PatAdmission::className(), ['encounter_id' => 'encounter_id'])->andWhere(['IN','admission_status', ['A', 'TD']])->orderBy(['created_at' => SORT_DESC]);
+    public function getPatCurrentAdmission() {
+        return $this->hasOne(PatAdmission::className(), ['encounter_id' => 'encounter_id'])->orderBy(['created_at' => SORT_DESC]);
     }
     
     public function fields() {

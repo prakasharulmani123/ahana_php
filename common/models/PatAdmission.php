@@ -31,6 +31,8 @@ use yii\db\ActiveQuery;
  */
 class PatAdmission extends RActiveRecord {
 
+    public $changeOldRoomStatusId = null;
+
     /**
      * @inheritdoc
      */
@@ -53,11 +55,11 @@ class PatAdmission extends RActiveRecord {
 
     public function validateAdmissionStatus($attribute, $params) {
         if ($this->admission_status == 'TR') {
-            if ($this->encounter->patCurrentAdmissionRoom->room_id == $this->room_id && $this->encounter->patCurrentAdmissionRoom->room_type_id == $this->room_type_id) {
+            if ($this->encounter->patCurrentAdmission->room_id == $this->room_id && $this->encounter->patCurrentAdmission->room_type_id == $this->room_type_id) {
                 $this->addError($attribute, "Room can't be same. Change the Room");
             }
         } else if ($this->admission_status == 'TD') {
-            if ($this->encounter->patCurrentAdmissionDoctor->consultant_id == $this->consultant_id) {
+            if ($this->encounter->patCurrentAdmission->consultant_id == $this->consultant_id) {
                 $this->addError($attribute, "Consultant can't be same. Change the Consultant");
             }
         }
@@ -85,25 +87,6 @@ class PatAdmission extends RActiveRecord {
             'modified_at' => 'Modified At',
             'deleted_at' => 'Deleted At',
         ];
-    }
-
-    public function afterSave($insert, $changedAttributes) {
-        //Change room occupied status
-        if ($this->room_id) {
-            $room = CoRoom::find()->where(['room_id' => $this->room_id])->one();
-            $room->occupied_status = 1;
-            $room->save(false);
-        }
-
-        if ($insert) {
-            //Close Encounter
-            if ($this->admission_status == 'D') {
-                $this->encounter->status = '0';
-                $this->encounter->save(false);
-            }
-        }
-        
-        return parent::afterSave($insert, $changedAttributes);
     }
 
     /**
@@ -147,9 +130,65 @@ class PatAdmission extends RActiveRecord {
         return $this->hasOne(CoRoomType::className(), ['room_type_id' => 'room_type_id']);
     }
 
+    public function beforeValidate() {
+        $this->setCurrentData();
+        return parent::beforeValidate();
+    }
+
     public function beforeSave($insert) {
         $this->status_date = date('Y-m-d H:i:s', strtotime($this->status_date));
+
+        if ($insert) {
+            $this->setCurrentData();
+
+            //Set Old room status to vacant
+            if ($this->admission_status == 'TR') {
+                $this->changeOldRoomStatusId = $this->encounter->patCurrentAdmission->room_id;
+            }
+        }
         return parent::beforeSave($insert);
+    }
+
+    public function afterSave($insert, $changedAttributes) {
+        //Change room occupied status
+        if ($this->room_id) {
+            $room = CoRoom::find()->where(['room_id' => $this->room_id])->one();
+            $room->occupied_status = 1;
+            $room->save(false);
+        }
+
+        if ($insert) {
+            //Close Encounter
+            if ($this->admission_status == 'D') {
+                $this->encounter->status = '0';
+                $this->encounter->save(false);
+            }
+
+            //Change Old room status to vacant
+            if (!is_null($this->changeOldRoomStatusId)) {
+                $room = CoRoom::find()->where(['room_id' => $this->changeOldRoomStatusId])->one();
+                $room->occupied_status = 0;
+                $room->save(false);
+                $this->changeOldRoomStatusId = null;
+            }
+        }
+
+        return parent::afterSave($insert, $changedAttributes);
+    }
+
+    public function setCurrentData() {
+        if ($this->admission_status == 'TD' || $this->admission_status == 'D') {
+            $this->floor_id = $this->encounter->patCurrentAdmission->floor_id;
+            $this->ward_id = $this->encounter->patCurrentAdmission->ward_id;
+            $this->room_id = $this->encounter->patCurrentAdmission->room_id;
+            $this->room_type_id = $this->encounter->patCurrentAdmission->room_type_id;
+
+            if ($this->admission_status == 'D') {
+                $this->consultant_id = $this->encounter->patCurrentAdmission->consultant_id;
+            }
+        } else if ($this->admission_status == 'TR') {
+            $this->consultant_id = $this->encounter->patCurrentAdmission->consultant_id;
+        }
     }
 
 }
