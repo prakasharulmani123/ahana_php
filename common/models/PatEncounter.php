@@ -124,6 +124,20 @@ class PatEncounter extends RActiveRecord {
         return $this->hasOne(PatAppoinment::className(), ['encounter_id' => 'encounter_id'])->andWhere('appt_status = "A"')->orderBy(['created_at'=>SORT_DESC]);
     }
     
+    /**
+     * @return ActiveQuery
+     */
+    public function getPatCurrentAdmissionRoom() {
+        return $this->hasOne(PatAdmission::className(), ['encounter_id' => 'encounter_id'])->andWhere(['IN','admission_status', ['A', 'TR']])->orderBy(['created_at' => SORT_DESC]);
+    }
+    
+    /**
+     * @return ActiveQuery
+     */
+    public function getPatCurrentAdmissionDoctor() {
+        return $this->hasOne(PatAdmission::className(), ['encounter_id' => 'encounter_id'])->andWhere(['IN','admission_status', ['A', 'TD']])->orderBy(['created_at' => SORT_DESC]);
+    }
+    
     public function fields() {
         $extend = [
             'patient' => function ($model) {
@@ -172,4 +186,5 @@ class PatEncounter extends RActiveRecord {
 
         return $list;
     }
+    
 }

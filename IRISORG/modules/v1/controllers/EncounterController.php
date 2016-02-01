@@ -243,7 +243,7 @@ class EncounterController extends ActiveController {
                     ->one();
 
             if (!empty($model)) {
-                return ['success' => true];
+                return ['success' => true, 'model' => $model];
             } else {
                 return ['success' => false];
             }

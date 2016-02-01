@@ -17,6 +17,7 @@ use yii\db\ActiveQuery;
  * @property integer $ward_id
  * @property integer $room_id
  * @property integer $room_type_id
+ * @property string $admission_status
  * @property string $status
  * @property integer $created_by
  * @property string $created_at
@@ -44,9 +45,22 @@ class PatAdmission extends RActiveRecord {
         return [
             [['consultant_id', 'floor_id', 'ward_id', 'room_id', 'room_type_id'], 'required'],
             [['tenant_id', 'patient_id', 'encounter_id', 'consultant_id', 'floor_id', 'ward_id', 'room_id', 'room_type_id', 'created_by', 'modified_by'], 'integer'],
-            [['status_date', 'created_at', 'modified_at', 'deleted_at', 'status_date'], 'safe'],
-            [['status'], 'string']
+            [['status_date', 'created_at', 'modified_at', 'deleted_at', 'status_date', 'admission_status'], 'safe'],
+            [['status'], 'string'],
+            ['admission_status', 'validateAdmissionStatus'],
         ];
+    }
+
+    public function validateAdmissionStatus($attribute, $params) {
+        if ($this->admission_status == 'TR') {
+            if ($this->encounter->patCurrentAdmissionRoom->room_id == $this->room_id && $this->encounter->patCurrentAdmissionRoom->room_type_id == $this->room_type_id) {
+                $this->addError($attribute, "Room can't be same. Change the Room");
+            }
+        } else if ($this->admission_status == 'TD') {
+            if ($this->encounter->patCurrentAdmissionDoctor->consultant_id == $this->consultant_id) {
+                $this->addError($attribute, "Consultant can't be same. Change the Consultant");
+            }
+        }
     }
 
     /**
@@ -81,6 +95,14 @@ class PatAdmission extends RActiveRecord {
             $room->save(false);
         }
 
+        if ($insert) {
+            //Close Encounter
+            if ($this->admission_status == 'D') {
+                $this->encounter->status = '0';
+                $this->encounter->save(false);
+            }
+        }
+        
         return parent::afterSave($insert, $changedAttributes);
     }
 
@@ -123,6 +145,11 @@ class PatAdmission extends RActiveRecord {
 
     public function getRoomType() {
         return $this->hasOne(CoRoomType::className(), ['room_type_id' => 'room_type_id']);
+    }
+
+    public function beforeSave($insert) {
+        $this->status_date = date('Y-m-d H:i:s', strtotime($this->status_date));
+        return parent::beforeSave($insert);
     }
 
 }

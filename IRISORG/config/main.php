@@ -59,7 +59,7 @@ return [
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/patient'], 'extraPatterns' => ['POST remove' => 'remove', 'POST registration' => 'registration', 'GET getpatientaddress' => 'getpatientaddress']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/encounter'], 'extraPatterns' => ['POST remove' => 'remove', 'POST createappointment' => 'createappointment', 'POST createadmission' => 'createadmission', 'GET getencounters' => 'getencounters', 'GET inpatients' => 'inpatients', 'GET outpatients' => 'outpatients', 'GET getencounterlistbypatient' => 'getencounterlistbypatient', 'POST patienthaveactiveencounter' => 'patienthaveactiveencounter']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/procedure'], 'extraPatterns' => ['POST remove' => 'remove', 'GET getprocedurebyencounter' => 'getprocedurebyencounter', 'GET getconsultantsbyprocedure' => 'getconsultantsbyprocedure']],
-                
+                ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/admission'], 'extraPatterns' => ['POST remove' => 'remove']],
             ],
         ],
         'log' => [
