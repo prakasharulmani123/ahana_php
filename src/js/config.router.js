@@ -1017,6 +1017,22 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
+            
+            //Encounter change appointment status - OP
+            .state('patient.changeStatus', {
+                url: '/changeStatus/{id}/{enc_id}',
+                templateUrl: 'tpl/patient_appointment/change_status.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table', 'ui.select']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/patient_appointment/patient_appointment.js');
+                                    }
+                            );
+                        }]
+                }
+            })
 }
 run.$inject = ['$rootScope', '$state', '$stateParams', '$location', '$cookieStore', '$http', '$window', 'CommonService'];
 function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $window, CommonService) {

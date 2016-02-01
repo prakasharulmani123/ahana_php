@@ -5,18 +5,36 @@ app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http
         $scope.app.settings.patientContentClass = 'app-content';
         $scope.app.settings.patientFooterClass = 'app-footer';
         
-        $scope.initCanCreateAppointment = function () {
+        $scope.isPatientHaveActiveEncounter = function (callback) {
             $http.post($rootScope.IRISOrgServiceUrl + '/encounter/patienthaveactiveencounter', {patient_id: $state.params.id})
                     .success(function (response) {
-                        if (response.success == true) {
-                            alert("This patient already have an active appointment. You can't create a new appointment");
-                            $state.go("patient.view", {id: $state.params.id});
-                        }
+                        callback(response);
                     }, function (x) {
                         response = {success: false, message: 'Server Error'};
+                        callback(response);
                     });
         }
 
+        $scope.initCanCreateAppointment = function () {
+            $scope.isPatientHaveActiveEncounter(function (response) {
+                if (response.success == true) {
+                    alert("This patient already have an active appointment. You can't create a new appointment");
+                    $state.go("patient.view", {id: $state.params.id});
+                }
+            });
+        }
+
+        $scope.initCanSaveAppointment = function () {
+            $scope.isPatientHaveActiveEncounter(function (response) {
+                if (response.success == true) {
+                    if (response.model.encounter_id != $state.params.enc_id) {
+                        alert("This is not an active Encounter");
+                        $state.go("patient.encounter", {id: $state.params.id});
+                    }
+                }
+            });
+        }
+        
         $scope.initForm = function () {
             //Load Doctor List
             $rootScope.commonService.GetDoctorList('', '1', false, '1', function (response) {
