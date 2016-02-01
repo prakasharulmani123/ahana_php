@@ -33,7 +33,7 @@ use yii\helpers\ArrayHelper;
  * @property CoUser[] $coUserProfiles
  */
 class CoTenant extends RActiveRecord {
-    
+
     /**
      * @inheritdoc
      */
@@ -127,7 +127,7 @@ class CoTenant extends RActiveRecord {
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
     }
-    
+
     public static function find() {
         return new CoTenantQuery(get_called_class());
     }
@@ -135,6 +135,22 @@ class CoTenant extends RActiveRecord {
     public static function getTenantlist() {
         return ArrayHelper::map(self::find()->all(), 'tenant_id', 'tenant_name');
     }
+
+    public function afterSave($insert, $changedAttributes) {
+        if ($insert) {
+            $code_types = CoInternalCode::getCodeTypes();
+            foreach ($code_types as $code_type) {
+                $internal_code = new CoInternalCode;
+                $internal_code->tenant_id = $this->tenant_id;
+                $internal_code->code_type = $code_type;
+                $internal_code->code_prefix = strtoupper(substr($this->tenant_name, 0, 2));
+                $internal_code->code = '1';
+                $internal_code->save(false);
+            }
+        }
+        return parent::afterSave($insert, $changedAttributes);
+    }
+
 //    public function extraFields() {
 //        parent::extraFields();
 //        return ['coMasterCity', 'coMasterState', 'coMasterCountry'];

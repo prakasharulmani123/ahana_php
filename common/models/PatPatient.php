@@ -10,6 +10,7 @@ use yii\db\ActiveQuery;
  *
  * @property integer $patient_id
  * @property integer $casesheetno
+ * @property string $patient_int_code
  * @property integer $tenant_id
  * @property string $patient_reg_date
  * @property string $patient_title_code
@@ -51,6 +52,13 @@ class PatPatient extends RActiveRecord {
         return 'pat_patient';
     }
 
+    public function init() {
+        parent::init();
+        if ($this->isNewRecord) {
+            $this->patient_int_code = CoInternalCode::find()->tenant()->codeType("P")->one()->Fullcode;
+        }
+    }
+
     /**
      * @inheritdoc
      */
@@ -65,8 +73,8 @@ class PatPatient extends RActiveRecord {
             [['patient_relation_code', 'patient_gender', 'patient_marital_status', 'patient_reg_mode', 'patient_type'], 'string', 'max' => 2],
             [['patient_blood_group'], 'string', 'max' => 5],
             [['patient_ref_hospital'], 'string', 'max' => 255],
-            [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'patient_firstname', 'patient_lastname'], 'message' => 'The combination of Patient Firstname and Lastname has already been taken.'],
-            [['casesheetno'], 'unique', 'message' => 'This cashsheetno has already been taken.']
+            [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'casesheetno'], 'message' => 'The combination of Casesheetno has already been taken.', 'on' => 'casesheetunique'],
+            [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'patient_int_code'], 'message' => 'The combination of Patient Internal Code has already been taken.'],
         ];
     }
 
@@ -139,6 +147,13 @@ class PatPatient extends RActiveRecord {
             $this->patient_reg_date = date('Y-m-d H:i:s');
 
         return parent::beforeSave($insert);
+    }
+    
+    public function afterSave($insert, $changedAttributes) {
+        if($insert){
+            CoInternalCode::increaseInternalCode("P");
+        }
+        return parent::afterSave($insert, $changedAttributes);
     }
 
     public static function find() {
