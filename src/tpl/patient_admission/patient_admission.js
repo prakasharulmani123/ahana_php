@@ -26,11 +26,18 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
 
         $scope.initCanSaveAdmission = function () {
             $scope.isPatientHaveActiveEncounter(function (response) {
+                is_success = true;
                 if (response.success == true) {
                     if (response.model.encounter_id != $state.params.enc_id) {
-                        alert("This is not an active Encounter");
-                        $state.go("patient.encounter", {id: $state.params.id});
+                        is_success = false;
                     }
+                } else {
+                    is_success = false;
+                }
+
+                if (!is_success) {
+                    alert("This is not an active Encounter");
+                    $state.go("patient.encounter", {id: $state.params.id});
                 }
             });
         }
@@ -80,11 +87,6 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
                     break;
             }
         };
-
-        $scope.onTimeSet = function (newDate, oldDate) {
-            console.log(newDate);
-            console.log(oldDate);
-        }
 
         $scope.open = function ($event) {
             $event.preventDefault();
@@ -203,17 +205,12 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
 
             //Discharge
             if (mode == 'discharge') {
-                angular.extend(_that.data.PatAdmission, {consultant_id: 0, floor_id: 0, ward_id: 0, room_id: 0, room_type_id: 0});
                 succ_msg = 'Patient Discharged successfully';
-
             } else if (mode == 'transfer') {
                 //Transfer
                 if (_that.data.PatAdmission.admission_status == 'TD') {
-                    angular.extend(_that.data.PatAdmission, {floor_id: 0, ward_id: 0, room_id: 0, room_type_id: 0});
                     succ_msg = "Doctor Transfered successfully";
-
                 } else if (_that.data.PatAdmission.admission_status == 'TR') {
-                    angular.extend(_that.data.PatAdmission, {consultant_id: 0});
                     succ_msg = "Room Transfered successfully";
 
                 }
