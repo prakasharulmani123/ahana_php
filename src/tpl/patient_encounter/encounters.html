@@ -1,21 +1,21 @@
 <div ng-controller="EncounterController">
 
     <div class="bg-light lter b-b wrapper-md">
-        <h1 class="m-n h3">{{encounterView}} Encounters</h1>
+        <h1 class="m-n h3"> Encounters</h1>
     </div>
-    <div class="wrapper-md tab-btn">
-        <div class="row">
-            <div class="col-sm-4"> 
-                <div class="btn-group btn-group-justified">
-                    <a class="btn btn-info" ng-click="loadPatientEncounters('Current')">
-                        <i class="fa fa-list-alt"></i>  Current Encounter
-                    </a>
-                    <a class="btn btn-success" ng-click="loadPatientEncounters('Previous')">  <i class="fa fa-history"></i>
-                        Previous Encounter</a>
+    <!--    <div class="wrapper-md tab-btn">
+            <div class="row">
+                <div class="col-sm-4"> 
+                    <div class="btn-group btn-group-justified">
+                        <a class="btn btn-info" ng-click="loadPatientEncounters('Current')">
+                            <i class="fa fa-list-alt"></i>  Current Encounter
+                        </a>
+                        <a class="btn btn-success" ng-click="loadPatientEncounters('Previous')">  <i class="fa fa-history"></i>
+                            Previous Encounter</a>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
+        </div>-->
     <div class="wrapper-md" ng-init="loadPatientEncounters('Current');
                     loadPatientDetail()">
         <div class="panel panel-default">
@@ -40,6 +40,9 @@
                             <li><a href>Modify CaseSheetNo</a></li>
                             <li><a href>Print Selected OP</a></li>
                         </ul>
+                    </div>        
+                    <div class="btn-group" dropdown is-open="status.isopen">
+                        <button class="btn btn-sm btn-grey"> Edit </button>    
                     </div>        
                 </div>
                 <div class="col-sm-4">

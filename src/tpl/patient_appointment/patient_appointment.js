@@ -60,8 +60,8 @@ app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http
 
         $scope.getTimeOfAppointment = function () {
             if (typeof (this.data) != "undefined") {
-                if (typeof (this.data.consultant_id) != 'undefined' && typeof (this.data.appoinment_date != 'undefined')) {
-                    $http.post($rootScope.IRISOrgServiceUrl + '/doctorschedule/getdoctortimeschedule', {doctor_id: this.data.consultant_id, schedule_date: this.data.appoinment_date})
+                if (typeof (this.data.consultant_id) != 'undefined' && typeof (this.data.status_date != 'undefined')) {
+                    $http.post($rootScope.IRISOrgServiceUrl + '/doctorschedule/getdoctortimeschedule', {doctor_id: this.data.consultant_id, schedule_date: this.data.status_date})
                             .success(function (response) {
                                 $scope.timeslots = response.timerange;
                             }, function (x) {

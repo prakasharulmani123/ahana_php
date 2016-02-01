@@ -38,7 +38,7 @@
                                         <span> &nbsp; &nbsp; {{patient.Patient.patient_mobile}}</span> 
                                     </div>
                                 </div>
-                                
+
                                 <div class="col-xs-12 col-sm-5 col-md-4 pull-right right"> 
                                     <button class="btn m-b-xs w-xs btn-info" ng-show="patient.PatientActiveEncounter.hasOwnProperty('encounter_id') != true" ng-click="goToAppointment(patient.Patient.patient_id)">
                                         BOOK
@@ -110,13 +110,11 @@
 <!-- / header -->
 
 <script>
-    (function ($) {
-//        $(document).ready(function () {
-//            $.slidebars({
-//                scrollLock: true
-//            });
-//        });
-    })(jQuery);
+    $(function () {
+        $.slidebars({
+            scrollLock: true
+        });
+    });
 </script>
 
 <!--<script type="text/ng-template" id="searchbox">

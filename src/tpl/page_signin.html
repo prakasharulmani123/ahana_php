@@ -20,7 +20,7 @@
                 </div>
 
             </div>
-            <button type="submit" class="btn btn-lg btn-primary btn-block" ng-click="login()" ng-disabled='form.$invalid'>Log in</button>
+            <button type="submit" class="btn btn-lg btn-primary btn-block" id="login_btn" ng-click="login()" ng-disabled='form.$invalid'>{{loginButtonText}}</button>
             <div class="text-center m-t m-b"><a ui-sref="access.forgotpwd" href="#/access/forgotpwd">Forgot password?</a></div>
         </form>
     </div>

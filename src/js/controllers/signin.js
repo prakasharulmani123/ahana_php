@@ -8,18 +8,23 @@ SignInForm.$inject = ['$scope', '$state', 'AuthenticationService', '$http', '$ro
 function SignInForm($scope, $state, AuthenticationService, $http, $rootScope, $location, $timeout) {
     $scope.user = {};
     $scope.authError = null;
+    $scope.loginButtonText = 'Log in';
 
     $rootScope.commonService.GetTenantList(function (response) {
         $scope.tenants = response.tenantList;
     });
     $scope.login = function () {
         $scope.authError = null;
+        $scope.loginButtonText = 'Logging in...Please Wait ....';
+        $('#login_btn').attr('disabled', true);
         // Try to login
         AuthenticationService.Login($scope.user.username, $scope.user.password, $scope.user.tenant_id, function (response) {
             if (response.success) {
                 AuthenticationService.SetCredentials(response.access_token);
                 $state.go('configuration.roles');
             } else {
+                $scope.loginButtonText = 'Log in';
+                $('#login_btn').attr('disabled', false);
                 $scope.authError = response.message;
             }
         });
