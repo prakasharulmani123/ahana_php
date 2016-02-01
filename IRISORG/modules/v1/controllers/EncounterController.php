@@ -78,7 +78,7 @@ class EncounterController extends ActiveController {
             $model_attr = array(
                 'patient_id' => (isset($post['patient_id']) ? $post['patient_id'] : ''),
                 'encounter_type' => 'OP',
-                'encounter_date' => $post['appoinment_date'],
+                'encounter_date' => $post['status_date'],
             );
             $model->attributes = $model_attr;
 
@@ -157,11 +157,11 @@ class EncounterController extends ActiveController {
             $query .= "From v_encounter ";
             $query .= "Where patient_id = {$get['id']} ";
 
-            if (isset($get['type'])) {
-                $date = date('Y-m-d');
-                $separtor = $get['type'] == 'Current' ? "=" : '<>';
-                $query .= "And date {$separtor} '{$date}' ";
-            }
+//            if (isset($get['type'])) {
+//                $date = date('Y-m-d');
+//                $separtor = $get['type'] == 'Current' ? "=" : '<>';
+//                $query .= "And date {$separtor} '{$date}' ";
+//            }
 
             $command = Yii::$app->db->createCommand($query);
             $data = $command->queryAll();

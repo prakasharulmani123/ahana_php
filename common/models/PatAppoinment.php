@@ -11,8 +11,8 @@ use Yii;
  * @property integer $tenant_id
  * @property integer $patient_id
  * @property integer $encounter_id
- * @property string $appoinment_date
- * @property string $appoinment_time
+ * @property string $status_date
+ * @property string $status_time
  * @property integer $consultant_id
  * @property string $appt_status
  * @property string $status
@@ -43,9 +43,9 @@ class PatAppoinment extends \common\models\RActiveRecord
     public function rules()
     {
         return [
-            [['appoinment_date', 'appoinment_time', 'consultant_id', 'appt_status'], 'required'],
+            [['status_date', 'status_time', 'consultant_id', 'appt_status'], 'required'],
             [['tenant_id', 'patient_id', 'encounter_id', 'consultant_id', 'created_by', 'modified_by'], 'integer'],
-            [['appoinment_date', 'appoinment_time', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
+            [['status_date', 'status_time', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['status'], 'string'],
             [['appt_status'], 'string', 'max' => 1]
         ];
@@ -61,8 +61,8 @@ class PatAppoinment extends \common\models\RActiveRecord
             'tenant_id' => 'Tenant',
             'patient_id' => 'Patient',
             'encounter_id' => 'Encounter',
-            'appoinment_date' => 'Appoinment Date',
-            'appoinment_time' => 'Appoinment Time',
+            'status_date' => 'Appoinment Date',
+            'status_time' => 'Appoinment Time',
             'consultant_id' => 'Consultant',
             'appt_status' => 'Appt Status',
             'status' => 'Status',
@@ -107,8 +107,8 @@ class PatAppoinment extends \common\models\RActiveRecord
     }
     
     public function beforeSave($insert) {
-        if(!empty($this->appoinment_time))
-            $this->appoinment_time = date('H:i:s', strtotime ($this->appoinment_time));
+        if(!empty($this->status_time))
+            $this->status_time = date('H:i:s', strtotime ($this->status_time));
         
         return parent::beforeSave($insert);
     }
