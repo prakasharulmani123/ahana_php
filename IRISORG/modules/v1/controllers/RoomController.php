@@ -55,7 +55,7 @@ class RoomController extends ActiveController {
     }
 
     public function actionGetrooms() {
-        $model = CoRoom::find()->tenant()->active()->orderBy(['created_at' => SORT_DESC])->all();
+        $model = CoRoom::find()->orderBy(['created_at' => SORT_DESC])->all();
         $data = [];
         foreach ($model as $key => $value) {
             $data[$key] = $value->attributes;

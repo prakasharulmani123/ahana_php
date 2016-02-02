@@ -133,7 +133,7 @@ class CoTenant extends RActiveRecord {
     }
 
     public static function getTenantlist() {
-        return ArrayHelper::map(self::find()->status()->all(), 'tenant_id', 'tenant_name');
+        return ArrayHelper::map(self::find()->all(), 'tenant_id', 'tenant_name');
     }
 
     public function afterSave($insert, $changedAttributes) {
