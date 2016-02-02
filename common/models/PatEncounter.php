@@ -147,6 +147,9 @@ class PatEncounter extends RActiveRecord {
             'liveAdmission' => function ($model) {
                 return (isset($model->patLiveAdmission) ? $model->patLiveAdmission : '-');
             },
+            'currentAdmission' => function ($model) {
+                return (isset($model->patCurrentAdmission) ? $model->patCurrentAdmission : '-');
+            },
             'liveAppointmentBooking' => function ($model) {
                 return (isset($model->patLiveAppointmentBooking) ? $model->patLiveAppointmentBooking : '-');
             },

@@ -153,4 +153,19 @@ class PatientController extends ActiveController {
         $get = Yii::$app->getRequest()->get();
         return ['address' => PatPatientAddress::find()->where(['patient_id' => $get['id']])->one()];
     }
+    
+    public function actionGetpatientlist() {
+        $get = Yii::$app->getRequest()->get();
+
+        if (isset($get['tenant']))
+            $tenant = $get['tenant'];
+
+        if (isset($get['status']))
+            $status = strval($get['status']);
+
+        if (isset($get['deleted']))
+            $deleted = $get['deleted'] == 'true';
+
+        return ['patientlist' => PatPatient::getPatientlist($tenant, $status, $deleted)];
+    }
 }

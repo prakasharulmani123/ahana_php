@@ -31,7 +31,16 @@ use yii\db\ActiveQuery;
  */
 class PatAdmission extends RActiveRecord {
 
-    public $changeOldRoomStatusId = null;
+    public $vacantOldRoomId = null;
+    
+    public $isSwapping = false;
+    public $swapEncounterId;
+    public $swapFloorId;
+    public $swapWardId;
+    public $swapPatientId;
+    public $swapRoom;
+    public $swapRoomId;
+    public $swapRoomTypeId;
 
     /**
      * @inheritdoc
@@ -45,7 +54,8 @@ class PatAdmission extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['consultant_id', 'floor_id', 'ward_id', 'room_id', 'room_type_id'], 'required'],
+            [['consultant_id', 'floor_id', 'ward_id', 'room_id', 'room_type_id', 'status_date'], 'required'],
+            [['swapPatientId', 'swapRoomId', 'swapRoomTypeId'], 'required', 'on' => 'swap'],
             [['tenant_id', 'patient_id', 'encounter_id', 'consultant_id', 'floor_id', 'ward_id', 'room_id', 'room_type_id', 'created_by', 'modified_by'], 'integer'],
             [['status_date', 'created_at', 'modified_at', 'deleted_at', 'status_date', 'admission_status'], 'safe'],
             [['status'], 'string'],
@@ -54,7 +64,7 @@ class PatAdmission extends RActiveRecord {
     }
 
     public function validateAdmissionStatus($attribute, $params) {
-        if ($this->admission_status == 'TR') {
+        if ($this->admission_status == 'TR' && !$this->isSwapping) {
             if ($this->encounter->patCurrentAdmission->room_id == $this->room_id && $this->encounter->patCurrentAdmission->room_type_id == $this->room_type_id) {
                 $this->addError($attribute, "Room can't be same. Change the Room");
             }
@@ -86,6 +96,9 @@ class PatAdmission extends RActiveRecord {
             'modified_by' => 'Modified By',
             'modified_at' => 'Modified At',
             'deleted_at' => 'Deleted At',
+            'swapPatientId' => 'Patient', 
+            'swapRoomId' => 'Room', 
+            'swapRoomTypeId' => 'Room Type'
         ];
     }
 
@@ -136,14 +149,15 @@ class PatAdmission extends RActiveRecord {
     }
 
     public function beforeSave($insert) {
-        $this->status_date = date('Y-m-d H:i:s', strtotime($this->status_date));
+        if(!empty($this->status_date))
+            $this->status_date = date('Y-m-d H:i:s', strtotime($this->status_date));
 
         if ($insert) {
             $this->setCurrentData();
 
             //Set Old room status to vacant
-            if ($this->admission_status == 'TR') {
-                $this->changeOldRoomStatusId = $this->encounter->patCurrentAdmission->room_id;
+            if ($this->admission_status == 'TR' && !$this->isSwapping) {
+                $this->vacantOldRoomId = $this->encounter->patCurrentAdmission->room_id;
             }
         }
         return parent::beforeSave($insert);
@@ -158,18 +172,18 @@ class PatAdmission extends RActiveRecord {
         }
 
         if ($insert) {
-            //Close Encounter
+            //Close Encounter when Discharge
             if ($this->admission_status == 'D') {
                 $this->encounter->status = '0';
                 $this->encounter->save(false);
             }
 
-            //Change Old room status to vacant
-            if (!is_null($this->changeOldRoomStatusId)) {
-                $room = CoRoom::find()->where(['room_id' => $this->changeOldRoomStatusId])->one();
+            //Change Old room status to vacant if Room Transfer
+            if (!is_null($this->vacantOldRoomId)) {
+                $room = CoRoom::find()->where(['room_id' => $this->vacantOldRoomId])->one();
                 $room->occupied_status = 0;
                 $room->save(false);
-                $this->changeOldRoomStatusId = null;
+                $this->vacantOldRoomId = null;
             }
         }
 
@@ -189,6 +203,16 @@ class PatAdmission extends RActiveRecord {
         } else if ($this->admission_status == 'TR') {
             $this->consultant_id = $this->encounter->patCurrentAdmission->consultant_id;
         }
+    }
+    
+    public function fields() {
+        $extend = [
+            'room' => function ($model) {
+                return (isset($model->room) ? $model->room : '-');
+            },
+        ];
+        $fields = array_merge(parent::fields(), $extend);
+        return $fields;
     }
 
 }

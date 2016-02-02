@@ -188,6 +188,10 @@ class PatPatient extends RActiveRecord {
                 if (isset($model->patPatientAddress))
                     return $model->patPatientAddress;
             },
+//            'activeEncounter' => function ($model) {
+//                if (isset($model->patActiveEncounter))
+//                    return $model->patActiveEncounter;
+//            },
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
@@ -203,4 +207,13 @@ class PatPatient extends RActiveRecord {
         return date('Y-m-d', strtotime($age . ' years ago'));
     }
 
+    public static function getPatientlist($tenant = null, $status = '1', $deleted = false) {
+        if(!$deleted)
+            $list = self::find()->tenant($tenant)->status($status)->active()->all();
+        else
+            $list = self::find()->tenant($tenant)->deleted()->all();
+        
+        return $list;
+    }
+    
 }
