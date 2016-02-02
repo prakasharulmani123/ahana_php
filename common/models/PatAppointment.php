@@ -2,10 +2,10 @@
 
 namespace common\models;
 
-use Yii;
+use yii\db\ActiveQuery;
 
 /**
- * This is the model class for table "pat_appoinment".
+ * This is the model class for table "pat_appointment".
  *
  * @property integer $appt_id
  * @property integer $tenant_id
@@ -27,14 +27,14 @@ use Yii;
  * @property PatPatient $patient
  * @property CoTenant $tenant
  */
-class PatAppoinment extends \common\models\RActiveRecord
+class PatAppointment extends RActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'pat_appoinment';
+        return 'pat_appointment';
     }
 
     /**
@@ -61,8 +61,8 @@ class PatAppoinment extends \common\models\RActiveRecord
             'tenant_id' => 'Tenant',
             'patient_id' => 'Patient',
             'encounter_id' => 'Encounter',
-            'status_date' => 'Appoinment Date',
-            'status_time' => 'Appoinment Time',
+            'status_date' => 'Appointment Date',
+            'status_time' => 'Appointment Time',
             'consultant_id' => 'Consultant',
             'appt_status' => 'Appt Status',
             'status' => 'Status',
@@ -75,7 +75,7 @@ class PatAppoinment extends \common\models\RActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getConsultant()
     {
@@ -83,7 +83,7 @@ class PatAppoinment extends \common\models\RActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getEncounter()
     {
@@ -91,7 +91,7 @@ class PatAppoinment extends \common\models\RActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getPatient()
     {
@@ -99,7 +99,7 @@ class PatAppoinment extends \common\models\RActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getTenant()
     {
@@ -110,6 +110,25 @@ class PatAppoinment extends \common\models\RActiveRecord
         if(!empty($this->status_time))
             $this->status_time = date('H:i:s', strtotime ($this->status_time));
         
+        if ($insert) {
+            $this->setCurrentData();
+        }
+        
         return parent::beforeSave($insert);
+    }
+    
+    public function setCurrentData() {
+        if ($this->admission_status == 'TD' || $this->admission_status == 'D') {
+            $this->floor_id = $this->encounter->patCurrentAdmission->floor_id;
+            $this->ward_id = $this->encounter->patCurrentAdmission->ward_id;
+            $this->room_id = $this->encounter->patCurrentAdmission->room_id;
+            $this->room_type_id = $this->encounter->patCurrentAdmission->room_type_id;
+
+            if ($this->admission_status == 'D') {
+                $this->consultant_id = $this->encounter->patCurrentAdmission->consultant_id;
+            }
+        } else if ($this->admission_status == 'TR') {
+            $this->consultant_id = $this->encounter->patCurrentAdmission->consultant_id;
+        }
     }
 }

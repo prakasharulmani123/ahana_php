@@ -23,7 +23,7 @@ use yii\db\ActiveQuery;
  * @property string $modified_at
  * @property string $deleted_at
  *
- * @property PatAppoinment[] $patAppoinments
+ * @property PatAppointment[] $patAppointments
  * @property PatPatient $patient
  * @property CoTenant $tenant
  */
@@ -74,8 +74,8 @@ class PatEncounter extends RActiveRecord {
     /**
      * @return ActiveQuery
      */
-    public function getPatAppoinments() {
-        return $this->hasMany(PatAppoinment::className(), ['encounter_id' => 'encounter_id']);
+    public function getPatAppointments() {
+        return $this->hasMany(PatAppointment::className(), ['encounter_id' => 'encounter_id']);
     }
 
     /**
@@ -114,14 +114,14 @@ class PatEncounter extends RActiveRecord {
      * @return ActiveQuery
      */
     public function getPatLiveAppointmentBooking() {
-        return $this->hasOne(PatAppoinment::className(), ['encounter_id' => 'encounter_id'])->andWhere('appt_status = "B"')->orderBy(['created_at'=>SORT_DESC]);
+        return $this->hasOne(PatAppointment::className(), ['encounter_id' => 'encounter_id'])->andWhere('appt_status = "B"')->orderBy(['created_at'=>SORT_DESC]);
     }
     
     /**
      * @return ActiveQuery
      */
     public function getPatLiveAppointmentArrival() {
-        return $this->hasOne(PatAppoinment::className(), ['encounter_id' => 'encounter_id'])->andWhere('appt_status = "A"')->orderBy(['created_at'=>SORT_DESC]);
+        return $this->hasOne(PatAppointment::className(), ['encounter_id' => 'encounter_id'])->andWhere('appt_status = "A"')->orderBy(['created_at'=>SORT_DESC]);
     }
     
     /**

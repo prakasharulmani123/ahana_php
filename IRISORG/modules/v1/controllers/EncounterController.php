@@ -4,7 +4,7 @@ namespace IRISORG\modules\v1\controllers;
 
 use common\models\CoRoom;
 use common\models\PatAdmission;
-use common\models\PatAppoinment;
+use common\models\PatAppointment;
 use common\models\PatEncounter;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -73,7 +73,7 @@ class EncounterController extends ActiveController {
         $post = Yii::$app->getRequest()->post();
         if (!empty($post)) {
             $model = new PatEncounter();
-            $appt_model = new PatAppoinment();
+            $appt_model = new PatAppointment();
 
             $model_attr = array(
                 'patient_id' => (isset($post['patient_id']) ? $post['patient_id'] : ''),
@@ -97,7 +97,7 @@ class EncounterController extends ActiveController {
                     $appt_model->appt_status = "B";
                     $appt_model->save(false);
 
-                    $appt_model = new PatAppoinment();
+                    $appt_model = new PatAppointment();
                     $appt_model->attributes = $post;
                     $appt_model->encounter_id = $model->encounter_id;
                     $appt_model->appt_status = "A";
