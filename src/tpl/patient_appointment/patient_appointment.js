@@ -1,10 +1,10 @@
-app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', function ($rootScope, $scope, $timeout, $http, $state) {
+app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$filter', function ($rootScope, $scope, $timeout, $http, $state, $filter) {
 
         $scope.app.settings.patientTopBar = true;
         $scope.app.settings.patientSideMenu = true;
         $scope.app.settings.patientContentClass = 'app-content';
         $scope.app.settings.patientFooterClass = 'app-footer';
-        
+
         $scope.isPatientHaveActiveEncounter = function (callback) {
             $http.post($rootScope.IRISOrgServiceUrl + '/encounter/patienthaveactiveencounter', {patient_id: $state.params.id})
                     .success(function (response) {
@@ -30,11 +30,39 @@ app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http
                     if (response.model.encounter_id != $state.params.enc_id) {
                         alert("This is not an active Encounter");
                         $state.go("patient.encounter", {id: $state.params.id});
+                    } else {
+                        var consultant_id = '';
+                        if (response.model.liveAppointmentArrival.hasOwnProperty('appt_id')) {
+                            $scope.data = {'PatAppointment': {'appt_status': 'A'}};
+                            var consultant_id = response.model.liveAppointmentArrival.consultant_id;
+                        } else if (response.model.liveAppointmentBooking.hasOwnProperty('appt_id')) {
+                            $scope.data = {'PatAppointment': {'appt_status': 'B'}};
+                            var consultant_id = response.model.liveAppointmentArrival.consultant_id;
+                        }
+                        if (consultant_id) {
+                            $http.get($rootScope.IRISOrgServiceUrl + '/default/getconsultantcharges?consultant_id=' + consultant_id)
+                                    .success(function (response) {
+                                        $scope.chargesList = response.chargesList;
+                                    }, function (x) {
+                                        response = {success: false, message: 'Server Error'};
+                                    });
+                        }
                     }
+                }else {
+                    alert("This is not an active Encounter");
+                    $state.go("patient.encounter", {id: $state.params.id});
                 }
             });
         }
         
+        $scope.chargeAmount = '';
+        $scope.updateCharge = function () {
+            _that = this;
+            console.log(_that.data.PatAppointment.patient_cat_id);
+            var charge = $filter('filter')($scope.chargesList, { patient_cat_id: _that.data.PatAppointment.patient_cat_id });
+            $scope.chargeAmount = charge[0].charge_amount;
+        }
+
         $scope.initForm = function () {
             //Load Doctor List
             $rootScope.commonService.GetDoctorList('', '1', false, '1', function (response) {
@@ -44,6 +72,8 @@ app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http
                 $scope.appt_status_lists = response;
             });
         }
+
+
 
         //For Datepicker
         $scope.open = function ($event, mode) {
@@ -125,7 +155,7 @@ app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http
                     $scope.errorData = data.message;
             });
         };
-        
+
         $scope.changeAppointmentStatus = function (mode) {
             _that = this;
 
@@ -140,13 +170,17 @@ app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http
 
             post_url = $rootScope.IRISOrgServiceUrl + '/appointments';
             method = 'POST';
-
-            //Discharge
             succ_msg = 'Status changed successfully';
 
-            _that.data.PatAppointment.status_date = moment(_that.data.PatAppointment.status_date).format('YYYY-MM-DD');
             _that.data.PatAppointment.status_time = moment(_that.data.PatAppointment.status_date).format('HH:mm:ss');
-
+            _that.data.PatAppointment.status_date = moment(_that.data.PatAppointment.status_date).format('YYYY-MM-DD');
+            
+            if(mode == 'arrived'){
+                _that.data.PatAppointment.appt_status = "A";
+            } else if(mode == 'seen'){
+                _that.data.PatAppointment.appt_status = "S";
+            }
+            
             $scope.loadbar('show');
             $http({
                 method: method,
@@ -155,12 +189,11 @@ app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http
             }).success(
                     function (response) {
                         $scope.loadbar('hide');
-                        if (response.success == true) {
-                            $scope.successMessage = succ_msg;
-                            $scope.data = {};
-                        } else {
-                            $scope.errorData = response.message;
-                        }
+                        $scope.successMessage = succ_msg;
+                        $scope.data = {};
+                        $timeout(function () {
+                            $state.go("patient.encounter", {id: $state.params.id});
+                        }, 1000)
 
                     }
             ).error(function (data, status) {
