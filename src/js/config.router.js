@@ -929,6 +929,38 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                 }
             })
             
+		//PATIENT SWAPPING
+            .state('patient.swapping', {
+                url: '/swapping/{id}/{enc_id}',
+                templateUrl: 'tpl/patient_admission/swapping.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('smart-table').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/patient_admission/patient_admission.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            
+		//ADMISSION UPDATE
+            .state('patient.update_admission', {
+                url: '/update_admission/{id}/{enc_id}',
+                templateUrl: 'tpl/patient_admission/update.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('smart-table').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/patient_admission/patient_admission.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            
             // In-Patient
             .state('patient.inPatients', {
                 url: '/inPatients',

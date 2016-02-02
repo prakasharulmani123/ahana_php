@@ -35,6 +35,7 @@ function CommonService($http, $rootScope, $window, $q, $filter) {
     service.GetRoomList = GetRoomList;
     service.GetProcedureList = GetProcedureList;
     service.GetEncounterListByPatient = GetEncounterListByPatient;
+    service.GetPatientList = GetPatientList;
 
     service.GetLabelFromValue = GetLabelFromValue;
     service.FoundVlaue = FoundVlaue;
@@ -335,6 +336,18 @@ function CommonService($http, $rootScope, $window, $q, $filter) {
         var response;
 
         $http.get($rootScope.IRISOrgServiceUrl + '/roomchargecategory/getchargelist?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts + '&code=PRC')
+                .success(function (response) {
+                    callback(response);
+                }, function (x) {
+                    response = {success: false, message: 'Server Error'};
+                    callback(response);
+                });
+    }
+
+    function GetPatientList(tenant, sts, del_sts, callback) {
+        var response;
+
+        $http.get($rootScope.IRISOrgServiceUrl + '/patient/getpatientlist?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts)
                 .success(function (response) {
                     callback(response);
                 }, function (x) {

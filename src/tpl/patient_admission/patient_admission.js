@@ -1,4 +1,4 @@
-app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout', '$http', '$state', function ($rootScope, $scope, $timeout, $http, $state) {
+app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$filter', function ($rootScope, $scope, $timeout, $http, $state, $filter) {
 
         $scope.app.settings.patientTopBar = true;
         $scope.app.settings.patientSideMenu = true;
@@ -16,15 +16,18 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
         }
 
         $scope.initCanCreateAdmission = function () {
+            $scope.showForm = false;
             $scope.isPatientHaveActiveEncounter(function (response) {
                 if (response.success == true) {
                     alert("This patient already have an active admission. You can't create a new admission");
                     $state.go("patient.view", {id: $state.params.id});
                 }
+                $scope.showForm = true;
             });
         }
 
         $scope.initCanSaveAdmission = function () {
+            $scope.showForm = false;
             $scope.isPatientHaveActiveEncounter(function (response) {
                 is_success = true;
                 if (response.success == true) {
@@ -39,11 +42,48 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
                     alert("This is not an active Encounter");
                     $state.go("patient.encounter", {id: $state.params.id});
                 }
+                $scope.showForm = true;
             });
         }
 
-        $scope.initTransferForm = function () {
-            $scope.transferTypes = [{'value': 'TD', 'label': 'Consultant'}, {'value': 'TR', 'label': 'Room'}];
+        $scope.initCanSwapAdmission = function () {
+            $scope.showForm = false;
+            $scope.isPatientHaveActiveEncounter(function (response) {
+                is_success = true;
+                if (response.success == true) {
+                    if (response.model.encounter_id != $state.params.enc_id) {
+                        is_success = false;
+                    }
+                } else {
+                    is_success = false;
+                }
+
+                if (!is_success) {
+                    alert("This is not an active Encounter");
+                    $state.go("patient.encounter", {id: $state.params.id});
+                }
+                $scope.showForm = true;
+                $scope.activeEncounter = response.model;
+
+                $scope.data.PatAdmission.floor_id = response.model.currentAdmission.floor_id;
+                $scope.data.PatAdmission.ward_id = response.model.currentAdmission.ward_id;
+                $scope.data.PatAdmission.room_id = response.model.currentAdmission.room_id;
+                $scope.updateRoomType();
+                $scope.data.PatAdmission.room_type_id = response.model.currentAdmission.room_type_id;
+
+
+                $http.get($rootScope.IRISOrgServiceUrl + '/encounter/inpatients')
+                        .success(function (inpatients) {
+                            $scope.encounterList = inpatients;
+                            angular.forEach($scope.encounterList, function (ip, key) {
+                                if (ip.encounter_id == response.model.encounter_id)
+                                    $scope.encounterList.splice(key, 1);
+                            });
+                        })
+                        .error(function () {
+                            $scope.error = "An Error has occured while loading floors!";
+                        });
+            });
         }
 
         $scope.initForm = function () {
@@ -74,6 +114,51 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
             $rootScope.commonService.GetRoomTypesRoomsList('', function (response) {
                 $scope.roomTypesRoomsList = response.roomtypesroomsList;
             });
+        }
+
+        $scope.initAdmissionForm = function () {
+            $scope.data = {};
+            $scope.data.PatEncounter = {};
+            $scope.data.PatEncounter.encounter_date = moment().format('YYYY-MM-DD HH:mm:ss');
+        }
+
+        $scope.initTransferForm = function () {
+            $scope.transferTypes = [{'value': 'TD', 'label': 'Consultant'}, {'value': 'TR', 'label': 'Room'}];
+
+            $timeout(function () {
+                $scope.data.PatAdmission.status_date = moment().format('YYYY-MM-DD HH:mm:ss');
+            }, 1000)
+        }
+
+        $scope.initSwappingForm = function () {
+            $rootScope.commonService.GetRoomTypesRoomsList('', function (response) {
+                $scope.roomTypesRoomsList = response.roomtypesroomsList;
+                $scope.updateRoomType();
+            });
+            $timeout(function () {
+                $scope.data.PatAdmission.status_date = moment().format('YYYY-MM-DD HH:mm:ss');
+                $scope.data.PatAdmission.swapRoom = '-';
+            }, 1000)
+        }
+
+        $scope.setSwappingDetails = function () {
+            $scope.data.PatAdmission.swapPatientId = '';
+            $scope.data.PatAdmission.swapRoomTypeId = '';
+            $scope.data.PatAdmission.swapRoom = '-';
+            $scope.data.PatAdmission.swapRoomId = '';
+
+            var filterAdmission = $filter('filter')($scope.encounterList, {encounter_id: $scope.data.PatAdmission.swapEncounterId});
+
+            if (typeof filterAdmission[0] != 'undefined') {
+                $scope.data.PatAdmission.swapFloorId = filterAdmission[0].currentAdmission.floor_id;
+                $scope.data.PatAdmission.swapWardId = filterAdmission[0].currentAdmission.ward_id;
+                $scope.data.PatAdmission.swapRoomId = filterAdmission[0].currentAdmission.room_id;
+                $scope.data.PatAdmission.swapRoom = filterAdmission[0].currentAdmission.room.bed_name;
+                $scope.data.PatAdmission.swapRoomTypeId = filterAdmission[0].currentAdmission.room_type_id;
+                $scope.data.PatAdmission.swapPatientId = filterAdmission[0].patient_id;
+            }
+
+            $scope.updateRoomType2();
         }
 
         //For Datepicker
@@ -142,16 +227,27 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
             });
         }
 
+        $scope.updateRoomType2 = function () {
+            $scope.availableRoomtypes2 = [];
+
+            _that = this;
+            angular.forEach($scope.roomTypesRoomsList, function (value) {
+                if (value.room_id == _that.data.PatAdmission.swapRoomId) {
+                    var obj = {
+                        room_type_id: value.room_type_id,
+                        room_type_name: value.room_type_name
+                    };
+                    $scope.availableRoomtypes2.push(obj);
+                }
+            });
+        }
+
         //Save Both Add Data
-        $scope.saveForm = function () {
+        $scope.saveForm = function (mode) {
             _that = this;
 
             $scope.errorData = "";
             $scope.successMessage = "";
-
-            post_url = $rootScope.IRISOrgServiceUrl + '/encounter/createadmission';
-            method = 'POST';
-            succ_msg = 'Admission saved successfully';
 
             if (typeof (_that.data) != "undefined") {
                 if (_that.data.hasOwnProperty('PatAdmission')) {
@@ -163,17 +259,34 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
                 }
             }
 
+            _that.data.PatAdmission.status_date = moment(_that.data.PatAdmission.status_date).format('YYYY-MM-DD HH:mm:ss');
+
+            if (typeof _that.data.PatEncounter.encounter_date != 'undefined')
+                _that.data.PatEncounter.encounter_date = moment(_that.data.PatEncounter.encounter_date).format('YYYY-MM-DD HH:mm:ss');
+
+            if (mode == 'create') {
+                post_url = $rootScope.IRISOrgServiceUrl + '/encounter/createadmission';
+                method = 'POST';
+                form_data = _that.data;
+            } else if (mode == 'update') {
+                post_url = $rootScope.IRISOrgServiceUrl + '/admissions/' + _that.data.PatAdmission.admn_id;
+                method = 'PUT';
+                form_data = _that.data.PatAdmission;
+            }
+            succ_msg = 'Admission saved successfully';
+            
             $scope.loadbar('show');
             $http({
                 method: method,
                 url: post_url,
-                data: _that.data,
+                data: form_data,
             }).success(
                     function (response) {
                         $scope.loadbar('hide');
                         if (response.success == true) {
                             $scope.successMessage = succ_msg;
                             $scope.data = {};
+                            $state.go("patient.encounter", {id: $state.params.id});
                         } else {
                             $scope.errorData = response.message;
                         }
@@ -200,13 +313,17 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
                 }
             }
 
-            post_url = $rootScope.IRISOrgServiceUrl + '/admissions';
             method = 'POST';
 
             //Discharge
             if (mode == 'discharge') {
+                post_url = $rootScope.IRISOrgServiceUrl + '/admissions';
                 succ_msg = 'Patient Discharged successfully';
+            } else if (mode == 'swap') {
+                post_url = $rootScope.IRISOrgServiceUrl + '/admission/patientswap';
+                succ_msg = 'Patient Swapped successfully';
             } else if (mode == 'transfer') {
+                post_url = $rootScope.IRISOrgServiceUrl + '/admissions';
                 //Transfer
                 if (_that.data.PatAdmission.admission_status == 'TD') {
                     succ_msg = "Doctor Transfered successfully";
@@ -216,7 +333,6 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
                 }
             }
 
-            _that.data.PatAdmission.status_date = moment(_that.data.PatAdmission.status_date).format('YYYY-MM-DD HH:mm:ss');
 
             $scope.loadbar('show');
             $http({
@@ -226,11 +342,12 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
             }).success(
                     function (response) {
                         $scope.loadbar('hide');
-                        if (response.success == true) {
+                        if (response.success == false) {
+                            $scope.errorData = response.message;
+                        } else {
                             $scope.successMessage = succ_msg;
                             $scope.data = {};
-                        } else {
-                            $scope.errorData = response.message;
+                            $state.go("patient.encounter", {id: $state.params.id});
                         }
 
                     }
@@ -243,6 +360,34 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
             });
         };
 
+        $scope.loadAdmissionForm = function () {
+            $scope.loadbar('show');
+            _that = this;
+            $scope.errorData = "";
+            $http({
+                url: $rootScope.IRISOrgServiceUrl + "/encounters/" + $state.params.enc_id,
+                method: "GET"
+            }).success(
+                    function (response) {
+                        $scope.loadbar('hide');
+                        $scope.data = {};
+                        $scope.data.formtype = 'update'
+                        $scope.data.PatEncounter = response;
+                        $scope.data.PatAdmission = response.liveAdmission;
+                        $scope.updateWard();
 
-
+                        $rootScope.commonService.GetRoomList('', '1', false, '1', function (response) {
+                            angular.extend($scope.rooms, response.roomList);
+                            $scope.updateRoom();
+                            $scope.updateRoomType();
+                        });
+                    }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        };
     }]);
