@@ -43,7 +43,7 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">Address </label>
             <div class="col-sm-9">
-                <input type="text" ng-model="data.PatPatientAddress.addr_current_address" class="form-control" placeholder="" >
+                <textarea ng-model="data.PatPatientAddress.addr_current_address" class="form-control" placeholder="" ></textarea>
             </div>
         </div>
         <div class="line line-dashed b-b line-lg "></div>
@@ -80,7 +80,7 @@
             <label class="col-sm-3 control-label">Billing</label>
             <div class="col-sm-9">
                 <label class="i-checks" ng-repeat="bill_type in bill_types">
-                    <input type="radio" checked="" value="{{bill_type.value}}" name="b" ng-model="data.PatPatient.patient_billing_type">
+                    <input type="radio" checked="" value="{{bill_type.value}}" name="b" ng-model="data.PatPatient.patient_bill_type">
                     <i></i>
                     {{bill_type.label}}&nbsp; &nbsp;
                 </label>
@@ -109,7 +109,7 @@
 
     </div>
     <footer class="panel-footer text-right bg-light lter">
-        <button class="btn m-b-xs  btn-success save-btn" ng-click="saveForm('add')">Register</button> &nbsp;
+        <button class="btn m-b-xs  btn-success " ng-click="saveForm('add')">Register</button> &nbsp;
 <!--        <button class="btn m-b-xs  btn-default"> Register & Book an appoinment</button>  &nbsp;-->
         <button class="btn m-b-xs  btn-dark"> <i class="fa fa-times"></i> Cancel</button>  &nbsp;
     </footer>

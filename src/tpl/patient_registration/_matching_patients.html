@@ -7,8 +7,11 @@
                 <div class="col-xs-12 col-sm-2 col-md-2"> <img src="img/man-icon.png"  alt="" /></div>
                 <div class="col-xs-12 col-sm-5 col-md-5"> 
                     <div class="row"> 
-                        <a href="#">{{patient.Patient.patient_title_code}} {{patient.Patient.patient_firstname}}</a> ({{patient.Patient.patient_age}}y) <br/>
-                        AH12345 
+                        <a ui-sref="patient.view({id: {{patient.Patient.patient_id}}})">
+                            {{patient.Patient.patient_title_code}} {{patient.Patient.patient_firstname}}
+                        </a> 
+                        ({{patient.Patient.patient_age}}y) <br/>
+                        {{patient.Patient.patient_id}} 
                         <p class="m-t"> 
                             {{patient.PatientAddress.addr_current_address}} <br/> 
                             {{patient.PatientAddress.city_name}} {{patient.PatientAddress.addr_zip}} <br/> 
@@ -22,9 +25,19 @@
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-5 col-md-5"> 
-                    Last visited on <span> <b> 23-jan-2015 </b></span> <br/> 
-                    Consultation with <span> <b> Dr.Vikram </b> </span>
-                    <p class="m-t-xxl "> <button class="btn m-b-xs w-xs btn-info">BOOK</button></p>
+<!--                                        Last visited on <span> <b> 23-jan-2015 </b></span> <br/> 
+                                        Consultation with <span> <b> Dr.Vikram </b> </span>-->
+                    <p class="m-t-xxl "> 
+                        <button class="btn m-b-xs w-xs btn-info" ng-show="patient.PatientActiveEncounter.hasOwnProperty('encounter_id') != true" ng-click="$state.go('patient.appointment', {'id': patient.Patient.patient_id})">
+                            BOOK
+                        </button>
+                        <span class="label label-primary admission_details" ng-show="patient.PatientActiveEncounter.liveAdmission.hasOwnProperty('admn_id') == true">
+                            {{patient.PatientActiveEncounter.floor_name}} > {{patient.PatientActiveEncounter.room_name}} > {{patient.PatientActiveEncounter.room_type_name}}
+                        </span>
+                        <span class="label label-primary admission_details" ng-show="patient.PatientActiveEncounter.liveAppointmentBooking.hasOwnProperty('appt_id') == true">
+                            Appointed
+                        </span>
+                    </p>
                 </div>
             </div>
         </div>

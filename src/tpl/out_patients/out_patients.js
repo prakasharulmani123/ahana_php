@@ -2,11 +2,12 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
 
         $scope.app.settings.patientTopBar = false;
         $scope.app.settings.patientSideMenu = false;
-        $scope.app.settings.patientContentClass = 'app-content';
-        
+        $scope.app.settings.patientContentClass = 'app-content app-content3';
+        $scope.app.settings.patientFooterClass = 'app-footer app-footer3';
+
         editableThemes.bs3.inputClass = 'input-sm';
-    editableThemes.bs3.buttonsClass = 'btn-sm';
-    editableOptions.theme = 'bs3';
+        editableThemes.bs3.buttonsClass = 'btn-sm';
+        editableOptions.theme = 'bs3';
 
         //Index Page
         $scope.loadOutPatientsList = function () {
@@ -27,14 +28,14 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                         $scope.error = "An Error has occured while loading patients!";
                     });
         };
-        
+
         $scope.statuses = [
-      {value: 1, text: 'Billing'},
-      {value: 2, text: 'Consultation'},
-      {value: 3, text: 'Arrived'},
-	  {value: 4, text: 'Scheduled'}
-	  
-    ];
+            {value: 1, text: 'Billing'},
+            {value: 2, text: 'Consultation'},
+            {value: 3, text: 'Arrived'},
+            {value: 4, text: 'Scheduled'}
+
+        ];
 
 
     }]);

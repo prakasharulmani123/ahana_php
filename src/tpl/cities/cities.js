@@ -114,7 +114,6 @@ app.controller('CitiesController', ['$rootScope', '$scope', '$timeout', '$http',
                     function (response) {
                         $scope.loadbar('hide');
                         $scope.data = response;
-                        console.log($scope.data);
                         $scope.updateState();
                         $scope.updateCity();
                     }

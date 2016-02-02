@@ -854,17 +854,28 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
+            //PATIENT UPDATE
+            .state('patient.update', {
+                url: '/update/{id}',
+                templateUrl: 'tpl/patient/update_patient.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/patient/patient_update.js']);
+                        }]
+                }
+            })
             
             //PATIENT ENCOUNTER
             .state('patient.encounter', {
                 url: '/encounter/{id}',
-                templateUrl: 'tpl/patient/encounters.html',
+                templateUrl: 'tpl/patient_encounter/encounters.html',
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load('smart-table').then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/patient/patient.js');
+                                        return $ocLazyLoad.load('tpl/patient_encounter/encounter.js');
                                     }
                             );
                         }]
@@ -880,6 +891,70 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                             return $ocLazyLoad.load('smart-table').then(
                                     function () {
                                         return $ocLazyLoad.load('tpl/patient_appointment/patient_appointment.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            
+		//PATIENT TRANSFER
+            .state('patient.transfer', {
+                url: '/transfer/{id}/{enc_id}',
+                templateUrl: 'tpl/patient_admission/transfer.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('smart-table').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/patient_admission/patient_admission.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            
+		//PATIENT DISCHARGE
+            .state('patient.discharge', {
+                url: '/discharge/{id}/{enc_id}',
+                templateUrl: 'tpl/patient_admission/discharge.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('smart-table').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/patient_admission/patient_admission.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            
+		//PATIENT SWAPPING
+            .state('patient.swapping', {
+                url: '/swapping/{id}/{enc_id}',
+                templateUrl: 'tpl/patient_admission/swapping.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('smart-table').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/patient_admission/patient_admission.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            
+		//ADMISSION UPDATE
+            .state('patient.update_admission', {
+                url: '/update_admission/{id}/{enc_id}',
+                templateUrl: 'tpl/patient_admission/update.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('smart-table').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/patient_admission/patient_admission.js');
                                     }
                             );
                         }]
@@ -947,13 +1022,44 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
             //PATIENT ADD PROCEDURE
             .state('patient.add_procedure', {
                 url: '/add_procedure/{id}/{enc_id}',
-                templateUrl: 'tpl/patient_procedure/add_procedure.html',
+                templateUrl: 'tpl/patient_procedure/create.html',
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['smart-table', 'ui.select']).then(
                                     function () {
                                         return $ocLazyLoad.load('tpl/patient_procedure/procedure.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            //PATIENT Edit PROCEDURE
+            .state('patient.edit_procedure', {
+                url: '/edit_procedure/{id}/{proc_id}',
+                templateUrl: 'tpl/patient_procedure/update.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table', 'ui.select']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/patient_procedure/procedure.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            
+            //Encounter change appointment status - OP
+            .state('patient.changeStatus', {
+                url: '/changeStatus/{id}/{enc_id}',
+                templateUrl: 'tpl/patient_appointment/change_status.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table', 'ui.select']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/patient_appointment/patient_appointment.js');
                                     }
                             );
                         }]
