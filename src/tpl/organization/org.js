@@ -170,14 +170,14 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                 }
             }
 
-            $scope.loadbar('show');
+            $('.butterbar').removeClass('hide').addClass('active');
             $http({
                 method: "POST",
                 url: post_url,
                 data: post_data,
             }).then(
                     function (response) {
-                        $scope.loadbar('hide');
+                        $('.butterbar').removeClass('active').addClass('hide');
                         if (response.data.success === true) {
 
                             if (mode !== 'add') {
@@ -223,14 +223,14 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                 }
             }
 
-            $scope.loadbar('show');
+            $('.butterbar').removeClass('hide').addClass('active');
             $http({
                 method: "POST",
                 url: $rootScope.IRISAdminServiceUrl + '/organizations/validateorg',
                 data: post_data,
             }).then(
                     function (response) {
-                        $scope.loadbar('hide');
+                        $('.butterbar').removeClass('active').addClass('hide');
                         if (response.data.success === false) {
                             $scope.errorData = response.data.message;
                         } else {
