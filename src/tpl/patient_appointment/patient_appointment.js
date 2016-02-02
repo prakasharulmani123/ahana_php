@@ -125,4 +125,50 @@ app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http
                     $scope.errorData = data.message;
             });
         };
+        
+        $scope.changeAppointmentStatus = function (mode) {
+            _that = this;
+
+            $scope.errorData = "";
+            $scope.successMessage = "";
+
+            if (typeof (_that.data) != "undefined") {
+                if (_that.data.hasOwnProperty('PatAppointment')) {
+                    angular.extend(_that.data.PatAppointment, {patient_id: $scope.app.patientDetail.patientId, encounter_id: $state.params.enc_id});
+                }
+            }
+
+            post_url = $rootScope.IRISOrgServiceUrl + '/appointments';
+            method = 'POST';
+
+            //Discharge
+            succ_msg = 'Status changed successfully';
+
+            _that.data.PatAppointment.status_date = moment(_that.data.PatAppointment.status_date).format('YYYY-MM-DD');
+            _that.data.PatAppointment.status_time = moment(_that.data.PatAppointment.status_date).format('HH:mm:ss');
+
+            $scope.loadbar('show');
+            $http({
+                method: method,
+                url: post_url,
+                data: _that.data.PatAppointment,
+            }).success(
+                    function (response) {
+                        $scope.loadbar('hide');
+                        if (response.success == true) {
+                            $scope.successMessage = succ_msg;
+                            $scope.data = {};
+                        } else {
+                            $scope.errorData = response.message;
+                        }
+
+                    }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        };
     }]);

@@ -7,13 +7,8 @@
             {% include 'tpl/blocks/alert.html' %}
         </div>
         <div class="row">
-            <div class="col-sm-12" ng-init="data.formtype = 'add';
-                            initForm();
-                            initTransferForm();
-                            data.PatAdmission.status = '1';
-                            data.PatAdmission.admission_status = 'D'
-                 ">
-                <form name="patientAppointmentForm" class="form-horizontal form-validation" novalidate="">
+            <div class="col-sm-12" ng-init="data.formtype = 'add'; data.PatAppointment.appt_status = 'A'">
+                <form name="patientAppointmentChangeStatusForm" class="form-horizontal form-validation" novalidate="">
                     <div class="panel panel-default">
                         <div class="panel-body">
 
@@ -47,7 +42,7 @@
                             
                         </div>
                         <footer class="panel-footer text-right bg-light lter">
-                            <button class="btn m-b-xs  btn-success " ng-click="saveAdmissionForm('discharge')">Save</button> &nbsp;
+                            <button class="btn m-b-xs  btn-success " ng-click="changeAppointmentStatus('arrived')">Save</button> &nbsp;
                             <button class="btn m-b-xs  btn-dark"> <i class="fa fa-times"></i> Cancel</button>  &nbsp;
                         </footer>
                     </div>
