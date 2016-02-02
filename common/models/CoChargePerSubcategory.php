@@ -21,21 +21,19 @@ use yii\db\ActiveQuery;
  *
  * @property CoChargePerCategory $charge
  */
-class CoChargePerSubcategory extends RActiveRecord
-{
+class CoChargePerSubcategory extends RActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'co_charge_per_subcategory';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['charge_id', 'charge_type', 'charge_link_id', 'charge_amount'], 'required'],
             [['charge_id', 'charge_link_id', 'created_by', 'modified_by'], 'integer'],
@@ -48,8 +46,7 @@ class CoChargePerSubcategory extends RActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'sub_charge_id' => 'Sub Charge ID',
             'charge_id' => 'Charge ID',
@@ -67,15 +64,14 @@ class CoChargePerSubcategory extends RActiveRecord
     /**
      * @return ActiveQuery
      */
-    public function getCharge()
-    {
+    public function getCharge() {
         return $this->hasOne(CoChargePerCategory::className(), ['charge_id' => 'charge_id']);
     }
 
     public static function find() {
         return new CoChargePerSubcategoryQuery(get_called_class());
     }
-    
+
     public static function getChargePerSubCateogrylist($deleted = false, $cat_id = null) {
         if (!$deleted)
             $list = self::find()->active()->categoryid($cat_id)->all();
@@ -84,23 +80,21 @@ class CoChargePerSubcategory extends RActiveRecord
 
         return $list;
     }
-    
+
     /**
      * @return ActiveQuery
      */
-    public function getOutpatient()
-    {
+    public function getOutpatient() {
         return $this->hasOne(CoPatientCategory::className(), ['patient_cat_id' => 'charge_link_id']);
     }
-    
+
     /**
      * @return ActiveQuery
      */
-    public function getInpatient()
-    {
+    public function getInpatient() {
         return $this->hasOne(CoRoomType::className(), ['room_type_id' => 'charge_link_id']);
     }
-    
+
     public function fields() {
         $extend = [
             'op_dept' => function ($model) {
@@ -109,8 +103,12 @@ class CoChargePerSubcategory extends RActiveRecord
             'ip_dept' => function ($model) {
                 return (isset($model->inpatient) ? $model->inpatient->room_type_name : '-');
             },
+            'patient_cat_id' => function ($model) {
+                return (isset($model->outpatient) ? $model->outpatient->patient_cat_id : '-');
+            },
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
     }
+
 }

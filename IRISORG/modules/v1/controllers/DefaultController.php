@@ -2,6 +2,7 @@
 
 namespace IRISORG\modules\v1\controllers;
 
+use common\models\CoChargePerCategory;
 use common\models\CoMasterCity;
 use common\models\CoMasterCountry;
 use common\models\CoMasterState;
@@ -21,7 +22,7 @@ class DefaultController extends Controller {
         $behaviors = parent::behaviors();
         $behaviors['authenticator'] = [
             'class' => HttpBearerAuth::className(),
-            'only' => ['getnavigation'],
+            'only' => ['getnavigation', 'getconsultantcharges'],
         ];
         $behaviors['contentNegotiator'] = [
             'class' => ContentNegotiator::className(),
@@ -124,6 +125,14 @@ class DefaultController extends Controller {
         }
 
         return ['navigation' => $menus[0]['children']];
+    }
+    
+    public function actionGetconsultantcharges() {
+        $get = Yii::$app->request->get();
+        if(!empty($get)){
+            $charge_code_id = $get['consultant_id'];
+            return ['success' => true, 'chargesList' => CoChargePerCategory::getConsultantCharges($charge_code_id)->opCoChargePerSubcategories];
+        }
     }
 
 }

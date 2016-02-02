@@ -75,44 +75,62 @@ class CoChargePerCategory extends RActiveRecord {
     public static function find() {
         return new CoChargePerCategoryQuery(get_called_class());
     }
-    
+
     /**
      * @return ActiveQuery
      */
-    public function getRoomchargecategory()
-    {
+    public function getRoomchargecategory() {
         return $this->hasOne(CoRoomChargeCategory::className(), ['charge_cat_id' => 'charge_cat_id']);
     }
-    
+
     /**
      * @return ActiveQuery
      */
-    public function getRoomchargesubcategory()
-    {
+    public function getRoomchargesubcategory() {
         return $this->hasOne(CoRoomChargeSubcategory::className(), ['charge_subcat_id' => 'charge_code_id']);
     }
-    
-    public function getUser()
-    {
+
+    public function getUser() {
         return $this->hasOne(CoUser::className(), ['user_id' => 'charge_code_id']);
     }
+
+    public function getCoChargePerSubcategories() {
+        return $this->hasMany(CoChargePerSubcategory::className(), ['charge_id' => 'charge_id']);
+    }
     
+    public function getOpCoChargePerSubcategories() {
+        return $this->hasMany(CoChargePerSubcategory::className(), ['charge_id' => 'charge_id'])->andWhere(['charge_type' => 'OP']);
+    }
+    
+    public function getIpCoChargePerSubcategories() {
+        return $this->hasMany(CoChargePerSubcategory::className(), ['charge_id' => 'charge_id'])->andWhere(['charge_type' => 'IP']);
+    }
+
     public function fields() {
         $extend = [
             'charge_cat_name' => function ($model) {
-                if($model->charge_cat_type == 'C')
+                if ($model->charge_cat_type == 'C')
                     return (isset($model->roomchargecategory) ? $model->roomchargecategory->charge_cat_name : '-');
-                if($model->charge_cat_type == 'P' && $model->charge_cat_id == -1)
+                if ($model->charge_cat_type == 'P' && $model->charge_cat_id == -1)
                     return 'Professional Charge';
             },
             'charge_code_name' => function ($model) {
-                if($model->charge_cat_type == 'C')
+                if ($model->charge_cat_type == 'C')
                     return (isset($model->roomchargesubcategory) ? $model->roomchargesubcategory->charge_subcat_name : '-');
-                if($model->charge_cat_type == 'P' && $model->charge_cat_id == -1)
+                if ($model->charge_cat_type == 'P' && $model->charge_cat_id == -1)
                     return (isset($model->user) ? $model->user->name : '-');
             },
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
     }
+
+    /* charge_code_id - consultant_id (user_id) */
+
+    public static function getConsultantCharges($charge_code_id) {
+        if ($charge_code_id) {
+            return self::find()->tenant()->chargeCatType()->chargeCatId()->andWhere(['charge_code_id' => $charge_code_id])->one();
+        }
+    }
+
 }
