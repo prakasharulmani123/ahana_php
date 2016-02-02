@@ -15,7 +15,7 @@ function SignInForm($scope, $state, AuthenticationService, $http, $rootScope, $l
     });
     $scope.login = function () {
         $scope.authError = null;
-        $scope.loginButtonText = 'Logging in...Please Wait ....';
+        $scope.loginButtonText = 'Authenticating...Please Wait ....';
         $('#login_btn').attr('disabled', true);
         // Try to login
         AuthenticationService.Login($scope.user.username, $scope.user.password, $scope.user.tenant_id, function (response) {

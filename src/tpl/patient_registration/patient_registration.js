@@ -1,9 +1,8 @@
-app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout', '$http', '$state', function ($rootScope, $scope, $timeout, $http, $state) {
+app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', function ($rootScope, $scope, $timeout, $http, $state) {
 
         $scope.app.settings.patientTopBar = false;
         $scope.app.settings.patientSideMenu = false;
-        $scope.app.settings.patientContentClass = 'app-content app-content3';
-        $scope.app.settings.patientFooterClass = 'app-footer app-footer3';
+        $scope.app.settings.patientContentClass = 'app-content';
 
         //Index Page
         $scope.loadPatientsList = function () {

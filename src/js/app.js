@@ -17,9 +17,7 @@ angular.module('app', [
     'pascalprecht.translate',
     'ivh.treeview',
     'colorpicker.module',
-    'angular.filter',
-    'ui.bootstrap.datetimepicker',
-    'ui.dateTimeInput',
+    'angular.filter'
 //    'LocalStorageModule',
 ]);
 

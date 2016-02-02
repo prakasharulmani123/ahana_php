@@ -38,7 +38,6 @@ angular.module('app')
                         patientTopBar: true,
                         patientSideMenu: true,
                         patientContentClass: 'app-content app-content2',
-                        patientFooterClass: 'app-footer app-footer2',
                     },
                     patientDetail: {
                         patientTitleCode: '',
@@ -48,19 +47,15 @@ angular.module('app')
                         patientDOA: '',
                         patientOrg: '',
                         patientAge: '',
-                        patientCasesheetno: '',
                     }
                 }
 
                 // save settings to local storage
-//                if (angular.isDefined($localStorage.settings)) {
-//                    $scope.app.settings = $localStorage.settings;
-//                } else {
-//                    $localStorage.settings = $scope.app.settings;
-//                }
-                
-                $localStorage.settings = $scope.app.settings;
-                
+                if (angular.isDefined($localStorage.settings)) {
+                    $scope.app.settings = $localStorage.settings;
+                } else {
+                    $localStorage.settings = $scope.app.settings;
+                }
                 $scope.$watch('app.settings', function () {
                     if ($scope.app.settings.asideDock && $scope.app.settings.asideFixed) {
                         // aside dock and fixed must set the header fixed.
@@ -104,8 +99,10 @@ angular.module('app')
                 $scope.loadbar = function (mode) {
                     if (mode == 'show') {
                         $('.butterbar').removeClass('hide').addClass('active');
+                        $('.save-btn').attr('disabled', true);
                     } else if (mode == 'hide') {
                         $('.butterbar').removeClass('active').addClass('hide');
+                        $('.save-btn').attr('disabled', false);
                     }
                 }
 
@@ -131,27 +128,24 @@ angular.module('app')
 
                 $scope.loadPatientDetail = function () {
                     // Get data's from service
-                    if (typeof $state.params.id != 'undefined') {
-                        $http.get($rootScope.IRISOrgServiceUrl + '/patients/' + $state.params.id)
-                                .success(function (patient) {
-                                    $scope.app.patientDetail.patientTitleCode = patient.patient_title_code;
-                                    $scope.app.patientDetail.patientName = patient.patient_firstname;
-                                    $scope.app.patientDetail.patientId = patient.patient_id;
-                                    $scope.app.patientDetail.patientDOA = patient.doa;
-                                    $scope.app.patientDetail.patientOrg = patient.org_name;
-                                    $scope.app.patientDetail.patientAge = patient.patient_age;
-                                    $scope.app.patientDetail.patientCasesheetno = patient.casesheetno;
-                                    $rootScope.commonService.GetLabelFromValue(patient.patient_gender, 'GetGenderList', function (response) {
-                                        $scope.app.patientDetail.patientSex = response;
-                                    });
-
-                                    $scope.patientObj = patient;
-
-                                })
-                                .error(function () {
-                                    $scope.error = "An Error has occured while loading patient!";
+                    $http.get($rootScope.IRISOrgServiceUrl + '/patients/' + $state.params.id)
+                            .success(function (patient) {
+                                $scope.app.patientDetail.patientTitleCode = patient.patient_title_code;
+                                $scope.app.patientDetail.patientName = patient.patient_firstname;
+                                $scope.app.patientDetail.patientId = patient.patient_id;
+                                $scope.app.patientDetail.patientDOA = patient.doa;
+                                $scope.app.patientDetail.patientOrg = patient.org_name;
+                                $scope.app.patientDetail.patientAge = patient.patient_age;
+                                $rootScope.commonService.GetLabelFromValue(patient.patient_gender, 'GetGenderList', function (response) {
+                                    $scope.app.patientDetail.patientSex = response;
                                 });
-                    }
+                                
+                                $scope.patientObj = patient;
+
+                            })
+                            .error(function () {
+                                $scope.error = "An Error has occured while loading patient!";
+                            });
                 };
 
             }]);

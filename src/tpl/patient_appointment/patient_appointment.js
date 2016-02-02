@@ -1,66 +1,19 @@
-app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$filter', function ($rootScope, $scope, $timeout, $http, $state, $filter) {
+app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', function ($rootScope, $scope, $timeout, $http, $state) {
 
         $scope.app.settings.patientTopBar = true;
         $scope.app.settings.patientSideMenu = true;
-        $scope.app.settings.patientContentClass = 'app-content';
-        $scope.app.settings.patientFooterClass = 'app-footer';
-
-        $scope.isPatientHaveActiveEncounter = function (callback) {
-            $http.post($rootScope.IRISOrgServiceUrl + '/encounter/patienthaveactiveencounter', {patient_id: $state.params.id})
-                    .success(function (response) {
-                        callback(response);
-                    }, function (x) {
-                        response = {success: false, message: 'Server Error'};
-                        callback(response);
-                    });
-        }
+//        $scope.app.settings.patientContentClass = 'app-content';
 
         $scope.initCanCreateAppointment = function () {
-            $scope.isPatientHaveActiveEncounter(function (response) {
-                if (response.success == true) {
-                    alert("This patient already have an active appointment. You can't create a new appointment");
-                    $state.go("patient.view", {id: $state.params.id});
-                }
-            });
-        }
-
-        $scope.initCanSaveAppointment = function () {
-            $scope.isPatientHaveActiveEncounter(function (response) {
-                if (response.success == true) {
-                    if (response.model.encounter_id != $state.params.enc_id) {
-                        alert("This is not an active Encounter");
-                        $state.go("patient.encounter", {id: $state.params.id});
-                    } else {
-                        var consultant_id = '';
-                        if (response.model.liveAppointmentArrival.hasOwnProperty('appt_id')) {
-                            $scope.data = {'PatAppointment': {'appt_status': 'A'}};
-                            var consultant_id = response.model.liveAppointmentArrival.consultant_id;
-                        } else if (response.model.liveAppointmentBooking.hasOwnProperty('appt_id')) {
-                            $scope.data = {'PatAppointment': {'appt_status': 'B'}};
-                            var consultant_id = response.model.liveAppointmentArrival.consultant_id;
+            $http.post($rootScope.IRISOrgServiceUrl + '/encounter/patienthaveactiveencounter', {patient_id: $state.params.id})
+                    .success(function (response) {
+                        if (response.success == true) {
+                            alert("This patient already have an active appointment. You can't create a new appointment");
+                            $state.go("patient.view", {id: $state.params.id});
                         }
-                        if (consultant_id) {
-                            $http.get($rootScope.IRISOrgServiceUrl + '/default/getconsultantcharges?consultant_id=' + consultant_id)
-                                    .success(function (response) {
-                                        $scope.chargesList = response.chargesList;
-                                    }, function (x) {
-                                        response = {success: false, message: 'Server Error'};
-                                    });
-                        }
-                    }
-                }else {
-                    alert("This is not an active Encounter");
-                    $state.go("patient.encounter", {id: $state.params.id});
-                }
-            });
-        }
-        
-        $scope.chargeAmount = '';
-        $scope.updateCharge = function () {
-            _that = this;
-            console.log(_that.data.PatAppointment.patient_cat_id);
-            var charge = $filter('filter')($scope.chargesList, { patient_cat_id: _that.data.PatAppointment.patient_cat_id });
-            $scope.chargeAmount = charge[0].charge_amount;
+                    }, function (x) {
+                        response = {success: false, message: 'Server Error'};
+                    });
         }
 
         $scope.initForm = function () {
@@ -72,8 +25,6 @@ app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http
                 $scope.appt_status_lists = response;
             });
         }
-
-
 
         //For Datepicker
         $scope.open = function ($event, mode) {
@@ -107,15 +58,13 @@ app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http
         }
 
         $scope.getTimeOfAppointment = function () {
-            if (typeof (this.data) != "undefined") {
-                if (typeof (this.data.consultant_id) != 'undefined' && typeof (this.data.status_date != 'undefined')) {
-                    $http.post($rootScope.IRISOrgServiceUrl + '/doctorschedule/getdoctortimeschedule', {doctor_id: this.data.consultant_id, schedule_date: this.data.status_date})
-                            .success(function (response) {
-                                $scope.timeslots = response.timerange;
-                            }, function (x) {
-                                response = {success: false, message: 'Server Error'};
-                            });
-                }
+            if (this.data.consultant_id != '' && this.data.appoinment_date) {
+                $http.post($rootScope.IRISOrgServiceUrl + '/doctorschedule/getdoctortimeschedule', {doctor_id: this.data.consultant_id, schedule_day:this.data.appoinment_date})
+                        .success(function (response) {
+                            console.log(response);
+                        }, function (x) {
+                            response = {success: false, message: 'Server Error'};
+                        });
             }
         }
 
@@ -145,55 +94,6 @@ app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http
                         } else {
                             $scope.errorData = response.message;
                         }
-
-                    }
-            ).error(function (data, status) {
-                $scope.loadbar('hide');
-                if (status == 422)
-                    $scope.errorData = $scope.errorSummary(data);
-                else
-                    $scope.errorData = data.message;
-            });
-        };
-
-        $scope.changeAppointmentStatus = function (mode) {
-            _that = this;
-
-            $scope.errorData = "";
-            $scope.successMessage = "";
-
-            if (typeof (_that.data) != "undefined") {
-                if (_that.data.hasOwnProperty('PatAppointment')) {
-                    angular.extend(_that.data.PatAppointment, {patient_id: $scope.app.patientDetail.patientId, encounter_id: $state.params.enc_id});
-                }
-            }
-
-            post_url = $rootScope.IRISOrgServiceUrl + '/appointments';
-            method = 'POST';
-            succ_msg = 'Status changed successfully';
-
-            _that.data.PatAppointment.status_time = moment(_that.data.PatAppointment.status_date).format('HH:mm:ss');
-            _that.data.PatAppointment.status_date = moment(_that.data.PatAppointment.status_date).format('YYYY-MM-DD');
-            
-            if(mode == 'arrived'){
-                _that.data.PatAppointment.appt_status = "A";
-            } else if(mode == 'seen'){
-                _that.data.PatAppointment.appt_status = "S";
-            }
-            
-            $scope.loadbar('show');
-            $http({
-                method: method,
-                url: post_url,
-                data: _that.data.PatAppointment,
-            }).success(
-                    function (response) {
-                        $scope.loadbar('hide');
-                        $scope.successMessage = succ_msg;
-                        $scope.data = {};
-                        $timeout(function () {
-                            $state.go("patient.encounter", {id: $state.params.id});
-                        }, 1000)
 
                     }
             ).error(function (data, status) {

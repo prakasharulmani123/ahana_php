@@ -93,6 +93,7 @@ app.controller('DoctorSchedulesController', ['$rootScope', '$scope', '$timeout',
                 var keepGoing = true;
                 angular.forEach($scope.days, function (day) {
                     if (keepGoing) {
+                        console.log(day.checked);
                         if (day.checked) {
                             keepGoing = false;
                         }

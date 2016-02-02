@@ -21,48 +21,46 @@
         <form class="navbar-form navbar-form-sm navbar-left shift" ui-shift="prependTo" data-target=".navbar-collapse" role="search" ng-controller="PatientSearchController">
             <div class="form-group">
                 <div class="input-group">
-                    <!--<input type="text" ng-model="patientselected" typeahead="patient_list.Patient.patient_firstname for patient_list in patient_lists | filter:$viewValue | limitTo:8" class="form-control input-sm bg-light no-border rounded padder" placeholder="Search....">-->
-                    <input type="text" ng-model="patientselected" class="form-control input-sm bg-light no-border rounded padder" placeholder="Search....">
-                    <ul class="search-patientcont-header" ng-if="patientselected != ''">
-                        <li ng-repeat="patient in patient_lists">
+                    <input type="text" ng-model="patientselected" typeahead-template-url="searchbox" typeahead="patient_list.Patient.patient_firstname for patient_list in patient_lists | filter:$viewValue | limitTo:8" class="form-control input-sm bg-light no-border rounded padder" placeholder="Search....">
+                    <ul class="search-patientcont hide">
+                        <li>
                             <div class="row"> 
                                 <div class="col-xs-12 col-sm-2 col-md-2"> <img alt="" src="img/man-icon.png"></div>
-                                <div class="col-xs-12 col-sm-5 col-md-6"> 
+                                <div class="col-xs-12 col-sm-5 col-md-5"> 
                                     <div class="row ng-binding"> 
-                                        <a href="#" ng-click="goToPatient(patient.Patient.patient_id)" class="ng-binding">
-                                            {{patient.Patient.patient_title_code}} {{patient.Patient.patient_firstname}}
-                                        </a> 
-                                        <b>({{patient.Patient.patient_age}}y) </b>
-                                        <br>
-                                        <span class="pull-left">{{patient.Patient.patient_id}}</span> 
-                                        <span> &nbsp; &nbsp; {{patient.Patient.patient_mobile}}</span> 
+                                        <a href="#" class="ng-binding">Mr. Prakah</a> (25y) <br>
+                                        <span class="pull-left">AH12345</span> 
+                                        <span class="pull-right">9698566651</span> 
                                     </div>
                                 </div>
-
-                                <div class="col-xs-12 col-sm-5 col-md-4 pull-right right"> 
-                                    <button class="btn m-b-xs w-xs btn-info" ng-show="patient.PatientActiveEncounter.hasOwnProperty('encounter_id') != true" ng-click="goToAppointment(patient.Patient.patient_id)">
-                                        BOOK
-                                    </button>
-                                    <span class="label label-primary admission_details" ng-show="patient.PatientActiveEncounter.liveAdmission.hasOwnProperty('admn_id') == true">
-                                        {{patient.PatientActiveEncounter.floor_name}} > {{patient.PatientActiveEncounter.room_name}} > {{patient.PatientActiveEncounter.room_type_name}}
-                                    </span>
-                                    <span class="label label-primary admission_details" ng-show="patient.PatientActiveEncounter.liveAppointmentBooking.hasOwnProperty('appt_id') == true">
-                                        Appointed
-                                    </span>
+                                <div class="col-xs-12 col-sm-5 col-md-5 pull-right"> 
+                                    <button class="btn m-b-xs w-xs btn-info">BOOK</button>
                                 </div>
                             </div>
                         </li>
-
                         <li>
                             <div class="row"> 
-                                <div class="col-xs-12 col-sm-12 col-md-12 pull-right right">  
-                                    <button class="btn m-b-xs w-xs btn-success fullwidth" ng-click="goToRegistration()">Register</button>
+                                <div class="col-xs-12 col-sm-2 col-md-2"> <img alt="" src="img/man-icon.png"></div>
+                                <div class="col-xs-12 col-sm-5 col-md-5"> 
+                                    <div class="row ng-binding"> 
+                                        <a href="#" class="ng-binding">Mr. Prakah</a> (25y) <br>
+                                        <span class="pull-left">AH12345</span> 
+                                        <span class="pull-right">9698566651</span> 
+                                    </div>
                                 </div>
+                                <div class="col-xs-12 col-sm-5 col-md-5 pull-right"> 
+                                    <button class="btn m-b-xs w-xs btn-info">BOOK</button>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="row"> 
+                                <button class="btn m-b-xs w-xs btn-primary">Register</button>
                             </div>
                         </li>
                     </ul>
                     <span class="input-group-btn">
-                        <button type="submit" class="btn btn-sm bg-light rounded"><i class="fa fa-search"></i></button>
+                        <button type="submit" class="btn btn-sm bg-light rounded" ng-click="goToPatient(1)"><i class="fa fa-search"></i></button>
                     </span> 
                 </div>
             </div>
@@ -110,11 +108,13 @@
 <!-- / header -->
 
 <script>
-    $(function () {
-        $.slidebars({
-            scrollLock: true
+    (function ($) {
+        $(document).ready(function () {
+            $.slidebars({
+                scrollLock: true
+            });
         });
-    });
+    })(jQuery);
 </script>
 
 <!--<script type="text/ng-template" id="searchbox">

@@ -1,17 +1,14 @@
-<div ng-controller="ProcedureController">
+<div ng-controller="PatientController">
 
     <div class="bg-light lter b-b wrapper-md">
         <h1 class="m-n h3">Procedures</h1>
     </div>
     <div class="wrapper-md tab-btn">
-        <div ng-include="'tpl/blocks/alert.html'">
-            {% include 'tpl/blocks/alert.html' %}
-        </div>
         <div class="row">
             <div class="col-sm-4"> 
                 <div class="btn-group btn-group-justified">
                     Encounter Id: 
-                    <select class="form-control" ng-change="loadProceduresList()" ng-model="data.encounter_id" ng-options="encounter.encounter_id as encounter.encounter_id for encounter in encounters | orderBy: encounter_id">
+                    <select class="form-control" ng-model="data.encounter_id" ng-options="encounter.encounter_id as encounter.encounter_id for encounter in encounters | orderBy: encounter_id">
                         <option value="">Select Encounter</option>
                     </select>
                     <br />
@@ -20,25 +17,18 @@
         </div>
     </div>
     <div class="wrapper-md">
-        
         <div class="panel panel-default">
             <!--<div class="panel-heading">
               Responsive Table
             </div>-->
             <div class="row wrapper">
                 <div class="col-sm-5 m-b-xs">
-                        <button class="btn btn-sm btn-grey" ng-click="loadProceduresList()"> 
-                            &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
-                        </button>
-                    <div class="btn-group" dropdown is-open="status.isopen" ng-show="more_li.length > 0">
+                    <div class="btn-group" dropdown is-open="status.isopen">
                         <button type="button" class=" btn btn-sm btn-grey" dropdown-toggle ng-disabled="disabled">
                             More &nbsp;&nbsp;<span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu" role="menu">
-                            <li ng-repeat="li in more_li">
-                                <a ng-if="li.mode == 'sref'" ui-sref="{{li.href}}">{{li.name}}</a>
-                                <a ng-if="li.mode == 'click'" ng-click="removeRow(li.href)">{{li.name}}</a>
-                            </li>
+                            <li><a ui-sref="patient.add_procedure({id: {{$state.params.id}}, enc_id: 1})">Add Procedure</a></li>
                         </ul>
                     </div>        
                 </div>
@@ -48,26 +38,28 @@
                 </div>
             </div>
             <div class="table-responsive in-patient-table">
+                <script type="text/ng-template" id="myModalContent.html">
+                    <div ng-include="'tpl/inpatient.edit.html'"></div>
+                </script>
                 <table st-table="displayedCollection"  st-safe-src="rowCollection"  class="table table-striped b-t b-light">
                     <thead>
                         <tr>
                             <th></th>
-                            <th ></th>
+                            <th > <label class="i-checks m-b-none">
+                                    <input type="checkbox"><i></i>
+                                </label></th>
                             <th>Date of Procedure </th>
                             <th>Procedure Name</th>
                             <th>Notes</th>
                             <th>DoctorsName</th>
                         </tr>
                     </thead>
-                    <tbody ng-hide="isLoading" ng-show="displayedCollection.length > 0">
-                        <tr ng-repeat="row in displayedCollection">
+                    <tbody ng-hide="isLoading">
+                        <tr ng-repeat="(key, value) in displayedCollection | groupBy: 'encounter_id'">
 
-                            <td align="center" valign="middle"></td>
-                            <td><label class="i-checks m-b-none"><input id="proc_{{row.proc_id}}" class="proc_chk" type="checkbox" name="b[]" ng-click="moreOptions(row.proc_id)"><i></i></label></td>
-                            <td> {{row.proc_date}} </td>
-                            <td> {{row.procedure_name}} </td>
-                            <td> {{row.proc_description}} </td>
-                            <td> {{row.doctors}} </td>
+                            <td style="padding: 0;" colspan="6">
+                                asdas
+                            </td>
                         </tr>
                     </tbody>
                     <tbody ng-show="isLoading">

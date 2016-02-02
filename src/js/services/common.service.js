@@ -11,7 +11,6 @@ function CommonService($http, $rootScope, $window, $q, $filter) {
     service.GetStateList = GetStateList;
     service.GetCityList = GetCityList;
     service.GetTitleCodes = GetTitleCodes;
-    service.GetMaritalStatus = GetMaritalStatus;
     service.GetPasswordResetAccess = GetPasswordResetAccess;
     service.GetTenantList = GetTenantList;
     service.GetFloorList = GetFloorList;
@@ -35,11 +34,9 @@ function CommonService($http, $rootScope, $window, $q, $filter) {
     service.GetRoomList = GetRoomList;
     service.GetProcedureList = GetProcedureList;
     service.GetEncounterListByPatient = GetEncounterListByPatient;
-    service.GetPatientList = GetPatientList;
 
     service.GetLabelFromValue = GetLabelFromValue;
     service.FoundVlaue = FoundVlaue;
-    service.GetRoomTypesRoomsList = GetRoomTypesRoomsList;
 
     return service;
 
@@ -106,11 +103,6 @@ function CommonService($http, $rootScope, $window, $q, $filter) {
 
     function GetTitleCodes(callback) {
         var response = [{value: 'Mr.', label: 'Mr.'}, {value: 'Mrs.', label: 'Mrs.'}, {value: 'Miss.', label: 'Miss.'}, {value: 'Dr.', label: 'Dr.'}];
-        callback(response);
-    }
-
-    function GetMaritalStatus(callback) {
-        var response = [{value: 'S', label: 'Single'}, {value: 'M', label: 'Married'}, {value: 'D', label: 'Divorced'}, {value: 'W', label: 'Widowed'}];
         callback(response);
     }
 
@@ -308,10 +300,10 @@ function CommonService($http, $rootScope, $window, $q, $filter) {
         callback(response);
     }
 
-    function GetRoomList(tenant, sts, del_sts, occupied_status, callback) {
+    function GetRoomList(tenant, sts, del_sts, callback) {
         var response;
 
-        $http.get($rootScope.IRISOrgServiceUrl + '/room/getroomlist?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts  + '&occupied_status=' + occupied_status)
+        $http.get($rootScope.IRISOrgServiceUrl + '/room/getroomlist?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts)
                 .success(function (response) {
                     callback(response);
                 }, function (x) {
@@ -344,18 +336,6 @@ function CommonService($http, $rootScope, $window, $q, $filter) {
                 });
     }
 
-    function GetPatientList(tenant, sts, del_sts, callback) {
-        var response;
-
-        $http.get($rootScope.IRISOrgServiceUrl + '/patient/getpatientlist?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts)
-                .success(function (response) {
-                    callback(response);
-                }, function (x) {
-                    response = {success: false, message: 'Server Error'};
-                    callback(response);
-                });
-    }
-
     function GetLabelFromValue(val, func, callback) {
         if (func == 'GetGenderList') {
             $rootScope.commonService.GetGenderList(function (response) {
@@ -378,13 +358,6 @@ function CommonService($http, $rootScope, $window, $q, $filter) {
                 });
             });
         }
-        if (func == 'GetMaritalStatus') {
-            $rootScope.commonService.GetMaritalStatus(function (response) {
-                $rootScope.commonService.FoundVlaue(val, response, function (response2) {
-                    callback(response2);
-                });
-            });
-        }
     }
 
     function FoundVlaue(val, response, callback) {
@@ -394,17 +367,5 @@ function CommonService($http, $rootScope, $window, $q, $filter) {
             result = found[0].label;
         }
         callback(result);
-    }
-    
-    function GetRoomTypesRoomsList(tenant, callback) {
-        var response;
-
-        $http.get($rootScope.IRISOrgServiceUrl + '/roomtype/getroomtypesroomslist?tenant=' + tenant)
-                .success(function (response) {
-                    callback(response);
-                }, function (x) {
-                    response = {success: false, message: 'Server Error'};
-                    callback(response);
-                });
     }
 }

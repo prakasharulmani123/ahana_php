@@ -2,7 +2,7 @@
 <a href class="btn no-shadow navbar-btn" ng-click="app.settings.asideFolded = !app.settings.asideFolded">
     <i class="fa {{app.settings.asideFolded ? 'fa-indent' : 'fa-dedent'}} fa-fw"></i>
 </a> 
-<ul class="nav pat_nav">
+<ul class="nav">
     <li ui-sref-active="active"> <a ui-sref="patient.view({id: {{$state.params.id}}})">  <img src="img/icon1.png"  alt="" /> <br/> Details </a>  </li>
     <li ui-sref-active="active"> <a ui-sref="app.timeline">  <img src="img/icon2.png"  alt="" /> <br/> Timeline </a>  </li>
     <li ui-sref-active="active"> <a href="#">  <img src="img/icon3.png"  alt="" /> <br/> Documents </a>  </li>

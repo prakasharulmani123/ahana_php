@@ -77,8 +77,8 @@
                             {{row.patient.patient_id}}</td>
                         <td align="center" valign="middle"><img src="img/cate-1.png"  alt="" /></td>
                         <td><a editable-text="row.patient.patient_mobile">{{row.patient.patient_mobile}}</a></td>
-                        <td>{{row.liveAppointmentBooking.status_time}}<br/>  <span class="text-muted"> {{row.liveAppointmentBooking.status_date}}</span></td>
-                        <td>{{row.liveAppointmentArrival.status_time}} <br/> <span class="text-muted"> 10 mins late! </span> </td>
+                        <td>{{row.liveAppointmentBooking.appoinment_time}}<br/>  <span class="text-muted"> {{row.liveAppointmentBooking.appoinment_date}}</span></td>
+                        <td>{{row.liveAppointmentArrival.appoinment_time}} <br/> <span class="text-muted"> 10 mins late! </span> </td>
                         <td>
                             <a editable-select="user.status" e-ng-options="s.value as s.text for s in statuses">
                                 {{ showStatus(user)}}
