@@ -1,4 +1,4 @@
-app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$filter', function ($rootScope, $scope, $timeout, $http, $state, $filter) {
+app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$filter', 'modalService', function ($rootScope, $scope, $timeout, $http, $state, $filter, modalService) {
 
         $scope.app.settings.patientTopBar = true;
         $scope.app.settings.patientSideMenu = true;
@@ -33,11 +33,11 @@ app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http
                     } else {
                         var consultant_id = '';
                         if (response.model.liveAppointmentArrival.hasOwnProperty('appt_id')) {
-                            $scope.data = {'PatAppointment': {'appt_status': 'A'}};
-                            var consultant_id = response.model.liveAppointmentArrival.consultant_id;
+                            $scope.data = {'PatAppointment': {'appt_status': 'A', 'dummy_status': 'A'}};
+                            consultant_id = response.model.liveAppointmentArrival.consultant_id;
                         } else if (response.model.liveAppointmentBooking.hasOwnProperty('appt_id')) {
-                            $scope.data = {'PatAppointment': {'appt_status': 'B'}};
-                            var consultant_id = response.model.liveAppointmentArrival.consultant_id;
+                            $scope.data = {'PatAppointment': {'appt_status': 'B', 'dummy_status': 'B'}};
+                            consultant_id = response.model.liveAppointmentArrival.consultant_id;
                         }
                         if (consultant_id) {
                             $http.get($rootScope.IRISOrgServiceUrl + '/default/getconsultantcharges?consultant_id=' + consultant_id)
@@ -48,18 +48,18 @@ app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http
                                     });
                         }
                     }
-                }else {
+                } else {
                     alert("This is not an active Encounter");
                     $state.go("patient.encounter", {id: $state.params.id});
                 }
             });
         }
-        
+
         $scope.chargeAmount = '';
         $scope.updateCharge = function () {
             _that = this;
             console.log(_that.data.PatAppointment.patient_cat_id);
-            var charge = $filter('filter')($scope.chargesList, { patient_cat_id: _that.data.PatAppointment.patient_cat_id });
+            var charge = $filter('filter')($scope.chargesList, {patient_cat_id: _that.data.PatAppointment.patient_cat_id});
             $scope.chargeAmount = charge[0].charge_amount;
         }
 
@@ -71,6 +71,11 @@ app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http
             $rootScope.commonService.GetPatientAppointmentStatus(function (response) {
                 $scope.appt_status_lists = response;
             });
+        }
+
+        $scope.initAppointmentForm = function () {
+            $scope.data = {};
+            $scope.data.status_date = moment().format('YYYY-MM-DD');
         }
 
 
@@ -173,15 +178,17 @@ app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http
             method = 'POST';
             succ_msg = 'Status changed successfully';
 
-            _that.data.PatAppointment.status_time = moment(_that.data.PatAppointment.status_date).format('HH:mm:ss');
-            _that.data.PatAppointment.status_date = moment(_that.data.PatAppointment.status_date).format('YYYY-MM-DD');
-            
-            if(mode == 'arrived'){
+            if (_that.data.PatAppointment.status_date) {
+                _that.data.PatAppointment.status_time = moment(_that.data.PatAppointment.status_date).format('HH:mm:ss');
+                _that.data.PatAppointment.status_date = moment(_that.data.PatAppointment.status_date).format('YYYY-MM-DD');
+            }
+
+            if (mode == 'arrived') {
                 _that.data.PatAppointment.appt_status = "A";
-            } else if(mode == 'seen'){
+            } else if (mode == 'seen') {
                 _that.data.PatAppointment.appt_status = "S";
             }
-            
+
             $scope.loadbar('show');
             $http({
                 method: method,
@@ -203,6 +210,59 @@ app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http
                     $scope.errorData = $scope.errorSummary(data);
                 else
                     $scope.errorData = data.message;
+            });
+        };
+
+        $scope.cancelAppointment = function () {
+            $scope.isPatientHaveActiveEncounter(function (response) {
+                if (response.success == true) {
+                    if (response.model.encounter_id != $state.params.enc_id) {
+                        alert("This is not an active Encounter");
+                        $state.go("patient.encounter", {id: $state.params.id});
+                    } else {
+                        $scope.errorData = "";
+                        var modalOptions = {
+                            closeButtonText: 'No',
+                            actionButtonText: 'Yes',
+                            headerText: 'Cancel Appointment?',
+                            bodyText: 'Are you sure you want to cancel this appointment?'
+                        };
+                        modalService.showModal({}, modalOptions).then(function (result) {
+                            $scope.loadbar('show');
+                            post_url = $rootScope.IRISOrgServiceUrl + '/appointments';
+                            method = 'POST';
+                            succ_msg = 'Appointment cancelled successfully';
+                            var PatAppointment = {
+                                appt_status: "C",
+                                status_time: moment().format('HH:mm:ss'),
+                                status_date: moment().format('YYYY-MM-DD'),
+                                patient_id: $scope.app.patientDetail.patientId,
+                                encounter_id: $state.params.enc_id
+                            };
+                            $http({
+                                method: method,
+                                url: post_url,
+                                data: PatAppointment,
+                            }).success(
+                                    function (response) {
+                                        $scope.loadbar('hide');
+                                        $scope.successMessage = succ_msg;
+                                        $scope.data = {};
+                                        $timeout(function () {
+                                            $state.go("patient.encounter", {id: $state.params.id});
+                                        }, 1000)
+
+                                    }
+                            ).error(function (data, status) {
+                                $scope.loadbar('hide');
+                                if (status == 422)
+                                    $scope.errorData = $scope.errorSummary(data);
+                                else
+                                    $scope.errorData = data.message;
+                            });
+                        });
+                    }
+                }
             });
         };
     }]);
