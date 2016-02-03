@@ -82,6 +82,10 @@ class CoRoomChargeCategory extends RActiveRecord {
         return $this->hasMany(CoRoomChargeSubcategory::className(), ['charge_cat_id' => 'charge_cat_id']);
     }
 
+    public function getActiveroomchargesubcategory() {
+        return $this->hasMany(CoRoomChargeSubcategory::className(), ['charge_cat_id' => 'charge_cat_id'])->active();
+    }
+
     public static function find() {
         return new CoRoomChargeCategoryQuery(get_called_class());
     }
@@ -101,6 +105,16 @@ class CoRoomChargeCategory extends RActiveRecord {
         else
             $list = self::find()->tenantWithNull($tenant)->deleted()->andWhere(['charge_cat_code' => $code])->one();
         
-        return (isset($list->roomchargesubcategory)) ? $list->roomchargesubcategory : [];
+        return (isset($list->activeroomchargesubcategory)) ? $list->activeroomchargesubcategory : [];
+    }
+    
+    public function fields() {
+        $extend = [
+            'subcategories' => function ($model) {
+                return (isset($model->activeroomchargesubcategory) ? $model->activeroomchargesubcategory : '-');
+            },
+        ];
+        $fields = array_merge(parent::fields(), $extend);
+        return $fields;
     }
 }

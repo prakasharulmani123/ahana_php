@@ -40,7 +40,7 @@ return [
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/roommaintenance'], 'extraPatterns' => ['GET getmaintenancelist' => 'getmaintenancelist']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/floor'], 'extraPatterns' => ['POST remove' => 'remove']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/ward'], 'extraPatterns' => ['POST remove' => 'remove', 'GET getwardlist' => 'getwardlist']],
-                ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/roomchargecategory'], 'extraPatterns' => ['POST remove' => 'remove', 'GET getroomchargecategorylist' => 'getroomchargecategorylist', 'GET getchargelist' => 'getchargelist']],
+                ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/roomchargecategory'], 'extraPatterns' => ['POST remove' => 'remove', 'GET getroomchargecategorylist' => 'getroomchargecategorylist', 'GET getchargelist' => 'getchargelist', 'GET getroomchargelist' => 'getroomchargelist']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/roomchargesubcategory'], 'extraPatterns' => ['POST remove' => 'remove', 'GET getroomchargesubcategorylist' => 'getroomchargesubcategorylist', 'POST saveallsubcategory' => 'saveallsubcategory', 'POST deleteallsubcategory' => 'deleteallsubcategory']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/roomchargeitem'], 'extraPatterns' => ['POST remove' => 'remove', 'GET getroomchargeitemlist' => 'getroomchargeitemlist']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/roomtype'], 'extraPatterns' => ['POST remove' => 'remove', 'GET getroomtypelist' => 'getroomtypelist', 'GET getroomtypesroomslist' => 'getroomtypesroomslist']],

@@ -50,9 +50,9 @@ class CoRoomChargeSubcategory extends RActiveRecord {
     public function attributeLabels() {
         return [
             'charge_subcat_id' => 'Charge Subcat ID',
-            'tenant_id' => 'Tenant ID',
-            'charge_cat_id' => 'Charge Cat ID',
-            'charge_subcat_name' => 'Charge Subcat Name',
+            'tenant_id' => 'Tenant',
+            'charge_cat_id' => 'Charge Category',
+            'charge_subcat_name' => 'Charge Name',
             'status' => 'Status',
             'created_by' => 'Created By',
             'created_at' => 'Created At',

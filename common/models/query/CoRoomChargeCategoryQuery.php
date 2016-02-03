@@ -12,4 +12,8 @@ class CoRoomChargeCategoryQuery extends CommonQuery {
         return $this->andWhere(['tenant_id' => $tenant_id])->orWhere(['tenant_id' => null]);
     }
 
+    public function exceptCode() {
+        return $this->andWhere('charge_cat_code NOT IN ("ALC")');
+    }
+
 }

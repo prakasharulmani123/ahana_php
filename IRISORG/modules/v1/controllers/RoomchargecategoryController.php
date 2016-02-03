@@ -50,6 +50,10 @@ class RoomchargecategoryController extends ActiveController {
         ]);
     }
 
+    public function actionGetroomchargelist() {
+        return ['list' => CoRoomChargeCategory::find()->tenantWithNull()->exceptCode()->active()->orderBy(['created_at' => SORT_DESC])->all()];
+    }
+
     public function actionRemove() {
         $id = Yii::$app->getRequest()->post('id');
         if ($id) {
@@ -92,8 +96,10 @@ class RoomchargecategoryController extends ActiveController {
 
         if (isset($get['code']))
             $code = $get['code'];
-
-        return ['categoryList' => CoRoomChargeCategory::getChargeListByCode($tenant, $status, $deleted, $code)];
+        
+        $category = CoRoomChargeCategory::find()->where(['charge_cat_code' => $code])->one();
+        
+        return ['categoryList' => CoRoomChargeCategory::getChargeListByCode($tenant, $status, $deleted, $code), 'category' => $category];
     }
 
 }
