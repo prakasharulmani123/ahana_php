@@ -1065,6 +1065,46 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
+            
+            //Patient Alert
+            .state('patient.alert', {
+                url: '/alert/{id}',
+                templateUrl: 'tpl/patient_alert/index.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/patient_alert/patient_alert.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            
+            //Patient Alert Create
+            .state('patient.alertCreate', {
+                url: '/alertCreate/{id}',
+                templateUrl: 'tpl/patient_alert/create.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/patient_alert/patient_alert.js']);
+                        }]
+                }
+            })
+            
+            //Patient Alert Create
+            .state('patient.alertUpdate', {
+                url: '/alertUpdate/{id}/{alert_id}',
+                templateUrl: 'tpl/patient_alert/update.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/patient_alert/patient_alert.js']);
+                        }]
+                }
+            })
 }
 run.$inject = ['$rootScope', '$state', '$stateParams', '$location', '$cookieStore', '$http', '$window', 'CommonService'];
 function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $window, CommonService) {
