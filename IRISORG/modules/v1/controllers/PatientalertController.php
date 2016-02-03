@@ -2,7 +2,7 @@
 
 namespace IRISORG\modules\v1\controllers;
 
-use common\models\CoAlert;
+use common\models\PatAlert;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -14,9 +14,9 @@ use yii\web\Response;
 /**
  * WardController implements the CRUD actions for CoTenant model.
  */
-class AlertController extends ActiveController {
+class PatientalertController extends ActiveController {
 
-    public $modelClass = 'common\models\CoAlert';
+    public $modelClass = 'common\models\PatAlert';
 
     public function behaviors() {
         $behaviors = parent::behaviors();
@@ -53,24 +53,10 @@ class AlertController extends ActiveController {
     public function actionRemove() {
         $id = Yii::$app->getRequest()->post('id');
         if($id){
-            $model = CoAlert::find()->where(['alert_id' => $id])->one();
+            $model = PatAlert::find()->where(['pat_alert_id' => $id])->one();
             $model->remove();
             return ['success' => true];
         }
     }
     
-    public function actionGetalertlist() {
-        $get = Yii::$app->getRequest()->get();
-
-        if (isset($get['tenant']))
-            $tenant = $get['tenant'];
-
-        if (isset($get['status']))
-            $status = strval($get['status']);
-
-        if (isset($get['deleted']))
-            $deleted = $get['deleted'] == 'true';
-
-        return ['alertList' => CoAlert::getAlertlist($tenant, $status, $deleted)];
-    }
 }
