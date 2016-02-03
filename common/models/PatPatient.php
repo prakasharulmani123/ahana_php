@@ -132,6 +132,10 @@ class PatPatient extends RActiveRecord {
         return $this->hasOne(CoPatientCategory::className(), ['patient_cat_id' => 'patient_category_id']);
     }
 
+    public function getActivePatientAlert() {
+        return $this->hasMany(PatAlert::className(), ['patient_id' => 'patient_id'])->active();
+    }
+
     /**
      * @return ActiveQuery
      */
@@ -187,6 +191,14 @@ class PatPatient extends RActiveRecord {
             'address' => function ($model) {
                 if (isset($model->patPatientAddress))
                     return $model->patPatientAddress;
+            },
+            'hasalert' => function ($model) {
+                return (!empty($this->activePatientAlert)) ? true : false;
+            },
+            'alert' => function ($model) {
+                if(!empty($this->activePatientAlert)){
+                    return $this->activePatientAlert[0]->alert_description;
+                }
             },
 //            'activeEncounter' => function ($model) {
 //                if (isset($model->patActiveEncounter))
