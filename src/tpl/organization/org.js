@@ -22,21 +22,23 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
 
 
         // Form Page
-        $rootScope.commonService.GetCountryList(function (response) {
-            $scope.countries = response.countryList;
-        });
+        $scope.initForm = function () {
+            $rootScope.commonService.GetCountryList(function (response) {
+                $scope.countries = response.countryList;
+            });
 
-        $rootScope.commonService.GetStateList(function (response) {
-            $scope.states = response.stateList;
-        });
+            $rootScope.commonService.GetStateList(function (response) {
+                $scope.states = response.stateList;
+            });
 
-        $rootScope.commonService.GetCityList(function (response) {
-            $scope.cities = response.cityList;
-        });
+            $rootScope.commonService.GetCityList(function (response) {
+                $scope.cities = response.cityList;
+            });
 
-        $rootScope.commonService.GetTitleCodes(function (response) {
-            $scope.title_codes = response;
-        });
+            $rootScope.commonService.GetTitleCodes(function (response) {
+                $scope.title_codes = response;
+            });
+        }
 
         if ($state.current.name == 'app.org_new') {
             $http.get($rootScope.IRISAdminServiceUrl + "/default/get-module-tree").then(
