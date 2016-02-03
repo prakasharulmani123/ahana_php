@@ -3,7 +3,7 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">Name * </label>
             <div class="col-sm-2">
-                <select class="form-control" name="Country" ng-model="data.PatPatient.patient_title_code" ng-options="titleCode.value as titleCode.label for titleCode in titleCodes | orderBy: label">
+                <select class="form-control" ng-model="data.PatPatient.patient_title_code" ng-options="titleCode.value as titleCode.label for titleCode in titleCodes | orderBy: label">
                 </select>
             </div>
             <div class="col-sm-4">

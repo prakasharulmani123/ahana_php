@@ -15,3 +15,7 @@ and open the template in the editor.
 .butterbar {
   z-index: 1026;
 }
+
+.app-footer {
+  z-index: 999;
+}

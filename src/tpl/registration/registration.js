@@ -208,6 +208,8 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
         $scope.open = function ($event, mode) {
             $event.preventDefault();
             $event.stopPropagation();
+            
+            $scope.opened1 = $scope.opened2 = false;
 
             switch (mode) {
                 case 'opened1':
