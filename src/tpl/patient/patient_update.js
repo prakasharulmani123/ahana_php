@@ -2,7 +2,8 @@ app.controller('PatientUpdateController', ['$rootScope', '$scope', '$http', '$an
 
         $scope.app.settings.patientTopBar = true;
         $scope.app.settings.patientSideMenu = true;
-//        $scope.app.settings.patientContentClass = 'app-content';
+        $scope.app.settings.patientContentClass = 'app-content';
+        $scope.app.settings.patientFooterClass = 'app-footer';
 
         $scope.$watch('app.patientDetail.patientId', function (newValue, oldValue) {
             if (newValue != '') {

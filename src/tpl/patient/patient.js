@@ -7,7 +7,10 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
         
         $scope.$watch('app.patientDetail.patientId', function (newValue, oldValue) {
             if (newValue != '') {
-                $scope.data = $scope.patientObj;
+                $scope.data = {};
+                var pat_det = $scope.patientObj;
+                
+                $scope.data = pat_det;
 
                 $rootScope.commonService.GetLabelFromValue($scope.patientObj.patient_bill_type, 'GetPatientBillingList', function (response) {
                     $scope.data.bill_type = response;
