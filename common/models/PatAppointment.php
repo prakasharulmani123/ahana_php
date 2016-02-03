@@ -121,7 +121,7 @@ class PatAppointment extends RActiveRecord {
     public function afterSave($insert, $changedAttributes) {
         if ($insert) {
             //Close Encounter
-            if ($this->appt_status == 'S') {
+            if ($this->appt_status == 'S' || $this->appt_status == 'C') {
                 $this->encounter->status = '0';
                 $this->encounter->save(false);
             }
@@ -131,7 +131,7 @@ class PatAppointment extends RActiveRecord {
     }
 
     public function setCurrentData() {
-        if (isset($this->encounter->patLiveAppointmentBooking))
+        if (isset($this) && isset($this->encounter) && isset($this->encounter->patLiveAppointmentBooking))
             $this->consultant_id = $this->encounter->patLiveAppointmentBooking->consultant_id;
     }
 

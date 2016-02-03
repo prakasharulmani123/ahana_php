@@ -129,7 +129,10 @@ class CoChargePerCategory extends RActiveRecord {
 
     public static function getConsultantCharges($charge_code_id) {
         if ($charge_code_id) {
-            return self::find()->tenant()->chargeCatType()->chargeCatId()->andWhere(['charge_code_id' => $charge_code_id])->one();
+            $response = self::find()->tenant()->chargeCatType()->chargeCatId()->andWhere(['charge_code_id' => $charge_code_id])->one();
+            if(!empty($response)){
+                return $response->opCoChargePerSubcategories;
+            }
         }
     }
 

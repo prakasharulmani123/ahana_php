@@ -131,7 +131,7 @@ class DefaultController extends Controller {
         $get = Yii::$app->request->get();
         if(!empty($get)){
             $charge_code_id = $get['consultant_id'];
-            return ['success' => true, 'chargesList' => CoChargePerCategory::getConsultantCharges($charge_code_id)->opCoChargePerSubcategories];
+            return ['success' => true, 'chargesList' => CoChargePerCategory::getConsultantCharges($charge_code_id)];
         }
     }
 
