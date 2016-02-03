@@ -36,7 +36,7 @@
                 </tr>
             </thead>
             <tbody ng-hide="isLoading">
-                <tr ng-repeat="row in displayedCollection| orderBy: alert_code">
+                <tr ng-repeat="row in displayedCollection| orderBy: alert_description">
                     <td>
                         {{row.alert_description}}
                     </td>

@@ -29,7 +29,7 @@
                                 <div class="col-xs-12 col-sm-2 col-md-2"> <img alt="" src="img/man-icon.png"></div>
                                 <div class="col-xs-12 col-sm-5 col-md-6"> 
                                     <div class="row ng-binding"> 
-                                        <a href="#" ng-click="goToPatient(patient.Patient.patient_id)" class="ng-binding">
+                                        <a href="javascript:void(0)" ng-click="goToPatient(patient.Patient.patient_id)" class="ng-binding">
                                             {{patient.Patient.patient_title_code}} {{patient.Patient.patient_firstname}}
                                         </a> 
                                         <b>({{patient.Patient.patient_age}}y) </b>
@@ -108,14 +108,24 @@
     <!-- / navbar collapse --> 
 </header>
 <!-- / header -->
-
 <script>
     $(function () {
+        if ($.isFunction($.slidebars)) {
+            slidebar();
+        } else {
+            $.getScript("js/slidebars.js", function (data, textStatus, jqxhr) {
+                slidebar();
+            });
+        }
+    });
+
+    function slidebar() {
         $.slidebars({
             scrollLock: true
         });
-    });
+    }
 </script>
+
 
 <!--<script type="text/ng-template" id="searchbox">
    <a tabindex="-1" ui-sref="patient.encounter({id: 1})">

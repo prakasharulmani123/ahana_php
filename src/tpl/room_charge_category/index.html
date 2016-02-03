@@ -1,13 +1,13 @@
 <div class="bg-light lter b-b wrapper-md">
     <h1 class="m-n font-thin h3">Charge Categories</h1>
 </div>
-<div class="wrapper-md" ng-controller="RoomChargeCategorysController" ng-init="loadRoomChargeCategorysList()">
+<div class="wrapper-md" ng-controller="RoomChargeCategoriesController" ng-init="loadRoomChargeCategoriesList()">
     <div ng-include="'tpl/blocks/alert.html'">
         {% include 'tpl/blocks/alert.html' %}
     </div>
     <div class="panel panel-default">
         <div class="panel-body">
-            <button class="btn btn-sm btn-grey" ng-click="loadRoomChargeCategorysList()"> 
+            <button class="btn btn-sm btn-grey" ng-click="loadRoomChargeCategoriesList()"> 
                 &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
             </button>
             <button ng-click="$state.go('configuration.roomChargeCategoryCreate')" class="btn btn-sm btn-info pull-right">

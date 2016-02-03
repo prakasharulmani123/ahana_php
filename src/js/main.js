@@ -44,6 +44,7 @@ angular.module('app')
                         patientTitleCode: '',
                         patientName: '',
                         patientId: '',
+                        patientIntCode: '',
                         patientSex: '',
                         patientDOA: '',
                         patientOrg: '',
@@ -139,6 +140,7 @@ angular.module('app')
                                     $scope.app.patientDetail.patientTitleCode = patient.patient_title_code;
                                     $scope.app.patientDetail.patientName = patient.patient_firstname;
                                     $scope.app.patientDetail.patientId = patient.patient_id;
+                                    $scope.app.patientDetail.patientIntCode = patient.patient_int_code;
                                     $scope.app.patientDetail.patientDOA = patient.doa;
                                     $scope.app.patientDetail.patientOrg = patient.org_name;
                                     $scope.app.patientDetail.patientAge = patient.patient_age;

@@ -33,7 +33,7 @@ function CommonService($http, $rootScope, $window, $q, $filter) {
     service.GetPatientRegisterModelList = GetPatientRegisterModelList;
     service.GetPatientAppointmentStatus = GetPatientAppointmentStatus;
     service.GetRoomList = GetRoomList;
-    service.GetProcedureList = GetProcedureList;
+    service.GetChargeCategoryList = GetChargeCategoryList;
     service.GetEncounterListByPatient = GetEncounterListByPatient;
     service.GetPatientList = GetPatientList;
     service.GetAlertList = GetAlertList;
@@ -333,10 +333,10 @@ function CommonService($http, $rootScope, $window, $q, $filter) {
                 });
     }
 
-    function GetProcedureList(tenant, sts, del_sts, callback) {
+    function GetChargeCategoryList(tenant, sts, del_sts, code, callback) {
         var response;
 
-        $http.get($rootScope.IRISOrgServiceUrl + '/roomchargecategory/getchargelist?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts + '&code=PRC')
+        $http.get($rootScope.IRISOrgServiceUrl + '/roomchargecategory/getchargelist?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts + '&code=' + code)
                 .success(function (response) {
                     callback(response);
                 }, function (x) {

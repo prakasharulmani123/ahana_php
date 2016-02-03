@@ -48,7 +48,7 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
         }
 
         $scope.initForm = function () {
-            $rootScope.commonService.GetProcedureList('', '1', false, function (response) {
+            $rootScope.commonService.GetChargeCategoryList('', '1', false, 'PRC', function (response) {
                 $scope.procedures = response.categoryList;
             });
 
@@ -72,6 +72,7 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
             $scope.data.proc_consultant_ids = docIds;
             $scope.data.patient_id = $state.params.id;
 
+            _that.data.proc_date = moment(_that.data.proc_date).format('YYYY-MM-DD');
             if (mode == 'add') {
                 post_url = $rootScope.IRISOrgServiceUrl + '/procedures';
                 method = 'POST';

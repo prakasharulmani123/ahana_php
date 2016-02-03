@@ -358,6 +358,69 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
+            //CONFIGURATION ALLIED CHARGE
+            .state('configuration.alliedCharge', {
+                url: '/alliedCharge',
+                params: {
+                    code: 'ALC',
+                },
+                templateUrl: 'tpl/room_charge_category_custom/index.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('xeditable').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/room_charge_category_custom/room_charge_category_custom.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            .state('configuration.procedure', {
+                url: '/procedure',
+                params: {
+                    code: 'PRC',
+                },
+                templateUrl: 'tpl/room_charge_category_custom/index.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('xeditable').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/room_charge_category_custom/room_charge_category_custom.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            .state('configuration.chargeCreate', {
+                url: '/chargeCreate/{cat_id}',
+                templateUrl: 'tpl/room_charge_category_custom/create.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('xeditable').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/room_charge_category_custom/room_charge_category_custom.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            .state('configuration.chargeUpdate', {
+                url: '/chargeUpdate/{cat_id}/{id}',
+                templateUrl: 'tpl/room_charge_category_custom/update.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('xeditable').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/room_charge_category_custom/room_charge_category_custom.js');
+                                    }
+                            );
+                        }]
+                }
+            })
             //CONFIGURATION ROOM CHARGE CATEGORY ITEM
             .state('configuration.roomChargeCategoryItem', {
                 url: '/roomChargeCategoryItem',
@@ -865,7 +928,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-            
+
             //PATIENT ENCOUNTER
             .state('patient.encounter', {
                 url: '/encounter/{id}',
@@ -881,7 +944,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-		//PATIENT APPOINTMENT
+            //PATIENT APPOINTMENT
             .state('patient.appointment', {
                 url: '/appointment/{id}',
                 templateUrl: 'tpl/patient_appointment/create.html',
@@ -896,8 +959,8 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-            
-		//PATIENT TRANSFER
+
+            //PATIENT TRANSFER
             .state('patient.transfer', {
                 url: '/transfer/{id}/{enc_id}',
                 templateUrl: 'tpl/patient_admission/transfer.html',
@@ -912,8 +975,8 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-            
-		//PATIENT DISCHARGE
+
+            //PATIENT DISCHARGE
             .state('patient.discharge', {
                 url: '/discharge/{id}/{enc_id}',
                 templateUrl: 'tpl/patient_admission/discharge.html',
@@ -928,8 +991,8 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-            
-		//PATIENT SWAPPING
+
+            //PATIENT SWAPPING
             .state('patient.swapping', {
                 url: '/swapping/{id}/{enc_id}',
                 templateUrl: 'tpl/patient_admission/swapping.html',
@@ -944,8 +1007,8 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-            
-		//ADMISSION UPDATE
+
+            //ADMISSION UPDATE
             .state('patient.update_admission', {
                 url: '/update_admission/{id}/{enc_id}',
                 templateUrl: 'tpl/patient_admission/update.html',
@@ -960,7 +1023,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-            
+
             // In-Patient
             .state('patient.inPatients', {
                 url: '/inPatients',
@@ -976,7 +1039,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-            
+
             // Out-Patient
             .state('patient.outPatients', {
                 url: '/outPatients',
@@ -1049,7 +1112,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-            
+
             //Encounter change appointment status - OP
             .state('patient.changeStatus', {
                 url: '/changeStatus/{id}/{enc_id}',
@@ -1065,7 +1128,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-            
+
             //Patient Alert
             .state('patient.alert', {
                 url: '/alert/{id}',
@@ -1081,7 +1144,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-            
+
             //Patient Alert Create
             .state('patient.alertCreate', {
                 url: '/alertCreate/{id}',
@@ -1093,7 +1156,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-            
+
             //Patient Alert Create
             .state('patient.alertUpdate', {
                 url: '/alertUpdate/{id}/{alert_id}',

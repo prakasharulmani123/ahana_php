@@ -131,6 +131,7 @@ app.controller('PatientsController', ['$rootScope', '$scope', '$timeout', '$http
             succ_msg = 'Appointment saved successfully';
             angular.extend(_that.data, {patient_id: $scope.app.patientDetail.patientId});
 
+            _that.data.status_date = moment(_that.data.status_date).format('YYYY-MM-DD');
             $scope.loadbar('show');
             $http({
                 method: method,

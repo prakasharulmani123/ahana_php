@@ -1,11 +1,11 @@
-app.controller('RoomChargeCategorysController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$anchorScroll', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $anchorScroll) {
+app.controller('RoomChargeCategoriesController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$anchorScroll', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $anchorScroll) {
 
         editableThemes.bs3.inputClass = 'input-sm';
         editableThemes.bs3.buttonsClass = 'btn-sm';
         editableOptions.theme = 'bs3';
 
         //Index Page
-        $scope.loadRoomChargeCategorysList = function () {
+        $scope.loadRoomChargeCategoriesList = function () {
             $scope.isLoading = true;
             // pagination set up
             $scope.rowCollection = [];  // base collection
@@ -13,30 +13,11 @@ app.controller('RoomChargeCategorysController', ['$rootScope', '$scope', '$timeo
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
 
             // Get data's from service
-            $http.get($rootScope.IRISOrgServiceUrl + '/roomchargecategory')
+            $http.get($rootScope.IRISOrgServiceUrl + '/roomchargecategories/getroomchargelist')
                     .success(function (roomChargeCategorys) {
                         $scope.isLoading = false;
-                        $scope.rowCollection = roomChargeCategorys;
+                        $scope.rowCollection = roomChargeCategorys.list;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
-
-                        //Load All Subcategories
-                        $http.get($rootScope.IRISOrgServiceUrl + '/roomchargesubcategory')
-                                .success(function (roomChargeSubCategorys) {
-                                    $scope.allSubCategories = roomChargeSubCategorys;
-
-                                    angular.forEach($scope.displayedCollection, function (parent) {
-                                        parent.subcategories = [];
-                                        angular.forEach($scope.allSubCategories, function (sub) {
-                                            if (sub.charge_cat_id == parent.charge_cat_id) {
-                                                parent.subcategories.push(sub);
-                                            }
-                                        });
-                                    });
-                                })
-                                .error(function () {
-                                    $scope.error = "An Error has occured while loading roomChargesubCategorys!";
-                                });
-                        //End
                     })
                     .error(function () {
                         $scope.error = "An Error has occured while loading roomChargeCategorys!";
@@ -64,12 +45,12 @@ app.controller('RoomChargeCategorysController', ['$rootScope', '$scope', '$timeo
                 if (typeof id != 'undefined') {
                     post_method = 'PUT';
                     post_url = $rootScope.IRISOrgServiceUrl + '/roomchargesubcategories/' + id;
-                    succ_msg = 'ChargePerCategory Updated successfully';
+                    succ_msg = 'Charge Category Updated successfully';
                 } else {
                     post_method = 'POST';
                     post_url = $rootScope.IRISOrgServiceUrl + '/roomchargesubcategories';
                     angular.extend(data, {charge_cat_id: charge_cat_id});
-                    succ_msg = 'ChargePerCategory saved successfully';
+                    succ_msg = 'Charge Category saved successfully';
                 }
                 $http({
                     method: post_method,
@@ -144,7 +125,7 @@ app.controller('RoomChargeCategorysController', ['$rootScope', '$scope', '$timeo
                                                     else {
                                                         $scope.errorData = response.data.message;
                                                     }
-//                                                    $scope.loadRoomChargeCategorysList();
+//                                                    $scope.loadRoomChargeCategoriesList();
                                                 }
                                         )
                                     }
@@ -243,26 +224,6 @@ app.controller('RoomChargeCategorysController', ['$rootScope', '$scope', '$timeo
                         });
 
                         return false;
-
-
-//                        angular.forEach($scope.subcategories, function (sub) {
-//                            sub.charge_cat_id = response.charge_cat_id;
-//                            if (sub.charge_subcat_id == '') {
-//                                $http.post($rootScope.IRISOrgServiceUrl + '/roomchargesubcategories', sub);
-//                            } else {
-//                                $http.put($rootScope.IRISOrgServiceUrl + '/roomchargesubcategories/' + sub.charge_subcat_id, sub);
-//                            }
-//                        });
-
-                        //Delete Subcategories
-//                        angular.forEach($scope.deletedsubcategories, function (del) {
-//                            $http({
-//                                url: $rootScope.IRISOrgServiceUrl + "/roomchargesubcategory/remove",
-//                                method: "POST",
-//                                data: {id: del}
-//                            });
-//                        });
-
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');

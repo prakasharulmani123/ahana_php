@@ -167,6 +167,9 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
             _that.data.user_id = {};
             _that.data.user_id = $state.params.id;
 
+            _that.data.activation_date = moment(_that.data.activation_date).format('YYYY-MM-DD');
+            _that.data.Inactivation_date = moment(_that.data.Inactivation_date).format('YYYY-MM-DD');
+            
             $scope.errorData = "";
             $scope.successMessage = "";
 
