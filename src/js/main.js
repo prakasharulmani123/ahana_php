@@ -104,8 +104,10 @@ angular.module('app')
                 $scope.loadbar = function (mode) {
                     if (mode == 'show') {
                         $('.butterbar').removeClass('hide').addClass('active');
+                        $('.save-btn').attr('disabled', true);
                     } else if (mode == 'hide') {
                         $('.butterbar').removeClass('active').addClass('hide');
+                        $('.save-btn').attr('disabled', false);
                     }
                 }
 
