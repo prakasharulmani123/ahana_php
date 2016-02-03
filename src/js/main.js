@@ -3,8 +3,8 @@
 /* Controllers */
 
 angular.module('app')
-        .controller('AppCtrl', ['$scope', '$translate', '$localStorage', '$window', '$rootScope', '$state', '$cookieStore', 'CommonService',
-            function ($scope, $translate, $localStorage, $window, $rootScope, $state, $cookieStore, CommonService) {
+        .controller('AppCtrl', ['$scope', '$translate', '$localStorage', '$window', '$rootScope', '$state', '$cookieStore', 'CommonService', '$timeout',
+            function ($scope, $translate, $localStorage, $window, $rootScope, $state, $cookieStore, CommonService, $timeout) {
                 // add 'ie' classes to html
                 var isIE = !!navigator.userAgent.match(/MSIE/i);
                 isIE && angular.element($window.document.body).addClass('ie');
@@ -66,11 +66,20 @@ angular.module('app')
                 //Change Status
                 $scope.updateStatus = function (modelName, primaryKey) {
                     $scope.service = CommonService;
-                    $scope.service.ChangeStatus(modelName, primaryKey, function(response){
+                    $scope.service.ChangeStatus(modelName, primaryKey, function (response) {
                         $scope.successMessage = 'Status changed successfully !!!';
                     });
                 }
-                
+
+                $scope.$watch('successMessage', function (newValue, oldValue) {
+                    if (newValue != '') {
+                        $timeout(function () {
+                            $scope.successMessage = '';
+                        }, 3000);
+                    }
+
+                }, true);
+
                 //show/hide Load bar
                 $scope.loadbar = function (mode) {
                     if (mode == 'show') {
