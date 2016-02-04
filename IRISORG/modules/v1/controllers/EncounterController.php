@@ -2,10 +2,10 @@
 
 namespace IRISORG\modules\v1\controllers;
 
-use common\models\CoRoom;
 use common\models\PatAdmission;
 use common\models\PatAppointment;
 use common\models\PatEncounter;
+use common\models\PatPatient;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -155,7 +155,7 @@ class EncounterController extends ActiveController {
         if (isset($get['id'])) {
             $query = "Select * ";
             $query .= "From v_encounter ";
-            $query .= "Where patient_id = {$get['id']} ";
+            $query .= "Where patient_guid = '{$get['id']}' ";
 
 //            if (isset($get['type'])) {
 //                $date = date('Y-m-d');
@@ -235,11 +235,11 @@ class EncounterController extends ActiveController {
     public function actionPatienthaveactiveencounter() {
         $post = Yii::$app->getRequest()->post();
         if (!empty($post)) {
-            $patient_id = $post['patient_id'];
+            $patient = PatPatient::find()->where(['patient_guid' => $post['patient_id']])->one();
             $model = PatEncounter::find()
                     ->tenant()
                     ->status()
-                    ->andWhere(["patient_id" => $patient_id])
+                    ->andWhere(['patient_id' => $patient->patient_id])
                     ->one();
 
             if (!empty($model)) {

@@ -118,7 +118,17 @@ class PatientController extends ActiveController {
         $limit = 10;
         
         if(isset($post['search']) && !empty($post['search'])){
-            $lists = PatPatient::find()->tenant()->active()->andWhere("patient_firstname like :search")->addParams([':search'=> "%{$post['search']}%"])->limit($limit)->all();
+            $lists = PatPatient::find()
+                    ->tenant()
+                    ->active()
+                    ->andWhere("patient_firstname like :search")
+                    ->orWhere("patient_lastname like :search")
+                    ->orWhere("patient_mobile like :search")
+                    ->orWhere("patient_int_code like :search")
+                    ->orWhere("casesheetno like :search")
+                    ->addParams([':search'=> "%{$post['search']}%"])
+                    ->limit($limit)
+                    ->all();
             
             foreach ($lists as $key => $patient) {
                 $patients[$key]['Patient'] = $patient;
@@ -167,5 +177,10 @@ class PatientController extends ActiveController {
             $deleted = $get['deleted'] == 'true';
 
         return ['patientlist' => PatPatient::getPatientlist($tenant, $status, $deleted)];
+    }
+    
+    public function actionGetpatientbyguid() {
+        $guid = Yii::$app->getRequest()->post('guid');
+        return PatPatient::find()->where(['patient_guid' => $guid])->one();
     }
 }

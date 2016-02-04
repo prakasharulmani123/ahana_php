@@ -17,7 +17,8 @@
         "php": ">=5.4.0",
         "yiisoft/yii2": "*",
         "yiisoft/yii2-swiftmailer": "*",
-        "cornernote/yii2-linkall": "*"
+        "cornernote/yii2-linkall": "*",
+        "p2made/yii2-uuid": "*"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

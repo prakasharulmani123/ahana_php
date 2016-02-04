@@ -182,7 +182,7 @@ CREATE TABLE `co_internal_code` (
 
 /*Data for the table `co_internal_code` */
 
-insert  into `co_internal_code`(`internal_code_id`,`tenant_id`,`code_type`,`code_prefix`,`code`,`code_padding`,`code_suffix`,`status`,`created_at`,`created_by`,`modified_at`,`modified_by`,`deleted_at`) values (1,18,'B','B',1,7,NULL,'1','2016-02-02 10:56:12',1,NULL,NULL,'0000-00-00 00:00:00'),(2,18,'P','PAT',1,7,NULL,'1','2016-02-02 10:56:22',1,NULL,NULL,'0000-00-00 00:00:00');
+insert  into `co_internal_code`(`internal_code_id`,`tenant_id`,`code_type`,`code_prefix`,`code`,`code_padding`,`code_suffix`,`status`,`created_at`,`created_by`,`modified_at`,`modified_by`,`deleted_at`) values (1,18,'B','B',1,7,NULL,'1','2016-02-02 10:56:12',1,NULL,NULL,'0000-00-00 00:00:00'),(2,18,'P','PAT',3,7,NULL,'1','2016-02-04 13:44:13',1,'2016-02-04 13:44:13',1,'0000-00-00 00:00:00');
 
 /*Table structure for table `co_login` */
 
@@ -404,7 +404,7 @@ CREATE TABLE `co_room` (
 
 /*Data for the table `co_room` */
 
-insert  into `co_room`(`room_id`,`tenant_id`,`ward_id`,`bed_name`,`maintain_id`,`occupied_status`,`status`,`created_by`,`created_at`,`modified_by`,`modified_at`,`deleted_at`) values (1,18,4,'121',1,'1','1',1,'2016-01-18 16:21:53',1,'2016-02-02 15:28:41','0000-00-00 00:00:00'),(2,18,4,'122',1,'1','1',1,'2016-01-18 16:50:57',1,'2016-02-02 15:28:41','0000-00-00 00:00:00'),(3,18,4,'125',1,'1','1',1,'2016-02-02 15:51:20',1,'2016-02-03 16:48:00','0000-00-00 00:00:00');
+insert  into `co_room`(`room_id`,`tenant_id`,`ward_id`,`bed_name`,`maintain_id`,`occupied_status`,`status`,`created_by`,`created_at`,`modified_by`,`modified_at`,`deleted_at`) values (1,18,4,'121',1,'1','1',1,'2016-01-18 16:21:53',1,'2016-02-04 13:39:56','0000-00-00 00:00:00'),(2,18,4,'122',1,'1','1',1,'2016-01-18 16:50:57',1,'2016-02-04 13:55:59','0000-00-00 00:00:00'),(3,18,4,'125',1,'0','1',1,'2016-02-02 15:51:20',1,'2016-02-03 16:48:00','0000-00-00 00:00:00');
 
 /*Table structure for table `co_room_charge` */
 
@@ -782,11 +782,11 @@ CREATE TABLE `pat_admission` (
   CONSTRAINT `FK_pat_admission_encounter` FOREIGN KEY (`encounter_id`) REFERENCES `pat_encounter` (`encounter_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_pat_admission_patient` FOREIGN KEY (`patient_id`) REFERENCES `pat_patient` (`patient_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_pat_admission_tenant` FOREIGN KEY (`tenant_id`) REFERENCES `co_tenant` (`tenant_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=latin1;
 
 /*Data for the table `pat_admission` */
 
-insert  into `pat_admission`(`admn_id`,`tenant_id`,`patient_id`,`encounter_id`,`status_date`,`consultant_id`,`floor_id`,`ward_id`,`room_id`,`room_type_id`,`admission_status`,`status`,`notes`,`created_by`,`created_at`,`modified_by`,`modified_at`,`deleted_at`) values (1,18,1,2,'2015-01-26 00:00:00',2,2,1,1,1,'A','1',NULL,1,'2016-01-27 18:57:01',NULL,NULL,'0000-00-00 00:00:00'),(12,18,1,2,'2016-02-02 12:47:28',2,5,4,1,1,'TR','1',NULL,1,'2016-02-01 19:21:37',1,'2016-02-01 19:21:37','0000-00-00 00:00:00'),(13,18,2,3,'2016-02-03 02:30:00',2,2,1,2,1,'A','1',NULL,1,'2016-02-02 12:01:36',NULL,NULL,'0000-00-00 00:00:00'),(14,18,1,2,'2016-02-02 05:25:00',2,2,1,2,1,'TR','1',NULL,1,'2016-02-02 13:45:05',1,'2016-02-02 13:45:05','0000-00-00 00:00:00'),(15,18,2,3,'2016-02-02 05:25:00',2,5,4,1,1,'TR','1',NULL,1,'2016-02-02 13:45:06',1,'2016-02-02 13:45:06','0000-00-00 00:00:00'),(16,18,1,2,'2016-02-02 13:50:13',2,5,4,1,1,'TR','1',NULL,1,'2016-02-02 13:50:13',1,'2016-02-02 13:50:13','0000-00-00 00:00:00'),(17,18,2,3,'2016-02-02 13:50:13',2,2,1,2,1,'TR','1',NULL,1,'2016-02-02 13:50:13',1,'2016-02-02 13:50:13','0000-00-00 00:00:00'),(18,18,1,2,'2016-02-02 15:28:36',2,2,1,2,1,'TR','1',NULL,1,'2016-02-02 15:28:41',1,'2016-02-02 15:28:41','0000-00-00 00:00:00'),(19,18,2,3,'2016-02-02 15:28:36',2,5,4,1,1,'TR','1',NULL,1,'2016-02-02 15:28:41',1,'2016-02-02 15:28:41','0000-00-00 00:00:00'),(21,18,3,5,'2016-02-02 22:00:00',27,5,4,3,1,'A','1',NULL,1,'2016-02-02 16:51:11',1,'2016-02-02 16:51:11','0000-00-00 00:00:00'),(22,18,3,5,'2016-02-03 16:47:50',27,5,4,3,1,'D','1',NULL,1,'2016-02-03 16:48:00',1,'2016-02-03 16:48:00','0000-00-00 00:00:00');
+insert  into `pat_admission`(`admn_id`,`tenant_id`,`patient_id`,`encounter_id`,`status_date`,`consultant_id`,`floor_id`,`ward_id`,`room_id`,`room_type_id`,`admission_status`,`status`,`notes`,`created_by`,`created_at`,`modified_by`,`modified_at`,`deleted_at`) values (23,18,5,7,'2016-02-04 13:28:12',27,5,4,1,1,'A','1',NULL,1,'2016-02-04 13:28:27',1,'2016-02-04 13:28:27','0000-00-00 00:00:00'),(24,18,5,7,'2016-02-04 13:38:14',28,5,4,1,1,'TD','1',NULL,1,'2016-02-04 13:39:56',1,'2016-02-04 13:39:56','0000-00-00 00:00:00'),(25,18,6,8,'2016-02-04 13:55:45',27,5,4,2,1,'A','1',NULL,1,'2016-02-04 13:55:59',1,'2016-02-04 13:55:59','0000-00-00 00:00:00');
 
 /*Table structure for table `pat_alert` */
 
@@ -811,11 +811,9 @@ CREATE TABLE `pat_alert` (
   CONSTRAINT `FK_pat_alert_alert` FOREIGN KEY (`alert_id`) REFERENCES `co_alert` (`alert_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_pat_alert_patient` FOREIGN KEY (`patient_id`) REFERENCES `pat_patient` (`patient_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_pat_alert_tenant` FOREIGN KEY (`tenant_id`) REFERENCES `co_tenant` (`tenant_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `pat_alert` */
-
-insert  into `pat_alert`(`pat_alert_id`,`tenant_id`,`alert_id`,`patient_id`,`alert_description`,`status`,`created_by`,`created_at`,`modified_by`,`modified_at`,`deleted_at`) values (1,18,1,1,'test1111','1',1,'2016-02-03 11:44:27',1,'2016-02-03 11:48:13','2016-02-03 11:49:56'),(2,18,1,1,'Test','1',1,'2016-02-03 11:52:16',1,'2016-02-03 11:52:16','0000-00-00 00:00:00');
 
 /*Table structure for table `pat_appointment` */
 
@@ -848,11 +846,9 @@ CREATE TABLE `pat_appointment` (
   CONSTRAINT `FK_pat_appoinment_patient` FOREIGN KEY (`patient_id`) REFERENCES `pat_patient` (`patient_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_pat_appoinment_tenant` FOREIGN KEY (`tenant_id`) REFERENCES `co_tenant` (`tenant_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_pat_appoinment_user` FOREIGN KEY (`consultant_id`) REFERENCES `co_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `pat_appointment` */
-
-insert  into `pat_appointment`(`appt_id`,`tenant_id`,`patient_id`,`encounter_id`,`status_date`,`status_time`,`consultant_id`,`appt_status`,`status`,`amount`,`notes`,`patient_cat_id`,`created_by`,`created_at`,`modified_by`,`modified_at`,`deleted_at`) values (1,18,1,1,'2016-01-25','12:00:00',28,'B','1','0.00',NULL,NULL,1,'2016-01-25 17:54:17',1,'2016-01-25 17:54:17','0000-00-00 00:00:00'),(2,18,1,1,'2016-01-25','12:15:00',28,'A','1','0.00',NULL,NULL,1,'2016-01-25 18:53:43',NULL,NULL,'0000-00-00 00:00:00'),(3,18,3,6,'2016-02-03','01:00:00',28,'B','1','0.00',NULL,NULL,1,'2016-02-03 16:48:34',1,'2016-02-03 16:48:34','0000-00-00 00:00:00'),(4,18,3,6,'2016-02-03','01:00:00',28,'A','1','0.00',NULL,NULL,1,'2016-02-03 16:48:35',1,'2016-02-03 16:48:35','0000-00-00 00:00:00');
 
 /*Table structure for table `pat_consultant` */
 
@@ -877,10 +873,10 @@ CREATE TABLE `pat_consultant` (
   KEY `FK_pat_consultant_encounter` (`encounter_id`),
   KEY `FK_pat_consultant_patient` (`patient_id`),
   KEY `FK_pat_consultant_user` (`consultant_id`),
-  CONSTRAINT `FK_pat_consultant_user` FOREIGN KEY (`consultant_id`) REFERENCES `co_user` (`user_id`) ON UPDATE CASCADE,
   CONSTRAINT `FK_pat_consultant_encounter` FOREIGN KEY (`encounter_id`) REFERENCES `pat_encounter` (`encounter_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_pat_consultant_patient` FOREIGN KEY (`patient_id`) REFERENCES `pat_patient` (`patient_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `FK_pat_consultant_tenant` FOREIGN KEY (`tenant_id`) REFERENCES `co_tenant` (`tenant_id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `FK_pat_consultant_tenant` FOREIGN KEY (`tenant_id`) REFERENCES `co_tenant` (`tenant_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_pat_consultant_user` FOREIGN KEY (`consultant_id`) REFERENCES `co_user` (`user_id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `pat_consultant` */
@@ -909,11 +905,11 @@ CREATE TABLE `pat_encounter` (
   KEY `FK_pat_encounter_patient` (`patient_id`),
   CONSTRAINT `FK_pat_encounter_patient` FOREIGN KEY (`patient_id`) REFERENCES `pat_patient` (`patient_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_pat_encounter_tenant` FOREIGN KEY (`tenant_id`) REFERENCES `co_tenant` (`tenant_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 
 /*Data for the table `pat_encounter` */
 
-insert  into `pat_encounter`(`encounter_id`,`tenant_id`,`patient_id`,`encounter_type`,`encounter_date`,`inactive_date`,`finalize`,`authorize`,`status`,`created_by`,`created_at`,`modified_by`,`modified_at`,`deleted_at`) values (1,18,1,'OP','2016-01-28 17:54:17',NULL,0,0,'0',1,'2016-01-25 17:54:17',1,'2016-02-01 18:11:02','0000-00-00 00:00:00'),(2,18,1,'IP','2016-01-28 18:56:18',NULL,0,0,'1',1,'2016-01-27 18:56:18',NULL,NULL,'0000-00-00 00:00:00'),(3,18,2,'IP','2016-01-28 20:00:00',NULL,0,0,'1',1,'2016-02-02 12:01:06',NULL,NULL,'0000-00-00 00:00:00'),(4,18,3,'IP','2016-02-02 15:51:59',NULL,0,0,'0',1,'2016-02-02 15:52:11',1,'2016-02-02 15:52:11','0000-00-00 00:00:00'),(5,18,3,'IP','2016-02-02 22:00:00',NULL,0,0,'0',1,'2016-02-02 16:51:11',1,'2016-02-03 16:48:00','0000-00-00 00:00:00'),(6,18,3,'OP','2016-02-03 00:00:00',NULL,0,0,'1',1,'2016-02-03 16:48:34',1,'2016-02-03 16:48:34','0000-00-00 00:00:00');
+insert  into `pat_encounter`(`encounter_id`,`tenant_id`,`patient_id`,`encounter_type`,`encounter_date`,`inactive_date`,`finalize`,`authorize`,`status`,`created_by`,`created_at`,`modified_by`,`modified_at`,`deleted_at`) values (7,18,5,'IP','2016-02-04 13:28:12',NULL,0,0,'1',1,'2016-02-04 13:28:27',1,'2016-02-04 13:28:27','0000-00-00 00:00:00'),(8,18,6,'IP','2016-02-04 13:55:45',NULL,0,0,'1',1,'2016-02-04 13:55:59',1,'2016-02-04 13:55:59','0000-00-00 00:00:00');
 
 /*Table structure for table `pat_notes` */
 
@@ -948,6 +944,7 @@ DROP TABLE IF EXISTS `pat_patient`;
 
 CREATE TABLE `pat_patient` (
   `patient_id` int(11) NOT NULL AUTO_INCREMENT,
+  `patient_guid` varchar(32) NOT NULL,
   `casesheetno` int(11) DEFAULT NULL,
   `patient_int_code` varchar(30) NOT NULL,
   `tenant_id` int(11) NOT NULL,
@@ -982,11 +979,11 @@ CREATE TABLE `pat_patient` (
   UNIQUE KEY `PatientCasesheetUnique` (`casesheetno`,`tenant_id`),
   KEY `FK_pat_patient_tenant` (`tenant_id`),
   CONSTRAINT `FK_pat_patient_tenant` FOREIGN KEY (`tenant_id`) REFERENCES `co_tenant` (`tenant_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
 /*Data for the table `pat_patient` */
 
-insert  into `pat_patient`(`patient_id`,`casesheetno`,`patient_int_code`,`tenant_id`,`patient_reg_date`,`patient_title_code`,`patient_firstname`,`patient_lastname`,`patient_relation_code`,`patient_relation_name`,`patient_care_taker`,`patient_care_taker_name`,`patient_dob`,`patient_gender`,`patient_marital_status`,`patient_occupation`,`patient_blood_group`,`patient_category_id`,`patient_email`,`patient_reg_mode`,`patient_type`,`patient_ref_hospital`,`patient_ref_id`,`patient_mobile`,`patient_bill_type`,`status`,`created_by`,`created_at`,`modified_by`,`modified_at`,`deleted_at`) values (1,NULL,'PAT0001',18,'2016-01-28 13:00:07','Dr.','Prakash Arul Mani','Arul',NULL,NULL,NULL,NULL,'1990-07-30','M','S',NULL,NULL,1,NULL,'OP',NULL,NULL,NULL,'9566659581','N','1',1,'2016-01-23 13:51:03',1,'2016-01-30 16:12:42','0000-00-00 00:00:00'),(2,NULL,'PAT0002',18,'2016-01-28 12:48:33','Mr.','Nadesh',NULL,NULL,NULL,NULL,NULL,NULL,'M',NULL,NULL,NULL,1,NULL,'NO',NULL,NULL,NULL,'9566659581','N','1',1,'2016-01-23 14:18:50',1,'2016-01-23 14:18:50','0000-00-00 00:00:00'),(3,NULL,'PAT0003',18,'2016-01-27 12:37:47','Mr.','Prakah Arul Mani','Paramanandam',NULL,NULL,NULL,NULL,'1990-07-31','M','S',NULL,NULL,1,NULL,'NO',NULL,NULL,NULL,'9566659581','F','1',1,'2016-01-23 17:57:23',1,'2016-02-03 16:45:44','0000-00-00 00:00:00'),(4,NULL,'PAT0004',18,'2016-01-30 10:38:22','Mr.','Test','test',NULL,NULL,NULL,NULL,'2016-01-05','M',NULL,NULL,NULL,1,NULL,'OP',NULL,NULL,NULL,'123231312321','N','1',1,'2016-01-30 15:08:22',1,'2016-01-30 15:08:22','0000-00-00 00:00:00');
+insert  into `pat_patient`(`patient_id`,`patient_guid`,`casesheetno`,`patient_int_code`,`tenant_id`,`patient_reg_date`,`patient_title_code`,`patient_firstname`,`patient_lastname`,`patient_relation_code`,`patient_relation_name`,`patient_care_taker`,`patient_care_taker_name`,`patient_dob`,`patient_gender`,`patient_marital_status`,`patient_occupation`,`patient_blood_group`,`patient_category_id`,`patient_email`,`patient_reg_mode`,`patient_type`,`patient_ref_hospital`,`patient_ref_id`,`patient_mobile`,`patient_bill_type`,`status`,`created_by`,`created_at`,`modified_by`,`modified_at`,`deleted_at`) values (5,'efca45b2-6ef3-5c87-8169-de33af43',NULL,'PAT0000001',18,'2016-02-04 07:51:01','Mr.','Prakash arul mani','Paramanandam',NULL,NULL,NULL,NULL,'1990-07-31','M',NULL,NULL,NULL,1,NULL,'NO',NULL,NULL,NULL,'9566699580','N','1',1,'2016-02-04 12:21:01',1,'2016-02-04 12:21:01','0000-00-00 00:00:00'),(6,'0029a7d6-6a11-56c4-82e0-e5b8a3bd',NULL,'PAT0000002',18,'2016-02-04 09:14:13','Mr.','Nadesh','Subramanian',NULL,NULL,NULL,NULL,'1990-02-28','M',NULL,NULL,NULL,1,NULL,'IP',NULL,NULL,NULL,'9894622733',NULL,'1',1,'2016-02-04 13:44:13',1,'2016-02-04 13:44:13','0000-00-00 00:00:00');
 
 /*Table structure for table `pat_patient_address` */
 
@@ -1025,11 +1022,11 @@ CREATE TABLE `pat_patient_address` (
   CONSTRAINT `FK_pat_patient_address_perm_country` FOREIGN KEY (`addr_perm_country_id`) REFERENCES `co_master_country` (`country_id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `FK_pat_patient_address_perm_state` FOREIGN KEY (`addr_perm_state_id`) REFERENCES `co_master_state` (`state_id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `FK_pat_patient_address_state` FOREIGN KEY (`addr_state_id`) REFERENCES `co_master_state` (`state_id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 
 /*Data for the table `pat_patient_address` */
 
-insert  into `pat_patient_address`(`addr_id`,`patient_id`,`addr_current_address`,`addr_country_id`,`addr_state_id`,`addr_city_id`,`addr_zip`,`addr_perm_address`,`addr_perm_country_id`,`addr_perm_state_id`,`addr_perm_city_id`,`addr_perm_zip`,`created_by`,`created_at`,`modified_by`,`modified_at`,`deleted_at`) values (1,1,'1, Ahimshapuram 5th steert, Sellur, Madurai',1,1,2,'625002','1, Ahimshapuram 5th steert',1,1,2,'625002',1,'2016-01-23 13:51:03',1,'2016-01-30 16:12:42','0000-00-00 00:00:00'),(3,2,NULL,1,1,1,NULL,NULL,NULL,NULL,NULL,NULL,1,'2016-01-23 17:38:57',NULL,NULL,'0000-00-00 00:00:00'),(4,3,'1, Ahimshapuram 5th steert',1,1,1,NULL,NULL,NULL,NULL,NULL,NULL,1,'2016-01-23 17:57:23',1,'2016-02-03 16:45:44','0000-00-00 00:00:00'),(5,4,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'2016-01-30 15:08:22',1,'2016-01-30 15:08:22','0000-00-00 00:00:00');
+insert  into `pat_patient_address`(`addr_id`,`patient_id`,`addr_current_address`,`addr_country_id`,`addr_state_id`,`addr_city_id`,`addr_zip`,`addr_perm_address`,`addr_perm_country_id`,`addr_perm_state_id`,`addr_perm_city_id`,`addr_perm_zip`,`created_by`,`created_at`,`modified_by`,`modified_at`,`deleted_at`) values (6,5,NULL,1,1,1,NULL,NULL,NULL,NULL,NULL,NULL,1,'2016-02-04 12:21:02',1,'2016-02-04 12:21:02','0000-00-00 00:00:00'),(7,6,NULL,1,1,1,NULL,NULL,NULL,NULL,NULL,NULL,1,'2016-02-04 13:44:13',1,'2016-02-04 13:44:13','0000-00-00 00:00:00');
 
 /*Table structure for table `pat_procedure` */
 
@@ -1059,11 +1056,9 @@ CREATE TABLE `pat_procedure` (
   CONSTRAINT `FK_pat_procedure_patient` FOREIGN KEY (`patient_id`) REFERENCES `pat_patient` (`patient_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_pat_procedure_room_charge_subcategory` FOREIGN KEY (`charge_subcat_id`) REFERENCES `co_room_charge_subcategory` (`charge_subcat_id`) ON UPDATE CASCADE,
   CONSTRAINT `FK_pat_procedure_tenant` FOREIGN KEY (`tenant_id`) REFERENCES `co_tenant` (`tenant_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `pat_procedure` */
-
-insert  into `pat_procedure`(`proc_id`,`tenant_id`,`encounter_id`,`patient_id`,`charge_subcat_id`,`proc_date`,`proc_consultant_ids`,`proc_description`,`status`,`created_by`,`created_at`,`modified_by`,`modified_at`,`deleted_at`) values (3,18,1,1,31,'2016-01-04 18:30:00','[28]','test test','1',1,'2016-01-28 19:49:38',1,'2016-01-28 19:49:38','0000-00-00 00:00:00'),(4,18,1,1,31,'2016-01-27 18:30:00','[27]','asdasdsd asd','1',1,'2016-01-28 19:50:51',1,'2016-01-29 17:51:29','0000-00-00 00:00:00'),(5,18,1,1,31,'2016-01-28 18:30:00','[27,28]','ddddddd','1',1,'2016-01-29 12:08:10',1,'2016-01-29 17:51:16','2016-01-29 18:22:26'),(7,18,1,1,31,'2016-01-28 18:30:00','[28]','test test 1223','1',1,'2016-01-29 15:12:23',1,'2016-01-30 16:13:15','0000-00-00 00:00:00');
 
 /*Table structure for table `v_encounter` */
 
@@ -1075,10 +1070,11 @@ DROP TABLE IF EXISTS `v_encounter`;
 /*!50001 CREATE TABLE  `v_encounter`(
  `encounter_id` int(11) ,
  `date` varchar(10) ,
- `type` varchar(17) ,
+ `type` varchar(9) ,
  `details` varchar(214) ,
  `doctor` varchar(60) ,
- `patient_id` int(11) 
+ `patient_id` int(11) ,
+ `patient_guid` varchar(32) 
 )*/;
 
 /*View structure for view v_encounter */
@@ -1086,7 +1082,7 @@ DROP TABLE IF EXISTS `v_encounter`;
 /*!50001 DROP TABLE IF EXISTS `v_encounter` */;
 /*!50001 DROP VIEW IF EXISTS `v_encounter` */;
 
-/*!50001 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_encounter` AS select `c`.`encounter_id` AS `encounter_id`,date_format(`a`.`status_date`,'%Y-%m-%d') AS `date`,(case `a`.`appt_status` when 'B' then 'Booked' when 'A' then 'Arived' else NULL end) AS `type`,'OP' AS `details`,concat(`b`.`title_code`,`b`.`name`) AS `doctor`,`c`.`patient_id` AS `patient_id` from ((`pat_appointment` `a` join `co_user` `b` on((`b`.`user_id` = `a`.`consultant_id`))) join `pat_encounter` `c` on((`c`.`encounter_id` = `a`.`encounter_id`))) union all select `c`.`encounter_id` AS `encounter_id`,date_format(`a`.`status_date`,'%Y-%m-%d') AS `date`,(case `a`.`admission_status` when 'A' then 'Admission' when 'D' then 'Discharge' when 'TD' then 'Transfer (Doctor)' when 'TR' then 'Transfer (Room)' else NULL end) AS `type`,concat('IP: ',`d`.`floor_name`,' > ',`e`.`ward_name`,' > ',`f`.`bed_name`,'  (',`g`.`room_type_name`,')') AS `details`,concat(`b`.`title_code`,`b`.`name`) AS `doctor`,`c`.`patient_id` AS `patient_id` from ((((((`pat_admission` `a` join `co_user` `b` on((`b`.`user_id` = `a`.`consultant_id`))) join `pat_encounter` `c` on((`c`.`encounter_id` = `a`.`encounter_id`))) left join `co_floor` `d` on((`d`.`floor_id` = `a`.`floor_id`))) left join `co_ward` `e` on((`e`.`ward_id` = `a`.`ward_id`))) left join `co_room` `f` on((`f`.`room_id` = `a`.`room_id`))) left join `co_room_type` `g` on((`g`.`room_type_id` = `a`.`room_type_id`))) */;
+/*!50001 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_encounter` AS select `c`.`encounter_id` AS `encounter_id`,date_format(`a`.`status_date`,'%Y-%m-%d') AS `date`,(case `a`.`appt_status` when 'B' then 'Booked' when 'A' then 'Arived' else NULL end) AS `type`,'OP' AS `details`,concat(`b`.`title_code`,`b`.`name`) AS `doctor`,`c`.`patient_id` AS `patient_id`,`d`.`patient_guid` AS `patient_guid` from (((`pat_appointment` `a` join `co_user` `b` on((`b`.`user_id` = `a`.`consultant_id`))) join `pat_encounter` `c` on((`c`.`encounter_id` = `a`.`encounter_id`))) join `pat_patient` `d` on((`d`.`patient_id` = `c`.`patient_id`))) union all select `c`.`encounter_id` AS `encounter_id`,date_format(`a`.`status_date`,'%Y-%m-%d') AS `date`,(case `a`.`admission_status` when 'A' then 'Admission' when 'D' then 'Discharge' when 'T' then 'Transfer' else NULL end) AS `type`,concat('IP: ',`d`.`floor_name`,' > ',`e`.`ward_name`,' > ',`f`.`bed_name`,'  (',`g`.`room_type_name`,')') AS `details`,concat(`b`.`title_code`,`b`.`name`) AS `doctor`,`c`.`patient_id` AS `patient_id`,`h`.`patient_guid` AS `patient_guid` from (((((((`pat_admission` `a` join `co_user` `b` on((`b`.`user_id` = `a`.`consultant_id`))) join `pat_encounter` `c` on((`c`.`encounter_id` = `a`.`encounter_id`))) left join `co_floor` `d` on((`d`.`floor_id` = `a`.`floor_id`))) left join `co_ward` `e` on((`e`.`ward_id` = `a`.`ward_id`))) left join `co_room` `f` on((`f`.`room_id` = `a`.`room_id`))) left join `co_room_type` `g` on((`g`.`room_type_id` = `a`.`room_type_id`))) join `pat_patient` `h` on((`h`.`patient_id` = `c`.`patient_id`))) */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

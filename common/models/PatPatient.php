@@ -3,12 +3,14 @@
 namespace common\models;
 
 use common\models\query\PatPatientQuery;
+use p2made\helpers\Uuid\UuidHelpers;
 use yii\db\ActiveQuery;
 
 /**
  * This is the model class for table "pat_patient".
  *
  * @property integer $patient_id
+ * @property string $patient_guid
  * @property integer $casesheetno
  * @property string $patient_int_code
  * @property integer $tenant_id
@@ -66,7 +68,7 @@ class PatPatient extends RActiveRecord {
         return [
             [['patient_title_code', 'patient_firstname', 'patient_gender', 'patient_reg_mode', 'patient_mobile'], 'required'],
             [['casesheetno', 'tenant_id', 'patient_care_taker', 'patient_category_id', 'created_by', 'modified_by'], 'integer'],
-            [['patient_reg_date', 'patient_dob', 'created_at', 'modified_at', 'deleted_at', 'patient_mobile', 'patient_bill_type'], 'safe'],
+            [['patient_reg_date', 'patient_dob', 'created_at', 'modified_at', 'deleted_at', 'patient_mobile', 'patient_bill_type', 'patient_guid'], 'safe'],
             [['status'], 'string'],
             [['patient_title_code'], 'string', 'max' => 10],
             [['patient_firstname', 'patient_lastname', 'patient_relation_name', 'patient_care_taker_name', 'patient_occupation', 'patient_email', 'patient_ref_id'], 'string', 'max' => 50],
@@ -147,14 +149,16 @@ class PatPatient extends RActiveRecord {
         if (!empty($this->patient_dob))
             $this->patient_dob = date('Y-m-d', strtotime($this->patient_dob));
 
-        if ($insert)
+        if ($insert) {
+            $this->patient_guid = UuidHelpers::uuid();
             $this->patient_reg_date = date('Y-m-d H:i:s');
+        }
 
         return parent::beforeSave($insert);
     }
-    
+
     public function afterSave($insert, $changedAttributes) {
-        if($insert){
+        if ($insert) {
             CoInternalCode::increaseInternalCode("P");
         }
         return parent::afterSave($insert, $changedAttributes);
@@ -167,7 +171,7 @@ class PatPatient extends RActiveRecord {
     public function fields() {
         $extend = [
             'fullname' => function ($model) {
-                return $model->patient_title_code.$model->patient_firstname;
+                return $model->patient_title_code . $model->patient_firstname;
             },
             'patient_age' => function ($model) {
                 $age = '';
@@ -199,7 +203,7 @@ class PatPatient extends RActiveRecord {
                 return (!empty($this->activePatientAlert)) ? true : false;
             },
             'alert' => function ($model) {
-                if(!empty($this->activePatientAlert)){
+                if (!empty($this->activePatientAlert)) {
                     return $this->activePatientAlert[0]->alert_description;
                 }
             },
@@ -223,12 +227,12 @@ class PatPatient extends RActiveRecord {
     }
 
     public static function getPatientlist($tenant = null, $status = '1', $deleted = false) {
-        if(!$deleted)
+        if (!$deleted)
             $list = self::find()->tenant($tenant)->status($status)->active()->all();
         else
             $list = self::find()->tenant($tenant)->deleted()->all();
-        
+
         return $list;
     }
-    
+
 }
