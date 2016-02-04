@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\models\query\PatNotesQuery;
 use yii\db\ActiveQuery;
 
 /**
@@ -82,6 +83,27 @@ class PatNotes extends RActiveRecord {
      */
     public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getCreatedUser() {
+        return $this->hasOne(CoUser::className(), ['user_id' => 'created_by']);
+    }
+
+    public function fields() {
+        $extend = [
+            'created_by_name' => function ($model) {
+                return (isset($model->createdUser) ? $model->createdUser->name : '-');
+            },
+        ];
+        $fields = array_merge(parent::fields(), $extend);
+        return $fields;
+    }
+    
+    public static function find() {
+        return new PatNotesQuery(get_called_class());
     }
 
 }
