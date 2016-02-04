@@ -76,7 +76,7 @@
                         <td>
                             <img ng-if="$even" class="pull-left" src="img/man-icon.png" width="49" height="49" alt="" />  
                             <img ng-if="$odd" class="pull-left" src="img/man-icon2.png" width="49" height="49" alt="" />  
-                            <a href="#">{{row.patient.patient_title_code}} {{row.patient.patient_firstname}} </a>({{patient.Patient.patient_age}}y) <br/> 
+                            <a href="#">{{row.patient.fullname}} </a>({{patient.Patient.patient_age}}y) <br/> 
                             {{row.patient.patient_int_code}}</td>
                         <td align="center" valign="middle"><img src="img/cate-1.png"  alt="" /></td>
                         <td><a editable-text="row.patient.patient_mobile">{{row.patient.patient_mobile}}</a></td>

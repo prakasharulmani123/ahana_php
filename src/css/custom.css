@@ -19,3 +19,7 @@ and open the template in the editor.
 .app-footer {
   z-index: 999;
 }
+
+.highlighted {
+    font-weight: bolder;
+}

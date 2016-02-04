@@ -24,7 +24,7 @@
                     <!--<input type="text" ng-model="patientselected" typeahead="patient_list.Patient.patient_firstname for patient_list in patient_lists | filter:$viewValue | limitTo:8" class="form-control input-sm bg-light no-border rounded padder" placeholder="Search....">-->
                     <input type="text" ng-model="patientselected" class="form-control input-sm bg-light no-border rounded padder" placeholder="Search....">
                     <ul class="search-patientcont-header" ng-if="patientselected != ''">
-                        <li ng-repeat="patient in patient_lists">
+                        <li ng-repeat="patient in patient_lists | filter:patientselected">
                             <div class="row"> 
                                 <div class="col-xs-12 col-sm-2 col-md-2"> 
                                     <img ng-if="$even" alt="" src="img/man-icon.png">
@@ -32,9 +32,8 @@
                                 </div>
                                 <div class="col-xs-12 col-sm-5 col-md-6"> 
                                     <div class="row ng-binding"> 
-                                        <a href="javascript:void(0)" ng-click="goToPatient(patient.Patient.patient_id)" class="ng-binding">
-                                            {{patient.Patient.patient_title_code}} {{patient.Patient.patient_firstname}}
-                                        </a> 
+                                        <a ng-bind-html="patient.Patient.fullname | highlight:patientselected" href="javascript:void(0)" ng-click="goToPatient(patient.Patient.patient_id)" class="ng-binding">
+                                        </a>
                                         <b>({{patient.Patient.patient_age}}y) </b>
                                         <br>
                                         <span class="pull-left">{{patient.Patient.patient_id}}</span> 

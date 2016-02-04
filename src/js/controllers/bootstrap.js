@@ -305,7 +305,7 @@ app.controller('TimepickerDemoCtrl', ['$scope', function ($scope) {
         };
     }]);
 
-app.controller('PatientSearchController', ['$scope', '$http', '$rootScope', '$state', function ($scope, $http, $rootScope, $state) {
+app.controller('PatientSearchController', ['$scope', '$http', '$rootScope', '$state', '$sce', function ($scope, $http, $rootScope, $state, $sce) {
         $scope.patient_lists = [];
         $scope.patientselected = '';
 
@@ -337,4 +337,19 @@ app.controller('PatientSearchController', ['$scope', '$http', '$rootScope', '$st
             $scope.patientselected = '';
             $state.go('patient.appointment', {'id': patient_id});
         };
-    }]);
+        
+        $scope.highlight = function(text, search) {
+    if (!search) {
+        return $sce.trustAsHtml(text);
+    }
+    return $sce.trustAsHtml(text.replace(new RegExp(search, 'gi'), '<span class="highlightedText">$&</span>'));
+};
+    }])
+.filter('highlight', function($sce) {
+    return function(text, phrase) {
+      if (phrase) text = text.replace(new RegExp('('+phrase+')', 'gi'),
+        '<span class="highlighted">$1</span>')
+
+      return $sce.trustAsHtml(text)
+    }
+  });
