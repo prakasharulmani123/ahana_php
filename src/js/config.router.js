@@ -1208,6 +1208,46 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
+            
+            //Patient Consultant
+            .state('patient.consultant', {
+                url: '/consultant/{id}',
+                templateUrl: 'tpl/patient_consultant/index.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/patient_consultant/patient_consultant.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+
+            //Patient Note Create
+            .state('patient.consultantCreate', {
+                url: '/consultantCreate/{id}/{enc_id}',
+                templateUrl: 'tpl/patient_consultant/create.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/patient_consultant/patient_consultant.js']);
+                        }]
+                }
+            })
+
+            //Patient Note Update
+            .state('patient.consultantUpdate', {
+                url: '/consultantUpdate/{id}/{cons_id}',
+                templateUrl: 'tpl/patient_consultant/update.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/patient_consultant/patient_consultant.js']);
+                        }]
+                }
+            })
 }
 run.$inject = ['$rootScope', '$state', '$stateParams', '$location', '$cookieStore', '$http', '$window', 'CommonService'];
 function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $window, CommonService) {

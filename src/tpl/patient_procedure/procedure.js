@@ -69,8 +69,8 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
             angular.forEach($scope.data.consultant_ids, function (list) {
                 docIds.push(list.user_id);
             });
-            $scope.data.proc_consultant_ids = docIds;
-            $scope.data.patient_id = $state.params.id;
+            _that.data.proc_consultant_ids = docIds;
+            angular.extend(_that.data, {patient_id: $scope.app.patientDetail.patientId});
 
             _that.data.proc_date = moment(_that.data.proc_date).format('YYYY-MM-DD');
             if (mode == 'add') {

@@ -44,7 +44,7 @@ app.controller('AlertsController', ['$rootScope', '$scope', '$timeout', '$http',
                 method = 'POST';
                 succ_msg = 'Alert saved successfully';
                 
-                angular.extend(_that.data, {patient_id: $state.params.id});
+                angular.extend(_that.data, {patient_id: $scope.app.patientDetail.patientId});
             } else {
                 post_url = $rootScope.IRISOrgServiceUrl + '/patientalerts/' + _that.data.pat_alert_id;
                 method = 'PUT';

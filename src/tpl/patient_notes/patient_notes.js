@@ -63,7 +63,7 @@ app.controller('NotesController', ['$rootScope', '$scope', '$timeout', '$http', 
                 method = 'POST';
                 succ_msg = 'Note saved successfully';
                 
-                angular.extend(_that.data, {patient_id: $state.params.id});
+                angular.extend(_that.data, {patient_id: $scope.app.patientDetail.patientId});
             } else {
                 post_url = $rootScope.IRISOrgServiceUrl + '/patientnotes/' + _that.data.pat_note_id;
                 method = 'PUT';
