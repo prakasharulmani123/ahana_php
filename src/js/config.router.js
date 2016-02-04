@@ -1209,7 +1209,19 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                 }
             })
             
-            //Patient Consultant
+            //Patient Note View
+            .state('patient.noteView', {
+                url: '/noteView/{id}/{note_id}',
+                templateUrl: 'tpl/patient_notes/view.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/patient_notes/patient_notes.js']);
+                        }]
+                }
+            })
+
+		//Patient Consultant
             .state('patient.consultant', {
                 url: '/consultant/{id}',
                 templateUrl: 'tpl/patient_consultant/index.html',

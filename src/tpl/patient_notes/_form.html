@@ -1,6 +1,12 @@
 <div class="panel panel-default">
     <div class="panel-body">
         <div class="form-group">
+            <label class="col-sm-3 control-label">Encounter # * </label>
+            <div class="col-sm-9">
+                {{encounter.encounter_id}}
+            </div>
+        </div>
+        <div class="form-group">
             <label class="col-sm-3 control-label">Notes * </label>
             <div class="col-sm-9">
                 <textarea placeholder="Notes" class="form-control" ng-model="data.notes"></textarea>

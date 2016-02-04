@@ -20,12 +20,14 @@ app.controller('NotesController', ['$rootScope', '$scope', '$timeout', '$http', 
                 if (response.success == false) {
                     alert("Sorry, you can't create a note for this encounter");
                     $state.go("patient.view", {id: $state.params.id});
+                } else {
+                    $scope.encounter = response.model
                 }
             });
         }
         
-        //Index Page
-        $scope.loadNotesList = function () {
+//        //Index Page
+        $scope.loadPatNotesList = function () {
             $scope.isLoading = true;
             // pagination set up
             $scope.rowCollection = [];  // base collection
@@ -33,7 +35,7 @@ app.controller('NotesController', ['$rootScope', '$scope', '$timeout', '$http', 
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
 
             // Get data's from service
-            $http.get($rootScope.IRISOrgServiceUrl + '/patientnote')
+            $http.get($rootScope.IRISOrgServiceUrl + '/patientnotes')
                     .success(function (notes) {
                         $scope.isLoading = false;
                         $scope.rowCollection = notes;
@@ -63,7 +65,10 @@ app.controller('NotesController', ['$rootScope', '$scope', '$timeout', '$http', 
                 method = 'POST';
                 succ_msg = 'Note saved successfully';
                 
-                angular.extend(_that.data, {patient_id: $scope.app.patientDetail.patientId});
+                angular.extend(_that.data, {
+                    patient_id: $scope.app.patientDetail.patientId, 
+                    encounter_id: $scope.encounter.encounter_id
+                });
             } else {
                 post_url = $rootScope.IRISOrgServiceUrl + '/patientnotes/' + _that.data.pat_note_id;
                 method = 'PUT';
@@ -106,6 +111,7 @@ app.controller('NotesController', ['$rootScope', '$scope', '$timeout', '$http', 
                     function (response) {
                         $scope.loadbar('hide');
                         $scope.data = response;
+                        $scope.encounter = {encounter_id: response.encounter_id};
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');
@@ -124,16 +130,16 @@ app.controller('NotesController', ['$rootScope', '$scope', '$timeout', '$http', 
                 var index = $scope.displayedCollection.indexOf(row);
                 if (index !== -1) {
                     $http({
-                        url: $rootScope.IRISOrgServiceUrl + "/patientnote/remove",
+                        url: $rootScope.IRISOrgServiceUrl + "/patientnotes/remove",
                         method: "POST",
-                        data: {id: row.note_id}
+                        data: {id: row.pat_note_id}
                     }).then(
                             function (response) {
                                 $scope.loadbar('hide');
                                 if (response.data.success === true) {
                                     $scope.displayedCollection.splice(index, 1);
-                                    $scope.loadNotesList();
-                                    $scope.successMessage = 'Note Deleted Successfully';
+                                    $scope.loadPatNotesList();
+                                    $scope.successMessage = 'Patient Note Deleted Successfully';
                                 }
                                 else {
                                     $scope.errorData = response.data.message;

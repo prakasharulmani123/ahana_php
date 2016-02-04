@@ -2,7 +2,7 @@
     <h1 class="m-n font-thin h3">Notes</h1>
 </div>
 
-<div class="wrapper-md" ng-controller="NotesController" ng-init="loadNotesList()">
+<div class="wrapper-md" ng-controller="NotesController" ng-init="loadPatNotesList()">
 
     <div ng-include="'tpl/blocks/alert.html'">
         {% include 'tpl/blocks/alert.html' %}
@@ -10,7 +10,7 @@
 
     <div class="panel panel-default">
         <div class="panel-body">
-            <button class="btn btn-sm btn-grey" ng-click="loadNotesList()"> 
+            <button class="btn btn-sm btn-grey" ng-click="loadPatNotesList()"> 
                 &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
             </button>
             <button ng-click="$state.go('patient.noteCreate', {id: $state.params.id})" class="btn btn-sm btn-info pull-right">
@@ -21,8 +21,9 @@
         <table st-table="displayedCollection"  st-safe-src="rowCollection" class="table table-bordered table-striped">
             <thead>
                 <tr>
-                    <th st-sort="note_description">Note name</th>
-                    <th st-sort="note_type">Note Type</th>
+                    <th st-sort="note_description">Encounter #</th>
+                    <th st-sort="note_type">Date</th>
+                    <th st-sort="note_type">Created By</th>
                     <th>Action</th>
                 </tr>
                 <tr>
@@ -36,12 +37,15 @@
                 </tr>
             </thead>
             <tbody ng-hide="isLoading">
-                <tr ng-repeat="row in displayedCollection| orderBy: note_description">
+                <tr ng-repeat="row in displayedCollection">
                     <td>
-                        {{row.note_description}}
+                        {{row.encounter_id}}
                     </td>
                     <td>
-                        {{row.note_type}}
+                        {{row.created_at}}
+                    </td>
+                    <td>
+                        {{row.created_by_name}}
                     </td>
                     <td>
                         <div ng-if="row.tenant_id != null">

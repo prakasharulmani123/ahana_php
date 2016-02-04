@@ -1,15 +1,15 @@
 <div ng-controller="NotesController">
     <div class="bg-light lter b-b wrapper-md">
-        <h1 class="m-n h3">Update Note: {{data.note_name}}</h1>
+        <h1 class="m-n h3">Update Note</h1>
     </div>
     <div class="wrapper-md">
         <div ng-include="'tpl/blocks/alert.html'">
             {% include 'tpl/blocks/alert.html' %}
         </div>
         <div class="row">
-            <div class="col-sm-12" ng-init="data.formtype = 'update'; initForm(); loadForm();" novalidate="">
+            <div class="col-sm-12" ng-init="data.formtype = 'update'; loadForm();" novalidate="">
                 <form name="noteForm" class="form-horizontal form-validation">
-                     <input type="hidden" ng-model="data.note_id">
+                     <input type="hidden" ng-model="data.pat_note_id">
                     <div ng-include="'tpl/patient_notes/_form.html'">
                         {% include 'tpl/patient_notes/_form.html' %}
                     </div>
