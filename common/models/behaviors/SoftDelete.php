@@ -2,6 +2,7 @@
 
 namespace common\models\behaviors;
 
+use Yii;
 use yii\base\Event;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
@@ -29,6 +30,7 @@ class SoftDelete extends TimestampBehavior {
      * @var string SoftDelete attribute
      */
     public $attribute = "delete_time";
+    public $updatedByAttribute = 'updated_by';
 
     /**
      * @var bool If true, this behavior will process '$model->delete()' as a soft-delete. Thus, the
@@ -64,10 +66,17 @@ class SoftDelete extends TimestampBehavior {
     public function remove() {
         // evaluate timestamp and set attribute
 //        $timestamp = $this->getValue(null);
-        $attribute = $this->attribute;
-//        $this->owner->$attribute = $timestamp;
 
+        $attribute = $this->attribute;
+
+//        $updatebyAttribute = $this->updatedByAttribute;
+        $user = Yii::$app->get('user', false);
+        $user_id = $user && !$user->isGuest ? $user->id : null;
+
+//        $this->owner->$updatebyAttribute = $user_id;
         $this->owner->touch($attribute);
+        
+        $this->owner->updateAttributes([$this->updatedByAttribute => $user_id]);
         // save record
 //        $this->owner->save(false, [$attribute]);
     }

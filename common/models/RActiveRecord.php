@@ -33,6 +33,7 @@ class RActiveRecord extends ActiveRecord {
                 'class' => SoftDelete::className(),
                 // these are the default values, which you can omit
                 'attribute' => 'deleted_at',
+                'updatedByAttribute' => 'modified_by',
                 'value' => null, // this is the same format as in TimestampBehavior
                 'safeMode' => false, // this processes '$model->delete()' calls as soft-deletes
             ],
@@ -54,9 +55,9 @@ class RActiveRecord extends ActiveRecord {
     }
 
     public static function timeAgo($time_ago, $cur_time = NULL) {
-        if(is_null($cur_time))
+        if (is_null($cur_time))
             $cur_time = time();
-        
+
         $time_elapsed = $cur_time - $time_ago;
         $seconds = $time_elapsed;
         $minutes = round($time_elapsed / 60);
@@ -65,7 +66,7 @@ class RActiveRecord extends ActiveRecord {
         $weeks = round($time_elapsed / 604800);
         $months = round($time_elapsed / 2600640);
         $years = round($time_elapsed / 31207680);
-        
+
         $result = '';
         // Seconds
         if ($seconds <= 60) {
@@ -119,7 +120,7 @@ class RActiveRecord extends ActiveRecord {
                 $result = "$years years ago";
             }
         }
-        
+
         return $result;
     }
 

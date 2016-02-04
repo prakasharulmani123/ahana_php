@@ -62,6 +62,7 @@ return [
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/admission'], 'extraPatterns' => ['POST remove' => 'remove', 'POST patientswap' => 'patientswap']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/appointment'], 'extraPatterns' => ['POST remove' => 'remove']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/patientalert'], 'extraPatterns' => ['POST remove' => 'remove']],
+                ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/patientconsultant'], 'extraPatterns' => ['POST remove' => 'remove']],
             ],
         ],
         'log' => [
