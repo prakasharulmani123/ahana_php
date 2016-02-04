@@ -44,7 +44,7 @@
                         </td>
                         <td>
                             <div ng-if="row.tenant_id != null">
-                                <a title="Edit" ui-sref="configuration.chargeUpdate({id: {{row.charge_subcat_id}}, cat_id: '{{category.charge_cat_id}}'})">
+                                <a title="Edit" ui-sref="configuration.chargeUpdate({id: row.charge_subcat_id, cat_id: category.charge_cat_id})">
                                     <i class="fa fa-pencil"></i>
                                 </a>&nbsp;&nbsp;&nbsp;
                                 <a title="Delete" ng-click="removeRow(row)">

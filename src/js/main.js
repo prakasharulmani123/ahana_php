@@ -44,6 +44,7 @@ angular.module('app')
                         patientTitleCode: '',
                         patientName: '',
                         patientId: '',
+                        patientGuid: '',
                         patientIntCode: '',
                         patientSex: '',
                         patientDOA: '',
@@ -61,9 +62,9 @@ angular.module('app')
 //                } else {
 //                    $localStorage.settings = $scope.app.settings;
 //                }
-                
+
                 $localStorage.settings = $scope.app.settings;
-                
+
                 $scope.$watch('app.settings', function () {
                     if ($scope.app.settings.asideDock && $scope.app.settings.asideFixed) {
                         // aside dock and fixed must set the header fixed.
@@ -130,32 +131,39 @@ angular.module('app')
                                 $scope.navigationMenu = response.navigation;
                             })
                             .error(function () {
-                                $scope.error = "An Error has occured while loading posts!";
+                                $scope.errorData = "An Error has occured while loading posts!";
                             });
                 }
-                
+
                 $scope.patientObj = {};
-                
+
                 $scope.loadPatientDetail = function () {
                     // Get data's from service
                     if (typeof $state.params.id != 'undefined') {
-                        $http.get($rootScope.IRISOrgServiceUrl + '/patients/' + $state.params.id)
+                        $http.post($rootScope.IRISOrgServiceUrl + '/patient/getpatientbyguid', {guid: $state.params.id})
                                 .success(function (patient) {
-                                    $scope.app.patientDetail.patientTitleCode = patient.patient_title_code;
-                                    $scope.app.patientDetail.patientName = patient.patient_firstname;
-                                    $scope.app.patientDetail.patientId = patient.patient_id;
-                                    $scope.app.patientDetail.patientIntCode = patient.patient_int_code;
-                                    $scope.app.patientDetail.patientDOA = patient.doa;
-                                    $scope.app.patientDetail.patientOrg = patient.org_name;
-                                    $scope.app.patientDetail.patientAge = patient.patient_age;
-                                    $scope.app.patientDetail.patientCasesheetno = patient.casesheetno;
-                                    $scope.app.patientDetail.patientHasAlert = patient.hasalert;
-                                    $scope.app.patientDetail.patientAlert = patient.alert;
-                                    $rootScope.commonService.GetLabelFromValue(patient.patient_gender, 'GetGenderList', function (response) {
-                                        $scope.app.patientDetail.patientSex = response;
-                                    });
+                                    $scope.errorData = "";
+                                    if (patient == null || patient == '') {
+                                        $scope.errorData = "Invalid Access !";
+                                        $state.go('configuration.organization');
+                                    } else {
+                                        $scope.app.patientDetail.patientTitleCode = patient.patient_title_code;
+                                        $scope.app.patientDetail.patientName = patient.patient_firstname;
+                                        $scope.app.patientDetail.patientId = patient.patient_id;
+                                        $scope.app.patientDetail.patientIntCode = patient.patient_int_code;
+                                        $scope.app.patientDetail.patientGuid = patient.patient_guid;
+                                        $scope.app.patientDetail.patientDOA = patient.doa;
+                                        $scope.app.patientDetail.patientOrg = patient.org_name;
+                                        $scope.app.patientDetail.patientAge = patient.patient_age;
+                                        $scope.app.patientDetail.patientCasesheetno = patient.casesheetno;
+                                        $scope.app.patientDetail.patientHasAlert = patient.hasalert;
+                                        $scope.app.patientDetail.patientAlert = patient.alert;
+                                        $rootScope.commonService.GetLabelFromValue(patient.patient_gender, 'GetGenderList', function (response) {
+                                            $scope.app.patientDetail.patientSex = response;
+                                        });
 
-                                    $scope.patientObj = patient;
+                                        $scope.patientObj = patient;
+                                    }
 
                                 })
                                 .error(function () {

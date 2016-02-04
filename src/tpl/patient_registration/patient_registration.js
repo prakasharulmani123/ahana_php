@@ -118,9 +118,19 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
             return mode === 'day' && (date.getDay() === 0 || date.getDay() === 6);
         };
 
-
-
         $scope.$watch('data.PatPatient.patient_firstname', function (newValue, oldValue) {
+            $scope.post_search(newValue);
+        }, true);
+
+//        $scope.$watch('data.PatPatient.patient_lastname', function (newValue, oldValue) {
+//            $scope.post_search(newValue);
+//        }, true);
+
+        $scope.$watch('data.PatPatient.patient_mobile', function (newValue, oldValue) {
+            $scope.post_search(newValue);
+        }, true);
+
+        $scope.post_search = function (newValue) {
             $http({
                 method: 'POST',
                 url: $rootScope.IRISOrgServiceUrl + '/patient/search',
@@ -130,12 +140,12 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
                         $scope.matchings = response.patients;
                     }
             );
-        }, true);
-
+        }
+        
         $scope.setDateEmpty = function () {
             $scope.data.PatPatient.patient_dob = '';
         }
-        
+
         $scope.setAgeEmpty = function () {
             $scope.data.PatPatient.patient_age = '';
         }
@@ -183,7 +193,7 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
             succ_msg = 'Patient saved successfully';
 
             _that.data.PatPatient.patient_dob = moment(_that.data.PatPatient.patient_dob).format('YYYY-MM-DD');
-            
+
             $scope.loadbar('show');
             $http({
                 method: method,
@@ -197,11 +207,11 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
                             var patient_id = response.patient_id;
                             $timeout(function () {
                                 if (reg_mode == "IP") {
-                                    $state.go('patient.admission', {id: patient_id});
+                                    $state.go('patient.admission', {id: patient_guid});
                                 } else if (reg_mode == "OP") {
-                                    $state.go('patient.appointment', {id: patient_id});
+                                    $state.go('patient.appointment', {id: patient_guid});
                                 } else {
-                                    $state.go('patient.view', {id: patient_id});
+                                    $state.go('patient.view', {id: patient_guid});
                                 }
                             }, 1000)
                         } else {
@@ -266,4 +276,14 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
                 }
             }
         };
-    }]);
+    }])
+        .filter('highlight', function ($sce) {
+            return function (text, phrase) {
+                if (phrase)
+                    text = text.replace(new RegExp('(' + phrase + ')', 'gi'),
+                            '<span class="highlighted">$1</span>')
+
+                return $sce.trustAsHtml(text)
+            }
+        });
+;

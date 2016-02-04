@@ -30,7 +30,7 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
                         $scope.displayedCollection = [].concat($scope.rowCollection);
 
                         $scope.more_li = [
-                            {href: 'patient.add_procedure({id: ' + $scope.patientObj.patient_id + ', enc_id: ' + enc_id + '})', name: 'Add', mode: 'sref'}
+                            {href: 'patient.add_procedure({id: ' + $scope.patientObj.patient_guid + ', enc_id: ' + enc_id + '})', name: 'Add', mode: 'sref'}
                         ];
                     })
                     .error(function () {
@@ -94,7 +94,7 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
                         $scope.successMessage = succ_msg;
                         $scope.data = {};
                         $timeout(function () {
-                            $state.go('patient.procedure', {id: response.patient_id});
+                            $state.go('patient.procedure', {id: response.patient_guid});
                         }, 1000)
 
                     }

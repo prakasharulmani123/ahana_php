@@ -8,6 +8,9 @@
 </div>
 <!-- / main header -->
 <div class="wrapper-md ng-scope">
+    <div ng-include="'tpl/blocks/alert.html'">
+            {% include 'tpl/blocks/alert.html' %}
+        </div>
     <div ng-controller="OrganizationController" class="ng-scope" ng-init="loadData()">
         <div ng-include="'tpl/blocks/alert.html'">
             {% include 'tpl/blocks/alert.html' %}

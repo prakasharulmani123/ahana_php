@@ -82,7 +82,7 @@
                         <td>
                             <img ng-if="$even" class="pull-left" src="img/man-icon.png" width="49" height="49" alt="" />  
                             <img ng-if="$odd" class="pull-left" src="img/man-icon2.png" width="49" height="49" alt="" />  
-                            <a ui-sref="patient.view({id: '{{row.patient.patient_id}}'})">
+                            <a ui-sref="patient.view({id: row.patient.patient_guid})">
                                 {{row.patient.fullname}} 
                             </a>({{row.patient.patient_age}}y) <br/> 
                             {{row.patient.patient_int_code}}

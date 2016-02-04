@@ -236,7 +236,7 @@ app.controller('PatientUpdateController', ['$rootScope', '$scope', '$http', '$an
                             $scope.patientObj = response;
                             
                             $timeout(function () {
-                                $state.go('patient.view', {id: response.patient_id});
+                                $state.go('patient.view', {id: response.patient_guid});
                             }, 1000)
                         } else {
                             $scope.errorData = response.message;

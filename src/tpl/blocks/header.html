@@ -32,17 +32,17 @@
                                 </div>
                                 <div class="col-xs-12 col-sm-5 col-md-6"> 
                                     <div class="row ng-binding"> 
-                                        <a ng-bind-html="patient.Patient.fullname | highlight:patientselected" href="javascript:void(0)" ng-click="goToPatient(patient.Patient.patient_id)" class="ng-binding">
+                                        <a ng-bind-html="patient.Patient.fullname | highlight:patientselected" href="javascript:void(0)" ng-click="goToPatient(patient.Patient.patient_guid)" class="ng-binding">
                                         </a>
                                         <b>({{patient.Patient.patient_age}}y) </b>
                                         <br>
-                                        <span class="pull-left">{{patient.Patient.patient_id}}</span> 
-                                        <span> &nbsp; &nbsp; {{patient.Patient.patient_mobile}}</span> 
+                                        <span class="pull-left"  ng-bind-html="patient.Patient.patient_int_code | highlight:patientselected"></span> 
+                                        &nbsp; &nbsp;<span ng-bind-html="patient.Patient.patient_mobile | highlight:patientselected"> </span> 
                                     </div>
                                 </div>
 
                                 <div class="col-xs-12 col-sm-5 col-md-4 pull-right right"> 
-                                    <button class="btn m-b-xs w-xs btn-info" ng-show="patient.PatientActiveEncounter.hasOwnProperty('encounter_id') != true" ng-click="goToAppointment(patient.Patient.patient_id)">
+                                    <button class="btn m-b-xs w-xs btn-info" ng-show="patient.PatientActiveEncounter.hasOwnProperty('encounter_id') != true" ng-click="goToAppointment(patient.Patient.patient_guid)">
                                         BOOK
                                     </button>
                                     <span class="label label-primary admission_details" ng-show="patient.PatientActiveEncounter.liveAdmission.hasOwnProperty('admn_id') == true">
