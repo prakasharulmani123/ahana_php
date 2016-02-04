@@ -1,0 +1,73 @@
+<div class="bg-light lter b-b wrapper-md">
+    <h1 class="m-n font-thin h3">Notes</h1>
+</div>
+
+<div class="wrapper-md" ng-controller="NotesController" ng-init="loadNotesList()">
+
+    <div ng-include="'tpl/blocks/alert.html'">
+        {% include 'tpl/blocks/alert.html' %}
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <button class="btn btn-sm btn-grey" ng-click="loadNotesList()"> 
+                &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
+            </button>
+            <button ng-click="$state.go('patient.noteCreate', {id: $state.params.id})" class="btn btn-sm btn-info pull-right">
+                <i class="fa fa-plus"></i> &nbsp; Add new Note
+            </button>
+        </div>
+
+        <table st-table="displayedCollection"  st-safe-src="rowCollection" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th st-sort="note_description">Note name</th>
+                    <th st-sort="note_type">Note Type</th>
+                    <th>Action</th>
+                </tr>
+                <tr>
+                    <th>
+                        <input st-search="'note_description'" placeholder="search for note name" class="input-sm form-control" type="search"/>
+                    </th>
+                    <th>
+                        <input st-search="'note_type'" placeholder="search for note type" class="input-sm form-control" type="search"/>
+                    </th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody ng-hide="isLoading">
+                <tr ng-repeat="row in displayedCollection| orderBy: note_description">
+                    <td>
+                        {{row.note_description}}
+                    </td>
+                    <td>
+                        {{row.note_type}}
+                    </td>
+                    <td>
+                        <div ng-if="row.tenant_id != null">
+                            <a title="Edit" ui-sref="patient.noteUpdate({id: {{$state.params.id}}, note_id: '{{row.note_id}}'})">
+                                <i class="fa fa-pencil"></i>
+                            </a>&nbsp;&nbsp;&nbsp;
+                            <a title="Delete" ng-click="removeRow(row)">
+                                <i class="fa fa-trash"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+            <tbody ng-show="isLoading">
+                <tr>
+                    <td colspan="4" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="4" class="text-center">
+                        <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7"></div>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+
+    </div>
+</div>

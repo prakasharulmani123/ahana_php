@@ -1168,6 +1168,46 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
+            
+            //Patient Notes
+            .state('patient.notes', {
+                url: '/notes/{id}',
+                templateUrl: 'tpl/patient_notes/index.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/patient_notes/patient_notes.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+
+            //Patient Note Create
+            .state('patient.noteCreate', {
+                url: '/noteCreate/{id}',
+                templateUrl: 'tpl/patient_notes/create.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/patient_notes/patient_notes.js']);
+                        }]
+                }
+            })
+
+            //Patient Note Update
+            .state('patient.noteUpdate', {
+                url: '/noteUpdate/{id}/{note_id}',
+                templateUrl: 'tpl/patient_notes/update.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/patient_notes/patient_notes.js']);
+                        }]
+                }
+            })
 }
 run.$inject = ['$rootScope', '$state', '$stateParams', '$location', '$cookieStore', '$http', '$window', 'CommonService'];
 function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $window, CommonService) {
