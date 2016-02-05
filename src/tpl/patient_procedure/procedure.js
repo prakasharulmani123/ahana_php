@@ -4,18 +4,30 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
         $scope.app.settings.patientSideMenu = true;
         $scope.app.settings.patientContentClass = 'app-content';
         $scope.app.settings.patientFooterClass = 'app-footer';
-        
+
+        $scope.enc = {};
         $scope.$watch('app.patientDetail.patientId', function (newValue, oldValue) {
             if (newValue != '') {
-                $rootScope.commonService.GetEncounterListByPatient('', '1', false, $scope.patientObj.patient_id, function (response) {
+                $rootScope.commonService.GetEncounterListByPatient('', '0,1', false, $scope.patientObj.patient_id, function (response) {
                     $scope.encounters = response;
+                    if(response != null){
+                        $scope.enc.selected = $scope.encounters[0];
+                    }
                 });
             }
         }, true);
 
-        $scope.loadProceduresList = function () {
-            enc_id = $scope.data.encounter_id;
+        $scope.$watch('enc.selected.encounter_id', function (newValue, oldValue) {
+            if (newValue != '' && typeof newValue != 'undefined') {
+                $scope.loadProceduresList(newValue);
+            }
+        }, true);
 
+        $scope.initProcedureIndex = function () {
+            $scope.data = {};
+        }
+
+        $scope.loadProceduresList = function (enc_id) {
             $scope.isLoading = true;
             // pagination set up
             $scope.rowCollection = [];  // base collection
@@ -28,26 +40,15 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
                         $scope.isLoading = false;
                         $scope.rowCollection = procedures;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
-
-                        $scope.more_li = [
-                            {href: 'patient.add_procedure({id: ' + $scope.patientObj.patient_guid + ', enc_id: ' + enc_id + '})', name: 'Add', mode: 'sref'}
-                        ];
                     })
                     .error(function () {
                         $scope.error = "An Error has occured while loading procedures!";
                     });
         };
 
-        $scope.moreOptions = function (id) {
-            $('.proc_chk').not('#proc_' + id).attr('checked', false);
-            $scope.more_li = [
-                {href: 'patient.add_procedure({id: ' + $state.params.id + ', enc_id: ' + $state.params.enc_id + '})', name: 'Add', mode: 'sref'},
-                {href: 'patient.edit_procedure({id: ' + $state.params.id + ', proc_id: ' + id + '})', name: 'Modify', mode: 'sref'},
-                {href: id, name: 'Delete', mode: 'click'},
-            ];
-        }
-
         $scope.initForm = function () {
+            $scope.data = {};
+            $scope.data.proc_date = moment().format('YYYY-MM-DD HH:mm:ss');
             $rootScope.commonService.GetChargeCategoryList('', '1', false, 'PRC', function (response) {
                 $scope.procedures = response.categoryList;
             });
@@ -71,8 +72,8 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
             });
             _that.data.proc_consultant_ids = docIds;
             angular.extend(_that.data, {patient_id: $scope.app.patientDetail.patientId});
+            _that.data.proc_date = moment(_that.data.proc_date).format('YYYY-MM-DD HH:mm:ss');
 
-            _that.data.proc_date = moment(_that.data.proc_date).format('YYYY-MM-DD');
             if (mode == 'add') {
                 post_url = $rootScope.IRISOrgServiceUrl + '/procedures';
                 method = 'POST';
@@ -94,7 +95,7 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
                         $scope.successMessage = succ_msg;
                         $scope.data = {};
                         $timeout(function () {
-                            $state.go('patient.procedure', {id: response.patient_guid});
+                            $state.go('patient.procedure', {id: $scope.app.patientDetail.patientGuid});
                         }, 1000)
 
                     }

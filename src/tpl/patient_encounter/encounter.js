@@ -1,4 +1,4 @@
-app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$http', '$state', function ($rootScope, $scope, $timeout, $http, $state) {
+app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$filter', function ($rootScope, $scope, $timeout, $http, $state, $filter) {
 
         $scope.app.settings.patientTopBar = true;
         $scope.app.settings.patientSideMenu = true;
@@ -11,7 +11,7 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
             $scope.isLoading = true;
             // pagination set up
             $scope.rowCollection = [];  // base collection
-            $scope.itemsByPage = 10; // No.of records per page
+//            $scope.itemsByPage = 10; // No.of records per page
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
 
             $http.get($rootScope.IRISOrgServiceUrl + '/encounter/getencounters?id=' + $state.params.id + '&type=' + type)
@@ -31,6 +31,12 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                     });
         };
 
+//        $scope.max = function (arr) {
+//            t = $filter('max')
+//                    ($filter('map')(arr, 'id'));
+//            return t;
+//        }
+//
         $scope.ctrl = {};
         $scope.allExpanded = true;
         $scope.expanded = true;
@@ -38,19 +44,20 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
             $scope.$broadcast('onExpandAll', {expanded: expanded});
         };
 
-        $scope.moreOptions = function (id, enc_id, type) {
+        $scope.moreOptions = function (key, enc_id, type) {
             $scope.more_li = {};
 
-            $('.enc_chk').not('#enc_' + id).attr('checked', false);
-
-            if ($('#enc_' + id).is(':checked')) {
+            $('.enc_chk').not('#enc_' + enc_id + key).attr('checked', false);
+            
+            if ($('#enc_' + enc_id + key).is(':checked')) {
+                alert('yrddd');
                 if (type == 'IP') {
                     $scope.more_li = [
                         {href: 'patient.transfer({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Transfer', mode: 'sref'},
                         {href: 'patient.discharge({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Discharge', mode: 'sref'},
                         {href: 'patient.swapping({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Swapping', mode: 'sref'},
                     ];
-                }else if (type == 'OP') {
+                } else if (type == 'OP') {
                     $scope.more_li = [
                         {href: 'patient.changeStatus({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Change Status', mode: 'sref'},
                     ];

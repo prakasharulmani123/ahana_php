@@ -11,10 +11,15 @@
             <label class="col-sm-3 control-label">Procedure Date * </label>
             <div class="col-sm-9">
                 <div class="input-group w-md">
-                    <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="data.proc_date" is-open="opened1" datepicker-options="dateOptions" close-text="Close" />
-                    <span class="input-group-btn">
-                        <button type="button" class="btn btn-default" ng-click="open($event, 'opened1')"><i class="glyphicon glyphicon-calendar"></i></button>
-                    </span>
+                    <a class="dropdown-toggle" id="dropdown2" role="button" data-toggle="dropdown" data-target="#" href="javascript:void(0)">
+                        <div class="input-group">
+                            <input type="text" class="form-control" data-ng-model="data.proc_date" data-date-time-input="YYYY-MM-DD hh:mm A" />
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                        </div>
+                    </a>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                        <datetimepicker data-ng-model="data.proc_date" data-datetimepicker-config="{ dropdownSelector: '#dropdown2' }" />
+                    </ul>
                 </div>
             </div>
         </div>
@@ -53,7 +58,7 @@
     <footer class="panel-footer text-right bg-light lter">
         <button class="btn m-b-xs  btn-success save-btn" ng-click="saveForm(data.formtype)">Save</button>
         &nbsp;
-        <button class="btn m-b-xs  btn-dark" ng-click="$state.go('patient.procedure', {'id': data.patient_guid})"><i class="fa fa-times"></i> Cancel</button>
+        <button class="btn m-b-xs  btn-dark" ng-click="$state.go('patient.procedure', {id: $state.params.id})"><i class="fa fa-times"></i> Cancel</button>
         &nbsp;
     </footer>
 </div>
