@@ -156,6 +156,7 @@ class EncounterController extends ActiveController {
             $query = "Select * ";
             $query .= "From v_encounter ";
             $query .= "Where patient_guid = '{$get['id']}' ";
+            $query .= "Order By encounter_id DESC ";
 
 //            if (isset($get['type'])) {
 //                $date = date('Y-m-d');

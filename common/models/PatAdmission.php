@@ -32,7 +32,6 @@ use yii\db\ActiveQuery;
 class PatAdmission extends RActiveRecord {
 
     public $vacantOldRoomId = null;
-    
     public $isSwapping = false;
     public $swapEncounterId;
     public $swapFloorId;
@@ -60,17 +59,31 @@ class PatAdmission extends RActiveRecord {
             [['status_date', 'created_at', 'modified_at', 'deleted_at', 'status_date', 'admission_status'], 'safe'],
             [['status'], 'string'],
             ['admission_status', 'validateAdmissionStatus'],
+            ['status_date', 'validateStatusDate'],
         ];
     }
 
     public function validateAdmissionStatus($attribute, $params) {
+        $current_admission = $this->encounter->patCurrentAdmission;
+
         if ($this->admission_status == 'TR' && !$this->isSwapping) {
-            if ($this->encounter->patCurrentAdmission->room_id == $this->room_id && $this->encounter->patCurrentAdmission->room_type_id == $this->room_type_id) {
+            if ($current_admission->room_id == $this->room_id && $current_admission->room_type_id == $this->room_type_id) {
                 $this->addError($attribute, "Room can't be same. Change the Room");
             }
         } else if ($this->admission_status == 'TD') {
-            if ($this->encounter->patCurrentAdmission->consultant_id == $this->consultant_id) {
+            if ($current_admission->consultant_id == $this->consultant_id) {
                 $this->addError($attribute, "Consultant can't be same. Change the Consultant");
+            }
+        }
+    }
+
+    public function validateStatusDate($attribute, $params) {
+        $current_admission = $this->encounter->patCurrentAdmission;
+
+        if ($this->isNewRecord) {
+            if ($this->admission_status != 'A') {
+                if($current_admission->status_date > $this->status_date)
+                    $this->addError($attribute, "Date must be greater than {$current_admission->status_date}");
             }
         }
     }
@@ -96,8 +109,8 @@ class PatAdmission extends RActiveRecord {
             'modified_by' => 'Modified By',
             'modified_at' => 'Modified At',
             'deleted_at' => 'Deleted At',
-            'swapPatientId' => 'Patient', 
-            'swapRoomId' => 'Room', 
+            'swapPatientId' => 'Patient',
+            'swapRoomId' => 'Room',
             'swapRoomTypeId' => 'Room Type'
         ];
     }
@@ -149,7 +162,7 @@ class PatAdmission extends RActiveRecord {
     }
 
     public function beforeSave($insert) {
-        if(!empty($this->status_date))
+        if (!empty($this->status_date))
             $this->status_date = date('Y-m-d H:i:s', strtotime($this->status_date));
 
         if ($insert) {
@@ -204,7 +217,7 @@ class PatAdmission extends RActiveRecord {
             $this->consultant_id = $this->encounter->patCurrentAdmission->consultant_id;
         }
     }
-    
+
     public function fields() {
         $extend = [
             'room' => function ($model) {
