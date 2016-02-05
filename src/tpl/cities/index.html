@@ -41,7 +41,7 @@
                 </tr>
             </thead>
             <tbody ng-hide="isLoading">
-                <tr ng-repeat="row in displayedCollection| orderBy: city_code">
+                <tr ng-repeat="row in displayedCollection| orderBy: city_name">
                     <td>
                         {{row.city_name}}
                     </td>

@@ -54,8 +54,8 @@
                 <div class="col-sm-4">
                 </div>
                 <div class="col-sm-3 pull-right right">
-                    <button ng-click="$state.go('patient.admission', {id: $state.params.id})" class="btn btn-info"><i class="fa fa-plus"></i> New Admission </button>
-                    <button ng-click="$state.go('patient.appointment', {id: $state.params.id})" class="btn btn-primary"><i class="fa fa-plus"></i> New Appointment </button>
+                    <button ng-if="activeEncounter.length == 0" ng-click="$state.go('patient.admission', {id: $state.params.id})" class="btn btn-info"><i class="fa fa-plus"></i> New Admission </button>
+                    <button ng-if="activeEncounter.length == 0" ng-click="$state.go('patient.appointment', {id: $state.params.id})" class="btn btn-primary"><i class="fa fa-plus"></i> New Appointment </button>
                     <!--<button class="btn btn-default"><i class="fa fa-print"></i> Print</button>-->
                 </div>
             </div>
@@ -80,7 +80,7 @@
                         </tr>
                     </thead>
                     <tbody ng-hide="isLoading">
-                        <tr ng-repeat-start="(key, value) in displayedCollection | orderBy: 'encounter_id' | groupBy: 'encounter_id'">
+                        <tr ng-repeat-start="(key, value) in displayedCollection | orderBy: encounter_id | groupBy: 'encounter_id'">
                             <td>
                                 <button ng-click="expanded = !expanded" expand class="btn btn-sm btn-default">
                                     <i ng-if="!expanded" class="fa fa-plus text"></i>
@@ -88,11 +88,11 @@
                                 </button>
                             </td>
                             <td colspan="5">
-                               <b> Encounter: {{key}}</b>
+                               <b> Encounter: {{key}}; Type: {{value[0].encounter_type}}</b>
                             </td>
 
                         </tr>
-                        <tr ng-repeat-end ng-show="expanded" ng-repeat="encounter in value">
+                        <tr ng-repeat-end ng-show="expanded" ng-repeat="encounter in value | orderBy: date_time">
                             <td class="text-center" align="center" valign="middle">
                                 <label ng-show="encounter.status == 1" class="i-checks m-b-none"><input id="enc_{{$index}}" class="enc_chk" type="checkbox" name="b[]" ng-click="moreOptions($index, encounter.encounter_id, encounter.encounter_type)"><i></i></label>
                             </td>

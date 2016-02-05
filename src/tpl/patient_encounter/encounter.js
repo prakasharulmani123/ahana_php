@@ -19,6 +19,7 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                         if (response.success == true) {
                             $scope.isLoading = false;
                             $scope.rowCollection = response.encounters;
+                            $scope.activeEncounter = response.active_encounter;
                             $scope.displayedCollection = [].concat($scope.rowCollection);
                             $scope.more_li = {};
                         } else {
@@ -36,20 +37,24 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
         $scope.ctrl.expandAll = function (expanded) {
             $scope.$broadcast('onExpandAll', {expanded: expanded});
         };
-        
+
         $scope.moreOptions = function (id, enc_id, type) {
+            $scope.more_li = {};
+
             $('.enc_chk').not('#enc_' + id).attr('checked', false);
-            if (type == 'IP') {
-                $scope.more_li = [
-                    {href: 'patient.transfer({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Transfer', mode: 'sref'},
-                    {href: 'patient.discharge({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Discharge', mode: 'sref'},
-                    {href: 'patient.swapping({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Swapping', mode: 'sref'},
-                ];
-            }
-            if (type == 'OP') {
-                $scope.more_li = [
-                    {href: 'patient.changeStatus({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Change Status', mode: 'sref'},
-                ];
+
+            if ($('#enc_' + id).is(':checked')) {
+                if (type == 'IP') {
+                    $scope.more_li = [
+                        {href: 'patient.transfer({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Transfer', mode: 'sref'},
+                        {href: 'patient.discharge({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Discharge', mode: 'sref'},
+                        {href: 'patient.swapping({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Swapping', mode: 'sref'},
+                    ];
+                }else if (type == 'OP') {
+                    $scope.more_li = [
+                        {href: 'patient.changeStatus({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Change Status', mode: 'sref'},
+                    ];
+                }
             }
         }
     }]);
