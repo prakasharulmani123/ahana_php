@@ -26,11 +26,17 @@
                 <div class="col-sm-5 m-b-xs">
                     <button class="btn btn-sm btn-grey" ng-show="encounterView == 'Current'" ng-click="loadPatientEncounters('Current');"> &nbsp; &nbsp; <i class="fa fa-repeat"></i>  &nbsp; &nbsp; </button>    
                     <button class="btn btn-sm btn-grey" ng-show="encounterView == 'Previous'" ng-click="loadPatientEncounters('Previous');"> &nbsp; &nbsp; <i class="fa fa-repeat"></i>  &nbsp; &nbsp; </button>    
-                    <div class="btn-group" dropdown is-open="status.isopen">
+                    <div class="btn-group" dropdown is-open="status.isopen" ng-show="more_li.length > 0">
                         <button type="button" class=" btn btn-sm btn-grey" dropdown-toggle ng-disabled="disabled">
                             More &nbsp;&nbsp;<span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu" role="menu">
+                            <li ng-repeat="li in more_li">
+                                <a ng-if="li.mode == 'sref'" ui-sref="{{li.href}}">{{li.name}}</a>
+                                <a ng-if="li.mode == 'click'" ng-click="removeRow(li.href)">{{li.name}}</a>
+                            </li>
+                        </ul>
+<!--                        <ul class="dropdown-menu" role="menu">
                             <li><a href>Transfer</a></li>
                             <li><a href>Discharge</a></li>
                             <li><a href>Cancel</a></li>
@@ -39,7 +45,7 @@
                             <li><a href>Modify Transfer</a></li>
                             <li><a href>Modify CaseSheetNo</a></li>
                             <li><a href>Print Selected OP</a></li>
-                        </ul>
+                        </ul>-->
                     </div>        
 <!--                    <div class="btn-group" dropdown is-open="status.isopen">
                         <button class="btn btn-sm btn-grey"> Edit </button>    
@@ -47,10 +53,11 @@
                 </div>
                 <div class="col-sm-4">
                 </div>
-<!--                <div class="col-sm-3 pull-right right">
-                    <button class="btn btn-info"><i class="fa fa-plus"></i> New Encounter </button>
-                    <button class="btn btn-default"><i class="fa fa-print"></i> Print</button>
-                </div>-->
+                <div class="col-sm-3 pull-right right">
+                    <button ng-click="$state.go('patient.admission', {id: $state.params.id})" class="btn btn-info"><i class="fa fa-plus"></i> New Admission </button>
+                    <button ng-click="$state.go('patient.appointment', {id: $state.params.id})" class="btn btn-primary"><i class="fa fa-plus"></i> New Appointment </button>
+                    <!--<button class="btn btn-default"><i class="fa fa-print"></i> Print</button>-->
+                </div>
             </div>
             <div class="table-responsive in-patient-table">
                 <script type="text/ng-template" id="myModalContent.html">
@@ -73,7 +80,7 @@
                         </tr>
                     </thead>
                     <tbody ng-hide="isLoading">
-                        <tr ng-repeat-start="(key, value) in displayedCollection | groupBy: 'encounter_id'">
+                        <tr ng-repeat-start="(key, value) in displayedCollection | orderBy: 'encounter_id' | groupBy: 'encounter_id'">
                             <td>
                                 <button ng-click="expanded = !expanded" expand class="btn btn-sm btn-default">
                                     <i ng-if="!expanded" class="fa fa-plus text"></i>
@@ -86,7 +93,9 @@
 
                         </tr>
                         <tr ng-repeat-end ng-show="expanded" ng-repeat="encounter in value">
-                            <td class="text-center" align="center" valign="middle"><label class="i-checks m-b-none"><input type="checkbox" name="post[]"><i></i></label></td>
+                            <td class="text-center" align="center" valign="middle">
+                                <label ng-show="encounter.status == 1" class="i-checks m-b-none"><input id="enc_{{$index}}" class="enc_chk" type="checkbox" name="b[]" ng-click="moreOptions($index, encounter.encounter_id, encounter.encounter_type)"><i></i></label>
+                            </td>
                             <td> {{encounter.encounter_id}} </td>
                             <td> {{encounter.date}} </td>
                             <td> {{encounter.type}} </td>

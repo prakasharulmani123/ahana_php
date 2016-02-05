@@ -148,6 +148,7 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
                         if (response.success == true) {
                             $scope.successMessage = succ_msg;
                             $scope.data = {};
+                            $state.go("patient.encounter", {id: $state.params.id});
                         } else {
                             $scope.errorData = response.message;
                         }
