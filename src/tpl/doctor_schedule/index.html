@@ -18,8 +18,9 @@
             <thead>
                 <tr>
                     <th>
-                        <button type="button" ng-click="ctrl.expandAll(allExpanded = !allExpanded)">
-                            <span ng-bind="allExpanded ? '-' : '+ '"></span>
+                        <button class="btn btn-sm btn-default" type="button" ng-click="ctrl.expandAll(allExpanded = !allExpanded)">
+                            <i ng-if="!allExpanded" class="fa fa-plus text"></i>
+                            <i ng-if="allExpanded" class="fa fa-minus text"></i>
                         </button>
                     </th>
                     <th st-sort="name">Doctor name</th>
@@ -29,8 +30,9 @@
             <tbody ng-hide="isLoading">
                 <tr ng-repeat-start="row in displayedCollection| orderBy: name">
                     <td>
-                        <button ng-click="expanded = !expanded" expand>
-                            <span ng-bind="expanded ? '-' : '+ '"></span>
+                        <button ng-click="expanded = !expanded" expand class="btn btn-sm btn-default">
+                            <i ng-if="!expanded" class="fa fa-plus text"></i>
+                            <i ng-if="expanded" class="fa fa-minus text"></i>
                         </button>
                     </td>
                     <td>

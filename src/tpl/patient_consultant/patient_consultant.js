@@ -29,7 +29,7 @@ app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', 
 
                 if (!is_success) {
                     alert("Sorry, you can't create a Consultant for this encounter");
-                    $state.go("patient.encounter", {id: $state.params.id});
+                    $state.go("patient.consultant", {id: $state.params.id});
                 }
                 $scope.showForm = true;
             });

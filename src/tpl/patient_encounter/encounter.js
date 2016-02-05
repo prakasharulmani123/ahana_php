@@ -28,4 +28,9 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                         $scope.error = "An Error has occured while loading encounter!";
                     });
         };
+        
+        $scope.ctrl = {};
+        $scope.ctrl.expandAll = function (expanded) {
+            $scope.$broadcast('onExpandAll', {expanded: expanded});
+        };
     }]);
