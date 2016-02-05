@@ -3,6 +3,13 @@
         <h1 class="m-n h3">View Note</h1>
     </div>
     <div class="wrapper-md">
+        <div class="row wrapper">
+            <div class="col-sm-3">
+                <button class="btn m-b-xs  btn-dark" ng-click="$state.go('patient.notes', {id: $state.params.id})">
+                    <i class="fa fa-repeat"></i> Back 
+                </button>
+            </div>
+        </div>
         <div class="row">
             <div class="col-sm-12">
                 <form name="formValidate" class="form-horizontal form-validation">

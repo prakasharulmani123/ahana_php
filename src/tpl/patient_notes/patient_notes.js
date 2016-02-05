@@ -35,23 +35,16 @@ app.controller('NotesController', ['$rootScope', '$scope', '$timeout', '$http', 
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
 
             // Get data's from service
-            $http.get($rootScope.IRISOrgServiceUrl + '/patientnotes')
+            $http.get($rootScope.IRISOrgServiceUrl + '/patientnotes/getpatientnotes?patient_id=' + $state.params.id)
                     .success(function (notes) {
                         $scope.isLoading = false;
-                        $scope.rowCollection = notes;
+                        $scope.rowCollection = notes.result;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
                     })
                     .error(function () {
                         $scope.error = "An Error has occured while loading patientnote!";
                     });
         };
-
-        //For Form
-//        $scope.initForm = function () {
-//            $rootScope.commonService.GetNoteList('', '1', false, function (response) {
-//                $scope.notes = response.noteList;
-//            });
-//        }
 
         //Save Both Add & Update Data
         $scope.saveForm = function (mode) {
@@ -86,7 +79,7 @@ app.controller('NotesController', ['$rootScope', '$scope', '$timeout', '$http', 
                         $scope.successMessage = succ_msg;
                         $scope.data = {};
                         $timeout(function () {
-                            $state.go('patient.note', {id: $state.params.id});
+                            $state.go('patient.notes', {id: $state.params.id});
                         }, 1000)
 
                     }
