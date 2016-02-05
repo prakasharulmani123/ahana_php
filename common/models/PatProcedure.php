@@ -117,6 +117,9 @@ class PatProcedure extends RActiveRecord {
 
     public function fields() {
         $extend = [
+            'encounter' => function ($model) {
+                return isset($model->encounter) ? $model->encounter : '-';
+            },
             'procedure_name' => function ($model) {
                 return isset($model->chargeCat) ? $model->chargeCat->charge_subcat_name : '-';
             },

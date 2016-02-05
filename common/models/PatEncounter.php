@@ -176,9 +176,9 @@ class PatEncounter extends RActiveRecord {
 
     public static function getEncounterListByPatient($tenant = null, $status = '1', $deleted = false, $patient_id = null) {
         if (!$deleted)
-            $list = self::find()->tenant($tenant)->status($status)->active()->andWhere(['patient_id' => $patient_id])->all();
+            $list = self::find()->tenant($tenant)->status($status)->active()->andWhere(['patient_id' => $patient_id])->orderBy(['encounter_id' => SORT_DESC])->all();
         else
-            $list = self::find()->tenant($tenant)->deleted()->andWhere(['patient_id' => $patient_id])->all();
+            $list = self::find()->tenant($tenant)->deleted()->andWhere(['patient_id' => $patient_id])->orderBy(['encounter_id' => SORT_DESC])->all();
 
         return $list;
     }
