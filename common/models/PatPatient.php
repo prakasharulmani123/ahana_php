@@ -240,4 +240,13 @@ class PatPatient extends RActiveRecord {
         return $patient;
     }
 
+    public static function getActiveEncounterByPatientId($patient_id) {
+        return PatEncounter::find()->status()->active()->andWhere(['patient_id' => $patient_id])->one();
+    }
+
+    public static function getActiveEncounterByPatientGuid($patient_guid) {
+        $patient = self::find()->where(['patient_guid' => $patient_guid])->one();
+        return self::getActiveEncounterByPatientId($patient->patient_id);
+    }
+
 }

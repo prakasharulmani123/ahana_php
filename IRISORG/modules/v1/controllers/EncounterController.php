@@ -156,7 +156,7 @@ class EncounterController extends ActiveController {
             $query = "Select * ";
             $query .= "From v_encounter ";
             $query .= "Where patient_guid = '{$get['id']}' ";
-            $query .= "Order By encounter_id DESC ";
+//            $query .= "Order By encounter_id DESC ";
 
 //            if (isset($get['type'])) {
 //                $date = date('Y-m-d');
@@ -166,8 +166,10 @@ class EncounterController extends ActiveController {
 
             $command = Yii::$app->db->createCommand($query);
             $data = $command->queryAll();
-
-            return ['success' => true, 'encounters' => $data];
+            
+            $activeEncounter = PatPatient::getActiveEncounterByPatientGuid($get['id']);
+            
+            return ['success' => true, 'encounters' => $data, 'active_encounter' => $activeEncounter];
         } else {
             return ['success' => false, 'message' => 'Invalid Access'];
         }
