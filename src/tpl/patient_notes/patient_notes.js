@@ -18,7 +18,7 @@ app.controller('NotesController', ['$rootScope', '$scope', '$timeout', '$http', 
         $scope.initCanCreateNote = function () {
             $scope.isPatientHaveActiveEncounter(function (response) {
                 if (response.success == false) {
-                    alert("Sorry, you can't create a note for this encounter");
+                    alert("Sorry, you can't create a note");
                     $state.go("patient.view", {id: $state.params.id});
                 } else {
                     $scope.encounter = response.model
