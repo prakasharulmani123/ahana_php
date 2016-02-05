@@ -1228,7 +1228,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load(['smart-table']).then(
+                            return $ocLazyLoad.load(['smart-table', 'ui.select']).then(
                                     function () {
                                         return $ocLazyLoad.load('tpl/patient_consultant/patient_consultant.js');
                                     }

@@ -7,7 +7,12 @@
             {% include 'tpl/blocks/alert.html' %}
         </div>
         <div class="row">
-            <div class="col-sm-12" ng-init="data.formtype = 'add'; initForm()">
+            <div class="col-sm-12" ng-init="
+                            initForm();
+                            data.status = '1';
+                            data.patient_id = $state.params.id;
+                            data.encounter_id = $state.params.enc_id;
+                            data.formtype = 'add';">
                 <form name="PatConsultantForm" class="form-horizontal form-validation" novalidate="">
                     <div ng-include="'tpl/patient_consultant/_form.html'">
                         {% include 'tpl/patient_consultant/_form.html' %}

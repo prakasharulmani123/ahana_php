@@ -1,4 +1,37 @@
-app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', function ($rootScope, $scope, $timeout, $http, $state) {
+// this is a lazy load controller, 
+// so start with "app." to register this controller
+ 
+app.filter('propsFilter', function () {
+    return function (items, props) {
+        var out = [];
+
+        if (angular.isArray(items)) {
+            items.forEach(function (item) {
+                var itemMatches = false;
+
+                var keys = Object.keys(props);
+                for (var i = 0; i < keys.length; i++) {
+                    var prop = keys[i];
+                    var text = props[prop].toLowerCase();
+                    if (item[prop].toString().toLowerCase().indexOf(text) !== -1) {
+                        itemMatches = true;
+                        break;
+                    }
+                }
+
+                if (itemMatches) {
+                    out.push(item);
+                }
+            });
+        } else {
+            // Let the output be the input untouched
+            out = items;
+        }
+
+        return out;
+    };
+})
+app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$filter', function ($rootScope, $scope, $timeout, $http, $state, $filter) {
 
         $scope.app.settings.patientTopBar = true;
         $scope.app.settings.patientSideMenu = true;
@@ -35,21 +68,32 @@ app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', 
             });
         }
 
+        $scope.enc = {};
         $scope.$watch('app.patientDetail.patientId', function (newValue, oldValue) {
             if (newValue != '') {
-                $rootScope.commonService.GetEncounterListByPatient('', '1', false, $scope.patientObj.patient_id, function (response) {
+                $rootScope.commonService.GetEncounterListByPatient('', '0,1', false, $scope.patientObj.patient_id, function (response) {
+                    angular.forEach(response, function (resp) {
+                        resp.encounter_id = resp.encounter_id.toString();
+                    });
                     $scope.encounters = response;
-                    if(response != null){
-//                        $scope.data = {encounter_id : $scope.encounters[0].encounter_id};
-                        $scope.loadPatConsultantsList();
+                    if (response != null) {
+                        $scope.enc.selected = $scope.encounters[0];
                     }
                 });
             }
         }, true);
+        
+        $scope.$watch('enc.selected.encounter_id', function (newValue, oldValue) {
+            if (newValue != '' && typeof newValue != 'undefined') {
+                $scope.loadPatConsultantsList(newValue);
+            }
+        }, true);
+        
+        $scope.initPatConsultantIndex = function () {
+            $scope.data = {};
+        }
 
-        $scope.loadPatConsultantsList = function () {
-            enc_id = $scope.data.encounter_id;
-
+        $scope.loadPatConsultantsList = function (enc_id) {
             $scope.isLoading = true;
             // pagination set up
             $scope.rowCollection = [];  // base collection

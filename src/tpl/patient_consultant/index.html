@@ -2,7 +2,7 @@
     <h1 class="m-n font-thin h3">Consultants</h1>
 </div>
 
-<div class="wrapper-md" ng-controller="PatConsultantsController">
+<div class="wrapper-md" ng-controller="PatConsultantsController" ng-init="initPatConsultantIndex()">
 
     <div ng-include="'tpl/blocks/alert.html'">
         {% include 'tpl/blocks/alert.html' %}
@@ -11,10 +11,14 @@
     <div class="row">
         <div class="col-sm-4"> 
             <div class="btn-group btn-group-justified">
-                Encounter Id: 
-                <select class="form-control" ng-change="loadPatConsultantsList()" ng-model="data.encounter_id" ng-options="encounter.encounter_id as encounter.encounter_id for encounter in encounters | orderBy: encounter_id">
-                    <option value="">Select Encounter</option>
-                </select>
+                <b>Encounter Id: </b>
+                <br />
+                <ui-select ng-model="enc.selected" theme="bootstrap">
+                    <ui-select-match placeholder="Select Encounter Id">{{$select.selected.encounter_id}}</ui-select-match>
+                    <ui-select-choices repeat="item in encounters | filter: $select.search | orderBy: 'encounter_id' : true">
+                        <div ng-bind-html="item.encounter_id | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
                 <br />
             </div>
         </div>
@@ -22,10 +26,11 @@
 
     <div class="panel panel-default">
         <div class="panel-body">
-            <button class="btn btn-sm btn-grey" ng-click="loadPatConsultantsList()"> 
+            <button class="btn btn-sm btn-grey" ng-click="loadPatConsultantsList(enc.selected)"> 
                 &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
             </button>
-            <button ng-click="$state.go('patient.consultantCreate', {id: $state.params.id, enc_id: data.encounter_id})" class="btn btn-sm btn-info pull-right">
+            
+            <button ng-show="enc.selected.status == '1'" ng-click="$state.go('patient.consultantCreate', {id: $state.params.id, enc_id: enc.selected.encounter_id})" class="btn btn-sm btn-info pull-right">
                 <i class="fa fa-plus"></i> &nbsp; Add new Consultant
             </button>
         </div>
