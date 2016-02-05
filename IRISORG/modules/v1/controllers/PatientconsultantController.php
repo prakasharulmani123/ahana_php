@@ -59,4 +59,22 @@ class PatientconsultantController extends ActiveController {
         }
     }
     
+    public function actionGetpatconsultantsbyencounter() {
+        $enc_id = Yii::$app->getRequest()->get('enc_id');
+
+        if (!empty($enc_id)) {
+            $model = PatConsultant::find()
+                    ->tenant()
+                    ->status()
+                    ->active()
+                    ->andWhere(['encounter_id' => $enc_id])
+                    ->orderBy([
+                        'consult_date' => SORT_DESC,
+                    ])
+                    ->all();
+        }
+
+        return $model;
+    }
+    
 }

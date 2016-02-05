@@ -45,6 +45,7 @@ class PatAppointment extends RActiveRecord {
     public function rules() {
         return [
             [['status_date', 'status_time', 'consultant_id', 'appt_status'], 'required'],
+            [['patient_cat_id', 'amount'], 'required', 'on' => 'seen_status'],
             [['tenant_id', 'patient_id', 'encounter_id', 'consultant_id', 'created_by', 'modified_by'], 'integer'],
             [['status_date', 'status_time', 'amount', 'notes', 'patient_cat_id', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['status'], 'string'],
@@ -61,8 +62,8 @@ class PatAppointment extends RActiveRecord {
             'tenant_id' => 'Tenant',
             'patient_id' => 'Patient',
             'encounter_id' => 'Encounter',
-            'status_date' => 'Appointment Date',
-            'status_time' => 'Appointment Time',
+            'status_date' => 'Status Date',
+            'status_time' => 'Status Time',
             'consultant_id' => 'Consultant',
             'appt_status' => 'Appt Status',
             'status' => 'Status',
@@ -71,6 +72,8 @@ class PatAppointment extends RActiveRecord {
             'modified_by' => 'Modified By',
             'modified_at' => 'Modified At',
             'deleted_at' => 'Deleted At',
+            'patient_cat_id' => 'Charge category',
+            'amount' => 'Amount',
         ];
     }
 
