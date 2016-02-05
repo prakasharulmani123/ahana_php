@@ -3,6 +3,7 @@
 namespace IRISORG\modules\v1\controllers;
 
 use common\models\PatNotes;
+use common\models\PatPatient;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -48,6 +49,15 @@ class PatientnotesController extends ActiveController {
             'query' => $modelClass::find()->tenant()->active()->orderBy(['created_at' => SORT_DESC]),
             'pagination' => false,
         ]);
+    }
+    
+    public function actionGetpatientnotes(){
+        $get = Yii::$app->getRequest()->get();
+        if(!empty($get)){
+            $patient = PatPatient::getPatientByGuid($get['patient_id']);
+            $model = PatNotes::find()->tenant()->active()->andWhere(['patient_id' => $patient->patient_id])->orderBy(['created_at' => SORT_DESC])->all();
+            return ['success' => true, 'result' => $model];
+        }
     }
 
     public function actionRemove() {

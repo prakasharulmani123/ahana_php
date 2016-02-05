@@ -234,5 +234,10 @@ class PatPatient extends RActiveRecord {
 
         return $list;
     }
+    
+    public static function getPatientByGuid($patient_guid){
+        $patient = self::find()->where(['patient_guid' => $patient_guid])->one();
+        return $patient;
+    }
 
 }

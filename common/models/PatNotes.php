@@ -94,6 +94,18 @@ class PatNotes extends RActiveRecord {
 
     public function fields() {
         $extend = [
+            'short_notes' => function ($model) {
+                if (isset($model->notes)) {
+                    if (strlen($model->notes) > 10) {
+                        $notes = substr($model->notes, 0, 10) . '...';
+                    } else {
+                        $notes = $model->notes;
+                    }
+                    return $notes;
+                } else {
+                    return '-';
+                }
+            },
             'created_by_name' => function ($model) {
                 return (isset($model->createdUser) ? $model->createdUser->name : '-');
             },
@@ -101,7 +113,7 @@ class PatNotes extends RActiveRecord {
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
     }
-    
+
     public static function find() {
         return new PatNotesQuery(get_called_class());
     }
