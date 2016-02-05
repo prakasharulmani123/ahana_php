@@ -1,3 +1,36 @@
+// this is a lazy load controller, 
+// so start with "app." to register this controller
+ 
+app.filter('propsFilter', function () {
+    return function (items, props) {
+        var out = [];
+
+        if (angular.isArray(items)) {
+            items.forEach(function (item) {
+                var itemMatches = false;
+
+                var keys = Object.keys(props);
+                for (var i = 0; i < keys.length; i++) {
+                    var prop = keys[i];
+                    var text = props[prop].toLowerCase();
+                    if (item[prop].toString().toLowerCase().indexOf(text) !== -1) {
+                        itemMatches = true;
+                        break;
+                    }
+                }
+
+                if (itemMatches) {
+                    out.push(item);
+                }
+            });
+        } else {
+            // Let the output be the input untouched
+            out = items;
+        }
+
+        return out;
+    };
+})
 app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$timeout', '$filter', function ($rootScope, $scope, $timeout, $http, $state, $timeout, $filter) {
 
         $scope.app.settings.patientTopBar = true;
@@ -9,6 +42,9 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
         $scope.$watch('app.patientDetail.patientId', function (newValue, oldValue) {
             if (newValue != '') {
                 $rootScope.commonService.GetEncounterListByPatient('', '0,1', false, $scope.patientObj.patient_id, function (response) {
+                    angular.forEach(response, function (resp){
+                        resp.encounter_id = resp.encounter_id.toString(); 
+                    });
                     $scope.encounters = response;
                     if(response != null){
                         $scope.enc.selected = $scope.encounters[0];
@@ -26,6 +62,20 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
         $scope.initProcedureIndex = function () {
             $scope.data = {};
         }
+        
+        $scope.person = {};
+        $scope.people = [
+        { name: '1',      email: 'adam@email.com',      age: 12, country: 'United States' },
+        { name: '2',    email: 'amalie@email.com',    age: 12, country: 'Argentina' },
+        { name: '3', email: 'estefania@email.com', age: 21, country: 'Argentina' },
+        { name: '4',    email: 'adrian@email.com',    age: 21, country: 'Ecuador' },
+        { name: '5',  email: 'wladimir@email.com',  age: 30, country: 'Ecuador' },
+        { name: '6',  email: 'samantha@email.com',  age: 30, country: 'United States' },
+        { name: '7',    email: 'nicole@email.com',    age: 43, country: 'Colombia' },
+        { name: '8',   email: 'natasha@email.com',   age: 54, country: 'Ecuador' },
+        { name: '9',   email: 'michael@email.com',   age: 15, country: 'Colombia' },
+        { name: '10',   email: 'nicolas@email.com',    age: 43, country: 'Colombia' }
+        ];
 
         $scope.loadProceduresList = function (enc_id) {
             $scope.isLoading = true;
@@ -183,33 +233,3 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
         };
 
     }]);
-app.filter('propsFilter', function () {
-    return function (items, props) {
-        var out = [];
-
-        if (angular.isArray(items)) {
-            items.forEach(function (item) {
-                var itemMatches = false;
-
-                var keys = Object.keys(props);
-                for (var i = 0; i < keys.length; i++) {
-                    var prop = keys[i];
-                    var text = props[prop].toLowerCase();
-                    if (item[prop].toString().toLowerCase().indexOf(text) !== -1) {
-                        itemMatches = true;
-                        break;
-                    }
-                }
-
-                if (itemMatches) {
-                    out.push(item);
-                }
-            });
-        } else {
-            // Let the output be the input untouched
-            out = items;
-        }
-
-        return out;
-    };
-})
