@@ -8,7 +8,6 @@
         </div>
         <div class="row">
             <a ng-click="cancelAppointment()">Cancel Appointment</a>
-            {{data.PatAppointment.appt_status}}
             <div class="col-sm-12" ng-if="data.PatAppointment.dummy_status == 'B'">
                 <div ng-include="'tpl/patient_appointment/_arrived_form.html'">
                     {% include 'tpl/patient_appointment/_arrived_form.html' %}

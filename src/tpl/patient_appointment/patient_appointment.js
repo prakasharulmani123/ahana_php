@@ -175,7 +175,6 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
                 }
             }
 
-            post_url = $rootScope.IRISOrgServiceUrl + '/appointments';
             method = 'POST';
             succ_msg = 'Status changed successfully';
 
@@ -185,8 +184,10 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
             }
 
             if (mode == 'arrived') {
+                post_url = $rootScope.IRISOrgServiceUrl + '/appointments';
                 _that.data.PatAppointment.appt_status = "A";
             } else if (mode == 'seen') {
+                post_url = $rootScope.IRISOrgServiceUrl + '/appointments/changestatus';
                 _that.data.PatAppointment.appt_status = "S";
             }
 
@@ -198,12 +199,14 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
             }).success(
                     function (response) {
                         $scope.loadbar('hide');
-                        $scope.successMessage = succ_msg;
-                        $scope.data = {};
-                        $timeout(function () {
-                            $state.go("patient.encounter", {id: $state.params.id});
-                        }, 1000)
-
+                        if (response.success == true) {
+                            $scope.successMessage = succ_msg;
+                            $timeout(function () {
+                                $state.go("patient.encounter", {id: $state.params.id});
+                            }, 1000)
+                        } else {
+                            $scope.errorData = response.message;
+                        }
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');

@@ -34,9 +34,22 @@ app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', 
                 $scope.showForm = true;
             });
         }
-        
-        //Index Page
+
+        $scope.$watch('app.patientDetail.patientId', function (newValue, oldValue) {
+            if (newValue != '') {
+                $rootScope.commonService.GetEncounterListByPatient('', '1', false, $scope.patientObj.patient_id, function (response) {
+                    $scope.encounters = response;
+                    if(response != null){
+//                        $scope.data = {encounter_id : $scope.encounters[0].encounter_id};
+                        $scope.loadPatConsultantsList();
+                    }
+                });
+            }
+        }, true);
+
         $scope.loadPatConsultantsList = function () {
+            enc_id = $scope.data.encounter_id;
+
             $scope.isLoading = true;
             // pagination set up
             $scope.rowCollection = [];  // base collection
@@ -44,14 +57,14 @@ app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', 
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
 
             // Get data's from service
-            $http.get($rootScope.IRISOrgServiceUrl + '/patientconsultant')
-                    .success(function (PatConsultants) {
+            $http.get($rootScope.IRISOrgServiceUrl + '/patientconsultant/getpatconsultantsbyencounter?enc_id=' + enc_id)
+                    .success(function (patientconsultants) {
                         $scope.isLoading = false;
-                        $scope.rowCollection = PatConsultants;
+                        $scope.rowCollection = patientconsultants;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
                     })
                     .error(function () {
-                        $scope.error = "An Error has occured while loading patient Consultant!";
+                        $scope.error = "An Error has occured while loading patient consultants!";
                     });
         };
 
