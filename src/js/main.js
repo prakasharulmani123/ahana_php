@@ -174,12 +174,11 @@ angular.module('app')
                 };
 
                 $scope.loadUserDetail = function () {
-                    if (typeof $rootScope.globals.currentUser.authdata != 'undefined') {
+                    if (typeof $rootScope.globals.currentUser != 'undefined') {
                      
                         $http.post($rootScope.IRISOrgServiceUrl + '/user/getusercredentialsbytoken', {token: $rootScope.globals.currentUser.authdata})
                                 .success(function (response) {
                                     $scope.app.org_name = response.credentials.org;
-                                    console.log($scope.app.org_name);
                                 })
                                 .error(function () {
                                     $scope.error = "An Error has occured while loading patient!";
