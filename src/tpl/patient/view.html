@@ -1,4 +1,4 @@
-<div ng-controller="PatientController">
+<div ng-controller="PatientController" ng-init="loadView()">
     <div class="bg-light lter b-b wrapper-md">
         <h1 class="m-n h3">View Details</h1>
     </div>
@@ -19,7 +19,7 @@
                             <!--                            <div class="form-group">
                                                             <label class="col-sm-3 control-label">Patient ID  </label>
                                                             <div class="col-sm-9">
-                                                                <p>  <b> {{data.patient_id}}  </b></p>
+                                                                <p>  <b> {{view_data.patient_id}}  </b></p>
                                                             </div>
                                                         </div>
                                                         <div class="line line-dashed b-b line-lg "></div>-->
@@ -27,7 +27,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Registration Date:   </label>
                                 <div class="col-sm-9">
-                                    <p>  {{data.patient_reg_date}}  </p>
+                                    <p>  {{view_data.patient_reg_date}}  </p>
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
@@ -35,7 +35,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Name:   </label>
                                 <div class="col-sm-9">
-                                    <p> {{data.fullname}} </p>
+                                    <p> {{view_data.fullname}} </p>
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
@@ -43,7 +43,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Last Name:   </label>
                                 <div class="col-sm-9">
-                                    <p> {{data.patient_lastname}} </p>
+                                    <p> {{view_data.patient_lastname}} </p>
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
@@ -59,7 +59,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label"> Age: </label>
                                 <div class="col-sm-9">
-                                    <p>  {{data.patient_age}}  </p>
+                                    <p>  {{view_data.patient_age}}  </p>
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
@@ -67,7 +67,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label"> DOB: </label>
                                 <div class="col-sm-9">
-                                    <p>  {{data.patient_dob}}  </p>
+                                    <p>  {{view_data.patient_dob}}  </p>
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
@@ -75,7 +75,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Marital Status:    </label>
                                 <div class="col-sm-9">
-                                    <p> {{data.marital_status}} </p>
+                                    <p> {{view_data.marital_status}} </p>
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
@@ -83,7 +83,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Billing :     </label>
                                 <div class="col-sm-9">
-                                    <p>{{data.bill_type}}</p>
+                                    <p>{{view_data.bill_type}}</p>
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
@@ -91,7 +91,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Category :     </label>
                                 <div class="col-sm-9">
-                                    <p>{{data.patient_category}}</p>
+                                    <p>{{view_data.patient_category}}</p>
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
@@ -99,7 +99,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Register Mode :     </label>
                                 <div class="col-sm-9">
-                                    <p>{{data.reg_mode}}</p>
+                                    <p>{{view_data.reg_mode}}</p>
                                 </div>
                             </div>
                         </div>
@@ -114,7 +114,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Current Address  </label>
                                 <div class="col-sm-9">
-                                    <p>  {{data.address.addr_current_address}}</p>
+                                    <p>  {{view_data.address.addr_current_address}}</p>
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
@@ -122,7 +122,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Zip </label>
                                 <div class="col-sm-9">
-                                    <p>  {{data.address.addr_zip}}</p>
+                                    <p>  {{view_data.address.addr_zip}}</p>
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
@@ -130,7 +130,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">City  </label>
                                 <div class="col-sm-9">
-                                    <p>  {{data.address.city_name}}</p>
+                                    <p>  {{view_data.address.city_name}}</p>
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
@@ -138,7 +138,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">State </label>
                                 <div class="col-sm-9">
-                                    <p>  {{data.address.state_name}}</p>
+                                    <p>  {{view_data.address.state_name}}</p>
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
@@ -146,7 +146,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Country </label>
                                 <div class="col-sm-9">
-                                    <p>  {{data.address.country_name}}</p>
+                                    <p>  {{view_data.address.country_name}}</p>
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
@@ -154,7 +154,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Permanent Address  </label>
                                 <div class="col-sm-9">
-                                    <p>  {{data.address.addr_perm_address}}</p>
+                                    <p>  {{view_data.address.addr_perm_address}}</p>
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
@@ -162,7 +162,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Zip </label>
                                 <div class="col-sm-9">
-                                    <p>  {{data.address.addr_perm_zip}}</p>
+                                    <p>  {{view_data.address.addr_perm_zip}}</p>
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
@@ -170,7 +170,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">City  </label>
                                 <div class="col-sm-9">
-                                    <p>  {{data.address.perm_city_name}}</p>
+                                    <p>  {{view_data.address.perm_city_name}}</p>
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
@@ -178,7 +178,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">State </label>
                                 <div class="col-sm-9">
-                                    <p>  {{data.address.perm_state_name}}</p>
+                                    <p>  {{view_data.address.perm_state_name}}</p>
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
@@ -186,7 +186,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Country </label>
                                 <div class="col-sm-9">
-                                    <p>  {{data.address.perm_country_name}}</p>
+                                    <p>  {{view_data.address.perm_country_name}}</p>
                                 </div>
                             </div>
 

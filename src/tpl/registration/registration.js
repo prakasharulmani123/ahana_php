@@ -22,6 +22,7 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
 
         //For User Form
         $scope.initForm = function () {
+            $scope.loadbar('show');
             $rootScope.commonService.GetTitleCodes(function (response) {
                 $scope.title_codes = response;
 
@@ -37,6 +38,7 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
                             $rootScope.commonService.GetSpecialityList('', '1', false, function (response) {
                                 $scope.specialities = response.specialityList;
                                 
+                                $scope.loadbar('hide');
                                 if($scope.data.formrole == 'update'){
                                     $scope.loadForm();
                                 }
@@ -125,6 +127,7 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
 
         //Get Data for update Form
         $scope.loadForm = function () {
+            $scope.loadbar('show');
             _that = this;
             $scope.errorData = "";
             $http({
@@ -132,6 +135,7 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
                 method: "GET"
             }).then(
                     function (response) {
+                        $scope.loadbar('hide');
                         if (response.data.success === true) {
                             $scope.data = response.data.return;
                             $scope.updateState2();

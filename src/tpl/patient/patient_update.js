@@ -223,6 +223,8 @@ app.controller('PatientUpdateController', ['$rootScope', '$scope', '$http', '$an
                         if (response.success == true) {
                             $scope.successMessage = succ_msg;
                             
+                            $scope.app.patientDetail.patientId = '';
+                            
                             $scope.app.patientDetail.patientTitleCode = response.patient.patient_title_code;
                             $scope.app.patientDetail.patientName = response.patient.patient_firstname;
                             $scope.app.patientDetail.patientId = response.patient.patient_id;
@@ -236,7 +238,7 @@ app.controller('PatientUpdateController', ['$rootScope', '$scope', '$http', '$an
                             $scope.patientObj = response;
                             
                             $timeout(function () {
-                                $state.go('patient.view', {id: response.patient_guid});
+                                $state.go('patient.view', {id: response.patient.patient_guid});
                             }, 1000)
                         } else {
                             $scope.errorData = response.message;
