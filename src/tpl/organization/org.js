@@ -23,20 +23,26 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
 
         // Form Page
         $scope.initForm = function () {
+            $scope.loadbar('show');
             $rootScope.commonService.GetCountryList(function (response) {
                 $scope.countries = response.countryList;
-            });
 
-            $rootScope.commonService.GetStateList(function (response) {
-                $scope.states = response.stateList;
-            });
+                $rootScope.commonService.GetStateList(function (response) {
+                    $scope.states = response.stateList;
 
-            $rootScope.commonService.GetCityList(function (response) {
-                $scope.cities = response.cityList;
-            });
+                    $rootScope.commonService.GetCityList(function (response) {
+                        $scope.cities = response.cityList;
 
-            $rootScope.commonService.GetTitleCodes(function (response) {
-                $scope.title_codes = response;
+                        $rootScope.commonService.GetTitleCodes(function (response) {
+                            $scope.title_codes = response;
+
+                            $scope.loadbar('hide');
+                            if ($state.current.name == 'app.org_edit') {
+                                $scope.loadForm();
+                            }
+                        });
+                    });
+                });
             });
         }
 
@@ -261,6 +267,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
 
         //Get Data for update Form
         $scope.loadForm = function () {
+            $scope.loadbar('show');
             _that = this;
             $scope.errorData = "";
             $http({
@@ -275,6 +282,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                             $scope.updateState2();
                             $scope.updateCity2();
                             $scope.modules = response.data.modules;
+                            $scope.loadbar('hide');
                         }
                         else {
                             $scope.errorData = response.data;
