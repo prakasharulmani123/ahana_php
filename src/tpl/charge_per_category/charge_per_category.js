@@ -49,42 +49,50 @@ app.controller('ChargePerCategoriesController', ['$rootScope', '$scope', '$timeo
 
         //For Form
         $scope.initForm = function () {
+            $scope.loadbar('show');
+
             $rootScope.commonService.GetRoomChargeCategoryList('', '1', false, function (response) {
                 $scope.categories = response.categoryList;
-            });
-            $rootScope.commonService.GetRoomChargeSubCategoryList('', '1', false, '', function (response) {
-                $scope.sub_categories = response.subcategoryList;
 
-                //Load Doctor List
-                $rootScope.commonService.GetDoctorList('', '1', false, '1', function (response) {
-                    var insert_cat = {
-                        charge_cat_id: '-1',
-                        charge_cat_name: 'Professional Charges',
-                    };
-                    $scope.categories.push(insert_cat);
-                    angular.forEach(response.doctorsList, function (doctor) {
-                        var insert_subcat = {
-                            charge_subcat_id: doctor.user_id,
+                $rootScope.commonService.GetRoomChargeSubCategoryList('', '1', false, '', function (response) {
+                    $scope.sub_categories = response.subcategoryList;
+
+                    //Load Doctor List
+                    $rootScope.commonService.GetDoctorList('', '1', false, '1', function (response) {
+                        var insert_cat = {
                             charge_cat_id: '-1',
-                            charge_subcat_name: doctor.name,
+                            charge_cat_name: 'Professional Charges',
                         };
-                        $scope.sub_categories.push(insert_subcat);
+                        $scope.categories.push(insert_cat);
+                        angular.forEach(response.doctorsList, function (doctor) {
+                            var insert_subcat = {
+                                charge_subcat_id: doctor.user_id,
+                                charge_cat_id: '-1',
+                                charge_subcat_name: doctor.name,
+                            };
+                            $scope.sub_categories.push(insert_subcat);
+                        });
+
+                        $rootScope.commonService.GetPatientCateogryList('', '1', false, function (response) {
+                            $scope.patient_categories = [];
+                            angular.forEach(response.patientcategoryList, function (value) {
+                                value.amount = '';
+                                $scope.patient_categories.push(value);
+                            });
+
+                            $rootScope.commonService.GetRoomTypeList('', '1', false, function (response) {
+                                $scope.room_types = [];
+                                angular.forEach(response.roomtypeList, function (value) {
+                                    value.amount = '';
+                                    $scope.room_types.push(value);
+                                });
+                                $scope.loadbar('hide');
+                            });
+                        });
+
                     });
                 });
-            });
-            $rootScope.commonService.GetPatientCateogryList('', '1', false, function (response) {
-                $scope.patient_categories = [];
-                angular.forEach(response.patientcategoryList, function (value) {
-                    value.amount = '';
-                    $scope.patient_categories.push(value);
-                });
-            });
-            $rootScope.commonService.GetRoomTypeList('', '1', false, function (response) {
-                $scope.room_types = [];
-                angular.forEach(response.roomtypeList, function (value) {
-                    value.amount = '';
-                    $scope.room_types.push(value);
-                });
+
             });
 
 

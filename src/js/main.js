@@ -13,6 +13,7 @@ angular.module('app')
                 // config
                 $scope.app = {
                     name: 'IRIS',
+                    org_name: '',
                     version: '',
                     // for chart colors
                     color: {
@@ -165,6 +166,20 @@ angular.module('app')
                                         $scope.patientObj = patient;
                                     }
 
+                                })
+                                .error(function () {
+                                    $scope.error = "An Error has occured while loading patient!";
+                                });
+                    }
+                };
+
+                $scope.loadUserDetail = function () {
+                    if (typeof $rootScope.globals.currentUser.authdata != 'undefined') {
+                     
+                        $http.post($rootScope.IRISOrgServiceUrl + '/user/getusercredentialsbytoken', {token: $rootScope.globals.currentUser.authdata})
+                                .success(function (response) {
+                                    $scope.app.org_name = response.credentials.org;
+                                    console.log($scope.app.org_name);
                                 })
                                 .error(function () {
                                     $scope.error = "An Error has occured while loading patient!";

@@ -2,7 +2,7 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
 
         //Index Page
         $scope.loadList = function () {
-                        $scope.isLoading = true;
+            $scope.isLoading = true;
             // pagination set up
             $scope.rowCollection = [];  // base collection
             $scope.itemsByPage = 10; // No.of records per page
@@ -24,23 +24,28 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
         $scope.initForm = function () {
             $rootScope.commonService.GetTitleCodes(function (response) {
                 $scope.title_codes = response;
+
+                $rootScope.commonService.GetCountryList(function (response) {
+                    $scope.countries = response.countryList;
+
+                    $rootScope.commonService.GetStateList(function (response) {
+                        $scope.states = response.stateList;
+
+                        $rootScope.commonService.GetCityList(function (response) {
+                            $scope.cities = response.cityList;
+
+                            $rootScope.commonService.GetSpecialityList('', '1', false, function (response) {
+                                $scope.specialities = response.specialityList;
+                                
+                                if($scope.data.formrole == 'update'){
+                                    $scope.loadForm();
+                                }
+                            });
+                        });
+                    });
+                });
             });
 
-            $rootScope.commonService.GetCountryList(function (response) {
-                $scope.countries = response.countryList;
-            });
-
-            $rootScope.commonService.GetStateList(function (response) {
-                $scope.states = response.stateList;
-            });
-
-            $rootScope.commonService.GetCityList(function (response) {
-                $scope.cities = response.cityList;
-            });
-
-            $rootScope.commonService.GetSpecialityList('', '1', false, function (response) {
-                $scope.specialities = response.specialityList;
-            });
         }
 
         $scope.updateState2 = function () {
@@ -151,6 +156,10 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
                         if (response.data.success === true) {
                             if (!jQuery.isEmptyObject(response.data.return)) {
                                 $scope.data = response.data.return;
+                                $scope.data.password = '';
+                                $scope.data.form_type = 'update';
+                            } else {
+                                $scope.data.form_type = 'add';
                             }
                         }
                         else {
@@ -169,7 +178,7 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
 
             _that.data.activation_date = moment(_that.data.activation_date).format('YYYY-MM-DD');
             _that.data.Inactivation_date = moment(_that.data.Inactivation_date).format('YYYY-MM-DD');
-            
+
             $scope.errorData = "";
             $scope.successMessage = "";
 
@@ -211,7 +220,7 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
         $scope.open = function ($event, mode) {
             $event.preventDefault();
             $event.stopPropagation();
-            
+
             $scope.opened1 = $scope.opened2 = false;
 
             switch (mode) {
@@ -228,8 +237,8 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
             $scope.minDate = $scope.minDate ? null : new Date();
         };
         $scope.toggleMin();
-        
-        $scope.disabled = function(date, mode) {
-    return mode === 'day' && (date.getDay() === 0 || date.getDay() === 6);
-  };
+
+        $scope.disabled = function (date, mode) {
+            return mode === 'day' && (date.getDay() === 0 || date.getDay() === 6);
+        };
     }]);

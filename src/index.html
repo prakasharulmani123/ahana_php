@@ -31,13 +31,13 @@
         <div id="sb-site">
             <div class="app" id="app" ng-class="{'app-header-fixed':app.settings.headerFixed,  'app-aside-folded':app.settings.asideFolded, 'app-aside-dock':app.settings.asideDock, 'container':app.settings.container}" ui-view></div>
         </div>
-        <div class="sb-slidebar sb-right">
+        <div class="sb-slidebar sb-right" ng-init="loadUserDetail()">
             <!-- Your right Slidebar content. -->
             <div class="thumb-bg">
                 <a class="sb-close" href="#">   <img src="img/close.png"  alt=""></a>
                 <h4> Menu</h4>
                 <div class="clearfix"></div>
-                <h2> {{app.name}} </h2>
+                <h2> {{app.name}} ({{app.org_name}})</h2>
                 <img src="img/user-thumb.jpg"  alt="" class="thumb-img">
                 <p> <a href="" ng-click="logout();">  <i class="fa fa-sign-out"></i> Logout  </a> </p>
             </div>

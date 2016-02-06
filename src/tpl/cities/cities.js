@@ -22,13 +22,20 @@ app.controller('CitiesController', ['$rootScope', '$scope', '$timeout', '$http',
 
         //For Form
         $scope.initForm = function () {
+            $scope.loadbar('show');
             $rootScope.commonService.GetCountryList(function (response) {
                 $scope.countries = response.countryList;
+                
+                $rootScope.commonService.GetStateList(function (response) {
+                    $scope.states = response.stateList;
+                    $scope.loadbar('hide');
+                    
+                    if($scope.data.formtype == 'update'){
+                        $scope.loadForm();
+                    }
+                });
             });
 
-            $rootScope.commonService.GetStateList(function (response) {
-                $scope.states = response.stateList;
-            });
         }
         $scope.updateState = function () {
             $scope.availableStates = [];

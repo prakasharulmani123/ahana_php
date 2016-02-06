@@ -58,20 +58,27 @@ app.controller('DoctorSchedulesController', ['$rootScope', '$scope', '$timeout',
 
         //For Form
         $scope.initForm = function () {
+            $scope.loadbar('show');
             $rootScope.commonService.GetDoctorList('', '1', false, '1', function (response) {
                 $scope.doctors = response.doctorsList;
-            });
-            $rootScope.commonService.GetDayList(function (response) {
-                $scope.days = response;
-                angular.forEach($scope.days, function (day) {
-                    day.checked = true;
+
+                $rootScope.commonService.GetDayList(function (response) {
+                    $scope.days = response;
+                    angular.forEach($scope.days, function (day) {
+                        day.checked = true;
+                    });
                 });
+
+                $scope.is_show = false;
+                $scope.day_type = {
+                    name: 'A'
+                };
+                $scope.loadbar('hide');
+                if ($scope.data.formtype == 'update') {
+                    $scope.loadForm();
+                }
             });
 
-            $scope.is_show = false;
-            $scope.day_type = {
-                name: 'A'
-            };
         }
 
         $scope.checkDays = function (is_all) {

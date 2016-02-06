@@ -36,7 +36,7 @@ app.controller('RoomTypesRoomsController', ['$scope', '$http', '$filter', '$stat
         $scope.selectedRoomandRoomTypes = [];
         $scope.selectedRoom = [];
         $scope.roomTypes = [];
-        
+
         $scope.toggleSelection = function toggleSelection(roomtype) {
             var index = $scope.selectedRoomandRoomTypes.indexOfObjectWithProperty('room_type_id', roomtype.room_type_id);
             if (index > -1) {
@@ -75,11 +75,11 @@ app.controller('RoomTypesRoomsController', ['$scope', '$http', '$filter', '$stat
             $scope.successMessage = "";
 
             $scope.roomTypeList = [];
-            
+
             angular.forEach($scope.selectedRoomandRoomTypes, function (parent) {
                 $scope.roomTypeList.push(parent.room_type_id);
             });
-            
+
             if (typeof this.data != "undefined") {
                 this.data.room_type_ids = [];
                 this.data.room_type_ids = $scope.roomTypeList;
@@ -96,6 +96,9 @@ app.controller('RoomTypesRoomsController', ['$scope', '$http', '$filter', '$stat
                         $scope.loadbar('hide');
                         if (response.data.success === true) {
                             $scope.successMessage = "Bed Types assigned successfully";
+                            $timeout(function () {
+                                $state.go("configuration.roomTypeRoom");
+                            }, 1000);
                         }
                         else {
                             $scope.errorData = response.data.message;

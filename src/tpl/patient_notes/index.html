@@ -52,7 +52,7 @@
                             <a title="Edit" ui-sref="patient.noteUpdate({id: '{{$state.params.id}}', note_id: '{{note.pat_note_id}}'})">
                                 <i class="fa fa-pencil"></i>
                             </a>&nbsp;&nbsp;&nbsp;
-                            <a title="Delete" ng-click="removeRow(note)">
+                            <a class="hide" title="Delete" ng-click="removeRow(note)">
                                 <i class="fa fa-trash"></i>
                             </a>
                         </td>

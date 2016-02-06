@@ -22,8 +22,14 @@ app.controller('StatesController', ['$rootScope', '$scope', '$timeout', '$http',
 
         //For Form
         $scope.initForm = function () {
+            $scope.loadbar('show');
             $rootScope.commonService.GetCountryList(function (response) {
                 $scope.countries = response.countryList;
+                $scope.loadbar('hide');
+
+                if ($scope.data.formtype == 'update') {
+                    $scope.loadForm();
+                }
             });
         }
 
