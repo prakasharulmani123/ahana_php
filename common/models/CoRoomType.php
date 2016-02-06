@@ -40,7 +40,7 @@ class CoRoomType extends RActiveRecord {
             [['status'], 'string'],
             [['created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['room_type_name'], 'string', 'max' => 50],
-            [['tenant_id', 'room_type_name', 'deleted_at'], 'unique', 'targetAttribute' => ['tenant_id', 'room_type_name', 'deleted_at'], 'message' => 'The combination of Tenant ID and Room Type Name has already been taken.']
+            [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'room_type_name', 'deleted_at'], 'message' => 'The combination of Room Type Name has already been taken.']
         ];
     }
 

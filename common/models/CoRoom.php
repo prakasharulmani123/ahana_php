@@ -43,7 +43,7 @@ class CoRoom extends RActiveRecord {
             [['occupied_status', 'status'], 'string'],
             [['created_at', 'modified_at'], 'safe'],
             [['bed_name'], 'string', 'max' => 50],
-            [['tenant_id', 'ward_id', 'bed_name', 'deleted_at'], 'unique', 'targetAttribute' => ['tenant_id', 'ward_id', 'bed_name', 'deleted_at'], 'message' => 'The combination of Tenant ID and Ward Name has already been taken.']
+            [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'ward_id', 'bed_name', 'deleted_at'], 'message' => 'The combination of Ward Name has already been taken.']
         ];
     }
 

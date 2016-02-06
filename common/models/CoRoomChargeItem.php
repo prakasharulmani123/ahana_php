@@ -46,7 +46,7 @@ class CoRoomChargeItem extends RActiveRecord
             [['created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['charge_item_name'], 'string', 'max' => 50],
             [['charge_item_code'], 'string', 'max' => 10],
-            [['charge_item_name', 'tenant_id', 'deleted_at'], 'unique', 'targetAttribute' => ['charge_item_name', 'tenant_id', 'deleted_at'], 'message' => 'The combination has already been taken.']
+            [['tenant_id'], 'unique', 'targetAttribute' => ['charge_item_name', 'tenant_id', 'deleted_at'], 'message' => 'The combination has already been taken.']
         ];
     }
 

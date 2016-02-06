@@ -10,6 +10,13 @@ use yii\db\ActiveRecord;
 use yii\db\Expression;
 
 class RActiveRecord extends ActiveRecord {
+    
+    public function init() {
+        if($this->isNewRecord){
+            $this->deleted_at = '0000-00-00 00:00:00';
+        }
+        return parent::init();
+    }
 
     public function behaviors() {
         return [

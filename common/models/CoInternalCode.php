@@ -43,7 +43,7 @@ class CoInternalCode extends RActiveRecord {
             [['code_type'], 'string'],
             [['created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['code_prefix', 'code_suffix'], 'string', 'max' => 10],
-            [['tenant_id', 'code_type'], 'unique', 'targetAttribute' => ['tenant_id', 'code_type'], 'message' => 'The combination of Tenant ID and Code Type has already been taken.']
+            [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'code_type'], 'message' => 'The combination of Code Type has already been taken.']
         ];
     }
 

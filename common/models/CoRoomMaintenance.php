@@ -39,7 +39,7 @@ class CoRoomMaintenance extends RActiveRecord {
             [['status'], 'string'],
             [['created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['maintain_name'], 'string', 'max' => 50],
-            [['tenant_id', 'maintain_name', 'deleted_at'], 'unique', 'targetAttribute' => ['tenant_id', 'maintain_name', 'deleted_at'], 'message' => 'The combination of Tenant ID and Maintain Name has already been taken.']
+            [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'maintain_name', 'deleted_at'], 'message' => 'The combination of Maintain Name has already been taken.']
         ];
     }
 

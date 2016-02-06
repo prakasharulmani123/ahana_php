@@ -39,7 +39,7 @@ class CoMasterCountry extends RActiveRecord {
             [['created_by', 'modified_by', 'tenant_id'], 'integer'],
             [['created_at', 'modified_at', 'tenant_id'], 'safe'],
             [['country_name'], 'string', 'max' => 50],
-            [['tenant_id', 'country_name', 'deleted_at'], 'unique', 'targetAttribute' => ['tenant_id', 'country_name', 'deleted_at'], 'message' => 'The combination has already been taken.']
+            [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'country_name', 'deleted_at'], 'message' => 'The combination has already been taken.']
         ];
     }
 
