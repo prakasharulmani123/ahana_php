@@ -32,7 +32,7 @@ app.controller('RoomTypesRoomsController', ['$scope', '$http', '$filter', '$stat
                     });
         };
 
-        //Get Organization room types
+        //Get Organization bed types
         $scope.selectedRoomandRoomTypes = [];
         $scope.selectedRoom = [];
         $scope.roomTypes = [];
