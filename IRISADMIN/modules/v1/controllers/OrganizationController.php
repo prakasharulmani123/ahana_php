@@ -99,6 +99,7 @@ class OrganizationController extends ActiveController {
             $user_model->attributes = Yii::$app->request->post('User');
 
             $login_model = new CoLogin();
+            $login_model->scenario = 'create';
             $login_model->attributes = Yii::$app->request->post('Login');
 
             $valid = $model->validate();

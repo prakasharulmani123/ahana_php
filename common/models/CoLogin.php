@@ -63,13 +63,30 @@ class CoLogin extends ActiveRecord implements IdentityInterface {
      */
     public function rules() {
         return [
-            [['username', 'password'], 'required'],
+            [['username'], 'required'],
+            [['password'], 'required', 'on' => 'create'],
+            [['username'], 'validateUsername'],
+            [['password'], 'validateUserpassword'],
 //            [['username', 'password'], 'string', 'min' => 6],
             [['user_id', 'created_by', 'modified_by'], 'integer'],
             [['created_at', 'modified_at', 'activation_date', 'Inactivation_date'], 'safe'],
             [['username', 'password', 'password_reset_token', 'authtoken'], 'string', 'max' => 255],
             ['username', 'unique'],
         ];
+    }
+    
+    public function validateUsername($attribute, $params)
+    {
+        if (preg_match('/\\s/', $this->$attribute) || preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬-]/', $this->$attribute)) {
+             $this->addError($attribute, 'Invalid characters in username.(Spaces or Special Characters not Allowed)');
+        }
+    }
+
+    public function validateUserpassword($attribute, $params)
+    {
+        if (preg_match('/\\s/', $this->$attribute)) {
+             $this->addError($attribute, 'Invalid characters in password.(Space not Allowed)');
+        }
     }
 
     /**

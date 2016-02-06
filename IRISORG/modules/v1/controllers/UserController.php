@@ -53,7 +53,7 @@ class UserController extends ActiveController {
         $behaviors = parent::behaviors();
         $behaviors['authenticator'] = [
             'class' => HttpBearerAuth::className(),
-            'only' => ['dashboard', 'createuser', 'updateuser', 'getuser', 'getlogin', 'updatelogin', 'getuserdata', 'getuserslistbyuser', 'assignroles', 'getdoctorslist', 'checkstateaccess'],
+            'only' => ['dashboard', 'createuser', 'updateuser', 'getuser', 'getlogin', 'updatelogin', 'getuserdata', 'getuserslistbyuser', 'assignroles', 'getdoctorslist', 'checkstateaccess', 'getusercredentialsbytoken'],
         ];
         $behaviors['contentNegotiator'] = [
             'class' => ContentNegotiator::className(),
@@ -290,12 +290,17 @@ class UserController extends ActiveController {
         $post = Yii::$app->request->post();
         if (!empty($post)) {
             $model = CoLogin::find()->where(['user_id' => $post['user_id']])->one();
-            $model = empty($model) ? new CoLogin : $model;
+
+            if (empty($model)) {
+                $model = new CoLogin;
+                $model->scenario = 'create';
+            }
             $model->attributes = $post;
 
             $valid = $model->validate();
 
             if ($valid) {
+                $model->setPassword($model->password);
                 $model->save(false);
                 return ['success' => true];
             } else {
@@ -385,19 +390,33 @@ class UserController extends ActiveController {
     protected function checkstate($stateName) {
         $module = CoResources::find()->where(["resource_url" => $stateName])->one();
         $resource_id = $module->resource_id;
-        
+
         $tenant_id = Yii::$app->user->identity->user->tenant_id;
         $user_id = Yii::$app->user->identity->user->user_id;
-        
+
         $role_ids = CoUsersRoles::find()->select(['GROUP_CONCAT(role_id) AS role_ids'])->where(['tenant_id' => $tenant_id, 'user_id' => $user_id])->one();
         $role_ids = explode(',', $role_ids->role_ids);
-        
+
         $have_access = CoRolesResources::find()->tenant()->andWhere(['IN', 'role_id', $role_ids])->andWhere(["resource_id" => $resource_id])->one();
-        
-        if(!empty($have_access))
+
+        if (!empty($have_access))
             return ['success' => true];
         else
-          return ['success' => false, 'message' => 'Invalid access'];  
+            return ['success' => false, 'message' => 'Invalid access'];
+    }
+
+    public function actionGetusercredentialsbytoken() {
+        $token = Yii::$app->request->post('token');
+        if (!empty($token)) {
+            $data = CoLogin::find()->where(['authtoken' => $token])->one();
+            
+            $credentials = [
+                'org' => $data->user->tenant->tenant_name 
+            ];
+            return ['success' => true, 'credentials' => $credentials];
+        } else {
+            return ['success' => false, 'message' => 'Invalid Access'];
+        }
     }
 
 }
