@@ -13,7 +13,7 @@ class CoRoomChargeCategoryQuery extends CommonQuery {
     }
 
     public function exceptCode() {
-        return $this->andWhere('charge_cat_code NOT IN ("ALC")');
+        return $this->andWhere('charge_cat_code NOT IN ("ALC", "PRC")');
     }
 
 }
