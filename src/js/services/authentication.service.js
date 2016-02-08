@@ -26,10 +26,11 @@
                     });
         }
 
-        function SetCredentials(secToken) {
+        function SetCredentials(secToken, resources) {
             $rootScope.globals = {
                 currentUser: {
-                    authdata: secToken
+                    authdata: secToken,
+                    resources: resources,
                 }
             };
 

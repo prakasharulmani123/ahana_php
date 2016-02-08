@@ -176,7 +176,7 @@ angular.module('app')
 
                 $scope.loadUserDetail = function () {
                     if (typeof $rootScope.globals.currentUser != 'undefined') {
-                     
+
                         $http.post($rootScope.IRISOrgServiceUrl + '/user/getusercredentialsbytoken', {token: $rootScope.globals.currentUser.authdata})
                                 .success(function (response) {
                                     $scope.app.org_name = response.credentials.org;
@@ -186,8 +186,9 @@ angular.module('app')
                                 });
                     }
                 };
-                
-                $scope.checkAccess = function($url){
+
+                $scope.checkAccess = function (url) {
+                    return $rootScope.globals.currentUser.resources.hasOwnProperty(url);
                 }
 
             }]);

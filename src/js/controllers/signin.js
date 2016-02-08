@@ -20,7 +20,7 @@ function SignInForm($scope, $state, AuthenticationService, $http, $rootScope, $l
         // Try to login
         AuthenticationService.Login($scope.user.username, $scope.user.password, $scope.user.tenant_id, function (response) {
             if (response.success) {
-                AuthenticationService.SetCredentials(response.access_token);
+                AuthenticationService.SetCredentials(response.access_token, response.resources);
                 $state.go('configuration.roles');
             } else {
                 $scope.loginButtonText = 'Log in';
