@@ -1,3 +1,5 @@
+<!--- Note: Common Index for Allied & Procedure Charges -->
+
 <div ng-controller="CustomRoomChargeCategoriesController">
     <div class="bg-light lter b-b wrapper-md">
         <h1 class="m-n font-thin h3">{{category.charge_cat_name}}</h1>
@@ -11,7 +13,10 @@
                 <button class="btn btn-sm btn-grey" ng-click="loadCustomRoomChargeCategoriesList()"> 
                     &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
                 </button>
-                <button ng-click="$state.go('configuration.chargeCreate', {cat_id: category.charge_cat_id})" class="btn btn-sm btn-info pull-right">
+                <button ng-show="category.charge_cat_code == 'ALC'" ng-click="$state.go('configuration.alliedChargeCreate', {cat_id: category.charge_cat_id})" class="btn btn-sm btn-info pull-right">
+                    <i class="fa fa-plus"></i> &nbsp; Add new {{category.charge_cat_name}}
+                </button>
+                <button ng-show="category.charge_cat_code == 'PRC'" ng-click="$state.go('configuration.procedureChargeCreate', {cat_id: category.charge_cat_id})" class="btn btn-sm btn-info pull-right">
                     <i class="fa fa-plus"></i> &nbsp; Add new {{category.charge_cat_name}}
                 </button>
             </div>
@@ -44,7 +49,10 @@
                         </td>
                         <td>
                             <div ng-if="row.tenant_id != null">
-                                <a title="Edit" ui-sref="configuration.chargeUpdate({id: row.charge_subcat_id, cat_id: category.charge_cat_id})">
+                                <a ng-show="category.charge_cat_code == 'ALC'"  title="Edit" ui-sref="configuration.alliedChargeUpdate({id: row.charge_subcat_id, cat_id: category.charge_cat_id})">
+                                    <i class="fa fa-pencil"></i>
+                                </a>
+                                <a ng-show="category.charge_cat_code == 'PRC'"  title="Edit" ui-sref="configuration.procedureChargeUpdate({id: row.charge_subcat_id, cat_id: category.charge_cat_id})">
                                     <i class="fa fa-pencil"></i>
                                 </a>&nbsp;&nbsp;&nbsp;
                                 <a class="hide" title="Delete" ng-click="removeRow(row)">

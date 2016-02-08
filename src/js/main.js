@@ -186,5 +186,8 @@ angular.module('app')
                                 });
                     }
                 };
+                
+                $scope.checkAccess = function($url){
+                }
 
             }]);

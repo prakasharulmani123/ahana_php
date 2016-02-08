@@ -376,6 +376,35 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
+            .state('configuration.alliedChargeCreate', {
+                url: '/alliedChargeCreate/{cat_id}',
+                templateUrl: 'tpl/room_charge_category_custom/create.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('xeditable').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/room_charge_category_custom/room_charge_category_custom.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            .state('configuration.alliedChargeUpdate', {
+                url: '/alliedChargeUpdate/{cat_id}/{id}',
+                templateUrl: 'tpl/room_charge_category_custom/update.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('xeditable').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/room_charge_category_custom/room_charge_category_custom.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            //CONFIGURATION PROCEDURE CHARGE
             .state('configuration.procedure', {
                 url: '/procedure',
                 params: {
@@ -393,8 +422,8 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-            .state('configuration.chargeCreate', {
-                url: '/chargeCreate/{cat_id}',
+            .state('configuration.procedureChargeCreate', {
+                url: '/procedureChargeCreate/{cat_id}',
                 templateUrl: 'tpl/room_charge_category_custom/create.html',
                 resolve: {
                     deps: ['$ocLazyLoad',
@@ -407,8 +436,8 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-            .state('configuration.chargeUpdate', {
-                url: '/chargeUpdate/{cat_id}/{id}',
+            .state('configuration.procedureChargeUpdate', {
+                url: '/procedureChargeUpdate/{cat_id}/{id}',
                 templateUrl: 'tpl/room_charge_category_custom/update.html',
                 resolve: {
                     deps: ['$ocLazyLoad',
@@ -421,6 +450,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
+            
             //CONFIGURATION ROOM CHARGE CATEGORY ITEM
             .state('configuration.roomChargeCategoryItem', {
                 url: '/roomChargeCategoryItem',
