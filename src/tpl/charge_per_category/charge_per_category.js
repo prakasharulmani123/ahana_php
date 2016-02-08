@@ -54,6 +54,10 @@ app.controller('ChargePerCategoriesController', ['$rootScope', '$scope', '$timeo
             $rootScope.commonService.GetRoomChargeCategoryList('', '1', false, function (response) {
                 $scope.categories = response.categoryList;
 
+                $scope.categories = $.grep($scope.categories, function (e) {
+                    return e.charge_cat_code != 'ALC';
+                });
+
                 $rootScope.commonService.GetRoomChargeSubCategoryList('', '1', false, '', function (response) {
                     $scope.sub_categories = response.subcategoryList;
 
