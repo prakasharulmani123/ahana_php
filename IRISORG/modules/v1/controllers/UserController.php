@@ -19,6 +19,7 @@ use yii\db\BaseActiveRecord;
 use yii\db\Expression;
 use yii\filters\auth\HttpBearerAuth;
 use yii\filters\ContentNegotiator;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\rest\ActiveController;
 use yii\web\Response;
@@ -112,12 +113,24 @@ class UserController extends ActiveController {
         }
         return $data;
     }
+    
+    public static function Getuserrolesresources() {
+        $user_id = Yii::$app->user->identity->user->user_id;
+        $tenant_id = Yii::$app->user->identity->user->tenant_id;
+
+        $role_ids = ArrayHelper::map(CoUsersRoles::find()->where(['user_id' => $user_id])->all(), 'role_id', 'role_id');
+        $resource_ids = ArrayHelper::map(CoRolesResources::find()->where(['IN', 'role_id', $role_ids])->andWhere(['tenant_id' => $tenant_id])->all(), 'resource_id', 'resource_id');
+        
+        $resources = ArrayHelper::map(CoResources::find()->where(['IN', 'resource_id', $resource_ids])->all(), 'resource_url', 'resource_url');
+        
+        return $resources;
+    }
 
     public function actionLogin() {
         $model = new LoginForm();
 
         if ($model->load(Yii::$app->getRequest()->getBodyParams(), '') && $model->login()) {
-            return ['success' => true, 'access_token' => Yii::$app->user->identity->getAuthKey()];
+            return ['success' => true, 'access_token' => Yii::$app->user->identity->getAuthKey(), 'resources' => self::Getuserrolesresources()];
         } elseif (!$model->validate()) {
             return ['success' => false, 'message' => Html::errorSummary([$model])];
         }
