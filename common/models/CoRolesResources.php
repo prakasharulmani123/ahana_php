@@ -94,6 +94,9 @@ class CoRolesResources extends ActiveRecord {
                 $tree[$key]['children'][$cKey] = array('label' => $child->resource_name, 'value' => $child->resource_id);
                 foreach ($child->child as $cKey2 => $child2) {
                     $tree[$key]['children'][$cKey]['children'][$cKey2] = array('label' => $child2->resource_name, 'value' => $child2->resource_id);
+                    foreach ($child2->child as $cKey3 => $child3) {
+                        $tree[$key]['children'][$cKey]['children'][$cKey2]['children'][$cKey3] = array('label' => $child3->resource_name, 'value' => $child3->resource_id);
+                    }
                 }
             }
         }
@@ -130,6 +133,31 @@ class CoRolesResources extends ActiveRecord {
                         }
                         $tot++;
                         $tot2++;
+
+                        $tot3 = $checked3 = $unchecked3 = 0;
+
+                        if (isset($child2['children'])) {
+                            foreach ($child2['children'] as $cKey3 => $child3) {
+                                if (in_array($child3['value'], $role_resources_ids)) {
+                                    $tree[$key]['children'][$cKey]['children'][$cKey2]['children'][$cKey3]['selected'] = true;
+                                    $checked3++;
+                                    $checked2++;
+                                    $checked++;
+                                } else {
+                                    $unchecked3++;
+                                    $unchecked2++;
+                                    $unchecked++;
+                                }
+                                $tot++;
+                                $tot2++;
+                                $tot3++;
+                            }
+
+                            if ($tot3 == $checked3)
+                                $tree[$key]['children'][$cKey]['children'][$cKey2]['selected'] = true;
+                            if ($checked3 > 0 && $unchecked3 > 0)
+                                $tree[$key]['children'][$cKey]['children'][$cKey2]['__ivhTreeviewIndeterminate'] = true;
+                        }
                     }
 
                     if ($tot2 == $checked2)
