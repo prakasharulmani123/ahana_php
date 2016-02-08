@@ -1,6 +1,6 @@
 // this is a lazy load controller, 
 // so start with "app." to register this controller
- 
+
 app.filter('propsFilter', function () {
     return function (items, props) {
         var out = [];
@@ -68,6 +68,13 @@ app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', 
             });
         }
 
+        $scope.ctrl = {};
+        $scope.allExpanded = true;
+        $scope.expanded = true;
+        $scope.ctrl.expandAll = function (expanded) {
+            $scope.$broadcast('onExpandAll', {expanded: expanded});
+        };
+
         $scope.enc = {};
         $scope.$watch('app.patientDetail.patientId', function (newValue, oldValue) {
             if (newValue != '') {
@@ -82,13 +89,13 @@ app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', 
                 });
             }
         }, true);
-        
+
         $scope.$watch('enc.selected.encounter_id', function (newValue, oldValue) {
             if (newValue != '' && typeof newValue != 'undefined') {
                 $scope.loadPatConsultantsList(newValue);
             }
         }, true);
-        
+
         $scope.initPatConsultantIndex = function () {
             $scope.data = {};
         }

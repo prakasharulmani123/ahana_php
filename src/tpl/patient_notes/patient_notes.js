@@ -4,7 +4,7 @@ app.controller('NotesController', ['$rootScope', '$scope', '$timeout', '$http', 
         $scope.app.settings.patientSideMenu = true;
         $scope.app.settings.patientContentClass = 'app-content';
         $scope.app.settings.patientFooterClass = 'app-footer';
-        
+
         $scope.isPatientHaveActiveEncounter = function (callback) {
             $http.post($rootScope.IRISOrgServiceUrl + '/encounter/patienthaveactiveencounter', {patient_id: $state.params.id})
                     .success(function (response) {
@@ -14,7 +14,7 @@ app.controller('NotesController', ['$rootScope', '$scope', '$timeout', '$http', 
                         callback(response);
                     });
         }
-        
+
         $scope.initCanCreateNote = function () {
             $scope.isPatientHaveActiveEncounter(function (response) {
                 if (response.success == false) {
@@ -25,7 +25,7 @@ app.controller('NotesController', ['$rootScope', '$scope', '$timeout', '$http', 
                 }
             });
         }
-        
+
 //        //Index Page
         $scope.loadPatNotesList = function () {
             $scope.isLoading = true;
@@ -46,6 +46,13 @@ app.controller('NotesController', ['$rootScope', '$scope', '$timeout', '$http', 
                     });
         };
 
+        $scope.ctrl = {};
+        $scope.allExpanded = true;
+        $scope.expanded = true;
+        $scope.ctrl.expandAll = function (expanded) {
+            $scope.$broadcast('onExpandAll', {expanded: expanded});
+        };
+
         //Save Both Add & Update Data
         $scope.saveForm = function (mode) {
             _that = this;
@@ -57,9 +64,9 @@ app.controller('NotesController', ['$rootScope', '$scope', '$timeout', '$http', 
                 post_url = $rootScope.IRISOrgServiceUrl + '/patientnotes';
                 method = 'POST';
                 succ_msg = 'Note saved successfully';
-                
+
                 angular.extend(_that.data, {
-                    patient_id: $scope.app.patientDetail.patientId, 
+                    patient_id: $scope.app.patientDetail.patientId,
                     encounter_id: $scope.encounter.encounter_id
                 });
             } else {
