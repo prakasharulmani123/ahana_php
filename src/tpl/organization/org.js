@@ -147,6 +147,11 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                         angular.forEach(child.children, function (child2) {
                             if (child2.selected == true || child2.__ivhTreeviewIndeterminate == true)
                                 $scope.moduleList.push(child2.value);
+
+                            angular.forEach(child2.children, function (child3) {
+                                if (child3.selected == true || child3.__ivhTreeviewIndeterminate == true)
+                                    $scope.moduleList.push(child3.value);
+                            });
                         });
                     });
                 }
