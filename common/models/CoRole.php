@@ -39,7 +39,8 @@ class CoRole extends RActiveRecord {
             [['tenant_id', 'created_by', 'modified_by'], 'integer'],
             [['status'], 'string'],
             [['created_at', 'modified_at', 'deleted_at'], 'safe'],
-            [['description'], 'string', 'max' => 50]
+            [['description'], 'string', 'max' => 50],
+            [['tenant_id'], 'unique', 'targetAttribute' => ['description', 'tenant_id', 'deleted_at'], 'message' => 'The combination of Name has already been taken.']
         ];
     }
 
