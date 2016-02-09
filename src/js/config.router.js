@@ -1411,6 +1411,46 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
+
+		//PHARMACY GENERICNAME
+            .state('pharmacy.genericName', {
+                url: '/genericName',
+                templateUrl: 'tpl/pharmacy_generic_name/index.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/pharmacy_generic_name/pharmacy_generic_name.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+
+            //PHARMACY GENERICNAME CREATE
+            .state('pharmacy.genericNameCreate', {
+                url: '/genericNameCreate',
+                templateUrl: 'tpl/pharmacy_generic_name/create.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/pharmacy_generic_name/pharmacy_generic_name.js']);
+                        }]
+                }
+            })
+            
+            //PHARMACY GENERICNAME UPDATE
+            .state('pharmacy.genericNameUpdate', {
+                url: '/genericNameUpdate/{id}',
+                templateUrl: 'tpl/pharmacy_generic_name/update.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/pharmacy_generic_name/pharmacy_generic_name.js']);
+                        }]
+                }
+            })
 }
 run.$inject = ['$rootScope', '$state', '$stateParams', '$location', '$cookieStore', '$http', '$window', 'CommonService'];
 function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $window, CommonService) {
