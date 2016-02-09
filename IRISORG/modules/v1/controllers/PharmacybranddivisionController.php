@@ -2,7 +2,7 @@
 
 namespace IRISORG\modules\v1\controllers;
 
-use common\models\PhaBrand;
+use common\models\PhaBrandDivision;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -14,9 +14,9 @@ use yii\web\Response;
 /**
  * WardController implements the CRUD actions for CoTenant model.
  */
-class PharmacybrandController extends ActiveController {
+class PharmacybranddivisionController extends ActiveController {
 
-    public $modelClass = 'common\models\PhaBrand';
+    public $modelClass = 'common\models\PhaBrandDivision';
 
     public function behaviors() {
         $behaviors = parent::behaviors();
@@ -53,7 +53,7 @@ class PharmacybrandController extends ActiveController {
     public function actionRemove() {
         $id = Yii::$app->getRequest()->post('id');
         if($id){
-            $model = PhaBrand::find()->where(['brand_id' => $id])->one();
+            $model = PhaBrandDivision::find()->where(['division_id' => $id])->one();
             $model->remove();
             return ['success' => true];
         }
