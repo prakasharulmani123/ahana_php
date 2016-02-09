@@ -122,41 +122,43 @@ class CoRolesResources extends ActiveRecord {
 
                     $tot2 = $checked2 = $unchecked2 = 0;
 
-                    foreach ($child['children'] as $cKey2 => $child2) {
-                        if (in_array($child2['value'], $role_resources_ids)) {
-                            $tree[$key]['children'][$cKey]['children'][$cKey2]['selected'] = true;
-                            $checked2++;
-                            $checked++;
-                        } else {
-                            $unchecked2++;
-                            $unchecked++;
-                        }
-                        $tot++;
-                        $tot2++;
-
-                        $tot3 = $checked3 = $unchecked3 = 0;
-
-                        if (isset($child2['children'])) {
-                            foreach ($child2['children'] as $cKey3 => $child3) {
-                                if (in_array($child3['value'], $role_resources_ids)) {
-                                    $tree[$key]['children'][$cKey]['children'][$cKey2]['children'][$cKey3]['selected'] = true;
-                                    $checked3++;
-                                    $checked2++;
-                                    $checked++;
-                                } else {
-                                    $unchecked3++;
-                                    $unchecked2++;
-                                    $unchecked++;
-                                }
-                                $tot++;
-                                $tot2++;
-                                $tot3++;
-                            }
-
-                            if ($tot3 == $checked3)
+                    if (isset($child['children'])) {
+                        foreach ($child['children'] as $cKey2 => $child2) {
+                            if (in_array($child2['value'], $role_resources_ids)) {
                                 $tree[$key]['children'][$cKey]['children'][$cKey2]['selected'] = true;
-                            if ($checked3 > 0 && $unchecked3 > 0)
-                                $tree[$key]['children'][$cKey]['children'][$cKey2]['__ivhTreeviewIndeterminate'] = true;
+                                $checked2++;
+                                $checked++;
+                            } else {
+                                $unchecked2++;
+                                $unchecked++;
+                            }
+                            $tot++;
+                            $tot2++;
+
+                            $tot3 = $checked3 = $unchecked3 = 0;
+
+                            if (isset($child2['children'])) {
+                                foreach ($child2['children'] as $cKey3 => $child3) {
+                                    if (in_array($child3['value'], $role_resources_ids)) {
+                                        $tree[$key]['children'][$cKey]['children'][$cKey2]['children'][$cKey3]['selected'] = true;
+                                        $checked3++;
+                                        $checked2++;
+                                        $checked++;
+                                    } else {
+                                        $unchecked3++;
+                                        $unchecked2++;
+                                        $unchecked++;
+                                    }
+                                    $tot++;
+                                    $tot2++;
+                                    $tot3++;
+                                }
+
+                                if ($tot3 == $checked3)
+                                    $tree[$key]['children'][$cKey]['children'][$cKey2]['selected'] = true;
+                                if ($checked3 > 0 && $unchecked3 > 0)
+                                    $tree[$key]['children'][$cKey]['children'][$cKey2]['__ivhTreeviewIndeterminate'] = true;
+                            }
                         }
                     }
 
