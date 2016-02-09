@@ -1291,12 +1291,13 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                 }
             })
             
-             //PATIENT
+             //PHARMACY
             .state('pharmacy', {
                 abstract: true,
                 url: '/pharmacy',
                 templateUrl: 'tpl/pharmacy.html'
             })
+            //PHARMACY BRAND
             .state('pharmacy.brand', {
                 url: '/brand',
                 templateUrl: 'tpl/pharmacy_brand/index.html',
@@ -1308,6 +1309,29 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                                         return $ocLazyLoad.load('tpl/pharmacy_brand/pharmacy_brand.js');
                                     }
                             );
+                        }]
+                }
+            })
+            //PHARMACY BRAND CREATE
+            .state('pharmacy.brandCreate', {
+                url: '/brandCreate',
+                templateUrl: 'tpl/pharmacy_brand/create.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/pharmacy_brand/pharmacy_brand.js']);
+                        }]
+                }
+            })
+
+            //PHARMACY BRAND UPDATE
+            .state('pharmacy.brandUpdate', {
+                url: '/brandUpdate/{id}',
+                templateUrl: 'tpl/pharmacy_brand/update.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/pharmacy_brand/pharmacy_brand.js']);
                         }]
                 }
             })

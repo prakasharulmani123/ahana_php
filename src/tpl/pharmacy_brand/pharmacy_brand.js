@@ -1,10 +1,5 @@
 app.controller('BrandsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', function ($rootScope, $scope, $timeout, $http, $state) {
 
-        $scope.app.settings.patientTopBar = true;
-        $scope.app.settings.patientSideMenu = true;
-        $scope.app.settings.patientContentClass = 'app-content';
-        $scope.app.settings.patientFooterClass = 'app-footer';
-        
         //Index Page
         $scope.loadBrandsList = function () {
             $scope.isLoading = true;
@@ -14,14 +9,14 @@ app.controller('BrandsController', ['$rootScope', '$scope', '$timeout', '$http',
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
 
             // Get data's from service
-            $http.get($rootScope.IRISOrgServiceUrl + '/patientalert')
+            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacybrand')
                     .success(function (alerts) {
                         $scope.isLoading = false;
                         $scope.rowCollection = alerts;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
                     })
                     .error(function () {
-                        $scope.error = "An Error has occured while loading patientalert!";
+                        $scope.error = "An Error has occured while loading brand!";
                     });
         };
 
@@ -40,13 +35,11 @@ app.controller('BrandsController', ['$rootScope', '$scope', '$timeout', '$http',
             $scope.successMessage = "";
 
             if (mode == 'add') {
-                post_url = $rootScope.IRISOrgServiceUrl + '/patientalerts';
+                post_url = $rootScope.IRISOrgServiceUrl + '/pharmacybrands';
                 method = 'POST';
                 succ_msg = 'Brand saved successfully';
-                
-                angular.extend(_that.data, {patient_id: $scope.app.patientDetail.patientId});
             } else {
-                post_url = $rootScope.IRISOrgServiceUrl + '/patientalerts/' + _that.data.pat_alert_id;
+                post_url = $rootScope.IRISOrgServiceUrl + '/pharmacybrands/' + _that.data.brand_id;
                 method = 'PUT';
                 succ_msg = 'Brand updated successfully';
             }
@@ -62,7 +55,7 @@ app.controller('BrandsController', ['$rootScope', '$scope', '$timeout', '$http',
                         $scope.successMessage = succ_msg;
                         $scope.data = {};
                         $timeout(function () {
-                            $state.go('patient.alert', {id: $state.params.id});
+                            $state.go('pharmacy.brand');
                         }, 1000)
 
                     }
@@ -81,7 +74,7 @@ app.controller('BrandsController', ['$rootScope', '$scope', '$timeout', '$http',
             _that = this;
             $scope.errorData = "";
             $http({
-                url: $rootScope.IRISOrgServiceUrl + "/patientalerts/" + $state.params.alert_id,
+                url: $rootScope.IRISOrgServiceUrl + "/pharmacybrands/" + $state.params.id,
                 method: "GET"
             }).success(
                     function (response) {
@@ -105,9 +98,9 @@ app.controller('BrandsController', ['$rootScope', '$scope', '$timeout', '$http',
                 var index = $scope.displayedCollection.indexOf(row);
                 if (index !== -1) {
                     $http({
-                        url: $rootScope.IRISOrgServiceUrl + "/patientalert/remove",
+                        url: $rootScope.IRISOrgServiceUrl + "/pharmacybrand/remove",
                         method: "POST",
-                        data: {id: row.alert_id}
+                        data: {id: row.brand_id}
                     }).then(
                             function (response) {
                                 $scope.loadbar('hide');
