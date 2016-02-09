@@ -5,8 +5,8 @@
             .module('app')
             .factory('AuthenticationService', AuthenticationService);
 
-    AuthenticationService.$inject = ['$http', '$cookieStore', '$rootScope', '$window', '$sessionStorage'];
-    function AuthenticationService($http, $cookieStore, $rootScope, $window, $sessionStorage) {
+    AuthenticationService.$inject = ['$http', '$cookieStore', '$rootScope', '$window', '$localStorage'];
+    function AuthenticationService($http, $cookieStore, $rootScope, $window, $localStorage) {
         var service = {};
 
         service.Login = Login;
@@ -33,7 +33,7 @@
                 }
             };
             
-            $sessionStorage.$default({user_resources: resources});
+            $localStorage.$default({user_resources: resources});
 
             $cookieStore.put('globals', $rootScope.globals);
             $http.defaults.headers.common['Authorization'] = 'Bearer ' + secToken; // jshint ignore:line

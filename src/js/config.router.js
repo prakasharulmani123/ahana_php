@@ -1290,6 +1290,27 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
+            
+             //PATIENT
+            .state('pharmacy', {
+                abstract: true,
+                url: '/pharmacy',
+                templateUrl: 'tpl/pharmacy.html'
+            })
+            .state('pharmacy.brand', {
+                url: '/brand',
+                templateUrl: 'tpl/pharmacy_brand/index.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/pharmacy_brand/pharmacy_brand.js');
+                                    }
+                            );
+                        }]
+                }
+            })
 }
 run.$inject = ['$rootScope', '$state', '$stateParams', '$location', '$cookieStore', '$http', '$window', 'CommonService'];
 function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $window, CommonService) {

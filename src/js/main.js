@@ -3,8 +3,8 @@
 /* Controllers */
 
 angular.module('app')
-        .controller('AppCtrl', ['$scope', '$translate', '$localStorage', '$window', '$rootScope', '$state', '$cookieStore', '$http', 'CommonService', '$sessionStorage', '$location',
-            function ($scope, $translate, $localStorage, $window, $rootScope, $state, $cookieStore, $http, CommonService, $sessionStorage, $location) {
+        .controller('AppCtrl', ['$scope', '$localStorage', '$window', '$rootScope', '$state', '$cookieStore', '$http', 'CommonService',
+            function ($scope, $localStorage, $window, $rootScope, $state, $cookieStore, $http, CommonService) {
                 // add 'ie' classes to html
                 var isIE = !!navigator.userAgent.match(/MSIE/i);
                 isIE && angular.element($window.document.body).addClass('ie');
@@ -82,7 +82,7 @@ angular.module('app')
                 $scope.logout = function () {
                     $rootScope.globals = {};
                     $cookieStore.remove('globals');
-                    sessionStorage.removeItem('ngStorage-user_resources');
+                    localStorage.removeItem('ngStorage-user_resources');
                     $window.location.reload();
                 };
 
