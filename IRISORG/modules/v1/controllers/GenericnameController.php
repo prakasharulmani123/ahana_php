@@ -53,17 +53,8 @@ class GenericnameController extends ActiveController {
     public function actionRemove() {
         $id = Yii::$app->getRequest()->post('id');
         if ($id) {
-            $model = PhaGeneric::find()->where(['floor_id' => $id])->one();
+            $model = PhaGeneric::find()->where(['generic_id' => $id])->one();
             $model->remove();
-            
-            //Remove all related records
-            foreach ($model->coWards as $ward) {
-                $ward->remove();
-                foreach ($ward->room as $room) {
-                    $room->remove();
-                }
-            }
-            //
             return ['success' => true];
         }
     }
