@@ -13,7 +13,7 @@
             <button class="btn btn-sm btn-grey" ng-click="loadBrandsList()"> 
                 &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
             </button>
-            <button check-access-button ng-click="$state.go('pharmacy.brandCreate', {id: $state.params.id})" class="btn btn-sm btn-info pull-right">
+            <button check-access-button ng-click="$state.go('pharmacy.brandCreate')" class="btn btn-sm btn-info pull-right">
                 <i class="fa fa-plus"></i> &nbsp; Add new Brand
             </button>
         </div>
@@ -23,6 +23,7 @@
                 <tr>
                     <th st-sort="brand_name">Brand name</th>
                     <th st-sort="brand_code">Brand code</th>
+                    <th>Status</th>
                     <th>Action</th>
                 </tr>
                 <tr>
@@ -32,7 +33,7 @@
                     <th>
                         <input st-search="'brand_code'" placeholder="search for brand code" class="input-sm form-control" type="search"/>
                     </th>
-                    <th>&nbsp;</th>
+                    <th colspan="2">&nbsp;</th>
                 </tr>
             </thead>
             <tbody ng-hide="isLoading">
@@ -42,6 +43,14 @@
                     </td>
                     <td>
                         {{row.brand_code}}
+                    </td>
+                    <td>
+                        <div ng-if="row.tenant_id != null">
+                            <label class="i-checks "> 
+                                <input type="checkbox" checked="" ng-true-value="'1'" ng-false-value="'0'" name="status" ng-model="row.status" ng-change='updateStatus("PhaBrand", row.brand_id)'> 
+                                <i></i>
+                            </label>
+                        </div>
                     </td>
                     <td>
                         <div ng-if="row.tenant_id != null">

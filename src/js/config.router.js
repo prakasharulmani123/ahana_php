@@ -1290,7 +1290,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-
+            
              //PHARMACY
             .state('pharmacy', {
                 abstract: true,
@@ -1335,7 +1335,45 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-            //PHARMACY DRUG CLASS
+            //PHARMACY BRAND
+            .state('pharmacy.brandDivision', {
+                url: '/brandDivision',
+                templateUrl: 'tpl/pharmacy_brand_division/index.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/pharmacy_brand_division/pharmacy_brand_division.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            //PHARMACY BRAND CREATE
+            .state('pharmacy.brandDivisionCreate', {
+                url: '/brandDivisionCreate',
+                templateUrl: 'tpl/pharmacy_brand_division/create.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/pharmacy_brand_division/pharmacy_brand_division.js']);
+                        }]
+                }
+            })
+
+            //PHARMACY BRAND UPDATE
+            .state('pharmacy.brandDivisionUpdate', {
+                url: '/brandDivisionUpdate/{id}',
+                templateUrl: 'tpl/pharmacy_brand_division/update.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/pharmacy_brand_division/pharmacy_brand_division.js']);
+                        }]
+                }
+            })
+//PHARMACY DRUG CLASS
             .state('pharmacy.drugclass', {
                 url: '/drugclass',
                 templateUrl: 'tpl/pharmacy_drugclass/index.html',
@@ -1426,7 +1464,7 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
             }
         }
     });
-
+    
     //Check Access
 //    $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
 //        var stateName = toState.name;
