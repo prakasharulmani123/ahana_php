@@ -1290,7 +1290,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-            
+
              //PHARMACY
             .state('pharmacy', {
                 abstract: true,
@@ -1332,6 +1332,44 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                     deps: ['uiLoad',
                         function (uiLoad) {
                             return uiLoad.load(['tpl/pharmacy_brand/pharmacy_brand.js']);
+                        }]
+                }
+            })
+            //PHARMACY DRUG CLASS
+            .state('pharmacy.drugclass', {
+                url: '/drugclass',
+                templateUrl: 'tpl/pharmacy_drugclass/index.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/pharmacy_drugclass/pharmacy_drugclass.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            //PHARMACY DRUG CLASS CREATE
+            .state('pharmacy.drugclassCreate', {
+                url: '/drugclassCreate',
+                templateUrl: 'tpl/pharmacy_drugclass/create.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/pharmacy_drugclass/pharmacy_drugclass.js']);
+                        }]
+                }
+            })
+
+            //PHARMACY DRUG CLASS UPDATE
+            .state('pharmacy.drugclassUpdate', {
+                url: '/drugclassUpdate/{id}',
+                templateUrl: 'tpl/pharmacy_drugclass/update.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/pharmacy_drugclass/pharmacy_drugclass.js']);
                         }]
                 }
             })
@@ -1388,7 +1426,7 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
             }
         }
     });
-    
+
     //Check Access
 //    $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
 //        var stateName = toState.name;
