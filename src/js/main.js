@@ -3,8 +3,8 @@
 /* Controllers */
 
 angular.module('app')
-        .controller('AppCtrl', ['$scope', '$localStorage', '$window', '$rootScope', '$state', '$cookieStore', '$http', 'CommonService',
-            function ($scope, $localStorage, $window, $rootScope, $state, $cookieStore, $http, CommonService) {
+        .controller('AppCtrl', ['$scope', '$localStorage', '$window', '$rootScope', '$state', '$cookieStore', '$http', 'CommonService','$timeout',
+            function ($scope, $localStorage, $window, $rootScope, $state, $cookieStore, $http, CommonService,$timeout) {
                 // add 'ie' classes to html
                 var isIE = !!navigator.userAgent.match(/MSIE/i);
                 isIE && angular.element($window.document.body).addClass('ie');
@@ -196,5 +196,15 @@ angular.module('app')
                     });
                     return ret;
                 }
+
+                $scope.$watch('successMessage', function () {
+                    if ($scope.successMessage) {
+                        $timeout(function(){
+                            $scope.successMessage = false;
+                        }, 3000);
+                    }
+                }, true);
+
+
 
             }]);
