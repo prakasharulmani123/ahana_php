@@ -1290,7 +1290,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-
+            
              //PHARMACY
             .state('pharmacy', {
                 abstract: true,
@@ -1373,7 +1373,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-            //PHARMACY DRUG CLASS
+//PHARMACY DRUG CLASS
             .state('pharmacy.drugclass', {
                 url: '/drugclass',
                 templateUrl: 'tpl/pharmacy_drugclass/index.html',
@@ -1439,7 +1439,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-
+            
             //PHARMACY GENERICNAME UPDATE
             .state('pharmacy.genericNameUpdate', {
                 url: '/genericNameUpdate/{id}',
@@ -1451,8 +1451,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-
-            //PHARMACY Product Description
+//PHARMACY Product Description
             .state('pharmacy.prodesc', {
                 url: '/prodesc',
                 templateUrl: 'tpl/pharmacy_prodesc/index.html',
@@ -1487,6 +1486,45 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                     deps: ['uiLoad',
                         function (uiLoad) {
                             return uiLoad.load(['tpl/pharmacy_prodesc/pharmacy_prodesc.js']);
+                        }]
+                }
+            })
+		//PHARMACY PACKING UNIT
+            .state('pharmacy.packingUnit', {
+                url: '/packingUnit',
+                templateUrl: 'tpl/pharmacy_packing_unit/index.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/pharmacy_packing_unit/pharmacy_packing_unit.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+
+            //PHARMACY PACKING UNIT CREATE
+            .state('pharmacy.packingUnitCreate', {
+                url: '/packingUnitCreate',
+                templateUrl: 'tpl/pharmacy_packing_unit/create.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/pharmacy_packing_unit/pharmacy_packing_unit.js']);
+                        }]
+                }
+            })
+            
+            //PHARMACY PACKING UNIT UPDATE
+            .state('pharmacy.packingUnitUpdate', {
+                url: '/packingUnitUpdate/{id}',
+                templateUrl: 'tpl/pharmacy_packing_unit/update.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/pharmacy_packing_unit/pharmacy_packing_unit.js']);
                         }]
                 }
             })
@@ -1543,7 +1581,7 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
             }
         }
     });
-
+    
     //Check Access
 //    $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
 //        var stateName = toState.name;
