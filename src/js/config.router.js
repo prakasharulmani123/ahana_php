@@ -1290,8 +1290,8 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-            
-             //PHARMACY
+
+            //PHARMACY
             .state('pharmacy', {
                 abstract: true,
                 url: '/pharmacy',
@@ -1412,7 +1412,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                 }
             })
 
-		//PHARMACY GENERICNAME
+            //PHARMACY GENERICNAME
             .state('pharmacy.genericName', {
                 url: '/genericName',
                 templateUrl: 'tpl/pharmacy_generic_name/index.html',
@@ -1439,7 +1439,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-            
+
             //PHARMACY GENERICNAME UPDATE
             .state('pharmacy.genericNameUpdate', {
                 url: '/genericNameUpdate/{id}',
@@ -1504,7 +1504,7 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
             }
         }
     });
-    
+
     //Check Access
 //    $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
 //        var stateName = toState.name;

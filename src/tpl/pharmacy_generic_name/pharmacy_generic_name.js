@@ -1,10 +1,5 @@
 app.controller('GenericNameController', ['$rootScope', '$scope', '$timeout', '$http', '$state', function ($rootScope, $scope, $timeout, $http, $state) {
 
-        $scope.app.settings.patientTopBar = false;
-        $scope.app.settings.patientSideMenu = false;
-        $scope.app.settings.patientContentClass = 'app-content';
-        $scope.app.settings.patientFooterClass = 'app-footer';
-        
         //Index Page
         $scope.loadGenericNamesList = function () {
             $scope.isLoading = true;
@@ -15,9 +10,9 @@ app.controller('GenericNameController', ['$rootScope', '$scope', '$timeout', '$h
 
             // Get data's from service
             $http.get($rootScope.IRISOrgServiceUrl + '/genericname')
-                    .success(function (alerts) {
+                    .success(function (genericnames) {
                         $scope.isLoading = false;
-                        $scope.rowCollection = alerts;
+                        $scope.rowCollection = genericnames;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
                     })
                     .error(function () {
@@ -36,7 +31,7 @@ app.controller('GenericNameController', ['$rootScope', '$scope', '$timeout', '$h
                 post_url = $rootScope.IRISOrgServiceUrl + '/genericnames';
                 method = 'POST';
                 succ_msg = 'GenericName saved successfully';
-                
+
                 angular.extend(_that.data, {patient_id: $scope.app.patientDetail.patientId});
             } else {
                 post_url = $rootScope.IRISOrgServiceUrl + '/genericnames/' + _that.data.generic_id;
