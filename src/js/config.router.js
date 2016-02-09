@@ -1291,7 +1291,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                 }
             })
 
-            //PHARMACY
+             //PHARMACY
             .state('pharmacy', {
                 abstract: true,
                 url: '/pharmacy',
@@ -1373,7 +1373,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-//PHARMACY DRUG CLASS
+            //PHARMACY DRUG CLASS
             .state('pharmacy.drugclass', {
                 url: '/drugclass',
                 templateUrl: 'tpl/pharmacy_drugclass/index.html',
@@ -1412,7 +1412,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                 }
             })
 
-            //PHARMACY GENERICNAME
+		//PHARMACY GENERICNAME
             .state('pharmacy.genericName', {
                 url: '/genericName',
                 templateUrl: 'tpl/pharmacy_generic_name/index.html',
@@ -1448,6 +1448,45 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                     deps: ['uiLoad',
                         function (uiLoad) {
                             return uiLoad.load(['tpl/pharmacy_generic_name/pharmacy_generic_name.js']);
+                        }]
+                }
+            })
+
+            //PHARMACY Product Description
+            .state('pharmacy.prodesc', {
+                url: '/prodesc',
+                templateUrl: 'tpl/pharmacy_prodesc/index.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/pharmacy_prodesc/pharmacy_prodesc.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            //PHARMACY Product Description CREATE
+            .state('pharmacy.prodescCreate', {
+                url: '/prodescCreate',
+                templateUrl: 'tpl/pharmacy_prodesc/create.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/pharmacy_prodesc/pharmacy_prodesc.js']);
+                        }]
+                }
+            })
+
+            //PHARMACY Product Description UPDATE
+            .state('pharmacy.prodescUpdate', {
+                url: '/prodescUpdate/{id}',
+                templateUrl: 'tpl/pharmacy_prodesc/update.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/pharmacy_prodesc/pharmacy_prodesc.js']);
                         }]
                 }
             })
