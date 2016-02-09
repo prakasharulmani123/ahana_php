@@ -67,7 +67,7 @@
                     <td> {{patConsultant.consultant_name}} </td>
                     <td>
                         <div ng-if="patConsultant.tenant_id != null">
-                            <a title="Edit" ui-sref="patient.consultantUpdate({id: $state.params.id, cons_id: patConsultant.pat_consult_id})">
+                            <a title="Edit" check-access  ui-sref="patient.consultantUpdate({id: $state.params.id, cons_id: patConsultant.pat_consult_id})">
                                 <i class="fa fa-pencil"></i>
                             </a>&nbsp;&nbsp;&nbsp;
                             <a title="Delete" ng-click="removeRow(patConsultant)">

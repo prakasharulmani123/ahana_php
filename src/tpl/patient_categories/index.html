@@ -13,7 +13,7 @@
             <button class="btn btn-sm btn-grey" ng-click="loadPatientCategoriesList()"> 
                 &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
             </button>
-            <button ng-click="$state.go('configuration.patientCategoryCreate')" class="btn btn-sm btn-info pull-right">
+            <button check-access-button ng-click="$state.go('configuration.patientCategoryCreate')" class="btn btn-sm btn-info pull-right">
                 <i class="fa fa-plus"></i> &nbsp; Add new Patient Category
             </button>
         </div>
@@ -41,7 +41,7 @@
                         {{row.patient_cat_color}}
                     </td>-->
                     <td>
-                        <a title="Edit" ui-sref="configuration.patientCategoryUpdate({id: '{{row.patient_cat_id}}'})">
+                        <a title="Edit" check-access  ui-sref="configuration.patientCategoryUpdate({id: '{{row.patient_cat_id}}'})">
                             <i class="fa fa-pencil"></i>
                         </a>&nbsp;&nbsp;&nbsp;
                     </td>

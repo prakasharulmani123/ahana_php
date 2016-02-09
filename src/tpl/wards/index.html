@@ -13,7 +13,7 @@
             <button class="btn btn-sm btn-grey" ng-click="loadWardsList()"> 
                 &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
             </button>
-            <button ng-click="$state.go('configuration.ward_create')" class="btn btn-sm btn-info pull-right">
+            <button check-access-button ng-click="$state.go('configuration.ward_create')" class="btn btn-sm btn-info pull-right">
                 <i class="fa fa-plus"></i> &nbsp; Add new Ward
             </button>
         </div>
@@ -51,7 +51,7 @@
                         </label>
                     </td>                    
                     <td>
-                        <a title="Edit" ui-sref="configuration.ward_update({id: '{{row.ward_id}}'})">
+                        <a title="Edit" check-access  ui-sref="configuration.ward_update({id: '{{row.ward_id}}'})">
                             <i class="fa fa-pencil"></i>
                         </a>&nbsp;&nbsp;&nbsp;
                         <a class="hide" title="Delete" ng-click="removeRow(row)">

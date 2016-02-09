@@ -13,7 +13,7 @@
             <button class="btn btn-sm btn-grey" ng-click="loadRoomChargesList()"> 
                 &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
             </button>
-            <button ng-click="$state.go('configuration.roomChargeCreate')" class="btn btn-sm btn-info pull-right">
+            <button check-access-button ng-click="$state.go('configuration.roomChargeCreate')" class="btn btn-sm btn-info pull-right">
                 <i class="fa fa-plus"></i> &nbsp; Add new RoomCharge
             </button>
         </div>
@@ -51,7 +51,7 @@
                         {{row.charge}}
                     </td>
                     <td>
-                        <a title="Edit" ui-sref="configuration.roomChargeUpdate({id: '{{row.charge_id}}'})">
+                        <a title="Edit" check-access  ui-sref="configuration.roomChargeUpdate({id: '{{row.charge_id}}'})">
                             <i class="fa fa-pencil"></i>
                         </a>&nbsp;&nbsp;&nbsp;
                         <a class="hide" title="Delete" ng-click="removeRow(row)">

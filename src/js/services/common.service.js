@@ -2,8 +2,8 @@
 
 angular.module('app').factory('CommonService', CommonService);
 
-CommonService.$inject = ['$http', '$rootScope', '$window', '$q', '$filter'];
-function CommonService($http, $rootScope, $window, $q, $filter) {
+CommonService.$inject = ['$http', '$rootScope', '$window', '$q', '$filter', '$sessionStorage'];
+function CommonService($http, $rootScope, $window, $q, $filter, $sessionStorage) {
     var service = {};
 
     service.ChangeStatus = ChangeStatus;
@@ -277,16 +277,10 @@ function CommonService($http, $rootScope, $window, $q, $filter) {
         callback(response);
     }
 
-    function CheckStateAccess(stateName, callback) {
-        var response;
-
-        $http.post($rootScope.IRISOrgServiceUrl + '/user/checkstateaccess', {'stateName': stateName})
-                .success(function (response) {
-                    callback(response);
-                }, function (x) {
-                    response = {success: false, message: 'Server Error'};
-                    callback(response);
-                });
+    function CheckStateAccess(url, callback) {
+        var splittedStringArray = url.split("(");
+        url = splittedStringArray[0];
+        callback($sessionStorage.user_resources.hasOwnProperty(url));
     }
 
     function GetGenderList(callback) {
@@ -312,7 +306,7 @@ function CommonService($http, $rootScope, $window, $q, $filter) {
     function GetRoomList(tenant, sts, del_sts, occupied_status, callback) {
         var response;
 
-        $http.get($rootScope.IRISOrgServiceUrl + '/room/getroomlist?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts  + '&occupied_status=' + occupied_status)
+        $http.get($rootScope.IRISOrgServiceUrl + '/room/getroomlist?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts + '&occupied_status=' + occupied_status)
                 .success(function (response) {
                     callback(response);
                 }, function (x) {
@@ -408,7 +402,7 @@ function CommonService($http, $rootScope, $window, $q, $filter) {
         }
         callback(result);
     }
-    
+
     function GetRoomTypesRoomsList(tenant, callback) {
         var response;
 

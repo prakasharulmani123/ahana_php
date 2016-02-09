@@ -13,7 +13,7 @@
             <button class="btn btn-sm btn-grey" ng-click="loadList()"> 
                 &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
             </button>
-            <button ng-click="$state.go('configuration.user_create')" class="btn btn-sm btn-info pull-right">
+            <button check-access-button ng-click="$state.go('configuration.user_create')" class="btn btn-sm btn-info pull-right">
                 <i class="fa fa-plus"></i> &nbsp; Add new user
             </button>
         </div>
@@ -77,7 +77,7 @@
                         <a title="{{row.login_link_text}}" class="{{row.login_link_btn}}" ui-sref="configuration.login_update({id: '{{row.user_id}}'})">{{row.login_link_text}}</a>
                     </td>
                     <td>
-                        <a title="Edit" ui-sref="configuration.user_update({id: '{{row.user_id}}'})">
+                        <a title="Edit" check-access  ui-sref="configuration.user_update({id: '{{row.user_id}}'})">
                             <i class="fa fa-pencil"></i>
                         </a>&nbsp;&nbsp;&nbsp;
                         <!--                        <a class="hide" title="Delete" ui-sref="configuration.role_update({id: '{{row.role_id}}'})">

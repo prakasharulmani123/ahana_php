@@ -450,7 +450,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-            
+
             //CONFIGURATION ROOM CHARGE CATEGORY ITEM
             .state('configuration.roomChargeCategoryItem', {
                 url: '/roomChargeCategoryItem',
@@ -1198,7 +1198,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-            
+
             //Patient Notes
             .state('patient.notes', {
                 url: '/notes/{id}',
@@ -1238,7 +1238,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-            
+
             //Patient Note View
             .state('patient.noteView', {
                 url: '/noteView/{id}/{note_id}',
@@ -1251,7 +1251,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                 }
             })
 
-		//Patient Consultant
+            //Patient Consultant
             .state('patient.consultant', {
                 url: '/consultant/{id}',
                 templateUrl: 'tpl/patient_consultant/index.html',
@@ -1343,13 +1343,13 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
             }
         }
     });
-//
+    
+    //Check Access
 //    $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
-//        alert('stateChangeSuccess');
 //        var stateName = toState.name;
 //        if (stateName) {
 //            $rootScope.commonService.CheckStateAccess(stateName, function (response) {
-//                if (response.success === false) {
+//                if (!response) {
 //                    $state.go('configuration.organization');
 //                }
 //            });

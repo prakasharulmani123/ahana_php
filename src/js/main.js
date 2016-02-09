@@ -3,8 +3,8 @@
 /* Controllers */
 
 angular.module('app')
-        .controller('AppCtrl', ['$scope', '$translate', '$localStorage', '$window', '$rootScope', '$state', '$cookieStore', '$http', 'CommonService', '$sessionStorage',
-            function ($scope, $translate, $localStorage, $window, $rootScope, $state, $cookieStore, $http, CommonService, $sessionStorage) {
+        .controller('AppCtrl', ['$scope', '$translate', '$localStorage', '$window', '$rootScope', '$state', '$cookieStore', '$http', 'CommonService', '$sessionStorage', '$location',
+            function ($scope, $translate, $localStorage, $window, $rootScope, $state, $cookieStore, $http, CommonService, $sessionStorage, $location) {
                 // add 'ie' classes to html
                 var isIE = !!navigator.userAgent.match(/MSIE/i);
                 isIE && angular.element($window.document.body).addClass('ie');
@@ -85,9 +85,9 @@ angular.module('app')
                     sessionStorage.removeItem('ngStorage-user_resources');
                     $window.location.reload();
                 };
-                
+
 //                $scope.logout();
-               
+
                 //Change Status
                 $scope.updateStatus = function (modelName, primaryKey) {
                     $scope.service = CommonService;
@@ -190,7 +190,11 @@ angular.module('app')
                 };
 
                 $scope.checkAccess = function (url) {
-                    return $sessionStorage.user_resources.hasOwnProperty(url);
+                    var ret = true;
+                    $rootScope.commonService.CheckStateAccess(url, function (response) {
+                        ret = response;
+                    });
+                    return ret;
                 }
 
             }]);

@@ -13,7 +13,7 @@
             <button class="btn btn-sm btn-grey" ng-click="loadRolesList()"> 
                 &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
             </button>
-            <button ng-click="$state.go('configuration.role_create')" class="btn btn-sm btn-info pull-right">
+            <button check-access-button ng-click="$state.go('configuration.role_create')" class="btn btn-sm btn-info pull-right">
                 <i class="fa fa-plus"></i> &nbsp; Add new role
             </button>
         </div>
@@ -37,7 +37,7 @@
                         {{row.description}}
                     </td>
                     <td>
-                        <a title="Edit" ui-sref="configuration.role_update({id: '{{row.role_id}}'})">
+                        <a title="Edit" check-access  ui-sref="configuration.role_update({id: '{{row.role_id}}'})">
                             <i class="fa fa-pencil"></i>
                         </a>&nbsp;&nbsp;&nbsp;
                         <a class="hide" title="Delete" ng-click="removeRow(row)">
