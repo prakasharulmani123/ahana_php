@@ -176,17 +176,8 @@ angular.module('app')
                     }
                 };
 
-                $scope.loadUserDetail = function () {
-                    if (typeof $rootScope.globals.currentUser != 'undefined') {
-
-                        $http.post($rootScope.IRISOrgServiceUrl + '/user/getusercredentialsbytoken', {token: $rootScope.globals.currentUser.authdata})
-                                .success(function (response) {
-                                    $scope.app.org_name = response.credentials.org;
-                                })
-                                .error(function () {
-                                    $scope.error = "An Error has occured while loading patient!";
-                                });
-                    }
+                $scope.loadUserCredentials = function () {
+                    $scope.app.org_name = $localStorage.user_credentials.org;
                 };
 
                 $scope.checkAccess = function (url) {

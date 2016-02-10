@@ -26,14 +26,14 @@
                     });
         }
 
-        function SetCredentials(secToken, resources) {
+        function SetCredentials(secToken, resources, credentials) {
             $rootScope.globals = {
                 currentUser: {
                     authdata: secToken
                 }
             };
             
-            $localStorage.$default({user_resources: resources});
+            $localStorage.$default({user_resources: resources, user_credentials: credentials});
 
             $cookieStore.put('globals', $rootScope.globals);
             $http.defaults.headers.common['Authorization'] = 'Bearer ' + secToken; // jshint ignore:line
