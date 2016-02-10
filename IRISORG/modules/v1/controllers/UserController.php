@@ -113,24 +113,34 @@ class UserController extends ActiveController {
         }
         return $data;
     }
-    
+
     public static function Getuserrolesresources() {
         $user_id = Yii::$app->user->identity->user->user_id;
         $tenant_id = Yii::$app->user->identity->user->tenant_id;
 
         $role_ids = ArrayHelper::map(CoUsersRoles::find()->where(['user_id' => $user_id])->all(), 'role_id', 'role_id');
         $resource_ids = ArrayHelper::map(CoRolesResources::find()->where(['IN', 'role_id', $role_ids])->andWhere(['tenant_id' => $tenant_id])->all(), 'resource_id', 'resource_id');
-        
+
         $resources = ArrayHelper::map(CoResources::find()->where(['IN', 'resource_id', $resource_ids])->all(), 'resource_url', 'resource_url');
-        
+
         return $resources;
+    }
+
+    public static function GetuserCredentials() {
+        $user_id = Yii::$app->user->identity->user->user_id;
+        $user = CoUser::find()->where(['user_id' => $user_id])->one();
+
+        $credentials = [
+            'org' => $user->tenant->tenant_name
+        ];
+        return $credentials;
     }
 
     public function actionLogin() {
         $model = new LoginForm();
 
         if ($model->load(Yii::$app->getRequest()->getBodyParams(), '') && $model->login()) {
-            return ['success' => true, 'access_token' => Yii::$app->user->identity->getAuthKey(), 'resources' => self::Getuserrolesresources()];
+            return ['success' => true, 'access_token' => Yii::$app->user->identity->getAuthKey(), 'resources' => self::Getuserrolesresources(), 'credentials' => self::GetuserCredentials()];
         } elseif (!$model->validate()) {
             return ['success' => false, 'message' => Html::errorSummary([$model])];
         }
@@ -422,9 +432,9 @@ class UserController extends ActiveController {
         $token = Yii::$app->request->post('token');
         if (!empty($token)) {
             $data = CoLogin::find()->where(['authtoken' => $token])->one();
-            
+
             $credentials = [
-                'org' => $data->user->tenant->tenant_name 
+                'org' => $data->user->tenant->tenant_name
             ];
             return ['success' => true, 'credentials' => $credentials];
         } else {
