@@ -6,6 +6,7 @@ use common\models\CoChargePerCategory;
 use common\models\CoMasterCity;
 use common\models\CoMasterCountry;
 use common\models\CoMasterState;
+use common\models\CoOrganization;
 use common\models\CoRolesResources;
 use common\models\CoTenant;
 use common\models\CoUsersRoles;
@@ -82,7 +83,8 @@ class DefaultController extends Controller {
 
     public function actionGetTenantList() {
         $list = array();
-        $data = CoTenant::getTenantlist();
+        $data = ArrayHelper::map(CoOrganization::findOne(['org_domain' => DOMAIN_PATH])->coTenants, 'tenant_id', 'tenant_name');
+//        $data = CoTenant::getTenantlist(['org_id' => $org]);
         foreach ($data as $value => $label) {
             $list[] = array('value' => $value, 'label' => $label);
         }
