@@ -359,8 +359,7 @@ CREATE TABLE `co_roles_resources` (
   KEY `FK_co_role_permissions_role` (`role_id`),
   KEY `FK_co_role_permissions_resource` (`resource_id`),
   KEY `FK_co_role_permissions_tenant` (`tenant_id`),
-  CONSTRAINT `FK_co_role_permissions_role` FOREIGN KEY (`role_id`) REFERENCES `co_role` (`role_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `FK_co_role_permissions_tenant` FOREIGN KEY (`tenant_id`) REFERENCES `co_tenant` (`tenant_id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `FK_co_role_permissions_role` FOREIGN KEY (`role_id`) REFERENCES `co_role` (`role_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=128 DEFAULT CHARSET=latin1;
 
 /*Data for the table `co_roles_resources` */
