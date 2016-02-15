@@ -1535,7 +1535,7 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
     $rootScope.$stateParams = $stateParams;
 
     var serviceUrl = '';
-    var clientUrl = 'apollo.hms.ark';
+    var clientUrl = 'ahana.hms.ark';
     var orgUrl = '';
     if ($location.host() == 'demo.arkinfotec.in') {
         serviceUrl = 'http://demo.arkinfotec.in/ahana/demo/IRIS-service/IRISORG/web/v1'
