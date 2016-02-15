@@ -8,7 +8,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
             $scope.itemsByPage = 10;
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
             // Display Data
-            $http.get($rootScope.IRISAdminServiceUrl + '/organizations')
+            $http.get($rootScope.IRISAdminServiceUrl + '/organization/getorglist')
                     .success(function (usr) {
                         $scope.isLoading = false;
                         $scope.rowCollection = usr;
@@ -322,5 +322,10 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                 }
             }, 1000);
         }
+        
+        $scope.ctrl = {};
+        $scope.ctrl.expandAll = function (expanded) {
+            $scope.$broadcast('onExpandAll', {expanded: expanded});
+        };
 
     }]);
