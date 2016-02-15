@@ -3,6 +3,7 @@
 namespace IRISADMIN\modules\v1\controllers;
 
 use common\models\CoLogin;
+use common\models\CoOrganization;
 use common\models\CoResources;
 use common\models\CoRole;
 use common\models\CoRolesResources;
@@ -285,6 +286,10 @@ class OrganizationController extends ActiveController {
         } else {
             return ['success' => false, 'message' => 'Please Fill the Form'];
         }
+    }
+    
+    public function actionGetorglist() {
+        return CoOrganization::find()->all();
     }
 
 }

@@ -89,4 +89,14 @@ class CoOrganization extends GActiveRecord
     {
         return $this->hasMany(CoTenant::className(), ['org_id' => 'org_id']);
     }
+    
+    public function fields() {
+        $extend = [
+            'tenants' => function ($model) {
+                return $model->coTenants;
+            },
+        ];
+        $fields = array_merge(parent::fields(), $extend);
+        return $fields;
+    }
 }
