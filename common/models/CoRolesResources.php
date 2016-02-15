@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\models\query\CoRolesResourcesQuery;
+use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
@@ -299,6 +300,10 @@ class CoRolesResources extends ActiveRecord {
                 return (isset($model->resource) ? $model->resource->resource_name : '-');
             },
         ];
+    }
+    
+    public static function getDb() {
+        return Yii::$app->client;
     }
 
 }

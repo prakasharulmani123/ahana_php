@@ -32,7 +32,7 @@ use yii\helpers\ArrayHelper;
  * @property CoRole[] $coRoles
  * @property CoUser[] $coUserProfiles
  */
-class CoTenant extends RActiveRecord {
+class CoTenant extends GActiveRecord {
 
     /**
      * @inheritdoc
@@ -112,6 +112,10 @@ class CoTenant extends RActiveRecord {
         return $this->hasOne(CoMasterCountry::className(), ['country_id' => 'tenant_country_id']);
     }
 
+    public function getCoOrganization() {
+        return $this->hasOne(CoOrganization::className(), ['org_id' => 'org_id']);
+    }
+
     public function fields() {
         $extend = [
             'tenant_city_name' => function ($model) {
@@ -132,8 +136,8 @@ class CoTenant extends RActiveRecord {
         return new CoTenantQuery(get_called_class());
     }
 
-    public static function getTenantlist() {
-        return ArrayHelper::map(self::find()->status()->all(), 'tenant_id', 'tenant_name');
+    public static function getTenantlist($condition = []) {
+        return ArrayHelper::map(self::find()->status()->all($condition), 'tenant_id', 'tenant_name');
     }
 
     public function afterSave($insert, $changedAttributes) {

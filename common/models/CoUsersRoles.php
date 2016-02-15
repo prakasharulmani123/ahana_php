@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\models\query\CoUsersRolesQuery;
+use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
@@ -89,5 +90,9 @@ class CoUsersRoles extends ActiveRecord
     
     public static function find() {
         return new CoUsersRolesQuery(get_called_class());
+    }
+    
+    public static function getDb() {
+        return Yii::$app->client;
     }
 }

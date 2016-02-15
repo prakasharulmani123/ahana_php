@@ -10,10 +10,10 @@ use yii\db\ActiveRecord;
 use yii\db\Expression;
 
 class RActiveRecord extends ActiveRecord {
-    
+
     public function init() {
-        if($this->isNewRecord){
-            if(isset($this->deleted_at))
+        if ($this->isNewRecord) {
+            if (isset($this->deleted_at))
                 $this->deleted_at = '0000-00-00 00:00:00';
         }
         return parent::init();
@@ -130,6 +130,10 @@ class RActiveRecord extends ActiveRecord {
         }
 
         return $result;
+    }
+
+    public static function getDb() {
+        return Yii::$app->client;
     }
 
 }

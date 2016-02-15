@@ -236,5 +236,8 @@ class CoLogin extends ActiveRecord implements IdentityInterface {
     public function removePasswordResetToken() {
         $this->password_reset_token = null;
     }
-
+    
+    public static function getDb() {
+        return Yii::$app->client;
+    }
 }

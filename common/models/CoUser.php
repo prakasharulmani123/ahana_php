@@ -165,5 +165,4 @@ class CoUser extends RActiveRecord {
 
         return $list;
     }
-
 }
