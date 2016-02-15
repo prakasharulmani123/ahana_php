@@ -1536,11 +1536,10 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
 
     var serviceUrl = '';
     var orgUrl = '';
-    if ($location.host() == 'ahana.local' || $location.host() == 'localhost') {
-        serviceUrl = 'http://ahana.local/IRIS-service/IRISORG/web/v1'
-        orgUrl = 'http://ahana.local/IRISORG-client';
-    } else if ($location.host() == 'demo.arkinfotec.in') {
+    if($location.host() == 'demo.arkinfotec.in'){
         serviceUrl = 'http://demo.arkinfotec.in/ahana/demo/IRIS-service/IRISORG/web/v1'
+    }else if($location.host() == 'hms.ark'){
+        serviceUrl = 'http://hms.ark/api/IRISORG/web/v1'
     }
     $rootScope.IRISOrgServiceUrl = serviceUrl;
     $rootScope.commonService = CommonService;
