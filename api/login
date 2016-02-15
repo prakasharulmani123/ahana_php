@@ -1,8 +1,0 @@
-{
-"success": true,
-"message": "Successfully logged in!!!",
-"user":{
-    "UID" : "1",
-    "SECTOKEN" : "156456456"
-    }
-}
