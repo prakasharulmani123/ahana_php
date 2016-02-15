@@ -131,10 +131,10 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
     $rootScope.$stateParams = $stateParams;
 
     var serviceUrl = '';
-    if($location.host() == 'ahana.local' || $location.host() == 'localhost'){
-        serviceUrl = 'http://ahana.local/IRIS-service/IRISADMIN/web/v1'
-    }else if($location.host() == 'demo.arkinfotec.in'){
+    if($location.host() == 'demo.arkinfotec.in'){
         serviceUrl = 'http://demo.arkinfotec.in/ahana/demo/IRIS-service/IRISADMIN/web/v1'
+    }else if($location.host() == 'hms.ark'){
+        serviceUrl = 'http://hms.ark/api/IRISADMIN/web/v1'
     }
     $rootScope.IRISAdminServiceUrl = serviceUrl;
     $rootScope.commonService = CommonService;
