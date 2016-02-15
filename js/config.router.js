@@ -1290,8 +1290,8 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-            
-             //PHARMACY
+
+            //PHARMACY
             .state('pharmacy', {
                 abstract: true,
                 url: '/pharmacy',
@@ -1412,7 +1412,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                 }
             })
 
-		//PHARMACY GENERICNAME
+            //PHARMACY GENERICNAME
             .state('pharmacy.genericName', {
                 url: '/genericName',
                 templateUrl: 'tpl/pharmacy_generic_name/index.html',
@@ -1439,7 +1439,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-            
+
             //PHARMACY GENERICNAME UPDATE
             .state('pharmacy.genericNameUpdate', {
                 url: '/genericNameUpdate/{id}',
@@ -1489,7 +1489,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-		//PHARMACY PACKING UNIT
+            //PHARMACY PACKING UNIT
             .state('pharmacy.packingUnit', {
                 url: '/packingUnit',
                 templateUrl: 'tpl/pharmacy_packing_unit/index.html',
@@ -1516,7 +1516,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
-            
+
             //PHARMACY PACKING UNIT UPDATE
             .state('pharmacy.packingUnitUpdate', {
                 url: '/packingUnitUpdate/{id}',
@@ -1535,10 +1535,11 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
     $rootScope.$stateParams = $stateParams;
 
     var serviceUrl = '';
+    var clientUrl = 'apollo.hms.ark';
     var orgUrl = '';
-    if($location.host() == 'demo.arkinfotec.in'){
+    if ($location.host() == 'demo.arkinfotec.in') {
         serviceUrl = 'http://demo.arkinfotec.in/ahana/demo/IRIS-service/IRISORG/web/v1'
-    }else if($location.host() == 'hms.ark'){
+    } else if ($location.host() == 'hms.ark') {
         serviceUrl = 'http://hms.ark/api/IRISORG/web/v1'
     }
     $rootScope.IRISOrgServiceUrl = serviceUrl;
@@ -1549,6 +1550,7 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
     if ($rootScope.globals.currentUser) {
         $http.defaults.headers.common['Authorization'] = 'Bearer ' + $rootScope.globals.currentUser.authdata; // jshint ignore:line
     }
+    $http.defaults.headers.common['x-domain-path'] = clientUrl;
 
 //    $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
 //        var stateName = toState.name;
@@ -1580,7 +1582,7 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
             }
         }
     });
-    
+
     //Check Access
 //    $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
 //        var stateName = toState.name;
