@@ -57,7 +57,7 @@
                         </label>
                     </td>
                     <td>
-                        <a title="Add Brach" ui-sref="app.branch_add({id: '{{row.org_id}}'})"><i class="fa fa-plus-circle"></i></a>&nbsp;&nbsp;
+                        <a title="Add Brach" ui-sref="app.branch_add({org_id: '{{row.org_id}}'})"><i class="fa fa-plus-circle"></i></a>&nbsp;&nbsp;
                         <!--<a title="Edit" ui-sref="app.org_edit({id: '{{row.tenant_id}}'})"><i class="fa fa-pencil"></i></a>-->
                     </td>
                 </tr>
@@ -93,7 +93,7 @@
                                             <i></i>
                                         </label>
                                     </td>
-                                    <td><a title="Edit" ui-sref="app.org_edit({id: '{{tenant.tenant_id}}'})"><i class="fa fa-pencil"></i></a></td>
+                                    <td><a title="Edit" ui-sref="app.branch_edit({org_id: '{{row.org_id}}', id: '{{tenant.tenant_id}}'})"><i class="fa fa-pencil"></i></a></td>
                                 </tr>
                             </tbody>
                         </table>

@@ -85,8 +85,18 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                 }
             })
             .state('app.branch_add', {
-                url: '/branch_add/{id}',
+                url: '/branch_add/{org_id}',
                 templateUrl: 'tpl/organization/add_branch.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/organization/org.js']);
+                        }]
+                }
+            })
+            .state('app.branch_edit', {
+                url: '/branch_edit/{org_id}/{id}',
+                templateUrl: 'tpl/organization/edit_branch.html',
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {

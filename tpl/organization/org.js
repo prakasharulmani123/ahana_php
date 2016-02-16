@@ -40,6 +40,9 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                             if ($state.current.name == 'app.org_edit') {
                                 $scope.loadForm();
                             }
+                            if ($state.current.name == 'app.branch_add' || $state.current.name == 'app.branch_edit') {
+                                $scope.loadOrg();
+                            }
                         });
                     });
                 });
@@ -322,32 +325,32 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                 }
             }, 1000);
         }
-        
+
         $scope.ctrl = {};
         $scope.ctrl.expandAll = function (expanded) {
             $scope.$broadcast('onExpandAll', {expanded: expanded});
         };
-        
+
         //Save Both Add & Update Data
         $scope.saveBranch = function (mode) {
             _that = this;
 
             $scope.errorData = "";
             $scope.successMessage = "";
-            
+
             if (mode == 'add') {
                 post_url = $rootScope.IRISAdminServiceUrl + '/organizations';
                 method = 'POST';
                 succ_msg = 'Branch saved successfully';
-                
-                if(typeof _that.data.Tenant != 'undefined')
-                    angular.extend(_that.data.Tenant, {org_id: parseInt($state.params.id)});
+
+                if (typeof _that.data.Tenant != 'undefined')
+                    angular.extend(_that.data.Tenant, {org_id: parseInt($state.params.org_id)});
             } else {
                 post_url = $rootScope.IRISAdminServiceUrl + '/organizations/' + _that.data.Tenant.tenant_id;
                 method = 'PUT';
                 succ_msg = 'Branch updated successfully';
             }
-            
+
             $scope.loadbar('show');
             $http({
                 method: method,
@@ -359,7 +362,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                         $scope.successMessage = succ_msg;
                         $scope.data = {};
                         $timeout(function () {
-                            $state.go('app.org');
+                            $state.go('app.org_list');
                         }, 1000)
 
                     }
@@ -371,5 +374,48 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                     $scope.errorData = data.message;
             });
         };
+
+        $scope.loadOrg = function () {
+            $scope.loadbar('show');
+            _that = this;
+            $scope.errorData = "";
+            $http({
+                url: $rootScope.IRISAdminServiceUrl + "/organizations/getorganization?id=" + $state.params.org_id,
+                method: "GET"
+            }).success(
+                    function (response) {
+                        $scope.loadbar('hide');
+                        
+                        $http.defaults.headers.common['x-domain-path'] = response.org.org_domain;
+
+                        if ($scope.data.form_type == 'update') {
+                            $scope.loadbar('show');
+                            $http({
+                                url: $rootScope.IRISAdminServiceUrl + "/organizations/" + $state.params.id,
+                                method: "GET"
+                            }).success(
+                                    function (response) {
+                                        $scope.loadbar('hide');
+                                        _that.data.Tenant = response;
+                                        $scope.updateState();
+                                        $scope.updateCity();
+                                    }
+                            ).error(function (data, status) {
+                                $scope.loadbar('hide');
+                                if (status == 422)
+                                    $scope.errorData = $scope.errorSummary(data);
+                                else
+                                    $scope.errorData = data.message;
+                            });
+                        }
+                    }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        }
 
     }]);
