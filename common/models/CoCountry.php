@@ -2,7 +2,8 @@
 
 namespace common\models;
 
-use Yii;
+use yii\db\ActiveQuery;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "co_country".
@@ -19,7 +20,7 @@ use Yii;
  *
  * @property CoState[] $coStates
  */
-class CoCountry extends \common\models\GActiveRecord
+class CoCountry extends GActiveRecord
 {
     /**
      * @inheritdoc
@@ -63,10 +64,14 @@ class CoCountry extends \common\models\GActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getCoStates()
     {
         return $this->hasMany(CoState::className(), ['country_id' => 'country_id']);
+    }
+    
+    public static function getCountrylist() {
+        return ArrayHelper::map(self::find()->all(), 'country_id', 'country_name');
     }
 }

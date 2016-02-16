@@ -151,46 +151,48 @@ class OrganizationController extends ActiveController {
         $post = Yii::$app->request->post();
         if (!empty($post)) {
 
-            if (Yii::$app->request->post('Tenant')) {
-                $model = CoTenant::findOne(['tenant_id' => Yii::$app->request->post('Tenant')['tenant_id']]);
-                $model->attributes = Yii::$app->request->post('Tenant');
+            $valid = false;
+
+            if (isset($post['Tenant']) && !empty($post['Tenant'])) {
+                $model = CoTenant::findOne(['tenant_id' => $post['Tenant']['tenant_id']]);
+                $model->attributes = $post['Tenant'];
                 $valid = $model->validate();
             }
 
-            if (Yii::$app->request->post('Role')) {
-                $model = CoRole::findOne(['role_id' => Yii::$app->request->post('Role')['role_id']]);
-                $model->attributes = Yii::$app->request->post('Role');
+            if (isset($post['Role']) && !empty($post['Role'])) {
+                $model = CoRole::findOne(['role_id' => $post['Role']['role_id']]);
+                $model->attributes = $post['Role'];
                 $valid = $model->validate();
             }
 
-            if (Yii::$app->request->post('Login')) {
-                $model = CoLogin::findOne(['login_id' => Yii::$app->request->post('Login')['login_id']]);
-                $model->attributes = Yii::$app->request->post('Login');
-                if(!empty($model->password))
+            if (isset($post['Login']) && !empty($post['Login'])) {
+                $model = CoLogin::findOne(['login_id' => $post['Login']['login_id']]);
+                $model->attributes = $post['Login'];
+                if (!empty($model->password))
                     $model->setPassword($model->password);
-                
+
                 $valid = $model->validate();
             }
 
-            if (Yii::$app->request->post('User')) {
-                $model = CoUser::findOne(['user_id' => Yii::$app->request->post('User')['user_id']]);
+            if (isset($post['User']) && !empty($post['User'])) {
+                $model = CoUser::findOne(['user_id' => $post['User']['user_id']]);
                 $model->scenario = 'saveorg';
-                $model->attributes = Yii::$app->request->post('User');
+                $model->attributes = $post['User'];
                 $valid = $model->validate();
             }
 
-            if (Yii::$app->request->post('Module')) {
-                $resource_id = Yii::$app->request->post('Module')['resource_ids'];
-                $model = CoRole::findOne(['role_id' => Yii::$app->request->post('Module')['role_id']]);
+            if (isset($post['Module']) && !empty($post['Module'])) {
+                $resource_id = $post['Module']['resource_ids'];
+                $model = CoRole::findOne(['role_id' => $post['Module']['role_id']]);
 
                 $resources = CoResources::find()->where(['in', 'resource_id', $resource_id])->all();
-                $extraColumns = ['tenant_id' => Yii::$app->request->post('Module')['tenant_id'], 'created_by' => Yii::$app->user->identity->user_id, 'status' => '1']; // extra columns to be saved to the many to many table
+                $extraColumns = ['tenant_id' => $post['Module']['tenant_id'], 'created_by' => Yii::$app->user->identity->user_id, 'status' => '1']; // extra columns to be saved to the many to many table
                 $unlink = true; // unlink tags not in the list
                 $delete = true; // delete unlinked tags
                 $model->linkAll('resources', $resources, $extraColumns, $unlink, $delete);
 
                 //For Update Status
-                $role_resources = CoRolesResources::find()->tenant(Yii::$app->request->post('Module')['tenant_id'])->where(['role_id' => Yii::$app->request->post('Module')['role_id']])->all();
+                $role_resources = CoRolesResources::find()->tenant($post['Module']['tenant_id'])->where(['role_id' => $post['Module']['role_id']])->all();
                 foreach ($role_resources as $role_resource) {
                     if ($role_resource->status != '1') {
                         $role_resource->updateAttributes(['status' => '1']);
@@ -287,7 +289,7 @@ class OrganizationController extends ActiveController {
             return ['success' => false, 'message' => 'Please Fill the Form'];
         }
     }
-    
+
     public function actionGetorglist() {
         return CoOrganization::find()->all();
     }

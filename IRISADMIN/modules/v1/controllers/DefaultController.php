@@ -2,11 +2,12 @@
 
 namespace IRISADMIN\modules\v1\controllers;
 
-use common\models\CoMasterCity;
-use common\models\CoMasterCountry;
-use common\models\CoMasterState;
-use common\models\CoResources;
+use common\models\CoCity;
+use common\models\CoCountry;
+use common\models\CoRole;
 use common\models\CoRolesResources;
+use common\models\CoState;
+use common\models\CoUser;
 use Yii;
 use yii\filters\ContentNegotiator;
 use yii\web\Controller;
@@ -33,7 +34,7 @@ class DefaultController extends Controller {
 
     public function actionGetCountryList() {
         $list = array();
-        $data = CoMasterCountry::getCountrylist();
+        $data = CoCountry::getCountrylist();
         foreach ($data as $value => $label) {
             $list[] = array('value' => $value, 'label' => $label);
         }
@@ -42,7 +43,7 @@ class DefaultController extends Controller {
 
     public function actionGetStateList() {
         $list = array();
-        $datas = CoMasterState::find()->all();
+        $datas = CoState::find()->all();
         foreach ($datas as $data) {
             $list[] = array('value' => $data->state_id, 'label' => $data->state_name, 'countryId' => $data->country_id);
         }
@@ -51,7 +52,7 @@ class DefaultController extends Controller {
 
     public function actionGetCityList() {
         $list = array();
-        $datas = CoMasterCity::find()->all();
+        $datas = CoCity::find()->all();
         foreach ($datas as $data) {
             $list[] = array('value' => $data->city_id, 'label' => $data->city_name, 'stateId' => $data->state_id);
         }
@@ -76,12 +77,12 @@ class DefaultController extends Controller {
     }
 
     public function actionTesting() {
-        $user = new \common\models\CoUser;
+        $user = new CoUser;
         $user->tenant_id = 18;
         $user->name = 'Nadesh';
         $user->save(false);
 
-        $role = new \common\models\CoRole;
+        $role = new CoRole;
         $role->tenant_id = 18;
         $role->description = 'Nadesh_role';
         $role->save(false);
@@ -91,8 +92,8 @@ class DefaultController extends Controller {
     }
 
     public function actionExample() {
-        $user = \common\models\CoUser::findOne(10);
-        $roles = [\common\models\CoRole::findOne(8)];
+        $user = CoUser::findOne(10);
+        $roles = [CoRole::findOne(8)];
 
         $extraColumns = ['tenant_id' => '18']; // extra columns to be saved to the many to many table
         $unlink = true; // unlink tags not in the list

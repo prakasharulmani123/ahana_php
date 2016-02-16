@@ -10,6 +10,7 @@ use yii\helpers\ArrayHelper;
  * This is the model class for table "co_tenant".
  *
  * @property integer $tenant_id
+ * @property integer $org_id
  * @property string $tenant_guid
  * @property string $tenant_name
  * @property string $tenant_address
@@ -47,15 +48,15 @@ class CoTenant extends GActiveRecord {
     public function rules() {
         return [
             [['tenant_name', 'tenant_address', 'tenant_country_id', 'tenant_state_id', 'tenant_city_id', 'tenant_contact1', 'tenant_email'], 'required'],
-            [['tenant_city_id', 'tenant_state_id', 'tenant_country_id', 'created_by', 'modified_by'], 'integer'],
+            [['tenant_city_id', 'tenant_state_id', 'tenant_country_id', 'created_by', 'modified_by', 'org_id'], 'integer'],
             [['status'], 'string'],
             [['tenant_email'], 'email', 'message' => 'Invalid Email Format'],
             [['tenant_url'], 'url', 'message' => 'Invalid Website Format'],
-            [['created_at', 'modified_at'], 'safe'],
+            [['created_at', 'modified_at', 'org_id'], 'safe'],
             [['tenant_guid', 'tenant_name', 'tenant_fax', 'tenant_email', 'tenant_url', 'slug'], 'string', 'max' => 50],
             [['tenant_address'], 'string', 'max' => 100],
             [['tenant_contact1', 'tenant_contact2', 'tenant_mobile'], 'string', 'max' => 20],
-            [['tenant_name'], 'unique']
+            [['tenant_name'], 'unique', 'targetAttribute' => ['org_id', 'tenant_name'], 'message' => 'The combination of Branch Name has already been taken.']
         ];
     }
 
