@@ -73,10 +73,10 @@ class PatientController extends ActiveController {
         if (!empty($post['PatPatient']) || !empty($post['PatPatientAddress'])) {
             $model = new PatPatient();
             $addr_model = new PatPatientAddress();
-            
-            if(isset($post['PatPatient']['patient_id'])){
+
+            if (isset($post['PatPatient']['patient_id'])) {
                 $patient = PatPatient::find()->where(['patient_id' => $post['PatPatient']['patient_id']])->one();
-                if(!empty($patient)){
+                if (!empty($patient)) {
                     $model = $patient;
                     $addr_model = $patient->patPatientAddress;
                 }
@@ -103,7 +103,7 @@ class PatientController extends ActiveController {
                 $addr_model->patient_id = $model->patient_id;
                 $addr_model->save(false);
 
-                return ['success' => true, 'patient_id' => $model->patient_id, 'patient' => $model];
+                return ['success' => true, 'patient_id' => $model->patient_id, 'patient_guid' => $model->patient_guid, 'patient' => $model];
             } else {
                 return ['success' => false, 'message' => Html::errorSummary([$model, $addr_model])];
             }
@@ -111,13 +111,13 @@ class PatientController extends ActiveController {
             return ['success' => false, 'message' => 'Please Fill the Form'];
         }
     }
-    
+
     public function actionSearch() {
         $post = Yii::$app->getRequest()->post();
         $patients = [];
         $limit = 10;
-        
-        if(isset($post['search']) && !empty($post['search'])){
+
+        if (isset($post['search']) && !empty($post['search'])) {
             $lists = PatPatient::find()
                     ->tenant()
                     ->active()
@@ -126,10 +126,10 @@ class PatientController extends ActiveController {
                     ->orWhere("patient_mobile like :search")
                     ->orWhere("patient_int_code like :search")
                     ->orWhere("casesheetno like :search")
-                    ->addParams([':search'=> "%{$post['search']}%"])
+                    ->addParams([':search' => "%{$post['search']}%"])
                     ->limit($limit)
                     ->all();
-            
+
             foreach ($lists as $key => $patient) {
                 $patients[$key]['Patient'] = $patient;
                 $patients[$key]['PatientAddress'] = $patient->patPatientAddress;
@@ -138,24 +138,24 @@ class PatientController extends ActiveController {
         }
         return ['patients' => $patients];
     }
-    
+
     public function actionGetagefromdate() {
         $post = Yii::$app->request->post();
         $age = '';
         if (isset($post['date'])) {
             $age = PatPatient::getPatientAge($post['date']);
         }
-        
+
         return ['age' => $age];
     }
-    
+
     public function actionGetdatefromage() {
         $post = Yii::$app->request->post();
         $dob = '';
         if (isset($post['age'])) {
             $dob = PatPatient::getPatientBirthdate($post['age']);
         }
-        
+
         return ['dob' => $dob];
     }
 
@@ -163,7 +163,7 @@ class PatientController extends ActiveController {
         $get = Yii::$app->getRequest()->get();
         return ['address' => PatPatientAddress::find()->where(['patient_id' => $get['id']])->one()];
     }
-    
+
     public function actionGetpatientlist() {
         $get = Yii::$app->getRequest()->get();
 
@@ -178,9 +178,10 @@ class PatientController extends ActiveController {
 
         return ['patientlist' => PatPatient::getPatientlist($tenant, $status, $deleted)];
     }
-    
+
     public function actionGetpatientbyguid() {
         $guid = Yii::$app->getRequest()->post('guid');
         return PatPatient::find()->where(['patient_guid' => $guid])->one();
     }
+
 }

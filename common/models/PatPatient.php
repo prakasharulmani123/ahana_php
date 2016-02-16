@@ -161,6 +161,10 @@ class PatPatient extends RActiveRecord {
         if ($insert) {
             CoInternalCode::increaseInternalCode("P");
         }
+        
+        if(is_object($this->patient_guid))
+            $this->patient_guid = $this->patient_guid->toString();
+        
         return parent::afterSave($insert, $changedAttributes);
     }
 
@@ -249,4 +253,10 @@ class PatPatient extends RActiveRecord {
         return self::getActiveEncounterByPatientId($patient->patient_id);
     }
 
+    public function afterFind() {
+        if(is_object($this->patient_guid))
+            $this->patient_guid = $this->patient_guid->toString();
+        
+        return parent::afterFind();
+    }
 }
