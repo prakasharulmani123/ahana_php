@@ -120,7 +120,8 @@ class OrganizationController extends ActiveController {
                 $role_model->tenant_id = $tenant->tenant_id;
                 $role_model->save(false);
 
-                $user_model->tenant_id = $tenant->tenant_id;
+                $user_model->tenant_id = 0;
+                $user_model->org_id = $model->org_id;
                 $user_model->save(false);
 
                 $login_model->user_id = $user_model->user_id;
