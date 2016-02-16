@@ -7,7 +7,6 @@
             {% include 'tpl/blocks/alert.html' %}
         </div>
 
-
         <div class="row">
             <div class="col-sm-12">
                 <div class="pull-right">
@@ -21,105 +20,63 @@
                     <progressbar value="steps.percent" class="progress-xs" type="success"></progressbar>
                     <div class="row">
                         <div class="col-sm-12">
-                            <div class="col-sm-6">
-
-                                <div class="form-group">
-                                    <label class="col-lg-4 control-label">Organization Name *</label>
-                                    <div class="col-lg-8">
-                                        <input type="text" placeholder="Name" class="form-control" ng-model="data.Tenant.tenant_name" focus-me="true" id="tenant_name" required>
-                                    </div>
+                            <div class="form-group">
+                                <label class="col-lg-4 control-label">Organization Name *</label>
+                                <div class="col-lg-8">
+                                    <input type="text" placeholder="Organization Name" class="form-control" ng-model="data.Organization.org_name" focus-me="true" id="tenant_name" required>
                                 </div>
-                                <div class="form-group">
-                                    <label class="col-lg-4 control-label">Organization Address *</label>
-                                    <div class="col-lg-8">
-                                        <textarea type="text" placeholder="Address" class="form-control" ng-model="data.Tenant.tenant_address" required></textarea>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-lg-4 control-label">Country *</label>
-                                    <div class="col-lg-8">
-                                        <select class="form-control" name="Country" ng-model="data.Tenant.tenant_country_id" ng-options="country.value as country.label for country in countries | orderBy: label" data-ng-change="updateState(); data.Tenant.tenant_state_id = ''; data.Tenant.tenant_city_id = '';" required>
-                                            <option value="">Select Country</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-lg-4 control-label">State *</label>
-                                    <div class="col-lg-8">
-                                        <select class="form-control" name="State" ng-model="data.Tenant.tenant_state_id" ng-options="state.value as state.label for state in availableStates | orderBy: label" data-ng-change="updateCity(); data.Tenant.tenant_city_id = '';" required>
-                                            <option value="">Select State</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-lg-4 control-label">City *</label>
-                                    <div class="col-lg-8">
-                                        <select class="form-control" name="City" ng-model="data.Tenant.tenant_city_id" ng-options="city.value as city.label for city in availableCities | orderBy: label" required>
-                                            <option value="">Select City</option>
-                                        </select>
-                                    </div>
-                                </div>
-
                             </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-lg-4 control-label">Contact1 *</label>
-                                    <div class="col-lg-8">
-                                        <input type="text" placeholder="Contact1" class="form-control" ng-model="data.Tenant.tenant_contact1" only-digits="">
-                                    </div>
+                            <div class="form-group">
+                                <label class="col-lg-4 control-label">Organization Description *</label>
+                                <div class="col-lg-8">
+                                    <textarea type="text" placeholder="Organization Description" class="form-control" ng-model="data.Organization.org_description" required></textarea>
                                 </div>
-                                <div class="form-group">
-                                    <label class="col-lg-4 control-label">Contact2</label>
-                                    <div class="col-lg-8">
-                                        <input type="text" placeholder="Contact2" class="form-control" ng-model="data.Tenant.tenant_contact2" only-digits="">
-                                    </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-4 control-label">Host Name *</label>
+                                <div class="col-lg-8">
+                                    <input type="text" placeholder="Host Name" class="form-control" ng-model="data.Organization.org_db_host" focus-me="true" id="tenant_name" required>
                                 </div>
-                                <div class="form-group">
-                                    <label class="col-lg-4 control-label">Fax</label>
-                                    <div class="col-lg-8">
-                                        <input type="text" placeholder="Fax" class="form-control" ng-model="data.Tenant.tenant_fax" only-digits="">
-                                    </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-4 control-label">Database Username *</label>
+                                <div class="col-lg-8">
+                                    <input type="text" placeholder="Database Username" class="form-control" ng-model="data.Organization.org_db_username" focus-me="true" id="tenant_name" required>
                                 </div>
-                                <div class="form-group">
-                                    <label class="col-lg-4 control-label">Mobile</label>
-                                    <div class="col-lg-8">
-                                        <input type="text" placeholder="Mobile" class="form-control" ng-model="data.Tenant.tenant_mobile" only-digits="">
-                                    </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-4 control-label">Database Password</label>
+                                <div class="col-lg-8">
+                                    <input type="text" placeholder="Database Password" class="form-control" ng-model="data.Organization.org_db_password" focus-me="true" id="tenant_name" required>
                                 </div>
-                                <div class="form-group">
-                                    <label class="col-lg-4 control-label">Email *</label>
-                                    <div class="col-lg-8">
-                                        <input type="text" placeholder="abc@abc.com" class="form-control" ng-model="data.Tenant.tenant_email">
-                                    </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-4 control-label">Database Name *</label>
+                                <div class="col-lg-8">
+                                    <input type="text" placeholder="Database Name" class="form-control" ng-model="data.Organization.org_database" focus-me="true" id="tenant_name" required>
                                 </div>
-                                <div class="form-group">
-                                    <label class="col-lg-4 control-label">Website</label>
-                                    <div class="col-lg-8">
-                                        <input type="text" placeholder="http://abc.com" class="form-control" ng-model="data.Tenant.tenant_url">
-                                    </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-4 control-label">Domain Name *</label>
+                                <div class="col-lg-8">
+                                    <input type="text" placeholder="Domain Name" class="form-control" ng-model="data.Organization.org_domain" focus-me="true" id="tenant_name" required>
                                 </div>
-                                <div class="pull-right m-t m-b">
-                                    <button type="submit" class="btn btn-default btn-rounded" ng-click="validateForm('Organization', 2);">Next</button>
-                                    <!--<button type="submit" class="btn btn-default btn-rounded" ng-disabled="step1.$invalid" ng-click="steps.step2 = true">Next</button>-->
-                                </div>
+                            </div>
+                            <div class="pull-right m-t m-b">
+                                <button type="submit" class="btn btn-default btn-rounded" ng-click="validateForm('Organization', 2);">Next</button>
+                                <!--<button type="submit" class="btn btn-default btn-rounded" ng-disabled="step1.$invalid" ng-click="steps.step2 = true">Next</button>-->
                             </div>
                         </div>
                     </div>
                 </form>
             </tab>
-            <tab heading="Role" disabled="step1.$invalid" active="steps.step2" select="steps.percent=40; setFocus(2)">
+
+            <tab heading="Login" disabled="step1.$invalid" active="steps.step2" select="steps.percent=40; setFocus(2)">
                 <form name="step2" class="bs-example form-horizontal ng-pristine ng-valid form-validation" novalidate="">
                     <progressbar value="steps.percent" class="progress-xs" type="success"></progressbar>
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="col-sm-6">
-
-                                <div class="form-group">
-                                    <label class="col-lg-4 control-label">Role *</label>
-                                    <div class="col-lg-8">
-                                        <input type="text" placeholder="Role" class="form-control" ng-model="data.Role.description" id="role_desc" required>
-                                    </div>
-                                </div>
                                 <div class="form-group">
                                     <label class="col-lg-4 control-label">Username *</label>
                                     <div class="col-lg-8">
@@ -134,40 +91,14 @@
                                 </div>
                                 <div class="pull-right m-t m-b">
                                     <button type="button" class="btn btn-default btn-rounded" ng-click="steps.step1 = true; setFocus(1)">Prev</button>
-                                    <button type="submit" class="btn btn-default btn-rounded" ng-click="validateForm('RoleLogin', 4);">Next</button>
+                                    <button type="submit" class="btn btn-default btn-rounded" ng-click="validateForm('Login', 4);">Next</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </form>
             </tab>
-            <!--            <tab heading="Login" disabled="step2.$invalid" active="steps.step3" select="steps.percent=60">
-                            <form name="step3" class="bs-example form-horizontal ng-pristine ng-valid form-validation" novalidate="">
-                                <progressbar value="steps.percent" class="progress-xs" type="success"></progressbar>
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label class="col-lg-4 control-label">Username *</label>
-                                                <div class="col-lg-8">
-                                                    <input type="text" placeholder="Username" class="form-control" ng-model="data.Login.username" ng-trim="false" ng-change="data.Login.username = data.Login.username.split(' ').join('')" required>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-lg-4 control-label">Password *</label>
-                                                <div class="col-lg-8">
-                                                    <input type="password" placeholder="Password" class="form-control" ng-model="data.Login.password" value="" required ng-trim="false" ng-change="data.Login.password = data.Login.password.split(' ').join('')">
-                                                </div>
-                                            </div>
-                                            <div class="pull-right m-t m-b">
-                                                <button type="button" class="btn btn-default btn-rounded" ng-click="steps.step2 = true">Prev</button>
-                                                <button type="submit" class="btn btn-default btn-rounded" ng-click="validateForm('Login', 4);">Next</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </tab>-->
+
             <tab heading="Module" disabled="step2.$invalid" active="steps.step4" select="steps.percent=80">
                 <form name="step4" class="bs-example form-horizontal ng-pristine ng-valid form-validation" novalidate="">
                     <progressbar value="steps.percent" class="progress-xs" type="success"></progressbar>
@@ -190,6 +121,7 @@
                     </div>
                 </form>
             </tab>
+
             <tab heading="User" disabled="step2.$invalid" active="steps.step5" select="steps.percent=90; setFocus(5)">
                 <form name="step5" class="bs-example form-horizontal ng-pristine ng-valid form-validation" novalidate="">
                     <progressbar value="steps.percent" class="progress-xs" type="success"></progressbar>

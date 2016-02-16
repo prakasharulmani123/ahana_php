@@ -227,7 +227,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
 
             if (typeof this.data != "undefined") {
                 if (mode == 'Organization') {
-                    post_data = {Tenant: sanitizeVariable(this.data.Tenant)};
+                    post_data = {Organization: sanitizeVariable(this.data.Organization)};
                 } else if (mode == 'Role') {
                     post_data = {Role: sanitizeVariable(this.data.Role)};
                 } else if (mode == 'Login') {
@@ -236,6 +236,13 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                     post_data = {User: sanitizeVariable(this.data.User)};
                 } else if (mode == 'RoleLogin') {
                     post_data = {Role: sanitizeVariable(this.data.Role), Login: sanitizeVariable(this.data.Login), RoleLogin: true};
+                }
+            }
+
+            if (typeof (_that.data) != "undefined") {
+                if (_that.data.hasOwnProperty('Organization')) {
+                    var clientUrl = this.data.Organization.org_domain;
+                    $http.defaults.headers.common['x-domain-path'] = clientUrl;
                 }
             }
 
@@ -385,7 +392,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
             }).success(
                     function (response) {
                         $scope.loadbar('hide');
-                        
+
                         $http.defaults.headers.common['x-domain-path'] = response.org.org_domain;
 
                         if ($scope.data.form_type == 'update') {
