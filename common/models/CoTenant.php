@@ -102,15 +102,15 @@ class CoTenant extends GActiveRecord {
     }
 
     public function getCoMasterCity() {
-        return $this->hasOne(CoMasterCity::className(), ['city_id' => 'tenant_city_id']);
+        return $this->hasOne(CoCity::className(), ['city_id' => 'tenant_city_id']);
     }
 
     public function getCoMasterState() {
-        return $this->hasOne(CoMasterState::className(), ['state_id' => 'tenant_state_id']);
+        return $this->hasOne(CoState::className(), ['state_id' => 'tenant_state_id']);
     }
 
     public function getCoMasterCountry() {
-        return $this->hasOne(CoMasterCountry::className(), ['country_id' => 'tenant_country_id']);
+        return $this->hasOne(CoCountry::className(), ['country_id' => 'tenant_country_id']);
     }
 
     public function getCoOrganization() {

@@ -293,5 +293,17 @@ class OrganizationController extends ActiveController {
     public function actionGetorglist() {
         return CoOrganization::find()->all();
     }
+    
+    public function actionGetorganization() {
+        $org_id = Yii::$app->request->get('id');
+
+        if (!empty($org_id)) {
+            $return = array();
+            $org = CoOrganization::findOne(['org_id' => $org_id]);
+            return ['success' => true, 'org' => $org];
+        } else {
+            return ['success' => false, 'message' => 'Invalid Access'];
+        }
+    }
 
 }
