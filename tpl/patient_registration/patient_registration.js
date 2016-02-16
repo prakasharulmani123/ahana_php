@@ -204,7 +204,7 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
                         $scope.loadbar('hide');
                         if (response.success == true) {
                             $scope.successMessage = succ_msg;
-                            var patient_id = response.patient_id;
+                            var patient_guid = response.patient_guid;
                             $timeout(function () {
                                 if (reg_mode == "IP") {
                                     $state.go('patient.admission', {id: patient_guid});

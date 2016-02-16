@@ -50,7 +50,6 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
             $('.enc_chk').not('#enc_' + enc_id + key).attr('checked', false);
             
             if ($('#enc_' + enc_id + key).is(':checked')) {
-                alert('yrddd');
                 if (type == 'IP') {
                     $scope.more_li = [
                         {href: 'patient.transfer({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Transfer', mode: 'sref'},
