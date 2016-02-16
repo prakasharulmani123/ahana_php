@@ -2,7 +2,7 @@
 
 namespace common\models;
 
-use Yii;
+use yii\db\ActiveQuery;
 
 /**
  * This is the model class for table "co_state".
@@ -21,7 +21,7 @@ use Yii;
  * @property CoCity[] $coCities
  * @property CoCountry $country
  */
-class CoState extends \common\models\GActiveRecord
+class CoState extends GActiveRecord
 {
     /**
      * @inheritdoc
@@ -66,7 +66,7 @@ class CoState extends \common\models\GActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getCoCities()
     {
@@ -74,7 +74,7 @@ class CoState extends \common\models\GActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getCountry()
     {

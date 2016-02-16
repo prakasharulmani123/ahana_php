@@ -34,6 +34,7 @@ class DefaultController extends Controller {
 
     public function actionGetCountryList() {
         $list = array();
+        
         $data = CoCountry::getCountrylist();
         foreach ($data as $value => $label) {
             $list[] = array('value' => $value, 'label' => $label);

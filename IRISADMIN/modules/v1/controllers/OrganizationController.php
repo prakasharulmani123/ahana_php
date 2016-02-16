@@ -89,11 +89,12 @@ class OrganizationController extends ActiveController {
     public function actionCreateorg() {
         $post = Yii::$app->request->post();
         if (!empty($post)) {
-            $model = new CoTenant();
-            $model->attributes = Yii::$app->request->post('Tenant');
+            $model = new CoOrganization();
+            $model->attributes = Yii::$app->request->post('Organization');
 
             $role_model = new CoRole();
-            $role_model->attributes = Yii::$app->request->post('Role');
+            $role_model->description = 'Super Admin';
+//            $role_model->attributes = Yii::$app->request->post('Role');
 
             $user_model = new CoUser();
             $user_model->scenario = 'saveorg';
@@ -110,11 +111,16 @@ class OrganizationController extends ActiveController {
 
             if ($valid) {
                 $model->save(false);
+                
+                $tenant = new CoTenant;
+                $tenant->org_id = $model->org_id;
+                $tenant->tenant_name = $model->org_name;
+                $tenant->save(false);
 
-                $role_model->tenant_id = $model->tenant_id;
+                $role_model->tenant_id = $tenant->tenant_id;
                 $role_model->save(false);
 
-                $user_model->tenant_id = $model->tenant_id;
+                $user_model->tenant_id = $tenant->tenant_id;
                 $user_model->save(false);
 
                 $login_model->user_id = $user_model->user_id;
@@ -123,7 +129,7 @@ class OrganizationController extends ActiveController {
 
                 $user = $user_model;
                 $roles = [$role_model];
-                $extraColumns = ['tenant_id' => $model->tenant_id, 'created_by' => Yii::$app->user->identity->user_id]; // extra columns to be saved to the many to many table
+                $extraColumns = ['tenant_id' => $tenant->tenant_id, 'created_by' => Yii::$app->user->identity->user_id]; // extra columns to be saved to the many to many table
                 $unlink = true; // unlink tags not in the list
                 $delete = true; // delete unlinked tags
                 $user->linkAll('roles', $roles, $extraColumns, $unlink, $delete);
@@ -132,7 +138,7 @@ class OrganizationController extends ActiveController {
                     $resource_id = Yii::$app->request->post('Module')['resource_ids'];
                     $role = $role_model;
                     $resources = CoResources::find()->where(['in', 'resource_id', $resource_id])->all();
-                    $extraColumns = ['tenant_id' => $model->tenant_id, 'created_by' => Yii::$app->user->identity->user_id]; // extra columns to be saved to the many to many table
+                    $extraColumns = ['tenant_id' => $tenant->tenant_id, 'created_by' => Yii::$app->user->identity->user_id]; // extra columns to be saved to the many to many table
                     $unlink = true; // unlink tags not in the list
                     $delete = true; // delete unlinked tags
                     $role->linkAll('resources', $resources, $extraColumns, $unlink, $delete);
@@ -247,20 +253,22 @@ class OrganizationController extends ActiveController {
 
     public function actionValidateorg() {
         $post = Yii::$app->request->post();
+        
         if (!empty($post)) {
             $valid = true;
-            if (isset($post['Tenant'])) {
-                $model = new CoTenant();
-                $model->attributes = Yii::$app->request->post('Tenant');
+            if (isset($post['Organization'])) {
+                $model = new CoOrganization();
+                $model->attributes = Yii::$app->request->post('Organization');
             }
 
-            if (isset($post['Role'])) {
-                $model = new CoRole();
-                $model->attributes = Yii::$app->request->post('Role');
-            }
+//            if (isset($post['Role'])) {
+//                $model = new CoRole();
+//                $model->attributes = Yii::$app->request->post('Role');
+//            }
 
             if (isset($post['Login'])) {
                 $model = new CoLogin();
+                $model->scenario = 'create';
                 $model->attributes = Yii::$app->request->post('Login');
             }
 
@@ -269,10 +277,10 @@ class OrganizationController extends ActiveController {
                 $model->attributes = Yii::$app->request->post('CoUser');
             }
 
-            $role = new CoRole();
+//            $role = new CoRole();
             if (isset($post['RoleLogin'])) {
-                $role->attributes = Yii::$app->request->post('Role');
-                $valid = $role->validate();
+//                $role->attributes = Yii::$app->request->post('Role');
+//                $valid = $role->validate();
 
                 $model = new CoLogin();
                 $model->attributes = Yii::$app->request->post('Login');
@@ -283,7 +291,8 @@ class OrganizationController extends ActiveController {
             if ($valid) {
                 return ['success' => true];
             } else {
-                return ['success' => false, 'message' => Html::errorSummary([$model, $role])];
+//                return ['success' => false, 'message' => Html::errorSummary([$model, $role])];
+                return ['success' => false, 'message' => Html::errorSummary([$model])];
             }
         } else {
             return ['success' => false, 'message' => 'Please Fill the Form'];

@@ -3,6 +3,7 @@
 namespace common\models;
 
 use yii\db\ActiveQuery;
+use yii\db\Connection;
 
 /**
  * This is the model class for table "co_organization".
@@ -25,46 +26,44 @@ use yii\db\ActiveQuery;
  * @property CoLogin[] $coLogins
  * @property CoTenant[] $coTenants
  */
-class CoOrganization extends GActiveRecord
-{
+class CoOrganization extends GActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'co_organization';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            [['org_name', 'org_database', 'org_domain', 'created_by'], 'required'],
+            [['org_name', 'org_description', 'org_db_host', 'org_db_username', 'org_database', 'org_domain'], 'required'],
             [['org_description', 'status'], 'string'],
             [['created_by', 'modified_by'], 'integer'],
             [['created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['org_name'], 'string', 'max' => 100],
             [['org_db_host', 'org_db_username', 'org_db_password', 'org_database', 'org_domain'], 'string', 'max' => 255],
-            [['org_name'], 'unique']
+            [['org_name'], 'unique'],
+            ['org_database', 'checkDB'],
         ];
     }
 
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'org_id' => 'Org ID',
-            'org_name' => 'Org Name',
-            'org_description' => 'Org Description',
-            'org_db_host' => 'Org Db Host',
-            'org_db_username' => 'Org Db Username',
-            'org_db_password' => 'Org Db Password',
-            'org_database' => 'Org Database',
-            'org_domain' => 'Org Domain',
+            'org_name' => 'Organization Name',
+            'org_description' => 'Organization Description',
+            'org_db_host' => 'Organization Database Host',
+            'org_db_username' => 'Organization Database Username',
+            'org_db_password' => 'Organization Database Password',
+            'org_database' => 'Organization Database Name',
+            'org_domain' => 'Organization Domain Name',
             'status' => 'Status',
             'created_by' => 'Created By',
             'created_at' => 'Created At',
@@ -77,19 +76,17 @@ class CoOrganization extends GActiveRecord
     /**
      * @return ActiveQuery
      */
-    public function getCoLogins()
-    {
+    public function getCoLogins() {
         return $this->hasMany(CoLogin::className(), ['org_id' => 'org_id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getCoTenants()
-    {
+    public function getCoTenants() {
         return $this->hasMany(CoTenant::className(), ['org_id' => 'org_id']);
     }
-    
+
     public function fields() {
         $extend = [
             'tenants' => function ($model) {
@@ -99,4 +96,19 @@ class CoOrganization extends GActiveRecord
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
     }
+
+    public function checkDB($attribute, $params) {
+        try {
+            $connection = new Connection([
+                'dsn' => "mysql:host={$this->org_db_host};dbname={$this->org_database}",
+                'username' => $this->org_db_username,
+                'password' => $this->org_db_password,
+            ]);
+            $connection->open();
+            $connection->close();
+        } catch (\Exception $ex) {
+            $this->addError($attribute, $ex->getMessage());
+        }
+    }
+
 }

@@ -1,8 +1,10 @@
 <?php
 
-namespace common\models;
+use common\models\CoState;
+use common\models\GActiveRecord;
+use yii\db\ActiveQuery;
 
-use Yii;
+namespace common\models;
 
 /**
  * This is the model class for table "co_city".
@@ -20,7 +22,7 @@ use Yii;
  *
  * @property CoState $state
  */
-class CoCity extends \common\models\GActiveRecord
+class CoCity extends GActiveRecord
 {
     /**
      * @inheritdoc
@@ -65,7 +67,7 @@ class CoCity extends \common\models\GActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getState()
     {
