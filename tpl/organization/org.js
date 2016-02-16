@@ -327,5 +327,49 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
         $scope.ctrl.expandAll = function (expanded) {
             $scope.$broadcast('onExpandAll', {expanded: expanded});
         };
+        
+        //Save Both Add & Update Data
+        $scope.saveBranch = function (mode) {
+            _that = this;
+
+            $scope.errorData = "";
+            $scope.successMessage = "";
+            
+            if (mode == 'add') {
+                post_url = $rootScope.IRISAdminServiceUrl + '/organizations';
+                method = 'POST';
+                succ_msg = 'Branch saved successfully';
+                
+                if(typeof _that.data.Tenant != 'undefined')
+                    angular.extend(_that.data.Tenant, {org_id: parseInt($state.params.id)});
+            } else {
+                post_url = $rootScope.IRISAdminServiceUrl + '/organizations/' + _that.data.Tenant.tenant_id;
+                method = 'PUT';
+                succ_msg = 'Branch updated successfully';
+            }
+            
+            $scope.loadbar('show');
+            $http({
+                method: method,
+                url: post_url,
+                data: _that.data.Tenant,
+            }).success(
+                    function (response) {
+                        $scope.loadbar('hide');
+                        $scope.successMessage = succ_msg;
+                        $scope.data = {};
+                        $timeout(function () {
+                            $state.go('app.org');
+                        }, 1000)
+
+                    }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        };
 
     }]);

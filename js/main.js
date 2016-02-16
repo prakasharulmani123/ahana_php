@@ -100,4 +100,15 @@ angular.module('app')
                 }
 
                 $scope.onlyLetters = /^[a-zA-Z0-9]*$/;
+                
+                //error Summary
+                $scope.errorSummary = function (error) {
+                    var html = '<div><p>Please fix the following errors:</p><ul>';
+                    angular.forEach(error, function (error) {
+                        html += '<li>' + error.message + '</li>';
+                    });
+
+                    html += '</ul></div>';
+                    return html;
+                }
             }]);
