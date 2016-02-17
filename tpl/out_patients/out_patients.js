@@ -39,3 +39,9 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
 
 
     }]);
+
+app.filter('moment', function() {
+    return function(dateString, format) {
+        return moment(dateString).format(format);
+    };
+});

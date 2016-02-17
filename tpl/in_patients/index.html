@@ -57,24 +57,24 @@
                 <thead>
                     <tr>
                         <th width="21"  style="width:20px;">
-                            <label class="i-checks m-b-none">
+<!--                            <label class="i-checks m-b-none">
                                 <input type="checkbox"><i></i>
-                            </label>
+                            </label>-->
                         </th>
                         <th style="width:40px;">&nbsp;</th>
                         <th st-sort="patient_firstname">Patient</th>
 <!--                        <th>Case sheet#</th>-->
                         <th>Admission Date</th>
                         <th>ROOM#</th>
-                        <th style="width:150px;"> Actions </th>
+                        <!--<th style="width:150px;"> Actions </th>-->
                     </tr>
                 </thead>
                 <tbody ng-hide="isLoading">
                     <tr ng-repeat="row in displayedCollection| orderBy: patient_firstname">
                         <td align="center" valign="middle">
-                            <label class="i-checks m-b-none">
+<!--                            <label class="i-checks m-b-none">
                                 <input type="checkbox" name="post[]"><i></i>
-                            </label>
+                            </label>-->
                         </td>
                         <td align="center" valign="middle">
                             <img ng-if="row.patient.hasalert" class="pull-left" src="img/symbol1.png"  alt="" />
@@ -93,7 +93,7 @@
                         </td>
                         <td>{{row.room_name}} <br/> <span class="text-muted"> {{row.room_type_name}} </span> </td>
 
-                        <td> 
+<!--                        <td> 
                             <div class="actions-icons-cont">  
                                 <a href="#">  <i tooltip="Cancel" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" class="fa fa-times-circle"></i>  </a>
                                 <span ng-controller="ModalDemoCtrl"><a href="#" ng-click="open()">  <i tooltip="Modify" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" class="fa fa-pencil"></i>   </a></span>
@@ -102,27 +102,25 @@
                                     <a href class="dropdown-toggle" dropdown-toggle>
                                         <img src="img/actions-icon.png"  alt="" />
                                     </a>
-                                    <!-- dropdown -->
                                     <ul class="dropdown-menu ">
                                         <li><a href="#"> Action 1</a></li>
                                         <li><a href="#">  Action 2 </a></li>
                                         <li><a href="#"> Action 3</a></li>
                                         <li><a href="#">  Action 5</a></li>
                                     </ul>
-                                    <!-- / dropdown -->
                                 </span>
                             </div>  
-                        </td>
+                        </td>-->
                     </tr>
                 </tbody>
                 <tbody ng-show="isLoading">
                     <tr>
-                        <td colspan="8" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
+                        <td colspan="7" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
                     </tr>
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td colspan="8" class="text-center">
+                        <td colspan="7" class="text-center">
                             <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7"></div>
                         </td>
                     </tr>

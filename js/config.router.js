@@ -1533,7 +1533,8 @@ run.$inject = ['$rootScope', '$state', '$stateParams', '$location', '$cookieStor
 function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $window, CommonService) {
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
-
+    
+    console.log($location.host());
     var serviceUrl = '';
     var clientUrl = 'ahana.hms.ark';
     var orgUrl = '';
