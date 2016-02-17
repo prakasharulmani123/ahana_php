@@ -164,7 +164,7 @@ class EncounterController extends ActiveController {
 //                $query .= "And date {$separtor} '{$date}' ";
 //            }
 
-            $command = Yii::$app->db->createCommand($query);
+            $command = Yii::$app->client->createCommand($query);
             $data = $command->queryAll();
             
             $activeEncounter = PatPatient::getActiveEncounterByPatientGuid($get['id']);

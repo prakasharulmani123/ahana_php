@@ -79,7 +79,7 @@ class RoomController extends ActiveController {
     //room_types_rooms.js
     public function actionAssignroomtypes() {
         $post = Yii::$app->request->post();
-        $tenant_id = Yii::$app->user->identity->user->tenant_id;
+        $tenant_id = Yii::$app->user->identity->logged_tenant_id;
 
         if (!empty($post) && !empty($tenant_id)) {
             $model = new CoRoomTypesRooms;

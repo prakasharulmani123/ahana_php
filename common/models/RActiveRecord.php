@@ -48,17 +48,23 @@ class RActiveRecord extends ActiveRecord {
         ];
     }
 
-    public function beforeValidate() {
-        if (isset(Yii::$app->user->identity) && Yii::$app->user->identity->user_id > 0 && $this->hasAttribute('tenant_id')) {
-            $this->tenant_id = Yii::$app->user->identity->user->tenant_id;
+    public function setTenant() {
+        if (isset(Yii::$app->user->identity) && Yii::$app->user->identity->user_id > 0 ) {
+            if($this->hasAttribute('tenant_id'))
+                $this->tenant_id = Yii::$app->user->identity->logged_tenant_id;
+            
+            if($this->hasAttribute('org_id'))
+                $this->org_id = Yii::$app->user->identity->user->org_id;
         }
+    }
+    
+    public function beforeValidate() {
+        $this->setTenant();
         return parent::beforeValidate();
     }
 
     public function beforeSave($insert) {
-        if (isset(Yii::$app->user->identity) && Yii::$app->user->identity->user_id > 0 && $this->hasAttribute('tenant_id')) {
-            $this->tenant_id = Yii::$app->user->identity->user->tenant_id;
-        }
+        $this->setTenant();
         return parent::beforeSave($insert);
     }
 

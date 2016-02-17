@@ -45,7 +45,7 @@ class OrganizationController extends ActiveController {
 
     //role_rights.js
     public function actionGetorg() {
-        $tenant_id = Yii::$app->user->identity->user->tenant_id;
+        $tenant_id = Yii::$app->user->identity->logged_tenant_id;
         $tenant_super_role = CoRole::getTenantSuperRole($tenant_id);
         $tenant_super_role_id = $tenant_super_role->role_id;
         
@@ -60,7 +60,7 @@ class OrganizationController extends ActiveController {
 
     //role_rights.js
     public function actionGetorgmodulesbyrole() {
-        $tenant_id = Yii::$app->user->identity->user->tenant_id;
+        $tenant_id = Yii::$app->user->identity->logged_tenant_id;
         $tenant_super_role = CoRole::getTenantSuperRole($tenant_id);
         $tenant_super_role_id = $tenant_super_role->role_id;
         

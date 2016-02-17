@@ -6,6 +6,7 @@ use common\models\CoLogin;
 use common\models\CoResources;
 use common\models\CoRole;
 use common\models\CoRolesResources;
+use common\models\CoTenant;
 use common\models\CoUser;
 use common\models\CoUsersRoles;
 use common\models\LoginForm;
@@ -116,31 +117,32 @@ class UserController extends ActiveController {
 
     public static function Getuserrolesresources() {
         $user_id = Yii::$app->user->identity->user->user_id;
-        $tenant_id = Yii::$app->user->identity->user->tenant_id;
+        $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+        
+        //For Super Admin
+        if($tenant_id == 0)
+            $tenant_id = Yii::$app->user->identity->user->first_tenant_id;
 
         $role_ids = ArrayHelper::map(CoUsersRoles::find()->where(['user_id' => $user_id])->all(), 'role_id', 'role_id');
         $resource_ids = ArrayHelper::map(CoRolesResources::find()->where(['IN', 'role_id', $role_ids])->andWhere(['tenant_id' => $tenant_id])->all(), 'resource_id', 'resource_id');
-
         $resources = ArrayHelper::map(CoResources::find()->where(['IN', 'resource_id', $resource_ids])->all(), 'resource_url', 'resource_url');
-
+        
         return $resources;
     }
 
-    public static function GetuserCredentials() {
-        $user_id = Yii::$app->user->identity->user->user_id;
-        $user = CoUser::find()->where(['user_id' => $user_id])->one();
-
+    public static function GetuserCredentials($tenant_id) {
+        $tenant = CoTenant::findOne(['tenant_id' => $tenant_id]);
         $credentials = [
-            'org' => $user->tenant->tenant_name
+            'org' => $tenant->tenant_name
         ];
         return $credentials;
     }
 
     public function actionLogin() {
         $model = new LoginForm();
-
+        
         if ($model->load(Yii::$app->getRequest()->getBodyParams(), '') && $model->login()) {
-            return ['success' => true, 'access_token' => Yii::$app->user->identity->getAuthKey(), 'resources' => self::Getuserrolesresources(), 'credentials' => self::GetuserCredentials()];
+            return ['success' => true, 'access_token' => Yii::$app->user->identity->getAuthKey(), 'resources' => self::Getuserrolesresources(), 'credentials' => self::GetuserCredentials(\Yii::$app->request->post('tenant_id'))];
         } elseif (!$model->validate()) {
             return ['success' => false, 'message' => Html::errorSummary([$model])];
         }
@@ -341,7 +343,7 @@ class UserController extends ActiveController {
 
     public function actionAssignroles() {
         $post = Yii::$app->request->post();
-        $tenant_id = Yii::$app->user->identity->user->tenant_id;
+        $tenant_id = Yii::$app->user->identity->logged_tenant_id;
 
         if (!empty($post) && !empty($tenant_id)) {
             $model = new CoUsersRoles;
@@ -414,7 +416,7 @@ class UserController extends ActiveController {
         $module = CoResources::find()->where(["resource_url" => $stateName])->one();
         $resource_id = $module->resource_id;
 
-        $tenant_id = Yii::$app->user->identity->user->tenant_id;
+        $tenant_id = Yii::$app->user->identity->logged_tenant_id;
         $user_id = Yii::$app->user->identity->user->user_id;
 
         $role_ids = CoUsersRoles::find()->select(['GROUP_CONCAT(role_id) AS role_ids'])->where(['tenant_id' => $tenant_id, 'user_id' => $user_id])->one();

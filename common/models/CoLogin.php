@@ -29,7 +29,7 @@ use yii\web\IdentityInterface;
  * @property CoUser $user
  */
 class CoLogin extends ActiveRecord implements IdentityInterface {
-
+    
     /**
      * @inheritdoc
      */
@@ -68,8 +68,8 @@ class CoLogin extends ActiveRecord implements IdentityInterface {
             [['username'], 'validateUsername'],
             [['password'], 'validateUserpassword'],
 //            [['username', 'password'], 'string', 'min' => 6],
-            [['user_id', 'created_by', 'modified_by'], 'integer'],
-            [['created_at', 'modified_at', 'activation_date', 'Inactivation_date'], 'safe'],
+            [['user_id', 'created_by', 'modified_by', 'logged_tenant_id'], 'integer'],
+            [['created_at', 'modified_at', 'activation_date', 'Inactivation_date', 'logged_tenant_id'], 'safe'],
             [['username', 'password', 'password_reset_token', 'authtoken'], 'string', 'max' => 255],
             ['username', 'unique'],
         ];
@@ -141,7 +141,7 @@ class CoLogin extends ActiveRecord implements IdentityInterface {
     }
 
     public static function findByUsernameAndTenant($username, $tenant) {
-        return static::find()->joinWith(['user'])->where(['username' => $username, 'co_user.tenant_id' => $tenant])->one();
+        return static::find()->joinWith(['user'])->where(['username' => $username, 'co_user.tenant_id' => $tenant])->orWhere(['username' => $username, 'co_user.tenant_id' => 0])->one();
     }
 
     /**
@@ -189,7 +189,7 @@ class CoLogin extends ActiveRecord implements IdentityInterface {
     public function getAuthKey() {
         return $this->authtoken;
     }
-
+    
     /**
      * @inheritdoc
      */
@@ -240,4 +240,9 @@ class CoLogin extends ActiveRecord implements IdentityInterface {
     public static function getDb() {
         return Yii::$app->client;
     }
+    
+//    public function attributes() {
+//        $attr = array_merge(parent::attributes(), ['loggedTenantId']);
+//        return $attr;
+//    }
 }

@@ -38,6 +38,8 @@ use yii\helpers\ArrayHelper;
  */
 class CoUser extends RActiveRecord {
 
+//    public $logged_tenant_id = null;
+    
     const STATUS_ACTIVE = '1';
     const STATUS_INACTIVE = '0';
 
@@ -121,6 +123,13 @@ class CoUser extends RActiveRecord {
     /**
      * @return ActiveQuery
      */
+    public function getOrganization() {
+        return $this->hasOne(CoOrganization::className(), ['org_id' => 'org_id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
     public function getUsersRoles() {
         return $this->hasMany(CoUsersRoles::className(), ['user_id' => 'user_id']);
     }
@@ -164,5 +173,9 @@ class CoUser extends RActiveRecord {
             $list = self::find()->tenant($tenant)->deleted()->careprovider($care_provider)->all();
 
         return $list;
+    }
+    
+    public function getFirst_tenant_id() {
+        return $this->organization->coTenants[0]->tenant_id;
     }
 }

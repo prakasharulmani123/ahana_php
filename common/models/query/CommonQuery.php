@@ -20,7 +20,7 @@ class CommonQuery extends ActiveQuery {
 
     public function tenant($tenant_id = NULL) {
         if ($tenant_id == null && empty($tenant_id))
-            $tenant_id = Yii::$app->user->identity->user->tenant_id;
+            $tenant_id = Yii::$app->user->identity->logged_tenant_id;
         return $this->andWhere(['tenant_id' => $tenant_id]);
     }
 

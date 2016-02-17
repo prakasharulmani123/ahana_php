@@ -101,7 +101,7 @@ class DefaultController extends Controller {
     public function actionGetnavigation() {
         $get = Yii::$app->request->get();
         $user_id = Yii::$app->user->identity->user->user_id;
-        $tenant_id = Yii::$app->user->identity->user->tenant_id;
+        $tenant_id = Yii::$app->user->identity->logged_tenant_id;
 
         $role_ids = ArrayHelper::map(CoUsersRoles::find()->where(['user_id' => $user_id])->all(), 'role_id', 'role_id');
         $resource_ids = ArrayHelper::map(CoRolesResources::find()->where(['IN', 'role_id', $role_ids])->andWhere(['tenant_id' => $tenant_id])->all(), 'resource_id', 'resource_id');

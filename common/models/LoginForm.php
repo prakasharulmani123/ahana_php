@@ -81,13 +81,14 @@ class LoginForm extends Model {
         if ($this->_user === false) {
             $this->_user = CoLogin::findByUsername($this->username);
         }
-
+        
         return $this->_user;
     }
 
     public function setToken() {
         if ($this->_user !== false) {
             $this->_user->authtoken = base64_encode($this->_user->username . time() . rand(1000, 9999));
+            $this->_user->logged_tenant_id = $this->tenant_id;
             $this->_user->save(false);
         }
 
