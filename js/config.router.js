@@ -1544,7 +1544,7 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
         orgUrl = 'http://demo.arkinfotec.in/ahana/demo/IRISORG-client';
     } else if ($location.host() == 'hms.ark') {
         serviceUrl = 'http://hms.ark/api/IRISORG/web/v1'
-        orgUrl = '';
+        orgUrl = 'http://hms.ark/client';
     }
     $rootScope.IRISOrgServiceUrl = serviceUrl;
     $rootScope.commonService = CommonService;

@@ -33,7 +33,7 @@
                         <ul class="dropdown-menu" role="menu">
                             <li ng-repeat="li in more_li">
                                 <a ng-if="li.mode == 'sref'" ui-sref="{{li.href}}">{{li.name}}</a>
-                                <a ng-if="li.mode == 'click'" ng-click="removeRow(li.href)">{{li.name}}</a>
+                                <a ng-if="li.mode == 'click'" ng-click="{{li.href}}">{{li.name}}</a>
                             </li>
                         </ul>
 <!--                        <ul class="dropdown-menu" role="menu">

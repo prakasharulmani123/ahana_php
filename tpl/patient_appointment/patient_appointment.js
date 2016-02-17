@@ -77,8 +77,12 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
             $scope.data = {};
             $scope.data.status_date = moment().format('YYYY-MM-DD');
         }
-
-
+        
+        $scope.initChangeStatusForm = function () {
+             $timeout(function () {
+                $scope.data.PatAppointment.status_date = moment().format('YYYY-MM-DD HH:mm:ss');
+            }, 1000)
+        }
 
         //For Datepicker
         $scope.open = function ($event, mode) {

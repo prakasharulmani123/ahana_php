@@ -4,7 +4,7 @@ app.service ('modalService', [ '$modal', '$rootScope',
       backdrop: true,
       keyboard: true,
       modalFade: true,
-      templateUrl: $rootScope.IRISOrgUrl + '/src/tpl/blocks/modal.html'
+      templateUrl: $rootScope.IRISOrgUrl + '/tpl/blocks/modal.html'
     };
     var modalOptions = {
       closeButtonText: 'Close',
