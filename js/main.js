@@ -83,6 +83,7 @@ angular.module('app')
                     $rootScope.globals = {};
                     $cookieStore.remove('globals');
                     localStorage.removeItem('ngStorage-user_resources');
+                    localStorage.removeItem('ngStorage-user_credentials');
                     $window.location.reload();
                 };
 
