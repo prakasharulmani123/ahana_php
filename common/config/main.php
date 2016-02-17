@@ -27,12 +27,14 @@ function setClientDb() {
     $read = $sth->fetch(PDO::FETCH_OBJ);
 
     $client = ['class' => 'yii\db\Connection', 'charset' => 'utf8'];
-    $client['dsn'] = "mysql:host={$read->org_db_host};dbname={$read->org_database}";
-    $client['username'] = "{$read->org_db_username}";
-    $client['password'] = "{$read->org_db_password}";
-
+    if (!empty($read)) {
+        $client['dsn'] = "mysql:host={$read->org_db_host};dbname={$read->org_database}";
+        $client['username'] = "{$read->org_db_username}";
+        $client['password'] = "{$read->org_db_password}";
+    }
+    
     Yii::$app->session['client'] = $client;
     Yii::$app->session['current_domain_path'] = DOMAIN_PATH;
-    
+
     return $client;
 }
