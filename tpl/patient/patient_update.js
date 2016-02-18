@@ -127,25 +127,7 @@ app.controller('PatientUpdateController', ['$rootScope', '$scope', '$http', '$an
             $scope.opened = true;
         };
 
-        var today = new Date();
-        today.setMonth(today.getMonth() + 6);
-        $scope.tre = today;
-
-        $scope.maxDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-//        $scope.today = function () {
-//            $scope.data = {};
-//            $scope.data.PatPatient.patient_dob = new Date();
-//        };
-//        $scope.today();
-
-        $scope.toggleMin = function () {
-            $scope.minDate = $scope.minDate ? null : new Date();
-        };
-        $scope.toggleMin();
-
-        $scope.disabled = function (date, mode) {
-            return mode === 'day' && (date.getDay() === 0 || date.getDay() === 6);
-        };
+        $scope.maxDate = new Date();
 
 
         $scope.setDateEmpty = function () {
