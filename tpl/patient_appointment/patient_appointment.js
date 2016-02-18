@@ -79,6 +79,10 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
         }
         
         $scope.initChangeStatusForm = function () {
+            $rootScope.commonService.GetPatientBillingList(function (response) {
+                $scope.bill_types = response;
+            });
+            
              $timeout(function () {
                 $scope.data.PatAppointment.status_date = moment().format('YYYY-MM-DD HH:mm:ss');
             }, 1000)
@@ -205,7 +209,8 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
             }).success(
                     function (response) {
                         $scope.loadbar('hide');
-                        if (response.success == true) {
+                        if (response.success == true || mode == 'arrived') {
+                            $scope.data = {};
                             $scope.successMessage = succ_msg;
                             $timeout(function () {
                                 $state.go("patient.encounter", {id: $state.params.id});

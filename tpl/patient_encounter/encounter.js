@@ -130,3 +130,9 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
             });
         };
     }]);
+
+app.filter('moment', function() {
+    return function(dateString, format) {
+        return moment(dateString).format(format);
+    };
+});

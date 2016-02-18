@@ -24,6 +24,17 @@
                 </div>
             </div>
             <div class="line line-dashed b-b line-lg "></div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Billing</label>
+                <div class="col-sm-9">
+                    <label class="i-checks" ng-repeat="bill_type in bill_types">
+                        <input type="radio" checked="" value="{{bill_type.value}}" name="b" ng-model="data.PatPatient.patient_bill_type">
+                        <i></i>
+                        {{bill_type.label}}&nbsp; &nbsp;
+                    </label>
+                </div>
+            </div>
+            <div class="line line-dashed b-b line-lg "></div>
 
             <div class="form-group">
                 <label class="col-sm-3 control-label">Charge category * </label>
