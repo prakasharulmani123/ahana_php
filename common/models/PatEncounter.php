@@ -29,6 +29,9 @@ use yii\db\ActiveQuery;
  */
 class PatEncounter extends RActiveRecord {
 
+    public $sts_date;
+    public $sts_time;
+    public $sts_status = 'A';
     /**
      * @inheritdoc
      */
@@ -167,6 +170,15 @@ class PatEncounter extends RActiveRecord {
             },
             'floor_name' => function ($model) {
                 return (isset($model->patLiveAdmission->floor->floor_name) ? $model->patLiveAdmission->floor->floor_name : '-');
+            },
+            'sts_date' => function ($model) {
+                return $this->sts_date;
+            },
+            'sts_time' => function ($model) {
+                return $this->sts_time;
+            },
+            'sts_status' => function ($model) {
+                return $this->sts_status;
             },
                     
         ];
