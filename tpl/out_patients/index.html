@@ -2,60 +2,63 @@
     <h1 class="m-n h3">Out-Patient</h1>
 </div>
 <div class="wrapper-md" ng-controller="OutPatientsController" ng-init="loadOutPatientsList()">
+    <div ng-include="'tpl/blocks/alert.html'">
+        {% include 'tpl/blocks/alert.html' %}
+    </div>
     <div class="panel panel-default">
         <div class="row wrapper">
             <div class="col-sm-5 m-b-xs">
                 <button class="btn btn-sm btn-grey" ng-click="loadOutPatientsList()"> &nbsp; &nbsp; <i class="fa fa-repeat"></i>  &nbsp; &nbsp; </button>    
-<!--                <div class="btn-group" dropdown is-open="status.isopen">
-                    <button type="button" class=" btn btn-sm btn-grey" dropdown-toggle ng-disabled="disabled">
-                        More &nbsp;&nbsp;<span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" role="menu">
-                        <li><a href>Action</a></li>
-                        <li><a href>Another action</a></li>
-                        <li><a href>Something else here</a></li>
-                        <li class="divider"></li>
-                        <li><a href>Separated link</a></li>
-                    </ul>
-                </div>        -->
+                <!--                <div class="btn-group" dropdown is-open="status.isopen">
+                                    <button type="button" class=" btn btn-sm btn-grey" dropdown-toggle ng-disabled="disabled">
+                                        More &nbsp;&nbsp;<span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li><a href>Action</a></li>
+                                        <li><a href>Another action</a></li>
+                                        <li><a href>Something else here</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href>Separated link</a></li>
+                                    </ul>
+                                </div>        -->
             </div>
             <div class="col-sm-4">
             </div>
-<!--            <div class="col-sm-2 pull-right">
-                <div class="btn-group navbar-right" dropdown>
-                    <button type="button" class=" btn btn-sm no-bg" dropdown-toggle >
-                        &nbsp;&nbsp;  <img src="img/actions-icon.png"  alt="" />
-                    </button>
-                    <ul class="dropdown-menu" role="menu1">
-                        <li><a href>Action</a></li>
-                        <li><a href>Another action</a></li>
-                        <li><a href>Something else here</a></li>
-                        <li class="divider"></li>
-                        <li><a href>Separated link</a></li>
-                    </ul>
-                </div>
-                <div class="btn-group pull-right" dropdown>
-                    <button type="button" class=" btn btn-sm btn-grey" dropdown-toggle >
-                        &nbsp;&nbsp; Select &nbsp;&nbsp;<span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" role="menu1">
-                        <li><a href>Action</a></li>
-                        <li><a href>Another action</a></li>
-                        <li><a href>Something else here</a></li>
-                        <li class="divider"></li>
-                        <li><a href>Separated link</a></li>
-                    </ul>
-                </div>
-            </div>-->
+            <!--            <div class="col-sm-2 pull-right">
+                            <div class="btn-group navbar-right" dropdown>
+                                <button type="button" class=" btn btn-sm no-bg" dropdown-toggle >
+                                    &nbsp;&nbsp;  <img src="img/actions-icon.png"  alt="" />
+                                </button>
+                                <ul class="dropdown-menu" role="menu1">
+                                    <li><a href>Action</a></li>
+                                    <li><a href>Another action</a></li>
+                                    <li><a href>Something else here</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href>Separated link</a></li>
+                                </ul>
+                            </div>
+                            <div class="btn-group pull-right" dropdown>
+                                <button type="button" class=" btn btn-sm btn-grey" dropdown-toggle >
+                                    &nbsp;&nbsp; Select &nbsp;&nbsp;<span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu1">
+                                    <li><a href>Action</a></li>
+                                    <li><a href>Another action</a></li>
+                                    <li><a href>Something else here</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href>Separated link</a></li>
+                                </ul>
+                            </div>
+                        </div>-->
         </div>
         <div class="table-responsive in-patient-table">
             <table st-table="displayedCollection"  st-safe-src="rowCollection" class="table table-striped b-t b-light">
                 <thead>
                     <tr>
                         <th width="21"  style="width:20px;">
-<!--                            <label class="i-checks m-b-none">
-                                <input type="checkbox"><i></i>
-                            </label>-->
+                            <!--                            <label class="i-checks m-b-none">
+                                                            <input type="checkbox"><i></i>
+                                                        </label>-->
                         </th>
                         <th>Patient</th>
                         <th>Category</th>
@@ -64,14 +67,14 @@
                             time</th>
                         <th>Arrival<br />
                             Time</th>
-                        <!--<th>status</th>-->
+                        <th>status</th>
                         <th>consultant</th>
                         <!--<th>remarks</th>-->
                         <!--<th style="width:150px;"> Actions</th>-->
                     </tr>
                 </thead>
                 <tbody ng-hide="isLoading">
-                    <tr ng-repeat="row in displayedCollection| orderBy: patient_firstname">
+                    <tr ng-repeat="(key, row) in displayedCollection| orderBy: patient_firstname">
                         <td align="center" valign="middle">
                             <!--<label class="i-checks m-b-none"><input type="checkbox" name="post[]"><i></i></label>-->
                         </td>
@@ -85,46 +88,90 @@
                             <!--<img src="img/cate-1.png"  alt="" />-->
                         </td>
                         <td>
-                            {{row.patient.patient_mobile}}
-                            <!--<a editable-text="row.patient.patient_mobile">{{row.patient.patient_mobile}}</a>-->
+                            <!--{{row.patient.patient_mobile}}-->
+                            <a editable-text="row.patient.patient_mobile" e-number-mask="" onbeforesave="updatePatient(row.patient.patient_id, {'patient_mobile': $data}, $data)">{{row.patient.patient_mobile}}</a>
                         </td>
-                        <td>{{row.liveAppointmentBooking.status_datetime | moment:'hh:mm A'}}<br/>  <span class="text-muted"> {{row.liveAppointmentBooking.status_date}}</span></td>
-                        <td>{{row.liveAppointmentArrival.status_datetime | moment:'hh:mm A'}} <br/> 
-                            <span class="text-muted"> {{row.doeTimeago}} </span> 
+                        <td>{{row.liveAppointmentBooking.status_datetime| moment:'hh:mm A'}}<br/>  <span class="text-muted"> {{row.liveAppointmentBooking.status_date}}</span></td>
+                        <td>
+                            <div class="input-group" ng-if="row.liveAppointmentArrival == '-'">
+                                <a class="dropdown-toggle" id="dropdown2" role="button" data-toggle="dropdown" data-target="#" href="javascript:void(0)">
+                                    <div class="input-group">
+                                        <span editable-text="row.sts_time" e-name="sts_date" e-form="hiddenform">
+                                            {{row.sts_time}} <br/> 
+                                            <span class="text-muted"> {{row.sts_date}} </span> 
+                                        </span>
+                                    </div>
+                                </a>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                    <datetimepicker data-ng-model="arr_date" data-datetimepicker-config="{ dropdownSelector: '#dropdown2' }" data-on-set-time="onTimeSet(newDate, oldDate, key)"/>
+                                </ul>
+                            </div>
+
+                            <div ng-if="row.liveAppointmentArrival != '-'">
+                                {{row.liveAppointmentArrival.status_datetime| moment:'hh:mm A'}} <br/> 
+                                <span class="text-muted"> {{row.liveAppointmentArrival.status_date}} </span>
+                            </div>
+
                         </td>
-<!--                        <td>
-                            <a editable-select="user.status" e-ng-options="s.value as s.text for s in statuses">
-                                {{ showStatus(user)}}
-                            </a>
-                            <br /><span class="text-muted">Prepare final bill!</span></td>-->
+                        <td>
+                            <div ng-if="row.liveAppointmentArrival == '-'">
+                                <form editable-form name="rowform" onbeforesave="changeAppointmentStatus({
+                                      'patient_id': row.patient_id, 
+                                      'encounter_id': row.encounter_id,
+                                      'status_date': row.sts_date,
+                                      'status_time': row.sts_time,
+                                      'consultant_id': row.liveAppointmentBooking.consultant_id,
+                                      'appt_status': row.sts_status,
+                                      })" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == row">
+                                    <span editable-select="row.sts_status" e-name="sts_status" e-form="rowform" e-ng-options="s.value as s.text for s in statuses">
+                                        {{row.sts_status|| 'empty' }}
+                                    </span>
+                                    <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-primary btn-sm">
+                                        <span class="glyphicon glyphicon-ok"></span>
+                                    </button>
+                                    <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel(); setTimings(key, 'unset')" class="btn btn-default btn-sm">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    </button>
+                                </form>
+                                <div class="buttons" ng-show="!rowform.$visible">
+                                    <a ng-click="rowform.$show();
+                                                    setTimings(key, 'set')" class="ng-scope ng-binding editable editable-click"> Booked </a><br />
+                                                    <span class="text-danger-dk">Waiting!</span>
+                                </div> 
+                            </div>
+                            
+                            <div ng-if="row.liveAppointmentArrival != '-'">
+                                <div ng-if="row.liveAppointmentArrival.appt_status == 'A'"> Arrived </div>
+                            </div>
+                        </td>
                         <td>{{row.liveAppointmentConsultant.title_code}} {{row.liveAppointmentConsultant.name}}</td>
                         <!--<td>Comments if any</td>-->
-<!--                        <td> <div class="actions-icons-cont">  
-                                <a href="#">  <i tooltip="Cancel" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" class="fa fa-times-circle"></i>  </a>
-                                <span ng-controller="ModalDemoCtrl"><a href="#" ng-click="open()">  <i tooltip="Modify" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" class="fa fa-pencil"></i>   </a></span>
-                                <a href="#">  <i tooltip="Delete" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" class="fa fa-trash"></i>   </a>
-                                <span class="dropdown hidden-sm" dropdown>
-                                    <a href class="dropdown-toggle" dropdown-toggle>
-                                        <img src="img/actions-icon.png"  alt="" />
-                                    </a>
-                                    <ul class="dropdown-menu ">
-                                        <li><a href="#"> Action 1</a></li>
-                                        <li><a href="#">  Action 2 </a></li>
-                                        <li><a href="#"> Action 3</a></li>
-                                        <li><a href="#">  Action 5</a></li>
-                                    </ul>
-                                </span>
-                            </div>  </td>-->
+                        <!--                        <td> <div class="actions-icons-cont">  
+                                                        <a href="#">  <i tooltip="Cancel" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" class="fa fa-times-circle"></i>  </a>
+                                                        <span ng-controller="ModalDemoCtrl"><a href="#" ng-click="open()">  <i tooltip="Modify" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" class="fa fa-pencil"></i>   </a></span>
+                                                        <a href="#">  <i tooltip="Delete" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" class="fa fa-trash"></i>   </a>
+                                                        <span class="dropdown hidden-sm" dropdown>
+                                                            <a href class="dropdown-toggle" dropdown-toggle>
+                                                                <img src="img/actions-icon.png"  alt="" />
+                                                            </a>
+                                                            <ul class="dropdown-menu ">
+                                                                <li><a href="#"> Action 1</a></li>
+                                                                <li><a href="#">  Action 2 </a></li>
+                                                                <li><a href="#"> Action 3</a></li>
+                                                                <li><a href="#">  Action 5</a></li>
+                                                            </ul>
+                                                        </span>
+                                                    </div>  </td>-->
                     </tr>
                 </tbody>
                 <tbody ng-show="isLoading">
                     <tr>
-                        <td colspan="7" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
+                        <td colspan="8" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
                     </tr>
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td colspan="7" class="text-center">
+                        <td colspan="8" class="text-center">
                             <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7"></div>
                         </td>
                     </tr>

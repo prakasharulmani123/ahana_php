@@ -30,18 +30,80 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
         };
 
         $scope.statuses = [
-            {value: 1, text: 'Billing'},
-            {value: 2, text: 'Consultation'},
-            {value: 3, text: 'Arrived'},
-            {value: 4, text: 'Scheduled'}
+            {value: 'A', text: 'Arrived'},
 
         ];
+
+        $scope.updatePatient = function (id, _data, val) {
+            if (val == '') {
+                return 'Mobile can not be empty';
+            }
+            if (!val.match(/^[0-9]{10}$/)) {
+                return 'Mobile must be 10 digits only';
+            }
+            $http({
+                method: 'PUT',
+                url: $rootScope.IRISOrgServiceUrl + '/patients/' + id,
+                data: _data,
+            }).success(
+                    function (response) {
+                        $scope.loadbar('hide');
+                        $scope.successMessage = 'Patient updated successfully';
+                    }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        }
+        
+        $scope.setTimings = function(key, mode){
+            if(mode == 'set'){
+                st_d = moment().format('YYYY-MM-DD');
+                st_t = moment().format('hh:mm A');
+            }else{
+                st_d = st_t = '';
+            }
+            $scope.displayedCollection[key].sts_date = st_d;
+            $scope.displayedCollection[key].sts_time = st_t;
+        }
+        
+        $scope.onTimeSet = function(newDate, oldDate, key){
+            $scope.displayedCollection[key].sts_date = moment(newDate).format('YYYY-MM-DD');
+            $scope.displayedCollection[key].sts_time = moment(newDate).format('hh:mm A');
+        }
+        
+        $scope.changeAppointmentStatus = function (_data) {
+            $scope.errorData = "";
+            $scope.successMessage = "";
+
+            $scope.loadbar('show');
+            $http({
+                method: 'POST',
+                url: $rootScope.IRISOrgServiceUrl + '/appointments',
+                data: _data,
+            }).success(
+                    function (response) {
+                        $scope.loadbar('hide');
+                        $scope.successMessage = 'Status changed successfully';
+                        $scope.loadOutPatientsList();
+                    }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        };
 
 
     }]);
 
-app.filter('moment', function() {
-    return function(dateString, format) {
+app.filter('moment', function () {
+    return function (dateString, format) {
         return moment(dateString).format(format);
     };
 });
