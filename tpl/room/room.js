@@ -16,7 +16,7 @@ app.controller('RoomController', ['$rootScope', '$scope', '$timeout', '$http', '
                         $scope.displayedCollection = [].concat($scope.rowCollection);
                     })
                     .error(function () {
-                        $scope.error = "An Error has occured while loading room!";
+                        $scope.errorData = "An Error has occured while loading room!";
                     });
         };
 

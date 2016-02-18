@@ -16,7 +16,7 @@ app.controller('DrugClassController', ['$rootScope', '$scope', '$timeout', '$htt
                         $scope.displayedCollection = [].concat($scope.rowCollection);
                     })
                     .error(function () {
-                        $scope.error = "An Error has occured while loading drugclass!";
+                        $scope.errorData = "An Error has occured while loading drugclass!";
                     });
         };
 

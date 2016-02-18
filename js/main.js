@@ -172,7 +172,7 @@ angular.module('app')
 
                                 })
                                 .error(function () {
-                                    $scope.error = "An Error has occured while loading patient!";
+                                    $scope.errorData = "An Error has occured while loading patient!";
                                 });
                     }
                 };

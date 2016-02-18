@@ -16,7 +16,7 @@ app.controller('RoomMaintenanceController', ['$rootScope', '$scope', '$timeout',
                         $scope.displayedCollection = [].concat($scope.rowCollection);
                     })
                     .error(function () {
-                        $scope.error = "An Error has occured while loading Room Maintenance!";
+                        $scope.errorData = "An Error has occured while loading Room Maintenance!";
                     });
         };
 

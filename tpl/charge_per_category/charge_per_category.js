@@ -20,7 +20,7 @@ app.controller('ChargePerCategoriesController', ['$rootScope', '$scope', '$timeo
                         $scope.displayedCollection = [].concat($scope.rowCollection);
                     })
                     .error(function () {
-                        $scope.error = "An Error has occured while loading charges!";
+                        $scope.errorData = "An Error has occured while loading charges!";
                     });
 
             $rootScope.commonService.GetPatientCateogryList('', '1', false, function (response) {

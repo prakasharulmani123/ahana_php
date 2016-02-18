@@ -23,7 +23,7 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
                         });
                     })
                     .error(function () {
-                        $scope.error = "An Error has occured while loading patient!";
+                        $scope.errorData = "An Error has occured while loading patient!";
                     });
         }
     }]);

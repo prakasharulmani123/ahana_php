@@ -23,11 +23,11 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                             $scope.displayedCollection = [].concat($scope.rowCollection);
                             $scope.more_li = {};
                         } else {
-                            $scope.error = response.message;
+                            $scope.errorData = response.message;
                         }
                     })
                     .error(function () {
-                        $scope.error = "An Error has occured while loading encounter!";
+                        $scope.errorData = "An Error has occured while loading encounter!";
                     });
         };
 

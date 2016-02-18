@@ -27,7 +27,7 @@ app.controller('CustomRoomChargeCategoriesController', ['$rootScope', '$scope', 
                         $scope.category = category;
                     })
                     .error(function () {
-                        $scope.error = "An Error has occured while loading cities!";
+                        $scope.errorData = "An Error has occured while loading cities!";
                     });
         }
         

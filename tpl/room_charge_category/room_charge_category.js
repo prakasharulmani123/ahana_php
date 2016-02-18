@@ -20,7 +20,7 @@ app.controller('RoomChargeCategoriesController', ['$rootScope', '$scope', '$time
                         $scope.displayedCollection = [].concat($scope.rowCollection);
                     })
                     .error(function () {
-                        $scope.error = "An Error has occured while loading roomChargeCategorys!";
+                        $scope.errorData = "An Error has occured while loading roomChargeCategorys!";
                     });
 
         };
@@ -261,7 +261,7 @@ app.controller('RoomChargeCategoriesController', ['$rootScope', '$scope', '$time
                                     });
                                 })
                                 .error(function () {
-                                    $scope.error = "An Error has occured while loading roomChargesubCategorys!";
+                                    $scope.errorData = "An Error has occured while loading roomChargesubCategorys!";
                                 });
                         //End
                     }

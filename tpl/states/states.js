@@ -16,7 +16,7 @@ app.controller('StatesController', ['$rootScope', '$scope', '$timeout', '$http',
                         $scope.displayedCollection = [].concat($scope.rowCollection);
                     })
                     .error(function () {
-                        $scope.error = "An Error has occured while loading states!";
+                        $scope.errorData = "An Error has occured while loading states!";
                     });
         };
 

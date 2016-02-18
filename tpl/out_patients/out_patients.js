@@ -25,7 +25,7 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                         $scope.displayedCollection = [].concat($scope.rowCollection);
                     })
                     .error(function () {
-                        $scope.error = "An Error has occured while loading patients!";
+                        $scope.errorData = "An Error has occured while loading patients!";
                     });
         };
 
@@ -75,7 +75,7 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
             $scope.displayedCollection[key].sts_time = moment(newDate).format('hh:mm A');
         }
         
-        $scope.changeAppointmentStatus = function (_data) {
+        $scope.changeAppointmentStatus = function (_data, key) {
             $scope.errorData = "";
             $scope.successMessage = "";
 
@@ -86,9 +86,10 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                 data: _data,
             }).success(
                     function (response) {
+                        console.log(response);
                         $scope.loadbar('hide');
                         $scope.successMessage = 'Status changed successfully';
-                        $scope.loadOutPatientsList();
+                        $scope.displayedCollection[key].liveAppointmentArrival = response;
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');

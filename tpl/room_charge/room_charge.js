@@ -16,7 +16,7 @@ app.controller('RoomChargesController', ['$rootScope', '$scope', '$timeout', '$h
                         $scope.displayedCollection = [].concat($scope.rowCollection);
                     })
                     .error(function () {
-                        $scope.error = "An Error has occured while loading roomcharges!";
+                        $scope.errorData = "An Error has occured while loading roomcharges!";
                     });
         };
 

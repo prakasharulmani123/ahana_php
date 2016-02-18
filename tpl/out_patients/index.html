@@ -122,7 +122,7 @@
                                       'status_time': row.sts_time,
                                       'consultant_id': row.liveAppointmentBooking.consultant_id,
                                       'appt_status': row.sts_status,
-                                      })" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == row">
+                                      }, key)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == row">
                                     <span editable-select="row.sts_status" e-name="sts_status" e-form="rowform" e-ng-options="s.value as s.text for s in statuses">
                                         {{row.sts_status|| 'empty' }}
                                     </span>

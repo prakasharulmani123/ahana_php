@@ -16,7 +16,7 @@ app.controller('GenericNameController', ['$rootScope', '$scope', '$timeout', '$h
                         $scope.displayedCollection = [].concat($scope.rowCollection);
                     })
                     .error(function () {
-                        $scope.error = "An Error has occured while loading genericname!";
+                        $scope.errorData = "An Error has occured while loading genericname!";
                     });
         };
 

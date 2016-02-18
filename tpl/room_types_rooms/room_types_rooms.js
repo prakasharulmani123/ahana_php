@@ -28,7 +28,7 @@ app.controller('RoomTypesRoomsController', ['$scope', '$http', '$filter', '$stat
                         $scope.displayedCollection = [].concat($scope.rowCollection);
                     })
                     .error(function () {
-                        $scope.error = "An Error has occured while loading roomtypes!";
+                        $scope.errorData = "An Error has occured while loading roomtypes!";
                     });
         };
 

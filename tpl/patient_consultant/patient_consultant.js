@@ -115,7 +115,7 @@ app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', 
                         $scope.displayedCollection = [].concat($scope.rowCollection);
                     })
                     .error(function () {
-                        $scope.error = "An Error has occured while loading patient consultants!";
+                        $scope.errorData = "An Error has occured while loading patient consultants!";
                     });
         };
 

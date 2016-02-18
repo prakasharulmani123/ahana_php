@@ -16,7 +16,7 @@ app.controller('OrganizationModulesController', ['$rootScope', '$scope', '$timeo
                         $scope.displayedCollection = [].concat($scope.rowCollection);
                     })
                     .error(function () {
-                        $scope.error = "An Error has occured while loading roles!";
+                        $scope.errorData = "An Error has occured while loading roles!";
                     });
         };
 

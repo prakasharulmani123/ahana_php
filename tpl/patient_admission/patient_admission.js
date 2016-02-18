@@ -81,7 +81,7 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
                             });
                         })
                         .error(function () {
-                            $scope.error = "An Error has occured while loading floors!";
+                            $scope.errorData = "An Error has occured while loading floors!";
                         });
             });
         }

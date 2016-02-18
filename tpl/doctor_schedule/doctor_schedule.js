@@ -52,7 +52,7 @@ app.controller('DoctorSchedulesController', ['$rootScope', '$scope', '$timeout',
                         $scope.isLoading = false;
                     })
                     .error(function () {
-                        $scope.error = "An Error has occured while loading roomChargesubCategorys!";
+                        $scope.errorData = "An Error has occured while loading roomChargesubCategorys!";
                     });
         };
 

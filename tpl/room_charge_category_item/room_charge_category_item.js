@@ -16,7 +16,7 @@ app.controller('RoomChargeCategoryItemsController', ['$rootScope', '$scope', '$t
                         $scope.displayedCollection = [].concat($scope.rowCollection);
                     })
                     .error(function () {
-                        $scope.error = "An Error has occured while loading roomChargeCategoryItems!";
+                        $scope.errorData = "An Error has occured while loading roomChargeCategoryItems!";
                     });
         };
 
