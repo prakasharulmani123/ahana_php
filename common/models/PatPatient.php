@@ -162,10 +162,10 @@ class PatPatient extends RActiveRecord {
         if ($insert) {
             CoInternalCode::increaseInternalCode("P");
         }
-        
-        if(is_object($this->patient_guid))
+
+        if (is_object($this->patient_guid))
             $this->patient_guid = $this->patient_guid->toString();
-        
+
         return parent::afterSave($insert, $changedAttributes);
     }
 
@@ -212,6 +212,16 @@ class PatPatient extends RActiveRecord {
                     return $this->activePatientAlert[0]->alert_description;
                 }
             },
+            'billing_type' => function ($model) {
+                if (isset($model->patient_bill_type) && $model->patient_bill_type != ''){
+                    if($model->patient_bill_type == 'N')
+                        return "Normal";
+                    elseif($model->patient_bill_type == 'F')
+                        return "Free";
+                } else {
+                    return '-';
+                }
+            },
 //            'activeEncounter' => function ($model) {
 //                if (isset($model->patActiveEncounter))
 //                    return $model->patActiveEncounter;
@@ -239,8 +249,8 @@ class PatPatient extends RActiveRecord {
 
         return $list;
     }
-    
-    public static function getPatientByGuid($patient_guid){
+
+    public static function getPatientByGuid($patient_guid) {
         $patient = self::find()->where(['patient_guid' => $patient_guid])->one();
         return $patient;
     }
@@ -255,9 +265,10 @@ class PatPatient extends RActiveRecord {
     }
 
     public function afterFind() {
-        if(is_object($this->patient_guid))
+        if (is_object($this->patient_guid))
             $this->patient_guid = $this->patient_guid->toString();
-        
+
         return parent::afterFind();
     }
+
 }
