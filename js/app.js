@@ -2,6 +2,7 @@
 
 
 angular.module('app', [
+    'restangular',
     'ngAnimate',
     'ngCookies',
     'ngResource',

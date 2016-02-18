@@ -7,8 +7,8 @@ angular.module('app')
         .run(run)
         .config(config);
 
-config.$inject = ['$stateProvider', '$urlRouterProvider', 'JQ_CONFIG'];
-function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
+config.$inject = ['$stateProvider', '$urlRouterProvider', 'JQ_CONFIG', '$cookiesProvider', 'RestangularProvider'];
+function config($stateProvider, $urlRouterProvider, JQ_CONFIG, $cookiesProvider, RestangularProvider) {
     $urlRouterProvider
             .otherwise('/access/signin');
 
@@ -1528,17 +1528,22 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                         }]
                 }
             })
+
+    var getGlobals = $cookiesProvider.$get();
+    var getCurrentUser = JSON.parse(getGlobals.globals);
+    RestangularProvider.setBaseUrl('http://hms.ark/api/IRISORG/web/v1');
+    RestangularProvider.setDefaultRequestParams({access_token: getCurrentUser.currentUser.authdata});
 }
 run.$inject = ['$rootScope', '$state', '$stateParams', '$location', '$cookieStore', '$http', '$window', 'CommonService'];
 function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $window, CommonService) {
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
-    
+
     console.log($location.host());
     var serviceUrl = '';
     var clientUrl = 'ahana.hms.ark';
     var orgUrl = '';
-    
+
     if ($location.host() == 'demo.arkinfotec.in') {
         serviceUrl = 'http://demo.arkinfotec.in/ahana/demo/IRIS-service/IRISORG/web/v1'
         orgUrl = 'http://demo.arkinfotec.in/ahana/demo/IRISORG-client';
