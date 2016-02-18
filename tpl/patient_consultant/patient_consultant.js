@@ -219,4 +219,12 @@ app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', 
                 }
             }
         };
+
+        $scope.beforeRender = function ($view, $dates, $leftDate, $upDate, $rightDate) {
+            var current = (new Date).getTime();
+            angular.forEach($dates, function(date, key){
+                if(current > date.utcDateValue)
+                    $dates[key].selectable = false;
+            });
+        }
     }]);
