@@ -19,6 +19,7 @@ use yii\db\ActiveQuery;
  * @property string $amount
  * @property string $notes
  * @property integer $patient_cat_id
+ * @property string $patient_bill_type
  * @property integer $created_by
  * @property string $created_at
  * @property integer $modified_by
@@ -47,7 +48,7 @@ class PatAppointment extends RActiveRecord {
             [['status_date', 'status_time', 'consultant_id', 'appt_status'], 'required'],
             [['patient_cat_id', 'amount'], 'required', 'on' => 'seen_status'],
             [['tenant_id', 'patient_id', 'encounter_id', 'consultant_id', 'created_by', 'modified_by'], 'integer'],
-            [['status_date', 'status_time', 'amount', 'notes', 'patient_cat_id', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
+            [['status_date', 'status_time', 'amount', 'notes', 'patient_cat_id', 'created_at', 'modified_at', 'deleted_at', 'patient_bill_type'], 'safe'],
             [['status'], 'string'],
             [['appt_status'], 'string', 'max' => 1]
         ];
