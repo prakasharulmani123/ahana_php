@@ -1530,9 +1530,11 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG, $cookiesProvider,
             })
 
     var getGlobals = $cookiesProvider.$get();
-    var getCurrentUser = JSON.parse(getGlobals.globals);
-    RestangularProvider.setBaseUrl('http://hms.ark/api/IRISORG/web/v1');
-    RestangularProvider.setDefaultRequestParams({access_token: getCurrentUser.currentUser.authdata});
+    if (!jQuery.isEmptyObject(getGlobals)) {
+        var getCurrentUser = JSON.parse(getGlobals.globals);
+        RestangularProvider.setBaseUrl('http://hms.ark/api/IRISORG/web/v1');
+        RestangularProvider.setDefaultRequestParams({access_token: getCurrentUser.currentUser.authdata});
+    }
 }
 run.$inject = ['$rootScope', '$state', '$stateParams', '$location', '$cookieStore', '$http', '$window', 'CommonService'];
 function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $window, CommonService) {
