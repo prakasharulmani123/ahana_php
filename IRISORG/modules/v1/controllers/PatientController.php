@@ -117,7 +117,7 @@ class PatientController extends ActiveController {
         $patients = [];
         $limit = 10;
 
-        if (isset($post['search']) && !empty($post['search'])) {
+        if (isset($post['search']) && !empty($post['search']) && strlen($post['search']) >= 2) {
             $lists = PatPatient::find()
                     ->tenant()
                     ->active()
