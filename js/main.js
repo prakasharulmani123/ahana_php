@@ -3,8 +3,8 @@
 /* Controllers */
 
 angular.module('app')
-        .controller('AppCtrl', ['$scope', '$translate', '$localStorage', '$window', '$rootScope', '$state', '$cookieStore', 'CommonService', '$timeout',
-            function ($scope, $translate, $localStorage, $window, $rootScope, $state, $cookieStore, CommonService, $timeout) {
+        .controller('AppCtrl', ['$scope', '$translate', '$localStorage', '$window', '$rootScope', '$state', '$cookieStore', 'CommonService', '$timeout', '$http',
+            function ($scope, $translate, $localStorage, $window, $rootScope, $state, $cookieStore, CommonService, $timeout, $http) {
                 // add 'ie' classes to html
                 var isIE = !!navigator.userAgent.match(/MSIE/i);
                 isIE && angular.element($window.document.body).addClass('ie');
@@ -58,9 +58,19 @@ angular.module('app')
                 };
 
                 $scope.logout = function () {
-                    $rootScope.globals = {};
-                    $cookieStore.remove('globals');
-                    $window.location.reload();
+                    $http.post($rootScope.IRISAdminServiceUrl + '/user/logout')
+                            .success(function (response) {
+                                if (response.success) {
+                                    $rootScope.globals = {};
+                                    $cookieStore.remove('globals');
+                                    $window.location.reload();
+                                } else {
+                                    $scope.errorData = response.message;
+                                }
+                            })
+                            .error(function () {
+                                $scope.errorData = "An Error has occured while loading patient!";
+                            });
                 };
 
                 //Change Status

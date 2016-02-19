@@ -391,6 +391,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                 method: "GET"
             }).success(
                     function (response) {
+                        $scope.organization = response;
                         $scope.loadbar('hide');
 
                         $http.defaults.headers.common['x-domain-path'] = response.org.org_domain;
