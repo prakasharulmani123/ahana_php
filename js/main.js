@@ -80,10 +80,10 @@ angular.module('app')
                 };
 
                 $scope.logout = function () {
-                    $rootScope.globals = {};
                     $http.post($rootScope.IRISOrgServiceUrl + '/user/logout')
                             .success(function (response) {
                                 if (response.success) {
+                                    $rootScope.globals = {};
                                     $cookieStore.remove('globals');
                                     localStorage.removeItem('ngStorage-user_resources');
                                     localStorage.removeItem('ngStorage-user_credentials');
