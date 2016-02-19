@@ -96,7 +96,7 @@ app.controller('RolesRightsController', ['$rootScope', '$scope', '$timeout', '$h
             }
 
             this.data.Module['role_id'] = this.data.role_id;
-            this.data.Module['tenant_id'] = this.data.tenant_id;
+//            this.data.Module['tenant_id'] = this.data.tenant_id;
 
             var post_data = {Module: $scope.sanitizeVariable(this.data.Module)};
 
