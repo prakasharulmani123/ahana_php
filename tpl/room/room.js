@@ -93,10 +93,37 @@ app.controller('RoomController', ['$rootScope', '$scope', '$timeout', '$http', '
                     $scope.errorData = data.message;
             });
         };
-        
-        $scope.updateNotes = function(sts){
-            if(sts == 0)
+
+        $scope.updateNotes = function (sts) {
+            if (sts == 0)
                 $scope.data.notes = '';
         }
 
+        $scope.occupiedStatus = {
+            '0': 'Vacant',
+            '1': 'Occupied',
+            '2': 'Maintenance'
+        };
+
+        $scope.predicates = ['bed_name', 'ward_name', 'roomstatus'];
+        $scope.selectedPredicate = $scope.predicates[0];
     }]);
+
+app.filter('myStrictFilter', function($filter){
+    return function(input, predicate){
+        return $filter('filter')(input, predicate, true);
+    }
+});
+
+app.filter('unique', function() {
+    return function (arr, field) {
+        var o = {}, i, l = arr.length, r = [];
+        for(i=0; i<l;i+=1) {
+            o[arr[i][field]] = arr[i];
+        }
+        for(i in o) {
+            r.push(o[i]);
+        }
+        return r;
+    };
+  })

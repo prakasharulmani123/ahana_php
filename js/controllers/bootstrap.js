@@ -309,17 +309,28 @@ app.controller('PatientSearchController', ['$scope', '$http', '$rootScope', '$st
         $scope.patient_lists = [];
         $scope.patientselected = '';
 
+        var changeTimer = false;
+
         $scope.$watch('patientselected', function (newValue, oldValue) {
             if (newValue != '') {
-                $http({
-                    method: 'POST',
-                    url: $rootScope.IRISOrgServiceUrl + '/patient/search',
-                    data: {'search': newValue},
-                }).success(
-                        function (response) {
-                            $scope.patient_lists = response.patients;
-                        }
-                );
+                if (changeTimer !== false)
+                    clearTimeout(changeTimer);
+
+                changeTimer = setTimeout(function () {
+                    $http({
+                        method: 'POST',
+                        url: $rootScope.IRISOrgServiceUrl + '/patient/search',
+                        data: {'search': newValue},
+                    }).success(
+                            function (response) {
+                                $scope.patient_lists = response.patients;
+                            }
+                    );
+                    changeTimer = false;
+                }, 300);
+
+
+
             }
         }, true);
 
@@ -332,24 +343,25 @@ app.controller('PatientSearchController', ['$scope', '$http', '$rootScope', '$st
             $scope.patientselected = '';
             $state.go('patient.registration');
         };
-        
+
         $scope.goToAppointment = function (patient_id) {
             $scope.patientselected = '';
             $state.go('patient.appointment', {'id': patient_id});
         };
-        
-        $scope.highlight = function(text, search) {
-    if (!search) {
-        return $sce.trustAsHtml(text);
-    }
-    return $sce.trustAsHtml(text.replace(new RegExp(search, 'gi'), '<span class="highlightedText">$&</span>'));
-};
-    }])
-.filter('highlight', function($sce) {
-    return function(text, phrase) {
-      if (phrase) text = text.replace(new RegExp('('+phrase+')', 'gi'),
-        '<span class="highlighted">$1</span>')
 
-      return $sce.trustAsHtml(text)
-    }
-  });
+        $scope.highlight = function (text, search) {
+            if (!search) {
+                return $sce.trustAsHtml(text);
+            }
+            return $sce.trustAsHtml(text.replace(new RegExp(search, 'gi'), '<span class="highlightedText">$&</span>'));
+        };
+    }])
+        .filter('highlight', function ($sce) {
+            return function (text, phrase) {
+                if (phrase)
+                    text = text.replace(new RegExp('(' + phrase + ')', 'gi'),
+                            '<span class="highlighted">$1</span>')
+
+                return $sce.trustAsHtml(text)
+            }
+        });

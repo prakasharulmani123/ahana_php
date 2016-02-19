@@ -36,16 +36,16 @@
                         <input st-search="'ward_name'" placeholder="search for ward name" class="input-sm form-control" type="search"/>
                     </th>
                     <th>
-                        <input st-search="'occupied_status'" placeholder="search for occupied status" class="input-sm form-control" type="search"/>
+                        <input st-search="'roomstatus'" class="input-sm form-control" type="search"/>
                     </th>
-<!--                    <th>
-                        <input st-search="'maintain_name'" placeholder="search for maintain name" class="input-sm form-control" type="search"/>
-                    </th>-->
+                    <!--                    <th>
+                                            <input st-search="'maintain_name'" placeholder="search for maintain name" class="input-sm form-control" type="search"/>
+                                        </th>-->
                     <th colspan="2">&nbsp;</th>
                 </tr>
             </thead>
             <tbody ng-hide="isLoading">
-                <tr ng-repeat="row in displayedCollection| orderBy: bed_name">
+                <tr ng-repeat="row in displayedCollection | orderBy: bed_name">
                     <td>
                         {{row.bed_name}}
                     </td>
@@ -56,9 +56,9 @@
                         {{row.roomstatus}}<br />
                         <span class="text-danger-dk" ng-if="row.occupied_status == '2'">>> {{row.notes}}</span>
                     </td>
-<!--                    <td>
-                        {{row.maintain_name}}
-                    </td>-->
+                    <!--                    <td>
+                                            {{row.maintain_name}}
+                                        </td>-->
                     <td>
                         <label class="i-checks "> 
                             <input type="checkbox" checked="" ng-true-value="'1'" ng-false-value="'0'" name="status" ng-model="row.status" ng-change='updateStatus("CoRoom", row.room_id)'> 
