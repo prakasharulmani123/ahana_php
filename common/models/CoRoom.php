@@ -15,6 +15,7 @@ use yii\db\ActiveQuery;
  * @property string $bed_name
  * @property integer $maintain_id
  * @property string $occupied_status
+ * @property string $notes
  * @property string $status
  * @property integer $created_by
  * @property string $created_at
@@ -38,13 +39,20 @@ class CoRoom extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['ward_id', 'bed_name', 'maintain_id'], 'required'],
+            [['ward_id', 'bed_name'], 'required'],
             [['tenant_id', 'ward_id', 'maintain_id', 'created_by', 'modified_by'], 'integer'],
-            [['occupied_status', 'status'], 'string'],
-            [['created_at', 'modified_at'], 'safe'],
+            [['occupied_status', 'status', 'notes'], 'string'],
+            [['created_at', 'modified_at', 'notes'], 'safe'],
             [['bed_name'], 'string', 'max' => 50],
+            [['occupied_status'], 'validateNotes'],
             [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'ward_id', 'bed_name', 'deleted_at'], 'message' => 'The combination of Ward Name has already been taken.']
         ];
+    }
+
+    public function validateNotes($attribute, $params) {
+        if ($this->$attribute == '2' && empty($this->notes)) {
+            $this->addError($attribute, 'Notes can not be empty');
+        }
     }
 
     /**
@@ -58,6 +66,7 @@ class CoRoom extends RActiveRecord {
             'bed_name' => 'Room Name',
             'maintain_id' => 'Room Maintain Status',
             'occupied_status' => 'Occupied Status',
+            'notes' => 'Notes',
             'status' => 'Status',
             'created_by' => 'Created By',
             'created_at' => 'Created At',
@@ -65,7 +74,7 @@ class CoRoom extends RActiveRecord {
             'modified_at' => 'Modified At',
         ];
     }
-    
+
     public function behaviors() {
         $extend = [
             LinkAllBehavior::className(),
@@ -125,15 +134,28 @@ class CoRoom extends RActiveRecord {
     }
 
     public function getRoomstatus() {
-        return ($this->occupied_status == 0) ? 'Vacant' : 'Occupied';
+        $sts = '';
+        switch ($this->occupied_status) {
+            case 0:
+                $sts = 'Vacant';
+                break;
+            case 1:
+                $sts = 'Occupied';
+                break;
+            case 2:
+                $sts = 'Maintenance';
+                break;
+        }
+        return $sts;
     }
-    
+
     public static function getRoomList($tenant = null, $status = '1', $deleted = false, $occupied_status = null) {
-        if(!$deleted)
+        if (!$deleted)
             $list = self::find()->tenant($tenant)->status($status)->active()->occupiedStatus($occupied_status)->all();
         else
             $list = self::find()->tenant($tenant)->deleted()->occupiedStatus($occupied_status)->all();
 
         return $list;
     }
+
 }
