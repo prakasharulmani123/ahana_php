@@ -1570,7 +1570,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG, $cookiesProvider,
             })
 
     var getGlobals = $cookiesProvider.$get();
-    if (!jQuery.isEmptyObject(getGlobals)) {
+    if (!jQuery.isEmptyObject(getGlobals) && typeof getGlobals.globals != 'undefined') {
         var getCurrentUser = JSON.parse(getGlobals.globals);
         RestangularProvider.setBaseUrl('http://hms.ark/api/IRISORG/web/v1');
         RestangularProvider.setDefaultRequestParams({access_token: getCurrentUser.currentUser.authdata});
