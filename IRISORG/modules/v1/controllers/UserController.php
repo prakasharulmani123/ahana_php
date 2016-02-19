@@ -55,7 +55,7 @@ class UserController extends ActiveController {
         $behaviors = parent::behaviors();
         $behaviors['authenticator'] = [
             'class' => HttpBearerAuth::className(),
-            'only' => ['dashboard', 'createuser', 'updateuser', 'getuser', 'getlogin', 'updatelogin', 'getuserdata', 'getuserslistbyuser', 'assignroles', 'getdoctorslist', 'checkstateaccess', 'getusercredentialsbytoken'],
+            'only' => ['dashboard', 'createuser', 'updateuser', 'getuser', 'getlogin', 'updatelogin', 'getuserdata', 'getuserslistbyuser', 'assignroles', 'getdoctorslist', 'checkstateaccess', 'getusercredentialsbytoken', 'logout'],
         ];
         $behaviors['contentNegotiator'] = [
             'class' => ContentNegotiator::className(),
@@ -145,6 +145,19 @@ class UserController extends ActiveController {
             return ['success' => true, 'access_token' => Yii::$app->user->identity->getAuthKey(), 'resources' => self::Getuserrolesresources(), 'credentials' => self::GetuserCredentials(\Yii::$app->request->post('tenant_id'))];
         } elseif (!$model->validate()) {
             return ['success' => false, 'message' => Html::errorSummary([$model])];
+        }
+    }
+
+    public function actionLogout() {
+        $model = CoLogin::findOne(['login_id' => Yii::$app->user->identity->login_id]);
+        if(!empty($model)){
+            $model->attributes = ['authtoken' => '','logged_tenant_id' => ''];
+            if($model->save())
+                return ['success' => true];
+            else
+                return ['success' => false, 'message' => Html::errorSummary([$model])];
+        } else{
+            return ['success' => false, 'message' => 'Try again later'];
         }
     }
 
