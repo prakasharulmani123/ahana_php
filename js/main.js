@@ -3,8 +3,8 @@
 /* Controllers */
 
 angular.module('app')
-        .controller('AppCtrl', ['$scope', '$localStorage', '$window', '$rootScope', '$state', '$cookieStore', '$http', 'CommonService','$timeout',
-            function ($scope, $localStorage, $window, $rootScope, $state, $cookieStore, $http, CommonService,$timeout) {
+        .controller('AppCtrl', ['$scope', '$localStorage', '$window', '$rootScope', '$state', '$cookieStore', '$http', 'CommonService', '$timeout',
+            function ($scope, $localStorage, $window, $rootScope, $state, $cookieStore, $http, CommonService, $timeout) {
                 // add 'ie' classes to html
                 var isIE = !!navigator.userAgent.match(/MSIE/i);
                 isIE && angular.element($window.document.body).addClass('ie');
@@ -81,13 +81,21 @@ angular.module('app')
 
                 $scope.logout = function () {
                     $rootScope.globals = {};
-                    $cookieStore.remove('globals');
-                    localStorage.removeItem('ngStorage-user_resources');
-                    localStorage.removeItem('ngStorage-user_credentials');
-                    $window.location.reload();
+                    $http.post($rootScope.IRISOrgServiceUrl + '/user/logout')
+                            .success(function (response) {
+                                if (response.success) {
+                                    $cookieStore.remove('globals');
+                                    localStorage.removeItem('ngStorage-user_resources');
+                                    localStorage.removeItem('ngStorage-user_credentials');
+                                    $window.location.reload();
+                                } else {
+                                    $scope.errorData = response.message;
+                                }
+                            })
+                            .error(function () {
+                                $scope.errorData = "An Error has occured while loading patient!";
+                            });
                 };
-
-//                $scope.logout();
 
                 //Change Status
                 $scope.updateStatus = function (modelName, primaryKey) {
@@ -191,7 +199,7 @@ angular.module('app')
 
                 $scope.$watch('successMessage', function () {
                     if ($scope.successMessage) {
-                        $timeout(function(){
+                        $timeout(function () {
                             $scope.successMessage = false;
                         }, 3000);
                     }
