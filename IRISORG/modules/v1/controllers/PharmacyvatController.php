@@ -53,7 +53,7 @@ class PharmacyvatController extends ActiveController {
     public function actionRemove() {
         $id = Yii::$app->getRequest()->post('id');
         if ($id) {
-            $model = PhaVat::find()->where(['brand_id' => $id])->one();
+            $model = PhaVat::find()->where(['vat_id' => $id])->one();
             $model->remove();
             return ['success' => true];
         }

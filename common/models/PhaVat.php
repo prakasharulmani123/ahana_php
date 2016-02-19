@@ -66,7 +66,7 @@ class PhaVat extends RActiveRecord {
     public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
-    
+
     public static function find() {
         return new PhaVatQuery(get_called_class());
     }
