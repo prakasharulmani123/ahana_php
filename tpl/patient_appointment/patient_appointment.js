@@ -33,10 +33,10 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
                     } else {
                         var consultant_id = '';
                         if (response.model.liveAppointmentArrival.hasOwnProperty('appt_id')) {
-                            $scope.data = {'PatAppointment': {'appt_status': 'A', 'dummy_status': 'A'}};
+                            $scope.data = {'PatAppointment': {'appt_status': 'A', 'dummy_status': 'A', 'status_date': moment().format('YYYY-MM-DD HH:mm:ss')}};
                             consultant_id = response.model.liveAppointmentArrival.consultant_id;
                         } else if (response.model.liveAppointmentBooking.hasOwnProperty('appt_id')) {
-                            $scope.data = {'PatAppointment': {'appt_status': 'B', 'dummy_status': 'B'}};
+                            $scope.data = {'PatAppointment': {'appt_status': 'B', 'dummy_status': 'B', 'status_date': moment().format('YYYY-MM-DD HH:mm:ss')}};
                             consultant_id = response.model.liveAppointmentArrival.consultant_id;
                         }
                         if (consultant_id) {
@@ -83,9 +83,9 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
                 $scope.bill_types = response;
             });
             
-             $timeout(function () {
-                $scope.data.PatAppointment.status_date = moment().format('YYYY-MM-DD HH:mm:ss');
-            }, 1000)
+//             $timeout(function () {
+//                $scope.data.PatAppointment.status_date = moment().format('YYYY-MM-DD HH:mm:ss');
+//            }, 1000)
         }
 
         //For Datepicker

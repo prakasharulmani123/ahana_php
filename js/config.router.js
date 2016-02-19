@@ -1528,7 +1528,7 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG, $cookiesProvider,
                         }]
                 }
             })
-            
+
             //PHARMACY SUPPLIER
             .state('pharmacy.supplier', {
                 url: '/supplier',
@@ -1565,6 +1565,45 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG, $cookiesProvider,
                     deps: ['uiLoad',
                         function (uiLoad) {
                             return uiLoad.load(['tpl/pharmacy_supplier/pharmacy_supplier.js']);
+                        }]
+                }
+            })
+
+            //PHARMACY VAT
+            .state('pharmacy.vat', {
+                url: '/vat',
+                templateUrl: 'tpl/pharmacy_vat/index.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/pharmacy_vat/pharmacy_vat.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            //PHARMACY BRAND CREATE
+            .state('pharmacy.vatCreate', {
+                url: '/vatCreate',
+                templateUrl: 'tpl/pharmacy_vat/create.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/pharmacy_vat/pharmacy_vat.js']);
+                        }]
+                }
+            })
+
+            //PHARMACY BRAND UPDATE
+            .state('pharmacy.vatUpdate', {
+                url: '/vatUpdate/{id}',
+                templateUrl: 'tpl/pharmacy_vat/update.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/pharmacy_vat/pharmacy_vat.js']);
                         }]
                 }
             })
