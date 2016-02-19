@@ -1528,6 +1528,46 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG, $cookiesProvider,
                         }]
                 }
             })
+            
+            //PHARMACY SUPPLIER
+            .state('pharmacy.supplier', {
+                url: '/supplier',
+                templateUrl: 'tpl/pharmacy_supplier/index.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/pharmacy_supplier/pharmacy_supplier.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+
+            //PHARMACY SUPPLIER CREATE
+            .state('pharmacy.supplierCreate', {
+                url: '/supplierCreate',
+                templateUrl: 'tpl/pharmacy_supplier/create.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/pharmacy_supplier/pharmacy_supplier.js']);
+                        }]
+                }
+            })
+
+            //PHARMACY SUPPLIER UPDATE
+            .state('pharmacy.supplierUpdate', {
+                url: '/supplierUpdate/{id}',
+                templateUrl: 'tpl/pharmacy_supplier/update.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/pharmacy_supplier/pharmacy_supplier.js']);
+                        }]
+                }
+            })
 
     var getGlobals = $cookiesProvider.$get();
     if (!jQuery.isEmptyObject(getGlobals)) {

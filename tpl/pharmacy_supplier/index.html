@@ -1,0 +1,96 @@
+<div class="bg-light lter b-b wrapper-md">
+    <h1 class="m-n font-thin h3">Suppliers</h1>
+</div>
+
+<div class="wrapper-md" ng-controller="SuppliersController" ng-init="loadSuppliersList()">
+
+    <div ng-include="'tpl/blocks/alert.html'">
+        {% include 'tpl/blocks/alert.html' %}
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <button class="btn btn-sm btn-grey" ng-click="loadSuppliersList()"> 
+                &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
+            </button>
+            <button check-access-button ng-click="$state.go('pharmacy.supplierCreate')" class="btn btn-sm btn-info pull-right">
+                <i class="fa fa-plus"></i> &nbsp; Add new Supplier
+            </button>
+        </div>
+
+        <table st-table="displayedCollection"  st-safe-src="rowCollection" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th st-sort="supplier_name">Supplier name</th>
+                    <th st-sort="supplier_code">Supplier code</th>
+                    <th st-sort="supplier_code">Mobile</th>
+                    <th st-sort="supplier_code">Phone</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+                <tr>
+                    <th>
+                        <input st-search="'supplier_name'" placeholder="search for supplier name" class="input-sm form-control" type="search"/>
+                    </th>
+                    <th>
+                        <input st-search="'supplier_code'" placeholder="search for supplier code" class="input-sm form-control" type="search"/>
+                    </th>
+                    <th>
+                        <input st-search="'supplier_mobile'" placeholder="search for mobile" class="input-sm form-control" type="search"/>
+                    </th>
+                    <th>
+                        <input st-search="'supplier_phone'" placeholder="search for phone" class="input-sm form-control" type="search"/>
+                    </th>
+                    <th colspan="2">&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody ng-hide="isLoading">
+                <tr ng-repeat="row in displayedCollection| orderBy: supplier_name">
+                    <td>
+                        {{row.supplier_name}}
+                    </td>
+                    <td>
+                        {{row.supplier_code}}
+                    </td>
+                    <td>
+                        {{row.supplier_mobile}}
+                    </td>
+                    <td>
+                        {{row.supplier_phone}}
+                    </td>
+                    <td>
+                        <div ng-if="row.tenant_id != null">
+                            <label class="i-checks "> 
+                                <input type="checkbox" checked="" ng-true-value="'1'" ng-false-value="'0'" name="status" ng-model="row.status" ng-change='updateStatus("PhaSupplier", row.supplier_id)'> 
+                                <i></i>
+                            </label>
+                        </div>
+                    </td>
+                    <td>
+                        <div ng-if="row.tenant_id != null">
+                            <a title="Edit" check-access  ui-sref="pharmacy.supplierUpdate({id: row.supplier_id})">
+                                <i class="fa fa-pencil"></i>
+                            </a>&nbsp;&nbsp;&nbsp;
+                            <a class="hide" title="Delete" ng-click="removeRow(row)">
+                                <i class="fa fa-trash"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+            <tbody ng-show="isLoading">
+                <tr>
+                    <td colspan="6" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="6" class="text-center">
+                        <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7"></div>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+
+    </div>
+</div>
