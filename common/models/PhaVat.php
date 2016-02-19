@@ -2,7 +2,8 @@
 
 namespace common\models;
 
-use Yii;
+use common\models\query\PhaVatQuery;
+use yii\db\ActiveQuery;
 
 /**
  * This is the model class for table "pha_vat".
@@ -19,23 +20,21 @@ use Yii;
  *
  * @property CoTenant $tenant
  */
-class PhaVat extends \common\models\RActiveRecord
-{
+class PhaVat extends RActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'pha_vat';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            [['tenant_id', 'vat', 'created_by'], 'required'],
+            [['vat'], 'required'],
             [['tenant_id', 'created_by', 'modified_by'], 'integer'],
             [['vat'], 'number'],
             [['status'], 'string'],
@@ -47,8 +46,7 @@ class PhaVat extends \common\models\RActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'vat_id' => 'Vat ID',
             'tenant_id' => 'Tenant ID',
@@ -63,10 +61,14 @@ class PhaVat extends \common\models\RActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getTenant()
-    {
+    public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
+    
+    public static function find() {
+        return new PhaVatQuery(get_called_class());
+    }
+
 }
