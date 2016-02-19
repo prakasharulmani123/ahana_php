@@ -51,7 +51,8 @@ class RoomchargecategoryController extends ActiveController {
     }
 
     public function actionGetroomchargelist() {
-        return ['list' => CoRoomChargeCategory::find()->tenantWithNull()->exceptCode()->active()->orderBy(['created_at' => SORT_DESC])->all()];
+        // exceptCode() -> use this function to hide Allied & Procedures in listing.
+        return ['list' => CoRoomChargeCategory::find()->tenantWithNull()->active()->orderBy(['created_at' => SORT_DESC])->all()];
     }
 
     public function actionRemove() {

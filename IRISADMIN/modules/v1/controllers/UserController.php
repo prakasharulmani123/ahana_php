@@ -1,6 +1,8 @@
 <?php
+
 namespace IRISADMIN\modules\v1\controllers;
 
+use common\models\CoSuperAdmin;
 use common\models\IrisLoginForm;
 use IRISADMIN\models\ContactForm;
 use Yii;
@@ -22,7 +24,7 @@ class UserController extends Controller {
         $behaviors = parent::behaviors();
         $behaviors['authenticator'] = [
             'class' => HttpBearerAuth::className(),
-            'only' => ['myidentity'],
+            'only' => ['myidentity', 'logout'],
         ];
         $behaviors['contentNegotiator'] = [
             'class' => ContentNegotiator::className(),
@@ -38,9 +40,22 @@ class UserController extends Controller {
         $model = new IrisLoginForm();
 
         if ($model->load(Yii::$app->getRequest()->getBodyParams(), '') && $model->login()) {
-            return ['success' => true,'access_token' => Yii::$app->user->identity->getAuthKey()];
+            return ['success' => true, 'access_token' => Yii::$app->user->identity->getAuthKey()];
         } elseif (!$model->validate()) {
             return ['success' => false, 'message' => Html::errorSummary([$model])];
+        }
+    }
+
+    public function actionLogout() {
+        $model = CoSuperAdmin::findOne(['su_id' => Yii::$app->user->identity->su_id]);
+        if (!empty($model)) {
+            $model->attributes = ['authtoken' => ''];
+            if ($model->save())
+                return ['success' => true];
+            else
+                return ['success' => false, 'message' => Html::errorSummary([$model])];
+        } else {
+            return ['success' => false, 'message' => 'Try again later'];
         }
     }
 
@@ -78,5 +93,5 @@ class UserController extends Controller {
             return $model;
         }
     }
-    
+
 }
