@@ -557,6 +557,16 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG, $cookiesProvider,
                         }]
                 }
             })
+            .state('configuration.updateMaintenance', {
+                url: '/updateMaintenance/{id}',
+                templateUrl: 'tpl/room/update_maintenance.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/room/room.js']);
+                        }]
+                }
+            })
             //Room Charge
             .state('configuration.roomCharge', {
                 url: '/roomCharge',

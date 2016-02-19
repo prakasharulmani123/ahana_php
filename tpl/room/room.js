@@ -93,5 +93,10 @@ app.controller('RoomController', ['$rootScope', '$scope', '$timeout', '$http', '
                     $scope.errorData = data.message;
             });
         };
+        
+        $scope.updateNotes = function(sts){
+            if(sts == 0)
+                $scope.data.notes = '';
+        }
 
     }]);

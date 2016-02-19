@@ -24,7 +24,7 @@
                     <th st-sort="bed_name">Bed No.</th>
                     <th st-sort="ward_name">Ward name</th>
                     <th st-sort="roomstatus">Occupancy Status</th>
-                    <th st-sort="maintain_name">Maintenance Status</th>
+                    <!--<th st-sort="maintain_name">Maintenance Status</th>-->
                     <th>Status</th>
                     <th>Action</th>
                 </tr>
@@ -38,9 +38,9 @@
                     <th>
                         <input st-search="'occupied_status'" placeholder="search for occupied status" class="input-sm form-control" type="search"/>
                     </th>
-                    <th>
+<!--                    <th>
                         <input st-search="'maintain_name'" placeholder="search for maintain name" class="input-sm form-control" type="search"/>
-                    </th>
+                    </th>-->
                     <th colspan="2">&nbsp;</th>
                 </tr>
             </thead>
@@ -53,11 +53,12 @@
                         {{row.ward_name}}
                     </td>
                     <td>
-                        {{row.roomstatus}}
+                        {{row.roomstatus}}<br />
+                        <span class="text-danger-dk" ng-if="row.occupied_status == '2'">>> {{row.notes}}</span>
                     </td>
-                    <td>
+<!--                    <td>
                         {{row.maintain_name}}
-                    </td>
+                    </td>-->
                     <td>
                         <label class="i-checks "> 
                             <input type="checkbox" checked="" ng-true-value="'1'" ng-false-value="'0'" name="status" ng-model="row.status" ng-change='updateStatus("CoRoom", row.room_id)'> 
@@ -68,17 +69,20 @@
                         <a title="Edit" check-access  ui-sref="configuration.roomUpdate({id: '{{row.room_id}}'})">
                             <i class="fa fa-pencil"></i>
                         </a>&nbsp;&nbsp;&nbsp;
+                        <a ng-if="row.occupied_status != '1'" title="Update Maintenance" ui-sref="configuration.updateMaintenance({id: '{{row.room_id}}'})">
+                            <i class="fa fa-exclamation-triangle"></i>
+                        </a>
                     </td>
                 </tr>
             </tbody>
             <tbody ng-show="isLoading">
                 <tr>
-                    <td colspan="6" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
+                    <td colspan="5" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
                 </tr>
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="6" class="text-center">
+                    <td colspan="5" class="text-center">
                         <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7"></div>
                     </td>
                 </tr>
