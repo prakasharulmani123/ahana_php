@@ -83,7 +83,7 @@ class OrganizationController extends ActiveController {
                     $resources = CoResources::find()->where(['in', 'resource_id', $resource_id])->all();
                     
                     // extra columns to be saved to the many to many table
-                    $extraColumns = ['tenant_id' => Yii::$app->request->post('Module')['tenant_id'], 'created_by' => Yii::$app->user->identity->user_id, 'status' => '1', 'role_id' => Yii::$app->request->post('Module')['role_id']]; 
+                    $extraColumns = ['tenant_id' => Yii::$app->user->identity->logged_tenant_id, 'created_by' => Yii::$app->user->identity->user_id, 'status' => '1', 'role_id' => Yii::$app->request->post('Module')['role_id']]; 
                     
                     $unlink = true; // unlink tags not in the list
                     $delete = true; // delete unlinked tags
