@@ -170,7 +170,7 @@ class PatAdmission extends RActiveRecord {
             $this->setCurrentData();
 
             //Set Old room status to vacant
-            if ($this->admission_status == 'TR' && !$this->isSwapping) {
+            if (($this->admission_status == 'TR' || $this->admission_status == 'D') && !$this->isSwapping) {
                 $this->vacantOldRoomId = $this->encounter->patCurrentAdmission->room_id;
             }
         }
