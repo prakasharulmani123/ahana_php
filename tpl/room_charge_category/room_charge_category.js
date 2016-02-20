@@ -16,6 +16,11 @@ app.controller('RoomChargeCategoriesController', ['$rootScope', '$scope', '$time
             $http.get($rootScope.IRISOrgServiceUrl + '/roomchargecategories/getroomchargelist')
                     .success(function (roomChargeCategorys) {
                         $scope.isLoading = false;
+
+                        var prof_charge = {"tenant_id": null, "charge_cat_name": "Professional Charges", "charge_cat_code": "PRF", "charge_cat_description": "Professional Charges",
+                            "subcategories": [{"charge_subcat_name": "Users who have been assigned 'Care Provider' status in user registration will be listed as the sub-categories"}]}
+                        roomChargeCategorys.list = roomChargeCategorys.list.concat([prof_charge]);
+                        
                         $scope.rowCollection = roomChargeCategorys.list;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
                     })

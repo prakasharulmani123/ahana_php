@@ -24,9 +24,12 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
             });
         }
 
+        $scope.patient_det = {};
         $scope.initCanSaveAppointment = function () {
             $scope.isPatientHaveActiveEncounter(function (response) {
                 if (response.success == true) {
+                    $scope.patient_det = response.model.patient;
+
                     if (response.model.encounter_id != $state.params.enc_id) {
                         alert("This is not an active Encounter");
                         $state.go("patient.encounter", {id: $state.params.id});
@@ -43,6 +46,9 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
                             $http.get($rootScope.IRISOrgServiceUrl + '/default/getconsultantcharges?consultant_id=' + consultant_id)
                                     .success(function (response) {
                                         $scope.chargesList = response.chargesList;
+                                        $scope.data.PatAppointment.patient_bill_type = $scope.patient_det.patient_bill_type;
+                                        $scope.data.PatAppointment.patient_cat_id = $scope.patient_det.patient_category_id;
+                                        $scope.updateCharge();
                                     }, function (x) {
                                         response = {success: false, message: 'Server Error'};
                                     });
@@ -58,9 +64,11 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
         $scope.chargeAmount = '';
         $scope.updateCharge = function () {
             _that = this;
-            console.log(_that.data.PatAppointment.patient_cat_id);
             var charge = $filter('filter')($scope.chargesList, {patient_cat_id: _that.data.PatAppointment.patient_cat_id});
-            $scope.chargeAmount = charge[0].charge_amount;
+            if(typeof charge[0] != 'undefined')
+                $scope.chargeAmount = $scope.data.PatAppointment.amount = charge[0].charge_amount;
+            else
+                $scope.chargeAmount = $scope.data.PatAppointment.amount = 0;
         }
 
         $scope.initForm = function () {
@@ -77,12 +85,12 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
             $scope.data = {};
             $scope.data.status_date = moment().format('YYYY-MM-DD');
         }
-        
+
         $scope.initChangeStatusForm = function () {
             $rootScope.commonService.GetPatientBillingList(function (response) {
                 $scope.bill_types = response;
             });
-            
+
 //             $timeout(function () {
 //                $scope.data.PatAppointment.status_date = moment().format('YYYY-MM-DD HH:mm:ss');
 //            }, 1000)
@@ -189,8 +197,8 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
             succ_msg = 'Status changed successfully';
 
             if (_that.data.PatAppointment.status_date) {
+                _that.data.PatAppointment.status_date = moment(_that.data.PatAppointment.status_date).format('YYYY-MM-DD HH:mm:ss');
                 _that.data.PatAppointment.status_time = moment(_that.data.PatAppointment.status_date).format('HH:mm:ss');
-                _that.data.PatAppointment.status_date = moment(_that.data.PatAppointment.status_date).format('YYYY-MM-DD');
             }
 
             if (mode == 'arrived') {

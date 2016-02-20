@@ -13,8 +13,8 @@
                     {% include 'tpl/patient_appointment/_arrived_form.html' %}
                 </div>
             </div>
-
-            <div class="col-sm-12" ng-if="data.PatAppointment.dummy_status == 'A'">
+            
+            <div class="col-sm-12" ng-if="data.PatAppointment.dummy_status == 'A';">
                 <div ng-include="'tpl/patient_appointment/_seen_form.html'">
                     {% include 'tpl/patient_appointment/_seen_form.html' %}
                 </div>

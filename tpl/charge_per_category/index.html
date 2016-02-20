@@ -29,7 +29,7 @@
                     </th>
                     <th st-sort="charge_cat_name">Category</th>
                     <th st-sort="charge_code_name">Code / Names</th>
-                    <th st-sort="charge_default">Default</th>
+                    <th st-sort="charge_default" style="width: 30%;">Default</th>
                 </tr>
             </thead>
             <tbody ng-hide="isLoading">
@@ -47,9 +47,32 @@
                         {{row.charge_code_name}}
                     </td>
                     <td>
-                        {{row.charge_default}}
+                        <table class="table-condensed">
+                            <tbody>
+                                <tr>
+                                    <td style="width: 50%;">
+                                        <span editable-text="row.charge_default" e-name="charge_default" e-form="mainform" e-number-mask="">
+                                            {{ row.charge_default || 'empty' }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <form editable-form name="mainform" onbeforesave="updateDefaultAmount($data, row.charge_id)" ng-show="mainform.$visible" class="form-buttons form-inline" shown="inserted == row">
+                                            <button type="submit" ng-disabled="mainform.$waiting" class="btn btn-sm btn-success">
+                                                Save
+                                            </button>
+                                            &nbsp;&nbsp;
+                                            <button type="button" ng-disabled="mainform.$waiting" ng-click="mainform.$cancel()" class="btn btn-sm btn-dark">
+                                                Cancel
+                                            </button>
+                                        </form>
+                                        <div class="buttons" ng-show="!mainform.$visible">
+                                            <button class="btn btn-sm btn-info" ng-click="mainform.$show()">Edit</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </td>
-
                 </tr>
                 <tr ng-repeat-end ng-show="expanded">
                     <td></td>
@@ -85,7 +108,7 @@
                                         </div> 
                                     </td>
                                 </tr>
-                                
+
                             </tbody>
                         </table>
                         <table class="table table-condensed table-bordered">

@@ -3,12 +3,39 @@
 /**
  * Config for the router
  */
+
+angular.module('app').factory('customHttpInterceptor', ['$log', '$location', '$q', function($log, $location, $q) {  
+    $log.debug('$log is here to show you that this is a regular factory with injection');
+    
+    var requestInterceptor = {
+        request: function(config) {
+            var deferred = $q.defer();
+//            someAsyncService.doAsyncOperation().then(function() {
+//                // Asynchronous operation succeeded, modify config accordingly
+//                deferred.resolve(config);
+//            }, function() {
+//                // Asynchronous operation failed, modify config accordingly
+//                deferred.resolve(config);
+//            });
+                console.log(config);
+            return deferred.promise;
+        }
+    };
+    
+//    var customHttpInterceptor = {'assd':'asd'};
+//    console.log(customHttpInterceptor);
+//    console.log($location.host());
+
+    return requestInterceptor;
+}]);
+
 angular.module('app')
         .run(run)
         .config(config);
 
-config.$inject = ['$stateProvider', '$urlRouterProvider', 'JQ_CONFIG', '$cookiesProvider', 'RestangularProvider'];
-function config($stateProvider, $urlRouterProvider, JQ_CONFIG, $cookiesProvider, RestangularProvider) {
+config.$inject = ['$stateProvider', '$urlRouterProvider', 'JQ_CONFIG', '$cookiesProvider', 'RestangularProvider', '$httpProvider'];
+function config($stateProvider, $urlRouterProvider, JQ_CONFIG, $cookiesProvider, RestangularProvider, $httpProvider) {
+//    $httpProvider.interceptors.push('customHttpInterceptor');
     $urlRouterProvider
             .otherwise('/access/signin');
 
@@ -1630,7 +1657,6 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
 
-    console.log($location.host());
     var serviceUrl = '';
     var clientUrl = 'ahana.hms.ark';
     var orgUrl = '';

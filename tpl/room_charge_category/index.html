@@ -69,41 +69,59 @@
                 <tr ng-repeat-end ng-show="expanded">
                     <td></td>
                     <td colspan="3">
-                        <table class="table table-condensed table-bordered">
-                            <thead>
-                                <tr>
-                                    <th style='width: 70%'>Sub Categories</th>
-                                    <th style='width: 30%'>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr ng-repeat="subcat in row.subcategories">
-                                    <td>
-                                        <span editable-text="subcat.charge_subcat_name" e-name="charge_subcat_name" e-form="rowform" onbeforesave="checkInput($data)">
-                                            {{subcat.charge_subcat_name|| 'empty' }}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <form editable-form name="rowform" onbeforesave="updateName($data, subcat.charge_subcat_id, row.charge_cat_id, subcat.temp_charge_cat_id)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == subcat">
-                                            <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-sm btn-success">
-                                                Save
-                                            </button>
-                                            &nbsp;&nbsp;
-                                            <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()" class="btn btn-sm btn-dark">
-                                                Cancel
-                                            </button>
-                                        </form>
-                                        <div class="buttons" ng-show="!rowform.$visible">
-                                            <button class="btn btn-sm btn-info" ng-click="rowform.$show()">Edit</button>
-                                            &nbsp;&nbsp;
-                                            <button class="btn btn-sm btn-danger" ng-click="deleteSubRow(row.charge_cat_id, subcat.charge_subcat_id, subcat.temp_charge_cat_id);">Delete</button>
-                                        </div> 
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div class="btn-form">
-                            <button type="button" ng-click="rowform.$show(); addSubRow(row.charge_cat_id)" class="btn btn-default pull-left btn-primary">Add Row</button>
+                        <div ng-if="row.charge_cat_code == 'PRF'">
+                            <table class="table table-condensed table-bordered">
+                                <tbody>
+                                    <tr ng-repeat="subcat in row.subcategories">
+                                        <td>
+                                            {{subcat.charge_subcat_name}}
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-primary" ui-sref="configuration.registration">View</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div ng-if="row.charge_cat_code != 'PRF'">
+                            <table class="table table-condensed table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th style='width: 70%'>Sub Categories</th>
+                                        <th style='width: 30%'>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="subcat in row.subcategories">
+                                        <td>
+                                            <span editable-text="subcat.charge_subcat_name" e-name="charge_subcat_name" e-form="rowform" onbeforesave="checkInput($data)">
+                                                {{subcat.charge_subcat_name|| 'empty' }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <form editable-form name="rowform" onbeforesave="updateName($data, subcat.charge_subcat_id, row.charge_cat_id, subcat.temp_charge_cat_id)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == subcat">
+                                                <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-sm btn-success">
+                                                    Save
+                                                </button>
+                                                &nbsp;&nbsp;
+                                                <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()" class="btn btn-sm btn-dark">
+                                                    Cancel
+                                                </button>
+                                            </form>
+                                            <div class="buttons" ng-show="!rowform.$visible">
+                                                <button class="btn btn-sm btn-info" ng-click="rowform.$show()">Edit</button>
+                                                &nbsp;&nbsp;
+                                                <button class="btn btn-sm btn-danger" ng-click="deleteSubRow(row.charge_cat_id, subcat.charge_subcat_id, subcat.temp_charge_cat_id);">Delete</button>
+                                            </div> 
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="btn-form">
+                                <button type="button" ng-click="rowform.$show();
+                                            addSubRow(row.charge_cat_id)" class="btn btn-default pull-left btn-primary">Add Row</button>
+                            </div>
                         </div>
                     </td>
                     <td colspan="2"></td>

@@ -255,6 +255,28 @@ app.controller('ChargePerCategoriesController', ['$rootScope', '$scope', '$timeo
             }
         };
 
+        $scope.updateDefaultAmount = function (data, id) {
+            $scope.errorData = $scope.successMessage = '';
+            if (typeof data.charge_default != 'undefined') {
+                $http({
+                    method: 'PUT',
+                    url: $rootScope.IRISOrgServiceUrl + '/chargepercategories/' + id,
+                    data: data,
+                }).success(
+                        function (response) {
+                            $scope.loadbar('hide');
+                            $scope.successMessage = 'Default Charge Updated successfully';
+                        }
+                ).error(function (data, status) {
+                    $scope.loadbar('hide');
+                    if (status == 422)
+                        $scope.errorData = $scope.errorSummary(data);
+                    else
+                        $scope.errorData = data.message;
+                });
+            }
+        };
+
         //Get Data for update Form
         $scope.loadForm = function () {
             $scope.loadbar('show');
