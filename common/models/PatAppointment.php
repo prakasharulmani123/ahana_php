@@ -49,7 +49,7 @@ class PatAppointment extends RActiveRecord {
             [['patient_cat_id', 'amount'], 'required', 'on' => 'seen_status'],
             [['tenant_id', 'patient_id', 'encounter_id', 'consultant_id', 'created_by', 'modified_by'], 'integer'],
             [['status_date', 'status_time', 'amount', 'notes', 'patient_cat_id', 'created_at', 'modified_at', 'deleted_at', 'patient_bill_type'], 'safe'],
-            [['status'], 'string'],
+            [['status', 'patient_bill_type'], 'string'],
             [['appt_status'], 'string', 'max' => 1]
         ];
     }

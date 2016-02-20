@@ -97,11 +97,11 @@ class CoChargePerCategory extends RActiveRecord {
     public function getCoChargePerSubcategories() {
         return $this->hasMany(CoChargePerSubcategory::className(), ['charge_id' => 'charge_id']);
     }
-    
+
     public function getOpCoChargePerSubcategories() {
         return $this->hasMany(CoChargePerSubcategory::className(), ['charge_id' => 'charge_id'])->andWhere(['charge_type' => 'OP']);
     }
-    
+
     public function getIpCoChargePerSubcategories() {
         return $this->hasMany(CoChargePerSubcategory::className(), ['charge_id' => 'charge_id'])->andWhere(['charge_type' => 'IP']);
     }
@@ -130,8 +130,12 @@ class CoChargePerCategory extends RActiveRecord {
     public static function getConsultantCharges($charge_code_id) {
         if ($charge_code_id) {
             $response = self::find()->tenant()->chargeCatType()->chargeCatId()->andWhere(['charge_code_id' => $charge_code_id])->one();
-            if(!empty($response)){
-                return $response->opCoChargePerSubcategories;
+            if (!empty($response)) {
+                $op = $response->opCoChargePerSubcategories;
+                if(!empty($response->charge_default))
+                    $op[] = ["charge_id" => $response->charge_id, "charge_type" => "OP", "charge_amount" => $response->charge_default, "op_dept" => "Default", 'patient_cat_id' => 0];
+                
+                return $op;
             }
         }
     }
