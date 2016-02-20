@@ -6,6 +6,7 @@ use common\models\PatAdmission;
 use common\models\PatAppointment;
 use common\models\PatEncounter;
 use common\models\PatPatient;
+use common\models\VEncounter;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -153,22 +154,24 @@ class EncounterController extends ActiveController {
         $get = Yii::$app->getRequest()->get();
 
         if (isset($get['id'])) {
-            $query = "Select * ";
-            $query .= "From v_encounter ";
-            $query .= "Where patient_guid = '{$get['id']}' ";
-            $query .= "Order By encounter_id DESC ";
+//            $query = "Select * ";
+//            $query .= "From v_encounter ";
+//            $query .= "Where patient_guid = '{$get['id']}' ";
+//            $query .= "Order By encounter_id DESC ";
+//
+////            if (isset($get['type'])) {
+////                $date = date('Y-m-d');
+////                $separtor = $get['type'] == 'Current' ? "=" : '<>';
+////                $query .= "And date {$separtor} '{$date}' ";
+////            }
+//
+//            $command = Yii::$app->client->createCommand($query);
+//            $data = $command->queryAll();
 
-//            if (isset($get['type'])) {
-//                $date = date('Y-m-d');
-//                $separtor = $get['type'] == 'Current' ? "=" : '<>';
-//                $query .= "And date {$separtor} '{$date}' ";
-//            }
+            $data = VEncounter::find()->where(['patient_guid' => $get['id']])->orderBy(['encounter_id' => SORT_DESC])->all();
 
-            $command = Yii::$app->client->createCommand($query);
-            $data = $command->queryAll();
-            
             $activeEncounter = PatPatient::getActiveEncounterByPatientGuid($get['id']);
-            
+
             return ['success' => true, 'encounters' => $data, 'active_encounter' => $activeEncounter];
         } else {
             return ['success' => false, 'message' => 'Invalid Access'];
