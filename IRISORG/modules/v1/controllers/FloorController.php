@@ -6,6 +6,7 @@ use common\models\CoFloor;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
+use yii\filters\auth\HttpBearerAuth;
 use yii\filters\auth\QueryParamAuth;
 use yii\filters\ContentNegotiator;
 use yii\rest\ActiveController;
@@ -20,9 +21,9 @@ class FloorController extends ActiveController {
 
     public function behaviors() {
         $behaviors = parent::behaviors();
-//        $behaviors['authenticator'] = [
-//            'class' => HttpBearerAuth::className()
-//        ];
+        $behaviors['authenticator'] = [
+            'class' => HttpBearerAuth::className()
+        ];
         $behaviors['authenticator'] = [
             'class' => QueryParamAuth::className(),
             'tokenParam' => 'access_token',

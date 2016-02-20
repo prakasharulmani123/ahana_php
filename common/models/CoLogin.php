@@ -240,9 +240,4 @@ class CoLogin extends ActiveRecord implements IdentityInterface {
     public static function getDb() {
         return Yii::$app->client;
     }
-    
-//    public function attributes() {
-//        $attr = array_merge(parent::attributes(), ['loggedTenantId']);
-//        return $attr;
-//    }
 }
