@@ -27,7 +27,7 @@
         <script src="js/jquery.timepicker.min.js"></script>
         <script src="js/slidebars.js"></script>
     </head>
-    <body ng-controller="AppCtrl">
+    <body ng-controller="AppCtrl" prevent-right-click>
         <div id="sb-site">
             <div class="app" id="app" ng-class="{'app-header-fixed':app.settings.headerFixed,  'app-aside-folded':app.settings.asideFolded, 'app-aside-dock':app.settings.asideDock, 'container':app.settings.container}" ui-view></div>
         </div>
@@ -106,6 +106,7 @@
         <script src="js/directives/confirm-needed.js"></script>
         <script src="js/directives/checkAccess.js"></script>
         <script src="js/directives/stSelectDistinct.js"></script>
+        <script src="js/directives/preventRightClick.js"></script>
 
         <script type="text/javascript" src="node_modules/angular-bootstrap-datetimepicker/src/js/datetimepicker.js"></script>
         <script type="text/javascript" src="node_modules/angular-bootstrap-datetimepicker/src/js/datetimepicker.templates.js"></script>
