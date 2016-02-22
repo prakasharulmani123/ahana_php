@@ -1628,7 +1628,7 @@ run.$inject = ['$rootScope', '$state', '$stateParams', '$location', '$cookieStor
 function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $window, CommonService, AuthenticationService) {
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
-
+    
     var serviceUrl = '';
     var orgUrl = '';
 
@@ -1643,6 +1643,7 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
     $rootScope.IRISOrgServiceUrl = serviceUrl;
     $rootScope.commonService = CommonService;
     $rootScope.IRISOrgUrl = orgUrl;
+    $rootScope.clientUrl = 'ahana.hms.ark';
 
     var currentUser = AuthenticationService.getCurrentUser();
 

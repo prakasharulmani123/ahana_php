@@ -8,9 +8,8 @@ angular.module('app').factory('APIInterceptor', function ($localStorage, $rootSc
                 var is_api = config.url.startsWith($rootScope.IRISOrgServiceUrl);
 
                 if (token && is_api) {
-                    var clientUrl = 'ahana.hms.ark';
                     config.params['access-token'] = token;
-                    config.headers['x-domain-path'] = clientUrl;
+                    config.headers['x-domain-path'] = $rootScope.clientUrl;
                 }
             }
             return config;
