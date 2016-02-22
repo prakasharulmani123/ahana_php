@@ -11,7 +11,7 @@ use common\models\CoRolesResources;
 use common\models\CoTenant;
 use common\models\CoUsersRoles;
 use Yii;
-use yii\filters\auth\HttpBearerAuth;
+use yii\filters\auth\QueryParamAuth;
 use yii\filters\ContentNegotiator;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
@@ -22,7 +22,7 @@ class DefaultController extends Controller {
     public function behaviors() {
         $behaviors = parent::behaviors();
         $behaviors['authenticator'] = [
-            'class' => HttpBearerAuth::className(),
+            'class' => QueryParamAuth::className(),
             'only' => ['getnavigation', 'getconsultantcharges'],
         ];
         $behaviors['contentNegotiator'] = [

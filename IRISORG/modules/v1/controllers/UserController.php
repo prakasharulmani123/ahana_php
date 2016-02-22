@@ -18,7 +18,7 @@ use yii\base\InvalidParamException;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
 use yii\db\Expression;
-use yii\filters\auth\HttpBearerAuth;
+use yii\filters\auth\QueryParamAuth;
 use yii\filters\ContentNegotiator;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
@@ -38,7 +38,7 @@ class UserController extends ActiveController {
 //    public function behaviors() {
 //        $behaviors = parent::behaviors();
 //        $behaviors['authenticator'] = [
-//            'class' => HttpBearerAuth::className()
+//            'class' => QueryParamAuth::className()
 //        ];
 //        $behaviors['contentNegotiator'] = [
 //            'class' => ContentNegotiator::className(),
@@ -54,7 +54,7 @@ class UserController extends ActiveController {
     public function behaviors() {
         $behaviors = parent::behaviors();
         $behaviors['authenticator'] = [
-            'class' => HttpBearerAuth::className(),
+            'class' => QueryParamAuth::className(),
             'only' => ['dashboard', 'createuser', 'updateuser', 'getuser', 'getlogin', 'updatelogin', 'getuserdata', 'getuserslistbyuser', 'assignroles', 'getdoctorslist', 'checkstateaccess', 'getusercredentialsbytoken', 'logout'],
         ];
         $behaviors['contentNegotiator'] = [

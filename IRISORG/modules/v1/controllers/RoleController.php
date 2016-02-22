@@ -7,7 +7,7 @@ use common\models\CoUsersRoles;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
-use yii\filters\auth\HttpBearerAuth;
+use yii\filters\auth\QueryParamAuth;
 use yii\filters\ContentNegotiator;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
@@ -24,7 +24,7 @@ class RoleController extends ActiveController {
     public function behaviors() {
         $behaviors = parent::behaviors();
         $behaviors['authenticator'] = [
-            'class' => HttpBearerAuth::className()
+            'class' => QueryParamAuth::className()
         ];
         $behaviors['contentNegotiator'] = [
             'class' => ContentNegotiator::className(),

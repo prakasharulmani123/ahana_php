@@ -8,7 +8,7 @@ use common\models\CoRolesResources;
 use common\models\CoTenant;
 use common\models\CoUsersRoles;
 use Yii;
-use yii\filters\auth\HttpBearerAuth;
+use yii\filters\auth\QueryParamAuth;
 use yii\filters\ContentNegotiator;
 use yii\rest\ActiveController;
 use yii\web\Response;
@@ -23,7 +23,7 @@ class OrganizationController extends ActiveController {
     public function behaviors() {
         $behaviors = parent::behaviors();
         $behaviors['authenticator'] = [
-            'class' => HttpBearerAuth::className()
+            'class' => QueryParamAuth::className()
         ];
         $behaviors['contentNegotiator'] = [
             'class' => ContentNegotiator::className(),

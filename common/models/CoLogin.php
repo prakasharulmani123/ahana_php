@@ -127,7 +127,7 @@ class CoLogin extends ActiveRecord implements IdentityInterface {
      * @inheritdoc
      */
     public static function findIdentityByAccessToken($token, $type = null) {
-        return static::findOne(['authtoken' => $token]);
+        return static::findOne(['md5(authtoken)' => $token]);
     }
 
     /**

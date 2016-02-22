@@ -10,7 +10,7 @@ use common\models\VEncounter;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
-use yii\filters\auth\HttpBearerAuth;
+use yii\filters\auth\QueryParamAuth;
 use yii\filters\ContentNegotiator;
 use yii\helpers\Html;
 use yii\rest\ActiveController;
@@ -26,7 +26,7 @@ class EncounterController extends ActiveController {
     public function behaviors() {
         $behaviors = parent::behaviors();
         $behaviors['authenticator'] = [
-            'class' => HttpBearerAuth::className()
+            'class' => QueryParamAuth::className()
         ];
         $behaviors['contentNegotiator'] = [
             'class' => ContentNegotiator::className(),
