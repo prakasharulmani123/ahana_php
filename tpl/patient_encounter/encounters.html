@@ -80,7 +80,7 @@
                         </tr>
                     </thead>
                     <tbody ng-hide="isLoading">
-                        <tr ng-repeat-start="encounter in displayedCollection | groupBy: 'encounter_id' |  orderBy:'encounter_id'" ng-init="expanded = (encounter[0].status == 1) ? true : false;">
+                        <tr ng-repeat-start="encounter in displayedCollection" ng-init="expanded = (encounter[0].status == 1) ? true : false;">
                             <td>
                                 <button ng-click="expanded = !expanded" expand class="btn btn-sm btn-default">
                                     <i ng-if="!expanded" class="fa fa-plus text"></i>
@@ -90,14 +90,14 @@
                             <td colspan="5">
                                <!--<b> Encounter: {{encounter.$key}};</b>-->
                                <b> 
-                                   Encounter: {{encounter[0].encounter_id}}; 
-                                   Type: {{encounter[0].encounter_type}};
-                                   Doctor: {{encounter[0].doctor}}
+                                   Encounter: {{encounter.encounter_id}}; 
+                                   Type: {{encounter.encounter_type}};
+                                   Doctor: {{encounter.doctor}}
                                </b>
                             </td>
 
                         </tr>
-                        <tr ng-repeat-end ng-show="expanded" ng-repeat="(key, item) in encounter | orderBy: 'id'">
+                        <tr ng-repeat-end ng-show="expanded" ng-repeat="(key, item) in encounter.all | orderBy: 'id'">
                             <td class="text-center" align="center" valign="middle">
                                 <label ng-show="item.status == 1" class="i-checks m-b-none"><input id="enc_{{item.encounter_id}}{{key}}" class="enc_chk" type="checkbox" name="b[]" ng-click="moreOptions(key, item.encounter_id, item.encounter_type)"><i></i></label>
                             </td>
