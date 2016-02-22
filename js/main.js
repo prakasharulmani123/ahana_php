@@ -3,8 +3,8 @@
 /* Controllers */
 
 angular.module('app')
-        .controller('AppCtrl', ['$scope', '$localStorage', '$window', '$rootScope', '$state', '$cookieStore', '$http', 'CommonService', '$timeout',
-            function ($scope, $localStorage, $window, $rootScope, $state, $cookieStore, $http, CommonService, $timeout) {
+        .controller('AppCtrl', ['$scope', '$localStorage', '$window', '$rootScope', '$state', '$cookieStore', '$http', 'CommonService', '$timeout', 'AuthenticationService',
+            function ($scope, $localStorage, $window, $rootScope, $state, $cookieStore, $http, CommonService, $timeout, AuthenticationService) {
                 // add 'ie' classes to html
                 var isIE = !!navigator.userAgent.match(/MSIE/i);
                 isIE && angular.element($window.document.body).addClass('ie');
@@ -75,18 +75,16 @@ angular.module('app')
                     $localStorage.settings = $scope.app.settings;
                 }, true);
 
-                $scope.loggedIn = function () {
-                    return Boolean($rootScope.globals.currentUser);
-                };
+//                $scope.loggedIn = function () {
+//                    return Boolean($rootScope.globals.currentUser);
+//                };
 
+//               
                 $scope.logout = function () {
                     $http.post($rootScope.IRISOrgServiceUrl + '/user/logout')
                             .success(function (response) {
                                 if (response.success) {
-                                    $rootScope.globals = {};
-                                    $cookieStore.remove('globals');
-                                    localStorage.removeItem('ngStorage-user_resources');
-                                    localStorage.removeItem('ngStorage-user_credentials');
+                                    AuthenticationService.ClearCredentials();
                                     $window.location.reload();
                                 } else {
                                     $scope.errorData = response.message;
@@ -186,7 +184,8 @@ angular.module('app')
                 };
 
                 $scope.loadUserCredentials = function () {
-                    $scope.app.org_name = $localStorage.user_credentials.org;
+                    var user = AuthenticationService.getCurrentUser();
+                    $scope.app.org_name = user.credentials.org;
                 };
 
                 $scope.checkAccess = function (url) {

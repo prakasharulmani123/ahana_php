@@ -4,38 +4,12 @@
  * Config for the router
  */
 
-angular.module('app').factory('customHttpInterceptor', ['$log', '$location', '$q', function($log, $location, $q) {  
-    $log.debug('$log is here to show you that this is a regular factory with injection');
-    
-    var requestInterceptor = {
-        request: function(config) {
-            var deferred = $q.defer();
-//            someAsyncService.doAsyncOperation().then(function() {
-//                // Asynchronous operation succeeded, modify config accordingly
-//                deferred.resolve(config);
-//            }, function() {
-//                // Asynchronous operation failed, modify config accordingly
-//                deferred.resolve(config);
-//            });
-                console.log(config);
-            return deferred.promise;
-        }
-    };
-    
-//    var customHttpInterceptor = {'assd':'asd'};
-//    console.log(customHttpInterceptor);
-//    console.log($location.host());
-
-    return requestInterceptor;
-}]);
-
 angular.module('app')
         .run(run)
         .config(config);
 
-config.$inject = ['$stateProvider', '$urlRouterProvider', 'JQ_CONFIG', '$cookiesProvider', 'RestangularProvider', '$httpProvider'];
-function config($stateProvider, $urlRouterProvider, JQ_CONFIG, $cookiesProvider, RestangularProvider, $httpProvider) {
-//    $httpProvider.interceptors.push('customHttpInterceptor');
+config.$inject = ['$stateProvider', '$urlRouterProvider', '$httpProvider'];
+function config($stateProvider, $urlRouterProvider, $httpProvider) {
     $urlRouterProvider
             .otherwise('/access/signin');
 
@@ -1410,7 +1384,8 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG, $cookiesProvider,
                         }]
                 }
             })
-//PHARMACY DRUG CLASS
+            
+            //PHARMACY DRUG CLASS
             .state('pharmacy.drugclass', {
                 url: '/drugclass',
                 templateUrl: 'tpl/pharmacy_drugclass/index.html',
@@ -1488,7 +1463,8 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG, $cookiesProvider,
                         }]
                 }
             })
-//PHARMACY Product Description
+            
+            //PHARMACY Product Description
             .state('pharmacy.prodesc', {
                 url: '/prodesc',
                 templateUrl: 'tpl/pharmacy_prodesc/index.html',
@@ -1645,50 +1621,33 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG, $cookiesProvider,
                 }
             })
 
-    var getGlobals = $cookiesProvider.$get();
-    if (!jQuery.isEmptyObject(getGlobals) && typeof getGlobals.globals != 'undefined') {
-        var getCurrentUser = JSON.parse(getGlobals.globals);
-        RestangularProvider.setBaseUrl('http://hms.ark/api/IRISORG/web/v1');
-        RestangularProvider.setDefaultRequestParams({access_token: getCurrentUser.currentUser.authdata});
-    }
+    $httpProvider.interceptors.push('APIInterceptor');
+
 }
-run.$inject = ['$rootScope', '$state', '$stateParams', '$location', '$cookieStore', '$http', '$window', 'CommonService'];
-function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $window, CommonService) {
+run.$inject = ['$rootScope', '$state', '$stateParams', '$location', '$cookieStore', '$http', '$window', 'CommonService', 'AuthenticationService'];
+function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $window, CommonService, AuthenticationService) {
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
 
     var serviceUrl = '';
-    var clientUrl = 'ahana.hms.ark';
     var orgUrl = '';
 
     if ($location.host() == 'demo.arkinfotec.in') {
         serviceUrl = 'http://demo.arkinfotec.in/ahana/demo/IRIS-service/IRISORG/web/v1'
         orgUrl = 'http://demo.arkinfotec.in/ahana/demo/IRISORG-client/src';
-    } else if ($location.host() == 'hms.ark') {
+    } else {
         serviceUrl = 'http://hms.ark/api/IRISORG/web/v1'
         orgUrl = 'http://hms.ark/client';
     }
+    
     $rootScope.IRISOrgServiceUrl = serviceUrl;
     $rootScope.commonService = CommonService;
     $rootScope.IRISOrgUrl = orgUrl;
 
+    var currentUser = AuthenticationService.getCurrentUser();
+
     $rootScope.globals = $cookieStore.get('globals') || {};
-    if ($rootScope.globals.currentUser) {
-        $http.defaults.headers.common['Authorization'] = 'Bearer ' + $rootScope.globals.currentUser.authdata; // jshint ignore:line
-    }
-    $http.defaults.headers.common['x-domain-path'] = clientUrl;
-
-//    $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-//        var stateName = toState.name;
-//        if (stateName) {
-//            $rootScope.commonService.CheckStateAccess(stateName, function (response) {
-//                if (response.success === false) {
-//                    $state.go('configuration.401');
-//                }
-//            });
-//        }
-//    });
-
+    
     $rootScope.$on('$locationChangeStart', function (event, next, current) {
         if ($location.path() == '/access/resetpwd') {
             var token = $location.search().token;
@@ -1700,7 +1659,7 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
             });
         } else {
             var restrictedPage = $.inArray($location.path(), ['/access/signin', '/access/forgotpwd', '/access/resetpwd']) === -1;
-            var loggedIn = Boolean($rootScope.globals.currentUser);
+            var loggedIn = Boolean(currentUser);
             if (restrictedPage && !loggedIn) {
                 $location.path('/access/signin');
             } else if (!restrictedPage && loggedIn) {
@@ -1710,14 +1669,14 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
     });
 
     //Check Access
-//    $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
-//        var stateName = toState.name;
-//        if (stateName) {
-//            $rootScope.commonService.CheckStateAccess(stateName, function (response) {
-//                if (!response) {
+    $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+        var stateName = toState.name;
+        if (stateName) {
+            $rootScope.commonService.CheckStateAccess(stateName, function (response) {
+                if (!response) {
 //                    $state.go('configuration.organization');
-//                }
-//            });
-//        }
-//    });
+                }
+            });
+        }
+    });
 }

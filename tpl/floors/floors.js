@@ -9,22 +9,22 @@ app.controller('FloorsController', ['$rootScope', '$scope', '$timeout', '$http',
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
 
             // Get data's from service
-            Restangular.all("floor").getList().then(function (floors) {
-                $scope.isLoading = false;
-                $scope.rowCollection = floors;
-                $scope.displayedCollection = [].concat($scope.rowCollection);
-            }, function (response) {
-                $scope.errorData = "An Error has occured while loading floors!";
-            });
-//            $http.get($rootScope.IRISOrgServiceUrl + '/floor')
-//                    .success(function (floors) {
-//                        $scope.isLoading = false;
-//                        $scope.rowCollection = floors;
-//                        $scope.displayedCollection = [].concat($scope.rowCollection);
-//                    })
-//                    .error(function () {
-//                        $scope.error = "An Error has occured while loading floors!";
-//                    });
+//            Restangular.all("floor").getList().then(function (floors) {
+//                $scope.isLoading = false;
+//                $scope.rowCollection = floors;
+//                $scope.displayedCollection = [].concat($scope.rowCollection);
+//            }, function (response) {
+//                $scope.errorData = "An Error has occured while loading floors!";
+//            });
+            $http.get($rootScope.IRISOrgServiceUrl + '/floor')
+                    .success(function (floors) {
+                        $scope.isLoading = false;
+                        $scope.rowCollection = floors;
+                        $scope.displayedCollection = [].concat($scope.rowCollection);
+                    })
+                    .error(function () {
+                        $scope.error = "An Error has occured while loading floors!";
+                    });
         };
 
         //Save Both Add & Update Data

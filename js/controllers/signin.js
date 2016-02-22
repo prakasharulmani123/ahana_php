@@ -20,7 +20,7 @@ function SignInForm($scope, $state, AuthenticationService, $http, $rootScope, $l
         // Try to login
         AuthenticationService.Login($scope.user.username, $scope.user.password, $scope.user.tenant_id, function (response) {
             if (response.success) {
-                AuthenticationService.SetCredentials(response.access_token, response.resources, response.credentials);
+                AuthenticationService.setCurrentUser(response);
                 $state.go('configuration.roles');
             } else {
                 $scope.loginButtonText = 'Log in';
@@ -29,6 +29,7 @@ function SignInForm($scope, $state, AuthenticationService, $http, $rootScope, $l
             }
         });
     };
+
 
     $scope.passwordrequest = function () {
         $http({

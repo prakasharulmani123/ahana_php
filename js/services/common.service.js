@@ -2,8 +2,8 @@
 
 angular.module('app').factory('CommonService', CommonService);
 
-CommonService.$inject = ['$http', '$rootScope', '$window', '$q', '$filter', '$localStorage'];
-function CommonService($http, $rootScope, $window, $q, $filter, $localStorage) {
+CommonService.$inject = ['$http', '$rootScope', '$window', '$q', '$filter', '$localStorage', 'AuthenticationService'];
+function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, AuthenticationService) {
     var service = {};
 
     service.ChangeStatus = ChangeStatus;
@@ -280,7 +280,7 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage) {
     function CheckStateAccess(url, callback) {
         var splittedStringArray = url.split("(");
         url = splittedStringArray[0];
-        callback($localStorage.user_resources.hasOwnProperty(url));
+        callback(AuthenticationService.getCurrentUser().resources.hasOwnProperty(url));
     }
 
     function GetGenderList(callback) {
