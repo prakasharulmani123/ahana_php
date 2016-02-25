@@ -80,7 +80,7 @@
                         </tr>
                     </thead>
                     <tbody ng-hide="isLoading">
-                        <tr ng-repeat-start="encounter in displayedCollection" ng-init="expanded = (encounter[0].status == 1) ? true : false;">
+                        <tr ng-repeat-start="encounter in displayedCollection" ng-init="expanded = (encounter.status == 1) ? true : false;">
                             <td>
                                 <button ng-click="expanded = !expanded" expand class="btn btn-sm btn-default">
                                     <i ng-if="!expanded" class="fa fa-plus text"></i>

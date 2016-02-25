@@ -8,13 +8,10 @@
                     </select>
                 </div>
                 <div class="col-sm-4">
-                    <input type="text" name="patient_firstname" ng-model="data.PatPatient.patient_firstname" class="form-control" placeholder="First Name" ng-minlength="3" 
-                           ng-maxlength="8"
-                           required>
-                    <div ng-messages="patientForm.patient_firstname.$error" style="color:maroon">
-                        <div ng-message="required">You did not enter a field</div>
-                        <div ng-message="minlength">Your field is too short</div>
-                        <div ng-message="maxlength">Your field is too long</div>
+                    <input type="text" name="patient_firstname" ng-model="data.PatPatient.patient_firstname" class="form-control" placeholder="First Name" ng-minlength="3" required>
+                    <div style="color:maroon">
+                        <div ng-show="submitted && patientForm.patient_firstname.$error.required">First Name cannot be blank.</div>
+                        <div ng-show="submitted && patientForm.patient_firstname.$error.minlength">First Name is too short</div>
                     </div>
                 </div>
                 <div class="col-sm-3">
@@ -26,10 +23,13 @@
                 <label class="col-sm-3 control-label">Gender *</label>
                 <div class="col-sm-9">
                     <label class="i-checks" ng-repeat="gender in genders">
-                        <input type="radio" checked="" value="{{gender.value}}" name="a" ng-model="data.PatPatient.patient_gender">
+                        <input type="radio" checked="" value="{{gender.value}}" name="patient_gender" ng-model="data.PatPatient.patient_gender" required>
                         <i></i>
                         {{gender.label}}&nbsp; &nbsp;
                     </label>
+                    <div style="color:maroon">
+                        <div ng-show="submitted && patientForm.patient_gender.$error.required">Gender cannot be blank.</div>
+                    </div>
                 </div>
             </div>
             <div class="line line-dashed b-b line-lg "></div>
@@ -37,16 +37,19 @@
                 <label class="col-sm-3 control-label">DOB *</label>
                 <div class="col-sm-5">
                     <div class="input-group">
-                        <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="data.PatPatient.patient_dob" is-open="$parent.opened" datepicker-options="dateOptions" close-text="Close" max-date="maxDate" ng-change="setAgeEmpty();
-                            getAge();"/>
+                        <input type="text" name="dob" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="data.PatPatient.patient_dob" is-open="$parent.opened" datepicker-options="dateOptions" close-text="Close" max-date="maxDate" ng-change="setAgeEmpty();
+                            getAge();" required/>
                         <span class="input-group-btn">
                             <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                         </span>
                     </div>
+                    <div style="color:maroon">
+                        <div ng-show="submitted && patientForm.dob.$error.required">DOB cannot be blank.</div>
+                    </div>
                 </div>
                 <div class="col-sm-4">
                     <input type="text" ng-model="data.PatPatient.patient_age" class="form-control" placeholder="Age" only-digits="" onkeydown="" ng-change="setDateEmpty();
-                        getDOB();">
+                            getDOB();">
                 </div>
             </div>
             <div class="line line-dashed b-b line-lg "></div>
@@ -61,14 +64,14 @@
                 <label class="col-sm-3 control-label">Place</label>
                 <div class="col-sm-3">
                     <select class="form-control" name="Country" ng-model="data.PatPatientAddress.addr_country_id" ng-options="country.value as country.label for country in countries | orderBy: label" ng-change="updateState2();
-                        data.PatPatientAddress.addr_state_id = '';
-                        data.PatPatientAddress.addr_city_id = '';">
+                            data.PatPatientAddress.addr_state_id = '';
+                            data.PatPatientAddress.addr_city_id = '';">
                         <option value="">Select Country</option>
                     </select>
                 </div>
                 <div class="col-sm-3">
                     <select class="form-control" name="State" ng-model="data.PatPatientAddress.addr_state_id" ng-options="state.value as state.label for state in availableStates2 | orderBy: label" ng-change="updateCity2();
-                        data.PatPatientAddress.addr_city_id = '';">
+                            data.PatPatientAddress.addr_city_id = '';">
                         <option value="">Select State</option>
                     </select>
                 </div>
@@ -82,7 +85,10 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label">Mobile No * </label>
                 <div class="col-sm-9">
-                    <input type="text" ng-model="data.PatPatient.patient_mobile" class="form-control" placeholder="" number-mask="">
+                    <input type="text" ng-model="data.PatPatient.patient_mobile"  name="patient_mobile" class="form-control" placeholder="" number-mask="" required>
+                    <div style="color:maroon">
+                        <div ng-show="submitted && patientForm.patient_mobile.$error.required">Mobile No cannot be blank.</div>
+                    </div>
                 </div>
             </div>
             <div class="line line-dashed b-b line-lg "></div>
@@ -128,7 +134,8 @@
 
         </div>
         <footer class="panel-footer text-right bg-light lter">
-            <button class="btn m-b-xs  btn-success save-btn" ng-click="saveForm('add')">Register</button> &nbsp;
+            <button class="btn m-b-xs  btn-success save-btn" ng-click="submitted = true;
+                saveForm('add')">Register</button> &nbsp;
             <!--        <button class="btn m-b-xs  btn-default"> Register & Book an appoinment</button>  &nbsp;-->
             <button class="btn m-b-xs  btn-dark"> <i class="fa fa-times"></i> Cancel</button>  &nbsp;
         </footer>

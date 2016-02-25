@@ -28,7 +28,7 @@
                 <label class="col-sm-3 control-label">Billing</label>
                 <div class="col-sm-9">
                     <label class="i-checks" ng-repeat="bill_type in bill_types">
-                        <input type="radio" checked="" value="{{bill_type.value}}" name="b" ng-model="data.PatAppointment.patient_bill_type" ng-checked="patientObj.patient_bill_type == bill_type.value">
+                        <input type="radio" checked="" value="{{bill_type.value}}" name="b" ng-model="data.PatAppointment.patient_bill_type" ng-checked="patientObj.patient_bill_type == bill_type.value" ng-click="updateFreeCharge()">
                         <i></i>
                         {{bill_type.label}}&nbsp; &nbsp;
                     </label>

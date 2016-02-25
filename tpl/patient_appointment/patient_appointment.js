@@ -70,6 +70,15 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
             else
                 $scope.chargeAmount = $scope.data.PatAppointment.amount = 0;
         }
+        
+        $scope.updateFreeCharge = function () {
+            _that = this;
+            if(_that.data.PatAppointment.patient_bill_type == "F"){
+                $scope.data.PatAppointment.amount = 0;
+            } else {
+                $scope.updateCharge();
+            }
+        }
 
         $scope.initForm = function () {
             //Load Doctor List

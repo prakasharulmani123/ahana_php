@@ -182,7 +182,7 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
             method = 'POST';
             succ_msg = 'Patient saved successfully';
 
-            _that.data.PatPatient.patient_dob = moment(_that.data.PatPatient.patient_dob).format('YYYY-MM-DD');
+//            _that.data.PatPatient.patient_dob = moment(_that.data.PatPatient.patient_dob).format('YYYY-MM-DD');
 
             $scope.loadbar('show');
             $http({
