@@ -16,11 +16,9 @@
                             data.PatPatient.patient_reg_mode = 'OP';
                             matchings = [];
                  ">
-                <form name="patientForm" class="form-horizontal form-validation" novalidate="">
-                    <div ng-include="'tpl/patient_registration/_form.html'">
-                        {% include 'tpl/patient_registration/_form.html' %}
-                    </div>
-                </form>
+                <div ng-include="'tpl/patient_registration/_form.html'">
+                    {% include 'tpl/patient_registration/_form.html' %}
+                </div>
             </div>
             <div class="col-sm-6">
                 <form name="patientForm" class="form-horizontal form-validation" novalidate="">

@@ -37,6 +37,7 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
     service.GetEncounterListByPatient = GetEncounterListByPatient;
     service.GetPatientList = GetPatientList;
     service.GetAlertList = GetAlertList;
+    service.GetBloodList = GetBloodList;
 
     service.GetLabelFromValue = GetLabelFromValue;
     service.FoundVlaue = FoundVlaue;
@@ -361,6 +362,11 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
                     response = {success: false, message: 'Server Error'};
                     callback(response);
                 });
+    }
+
+    function GetBloodList(callback) {
+        var response = [{value: 'O−', label: 'O−'}, {value: 'O+', label: 'O+'}, {value: 'A−', label: 'A−'}, {value: 'A−', label: 'A−'}, {value: 'A+', label: 'A+'}, {value: 'B−', label: 'B−'}, {value: 'B+', label: 'B+'}, {value: 'AB−', label: 'AB−'}, {value: 'AB+', label: 'AB+'}];
+        callback(response);
     }
 
     function GetLabelFromValue(val, func, callback) {

@@ -56,6 +56,10 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
                 $scope.titleCodes = response;
             });
 
+            $rootScope.commonService.GetBloodList(function (response) {
+                $scope.bloods = response;
+            });
+
             $rootScope.commonService.GetPatientCateogryList('', '1', false, function (response) {
                 $scope.categories = response.patientcategoryList;
             });

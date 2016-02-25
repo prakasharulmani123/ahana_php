@@ -20,6 +20,7 @@ angular.module('app', [
     'angular.filter',
     'ui.bootstrap.datetimepicker',
     'ui.dateTimeInput',
+    'ngMessages'
 //    'LocalStorageModule',
 ]);
 
