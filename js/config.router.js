@@ -1631,19 +1631,22 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
     
     var serviceUrl = '';
     var orgUrl = '';
+    var clientURL = '';
 
     if ($location.host() == 'demo.arkinfotec.in') {
-        serviceUrl = 'http://demo.arkinfotec.in/ahana/demo/IRIS-service/IRISORG/web/v1'
-        orgUrl = 'http://demo.arkinfotec.in/ahana/demo/IRISORG-client/src';
+        serviceUrl = 'http://demo.arkinfotec.in/ahana/demo/api/IRISORG/web/v1'
+        orgUrl = 'http://demo.arkinfotec.in/ahana/demo/client';
+        clientURL = 'http://demo.arkinfotec.in/ahana/demo';
     } else {
         serviceUrl = 'http://hms.ark/api/IRISORG/web/v1'
         orgUrl = 'http://hms.ark/client';
+        clientURL = 'ahana.hms.ark';
     }
     
     $rootScope.IRISOrgServiceUrl = serviceUrl;
     $rootScope.commonService = CommonService;
     $rootScope.IRISOrgUrl = orgUrl;
-    $rootScope.clientUrl = 'ahana.hms.ark';
+    $rootScope.clientUrl = clientURL;
 
     var currentUser = AuthenticationService.getCurrentUser();
 

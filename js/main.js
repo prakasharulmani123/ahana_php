@@ -84,8 +84,11 @@ angular.module('app')
                     $http.post($rootScope.IRISOrgServiceUrl + '/user/logout')
                             .success(function (response) {
                                 if (response.success) {
-                                    AuthenticationService.ClearCredentials();
-                                    $window.location.reload();
+                                    if (AuthenticationService.ClearCredentials()) {
+                                        $timeout(function () {
+                                            $window.location.reload();
+                                        }, 1000);
+                                    }
                                 } else {
                                     $scope.errorData = response.message;
                                 }

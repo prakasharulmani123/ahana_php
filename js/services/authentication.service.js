@@ -44,6 +44,7 @@
 
         function ClearCredentials() {
             $localStorage.$reset();
+            return true;
 
 //            $rootScope.globals = {};
 //            $cookieStore.remove('globals');
