@@ -152,7 +152,7 @@ class UserController extends ActiveController {
         $model = CoLogin::findOne(['login_id' => Yii::$app->user->identity->login_id]);
         if(!empty($model)){
             $model->attributes = ['authtoken' => '','logged_tenant_id' => ''];
-            if($model->save())
+            if($model->save(false))
                 return ['success' => true];
             else
                 return ['success' => false, 'message' => Html::errorSummary([$model])];
