@@ -3,12 +3,14 @@
 namespace IRISADMIN\modules\v1\controllers;
 
 use common\models\CoLogin;
+use common\models\CoLoginForm;
 use common\models\CoOrganization;
 use common\models\CoResources;
 use common\models\CoRole;
 use common\models\CoRolesResources;
 use common\models\CoTenant;
 use common\models\CoUser;
+use common\models\CoUserForm;
 use common\models\CoUsersRoles;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -92,39 +94,40 @@ class OrganizationController extends ActiveController {
             $model = new CoOrganization();
             $model->attributes = Yii::$app->request->post('Organization');
 
-            $role_model = new CoRole();
-            $role_model->description = 'Super Admin';
-//            $role_model->attributes = Yii::$app->request->post('Role');
+            $login_form_model = new CoLoginForm();
+            $login_form_model->scenario = 'create';
+            $login_form_model->attributes = Yii::$app->request->post('Login');
 
-            $user_model = new CoUser();
-            $user_model->scenario = 'saveorg';
-            $user_model->attributes = Yii::$app->request->post('User');
-
-            $login_model = new CoLogin();
-            $login_model->scenario = 'create';
-            $login_model->attributes = Yii::$app->request->post('Login');
+            $user_form_model = new CoUserForm();
+            $user_form_model->scenario = 'saveorg';
+            $user_form_model->attributes = Yii::$app->request->post('User');
 
             $valid = $model->validate();
-            $valid = $role_model->validate() && $valid;
-            $valid = $user_model->validate() && $valid;
-            $valid = $login_model->validate() && $valid;
+            $valid = $login_form_model->validate() && $valid;
+            $valid = $user_form_model->validate() && $valid;
 
             if ($valid) {
                 $model->save(false);
-                
+
                 $tenant = new CoTenant;
                 $tenant->org_id = $model->org_id;
                 $tenant->tenant_name = $model->org_name;
                 $tenant->save(false);
 
+                $role_model = new CoRole();
+                $role_model->description = 'Super Admin';
                 $role_model->tenant_id = $tenant->tenant_id;
                 $role_model->save(false);
 
+                $user_model = new CoUser();
                 $user_model->tenant_id = 0;
                 $user_model->org_id = $model->org_id;
+                $user_model->attributes = Yii::$app->request->post('User');
                 $user_model->save(false);
 
+                $login_model = new CoLogin();
                 $login_model->user_id = $user_model->user_id;
+                $login_model->attributes = Yii::$app->request->post('Login');
                 $login_model->setPassword($login_model->password);
                 $login_model->save(false);
 
@@ -147,7 +150,7 @@ class OrganizationController extends ActiveController {
 
                 return ['success' => true];
             } else {
-                return ['success' => false, 'message' => Html::errorSummary([$model, $role_model, $user_model, $login_model])];
+                return ['success' => false, 'message' => Html::errorSummary([$model, $login_form_model, $user_form_model])];
             }
         } else {
             return ['success' => false, 'message' => 'Please Fill the Form'];
@@ -254,7 +257,7 @@ class OrganizationController extends ActiveController {
 
     public function actionValidateorg() {
         $post = Yii::$app->request->post();
-        
+
         if (!empty($post)) {
             $valid = true;
             if (isset($post['Organization'])) {
@@ -268,7 +271,7 @@ class OrganizationController extends ActiveController {
 //            }
 
             if (isset($post['Login'])) {
-                $model = new CoLogin();
+                $model = new CoLoginForm();
                 $model->scenario = 'create';
                 $model->attributes = Yii::$app->request->post('Login');
             }
@@ -303,7 +306,7 @@ class OrganizationController extends ActiveController {
     public function actionGetorglist() {
         return CoOrganization::find()->all();
     }
-    
+
     public function actionGetorganization() {
         $org_id = Yii::$app->request->get('id');
 

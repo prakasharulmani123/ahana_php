@@ -3,7 +3,9 @@
 namespace common\models;
 
 use common\models\query\CoTenantQuery;
+use Yii;
 use yii\db\ActiveQuery;
+use yii\db\Connection;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -142,6 +144,25 @@ class CoTenant extends GActiveRecord {
     }
 
     public function afterSave($insert, $changedAttributes) {
+        $connection = new Connection([
+            'dsn' => "mysql:host={$this->coOrganization->org_db_host};dbname={$this->coOrganization->org_database}",
+            'username' => $this->coOrganization->org_db_username,
+            'password' => $this->coOrganization->org_db_password,
+        ]);
+        $connection->open();
+        if ($insert) {
+            $sql = "INSERT INTO co_tenant VALUES({$this->tenant_id},'{$this->org_id}','{$this->tenant_guid}','{$this->tenant_name}','{$this->tenant_address}','{$this->tenant_city_id}','{$this->tenant_state_id}','{$this->tenant_country_id}','{$this->tenant_contact1}','{$this->tenant_contact2}','{$this->tenant_fax}','{$this->tenant_mobile}','{$this->tenant_email}','{$this->tenant_url}','{$this->slug}','{$this->status}','{$this->created_by}','{$this->created_at}','{$this->modified_by}','{$this->modified_at}','{$this->deleted_at}')";
+        } else {
+            $sql = "UPDATE co_tenant SET tenant_name = '{$this->tenant_name}', tenant_address = '{$this->tenant_address}', tenant_city_id = '{$this->tenant_city_id}', tenant_state_id = '{$this->tenant_state_id}', tenant_country_id = '{$this->tenant_country_id}', tenant_contact1 = '{$this->tenant_contact1}', tenant_contact2 = '{$this->tenant_contact2}', tenant_fax = '{$this->tenant_fax}', tenant_mobile = '{$this->tenant_mobile}', tenant_email = '{$this->tenant_email}', tenant_url = '{$this->tenant_url}', slug = '{$this->slug}', status = '{$this->status}', modified_by = '{$this->modified_by}', modified_at = '{$this->modified_at}', deleted_at = '{$this->deleted_at}' WHERE tenant_id={$this->tenant_id}";
+        }
+        $command = $connection->createCommand($sql);
+        $command->execute();
+        $connection->close();
+
+        Yii::$app->client->dsn = "mysql:host={$this->coOrganization->org_db_host};dbname={$this->coOrganization->org_database}";
+        Yii::$app->client->username = $this->coOrganization->org_db_username;
+        Yii::$app->client->password = $this->coOrganization->org_db_password;
+
         if ($insert) {
             $code_types = CoInternalCode::getCodeTypes();
             foreach ($code_types as $code_type) {
@@ -153,6 +174,7 @@ class CoTenant extends GActiveRecord {
                 $internal_code->save(false);
             }
         }
+
         return parent::afterSave($insert, $changedAttributes);
     }
 

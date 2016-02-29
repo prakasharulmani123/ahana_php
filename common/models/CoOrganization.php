@@ -46,7 +46,7 @@ class CoOrganization extends GActiveRecord {
             [['created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['org_name'], 'string', 'max' => 100],
             [['org_db_host', 'org_db_username', 'org_db_password', 'org_database', 'org_domain'], 'string', 'max' => 255],
-            [['org_name'], 'unique'],
+            [['org_name', 'org_database', 'org_domain'], 'unique'],
             ['org_database', 'checkDB'],
         ];
     }
@@ -109,6 +109,22 @@ class CoOrganization extends GActiveRecord {
         } catch (\Exception $ex) {
             $this->addError($attribute, $ex->getMessage());
         }
+    }
+
+    public function afterSave($insert, $changedAttributes) {
+        if ($insert) {
+            $connection = new Connection([
+                'dsn' => "mysql:host={$this->org_db_host};dbname={$this->org_database}",
+                'username' => $this->org_db_username,
+                'password' => $this->org_db_password,
+            ]);
+            $connection->open();
+
+            $command = $connection->createCommand("INSERT INTO co_organization VALUES({$this->org_id},'{$this->org_name}','{$this->org_description}','{$this->org_db_host}','{$this->org_db_username}','{$this->org_db_password}','{$this->org_database}','{$this->org_domain}','{$this->status}',{$this->created_by},'{$this->created_at}',{$this->modified_by},'{$this->modified_at}','{$this->deleted_at}')");
+            $command->execute();
+            $connection->close();
+        }
+        return parent::afterSave($insert, $changedAttributes);
     }
 
 }

@@ -2,7 +2,7 @@
 
 $client = [];
 if (defined('DOMAIN_PATH')) {
-    if (isset(Yii::$app->session['client']) && isset(Yii::$app->session['current_domain_path']) && Yii::$app->session['current_domain_path'] == DOMAIN_PATH) {
+    if (isset(Yii::$app->session['client']) && isset(Yii::$app->session['current_domain_path']) && Yii::$app->session['current_domain_path'] == DOMAIN_PATH && Yii::$app->session['is_read']) {
         $client['client'] = Yii::$app->session['client'];
     } else {
         $client['client'] = setClientDb();
@@ -27,7 +27,9 @@ function setClientDb() {
     $read = $sth->fetch(PDO::FETCH_OBJ);
 
     $client = ['class' => 'yii\db\Connection', 'charset' => 'utf8'];
+    $is_read = false;
     if (!empty($read)) {
+        $is_read = true;
         $client['dsn'] = "mysql:host={$read->org_db_host};dbname={$read->org_database}";
         $client['username'] = "{$read->org_db_username}";
         $client['password'] = "{$read->org_db_password}";
@@ -35,6 +37,7 @@ function setClientDb() {
     
     Yii::$app->session['client'] = $client;
     Yii::$app->session['current_domain_path'] = DOMAIN_PATH;
+    Yii::$app->session['is_read'] = $is_read;
 
     return $client;
 }
