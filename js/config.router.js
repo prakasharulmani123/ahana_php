@@ -1640,7 +1640,7 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
     } else {
         serviceUrl = 'http://hms.ark/api/IRISORG/web/v1'
         orgUrl = 'http://hms.ark/client';
-        clientURL = 'apollo.hms.ark';
+        clientURL = 'ahana.hms.ark';
     }
     
     $rootScope.IRISOrgServiceUrl = serviceUrl;
