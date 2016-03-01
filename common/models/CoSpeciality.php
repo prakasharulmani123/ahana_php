@@ -37,7 +37,8 @@ class CoSpeciality extends RActiveRecord {
             [['tenant_id', 'created_by', 'modified_by'], 'integer'],
             [['status'], 'string'],
             [['created_at', 'modified_at'], 'safe'],
-            [['speciality_name'], 'string', 'max' => 50]
+            [['speciality_name'], 'string', 'max' => 50],
+            [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'speciality_name', 'deleted_at'], 'message' => 'The combination of Name has already been taken.']
         ];
     }
 
@@ -63,13 +64,13 @@ class CoSpeciality extends RActiveRecord {
     public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
-    
+
     public static function find() {
         return new CoSpecialityQuery(get_called_class());
     }
 
     public static function getSpecialityList($tenant = null, $status = '1', $deleted = false) {
-        if(!$deleted)
+        if (!$deleted)
             $list = self::find()->tenant($tenant)->status($status)->active()->all();
         else
             $list = self::find()->tenant($tenant)->deleted()->all();

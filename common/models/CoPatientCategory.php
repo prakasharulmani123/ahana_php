@@ -40,7 +40,8 @@ class CoPatientCategory extends RActiveRecord {
             [['created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['status'], 'string'],
             [['patient_cat_name'], 'string', 'max' => 50],
-            [['patient_cat_color'], 'string', 'max' => 10]
+            [['patient_cat_color'], 'string', 'max' => 10],
+            [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'patient_cat_name', 'deleted_at'], 'message' => 'The combination of Name has already been taken.']
         ];
     }
 
@@ -51,8 +52,8 @@ class CoPatientCategory extends RActiveRecord {
         return [
             'patient_cat_id' => 'Patient Cat ID',
             'tenant_id' => 'Tenant ID',
-            'patient_cat_name' => 'Patient Cat Name',
-            'patient_cat_color' => 'Patient Cat Color',
+            'patient_cat_name' => 'Patient Category Name',
+            'patient_cat_color' => 'Patient Category Color',
             'status' => 'Status',
             'created_by' => 'Created By',
             'created_at' => 'Created At',

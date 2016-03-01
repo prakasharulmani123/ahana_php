@@ -45,7 +45,7 @@ class SpecialityController extends ActiveController {
         $modelClass = $this->modelClass;
 
         return new ActiveDataProvider([
-            'query' => $modelClass::find()->tenant()->active()->orderBy(['speciality_name' => SORT_ASC]),
+            'query' => $modelClass::find()->tenant()->active()->orderBy(['created_at' => SORT_DESC]),
             'pagination' => false,
         ]);
     }
