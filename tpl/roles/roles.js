@@ -51,8 +51,8 @@ app.controller('RolesController', ['$rootScope', '$scope', '$timeout', '$http', 
                             }
                             else {
                                 $scope.successMessage = "Role saved successfully";
-                                $scope.data = {};
                                 $timeout(function () {
+                                    $scope.data = {};
                                     $state.go('configuration.roles');
                                 }, 1000)
                             }

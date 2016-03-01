@@ -1640,7 +1640,7 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
     } else {
         serviceUrl = 'http://hms.ark/api/IRISORG/web/v1'
         orgUrl = 'http://hms.ark/client';
-        clientURL = 'ahana.hms.ark';
+        clientURL = 'apollo.hms.ark';
     }
     
     $rootScope.IRISOrgServiceUrl = serviceUrl;
@@ -1648,7 +1648,7 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
     $rootScope.IRISOrgUrl = orgUrl;
     $rootScope.clientUrl = clientURL;
 
-    var currentUser = AuthenticationService.getCurrentUser();
+//    var currentUser = AuthenticationService.getCurrentUser();
 
     $rootScope.globals = $cookieStore.get('globals') || {};
     
@@ -1663,6 +1663,7 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
             });
         } else {
             var restrictedPage = $.inArray($location.path(), ['/access/signin', '/access/forgotpwd', '/access/resetpwd']) === -1;
+            var currentUser = AuthenticationService.getCurrentUser();
             var loggedIn = Boolean(currentUser);
             if (restrictedPage && !loggedIn) {
                 $location.path('/access/signin');
