@@ -13,7 +13,7 @@ class RActiveRecord extends ActiveRecord {
 
     public function init() {
         if ($this->isNewRecord) {
-            if (isset($this->deleted_at))
+            if ($this->hasAttribute('deleted_at'))
                 $this->deleted_at = '0000-00-00 00:00:00';
         }
         return parent::init();
