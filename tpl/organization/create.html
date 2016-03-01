@@ -23,7 +23,7 @@
                             <div class="form-group">
                                 <label class="col-lg-4 control-label">Organization Name *</label>
                                 <div class="col-lg-8">
-                                    <input type="text" placeholder="Organization Name" class="form-control" ng-model="data.Organization.org_name" focus-me="true" id="tenant_name" required>
+                                    <input type="text" placeholder="Organization Name" class="form-control" ng-model="data.Organization.org_name" focus-me="true" required>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -35,31 +35,31 @@
                             <div class="form-group">
                                 <label class="col-lg-4 control-label">Host Name *</label>
                                 <div class="col-lg-8">
-                                    <input type="text" placeholder="Host Name" class="form-control" ng-model="data.Organization.org_db_host" focus-me="true" id="tenant_name" required>
+                                    <input type="text" placeholder="Host Name" class="form-control" ng-model="data.Organization.org_db_host" focus-me="true" required>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-lg-4 control-label">Database Username *</label>
                                 <div class="col-lg-8">
-                                    <input type="text" placeholder="Database Username" class="form-control" ng-model="data.Organization.org_db_username" focus-me="true" id="tenant_name" required>
+                                    <input type="text" placeholder="Database Username" class="form-control" ng-model="data.Organization.org_db_username" focus-me="true" required>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-lg-4 control-label">Database Password</label>
                                 <div class="col-lg-8">
-                                    <input type="text" placeholder="Database Password" class="form-control" ng-model="data.Organization.org_db_password" focus-me="true" id="tenant_name" required>
+                                    <input type="text" placeholder="Database Password" class="form-control" ng-model="data.Organization.org_db_password" focus-me="true" >
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-lg-4 control-label">Database Name *</label>
                                 <div class="col-lg-8">
-                                    <input type="text" placeholder="Database Name" class="form-control" ng-model="data.Organization.org_database" focus-me="true" id="tenant_name" required>
+                                    <input type="text" placeholder="Database Name" class="form-control" ng-model="data.Organization.org_database" focus-me="true" required>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-lg-4 control-label">Domain Name *</label>
                                 <div class="col-lg-8">
-                                    <input type="text" placeholder="Domain Name" class="form-control" ng-model="data.Organization.org_domain" focus-me="true" id="tenant_name" required>
+                                    <input type="text" placeholder="Domain Name" class="form-control" ng-model="data.Organization.org_domain" focus-me="true" required>
                                 </div>
                             </div>
                             <div class="pull-right m-t m-b">
@@ -214,7 +214,13 @@
 
                                 <div class="pull-right m-t m-b">
                                     <button type="button" class="btn btn-default btn-rounded" ng-click="steps.step4 = true">Prev</button>
-                                    <button class="btn btn-primary btn-rounded save-btn" type="submit" ng-click="saveForm('add')">Save</button>
+                                    <button class="btn btn-primary btn-rounded save-btn-x" type="submit" ng-click="saveForm('add')">Save</button>
+                                </div>
+
+                                <div class="pull-left m-t m-b">
+                                    <div class="col-lg-offset-6">
+                                        <span class="pull-right text-danger">{{form_status}}</span>
+                                    </div>
                                 </div>
 
                             </div>

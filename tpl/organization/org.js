@@ -186,6 +186,26 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                 }
             }
 
+            if (mode == 'add') {
+                $scope.form_status = 'Please Wait... DB Structure initializing...';
+                $http({
+                    method: "POST",
+                    url: $rootScope.IRISAdminServiceUrl + '/organizations/createdb',
+                    data: post_data,
+                }).then(
+                        function (response) {
+                            $scope.form_status = 'Please Wait... Organization Creating...';
+                            $scope.loadbar('hide');
+                            $scope.postForm(post_url, post_data, mode);
+                        }
+                )
+            } else {
+                $scope.postForm(post_url, post_data, mode);
+            }
+
+        };
+
+        $scope.postForm = function (post_url, post_data, mode) {
             $scope.loadbar('show');
             $http({
                 method: "POST",
@@ -195,6 +215,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                     function (response) {
                         $scope.loadbar('hide');
                         if (response.data.success === true) {
+                            $scope.form_status = '';
 
                             if (mode !== 'add') {
                                 $scope.successMessage = mode + " updated successfully";
@@ -216,7 +237,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                         }
                     }
             )
-        };
+        }
 
         $scope.validateForm = function (mode, next_step) {
             _that = this;
