@@ -15,9 +15,11 @@ use common\models\CoUsersRoles;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
+use yii\db\Connection;
 use yii\filters\auth\HttpBearerAuth;
 use yii\filters\ContentNegotiator;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\rest\ActiveController;
 use yii\web\HttpException;
 use yii\web\Response;
@@ -85,6 +87,27 @@ class OrganizationController extends ActiveController {
             }
         } else {
             throw new HttpException(400, 'There are no query string');
+        }
+    }
+
+    public function actionCreatedb() {
+        $post = Yii::$app->request->post('Organization');
+        if (!empty($post)) {
+            //Execute DB Structure to client DB Connection
+            $structure = file_get_contents(Url::base(true) . '/structure.sql');
+            $data = file_get_contents(Url::base(true) . '/data.sql');
+            $sql = $structure . $data;
+
+            $connection = new Connection([
+                'dsn' => "mysql:host={$post['org_db_host']};dbname={$post['org_database']}",
+                'username' => $post['org_db_username'],
+                'password' => isset($post['org_db_password']) ? $post['org_db_password'] : '',
+            ]);
+            $connection->open();
+            $command = $connection->createCommand($sql);
+            $command->execute();
+            $connection->close();
+            //End
         }
     }
 

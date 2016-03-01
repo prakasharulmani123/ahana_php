@@ -80,11 +80,11 @@ CREATE TABLE `co_organization` (
   `deleted_at` timestamp NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`org_id`),
   UNIQUE KEY `orgNameUnique` (`org_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 
 /*Data for the table `co_organization` */
 
-insert  into `co_organization`(`org_id`,`org_name`,`org_description`,`org_db_host`,`org_db_username`,`org_db_password`,`org_database`,`org_domain`,`status`,`created_by`,`created_at`,`modified_by`,`modified_at`,`deleted_at`) values (26,'Apollo','Tesst','localhost','root',NULL,'apollo','apollo.hms.ark','1',-1,'2016-02-29 18:37:55',-1,'2016-02-29 18:37:55','0000-00-00 00:00:00');
+insert  into `co_organization`(`org_id`,`org_name`,`org_description`,`org_db_host`,`org_db_username`,`org_db_password`,`org_database`,`org_domain`,`status`,`created_by`,`created_at`,`modified_by`,`modified_at`,`deleted_at`) values (7,'Org','Org','localhost','root',NULL,'ahana','ahana.hms.ark','1',-1,'2016-02-17 18:50:12',NULL,NULL,'0000-00-00 00:00:00');
 
 /*Table structure for table `co_resources` */
 
@@ -150,7 +150,7 @@ CREATE TABLE `co_super_admin` (
 
 /*Data for the table `co_super_admin` */
 
-insert  into `co_super_admin`(`su_id`,`username`,`password`,`authtoken`,`last_activity`,`created_by`,`created_at`,`modified_by`,`modified_at`) values (1,'demo','$2y$13$pfNu2lorSgd3btV7foqp.uriRfXF.7lSi51b45oefB0V1NaObxEui','ZGVtbzE0NTY4MDc3OTMzOTY3','0000-00-00 00:00:00',NULL,'0000-00-00 00:00:00',-1,'2016-01-07 11:46:28');
+insert  into `co_super_admin`(`su_id`,`username`,`password`,`authtoken`,`last_activity`,`created_by`,`created_at`,`modified_by`,`modified_at`) values (1,'demo','$2y$13$pfNu2lorSgd3btV7foqp.uriRfXF.7lSi51b45oefB0V1NaObxEui','','0000-00-00 00:00:00',NULL,'0000-00-00 00:00:00',-1,'2016-01-07 11:46:28');
 
 /*Table structure for table `co_tenant` */
 
@@ -180,13 +180,12 @@ CREATE TABLE `co_tenant` (
   `deleted_at` timestamp NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`tenant_id`),
   UNIQUE KEY `TenantNameUnique` (`tenant_name`,`org_id`),
-  KEY `FK_co_tenant_org` (`org_id`),
-  CONSTRAINT `FK_co_tenant_org` FOREIGN KEY (`org_id`) REFERENCES `co_organization` (`org_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=latin1;
+  KEY `FK_co_tenant_org` (`org_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=63 DEFAULT CHARSET=latin1;
 
 /*Data for the table `co_tenant` */
 
-insert  into `co_tenant`(`tenant_id`,`org_id`,`tenant_guid`,`tenant_name`,`tenant_address`,`tenant_city_id`,`tenant_state_id`,`tenant_country_id`,`tenant_contact1`,`tenant_contact2`,`tenant_fax`,`tenant_mobile`,`tenant_email`,`tenant_url`,`slug`,`status`,`created_by`,`created_at`,`modified_by`,`modified_at`,`deleted_at`) values (33,26,NULL,'Apollo','Testing',1,1,1,'123456',NULL,NULL,NULL,'abc@gmail.com',NULL,NULL,'1',-1,'2016-02-29 18:37:55',-1,'2016-02-29 18:47:40','0000-00-00 00:00:00');
+insert  into `co_tenant`(`tenant_id`,`org_id`,`tenant_guid`,`tenant_name`,`tenant_address`,`tenant_city_id`,`tenant_state_id`,`tenant_country_id`,`tenant_contact1`,`tenant_contact2`,`tenant_fax`,`tenant_mobile`,`tenant_email`,`tenant_url`,`slug`,`status`,`created_by`,`created_at`,`modified_by`,`modified_at`,`deleted_at`) values (58,7,'','Ahana','Gandhi Nagar',1,8,7,'123',NULL,NULL,NULL,'vikhram@ahana.com','http://ahana.com','','1',-1,'2016-02-02 22:26:38',-1,'2016-02-05 22:19:13','0000-00-00 00:00:00'),(59,7,'','Ark Infotec','Bye-pass',1,8,7,'123','','','','gayatri@ark.com','http://ark.com','','0',-1,'2016-02-02 22:43:11',NULL,'2016-02-15 05:46:14','0000-00-00 00:00:00'),(60,7,'','Radianz','rad',1,8,7,'123123',NULL,NULL,NULL,'abc@radianz.com',NULL,'','1',-1,'2016-02-17 06:28:38',NULL,'2016-02-21 03:28:09','0000-00-00 00:00:00'),(61,7,NULL,'test','test',1,8,7,'99999999',NULL,NULL,NULL,'test.t@gm.xc','http://ahanahospitals.in/',NULL,'1',-1,'2016-02-21 23:16:05',-1,'2016-02-21 23:16:05','0000-00-00 00:00:00'),(62,0,NULL,'test test','test',5,8,7,'2323232323','',NULL,NULL,'34343@3444.3',NULL,NULL,'1',-1,'2016-02-29 02:00:01',-1,'2016-02-29 02:08:44','0000-00-00 00:00:00');
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
