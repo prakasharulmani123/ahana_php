@@ -187,6 +187,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
             }
 
             if (mode == 'add') {
+                $scope.loadbar('show');
                 $scope.form_status = 'Please Wait... DB Structure initializing...';
                 $http({
                     method: "POST",
