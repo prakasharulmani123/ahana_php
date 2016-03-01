@@ -152,9 +152,11 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
 
     var serviceUrl = '';
     if($location.host() == 'demo.arkinfotec.in'){
-        serviceUrl = 'http://demo.arkinfotec.in/ahana/demo/IRIS-service/IRISADMIN/web/v1'
+        serviceUrl = 'http://demo.arkinfotec.in/ahana/demo/api/IRISADMIN/web/v1';
     }else if($location.host() == 'hms.ark'){
-        serviceUrl = 'http://hms.ark/api/IRISADMIN/web/v1'
+        serviceUrl = 'http://hms.ark/api/IRISADMIN/web/v1';
+    } else {
+        serviceUrl = 'http://hms.ark/api/IRISADMIN/web/v1';
     }
     $rootScope.IRISAdminServiceUrl = serviceUrl;
     $rootScope.commonService = CommonService;
