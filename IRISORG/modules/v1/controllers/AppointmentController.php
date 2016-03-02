@@ -1,5 +1,4 @@
 <?php
-
 namespace IRISORG\modules\v1\controllers;
 
 use common\models\PatAppointment;

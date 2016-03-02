@@ -111,6 +111,9 @@ class CoRoom extends RActiveRecord {
 
     public function fields() {
         $extend = [
+            'ward_detail' => function ($model) {
+                return (isset($model->ward) ? $model->ward : '-');
+            },
             'ward_name' => function ($model) {
                 return (isset($model->ward) ? $model->ward->ward_name : '-');
             },

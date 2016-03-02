@@ -138,11 +138,17 @@ class PatAppointment extends RActiveRecord {
         if (isset($this) && isset($this->encounter) && isset($this->encounter->patLiveAppointmentBooking))
             $this->consultant_id = $this->encounter->patLiveAppointmentBooking->consultant_id;
     }
-    
+
     public function fields() {
         $extend = [
             'status_datetime' => function ($model) {
-                return $model->status_date .' '. $model->status_time;
+                return $model->status_date . ' ' . $model->status_time;
+            },
+            'waiting_elapsed' => function ($model) {
+                $date = date('Y-m-d', strtotime($model->status_date)).' '.date('H:i:s', strtotime($model->status_time));
+                $start_date = new \DateTime($date);
+                $since_start = $start_date->diff(new \DateTime(date('Y-m-d H:i:s')));
+                return ($since_start->h >= 1);
             },
         ];
         $fields = array_merge(parent::fields(), $extend);
