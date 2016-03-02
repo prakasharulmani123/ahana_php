@@ -101,12 +101,14 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
             $event.stopPropagation();
             $scope.opened = true;
         };
-        
+
         $scope.maxDate = new Date();
 
 //        $scope.disabled = function (date, mode) {
 //            return mode === 'day' && (date.getDay() === 0 || date.getDay() === 6);
 //        };
+
+        var changeTimer = false;
 
         $scope.$watch('data.PatPatient.patient_firstname', function (newValue, oldValue) {
             $scope.post_search(newValue);
@@ -121,17 +123,25 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
         }, true);
 
         $scope.post_search = function (newValue) {
-            $http({
-                method: 'POST',
-                url: $rootScope.IRISOrgServiceUrl + '/patient/search',
-                data: {'search': newValue},
-            }).success(
-                    function (response) {
-                        $scope.matchings = response.patients;
-                    }
-            );
+            if (newValue != '') {
+                if (changeTimer !== false)
+                    clearTimeout(changeTimer);
+
+                changeTimer = setTimeout(function () {
+                    $http({
+                        method: 'POST',
+                        url: $rootScope.IRISOrgServiceUrl + '/patient/search',
+                        data: {'search': newValue},
+                    }).success(
+                            function (response) {
+                                $scope.matchings = response.patients;
+                            }
+                    );
+                    changeTimer = false;
+                }, 300);
+            }
         }
-        
+
         $scope.setDateEmpty = function () {
             $scope.data.PatPatient.patient_dob = '';
         }

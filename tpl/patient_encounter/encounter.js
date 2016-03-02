@@ -17,7 +17,9 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
         $scope.app.settings.patientSideMenu = true;
         $scope.app.settings.patientContentClass = 'app-content';
         $scope.app.settings.patientFooterClass = 'app-footer';
-
+        
+        $scope.more_max = 4;
+        
         //Encounter Page
         $scope.loadPatientEncounters = function (type) {
             $scope.encounterView = type;

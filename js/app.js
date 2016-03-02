@@ -21,7 +21,7 @@ angular.module('app', [
     'ui.bootstrap.datetimepicker',
     'ui.dateTimeInput',
     'ngMessages',
-    'restangular'
+//    'restangular'
 //    'LocalStorageModule',
 ]);
 

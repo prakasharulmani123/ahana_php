@@ -69,23 +69,31 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
                 $scope.data.PatAdmission.ward_id = response.model.currentAdmission.ward_id;
                 $scope.data.PatAdmission.room_id = response.model.currentAdmission.room_id;
                 $scope.updateRoomType();
-                $scope.data.PatAdmission.room_type_id = response.model.currentAdmission.room_type_id;
+//                $scope.data.PatAdmission.room_type_id = response.model.currentAdmission.room_type_id;
 
 
                 $http.get($rootScope.IRISOrgServiceUrl + '/encounter/inpatients')
                         .success(function (inpatients) {
                             $scope.encounterList = inpatients;
+                            $scope.roomList = [];
+                    
                             angular.forEach($scope.encounterList, function (ip, key) {
-                                if (ip.encounter_id == response.model.encounter_id)
+                                if (ip.encounter_id == response.model.encounter_id){
                                     $scope.encounterList.splice(key, 1);
+                                }else{
+                                    label = ip.currentAdmission.room.ward_detail.floor_name + ' > ' + ip.currentAdmission.room.ward_detail.ward_name + ' > ' + ip.currentAdmission.room.bed_name;
+                                    $scope.roomList.push({'value': ip.encounter_id, 'label': label});
+                                }
                             });
+                            
+                            console.log($scope.roomList);
                         })
                         .error(function () {
                             $scope.errorData = "An Error has occured while loading floors!";
                         });
             });
         }
-
+        
         $scope.initForm = function () {
             $rootScope.commonService.GetDoctorList('', '1', false, '1', function (response) {
                 $scope.doctors = response.doctorsList;
@@ -146,6 +154,7 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
             $scope.data.PatAdmission.swapRoomTypeId = '';
             $scope.data.PatAdmission.swapRoom = '-';
             $scope.data.PatAdmission.swapRoomId = '';
+            $scope.data.PatAdmission.swapPatientName = '';
 
             var filterAdmission = $filter('filter')($scope.encounterList, {encounter_id: $scope.data.PatAdmission.swapEncounterId});
 
@@ -154,8 +163,13 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
                 $scope.data.PatAdmission.swapWardId = filterAdmission[0].currentAdmission.ward_id;
                 $scope.data.PatAdmission.swapRoomId = filterAdmission[0].currentAdmission.room_id;
                 $scope.data.PatAdmission.swapRoom = filterAdmission[0].currentAdmission.room.bed_name;
-                $scope.data.PatAdmission.swapRoomTypeId = filterAdmission[0].currentAdmission.room_type_id;
+                
+                console.log($scope.activeEncounter.currentAdmission.room_type_id);
+                $scope.data.PatAdmission.swapRoomTypeId = $scope.activeEncounter.currentAdmission.room_type_id;
+                $scope.data.PatAdmission.room_type_id = filterAdmission[0].currentAdmission.room_type_id;
+                
                 $scope.data.PatAdmission.swapPatientId = filterAdmission[0].patient_id;
+                $scope.data.PatAdmission.swapPatientName = filterAdmission[0].patient.fullname;
             }
 
             $scope.updateRoomType2();

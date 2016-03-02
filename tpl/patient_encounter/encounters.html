@@ -26,30 +26,23 @@
                 <div class="col-sm-5 m-b-xs">
                     <button class="btn btn-sm btn-grey" ng-show="encounterView == 'Current'" ng-click="loadPatientEncounters('Current');"> &nbsp; &nbsp; <i class="fa fa-repeat"></i>  &nbsp; &nbsp; </button>    
                     <button class="btn btn-sm btn-grey" ng-show="encounterView == 'Previous'" ng-click="loadPatientEncounters('Previous');"> &nbsp; &nbsp; <i class="fa fa-repeat"></i>  &nbsp; &nbsp; </button>    
-                    <div class="btn-group" dropdown is-open="status.isopen" ng-show="more_li.length > 0">
+                    &nbsp; &nbsp
+                    <div ng-if="more_li.length > 0 && (key + 1) <= more_max" ng-repeat="(key, li) in more_li" class="btn-group">
+                        <button ng-if="li.mode == 'sref'" ui-sref="{{li.href}}" class="btn btn-sm btn-grey"> {{li.name}}</button>    
+                        <button ng-if="li.mode == 'click'" ng-click="{{li.href}}" class="btn btn-sm btn-grey"> {{li.name}}</button>    &nbsp; &nbsp
+                    </div>
+                    
+                    <div class="btn-group" dropdown is-open="status.isopen" ng-if="more_li.length > more_max">
                         <button type="button" class=" btn btn-sm btn-grey" dropdown-toggle ng-disabled="disabled">
                             More &nbsp;&nbsp;<span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu" role="menu">
-                            <li ng-repeat="li in more_li">
+                            <li ng-if="(key + 1) > more_max" ng-repeat="(key, li) in more_li">
                                 <a ng-if="li.mode == 'sref'" ui-sref="{{li.href}}">{{li.name}}</a>
                                 <a ng-if="li.mode == 'click'" ng-click="{{li.href}}">{{li.name}}</a>
                             </li>
                         </ul>
-<!--                        <ul class="dropdown-menu" role="menu">
-                            <li><a href>Transfer</a></li>
-                            <li><a href>Discharge</a></li>
-                            <li><a href>Cancel</a></li>
-                            <li><a href>Modify Admission</a></li>
-                            <li><a href>Swapping</a></li>
-                            <li><a href>Modify Transfer</a></li>
-                            <li><a href>Modify CaseSheetNo</a></li>
-                            <li><a href>Print Selected OP</a></li>
-                        </ul>-->
                     </div>        
-<!--                    <div class="btn-group" dropdown is-open="status.isopen">
-                        <button class="btn btn-sm btn-grey"> Edit </button>    
-                    </div>        -->
                 </div>
                 <div class="col-sm-3">
                 </div>

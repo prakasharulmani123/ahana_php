@@ -1,4 +1,4 @@
-app.controller('RolesController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'Restangular', function ($rootScope, $scope, $timeout, $http, $state, Restangular) {
+app.controller('RolesController', ['$rootScope', '$scope', '$timeout', '$http', '$state', function ($rootScope, $scope, $timeout, $http, $state) {
 
         //Index Page
         $scope.loadRolesList = function () {

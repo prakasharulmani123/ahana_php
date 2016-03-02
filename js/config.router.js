@@ -8,17 +8,17 @@ angular.module('app')
         .run(run)
         .config(config);
 
-config.$inject = ['$stateProvider', '$urlRouterProvider', '$httpProvider', 'RestangularProvider'];
-function config($stateProvider, $urlRouterProvider, $httpProvider, RestangularProvider) {
-    var newBaseUrl = "";
-    
-    if (window.location.hostname == "localhost") {
-        newBaseUrl = "http://hms.ark/api/IRISORG/web/v1";
-    } else {
-//        var deployedAt = window.location.href.substring(0, window.location.href);
-        newBaseUrl = "http://demo.arkinfotec.in/ahana/demo/api/IRISORG/web/v1";
-    }
-    RestangularProvider.setBaseUrl(newBaseUrl);
+config.$inject = ['$stateProvider', '$urlRouterProvider', '$httpProvider'];
+function config($stateProvider, $urlRouterProvider, $httpProvider) {
+//    var newBaseUrl = "";
+//    
+//    if (window.location.hostname == "localhost") {
+//        newBaseUrl = "http://hms.ark/api/IRISORG/web/v1";
+//    } else {
+////        var deployedAt = window.location.href.substring(0, window.location.href);
+//        newBaseUrl = "http://demo.arkinfotec.in/ahana/demo/api/IRISORG/web/v1";
+//    }
+//    RestangularProvider.setBaseUrl(newBaseUrl);
 
     $urlRouterProvider
             .otherwise('/access/signin');
