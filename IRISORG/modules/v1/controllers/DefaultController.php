@@ -8,7 +8,6 @@ use common\models\CoMasterCountry;
 use common\models\CoMasterState;
 use common\models\CoOrganization;
 use common\models\CoRolesResources;
-use common\models\CoTenant;
 use common\models\CoUsersRoles;
 use Yii;
 use yii\filters\auth\QueryParamAuth;
@@ -83,10 +82,13 @@ class DefaultController extends Controller {
 
     public function actionGetTenantList() {
         $list = array();
-        $data = ArrayHelper::map(CoOrganization::findOne(['org_domain' => DOMAIN_PATH])->coTenants, 'tenant_id', 'tenant_name');
+         
+        $data = ArrayHelper::toArray(CoOrganization::findOne(['org_domain' => DOMAIN_PATH])->coTenants); //, 'tenant_id', 'tenant_name');
+
+
 //        $data = CoTenant::getTenantlist(['org_id' => $org]);
-        foreach ($data as $value => $label) {
-            $list[] = array('value' => $value, 'label' => $label);
+        foreach ($data as $label) {
+            $list[] = array('value' => $label['tenant_id'], 'label' => $label['tenant_name']);
         }
         return ['tenantList' => $list];
     }

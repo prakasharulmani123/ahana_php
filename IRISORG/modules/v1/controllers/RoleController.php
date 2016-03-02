@@ -9,7 +9,7 @@ use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
 use yii\filters\auth\QueryParamAuth;
 use yii\filters\ContentNegotiator;
-use yii\helpers\ArrayHelper;
+use yii\filters\Cors;
 use yii\helpers\Html;
 use yii\rest\ActiveController;
 use yii\web\Response;
@@ -71,7 +71,7 @@ class RoleController extends ActiveController {
             return ['success' => false, 'message' => 'Please Fill the Form'];
         }
     }
-    
+
     public function actionUpdaterole() {
         $post = Yii::$app->request->post();
         if (!empty($post)) {
@@ -101,13 +101,13 @@ class RoleController extends ActiveController {
             return ['success' => false, 'message' => 'Invalid Access'];
         }
     }
-    
+
     //role_rights.js, user_roles.js
     public function actionGetactiverolesbyuser() {
-        $roles = CoRole::find()->tenant()->active()->status()->myRoles()->all(); 
+        $roles = CoRole::find()->tenant()->active()->status()->myRoles()->all();
         return ['success' => true, 'roles' => $roles];
     }
-    
+
     public function actionGetmyroles() {
         $id = Yii::$app->request->get('id');
         if (!empty($id)) {
@@ -127,10 +127,10 @@ class RoleController extends ActiveController {
         }
         return $attrs;
     }
-    
+
     public function actionRemove() {
         $id = Yii::$app->getRequest()->post('id');
-        if($id){
+        if ($id) {
             $model = CoRole::find()->where(['role_id' => $id])->one();
             $model->remove();
             return ['success' => true];
