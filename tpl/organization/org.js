@@ -165,10 +165,10 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
             }
 
             if (mode == 'add') {
-                post_url = $rootScope.IRISAdminServiceUrl + '/organizations/createorg';
+                post_url = $rootScope.IRISAdminServiceUrl + '/organization/createorg';
                 post_data = _that.data;
             } else {
-                post_url = $rootScope.IRISAdminServiceUrl + '/organizations/updateorg';
+                post_url = $rootScope.IRISAdminServiceUrl + '/organization/updateorg';
                 if (mode == 'Organization') {
                     post_data = {Tenant: sanitizeVariable(this.data.Tenant)};
                 } else if (mode == 'Role') {
@@ -191,7 +191,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                 $scope.form_status = 'Please Wait... DB Structure initializing...';
                 $http({
                     method: "POST",
-                    url: $rootScope.IRISAdminServiceUrl + '/organizations/createdb',
+                    url: $rootScope.IRISAdminServiceUrl + '/organization/createdb',
                     data: post_data,
                 }).then(
                         function (response) {
