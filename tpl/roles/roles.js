@@ -1,4 +1,4 @@
-app.controller('RolesController', ['$rootScope', '$scope', '$timeout', '$http', '$state', function ($rootScope, $scope, $timeout, $http, $state) {
+app.controller('RolesController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'Restangular', function ($rootScope, $scope, $timeout, $http, $state, Restangular) {
 
         //Index Page
         $scope.loadRolesList = function () {
@@ -7,7 +7,9 @@ app.controller('RolesController', ['$rootScope', '$scope', '$timeout', '$http', 
             $scope.rowCollection = [];  // base collection
             $scope.itemsByPage = 10; // No.of records per page
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
-
+            
+//            Restangular.all('role').getList();
+            
             // Get data's from service
             $http.get($rootScope.IRISOrgServiceUrl + '/role')
                     .success(function (roles) {

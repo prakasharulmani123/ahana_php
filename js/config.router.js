@@ -8,8 +8,18 @@ angular.module('app')
         .run(run)
         .config(config);
 
-config.$inject = ['$stateProvider', '$urlRouterProvider', '$httpProvider'];
-function config($stateProvider, $urlRouterProvider, $httpProvider) {
+config.$inject = ['$stateProvider', '$urlRouterProvider', '$httpProvider', 'RestangularProvider'];
+function config($stateProvider, $urlRouterProvider, $httpProvider, RestangularProvider) {
+    var newBaseUrl = "";
+    
+    if (window.location.hostname == "localhost") {
+        newBaseUrl = "http://hms.ark/api/IRISORG/web/v1";
+    } else {
+//        var deployedAt = window.location.href.substring(0, window.location.href);
+        newBaseUrl = "http://demo.arkinfotec.in/ahana/demo/api/IRISORG/web/v1";
+    }
+    RestangularProvider.setBaseUrl(newBaseUrl);
+
     $urlRouterProvider
             .otherwise('/access/signin');
 
@@ -1384,7 +1394,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                         }]
                 }
             })
-            
+
             //PHARMACY DRUG CLASS
             .state('pharmacy.drugclass', {
                 url: '/drugclass',
@@ -1463,7 +1473,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                         }]
                 }
             })
-            
+
             //PHARMACY Product Description
             .state('pharmacy.prodesc', {
                 url: '/prodesc',
@@ -1628,19 +1638,18 @@ run.$inject = ['$rootScope', '$state', '$stateParams', '$location', '$cookieStor
 function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $window, CommonService, AuthenticationService) {
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
-    
+
     var serviceUrl = '';
     var orgUrl = '';
     var clientURL = '';
 
-    if ($location.host() == 'demo.arkinfotec.in') {
-        serviceUrl = 'http://demo.arkinfotec.in/ahana/demo/api/IRISORG/web/v1'
-        orgUrl = 'http://demo.arkinfotec.in/ahana/demo/client';
-        clientURL = 'http://demo.arkinfotec.in/ahana/demo';
-    } else {
+    if ($location.host() == 'localhost') {
         serviceUrl = 'http://hms.ark/api/IRISORG/web/v1'
         orgUrl = 'http://hms.ark/client';
         clientURL = 'ahana.hms.ark';
+    } else {
+        clientURL = orgUrl = $location.protocol() + '://' + $location.host();
+        serviceUrl = clientURL + '/api/IRISORG/web/v1'
     }
     
     $rootScope.IRISOrgServiceUrl = serviceUrl;
@@ -1651,7 +1660,7 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
 //    var currentUser = AuthenticationService.getCurrentUser();
 
     $rootScope.globals = $cookieStore.get('globals') || {};
-    
+
     $rootScope.$on('$locationChangeStart', function (event, next, current) {
         if ($location.path() == '/access/resetpwd') {
             var token = $location.search().token;
