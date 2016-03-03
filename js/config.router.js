@@ -1648,7 +1648,8 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
         orgUrl = 'http://hms.ark/client';
         clientURL = 'ahana.hms.ark';
     } else {
-        clientURL = orgUrl = $location.protocol() + '://' + $location.host();
+        clientURL = orgUrl = $location.absUrl().split('#')[0].slice(0,-1);
+//        clientURL = orgUrl = $location.protocol() + '://' + $location.host();
         serviceUrl = clientURL + '/api/IRISORG/web/v1'
     }
     
