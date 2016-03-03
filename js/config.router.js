@@ -1356,7 +1356,47 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                         }]
                 }
             })
-            //PHARMACY BRAND
+            
+            //PHARMACY BRAND REP
+            .state('pharmacy.brandrep', {
+                url: '/brandrep',
+                templateUrl: 'tpl/pharmacy_brandrep/index.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/pharmacy_brandrep/pharmacy_brandrep.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            
+            //PHARMACY BRAND REP CREATE
+            .state('pharmacy.brandrepCreate', {
+                url: '/brandrepCreate',
+                templateUrl: 'tpl/pharmacy_brandrep/create.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/pharmacy_brandrep/pharmacy_brandrep.js']);
+                        }]
+                }
+            })
+
+            //PHARMACY BRAND REP UPDATE
+            .state('pharmacy.brandrepUpdate', {
+                url: '/brandrepUpdate/{id}',
+                templateUrl: 'tpl/pharmacy_brandrep/update.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/pharmacy_brandrep/pharmacy_brandrep.js']);
+                        }]
+                }
+            })
+            //PHARMACY BRAND Division
             .state('pharmacy.brandDivision', {
                 url: '/brandDivision',
                 templateUrl: 'tpl/pharmacy_brand_division/index.html',
@@ -1371,7 +1411,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                         }]
                 }
             })
-            //PHARMACY BRAND CREATE
+            //PHARMACY BRAND Division CREATE
             .state('pharmacy.brandDivisionCreate', {
                 url: '/brandDivisionCreate',
                 templateUrl: 'tpl/pharmacy_brand_division/create.html',
@@ -1383,7 +1423,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                 }
             })
 
-            //PHARMACY BRAND UPDATE
+            //PHARMACY BRAND Division UPDATE
             .state('pharmacy.brandDivisionUpdate', {
                 url: '/brandDivisionUpdate/{id}',
                 templateUrl: 'tpl/pharmacy_brand_division/update.html',
