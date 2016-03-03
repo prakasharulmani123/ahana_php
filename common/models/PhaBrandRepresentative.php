@@ -2,6 +2,9 @@
 
 namespace common\models;
 
+use common\models\query\PhaBrandRepresentativeQuery;
+use yii\db\ActiveQuery;
+
 use Yii;
 
 /**
@@ -44,7 +47,7 @@ class PhaBrandRepresentative extends \common\models\RActiveRecord
     public function rules()
     {
         return [
-            [['tenant_id', 'brand_id', 'division_id', 'rep_1_name', 'rep_1_contact', 'rep_1_designation', 'created_by'], 'required'],
+            [['tenant_id', 'brand_id', 'division_id', 'rep_1_name', 'rep_1_contact', 'rep_1_designation'], 'required'],
             [['tenant_id', 'brand_id', 'division_id', 'created_by', 'modified_by'], 'integer'],
             [['status'], 'string'],
             [['created_at', 'modified_at', 'deleted_at'], 'safe'],
@@ -101,4 +104,25 @@ class PhaBrandRepresentative extends \common\models\RActiveRecord
     {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
+    
+    public static function find() {
+        return new PhaBrandRepresentativeQuery(get_called_class());
+    }
+    
+    public function fields() {
+        $extend = [
+            'brand_name' => function ($model) {
+                return (isset($model->brand) ? $model->brand->brand_name : '-');
+            },
+            'brand_code' => function ($model) {
+                return (isset($model->brand) ? $model->brand->brand_code : '-');
+            },
+            'division_name' => function ($model) {
+                return (isset($model->division) ? $model->division->division_name : '-');
+            }
+        ];
+        $fields = array_merge(parent::fields(), $extend);
+        return $fields;
+    }
+
 }
