@@ -1643,7 +1643,7 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
     var orgUrl = '';
     var clientURL = '';
 
-    if ($location.host() == 'localhost') {
+    if ($location.host() == 'hms.ark') {
         serviceUrl = 'http://hms.ark/api/IRISORG/web/v1'
         orgUrl = 'http://hms.ark/client';
         clientURL = 'ahana.hms.ark';
