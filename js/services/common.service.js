@@ -38,6 +38,8 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
     service.GetPatientList = GetPatientList;
     service.GetAlertList = GetAlertList;
     service.GetBloodList = GetBloodList;
+    service.GetDrugClassList = GetDrugClassList;
+    service.GetGenericList = GetGenericList;
 
     service.GetLabelFromValue = GetLabelFromValue;
     service.FoundVlaue = FoundVlaue;
@@ -370,6 +372,30 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
     function GetBloodList(callback) {
         var response = [{value: 'O−', label: 'O−'}, {value: 'O+', label: 'O+'}, {value: 'A−', label: 'A−'}, {value: 'A−', label: 'A−'}, {value: 'A+', label: 'A+'}, {value: 'B−', label: 'B−'}, {value: 'B+', label: 'B+'}, {value: 'AB−', label: 'AB−'}, {value: 'AB+', label: 'AB+'}];
         callback(response);
+    }
+
+    function GetDrugClassList(tenant, sts, del_sts, notUsed, callback) {
+        var response;
+
+        $http.get($rootScope.IRISOrgServiceUrl + '/pharmacydrugclass/getdruglist?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts + '&notUsed=' + notUsed)
+                .success(function (response) {
+                    callback(response);
+                }, function (x) {
+                    response = {success: false, message: 'Server Error'};
+                    callback(response);
+                });
+    }
+
+    function GetGenericList(tenant, sts, del_sts, notUsed, callback) {
+        var response;
+
+        $http.get($rootScope.IRISOrgServiceUrl + '/genericname/getgenericlist?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts + '&notUsed=' + notUsed)
+                .success(function (response) {
+                    callback(response);
+                }, function (x) {
+                    response = {success: false, message: 'Server Error'};
+                    callback(response);
+                });
     }
 
     function GetLabelFromValue(val, func, callback) {

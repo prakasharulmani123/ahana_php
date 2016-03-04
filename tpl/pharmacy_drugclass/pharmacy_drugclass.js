@@ -39,7 +39,7 @@ app.controller('DrugClassController', ['$rootScope', '$scope', '$timeout', '$htt
                 method = 'POST';
                 succ_msg = 'Brand saved successfully';
             } else {
-                post_url = $rootScope.IRISOrgServiceUrl + '/pharmacydrugclasses/' + _that.data.drug_id;
+                post_url = $rootScope.IRISOrgServiceUrl + '/pharmacydrugclasses/' + _that.data.drug_class_id;
                 method = 'PUT';
                 succ_msg = 'Brand updated successfully';
             }
@@ -100,7 +100,7 @@ app.controller('DrugClassController', ['$rootScope', '$scope', '$timeout', '$htt
                     $http({
                         url: $rootScope.IRISOrgServiceUrl + "/pharmacydrugclass/remove",
                         method: "POST",
-                        data: {id: row.drug_id}
+                        data: {id: row.drug_class_id}
                     }).then(
                             function (response) {
                                 $scope.loadbar('hide');

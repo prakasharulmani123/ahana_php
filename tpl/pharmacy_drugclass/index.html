@@ -41,14 +41,14 @@
                     <td>
                         <div ng-if="row.tenant_id != null">
                             <label class="i-checks ">
-                                <input type="checkbox" checked="" ng-true-value="'1'" ng-false-value="'0'" name="status" ng-model="row.status" ng-change='updateStatus("PhaDrugClass", row.drug_id)'>
+                                <input type="checkbox" checked="" ng-true-value="'1'" ng-false-value="'0'" name="status" ng-model="row.status" ng-change='updateStatus("PhaDrugClass", row.drug_class_id)'>
                                 <i></i>
                             </label>
                         </div>
                     </td>
                     <td>
                         <div ng-if="row.tenant_id != null">
-                            <a title="Edit" check-access  ui-sref="pharmacy.drugclassUpdate({id: row.drug_id})">
+                            <a title="Edit" check-access  ui-sref="pharmacy.drugclassUpdate({id: row.drug_class_id})">
                                 <i class="fa fa-pencil"></i>
                             </a>&nbsp;&nbsp;&nbsp;
                             <a class="hide" title="Delete" ng-click="removeRow(row)">

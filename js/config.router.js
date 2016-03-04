@@ -1671,6 +1671,53 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                 }
             })
 
+            //PHARMACY DRUG & GENERIC
+            .state('pharmacy.drugGeneric', {
+                url: '/drugGeneric',
+                templateUrl: 'tpl/pharmacy_drug_generic/index.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('xeditable').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/pharmacy_drug_generic/pharmacy_drug_generic.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            //PHARMACY DRUG & GENERIC CREATE
+            .state('pharmacy.drugGenericCreate', {
+                url: '/drugGenericCreate',
+                templateUrl: 'tpl/pharmacy_drug_generic/create.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('xeditable').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/pharmacy_drug_generic/pharmacy_drug_generic.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+
+            //PHARMACY DRUG & GENERIC UPDATE
+            .state('pharmacy.drugGenericUpdate', {
+                url: '/drugGenericUpdate/{id}',
+                templateUrl: 'tpl/pharmacy_drug_generic/update.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('xeditable').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/pharmacy_drug_generic/pharmacy_drug_generic.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+
     $httpProvider.interceptors.push('APIInterceptor');
 
 }
@@ -1686,7 +1733,7 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
     if ($location.host() == 'hms.ark') {
         serviceUrl = 'http://hms.ark/api/IRISORG/web/v1'
         orgUrl = 'http://hms.ark/client';
-        clientURL = 'ahana.hms.ark';
+        clientURL = 'http://hms.ark';
     } else {
         clientURL = orgUrl = $location.absUrl().split('#')[0].slice(0,-1);
 //        clientURL = orgUrl = $location.protocol() + '://' + $location.host();
