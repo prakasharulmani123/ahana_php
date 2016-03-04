@@ -980,13 +980,13 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                 }
             })
             //PATIENT MODIFY CASESHEET NO
-            .state('patient.update', {
-                url: '/update/{id}',
-                templateUrl: 'tpl/patient/update_patient.html',
+            .state('patient.modifyCaseSheetNo', {
+                url: '/modifyCaseSheetNo/{id}',
+                templateUrl: 'tpl/patient/modify_case_sheet.html',
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/patient/patient_update.js']);
+                            return uiLoad.load(['tpl/patient/modify_case_sheet.js']);
                         }]
                 }
             })
