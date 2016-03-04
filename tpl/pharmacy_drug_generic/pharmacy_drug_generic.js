@@ -6,60 +6,64 @@ app.controller('drugGenericController', ['$rootScope', '$scope', '$timeout', '$h
 
         //Index Page
         $scope.loaddrugGenericList = function () {
+            $scope.errorData = $scope.successMessage = '';
             $scope.isLoading = true;
             // pagination set up
             $scope.rowCollection = [];  // base collection
             $scope.itemsByPage = 10; // No.of records per page
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
-            
+
             $scope.generics = {};
+            $rootScope.commonService.GetGenericList('', '1', false, false, function (response) {
+                $scope.setGenericList(response);
+                // Get data's from service
+                $http.get($rootScope.IRISOrgServiceUrl + '/pharmacydruggeneric')
+                        .success(function (drugGenerics) {
+                            $scope.isLoading = false;
+                            $scope.rowCollection = drugGenerics;
+                            $scope.displayedCollection = [].concat($scope.rowCollection);
+                        })
+                        .error(function () {
+                            $scope.errorData = "An Error has occured while loading drugGenerics!";
+                        });
+            });
 
-            // Get data's from service
-            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacydruggeneric')
-                    .success(function (drugGenerics) {
-                        $scope.isLoading = false;
-
-//                        var prof_charge = {"tenant_id": null, "charge_cat_name": "Professional Charges", "charge_cat_code": "PRF", "charge_cat_description": "Professional Charges",
-//                            "genericnames": [{"generic_id": "Users who have been assigned 'Care Provider' status in user registration will be listed as the sub-categories"}]}
-//                        drugGenerics.list = drugGenerics.list.concat([prof_charge]);
-
-                        $scope.getGenericList();
-                        $scope.rowCollection = drugGenerics;
-                        $scope.displayedCollection = [].concat($scope.rowCollection);
-                    })
-                    .error(function () {
-                        $scope.errorData = "An Error has occured while loading drugGenerics!";
-                    });
 
         };
-        
+
         // editable table
         $scope.genericnames = [];
         $scope.deletedgenericnames = [];
-        
+
         $scope.showGeneric = function (generic_id) {
             var selected = $filter('filter')($scope.generics, {value: generic_id});
             return (generic_id && selected.length) ? selected[0].text : 'Not set';
         };
-        
+
         //For Form
         $scope.initForm = function () {
             $scope.loadbar('show');
             $rootScope.commonService.GetDrugClassList('', '1', false, true, function (response) {
                 $scope.drugs = response.drugList;
 
-                $scope.getGenericList();
+                $rootScope.commonService.GetGenericList('', '1', false, true, function (response) {
+                    $scope.setGenericList(response);
+                });
             });
 
         }
 
-        $scope.getGenericList = function () {
+        $scope.getGenericList = function (response) {
             $rootScope.commonService.GetGenericList('', '1', false, true, function (response) {
-                $scope.generics = [];
+                $scope.setGenericList(response);
+            });
+        }
 
-                angular.forEach(response.genericList, function (generic) {
-                    $scope.generics.push({'value': generic.generic_id, 'text': generic.generic_name});
-                });
+        $scope.setGenericList = function (response) {
+            $scope.generics = [];
+
+            angular.forEach(response.genericList, function (generic) {
+                $scope.generics.push({'value': generic.generic_id, 'text': generic.generic_name});
             });
         }
 
@@ -67,9 +71,8 @@ app.controller('drugGenericController', ['$rootScope', '$scope', '$timeout', '$h
             angular.forEach($scope.displayedCollection, function (parent) {
                 if (parent.drug_class_id == id) {
                     $scope.inserted = {
-                        temp_drug_class_id: parent.genericnames.length + 1,
+                        temp_drug_class_id: Math.random().toString(36).substring(7),
                         drug_class_id: id,
-                        generic_id: '',
                     };
                     parent.genericnames.push($scope.inserted);
                     return;
@@ -77,21 +80,11 @@ app.controller('drugGenericController', ['$rootScope', '$scope', '$timeout', '$h
             });
         };
 
-        $scope.updateName = function (data, drug_class_id, temp_drug_class_id) {
+        $scope.updateName = function (data, drug_class_id, key, gKey) {
             $scope.errorData = $scope.successMessage = '';
             if (typeof data.generic_id != 'undefined') {
-//                if (typeof id != 'undefined') {
-//                    post_method = 'PUT';
-//                    post_url = $rootScope.IRISOrgServiceUrl + '/updatedruggeneric';
-//                    succ_msg = 'Drug Class & Generic Updated successfully';
-//                } else {
-//                    post_method = 'POST';
-//                    post_url = $rootScope.IRISOrgServiceUrl + '/roomchargegenericnames';
-//                    angular.extend(data, {drug_class_id: drug_class_id});
-//                    succ_msg = 'Drug Class & Generic saved successfully';
-//                }
 
-                angular.extend(data, {drug_class_id: drug_class_id});
+                angular.extend(data, {drug_class_id: drug_class_id, mode: 'update'});
                 $http({
                     method: 'POST',
                     url: $rootScope.IRISOrgServiceUrl + '/pharmacydruggeneric/updatedruggeneric',
@@ -99,22 +92,14 @@ app.controller('drugGenericController', ['$rootScope', '$scope', '$timeout', '$h
                 }).success(
                         function (response) {
                             $scope.loadbar('hide');
-                            $scope.successMessage = 'Drug Class & Generic Updated successfully';
-
-                            //Update genericname
-                            angular.forEach($scope.displayedCollection, function (parent) {
-                                if (parent.drug_class_id == drug_class_id) {
-                                    angular.forEach(parent.genericnames, function (sub) {
-                                        if (typeof temp_drug_class_id != 'undefined') {
-                                            if (sub.temp_drug_class_id == temp_drug_class_id) {
-                                                var index = parent.genericnames.indexOf(sub);
-                                                parent.genericnames.splice(index, 1);
-                                                parent.genericnames.push(response);
-                                            }
-                                        }
-                                    });
-                                }
-                            });
+                            $anchorScroll();
+                            if (response.success == true) {
+                                $scope.successMessage = 'Drug class assigned successfully';
+                                delete $scope.displayedCollection[key].genericnames[gKey].temp_drug_class_id;
+                            } else {
+                                $scope.errorData = response.message;
+                                $scope.displayedCollection[key].genericnames.splice(gKey, 1);
+                            }
                         }
                 ).error(function (data, status) {
                     $scope.loadbar('hide');
@@ -126,7 +111,8 @@ app.controller('drugGenericController', ['$rootScope', '$scope', '$timeout', '$h
             }
         };
 
-        $scope.deleteSubRow = function (drug_class_id, generic_id, drug_generic_id, temp_drug_class_id) {
+        $scope.deleteSubRow = function (drug_class_id, generic_id, temp_drug_class_id) {
+            $scope.errorData = $scope.successMessage = '';
             //Remove Temp Row from Table
             if (typeof temp_drug_class_id != 'undefined') {
                 angular.forEach($scope.displayedCollection, function (parent) {
@@ -144,20 +130,31 @@ app.controller('drugGenericController', ['$rootScope', '$scope', '$timeout', '$h
             if (typeof generic_id != 'undefined') {
                 var conf = confirm('Are you sure to delete ?');
                 if (conf) {
-                    angular.forEach($scope.displayedCollection, function (parent) {
+                    angular.forEach($scope.displayedCollection, function (parent, key) {
                         if (parent.drug_class_id == drug_class_id) {
                             angular.forEach(parent.genericnames, function (sub) {
                                 if (sub.generic_id == generic_id) {
                                     var index = parent.genericnames.indexOf(sub);
                                     $scope.loadbar('show');
                                     if (index !== -1) {
+                                        var data = {};
+                                        var generics = [];
+                                        angular.forEach(parent.genericnames, function (genericname) {
+                                            generics.push(genericname.generic_id);
+                                        })
+                                        angular.extend(data, {drug_class_id: drug_class_id, generic_id: generic_id, generic_ids: generics, mode: 'delete'});
                                         $http({
-                                            url: $rootScope.IRISOrgServiceUrl + "/pharmacydruggenerics/" + drug_generic_id,
-                                            method: "DELETE",
+                                            url: $rootScope.IRISOrgServiceUrl + "/pharmacydruggeneric/updatedruggeneric",
+                                            method: "POST",
+                                            data: data
                                         }).success(
                                                 function (response) {
                                                     $scope.loadbar('hide');
                                                     parent.genericnames.splice(index, 1);
+
+                                                    if (parent.genericnames.length == 0) {
+                                                        $scope.displayedCollection.splice(key, 1);
+                                                    }
                                                     $scope.successMessage = sub.generic_name + ' deleted successfully !!!';
                                                 }
                                         ).error(function (data, status) {
@@ -226,7 +223,7 @@ app.controller('drugGenericController', ['$rootScope', '$scope', '$timeout', '$h
             });
         };
 
-        
+
         //Get Data for update Form
         $scope.loadForm = function () {
             $scope.loadbar('show');

@@ -1,5 +1,5 @@
 <div class="bg-light lter b-b wrapper-md">
-    <h1 class="m-n font-thin h3">Drug Class & Generic</h1>
+    <h1 class="m-n font-thin h3">Drug Class & Generic Names</h1>
 </div>
 <div class="wrapper-md" ng-controller="drugGenericController" ng-init="loaddrugGenericList()">
     <div ng-include="'tpl/blocks/alert.html'">
@@ -24,12 +24,10 @@
                         </button>
                     </th>
                     <th st-sort="drug_name">Drug Class name</th>
-                    <th>Status</th>
-                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat-start="row in displayedCollection| orderBy: drug_name">
+                <tr ng-repeat-start="(key, row) in displayedCollection | orderBy: drug_name">
                     <td style="width: 5%">
                         <button ng-click="expanded = !expanded" expand class="btn btn-sm btn-default">
                             <i ng-if="!expanded" class="fa fa-plus text"></i>
@@ -39,24 +37,10 @@
                     <td>
                         {{row.drug_name}}
                     </td>
-                    <td>
-                            <label class="i-checks "> 
-                                <input type="checkbox" checked="" ng-true-value="'1'" ng-false-value="'0'" name="status" ng-model="row.status" ng-change='updateStatus("CodrugGeneric", row.drug_class_id)'> 
-                                <i></i>
-                            </label>
-                    </td>                    
-                    <td>
-                            <a title="Edit" check-access  ui-sref="pharmacy.drugGenericUpdate({id: '{{row.drug_class_id}}'})">
-                                <i class="fa fa-pencil"></i>
-                            </a>&nbsp;&nbsp;&nbsp;
-                            <a class="hide" title="Delete" ng-click="removeRow(row)">
-                                <i class="fa fa-trash"></i>
-                            </a>
-                    </td>
                 </tr>
                 <tr ng-repeat-end ng-show="expanded">
                     <td></td>
-                    <td colspan="3">
+                    <td>
                         <table class="table table-condensed table-bordered">
                             <thead>
                                 <tr>
@@ -65,14 +49,14 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr ng-repeat="genericname in row.genericnames">
+                                <tr ng-repeat="(gKey, genericname) in row.genericnames | orderBy: genericname">
                                     <td>
                                         <span editable-select="genericname.generic_id" e-name="generic_id" e-form="rowform" onbeforesave="checkInput($data)" e-ng-options="s.value as s.text for s in generics">
                                             {{ showGeneric(genericname.generic_id) }}
                                         </span>
                                     </td>
                                     <td>
-                                        <form editable-form name="rowform" onbeforesave="updateName($data, row.drug_class_id, genericname.temp_drug_class_id)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == genericname">
+                                        <form editable-form name="rowform" onbeforesave="updateName($data, row.drug_class_id, key, gKey)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == genericname">
                                             <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-sm btn-success">
                                                 Save
                                             </button>
@@ -84,7 +68,7 @@
                                         <div class="buttons" ng-show="!rowform.$visible">
                                             <!--<button class="btn btn-sm btn-info" ng-click="rowform.$show()">Edit</button>-->
                                             &nbsp;&nbsp;
-                                            <button class="btn btn-sm btn-danger" ng-click="deleteSubRow(row.drug_class_id, genericname.generic_id, row.drug_generic_id, genericname.temp_drug_class_id);">Delete</button>
+                                            <button class="btn btn-sm btn-danger" ng-click="deleteSubRow(row.drug_class_id, genericname.generic_id, genericname.temp_drug_class_id);">Delete</button>
                                         </div> 
                                     </td>
                                 </tr>
@@ -95,7 +79,6 @@
                                             addSubRow(row.drug_class_id)" class="btn btn-default pull-left btn-primary">Add Row</button>
                         </div>
                     </td>
-                    <td colspan="2"></td>
                 </tr>
             </tbody>
         </table>

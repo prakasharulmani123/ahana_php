@@ -34,7 +34,7 @@ app.controller('RoomChargeCategoriesController', ['$rootScope', '$scope', '$time
             angular.forEach($scope.displayedCollection, function (parent) {
                 if (parent.charge_cat_id == id) {
                     $scope.inserted = {
-                        temp_charge_cat_id: parent.subcategories.length + 1,
+                        temp_charge_cat_id: Math.random().toString(36).substring(7),
                         charge_cat_id: id,
                         charge_subcat_name: '',
                     };
