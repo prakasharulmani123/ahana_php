@@ -71,4 +71,17 @@ class PhaGeneric extends RActiveRecord {
         return new PhaGenericQuery(get_called_class());
     }
 
+    public static function getGenericlist($tenant = null, $status = '1', $deleted = false, $notUsed = false) {
+        if (!$deleted) {
+            if($notUsed)
+                $list = self::find()->tenant($tenant)->status($status)->active()->notUsed()->all();
+            else
+                $list = self::find()->tenant($tenant)->status($status)->active()->all();
+        } else {
+            $list = self::find()->tenant($tenant)->deleted()->all();
+        }
+
+        return $list;
+    }
+
 }

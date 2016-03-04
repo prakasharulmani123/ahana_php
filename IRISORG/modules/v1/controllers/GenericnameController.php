@@ -58,5 +58,23 @@ class GenericnameController extends ActiveController {
             return ['success' => true];
         }
     }
+    
+    public function actionGetgenericlist() {
+        $get = Yii::$app->getRequest()->get();
+
+        if (isset($get['tenant']))
+            $tenant = $get['tenant'];
+
+        if (isset($get['status']))
+            $status = strval($get['status']);
+
+        if (isset($get['deleted']))
+            $deleted = $get['deleted'] == 'true';
+
+        if (isset($get['notUsed']))
+            $notUsed = $get['notUsed'] == 'true';
+
+        return ['genericList' => PhaGeneric::getGenericlist($tenant, $status, $deleted, $notUsed)];
+    }
 
 }

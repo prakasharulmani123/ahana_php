@@ -2,7 +2,7 @@
 
 namespace IRISORG\modules\v1\controllers;
 
-use common\models\PhaBrand;
+use common\models\PhaDrugClass;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -52,11 +52,29 @@ class PharmacydrugclassController extends ActiveController {
 
     public function actionRemove() {
         $id = Yii::$app->getRequest()->post('id');
-        if($id){
-            $model = PhaDrugClass::find()->where(['drug_id' => $id])->one();
+        if ($id) {
+            $model = PhaDrugClass::find()->where(['drug_class_id' => $id])->one();
             $model->remove();
             return ['success' => true];
         }
+    }
+
+    public function actionGetdruglist() {
+        $get = Yii::$app->getRequest()->get();
+
+        if (isset($get['tenant']))
+            $tenant = $get['tenant'];
+
+        if (isset($get['status']))
+            $status = strval($get['status']);
+
+        if (isset($get['deleted']))
+            $deleted = $get['deleted'] == 'true';
+
+        if (isset($get['notUsed']))
+            $notUsed = $get['notUsed'] == 'true';
+
+        return ['drugList' => PhaDrugClass::getDruglist($tenant, $status, $deleted, $notUsed)];
     }
 
 }
