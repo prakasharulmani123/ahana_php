@@ -1,4 +1,4 @@
-<div ng-controller="PatientController">
+<div ng-controller="PatientCaseSheetController" ng-init="loadPatientCaseSheetForm()">
     <div class="bg-light lter b-b wrapper-md">
         <h1 class="m-n h3">Modify Case Sheet No</h1>
     </div>
@@ -13,9 +13,9 @@
                         <div class="panel panel-default">
                             <div class="panel-body">                    
                                 <div class="form-group">
-                                    <label class="col-sm-3 control-label">Case Sheet No * </label>
+                                    <label class="col-sm-3 control-label">Case Sheet No *</label>
                                     <div class="col-sm-9">
-                                        <input type="text" ng-model="data.PatPatientCasesheet.casesheet_no" class="form-control" placeholder="" >
+                                        <input type="text" ng-model="data.casesheet_no" class="form-control" placeholder="" >
                                     </div>
                                 </div>
                                 <div class="line line-dashed b-b line-lg "></div>
@@ -26,7 +26,6 @@
             </div>
             <footer class="panel-footer text-right bg-light lter">
                 <button class="btn m-b-xs  btn-success save-btn" ng-click="saveCasesheetForm()">Save</button> &nbsp;
-                <button class="btn m-b-xs  btn-dark " ng-click="$state.go('patient.view', {id: data.PatPatient.patient_guid})">Cancel</button> &nbsp;
             </footer>
         </div>
     </div>

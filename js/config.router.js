@@ -986,7 +986,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/patient/modify_case_sheet.js']);
+                            return uiLoad.load(['tpl/patient/patient_casesheet.js']);
                         }]
                 }
             })

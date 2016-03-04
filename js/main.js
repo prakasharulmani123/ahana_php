@@ -54,6 +54,7 @@ angular.module('app')
                         patientCasesheetno: '',
                         patientHasAlert: '',
                         patientAlert: '',
+                        patientActiveCasesheetno: '',
                     }
                 }
 
@@ -172,6 +173,7 @@ angular.module('app')
                                         $scope.app.patientDetail.patientCasesheetno = patient.casesheetno;
                                         $scope.app.patientDetail.patientHasAlert = patient.hasalert;
                                         $scope.app.patientDetail.patientAlert = patient.alert;
+                                        $scope.app.patientDetail.patientActiveCasesheetno = patient.activeCasesheetno;
                                         $rootScope.commonService.GetLabelFromValue(patient.patient_gender, 'GetGenderList', function (response) {
                                             $scope.app.patientDetail.patientSex = response;
                                         });

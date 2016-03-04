@@ -70,13 +70,11 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                         {href: 'patient.transfer({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Transfer', mode: 'sref'},
                         {href: 'patient.discharge({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Discharge', mode: 'sref'},
                         {href: 'patient.swapping({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Swapping', mode: 'sref'},
-                        {href: 'patient.modifyCaseSheetNo({id: "' + $state.params.id + '"})', name: 'Modify CaseSheetNo', mode: 'sref'},
                     ];
                 } else if (type == 'OP') {
                     $scope.more_li = [
                         {href: 'patient.changeStatus({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Change Status', mode: 'sref'},
                         {href: "cancelAppointment(" + enc_id + ")", name: 'Cancel Appointment', mode: 'click'},
-                        {href: 'patient.modifyCaseSheetNo({id: "' + $state.params.id + '"})', name: 'Modify CaseSheetNo', mode: 'sref'},
                     ];
                 }
             }
