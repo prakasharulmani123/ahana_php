@@ -9,6 +9,7 @@ function SignInForm($scope, $state, AuthenticationService, $http, $rootScope, $l
     $scope.user = {};
     $scope.authError = null;
     $scope.loginButtonText = 'Log in';
+    $scope.forgotpasswordButtonText = 'Send';
 
     $rootScope.commonService.GetTenantList(function (response) {
         $scope.tenants = response.tenantList;
@@ -32,6 +33,9 @@ function SignInForm($scope, $state, AuthenticationService, $http, $rootScope, $l
 
 
     $scope.passwordrequest = function () {
+        $scope.forgotpasswordButtonText = 'Please Wait ....';
+        $('#forgot_btn').attr('disabled', true);
+
         $http({
             method: "POST",
             url: $rootScope.IRISOrgServiceUrl + '/user/request-password-reset',
@@ -45,6 +49,8 @@ function SignInForm($scope, $state, AuthenticationService, $http, $rootScope, $l
                     } else {
                         $scope.errorData = response.data.message;
                     }
+                    $scope.forgotpasswordButtonText = 'Send';
+                    $('#forgot_btn').attr('disabled', false);
                 }
         )
     };

@@ -13,7 +13,7 @@
           <input type="text" placeholder="Email" ng-model="email" class="form-control no-border" required>
         </div>
       </div>
-      <button type="submit" ng-disabled="reset.$invalid" class="btn btn-lg btn-primary btn-block" ng-click="passwordrequest()">Send</button>
+      <button id="forgot_btn" type="submit" ng-disabled="request.$invalid" class="btn btn-lg btn-primary btn-block" ng-click="passwordrequest()">{{forgotpasswordButtonText}}</button>
     </form>
       <div class="text-center m-t m-b"><a ui-sref="access.signin">Sign in</a></div>
     
