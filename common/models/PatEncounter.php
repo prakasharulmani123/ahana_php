@@ -19,6 +19,7 @@ use yii\db\ActiveQuery;
  * @property string $status
  * @property integer $created_by
  * @property string $created_at
+ * @property string $casesheet_no
  * @property integer $modified_by
  * @property string $modified_at
  * @property string $deleted_at
@@ -46,8 +47,8 @@ class PatEncounter extends RActiveRecord {
         return [
             [['encounter_date'], 'required'],
             [['tenant_id', 'patient_id', 'finalize', 'authorize', 'created_by', 'modified_by'], 'integer'],
-            [['encounter_date', 'inactive_date', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
-            [['status'], 'string'],
+            [['encounter_date', 'inactive_date', 'created_at', 'modified_at', 'deleted_at', 'casesheet_no'], 'safe'],
+            [['status', 'casesheet_no'], 'string'],
             [['encounter_type'], 'string', 'max' => 5],
         ];
     }
@@ -193,6 +194,14 @@ class PatEncounter extends RActiveRecord {
             $list = self::find()->tenant($tenant)->deleted()->andWhere(['patient_id' => $patient_id])->orderBy(['encounter_id' => SORT_DESC])->all();
 
         return $list;
+    }
+    
+    public function beforeSave($insert) {
+        if($insert){
+            if(isset($this->patient->patActiveCasesheetno))
+                $this->casesheet_no = $this->patient->patActiveCasesheetno->casesheet_no;
+        }
+        return parent::beforeSave($insert);
     }
     
 }

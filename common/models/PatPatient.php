@@ -146,6 +146,13 @@ class PatPatient extends RActiveRecord {
         return $this->hasOne(PatEncounter::className(), ['patient_id' => 'patient_id'])->status()->orderBy(['encounter_date' => SORT_DESC]);
     }
 
+    /**
+     * @return ActiveQuery
+     */
+    public function getPatActiveCasesheetno() {
+        return $this->hasOne(PatPatientCasesheet::className(), ['patient_id' => 'patient_id'])->tenant()->status()->active();
+    }
+
     public function beforeSave($insert) {
         if (!empty($this->patient_dob))
             $this->patient_dob = date('Y-m-d', strtotime($this->patient_dob));
@@ -232,7 +239,11 @@ class PatPatient extends RActiveRecord {
                         return $address . ' ' . $city . ' ' . $state . ' ' . $country;
                     }
                 }
-            }
+            },
+            'activeCasesheetno' => function ($model) {
+                 if (isset($model->patActiveCasesheetno))
+                    return $model->patActiveCasesheetno->casesheet_no;
+            },
 //            'activeEncounter' => function ($model) {
 //                if (isset($model->patActiveEncounter))
 //                    return $model->patActiveEncounter;

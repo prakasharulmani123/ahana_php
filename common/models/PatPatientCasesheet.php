@@ -2,7 +2,8 @@
 
 namespace common\models;
 
-use Yii;
+use common\models\query\PatPatientCasesheetQuery;
+use yii\db\ActiveQuery;
 
 /**
  * This is the model class for table "pat_patient_casesheet".
@@ -23,36 +24,33 @@ use Yii;
  * @property PatPatient $patient
  * @property CoTenant $tenant
  */
-class PatPatientCasesheet extends \common\models\RActiveRecord
-{
+class PatPatientCasesheet extends RActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'pat_patient_casesheet';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            [['tenant_id', 'patient_id', 'casesheet_no', 'start_date', 'created_by'], 'required'],
+            [['casesheet_no'], 'required'],
             [['tenant_id', 'patient_id', 'created_by', 'modified_by'], 'integer'],
             [['start_date', 'end_date', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['status'], 'string'],
             [['casesheet_no'], 'string', 'max' => 50],
-            [['tenant_id', 'patient_id', 'casesheet_no'], 'unique', 'targetAttribute' => ['tenant_id', 'patient_id', 'casesheet_no'], 'message' => 'The combination of Tenant ID, Patient ID and Casesheet No has already been taken.']
+            [['casesheet_no'], 'unique', 'targetAttribute' => ['tenant_id', 'patient_id', 'casesheet_no'], 'message' => 'The combination of Tenant ID, Patient ID and Casesheet No has already been taken.']
         ];
     }
 
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'casesheet_id' => 'Casesheet ID',
             'tenant_id' => 'Tenant ID',
@@ -70,18 +68,21 @@ class PatPatientCasesheet extends \common\models\RActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getPatient()
-    {
+    public function getPatient() {
         return $this->hasOne(PatPatient::className(), ['patient_id' => 'patient_id']);
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getTenant()
-    {
+    public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
+
+    public static function find() {
+        return new PatPatientCasesheetQuery(get_called_class());
+    }
+
 }
