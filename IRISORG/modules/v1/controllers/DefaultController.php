@@ -82,8 +82,17 @@ class DefaultController extends Controller {
 
     public function actionGetTenantList() {
         $list = array();
-         
+        echo '<pre>';
+        echo DOMAIN_PATH;
+        print_r(CoOrganization::findOne(['org_domain' => DOMAIN_PATH]));
+        exit;
+
         $data = ArrayHelper::toArray(CoOrganization::findOne(['org_domain' => DOMAIN_PATH])->coTenants); //, 'tenant_id', 'tenant_name');
+        
+        echo '<pre>';
+        print_r($data);
+        exit;
+
 
 
 //        $data = CoTenant::getTenantlist(['org_id' => $org]);
