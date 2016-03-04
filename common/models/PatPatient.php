@@ -213,15 +213,26 @@ class PatPatient extends RActiveRecord {
                 }
             },
             'billing_type' => function ($model) {
-                if (isset($model->patient_bill_type) && $model->patient_bill_type != ''){
-                    if($model->patient_bill_type == 'N')
+                if (isset($model->patient_bill_type) && $model->patient_bill_type != '') {
+                    if ($model->patient_bill_type == 'N')
                         return "Normal";
-                    elseif($model->patient_bill_type == 'F')
+                    elseif ($model->patient_bill_type == 'F')
                         return "Free";
                 } else {
                     return '-';
                 }
             },
+            'fullcurrentaddress' => function ($model) {
+                if (isset($model->patPatientAddress)) {
+                    if ($model->patPatientAddress->addr_current_address != '' && $model->patPatientAddress->addr_country_id != '' && $model->patPatientAddress->addr_state_id != '' && $model->patPatientAddress->addr_city_id != '') {
+                        $country = $model->patPatientAddress->addrCountry->country_name;
+                        $state = $model->patPatientAddress->addrState->state_name;
+                        $city = $model->patPatientAddress->addrCity->city_name;
+                        $address = $model->patPatientAddress->addr_current_address;
+                        return $address . ' ' . $city . ' ' . $state . ' ' . $country;
+                    }
+                }
+            }
 //            'activeEncounter' => function ($model) {
 //                if (isset($model->patActiveEncounter))
 //                    return $model->patActiveEncounter;
