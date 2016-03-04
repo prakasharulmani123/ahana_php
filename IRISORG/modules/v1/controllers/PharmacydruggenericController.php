@@ -10,6 +10,7 @@ use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
 use yii\filters\auth\QueryParamAuth;
 use yii\filters\ContentNegotiator;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\rest\ActiveController;
 use yii\web\Response;
@@ -78,29 +79,36 @@ class PharmacydruggenericController extends ActiveController {
     public function actionUpdatedruggeneric() {
         $post = Yii::$app->request->post();
 
+        $mode = $post['mode'];
         $drug_class_id = !isset($post['drug_class_id']) ? '' : $post['drug_class_id'];
         $generic_id = !isset($post['generic_id']) ? '' : $post['generic_id'];
 
         //validate
-        $v_model = new PhaDrugGeneric();
-        $v_model->attributes = [
-            'drug_class_id' => $drug_class_id,
-            'generic_id' => $generic_id,
-        ];
-        if (!$v_model->validate())
-            return ['success' => false, 'message' => Html::errorSummary([$v_model])];
+        if ($mode == 'update') {
+            $v_model = new PhaDrugGeneric();
+            $v_model->attributes = [
+                'drug_class_id' => $drug_class_id,
+                'generic_id' => $generic_id,
+            ];
+            if (!$v_model->validate())
+                return ['success' => false, 'message' => Html::errorSummary([$v_model])];
+        }
         //
 
-        $generic_ids = \yii\helpers\ArrayHelper::map(PhaDrugGeneric::find()->where(['drug_class_id' => $drug_class_id])->all(), 'generic_id', 'generic_id');
-        $generic_ids[] = $generic_id;
+        $generic_ids = ArrayHelper::map(PhaDrugGeneric::find()->tenant()->andWhere(['drug_class_id' => $drug_class_id])->all(), 'generic_id', 'generic_id');
+        if ($mode == 'update') {
+            $generic_ids[] = $generic_id;
+        } else {
+            $generic_ids = array_diff($generic_ids, [$generic_id]);
+        }
         $this->_link($drug_class_id, $generic_ids);
-        
+
         return ['success' => true];
     }
 
     protected function _link($drug_class_id, $generic_ids) {
-        $model = PhaDrugClass::findOne(['drug_class_id' => $drug_class_id]);
-        $generics = PhaGeneric::find()->where(['in', 'generic_id', $generic_ids])->all();
+        $model = PhaDrugClass::find()->tenant()->andWhere(['drug_class_id' => $drug_class_id])->one();
+        $generics = PhaGeneric::find()->tenant()->andWhere(['in', 'generic_id', $generic_ids])->all();
         $extraColumns = ['tenant_id' => Yii::$app->user->identity->user->tenant_id, 'created_by' => Yii::$app->user->identity->user_id, 'status' => '1']; // extra columns to be saved to the many to many table
         $unlink = true; // unlink tags not in the list
         $delete = true; // delete unlinked tags
