@@ -32,6 +32,11 @@
                         <button ng-if="li.mode == 'click'" ng-click="{{li.href}}" class="btn btn-sm btn-grey"> {{li.name}}</button>    &nbsp; &nbsp
                     </div>
                     
+                    <button ng-if="activeEncounter == null" ng-click="$state.go('patient.modifyCaseSheetNo', {id: $state.params.id})" class="btn btn-sm btn-grey">
+                        Modify Case Sheet No
+                    </button>
+                    
+                    
                     <div class="btn-group" dropdown is-open="status.isopen" ng-if="more_li.length > more_max">
                         <button type="button" class=" btn btn-sm btn-grey" dropdown-toggle ng-disabled="disabled">
                             More &nbsp;&nbsp;<span class="caret"></span>
