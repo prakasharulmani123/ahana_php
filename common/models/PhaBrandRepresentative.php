@@ -5,8 +5,6 @@ namespace common\models;
 use common\models\query\PhaBrandRepresentativeQuery;
 use yii\db\ActiveQuery;
 
-use Yii;
-
 /**
  * This is the model class for table "pha_brand_representative".
  *
@@ -31,21 +29,19 @@ use Yii;
  * @property PhaBrandDivision $division
  * @property CoTenant $tenant
  */
-class PhaBrandRepresentative extends \common\models\RActiveRecord
-{
+class PhaBrandRepresentative extends RActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'pha_brand_representative';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['tenant_id', 'brand_id', 'division_id', 'rep_1_name', 'rep_1_contact', 'rep_1_designation'], 'required'],
             [['tenant_id', 'brand_id', 'division_id', 'created_by', 'modified_by'], 'integer'],
@@ -59,13 +55,12 @@ class PhaBrandRepresentative extends \common\models\RActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'rep_id' => 'Rep ID',
             'tenant_id' => 'Tenant ID',
-            'brand_id' => 'Brand ID',
-            'division_id' => 'Division ID',
+            'brand_id' => 'Brand Name',
+            'division_id' => 'Division Name',
             'rep_1_name' => 'Rep 1 Name',
             'rep_1_contact' => 'Rep 1 Contact',
             'rep_1_designation' => 'Rep 1 Designation',
@@ -82,33 +77,30 @@ class PhaBrandRepresentative extends \common\models\RActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getBrand()
-    {
+    public function getBrand() {
         return $this->hasOne(PhaBrand::className(), ['brand_id' => 'brand_id']);
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getDivision()
-    {
+    public function getDivision() {
         return $this->hasOne(PhaBrandDivision::className(), ['division_id' => 'division_id']);
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getTenant()
-    {
+    public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
-    
+
     public static function find() {
         return new PhaBrandRepresentativeQuery(get_called_class());
     }
-    
+
     public function fields() {
         $extend = [
             'brand_name' => function ($model) {
