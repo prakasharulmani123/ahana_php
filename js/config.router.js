@@ -1728,6 +1728,22 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                         }]
                 }
             })
+            
+            //PHARMACY DRUG & GENERIC CREATE
+            .state('pharmacy.purchaseCreate', {
+                url: '/purchaseCreate',
+                templateUrl: 'tpl/pharmacy_purchase/create.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('xeditable').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/pharmacy_purchase/pharmacy_purchase.js');
+                                    }
+                            );
+                        }]
+                }
+            })
 
             //PHARMACY PRODUCTS
             .state('pharmacy.products', {

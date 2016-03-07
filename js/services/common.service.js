@@ -40,6 +40,10 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
     service.GetBloodList = GetBloodList;
     service.GetDrugClassList = GetDrugClassList;
     service.GetGenericList = GetGenericList;
+    service.GetPaymentType = GetPaymentType;
+    service.GetSupplierList = GetSupplierList;
+    service.GetProductList = GetProductList;
+    service.GetPackageUnitList = GetPackageUnitList;
 
     service.GetLabelFromValue = GetLabelFromValue;
     service.FoundVlaue = FoundVlaue;
@@ -393,6 +397,47 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
         var response;
 
         $http.get($rootScope.IRISOrgServiceUrl + '/genericname/getgenericlist?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts + '&notUsed=' + notUsed)
+                .success(function (response) {
+                    callback(response);
+                }, function (x) {
+                    response = {success: false, message: 'Server Error'};
+                    callback(response);
+                });
+    }
+
+    function GetPaymentType(callback) {
+        var response = [{value: 'CA', label: 'Cash'}, {value: 'CR', label: 'Credit'}];
+        callback(response);
+    }
+
+    function GetSupplierList(tenant, sts, del_sts, callback) {
+        var response;
+
+        $http.get($rootScope.IRISOrgServiceUrl + '/pharmacysupplier/getsupplierlist?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts)
+                .success(function (response) {
+                    callback(response);
+                }, function (x) {
+                    response = {success: false, message: 'Server Error'};
+                    callback(response);
+                });
+    }
+
+    function GetProductList(tenant, sts, del_sts, callback) {
+        var response;
+
+        $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/getproductlist?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts)
+                .success(function (response) {
+                    callback(response);
+                }, function (x) {
+                    response = {success: false, message: 'Server Error'};
+                    callback(response);
+                });
+    }
+
+    function GetPackageUnitList(tenant, sts, del_sts, callback) {
+        var response;
+
+        $http.get($rootScope.IRISOrgServiceUrl + '/pharmacypacking/getpackinglist?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts)
                 .success(function (response) {
                     callback(response);
                 }, function (x) {
