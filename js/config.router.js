@@ -1367,7 +1367,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                         }]
                 }
             })
-            
+
             //PHARMACY BRAND REP
             .state('pharmacy.brandrep', {
                 url: '/brandrep',
@@ -1383,7 +1383,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                         }]
                 }
             })
-            
+
             //PHARMACY BRAND REP CREATE
             .state('pharmacy.brandrepCreate', {
                 url: '/brandrepCreate',
@@ -1729,6 +1729,22 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                 }
             })
 
+            //PHARMACY PRODUCTS
+            .state('pharmacy.products', {
+                url: '/products',
+                templateUrl: 'tpl/pharmacy_products/index.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/pharmacy_products/pharmacy_products.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+
     $httpProvider.interceptors.push('APIInterceptor');
 
 }
@@ -1746,11 +1762,11 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
         orgUrl = 'http://hms.ark/client';
         clientURL = 'http://hms.ark';
     } else {
-        clientURL = orgUrl = $location.absUrl().split('#')[0].slice(0,-1);
+        clientURL = orgUrl = $location.absUrl().split('#')[0].slice(0, -1);
 //        clientURL = orgUrl = $location.protocol() + '://' + $location.host();
         serviceUrl = clientURL + '/api/IRISORG/web/v1'
     }
-    
+
     $rootScope.IRISOrgServiceUrl = serviceUrl;
     $rootScope.commonService = CommonService;
     $rootScope.IRISOrgUrl = orgUrl;

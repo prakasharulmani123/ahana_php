@@ -44,9 +44,12 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
     service.GetLabelFromValue = GetLabelFromValue;
     service.FoundVlaue = FoundVlaue;
     service.GetRoomTypesRoomsList = GetRoomTypesRoomsList;
-    
+
     service.GetBrandsList = GetBrandsList;
     service.GetDivisionsList = GetDivisionsList;
+    
+    service.GetProductUnits = GetProductUnits;
+    service.GetProductDescription = GetProductDescription;
 
     return service;
 
@@ -449,10 +452,10 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
                     callback(response);
                 });
     }
-    
+
     function GetBrandsList(tenant, sts, del_sts, callback) {
         var response;
-        
+
         $http.get($rootScope.IRISOrgServiceUrl + '/pharmacybrandrep/getallbrands?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts)
                 .success(function (response) {
                     callback(response);
@@ -461,11 +464,32 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
                     callback(response);
                 });
     }
-    
-     function GetDivisionsList(tenant, sts, del_sts, callback) {
+
+    function GetDivisionsList(tenant, sts, del_sts, callback) {
         var response;
-        
+
         $http.get($rootScope.IRISOrgServiceUrl + '/pharmacybrandrep/getalldivisions?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts)
+                .success(function (response) {
+                    callback(response);
+                }, function (x) {
+                    response = {success: false, message: 'Server Error'};
+                    callback(response);
+                });
+    }
+
+    function GetProductUnits(callback) {
+        var response = [
+            {value: 'MG', label: 'MG'},
+            {value: 'ML', label: 'ML'},
+            {value: 'G', label: 'G'}
+        ];
+        callback(response);
+    }
+    
+    function GetProductDescription(tenant, sts, del_sts, callback) {
+        var response;
+
+        $http.get($rootScope.IRISOrgServiceUrl + '/product/getproductdescription?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts)
                 .success(function (response) {
                     callback(response);
                 }, function (x) {
