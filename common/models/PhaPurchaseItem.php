@@ -1,8 +1,12 @@
 <?php
 
-namespace common\models;
+use common\models\CoTenant;
+use common\models\PhaProduct;
+use common\models\PhaPurchase;
+use common\models\RActiveRecord;
+use yii\db\ActiveQuery;
 
-use Yii;
+namespace common\models;
 
 /**
  * This is the model class for table "pha_purchase_item".
@@ -21,6 +25,7 @@ use Yii;
  * @property string $total_amount
  * @property string $package_name
  * @property string $vat_amount
+ * @property string $vat_percent
  * @property string $status
  * @property integer $created_by
  * @property string $created_at
@@ -32,7 +37,7 @@ use Yii;
  * @property PhaPurchase $purchase
  * @property CoTenant $tenant
  */
-class PhaPurchaseItem extends \common\models\RActiveRecord
+class PhaPurchaseItem extends RActiveRecord
 {
     /**
      * @inheritdoc
@@ -50,9 +55,9 @@ class PhaPurchaseItem extends \common\models\RActiveRecord
         return [
             [['tenant_id', 'purchase_id', 'product_id', 'quantity', 'mrp', 'purchase_rate', 'purchase_amount', 'package_name', 'vat_amount', 'created_by'], 'required'],
             [['tenant_id', 'purchase_id', 'product_id', 'quantity', 'free_quantity', 'created_by', 'modified_by'], 'integer'],
-            [['mrp', 'purchase_rate', 'purchase_amount', 'discount_percent', 'discount_amount', 'total_amount', 'vat_amount'], 'number'],
+            [['mrp', 'purchase_rate', 'purchase_amount', 'discount_percent', 'discount_amount', 'total_amount', 'vat_amount', 'vat_percent'], 'number'],
             [['status'], 'string'],
-            [['created_at', 'modified_at', 'deleted_at'], 'safe'],
+            [['created_at', 'modified_at', 'deleted_at', 'vat_percent'], 'safe'],
             [['package_name'], 'string', 'max' => 255]
         ];
     }
@@ -87,7 +92,7 @@ class PhaPurchaseItem extends \common\models\RActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getProduct()
     {
@@ -95,7 +100,7 @@ class PhaPurchaseItem extends \common\models\RActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getPurchase()
     {
@@ -103,7 +108,7 @@ class PhaPurchaseItem extends \common\models\RActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getTenant()
     {
