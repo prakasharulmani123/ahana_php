@@ -3,6 +3,7 @@
 namespace IRISORG\modules\v1\controllers;
 
 use common\models\PhaDrugClass;
+use common\models\PhaDrugGeneric;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -75,6 +76,16 @@ class PharmacydrugclassController extends ActiveController {
             $notUsed = $get['notUsed'] == 'true';
 
         return ['drugList' => PhaDrugClass::getDruglist($tenant, $status, $deleted, $notUsed)];
+    }
+    
+    public function actionGetdrugbygeneric() {
+        $generic_id = Yii::$app->request->get('generic_id');
+        if (!empty($generic_id)) {
+            $drug = PhaDrugGeneric::find()->tenant()->status()->active()->andWhere(['generic_id' => $generic_id])->one();
+            return ['success' => true, 'drug' => $drug];
+        } else {
+            return ['success' => false, 'message' => 'Invalid Access'];
+        }
     }
 
 }

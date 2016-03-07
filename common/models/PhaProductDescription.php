@@ -20,21 +20,19 @@ use yii\db\ActiveQuery;
  *
  * @property CoTenant $tenant
  */
-class PhaProductDescription extends RActiveRecord
-{
+class PhaProductDescription extends RActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'pha_product_description';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['description_name'], 'required'],
             [['tenant_id', 'created_by', 'modified_by'], 'integer'],
@@ -48,8 +46,7 @@ class PhaProductDescription extends RActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'description_id' => 'Description ID',
             'tenant_id' => 'Tenant ID',
@@ -66,12 +63,21 @@ class PhaProductDescription extends RActiveRecord
     /**
      * @return ActiveQuery
      */
-    public function getTenant()
-    {
+    public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
 
     public static function find() {
         return new PhaProductDescriptionQuery(get_called_class());
     }
+
+    public static function getProductDescriptionList($tenant = null, $status = '1', $deleted = false) {
+        if (!$deleted)
+            $list = self::find()->tenant($tenant)->status($status)->active()->all();
+        else
+            $list = self::find()->tenant($tenant)->deleted()->all();
+
+        return $list;
+    }
+
 }

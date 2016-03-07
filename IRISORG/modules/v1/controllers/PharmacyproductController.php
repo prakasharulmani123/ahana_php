@@ -3,6 +3,7 @@
 namespace IRISORG\modules\v1\controllers;
 
 use common\models\PhaProduct;
+use common\models\PhaProductDescription;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -58,8 +59,8 @@ class PharmacyproductController extends ActiveController {
             return ['success' => true];
         }
     }
-    
-    public function actionGetproductlist() {
+
+	public function actionGetproductlist() {
         $get = Yii::$app->getRequest()->get();
 
         if (isset($get['tenant']))
@@ -72,6 +73,25 @@ class PharmacyproductController extends ActiveController {
             $deleted = $get['deleted'] == 'true';
 
         return ['productList' => PhaProduct::getProductlist($tenant, $status, $deleted)];
+    }
+    
+    public function actionGetproductdescriptionlist() {
+        $tenant = null;
+        $status = '1';
+        $deleted = false;
+
+        $get = Yii::$app->getRequest()->get();
+
+        if (isset($get['tenant']))
+            $tenant = $get['tenant'];
+
+        if (isset($get['status']))
+            $status = strval($get['status']);
+
+        if (isset($get['deleted']))
+            $deleted = $get['deleted'] == 'true';
+
+        return ['productDescriptionList' => PhaProductDescription::getProductDescriptionList($tenant, $status, $deleted)];
     }
     
 }

@@ -58,5 +58,24 @@ class PharmacyvatController extends ActiveController {
             return ['success' => true];
         }
     }
+    
+    public function actionGetvatlist() {
+        $tenant = null;
+        $status = '1';
+        $deleted = false;
+
+        $get = Yii::$app->getRequest()->get();
+
+        if (isset($get['tenant']))
+            $tenant = $get['tenant'];
+
+        if (isset($get['status']))
+            $status = strval($get['status']);
+
+        if (isset($get['deleted']))
+            $deleted = $get['deleted'] == 'true';
+
+        return ['vatList' => PhaVat::getVatList($tenant, $status, $deleted)];
+    }
 
 }
