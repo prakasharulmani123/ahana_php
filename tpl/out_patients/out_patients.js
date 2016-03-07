@@ -86,7 +86,6 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                 data: _data,
             }).success(
                     function (response) {
-                        console.log(response);
                         $scope.loadbar('hide');
                         $scope.successMessage = 'Status changed successfully';
                         $scope.displayedCollection[key].liveAppointmentArrival = response;

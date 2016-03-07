@@ -76,17 +76,14 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
                         .success(function (inpatients) {
                             $scope.encounterList = inpatients;
                             $scope.roomList = [];
-                    
-                            angular.forEach($scope.encounterList, function (ip, key) {
-                                if (ip.encounter_id == response.model.encounter_id){
-                                    $scope.encounterList.splice(key, 1);
-                                }else{
+                            
+                            angular.forEach(inpatients, function (ip, key) {
+                                if (ip.encounter_id != response.model.encounter_id){
                                     label = ip.currentAdmission.room.ward_detail.floor_name + ' > ' + ip.currentAdmission.room.ward_detail.ward_name + ' > ' + ip.currentAdmission.room.bed_name;
                                     $scope.roomList.push({'value': ip.encounter_id, 'label': label});
                                 }
                             });
                             
-                            console.log($scope.roomList);
                         })
                         .error(function () {
                             $scope.errorData = "An Error has occured while loading floors!";
@@ -164,7 +161,6 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
                 $scope.data.PatAdmission.swapRoomId = filterAdmission[0].currentAdmission.room_id;
                 $scope.data.PatAdmission.swapRoom = filterAdmission[0].currentAdmission.room.bed_name;
                 
-                console.log($scope.activeEncounter.currentAdmission.room_type_id);
                 $scope.data.PatAdmission.swapRoomTypeId = $scope.activeEncounter.currentAdmission.room_type_id;
                 $scope.data.PatAdmission.room_type_id = filterAdmission[0].currentAdmission.room_type_id;
                 
