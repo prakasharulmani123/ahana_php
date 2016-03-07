@@ -1,8 +1,18 @@
 <?php
 
-namespace common\models;
+use common\models\CoTenant;
+use common\models\PhaBrand;
+use common\models\PhaBrandDivision;
+use common\models\PhaGeneric;
+use common\models\PhaPackageUnit;
+use common\models\PhaProductBatch;
+use common\models\PhaProductDescription;
+use common\models\PhaPurchaseItem;
+use common\models\PhaVat;
+use common\models\RActiveRecord;
+use yii\db\ActiveQuery;
 
-use Yii;
+namespace common\models;
 
 /**
  * This is the model class for table "pha_product".
@@ -44,21 +54,19 @@ use Yii;
  * @property PhaProductBatch[] $phaProductBatches
  * @property PhaPurchaseItem[] $phaPurchaseItems
  */
-class PhaProduct extends \common\models\RActiveRecord
-{
+class PhaProduct extends RActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'pha_product';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['tenant_id', 'product_code', 'product_name', 'product_unit', 'product_unit_count', 'product_description_id', 'product_reorder', 'product_price', 'brand_id', 'division_id', 'generic_id', 'purchase_vat_id', 'purchase_package_id', 'sales_vat_id', 'sales_package_id', 'created_by'], 'required'],
             [['tenant_id', 'product_description_id', 'product_reorder', 'brand_id', 'division_id', 'generic_id', 'drug_class_id', 'purchase_vat_id', 'purchase_package_id', 'sales_vat_id', 'sales_package_id', 'created_by', 'modified_by'], 'integer'],
@@ -75,8 +83,7 @@ class PhaProduct extends \common\models\RActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'product_id' => 'Product ID',
             'tenant_id' => 'Tenant ID',
@@ -106,90 +113,80 @@ class PhaProduct extends \common\models\RActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getBrand()
-    {
+    public function getBrand() {
         return $this->hasOne(PhaBrand::className(), ['brand_id' => 'brand_id']);
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getProductDescription()
-    {
+    public function getProductDescription() {
         return $this->hasOne(PhaProductDescription::className(), ['description_id' => 'product_description_id']);
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getDivision()
-    {
+    public function getDivision() {
         return $this->hasOne(PhaBrandDivision::className(), ['division_id' => 'division_id']);
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getGeneric()
-    {
+    public function getGeneric() {
         return $this->hasOne(PhaGeneric::className(), ['generic_id' => 'generic_id']);
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getPurchasePackage()
-    {
+    public function getPurchasePackage() {
         return $this->hasOne(PhaPackageUnit::className(), ['package_id' => 'purchase_package_id']);
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getPurchaseVat()
-    {
+    public function getPurchaseVat() {
         return $this->hasOne(PhaVat::className(), ['vat_id' => 'purchase_vat_id']);
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getSalesPackage()
-    {
+    public function getSalesPackage() {
         return $this->hasOne(PhaPackageUnit::className(), ['package_id' => 'sales_package_id']);
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getSalesVat()
-    {
+    public function getSalesVat() {
         return $this->hasOne(PhaVat::className(), ['vat_id' => 'sales_vat_id']);
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getTenant()
-    {
+    public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getPhaProductBatches()
-    {
+    public function getPhaProductBatches() {
         return $this->hasMany(PhaProductBatch::className(), ['product_id' => 'product_id']);
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getPhaPurchaseItems()
-    {
+    public function getPhaPurchaseItems() {
         return $this->hasMany(PhaPurchaseItem::className(), ['product_id' => 'product_id']);
     }
+
 }

@@ -75,6 +75,7 @@ return [
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/pharmacyvat'], 'extraPatterns' => ['POST remove' => 'remove']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/pharmacydruggeneric'], 'extraPatterns' => ['POST remove' => 'remove', 'POST savedruggeneric' => 'savedruggeneric', 'POST updatedruggeneric' => 'updatedruggeneric']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/patientcasesheet'], 'extraPatterns' => ['POST createcasesheet' => 'createcasesheet']],
+                ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/pharmacyproduct'], 'extraPatterns' => ['POST remove' => 'remove']],
             ],
         ],
         'log' => [
