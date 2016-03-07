@@ -1,0 +1,151 @@
+<div class="row">
+
+    <div class="col-sm-6">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-lg-3 control-label">Invoice No. *</label>
+                    <div class="col-lg-9">
+                        <input type="text" placeholder="Invoice No." class="form-control" ng-model="data.invoice_no">
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg "></div>
+                <div class="form-group">
+                    <label class="col-lg-3 control-label">Invoice Date *</label>
+                    <div class="col-lg-9">
+                        <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="data.invoice_date" is-open="$parent.opened1" datepicker-options="dateOptions" close-text="Close"  min-date="minDate"/>
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="open($event, 'opened1')"><i class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-lg-3 control-label">Payment Type *</label>
+                    <div class="col-lg-9 col-sm-9">
+                        <div class="input-group w-md">
+
+                            <label class="i-checks" ng-repeat="paymentType in paymentTypes">
+                                <input type="radio" checked="" value="{{paymentType.value}}" name="b" ng-model="data.payment_type">
+                                <i></i>
+                                {{paymentType.label}}&nbsp; &nbsp;
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg "></div>
+                <div class="form-group">
+                    <label class="col-lg-3 control-label">Supplier Name *</label>
+                    <div class="col-lg-9">
+                        <select class="form-control" name="Country" ng-model="data.country_id" ng-options="supplier.supplier_id as supplier.supplier_name for supplier in suppliers | orderBy: supplier_name">
+                            <option value="">Select Supplier</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+
+    <div class="col-sm-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-sm-12">
+
+                        <table class="table table-bordered table-hover table-condensed bg-white-only">
+                            <tr style="font-weight: bold">
+                                <td><span>Product Name</span></td>
+                                <td><span>Batch No</span></td>
+                                <td><span>Exp Date</span></td>
+                                <td><span>Qty</span></td>
+                                <td><span>Free</span></td>
+                                <td><span>F. Unit</span></td>
+                                <td><span>MRP</span></td>
+                                <td><span>P.Price</span></td>
+                                <td><span>Amt</span></td>
+                                <td><span>Dis %</span></td>
+                                <td><span>Dis Amt</span></td>
+                                <td><span>P.Vat</span></td>
+                                <td><span>Vat Amt</span></td>
+                                <td><span>P.Unit</span></td>
+                                <td><span>Total Amt</span></td>
+                                <td><span>Action</span></td>
+                            </tr>
+                            <tr ng-repeat="(key, purchaseitem) in purchaseitems">
+                                <td>
+                                    <span editable-text="purchaseitem.product_id" e-name="product_id" e-form="tableform" onbeforesave="checkInput($data)" e-typeahead="product as product.product_name for product in products | filter:$viewValue | limitTo:8" e-typeahead-editable="false" e-typeahead-on-select="updateProductRow($item, $model, $label, key)" e-autocomplete="off">
+                                    <!--<span editable-text="purchaseitem.product_id" e-name="product_id" e-form="tableform" onbeforesave="checkInput($data)" e-typeahead="product.product_id as product.product_name for product in products | filter:$viewValue | limitTo:8" e-typeahead-on-select="updateProductRow($item, $model, $label)" e-typeahead-editable="false" e-typeahead-input-formatter="formatLabel($model)">-->
+                                        {{ purchaseitem.product_id || 'empty' }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span editable-text="purchaseitem.batch_id" e-name="batch_id" e-form="tableform" onbeforesave="checkInput($data)">
+                                        {{ purchaseitem.batch_id || 'empty' }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span editable-text="purchaseitem.expiry_date" e-name="expiry_date" e-form="tableform" onbeforesave="checkInput($data)" e-class="form-control" e-datepicker-popup="MMM yyyy" e-is-open="$parent.opened2" e-ng-click="$parent.opened2=true" e-ng-focus="$parent.opened2=true" e-datepicker-options="{minMode: 'month'}" e-close-text="Close" e-datepicker-mode="'month'">
+                                        {{ purchaseitem.expiry_date || 'empty' }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span editable-text="purchaseitem.quantity" e-name="quantity" e-number-mask="" e-form="tableform" onbeforesave="checkInput($data)" e-ng-change="updateRow(tableform, key)">{{purchaseitem.quantity || 0}}</span>
+                                </td>
+                                <td>
+                                    <span editable-text="purchaseitem.free_quantity" e-name="free_quantity" e-number-mask="" e-form="tableform" onbeforesave="checkInput($data)">{{purchaseitem.free_quantity || 0}}</span>
+                                </td>
+                                <td><span>0</span></td>
+                                <td>
+                                    <span editable-text="purchaseitem.mrp" e-number-mask="" e-name="mrp" e-form="tableform" onbeforesave="checkInput($data)">{{purchaseitem.mrp || 0}}</span>
+                                </td>
+                                <td>
+                                    <span editable-text="purchaseitem.purchase_rate" e-number-mask="" e-name="purchase_rate" e-form="tableform" onbeforesave="checkInput($data)" e-ng-change="updateRow(tableform, key)">{{purchaseitem.purchase_rate || 0}}</span>
+                                </td>
+                                <td><span>{{purchaseitem.purchase_amount}}</span></td>
+                                <td>
+                                    <span editable-text="purchaseitem.discount_percent" e-name="discount_percent" e-number-mask="" e-form="tableform" onbeforesave="checkInput($data)" e-ng-change="updateRow(tableform, key)">{{purchaseitem.discount_percent|| 0}}</span>
+                                </td>
+                                <td><span>{{purchaseitem.discount_amount}}</span></td>
+                                <td><span>{{purchaseitem.vat_percent}}</span></td>
+                                <td><span>{{purchaseitem.vat_amount}}</span></td>
+                                <td>
+                                    <span editable-select="purchaseitem.package_name" e-name="package_name" e-form="nameform" e-ng-options="s.package_name as s.package_name for s in packings">
+                                        {{ purchaseitem.package_name || 'empty' }}
+                                    </span>
+                                </td>
+                                <td><span>{{purchaseitem.total_amount}}</span></td>
+
+                                <td>
+                                    <button type="button" ng-click="removeSubcat($index, purchaseitem.product_id)" class="btn btn-sm btn-danger pull-right">Delete</button>
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="btn-form">
+                            <button type="button" ng-click="tableform.$show();
+                                addRow()" class="btn btn-default pull-left btn-primary">Add Product</button>
+                        </div>
+                    </div>
+                </div>
+            </div>    
+        </div>    
+    </div>    
+</div>
+
+<div class="row">
+    <footer class="panel-footer text-right bg-light lter">
+        <button class="btn m-b-xs  btn-success save-btn">Save</button>
+        &nbsp;
+        <button class="btn m-b-xs  btn-dark" ng-click="$state.go('configuration.registration')"><i class="fa fa-times"></i> Cancel</button>
+        &nbsp;
+    </footer>
+</div>
+
+
