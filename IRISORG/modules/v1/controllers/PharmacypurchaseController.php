@@ -2,7 +2,7 @@
 
 namespace IRISORG\modules\v1\controllers;
 
-use common\models\PhaPackageUnit;
+use common\models\PhaPurchase;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -14,9 +14,9 @@ use yii\web\Response;
 /**
  * WardController implements the CRUD actions for CoTenant model.
  */
-class PharmacypackingController extends ActiveController {
+class PharmacypurchaseController extends ActiveController {
 
-    public $modelClass = 'common\models\PhaPackageUnit';
+    public $modelClass = 'common\models\PhaPurchase';
 
     public function behaviors() {
         $behaviors = parent::behaviors();
@@ -53,25 +53,17 @@ class PharmacypackingController extends ActiveController {
     public function actionRemove() {
         $id = Yii::$app->getRequest()->post('id');
         if($id){
-            $model = PhaPackageUnit::find()->where(['package_id' => $id])->one();
+            $model = PhaPurchase::find()->where(['purchase_id' => $id])->one();
             $model->remove();
             return ['success' => true];
         }
     }
     
-    public function actionGetpackinglist() {
-        $get = Yii::$app->getRequest()->get();
-
-        if (isset($get['tenant']))
-            $tenant = $get['tenant'];
-
-        if (isset($get['status']))
-            $status = strval($get['status']);
-
-        if (isset($get['deleted']))
-            $deleted = $get['deleted'] == 'true';
-
-        return ['packingList' => PhaPackageUnit::getPackinglist($tenant, $status, $deleted)];
+    public function actionSavepurchase() {
+        $post = Yii::$app->getRequest()->post();
+        if(!empty($post)){
+            echo 'hi';
+            exit;
+        }
     }
-    
 }

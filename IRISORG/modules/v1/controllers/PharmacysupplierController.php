@@ -59,4 +59,19 @@ class PharmacysupplierController extends ActiveController {
         }
     }
     
+    public function actionGetsupplierlist() {
+        $get = Yii::$app->getRequest()->get();
+
+        if (isset($get['tenant']))
+            $tenant = $get['tenant'];
+
+        if (isset($get['status']))
+            $status = strval($get['status']);
+
+        if (isset($get['deleted']))
+            $deleted = $get['deleted'] == 'true';
+
+        return ['supplierList' => PhaSupplier::getSupplierlist($tenant, $status, $deleted)];
+    }
+    
 }

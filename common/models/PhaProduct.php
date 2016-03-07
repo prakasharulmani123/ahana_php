@@ -1,18 +1,9 @@
 <?php
 
-use common\models\CoTenant;
-use common\models\PhaBrand;
-use common\models\PhaBrandDivision;
-use common\models\PhaGeneric;
-use common\models\PhaPackageUnit;
-use common\models\PhaProductBatch;
-use common\models\PhaProductDescription;
-use common\models\PhaPurchaseItem;
-use common\models\PhaVat;
-use common\models\RActiveRecord;
-use yii\db\ActiveQuery;
-
 namespace common\models;
+
+use common\models\query\PhaProductQuery;
+use yii\db\ActiveQuery;
 
 /**
  * This is the model class for table "pha_product".
@@ -187,6 +178,30 @@ class PhaProduct extends RActiveRecord {
      */
     public function getPhaPurchaseItems() {
         return $this->hasMany(PhaPurchaseItem::className(), ['product_id' => 'product_id']);
+    }
+
+    public static function find() {
+        return new PhaProductQuery(get_called_class());
+    }
+
+    public static function getProductlist($tenant = null, $status = '1', $deleted = false) {
+        if (!$deleted) {
+            $list = self::find()->tenant($tenant)->status($status)->active()->all();
+        } else {
+            $list = self::find()->tenant($tenant)->deleted()->all();
+        }
+
+        return $list;
+    }
+
+    public function fields() {
+        $extend = [
+            'purchaseVat' => function ($model) {
+                return (isset($model->purchaseVat) ? $model->purchaseVat : '-');
+            },
+        ];
+        $fields = array_merge(parent::fields(), $extend);
+        return $fields;
     }
 
 }

@@ -77,4 +77,14 @@ class PhaPackageUnit extends RActiveRecord
     public static function find() {
         return new PhaPackageUnitQuery(get_called_class());
     }
+    
+    public static function getPackinglist($tenant = null, $status = '1', $deleted = false) {
+        if (!$deleted) {
+            $list = self::find()->tenant($tenant)->status($status)->active()->all();
+        } else {
+            $list = self::find()->tenant($tenant)->deleted()->all();
+        }
+
+        return $list;
+    }
 }

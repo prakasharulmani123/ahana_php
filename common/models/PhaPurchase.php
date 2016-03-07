@@ -2,7 +2,8 @@
 
 namespace common\models;
 
-use Yii;
+use common\models\query\PhaPurchaseQuery;
+use yii\db\ActiveQuery;
 
 /**
  * This is the model class for table "pha_purchase".
@@ -33,7 +34,7 @@ use Yii;
  * @property CoTenant $tenant
  * @property PhaPurchaseItem[] $phaPurchaseItems
  */
-class PhaPurchase extends \common\models\RActiveRecord
+class PhaPurchase extends RActiveRecord
 {
     /**
      * @inheritdoc
@@ -89,7 +90,7 @@ class PhaPurchase extends \common\models\RActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getSupplier()
     {
@@ -97,7 +98,7 @@ class PhaPurchase extends \common\models\RActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getTenant()
     {
@@ -105,10 +106,14 @@ class PhaPurchase extends \common\models\RActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getPhaPurchaseItems()
     {
         return $this->hasMany(PhaPurchaseItem::className(), ['purchase_id' => 'purchase_id']);
+    }
+    
+    public static function find() {
+        return new PhaPurchaseQuery(get_called_class());
     }
 }
