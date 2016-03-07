@@ -51,9 +51,10 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
 
     service.GetBrandsList = GetBrandsList;
     service.GetDivisionsList = GetDivisionsList;
-    
-    service.GetProductUnits = GetProductUnits;
-    service.GetProductDescription = GetProductDescription;
+
+    service.GetProductUnitsList = GetProductUnitsList;
+    service.GetProductDescriptionList = GetProductDescriptionList;
+    service.GetVatList = GetVatList;
 
     return service;
 
@@ -522,7 +523,7 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
                 });
     }
 
-    function GetProductUnits(callback) {
+    function GetProductUnitsList(callback) {
         var response = [
             {value: 'MG', label: 'MG'},
             {value: 'ML', label: 'ML'},
@@ -530,11 +531,23 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
         ];
         callback(response);
     }
-    
-    function GetProductDescription(tenant, sts, del_sts, callback) {
+
+    function GetProductDescriptionList(tenant, sts, del_sts, callback) {
         var response;
 
-        $http.get($rootScope.IRISOrgServiceUrl + '/product/getproductdescription?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts)
+        $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/getproductdescriptionlist?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts)
+                .success(function (response) {
+                    callback(response);
+                }, function (x) {
+                    response = {success: false, message: 'Server Error'};
+                    callback(response);
+                });
+    }
+    
+    function GetVatList(tenant, sts, del_sts, callback) {
+        var response;
+
+        $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyvat/getvatlist?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts)
                 .success(function (response) {
                     callback(response);
                 }, function (x) {

@@ -1760,6 +1760,17 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                         }]
                 }
             })
+            //PHARMACY BRAND CREATE
+            .state('pharmacy.productAdd', {
+                url: '/productAdd',
+                templateUrl: 'tpl/pharmacy_products/create.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/pharmacy_products/pharmacy_products.js']);
+                        }]
+                }
+            })
 
     $httpProvider.interceptors.push('APIInterceptor');
 
