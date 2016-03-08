@@ -30,3 +30,7 @@ and open the template in the editor.
 .editable-wrap .form-group{
     margin-left: 0px;
 }
+
+.patient_aside, .patient_content{
+    margin-top: 75px;
+}

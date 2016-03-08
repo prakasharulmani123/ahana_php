@@ -172,6 +172,9 @@ h3, .h3 {
     font-size:20px;
     font-weight:700;
     margin-bottom:0px;
+    position:fixed;
+    width: 100%;
+    z-index: 1;
 }
 
 .patient-panel a
@@ -320,9 +323,9 @@ h3, .h3 {
 }
 
 .search-patientcont span.admission_details {
-  color: #ffffff;
-  font-size: 100%;
-  font-weight: normal;
+    color: #ffffff;
+    font-size: 100%;
+    font-weight: normal;
 }
 
 
@@ -367,9 +370,12 @@ h3, .h3 {
 }
 
 .search-patientcont-header span.admission_details {
-  color: #ffffff;
-  font-size: 90%;
-  font-weight: normal;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: normal;
+    white-space: normal;
+    width: auto;
+    float: right;
 }
 
 .search-patientcont-header a

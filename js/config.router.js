@@ -1798,6 +1798,22 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                         }]
                 }
             })
+            
+            //SALE CREATE
+            .state('pharmacy.saleCreate', {
+                url: '/saleCreate',
+                templateUrl: 'tpl/pharmacy_sale/create.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('xeditable').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/pharmacy_sale/pharmacy_sale.js');
+                                    }
+                            );
+                        }]
+                }
+            })
 
     $httpProvider.interceptors.push('APIInterceptor');
 
