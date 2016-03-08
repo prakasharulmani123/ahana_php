@@ -1760,7 +1760,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                         }]
                 }
             })
-            //PHARMACY BRAND CREATE
+            //PHARMACY PRODUCT ADD
             .state('pharmacy.productAdd', {
                 url: '/productAdd',
                 templateUrl: 'tpl/pharmacy_products/create.html',
@@ -1771,7 +1771,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                         }]
                 }
             })
-            //PHARMACY BRAND CREATE
+            //PHARMACY PRODUCT EDIT
             .state('pharmacy.productEdit', {
                 url: '/productEdit/{id}',
                 templateUrl: 'tpl/pharmacy_products/update.html',

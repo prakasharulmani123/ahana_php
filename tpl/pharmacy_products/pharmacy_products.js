@@ -63,34 +63,6 @@ app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http
             });
         }
 
-        $scope.showDrugDropdown = false;
-        $scope.getDrugByGeneric = function () {
-            $scope.errorData = "";
-            $scope.successMessage = "";
-            if ($scope.data.generic_id) {
-                $http({
-                    url: $rootScope.IRISOrgServiceUrl + '/pharmacydrugclass/getdrugbygeneric?generic_id=' + $scope.data.generic_id,
-                    method: "GET",
-                }).then(
-                        function (response) {
-                            if (response.data.drug) {
-                                $scope.data.drug_name = response.data.drug.drug_name;
-                                $scope.data.drug_class_id = response.data.drug.drug_class_id;
-                                $scope.showDrugDropdown = false;
-                            } else {
-                                $scope.data.drug_name = '';
-                                $scope.data.drug_class_id = '';
-                                $scope.showDrugDropdown = true;
-                            }
-                        }
-                );
-            } else {
-                $scope.data.drug_name = '';
-                $scope.data.drug_class_id = '';
-                $scope.showDrugDropdown = false;
-            }
-        }
-
         //Save Both Add & Update Data
         $scope.saveForm = function (mode) {
             _that = this;
@@ -154,31 +126,59 @@ app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http
             });
         };
 
-        //Delete
-        $scope.removeRow = function (row) {
-            var conf = confirm('Are you sure to delete ?');
-            if (conf) {
-                $scope.loadbar('show');
-                var index = $scope.displayedCollection.indexOf(row);
-                if (index !== -1) {
-                    $http({
-                        url: $rootScope.IRISOrgServiceUrl + "/pharmacybrandrep/remove",
-                        method: "POST",
-                        data: {id: row.brand_id}
-                    }).then(
-                            function (response) {
-                                $scope.loadbar('hide');
-                                if (response.data.success === true) {
-                                    $scope.displayedCollection.splice(index, 1);
-                                    $scope.loadBrandsList();
-                                    $scope.successMessage = 'Brand Rep Deleted Successfully';
-                                }
-                                else {
-                                    $scope.errorData = response.data.message;
-                                }
+        $scope.showDrugDropdown = false;
+        $scope.getDrugByGeneric = function () {
+            $scope.errorData = "";
+            $scope.successMessage = "";
+            if ($scope.data.generic_id) {
+                $http({
+                    url: $rootScope.IRISOrgServiceUrl + '/pharmacydrugclass/getdrugbygeneric?generic_id=' + $scope.data.generic_id,
+                    method: "GET",
+                }).then(
+                        function (response) {
+                            if (response.data.drug) {
+                                $scope.data.drug_name = response.data.drug.drug_name;
+                                $scope.data.drug_class_id = response.data.drug.drug_class_id;
+                                $scope.showDrugDropdown = false;
+                            } else {
+                                $scope.data.drug_name = '';
+                                $scope.data.drug_class_id = '';
+                                $scope.showDrugDropdown = true;
                             }
-                    )
-                }
+                        }
+                );
+            } else {
+                $scope.data.drug_name = '';
+                $scope.data.drug_class_id = '';
+                $scope.showDrugDropdown = false;
             }
-        };
+        }
+
+        //Delete
+//        $scope.removeRow = function (row) {
+//            var conf = confirm('Are you sure to delete ?');
+//            if (conf) {
+//                $scope.loadbar('show');
+//                var index = $scope.displayedCollection.indexOf(row);
+//                if (index !== -1) {
+//                    $http({
+//                        url: $rootScope.IRISOrgServiceUrl + "/pharmacybrandrep/remove",
+//                        method: "POST",
+//                        data: {id: row.brand_id}
+//                    }).then(
+//                            function (response) {
+//                                $scope.loadbar('hide');
+//                                if (response.data.success === true) {
+//                                    $scope.displayedCollection.splice(index, 1);
+//                                    $scope.loadBrandsList();
+//                                    $scope.successMessage = 'Brand Rep Deleted Successfully';
+//                                }
+//                                else {
+//                                    $scope.errorData = response.data.message;
+//                                }
+//                            }
+//                    )
+//                }
+//            }
+//        };
     }]);

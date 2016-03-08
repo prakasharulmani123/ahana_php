@@ -7,13 +7,13 @@
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label class="col-sm-4 control-label">Product Name * </label>
-                            <div class="col-sm-4">
+                            <div class="col-sm-3">
                                 <input type="text" name="product_name" ng-model="data.product_name" class="form-control" placeholder="Product Name">
                             </div>
                             <div class="col-sm-2">
                                 <input type="text" name="product_unit_count" ng-model="data.product_unit_count" class="form-control" placeholder="Unit">
                             </div>
-                            <div class="col-sm-2">
+                            <div class="col-sm-3">
                                 <select class="form-control" ng-model="data.product_unit" ng-options="productUnit.value as productUnit.label for productUnit in productUnits | orderBy: label">
                                 </select>
                             </div>
@@ -23,7 +23,7 @@
                         <div class="form-group">
                             <label class="col-sm-5 control-label">Description * </label>
                             <div class="col-sm-7">
-                                <select class="form-control" ng-model="data.product_description_id" ng-options="productDescription.description_id as productDescription.description_name for productDescription in productDescriptions | orderBy: division_name"">
+                                <select class="form-control" ng-model="data.product_description_id" ng-options="productDescription.description_id as productDescription.description_name for productDescription in productDescriptions | orderBy: description_name"">
                                     <option value="">Select Product Description</option>
                                 </select>
                             </div>
@@ -79,7 +79,7 @@
                             <label class="col-sm-5 control-label">Generic Name * </label>
                             <div class="col-sm-7">
                                 <select class="form-control" ng-model="data.generic_id" ng-options="generic.generic_id as generic.generic_name for generic in generics | orderBy: generic_name"" ng-change="getDrugByGeneric()">
-                                    <option value="">Select Brand Division</option>
+                                    <option value="">Select Generic Name</option>
                                 </select>
                             </div>
                         </div>
