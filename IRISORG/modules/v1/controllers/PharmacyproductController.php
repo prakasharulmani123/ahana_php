@@ -50,17 +50,17 @@ class PharmacyproductController extends ActiveController {
             'pagination' => false,
         ]);
     }
-    
+
     public function actionRemove() {
         $id = Yii::$app->getRequest()->post('id');
-        if($id){
+        if ($id) {
             $model = PhaProduct::find()->where(['product_id' => $id])->one();
             $model->remove();
             return ['success' => true];
         }
     }
 
-	public function actionGetproductlist() {
+    public function actionGetproductlist() {
         $get = Yii::$app->getRequest()->get();
 
         if (isset($get['tenant']))
@@ -74,7 +74,7 @@ class PharmacyproductController extends ActiveController {
 
         return ['productList' => PhaProduct::getProductlist($tenant, $status, $deleted)];
     }
-    
+
     public function actionGetproductdescriptionlist() {
         $tenant = null;
         $status = '1';
@@ -93,5 +93,5 @@ class PharmacyproductController extends ActiveController {
 
         return ['productDescriptionList' => PhaProductDescription::getProductDescriptionList($tenant, $status, $deleted)];
     }
-    
+
 }

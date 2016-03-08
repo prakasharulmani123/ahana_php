@@ -59,7 +59,7 @@ class PhaProduct extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['tenant_id', 'product_code', 'product_name', 'product_unit', 'product_unit_count', 'product_description_id', 'product_reorder', 'product_price', 'brand_id', 'division_id', 'generic_id', 'purchase_vat_id', 'purchase_package_id', 'sales_vat_id', 'sales_package_id', 'created_by'], 'required'],
+            [['product_name', 'product_unit', 'product_unit_count', 'product_description_id', 'product_reorder', 'product_price', 'brand_id', 'division_id', 'generic_id', 'purchase_vat_id', 'purchase_package_id', 'sales_vat_id', 'sales_package_id'], 'required'],
             [['tenant_id', 'product_description_id', 'product_reorder', 'brand_id', 'division_id', 'generic_id', 'drug_class_id', 'purchase_vat_id', 'purchase_package_id', 'sales_vat_id', 'sales_package_id', 'created_by', 'modified_by'], 'integer'],
             [['product_price'], 'number'],
             [['status'], 'string'],
@@ -82,18 +82,18 @@ class PhaProduct extends RActiveRecord {
             'product_name' => 'Product Name',
             'product_unit' => 'Product Unit',
             'product_unit_count' => 'Product Unit Count',
-            'product_description_id' => 'Product Description ID',
+            'product_description_id' => 'Product Description',
             'product_reorder' => 'Product Reorder',
             'product_price' => 'Product Price',
             'product_location' => 'Product Location',
-            'brand_id' => 'Brand ID',
-            'division_id' => 'Division ID',
-            'generic_id' => 'Generic ID',
-            'drug_class_id' => 'Drug Class ID',
-            'purchase_vat_id' => 'Purchase Vat ID',
-            'purchase_package_id' => 'Purchase Package ID',
-            'sales_vat_id' => 'Sales Vat ID',
-            'sales_package_id' => 'Sales Package ID',
+            'brand_id' => 'Brand Name',
+            'division_id' => 'Division Name',
+            'generic_id' => 'Generic Name',
+            'drug_class_id' => 'Drug Class',
+            'purchase_vat_id' => 'Purchase Vat',
+            'purchase_package_id' => 'Purchase Package Unit',
+            'sales_vat_id' => 'Sales Vat',
+            'sales_package_id' => 'Sales Package Unit',
             'status' => 'Status',
             'created_by' => 'Created By',
             'created_at' => 'Created At',
@@ -129,6 +129,12 @@ class PhaProduct extends RActiveRecord {
      */
     public function getGeneric() {
         return $this->hasOne(PhaGeneric::className(), ['generic_id' => 'generic_id']);
+    }
+    /**
+     * @return ActiveQuery
+     */
+    public function getDrugClass() {
+        return $this->hasOne(PhaDrugClass::className(), ['drug_class_id' => 'drug_class_id']);
     }
 
     /**
@@ -199,9 +205,60 @@ class PhaProduct extends RActiveRecord {
             'purchaseVat' => function ($model) {
                 return (isset($model->purchaseVat) ? $model->purchaseVat : '-');
             },
+            'description_name' => function ($model) {
+                return (isset($model->productDescription) ? $model->productDescription->description_name : '-');
+            },
+            'brand_name' => function ($model) {
+                return (isset($model->brand) ? $model->brand->brand_name : '-');
+            },
+            'division_name' => function ($model) {
+                return (isset($model->brand) ? $model->division->division_name : '-');
+            },
+            'generic_name' => function ($model) {
+                return (isset($model->generic) ? $model->generic->generic_name : '-');
+            },
+            'drug_name' => function ($model) {
+                return (isset($model->drugClass) ? $model->drugClass->drug_name : '-');
+            },
+            'saleVatPercent' => function ($model) {
+                return (isset($model->salesVat) ? $model->salesVat->vat : '-');
+            },
+            'purchaseVatPercent' => function ($model) {
+                return (isset($model->purchaseVat) ? $model->purchaseVat->vat : '-');
+            },
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
+    }
+
+    public function beforeSave($insert) {
+        if ($insert) {
+            $this->product_code = self::getProductCode();
+        }
+        return parent::beforeSave($insert);
+    }
+
+    public static function getProductCode($length = 6) {
+        $new_guid = strtoupper(self::getRandomString($length));
+        do {
+            $exist_count = self::find()->where(['product_code' => $new_guid])->count();
+            if ($exist_count > 0) {
+                $old_guid = $new_guid;
+                $new_guid = self::getRandomString($length);
+            } else {
+                break;
+            }
+        } while ($old_guid != $new_guid);
+        return $new_guid;
+    }
+
+    public static function getRandomString($length = 6) {
+        $chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"; //length:36
+        $final_rand = '';
+        for ($i = 0; $i < $length; $i++) {
+            $final_rand .= $chars[rand(0, strlen($chars) - 1)];
+        }
+        return $final_rand;
     }
 
 }
