@@ -51,8 +51,8 @@
                             <tbody>
                                 <tr ng-repeat="(gKey, purchaseitem) in row.purchaseitems | orderBy: purchaseitem">
                                     <td>
-                                        <span editable-select="purchaseitem.product_id" e-name="product_id" e-form="rowform" onbeforesave="checkInput($data)" e-ng-options="s.value as s.text for s in generics">
-                                            {{ showGeneric(purchaseitem.product_id) }}
+                                        <span editable-select="purchaseitem.product_name" e-name="product_name" e-form="rowform" onbeforesave="checkInput($data)" e-ng-options="s.value as s.text for s in generics">
+                                            {{ showGeneric(purchaseitem.product_name) }}
                                         </span>
                                     </td>
                                     <td>
@@ -68,7 +68,7 @@
                                         <div class="buttons" ng-show="!rowform.$visible">
                                             <!--<button class="btn btn-sm btn-info" ng-click="rowform.$show()">Edit</button>-->
                                             &nbsp;&nbsp;
-                                            <button class="btn btn-sm btn-danger" ng-click="deleteSubRow(row.drug_class_id, purchaseitem.product_id, purchaseitem.temp_drug_class_id);">Delete</button>
+                                            <button class="btn btn-sm btn-danger" ng-click="deleteSubRow(row.drug_class_id, purchaseitem.product_name, purchaseitem.temp_drug_class_id);">Delete</button>
                                         </div> 
                                     </td>
                                 </tr>

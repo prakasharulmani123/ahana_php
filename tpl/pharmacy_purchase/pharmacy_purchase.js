@@ -4,42 +4,6 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
         editableThemes.bs3.buttonsClass = 'btn-sm';
         editableOptions.theme = 'bs3';
 
-        //Index Page
-        $scope.loadpurchaseitem = function () {
-            $scope.errorData = $scope.successMessage = '';
-            $scope.isLoading = true;
-            // pagination set up
-            $scope.rowCollection = [];  // base collection
-            $scope.itemsByPage = 10; // No.of records per page
-            $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
-
-            $scope.generics = {};
-            $rootScope.commonService.GetGenericList('', '1', false, false, function (response) {
-                $scope.setGenericList(response);
-                // Get data's from service
-                $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyPurchase')
-                        .success(function (Purchases) {
-                            $scope.isLoading = false;
-                            $scope.rowCollection = Purchases;
-                            $scope.displayedCollection = [].concat($scope.rowCollection);
-                        })
-                        .error(function () {
-                            $scope.errorData = "An Error has occured while loading Purchases!";
-                        });
-            });
-
-
-        };
-
-        // editable table
-        $scope.purchaseitems = [];
-        $scope.deletedpurchaseitems = [];
-
-        $scope.showGeneric = function (product_id) {
-            var selected = $filter('filter')($scope.generics, {value: product_id});
-            return (product_id && selected.length) ? selected[0].text : 'Not set';
-        };
-
         //For Form
         $scope.initForm = function () {
             $scope.loadbar('show');
@@ -55,6 +19,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                         $rootScope.commonService.GetPackageUnitList('', '1', false, function (response) {
                             $scope.packings = response.packingList;
                             $scope.addRow();
+                            $scope.loadbar('hide');
                         });
                     });
 
@@ -77,9 +42,24 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             }
         };
 
+        $scope.updateBatchRow = function (item, model, label, key, purchaseitem) {
+            $scope.purchaseitems[key].batch_id = item.batch_no;
+            $scope.purchaseitems[key].expiry_date = item.expiry_date;
+            
+            $('#i_expiry_date_'+key).addClass('hide');
+            $('#t_expiry_date_'+key).removeClass('hide');
+        }
+        
         $scope.updateProductRow = function (item, model, label, key) {
+            $scope.purchaseitems[key].product_name = item.product_name;
             $scope.purchaseitems[key].product_id = item.product_id;
             $scope.purchaseitems[key].vat_percent = item.purchaseVat.vat;
+            
+            $scope.loadbar('show');
+            $rootScope.commonService.GetBatchListByProduct(item.product_id, function (response) {
+                $scope.batches = response.batchList;
+                $scope.loadbar('hide');
+            });
         }
 
         $scope.updateRow = function (purchaseitem, key) {
@@ -87,44 +67,63 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             var rate = parseFloat(purchaseitem.purchase_rate.$modelValue);
             var disc_perc = parseFloat(purchaseitem.discount_percent.$modelValue);
             var vat_perc = parseFloat($scope.purchaseitems[key].vat_percent);
-            
+            var free_qty = parseFloat(purchaseitem.free_quantity.$modelValue);
+
             qty = angular.isNumber(qty) ? qty : 0;
             rate = angular.isNumber(rate) ? rate : 0;
             disc_perc = angular.isNumber(disc_perc) ? disc_perc : 0;
             vat_perc = angular.isNumber(vat_perc) ? vat_perc : 0;
-            
-            var purchase_amount = (qty * rate);
-            var disc_amount = disc_perc > 0 ? purchase_amount * (disc_perc / 100) : 0;
-            
-            var total_amount = purchase_amount - disc_amount;
-            var vat_amount = purchase_amount * (vat_perc / 100);
-            
+            free_qty = angular.isNumber(free_qty) ? free_qty : 0;
+
+            var purchase_amount = (qty * rate).toFixed(2);
+            var disc_amount = disc_perc > 0 ? (purchase_amount * (disc_perc / 100)).toFixed(2) : 0;
+
+            var total_amount = (purchase_amount - disc_amount).toFixed(2);
+            var vat_amount = (purchase_amount * (vat_perc / 100)).toFixed(2);
+
             $scope.purchaseitems[key].purchase_amount = purchase_amount;
             $scope.purchaseitems[key].discount_amount = disc_amount;
             $scope.purchaseitems[key].total_amount = total_amount;
             $scope.purchaseitems[key].vat_amount = vat_amount;
+            $scope.purchaseitems[key].free_quantity_unit = free_qty;
+
+            $scope.updatePurchaseRate();
         }
 
-        $scope.formatLabel = function (model) {
-            for (var i = 0; i < $scope.products.length; i++) {
-                if (model === $scope.products[i].value) {
-                    return $scope.products[i].text;
-                }
-            }
-        };
+        $scope.updatePurchaseRate = function () {
+            var total_purchase_amount = total_discount_amount = total_vat_amount = total_amount = 0;
+            var before_disc_total = after_disc_total = roundoff_amount = net_amount = 0;
 
-        $scope.getGenericList = function (response) {
-            $rootScope.commonService.GetGenericList('', '1', false, true, function (response) {
-                $scope.setGenericList(response);
+            //Get Total Purchase, VAT, Discount Amount
+            angular.forEach($scope.purchaseitems, function (item) {
+                total_purchase_amount = total_purchase_amount + parseFloat(item.total_amount);
+                total_discount_amount = total_discount_amount + parseFloat(item.discount_amount);
+                total_vat_amount = total_vat_amount + parseFloat(item.vat_amount);
             });
-        }
 
-        $scope.setGenericList = function (response) {
-            $scope.generics = [];
+            $scope.data.total_item_purchase_amount = total_purchase_amount.toFixed(2);
+            $scope.data.total_item_vat_amount = total_vat_amount.toFixed(2);
+            
+            //Get Before Discount Amount (Total Purchase Amount + Total VAT)
+            before_disc_total = (total_purchase_amount + total_vat_amount).toFixed(2);
+            $scope.data.before_disc_total = before_disc_total;
 
-            angular.forEach(response.genericList, function (generic) {
-                $scope.generics.push({'value': generic.product_id, 'text': generic.generic_name});
-            });
+            //Get Discount Amount
+            var disc_perc = parseFloat($scope.data.discount_percent);
+            disc_perc = angular.isNumber(disc_perc) ? (disc_perc).toFixed(2) : 0;
+            
+            var disc_amount = disc_perc > 0 ? (before_disc_total * (disc_perc / 100)).toFixed(2) : 0;
+            $scope.data.discount_amount = disc_amount;
+            
+            after_disc_total = (parseFloat(before_disc_total) - parseFloat(disc_amount));
+            $scope.data.after_disc_total = after_disc_total.toFixed(2);
+            
+            // Net Amount = (Total Amount - Discount Amount) +- RoundOff
+            net_amount = Math.round(parseFloat(after_disc_total));
+            roundoff_amount = Math.abs(net_amount - after_disc_total);
+            
+            $scope.data.roundoff_amount = roundoff_amount.toFixed(2);
+            $scope.data.net_amount = net_amount.toFixed(2);
         }
 
         $scope.checkInput = function (data, id) {
@@ -142,10 +141,9 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
 
             angular.forEach($scope.purchaseitems, function (purchaseitem, key) {
                 $scope.purchaseitems[key].expiry_date = moment(purchaseitem.expiry_date).format('YYYY-MM-DD HH:mm:ss');
-                
-                if(typeof purchaseitem.product !== 'undefined'){
-                    alert('asdad');
-                    $scope.purchaseitems[key].product_id = purchaseitem.product.product_id;
+
+                if (angular.isObject(purchaseitem.product_name)) {
+                    $scope.purchaseitems[key].product_name = purchaseitem.product_name.product_name;
                 }
             })
             angular.extend(_that.data, {product_items: $scope.purchaseitems});
@@ -181,14 +179,18 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
         };
 
 
+        // editable table
+        $scope.purchaseitems = [];
+
         // add Row
         $scope.addRow = function () {
             $scope.inserted = {
-                product_id: '',
+                product_name: '',
                 batch_id: '',
                 expiry_date: '',
                 quantity: '0',
                 free_quantity: '0',
+                free_quantity_unit: '0',
                 mrp: '0',
                 purchase_rate: '0',
                 discount_percent: '0',
@@ -196,6 +198,8 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                 vat_percent: '0',
                 vat_amount: '0',
                 total_amount: '0',
+                product_id: '',
+                purchase_amount: '0'
             };
             $scope.purchaseitems.push($scope.inserted);
         };
@@ -212,3 +216,9 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             $scope.$broadcast('onExpandAll', {expanded: expanded});
         };
     }]);
+
+app.filter('moment', function () {
+    return function (dateString, format) {
+        return moment(dateString).format(format);
+    };
+});

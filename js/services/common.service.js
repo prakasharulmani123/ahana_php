@@ -44,6 +44,7 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
     service.GetSupplierList = GetSupplierList;
     service.GetProductList = GetProductList;
     service.GetPackageUnitList = GetPackageUnitList;
+    service.GetBatchListByProduct = GetBatchListByProduct;
 
     service.GetLabelFromValue = GetLabelFromValue;
     service.FoundVlaue = FoundVlaue;
@@ -446,6 +447,21 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
                     callback(response);
                 });
     }
+
+    function GetBatchListByProduct(product_id, callback) {
+        var response;
+
+        $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproductbatch/getbatchbyproduct?product_id=' + product_id)
+                .success(function (response) {
+                    callback(response);
+                }, function (x) {
+                    response = {success: false, message: 'Server Error'};
+                    callback(response);
+                });
+    }
+    
+    
+    
 
     function GetLabelFromValue(val, func, callback) {
         if (func == 'GetGenderList') {
