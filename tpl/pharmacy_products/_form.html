@@ -1,0 +1,174 @@
+<div class="row">
+    <div class="col-sm-12">
+        <div class="panel panel-default">
+            <div class="panel-heading font-bold">Product Details</div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Product Name * </label>
+                            <div class="col-sm-4">
+                                <input type="text" name="product_name" ng-model="data.product_name" class="form-control" placeholder="Product Name">
+                            </div>
+                            <div class="col-sm-2">
+                                <input type="text" name="product_unit_count" ng-model="data.product_unit_count" class="form-control" placeholder="Unit">
+                            </div>
+                            <div class="col-sm-2">
+                                <select class="form-control" ng-model="data.product_unit" ng-options="productUnit.value as productUnit.label for productUnit in productUnits | orderBy: label">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="line line-dashed b-b line-lg "></div>
+
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label">Description * </label>
+                            <div class="col-sm-7">
+                                <select class="form-control" ng-model="data.product_description_id" ng-options="productDescription.description_id as productDescription.description_name for productDescription in productDescriptions | orderBy: division_name"">
+                                    <option value="">Select Product Description</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="line line-dashed b-b line-lg "></div>
+
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label">Re-Order Level (EOQ-LEVEL) * </label>
+                            <div class="col-sm-7">
+                                <input type="text" ng-model="data.product_reorder" maxlength="50" class="form-control" >
+                            </div>
+                        </div>
+                        <div class="line line-dashed b-b line-lg "></div>
+
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label">Purchase Price * </label>
+                            <div class="col-sm-7">
+                                <input type="text" ng-model="data.product_price" maxlength="50" class="form-control" >
+                            </div>
+                        </div>
+                        <div class="line line-dashed b-b line-lg "></div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label">Product Location </label>
+                            <div class="col-sm-7">
+                                <input type="text" ng-model="data.product_location" maxlength="50" class="form-control" >
+                            </div>
+                        </div>
+                        <div class="line line-dashed b-b line-lg "></div>
+
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label">Brand Name * </label>
+                            <div class="col-sm-7">
+                                <select class="form-control" ng-model="data.brand_id" ng-options="brand.brand_id as brand.brand_name for brand in brands | orderBy: brand_name"">
+                                    <option value="">Select Brand Name</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="line line-dashed b-b line-lg "></div>
+
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label">Brand Division * </label>
+                            <div class="col-sm-7">
+                                <select class="form-control" ng-model="data.division_id" ng-options="division.division_id as division.division_name for division in divisions | orderBy: division_name"">
+                                    <option value="">Select Brand Division</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="line line-dashed b-b line-lg "></div>
+
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label">Generic Name * </label>
+                            <div class="col-sm-7">
+                                <select class="form-control" ng-model="data.generic_id" ng-options="generic.generic_id as generic.generic_name for generic in generics | orderBy: generic_name"" ng-change="getDrugByGeneric()">
+                                    <option value="">Select Brand Division</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="line line-dashed b-b line-lg "></div>
+
+                        <div ng-show="data.drug_name">
+                            <div class="form-group" >
+                                <label class="col-sm-5 control-label">Drug Class </label>
+                                <div class="col-sm-7">
+                                    <input type="text" ng-value="data.drug_name" maxlength="50" class="form-control" readonly>
+                                </div>
+                            </div>
+                            <div class="line line-dashed b-b line-lg"></div>
+                        </div>
+
+                        <div ng-show="showDrugDropdown">
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">Drug Class </label>
+                                <div class="col-sm-7">
+                                    <select class="form-control" ng-model="data.drug_class_id" ng-options="drugClass.drug_class_id as drugClass.drug_name for drugClass in drugClasses | orderBy: drug_name"">
+                                        <option value="">Select Drug Class</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="line line-dashed b-b line-lg "></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-6">
+        <div class="panel panel-default">
+            <div class="panel-heading font-bold">Vat Details:</div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-sm-5 control-label">Purchase Vat * </label>
+                    <div class="col-sm-7">
+                        <select class="form-control" ng-model="data.purchase_vat_id" ng-options="purchase_vat.vat_id as purchase_vat.vat for purchase_vat in vats | orderBy: vat"">
+                            <option value="">Select Purchase Vat</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg "></div>
+                <div class="form-group">
+                    <label class="col-sm-5 control-label">Sale Vat * </label>
+                    <div class="col-sm-7">
+                        <select class="form-control" ng-model="data.sales_vat_id" ng-options="sale_vat.vat_id as sale_vat.vat for sale_vat in vats | orderBy: vat"">
+                            <option value="">Select Sale Vat</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg "></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="panel panel-default">
+            <div class="panel-heading font-bold">Packing Details:</div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-sm-5 control-label">Purchase Unit * </label>
+                    <div class="col-sm-7">
+                        <select class="form-control" ng-model="data.purchase_package_id" ng-options="purchase_unit.package_id as purchase_unit.package_name for purchase_unit in packingUnits | orderBy: package_name"">
+                            <option value="">Select Purchase Unit</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg "></div>
+                <div class="form-group">
+                    <label class="col-sm-5 control-label">Sale Unit * </label>
+                    <div class="col-sm-7">
+                        <select class="form-control" ng-model="data.sales_package_id" ng-options="sale_unit.package_id as sale_unit.package_name for sale_unit in packingUnits | orderBy: package_name"">
+                            <option value="">Select Sale Vat</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg "></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="panel-footer text-right bg-light lter">
+    <button class="btn m-b-xs  btn-success save-btn" ng-click="saveForm(data.formtype)">Save</button>
+    &nbsp;
+    <button class="btn m-b-xs  btn-dark" ng-click="$state.go('pharmacy.products')"><i class="fa fa-times"></i> Cancel</button>
+    &nbsp;
+</footer>

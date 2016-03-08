@@ -1,0 +1,117 @@
+<div class="bg-light lter b-b wrapper-md">
+    <h1 class="m-n font-thin h3">Products</h1>
+</div>
+
+<div class="wrapper-md" ng-controller="ProductsController" ng-init="loadProductsList()">
+
+    <div ng-include="'tpl/blocks/alert.html'">
+        {% include 'tpl/blocks/alert.html' %}
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <button class="btn btn-sm btn-grey" ng-click="loadProductsList()"> 
+                &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
+            </button>
+            <button check-access-button ng-click="$state.go('pharmacy.productAdd')" class="btn btn-sm btn-info pull-right">
+                <i class="fa fa-plus"></i> &nbsp; Add Product
+            </button>
+        </div>
+
+        <table st-table="displayedCollection"  st-safe-src="rowCollection" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th st-sort="product_name">Product name</th>
+                    <th st-sort="product_code">Product code</th>
+                    <th st-sort="description_name">Description</th>
+                    <th st-sort="brand_name">Brand Name</th>
+                    <th st-sort="division_name">Division Name</th>
+                    <th st-sort="generic_name">Generic Name</th>
+                    <th st-sort="drug_name">Drug Class</th>
+                    <th>Action</th>
+                </tr>
+                <tr>
+                    <th>
+                        <input st-search="'brand_name'" placeholder="search for brand name" class="input-sm form-control" type="search"/>
+                    </th>
+                    <th>
+                        <input st-search="'brand_code'" placeholder="search for brand code" class="input-sm form-control" type="search"/>
+                    </th>
+                    <th>
+                        <input st-search="'division_name'" placeholder="search for division name" class="input-sm form-control" type="search"/>
+                    </th>
+                    <th>
+                        <input st-search="'rep_1_name'" placeholder="search for rep name" class="input-sm form-control" type="search"/>
+                    </th>
+                    <th>
+                        <input st-search="'rep_1_contact'" placeholder="search for rep contact" class="input-sm form-control" type="search"/>
+                    </th>
+                     <th>
+                        <input st-search="'rep_2_name'" placeholder="search for rep name" class="input-sm form-control" type="search"/>
+                    </th>
+                    <th>
+                        <input st-search="'rep_2_contact'" placeholder="search for rep contact" class="input-sm form-control" type="search"/>
+                    </th>
+                    
+                    <th colspan="2">&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody ng-hide="isLoading">
+                <tr ng-repeat="row in displayedCollection| orderBy: product_name">
+                    <td>
+                        {{row.product_name}}
+                    </td>
+                    <td>
+                        {{row.product_code}}
+                    </td>
+                     <td>
+                        {{row.description_name}}
+                    </td>
+                     <td>
+                        {{row.brand_name}}
+                    </td>
+                    <td>
+                        {{row.division_name}}
+                    </td>
+                    <td>
+                        {{row.generic_name}}
+                    </td>
+                    <td>
+                        {{row.drug_name}}
+                    </td>
+                    <td>
+                        <div ng-if="row.tenant_id != null">
+                            <label class="i-checks "> 
+                                <input type="checkbox" checked="" ng-true-value="'1'" ng-false-value="'0'" name="status" ng-model="row.status" ng-change='updateStatus("PhaBrandRepresentative", row.rep_id)'> 
+                                <i></i>
+                            </label>
+                        </div>
+                    </td>
+                    <td>
+                        <div ng-if="row.tenant_id != null">
+                            <a title="Edit" check-access  ui-sref="pharmacy.brandrepUpdate({id: row.rep_id})">
+                                <i class="fa fa-pencil"></i>
+                            </a>&nbsp;&nbsp;&nbsp;
+                            <a class="hide" title="Delete" ng-click="removeRow(row)">
+                                <i class="fa fa-trash"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+            <tbody ng-show="isLoading">
+                <tr>
+                    <td colspan="9" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="9" class="text-center">
+                        <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7"></div>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+
+    </div>
+</div>
