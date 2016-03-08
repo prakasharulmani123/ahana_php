@@ -43,6 +43,7 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
     service.GetPaymentType = GetPaymentType;
     service.GetSupplierList = GetSupplierList;
     service.GetProductList = GetProductList;
+    service.GetProductListByName = GetProductListByName;
     service.GetPackageUnitList = GetPackageUnitList;
     service.GetBatchListByProduct = GetBatchListByProduct;
 
@@ -428,6 +429,18 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
         var response;
 
         $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/getproductlist?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts)
+                .success(function (response) {
+                    callback(response);
+                }, function (x) {
+                    response = {success: false, message: 'Server Error'};
+                    callback(response);
+                });
+    }
+
+    function GetProductListByName(name, callback) {
+        var response;
+
+        $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/getproductlistbyname?name=' + name)
                 .success(function (response) {
                     callback(response);
                 }, function (x) {

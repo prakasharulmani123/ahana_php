@@ -8,7 +8,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
         $scope.ctrl.expandAll = function (expanded) {
             $scope.$broadcast('onExpandAll', {expanded: expanded});
         };
-        
+
         //Index Page
         $scope.loadPurchaseItemList = function () {
             $scope.errorData = $scope.successMessage = '';
@@ -41,19 +41,50 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                 $rootScope.commonService.GetSupplierList('', '1', false, function (response) {
                     $scope.suppliers = response.supplierList;
 
-                    $rootScope.commonService.GetProductList('', '1', false, function (response) {
-                        $scope.products = response.productList;
+//                    $rootScope.commonService.GetProductList('', '1', false, function (response) {
+//                        $scope.products = response.productList;
 
                         $rootScope.commonService.GetPackageUnitList('', '1', false, function (response) {
+                            $scope.products = [];
                             $scope.packings = response.packingList;
                             $scope.addRow();
                             $scope.loadbar('hide');
                         });
-                    });
+//                    });
 
                 });
             });
 
+        }
+
+        var changeTimer = false;
+        $scope.$watch('fullname', function (newValue, oldValue) {
+            if (newValue != '') {
+                console.log('asdasd');
+            }
+        });
+        
+        $('body').on('.fullname', 'change',function(){
+            alert('asdadsad');
+        });
+        
+        $scope.getProduct = function (purchaseitem) {
+            var name = purchaseitem.full_name.$$lastCommittedViewValue;
+//            console.log($scope.purchaseitems);
+//            console.log(purchaseitem);
+//            console.log(name);
+//            return false;
+            if (changeTimer !== false)
+                clearTimeout(changeTimer);
+
+            changeTimer = setTimeout(function () {
+                $scope.loadbar('show');
+                $rootScope.commonService.GetProductListByName(name, function (response) {
+                        $scope.products = response.productList;
+                        $scope.loadbar('hide');
+                    });
+                changeTimer = false;
+            }, 300);
         }
 
         // editable table
@@ -226,9 +257,9 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
 
             $scope.errorData = "";
             $scope.successMessage = "";
-            
+
             $scope.data.invoice_date = moment($scope.data.invoice_date).format('YYYY-MM-DD');
-            
+
             angular.forEach($scope.purchaseitems, function (purchaseitem, key) {
                 if (purchaseitem.is_temp == '1') {
                     exp_date = purchaseitem.temp_expiry_date;
@@ -254,7 +285,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                     $scope.purchaseitems[key].batch_id = purchaseitem.batch_details;
                 }
             });
-            
+
             angular.extend(_that.data, {product_items: $scope.purchaseitems});
             $scope.loadbar('show');
             $http({
