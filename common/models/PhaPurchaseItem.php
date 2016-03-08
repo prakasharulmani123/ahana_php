@@ -15,6 +15,7 @@ use yii\db\ActiveQuery;
  * @property integer $batch_id
  * @property integer $quantity
  * @property integer $free_quantity
+ * @property integer $free_quantity_unit
  * @property string $mrp
  * @property string $purchase_rate
  * @property string $purchase_amount
@@ -53,9 +54,9 @@ class PhaPurchaseItem extends RActiveRecord {
         return [
             [['product_id', 'quantity', 'mrp', 'purchase_rate', 'purchase_amount', 'package_name', 'vat_amount'], 'required'],
             [['tenant_id', 'purchase_id', 'product_id', 'quantity', 'free_quantity', 'created_by', 'modified_by'], 'integer'],
-            [['mrp', 'purchase_rate', 'purchase_amount', 'discount_percent', 'discount_amount', 'total_amount', 'vat_amount', 'vat_percent'], 'number'],
+            [['mrp', 'purchase_rate', 'purchase_amount', 'discount_percent', 'discount_amount', 'total_amount', 'vat_amount', 'vat_percent', 'free_quantity_unit'], 'number'],
             [['status'], 'string'],
-            [['created_at', 'modified_at', 'deleted_at', 'vat_percent', 'batch_id', 'expiry_date'], 'safe'],
+            [['created_at', 'modified_at', 'deleted_at', 'vat_percent', 'batch_id', 'expiry_date', 'free_quantity_unit'], 'safe'],
             [['package_name'], 'string', 'max' => 255]
         ];
     }
@@ -109,8 +110,25 @@ class PhaPurchaseItem extends RActiveRecord {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
 
+    public function getBatch() {
+        return $this->hasOne(PhaProductBatch::className(), ['batch_id' => 'batch_id']);
+    }
+
     public static function find() {
         return new PhaPurchaseItemQuery(get_called_class());
+    }
+    
+    public function fields() {
+        $extend = [
+            'product' => function ($model) {
+                return (isset($model->product) ? $model->product : '-');
+            },
+            'batch' => function ($model) {
+                return (isset($model->batch) ? $model->batch : '-');
+            },
+        ];
+        $fields = array_merge(parent::fields(), $extend);
+        return $fields;
     }
 
     public function beforeSave($insert) {

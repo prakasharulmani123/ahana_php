@@ -202,6 +202,9 @@ class PhaProduct extends RActiveRecord {
 
     public function fields() {
         $extend = [
+            'full_name' => function ($model) {
+                return $model->product_name.' | '.$model->product_unit_count. ' | '.$model->product_unit;
+            },
             'purchaseVat' => function ($model) {
                 return (isset($model->purchaseVat) ? $model->purchaseVat : '-');
             },

@@ -18,11 +18,13 @@ use yii\db\ActiveQuery;
  * @property string $total_item_purchase_amount
  * @property string $total_item_vat_amount
  * @property string $total_item_discount_amount
- * @property string $total_item_amount
  * @property string $discount_percent
  * @property string $discount_amount
  * @property string $roundoff_amount
- * @property string $net_amuont
+ * @property string $net_amount
+ * @property string $before_disc_amount
+ * @property string $after_disc_amount
+ * @property string $net_amount
  * @property string $status
  * @property integer $created_by
  * @property string $created_at
@@ -54,7 +56,7 @@ class PhaPurchase extends RActiveRecord
             [['tenant_id', 'supplier_id', 'created_by', 'modified_by'], 'integer'],
             [['invoice_date', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['payment_type', 'status'], 'string'],
-            [['total_item_purchase_amount', 'total_item_vat_amount', 'total_item_discount_amount', 'total_item_amount', 'discount_percent', 'discount_amount', 'roundoff_amount', 'net_amuont'], 'number'],
+            [['total_item_purchase_amount', 'total_item_vat_amount', 'total_item_discount_amount', 'discount_percent', 'discount_amount', 'roundoff_amount', 'net_amount', 'before_disc_amount', 'after_disc_amount'], 'number'],
             [['purchase_code', 'invoice_no'], 'string', 'max' => 50]
         ];
     }
@@ -75,11 +77,10 @@ class PhaPurchase extends RActiveRecord
             'total_item_purchase_amount' => 'Total Item Purchase Amount',
             'total_item_vat_amount' => 'Total Item Vat Amount',
             'total_item_discount_amount' => 'Total Item Discount Amount',
-            'total_item_amount' => 'Total Item Amount',
             'discount_percent' => 'Discount Percent',
             'discount_amount' => 'Discount Amount',
             'roundoff_amount' => 'Roundoff Amount',
-            'net_amuont' => 'Net Amuont',
+            'net_amount' => 'Net Amuont',
             'status' => 'Status',
             'created_by' => 'Created By',
             'created_at' => 'Created At',
@@ -122,5 +123,25 @@ class PhaPurchase extends RActiveRecord
             $this->purchase_code = CoInternalCode::find()->tenant()->codeType("PU")->one()->Fullcode;
         }
         return parent::beforeSave($insert);
+    }
+    
+    public function fields() {
+        $extend = [
+            'supplier' => function ($model) {
+                return (isset($model->supplier) ? $model->supplier : '-');
+            },
+            'items' => function ($model) {
+                return (isset($model->phaPurchaseItems) ? $model->phaPurchaseItems : '-');
+            },
+        ];
+        $fields = array_merge(parent::fields(), $extend);
+        return $fields;
+    }
+    
+    public function afterSave($insert, $changedAttributes) {
+        if ($insert) {
+            CoInternalCode::increaseInternalCode("PU");
+        }
+        return parent::afterSave($insert, $changedAttributes);
     }
 }
