@@ -1,17 +1,17 @@
 <div class="bg-light lter b-b wrapper-md">
-    <h1 class="m-n font-thin h3">Drug Class & Generic Names</h1>
+    <h1 class="m-n font-thin h3">Purchase List</h1>
 </div>
-<div class="wrapper-md" ng-controller="PurchaseController" ng-init="loadpurchaseitem()">
+<div class="wrapper-md" ng-controller="PurchaseController" ng-init="loadPurchaseItemList()">
     <div ng-include="'tpl/blocks/alert.html'">
         {% include 'tpl/blocks/alert.html' %}
     </div>
     <div class="panel panel-default">
         <div class="panel-body">
-            <button class="btn btn-sm btn-grey" ng-click="loadpurchaseitem()"> 
+            <button class="btn btn-sm btn-grey" ng-click="loadPurchaseItemList()"> 
                 &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
             </button>
-            <button check-access-button ng-click="$state.go('pharmacy.PurchaseCreate')" class="btn btn-sm btn-info pull-right">
-                <i class="fa fa-plus"></i> &nbsp; Add new Drug Class & Generic
+            <button check-access-button ng-click="$state.go('pharmacy.purchaseCreate')" class="btn btn-sm btn-info pull-right">
+                <i class="fa fa-plus"></i> &nbsp; Add new Purchase
             </button>
         </div>
         <table st-table="displayedCollection"  st-safe-src="rowCollection" class="table table-bordered table-striped">
@@ -23,7 +23,17 @@
                             <i ng-if="allExpanded" class="fa fa-minus text"></i>
                         </button>
                     </th>
-                    <th st-sort="drug_name">Drug Class name</th>
+                    <th st-sort="purchase_code">Purchase #</th>
+                    <th st-sort="invoice_date">Invoice Date</th>
+                    <th st-sort="invoice_no">Invoice No.</th>
+                    <th st-sort="supplier.supplier_name">Supplier Name</th>
+                    <th st-sort="total_item_purchase_amount">Total Purchase Amount</th>
+                    <th st-sort="total_item_vat_amount">Total Vat Amount</th>
+                    <th st-sort="total_item_discount_amount">Total Product Disc. Amount</th>
+                    <th st-sort="discount_percent">Disc. %</th>
+                    <th st-sort="discount_amount">Disc Amount</th>
+                    <th st-sort="roundoff_amount">Roundoff Amount</th>
+                    <th st-sort="net_amount">net Amount</th>
                 </tr>
             </thead>
             <tbody>
@@ -34,50 +44,61 @@
                             <i ng-if="expanded" class="fa fa-minus text"></i>
                         </button>
                     </td>
-                    <td>
-                        {{row.drug_name}}
-                    </td>
+                    <td>{{row.purchase_code}}</td>
+                    <td>{{row.invoice_date}}</td>
+                    <td>{{row.invoice_no}}</td>
+                    <td>{{row.supplier.supplier_name}}</td>
+                    <td>{{row.total_item_purchase_amount}}</td>
+                    <td>{{row.total_item_vat_amount}}</td>
+                    <td>{{row.total_item_discount_amount}}</td>
+                    <td>{{row.discount_percent}}</td>
+                    <td>{{row.discount_amount}}</td>
+                    <td>{{row.roundoff_amount}}</td>
+                    <td>{{row.net_amount}}</td>
                 </tr>
                 <tr ng-repeat-end ng-show="expanded">
                     <td></td>
-                    <td>
+                    <td colspan="11">
                         <table class="table table-condensed table-bordered">
                             <thead>
                                 <tr>
-                                    <th style='width: 70%'>Generic Names</th>
-                                    <th style='width: 30%'>Action</th>
+                                    <th>Product Name</th>
+                                    <th>Batch No</th>
+                                    <th>Exp Date</th>
+                                    <th>Qty</th>
+                                    <th>Free</th>
+                                    <th>F. Unit</th>
+                                    <th>MRP</th>
+                                    <th>P.Price</th>
+                                    <th>Amt</th>
+                                    <th>Dis %</th>
+                                    <th>Dis Amt</th>
+                                    <th>P.Vat</th>
+                                    <th>Vat Amt</th>
+                                    <th>P.Unit</th>
+                                    <th>Total Amt</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr ng-repeat="(gKey, purchaseitem) in row.purchaseitems | orderBy: purchaseitem">
-                                    <td>
-                                        <span editable-select="purchaseitem.product_name" e-name="product_name" e-form="rowform" onbeforesave="checkInput($data)" e-ng-options="s.value as s.text for s in generics">
-                                            {{ showGeneric(purchaseitem.product_name) }}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <form editable-form name="rowform" onbeforesave="updateName($data, row.drug_class_id, key, gKey)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == purchaseitem">
-                                            <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-sm btn-success">
-                                                Save
-                                            </button>
-                                            &nbsp;&nbsp;
-                                            <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()" class="btn btn-sm btn-dark">
-                                                Cancel
-                                            </button>
-                                        </form>
-                                        <div class="buttons" ng-show="!rowform.$visible">
-                                            <!--<button class="btn btn-sm btn-info" ng-click="rowform.$show()">Edit</button>-->
-                                            &nbsp;&nbsp;
-                                            <button class="btn btn-sm btn-danger" ng-click="deleteSubRow(row.drug_class_id, purchaseitem.product_name, purchaseitem.temp_drug_class_id);">Delete</button>
-                                        </div> 
-                                    </td>
+                                <tr ng-repeat="(gKey, purchaseitem) in row.items | orderBy: purchaseitem">
+                                    <td>{{ purchaseitem.product.full_name}}</td>
+                                    <td>{{ purchaseitem.batch.batch_no}}</td>
+                                    <td>{{ purchaseitem.batch.expiry_date | moment:'MMM YYYY' || 'empty' }}</td>
+                                    <td>{{ purchaseitem.quantity}}</td>
+                                    <td>{{ purchaseitem.free_quantity}}</td>
+                                    <td>{{ purchaseitem.free_quantity_unit}}</td>
+                                    <td>{{ purchaseitem.mrp}}</td>
+                                    <td>{{ purchaseitem.purchase_rate}}</td>
+                                    <td>{{ purchaseitem.purchase_amount}}</td>
+                                    <td>{{ purchaseitem.discount_percent}}</td>
+                                    <td>{{ purchaseitem.discount_amount}}</td>
+                                    <td>{{ purchaseitem.vat_percent}}</td>
+                                    <td>{{ purchaseitem.vat_amount}}</td>
+                                    <td>{{ purchaseitem.package_name}}</td>
+                                    <td>{{ purchaseitem.total_amount}}</td>
                                 </tr>
                             </tbody>
                         </table>                            
-                        <div class="btn-form">
-                            <button type="button" ng-click="rowform.$show();
-                                            addSubRow(row.drug_class_id)" class="btn btn-default pull-left btn-primary">Add Row</button>
-                        </div>
                     </td>
                 </tr>
             </tbody>

@@ -4,6 +4,34 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
         editableThemes.bs3.buttonsClass = 'btn-sm';
         editableOptions.theme = 'bs3';
 
+        $scope.ctrl = {};
+        $scope.ctrl.expandAll = function (expanded) {
+            $scope.$broadcast('onExpandAll', {expanded: expanded});
+        };
+        
+        //Index Page
+        $scope.loadPurchaseItemList = function () {
+            $scope.errorData = $scope.successMessage = '';
+            $scope.isLoading = true;
+            // pagination set up
+            $scope.rowCollection = [];  // base collection
+            $scope.itemsByPage = 10; // No.of records per page
+            $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
+
+            // Get data's from service
+            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacypurchase')
+                    .success(function (purchaseList) {
+                        $scope.isLoading = false;
+                        $scope.rowCollection = purchaseList;
+                        $scope.displayedCollection = [].concat($scope.rowCollection);
+                    })
+                    .error(function () {
+                        $scope.errorData = "An Error has occured while loading purchaseList!";
+                    });
+
+
+        };
+
         //For Form
         $scope.initForm = function () {
             $scope.loadbar('show');
@@ -34,7 +62,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
         // add Row
         $scope.addRow = function () {
             $scope.inserted = {
-                product_name: '',
+                full_name: '',
                 batch_details: '',
                 expiry_date: '',
                 temp_expiry_date: '',
@@ -61,19 +89,19 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
 
         // remove Row
         $scope.removeSubcat = function (index) {
-            if($scope.purchaseitems.length == 1){
+            if ($scope.purchaseitems.length == 1) {
                 alert('Can\'t Delete. Purchase Item must be atleast one.');
                 return false;
             }
             $scope.purchaseitems.splice(index, 1);
         };
-        
+
         $scope.checkInput = function (data) {
             if (data == '') {
                 return "Field should not be empty.";
             }
         };
-        
+
         $scope.open = function ($event, mode) {
             $event.preventDefault();
             $event.stopPropagation();
@@ -93,7 +121,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             $scope.purchaseitems[key].temp_expiry_date = item.expiry_date;
             $scope.purchaseitems[key].temp_mrp = item.mrp;
             $scope.purchaseitems[key].temp_package_name = item.product.purchasePackageName;
-            
+
             $scope.showOrHideRowEdit('hide', key);
         }
 
@@ -126,7 +154,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             $('#t_mrp_' + key).addClass(t_addclass).removeClass(t_removeclass);
             $('#t_package_name_' + key).addClass(t_addclass).removeClass(t_removeclass);
         }
-        
+
         $scope.updateRow = function (purchaseitem, key) {
             var qty = parseFloat(purchaseitem.quantity.$modelValue);
             var rate = parseFloat(purchaseitem.purchase_rate.$modelValue);
@@ -157,7 +185,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
 
         $scope.updatePurchaseRate = function () {
             var total_purchase_amount = total_discount_amount = total_vat_amount = total_amount = 0;
-            var before_disc_total = after_disc_total = roundoff_amount = net_amount = 0;
+            var before_disc_amount = after_disc_amount = roundoff_amount = net_amount = 0;
 
             //Get Total Purchase, VAT, Discount Amount
             angular.forEach($scope.purchaseitems, function (item) {
@@ -167,11 +195,12 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             });
 
             $scope.data.total_item_purchase_amount = total_purchase_amount.toFixed(2);
+            $scope.data.total_item_discount_amount = total_discount_amount.toFixed(2);
             $scope.data.total_item_vat_amount = total_vat_amount.toFixed(2);
 
             //Get Before Discount Amount (Total Purchase Amount + Total VAT)
-            before_disc_total = (total_purchase_amount + total_vat_amount).toFixed(2);
-            $scope.data.before_disc_total = before_disc_total;
+            before_disc_amount = (total_purchase_amount + total_vat_amount).toFixed(2);
+            $scope.data.before_disc_amount = before_disc_amount;
 
             //Get Discount Amount
             var disc_perc = parseFloat($scope.data.discount_percent);
@@ -180,12 +209,12 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             var disc_amount = disc_perc > 0 ? (total_purchase_amount * (disc_perc / 100)).toFixed(2) : 0;
             $scope.data.discount_amount = disc_amount;
 
-            after_disc_total = (parseFloat(before_disc_total) - parseFloat(disc_amount));
-            $scope.data.after_disc_total = after_disc_total.toFixed(2);
+            after_disc_amount = (parseFloat(before_disc_amount) - parseFloat(disc_amount));
+            $scope.data.after_disc_amount = after_disc_amount.toFixed(2);
 
             // Net Amount = (Total Amount - Discount Amount) +- RoundOff
-            net_amount = Math.round(parseFloat(after_disc_total));
-            roundoff_amount = Math.abs(net_amount - after_disc_total);
+            net_amount = Math.round(parseFloat(after_disc_amount));
+            roundoff_amount = Math.abs(net_amount - after_disc_amount);
 
             $scope.data.roundoff_amount = roundoff_amount.toFixed(2);
             $scope.data.net_amount = net_amount.toFixed(2);
@@ -197,31 +226,35 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
 
             $scope.errorData = "";
             $scope.successMessage = "";
-
+            
+            $scope.data.invoice_date = moment($scope.data.invoice_date).format('YYYY-MM-DD');
+            
             angular.forEach($scope.purchaseitems, function (purchaseitem, key) {
-                if(purchaseitem.is_temp == '1'){
+                if (purchaseitem.is_temp == '1') {
                     exp_date = purchaseitem.temp_expiry_date;
                     $scope.purchaseitems[key].mrp = purchaseitem.temp_mrp;
                     $scope.purchaseitems[key].package_name = purchaseitem.temp_package_name;
-                }else{
+                } else {
                     exp_date = purchaseitem.expiry_date;
                 }
-                
+
                 $scope.purchaseitems[key].expiry_date = moment(exp_date).format('YYYY-MM-DD');
 
-                if (angular.isObject(purchaseitem.product_name)) {
-                    $scope.purchaseitems[key].product_name = purchaseitem.product_name.product_name;
-                }else if(typeof purchaseitem.product_name == 'undefined'){
+                if (angular.isObject(purchaseitem.full_name)) {
+                    $scope.purchaseitems[key].full_name = purchaseitem.full_name.full_name;
+                } else if (typeof purchaseitem.full_name == 'undefined') {
                     $scope.purchaseitems[key].product_id = '';
                 }
-                
+
                 if (angular.isObject(purchaseitem.batch_details)) {
                     $scope.purchaseitems[key].batch_details = purchaseitem.batch_details.batch_details;
-                }else if(typeof purchaseitem.batch_details == 'undefined'){
+                } else if (typeof purchaseitem.batch_details == 'undefined') {
                     $scope.purchaseitems[key].batch_id = '';
+                } else if (purchaseitem.batch_id == '0' && typeof purchaseitem.batch_details !== 'undefined') {
+                    $scope.purchaseitems[key].batch_id = purchaseitem.batch_details;
                 }
-                
-            })
+            });
+            
             angular.extend(_that.data, {product_items: $scope.purchaseitems});
             $scope.loadbar('show');
             $http({
