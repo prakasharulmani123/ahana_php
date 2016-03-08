@@ -75,6 +75,12 @@ class PharmacyproductController extends ActiveController {
         return ['productList' => PhaProduct::getProductlist($tenant, $status, $deleted)];
     }
 
+    public function actionGetproductlistbyname() {
+        $get = Yii::$app->getRequest()->get();
+        $name = $get['name'];
+        return ['productList' => PhaProduct::find()->tenant()->nameLike($name)->active()->all()];
+    }
+
     public function actionGetproductdescriptionlist() {
         $tenant = null;
         $status = '1';
