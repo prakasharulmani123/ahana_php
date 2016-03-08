@@ -54,12 +54,12 @@ class PatPatient extends RActiveRecord {
         return 'pat_patient';
     }
 
-    public function init() {
-        parent::init();
-        if ($this->isNewRecord) {
-            $this->patient_int_code = CoInternalCode::find()->tenant()->codeType("P")->one()->Fullcode;
-        }
-    }
+//    public function init() {
+//        parent::init();
+//        if ($this->isNewRecord) {
+//            $this->patient_int_code = CoInternalCode::find()->tenant()->codeType("P")->one()->Fullcode;
+//        }
+//    }
 
     /**
      * @inheritdoc
@@ -160,6 +160,8 @@ class PatPatient extends RActiveRecord {
         if ($insert) {
             $this->patient_guid = UuidHelpers::uuid();
             $this->patient_reg_date = date('Y-m-d H:i:s');
+            
+            $this->patient_int_code = CoInternalCode::find()->tenant()->codeType("P")->one()->Fullcode;
         }
 
         return parent::beforeSave($insert);

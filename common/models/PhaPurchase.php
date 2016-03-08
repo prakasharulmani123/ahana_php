@@ -50,7 +50,7 @@ class PhaPurchase extends RActiveRecord
     public function rules()
     {
         return [
-            [['tenant_id', 'purchase_code', 'invoice_date', 'invoice_no', 'supplier_id', 'created_by'], 'required'],
+            [['invoice_date', 'invoice_no', 'supplier_id'], 'required'],
             [['tenant_id', 'supplier_id', 'created_by', 'modified_by'], 'integer'],
             [['invoice_date', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['payment_type', 'status'], 'string'],
@@ -115,5 +115,12 @@ class PhaPurchase extends RActiveRecord
     
     public static function find() {
         return new PhaPurchaseQuery(get_called_class());
+    }
+    
+    public function beforeSave($insert) {
+        if($insert){
+            $this->purchase_code = CoInternalCode::find()->tenant()->codeType("PU")->one()->Fullcode;
+        }
+        return parent::beforeSave($insert);
     }
 }

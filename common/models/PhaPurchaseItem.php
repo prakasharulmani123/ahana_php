@@ -1,12 +1,9 @@
 <?php
 
-use common\models\CoTenant;
-use common\models\PhaProduct;
-use common\models\PhaPurchase;
-use common\models\RActiveRecord;
-use yii\db\ActiveQuery;
-
 namespace common\models;
+
+use common\models\query\PhaPurchaseItemQuery;
+use yii\db\ActiveQuery;
 
 /**
  * This is the model class for table "pha_purchase_item".
@@ -15,6 +12,7 @@ namespace common\models;
  * @property integer $tenant_id
  * @property integer $purchase_id
  * @property integer $product_id
+ * @property integer $batch_id
  * @property integer $quantity
  * @property integer $free_quantity
  * @property string $mrp
@@ -37,27 +35,27 @@ namespace common\models;
  * @property PhaPurchase $purchase
  * @property CoTenant $tenant
  */
-class PhaPurchaseItem extends RActiveRecord
-{
+class PhaPurchaseItem extends RActiveRecord {
+
+    public $expiry_date;
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'pha_purchase_item';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            [['tenant_id', 'purchase_id', 'product_id', 'quantity', 'mrp', 'purchase_rate', 'purchase_amount', 'package_name', 'vat_amount', 'created_by'], 'required'],
+            [['product_id', 'quantity', 'mrp', 'purchase_rate', 'purchase_amount', 'package_name', 'vat_amount'], 'required'],
             [['tenant_id', 'purchase_id', 'product_id', 'quantity', 'free_quantity', 'created_by', 'modified_by'], 'integer'],
             [['mrp', 'purchase_rate', 'purchase_amount', 'discount_percent', 'discount_amount', 'total_amount', 'vat_amount', 'vat_percent'], 'number'],
             [['status'], 'string'],
-            [['created_at', 'modified_at', 'deleted_at', 'vat_percent'], 'safe'],
+            [['created_at', 'modified_at', 'deleted_at', 'vat_percent', 'batch_id', 'expiry_date'], 'safe'],
             [['package_name'], 'string', 'max' => 255]
         ];
     }
@@ -65,8 +63,7 @@ class PhaPurchaseItem extends RActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'purchase_item_id' => 'Purchase Item ID',
             'tenant_id' => 'Tenant ID',
@@ -94,24 +91,64 @@ class PhaPurchaseItem extends RActiveRecord
     /**
      * @return ActiveQuery
      */
-    public function getProduct()
-    {
+    public function getProduct() {
         return $this->hasOne(PhaProduct::className(), ['product_id' => 'product_id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getPurchase()
-    {
+    public function getPurchase() {
         return $this->hasOne(PhaPurchase::className(), ['purchase_id' => 'purchase_id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getTenant()
-    {
+    public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
+
+    public static function find() {
+        return new PhaPurchaseItemQuery(get_called_class());
+    }
+
+    public function beforeSave($insert) {
+        $batch = $this->updateBatch();
+        $batch_rate = $this->updateBatchRate($batch->batch_id);
+        
+        $this->batch_id = $batch->batch_id;
+        return parent::beforeSave($insert);
+    }
+
+    private function updateBatch() {
+        $batch_exists = PhaProductBatch::find()->tenant()->andWhere(['product_id' => $this->product_id, 'batch_no' => $this->batch_id])->one();
+        if (empty($batch_exists)) {
+            $batch = new PhaProductBatch;
+            $batch->total_qty = $batch->available_qty = $this->quantity;
+        } else {
+            $batch = $batch_exists;
+        }
+        $batch->attributes = [
+            'product_id' => $this->product_id,
+            'batch_no' => $this->batch_id,
+            'expiry_date' => $this->expiry_date,
+        ];
+        $batch->save(false);
+        return $batch;
+    }
+
+    private function updateBatchRate($batch_id) {
+        $batch_rate_exists = PhaProductBatchRate::find()->tenant()->andWhere(['batch_id' => $batch_id])->one();
+        if (empty($batch_rate_exists)) {
+            $batch_rate = new PhaProductBatchRate();
+            $batch_rate->mrp = $this->mrp;
+        } else {
+            $batch_rate = $batch_rate_exists;
+        }
+        $batch_rate->batch_id = $batch_id;
+        $batch_rate->save(false);
+        return $batch_rate;
+    }
+
 }

@@ -2,7 +2,8 @@
 
 namespace common\models;
 
-use Yii;
+use common\models\query\PhaProductBatchQuery;
+use yii\db\ActiveQuery;
 
 /**
  * This is the model class for table "pha_product_batch".
@@ -25,21 +26,19 @@ use Yii;
  * @property CoTenant $tenant
  * @property PhaProductBatchRate[] $phaProductBatchRates
  */
-class PhaProductBatch extends \common\models\RActiveRecord
-{
+class PhaProductBatch extends RActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'pha_product_batch';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['tenant_id', 'product_id', 'batch_no', 'expiry_date', 'total_qty', 'available_qty', 'created_by'], 'required'],
             [['tenant_id', 'product_id', 'total_qty', 'available_qty', 'created_by', 'modified_by'], 'integer'],
@@ -52,8 +51,7 @@ class PhaProductBatch extends \common\models\RActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'batch_id' => 'Batch ID',
             'tenant_id' => 'Tenant ID',
@@ -72,26 +70,38 @@ class PhaProductBatch extends \common\models\RActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getProduct()
-    {
+    public function getProduct() {
         return $this->hasOne(PhaProduct::className(), ['product_id' => 'product_id']);
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getTenant()
-    {
+    public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getPhaProductBatchRates()
-    {
+    public function getPhaProductBatchRates() {
         return $this->hasMany(PhaProductBatchRate::className(), ['batch_id' => 'batch_id']);
     }
+
+    public static function find() {
+        return new PhaProductBatchQuery(get_called_class());
+    }
+
+    public function fields() {
+        $extend = [
+            'batch_details' => function ($model) {
+                return $model->batch_no . ' (' . date('M Y', strtotime($model->expiry_date)) . ')';
+            },
+        ];
+        $fields = array_merge(parent::fields(), $extend);
+        return $fields;
+    }
+
 }

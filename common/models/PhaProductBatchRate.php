@@ -2,7 +2,8 @@
 
 namespace common\models;
 
-use Yii;
+use common\models\query\PhaProductBatchRateQuery;
+use yii\db\ActiveQuery;
 
 /**
  * This is the model class for table "pha_product_batch_rate".
@@ -21,7 +22,7 @@ use Yii;
  * @property PhaProductBatch $batch
  * @property CoTenant $tenant
  */
-class PhaProductBatchRate extends \common\models\RActiveRecord
+class PhaProductBatchRate extends RActiveRecord
 {
     /**
      * @inheritdoc
@@ -65,7 +66,7 @@ class PhaProductBatchRate extends \common\models\RActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getBatch()
     {
@@ -73,10 +74,14 @@ class PhaProductBatchRate extends \common\models\RActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getTenant()
     {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
+    }
+    
+    public static function find() {
+        return new PhaProductBatchRateQuery(get_called_class());
     }
 }

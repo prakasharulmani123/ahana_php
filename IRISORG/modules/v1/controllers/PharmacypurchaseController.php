@@ -3,11 +3,13 @@
 namespace IRISORG\modules\v1\controllers;
 
 use common\models\PhaPurchase;
+use common\models\PhaPurchaseItem;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
 use yii\filters\auth\QueryParamAuth;
 use yii\filters\ContentNegotiator;
+use yii\helpers\Html;
 use yii\rest\ActiveController;
 use yii\web\Response;
 
@@ -49,21 +51,52 @@ class PharmacypurchaseController extends ActiveController {
             'pagination' => false,
         ]);
     }
-    
+
     public function actionRemove() {
         $id = Yii::$app->getRequest()->post('id');
-        if($id){
+        if ($id) {
             $model = PhaPurchase::find()->where(['purchase_id' => $id])->one();
             $model->remove();
             return ['success' => true];
         }
     }
-    
+
     public function actionSavepurchase() {
         $post = Yii::$app->getRequest()->post();
-        if(!empty($post)){
-            echo 'hi';
-            exit;
+
+        if (!empty($post)) {
+            $model = new PhaPurchase;
+            $model->attributes = $post;
+            $valid = $model->validate();
+
+            foreach ($post['product_items'] as $key => $product_item) {
+                $item_model = new PhaPurchaseItem();
+                $item_model->attributes = $product_item;
+                $valid = $item_model->validate() && $valid;
+                if (!$valid)
+                    break;
+            }
+
+            if ($valid) {
+                $model->save(false);
+
+                foreach ($post['product_items'] as $key => $product_item) {
+                    $item_model = new PhaPurchaseItem();
+                    $item_model->attributes = $product_item;
+                    $item_model->purchase_id = $model->purchase_id;
+                    $item_model->save(false);
+                }
+                
+//                $model->updatePurchaseRate();
+                
+                exit;
+                return ['success' => true];
+            } else {
+                return ['success' => false, 'message' => Html::errorSummary([$model, $item_model])];
+            }
+        } else {
+            return ['success' => false, 'message' => 'Fill the Form'];
         }
     }
+
 }
