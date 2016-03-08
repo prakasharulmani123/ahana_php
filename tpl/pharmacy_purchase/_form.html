@@ -13,7 +13,7 @@
                 <div class="form-group">
                     <label class="col-lg-3 control-label">Invoice Date *</label>
                     <div class="col-lg-9">
-                        <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="data.invoice_date" is-open="$parent.opened1" datepicker-options="dateOptions" close-text="Close"  min-date="minDate" ng-click="open($event, 'opened1')" ng-focus="open($event, 'opened1')"/>
+                        <input type="text" placeholder="Invoice Date" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="data.invoice_date" is-open="$parent.opened1" datepicker-options="dateOptions" close-text="Close"  min-date="minDate" ng-click="open($event, 'opened1')" ng-focus="open($event, 'opened1')"/>
                     </div>
                 </div>
             </div>
@@ -81,23 +81,22 @@
                             <tr ng-repeat="(key, purchaseitem) in purchaseitems">
                                 <td>
                                     <span editable-text="purchaseitem.product_name" e-name="product_name" e-form="tableform" onbeforesave="checkInput($data)" e-typeahead="product as product.product_name for product in products | filter:$viewValue | limitTo:8" e-typeahead-editable="false" e-typeahead-on-select="updateProductRow($item, $model, $label, key)" e-autocomplete="off">
-                                        <!--<span editable-text="purchaseitem.product_name" e-name="product_name" e-form="tableform" onbeforesave="checkInput($data)" e-typeahead="product.product_name as product.product_name for product in products | filter:$viewValue | limitTo:8" e-typeahead-on-select="updateProductRow($item, $model, $label)" e-typeahead-editable="false" e-typeahead-input-formatter="formatLabel($model)">-->
                                         {{ purchaseitem.product_name || 'empty' }}
                                     </span>
                                 </td>
                                 <td>
-                                    <span editable-text="purchaseitem.batch_id" e-id="city" e-name="batch_id" e-form="tableform" onbeforesave="checkInput($data)" e-typeahead="batch as batch.batch_details for batch in batches | filter:$viewValue | limitTo:8" e-autocomplete="off" e-typeahead-on-select="updateBatchRow($item, $model, $label, key, tableform)">
-                                        {{ purchaseitem.batch_id || 'empty' }}
+                                    <span editable-text="purchaseitem.batch_details" e-id="city" e-name="batch_details" e-form="tableform" onbeforesave="checkInput($data)" e-typeahead="batch as batch.batch_details for batch in batches | filter:$viewValue | limitTo:8" e-autocomplete="off" e-typeahead-on-select="updateBatchRow($item, $model, $label, key)" e-ng-change="showOrHideRowEdit('show', key)">
+                                        {{ purchaseitem.batch_details || 'empty' }}
                                     </span>
                                 </td>
                                 <td>
                                     <div id="i_expiry_date_{{key}}">
-                                        <span editable-text="purchaseitem.expiry_date" e-name="expiry_date" e-form="tableform" e-class="form-control" e-datepicker-popup="MMM yyyy" e-is-open="$parent.opened2" e-ng-click="$parent.opened2=true" e-ng-focus="$parent.opened2=true" e-datepicker-options="{minMode: 'month'}" e-close-text="Close" e-datepicker-mode="'month'" e-autocomplete="off">
+                                        <span editable-text="purchaseitem.expiry_date" e-ng-value="purchaseitem.expiry_date" e-name="expiry_date" e-form="tableform" e-class="form-control" e-datepicker-popup="MMM yyyy" e-is-open="$parent.opened2" e-ng-click="$parent.opened2=true" e-ng-focus="$parent.opened2=true" e-datepicker-options="{minMode: 'month'}" e-close-text="Close" e-datepicker-mode="'month'" e-autocomplete="off">
                                             {{ purchaseitem.expiry_date | moment:'MMM YYYY' || 'empty' }}
                                         </span>
                                     </div>
                                     <span id="t_expiry_date_{{key}}" class="hide">
-                                        {{ purchaseitem.expiry_date | moment:'MMM YYYY' || 'empty' }}
+                                        {{ purchaseitem.temp_expiry_date | moment:'MMM YYYY' || 'empty' }}
                                     </span>
                                 </td>
                                 <td>
@@ -108,7 +107,12 @@
                                 </td>
                                 <td><span>{{purchaseitem.free_quantity_unit}}</span></td>
                                 <td>
-                                    <span editable-text="purchaseitem.mrp" e-number-mask="" e-name="mrp" e-form="tableform" onbeforesave="checkInput($data)" e-autocomplete="off">{{purchaseitem.mrp|| 0}}</span>
+                                    <div id="i_mrp_{{key}}">
+                                        <span editable-text="purchaseitem.mrp" e-number-mask="" e-name="mrp" e-form="tableform" e-autocomplete="off">{{purchaseitem.mrp|| 0}}</span>
+                                    </div>
+                                    <span id="t_mrp_{{key}}" class="hide">
+                                        {{purchaseitem.temp_mrp|| 0}}
+                                    </span>
                                 </td>
                                 <td>
                                     <span editable-text="purchaseitem.purchase_rate" e-number-mask="" e-name="purchase_rate" e-form="tableform" onbeforesave="checkInput($data)" e-ng-change="updateRow(tableform, key)" e-autocomplete="off">{{purchaseitem.purchase_rate|| 0}}</span>
@@ -121,8 +125,13 @@
                                 <td><span>{{purchaseitem.vat_percent}}</span></td>
                                 <td><span>{{purchaseitem.vat_amount}}</span></td>
                                 <td>
-                                    <span editable-select="purchaseitem.package_name" e-name="package_name" e-form="nameform" e-ng-options="s.package_name as s.package_name for s in packings" e-autocomplete="off">
-                                        {{ purchaseitem.package_name || 'empty' }}
+                                    <div id="i_package_name_{{key}}">
+                                        <span editable-select="purchaseitem.package_name" e-name="package_name" e-form="nameform" e-ng-options="s.package_name as s.package_name for s in packings" e-autocomplete="off">
+                                            {{ purchaseitem.package_name || 'empty' }}
+                                        </span>
+                                    </div>
+                                    <span id="t_package_name_{{key}}" class="hide">
+                                        {{ purchaseitem.temp_package_name || 'empty' }}
                                     </span>
                                 </td>
                                 <td><span>{{purchaseitem.total_amount}}</span></td>
@@ -135,6 +144,7 @@
                         <div class="btn-form">
                             <button type="button" ng-click="tableform.$show();
                                 addRow()" class="btn btn-default pull-left btn-primary">Add Product</button>
+                            <button type="button" ng-click="tableform.$show();" class="btn btn-default pull-left btn-info">Edit Products</button>
                         </div>
                     </div>
                 </div>
@@ -153,6 +163,15 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label class="col-lg-2 control-label">Disc. %</label>
+                    <div class="col-lg-2">
+                        <input type="text" class="form-control" ng-model="data.discount_percent" ng-change="updatePurchaseRate()">
+                    </div>
+                    <div class="col-lg-8">
+                        <input type="text" class="form-control" ng-value="data.discount_amount" readonly="">
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="col-lg-4 control-label">Total Vat Amount</label>
                     <div class="col-lg-8">
                         <input type="text" class="form-control" ng-value="data.total_item_vat_amount" readonly="">
@@ -162,15 +181,6 @@
                     <label class="col-lg-4 control-label">Total</label>
                     <div class="col-lg-8">
                         <input type="text" class="form-control" ng-value="data.before_disc_total" readonly="">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-lg-2 control-label">Disc. %</label>
-                    <div class="col-lg-2">
-                        <input type="text" class="form-control" ng-model="data.discount_percent" ng-change="updatePurchaseRate()">
-                    </div>
-                    <div class="col-lg-8">
-                        <input type="text" class="form-control" ng-value="data.discount_amount" readonly="">
                     </div>
                 </div>
                 <div class="form-group">

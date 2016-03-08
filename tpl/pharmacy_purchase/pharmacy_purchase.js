@@ -28,6 +28,52 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
 
         }
 
+        // editable table
+        $scope.purchaseitems = [];
+
+        // add Row
+        $scope.addRow = function () {
+            $scope.inserted = {
+                product_name: '',
+                batch_details: '',
+                expiry_date: '',
+                temp_expiry_date: '',
+                quantity: '0',
+                free_quantity: '0',
+                free_quantity_unit: '0',
+                mrp: '0',
+                temp_mrp: '0',
+                purchase_rate: '0',
+                discount_percent: '0',
+                discount_amount: '0',
+                package_name: '',
+                temp_package_name: '',
+                vat_percent: '0',
+                vat_amount: '0',
+                total_amount: '0',
+                product_id: '',
+                purchase_amount: '0',
+                batch_id: '0',
+                is_temp: '0',
+            };
+            $scope.purchaseitems.push($scope.inserted);
+        };
+
+        // remove Row
+        $scope.removeSubcat = function (index) {
+            if($scope.purchaseitems.length == 1){
+                alert('Can\'t Delete. Purchase Item must be atleast one.');
+                return false;
+            }
+            $scope.purchaseitems.splice(index, 1);
+        };
+        
+        $scope.checkInput = function (data) {
+            if (data == '') {
+                return "Field should not be empty.";
+            }
+        };
+        
         $scope.open = function ($event, mode) {
             $event.preventDefault();
             $event.stopPropagation();
@@ -42,19 +88,19 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             }
         };
 
-        $scope.updateBatchRow = function (item, model, label, key, purchaseitem) {
+        $scope.updateBatchRow = function (item, model, label, key) {
             $scope.purchaseitems[key].batch_id = item.batch_no;
-            $scope.purchaseitems[key].expiry_date = item.expiry_date;
+            $scope.purchaseitems[key].temp_expiry_date = item.expiry_date;
+            $scope.purchaseitems[key].temp_mrp = item.mrp;
+            $scope.purchaseitems[key].temp_package_name = item.product.purchasePackageName;
             
-            $('#i_expiry_date_'+key).addClass('hide');
-            $('#t_expiry_date_'+key).removeClass('hide');
+            $scope.showOrHideRowEdit('hide', key);
         }
-        
+
         $scope.updateProductRow = function (item, model, label, key) {
-            $scope.purchaseitems[key].product_name = item.product_name;
             $scope.purchaseitems[key].product_id = item.product_id;
             $scope.purchaseitems[key].vat_percent = item.purchaseVat.vat;
-            
+
             $scope.loadbar('show');
             $rootScope.commonService.GetBatchListByProduct(item.product_id, function (response) {
                 $scope.batches = response.batchList;
@@ -62,6 +108,25 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             });
         }
 
+        $scope.showOrHideRowEdit = function (mode, key) {
+            if (mode == 'hide') {
+                i_addclass = t_removeclass = 'hide';
+                i_removeclass = t_addclass = '';
+                $scope.purchaseitems[key].is_temp = '1';
+            } else {
+                i_addclass = t_removeclass = '';
+                i_removeclass = t_addclass = 'hide';
+                $scope.purchaseitems[key].is_temp = '0';
+            }
+            $('#i_expiry_date_' + key).addClass(i_addclass).removeClass(i_removeclass);
+            $('#i_mrp_' + key).addClass(i_addclass).removeClass(i_removeclass);
+            $('#i_package_name_' + key).addClass(i_addclass).removeClass(i_removeclass);
+
+            $('#t_expiry_date_' + key).addClass(t_addclass).removeClass(t_removeclass);
+            $('#t_mrp_' + key).addClass(t_addclass).removeClass(t_removeclass);
+            $('#t_package_name_' + key).addClass(t_addclass).removeClass(t_removeclass);
+        }
+        
         $scope.updateRow = function (purchaseitem, key) {
             var qty = parseFloat(purchaseitem.quantity.$modelValue);
             var rate = parseFloat(purchaseitem.purchase_rate.$modelValue);
@@ -103,7 +168,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
 
             $scope.data.total_item_purchase_amount = total_purchase_amount.toFixed(2);
             $scope.data.total_item_vat_amount = total_vat_amount.toFixed(2);
-            
+
             //Get Before Discount Amount (Total Purchase Amount + Total VAT)
             before_disc_total = (total_purchase_amount + total_vat_amount).toFixed(2);
             $scope.data.before_disc_total = before_disc_total;
@@ -111,26 +176,20 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             //Get Discount Amount
             var disc_perc = parseFloat($scope.data.discount_percent);
             disc_perc = angular.isNumber(disc_perc) ? (disc_perc).toFixed(2) : 0;
-            
-            var disc_amount = disc_perc > 0 ? (before_disc_total * (disc_perc / 100)).toFixed(2) : 0;
+
+            var disc_amount = disc_perc > 0 ? (total_purchase_amount * (disc_perc / 100)).toFixed(2) : 0;
             $scope.data.discount_amount = disc_amount;
-            
+
             after_disc_total = (parseFloat(before_disc_total) - parseFloat(disc_amount));
             $scope.data.after_disc_total = after_disc_total.toFixed(2);
-            
+
             // Net Amount = (Total Amount - Discount Amount) +- RoundOff
             net_amount = Math.round(parseFloat(after_disc_total));
             roundoff_amount = Math.abs(net_amount - after_disc_total);
-            
+
             $scope.data.roundoff_amount = roundoff_amount.toFixed(2);
             $scope.data.net_amount = net_amount.toFixed(2);
         }
-
-        $scope.checkInput = function (data, id) {
-            if (data == '') {
-                return "Field should not be empty.";
-            }
-        };
 
         //Save Both Add & Update Data
         $scope.saveForm = function (mode) {
@@ -140,11 +199,28 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             $scope.successMessage = "";
 
             angular.forEach($scope.purchaseitems, function (purchaseitem, key) {
-                $scope.purchaseitems[key].expiry_date = moment(purchaseitem.expiry_date).format('YYYY-MM-DD HH:mm:ss');
+                if(purchaseitem.is_temp == '1'){
+                    exp_date = purchaseitem.temp_expiry_date;
+                    $scope.purchaseitems[key].mrp = purchaseitem.temp_mrp;
+                    $scope.purchaseitems[key].package_name = purchaseitem.temp_package_name;
+                }else{
+                    exp_date = purchaseitem.expiry_date;
+                }
+                
+                $scope.purchaseitems[key].expiry_date = moment(exp_date).format('YYYY-MM-DD');
 
                 if (angular.isObject(purchaseitem.product_name)) {
                     $scope.purchaseitems[key].product_name = purchaseitem.product_name.product_name;
+                }else if(typeof purchaseitem.product_name == 'undefined'){
+                    $scope.purchaseitems[key].product_id = '';
                 }
+                
+                if (angular.isObject(purchaseitem.batch_details)) {
+                    $scope.purchaseitems[key].batch_details = purchaseitem.batch_details.batch_details;
+                }else if(typeof purchaseitem.batch_details == 'undefined'){
+                    $scope.purchaseitems[key].batch_id = '';
+                }
+                
             })
             angular.extend(_that.data, {product_items: $scope.purchaseitems});
             $scope.loadbar('show');
@@ -176,44 +252,6 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                 else
                     $scope.errorData = data.message;
             });
-        };
-
-
-        // editable table
-        $scope.purchaseitems = [];
-
-        // add Row
-        $scope.addRow = function () {
-            $scope.inserted = {
-                product_name: '',
-                batch_id: '',
-                expiry_date: '',
-                quantity: '0',
-                free_quantity: '0',
-                free_quantity_unit: '0',
-                mrp: '0',
-                purchase_rate: '0',
-                discount_percent: '0',
-                package_name: '',
-                vat_percent: '0',
-                vat_amount: '0',
-                total_amount: '0',
-                product_id: '',
-                purchase_amount: '0'
-            };
-            $scope.purchaseitems.push($scope.inserted);
-        };
-
-        // remove Row
-        $scope.removeSubcat = function (index, id) {
-            if (id != '')
-                $scope.deletedpurchaseitems.push(id);
-            $scope.purchaseitems.splice(index, 1);
-        };
-
-        $scope.ctrl = {};
-        $scope.ctrl.expandAll = function (expanded) {
-            $scope.$broadcast('onExpandAll', {expanded: expanded});
         };
     }]);
 
