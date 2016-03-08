@@ -87,7 +87,7 @@ class PhaProductBatch extends RActiveRecord {
      * @return ActiveQuery
      */
     public function getPhaProductBatchRates() {
-        return $this->hasMany(PhaProductBatchRate::className(), ['batch_id' => 'batch_id']);
+        return $this->hasMany(PhaProductBatchRate::className(), ['batch_id' => 'batch_id'])->orderBy(['created_at' => SORT_DESC]);
     }
 
     public static function find() {
@@ -98,6 +98,12 @@ class PhaProductBatch extends RActiveRecord {
         $extend = [
             'batch_details' => function ($model) {
                 return $model->batch_no . ' (' . date('M Y', strtotime($model->expiry_date)) . ')';
+            },
+            'mrp' => function ($model) {
+                return isset($model->phaProductBatchRates) ? $model->phaProductBatchRates[0]->mrp : 0;
+            },
+            'product' => function ($model) {
+                return isset($model->product) ? $model->product : '';
             },
         ];
         $fields = array_merge(parent::fields(), $extend);

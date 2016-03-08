@@ -226,6 +226,9 @@ class PhaProduct extends RActiveRecord {
             'purchaseVatPercent' => function ($model) {
                 return (isset($model->purchaseVat) ? $model->purchaseVat->vat : '-');
             },
+            'purchasePackageName' => function ($model) {
+                return (isset($model->purchasePackage) ? $model->purchasePackage->package_name : '-');
+            },
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;

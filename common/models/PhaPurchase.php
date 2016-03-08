@@ -71,7 +71,7 @@ class PhaPurchase extends RActiveRecord
             'invoice_date' => 'Invoice Date',
             'invoice_no' => 'Invoice No',
             'payment_type' => 'Payment Type',
-            'supplier_id' => 'Supplier ID',
+            'supplier_id' => 'Supplier',
             'total_item_purchase_amount' => 'Total Item Purchase Amount',
             'total_item_vat_amount' => 'Total Item Vat Amount',
             'total_item_discount_amount' => 'Total Item Discount Amount',

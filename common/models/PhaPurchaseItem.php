@@ -67,8 +67,8 @@ class PhaPurchaseItem extends RActiveRecord {
         return [
             'purchase_item_id' => 'Purchase Item ID',
             'tenant_id' => 'Tenant ID',
-            'purchase_id' => 'Purchase ID',
-            'product_id' => 'Product ID',
+            'purchase_id' => 'Purchase',
+            'product_id' => 'Product',
             'quantity' => 'Quantity',
             'free_quantity' => 'Free Quantity',
             'mrp' => 'Mrp',
@@ -114,20 +114,24 @@ class PhaPurchaseItem extends RActiveRecord {
     }
 
     public function beforeSave($insert) {
+        //Update Batch
         $batch = $this->updateBatch();
-        $batch_rate = $this->updateBatchRate($batch->batch_id);
+        $batch_rate = $this->updateBatchRate($batch->batch_id, $this->mrp);
         
         $this->batch_id = $batch->batch_id;
         return parent::beforeSave($insert);
     }
 
+    //Update Batch
     private function updateBatch() {
-        $batch_exists = PhaProductBatch::find()->tenant()->andWhere(['product_id' => $this->product_id, 'batch_no' => $this->batch_id])->one();
+        $batch_exists = PhaProductBatch::find()->tenant()->andWhere(['product_id' => $this->product_id, 'batch_no' => $this->batch_id, 'expiry_date' => $this->expiry_date])->one();
         if (empty($batch_exists)) {
             $batch = new PhaProductBatch;
             $batch->total_qty = $batch->available_qty = $this->quantity;
         } else {
             $batch = $batch_exists;
+            $batch->total_qty = $batch->total_qty + $this->quantity;
+            $batch->available_qty = $batch->available_qty + $this->quantity;
         }
         $batch->attributes = [
             'product_id' => $this->product_id,
@@ -138,8 +142,9 @@ class PhaPurchaseItem extends RActiveRecord {
         return $batch;
     }
 
-    private function updateBatchRate($batch_id) {
-        $batch_rate_exists = PhaProductBatchRate::find()->tenant()->andWhere(['batch_id' => $batch_id])->one();
+    //Update Batch Rate
+    private function updateBatchRate($batch_id, $mrp) {
+        $batch_rate_exists = PhaProductBatchRate::find()->tenant()->andWhere(['batch_id' => $batch_id, 'mrp' => $mrp])->one();
         if (empty($batch_rate_exists)) {
             $batch_rate = new PhaProductBatchRate();
             $batch_rate->mrp = $this->mrp;
