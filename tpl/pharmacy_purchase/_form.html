@@ -59,7 +59,7 @@
                 <div class="form-group">
                     <div class="col-sm-12">
 
-                        <table class="table table-bordered table-hover table-condensed bg-white-only">
+                        <table class="table table-bordered table-hover table-condensed bg-white-only" id="item_table">
                             <tr style="font-weight: bold">
                                 <td><span>Product Name</span></td>
                                 <td><span>Batch No</span></td>
@@ -80,7 +80,7 @@
                             </tr>
                             <tr ng-repeat="(key, purchaseitem) in purchaseitems">
                                 <td>
-                                    <span editable-text="purchaseitem.full_name" e-class="fullname" e-name="full_name" e-form="tableform" onbeforesave="checkInput($data)" e-typeahead="product as product.full_name for product in products | filter:$viewValue | limitTo:8" e-typeahead-editable="false" e-typeahead-on-select="updateProductRow($item, $model, $label, key)" e-ng-change="getProduct(tableform)" e-autocomplete="off">
+                                    <span editable-text="purchaseitem.full_name" e-class="fullname" e-name="full_name" e-form="tableform" onbeforesave="checkInput($data)" e-typeahead="product as product.full_name for product in products | filter:$viewValue | limitTo:8" e-typeahead-editable="false" e-typeahead-on-select="updateProductRow($item, $model, $label, key)" e-ng-keyup="getProduct(tableform)" e-autocomplete="off">
                                         {{ purchaseitem.full_name || 'empty' }}
                                     </span>
                                 </td>
@@ -144,7 +144,7 @@
                         <div class="btn-form">
                             <button type="button" ng-click="tableform.$show();
                                 addRow()" class="btn btn-default pull-left btn-primary">Add Product</button>
-                            <button type="button" ng-click="tableform.$show();" class="btn btn-default pull-left btn-info">Edit Products</button>
+                            <button type="button" ng-show="!tableform.$visible;" ng-click="tableform.$show();" class="btn btn-default pull-left btn-info">Edit Products</button>
                         </div>
                     </div>
                 </div>

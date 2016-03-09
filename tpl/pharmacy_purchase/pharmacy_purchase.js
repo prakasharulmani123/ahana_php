@@ -1,4 +1,4 @@
-app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$anchorScroll', '$filter', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $anchorScroll, $filter) {
+app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$anchorScroll', '$filter', '$timeout', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $anchorScroll, $filter, $timeout) {
 
         editableThemes.bs3.inputClass = 'input-sm';
         editableThemes.bs3.buttonsClass = 'btn-sm';
@@ -44,12 +44,12 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
 //                    $rootScope.commonService.GetProductList('', '1', false, function (response) {
 //                        $scope.products = response.productList;
 
-                        $rootScope.commonService.GetPackageUnitList('', '1', false, function (response) {
-                            $scope.products = [];
-                            $scope.packings = response.packingList;
-                            $scope.addRow();
-                            $scope.loadbar('hide');
-                        });
+                    $rootScope.commonService.GetPackageUnitList('', '1', false, function (response) {
+                        $scope.products = [];
+                        $scope.packings = response.packingList;
+                        $scope.addRow();
+                        $scope.loadbar('hide');
+                    });
 //                    });
 
                 });
@@ -58,31 +58,17 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
         }
 
         var changeTimer = false;
-        $scope.$watch('fullname', function (newValue, oldValue) {
-            if (newValue != '') {
-                console.log('asdasd');
-            }
-        });
-        
-        $('body').on('.fullname', 'change',function(){
-            alert('asdadsad');
-        });
-        
         $scope.getProduct = function (purchaseitem) {
             var name = purchaseitem.full_name.$$lastCommittedViewValue;
-//            console.log($scope.purchaseitems);
-//            console.log(purchaseitem);
-//            console.log(name);
-//            return false;
             if (changeTimer !== false)
                 clearTimeout(changeTimer);
 
             changeTimer = setTimeout(function () {
                 $scope.loadbar('show');
                 $rootScope.commonService.GetProductListByName(name, function (response) {
-                        $scope.products = response.productList;
-                        $scope.loadbar('hide');
-                    });
+                    $scope.products = response.productList;
+                    $scope.loadbar('hide');
+                });
                 changeTimer = false;
             }, 300);
         }
@@ -116,6 +102,16 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                 is_temp: '0',
             };
             $scope.purchaseitems.push($scope.inserted);
+
+            $timeout(function () {
+                $scope.setFocus('full_name', $scope.purchaseitems.length - 1);
+            });
+//            console.log(angular.element('#item_table tr:last td:first div'));
+//            angular.element('#item_table tr:last').find('td.fullname').trigger('focus');
+        };
+
+        $scope.setFocus = function (id, index) {
+            angular.element(document.querySelectorAll("#" + id))[index].focus();
         };
 
         // remove Row
