@@ -208,6 +208,9 @@ class PhaProduct extends RActiveRecord {
             'purchaseVat' => function ($model) {
                 return (isset($model->purchaseVat) ? $model->purchaseVat : '-');
             },
+            'salesVat' => function ($model) {
+                return (isset($model->salesVat) ? $model->salesVat : '-');
+            },
             'description_name' => function ($model) {
                 return (isset($model->productDescription) ? $model->productDescription->description_name : '-');
             },
@@ -231,6 +234,9 @@ class PhaProduct extends RActiveRecord {
             },
             'purchasePackageName' => function ($model) {
                 return (isset($model->purchasePackage) ? $model->purchasePackage->package_name : '-');
+            },
+            'salesPackageName' => function ($model) {
+                return (isset($model->salesPackage) ? $model->salesPackage->package_name : '-');
             },
         ];
         $fields = array_merge(parent::fields(), $extend);

@@ -61,7 +61,7 @@ class PharmacysaleController extends ActiveController {
         }
     }
 
-    public function actionSavepurchase() {
+    public function actionSavesale() {
         $post = Yii::$app->getRequest()->post();
 
         if (!empty($post)) {
@@ -86,10 +86,6 @@ class PharmacysaleController extends ActiveController {
                     $item_model->sale_id = $model->sale_id;
                     $item_model->save(false);
                 }
-
-//                $model->updatePurchaseRate();
-
-                exit;
                 return ['success' => true];
             } else {
                 return ['success' => false, 'message' => Html::errorSummary([$model, $item_model])];

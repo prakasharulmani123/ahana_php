@@ -44,7 +44,7 @@ class PhaSaleItem extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['tenant_id', 'sale_id', 'product_id', 'batch_id', 'quantity', 'mrp', 'item_amount', 'created_by'], 'required'],
+            [['product_id', 'batch_id', 'quantity', 'mrp'], 'required'],
             [['tenant_id', 'sale_id', 'product_id', 'batch_id', 'quantity', 'created_by', 'modified_by'], 'integer'],
             [['mrp', 'item_amount', 'vat_amount', 'vat_percent'], 'number'],
             [['status'], 'string'],

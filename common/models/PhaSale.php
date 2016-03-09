@@ -13,7 +13,7 @@ use yii\db\ActiveQuery;
  * @property integer $bill_no
  * @property integer $patient_id
  * @property string $mobile_no
- * @property integer $pat_consult_id
+ * @property integer $consultant_id
  * @property string $sale_date
  * @property string $payment_type
  * @property string $total_item_vat_amount
@@ -50,8 +50,8 @@ class PhaSale extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['tenant_id', 'bill_no', 'patient_id', 'mobile_no', 'pat_consult_id', 'sale_date', 'created_by'], 'required'],
-            [['tenant_id', 'bill_no', 'patient_id', 'pat_consult_id', 'created_by', 'modified_by'], 'integer'],
+            [['patient_id', 'mobile_no', 'consultant_id', 'sale_date'], 'required'],
+            [['tenant_id', 'bill_no', 'patient_id', 'consultant_id', 'created_by', 'modified_by'], 'integer'],
             [['sale_date', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['payment_type', 'status'], 'string'],
             [['total_item_vat_amount', 'total_item_sale_amount', 'total_item_discount_percent', 'total_item_discount_amount', 'total_item_amount', 'welfare_amount', 'roundoff_amount', 'bill_amount'], 'number'],
@@ -67,9 +67,9 @@ class PhaSale extends RActiveRecord {
             'sale_id' => 'Sale ID',
             'tenant_id' => 'Tenant ID',
             'bill_no' => 'Bill No',
-            'patient_id' => 'Patient ID',
+            'patient_id' => 'Patient',
             'mobile_no' => 'Mobile No',
-            'pat_consult_id' => 'Pat Consult ID',
+            'consultant_id' => 'Consultant',
             'sale_date' => 'Sale Date',
             'payment_type' => 'Payment Type',
             'total_item_vat_amount' => 'Total Item Vat Amount',
@@ -88,12 +88,28 @@ class PhaSale extends RActiveRecord {
             'deleted_at' => 'Deleted At',
         ];
     }
+    
+    public function beforeSave($insert) {
+        if ($insert) {
+            $this->bill_no = CoInternalCode::find()->tenant()->codeType("B")->one()->Fullcode;
+        }
+
+        return parent::beforeSave($insert);
+    }
+    
+    public function afterSave($insert, $changedAttributes) {
+        if ($insert) {
+            CoInternalCode::increaseInternalCode("B");
+        }
+
+        return parent::afterSave($insert, $changedAttributes);
+    }
 
     /**
      * @return ActiveQuery
      */
-    public function getPatConsult() {
-        return $this->hasOne(PatConsultant::className(), ['pat_consult_id' => 'pat_consult_id']);
+    public function getConsultant() {
+        return $this->hasOne(CoUser::className(), ['user_id' => 'consultant_id']);
     }
 
     /**

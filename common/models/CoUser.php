@@ -39,7 +39,7 @@ use yii\helpers\ArrayHelper;
 class CoUser extends RActiveRecord {
 
 //    public $logged_tenant_id = null;
-    
+
     const STATUS_ACTIVE = '1';
     const STATUS_INACTIVE = '0';
 
@@ -157,6 +157,9 @@ class CoUser extends RActiveRecord {
             'speciality_name' => function ($model) {
                 return (isset($model->speciality) ? $model->speciality->speciality_name : '-');
             },
+            'fullname' => function ($model) {
+                return $model->title_code . $model->name;
+            },
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
@@ -174,8 +177,9 @@ class CoUser extends RActiveRecord {
 
         return $list;
     }
-    
+
     public function getFirst_tenant_id() {
         return $this->organization->coTenants[0]->tenant_id;
     }
+
 }
