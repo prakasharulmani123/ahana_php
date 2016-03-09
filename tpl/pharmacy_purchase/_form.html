@@ -6,7 +6,7 @@
                 <div class="form-group">
                     <label class="col-lg-3 control-label">Invoice No. *</label>
                     <div class="col-lg-9">
-                        <input type="text" placeholder="Invoice No." class="form-control" ng-model="data.invoice_no">
+                        <input type="text" placeholder="Invoice No." class="form-control" ng-model="data.invoice_no" focus-me="true">
                     </div>
                 </div>
                 <div class="line line-dashed b-b line-lg "></div>
@@ -80,7 +80,7 @@
                             </tr>
                             <tr ng-repeat="(key, purchaseitem) in purchaseitems">
                                 <td>
-                                    <span editable-text="purchaseitem.full_name" e-class="fullname" e-name="full_name" e-form="tableform" onbeforesave="checkInput($data)" e-typeahead="product as product.full_name for product in products | filter:$viewValue | limitTo:8" e-typeahead-editable="false" e-typeahead-on-select="updateProductRow($item, $model, $label, key)" e-ng-keyup="getProduct(tableform)" e-autocomplete="off">
+                                    <span editable-text="purchaseitem.full_name" e-class="fullname" e-name="full_name" e-form="tableform" onbeforesave="checkInput($data)" e-typeahead="product as product.full_name for product in products | filter:$viewValue | limitTo:8" e-typeahead-editable="false" e-typeahead-on-select="updateProductRow($item, $model, $label, key)" e-ng-keyup="getProduct(tableform)" e-autocomplete="off" data-e-id="full_name">
                                         {{ purchaseitem.full_name || 'empty' }}
                                     </span>
                                 </td>
@@ -91,7 +91,7 @@
                                 </td>
                                 <td>
                                     <div id="i_expiry_date_{{key}}">
-                                        <span editable-text="purchaseitem.expiry_date" e-ng-value="purchaseitem.expiry_date" e-name="expiry_date" e-form="tableform" e-class="form-control" e-datepicker-popup="MMM yyyy" e-is-open="$parent.opened2" e-ng-click="$parent.opened2=true" e-ng-focus="$parent.opened2=true" e-datepicker-options="{minMode: 'month'}" e-close-text="Close" e-datepicker-mode="'month'" e-autocomplete="off">
+                                        <span editable-text="purchaseitem.expiry_date" e-ng-value="purchaseitem.expiry_date" e-name="expiry_date" e-form="tableform" e-class="form-control" e-datepicker-popup="MMM yyyy" e-is-open="$parent.opened2" e-ng-click="$parent.opened2=true" e-ng-focus="$parent.opened2=true" e-datepicker-options="{minMode: 'month'}" e-close-text="Close" e-datepicker-mode="'month'" e-autocomplete="off" e-prevent-enter="true">
                                             {{ purchaseitem.expiry_date | moment:'MMM YYYY' || 'empty' }}
                                         </span>
                                     </div>

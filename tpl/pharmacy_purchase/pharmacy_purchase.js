@@ -103,11 +103,11 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             };
             $scope.purchaseitems.push($scope.inserted);
 
-            $timeout(function () {
-                $scope.setFocus('full_name', $scope.purchaseitems.length - 1);
-            });
-//            console.log(angular.element('#item_table tr:last td:first div'));
-//            angular.element('#item_table tr:last').find('td.fullname').trigger('focus');
+            if ($scope.purchaseitems.length > 1) {
+                $timeout(function () {
+                    $scope.setFocus('full_name', $scope.purchaseitems.length - 1);
+                });
+            }
         };
 
         $scope.setFocus = function (id, index) {
@@ -121,6 +121,9 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                 return false;
             }
             $scope.purchaseitems.splice(index, 1);
+            $timeout(function () {
+                $scope.setFocus('full_name', $scope.purchaseitems.length - 1);
+            });
         };
 
         $scope.checkInput = function (data) {
