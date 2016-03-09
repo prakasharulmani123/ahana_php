@@ -57,8 +57,20 @@ class PhaPurchaseItem extends RActiveRecord {
             [['mrp', 'purchase_rate', 'purchase_amount', 'discount_percent', 'discount_amount', 'total_amount', 'vat_amount', 'vat_percent', 'free_quantity_unit'], 'number'],
             [['status'], 'string'],
             [['created_at', 'modified_at', 'deleted_at', 'vat_percent', 'batch_id', 'expiry_date', 'free_quantity_unit'], 'safe'],
-            [['package_name'], 'string', 'max' => 255]
+            [['package_name'], 'string', 'max' => 255],
+            ['purchase_rate', 'validateProductRate'],
+            [['quantity', 'mrp', 'purchase_rate', 'purchase_amount', 'total_amount'], 'validateAmount'],
         ];
+    }
+
+    public function validateProductRate($attribute, $params) {
+        if ($this->purchase_rate > $this->mrp)
+            $this->addError($attribute, "Product Price ({$this->purchase_rate}) must be lesser than MRP ({$this->mrp}) for {$this->product->fullname}");
+    }
+
+    public function validateAmount($attribute, $params) {
+        if ($this->$attribute <= 0)
+            $this->addError($attribute, "{$this->getAttributeLabel($attribute)} must be greater than 0 for {$this->product->fullname}");
     }
 
     /**
@@ -117,7 +129,7 @@ class PhaPurchaseItem extends RActiveRecord {
     public static function find() {
         return new PhaPurchaseItemQuery(get_called_class());
     }
-    
+
     public function fields() {
         $extend = [
             'product' => function ($model) {
@@ -133,10 +145,15 @@ class PhaPurchaseItem extends RActiveRecord {
 
     public function beforeSave($insert) {
         //Update Batch
-        $batch = $this->updateBatch();
-        $batch_rate = $this->updateBatchRate($batch->batch_id, $this->mrp);
-        
+        if ($insert) {
+            $batch = $this->updateBatch();
+            $batch_rate = $this->updateBatchRate($batch->batch_id, $this->mrp);
+        }else{
+            $batch = PhaProductBatch::find()->tenant()->andWhere(['product_id' => $this->product_id, 'batch_no' => $this->batch_id, 'expiry_date' => $this->expiry_date])->one();
+            //Thinking.....
+        }
         $this->batch_id = $batch->batch_id;
+
         return parent::beforeSave($insert);
     }
 

@@ -46,6 +46,8 @@ use yii\db\ActiveQuery;
  * @property PhaPurchaseItem[] $phaPurchaseItems
  */
 class PhaProduct extends RActiveRecord {
+    
+    public $full_name;
 
     /**
      * @inheritdoc
@@ -184,6 +186,10 @@ class PhaProduct extends RActiveRecord {
      */
     public function getPhaPurchaseItems() {
         return $this->hasMany(PhaPurchaseItem::className(), ['product_id' => 'product_id']);
+    }
+    
+    public function getFullName() {
+        return $this->product_name.' | '.$this->product_unit_count. ' | '.$this->product_unit;
     }
 
     public static function find() {

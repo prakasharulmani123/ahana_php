@@ -65,7 +65,14 @@ class PharmacypurchaseController extends ActiveController {
         $post = Yii::$app->getRequest()->post();
 
         if (!empty($post)) {
+            //Validation
             $model = new PhaPurchase;
+            if (isset($post['purchase_id'])) {
+                $purchase = PhaPurchase::find()->tenant()->andWhere(['purchase_id' => $post['purchase_id']])->one();
+                if (!empty($purchase))
+                    $model = $purchase;
+            }
+
             $model->attributes = $post;
             $valid = $model->validate();
 
@@ -76,20 +83,23 @@ class PharmacypurchaseController extends ActiveController {
                 if (!$valid)
                     break;
             }
+            //End
 
             if ($valid) {
                 $model->save(false);
 
                 foreach ($post['product_items'] as $key => $product_item) {
                     $item_model = new PhaPurchaseItem();
+                    if (isset($product_item['purchase_item_id'])) {
+                        $item = PhaPurchaseItem::find()->tenant()->andWhere(['purchase_item_id' => $product_item['purchase_item_id']])->one();
+                        if (!empty($item))
+                            $item_model = $item;
+                    }
+
                     $item_model->attributes = $product_item;
                     $item_model->purchase_id = $model->purchase_id;
                     $item_model->save(false);
                 }
-                
-//                $model->updatePurchaseRate();
-                
-                exit;
                 return ['success' => true];
             } else {
                 return ['success' => false, 'message' => Html::errorSummary([$model, $item_model])];
