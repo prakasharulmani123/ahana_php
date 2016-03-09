@@ -34,10 +34,11 @@
                     <th st-sort="discount_amount">Disc Amount</th>
                     <th st-sort="roundoff_amount">Roundoff Amount</th>
                     <th st-sort="net_amount">net Amount</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat-start="(key, row) in displayedCollection | orderBy: drug_name">
+                <tr ng-repeat-start="(key, row) in displayedCollection">
                     <td style="width: 5%">
                         <button ng-click="expanded = !expanded" expand class="btn btn-sm btn-default">
                             <i ng-if="!expanded" class="fa fa-plus text"></i>
@@ -55,10 +56,15 @@
                     <td>{{row.discount_amount}}</td>
                     <td>{{row.roundoff_amount}}</td>
                     <td>{{row.net_amount}}</td>
+                    <td>
+                        <a title="Edit" check-access  ui-sref="pharmacy.purchaseUpdate({id: '{{row.purchase_id}}'})">
+                            <i class="fa fa-pencil"></i>
+                        </a>
+                    </td>
                 </tr>
                 <tr ng-repeat-end ng-show="expanded">
                     <td></td>
-                    <td colspan="11">
+                    <td colspan="12">
                         <table class="table table-condensed table-bordered">
                             <thead>
                                 <tr>

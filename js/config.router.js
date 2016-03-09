@@ -1745,6 +1745,22 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                 }
             })
 
+            //PHARMACY EDIT PURCHASE
+            .state('pharmacy.purchaseUpdate', {
+                url: '/purchaseUpdate/{id}',
+                templateUrl: 'tpl/pharmacy_purchase/update.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('xeditable').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/pharmacy_purchase/pharmacy_purchase.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+
             //PHARMACY PURCHASE LIST
             .state('pharmacy.purchase', {
                 url: '/purchase',

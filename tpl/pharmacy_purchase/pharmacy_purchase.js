@@ -41,16 +41,18 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                 $rootScope.commonService.GetSupplierList('', '1', false, function (response) {
                     $scope.suppliers = response.supplierList;
 
-//                    $rootScope.commonService.GetProductList('', '1', false, function (response) {
-//                        $scope.products = response.productList;
-
                     $rootScope.commonService.GetPackageUnitList('', '1', false, function (response) {
+
+                        if ($scope.data.formtype == 'update') {
+                            $scope.loadForm();
+                        } else {
+                            $scope.addRow();
+                        }
                         $scope.products = [];
+                        $scope.batches = [];
                         $scope.packings = response.packingList;
-                        $scope.addRow();
                         $scope.loadbar('hide');
                     });
-//                    });
 
                 });
             });
@@ -58,8 +60,9 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
         }
 
         var changeTimer = false;
+        
         $scope.getProduct = function (purchaseitem) {
-            var name = purchaseitem.full_name.$$lastCommittedViewValue;
+            var name = purchaseitem.full_name.$viewValue;
             if (changeTimer !== false)
                 clearTimeout(changeTimer);
 
@@ -121,6 +124,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                 return false;
             }
             $scope.purchaseitems.splice(index, 1);
+            $scope.updatePurchaseRate();
             $timeout(function () {
                 $scope.setFocus('full_name', $scope.purchaseitems.length - 1);
             });
@@ -129,6 +133,12 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
         $scope.checkInput = function (data) {
             if (data == '') {
                 return "Field should not be empty.";
+            }
+        };
+
+        $scope.checkAmount = function (data) {
+            if (data <= 0) {
+                return "Value should not be 0.";
             }
         };
 
@@ -160,6 +170,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             $scope.purchaseitems[key].vat_percent = item.purchaseVat.vat;
 
             $scope.loadbar('show');
+            $scope.updateRow(key);
             $rootScope.commonService.GetBatchListByProduct(item.product_id, function (response) {
                 $scope.batches = response.batchList;
                 $scope.loadbar('hide');
@@ -184,26 +195,34 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             $('#t_mrp_' + key).addClass(t_addclass).removeClass(t_removeclass);
             $('#t_package_name_' + key).addClass(t_addclass).removeClass(t_removeclass);
         }
+        
+        $scope.updateColumn = function($data, key, column){
+            $scope.purchaseitems[key][column] = $data;
+            
+            $scope.updateRow(key);
+        }
 
-        $scope.updateRow = function (purchaseitem, key) {
-            var qty = parseFloat(purchaseitem.quantity.$modelValue);
-            var rate = parseFloat(purchaseitem.purchase_rate.$modelValue);
-            var disc_perc = parseFloat(purchaseitem.discount_percent.$modelValue);
+        $scope.updateRow = function (key) {
+            //Get Data
+            var qty = parseFloat($scope.purchaseitems[key].quantity);
+            var rate = parseFloat($scope.purchaseitems[key].purchase_rate);
+            var disc_perc = parseFloat($scope.purchaseitems[key].discount_percent);
             var vat_perc = parseFloat($scope.purchaseitems[key].vat_percent);
-            var free_qty = parseFloat(purchaseitem.free_quantity.$modelValue);
+            var free_qty = parseFloat($scope.purchaseitems[key].free_quantity);
 
-            qty = angular.isNumber(qty) ? qty : 0;
-            rate = angular.isNumber(rate) ? rate : 0;
-            disc_perc = angular.isNumber(disc_perc) ? disc_perc : 0;
-            vat_perc = angular.isNumber(vat_perc) ? vat_perc : 0;
-            free_qty = angular.isNumber(free_qty) ? free_qty : 0;
+            //Validate isNumer
+            qty = !isNaN(qty) ? qty : 0;
+            rate = !isNaN(rate) ? rate : 0;
+            disc_perc = !isNaN(disc_perc) ? disc_perc : 0;
+            vat_perc = !isNaN(vat_perc) ? vat_perc : 0;
+            free_qty = !isNaN(free_qty) ? free_qty : 0;
 
             var purchase_amount = (qty * rate).toFixed(2);
             var disc_amount = disc_perc > 0 ? (purchase_amount * (disc_perc / 100)).toFixed(2) : 0;
-
+            
             var total_amount = (purchase_amount - disc_amount).toFixed(2);
             var vat_amount = (purchase_amount * (vat_perc / 100)).toFixed(2);
-
+            
             $scope.purchaseitems[key].purchase_amount = purchase_amount;
             $scope.purchaseitems[key].discount_amount = disc_amount;
             $scope.purchaseitems[key].total_amount = total_amount;
@@ -234,7 +253,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
 
             //Get Discount Amount
             var disc_perc = parseFloat($scope.data.discount_percent);
-            disc_perc = angular.isNumber(disc_perc) ? (disc_perc).toFixed(2) : 0;
+            disc_perc = !isNaN(disc_perc) ? (disc_perc).toFixed(2) : 0;
 
             var disc_amount = disc_perc > 0 ? (total_purchase_amount * (disc_perc / 100)).toFixed(2) : 0;
             $scope.data.discount_amount = disc_amount;
@@ -296,10 +315,10 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                         $anchorScroll();
                         if (response.success == true) {
                             $scope.loadbar('hide');
-                            $scope.successMessage = 'Drug class assigned successfully';
+                            $scope.successMessage = 'Purchase Saved successfully';
                             $scope.data = {};
                             $timeout(function () {
-                                $state.go('pharmacy.Purchase');
+                                $state.go('pharmacy.purchase');
                             }, 1000)
                         } else {
                             $scope.loadbar('hide');
@@ -309,6 +328,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                         return false;
                     }
             ).error(function (data, status) {
+                $anchorScroll();
                 $scope.loadbar('hide');
                 if (status == 422)
                     $scope.errorData = $scope.errorSummary(data);
@@ -316,6 +336,38 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                     $scope.errorData = data.message;
             });
         };
+
+        //Get Data for update Form
+        $scope.loadForm = function () {
+            $scope.loadbar('show');
+            _that = this;
+            $scope.errorData = "";
+            $http({
+                url: $rootScope.IRISOrgServiceUrl + "/pharmacypurchases/" + $state.params.id,
+                method: "GET"
+            }).success(
+                    function (response) {
+                        $scope.loadbar('hide');
+                        $scope.data = response;
+                        
+                        $scope.purchaseitems = response.items;
+
+                        angular.forEach($scope.purchaseitems, function (item, key) {
+                            angular.extend($scope.purchaseitems[key], {is_temp: '0', full_name: item.product.full_name, batch_id: item.batch.batch_no, batch_details: item.batch.batch_details, temp_expiry_date: item.batch.expiry_date, temp_mrp: item.batch.mrp, temp_package_name: item.package_name});
+                            $timeout(function () {
+                                $scope.showOrHideRowEdit('hide', key);
+                            });
+                        });
+                    }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        };
+
     }]);
 
 app.filter('moment', function () {
