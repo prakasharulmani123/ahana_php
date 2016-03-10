@@ -1815,10 +1815,42 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                 }
             })
             
+            //PHARMACY SALE LIST
+            .state('pharmacy.sales', {
+                url: '/sales',
+                templateUrl: 'tpl/pharmacy_sale/index.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('xeditable').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/pharmacy_sale/pharmacy_sale.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            
             //SALE CREATE
             .state('pharmacy.saleCreate', {
                 url: '/saleCreate',
                 templateUrl: 'tpl/pharmacy_sale/create.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('xeditable').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/pharmacy_sale/pharmacy_sale.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            
+            //PHARMACY EDIT SALE
+            .state('pharmacy.saleUpdate', {
+                url: '/saleUpdate/{id}',
+                templateUrl: 'tpl/pharmacy_sale/update.html',
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
