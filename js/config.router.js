@@ -1846,8 +1846,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                         }]
                 }
             })
-            
-            //PHARMACY EDIT SALE
+//PHARMACY EDIT SALE
             .state('pharmacy.saleUpdate', {
                 url: '/saleUpdate/{id}',
                 templateUrl: 'tpl/pharmacy_sale/update.html',
@@ -1857,6 +1856,21 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                             return $ocLazyLoad.load('xeditable').then(
                                     function () {
                                         return $ocLazyLoad.load('tpl/pharmacy_sale/pharmacy_sale.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            //PHARMACY PRODUCT ADD
+            .state('pharmacy.stockAdjust', {
+                url: '/stockAdjust',
+                templateUrl: 'tpl/pharmacy_stock/adjust.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['xeditable', 'smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/pharmacy_stock/pharmacy_stock.js');
                                     }
                             );
                         }]

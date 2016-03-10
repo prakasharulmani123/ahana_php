@@ -34,7 +34,6 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
 
         //For Form
         $scope.initForm = function () {
-            $scope.data = {};
             $scope.loadbar('show');
             $rootScope.commonService.GetPaymentType(function (response) {
                 $scope.paymentTypes = response;
