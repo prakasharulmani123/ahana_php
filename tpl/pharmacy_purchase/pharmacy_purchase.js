@@ -34,6 +34,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
 
         //For Form
         $scope.initForm = function () {
+            $scope.data = {};
             $scope.loadbar('show');
             $rootScope.commonService.GetPaymentType(function (response) {
                 $scope.paymentTypes = response;
@@ -46,6 +47,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                         if ($scope.data.formtype == 'update') {
                             $scope.loadForm();
                         } else {
+                            $scope.data.invoice_date = moment().format('YYYY-MM-DD');
                             $scope.addRow();
                         }
                         $scope.products = [];

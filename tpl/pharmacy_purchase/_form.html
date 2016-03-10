@@ -13,7 +13,7 @@
                 <div class="form-group">
                     <label class="col-lg-3 control-label">Invoice Date *</label>
                     <div class="col-lg-9">
-                        <input type="text" placeholder="Invoice Date" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="data.invoice_date" is-open="$parent.opened1" datepicker-options="dateOptions" close-text="Close"  min-date="minDate" ng-click="open($event, 'opened1')" ng-focus="open($event, 'opened1')"/>
+                        <input type="text" placeholder="Invoice Date" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="data.invoice_date" is-open="$parent.opened1" datepicker-options="dateOptions" close-text="Close"  min-date="minDate" ng-click="open($event, 'opened1')" ng-focus="open($event, 'opened1')" prevent-enter="true"/>
                     </div>
                 </div>
             </div>
