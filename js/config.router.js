@@ -1728,7 +1728,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                         }]
                 }
             })
-            
+
             //PHARMACY NEW PURCHASE
             .state('pharmacy.purchaseCreate', {
                 url: '/purchaseCreate',
@@ -1814,7 +1814,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                         }]
                 }
             })
-            
+
             //PHARMACY SALE LIST
             .state('pharmacy.sales', {
                 url: '/sales',
@@ -1830,7 +1830,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                         }]
                 }
             })
-            
+
             //SALE CREATE
             .state('pharmacy.saleCreate', {
                 url: '/saleCreate',
@@ -1846,7 +1846,8 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                         }]
                 }
             })
-//PHARMACY EDIT SALE
+
+            //PHARMACY EDIT SALE
             .state('pharmacy.saleUpdate', {
                 url: '/saleUpdate/{id}',
                 templateUrl: 'tpl/pharmacy_sale/update.html',
