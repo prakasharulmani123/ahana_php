@@ -65,12 +65,20 @@ class PharmacysaleController extends ActiveController {
         $post = Yii::$app->getRequest()->post();
 
         if (!empty($post)) {
+            //Validation
             $model = new PhaSale;
+            if (isset($post['sale_id'])) {
+                $sale = PhaSale::find()->tenant()->andWhere(['sale_id' => $post['sale_id']])->one();
+                if (!empty($sale))
+                    $model = $sale;
+            }
+
             $model->attributes = $post;
             $valid = $model->validate();
 
             foreach ($post['product_items'] as $key => $product_item) {
                 $item_model = new PhaSaleItem();
+                $item_model->scenario = 'saveform';
                 $item_model->attributes = $product_item;
                 $valid = $item_model->validate() && $valid;
                 if (!$valid)
@@ -80,11 +88,31 @@ class PharmacysaleController extends ActiveController {
             if ($valid) {
                 $model->save(false);
 
+                $item_ids = [];
                 foreach ($post['product_items'] as $key => $product_item) {
                     $item_model = new PhaSaleItem();
+
+                    //Edit Mode
+                    if (isset($product_item['sale_item_id'])) {
+                        $item = PhaSaleItem::find()->tenant()->andWhere(['sale_item_id' => $product_item['sale_item_id']])->one();
+                        if (!empty($item))
+                            $item_model = $item;
+                    }
+
                     $item_model->attributes = $product_item;
                     $item_model->sale_id = $model->sale_id;
                     $item_model->save(false);
+                    $item_ids[$item_model->sale_item_id] = $item_model->sale_item_id;
+                }
+
+                //Delete Product Items
+                if (!empty($item_ids)) {
+                    $delete_ids = array_diff($model->getSaleItemIds(), $item_ids);
+
+                    foreach ($delete_ids as $delete_id) {
+                        $item = PhaSaleItem::find()->tenant()->andWhere(['sale_item_id' => $delete_id])->one();
+                        $item->delete();
+                    }
                 }
                 return ['success' => true];
             } else {

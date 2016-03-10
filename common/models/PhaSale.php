@@ -4,6 +4,7 @@ namespace common\models;
 
 use common\models\query\PhaSaleQuery;
 use yii\db\ActiveQuery;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "pha_sale".
@@ -51,7 +52,7 @@ class PhaSale extends RActiveRecord {
     public function rules() {
         return [
             [['patient_id', 'mobile_no', 'consultant_id', 'sale_date'], 'required'],
-            [['tenant_id', 'bill_no', 'patient_id', 'consultant_id', 'created_by', 'modified_by'], 'integer'],
+            [['tenant_id', 'patient_id', 'consultant_id', 'created_by', 'modified_by'], 'integer'],
             [['sale_date', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['payment_type', 'status'], 'string'],
             [['total_item_vat_amount', 'total_item_sale_amount', 'total_item_discount_percent', 'total_item_discount_amount', 'total_item_amount', 'welfare_amount', 'roundoff_amount', 'bill_amount'], 'number'],
@@ -88,7 +89,7 @@ class PhaSale extends RActiveRecord {
             'deleted_at' => 'Deleted At',
         ];
     }
-    
+
     public function beforeSave($insert) {
         if ($insert) {
             $this->bill_no = CoInternalCode::find()->tenant()->codeType("B")->one()->Fullcode;
@@ -96,7 +97,7 @@ class PhaSale extends RActiveRecord {
 
         return parent::beforeSave($insert);
     }
-    
+
     public function afterSave($insert, $changedAttributes) {
         if ($insert) {
             CoInternalCode::increaseInternalCode("B");
@@ -132,9 +133,26 @@ class PhaSale extends RActiveRecord {
     public function getPhaSaleItems() {
         return $this->hasMany(PhaSaleItem::className(), ['sale_id' => 'sale_id']);
     }
-    
+
     public static function find() {
         return new PhaSaleQuery(get_called_class());
+    }
+
+    public function fields() {
+        $extend = [
+            'patient' => function ($model) {
+                return (isset($model->patient) ? $model->patient : '-');
+            },
+            'items' => function ($model) {
+                return (isset($model->phaSaleItems) ? $model->phaSaleItems : '-');
+            },
+        ];
+        $fields = array_merge(parent::fields(), $extend);
+        return $fields;
+    }
+    
+    public function getSaleItemIds() {
+        return ArrayHelper::map($this->phaSaleItems, 'sale_item_id', 'sale_item_id');
     }
 
 }
