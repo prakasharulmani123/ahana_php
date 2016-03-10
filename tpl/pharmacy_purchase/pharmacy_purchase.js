@@ -60,7 +60,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
         }
 
         var changeTimer = false;
-        
+
         $scope.getProduct = function (purchaseitem) {
             var name = purchaseitem.full_name.$viewValue;
             if (changeTimer !== false)
@@ -69,7 +69,8 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             changeTimer = setTimeout(function () {
                 $scope.loadbar('show');
                 $rootScope.commonService.GetProductListByName(name, function (response) {
-                    $scope.products = response.productList;
+                    if (response.productList.length > 0)
+                        $scope.products = response.productList;
                     $scope.loadbar('hide');
                 });
                 changeTimer = false;
@@ -101,7 +102,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                 total_amount: '0',
                 product_id: '',
                 purchase_amount: '0',
-                batch_id: '0',
+                batch_no: '0',
                 is_temp: '0',
             };
             $scope.purchaseitems.push($scope.inserted);
@@ -157,7 +158,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
         };
 
         $scope.updateBatchRow = function (item, model, label, key) {
-            $scope.purchaseitems[key].batch_id = item.batch_no;
+            $scope.purchaseitems[key].batch_no = item.batch_no;
             $scope.purchaseitems[key].temp_expiry_date = item.expiry_date;
             $scope.purchaseitems[key].temp_mrp = item.mrp;
             $scope.purchaseitems[key].temp_package_name = item.product.purchasePackageName;
@@ -172,8 +173,22 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             $scope.loadbar('show');
             $scope.updateRow(key);
             $rootScope.commonService.GetBatchListByProduct(item.product_id, function (response) {
-                $scope.batches = response.batchList;
                 $scope.loadbar('hide');
+                $scope.batches = response.batchList;
+                
+                $scope.purchaseitems[key].batch_no = '';
+                $scope.purchaseitems[key].expiry_date = '';
+                $scope.purchaseitems[key].temp_expiry_date = '';
+                $scope.purchaseitems[key].mrp = 0;
+                $scope.purchaseitems[key].temp_mrp = 0;
+                $scope.purchaseitems[key].package_name = '';
+                $scope.purchaseitems[key].temp_package_name = '';
+                $scope.purchaseitems[key].quantity = 0;
+                $scope.purchaseitems[key].free_quantity = 0;
+                $scope.purchaseitems[key].free_quantity_unit = 0;
+                $scope.purchaseitems[key].purchase_rate = 0;
+                $scope.purchaseitems[key].discount_percent = 0;
+                
             });
         }
 
@@ -195,10 +210,25 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             $('#t_mrp_' + key).addClass(t_addclass).removeClass(t_removeclass);
             $('#t_package_name_' + key).addClass(t_addclass).removeClass(t_removeclass);
         }
-        
-        $scope.updateColumn = function($data, key, column){
+
+        $scope.showOrHideProductBatch = function (mode, key) {
+            if (mode == 'hide') {
+                i_addclass = t_removeclass = 'hide';
+                i_removeclass = t_addclass = '';
+            } else {
+                i_addclass = t_removeclass = '';
+                i_removeclass = t_addclass = 'hide';
+            }
+            $('#i_full_name_' + key).addClass(i_addclass).removeClass(i_removeclass);
+            $('#i_batch_details_' + key).addClass(i_addclass).removeClass(i_removeclass);
+
+            $('#t_full_name_' + key).addClass(t_addclass).removeClass(t_removeclass);
+            $('#t_batch_details_' + key).addClass(t_addclass).removeClass(t_removeclass);
+        }
+
+        $scope.updateColumn = function ($data, key, column) {
             $scope.purchaseitems[key][column] = $data;
-            
+
             $scope.updateRow(key);
         }
 
@@ -219,10 +249,10 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
 
             var purchase_amount = (qty * rate).toFixed(2);
             var disc_amount = disc_perc > 0 ? (purchase_amount * (disc_perc / 100)).toFixed(2) : 0;
-            
+
             var total_amount = (purchase_amount - disc_amount).toFixed(2);
             var vat_amount = (purchase_amount * (vat_perc / 100)).toFixed(2);
-            
+
             $scope.purchaseitems[key].purchase_amount = purchase_amount;
             $scope.purchaseitems[key].discount_amount = disc_amount;
             $scope.purchaseitems[key].total_amount = total_amount;
@@ -279,6 +309,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             $scope.data.invoice_date = moment($scope.data.invoice_date).format('YYYY-MM-DD');
 
             angular.forEach($scope.purchaseitems, function (purchaseitem, key) {
+                //Manual functions for Temp records//
                 if (purchaseitem.is_temp == '1') {
                     exp_date = purchaseitem.temp_expiry_date;
                     $scope.purchaseitems[key].mrp = purchaseitem.temp_mrp;
@@ -298,9 +329,9 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                 if (angular.isObject(purchaseitem.batch_details)) {
                     $scope.purchaseitems[key].batch_details = purchaseitem.batch_details.batch_details;
                 } else if (typeof purchaseitem.batch_details == 'undefined') {
-                    $scope.purchaseitems[key].batch_id = '';
-                } else if (purchaseitem.batch_id == '0' && typeof purchaseitem.batch_details !== 'undefined') {
-                    $scope.purchaseitems[key].batch_id = purchaseitem.batch_details;
+                    $scope.purchaseitems[key].batch_no = '';
+                } else if ((purchaseitem.batch_no == '0' || purchaseitem.batch_no == '') && typeof purchaseitem.batch_details !== 'undefined') {
+                    $scope.purchaseitems[key].batch_no = purchaseitem.batch_details;
                 }
             });
 
@@ -347,16 +378,26 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                 method: "GET"
             }).success(
                     function (response) {
-                        $scope.loadbar('hide');
-                        $scope.data = response;
-                        
-                        $scope.purchaseitems = response.items;
 
-                        angular.forEach($scope.purchaseitems, function (item, key) {
-                            angular.extend($scope.purchaseitems[key], {is_temp: '0', full_name: item.product.full_name, batch_id: item.batch.batch_no, batch_details: item.batch.batch_details, temp_expiry_date: item.batch.expiry_date, temp_mrp: item.batch.mrp, temp_package_name: item.package_name});
-                            $timeout(function () {
-                                $scope.showOrHideRowEdit('hide', key);
+                        $rootScope.commonService.GetProductList('', '1', false, function (response2) {
+                            $scope.loadbar('hide');
+
+                            $scope.data = response;
+                            $scope.products = response2.productList;
+
+                            $scope.purchaseitems = response.items;
+                            angular.forEach($scope.purchaseitems, function (item, key) {
+                                angular.extend($scope.purchaseitems[key], {is_temp: '0', full_name: item.product.full_name, batch_no: item.batch.batch_no, batch_details: item.batch.batch_details, temp_expiry_date: item.batch.expiry_date, temp_mrp: item.batch.mrp, temp_package_name: item.package_name});
+                                $timeout(function () {
+                                    $scope.showOrHideRowEdit('hide', key);
+                                    $scope.showOrHideProductBatch('hide', key);
+                                });
                             });
+
+                            $timeout(function () {
+                                delete $scope.data.supplier;
+                                delete $scope.data.items;
+                            }, 3000);
                         });
                     }
             ).error(function (data, status) {

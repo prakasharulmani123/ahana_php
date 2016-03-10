@@ -58,7 +58,7 @@
             <div class="panel-body">
                 <div class="form-group">
                     <div class="col-sm-12">
-                        
+
                         <table class="table table-bordered table-hover table-condensed bg-white-only" id="item_table">
                             <tr style="font-weight: bold">
                                 <td><span>Product Name</span></td>
@@ -80,12 +80,22 @@
                             </tr>
                             <tr ng-repeat="(key, purchaseitem) in purchaseitems">
                                 <td>
-                                    <span editable-text="purchaseitem.full_name" e-class="fullname" e-form="tableform" onbeforesave="checkInput($data)" e-typeahead="product as product.full_name for product in products | filter:$viewValue | limitTo:8" e-typeahead-editable="false" e-typeahead-on-select="updateProductRow($item, $model, $label, key)" e-ng-keyup="getProduct(tableform)" e-ng-keydown="getProduct(tableform)" e-autocomplete="off" data-e-id="full_name" e-name='full_name'>
+                                    <div id="i_full_name_{{key}}">
+                                        <span editable-text="purchaseitem.full_name" e-class="fullname" e-form="tableform" onbeforesave="checkInput($data)" e-typeahead="product as product.full_name for product in products | filter:$viewValue | limitTo:8" e-typeahead-editable="false" e-typeahead-on-select="updateProductRow($item, $model, $label, key)" e-ng-keyup="getProduct(tableform)" e-ng-keydown="getProduct(tableform)" e-autocomplete="off" data-e-id="full_name" e-name='full_name'>
+                                            {{ purchaseitem.full_name || 'empty' }}
+                                        </span>
+                                    </div>
+                                    <span id="t_full_name_{{key}}" class="hide">
                                         {{ purchaseitem.full_name || 'empty' }}
                                     </span>
                                 </td>
                                 <td>
-                                    <span editable-text="purchaseitem.batch_details" e-form="tableform" onbeforesave="checkInput($data)" e-typeahead="batch as batch.batch_details for batch in batches | filter:$viewValue | limitTo:8" e-autocomplete="off" e-typeahead-on-select="updateBatchRow($item, $model, $label, key)" e-ng-change="showOrHideRowEdit('show', key)">
+                                    <div id="i_batch_details_{{key}}">
+                                        <span editable-text="purchaseitem.batch_details" e-form="tableform" onbeforesave="checkInput($data)" e-typeahead="batch as batch.batch_details for batch in batches | filter:$viewValue | limitTo:8" e-autocomplete="off" e-typeahead-on-select="updateBatchRow($item, $model, $label, key)" e-ng-change="showOrHideRowEdit('show', key)">
+                                            {{ purchaseitem.batch_details || 'empty' }}
+                                        </span>
+                                    </div>
+                                    <span id="t_batch_details_{{key}}" class="hide">
                                         {{ purchaseitem.batch_details || 'empty' }}
                                     </span>
                                 </td>
@@ -137,7 +147,7 @@
                                 <td><span>{{purchaseitem.total_amount}}</span></td>
 
                                 <td>
-                                    <button type="button" ng-click="removeSubcat($index, purchaseitem.full_name)" class="btn btn-sm btn-danger pull-right">Delete</button>
+                                    <button type="button" ng-click="removeSubcat($index, purchaseitem.full_name)" class="btn btn-sm btn-danger pull-right">Remove</button>
                                 </td>
                             </tr>
                         </table>
