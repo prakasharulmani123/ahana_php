@@ -4,6 +4,7 @@ namespace common\models;
 
 use common\models\query\PhaPurchaseQuery;
 use yii\db\ActiveQuery;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "pha_purchase".
@@ -144,4 +145,9 @@ class PhaPurchase extends RActiveRecord
         }
         return parent::afterSave($insert, $changedAttributes);
     }
+    
+    public function getProductItemIds() {
+        return ArrayHelper::map($this->phaPurchaseItems, 'purchase_item_id', 'purchase_item_id');
+    }
+
 }

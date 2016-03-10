@@ -78,6 +78,7 @@ class PharmacypurchaseController extends ActiveController {
 
             foreach ($post['product_items'] as $key => $product_item) {
                 $item_model = new PhaPurchaseItem();
+                $item_model->scenario = 'saveform';
                 $item_model->attributes = $product_item;
                 $valid = $item_model->validate() && $valid;
                 if (!$valid)
@@ -87,9 +88,12 @@ class PharmacypurchaseController extends ActiveController {
 
             if ($valid) {
                 $model->save(false);
-
+                
+                $item_ids = [];
                 foreach ($post['product_items'] as $key => $product_item) {
                     $item_model = new PhaPurchaseItem();
+                    
+                    //Edit Mode
                     if (isset($product_item['purchase_item_id'])) {
                         $item = PhaPurchaseItem::find()->tenant()->andWhere(['purchase_item_id' => $product_item['purchase_item_id']])->one();
                         if (!empty($item))
@@ -99,7 +103,19 @@ class PharmacypurchaseController extends ActiveController {
                     $item_model->attributes = $product_item;
                     $item_model->purchase_id = $model->purchase_id;
                     $item_model->save(false);
+                    $item_ids[$item_model->purchase_item_id] = $item_model->purchase_item_id;
                 }
+                
+                //Delete Product Items
+                if(!empty($item_ids)){
+                    $delete_ids = array_diff($model->getProductItemIds(), $item_ids);
+                    
+                    foreach ($delete_ids as $delete_id) {
+                        $item = PhaPurchaseItem::find()->tenant()->andWhere(['purchase_item_id' => $delete_id])->one();
+                        $item->delete();
+                    }
+                }
+                
                 return ['success' => true];
             } else {
                 return ['success' => false, 'message' => Html::errorSummary([$model, $item_model])];
