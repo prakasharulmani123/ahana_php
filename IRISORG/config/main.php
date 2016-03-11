@@ -80,6 +80,7 @@ return [
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/pharmacyproductbatch'], 'extraPatterns' => ['POST remove' => 'remove', 'GET getbatchbyproduct' => 'getbatchbyproduct']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/pharmacysale'], 'extraPatterns' => ['POST remove' => 'remove', 'POST savesale' => 'savesale']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/pharmacypurchasereturn'], 'extraPatterns' => ['POST remove' => 'remove', 'POST savepurchasereturn' => 'savepurchasereturn']],
+                ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/pharmacysalereturn'], 'extraPatterns' => ['POST remove' => 'remove', 'POST savesalereturn' => 'savesalereturn']],
             ],
         ],
         'log' => [
