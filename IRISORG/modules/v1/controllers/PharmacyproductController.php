@@ -10,6 +10,7 @@ use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
 use yii\filters\auth\QueryParamAuth;
 use yii\filters\ContentNegotiator;
+use yii\helpers\Html;
 use yii\rest\ActiveController;
 use yii\web\Response;
 
@@ -121,7 +122,7 @@ class PharmacyproductController extends ActiveController {
             if ($post['search_by'] == 'pha_product.product_name') {
                 $having_column = "CONCAT(pha_product.product_name, ' | ', pha_product.product_unit_count, ' | ', pha_product.product_unit) AS search_column";
             } else {
-                $having_column = $post['search_by'].' AS search_column';
+                $having_column = $post['search_by'] . ' AS search_column';
             }
 
             $products = PhaProductBatch::find()
@@ -150,9 +151,39 @@ class PharmacyproductController extends ActiveController {
                 if ($model->save())
                     return ['success' => true, 'batch' => $model];
                 else
-                    return ['success' => false, 'message' => 'Failed to save'];
+                    return ['success' => false, 'message' => Html::errorSummary([$model])];
             }
         }else {
+            return ['success' => false, 'message' => 'Invalid Access'];
+        }
+    }
+
+    public function actionUpdatebatch() {
+        $post = Yii::$app->getRequest()->post();
+
+        if (!empty($post)) {
+            $model = PhaProductBatch::find()->tenant()->andWhere(['batch_id' => $post['batch_id']])->one();
+
+            if (!empty($model)) {
+                $model->expiry_date = $post['expiry_date'];
+                $model->batch_no = $post['batch_no'];
+
+                $rate = $model->phaProductBatchRate;
+                $rate->mrp = $post['mrp'];
+
+                $valid = $model->validate();
+                $valid = $rate->validate() && $valid;
+
+                if ($valid) {
+                    $model->save(false);
+                    $rate->save(false);
+                    
+                    return ['success' => true, 'batch' => $model];
+                } else {
+                    return ['success' => false, 'message' => Html::errorSummary([$model, $rate])];
+                }
+            }
+        } else {
             return ['success' => false, 'message' => 'Invalid Access'];
         }
     }

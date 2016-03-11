@@ -44,7 +44,8 @@ class PhaProductBatch extends RActiveRecord {
             [['tenant_id', 'product_id', 'total_qty', 'available_qty', 'created_by', 'modified_by'], 'integer'],
             [['expiry_date', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['status'], 'string'],
-            [['batch_no'], 'string', 'max' => 255]
+            [['batch_no'], 'string', 'max' => 255],
+            [['batch_no'], 'unique', 'targetAttribute' => ['tenant_id', 'product_id', 'batch_no', 'expiry_date', 'deleted_at'], 'message' => 'The combination of Batch NO. & Expiry Date has already been taken.']
         ];
     }
 
@@ -86,8 +87,8 @@ class PhaProductBatch extends RActiveRecord {
     /**
      * @return ActiveQuery
      */
-    public function getPhaProductBatchRates() {
-        return $this->hasMany(PhaProductBatchRate::className(), ['batch_id' => 'batch_id'])->orderBy(['created_at' => SORT_DESC]);
+    public function getPhaProductBatchRate() {
+        return $this->hasOne(PhaProductBatchRate::className(), ['batch_id' => 'batch_id'])->orderBy(['created_at' => SORT_DESC]);
     }
 
     public static function find() {
@@ -100,7 +101,7 @@ class PhaProductBatch extends RActiveRecord {
                 return $model->batch_no . ' (' . date('M Y', strtotime($model->expiry_date)) . ')';
             },
             'mrp' => function ($model) {
-                return isset($model->phaProductBatchRates) ? $model->phaProductBatchRates[0]->mrp : 0;
+                return isset($model->phaProductBatchRate) ? $model->phaProductBatchRate->mrp : 0;
             },
             'product' => function ($model) {
                 return isset($model->product) ? $model->product : '';
@@ -110,4 +111,8 @@ class PhaProductBatch extends RActiveRecord {
         return $fields;
     }
 
+    public function beforeSave($insert) {
+        $this->expiry_date = date('Y-m', strtotime($this->expiry_date)).'-01';
+        return parent::beforeSave($insert);
+    }
 }
