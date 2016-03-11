@@ -187,6 +187,21 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             $scope.saleItems[key].mrp = item.mrp;
         }
 
+        $scope.showOrHideProductBatch = function (mode, key) {
+            if (mode == 'hide') {
+                i_addclass = t_removeclass = 'hide';
+                i_removeclass = t_addclass = '';
+            } else {
+                i_addclass = t_removeclass = '';
+                i_removeclass = t_addclass = 'hide';
+            }
+            $('#i_full_name_' + key).addClass(i_addclass).removeClass(i_removeclass);
+            $('#i_batch_details_' + key).addClass(i_addclass).removeClass(i_removeclass);
+
+            $('#t_full_name_' + key).addClass(t_addclass).removeClass(t_removeclass);
+            $('#t_batch_details_' + key).addClass(t_addclass).removeClass(t_removeclass);
+        }
+
         $scope.updateColumn = function ($data, key, column) {
             $scope.saleItems[key][column] = $data;
             $scope.updateRow(key);
@@ -263,6 +278,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             $scope.data.sale_date = moment($scope.data.sale_date).format('YYYY-MM-DD');
 
             angular.forEach($scope.saleItems, function (saleitem, key) {
+//                alert(saleitem.expiry_date);
                 $scope.saleItems[key].expiry_date = moment(saleitem.expiry_date).format('YYYY-MM-DD');
 
                 if (angular.isObject(saleitem.full_name)) {
@@ -312,7 +328,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                     $scope.errorData = data.message;
             });
         };
-        
+
         //Get Data for update Form
         $scope.loadForm = function () {
             $scope.loadbar('show');
@@ -323,25 +339,33 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 method: "GET"
             }).success(
                     function (response) {
-                        $rootScope.commonService.GetProductList('', '1', false, function (response2) {
-                            $scope.loadbar('hide');
+//                        $rootScope.commonService.GetProductList('', '1', false, function (response2) {
+//                            
+//                        });
+                        $scope.loadbar('hide');
 
-                            $scope.data = response;
-                            $scope.products = response2.productList;
+                        $scope.data = response;
+                        $scope.products = [];
+//                        $scope.products = response2.productList;
 
-                            $scope.saleItems = response.items;
-                            angular.forEach($scope.saleItems, function (item, key) {
-                                angular.extend($scope.saleItems[key], {
-                                    full_name: item.product.full_name, 
-                                    batch_no: item.batch.batch_no, 
-                                    batch_details: item.batch.batch_details
-                                });
+                        $scope.saleItems = response.items;
+//                        console.log($scope.saleItems);
+                        angular.forEach($scope.saleItems, function (item, key) {
+                            angular.extend($scope.saleItems[key], {
+                                full_name: item.product.full_name,
+                                batch_no: item.batch.batch_no,
+                                batch_details: item.batch.batch_details,
+                                expiry_date: item.batch.expiry_date
                             });
-
-//                            $timeout(function () {
-//                                delete $scope.data.items;
-//                            }, 3000);
+                            $timeout(function () {
+                                $scope.showOrHideProductBatch('hide', key);
+                            });
                         });
+
+                        $timeout(function () {
+                            delete $scope.data.items;
+                        }, 3000);
+
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');

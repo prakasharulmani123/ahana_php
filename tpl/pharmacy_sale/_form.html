@@ -96,12 +96,22 @@
                             </tr>
                             <tr ng-repeat="(key, saleitem) in saleItems">
                                 <td>
-                                    <span editable-text="saleitem.full_name" e-class="fullname" e-name="full_name" e-form="tableform" onbeforesave="checkInput($data)" e-typeahead="product as product.full_name for product in products | filter:$viewValue | limitTo:8" e-typeahead-editable="false" e-typeahead-on-select="updateProductRow($item, $model, $label, key)" e-ng-keyup="getProduct(tableform)" e-ng-keydown="getProduct(tableform)" e-autocomplete="off" data-e-id="full_name" e-name='full_name'>
+                                    <div id="i_full_name_{{key}}">
+                                        <span editable-text="saleitem.full_name" e-class="fullname" e-name="full_name" e-form="tableform" onbeforesave="checkInput($data)" e-typeahead="product as product.full_name for product in products | filter:$viewValue | limitTo:8" e-typeahead-editable="false" e-typeahead-on-select="updateProductRow($item, $model, $label, key)" e-ng-keyup="getProduct(tableform)" e-ng-keydown="getProduct(tableform)" e-autocomplete="off" data-e-id="full_name" e-name='full_name'>
+                                            {{ saleitem.full_name || 'empty' }}
+                                        </span>
+                                    </div>
+                                    <span id="t_full_name_{{key}}" class="hide">
                                         {{ saleitem.full_name || 'empty' }}
                                     </span>
                                 </td>
                                 <td>
-                                    <span editable-text="saleitem.batch_details" e-name="batch_details" e-form="tableform" onbeforesave="checkInput($data)" e-typeahead="batch as batch.batch_details for batch in batches | filter:$viewValue | limitTo:8" e-typeahead-editable="false" e-autocomplete="off" e-typeahead-on-select="updateBatchRow($item, $model, $label, key)">
+                                    <div id="i_batch_details_{{key}}">
+                                        <span editable-text="saleitem.batch_details" e-name="batch_details" e-form="tableform" onbeforesave="checkInput($data)" e-typeahead="batch as batch.batch_details for batch in batches | filter:$viewValue | limitTo:8" e-typeahead-editable="false" e-autocomplete="off" e-typeahead-on-select="updateBatchRow($item, $model, $label, key)">
+                                            {{ saleitem.batch_details || 'empty' }}
+                                        </span>
+                                    </div>
+                                    <span id="t_batch_details_{{key}}" class="hide">
                                         {{ saleitem.batch_details || 'empty' }}
                                     </span>
                                 </td>

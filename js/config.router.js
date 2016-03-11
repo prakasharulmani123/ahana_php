@@ -1927,7 +1927,55 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                 }
             })
             
-            //PHARMACY PRODUCT ADD
+            //PHARMACY SALE RETURN LIST
+            .state('pharmacy.saleReturn', {
+                url: '/saleReturn',
+                templateUrl: 'tpl/pharmacy_sale_return/index.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('xeditable').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/pharmacy_sale_return/pharmacy_sale_return.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            
+            //SALE RETURN CREATE
+            .state('pharmacy.saleReturnCreate', {
+                url: '/saleReturnCreate',
+                templateUrl: 'tpl/pharmacy_sale_return/create.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('xeditable').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/pharmacy_sale_return/pharmacy_sale_return.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            
+            //PHARMACY EDIT SALE RETURN
+            .state('pharmacy.saleReturnUpdate', {
+                url: '/saleReturnUpdate/{id}',
+                templateUrl: 'tpl/pharmacy_sale_return/update.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('xeditable').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/pharmacy_sale_return/pharmacy_sale_return.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+
+		//PHARMACY PRODUCT ADD
             .state('pharmacy.batchDetails', {
                 url: '/batchDetails',
                 templateUrl: 'tpl/pharmacy_stock/batch_details.html',
