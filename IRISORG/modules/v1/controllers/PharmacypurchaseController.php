@@ -124,5 +124,10 @@ class PharmacypurchaseController extends ActiveController {
             return ['success' => false, 'message' => 'Fill the Form'];
         }
     }
+    
+    public function actionReportlist() {
+        echo 'hi';
+        exit;
+    }
 
 }
