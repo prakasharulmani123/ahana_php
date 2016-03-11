@@ -88,7 +88,11 @@ class PhaProductBatch extends RActiveRecord {
      * @return ActiveQuery
      */
     public function getPhaProductBatchRate() {
-        return $this->hasOne(PhaProductBatchRate::className(), ['batch_id' => 'batch_id'])->orderBy(['created_at' => SORT_DESC]);
+        return $this->hasOne(PhaProductBatchRate::className(), ['batch_id' => 'batch_id']);
+    }
+
+    public function getPhaProductBatchRates() {
+        return $this->hasMany(PhaProductBatchRate::className(), ['batch_id' => 'batch_id'])->orderBy(['created_at' => SORT_DESC]);
     }
 
     public static function find() {

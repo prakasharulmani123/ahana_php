@@ -128,6 +128,7 @@ class PharmacyproductController extends ActiveController {
             $products = PhaProductBatch::find()
                     ->addSelect(["*", $having_column])
                     ->joinWith('product')
+                    ->joinWith('phaProductBatchRate')
                     ->andWhere(['pha_product.tenant_id' => $tenant_id])
                     ->andHaving("search_column LIKE '$text'")
                     ->all();
