@@ -5,7 +5,7 @@ app.controller('stockController', ['$rootScope', '$scope', '$timeout', '$http', 
         editableOptions.theme = 'bs3';
 
         $scope.initForm = function () {
-            $scope.searchByLists = [{'value': 'pha_product.product_name', 'label': 'Product Name'}, {'value': 'pha_product.product_code', 'label': 'Product Code'}, {'value': 'available_qty', 'label': 'Available'}, {'value': 'batch_no', 'label': 'Batch No'}];
+            $scope.searchByLists = [{'value': 'pha_product.product_name', 'label': 'Product Name'}, {'value': 'pha_product.product_code', 'label': 'Product Code'}, {'value': 'available_qty', 'label': 'Available'}, {'value': 'batch_no', 'label': 'Batch No'}, {'value': 'pha_product_batch_rate.mrp', 'label': 'MRP'}];
             $scope.searchTypes = [{'value': 'B', 'label': 'Begin With'}, {'value': 'C', 'label': 'Content With'}, {'value': 'E', 'label': 'End With'}];
         }
 
@@ -100,7 +100,7 @@ app.controller('stockController', ['$rootScope', '$scope', '$timeout', '$http', 
                     .success(function (response) {
                         $scope.loadbar('hide');
                         if (response.success === true) {
-                            $scope.successMessage = 'Stock Adjusted successfully';
+                            $scope.successMessage = 'Batch Details saved successfully';
                             $scope.displayedCollection[key].available_qty = response.batch.available_qty;
                             $scope.displayedCollection[key].add_stock = 0;
                         } else {

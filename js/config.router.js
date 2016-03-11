@@ -1943,6 +1943,22 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                 }
             })
 
+            //PHARMACY REPORT
+            .state('pharmacy.report', {
+                url: '/report',
+                templateUrl: 'tpl/pharmacy_report/report.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['xeditable', 'smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/pharmacy_report/report.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+
     $httpProvider.interceptors.push('APIInterceptor');
 
 }
