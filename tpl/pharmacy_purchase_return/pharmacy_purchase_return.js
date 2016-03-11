@@ -303,7 +303,7 @@ app.controller('PurchaseReturnController', ['$rootScope', '$scope', '$timeout', 
                             $scope.successMessage = 'PurchaseReturn Saved successfully';
                             $scope.data = {};
                             $timeout(function () {
-                                $state.go('pharmacy.purchasereturn');
+                                $state.go('pharmacy.purchaseReturn');
                             }, 1000)
                         } else {
                             $scope.loadbar('hide');
@@ -341,7 +341,7 @@ app.controller('PurchaseReturnController', ['$rootScope', '$scope', '$timeout', 
 
                             $scope.purchasereturnitems = response.items;
                             angular.forEach($scope.purchasereturnitems, function (item, key) {
-                                angular.extend($scope.purchasereturnitems[key], {full_name: item.product.full_name, batch_no: item.batch.batch_no, batch_details: item.batch.batch_details});
+                                angular.extend($scope.purchasereturnitems[key], {full_name: item.product.full_name, batch_no: item.batch.batch_no, batch_details: item.batch.batch_details, expiry_date: item.batch.expiry_date});
                                 $timeout(function () {
                                     $scope.showOrHideProductBatch('hide', key);
                                 });

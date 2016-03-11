@@ -1,5 +1,5 @@
 <div class="bg-light lter b-b wrapper-md">
-    <h1 class="m-n font-thin h3">PurchaseReturn List</h1>
+    <h1 class="m-n font-thin h3">Purchase Return List</h1>
 </div>
 <div class="wrapper-md" ng-controller="PurchaseReturnController" ng-init="loadPurchaseReturnItemList()">
     <div ng-include="'tpl/blocks/alert.html'">
@@ -10,8 +10,8 @@
             <button class="btn btn-sm btn-grey" ng-click="loadPurchaseReturnItemList()"> 
                 &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
             </button>
-            <button check-access-button ng-click="$state.go('pharmacy.purchasereturnCreate')" class="btn btn-sm btn-info pull-right">
-                <i class="fa fa-plus"></i> &nbsp; Add new PurchaseReturn
+            <button check-access-button ng-click="$state.go('pharmacy.purchaseReturnCreate')" class="btn btn-sm btn-info pull-right">
+                <i class="fa fa-plus"></i> &nbsp; Add new Purchase Return
             </button>
         </div>
         <table st-table="displayedCollection"  st-safe-src="rowCollection" class="table table-bordered table-striped">
@@ -23,17 +23,17 @@
                             <i ng-if="allExpanded" class="fa fa-minus text"></i>
                         </button>
                     </th>
-                    <th st-sort="purchasereturn_code">PurchaseReturn #</th>
+                    <th st-sort="purchase_return_code">Purchase Return #</th>
                     <th st-sort="invoice_date">Invoice Date</th>
                     <th st-sort="invoice_no">Invoice No.</th>
                     <th st-sort="supplier.supplier_name">Supplier Name</th>
-                    <th st-sort="total_item_purchase_ret_amount">Total PurchaseReturn Amount</th>
+                    <th st-sort="total_item_purchase_ret_amount">Total Purchase Ret. Amount</th>
                     <th st-sort="total_item_vat_amount">Total Vat Amount</th>
                     <th st-sort="total_item_discount_amount">Total Product Disc. Amount</th>
                     <th st-sort="discount_percent">Disc. %</th>
                     <th st-sort="discount_amount">Disc Amount</th>
                     <th st-sort="roundoff_amount">Roundoff Amount</th>
-                    <th st-sort="net_amount">net Amount</th>
+                    <th st-sort="net_amount">Net Amount</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -45,7 +45,7 @@
                             <i ng-if="expanded" class="fa fa-minus text"></i>
                         </button>
                     </td>
-                    <td>{{row.purchasereturn_code}}</td>
+                    <td>{{row.purchase_ret_code}}</td>
                     <td>{{row.invoice_date}}</td>
                     <td>{{row.invoice_no}}</td>
                     <td>{{row.supplier.supplier_name}}</td>
@@ -57,7 +57,7 @@
                     <td>{{row.roundoff_amount}}</td>
                     <td>{{row.net_amount}}</td>
                     <td>
-                        <a title="Edit" check-access  ui-sref="pharmacy.purchasereturnUpdate({id: '{{row.purchasereturn_id}}'})">
+                        <a title="Edit" check-access  ui-sref="pharmacy.purchaseReturnUpdate({id: '{{row.purchase_ret_id}}'})">
                             <i class="fa fa-pencil"></i>
                         </a>
                     </td>
