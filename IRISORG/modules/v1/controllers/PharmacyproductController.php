@@ -118,11 +118,17 @@ class PharmacyproductController extends ActiveController {
                     break;
             }
 
+            if ($post['search_by'] == 'pha_product.product_name') {
+                $having_column = "CONCAT(pha_product.product_name, ' | ', pha_product.product_unit_count, ' | ', pha_product.product_unit) AS search_column";
+            } else {
+                $having_column = $post['search_by'].' AS search_column';
+            }
+
             $products = PhaProductBatch::find()
-                    ->addSelect(["*", "CONCAT(pha_product.product_name, ' | ', pha_product.product_unit_count, ' | ', pha_product.product_unit) AS full_name"])
+                    ->addSelect(["*", $having_column])
                     ->joinWith('product')
                     ->andWhere(['pha_product.tenant_id' => $tenant_id])
-                    ->andHaving("full_name LIKE '$text'")
+                    ->andHaving("search_column LIKE '$text'")
                     ->all();
         } else {
             $products = PhaProductBatch::find()->tenant()->all();
