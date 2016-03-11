@@ -1910,10 +1910,27 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                         }]
                 }
             })
+            
             //PHARMACY PRODUCT ADD
             .state('pharmacy.stockAdjust', {
                 url: '/stockAdjust',
                 templateUrl: 'tpl/pharmacy_stock/adjust.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['xeditable', 'smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/pharmacy_stock/pharmacy_stock.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            
+            //PHARMACY PRODUCT ADD
+            .state('pharmacy.batchDetails', {
+                url: '/batchDetails',
+                templateUrl: 'tpl/pharmacy_stock/batch_details.html',
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {

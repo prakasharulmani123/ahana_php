@@ -43,9 +43,60 @@ app.controller('stockController', ['$rootScope', '$scope', '$timeout', '$http', 
                     });
         };
 
+        $scope.loadBatchList = function () {
+            $scope.loadbar('show');
+            $scope.isLoading = true;
+            
+            $scope.errorData = "";
+            $scope.successMessage = "";
+            
+            // pagination set up
+            $scope.rowCollection = [];  // base collection
+            $scope.itemsByPage = 20; // No.of records per page
+            $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
+
+            // Get data's from service
+            $http.post($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/searchbycriteria')
+                    .success(function (products) {
+                        $scope.isLoading = false;
+                        $scope.loadbar('hide');
+                        angular.forEach(products.productLists, function (product, key) {
+                            angular.extend(products.productLists[key], {full_name: product.product.full_name, description_name: product.product.description_name});
+                        });
+                        $scope.rowCollection = products.productLists;
+                        $scope.displayedCollection = [].concat($scope.rowCollection);
+                    })
+                    .error(function () {
+                        $scope.errorData = "An Error has occured while loading products!";
+                    });
+        };
+
         $scope.adjustStock = function ($data, batch_id, key) {
             $scope.loadbar('show');
+            $scope.errorData = "";
+            $scope.successMessage = "";
             $http.post($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/adjuststock', {'batch_id': batch_id, 'adjust_qty': $data})
+                    .success(function (response) {
+                        $scope.loadbar('hide');
+                        if (response.success === true) {
+                            $scope.successMessage = 'Stock Adjusted successfully';
+                            $scope.displayedCollection[key].available_qty = response.batch.available_qty;
+                            $scope.displayedCollection[key].add_stock = 0;
+                        } else {
+                            $scope.errorData = response.message;
+                        }
+                    })
+                    .error(function () {
+                        $scope.errorData = "An Error has occured while loading products!";
+                    });
+        }
+
+        $scope.updateBatch = function ($data, batch_id, key) {
+            $scope.loadbar('show');
+            $scope.errorData = "";
+            $scope.successMessage = "";
+            angular.extend($data, {'batch_id': batch_id});
+            $http.post($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/updatebatch', $data)
                     .success(function (response) {
                         $scope.loadbar('hide');
                         if (response.success === true) {
