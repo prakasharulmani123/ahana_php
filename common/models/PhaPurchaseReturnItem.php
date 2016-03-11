@@ -39,6 +39,7 @@ use yii\db\ActiveQuery;
  */
 class PhaPurchaseReturnItem extends RActiveRecord
 {
+    public $expiry_date;
     public $batch_no;
     /**
      * @inheritdoc
@@ -59,7 +60,7 @@ class PhaPurchaseReturnItem extends RActiveRecord
             [['tenant_id', 'purchase_ret_id', 'product_id', 'batch_id', 'quantity', 'free_quantity', 'free_quantity_unit', 'created_by', 'modified_by'], 'integer'],
             [['mrp', 'purchase_ret_rate', 'purchase_ret_amount', 'discount_percent', 'discount_amount', 'total_amount', 'vat_amount', 'vat_percent'], 'number'],
             [['status'], 'string'],
-            [['created_at', 'modified_at', 'deleted_at'], 'safe'],
+            [['created_at', 'modified_at', 'deleted_at', 'expiry_date', 'batch_no'], 'safe'],
             [['package_name'], 'string', 'max' => 255],
             ['purchase_ret_rate', 'validateProductRate'],
             [['quantity', 'mrp', 'purchase_ret_rate', 'purchase_ret_amount', 'total_amount'], 'validateAmount'],
@@ -144,6 +145,19 @@ class PhaPurchaseReturnItem extends RActiveRecord
         return new PhaPurchaseReturnItemQuery(get_called_class());
     }
     
+    public function fields() {
+        $extend = [
+            'product' => function ($model) {
+                return (isset($model->product) ? $model->product : '-');
+            },
+            'batch' => function ($model) {
+                return (isset($model->batch) ? $model->batch : '-');
+            },
+        ];
+        $fields = array_merge(parent::fields(), $extend);
+        return $fields;
+    }
+    
     public function beforeSave($insert) {
         //Update Batch
         if ($insert) {
@@ -151,12 +165,12 @@ class PhaPurchaseReturnItem extends RActiveRecord
         } else {
             $old_qty = $this->getOldAttribute('quantity');
             $new_qty = $this->quantity;
-
-            //Add New Quantity
+            
+            //Subtract New Quantity
             if ($old_qty < $new_qty) {
                 $batch = $this->updateBatch(($new_qty - $old_qty), '-');
             }
-            //Subtract New Quantity
+            //Add New Quantity
             else if ($new_qty < $old_qty) {
                 $batch = $this->updateBatch(($old_qty - $new_qty), '+');
             }
@@ -172,8 +186,10 @@ class PhaPurchaseReturnItem extends RActiveRecord
             $this->batch_id = $batch->batch_id;
             if ($sep == '-') {
                 $batch->available_qty = $batch->available_qty - $quantity;
+                $batch->total_qty = $batch->total_qty - $quantity;
             } else {
                 $batch->available_qty = $batch->available_qty + $quantity;
+                $batch->total_qty = $batch->total_qty + $quantity;
             }
             $batch->save(false);
         }

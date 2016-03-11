@@ -4,6 +4,7 @@ namespace common\models;
 
 use common\models\query\PhaPurchaseReturnQuery;
 use yii\db\ActiveQuery;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "pha_purchase_return".
@@ -14,7 +15,7 @@ use yii\db\ActiveQuery;
  * @property string $invoice_date
  * @property string $invoice_no
  * @property integer $supplier_id
- * @property string $total_item_purchase_amount
+ * @property string $total_item_purchase_ret_amount
  * @property string $total_item_vat_amount
  * @property string $total_item_discount_amount
  * @property string $before_disc_amount
@@ -53,8 +54,8 @@ class PhaPurchaseReturn extends RActiveRecord
             [['invoice_date', 'invoice_no', 'supplier_id'], 'required'],
             [['tenant_id', 'supplier_id', 'created_by', 'modified_by'], 'integer'],
             [['invoice_date', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
-            [['total_item_purchase_amount', 'total_item_vat_amount', 'total_item_discount_amount', 'before_disc_amount', 'discount_percent', 'discount_amount', 'after_disc_amount', 'roundoff_amount', 'net_amount'], 'number'],
-            [['status'], 'string'],
+            [['total_item_purchase_ret_amount', 'total_item_vat_amount', 'total_item_discount_amount', 'before_disc_amount', 'discount_percent', 'discount_amount', 'after_disc_amount', 'roundoff_amount', 'net_amount'], 'number'],
+            [['status', 'total_item_purchase_ret_amount'], 'string'],
             [['purchase_ret_code', 'invoice_no'], 'string', 'max' => 50]
         ];
     }
@@ -71,7 +72,7 @@ class PhaPurchaseReturn extends RActiveRecord
             'invoice_date' => 'Invoice Date',
             'invoice_no' => 'Invoice No',
             'supplier_id' => 'Supplier ID',
-            'total_item_purchase_amount' => 'Total Item Purchase Amount',
+            'total_item_purchase_ret_amount' => 'Total Item Purchase Amount',
             'total_item_vat_amount' => 'Total Item Vat Amount',
             'total_item_discount_amount' => 'Total Item Discount Amount',
             'before_disc_amount' => 'Before Disc Amount',
@@ -115,5 +116,36 @@ class PhaPurchaseReturn extends RActiveRecord
     
     public static function find() {
         return new PhaPurchaseReturnQuery(get_called_class());
+    }
+    
+    public function beforeSave($insert) {
+        if($insert){
+            $this->purchase_ret_code = CoInternalCode::find()->tenant()->codeType("PR")->one()->Fullcode;
+        }
+        return parent::beforeSave($insert);
+    }
+    
+    public function fields() {
+        $extend = [
+            'supplier' => function ($model) {
+                return (isset($model->supplier) ? $model->supplier : '-');
+            },
+            'items' => function ($model) {
+                return (isset($model->phaPurchaseReturnItems) ? $model->phaPurchaseReturnItems : '-');
+            },
+        ];
+        $fields = array_merge(parent::fields(), $extend);
+        return $fields;
+    }
+    
+    public function afterSave($insert, $changedAttributes) {
+        if ($insert) {
+            CoInternalCode::increaseInternalCode("PR");
+        }
+        return parent::afterSave($insert, $changedAttributes);
+    }
+    
+    public function getProductItemIds() {
+        return ArrayHelper::map($this->phaPurchaseReturnItems, 'purchase_ret_item_id', 'purchase_ret_item_id');
     }
 }
