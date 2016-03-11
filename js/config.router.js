@@ -1993,7 +1993,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
 
             //PHARMACY REPORT
             .state('pharmacy.report', {
-                url: '/report',
+                url: '/report/{mode}',
                 templateUrl: 'tpl/pharmacy_report/report.html',
                 resolve: {
                     deps: ['$ocLazyLoad',
