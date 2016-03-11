@@ -55,20 +55,20 @@ class PharmacypurchasereturnController extends ActiveController {
     public function actionRemove() {
         $id = Yii::$app->getRequest()->post('id');
         if ($id) {
-            $model = PhaPurchaseReturn::find()->where(['purchase_id' => $id])->one();
+            $model = PhaPurchaseReturn::find()->where(['purchase_ret_id' => $id])->one();
             $model->remove();
             return ['success' => true];
         }
     }
 
-    public function actionSavepurchase() {
+    public function actionSavepurchasereturn() {
         $post = Yii::$app->getRequest()->post();
 
         if (!empty($post)) {
             //Validation
             $model = new PhaPurchaseReturn;
-            if (isset($post['purchase_id'])) {
-                $purchase = PhaPurchaseReturn::find()->tenant()->andWhere(['purchase_id' => $post['purchase_id']])->one();
+            if (isset($post['purchase_ret_id'])) {
+                $purchase = PhaPurchaseReturn::find()->tenant()->andWhere(['purchase_ret_id' => $post['purchase_ret_id']])->one();
                 if (!empty($purchase))
                     $model = $purchase;
             }
@@ -94,16 +94,16 @@ class PharmacypurchasereturnController extends ActiveController {
                     $item_model = new PhaPurchaseReturnItem();
                     
                     //Edit Mode
-                    if (isset($product_item['purchase_item_id'])) {
-                        $item = PhaPurchaseReturnItem::find()->tenant()->andWhere(['purchase_item_id' => $product_item['purchase_item_id']])->one();
+                    if (isset($product_item['purchase_ret_item_id'])) {
+                        $item = PhaPurchaseReturnItem::find()->tenant()->andWhere(['purchase_ret_item_id' => $product_item['purchase_ret_item_id']])->one();
                         if (!empty($item))
                             $item_model = $item;
                     }
 
                     $item_model->attributes = $product_item;
-                    $item_model->purchase_id = $model->purchase_id;
+                    $item_model->purchase_ret_id = $model->purchase_ret_id;
                     $item_model->save(false);
-                    $item_ids[$item_model->purchase_item_id] = $item_model->purchase_item_id;
+                    $item_ids[$item_model->purchase_ret_item_id] = $item_model->purchase_ret_item_id;
                 }
                 
                 //Delete Product Items
@@ -111,7 +111,7 @@ class PharmacypurchasereturnController extends ActiveController {
                     $delete_ids = array_diff($model->getProductItemIds(), $item_ids);
                     
                     foreach ($delete_ids as $delete_id) {
-                        $item = PhaPurchaseReturnItem::find()->tenant()->andWhere(['purchase_item_id' => $delete_id])->one();
+                        $item = PhaPurchaseReturnItem::find()->tenant()->andWhere(['purchase_ret_item_id' => $delete_id])->one();
                         $item->delete();
                     }
                 }
