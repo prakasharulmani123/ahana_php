@@ -1777,6 +1777,54 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                 }
             })
 
+            //PHARMACY NEW PURCHASE RETURN
+            .state('pharmacy.purchaseReturnCreate', {
+                url: '/purchaseReturnCreate',
+                templateUrl: 'tpl/pharmacy_purchase_return/create.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('xeditable').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/pharmacy_purchase_return/pharmacy_purchase_return.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+
+            //PHARMACY EDIT PURCHASE RETURN
+            .state('pharmacy.purchaseReturnUpdate', {
+                url: '/purchaseReturnUpdate/{id}',
+                templateUrl: 'tpl/pharmacy_purchase_return/update.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('xeditable').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/pharmacy_purchase_return/pharmacy_purchase_return.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+
+            //PHARMACY PURCHASE RETURN LIST
+            .state('pharmacy.purchaseReturn', {
+                url: '/purchaseReturn',
+                templateUrl: 'tpl/pharmacy_purchase_return/index.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('xeditable').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/pharmacy_purchase_return/pharmacy_purchase_return.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+
             //PHARMACY PRODUCTS
             .state('pharmacy.products', {
                 url: '/products',
