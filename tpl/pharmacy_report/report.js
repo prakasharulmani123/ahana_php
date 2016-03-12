@@ -8,17 +8,40 @@ app.controller('reportController', ['$rootScope', '$scope', '$timeout', '$http',
 
         $scope.data = {};
 
+        $scope.exportAction = function (export_action) {
+            switch (export_action) {
+                case 'pdf':
+                    $scope.$broadcast('export-pdf', {});
+                    break;
+                case 'excel':
+                    $scope.$broadcast('export-excel', {});
+                    break;
+                case 'doc':
+                    $scope.$broadcast('export-doc', {});
+                    break;
+                case 'png':
+                    $scope.$broadcast('export-png', {});
+                    break;
+                case 'powerpoint':
+                    $scope.$broadcast('export-powerpoint', {});
+                    break;
+                default:
+                    console.log('no event caught');
+            }
+
+        }
+
         $scope.initReport = function () {
             $scope.mode = $state.params.mode;
             $scope.show_search = true;
-            
+
             if ($scope.mode == 'purchase') {
                 $scope.report_title = 'Purchase Report';
                 $scope.url = '/pharmacyreport/purchasereport';
             } else if ($scope.mode == 'sale') {
                 $scope.report_title = 'Sale Report';
                 $scope.url = '/pharmacyreport/salereport';
-            }else if ($scope.mode == 'stock') {
+            } else if ($scope.mode == 'stock') {
                 $scope.show_search = false;
                 $scope.report_title = 'Stock Report';
                 $scope.url = '/pharmacyreport/stockreport';

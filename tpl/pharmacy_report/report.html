@@ -55,6 +55,17 @@
                 <div class="row" ng-show='showTable'>
                     <div class="wrapper-md">
                         <div class='text-right'>
+                            <div class="btn-group dropdown" dropdown>
+                                <button class="btn btn-danger" dropdown-toggle> Export <span class="caret"></span></button>
+                                <ul class="dropdown-menu">
+                                    <li><a ng-click="exportAction('excel')">EXCEL</a></li>
+                                    <!--<li><a ng-click="exportAction('pdf')">PDF</a></li>-->
+                                    <li><a ng-click="exportAction('doc')">DOC</a></li>
+                                    <!--<li><a ng-click="exportAction('png')">PNG</a></li>-->
+                                    <li><a ng-click="exportAction('powerpoint')">POWER POINT</a></li>
+                                </ul>
+                            </div>
+                            &nbsp;
                             <button class="btn btn-primary" ng-print print-element-id="printThisElement"><i class="fa fa-print"></i> Print</button>
                         </div>
                         <div id='printThisElement'>
