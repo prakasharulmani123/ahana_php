@@ -40,6 +40,8 @@ class PhaPurchaseItem extends RActiveRecord {
 
     public $expiry_date;
     public $batch_no;
+    public $product_name;
+    public $total_purhcase_amount;
 
     /**
      * @inheritdoc
