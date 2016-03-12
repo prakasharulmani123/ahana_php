@@ -52,23 +52,23 @@
                         </div>
                     </form>
                 </div>
-                <div class="row">
+                <div class="row" ng-show='showTable'>
                     <div class="wrapper-md">
                         <div class='text-right'>
                             <button class="btn btn-primary" ng-print print-element-id="printThisElement"><i class="fa fa-print"></i> Print</button>
                         </div>
                         <div id='printThisElement'>
-                            <div ng-if="mode == 'purchase' && showTable">
+                            <div ng-if="mode == 'purchase'">
                                 <div ng-include="'tpl/pharmacy_report/_purchase_report.html'">
                                     {% include 'tpl/pharmacy_report/_purchase_report.html' %}
                                 </div>
                             </div>
-                            <div ng-if="mode == 'sale' && showTable">
+                            <div ng-if="mode == 'sale'">
                                 <div ng-include="'tpl/pharmacy_report/_sale_report.html'">
                                     {% include 'tpl/pharmacy_report/_sale_report.html' %}
                                 </div>
                             </div>
-                            <div ng-if="mode == 'stock' && showTable">
+                            <div ng-if="mode == 'stock'">
                                 <div ng-include="'tpl/pharmacy_report/_stock_report.html'">
                                     {% include 'tpl/pharmacy_report/_stock_report.html' %}
                                 </div>
