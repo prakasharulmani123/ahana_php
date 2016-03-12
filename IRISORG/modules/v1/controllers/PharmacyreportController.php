@@ -70,7 +70,7 @@ class PharmacyreportController extends ActiveController {
         $post = Yii::$app->getRequest()->post();
         $tenant_id = Yii::$app->user->identity->logged_tenant_id;
 
-        $purchases = PhaProductBatch::find()
+        $stocks = PhaProductBatch::find()
                 ->joinWith('product')
                 ->andWhere(['pha_product.tenant_id' => $tenant_id])
                 ->addSelect(["CONCAT(pha_product.product_name, ' | ', pha_product.product_unit_count, ' | ', pha_product.product_unit) as product_name", 'SUM(available_qty) as available_qty', 'pha_product.product_code as product_code'])
@@ -79,7 +79,7 @@ class PharmacyreportController extends ActiveController {
 
         $reports = [];
 
-        foreach ($purchases as $key => $purchase) {
+        foreach ($stocks as $key => $purchase) {
             $reports[$key]['product_name'] = $purchase['product_name'];
             $reports[$key]['product_code'] = $purchase['product_code'];
             $reports[$key]['available_qty'] = $purchase['available_qty'];
