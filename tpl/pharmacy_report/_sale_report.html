@@ -1,0 +1,42 @@
+<div class="grid-view" id="work-base-grid">
+    <div class="panel">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-sm-6">&nbsp;</div>
+                <div class="col-sm-6 text-right">
+                    <div class="inline">Total {{records.length}} results.</div>
+                </div>
+                <div class="col-sm-12">
+                    <table width="100%" style="border-bottom: 1px solid #000000;vertical-align: middle; font-family: serif; font-size: 9pt;">
+                        <tbody>
+                            <tr>
+                                <td width="33%">
+                                    <!--<img width="75" alt="" src="/uploads/society/f2b490e6ad22cc5301bfed9fcff535fe.gif">-->
+                                    <h3>{{app.name}} ({{app.org_name}})</h3>
+                                </td>
+                                <td width="33%" align="center"><h4>Sale Report</h4></td>
+                                <td width="33%" style="text-align: right;">Capture: {{ date}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <table class="print-table table table-bordered">
+                <thead>
+                    <tr>
+                        <th id="work-base-grid_c0">Product</th>
+                        <th id="work-base-grid_c1">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="(key, record) in records">
+                        <td>{{record.product_name}}</td>
+                        <td>{{record.total_amount}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

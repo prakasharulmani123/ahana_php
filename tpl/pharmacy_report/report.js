@@ -15,6 +15,9 @@ app.controller('reportController', ['$rootScope', '$scope', '$timeout', '$http',
             if ($scope.mode == 'purchase') {
                 $scope.report_title = 'Purchase Report';
                 $scope.url = '/pharmacyreport/purchasereport';
+            } else if ($scope.mode == 'sale') {
+                $scope.report_title = 'Sale Report';
+                $scope.url = '/pharmacyreport/salereport';
             }else if ($scope.mode == 'stock') {
                 $scope.show_search = false;
                 $scope.report_title = 'Stock Report';
