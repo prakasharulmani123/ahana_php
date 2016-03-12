@@ -35,6 +35,8 @@ class PhaSaleItem extends RActiveRecord {
 
     public $expiry_date;
     public $batch_no;
+    public $product_name;
+    public $total_sale_item_amount;
 
     /**
      * @inheritdoc

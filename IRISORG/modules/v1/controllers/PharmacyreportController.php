@@ -4,6 +4,7 @@ namespace IRISORG\modules\v1\controllers;
 
 use common\models\PhaProductBatch;
 use common\models\PhaPurchaseItem;
+use common\models\PhaSaleItem;
 use Yii;
 use yii\filters\auth\QueryParamAuth;
 use yii\filters\ContentNegotiator;
@@ -65,8 +66,43 @@ class PharmacyreportController extends ActiveController {
 
         return ['report' => $reports];
     }
+    
+    //Sales Report
+    public function actionSalereport() {
+        $post = Yii::$app->getRequest()->post();
+        $tenant_id = Yii::$app->user->identity->logged_tenant_id;
 
-    public function actionStockreport() {
+
+        if (isset($post['from']) && isset($post['to'])) {
+            $sales = PhaSaleItem::find()
+                    ->joinWith('sale')
+                    ->joinWith('product')
+                    ->andWhere(['pha_product.tenant_id' => $tenant_id])
+                    ->andWhere("pha_sale.sale_date between '{$post['from']}' AND '{$post['to']}'")
+                    ->addSelect(["CONCAT(pha_product.product_name, ' | ', pha_product.product_unit_count, ' | ', pha_product.product_unit) as product_name", 'SUM(item_amount) as total_sale_item_amount'])
+                    ->groupBy(['pha_product.product_id'])
+                    ->all();
+        }else{
+            $sales = PhaSaleItem::find()
+                    ->joinWith('sale')
+                    ->joinWith('product')
+                    ->andWhere(['pha_product.tenant_id' => $tenant_id])
+                    ->addSelect(["CONCAT(pha_product.product_name, ' | ', pha_product.product_unit_count, ' | ', pha_product.product_unit) as product_name", 'SUM(item_amount) as total_sale_item_amount'])
+                    ->groupBy(['pha_product.product_id'])
+                    ->all();
+        }
+
+        $reports = [];
+
+        foreach ($sales as $key => $sale) {
+            $reports[$key]['product_name'] = $sale['product_name'];
+            $reports[$key]['total_amount'] = $sale['total_sale_item_amount'];
+        }
+
+        return ['report' => $reports];
+    }
+
+	public function actionStockreport() {
         $post = Yii::$app->getRequest()->post();
         $tenant_id = Yii::$app->user->identity->logged_tenant_id;
 
