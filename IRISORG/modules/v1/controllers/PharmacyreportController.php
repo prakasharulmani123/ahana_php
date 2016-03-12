@@ -2,14 +2,11 @@
 
 namespace IRISORG\modules\v1\controllers;
 
-use common\models\PhaPurchase;
+use common\models\PhaProductBatch;
 use common\models\PhaPurchaseItem;
 use Yii;
-use yii\data\ActiveDataProvider;
-use yii\db\BaseActiveRecord;
 use yii\filters\auth\QueryParamAuth;
 use yii\filters\ContentNegotiator;
-use yii\helpers\Html;
 use yii\rest\ActiveController;
 use yii\web\Response;
 
@@ -64,6 +61,28 @@ class PharmacyreportController extends ActiveController {
         foreach ($purchases as $key => $purchase) {
             $reports[$key]['product_name'] = $purchase['product_name'];
             $reports[$key]['total_amount'] = $purchase['total_purhcase_amount'];
+        }
+
+        return ['report' => $reports];
+    }
+
+    public function actionStockreport() {
+        $post = Yii::$app->getRequest()->post();
+        $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+
+        $purchases = PhaProductBatch::find()
+                ->joinWith('product')
+                ->andWhere(['pha_product.tenant_id' => $tenant_id])
+                ->addSelect(["CONCAT(pha_product.product_name, ' | ', pha_product.product_unit_count, ' | ', pha_product.product_unit) as product_name", 'SUM(available_qty) as available_qty', 'pha_product.product_code as product_code'])
+                ->groupBy(['pha_product.product_id'])
+                ->all();
+
+        $reports = [];
+
+        foreach ($purchases as $key => $purchase) {
+            $reports[$key]['product_name'] = $purchase['product_name'];
+            $reports[$key]['product_code'] = $purchase['product_code'];
+            $reports[$key]['available_qty'] = $purchase['available_qty'];
         }
 
         return ['report' => $reports];

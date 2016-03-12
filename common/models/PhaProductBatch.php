@@ -27,6 +27,9 @@ use yii\db\ActiveQuery;
  * @property PhaProductBatchRate[] $phaProductBatchRates
  */
 class PhaProductBatch extends RActiveRecord {
+    
+    public $product_name;
+    public $product_code;
 
     /**
      * @inheritdoc
