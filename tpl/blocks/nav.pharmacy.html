@@ -5,7 +5,7 @@
                 <i class="fa fa-fw fa-angle-right text"></i> 
                 <i class="fa fa-fw fa-angle-down text-active"></i> 
             </span> 
-            <i class="fa fa-medkit icon text-info-lter"></i> 
+            <i class="fa fa-briefcase icon text-info-lter"></i> 
             <span class="font-bold ng-binding"> Purchase</span> 
         </a>
         <ul class="nav nav-sub dk">
@@ -47,8 +47,20 @@
             </li>
         </ul>
     </li>
-    <li ui-sref-active="active"> 
-        <a check-access ui-sref="pharmacy.purchase"> <span>Reports</span> </a> 
+    <li class="ng-scope"> 
+        <a class="auto" href=""> 
+            <span class="pull-right text-muted"> 
+                <i class="fa fa-fw fa-angle-right text"></i> 
+                <i class="fa fa-fw fa-angle-down text-active"></i> 
+            </span> 
+            <i class="fa fa-file-text icon text-info-lter"></i> 
+            <span class="font-bold ng-binding"> Reports </span> 
+        </a>
+        <ul class="nav nav-sub dk">
+            <li ui-sref-active="active"> 
+                <a check-access ui-sref="pharmacy.report({mode: 'purchase'})"> <span>Purchase Report</span> </a> 
+            </li>
+        </ul>
     </li>
     <li class="ng-scope"> 
         <a class="auto" href=""> 
@@ -68,9 +80,9 @@
             </li>
         </ul>
     </li>
-    <li ui-sref-active="active"> 
+<!--    <li ui-sref-active="active"> 
         <a check-access ui-sref="pharmacy.purchase"> <span>Accounts</span> </a> 
-    </li>
+    </li>-->
     <li class="ng-scope"> 
         <a class="auto" href=""> 
             <span class="pull-right text-muted"> 
@@ -99,7 +111,7 @@
                         <i class="fa fa-fw fa-angle-right text"></i> 
                         <i class="fa fa-fw fa-angle-down text-active"></i> 
                     </span> 
-                    <i class="fa fa-cog icon text-info-lter"></i> 
+                    <i class="fa fa-wrench icon text-info-lter"></i> 
                     <span class="font-bold ng-binding"> Prod & Brand Config.</span> 
                 </a>
                 <ul class="nav nav-sub dk">

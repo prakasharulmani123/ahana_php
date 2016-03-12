@@ -11,6 +11,12 @@ app.controller('reportController', ['$rootScope', '$scope', '$timeout', '$http',
         $scope.initReport = function () {
             $scope.mode = $state.params.mode;
             $scope.date = moment().format('YYYY-MM-DD HH:MM:ss');
+            
+            if ($scope.mode == 'purchase') {
+                $scope.report_title = 'Purchase Report';
+                $scope.url = '/pharmacyreport/purchasereport';
+            }
+
         }
 
         //Index Page
@@ -22,18 +28,14 @@ app.controller('reportController', ['$rootScope', '$scope', '$timeout', '$http',
             $scope.successMessage = "";
 
             var data = {};
-            if ($state.params.mode == 'purchase') {
-                url = '/pharmacyreport/purchasereport';
+            if (typeof $scope.data.from !== 'undefined' && $scope.data.from != '')
+                angular.extend(data, {from: moment($scope.data.from).format('YYYY-MM-DD')});
 
-                if (typeof $scope.data.from !== 'undefined' && $scope.data.from != '')
-                    angular.extend(data, {from: moment($scope.data.from).format('YYYY-MM-DD')});
-
-                if (typeof $scope.data.to !== 'undefined' && $scope.data.to != '')
-                    angular.extend(data, {to: moment($scope.data.to).format('YYYY-MM-DD')});
-            }
+            if (typeof $scope.data.to !== 'undefined' && $scope.data.to != '')
+                angular.extend(data, {to: moment($scope.data.to).format('YYYY-MM-DD')});
 
             // Get data's from service
-            $http.post($rootScope.IRISOrgServiceUrl + url, data)
+            $http.post($rootScope.IRISOrgServiceUrl + $scope.url, data)
                     .success(function (response) {
                         $scope.loadbar('hide');
                         $scope.records = response.report;

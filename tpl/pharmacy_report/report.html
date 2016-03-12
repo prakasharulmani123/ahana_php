@@ -1,6 +1,6 @@
 <div ng-controller="reportController" ng-init="initReport();">
     <div class="bg-light lter b-b wrapper-md">
-        <h1 class="m-n h3">Report</h1>
+        <h1 class="m-n h3">{{report_title}}</h1>
     </div>
     <div class="wrapper-md">
         <div ng-include="'tpl/blocks/alert.html'">
@@ -38,8 +38,9 @@
                                     <div class="form-group">
                                         <label class="col-lg-3 control-label"></label>
                                         <div class="col-lg-6">
-                                            <button class="btn m-b-xs  btn-success save-btnx" ng-click="loadReport()">Search</button>
+                                            <button class="btn m-b-xs  btn-success save-btn" ng-click="loadReport()">Search</button>
                                             &nbsp;
+                                            <button class="btn m-b-xs  btn-dark" ng-click="data.from = '';data.to = '';">Cancel</button>
                                         </div>
                                     </div>
                                 </div>
