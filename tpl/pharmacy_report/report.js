@@ -10,11 +10,16 @@ app.controller('reportController', ['$rootScope', '$scope', '$timeout', '$http',
 
         $scope.initReport = function () {
             $scope.mode = $state.params.mode;
-            $scope.date = moment().format('YYYY-MM-DD HH:MM:ss');
+            $scope.show_search = true;
             
             if ($scope.mode == 'purchase') {
                 $scope.report_title = 'Purchase Report';
                 $scope.url = '/pharmacyreport/purchasereport';
+            }else if ($scope.mode == 'stock') {
+                $scope.show_search = false;
+                $scope.report_title = 'Stock Report';
+                $scope.url = '/pharmacyreport/stockreport';
+                $scope.loadReport();
             }
 
         }
@@ -39,6 +44,7 @@ app.controller('reportController', ['$rootScope', '$scope', '$timeout', '$http',
                     .success(function (response) {
                         $scope.loadbar('hide');
                         $scope.records = response.report;
+                        $scope.date = moment().format('YYYY-MM-DD HH:MM:ss');
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading products!";
