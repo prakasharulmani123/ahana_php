@@ -64,6 +64,7 @@ app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', 
                     alert("Sorry, you can't create a Consultant for this encounter");
                     $state.go("patient.consultant", {id: $state.params.id});
                 }
+
                 $scope.showForm = true;
             });
         }
@@ -221,15 +222,26 @@ app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', 
         };
 
         $scope.beforeRender = function ($view, $dates, $leftDate, $upDate, $rightDate) {
-            var d = new Date();
-            var n = d.getDate();
-            var m = d.getMonth();
-            var y = d.getFullYear();
-            var current = (new Date(y, m, n)).valueOf();
+            $http.post($rootScope.IRISOrgServiceUrl + '/user/getuser')
+                    .success(function (response) {
+                        if (response.return.tenant_id != 0) {
+                            var d = new Date();
+                            var n = d.getDate();
+                            var m = d.getMonth();
+                            var y = d.getFullYear();
+                            var current = (new Date(y, m, n)).valueOf();
 
-            angular.forEach($dates, function (date, key) {
-                if (current > date.utcDateValue)
-                    $dates[key].selectable = false;
-            });
+                            var today_date = new Date();
+                            var upto_date = (today_date.setDate(today_date.getDate() + 3)).valueOf();
+
+                            angular.forEach($dates, function (date, key) {
+                                if (current > date.utcDateValue || upto_date < date.utcDateValue) {
+                                    $dates[key].selectable = false;
+                                }
+                            });
+                        }
+                    }, function (x) {
+                        $scope.errorData = 'Error while authorize the user';
+                    });
         }
     }]);
