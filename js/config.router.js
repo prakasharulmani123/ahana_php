@@ -1190,6 +1190,22 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                         }]
                 }
             })
+            
+            //Encounter Edit Doctor Fee - OP
+            .state('patient.editDoctorFee', {
+                url: '/editDoctorFee/{id}/{enc_id}',
+                templateUrl: 'tpl/patient_appointment/edit_doctor_fee.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table', 'ui.select']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/patient_appointment/patient_appointment.js');
+                                    }
+                            );
+                        }]
+                }
+            })
 
             //Patient Alert
             .state('patient.alert', {

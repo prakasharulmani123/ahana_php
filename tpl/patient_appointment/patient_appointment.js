@@ -61,19 +61,66 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
             });
         }
 
+        $scope.isAppointmentSeen = function (callback) {
+            $http.post($rootScope.IRISOrgServiceUrl + '/encounter/appointmentseenencounter', {patient_id: $state.params.id, enc_id: $state.params.enc_id})
+                    .success(function (response) {
+                        callback(response);
+                    }, function (x) {
+                        response = {success: false, message: 'Server Error'};
+                        callback(response);
+                    });
+        }
+
+        $scope.initCanEditDoctorFee = function () {
+            $scope.isAppointmentSeen(function (response) {
+                if (response.success == true) {
+                    $scope.patient_det = response.model.patient;
+
+                    if (response.model.encounter_id != $state.params.enc_id) {
+                        alert("This is not a selected Encounter");
+                        $state.go("patient.encounter", {id: $state.params.id});
+                    } else {
+                        var consultant_id = '';
+                        if (response.model.appointmentSeen.hasOwnProperty('appt_id')) {
+                            consultant_id = response.model.appointmentSeen.consultant_id;
+                            $http.get($rootScope.IRISOrgServiceUrl + '/default/getconsultantcharges?consultant_id=' + consultant_id)
+                                    .success(function (response2) {
+                                        $scope.chargesList = response2.chargesList;
+                                        $scope.data = {
+                                            'PatAppointment': {
+                                                'appt_id': response.model.appointmentSeen.appt_id,
+                                                'appt_status': 'S',
+                                                'dummy_status': 'S',
+                                                'status_date': moment(response.model.appointmentSeen.status_datetime).format('YYYY-MM-DD HH:mm:ss'),
+                                                'patient_bill_type': response.model.appointmentSeen.patient_bill_type,
+                                                'patient_cat_id': response.model.appointmentSeen.patient_cat_id,
+                                                'amount': response.model.appointmentSeen.amount
+                                            }};
+                                    }, function (x) {
+                                        response = {success: false, message: 'Server Error'};
+                                    });
+                        }
+                    }
+                } else {
+                    alert("This is not a selected Encounter");
+                    $state.go("patient.encounter", {id: $state.params.id});
+                }
+            });
+        }
+
         $scope.chargeAmount = '';
         $scope.updateCharge = function () {
             _that = this;
             var charge = $filter('filter')($scope.chargesList, {patient_cat_id: _that.data.PatAppointment.patient_cat_id});
-            if(typeof charge[0] != 'undefined')
+            if (typeof charge[0] != 'undefined')
                 $scope.chargeAmount = $scope.data.PatAppointment.amount = charge[0].charge_amount;
             else
                 $scope.chargeAmount = $scope.data.PatAppointment.amount = 0;
         }
-        
+
         $scope.updateFreeCharge = function () {
             _that = this;
-            if(_that.data.PatAppointment.patient_bill_type == "F"){
+            if (_that.data.PatAppointment.patient_bill_type == "F") {
                 $scope.data.PatAppointment.amount = 0;
             } else {
                 $scope.updateCharge();
@@ -214,7 +261,13 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
                 post_url = $rootScope.IRISOrgServiceUrl + '/appointments';
                 _that.data.PatAppointment.appt_status = "A";
             } else if (mode == 'seen') {
-                post_url = $rootScope.IRISOrgServiceUrl + '/appointments/changestatus';
+                if (_that.data.PatAppointment.appt_id) {
+                    post_url = $rootScope.IRISOrgServiceUrl + '/appointments/' + _that.data.PatAppointment.appt_id;
+                    method = 'PUT';
+                    mode = 'arrived';
+                } else {
+                    post_url = $rootScope.IRISOrgServiceUrl + '/appointments/changestatus';
+                }
                 _that.data.PatAppointment.appt_status = "S";
             }
 

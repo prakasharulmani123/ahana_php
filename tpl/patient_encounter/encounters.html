@@ -97,7 +97,7 @@
                         </tr>
                         <tr ng-repeat-end ng-show="expanded" ng-repeat="(key, item) in encounter.all | orderBy: 'id'">
                             <td class="text-center" align="center" valign="middle">
-                                <label ng-show="item.status == 1" class="i-checks m-b-none"><input id="enc_{{item.encounter_id}}{{key}}" class="enc_chk" type="checkbox" name="b[]" ng-click="moreOptions(key, item.encounter_id, item.encounter_type)"><i></i></label>
+                                <label ng-show="(item.status == 1 || item.type == 'Seen')" class="i-checks m-b-none"><input id="enc_{{item.encounter_id}}{{key}}" class="enc_chk" type="checkbox" name="b[]" ng-click="moreOptions(key, item.encounter_id, item.encounter_type)"><i></i></label>
                             </td>
                             <td> {{item.encounter_id}} </td>
                             <td> {{item.date | moment:'YYYY-MM-DD hh:mm A'}}</td>

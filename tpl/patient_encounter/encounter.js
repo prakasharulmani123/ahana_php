@@ -17,9 +17,9 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
         $scope.app.settings.patientSideMenu = true;
         $scope.app.settings.patientContentClass = 'app-content patient_content ';
         $scope.app.settings.patientFooterClass = 'app-footer';
-        
+
         $scope.more_max = 4;
-        
+
         //Encounter Page
         $scope.loadPatientEncounters = function (type) {
             $scope.encounterView = type;
@@ -75,11 +75,12 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                     $scope.more_li = [
                         {href: 'patient.changeStatus({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Change Status', mode: 'sref'},
                         {href: "cancelAppointment(" + enc_id + ")", name: 'Cancel Appointment', mode: 'click'},
+                        {href: 'patient.editDoctorFee({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Edit Doctor Fee', mode: 'sref'},
                     ];
                 }
             }
         }
-        
+
         $scope.isPatientHaveActiveEncounter = function (callback) {
             $http.post($rootScope.IRISOrgServiceUrl + '/encounter/patienthaveactiveencounter', {patient_id: $state.params.id})
                     .success(function (response) {
@@ -124,7 +125,7 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                                     function (response) {
                                         $scope.loadbar('hide');
                                         $scope.loadPatientEncounters('Current');
-                                        
+
 //                                        $scope.successMessage = succ_msg;
 //                                        $scope.data = {};
 //                                        $timeout(function () {
@@ -146,8 +147,8 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
         };
     }]);
 
-app.filter('moment', function() {
-    return function(dateString, format) {
+app.filter('moment', function () {
+    return function (dateString, format) {
         return moment(dateString).format(format);
     };
 });
