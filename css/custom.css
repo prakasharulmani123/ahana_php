@@ -35,6 +35,10 @@ and open the template in the editor.
     margin-top: 75px;
 }
 
+th[st-sort] {
+    cursor: pointer;
+}
+
 @media screen {
     #printSection {
         display: none;
@@ -54,3 +58,4 @@ and open the template in the editor.
         top:0;
     }
 }
+

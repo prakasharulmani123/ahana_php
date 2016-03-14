@@ -2,7 +2,7 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
 
         $scope.app.settings.patientTopBar = true;
         $scope.app.settings.patientSideMenu = true;
-        $scope.app.settings.patientContentClass = 'app-content';
+        $scope.app.settings.patientContentClass = 'app-content patient_content ';
         $scope.app.settings.patientFooterClass = 'app-footer';
         
         $scope.orgData = {};
