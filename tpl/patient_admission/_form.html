@@ -1,14 +1,14 @@
 <div class="panel panel-default">
     <div class="panel-body">
-
-        <!--        <div class="form-group">
-                    <label class="col-sm-3 control-label">Case sheet no * </label>
-                    <div class="col-sm-9">
-                        <input type="text" ng-model="data.PatPatient.casesheetno" class="form-control" placeholder="" ng-if="$scope.app.patientDetail.patientCasesheetno == null">
-                        <input type="text" readonly ng-model="data.PatPatient.casesheetno" class="form-control" placeholder="" ng-if="$scope.app.patientDetail.patientCasesheetno != null">
-                    </div>
-                </div>
-                <div class="line line-dashed b-b line-lg "></div>-->
+        
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Case sheet no * </label>
+            <div class="col-sm-9">
+                <input type="text" ng-model="data.PatEncounter.add_casesheet_no" class="form-control" placeholder="" ng-if="app.patientDetail.patientCasesheetno == null">
+                <input type="text" readonly ng-value="app.patientDetail.patientCasesheetno" class="form-control" placeholder="" ng-if="app.patientDetail.patientCasesheetno != null">
+            </div>
+        </div>
+        <div class="line line-dashed b-b line-lg "></div>
 
         <div class="form-group">
             <label class="col-sm-3 control-label">Date of admission * </label>

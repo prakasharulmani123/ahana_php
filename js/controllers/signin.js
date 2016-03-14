@@ -9,7 +9,8 @@ function SignInForm($scope, $state, AuthenticationService, $http, $rootScope, $l
     $scope.user = {};
     $scope.authError = null;
     $scope.loginButtonText = 'Log in';
-    $scope.forgotpasswordButtonText = 'Send';
+    $scope.forgotpasswordButtonText = 'Send Request';
+    $scope.forgotpasswordButtonClass = 'primary';
 
     $rootScope.commonService.GetTenantList(function (response) {
         $scope.tenants = response.tenantList;
@@ -33,24 +34,28 @@ function SignInForm($scope, $state, AuthenticationService, $http, $rootScope, $l
 
 
     $scope.passwordrequest = function () {
+        $scope.errorData = $scope.successMessage = '';
         $scope.forgotpasswordButtonText = 'Please Wait ....';
         $('#forgot_btn').attr('disabled', true);
 
         $http({
             method: "POST",
             url: $rootScope.IRISOrgServiceUrl + '/user/request-password-reset',
-            data: {email: $scope.email},
+            data: {email: $scope.email, tenant_id: $scope.tenant_id},
         }).then(
                 function (response) {
                     if (response.data.success === true) {
                         $scope.successMessage = response.data.message;
                         $scope.errorData = '';
                         $scope.email = '';
+                        $scope.forgotpasswordButtonText = 'Request Sent';
+                        $('#forgot_btn').attr('disabled', true);
+                        $scope.forgotpasswordButtonClass = 'success';
                     } else {
+                        $scope.forgotpasswordButtonText = 'Send';
+                        $('#forgot_btn').attr('disabled', false);
                         $scope.errorData = response.data.message;
                     }
-                    $scope.forgotpasswordButtonText = 'Send';
-                    $('#forgot_btn').attr('disabled', false);
                 }
         )
     };

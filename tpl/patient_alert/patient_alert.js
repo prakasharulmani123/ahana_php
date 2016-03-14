@@ -61,6 +61,8 @@ app.controller('AlertsController', ['$rootScope', '$scope', '$timeout', '$http',
                         $scope.loadbar('hide');
                         $scope.successMessage = succ_msg;
                         $scope.data = {};
+                        $scope.app.patientDetail.patientHasAlert = true;
+                        $scope.app.patientDetail.patientAlert = response.alert_description;
                         $timeout(function () {
                             $state.go('patient.alert', {id: $state.params.id});
                         }, 1000)

@@ -10,22 +10,25 @@
                                 {{app.patientDetail.patientTitleCode}} 
                                 {{app.patientDetail.patientName}} 
                             </a> 
-                            ({{app.patientDetail.patientAge}}y) 
+                            <a ng-show="app.patientDetail.patientActiveIp" ng-click="$state.go('patient.view', {id: app.patientDetail.patientGuid})"> ({{app.patientDetail.patientActiveCasesheetno}})</a>
                             <br/>
                             <span> {{app.patientDetail.patientIntCode}}  </span>
                         </div>
                         <div class="col-xs-2 col-sm-2 col-md-2"> 
-                            {{app.patientDetail.patientSex}}
-<!--                            <br />
-                            <span ng-if="app.patientDetail.patientHasAlert">
-                            <img  class="pull-left" src="img/symbol1.png"  alt="" />&nbsp;{{app.patientDetail.patientAlert}}
-                            </span>-->
+                            {{app.patientDetail.patientSex}} ({{app.patientDetail.patientAge}}y)
+                        </div>
+                        <div class="col-xs-2 col-sm-2 col-md-2">
+                            <div ng-show="app.patientDetail.patientActiveIp">
+                                DOA: {{app.patientDetail.patientDOA}}
+                            </div>
                         </div>
                         <div class="col-xs-2 col-sm-2 col-md-2"> 
-                            DOA: {{app.patientDetail.patientDOA}}
-                        </div>
-                        <div class="col-xs-3 col-sm-3 col-md-3"> 
                             Org: {{app.patientDetail.patientOrg}}
+                        </div>
+                        <div class="col-xs-2 col-sm-2 col-md-2">
+                            <div ng-show="app.patientDetail.patientHasAlert">
+                                <img src="img/symbol2.png"  alt="" />&nbsp;&nbsp;{{app.patientDetail.patientAlert}}
+                            </div>
                         </div>
                     </div>
                 </div>

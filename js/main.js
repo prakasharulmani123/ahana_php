@@ -55,6 +55,7 @@ angular.module('app')
                         patientHasAlert: '',
                         patientAlert: '',
                         patientActiveCasesheetno: '',
+                        patientActiveIP: '',
                     }
                 }
 
@@ -170,10 +171,11 @@ angular.module('app')
                                         $scope.app.patientDetail.patientDOA = patient.doa;
                                         $scope.app.patientDetail.patientOrg = patient.org_name;
                                         $scope.app.patientDetail.patientAge = patient.patient_age;
-                                        $scope.app.patientDetail.patientCasesheetno = patient.casesheetno;
+                                        $scope.app.patientDetail.patientCasesheetno = patient.activeCasesheetno;
                                         $scope.app.patientDetail.patientHasAlert = patient.hasalert;
                                         $scope.app.patientDetail.patientAlert = patient.alert;
                                         $scope.app.patientDetail.patientActiveCasesheetno = patient.activeCasesheetno;
+                                        $scope.app.patientDetail.patientActiveIp = patient.patActiveIp;
                                         $rootScope.commonService.GetLabelFromValue(patient.patient_gender, 'GetGenderList', function (response) {
                                             $scope.app.patientDetail.patientSex = response;
                                         });

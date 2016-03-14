@@ -78,6 +78,7 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
         ];
 
         $scope.loadProceduresList = function (enc_id) {
+            $scope.loadbar('show');
             $scope.isLoading = true;
             // pagination set up
             $scope.rowCollection = [];  // base collection
@@ -87,6 +88,7 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
             // Get data's from service
             $http.get($rootScope.IRISOrgServiceUrl + '/procedure/getprocedurebyencounter?enc_id=' + enc_id)
                     .success(function (procedures) {
+                        $scope.loadbar('hide');
                         $scope.isLoading = false;
                         $scope.rowCollection = procedures;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
@@ -97,6 +99,7 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
         };
 
         $scope.initForm = function () {
+            $scope.loadbar('show');
             $scope.data = {};
             $scope.data.proc_date = moment().format('YYYY-MM-DD HH:mm:ss');
             $rootScope.commonService.GetChargeCategoryList('', '1', false, 'PRC', function (response) {
@@ -106,6 +109,7 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
             $scope.doctors = [];
             $rootScope.commonService.GetDoctorList('', '1', false, '1', function (response) {
                 $scope.doctors = response.doctorsList;
+                $scope.loadbar('hide');
             });
         }
 
