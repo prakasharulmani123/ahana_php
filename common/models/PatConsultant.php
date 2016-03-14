@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\models\query\PatConsultantQuery;
+use Yii;
 use yii\db\ActiveQuery;
 
 /**
@@ -27,34 +28,44 @@ use yii\db\ActiveQuery;
  * @property CoTenant $tenant
  * @property CoUser $consultant
  */
-class PatConsultant extends RActiveRecord
-{
+class PatConsultant extends RActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'pat_consultant';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['encounter_id', 'patient_id', 'consultant_id'], 'required'],
             [['tenant_id', 'encounter_id', 'patient_id', 'consultant_id', 'created_by', 'modified_by'], 'integer'],
             [['consult_date', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
-            [['notes', 'status'], 'string']
+            [['notes', 'status'], 'string'],
+            [['consult_date'], 'validateConsultant'],
         ];
+    }
+
+    public function validateConsultant($attribute, $params) {
+        if ($this->isNewRecord && isset(Yii::$app->user->identity->user->tenant_id) && Yii::$app->user->identity->user->tenant_id != 0) {
+            $current_date = date('Y-m-d');
+            $upto_date = date('Y-m-d', strtotime($current_date . "+3 days"));
+
+            if ($upto_date < date('Y-m-d', strtotime($this->consult_date)))
+                $this->addError($attribute, "Consultant Date must be lesser than {$upto_date}");
+            else if(date('Y-m-d', strtotime($this->consult_date)) < $current_date)
+                $this->addError($attribute, "Consultant Date must be greater than {$current_date}");
+        }
     }
 
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'pat_consult_id' => 'Pat Consult ID',
             'tenant_id' => 'Tenant ID',
@@ -75,35 +86,31 @@ class PatConsultant extends RActiveRecord
     /**
      * @return ActiveQuery
      */
-    public function getEncounter()
-    {
+    public function getEncounter() {
         return $this->hasOne(PatEncounter::className(), ['encounter_id' => 'encounter_id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getPatient()
-    {
+    public function getPatient() {
         return $this->hasOne(PatPatient::className(), ['patient_id' => 'patient_id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getTenant()
-    {
+    public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getConsultant()
-    {
+    public function getConsultant() {
         return $this->hasOne(CoUser::className(), ['user_id' => 'consultant_id']);
     }
-    
+
     public static function find() {
         return new PatConsultantQuery(get_called_class());
     }
@@ -117,4 +124,5 @@ class PatConsultant extends RActiveRecord
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
     }
+
 }

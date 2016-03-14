@@ -296,6 +296,10 @@ class UserController extends ActiveController {
 
     public function actionGetuser() {
         $id = Yii::$app->request->get('id');
+        
+        if(empty($id))
+            $id = Yii::$app->user->identity->user->user_id;
+        
         if (!empty($id)) {
             $data = CoUser::find()->where(['user_id' => $id])->one();
             $return = $this->excludeColumns($data->attributes);
