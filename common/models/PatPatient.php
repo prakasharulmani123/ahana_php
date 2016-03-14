@@ -136,7 +136,7 @@ class PatPatient extends RActiveRecord {
     }
 
     public function getActivePatientAlert() {
-        return $this->hasMany(PatAlert::className(), ['patient_id' => 'patient_id'])->active();
+        return $this->hasMany(PatAlert::className(), ['patient_id' => 'patient_id'])->active()->orderBy(['created_at' => SORT_DESC]);
     }
 
     /**
@@ -144,6 +144,10 @@ class PatPatient extends RActiveRecord {
      */
     public function getPatActiveEncounter() {
         return $this->hasOne(PatEncounter::className(), ['patient_id' => 'patient_id'])->status()->orderBy(['encounter_date' => SORT_DESC]);
+    }
+
+    public function getPatActiveIp() {
+        return $this->hasOne(PatEncounter::className(), ['patient_id' => 'patient_id'])->status()->encounterType()->orderBy(['encounter_date' => SORT_DESC]);
     }
 
     /**
@@ -197,10 +201,10 @@ class PatPatient extends RActiveRecord {
                 if (isset($this->tenant->tenant_name))
                     return $this->tenant->tenant_name;
             },
-            'doa' => function ($model) {
-                if (isset($model->patient_reg_date))
-                    return date('Y-m-d', strtotime($model->patient_reg_date));
-            },
+//            'doa' => function ($model) {
+//                if (isset($model->patient_reg_date))
+//                    return date('Y-m-d', strtotime($model->patient_reg_date));
+//            },
             'sex' => function ($model) {
                 if (isset($model->patient_reg_date))
                     return date('Y-m-d', strtotime($model->patient_reg_date));
@@ -245,6 +249,12 @@ class PatPatient extends RActiveRecord {
             'activeCasesheetno' => function ($model) {
                  if (isset($model->patActiveCasesheetno))
                     return $model->patActiveCasesheetno->casesheet_no;
+            },
+            'patActiveIp' => function ($model) {
+                return isset($model->patActiveIp);
+            },
+            'doa' => function ($model) {
+                return isset($model->patActiveIp) ? date('Y-m-d', strtotime($model->patActiveIp->encounter_date)) : '';
             },
 //            'activeEncounter' => function ($model) {
 //                if (isset($model->patActiveEncounter))

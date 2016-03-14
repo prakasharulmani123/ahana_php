@@ -110,6 +110,25 @@ class PatProcedure extends RActiveRecord {
         return parent::beforeSave($insert);
     }
 
+    public function afterSave($insert, $changedAttributes) {
+        if ($insert) {
+            $this->proc_consultant_ids = Json::decode($this->proc_consultant_ids);
+
+            foreach ($this->proc_consultant_ids as $key => $consultant_id) {
+                $model = new PatConsultant;
+                $model->attributes = [
+                    'encounter_id' => $this->encounter_id,
+                    'patient_id' => $this->patient_id,
+                    'consultant_id' => $consultant_id,
+                    'consult_date' => $this->proc_date,
+                    'notes' => "Consulted for Procedure ({$this->chargeCat->charge_subcat_name})",
+                ];
+                $model->save(false);
+            }
+        }
+        return parent::afterSave($insert, $changedAttributes);
+    }
+
     public function setConsultId() {
         if (is_array($this->proc_consultant_ids))
             $this->proc_consultant_ids = Json::encode($this->proc_consultant_ids);
@@ -131,7 +150,7 @@ class PatProcedure extends RActiveRecord {
                     $query .= "From co_user ";
                     $query .= "Where find_in_set(user_id, '$ids') > 0 ";
 
-                    $command = Yii::$app->db->createCommand($query);
+                    $command = Yii::$app->client->createCommand($query);
                     $data = $command->queryAll();
                     return $data[0]['doctors'];
                 }

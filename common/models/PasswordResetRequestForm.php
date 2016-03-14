@@ -10,6 +10,7 @@ use yii\base\Model;
 class PasswordResetRequestForm extends Model
 {
     public $email;
+    public $tenant_id;
 
     /**
      * @inheritdoc
@@ -25,6 +26,7 @@ class PasswordResetRequestForm extends Model
                 'filter' => ['status' => CoUser::STATUS_ACTIVE],
                 'message' => 'There is no user with such email.'
             ],
+            [['tenant_id'], 'safe'],
         ];
     }
 
@@ -39,9 +41,10 @@ class PasswordResetRequestForm extends Model
         $user = CoUser::findOne([
             'status' => CoUser::STATUS_ACTIVE,
             'email' => $this->email,
+            'tenant_id' => $this->tenant_id,
         ]);
         
-        $user = $user->login;
+        $user = isset($user->login) ? $user->login : [];
 
         if ($user) {
             if (!CoLogin::isPasswordResetTokenValid($user->password_reset_token)) {

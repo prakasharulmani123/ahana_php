@@ -33,6 +33,8 @@ class PatEncounter extends RActiveRecord {
     public $sts_date;
     public $sts_time;
     public $sts_status = 'A';
+    public $add_casesheet_no = 'A';
+
     /**
      * @inheritdoc
      */
@@ -48,7 +50,7 @@ class PatEncounter extends RActiveRecord {
             [['encounter_date'], 'required'],
             [['tenant_id', 'patient_id', 'finalize', 'authorize', 'created_by', 'modified_by'], 'integer'],
             [['encounter_date', 'inactive_date', 'created_at', 'modified_at', 'deleted_at', 'casesheet_no'], 'safe'],
-            [['status', 'casesheet_no'], 'string'],
+            [['status', 'casesheet_no', 'add_casesheet_no'], 'string'],
             [['encounter_type'], 'string', 'max' => 5],
         ];
     }
@@ -106,35 +108,35 @@ class PatEncounter extends RActiveRecord {
     public function getPatAdmissions() {
         return $this->hasMany(PatAdmission::className(), ['encounter_id' => 'encounter_id']);
     }
-    
+
     /**
      * @return ActiveQuery
      */
     public function getPatLiveAdmission() {
         return $this->hasOne(PatAdmission::className(), ['encounter_id' => 'encounter_id'])->andWhere(['admission_status' => 'A'])->orderBy(['status_date' => SORT_DESC]);
     }
-    
+
     /**
      * @return ActiveQuery
      */
     public function getPatLiveAppointmentBooking() {
-        return $this->hasOne(PatAppointment::className(), ['encounter_id' => 'encounter_id'])->andWhere('appt_status = "B"')->orderBy(['created_at'=>SORT_DESC]);
+        return $this->hasOne(PatAppointment::className(), ['encounter_id' => 'encounter_id'])->andWhere('appt_status = "B"')->orderBy(['created_at' => SORT_DESC]);
     }
-    
+
     /**
      * @return ActiveQuery
      */
     public function getPatLiveAppointmentArrival() {
-        return $this->hasOne(PatAppointment::className(), ['encounter_id' => 'encounter_id'])->andWhere('appt_status = "A"')->orderBy(['created_at'=>SORT_DESC]);
+        return $this->hasOne(PatAppointment::className(), ['encounter_id' => 'encounter_id'])->andWhere('appt_status = "A"')->orderBy(['created_at' => SORT_DESC]);
     }
-    
+
     /**
      * @return ActiveQuery
      */
     public function getPatCurrentAdmission() {
         return $this->hasOne(PatAdmission::className(), ['encounter_id' => 'encounter_id'])->orderBy(['created_at' => SORT_DESC]);
     }
-    
+
     public function fields() {
         $extend = [
             'patient' => function ($model) {
@@ -179,9 +181,8 @@ class PatEncounter extends RActiveRecord {
                 return $this->sts_time;
             },
             'sts_status' => function ($model) {
-                return $this->sts_status;
+                return !$this->sts_status;
             },
-                    
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
@@ -195,13 +196,23 @@ class PatEncounter extends RActiveRecord {
 
         return $list;
     }
-    
+
     public function beforeSave($insert) {
-        if($insert){
-            if(isset($this->patient->patActiveCasesheetno))
+        if ($insert) {
+            if (isset($this->patient->patActiveCasesheetno) && !empty($this->patient->patActiveCasesheetno)) {
                 $this->casesheet_no = $this->patient->patActiveCasesheetno->casesheet_no;
+            } else if (isset($this->add_casesheet_no) && !empty($this->add_casesheet_no)) {
+                $model = new PatPatientCasesheet();
+                $model->attributes = [
+                    'casesheet_no' => $this->add_casesheet_no,
+                    'patient_id' => $this->patient_id,
+                    'start_date' => date("Y-m-d"),
+                ];
+                $model->save(false);
+                $this->casesheet_no = $model->casesheet_no;
+            }
         }
         return parent::beforeSave($insert);
     }
-    
+
 }

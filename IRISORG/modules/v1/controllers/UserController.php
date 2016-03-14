@@ -204,7 +204,7 @@ class UserController extends ActiveController {
             if ($model->sendEmail()) {
                 return ['success' => true, 'message' => 'A reset link sent to your email address. Check your mail.'];
             } else {
-                return ['success' => false, 'message' => 'Sorry, we are unable to reset password for email provided.'];
+                return ['success' => false, 'message' => 'Sorry, we are unable to reset password for email & Organization provided.'];
             }
         } else {
             return ['success' => false, 'message' => Html::errorSummary([$model])];
