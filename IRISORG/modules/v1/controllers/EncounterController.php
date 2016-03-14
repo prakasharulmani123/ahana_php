@@ -245,5 +245,24 @@ class EncounterController extends ActiveController {
             }
         }
     }
+    
+    public function actionAppointmentseenencounter() {
+        $post = Yii::$app->getRequest()->post();
+        if (!empty($post)) {
+            $patient = PatPatient::find()->where(['patient_guid' => $post['patient_id']])->one();
+            $model = PatEncounter::find()
+                    ->tenant()
+                    ->status('0')
+                    ->andWhere(['patient_id' => $patient->patient_id])
+                    ->andWhere(['encounter_id' => $post['enc_id']])
+                    ->one();
+
+            if (!empty($model)) {
+                return ['success' => true, 'model' => $model];
+            } else {
+                return ['success' => false];
+            }
+        }
+    }
 
 }

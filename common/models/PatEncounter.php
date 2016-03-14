@@ -129,6 +129,13 @@ class PatEncounter extends RActiveRecord {
     public function getPatLiveAppointmentArrival() {
         return $this->hasOne(PatAppointment::className(), ['encounter_id' => 'encounter_id'])->andWhere('appt_status = "A"')->orderBy(['created_at' => SORT_DESC]);
     }
+    
+    /**
+     * @return ActiveQuery
+     */
+    public function getPatAppointmentSeen() {
+        return $this->hasOne(PatAppointment::className(), ['encounter_id' => 'encounter_id'])->andWhere('appt_status = "S"')->orderBy(['created_at' => SORT_DESC]);
+    }
 
     /**
      * @return ActiveQuery
@@ -161,6 +168,9 @@ class PatEncounter extends RActiveRecord {
             },
             'liveAppointmentArrival' => function ($model) {
                 return (isset($model->patLiveAppointmentArrival) ? $model->patLiveAppointmentArrival : '-');
+            },
+            'appointmentSeen' => function ($model) {
+                return (isset($model->patAppointmentSeen) ? $model->patAppointmentSeen : '-');
             },
             'room_name' => function ($model) {
                 return (isset($model->patLiveAdmission->room->bed_name) ? $model->patLiveAdmission->room->bed_name : '-');
