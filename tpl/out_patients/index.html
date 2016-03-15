@@ -70,8 +70,7 @@
                             Time</th>
                         <th>status</th>
                         <th>consultant</th>
-                        <!--<th>remarks</th>-->
-                        <!--<th style="width:150px;"> Actions</th>-->
+                        <th style="width:180px;"> Actions</th>
                     </tr>
                 </thead>
                 <tbody ng-hide="isLoading">
@@ -80,7 +79,8 @@
                             <!--<label class="i-checks m-b-none"><input type="checkbox" name="post[]"><i></i></label>-->
                         </td>
                         <td align="center" valign="middle">
-                            <img ng-if="(row.liveAppointmentArrival != '-' && row.liveAppointmentArrival.waiting_elapsed)" class="pull-left" src="img/symbol2.png"  alt="" />
+                            <img ng-if="(row.liveAppointmentArrival != '-' && row.liveAppointmentArrival.waiting_elapsed)" class="pull-left" src="img/elapsed-waiting-time.png"  alt="" />
+                            <img ng-if="row.patient.address.incomplete_profile" class="pull-left" src="img/question.png"  alt="" />
                         </td>
                         <td>
                             <img ng-if="$even" class="pull-left" src="img/man-icon.png" width="49" height="49" alt="" />  
@@ -133,49 +133,55 @@
                                     <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-primary btn-sm">
                                         <span class="glyphicon glyphicon-ok"></span>
                                     </button>
-                                    <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel(); setTimings(key, 'unset')" class="btn btn-default btn-sm">
+                                    <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel();
+                                                    setTimings(key, 'unset')" class="btn btn-default btn-sm">
                                         <span class="glyphicon glyphicon-remove"></span>
                                     </button>
                                 </form>
                                 <div class="buttons" ng-show="!rowform.$visible">
                                     <a ng-click="rowform.$show();
                                                     setTimings(key, 'set')" class="ng-scope ng-binding editable editable-click"> Booked </a><br />
-                                                    <span class="text-danger-dk">Waiting!</span>
+                                    <span class="text-danger-dk">Waiting!</span>
                                 </div> 
                             </div>
-                            
+
                             <div ng-if="row.liveAppointmentArrival != '-'">
                                 <div ng-if="row.liveAppointmentArrival.appt_status == 'A'"> Arrived </div>
                             </div>
                         </td>
                         <td>{{row.liveAppointmentConsultant.title_code}} {{row.liveAppointmentConsultant.name}}</td>
-                        <!--<td>Comments if any</td>-->
-                        <!--                        <td> <div class="actions-icons-cont">  
-                                                        <a href="#">  <i tooltip="Cancel" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" class="fa fa-times-circle"></i>  </a>
-                                                        <span ng-controller="ModalDemoCtrl"><a href="#" ng-click="open()">  <i tooltip="Modify" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" class="fa fa-pencil"></i>   </a></span>
-                                                        <a href="#">  <i tooltip="Delete" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" class="fa fa-trash"></i>   </a>
-                                                        <span class="dropdown hidden-sm" dropdown>
-                                                            <a href class="dropdown-toggle" dropdown-toggle>
-                                                                <img src="img/actions-icon.png"  alt="" />
-                                                            </a>
-                                                            <ul class="dropdown-menu ">
-                                                                <li><a href="#"> Action 1</a></li>
-                                                                <li><a href="#">  Action 2 </a></li>
-                                                                <li><a href="#"> Action 3</a></li>
-                                                                <li><a href="#">  Action 5</a></li>
-                                                            </ul>
-                                                        </span>
-                                                    </div>  </td>-->
+                        <td> 
+                            <div class="actions-icons-cont">  
+                                <a ui-sref="patient.view({id: row.patient.patient_guid})" title="Details">  
+                                    <img src="img/small-icon1.png"  alt="" /> 
+                                </a>
+                                <a ui-sref="patient.encounter({id: row.patient.patient_guid})" title="Encounter">  
+                                    <img src="img/small-icon3.png"  alt="" /> 
+                                </a>
+                                <a ui-sref="patient.notes({id: row.patient.patient_guid})" title="Notes">  
+                                    <img src="img/small-icon4.png"  alt="" /> 
+                                </a>
+                                <a ui-sref="patient.consultant({id: row.patient.patient_guid})" title="Consultant">  
+                                    <img src="img/small-icon6.png"  alt="" /> 
+                                </a>
+                                <a ui-sref="patient.procedure({id: row.patient.patient_guid})" title="Procedure">  
+                                    <img src="img/small-icon2.png"  alt="" /> 
+                                </a>
+                                <a ui-sref="patient.alert({id: row.patient.patient_guid})" title="Alert">  
+                                    <img src="img/small-icon8.png"  alt="" /> 
+                                </a>
+                            </div>  
+                        </td>
                     </tr>
                 </tbody>
                 <tbody ng-show="isLoading">
                     <tr>
-                        <td colspan="9" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
+                        <td colspan="10" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
                     </tr>
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td colspan="9" class="text-center">
+                        <td colspan="10" class="text-center">
                             <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7"></div>
                         </td>
                     </tr>
