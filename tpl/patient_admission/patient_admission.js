@@ -76,21 +76,21 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
                         .success(function (inpatients) {
                             $scope.encounterList = inpatients;
                             $scope.roomList = [];
-                            
+
                             angular.forEach(inpatients, function (ip, key) {
-                                if (ip.encounter_id != response.model.encounter_id){
+                                if (ip.encounter_id != response.model.encounter_id) {
                                     label = ip.currentAdmission.room.ward_detail.floor_name + ' > ' + ip.currentAdmission.room.ward_detail.ward_name + ' > ' + ip.currentAdmission.room.bed_name;
                                     $scope.roomList.push({'value': ip.encounter_id, 'label': label});
                                 }
                             });
-                            
+
                         })
                         .error(function () {
                             $scope.errorData = "An Error has occured while loading floors!";
                         });
             });
         }
-        
+
         $scope.initForm = function () {
             $rootScope.commonService.GetDoctorList('', '1', false, '1', function (response) {
                 $scope.doctors = response.doctorsList;
@@ -160,10 +160,10 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
                 $scope.data.PatAdmission.swapWardId = filterAdmission[0].currentAdmission.ward_id;
                 $scope.data.PatAdmission.swapRoomId = filterAdmission[0].currentAdmission.room_id;
                 $scope.data.PatAdmission.swapRoom = filterAdmission[0].currentAdmission.room.bed_name;
-                
+
                 $scope.data.PatAdmission.swapRoomTypeId = $scope.activeEncounter.currentAdmission.room_type_id;
                 $scope.data.PatAdmission.room_type_id = filterAdmission[0].currentAdmission.room_type_id;
-                
+
                 $scope.data.PatAdmission.swapPatientId = filterAdmission[0].patient_id;
                 $scope.data.PatAdmission.swapPatientName = filterAdmission[0].patient.fullname;
             }
@@ -284,7 +284,7 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
                 form_data = _that.data.PatAdmission;
             }
             succ_msg = 'Admission saved successfully';
-            
+
             $scope.loadbar('show');
             $http({
                 method: method,
@@ -342,6 +342,7 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
 
                 }
             }
+            _that.data.PatAdmission.status_date = moment(_that.data.PatAdmission.status_date).format('YYYY-MM-DD HH:mm:ss');
 
 
             $scope.loadbar('show');

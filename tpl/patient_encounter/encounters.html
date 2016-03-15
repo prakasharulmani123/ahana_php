@@ -3,27 +3,14 @@
     <div class="bg-light lter b-b wrapper-md">
         <h1 class="m-n h3"> Encounters</h1>
     </div>
-    <!--    <div class="wrapper-md tab-btn">
-            <div class="row">
-                <div class="col-sm-4"> 
-                    <div class="btn-group btn-group-justified">
-                        <a class="btn btn-info" ng-click="loadPatientEncounters('Current')">
-                            <i class="fa fa-list-alt"></i>  Current Encounter
-                        </a>
-                        <a class="btn btn-success" ng-click="loadPatientEncounters('Previous')">  <i class="fa fa-history"></i>
-                            Previous Encounter</a>
-                    </div>
-                </div>
-            </div>
-        </div>-->
     <div class="wrapper-md" ng-init="loadPatientEncounters('Current');
-                    loadPatientDetail()">
+                loadPatientDetail()">
+        <div ng-include="'tpl/blocks/alert.html'">
+            {% include 'tpl/blocks/alert.html' %}
+        </div>
         <div class="panel panel-default">
-            <!--<div class="panel-heading">
-              Responsive Table
-            </div>-->
             <div class="row wrapper">
-                <div class="col-sm-5 m-b-xs">
+                <div class="col-sm-6 m-b-xs">
                     <button class="btn btn-sm btn-grey" ng-show="encounterView == 'Current'" ng-click="loadPatientEncounters('Current');"> &nbsp; &nbsp; <i class="fa fa-repeat"></i>  &nbsp; &nbsp; </button>    
                     <button class="btn btn-sm btn-grey" ng-show="encounterView == 'Previous'" ng-click="loadPatientEncounters('Previous');"> &nbsp; &nbsp; <i class="fa fa-repeat"></i>  &nbsp; &nbsp; </button>    
                     &nbsp; &nbsp
@@ -31,12 +18,12 @@
                         <button ng-if="li.mode == 'sref'" ui-sref="{{li.href}}" class="btn btn-sm btn-grey"> {{li.name}}</button>    
                         <button ng-if="li.mode == 'click'" ng-click="{{li.href}}" class="btn btn-sm btn-grey"> {{li.name}}</button>    &nbsp; &nbsp
                     </div>
-                    
+
                     <button ng-if="activeEncounter == null" ng-click="$state.go('patient.modifyCaseSheetNo', {id: $state.params.id})" class="btn btn-sm btn-grey">
                         Modify Case Sheet No
                     </button>
-                    
-                    
+
+
                     <div class="btn-group" dropdown is-open="status.isopen" ng-if="more_li.length > more_max">
                         <button type="button" class=" btn btn-sm btn-grey" dropdown-toggle ng-disabled="disabled">
                             More &nbsp;&nbsp;<span class="caret"></span>
@@ -49,7 +36,7 @@
                         </ul>
                     </div>        
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                 </div>
                 <div class="col-sm-4 pull-right right">
                     <button ng-if="activeEncounter == null" ng-click="$state.go('patient.admission', {id: $state.params.id})" class="btn btn-info"><i class="fa fa-plus"></i> New Admission </button>
@@ -86,22 +73,22 @@
                                 </button>
                             </td>
                             <td colspan="5">
-                               <!--<b> Encounter: {{encounter.$key}};</b>-->
-                               <b> 
-                                   Encounter: {{encounter.encounter_id}}; 
-                                   Type: {{encounter.encounter_type}};
-                                   Doctor: {{encounter.doctor}}
-                               </b>
+                                <!--<b> Encounter: {{encounter.$key}};</b>-->
+                                <b> 
+                                    Encounter: {{encounter.encounter_id}}; 
+                                    Type: {{encounter.encounter_type}};
+                                    Doctor: {{encounter.doctor}}
+                                </b>
                             </td>
 
                         </tr>
                         <tr ng-repeat-end ng-show="expanded" ng-repeat="(key, item) in encounter.all | orderBy: 'id'">
                             <td class="text-center" align="center" valign="middle">
-                                <label ng-show="(item.status == 1 || item.type == 'Seen')" class="i-checks m-b-none"><input id="enc_{{item.encounter_id}}{{key}}" class="enc_chk" type="checkbox" name="b[]" ng-click="moreOptions(key, item.encounter_id, item.encounter_type)"><i></i></label>
+                                <label ng-show="(item.status == 1 || item.type == 'Seen')" class="i-checks m-b-none"><input id="enc_{{item.encounter_id}}{{key}}" class="enc_chk" type="checkbox" name="b[]" ng-click="moreOptions(key, item.encounter_id, item.encounter_type, item.row_sts, item.id, item.status, item.is_swap)"><i></i></label>
                             </td>
                             <td> {{item.encounter_id}} </td>
-                            <td> {{item.date | moment:'YYYY-MM-DD hh:mm A'}}</td>
-                            <td> {{item.type}} </td>
+                            <td> {{item.date| moment:'YYYY-MM-DD hh:mm A'}}</td>
+                            <td> {{item.type}} <span ng-if="item.is_swap == 1">( Swapping )</span></td>
                             <td> {{item.details}} </td>
                             <td> {{item.doctor}} </td>
                         </tr>
@@ -111,13 +98,13 @@
                             <td colspan="6" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
                         </tr>
                     </tbody>
-<!--                    <tfoot>
-                        <tr>
-                            <td colspan="6" class="text-center">
-                                <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7"></div>
-                            </td>
-                        </tr>
-                    </tfoot>-->
+                    <!--                    <tfoot>
+                                            <tr>
+                                                <td colspan="6" class="text-center">
+                                                    <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7"></div>
+                                                </td>
+                                            </tr>
+                                        </tfoot>-->
                 </table>
 
             </div>
