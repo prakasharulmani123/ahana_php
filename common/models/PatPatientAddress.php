@@ -39,6 +39,8 @@ namespace common\models;
  * @property CoMasterState $addrState
  */
 class PatPatientAddress extends RActiveRecord {
+    
+    public $incomplete_profile = '';
 
     /**
      * @inheritdoc
@@ -132,6 +134,14 @@ class PatPatientAddress extends RActiveRecord {
     public function getAddrState() {
         return $this->hasOne(CoMasterState::className(), ['state_id' => 'addr_state_id']);
     }
+    
+    public function isIncompleteProfile(){
+        if (in_array(null, $this->attributes)) {
+            return true;
+        }
+        
+        return false;
+    }
 
     public function fields() {
         $extend = [
@@ -153,6 +163,10 @@ class PatPatientAddress extends RActiveRecord {
             'perm_city_name' => function ($model) {
                 return (isset($model->addrPermCity) ? $model->addrPermCity->city_name : '-');
             },
+            'incomplete_profile' => function(){
+                return $this->isIncompleteProfile();
+            }
+            ,
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;

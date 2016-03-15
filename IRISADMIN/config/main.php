@@ -5,6 +5,7 @@ $params = array_merge(
 );
 
 return [
+    'timezone' => 'Asia/Kolkata',
     'id' => 'app-IRISADMIN',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
