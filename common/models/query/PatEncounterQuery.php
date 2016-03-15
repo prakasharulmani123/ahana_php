@@ -10,5 +10,4 @@ class PatEncounterQuery extends CommonQuery {
         return $this->andWhere(['encounter_type' => $type]);
     }
 
-
 }
