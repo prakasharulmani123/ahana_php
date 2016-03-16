@@ -1850,7 +1850,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['smart-table']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/pharmacy_products/pharmacy_products.js');
+                                        return $ocLazyLoad.load(['tpl/pharmacy_products/pharmacy_products.js']);
                                     }
                             );
                         }]
@@ -1863,7 +1863,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/pharmacy_products/pharmacy_products.js']);
+                            return uiLoad.load(['tpl/pharmacy_products/pharmacy_products.js', 'tpl/modal_form/modal.description.js']);
                         }]
                 }
             })

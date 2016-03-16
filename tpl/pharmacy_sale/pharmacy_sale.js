@@ -47,6 +47,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             //Payment types
             $rootScope.commonService.GetPaymentType(function (response) {
                 $scope.paymentTypes = response;
+                $scope.paymentTypes.push({value: 'COD', label: 'Cash On Delivery'});
             });
 
             if ($scope.data.formtype == 'update') {

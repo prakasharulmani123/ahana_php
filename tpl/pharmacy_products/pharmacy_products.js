@@ -1,5 +1,5 @@
-app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', function ($rootScope, $scope, $timeout, $http, $state) {
-
+app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$modal', '$log', function ($rootScope, $scope, $timeout, $http, $state, $modal, $log) {
+        
         //Index Page
         $scope.loadProductsList = function () {
             $scope.isLoading = true;
@@ -181,4 +181,29 @@ app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http
 //                }
 //            }
 //        };
+
+        $scope.items = ['item1', 'item2', 'item3'];
+        $scope.open = function (size) {
+            var modalInstance = $modal.open({
+                templateUrl: 'DescriptionModalContent.html',
+                controller: 'DescriptionModalInstanceCtrl',
+                size: size,
+//                scope: $scope,
+                resolve: {
+                    productDescriptions: function () {
+                        return $scope.productDescriptions;
+                    },
+                    scope: function () {
+                        return $scope;
+                    },
+                }
+            });
+
+            modalInstance.result.then(function (selectedItem) {
+                $scope.selected = selectedItem;
+            }, function () {
+                $log.info('Modal dismissed at: ' + new Date());
+            });
+        };
+
     }]);
