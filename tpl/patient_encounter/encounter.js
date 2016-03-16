@@ -40,6 +40,28 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
             $scope.$broadcast('onExpandAll', {expanded: expanded});
         };
 
+        $scope.statuses = [
+            {value: 'A', text: 'Arrived'},
+        ];
+        
+        $scope.setTimings = function(key, mode){
+            if(mode == 'set'){
+                st_d = moment().format('YYYY-MM-DD');
+                st_t = moment().format('hh:mm A');
+            }else{
+                st_d = st_t = '';
+            }
+            $scope.displayedCollection[key].sts_date = st_d;
+            $scope.displayedCollection[key].sts_time = st_t;
+        }
+        
+        $scope.onTimeSet = function(newDate, oldDate, main_key, key){
+            console.log($scope.displayedCollection[main_key].all[key]);
+            $scope.displayedCollection[main_key].all[key].date = moment(newDate).format('YYYY-MM-DD hh:mm A');
+//            $scope.displayedCollection[key].sts_date = moment(newDate).format('YYYY-MM-DD');
+//            $scope.displayedCollection[key].sts_time = moment(newDate).format('hh:mm A');
+        }
+        
         $scope.moreOptions = function (key, enc_id, type, row_sts, id, status, is_swap) {
             console.log(row_sts);
             $scope.more_li = {};
@@ -197,6 +219,33 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                         });
                     }
                 }
+            });
+        };
+        
+        $scope.changeAppointmentStatus = function (_data, key) {
+            $scope.errorData = "";
+            $scope.successMessage = "";
+            
+            console.log(_data);
+            return false;
+
+            $scope.loadbar('show');
+            $http({
+                method: 'POST',
+                url: $rootScope.IRISOrgServiceUrl + '/appointments',
+                data: _data,
+            }).success(
+                    function (response) {
+                        $scope.loadbar('hide');
+                        $scope.successMessage = 'Status changed successfully';
+                        $scope.displayedCollection[key].liveAppointmentArrival = response;
+                    }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
             });
         };
     }]);

@@ -1,6 +1,6 @@
 <div>
     <div class="bg-light lter b-b wrapper-md">
-        <h1 class="m-n h3">Create Product Description</h1>
+        <h1 class="m-n h3">Create Brand Division</h1>
     </div>
     <div class="wrapper-md">
         <div ng-include="'tpl/blocks/alert.html'">
@@ -8,14 +8,15 @@
         </div>
         <div class="row">
             <div class="col-sm-12" ng-init="data.status = '1'">
-                <form name="descForm" class="form-horizontal form-validation" novalidate="">
+                <form name="divisionForm" class="form-horizontal form-validation" novalidate="">
                     <div class="modal-body wrapper-lg">
                         <div class="panel panel-default">
                             <div class="panel-body">
+
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label">Description * </label>
+                                    <label class="col-sm-2 control-label">Division Name * </label>
                                     <div class="col-sm-10">
-                                        <input type="text" ng-model="data.description_name" maxlength="50" class="form-control" placeholder="Product Description">
+                                        <input type="text" ng-model="data.division_name" maxlength="50" class="form-control" placeholder="Division Name">
                                     </div>
                                 </div>
                             </div>

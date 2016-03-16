@@ -26,11 +26,11 @@
                                     <option value="">Select Product Description</option>
                                 </select>
                             </div>
-                            <div class="col-sm-1">
+                            <div class="col-sm-0">
                                 <script type="text/ng-template" id="DescriptionModalContent.html">
                                     <div ng-include="'tpl/modal_form/modal.description.html'"></div>
                                 </script>
-                                <button type="button" class="btn btn-sm btn-default" ng-click="open('lg')">
+                                <button type="button" class="btn btn-primary" ng-click="open('lg', 'DescriptionModalInstanceCtrl', 'DescriptionModalContent.html', '')">
                                     <i class="fa fa-plus text ng-scope"></i>
                                 </button>
                             </div>
@@ -64,30 +64,54 @@
 
                         <div class="form-group">
                             <label class="col-sm-5 control-label">Brand Name * </label>
-                            <div class="col-sm-7">
+                            <div class="col-sm-6">
                                 <select class="form-control" ng-model="data.brand_id" ng-options="brand.brand_id as brand.brand_name for brand in brands | orderBy: brand_name"">
                                     <option value="">Select Brand Name</option>
                                 </select>
+                            </div>
+                            <div class="col-sm-0">
+                                <script type="text/ng-template" id="BrandModalContent.html">
+                                    <div ng-include="'tpl/modal_form/modal.brand.html'"></div>
+                                </script>
+                                <button type="button" class="btn btn-primary" ng-click="open('lg', 'BrandModalInstanceCtrl', 'BrandModalContent.html', '')">
+                                    <i class="fa fa-plus text ng-scope"></i>
+                                </button>
                             </div>
                         </div>
                         <div class="line line-dashed b-b line-lg "></div>
 
                         <div class="form-group">
                             <label class="col-sm-5 control-label">Brand Division * </label>
-                            <div class="col-sm-7">
+                            <div class="col-sm-6">
                                 <select class="form-control" ng-model="data.division_id" ng-options="division.division_id as division.division_name for division in divisions | orderBy: division_name"">
                                     <option value="">Select Brand Division</option>
                                 </select>
+                            </div>
+                            <div class="col-sm-0">
+                                <script type="text/ng-template" id="DivisionModalContent.html">
+                                    <div ng-include="'tpl/modal_form/modal.division.html'"></div>
+                                </script>
+                                <button type="button" class="btn btn-primary" ng-click="open('lg', 'DivisionModalInstanceCtrl', 'DivisionModalContent.html', '')">
+                                    <i class="fa fa-plus text ng-scope"></i>
+                                </button>
                             </div>
                         </div>
                         <div class="line line-dashed b-b line-lg "></div>
 
                         <div class="form-group">
                             <label class="col-sm-5 control-label">Generic Name * </label>
-                            <div class="col-sm-7">
+                            <div class="col-sm-6">
                                 <select class="form-control" ng-model="data.generic_id" ng-options="generic.generic_id as generic.generic_name for generic in generics | orderBy: generic_name"" ng-change="getDrugByGeneric()">
                                     <option value="">Select Generic Name</option>
                                 </select>
+                            </div>
+                            <div class="col-sm-0">
+                                <script type="text/ng-template" id="GenericModalContent.html">
+                                    <div ng-include="'tpl/modal_form/modal.generic.html'"></div>
+                                </script>
+                                <button type="button" class="btn btn-primary" ng-click="open('lg', 'GenericModalInstanceCtrl', 'GenericModalContent.html', '')">
+                                    <i class="fa fa-plus text ng-scope"></i>
+                                </button>
                             </div>
                         </div>
                         <div class="line line-dashed b-b line-lg "></div>
@@ -127,19 +151,33 @@
             <div class="panel-body">
                 <div class="form-group">
                     <label class="col-sm-5 control-label">Purchase Vat * </label>
-                    <div class="col-sm-7">
+                    <div class="col-sm-6">
                         <select class="form-control" ng-model="data.purchase_vat_id" ng-options="purchase_vat.vat_id as purchase_vat.vat for purchase_vat in vats | orderBy: vat"">
                             <option value="">Select Purchase Vat</option>
                         </select>
                     </div>
+                    <div class="col-sm-0">
+                        <script type="text/ng-template" id="VatModalContent.html">
+                            <div ng-include="'tpl/modal_form/modal.vat.html'"></div>
+                        </script>
+                        <button type="button" class="btn btn-primary" ng-click="open('lg', 'VatModalInstanceCtrl', 'VatModalContent.html', 'purchase')">
+                            <i class="fa fa-plus text ng-scope"></i>
+                        </button>
+                    </div>
                 </div>
+
                 <div class="line line-dashed b-b line-lg "></div>
                 <div class="form-group">
                     <label class="col-sm-5 control-label">Sale Vat * </label>
-                    <div class="col-sm-7">
+                    <div class="col-sm-6">
                         <select class="form-control" ng-model="data.sales_vat_id" ng-options="sale_vat.vat_id as sale_vat.vat for sale_vat in vats | orderBy: vat"">
                             <option value="">Select Sale Vat</option>
                         </select>
+                    </div>
+                    <div class="col-sm-0">
+                        <button type="button" class="btn btn-primary" ng-click="open('lg', 'VatModalInstanceCtrl', 'VatModalContent.html', 'sale')">
+                            <i class="fa fa-plus text ng-scope"></i>
+                        </button>
                     </div>
                 </div>
                 <div class="line line-dashed b-b line-lg "></div>
@@ -152,19 +190,32 @@
             <div class="panel-body">
                 <div class="form-group">
                     <label class="col-sm-5 control-label">Purchase Unit * </label>
-                    <div class="col-sm-7">
+                    <div class="col-sm-6">
                         <select class="form-control" ng-model="data.purchase_package_id" ng-options="purchase_unit.package_id as purchase_unit.package_name for purchase_unit in packingUnits | orderBy: package_name"">
                             <option value="">Select Purchase Unit</option>
                         </select>
+                    </div>
+                    <div class="col-sm-0">
+                        <script type="text/ng-template" id="PackageModalContent.html">
+                            <div ng-include="'tpl/modal_form/modal.package.html'"></div>
+                        </script>
+                        <button type="button" class="btn btn-primary" ng-click="open('lg', 'PackageModalInstanceCtrl', 'PackageModalContent.html', 'purchase')">
+                            <i class="fa fa-plus text ng-scope"></i>
+                        </button>
                     </div>
                 </div>
                 <div class="line line-dashed b-b line-lg "></div>
                 <div class="form-group">
                     <label class="col-sm-5 control-label">Sale Unit * </label>
-                    <div class="col-sm-7">
+                    <div class="col-sm-6">
                         <select class="form-control" ng-model="data.sales_package_id" ng-options="sale_unit.package_id as sale_unit.package_name for sale_unit in packingUnits | orderBy: package_name"">
                             <option value="">Select Sale Vat</option>
                         </select>
+                    </div>
+                    <div class="col-sm-0">
+                        <button type="button" class="btn btn-primary" ng-click="open('lg', 'PackageModalInstanceCtrl', 'PackageModalContent.html', 'sale')">
+                            <i class="fa fa-plus text ng-scope"></i>
+                        </button>
                     </div>
                 </div>
                 <div class="line line-dashed b-b line-lg "></div>

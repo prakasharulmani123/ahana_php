@@ -182,19 +182,17 @@ app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http
 //            }
 //        };
 
-        $scope.items = ['item1', 'item2', 'item3'];
-        $scope.open = function (size) {
+        $scope.open = function (size, ctrlr, tmpl, update_col) {
             var modalInstance = $modal.open({
-                templateUrl: 'DescriptionModalContent.html',
-                controller: 'DescriptionModalInstanceCtrl',
+                templateUrl: tmpl,
+                controller: ctrlr,
                 size: size,
-//                scope: $scope,
                 resolve: {
-                    productDescriptions: function () {
-                        return $scope.productDescriptions;
-                    },
                     scope: function () {
                         return $scope;
+                    },
+                    column: function () {
+                        return update_col;
                     },
                 }
             });

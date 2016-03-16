@@ -998,7 +998,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('smart-table').then(
+                            return $ocLazyLoad.load(['smart-table', 'xeditable']).then(
                                     function () {
                                         return $ocLazyLoad.load('tpl/patient_encounter/encounter.js');
                                     }
@@ -1863,7 +1863,15 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/pharmacy_products/pharmacy_products.js', 'tpl/modal_form/modal.description.js']);
+                            return uiLoad.load([
+                                'tpl/pharmacy_products/pharmacy_products.js', 
+                                'tpl/modal_form/modal.description.js', 
+                                'tpl/modal_form/modal.brand.js', 
+                                'tpl/modal_form/modal.division.js',
+                                'tpl/modal_form/modal.generic.js',
+                                'tpl/modal_form/modal.vat.js',
+                                'tpl/modal_form/modal.package.js',
+                            ]);
                         }]
                 }
             })
