@@ -55,7 +55,7 @@ class UserController extends ActiveController {
         $behaviors = parent::behaviors();
         $behaviors['authenticator'] = [
             'class' => QueryParamAuth::className(),
-            'only' => ['dashboard', 'createuser', 'updateuser', 'getuser', 'getlogin', 'updatelogin', 'getuserdata', 'getuserslistbyuser', 'assignroles', 'getdoctorslist', 'checkstateaccess', 'getusercredentialsbytoken', 'logout'],
+            'only' => ['dashboard', 'createuser', 'updateuser', 'getuser', 'getlogin', 'updatelogin', 'getuserdata', 'getuserslistbyuser', 'assignroles', 'getdoctorslist', 'checkstateaccess', 'getusercredentialsbytoken'],
         ];
         $behaviors['contentNegotiator'] = [
             'class' => ContentNegotiator::className(),
@@ -149,6 +149,10 @@ class UserController extends ActiveController {
     }
 
     public function actionLogout() {
+        if(empty(Yii::$app->user->identity)){
+            return ['success' => true];
+        }
+        
         $model = CoLogin::findOne(['login_id' => Yii::$app->user->identity->login_id]);
         if(!empty($model)){
             $model->attributes = ['authtoken' => '','logged_tenant_id' => ''];

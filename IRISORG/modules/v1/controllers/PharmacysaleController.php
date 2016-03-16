@@ -60,6 +60,17 @@ class PharmacysaleController extends ActiveController {
             return ['success' => true];
         }
     }
+    
+    public function actionGetsales() {
+        $get = Yii::$app->getRequest()->get();
+
+        if (isset($get['payment_type'])) {
+            $data = PhaSale::find()->tenant()->active()->andWhere(['payment_type' => $get['payment_type']])->all();
+            return ['success' => true, 'sales' => $data];
+        } else {
+            return ['success' => false, 'message' => 'Invalid Access'];
+        }
+    }
 
     public function actionSavesale() {
         $post = Yii::$app->getRequest()->post();
