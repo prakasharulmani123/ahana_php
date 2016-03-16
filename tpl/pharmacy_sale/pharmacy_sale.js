@@ -11,9 +11,10 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         };
 
         //Index Page
-        $scope.loadSaleItemList = function () {
+        $scope.loadSaleItemList = function (payment_type) {
             $scope.errorData = $scope.successMessage = '';
             $scope.isLoading = true;
+            $scope.sale_payment_type = payment_type;
 
             // pagination set up
             $scope.rowCollection = [];  // base collection
@@ -21,10 +22,10 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
 
             // Get data's from service
-            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacysale')
+            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacysale/getsales?payment_type=' + payment_type)
                     .success(function (saleList) {
                         $scope.isLoading = false;
-                        $scope.rowCollection = saleList;
+                        $scope.rowCollection = saleList.sales;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
                     })
                     .error(function () {
