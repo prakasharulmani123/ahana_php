@@ -1896,7 +1896,10 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load('xeditable').then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/pharmacy_sale/pharmacy_sale.js');
+                                        return $ocLazyLoad.load([
+                                            'tpl/pharmacy_sale/pharmacy_sale.js',
+                                            'tpl/pharmacy_sale/sale_make_payment.js',
+                                        ]);
                                     }
                             );
                         }]

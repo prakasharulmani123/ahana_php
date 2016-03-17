@@ -1,4 +1,4 @@
-app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$anchorScroll', '$filter', '$timeout', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $anchorScroll, $filter, $timeout) {
+app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$anchorScroll', '$filter', '$timeout', '$modal', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $anchorScroll, $filter, $timeout, $modal) {
 
         editableThemes.bs3.inputClass = 'input-sm';
         editableThemes.bs3.buttonsClass = 'btn-sm';
@@ -377,6 +377,29 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                     $scope.errorData = data.message;
             });
         };
+
+        $scope.make_payment = function (sale_id, bill_amount, paid, balance, sale_payment_type) {
+            var modalInstance = $modal.open({
+                templateUrl: 'tpl/pharmacy_sale/modal.makepayment.html',
+                controller: "SaleMakePaymentController",
+                resolve: {
+                    scope: function () {
+                        return $scope;
+                    },
+                }
+            });
+            modalInstance.data = {
+                sale_id: sale_id,
+                bill_amount: bill_amount,
+                paid: paid,
+                balance: balance,
+                sale_payment_type: sale_payment_type,
+            };
+
+            modalInstance.result.then(function (selectedItem) {
+                console.log('hi');
+            });
+        }
 
     }]);
 

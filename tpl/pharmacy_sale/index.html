@@ -7,14 +7,14 @@
             <div class="col-sm-4"> 
                 <div class="btn-group btn-group-justified">
                     <a class="btn btn-info" ng-click="loadSaleItemList('CA')">
-                        <i class="fa fa-list-alt"></i>  Cash
+                        <i class="fa fa-money"></i>  Cash
                     </a>
                     <a class="btn btn-success" ng-click="loadSaleItemList('CR')">  
-                        <i class="fa fa-history"></i>
+                        <i class="fa fa-list-alt"></i>
                         Credit
                     </a>
-                    <a class="btn btn-default" ng-click="loadSaleItemList('COD')">  
-                        <i class="fa fa-history"></i>
+                    <a class="btn btn-primary" ng-click="loadSaleItemList('COD')">  
+                        <i class="fa fa-cab"></i>
                         COD
                     </a>
                 </div>
@@ -78,6 +78,11 @@
                             <a title="Edit" check-access  ui-sref="pharmacy.saleUpdate({id: '{{row.sale_id}}'})">
                                 <i class="fa fa-pencil"></i>
                             </a>
+                            <span ng-if="row.payment_type != 'CA' && row.payment_status != 'C'">
+                                <a title="Make Payment" ng-click="make_payment(row.sale_id, row.bill_amount, row.billings_total_paid_amount, row.billings_total_balance_amount, sale_payment_type)" check-access ">
+                                   <i class="fa fa-money"></i>
+                                </a>
+                            </span>
                         </td>
                     </tr>
                     <tr ng-repeat-end ng-show="expanded">
