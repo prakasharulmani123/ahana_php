@@ -41,6 +41,8 @@ use yii\helpers\ArrayHelper;
  */
 class PhaSale extends RActiveRecord {
 
+    public $after_save = true;
+
     /**
      * @inheritdoc
      */
@@ -96,9 +98,9 @@ class PhaSale extends RActiveRecord {
     public function beforeSave($insert) {
         if ($insert) {
             $this->bill_no = CoInternalCode::find()->tenant()->codeType("B")->one()->Fullcode;
-            
+
             //Payment Type - Credit, COD - Then payment status is pending.
-            if($this->payment_type != 'CA'){
+            if ($this->payment_type != 'CA') {
                 $this->payment_status = 'P';
             }
         }
@@ -111,18 +113,20 @@ class PhaSale extends RActiveRecord {
             CoInternalCode::increaseInternalCode("B");
         }
 
-        //Sale Billing - Payment Type - CASH
-        if ($this->payment_type == 'CA') {
-            if ($insert) {
-                $sale_billing_model = new PhaSaleBilling();
-            } else {
-                $sale_billing_model = PhaSaleBilling::find()->where(['sale_id' => $this->sale_id])->one();
+        if ($this->after_save) {
+            //Sale Billing - Payment Type - CASH
+            if ($this->payment_type == 'CA') {
+                if ($insert) {
+                    $sale_billing_model = new PhaSaleBilling();
+                } else {
+                    $sale_billing_model = PhaSaleBilling::find()->where(['sale_id' => $this->sale_id])->one();
+                }
+
+                $sale_billing_model->sale_id = $this->sale_id;
+                $sale_billing_model->paid_date = $this->sale_date;
+                $sale_billing_model->paid_amount = $this->bill_amount;
+                $sale_billing_model->save(false);
             }
-            
-            $sale_billing_model->sale_id = $this->sale_id;
-            $sale_billing_model->paid_date = $this->sale_date;
-            $sale_billing_model->paid_amount = $this->bill_amount;
-            $sale_billing_model->save(false);
         }
 
         return parent::afterSave($insert, $changedAttributes);
@@ -156,6 +160,10 @@ class PhaSale extends RActiveRecord {
         return $this->hasMany(PhaSaleBilling::className(), ['sale_id' => 'sale_id']);
     }
 
+    public function getPhaSaleBillingsTotalPaidAmount() {
+        return $this->hasMany(PhaSaleBilling::className(), ['sale_id' => 'sale_id'])->sum('paid_amount');
+    }
+
     /**
      * @return ActiveQuery
      */
@@ -174,6 +182,18 @@ class PhaSale extends RActiveRecord {
             },
             'items' => function ($model) {
                 return (isset($model->phaSaleItems) ? $model->phaSaleItems : '-');
+            },
+            'billings_total_paid_amount' => function ($model) {
+                return (isset($model->phaSaleBillingsTotalPaidAmount) ? $model->phaSaleBillingsTotalPaidAmount : '0');
+            },
+            'billings_total_balance_amount' => function ($model) {
+                $paid_amount = 0;
+                if(isset($model->phaSaleBillingsTotalPaidAmount)){
+                    $paid_amount = $model->phaSaleBillingsTotalPaidAmount;
+                } 
+                
+                $balance = $model->bill_amount - $paid_amount;
+                return number_format($balance, '2');
             },
         ];
         $fields = array_merge(parent::fields(), $extend);

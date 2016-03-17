@@ -41,8 +41,15 @@ class PhaSaleBilling extends RActiveRecord {
             [['sale_id', 'tenant_id', 'created_by', 'modified_by'], 'integer'],
             [['paid_date', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['paid_amount'], 'number'],
-            [['status'], 'string']
+            [['status'], 'string'],
+            ['paid_amount', 'validateBillAmount'],
         ];
+    }
+
+    public function validateBillAmount($attribute, $params) {
+        if ($this->paid_amount > $this->sale->bill_amount) {
+            $this->addError($attribute, "Amount ({$this->paid_amount}) must be lesser than or equal to Bill Amount ({$this->sale->bill_amount})");
+        }
     }
 
     /**
@@ -80,6 +87,22 @@ class PhaSaleBilling extends RActiveRecord {
 
     public static function find() {
         return new PhaSaleBillingQuery(get_called_class());
+    }
+
+    public function afterSave($insert, $changedAttributes) {
+        $sale_bill_amount = $this->sale->bill_amount;
+        $sale_billings_total = $this->find()->where(['sale_id' => $this->sale_id])->sum('paid_amount');
+
+        $sale_model = $this->sale;
+        if ($sale_bill_amount == $sale_billings_total) {
+            $sale_model->payment_status = 'C';
+        } elseif ($sale_billings_total > 0) {
+            $sale_model->payment_status = 'PC';
+        }
+        $sale_model->after_save = false;
+        $sale_model->save(false);
+
+        return parent::afterSave($insert, $changedAttributes);
     }
 
 }
