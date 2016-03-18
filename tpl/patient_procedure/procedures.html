@@ -64,10 +64,10 @@
                             <td> {{row.doctors}} </td>
                             <td>
                                 <div ng-show="enc.selected.status == '1'">
-                                    <a title="Edit" check-access  ui-sref="patient.edit_procedure({id: '$state.params.id', proc_id : row.proc_id})">
+                                    <a title="Edit" check-access  ui-sref="patient.edit_procedure({id: $state.params.id, proc_id : row.proc_id})">
                                         <i class="fa fa-pencil"></i>
                                     </a>&nbsp;&nbsp;&nbsp;
-                                    <a class="hide" title="Delete" ng-click="removeRow(row.proc_id)">
+                                    <a title="Delete" ng-click="removeRow(row.proc_id)">
                                         <i class="fa fa-trash"></i>
                                     </a>
                                 </div>
