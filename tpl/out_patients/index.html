@@ -146,7 +146,22 @@
                             </div>
 
                             <div ng-if="row.liveAppointmentArrival != '-'">
-                                <div ng-if="row.liveAppointmentArrival.appt_status == 'A'"> Arrived </div>
+                                <div ng-if="row.liveAppointmentArrival.appt_status == 'A'"> 
+                                    <form editable-form name="rowform" onbeforesave="$state.go('patient.changeStatus', {id: row.patient.patient_guid, enc_id: row.encounter_id})" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == row">
+                                        <span editable-select="row.sts_status" e-name="sts_status" e-form="rowform" e-ng-options="s.value as s.text for s in arr_statuses" e-class="form-control">
+                                            {{item.sts_status|| 'empty' }}
+                                        </span>
+                                        <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-primary btn-sm">
+                                            <span class="glyphicon glyphicon-ok"></span>
+                                        </button>
+                                        <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel();" class="btn btn-default btn-sm">
+                                            <span class="glyphicon glyphicon-remove"></span>
+                                        </button>
+                                    </form>
+                                    <div class="buttons" ng-show="!rowform.$visible">
+                                        <a ng-click="rowform.$show();" class="ng-scope ng-binding editable editable-click"> Arrived </a><br />
+                                    </div> 
+                                </div>
                             </div>
                         </td>
                         <td>{{row.liveAppointmentConsultant.title_code}} {{row.liveAppointmentConsultant.name}}</td>

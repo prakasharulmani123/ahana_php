@@ -82,57 +82,79 @@
                             </td>
 
                         </tr>
-                        <tr ng-repeat-end ng-show="expanded" ng-repeat="(key, item) in encounter.all | orderBy: 'id'">
+                        <tr ng-repeat-end ng-show="expanded" ng-repeat="(key, item) in encounter.all">
                             <td class="text-center" align="center" valign="middle">
                                 <label ng-show="(item.status == 1 || item.type == 'Seen')" class="i-checks m-b-none"><input id="enc_{{item.encounter_id}}{{key}}" class="enc_chk" type="checkbox" name="b[]" ng-click="moreOptions(key, item.encounter_id, item.encounter_type, item.row_sts, item.id, item.status, item.is_swap)"><i></i></label>
                             </td>
                             <td> {{item.encounter_id}} </td>
                             <td> 
-                                <div class="input-group" ng-if="item.encounter_type == 'OP' && item.type == 'Booked'">
-                                <a class="dropdown-toggle" id="dropdown2" role="button" data-toggle="dropdown" data-target="#" href="javascript:void(0)">
-                                    <div class="input-group">
-                                        <span editable-text="item.date" e-name="date" e-form="hiddenform">
-                                            {{item.date| moment:'YYYY-MM-DD hh:mm A'}}
-                                        </span>
-                                    </div>
-                                </a>
-                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                                    <datetimepicker data-ng-model="arr_date" data-datetimepicker-config="{ dropdownSelector: '#dropdown2' }" data-on-set-time="onTimeSet(newDate, oldDate, main_key, key)"/>
-                                </ul>
-                            </div>
+                                <!--Datetime picker-->
+                                <div class="input-group" ng-if="item.type == 'Booked' && encounter.all.length == 1">
+                                    <a class="dropdown-toggle" id="dropdown2" role="button" data-toggle="dropdown" data-target="#" href="javascript:void(0)">
+                                        <div class="input-group">
+                                            <span editable-text="item.date" e-name="date" e-form="hiddenform">
+                                                {{item.date| moment:'YYYY-MM-DD hh:mm A'}}
+                                            </span>
+                                        </div>
+                                    </a>
+                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                        <datetimepicker data-ng-model="arr_date" data-datetimepicker-config="{ dropdownSelector: '#dropdown2' }" data-on-set-time="onTimeSet(newDate, oldDate, main_key, key)"/>
+                                    </ul>
+                                </div>
 
-                            <div ng-if="item.encounter_type !== 'OP' && item.type !== 'Booked'">
-                                {{item.date| moment:'YYYY-MM-DD hh:mm A'}}
-                            </div>
-                                
+                                <div ng-if="item.type !== 'Booked' ||  encounter.all.length > 1">
+                                    {{item.date| moment:'YYYY-MM-DD hh:mm A'}}
+                                </div>
                             </td>
-                            <td ng-if="item.encounter_type !== 'OP' && item.type !== 'Booked'"> {{item.type}} <span ng-if="item.is_swap == 1">( Swapping )</span></td>
-                            <td ng-if="item.encounter_type == 'OP' && item.type == 'Booked'">
+                            <td> 
 
-                                <form editable-form name="rowform" onbeforesave="changeAppointmentStatus({
-                                      'patient_id': item.patient_id, 
-                                      'encounter_id': item.encounter_id,
-                                      'consultant_id': item.consultant_id,
-                                      'status_date': item.date,
-                                      'status_time': item.date,
-                                      'appt_status': 'A',
-                                      }, key)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == item">
-                                    <span editable-select="item.sts_status" e-name="sts_status" e-form="rowform" e-ng-options="s.value as s.text for s in statuses">
-                                        {{item.sts_status|| 'empty' }}
-                                    </span>
-                                    <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-primary btn-sm">
-                                        <span class="glyphicon glyphicon-ok"></span>
-                                    </button>
-                                    <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel();
-                                                setTimings(key, 'unset')" class="btn btn-default btn-sm">
-                                        <span class="glyphicon glyphicon-remove"></span>
-                                    </button>
-                                </form>
-                                <div class="buttons" ng-show="!rowform.$visible">
-                                    <a ng-click="rowform.$show();
-                                                setTimings(key, 'set')" class="ng-scope ng-binding editable editable-click"> Booked </a><br />
-                                    <span class="text-danger-dk">Waiting!</span>
-                                </div> 
+                                <div ng-if="item.type !== 'Booked' ||  encounter.all.length > 1" ng-show="item.type !== 'Arrived'">
+                                    {{item.type}} <span ng-if="item.is_swap == 1">( Swapping )</span>
+                                </div>
+                                <!--Booked to Arrival Form-->
+                                <div ng-if="item.type == 'Booked' && encounter.all.length == 1">
+                                    <form editable-form name="rowform" onbeforesave="changeAppointmentStatus({
+                                          'patient_id': item.patient_id, 
+                                          'encounter_id': item.encounter_id,
+                                          'consultant_id': item.consultant_id,
+                                          'status_date': item.date,
+                                          'status_time': item.date,
+                                          'appt_status': 'A',
+                                          }, key)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == item">
+                                        <span editable-select="item.sts_status" e-name="sts_status" e-form="rowform" e-ng-options="s.value as s.text for s in statuses" e-class="form-control">
+                                            {{item.sts_status|| 'empty' }}
+                                        </span>
+                                        <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-primary btn-sm">
+                                            <span class="glyphicon glyphicon-ok"></span>
+                                        </button>
+                                        <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel();
+                                                    setTimings(key, 'unset')" class="btn btn-default btn-sm">
+                                            <span class="glyphicon glyphicon-remove"></span>
+                                        </button>
+                                    </form>
+                                    <div class="buttons" ng-show="!rowform.$visible">
+                                        <a ng-click="rowform.$show();
+                                                    setTimings(key, 'set')" class="ng-scope ng-binding editable editable-click"> Booked </a><br />
+                                        <!--<span class="text-danger-dk">Waiting!</span>-->
+                                    </div> 
+                                </div>
+                                <!--Arrived to Seen Form-->
+                                <div ng-if="item.type == 'Arrived' && encounter.all.length == 2">
+                                    <form editable-form name="rowform" onbeforesave="$state.go('patient.changeStatus', {id: $state.params.id, enc_id: item.encounter_id})" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == item">
+                                        <span editable-select="item.sts_status" e-name="sts_status" e-form="rowform" e-ng-options="s.value as s.text for s in arr_statuses" e-class="form-control">
+                                            {{item.sts_status|| 'empty' }}
+                                        </span>
+                                        <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-primary btn-sm">
+                                            <span class="glyphicon glyphicon-ok"></span>
+                                        </button>
+                                        <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel();" class="btn btn-default btn-sm">
+                                            <span class="glyphicon glyphicon-remove"></span>
+                                        </button>
+                                    </form>
+                                    <div class="buttons" ng-show="!rowform.$visible">
+                                        <a ng-click="rowform.$show();" class="ng-scope ng-binding editable editable-click"> Arrived </a><br />
+                                    </div> 
+                                </div>
                             </td>
                             <td> {{item.details}} </td>
                             <td> {{item.doctor}} </td>

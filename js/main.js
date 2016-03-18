@@ -3,8 +3,8 @@
 /* Controllers */
 
 angular.module('app')
-        .controller('AppCtrl', ['$scope', '$localStorage', '$window', '$rootScope', '$state', '$cookieStore', '$http', 'CommonService', '$timeout', 'AuthenticationService',
-            function ($scope, $localStorage, $window, $rootScope, $state, $cookieStore, $http, CommonService, $timeout, AuthenticationService) {
+        .controller('AppCtrl', ['$scope', '$localStorage', '$window', '$rootScope', '$state', '$cookieStore', '$http', 'CommonService', '$timeout', 'AuthenticationService', 'toaster',
+            function ($scope, $localStorage, $window, $rootScope, $state, $cookieStore, $http, CommonService, $timeout, AuthenticationService, toaster) {
                 // add 'ie' classes to html
                 var isIE = !!navigator.userAgent.match(/MSIE/i);
                 isIE && angular.element($window.document.body).addClass('ie');
@@ -56,6 +56,7 @@ angular.module('app')
                         patientAlert: '',
                         patientActiveCasesheetno: '',
                         patientActiveIP: '',
+                        patientCurrentRoom: '',
                     }
                 }
 
@@ -99,6 +100,11 @@ angular.module('app')
                                 $scope.errorData = "An Error has occured while loading patient!";
                             });
                 };
+
+                $rootScope.$on('unauthorized', function () {
+                    toaster.pop('error', 'Session Expired', 'Kindly Login Again');
+                    $scope.logout();
+                });
 
                 //Change Status
                 $scope.updateStatus = function (modelName, primaryKey) {
@@ -176,6 +182,7 @@ angular.module('app')
                                         $scope.app.patientDetail.patientAlert = patient.alert;
                                         $scope.app.patientDetail.patientActiveCasesheetno = patient.activeCasesheetno;
                                         $scope.app.patientDetail.patientActiveIp = patient.patActiveIp;
+                                        $scope.app.patientDetail.patientCurrentRoom = patient.current_room;
                                         $rootScope.commonService.GetLabelFromValue(patient.patient_gender, 'GetGenderList', function (response) {
                                             $scope.app.patientDetail.patientSex = response;
                                         });

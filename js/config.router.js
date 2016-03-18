@@ -76,12 +76,6 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                 abstract: true,
                 url: '/configuration',
                 templateUrl: 'tpl/configuration.html',
-                resolve: {
-                    deps: ['$ocLazyLoad',
-                        function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('toaster');
-                        }]
-                }
             })
             //401 PAGE
             .state('configuration.401', {

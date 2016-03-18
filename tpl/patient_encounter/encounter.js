@@ -9,7 +9,7 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
 
         //Encounter Page
         $scope.loadPatientEncounters = function (type) {
-            $scope.successMessage = $scope.errorData = '';
+            $scope.errorData = '';
             $scope.encounterView = type;
             $scope.isLoading = true;
             $scope.rowCollection = [];  // base collection
@@ -43,25 +43,26 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
         $scope.statuses = [
             {value: 'A', text: 'Arrived'},
         ];
-        
-        $scope.setTimings = function(key, mode){
-            if(mode == 'set'){
+
+        $scope.arr_statuses = [
+            {value: 'S', text: 'Seen'},
+        ];
+
+        $scope.setTimings = function (key, mode) {
+            if (mode == 'set') {
                 st_d = moment().format('YYYY-MM-DD');
                 st_t = moment().format('hh:mm A');
-            }else{
+            } else {
                 st_d = st_t = '';
             }
             $scope.displayedCollection[key].sts_date = st_d;
             $scope.displayedCollection[key].sts_time = st_t;
         }
-        
-        $scope.onTimeSet = function(newDate, oldDate, main_key, key){
-            console.log($scope.displayedCollection[main_key].all[key]);
+
+        $scope.onTimeSet = function (newDate, oldDate, main_key, key) {
             $scope.displayedCollection[main_key].all[key].date = moment(newDate).format('YYYY-MM-DD hh:mm A');
-//            $scope.displayedCollection[key].sts_date = moment(newDate).format('YYYY-MM-DD');
-//            $scope.displayedCollection[key].sts_time = moment(newDate).format('hh:mm A');
         }
-        
+
         $scope.moreOptions = function (key, enc_id, type, row_sts, id, status, is_swap) {
             console.log(row_sts);
             $scope.more_li = {};
@@ -77,10 +78,10 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                     ];
 
                     if (status == '1' && row_sts != 'A') {
-                        
-                        if(is_swap == '1')
+
+                        if (is_swap == '1')
                             row_sts = 'SW';
-                        
+
                         $scope.more_li.push({href: "cancelAdmission(" + enc_id + ", " + id + ", '" + row_sts + "')", name: 'Cancel', mode: 'click'});
                     }
                 } else if (type == 'OP') {
@@ -113,28 +114,37 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                         $state.go("patient.encounter", {id: $state.params.id});
                     } else {
                         $scope.errorData = "";
+
+                        var notes = '';
+                        var headerText = '';
+                        var bodyText = '';
+
+                        if (row_sts == 'TR') {
+                            notes = 'Transfer (Room) Cancelled';
+                            headerText = 'Cancel Room Transfer?';
+                            bodyText = 'Are you sure you want to cancel this Room Transfer?';
+                        } else if (row_sts == 'TD') {
+                            notes = 'Transfer (Doctor) Cancelled';
+                            headerText = 'Cancel Doctor Transfer?';
+                            bodyText = 'Are you sure you want to cancel this Doctor Transfer?';
+                        } else if (row_sts == 'SW') {
+                            notes = 'Room Swapping Cancelled';
+                            headerText = 'Cancel Room Swapping?';
+                            bodyText = 'Are you sure you want to cancel this Room Swapping?';
+                        }
+
                         var modalOptions = {
                             closeButtonText: 'No',
                             actionButtonText: 'Yes',
-                            headerText: 'Cancel Room Transfer?',
-                            bodyText: 'Are you sure you want to cancel this Room Transfer?'
+                            headerText: headerText,
+                            bodyText: bodyText
                         };
                         modalService.showModal({}, modalOptions).then(function (result) {
                             $scope.loadbar('show');
                             post_url = $rootScope.IRISOrgServiceUrl + '/admission/canceladmission';
                             method = 'POST';
                             succ_msg = 'Room Transfer cancelled successfully';
-                            
-                            var notes = '';
-                            
-                            if(row_sts == 'TR'){
-                                notes = 'Transfer (Room) Cancelled';
-                            }else if(row_sts == 'TD'){
-                                notes = 'Transfer (Doctor) Cancelled';
-                            }else if(row_sts == 'SW'){
-                                notes = 'Room Swapping Cancelled';
-                            }
-                            
+
                             var PatAdmission = {
                                 admn_id: id,
                                 admission_status: "C",
@@ -221,13 +231,13 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                 }
             });
         };
-        
+
         $scope.changeAppointmentStatus = function (_data, key) {
             $scope.errorData = "";
             $scope.successMessage = "";
-            
-            console.log(_data);
-            return false;
+
+//            console.log(_data);
+//            return false;
 
             $scope.loadbar('show');
             $http({
@@ -238,7 +248,7 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                     function (response) {
                         $scope.loadbar('hide');
                         $scope.successMessage = 'Status changed successfully';
-                        $scope.displayedCollection[key].liveAppointmentArrival = response;
+                        $scope.loadPatientEncounters('Current');
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');

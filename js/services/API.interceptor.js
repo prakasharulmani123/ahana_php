@@ -1,4 +1,4 @@
-angular.module('app').factory('APIInterceptor', function ($localStorage, $rootScope) {
+angular.module('app').factory('APIInterceptor', function ($localStorage, $rootScope, $q, $window, $timeout) {
     return {
         request: function (config) {
             config.params = config.params || {};
@@ -15,6 +15,13 @@ angular.module('app').factory('APIInterceptor', function ($localStorage, $rootSc
                 }
             }
             return config;
+        },
+        responseError: function (rejection) {
+            // do something on error
+            if (rejection.status === 401) {
+                $rootScope.$broadcast('unauthorized');
+            }
+            return $q.reject(rejection);
         }
     };
 });

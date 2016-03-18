@@ -31,9 +31,12 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
 
         $scope.statuses = [
             {value: 'A', text: 'Arrived'},
-
         ];
 
+        $scope.arr_statuses = [
+            {value: 'S', text: 'Seen'},
+        ];
+        
         $scope.updatePatient = function (id, _data, val) {
             if (val == '') {
                 return 'Mobile can not be empty';
