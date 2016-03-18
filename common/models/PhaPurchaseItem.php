@@ -148,8 +148,8 @@ class PhaPurchaseItem extends RActiveRecord {
     }
 
     public function beforeSave($insert) {
-        $batch = $insert ? $this->insertBatch() : $this->updateBatch();
-        $batch_rate = $this->updateBatchRate($batch->batch_id, $this->mrp);
+        $batch = $insert ? $this->_insertBatch() : $this->_updateBatch();
+        $batch_rate = $this->_updateBatchRate($batch->batch_id, $this->mrp);
 
         $this->batch_id = $batch->batch_id;
         $this->free_quantity = (!empty($this->free_quantity)) ? $this->free_quantity : 0;
@@ -158,13 +158,13 @@ class PhaPurchaseItem extends RActiveRecord {
         return parent::beforeSave($insert);
     }
 
-    private function getBatchData() {
+    private function _getBatchData() {
         return PhaProductBatch::find()->tenant()->andWhere(['product_id' => $this->product_id, 'batch_no' => $this->batch_no, 'expiry_date' => $this->expiry_date])->one();
     }
 
     //Insert Batch
-    private function insertBatch() {
-        $batch = $this->getBatchData();
+    private function _insertBatch() {
+        $batch = $this->_getBatchData();
         if (empty($batch)) {
             $batch = new PhaProductBatch;
             $batch->total_qty = $batch->available_qty = $this->quantity;
@@ -182,8 +182,8 @@ class PhaPurchaseItem extends RActiveRecord {
     }
 
     //Update Batch
-    private function updateBatch() {
-        $batch = $this->getBatchData();
+    private function _updateBatch() {
+        $batch = $this->_getBatchData();
         if (empty($batch)) {
             $batch = new PhaProductBatch;
             $batch->total_qty = $batch->available_qty = $this->quantity;
@@ -212,7 +212,7 @@ class PhaPurchaseItem extends RActiveRecord {
     }
 
     //Update Batch
-    private function deleteBatch() {
+    private function _deleteBatch() {
         $batch = PhaProductBatch::find()->tenant()->andWhere(['batch_id' => $this->batch_id])->one();
         if (!empty($batch)) {
             $batch->total_qty = $batch->total_qty - $this->quantity;
@@ -223,7 +223,7 @@ class PhaPurchaseItem extends RActiveRecord {
     }
 
     //Update Batch Rate
-    private function updateBatchRate($batch_id, $mrp) {
+    private function _updateBatchRate($batch_id, $mrp) {
         $batch_rate_exists = PhaProductBatchRate::find()->tenant()->andWhere(['batch_id' => $batch_id, 'mrp' => $mrp])->one();
         if (empty($batch_rate_exists)) {
             $batch_rate = new PhaProductBatchRate();
@@ -237,7 +237,7 @@ class PhaPurchaseItem extends RActiveRecord {
     }
 
     public function afterDelete() {
-        $this->deleteBatch($this->batch_id);
+        $this->_deleteBatch($this->batch_id);
         return parent::afterDelete();
     }
 

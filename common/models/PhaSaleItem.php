@@ -132,18 +132,18 @@ class PhaSaleItem extends RActiveRecord {
     public function beforeSave($insert) {
         //Update Batch
         if ($insert) {
-            $batch = $this->updateBatch($this->quantity, '-');
+            $batch = $this->_updateBatch($this->quantity, '-');
         } else {
             $old_qty = $this->getOldAttribute('quantity');
             $new_qty = $this->quantity;
 
             //Add New Quantity
             if ($old_qty < $new_qty) {
-                $batch = $this->updateBatch(($new_qty - $old_qty), '-');
+                $batch = $this->_updateBatch(($new_qty - $old_qty), '-');
             }
             //Subtract New Quantity
             else if ($new_qty < $old_qty) {
-                $batch = $this->updateBatch(($old_qty - $new_qty), '+');
+                $batch = $this->_updateBatch(($old_qty - $new_qty), '+');
             }
         }
 
@@ -151,7 +151,7 @@ class PhaSaleItem extends RActiveRecord {
     }
 
     //Update Batch
-    private function updateBatch($quantity, $sep) {
+    private function _updateBatch($quantity, $sep) {
         $batch = PhaProductBatch::find()->tenant()->andWhere(['product_id' => $this->product_id, 'batch_no' => $this->batch_no, 'DATE(expiry_date)' => $this->expiry_date])->one();
         if (!empty($batch)) {
             $this->batch_id = $batch->batch_id;
@@ -165,7 +165,7 @@ class PhaSaleItem extends RActiveRecord {
         return $batch;
     }
     
-    private function deleteBatch() {
+    private function _deleteBatch() {
         $batch = PhaProductBatch::find()->tenant()->andWhere(['batch_id' => $this->batch_id])->one();
         if (!empty($batch)) {
             $batch->available_qty = $batch->available_qty + $this->quantity;
@@ -175,7 +175,7 @@ class PhaSaleItem extends RActiveRecord {
     }
 
     public function afterDelete() {
-        $this->deleteBatch();
+        $this->_deleteBatch();
         return parent::afterDelete();
     }
 

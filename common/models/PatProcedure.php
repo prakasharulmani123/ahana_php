@@ -113,20 +113,24 @@ class PatProcedure extends RActiveRecord {
     public function afterSave($insert, $changedAttributes) {
         if ($insert) {
             $this->proc_consultant_ids = Json::decode($this->proc_consultant_ids);
-
-            foreach ($this->proc_consultant_ids as $key => $consultant_id) {
-                $model = new PatConsultant;
-                $model->attributes = [
-                    'encounter_id' => $this->encounter_id,
-                    'patient_id' => $this->patient_id,
-                    'consultant_id' => $consultant_id,
-                    'consult_date' => $this->proc_date,
-                    'notes' => "Consulted for Procedure ({$this->chargeCat->charge_subcat_name})",
-                ];
-                $model->save(false);
-            }
         }
+        $this->_updateConsultant();
+        
         return parent::afterSave($insert, $changedAttributes);
+    }
+
+    private function _updateConsultant() {
+        foreach ($this->proc_consultant_ids as $key => $consultant_id) {
+            $model = new PatConsultant;
+            $model->attributes = [
+                'encounter_id' => $this->encounter_id,
+                'patient_id' => $this->patient_id,
+                'consultant_id' => $consultant_id,
+                'consult_date' => $this->proc_date,
+                'notes' => "Consulted for Procedure ({$this->chargeCat->charge_subcat_name})",
+            ];
+            $model->save(false);
+        }
     }
 
     public function setConsultId() {
