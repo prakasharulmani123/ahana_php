@@ -1,0 +1,43 @@
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Encounter # </label>
+            <div class="col-sm-9">
+                {{encounter.encounter_id}}
+            </div>
+        </div>
+        <div class="line line-dashed b-b line-lg "></div>
+        
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Date of Payment * </label>
+            <div class="col-sm-9">
+                <div class="input-group w-md">
+                    <a class="dropdown-toggle" id="dropdown2" role="button" data-toggle="dropdown" data-target="#" href="javascript:void(0)">
+                        <div class="input-group">
+                            <input type="text" class="form-control" data-ng-model="data.payment_date" data-date-time-input="YYYY-MM-DD hh:mm A" />
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                        </div>
+                    </a>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                        <datetimepicker data-ng-model="data.payment_date" data-datetimepicker-config="{ dropdownSelector: '#dropdown2' }" data-on-set-time="onTimeSet(newDate, oldDate)"/>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="line line-dashed b-b line-lg "></div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Amount Paid * </label>
+            <div class="col-sm-9">
+                <input type="text" ng-model="data.payment_amount" maxlength="50" class="form-control" placeholder="Amount" number-mask="">
+            </div>
+        </div>
+        <div class="line line-dashed b-b line-lg "></div>
+    </div>
+    <footer class="panel-footer text-right bg-light lter">
+        <button class="btn m-b-xs  btn-success save-btn" ng-click="saveForm(data.formtype)">Save</button>
+        &nbsp;
+        <button class="btn m-b-xs  btn-dark" ng-click="$state.go('patient.billing', {id: $state.params.id})"><i class="fa fa-times"></i> Cancel</button>
+        &nbsp;
+    </footer>
+</div>
