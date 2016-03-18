@@ -256,6 +256,14 @@ class PatPatient extends RActiveRecord {
             'doa' => function ($model) {
                 return isset($model->patActiveIp) ? date('Y-m-d', strtotime($model->patActiveIp->encounter_date)) : '';
             },
+            'current_room' => function ($model) {
+                if(isset($model->patActiveIp)){
+                    $admission = $model->patActiveIp->patCurrentAdmission;
+                    return "{$admission->floor->floor_name} > {$admission->ward->ward_name} > {$admission->room->bed_name} ({$admission->roomType->room_type_name})";
+                }else{
+                    return '-';
+                }
+            },
 //            'activeEncounter' => function ($model) {
 //                if (isset($model->patActiveEncounter))
 //                    return $model->patActiveEncounter;

@@ -115,6 +115,9 @@ class PatAppointment extends RActiveRecord {
         if (!empty($this->status_time))
             $this->status_time = date('H:i:s', strtotime($this->status_time));
 
+        if (!empty($this->status_date))
+            $this->status_date = date('Y-m-d', strtotime($this->status_date));
+
         if ($insert) {
             $this->setCurrentData();
         }

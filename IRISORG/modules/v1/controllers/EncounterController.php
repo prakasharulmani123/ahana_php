@@ -156,7 +156,7 @@ class EncounterController extends ActiveController {
         if (isset($get['id'])) {
             $data = VEncounter::find()->where(['patient_guid' => $get['id']])->groupBy('encounter_id')->orderBy(['encounter_id' => SORT_DESC])->asArray()->all();
             foreach($data as $key => $value){
-                $details = VEncounter::find()->where(['patient_guid' => $get['id'], 'encounter_id' => $value['encounter_id']])->asArray()->all();
+                $details = VEncounter::find()->where(['patient_guid' => $get['id'], 'encounter_id' => $value['encounter_id']])->orderBy(['id' => SORT_ASC])->asArray()->all();
                 $data[$key]['all'] = $details;
             }
             
