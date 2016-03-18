@@ -14,6 +14,15 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         $scope.loadSaleItemList = function (payment_type) {
             $scope.errorData = $scope.successMessage = '';
             $scope.isLoading = true;
+            if(payment_type == 'CA'){
+                $scope.sale_payment_type_name = 'Cash';
+            }
+            if(payment_type == 'CR'){
+                $scope.sale_payment_type_name = 'Credit';
+            }
+            if(payment_type == 'COD'){
+                $scope.sale_payment_type_name = 'Cash On Deleivery';
+            }
             $scope.sale_payment_type = payment_type;
 
             // pagination set up
