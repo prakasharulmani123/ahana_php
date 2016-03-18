@@ -2027,6 +2027,46 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                         }]
                 }
             })
+            
+            //Patient Billing
+            .state('patient.billing', {
+                url: '/billing/{id}',
+                templateUrl: 'tpl/patient_billing/index.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table', 'ui.select']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/patient_billing/patient_billing.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            
+            //Patient Billing Add Payment
+            .state('patient.addPayment', {
+                url: '/addPayment/{id}',
+                templateUrl: 'tpl/patient_payment/create.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/patient_payment/patient_payment.js']);
+                        }]
+                }
+            })
+
+            //Patient Billing Edit Payment
+            .state('patient.editPayment', {
+                url: '/editPayment/{id}/{payment_id}',
+                templateUrl: 'tpl/patient_payment/update.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/patient_payment/patient_payment.js']);
+                        }]
+                }
+            })
 
     $httpProvider.interceptors.push('APIInterceptor');
 

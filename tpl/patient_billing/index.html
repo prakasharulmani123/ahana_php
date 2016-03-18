@@ -1,0 +1,35 @@
+<div class="bg-light lter b-b wrapper-md">
+    <h1 class="m-n font-thin h3">Billing Details</h1>
+</div>
+
+<div class="wrapper-md" ng-controller="BillingController" ng-init="initPatBillingIndex()">
+
+    <div ng-include="'tpl/blocks/alert.html'">
+        {% include 'tpl/blocks/alert.html' %}
+    </div>
+
+    <div class="row">
+        <div class="col-sm-4"> 
+            <div class="btn-group btn-group-justified">
+                <b>Encounter Id: </b>
+                <br />
+                <ui-select ng-model="enc.selected" theme="bootstrap">
+                    <ui-select-match placeholder="Select Encounter Id">{{$select.selected.encounter_id}}</ui-select-match>
+                    <ui-select-choices repeat="item in encounters | filter: $select.search | orderBy: 'encounter_id' : true">
+                        <div ng-bind-html="item.encounter_id | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+                <br />
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <button ng-show="enc.selected.status == '1'" ng-click="$state.go('patient.addPayment', {id: $state.params.id})" class="btn btn-sm btn-info pull-right">
+                <i class="fa fa-plus"></i> &nbsp; Add payment
+            </button>
+            <b>Welcome to patient billing section...</b>
+        </div>
+    </div>
+</div>
