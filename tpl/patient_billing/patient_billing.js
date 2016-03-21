@@ -55,7 +55,19 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
                 url: $rootScope.IRISOrgServiceUrl + '/encounter/getnonrecurringbilling?encounter_id=' + enc_id,
             }).success(
                     function (response) {
-                        console.log(response);
+                        $scope.procedures = null;
+                        $scope.consultants = null;
+                        $scope.other_charges = null;
+                        
+                        if(typeof response.Procedures != 'undefined')
+                            $scope.procedures = response.Procedures;
+                        
+                        if(typeof response.Consults != 'undefined')
+                            $scope.consultants = response.Consults;
+                        
+                        if(Object.keys(response.other_charges).length)
+                            $scope.other_charges = response.other_charges;
+                        
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');

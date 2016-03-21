@@ -1184,7 +1184,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                         }]
                 }
             })
-            
+
             //Encounter Edit Doctor Fee - OP
             .state('patient.editDoctorFee', {
                 url: '/editDoctorFee/{id}/{enc_id}',
@@ -1858,9 +1858,9 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                     deps: ['uiLoad',
                         function (uiLoad) {
                             return uiLoad.load([
-                                'tpl/pharmacy_products/pharmacy_products.js', 
-                                'tpl/modal_form/modal.description.js', 
-                                'tpl/modal_form/modal.brand.js', 
+                                'tpl/pharmacy_products/pharmacy_products.js',
+                                'tpl/modal_form/modal.description.js',
+                                'tpl/modal_form/modal.brand.js',
                                 'tpl/modal_form/modal.division.js',
                                 'tpl/modal_form/modal.generic.js',
                                 'tpl/modal_form/modal.vat.js',
@@ -1931,7 +1931,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                         }]
                 }
             })
-            
+
             //PHARMACY PRODUCT ADD
             .state('pharmacy.stockAdjust', {
                 url: '/stockAdjust',
@@ -1947,7 +1947,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                         }]
                 }
             })
-            
+
             //PHARMACY SALE RETURN LIST
             .state('pharmacy.saleReturn', {
                 url: '/saleReturn',
@@ -1963,7 +1963,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                         }]
                 }
             })
-            
+
             //SALE RETURN CREATE
             .state('pharmacy.saleReturnCreate', {
                 url: '/saleReturnCreate',
@@ -1979,7 +1979,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                         }]
                 }
             })
-            
+
             //PHARMACY EDIT SALE RETURN
             .state('pharmacy.saleReturnUpdate', {
                 url: '/saleReturnUpdate/{id}',
@@ -1996,7 +1996,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                 }
             })
 
-		//PHARMACY PRODUCT ADD
+            //PHARMACY PRODUCT ADD
             .state('pharmacy.batchDetails', {
                 url: '/batchDetails',
                 templateUrl: 'tpl/pharmacy_stock/batch_details.html',
@@ -2027,7 +2027,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                         }]
                 }
             })
-            
+
             //Patient Billing
             .state('patient.billing', {
                 url: '/billing/{id}',
@@ -2043,7 +2043,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                         }]
                 }
             })
-            
+
             //Patient Billing Add Payment
             .state('patient.addPayment', {
                 url: '/addPayment/{id}',
@@ -2067,7 +2067,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                         }]
                 }
             })
-            
+
             //Patient Billing Add Other Charges
             .state('patient.addOtherCharge', {
                 url: '/addOtherCharge/{id}',
@@ -2087,6 +2087,35 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                     deps: ['uiLoad',
                         function (uiLoad) {
                             return uiLoad.load(['tpl/patient_other_charges/patient_other_charges.js']);
+                        }]
+                }
+            })
+
+            //Patient Billing Add Extra Amount
+            .state('patient.addExtraAmount', {
+                url: '/addExtraAmount/{id}/{ec_type}/{link_id}',
+                params: {
+                    mode: 'E',
+                },
+                templateUrl: 'tpl/patient_extra_concession/create.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/patient_extra_concession/patient_extra_concession.js']);
+                        }]
+                }
+            })
+            //Patient Billing Edit Extra Amount
+            .state('patient.editExtraAmount', {
+                url: '/editExtraAmount/{id}/{other_charge_id}',
+                params: {
+                    mode: 'E',
+                },
+                templateUrl: 'tpl/patient_extra_concession/update.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/patient_extra_concession/patient_extra_concession.js']);
                         }]
                 }
             })

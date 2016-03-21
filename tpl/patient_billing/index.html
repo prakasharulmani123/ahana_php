@@ -23,22 +23,140 @@
             </div>
         </div>
     </div>
-    
-    
+
+
     <button class="btn btn-sm btn-grey" ng-click="loadBillingCharges(enc.selected.encounter_id)"> 
-                        &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
-                    </button>
+        &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
+    </button>
 
     <div class="panel panel-default">
         <div class="panel-body">
-            <button ng-show="enc.selected.status == '1'" ng-click="$state.go('patient.addPayment', {id: $state.params.id})" class="btn btn-sm btn-info pull-right">
-                <i class="fa fa-plus"></i> &nbsp; Add payment
-            </button>
-            &nbsp; &nbsp; &nbsp; &nbsp; 
-            <button ng-show="enc.selected.status == '1'" ng-click="$state.go('patient.addOtherCharge', {id: $state.params.id})" class="btn btn-sm btn-info pull-right">
-                <i class="fa fa-plus"></i> &nbsp; Add other charges
-            </button>
-            <b>Welcome to patient billing section...</b>
+            <div class="row wrapper">
+                <div class="col-sm-6 m-b-xs">
+                    <button ng-show="enc.selected.status == '1'" ng-click="$state.go('patient.addPayment', {id: $state.params.id})" class="btn btn-sm btn-info pull-right">
+                        <i class="fa fa-plus"></i> &nbsp; Add payment
+                    </button>
+                    &nbsp; &nbsp; &nbsp; &nbsp; 
+                    <button ng-show="enc.selected.status == '1'" ng-click="$state.go('patient.addOtherCharge', {id: $state.params.id})" class="btn btn-sm btn-info pull-right">
+                        <i class="fa fa-plus"></i> &nbsp; Add other charges
+                    </button>
+                </div>
+            </div>
+
+
+            <div class="table-responsive in-patient-table">
+
+                <table st-table="displayedCollection" class="table table-bordered table-striped">
+                    <thead>
+
+                        <tr>
+                            <th>
+                                <button class="btn btn-sm btn-default" type="button" ng-click="ctrl.expandAll(allExpanded = !allExpanded)">
+                                    <i ng-if="!allExpanded" class="fa fa-plus text"></i>
+                                    <i ng-if="allExpanded" class="fa fa-minus text"></i>
+                                </button>
+                            </th>
+                            <th>Category</th>
+                            <th>Headers</th>
+                            <th>Charge</th>
+                            <th>Count</th>
+                            <th>Charge</th>
+                            <th>Concession</th>
+                            <th>Extra</th>
+                            <th>Total Price</th>
+                        </tr>
+                    </thead>
+                    <tbody ng-hide="isLoading">
+                        <!-- Procedures -->
+                        <tr ng-init="expanded = true;" ng-show="procedures">
+                            <td>
+                                <button ng-click="expanded = !expanded" expand class="btn btn-sm btn-default">
+                                    <i ng-if="!expanded" class="fa fa-plus text"></i>
+                                    <i ng-if="expanded" class="fa fa-minus text"></i>
+                                </button>
+                            </td>
+                            <td colspan="8"><b>Category: Procedure Charges</b></td>
+                        </tr>
+                        <tr ng-show="expanded" ng-repeat="(key, row) in procedures">
+                            <td class="text-center" align="center" valign="middle">
+                                <label class="i-checks m-b-none"><input id="enc_{{key}}" class="enc_chk" type="checkbox" name="b[]"><i></i></label>
+                            </td>
+                            <td>Procedure Charges </td>
+                            <td> {{row.name}} </td>
+                            <td> {{row.charge_amount}} </td>
+                            <td> {{row.count}} </td>
+                            <td> {{row.total_charge}} </td>
+                            <td> {{row.concession_amount}} </td>
+                            <td> {{row.extra_amount}} </td>
+                            <td> {{row.final_charge_amount}} </td>
+                        </tr>
+                        
+                        <!-- Consultants -->
+                        <tr ng-init="expanded = true;" ng-show="consultants">
+                            <td>
+                                <button ng-click="expanded = !expanded" expand class="btn btn-sm btn-default">
+                                    <i ng-if="!expanded" class="fa fa-plus text"></i>
+                                    <i ng-if="expanded" class="fa fa-minus text"></i>
+                                </button>
+                            </td>
+                            <td colspan="8"><b>Category: Professional Charges</b></td>
+                        </tr>
+                        <tr ng-show="expanded" ng-repeat="(key, row) in consultants">
+                            <td class="text-center" align="center" valign="middle">
+                                <label class="i-checks m-b-none"><input id="enc_{{key}}" class="enc_chk" type="checkbox" name="b[]"><i></i></label>
+                            </td>
+                            <td>Professional Charges </td>
+                            <td> {{row.name}} </td>
+                            <td> {{row.charge_amount}} </td>
+                            <td> {{row.count}} </td>
+                            <td> {{row.total_charge}} </td>
+                            <td> {{row.concession_amount}} </td>
+                            <td> {{row.extra_amount}} </td>
+                            <td> {{row.final_charge_amount}} </td>
+                        </tr>
+                        
+                        <!-- Other Charges -->
+                        <tr ng-repeat-start="(name, other_charge) in other_charges" ng-init="expanded = true;" ng-show="other_charges">
+                            <td>
+                                <button ng-click="expanded = !expanded" expand class="btn btn-sm btn-default">
+                                    <i ng-if="!expanded" class="fa fa-plus text"></i>
+                                    <i ng-if="expanded" class="fa fa-minus text"></i>
+                                </button>
+                            </td>
+                            <td colspan="8"><b>Category: {{name}}</b></td>
+                        </tr>
+                        <tr ng-repeat-end ng-show="expanded" ng-repeat="(key, row) in other_charge">
+                            <td class="text-center" align="center" valign="middle">
+                                <label class="i-checks m-b-none"><input id="enc_{{key}}" class="enc_chk" type="checkbox" name="b[]"><i></i></label>
+                            </td>
+                            <td>{{name}}</td>
+                            <td> {{row.name}} </td>
+                            <td> {{row.charge_amount}} </td>
+                            <td> {{row.count}} </td>
+                            <td> {{row.total_charge}} </td>
+                            <td> {{row.concession_amount}} </td>
+                            <td> {{row.extra_amount}} </td>
+                            <td> {{row.final_charge_amount}} </td>
+                        </tr>
+                    </tbody>
+                    <tbody ng-show="isLoading">
+                        <tr>
+                            <td colspan="9" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="9" class="text-center">
+                                <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7"></div>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+            </div>
         </div>
     </div>
+
+
+
 </div>
