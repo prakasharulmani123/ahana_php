@@ -2067,6 +2067,29 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                         }]
                 }
             })
+            
+            //Patient Billing Add Other Charges
+            .state('patient.addOtherCharge', {
+                url: '/addOtherCharge/{id}',
+                templateUrl: 'tpl/patient_other_charges/create.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/patient_other_charges/patient_other_charges.js']);
+                        }]
+                }
+            })
+            //Patient Billing Edit Other Charges
+            .state('patient.editOtherCharge', {
+                url: '/editOtherCharge/{id}/{other_charge_id}',
+                templateUrl: 'tpl/patient_other_charges/update.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/patient_other_charges/patient_other_charges.js']);
+                        }]
+                }
+            })
 
     $httpProvider.interceptors.push('APIInterceptor');
 
