@@ -127,9 +127,9 @@ class CoChargePerCategory extends RActiveRecord {
 
     /* charge_code_id - consultant_id (user_id) */
 
-    public static function getConsultantCharges($charge_code_id) {
+    public static function getConsultantCharges($charge_code_id, $type = 'P', $charge_cat_id = '-1') {
         if ($charge_code_id) {
-            $response = self::find()->tenant()->chargeCatType()->chargeCatId()->andWhere(['charge_code_id' => $charge_code_id])->one();
+            $response = self::find()->tenant()->chargeCatType($type)->chargeCatId($charge_cat_id)->andWhere(['charge_code_id' => $charge_code_id])->one();
             if (!empty($response)) {
                 $op = $response->opCoChargePerSubcategories;
                 if(!empty($response->charge_default))
@@ -138,6 +138,42 @@ class CoChargePerCategory extends RActiveRecord {
                 return $op;
             }
         }
+    }
+
+    // $charge_cat_id = 1 for Procedures
+    // $charge_cat_id = 2 for Allied Charge
+    // $charge_cat_id = -1 for Professional
+    
+    public static function getChargeAmount($charge_cat_id, $type, $charge_code_id, $charge_type, $charge_link_id) {
+        $amount = 0;
+        if ($charge_code_id) {
+            $response = self::find()->tenant()->chargeCatType($type)->chargeCatId($charge_cat_id)->andWhere(['charge_code_id' => $charge_code_id])->one();
+            
+            if (!empty($response)) {
+                if($charge_type == 'IP')
+                    $categories = $response->ipCoChargePerSubcategories;
+                else
+                    $categories = $response->opCoChargePerSubcategories;
+                
+                if(!empty($categories))
+                    $amount = self::_get_amount($categories, $charge_link_id);
+                
+                if(empty($amount) && $amount == 0)
+                    $amount = $response->charge_default;
+            }
+        }
+        return $amount;
+    }
+    
+    private function _get_amount($categories, $charge_link_id) {
+        $amount = 0;
+        foreach ($categories as $key => $category) {
+            if($category->charge_link_id == $charge_link_id){
+                $amount = $category->charge_amount;
+                break;
+            }
+        }
+        return $amount;
     }
 
 }

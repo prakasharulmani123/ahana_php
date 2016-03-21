@@ -5,6 +5,7 @@ namespace common\models;
 use common\models\query\PatProcedureQuery;
 use Yii;
 use yii\db\ActiveQuery;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 
 /**
@@ -18,6 +19,7 @@ use yii\helpers\Json;
  * @property string $proc_date
  * @property string $proc_consultant_ids
  * @property string $proc_description
+ * @property string $charge_amount
  * @property string $status
  * @property integer $created_by
  * @property string $created_at
@@ -28,6 +30,7 @@ use yii\helpers\Json;
  * @property PatEncounter $encounter
  * @property CoRoomChargeCategory $chargeCat
  * @property CoTenant $tenant
+ * @property PatPatient $patient
  */
 class PatProcedure extends RActiveRecord {
 
@@ -45,7 +48,7 @@ class PatProcedure extends RActiveRecord {
         return [
             [['charge_subcat_id', 'proc_date'], 'required'],
             [['tenant_id', 'encounter_id', 'charge_subcat_id', 'created_by', 'modified_by', 'patient_id'], 'integer'],
-            [['proc_date', 'created_at', 'modified_at', 'deleted_at', 'patient_id'], 'safe'],
+            [['proc_date', 'created_at', 'modified_at', 'deleted_at', 'patient_id', 'charge_amount'], 'safe'],
             [['proc_consultant_ids', 'proc_description', 'status'], 'string']
         ];
     }
@@ -101,12 +104,22 @@ class PatProcedure extends RActiveRecord {
     }
 
     public function beforeValidate() {
-        $this->setConsultId();
+        $this->_setConsultId();
         return parent::beforeValidate();
     }
 
     public function beforeSave($insert) {
-        $this->setConsultId();
+        $this->_setConsultId();
+        
+        $type = $this->encounter->encounter_type;
+        
+        if($type == 'IP'){
+            $charge_link_id = $this->encounter->patCurrentAdmission->room_type_id;
+        }else{
+            $charge_link_id = $this->patient->patient_category_id;
+        }
+        
+        $this->charge_amount = CoChargePerCategory::getChargeAmount(1, 'C', $this->charge_subcat_id, $type, $charge_link_id);
         return parent::beforeSave($insert);
     }
 
@@ -114,26 +127,47 @@ class PatProcedure extends RActiveRecord {
         if ($insert) {
             $this->proc_consultant_ids = Json::decode($this->proc_consultant_ids);
         }
-        $this->_updateConsultant();
-        
+        $this->_updateConsultant($insert);
+
         return parent::afterSave($insert, $changedAttributes);
     }
 
-    private function _updateConsultant() {
-        foreach ($this->proc_consultant_ids as $key => $consultant_id) {
-            $model = new PatConsultant;
-            $model->attributes = [
-                'encounter_id' => $this->encounter_id,
-                'patient_id' => $this->patient_id,
-                'consultant_id' => $consultant_id,
-                'consult_date' => $this->proc_date,
-                'notes' => "Consulted for Procedure ({$this->chargeCat->charge_subcat_name})",
-            ];
-            $model->save(false);
+    private function _updateConsultant($insert) {
+        $deleted_consultant_ids = $consultant_ids = [];
+        if ($insert) {
+            $consultant_ids = $this->proc_consultant_ids;
+        } else {
+            $saved_consultant_ids = Json::decode($this->proc_consultant_ids);
+            $existing_consultant_ids = ArrayHelper::map(PatConsultant::find()->tenant()->andWhere(['proc_id' => $this->proc_id])->all(), 'pat_consult_id', 'consultant_id');
+
+            $consultant_ids = array_diff($saved_consultant_ids, $existing_consultant_ids);
+            $deleted_consultant_ids = array_diff($existing_consultant_ids, $saved_consultant_ids);
+        }
+
+        if (!empty($consultant_ids)) {
+            foreach ($consultant_ids as $key => $consultant_id) {
+                $model = new PatConsultant;
+                $model->attributes = [
+                    'encounter_id' => $this->encounter_id,
+                    'patient_id' => $this->patient_id,
+                    'consultant_id' => $consultant_id,
+                    'proc_id' => $this->proc_id,
+                    'consult_date' => $this->proc_date,
+                    'notes' => "Consulted for Procedure ({$this->chargeCat->charge_subcat_name})",
+                ];
+                $model->save(false);
+            }
+        }
+
+        if (!empty($deleted_consultant_ids)) {
+            foreach ($deleted_consultant_ids as $pat_consult_id => $consultant_id) {
+                $model = PatConsultant::find()->tenant()->andWhere(['pat_consult_id' => $pat_consult_id])->one();
+                $model->delete();
+            }
         }
     }
 
-    public function setConsultId() {
+    private function _setConsultId() {
         if (is_array($this->proc_consultant_ids))
             $this->proc_consultant_ids = Json::encode($this->proc_consultant_ids);
     }

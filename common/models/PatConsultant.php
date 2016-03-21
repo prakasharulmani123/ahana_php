@@ -17,6 +17,8 @@ use yii\db\ActiveQuery;
  * @property string $consult_date
  * @property string $notes
  * @property string $status
+ * @property string $charge_amount
+ * @property integer $proc_id
  * @property integer $created_by
  * @property string $created_at
  * @property integer $modified_by
@@ -44,7 +46,7 @@ class PatConsultant extends RActiveRecord {
         return [
             [['encounter_id', 'patient_id', 'consultant_id'], 'required'],
             [['tenant_id', 'encounter_id', 'patient_id', 'consultant_id', 'created_by', 'modified_by'], 'integer'],
-            [['consult_date', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
+            [['consult_date', 'created_at', 'modified_at', 'deleted_at', 'proc_id', 'charge_amount'], 'safe'],
             [['notes', 'status'], 'string'],
             [['consult_date'], 'validateConsultant'],
         ];
@@ -123,6 +125,11 @@ class PatConsultant extends RActiveRecord {
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
+    }
+    
+    public function beforeSave($insert) {
+        $this->charge_amount = CoChargePerCategory::getChargeAmount(-1, 'P', $this->consultant_id, 'OP', $this->patient->patient_category_id);
+        return parent::beforeSave($insert);
     }
 
 }
