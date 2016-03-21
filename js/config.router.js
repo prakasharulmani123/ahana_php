@@ -2119,6 +2119,35 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                         }]
                 }
             })
+            
+            //Patient Billing Add Concession Amount
+            .state('patient.addConcessionAmount', {
+                url: '/addConcessionAmount/{id}/{ec_type}/{link_id}',
+                params: {
+                    mode: 'C',
+                },
+                templateUrl: 'tpl/patient_extra_concession/create.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/patient_extra_concession/patient_extra_concession.js']);
+                        }]
+                }
+            })
+            //Patient Billing Edit Concession Amount
+            .state('patient.editConcessionAmount', {
+                url: '/editConcessionAmount/{id}/{other_charge_id}',
+                params: {
+                    mode: 'C',
+                },
+                templateUrl: 'tpl/patient_extra_concession/update.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/patient_extra_concession/patient_extra_concession.js']);
+                        }]
+                }
+            })
 
     $httpProvider.interceptors.push('APIInterceptor');
 

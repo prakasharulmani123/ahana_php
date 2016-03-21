@@ -44,6 +44,12 @@ app.controller('ExtraConcessionController', ['$rootScope', '$scope', '$timeout',
                             function (response) {
                                 $scope.loadbar('hide');
                                 $scope.data.link = response;
+
+                                if ($scope.data.ec_type == 'P') {
+                                    $scope.data.link_id = response.charge_subcat_id;
+                                } else if ($scope.data.ec_type == 'C') {
+                                    $scope.data.link_id = response.user_id;
+                                }
                             }
                     ).error(function (data, status) {
                         $scope.loadbar('hide');
@@ -70,23 +76,16 @@ app.controller('ExtraConcessionController', ['$rootScope', '$scope', '$timeout',
             $scope.errorData = "";
             $scope.successMessage = "";
 
-            if (mode == 'add') {
-                post_url = $rootScope.IRISOrgServiceUrl + '/patientbillingothercharges';
-                method = 'POST';
-                succ_msg = 'Billing other charge saved successfully';
+            post_url = $rootScope.IRISOrgServiceUrl + '/patientbillingextraconcession/addcharge';
+            method = 'POST';
+            succ_msg = 'Amount updated successfully';
 
+            if (mode == 'add') {
                 angular.extend(_that.data, {
                     patient_id: $scope.app.patientDetail.patientId,
                     encounter_id: $scope.encounter.encounter_id
                 });
-            } else {
-                post_url = $rootScope.IRISOrgServiceUrl + '/patientbillingothercharges/' + _that.data.other_charge_id;
-                method = 'PUT';
-                succ_msg = 'Billing other charge updated successfully';
             }
-            
-            console.log(_that.data);
-            return false;
 
             $scope.loadbar('show');
             $http({
@@ -96,11 +95,16 @@ app.controller('ExtraConcessionController', ['$rootScope', '$scope', '$timeout',
             }).success(
                     function (response) {
                         $scope.loadbar('hide');
-                        $scope.successMessage = succ_msg;
-                        $scope.data = {};
-                        $timeout(function () {
-                            $state.go('patient.billing', {id: $state.params.id});
-                        }, 1000)
+
+                        if (response.success != false) {
+                            $scope.successMessage = succ_msg;
+//                            $scope.data = {};
+//                        $timeout(function () {
+//                            $state.go('patient.billing', {id: $state.params.id});
+//                        }, 1000)
+                        }else{
+                            $scope.errorData = response.message;
+                        }
 
                     }
             ).error(function (data, status) {

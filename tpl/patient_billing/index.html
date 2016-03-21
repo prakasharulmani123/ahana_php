@@ -1,14 +1,13 @@
-<div class="bg-light lter b-b wrapper-md">
-    <h1 class="m-n font-thin h3">Billing Details</h1>
-</div>
+<div ng-controller="BillingController" ng-init="initPatBillingIndex()">
 
-<div class="wrapper-md" ng-controller="BillingController" ng-init="initPatBillingIndex()">
-
-    <div ng-include="'tpl/blocks/alert.html'">
-        {% include 'tpl/blocks/alert.html' %}
+    <div class="bg-light lter b-b wrapper-md">
+        <h1 class="m-n h3"> Billing Details</h1>
     </div>
-
-    <div class="row">
+    <div class="wrapper-md">
+        <div ng-include="'tpl/blocks/alert.html'">
+            {% include 'tpl/blocks/alert.html' %}
+        </div>
+        <div class="row">
         <div class="col-sm-4"> 
             <div class="btn-group btn-group-justified">
                 <b>Encounter Id: </b>
@@ -23,30 +22,50 @@
             </div>
         </div>
     </div>
-
-
-    <button class="btn btn-sm btn-grey" ng-click="loadBillingCharges(enc.selected.encounter_id)"> 
-        &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
-    </button>
-
-    <div class="panel panel-default">
-        <div class="panel-body">
+        <div class="panel panel-default">
             <div class="row wrapper">
                 <div class="col-sm-6 m-b-xs">
+                    <button class="btn btn-sm btn-grey" ng-click="loadBillingCharges(enc.selected.encounter_id)"> 
+                        &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
+                    </button>
+                    &nbsp; &nbsp
+                    <div ng-if="more_li.length > 0 && (key + 1) <= more_max" ng-repeat="(key, li) in more_li" class="btn-group">
+                        <button ng-if="li.mode == 'sref'" ui-sref="{{li.href}}" class="btn btn-sm btn-grey"> {{li.name}}</button>    
+                        <button ng-if="li.mode == 'click'" ng-click="{{li.href}}" class="btn btn-sm btn-grey"> {{li.name}}</button>    &nbsp; &nbsp
+                    </div>
+
+                    <button ng-if="activeEncounter == null" ng-click="$state.go('patient.modifyCaseSheetNo', {id: $state.params.id})" class="btn btn-sm btn-grey">
+                        Modify Case Sheet No
+                    </button>
+
+
+                    <div class="btn-group" dropdown is-open="status.isopen" ng-if="more_li.length > more_max">
+                        <button type="button" class=" btn btn-sm btn-grey" dropdown-toggle ng-disabled="disabled">
+                            More &nbsp;&nbsp;<span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li ng-if="(key + 1) > more_max" ng-repeat="(key, li) in more_li">
+                                <a ng-if="li.mode == 'sref'" ui-sref="{{li.href}}">{{li.name}}</a>
+                                <a ng-if="li.mode == 'click'" ng-click="{{li.href}}">{{li.name}}</a>
+                            </li>
+                        </ul>
+                    </div>        
+                </div>
+                <div class="col-sm-2">
+                </div>
+                <div class="col-sm-4 pull-right right">
                     <button ng-show="enc.selected.status == '1'" ng-click="$state.go('patient.addPayment', {id: $state.params.id})" class="btn btn-sm btn-info pull-right">
                         <i class="fa fa-plus"></i> &nbsp; Add payment
                     </button>
-                    &nbsp; &nbsp; &nbsp; &nbsp; 
                     <button ng-show="enc.selected.status == '1'" ng-click="$state.go('patient.addOtherCharge', {id: $state.params.id})" class="btn btn-sm btn-info pull-right">
                         <i class="fa fa-plus"></i> &nbsp; Add other charges
                     </button>
+                    <!--<button class="btn btn-default"><i class="fa fa-print"></i> Print</button>-->
                 </div>
             </div>
-
-
             <div class="table-responsive in-patient-table">
 
-                <table st-table="displayedCollection" class="table table-bordered table-striped">
+                <table class="table table-bordered table-striped">
                     <thead>
 
                         <tr>
@@ -90,7 +109,7 @@
                             <td> {{row.extra_amount}} </td>
                             <td> {{row.final_charge_amount}} </td>
                         </tr>
-                        
+
                         <!-- Consultants -->
                         <tr ng-init="expanded = true;" ng-show="consultants">
                             <td>
@@ -114,7 +133,7 @@
                             <td> {{row.extra_amount}} </td>
                             <td> {{row.final_charge_amount}} </td>
                         </tr>
-                        
+
                         <!-- Other Charges -->
                         <tr ng-repeat-start="(name, other_charge) in other_charges" ng-init="expanded = true;" ng-show="other_charges">
                             <td>
@@ -154,9 +173,9 @@
                 </table>
 
             </div>
+            <footer class="panel-footer">
+                <!--<div st-pagination="" st-items-by-page="itemsByPage" st-template="pagination.custom.html" st-displayed-pages="7"></div>-->
+            </footer>    
         </div>
     </div>
-
-
-
 </div>

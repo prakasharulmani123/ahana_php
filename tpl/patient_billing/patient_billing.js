@@ -38,6 +38,8 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
         $scope.app.settings.patientContentClass = 'app-content patient_content ';
         $scope.app.settings.patientFooterClass = 'app-footer';
 
+        $scope.more_max = 4;
+        
         $scope.initPatBillingIndex = function () {
             $scope.data = {};
         }
@@ -47,6 +49,37 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
                 $scope.loadBillingCharges(newValue);
             }
         }, true);
+        
+        $scope.moreOptions = function (key, enc_id, type, row_sts, id, status, is_swap) {
+            console.log(row_sts);
+            $scope.more_li = {};
+
+            $('.enc_chk').not('#enc_' + enc_id + key).attr('checked', false);
+
+            if ($('#enc_' + enc_id + key).is(':checked')) {
+                if (type == 'IP') {
+                    $scope.more_li = [
+                        {href: 'patient.transfer({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Transfer', mode: 'sref'},
+                        {href: 'patient.discharge({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Discharge', mode: 'sref'},
+                        {href: 'patient.swapping({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Swapping', mode: 'sref'},
+                    ];
+
+                    if (status == '1' && row_sts != 'A') {
+
+                        if (is_swap == '1')
+                            row_sts = 'SW';
+
+                        $scope.more_li.push({href: "cancelAdmission(" + enc_id + ", " + id + ", '" + row_sts + "')", name: 'Cancel', mode: 'click'});
+                    }
+                } else if (type == 'OP') {
+                    $scope.more_li = [
+                        {href: 'patient.changeStatus({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Change Status', mode: 'sref'},
+                        {href: "cancelAppointment(" + enc_id + ")", name: 'Cancel Appointment', mode: 'click'},
+                        {href: 'patient.editDoctorFee({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Edit Doctor Fee', mode: 'sref'},
+                    ];
+                }
+            }
+        }
 
 
         $scope.loadBillingCharges = function (enc_id) {
