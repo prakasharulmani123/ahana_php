@@ -85,6 +85,7 @@ return [
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/pharmacyreport'], 'extraPatterns' => ['POST purchasereport' => 'purchasereport', 'POST salereport' => 'salereport', 'POST stockreport' => 'stockreport']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/pharmacysalebilling'], 'extraPatterns' => ['POST makepayment' => 'makepayment']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/patientbillingpayment'], 'extraPatterns' => ['POST remove' => 'remove']],
+                ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/patientbillingothercharge'], 'extraPatterns' => ['POST remove' => 'remove']],
             ],
         ],
         'log' => [
