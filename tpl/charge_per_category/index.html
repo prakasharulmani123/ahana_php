@@ -128,7 +128,7 @@
                                         </span>
                                     </td>
                                     <td>
-                                        <form editable-form name="rowform" onbeforesave="updateAmount($data, allSubCategories['IP'][row.charge_code_id][ip.room_type_id]['id'])" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == ip">
+                                        <form editable-form name="rowform" onbeforesave="updateAmount($data, allSubCategories['IP'][row.charge_code_id][ip.room_type_id]['id'], row.charge_id, 'IP', ip.room_type_id)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == ip">
                                             <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-sm btn-success">
                                                 Save
                                             </button>

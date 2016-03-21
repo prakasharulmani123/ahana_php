@@ -37,9 +37,33 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
         $scope.app.settings.patientSideMenu = true;
         $scope.app.settings.patientContentClass = 'app-content patient_content ';
         $scope.app.settings.patientFooterClass = 'app-footer';
-        
+
         $scope.initPatBillingIndex = function () {
             $scope.data = {};
+        }
+
+        $scope.$watch('enc.selected.encounter_id', function (newValue, oldValue) {
+            if (newValue != '' && typeof newValue != 'undefined') {
+                $scope.loadBillingCharges(newValue);
+            }
+        }, true);
+
+
+        $scope.loadBillingCharges = function (enc_id) {
+            $http({
+                method: 'GET',
+                url: $rootScope.IRISOrgServiceUrl + '/encounter/getnonrecurringbilling?encounter_id=' + enc_id,
+            }).success(
+                    function (response) {
+                        console.log(response);
+                    }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
         }
 
         $scope.isPatientHaveActiveEncounter = function (callback) {

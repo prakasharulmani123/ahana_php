@@ -940,7 +940,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
             .state('patient', {
                 abstract: true,
                 url: '/patient',
-                templateUrl: 'tpl/patient.html'
+                templateUrl: 'tpl/patient.html',
             })
             .state('patient.registration', {
                 url: '/registration',
