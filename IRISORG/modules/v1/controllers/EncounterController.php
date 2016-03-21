@@ -5,6 +5,9 @@ namespace IRISORG\modules\v1\controllers;
 use common\models\PatAdmission;
 use common\models\PatAppointment;
 use common\models\PatBillingExtraConcession;
+use common\models\PatBillingOtherCharges;
+use common\models\PatBillingPayment;
+use common\models\PatConsultant;
 use common\models\PatEncounter;
 use common\models\PatPatient;
 use common\models\PatProcedure;
@@ -277,13 +280,14 @@ class EncounterController extends ActiveController {
 
             $procedure_charges = $this->_getProcedureCharges($encounter_id);
             $consultant_charges = $this->_getConsultantCharges($encounter_id);
+            $allied_charges = $this->_getOtherCharges($encounter_id);
+            $advanced_charges = $this->_getAdvancedCharges($encounter_id);
 
-            $return = array_merge($return, $procedure_charges, $consultant_charges);
+            $return = array_merge($return, $procedure_charges, $consultant_charges, ['other_charges' => $allied_charges], $advanced_charges);
         }
         return $return;
     }
 
-    
     private function _getProcedureCharges($encounter_id) {
         $procedures = PatProcedure::find()->tenant()->status()->active()->andWhere(['encounter_id' => $encounter_id])->all();
         $extra_concessions = PatBillingExtraConcession::find()->tenant()->status()->active()->ectype('P')->andWhere(['encounter_id' => $encounter_id])->all();
@@ -293,20 +297,18 @@ class EncounterController extends ActiveController {
 
         $return = [];
         foreach ($procedures as $key => $procedure) {
-
-            $return['Procedures'][$procedure->charge_subcat_id]['charge_subcat_id'] = $procedure->charge_subcat_id;
             $return['Procedures'][$procedure->charge_subcat_id]['name'] = $procedure->chargeCat->charge_subcat_name;
-            
-            $proc_charge_amount = $procedure->charge_amount;
-            
-            if(!isset($return['Procedures'][$procedure->charge_subcat_id]['count']))
+
+            $charge_amount = $procedure->charge_amount;
+
+            if (!isset($return['Procedures'][$procedure->charge_subcat_id]['count']))
                 $return['Procedures'][$procedure->charge_subcat_id]['count'] = 0;
 
-            if(!isset($return['Procedures'][$procedure->charge_subcat_id]['total_charge']))
+            if (!isset($return['Procedures'][$procedure->charge_subcat_id]['total_charge']))
                 $return['Procedures'][$procedure->charge_subcat_id]['total_charge'] = 0;
-                
+
             $return['Procedures'][$procedure->charge_subcat_id]['count'] = $return['Procedures'][$procedure->charge_subcat_id]['count'] + 1;
-            $return['Procedures'][$procedure->charge_subcat_id]['total_charge'] = $return['Procedures'][$procedure->charge_subcat_id]['total_charge'] + $proc_charge_amount;
+            $return['Procedures'][$procedure->charge_subcat_id]['total_charge'] = $return['Procedures'][$procedure->charge_subcat_id]['total_charge'] + $charge_amount;
         }
 
         if (isset($return['Procedures'])) {
@@ -336,53 +338,116 @@ class EncounterController extends ActiveController {
     }
 
     private function _getConsultantCharges($encounter_id) {
-        $consultants = PatProcedure::find()->tenant()->status()->active()->andWhere(['encounter_id' => $encounter_id])->all();
-        $extra_concessions = PatBillingExtraConcession::find()->tenant()->status()->active()->ectype('P')->andWhere(['encounter_id' => $encounter_id])->all();
+        $consultants = PatConsultant::find()->tenant()->status()->active()->andWhere(['encounter_id' => $encounter_id])->all();
+        $extra_concessions = PatBillingExtraConcession::find()->tenant()->status()->active()->ectype('C')->andWhere(['encounter_id' => $encounter_id])->all();
 
         $extras = ArrayHelper::map($extra_concessions, 'link_id', 'extra_amount');
         $concessions = ArrayHelper::map($extra_concessions, 'link_id', 'concession_amount');
 
         $return = [];
         foreach ($consultants as $key => $consultant) {
+            $return['Consults'][$consultant->consultant_id]['name'] = $consultant->consultant->name;
 
-            $return['Procedures'][$consultant->charge_subcat_id]['charge_subcat_id'] = $consultant->charge_subcat_id;
-            $return['Procedures'][$consultant->charge_subcat_id]['name'] = $consultant->chargeCat->charge_subcat_name;
-            
-            $proc_charge_amount = $consultant->charge_amount;
-            
-            if(!isset($return['Procedures'][$consultant->charge_subcat_id]['count']))
-                $return['Procedures'][$consultant->charge_subcat_id]['count'] = 0;
+            $charge_amount = $consultant->charge_amount;
 
-            if(!isset($return['Procedures'][$consultant->charge_subcat_id]['total_charge']))
-                $return['Procedures'][$consultant->charge_subcat_id]['total_charge'] = 0;
-                
-            $return['Procedures'][$consultant->charge_subcat_id]['count'] = $return['Procedures'][$consultant->charge_subcat_id]['count'] + 1;
-            $return['Procedures'][$consultant->charge_subcat_id]['total_charge'] = $return['Procedures'][$consultant->charge_subcat_id]['total_charge'] + $proc_charge_amount;
+            if (!isset($return['Consults'][$consultant->consultant_id]['count']))
+                $return['Consults'][$consultant->consultant_id]['count'] = 0;
+
+            if (!isset($return['Consults'][$consultant->consultant_id]['total_charge']))
+                $return['Consults'][$consultant->consultant_id]['total_charge'] = 0;
+
+            $return['Consults'][$consultant->consultant_id]['count'] = $return['Consults'][$consultant->consultant_id]['count'] + 1;
+            $return['Consults'][$consultant->consultant_id]['total_charge'] = $return['Consults'][$consultant->consultant_id]['total_charge'] + $charge_amount;
         }
 
-        if (isset($return['Procedures'])) {
-            foreach ($return['Procedures'] as $link_id => $value) {
+        if (isset($return['Consults'])) {
+            foreach ($return['Consults'] as $link_id => $value) {
                 //Extra
                 if (!empty($extras) && array_key_exists($link_id, $extras)) {
-                    $return['Procedures'][$link_id]['extra_amount'] = $extras[$link_id];
+                    $return['Consults'][$link_id]['extra_amount'] = $extras[$link_id];
                 } else {
-                    $return['Procedures'][$link_id]['extra_amount'] = 0;
+                    $return['Consults'][$link_id]['extra_amount'] = 0;
                 }
 
                 //Concession
                 if (!empty($concessions) && array_key_exists($link_id, $concessions)) {
-                    $return['Procedures'][$link_id]['concession_amount'] = $concessions[$link_id];
+                    $return['Consults'][$link_id]['concession_amount'] = $concessions[$link_id];
                 } else {
-                    $return['Procedures'][$link_id]['concession_amount'] = 0;
+                    $return['Consults'][$link_id]['concession_amount'] = 0;
                 }
 
                 $charge_amount = round(($value['total_charge'] / $value['count']), 0);
-                $final_price = $value['total_charge'] + $return['Procedures'][$link_id]['extra_amount'] - $return['Procedures'][$link_id]['concession_amount'];
+                $final_price = $value['total_charge'] + $return['Consults'][$link_id]['extra_amount'] - $return['Consults'][$link_id]['concession_amount'];
 
-                $return['Procedures'][$link_id]['charge_amount'] = $charge_amount;
-                $return['Procedures'][$link_id]['final_charge_amount'] = $final_price;
+                $return['Consults'][$link_id]['charge_amount'] = $charge_amount;
+                $return['Consults'][$link_id]['final_charge_amount'] = $final_price;
             }
         }
+        return $return;
+    }
+
+    private function _getOtherCharges($encounter_id) {
+        $other_charges = PatBillingOtherCharges::find()->tenant()->status()->active()->andWhere(['encounter_id' => $encounter_id])->all();
+
+        $return = [];
+        foreach ($other_charges as $key => $other_charge) {
+
+            $cat_name = $other_charge->chargeCat->charge_cat_name;
+
+            $return[$cat_name][$other_charge->charge_subcat_id]['charge_subcat_id'] = $other_charge->charge_subcat_id;
+            $return[$cat_name][$other_charge->charge_subcat_id]['name'] = $other_charge->chargeSubcat->charge_subcat_name;
+
+            $charge_amount = $other_charge->charge_amount;
+
+            if (!isset($return[$cat_name][$other_charge->charge_subcat_id]['count']))
+                $return[$cat_name][$other_charge->charge_subcat_id]['count'] = 0;
+
+            if (!isset($return[$cat_name][$other_charge->charge_subcat_id]['total_charge']))
+                $return[$cat_name][$other_charge->charge_subcat_id]['total_charge'] = 0;
+
+            $return[$cat_name][$other_charge->charge_subcat_id]['count'] = $return[$cat_name][$other_charge->charge_subcat_id]['count'] + 1;
+            $return[$cat_name][$other_charge->charge_subcat_id]['total_charge'] = $return[$cat_name][$other_charge->charge_subcat_id]['total_charge'] + $charge_amount;
+        }
+
+        if (!empty($return)) {
+            foreach ($return as $charge_name => $row) {
+                foreach ($row as $link_id => $value) {
+                    //Extra
+                    $return[$charge_name][$link_id]['extra_amount'] = 0;
+
+                    //Concession
+                    $return[$charge_name][$link_id]['concession_amount'] = 0;
+
+                    $charge_amount = round(($value['total_charge'] / $value['count']), 0);
+                    $final_price = $value['total_charge'] + $return[$charge_name][$link_id]['extra_amount'] - $return[$charge_name][$link_id]['concession_amount'];
+
+                    $return[$charge_name][$link_id]['charge_amount'] = $charge_amount;
+                    $return[$charge_name][$link_id]['final_charge_amount'] = $final_price;
+                }
+            }
+        }
+        
+        return $return;
+    }
+
+    private function _getAdvancedCharges($encounter_id) {
+        $advances = PatBillingPayment::find()->tenant()->status()->active()->andWhere(['encounter_id' => $encounter_id])->all();
+
+        $return = [];
+        foreach ($advances as $key => $advance) {
+
+            $return['Advanced'][$advance->payment_id]['payment_id'] = $advance->payment_id;
+            $return['Advanced'][$advance->payment_id]['name'] = 'Payment';
+
+            $charge_amount = $advance->payment_amount;
+
+            $return['Advanced'][$advance->payment_id]['count'] = 0;
+            $return['Advanced'][$advance->payment_id]['extra_amount'] = 0;
+            $return['Advanced'][$advance->payment_id]['concession_amount'] = 0;
+            $return['Advanced'][$advance->payment_id]['total_charge'] = $charge_amount;
+            $return['Advanced'][$advance->payment_id]['final_charge_amount'] = $charge_amount;
+        }
+
         return $return;
     }
 
