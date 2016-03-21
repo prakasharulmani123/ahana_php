@@ -1,0 +1,35 @@
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Encounter # </label>
+            <div class="col-sm-9">
+                {{encounter.encounter_id}}
+            </div>
+        </div>
+        <div class="line line-dashed b-b line-lg "></div>
+        
+        <div class="form-group">
+            <label class="col-lg-3 control-label">Allied Charges *</label>
+            <div class="col-lg-6">
+                <select class="form-control" ng-model="data.charge_subcat_id" ng-options="alliedCharge.charge_subcat_id as alliedCharge.charge_subcat_name for alliedCharge in alliedCharges | orderBy: charge_subcat_name">
+                    <option value="">Select Charge Type</option>
+                </select>
+            </div>
+        </div>
+        <div class="line line-dashed b-b line-lg "></div>
+        
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Charge * </label>
+            <div class="col-sm-9">
+                <input type="text" ng-model="data.charge_amount" maxlength="50" class="form-control" placeholder="Charge" number-mask="">
+            </div>
+        </div>
+        <div class="line line-dashed b-b line-lg "></div>
+    </div>
+    <footer class="panel-footer text-right bg-light lter">
+        <button class="btn m-b-xs  btn-success save-btn" ng-click="saveForm(data.formtype)">Save</button>
+        &nbsp;
+        <button class="btn m-b-xs  btn-dark" ng-click="$state.go('patient.billing', {id: $state.params.id})"><i class="fa fa-times"></i> Cancel</button>
+        &nbsp;
+    </footer>
+</div>
