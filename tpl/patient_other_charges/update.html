@@ -9,7 +9,7 @@
         <div class="row">
             <div class="col-sm-12" ng-init="data.formtype = 'update'; loadForm();" novalidate="">
                 <form name="otherChargesForm" class="form-horizontal form-validation">
-                     <input type="hidden" ng-model="data.payment_id">
+                     <input type="hidden" ng-model="data.other_charge_id">
                     <div ng-include="'tpl/patient_other_charges/_form.html'">
                         {% include 'tpl/patient_other_charges/_form.html' %}
                     </div>
