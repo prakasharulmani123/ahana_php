@@ -37,7 +37,7 @@
                         {{row.description}}
                     </td>
                     <td>
-                        <a title="Edit" check-access  ui-sref="configuration.role_update({id: '{{row.role_id}}'})">
+                        <a class="btn btn-dark" title="Edit" check-access  ui-sref="configuration.role_update({id: '{{row.role_id}}'})">
                             <i class="fa fa-pencil"></i>
                         </a>&nbsp;&nbsp;&nbsp;
                         <a class="hide" title="Delete" ng-click="removeRow(row)">

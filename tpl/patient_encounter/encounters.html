@@ -83,7 +83,7 @@
 
                         </tr>
                         <tr ng-repeat-end ng-show="expanded" ng-repeat="(key, item) in encounter.all">
-                            <td class="text-center" align="center" valign="middle">
+                            <td>
                                 <label ng-show="(item.status == 1 || item.type == 'Seen')" class="i-checks m-b-none"><input id="enc_{{item.encounter_id}}{{key}}" class="enc_chk" type="checkbox" name="b[]" ng-click="moreOptions(key, item.encounter_id, item.encounter_type, item.row_sts, item.id, item.status, item.is_swap)"><i></i></label>
                             </td>
                             <td> {{item.encounter_id}} </td>
@@ -102,13 +102,13 @@
                                     </ul>
                                 </div>
 
-                                <div ng-if="item.type !== 'Booked' ||  encounter.all.length > 1">
+                                <div ng-if="item.type !== 'Booked' || encounter.all.length > 1">
                                     {{item.date| moment:'YYYY-MM-DD hh:mm A'}}
                                 </div>
                             </td>
                             <td> 
 
-                                <div ng-if="item.type !== 'Booked' ||  encounter.all.length > 1" ng-show="item.type !== 'Arrived'">
+                                <div ng-if="item.type !== 'Booked' || encounter.all.length > 1" ng-show="item.type !== 'Arrived'">
                                     {{item.type}} <span ng-if="item.is_swap == 1">( Swapping )</span>
                                 </div>
                                 <!--Booked to Arrival Form-->
@@ -156,7 +156,10 @@
                                     </div> 
                                 </div>
                             </td>
-                            <td> {{item.details}} </td>
+                            <td> 
+                                <span ng-if="item.encounter_type == 'OP'" class="label bg-primary">{{item.details}}</span>
+                                <span ng-if="item.encounter_type == 'IP'" class="label bg-success">{{item.details}}</span>
+                            </td>
                             <td> {{item.doctor}} </td>
                         </tr>
                     </tbody>
