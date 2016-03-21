@@ -27,35 +27,39 @@ use yii\db\ActiveQuery;
  * @property PatPatient $patient
  * @property CoTenant $tenant
  */
-class PatBillingExtraConcession extends RActiveRecord
-{
+class PatBillingExtraConcession extends RActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'pat_billing_extra_concession';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            [['tenant_id', 'encounter_id', 'patient_id', 'ec_type', 'link_id', 'created_by'], 'required'],
+            [['encounter_id', 'patient_id', 'ec_type', 'link_id'], 'required'],
             [['tenant_id', 'encounter_id', 'patient_id', 'link_id', 'created_by', 'modified_by'], 'integer'],
             [['ec_type', 'status'], 'string'],
             [['extra_amount', 'concession_amount'], 'number'],
-            [['created_at', 'modified_at', 'deleted_at'], 'safe']
+            [['created_at', 'modified_at', 'deleted_at'], 'safe'],
+            [['extra_amount', 'concession_amount'], 'validateAmount'],
         ];
+    }
+
+    public function validateAmount($attribute, $params) {
+        if ($this->extra_amount < 1 && $this->concession_amount < 1) {
+            $this->addError($attribute, "Amount can not be empty");
+        }
     }
 
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'ec_id' => 'Ec ID',
             'tenant_id' => 'Tenant ID',
@@ -77,28 +81,26 @@ class PatBillingExtraConcession extends RActiveRecord
     /**
      * @return ActiveQuery
      */
-    public function getEncounter()
-    {
+    public function getEncounter() {
         return $this->hasOne(PatEncounter::className(), ['encounter_id' => 'encounter_id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getPatient()
-    {
+    public function getPatient() {
         return $this->hasOne(PatPatient::className(), ['patient_id' => 'patient_id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getTenant()
-    {
+    public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
-    
+
     public static function find() {
         return new PatBillingExtraConcessionQuery(get_called_class());
     }
+
 }
