@@ -63,20 +63,6 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
             $scope.data = {};
         }
         
-        $scope.person = {};
-        $scope.people = [
-        { name: '1',      email: 'adam@email.com',      age: 12, country: 'United States' },
-        { name: '2',    email: 'amalie@email.com',    age: 12, country: 'Argentina' },
-        { name: '3', email: 'estefania@email.com', age: 21, country: 'Argentina' },
-        { name: '4',    email: 'adrian@email.com',    age: 21, country: 'Ecuador' },
-        { name: '5',  email: 'wladimir@email.com',  age: 30, country: 'Ecuador' },
-        { name: '6',  email: 'samantha@email.com',  age: 30, country: 'United States' },
-        { name: '7',    email: 'nicole@email.com',    age: 43, country: 'Colombia' },
-        { name: '8',   email: 'natasha@email.com',   age: 54, country: 'Ecuador' },
-        { name: '9',   email: 'michael@email.com',   age: 15, country: 'Colombia' },
-        { name: '10',   email: 'nicolas@email.com',    age: 43, country: 'Colombia' }
-        ];
-
         $scope.loadProceduresList = function (enc_id) {
             $scope.loadbar('show');
             $scope.isLoading = true;

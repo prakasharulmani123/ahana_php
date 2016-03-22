@@ -34,11 +34,6 @@
                         <button ng-if="li.mode == 'click'" ng-click="{{li.href}}" class="btn btn-sm btn-grey"> {{li.name}}</button>    &nbsp; &nbsp
                     </div>
 
-                    <button ng-if="activeEncounter == null" ng-click="$state.go('patient.modifyCaseSheetNo', {id: $state.params.id})" class="btn btn-sm btn-grey">
-                        Modify Case Sheet No
-                    </button>
-
-
                     <div class="btn-group" dropdown is-open="status.isopen" ng-if="more_li.length > more_max">
                         <button type="button" class=" btn btn-sm btn-grey" dropdown-toggle ng-disabled="disabled">
                             More &nbsp;&nbsp;<span class="caret"></span>
@@ -79,13 +74,14 @@
                             <th>Headers</th>
                             <th>Charge</th>
                             <th>Count</th>
+                            <th>Mode</th>
                             <th>Charge</th>
                             <th>Concession</th>
                             <th>Extra</th>
                             <th>Total Price</th>
                         </tr>
                     </thead>
-                    <tbody ng-hide="isLoading">
+                    <tbody ng-hide="isLoading" ng-init="billing.total = {}">
                         <!-- Procedures -->
                         <tr ng-init="expanded = true;" ng-show="procedures">
                             <td>
@@ -94,20 +90,21 @@
                                     <i ng-if="expanded" class="fa fa-minus text"></i>
                                 </button>
                             </td>
-                            <td colspan="8"><b>Category: Procedure Charges</b></td>
+                            <td colspan="9"><b>Category: Procedure Charges</b></td>
                         </tr>
                         <tr ng-show="expanded" ng-repeat="(key, row) in procedures">
                             <td class="text-center" align="center" valign="middle">
                                 <label class="i-checks m-b-none"><input id="enc_{{key}}" class="enc_chk" type="checkbox" name="b[]"><i></i></label>
                             </td>
-                            <td>Procedure Charges </td>
-                            <td> {{row.name}} </td>
-                            <td> {{row.charge_amount}} </td>
-                            <td> {{row.count}} </td>
-                            <td> {{row.total_charge}} </td>
-                            <td> {{row.concession_amount}} </td>
-                            <td> {{row.extra_amount}} </td>
-                            <td> {{row.final_charge_amount}} </td>
+                            <td>{{row.category}} </td>
+                            <td> {{row.headers}} </td>
+                            <td> {{row.charge}} </td>
+                            <td> {{row.visit_count}} </td>
+                            <td> {{row.trans_mode}} </td>
+                            <td ng-init="billing.total.charge = billing.total.charge + parseFloat(row.total_charge); "> {{row.total_charge}} </td>
+                            <td ng-init="billing.total.concession = billing.total.concession + parseFloat(row.concession_amount); "> {{row.concession_amount}} </td>
+                            <td ng-init="billing.total.extra = billing.total.extra + parseFloat(row.extra_amount); "> {{row.extra_amount}} </td>
+                            <td ng-init="row_total = getTotalPrice(row); billing.total.price = billing.total.price + row_total; "> {{row_total | number:2}} </td>
                         </tr>
 
                         <!-- Consultants -->
@@ -118,59 +115,90 @@
                                     <i ng-if="expanded" class="fa fa-minus text"></i>
                                 </button>
                             </td>
-                            <td colspan="8"><b>Category: Professional Charges</b></td>
+                            <td colspan="9"><b>Category: Professional Charges</b></td>
                         </tr>
                         <tr ng-show="expanded" ng-repeat="(key, row) in consultants">
                             <td class="text-center" align="center" valign="middle">
                                 <label class="i-checks m-b-none"><input id="enc_{{key}}" class="enc_chk" type="checkbox" name="b[]"><i></i></label>
                             </td>
-                            <td>Professional Charges </td>
-                            <td> {{row.name}} </td>
-                            <td> {{row.charge_amount}} </td>
-                            <td> {{row.count}} </td>
-                            <td> {{row.total_charge}} </td>
-                            <td> {{row.concession_amount}} </td>
-                            <td> {{row.extra_amount}} </td>
-                            <td> {{row.final_charge_amount}} </td>
+                            <td>{{row.category}} </td>
+                            <td> {{row.headers}} </td>
+                            <td> {{row.charge}} </td>
+                            <td> {{row.visit_count}} </td>
+                            <td> {{row.trans_mode}} </td>
+                            <td ng-init="billing.total.charge = billing.total.charge + parseFloat(row.total_charge); "> {{row.total_charge}} </td>
+                            <td ng-init="billing.total.concession = billing.total.concession + parseFloat(row.concession_amount); "> {{row.concession_amount}} </td>
+                            <td ng-init="billing.total.extra = billing.total.extra + parseFloat(row.extra_amount); "> {{row.extra_amount}} </td>
+                            <td ng-init="row_total = getTotalPrice(row); billing.total.price = billing.total.price + row_total; "> {{row_total | number:2}} </td>
                         </tr>
 
                         <!-- Other Charges -->
-                        <tr ng-repeat-start="(name, other_charge) in other_charges" ng-init="expanded = true;" ng-show="other_charges">
+                        <tr ng-init="expanded = true;" ng-show="other_charges">
                             <td>
                                 <button ng-click="expanded = !expanded" expand class="btn btn-sm btn-default">
                                     <i ng-if="!expanded" class="fa fa-plus text"></i>
                                     <i ng-if="expanded" class="fa fa-minus text"></i>
                                 </button>
                             </td>
-                            <td colspan="8"><b>Category: {{name}}</b></td>
+                            <td colspan="9"><b>Category: Other Charges</b></td>
                         </tr>
-                        <tr ng-repeat-end ng-show="expanded" ng-repeat="(key, row) in other_charge">
+                        <tr ng-show="expanded" ng-repeat="(key, row) in other_charges">
                             <td class="text-center" align="center" valign="middle">
                                 <label class="i-checks m-b-none"><input id="enc_{{key}}" class="enc_chk" type="checkbox" name="b[]"><i></i></label>
                             </td>
-                            <td>{{name}}</td>
-                            <td> {{row.name}} </td>
-                            <td> {{row.charge_amount}} </td>
-                            <td> {{row.count}} </td>
-                            <td> {{row.total_charge}} </td>
+                            <td>{{row.category}} </td>
+                            <td> {{row.headers}} </td>
+                            <td> {{row.charge}} </td>
+                            <td> {{row.visit_count}} </td>
+                            <td> {{row.trans_mode}} </td>
+                            <td ng-init="billing.total.charge = billing.total.charge + parseFloat(row.total_charge); "> {{row.total_charge}} </td>
                             <td> {{row.concession_amount}} </td>
                             <td> {{row.extra_amount}} </td>
-                            <td> {{row.final_charge_amount}} </td>
+                            <td ng-init="row_total = getTotalPrice(row); billing.total.price = billing.total.price + row_total; "> {{row_total | number:2}} </td>
                         </tr>
+
+                        <!-- Advance Charges -->
+                        <tr ng-init="expanded = true;" ng-show="advances">
+                            <td>
+                                <button ng-click="expanded = !expanded" expand class="btn btn-sm btn-default">
+                                    <i ng-if="!expanded" class="fa fa-plus text"></i>
+                                    <i ng-if="expanded" class="fa fa-minus text"></i>
+                                </button>
+                            </td>
+                            <td colspan="9"><b>Category: Advance Charges</b></td>
+                        </tr>
+                        <tr ng-show="expanded" ng-repeat="(key, row) in advances">
+                            <td class="text-center" align="center" valign="middle">
+                                <label class="i-checks m-b-none"><input id="enc_{{key}}" class="enc_chk" type="checkbox" name="b[]"><i></i></label>
+                            </td>
+                            <td>{{row.category}} </td>
+                            <td> {{row.headers}} </td>
+                            <td> {{row.charge}} </td>
+                            <td> {{row.visit_count}} </td>
+                            <td> {{row.trans_mode}} </td>
+                            <td ng-init="billing.total.charge = billing.total.charge - parseFloat(row.total_charge); "> {{row.total_charge}} </td>
+                            <td> {{row.concession_amount}} </td>
+                            <td> {{row.extra_amount}} </td>
+                            <td ng-init="row_total = getTotalPrice(row); billing.total.price = billing.total.price - row_total; "> {{row_total | number:2}} </td>
+                        </tr>
+
                     </tbody>
                     <tbody ng-show="isLoading">
                         <tr>
-                            <td colspan="9" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
+                            <td colspan="10" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
                         </tr>
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="9" class="text-center">
-                                <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7"></div>
-                            </td>
-                        </tr>
+                            <td colspan="6" class="text-right"><b>Total :</b></td>
+                            <td>{{billing.total.charge | number:2}}</td>
+                            <td>{{billing.total.concession | number:2}}</td>
+                            <td>{{billing.total.extra | number:2}}</td>
+                            <td>{{billing.total.price | number:2}}</td>
+                        </tr>                    
                     </tfoot>
                 </table>
+                
 
             </div>
             <footer class="panel-footer">

@@ -31,6 +31,7 @@ app.filter('propsFilter', function () {
         return out;
     };
 })
+
 app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$filter', function ($rootScope, $scope, $timeout, $http, $state, $filter) {
 
         $scope.app.settings.patientTopBar = true;
@@ -39,6 +40,7 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
         $scope.app.settings.patientFooterClass = 'app-footer';
 
         $scope.more_max = 4;
+        $scope.total_billing = 0;
         
         $scope.initPatBillingIndex = function () {
             $scope.data = {};
@@ -91,15 +93,19 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
                         $scope.procedures = null;
                         $scope.consultants = null;
                         $scope.other_charges = null;
+                        $scope.advances = null;
                         
-                        if(typeof response.Procedures != 'undefined')
-                            $scope.procedures = response.Procedures;
+                        if(typeof response.Procedure != 'undefined')
+                            $scope.procedures = response.Procedure;
                         
                         if(typeof response.Consults != 'undefined')
                             $scope.consultants = response.Consults;
                         
-                        if(Object.keys(response.other_charges).length)
-                            $scope.other_charges = response.other_charges;
+                        if(Object.keys(response.OtherCharge).length)
+                            $scope.other_charges = response.OtherCharge;
+                        
+                        if(Object.keys(response.Advance).length)
+                            $scope.advances = response.Advance;
                         
                     }
             ).error(function (data, status) {
@@ -109,6 +115,15 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
                 else
                     $scope.errorData = data.message;
             });
+        }
+        
+        $scope.getTotalPrice = function(row){
+            tot = parseFloat(row.total_charge) + parseFloat(row.extra_amount) - parseFloat(row.concession_amount);
+            return tot;
+        }
+
+        $scope.parseFloat = function(row){
+            return parseFloat(row);
         }
 
         $scope.isPatientHaveActiveEncounter = function (callback) {
