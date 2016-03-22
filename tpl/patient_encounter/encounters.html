@@ -19,10 +19,9 @@
                         <button ng-if="li.mode == 'click'" ng-click="{{li.href}}" class="btn btn-sm btn-grey"> {{li.name}}</button>    &nbsp; &nbsp
                     </div>
 
-                    <button ng-if="activeEncounter == null" ng-click="$state.go('patient.modifyCaseSheetNo', {id: $state.params.id})" class="btn btn-sm btn-grey">
+                    <button ng-click="$state.go('patient.modifyCaseSheetNo', {id: $state.params.id})" class="btn btn-sm btn-grey">
                         Modify Case Sheet No
                     </button>
-
 
                     <div class="btn-group" dropdown is-open="status.isopen" ng-if="more_li.length > more_max">
                         <button type="button" class=" btn btn-sm btn-grey" dropdown-toggle ng-disabled="disabled">
@@ -67,7 +66,7 @@
                     <tbody ng-hide="isLoading">
                         <tr ng-repeat-start="(main_key, encounter) in displayedCollection" ng-init="expanded = (encounter.status == 1) ? true : false;">
                             <td>
-                                <button ng-click="expanded = !expanded" expand class="btn btn-sm btn-default">
+                                <button ng-click="expanded = !expanded" expand class="btn btn-sm btn-default hms-plus">
                                     <i ng-if="!expanded" class="fa fa-plus text"></i>
                                     <i ng-if="expanded" class="fa fa-minus text"></i>
                                 </button>
@@ -75,7 +74,10 @@
                             <td colspan="5">
                                 <!--<b> Encounter: {{encounter.$key}};</b>-->
                                 <b> 
-                                    Encounter: {{encounter.encounter_id}};&nbsp; &nbsp; Type: {{encounter.encounter_type}};&nbsp; &nbsp; Doctor: {{encounter.doctor}}
+                                    <span class="badge bg-primary">Encounter: {{encounter.encounter_id}}</span>&nbsp; &nbsp; 
+                                    <span class="badge bg-success">Type: {{encounter.encounter_type}}</span>&nbsp; &nbsp; 
+                                    <span class="badge bg-info">Doctor: {{encounter.doctor}}</span>
+                                    <!--Encounter: {{encounter.encounter_id}};&nbsp; &nbsp; Type: {{encounter.encounter_type}};&nbsp; &nbsp; Doctor: {{encounter.doctor}}-->
                                 </b>
                             </td>
 

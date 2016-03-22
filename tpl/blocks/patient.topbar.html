@@ -9,6 +9,10 @@
                             <a ng-click="$state.go('patient.view', {id: app.patientDetail.patientGuid})">
                                 {{app.patientDetail.patientTitleCode}} 
                                 {{app.patientDetail.patientName}} 
+                                <span ng-if="app.patientDetail.patActiveIp">
+                                    ({{app.patientDetail.patientActiveCasesheetno}})
+                                </span>
+                                
                             </a> 
                             <a ng-show="app.patientDetail.patientActiveIp" ng-click="$state.go('patient.view', {id: app.patientDetail.patientGuid})"> ({{app.patientDetail.patientActiveCasesheetno}})</a>
                             <br/>

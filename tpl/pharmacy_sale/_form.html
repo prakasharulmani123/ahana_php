@@ -10,9 +10,16 @@
                                 <div class="form-group">
                                     <label class="col-lg-4 control-label">Patient Name *</label>
                                     <div class="col-lg-8">
-                                        <select class="form-control" ng-model="data.patient_id" ng-options="patient.patient_id as patient.fullname for patient in patients | orderBy: fullname" ng-change="getPatientMobileNo(data.patient_id)">
-                                            <option value="">Select Patient</option>
-                                        </select>
+                                        <input autocomplete="off"
+                                               placeholder="Patient Name"
+                                               type="text"
+                                               class="form-control"
+                                               ng-model="data.patient_name"
+                                               ng-keyup="data.patient_id = ''" 
+                                               ng-keydown="data.patient_id = ''"
+                                               typeahead-editable="false" 
+                                               typeahead="fullname as patient.fullname for patient in patients | filter:$viewValue"
+                                               typeahead-on-select="formatPatient($item, $model, $label)" />
                                     </div>
                                 </div>
                                 <div class="line line-dashed b-b line-lg "></div>

@@ -70,6 +70,13 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             $scope.products = [];
             $scope.batches = [];
         }
+        
+        $scope.formatPatient = function ($item, $model, $label) {
+            $scope.data.patient_id = $item.patient_id;
+            $scope.data.patient_name = $item.fullname;
+            
+            $scope.getPatientMobileNo($item.patient_id);
+        }
 
         //Get selected patient mobile no.
         $scope.getPatientMobileNo = function (id) {
@@ -356,6 +363,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                         $scope.loadbar('hide');
 
                         $scope.data = response;
+                        $scope.data.patient_name = response.patient.fullname;
                         $scope.products = [];
 //                        $scope.products = response2.productList;
 
