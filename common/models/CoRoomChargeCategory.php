@@ -79,11 +79,11 @@ class CoRoomChargeCategory extends RActiveRecord {
     }
 
     public function getRoomchargesubcategory() {
-        return $this->hasMany(CoRoomChargeSubcategory::className(), ['charge_cat_id' => 'charge_cat_id']);
+        return $this->hasMany(CoRoomChargeSubcategory::className(), ['charge_cat_id' => 'charge_cat_id'])->tenant();
     }
 
     public function getActiveroomchargesubcategory() {
-        return $this->hasMany(CoRoomChargeSubcategory::className(), ['charge_cat_id' => 'charge_cat_id'])->active();
+        return $this->hasMany(CoRoomChargeSubcategory::className(), ['charge_cat_id' => 'charge_cat_id'])->tenant()->active();
     }
 
     public static function find() {
