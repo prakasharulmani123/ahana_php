@@ -10,8 +10,16 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
         };
 
         //Index Page
-        $scope.loadPurchaseItemList = function () {
+        $scope.loadPurchaseItemList = function (payment_type) {
             $scope.errorData = $scope.successMessage = '';
+            if(payment_type == 'CA'){
+                $scope.purchase_payment_type_name = 'Cash';
+            }
+            if(payment_type == 'CR'){
+                $scope.purchase_payment_type_name = 'Credit';
+            }
+            $scope.purchase_payment_type = payment_type;
+            
             $scope.isLoading = true;
             // pagination set up
             $scope.rowCollection = [];  // base collection
@@ -19,10 +27,11 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
 
             // Get data's from service
-            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacypurchase')
+            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacypurchase/getpurchases?payment_type=' + payment_type)
+//            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacypurchase')
                     .success(function (purchaseList) {
                         $scope.isLoading = false;
-                        $scope.rowCollection = purchaseList;
+                        $scope.rowCollection = purchaseList.purchases;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
                     })
                     .error(function () {
