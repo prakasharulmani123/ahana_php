@@ -165,7 +165,7 @@ class CoChargePerCategory extends RActiveRecord {
         return $amount;
     }
     
-    private function _get_amount($categories, $charge_link_id) {
+    private static function _get_amount($categories, $charge_link_id) {
         $amount = 0;
         foreach ($categories as $key => $category) {
             if($category->charge_link_id == $charge_link_id){
