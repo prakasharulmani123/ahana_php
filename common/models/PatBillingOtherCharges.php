@@ -46,7 +46,8 @@ class PatBillingOtherCharges extends RActiveRecord {
             [['tenant_id', 'encounter_id', 'patient_id', 'charge_cat_id', 'charge_subcat_id', 'created_by', 'modified_by'], 'integer'],
             [['charge_amount'], 'number'],
             [['status'], 'string'],
-            [['created_at', 'modified_at', 'deleted_at'], 'safe']
+            [['created_at', 'modified_at', 'deleted_at'], 'safe'],
+            [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'encounter_id', 'patient_id', 'charge_cat_id', 'charge_subcat_id', 'deleted_at'], 'message' => 'The combination has already been taken.']
         ];
     }
 
