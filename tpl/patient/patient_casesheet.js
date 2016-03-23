@@ -39,6 +39,7 @@ app.controller('PatientCaseSheetController', ['$rootScope', '$scope', '$timeout'
                         $scope.loadbar('hide');
                         if(response.success == true){
                             $scope.successMessage = succ_msg;
+                            $scope.app.patientDetail.patientActiveCasesheetno = _that.data.casesheet_no;
                         } else {
                             $scope.errorData = response.message;
                         }
