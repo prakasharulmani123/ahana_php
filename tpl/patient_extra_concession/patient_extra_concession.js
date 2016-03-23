@@ -76,18 +76,24 @@ app.controller('ExtraConcessionController', ['$rootScope', '$scope', '$timeout',
             $scope.errorData = "";
             $scope.successMessage = "";
 
-            post_url = $rootScope.IRISOrgServiceUrl + '/patientbillingextraconcession/addcharge';
-            method = 'POST';
-            succ_msg = 'Amount updated successfully';
-
             if (mode == 'add') {
                 angular.extend(_that.data, {
                     patient_id: $scope.app.patientDetail.patientId,
                     encounter_id: $scope.encounter.encounter_id,
-                    mode: $state.params.mode,
                 });
+                post_url = $rootScope.IRISOrgServiceUrl + '/patientbillingextraconcession/addcharge';
+                method = 'POST';
+                succ_msg = 'Amount added successfully';
+            } else {
+                post_url = $rootScope.IRISOrgServiceUrl + '/patientbillingextraconcessions/' + _that.data.ec_id;
+                method = 'PUT';
+                succ_msg = 'Amount updated successfully';
             }
 
+            angular.extend(_that.data, {
+                mode: $state.params.mode,
+            });
+                
             $scope.loadbar('show');
             $http({
                 method: method,
@@ -100,9 +106,9 @@ app.controller('ExtraConcessionController', ['$rootScope', '$scope', '$timeout',
                         if (response.success != false) {
                             $scope.successMessage = succ_msg;
 //                            $scope.data = {};
-//                        $timeout(function () {
-//                            $state.go('patient.billing', {id: $state.params.id});
-//                        }, 1000)
+                            $timeout(function () {
+                                $state.go('patient.billing', {id: $state.params.id});
+                            }, 1000)
                         } else {
                             $scope.errorData = response.message;
                         }
@@ -124,6 +130,7 @@ app.controller('ExtraConcessionController', ['$rootScope', '$scope', '$timeout',
                     alert("Sorry, you can't add charge");
                     $state.go("patient.billing", {id: $state.params.id});
                 } else {
+                    $scope.encounter = response.model;
                     $scope.loadbar('show');
                     _that = this;
                     $scope.errorData = "";
@@ -134,6 +141,11 @@ app.controller('ExtraConcessionController', ['$rootScope', '$scope', '$timeout',
                             function (response) {
                                 $scope.loadbar('hide');
                                 $scope.data = response;
+                                if ($scope.data.ec_type == 'P') {
+                                    $scope.data.type = 'Procedure Charges';
+                                } else if ($scope.data.ec_type == 'C') {
+                                    $scope.data.type = 'Consultant Charges';
+                                }
                             }
                     ).error(function (data, status) {
                         $scope.loadbar('hide');
