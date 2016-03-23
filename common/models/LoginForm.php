@@ -90,6 +90,7 @@ class LoginForm extends Model {
             $token = base64_encode($this->_user->username . time() . rand(1000, 9999));
             $this->_user->authtoken = $token;
             $this->_user->logged_tenant_id = $this->tenant_id;
+            $this->_user->access_tenant_id = $this->_user->user->tenant_id == 0 ? $this->_user->user->first_tenant_id : $this->tenant_id;
             $this->_user->save(false);
             $this->_user->authtoken = md5($token);
         }

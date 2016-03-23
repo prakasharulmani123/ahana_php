@@ -46,13 +46,14 @@ class OrganizationController extends ActiveController {
     //role_rights.js
     public function actionGetorg() {
         $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+        $access_tenant_id = Yii::$app->user->identity->access_tenant_id;
         $tenant_super_role = CoRole::getTenantSuperRole($tenant_id);
         $tenant_super_role_id = $tenant_super_role->role_id;
         
         if (!empty($tenant_id)) {
             $return = array();
             $organization = CoTenant::find()->where(['tenant_id' => $tenant_id])->one();
-            return ['success' => true, 'return' => $organization, 'modules' => CoRolesResources::getOrgModuleTree($tenant_id, $tenant_super_role_id)];
+            return ['success' => true, 'return' => $organization, 'modules' => CoRolesResources::getOrgModuleTree($access_tenant_id, $tenant_super_role_id)];
         } else {
             return ['success' => false, 'message' => 'Invalid Access'];
         }

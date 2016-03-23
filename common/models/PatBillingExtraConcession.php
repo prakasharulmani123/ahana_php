@@ -29,6 +29,7 @@ use yii\db\ActiveQuery;
  */
 class PatBillingExtraConcession extends RActiveRecord {
 
+    public $mode;
     /**
      * @inheritdoc
      */
@@ -45,14 +46,17 @@ class PatBillingExtraConcession extends RActiveRecord {
             [['tenant_id', 'encounter_id', 'patient_id', 'link_id', 'created_by', 'modified_by'], 'integer'],
             [['ec_type', 'status'], 'string'],
             [['extra_amount', 'concession_amount'], 'number'],
-            [['created_at', 'modified_at', 'deleted_at'], 'safe'],
+            [['created_at', 'modified_at', 'deleted_at', 'mode'], 'safe'],
             [['extra_amount', 'concession_amount'], 'validateAmount'],
         ];
     }
 
     public function validateAmount($attribute, $params) {
-        if ($this->extra_amount < 1 && $this->concession_amount < 1) {
-            $this->addError($attribute, "Amount can not be empty");
+        $amount = $this->mode == 'E' ? $this->extra_amount : $this->concession_amount;
+        $name = $this->mode == 'E' ? 'Extra Amount' : 'Concession Amount';
+        
+        if (empty($amount) || $amount < 1) {
+            $this->addError($attribute, "{$name} can not be empty");
         }
     }
 

@@ -84,7 +84,7 @@ class CoOrganization extends GActiveRecord {
      * @return ActiveQuery
      */
     public function getCoTenants() {
-        return $this->hasMany(CoTenant::className(), ['org_id' => 'org_id']);
+        return $this->hasMany(CoTenant::className(), ['org_id' => 'org_id'])->orderBy(['created_at' => SORT_ASC]);
     }
 
     public function fields() {

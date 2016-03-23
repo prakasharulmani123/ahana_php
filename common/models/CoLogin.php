@@ -30,6 +30,7 @@ use yii\web\IdentityInterface;
  */
 class CoLogin extends ActiveRecord implements IdentityInterface {
     
+    public $access_tenant_id;
     /**
      * @inheritdoc
      */
@@ -68,8 +69,8 @@ class CoLogin extends ActiveRecord implements IdentityInterface {
             [['username'], 'validateUsername'],
             [['password'], 'validateUserpassword'],
 //            [['username', 'password'], 'string', 'min' => 6],
-            [['user_id', 'created_by', 'modified_by', 'logged_tenant_id'], 'integer'],
-            [['created_at', 'modified_at', 'activation_date', 'Inactivation_date', 'logged_tenant_id'], 'safe'],
+            [['user_id', 'created_by', 'modified_by', 'logged_tenant_id', 'access_tenant_id'], 'integer'],
+            [['created_at', 'modified_at', 'activation_date', 'Inactivation_date', 'logged_tenant_id', 'access_tenant_id'], 'safe'],
             [['username', 'password', 'password_reset_token', 'authtoken'], 'string', 'max' => 255],
             ['username', 'unique'],
         ];
