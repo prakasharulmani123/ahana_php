@@ -61,6 +61,17 @@ class PharmacypurchaseController extends ActiveController {
         }
     }
 
+    public function actionGetpurchases() {
+        $get = Yii::$app->getRequest()->get();
+
+        if (isset($get['payment_type'])) {
+            $data = PhaPurchase::find()->tenant()->active()->andWhere(['payment_type' => $get['payment_type']])->all();
+            return ['success' => true, 'purchases' => $data];
+        } else {
+            return ['success' => false, 'message' => 'Invalid Access'];
+        }
+    }
+
     public function actionSavepurchase() {
         $post = Yii::$app->getRequest()->post();
 

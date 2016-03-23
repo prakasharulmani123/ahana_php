@@ -39,7 +39,7 @@ class PhaProductDescription extends RActiveRecord {
             [['status'], 'string'],
             [['created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['description_name'], 'string', 'max' => 255],
-            [['tenant_id', 'description_name', 'deleted_at'], 'unique', 'targetAttribute' => ['tenant_id', 'description_name', 'deleted_at'], 'message' => 'The combination of Tenant ID, Description Name and Deleted At has already been taken.']
+            [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'description_name', 'deleted_at'], 'message' => 'Description has already been taken.']
         ];
     }
 
