@@ -41,7 +41,7 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
 
         $scope.more_max = 4;
         $scope.total_billing = 0;
-        
+
         $scope.initPatBillingIndex = function () {
             $scope.data = {};
         }
@@ -51,34 +51,50 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
                 $scope.loadBillingCharges(newValue);
             }
         }, true);
-        
-        $scope.moreOptions = function (key, enc_id, type, row_sts, id, status, is_swap) {
-            console.log(row_sts);
+
+        $scope.moreOptions = function (key, type, pk_id, link_id, concession_amount, extra_amount) {
+            var row_id = '#enc_' + type + '_' + key;
             $scope.more_li = {};
 
-            $('.enc_chk').not('#enc_' + enc_id + key).attr('checked', false);
+            $('.enc_chk').not(row_id).attr('checked', false);
 
-            if ($('#enc_' + enc_id + key).is(':checked')) {
-                if (type == 'IP') {
+            if ($(row_id).is(':checked')) {
+                if (type == 'other') {
                     $scope.more_li = [
-                        {href: 'patient.transfer({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Transfer', mode: 'sref'},
-                        {href: 'patient.discharge({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Discharge', mode: 'sref'},
-                        {href: 'patient.swapping({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Swapping', mode: 'sref'},
+                        {href: 'patient.editOtherCharge({id: "' + $state.params.id + '", other_charge_id: ' + pk_id + '})', name: 'Modify Other Charge', mode: 'sref'},
                     ];
-
-                    if (status == '1' && row_sts != 'A') {
-
-                        if (is_swap == '1')
-                            row_sts = 'SW';
-
-                        $scope.more_li.push({href: "cancelAdmission(" + enc_id + ", " + id + ", '" + row_sts + "')", name: 'Cancel', mode: 'click'});
+                } else if (type == 'advance') {
+                    $scope.more_li = [
+                        {href: 'patient.editPayment({id: "' + $state.params.id + '", payment_id: ' + pk_id + '})', name: 'Modify Payment', mode: 'sref'},
+                    ];
+                } else if (type == 'procedure' || type == 'consultant') {
+                    var ec_type = '';
+                    if(type == 'procedure'){
+                        ec_type = 'P';
                     }
-                } else if (type == 'OP') {
-                    $scope.more_li = [
-                        {href: 'patient.changeStatus({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Change Status', mode: 'sref'},
-                        {href: "cancelAppointment(" + enc_id + ")", name: 'Cancel Appointment', mode: 'click'},
-                        {href: 'patient.editDoctorFee({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Edit Doctor Fee', mode: 'sref'},
-                    ];
+                    if(type == 'consultant'){
+                        ec_type = 'C';
+                    }
+                    
+                    if (extra_amount == '0.00') {
+                        $scope.more_li = [
+                            {href: 'patient.addExtraAmount({id: "' + $state.params.id + '", ec_type: "' + ec_type + '", link_id: "' + link_id + '"})', name: 'Add Extra Amount', mode: 'sref'},
+                        ];
+                    } else {
+                        $scope.more_li = [
+                            {href: 'patient.editExtraAmount({id: "' + $state.params.id + '", ec_id: "' + pk_id + '"})', name: 'Edit Extra Amount', mode: 'sref'},
+                        ];
+                    }
+
+                    if (concession_amount == '0.00') {
+                        $scope.more_li.push(
+                                {href: 'patient.addConcessionAmount({id: "' + $state.params.id + '", ec_type: "' + ec_type + '", link_id: "' + link_id + '"})', name: 'Add Concession Amount', mode: 'sref'}
+                        );
+                    } else {
+                        $scope.more_li.push(
+                                {href: 'patient.editConcessionAmount({id: "' + $state.params.id + '", ec_id: "' + pk_id + '"})', name: 'Edit Concession Amount', mode: 'sref'}
+                        );
+                    }
                 }
             }
         }
@@ -94,19 +110,19 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
                         $scope.consultants = null;
                         $scope.other_charges = null;
                         $scope.advances = null;
-                        
-                        if(typeof response.Procedure != 'undefined')
+
+                        if (typeof response.Procedure != 'undefined')
                             $scope.procedures = response.Procedure;
-                        
-                        if(typeof response.Consults != 'undefined')
+
+                        if (typeof response.Consults != 'undefined')
                             $scope.consultants = response.Consults;
-                        
-                        if(Object.keys(response.OtherCharge).length)
+
+                        if (Object.keys(response.OtherCharge).length)
                             $scope.other_charges = response.OtherCharge;
-                        
-                        if(Object.keys(response.Advance).length)
+
+                        if (Object.keys(response.Advance).length)
                             $scope.advances = response.Advance;
-                        
+
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');
@@ -116,13 +132,13 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
                     $scope.errorData = data.message;
             });
         }
-        
-        $scope.getTotalPrice = function(row){
+
+        $scope.getTotalPrice = function (row) {
             tot = parseFloat(row.total_charge) + parseFloat(row.extra_amount) - parseFloat(row.concession_amount);
             return tot;
         }
 
-        $scope.parseFloat = function(row){
+        $scope.parseFloat = function (row) {
             return parseFloat(row);
         }
 
