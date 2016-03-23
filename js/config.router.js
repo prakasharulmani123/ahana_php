@@ -2107,7 +2107,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
             })
             //Patient Billing Edit Extra Amount
             .state('patient.editExtraAmount', {
-                url: '/editExtraAmount/{id}/{other_charge_id}',
+                url: '/editExtraAmount/{id}/{ec_id}',
                 params: {
                     mode: 'E',
                 },
@@ -2136,7 +2136,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
             })
             //Patient Billing Edit Concession Amount
             .state('patient.editConcessionAmount', {
-                url: '/editConcessionAmount/{id}/{other_charge_id}',
+                url: '/editConcessionAmount/{id}/{ec_id}',
                 params: {
                     mode: 'C',
                 },

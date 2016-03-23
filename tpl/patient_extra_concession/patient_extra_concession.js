@@ -18,7 +18,7 @@ app.controller('ExtraConcessionController', ['$rootScope', '$scope', '$timeout',
         $scope.initCanExtraConcession = function () {
             $scope.isPatientHaveActiveEncounter(function (response) {
                 if (response.success == false) {
-                    alert("Sorry, you can't add other charge");
+                    alert("Sorry, you can't add charge");
                     $state.go("patient.billing", {id: $state.params.id});
                 } else {
                     $scope.encounter = response.model;
@@ -83,7 +83,8 @@ app.controller('ExtraConcessionController', ['$rootScope', '$scope', '$timeout',
             if (mode == 'add') {
                 angular.extend(_that.data, {
                     patient_id: $scope.app.patientDetail.patientId,
-                    encounter_id: $scope.encounter.encounter_id
+                    encounter_id: $scope.encounter.encounter_id,
+                    mode: $state.params.mode,
                 });
             }
 
@@ -102,7 +103,7 @@ app.controller('ExtraConcessionController', ['$rootScope', '$scope', '$timeout',
 //                        $timeout(function () {
 //                            $state.go('patient.billing', {id: $state.params.id});
 //                        }, 1000)
-                        }else{
+                        } else {
                             $scope.errorData = response.message;
                         }
 
@@ -118,24 +119,30 @@ app.controller('ExtraConcessionController', ['$rootScope', '$scope', '$timeout',
 
         //Get Data for update Form
         $scope.loadForm = function () {
-            $scope.loadbar('show');
-            _that = this;
-            $scope.errorData = "";
-            $http({
-                url: $rootScope.IRISOrgServiceUrl + "/patientbillingothercharges/" + $state.params.other_charge_id,
-                method: "GET"
-            }).success(
-                    function (response) {
+            $scope.isPatientHaveActiveEncounter(function (response) {
+                if (response.success == false) {
+                    alert("Sorry, you can't add charge");
+                    $state.go("patient.billing", {id: $state.params.id});
+                } else {
+                    $scope.loadbar('show');
+                    _that = this;
+                    $scope.errorData = "";
+                    $http({
+                        url: $rootScope.IRISOrgServiceUrl + "/patientbillingextraconcessions/" + $state.params.ec_id,
+                        method: "GET"
+                    }).success(
+                            function (response) {
+                                $scope.loadbar('hide');
+                                $scope.data = response;
+                            }
+                    ).error(function (data, status) {
                         $scope.loadbar('hide');
-                        $scope.data = response;
-                        $scope.encounter = {encounter_id: response.encounter_id};
-                    }
-            ).error(function (data, status) {
-                $scope.loadbar('hide');
-                if (status == 422)
-                    $scope.errorData = $scope.errorSummary(data);
-                else
-                    $scope.errorData = data.message;
+                        if (status == 422)
+                            $scope.errorData = $scope.errorSummary(data);
+                        else
+                            $scope.errorData = data.message;
+                    });
+                }
             });
         };
 
