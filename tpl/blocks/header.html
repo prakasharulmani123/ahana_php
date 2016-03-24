@@ -22,7 +22,7 @@
             <div class="form-group">
                 <div class="input-group">
                     <!--<input type="text" ng-model="patientselected" typeahead="patient_list.Patient.patient_firstname for patient_list in patient_lists | filter:$viewValue | limitTo:8" class="form-control input-sm bg-light no-border rounded padder" placeholder="Search....">-->
-                    <input type="text" ng-model="patientselected" class="form-control input-sm bg-light no-border rounded padder" placeholder="Search....">
+                    <input type="text" ng-model="patientselected" class="form-control input-sm bg-light no-border rounded padder header_search_input" placeholder="Search....">
                     <ul class="search-patientcont-header" ng-if="patientselected != ''">
                         <li ng-repeat="patient in patient_lists | filter:patientselected">
                             <div class="row"> 
@@ -40,7 +40,6 @@
                                         &nbsp; &nbsp;<span ng-bind-html="patient.Patient.patient_mobile | highlight:patientselected"> </span> 
                                     </div>
                                 </div>
-
                                 <div class="col-xs-12 col-sm-5 col-md-4 pull-right right"> 
                                     <button class="btn m-b-xs w-xs btn-info" ng-show="patient.PatientActiveEncounter.hasOwnProperty('encounter_id') != true" ng-click="goToAppointment(patient.Patient.patient_guid)">
                                         BOOK
@@ -54,7 +53,6 @@
                                 </div>
                             </div>
                         </li>
-
                         <li>
                             <div class="row"> 
                                 <div class="col-xs-12 col-sm-12 col-md-12 pull-right right">  

@@ -162,7 +162,7 @@ h3, .h3 {
     margin-bottom:0px;
     position:fixed;
     width: 100%;
-    z-index: 9999;
+    z-index: 999;
 }
 
 .patient-panel a

@@ -14,13 +14,13 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         $scope.loadSaleItemList = function (payment_type) {
             $scope.errorData = $scope.successMessage = '';
             $scope.isLoading = true;
-            if(payment_type == 'CA'){
+            if (payment_type == 'CA') {
                 $scope.sale_payment_type_name = 'Cash';
             }
-            if(payment_type == 'CR'){
+            if (payment_type == 'CR') {
                 $scope.sale_payment_type_name = 'Credit';
             }
-            if(payment_type == 'COD'){
+            if (payment_type == 'COD') {
                 $scope.sale_payment_type_name = 'Cash On Deleivery';
             }
             $scope.sale_payment_type = payment_type;
@@ -70,11 +70,19 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             $scope.products = [];
             $scope.batches = [];
         }
-        
+
+        $scope.showExpiryDate = function (saleitem) {
+            if (saleitem.expiry_date) {
+                return moment(saleitem.expiry_date).format('MMM YYYY');
+            } else {
+                return 'empty';
+            }
+        };
+
         $scope.formatPatient = function ($item, $model, $label) {
             $scope.data.patient_id = $item.patient_id;
             $scope.data.patient_name = $item.fullname;
-            
+
             $scope.getPatientMobileNo($item.patient_id);
         }
 
