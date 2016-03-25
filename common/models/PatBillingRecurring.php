@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\models\query\PatBillingRecurringQuery;
 use yii\db\ActiveQuery;
 
 /**
@@ -123,5 +124,9 @@ class PatBillingRecurring extends RActiveRecord
     public function getTenant()
     {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
+    }
+    
+    public static function find() {
+        return new PatBillingRecurringQuery(get_called_class());
     }
 }

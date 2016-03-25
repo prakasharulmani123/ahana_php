@@ -164,7 +164,7 @@ class PatAdmission extends RActiveRecord {
     public static function find() {
         return new PatAdmissionQuery(get_called_class());
     }
-    
+
     public function beforeValidate() {
         $this->setCurrentData();
         return parent::beforeValidate();
@@ -208,9 +208,14 @@ class PatAdmission extends RActiveRecord {
                 $this->vacantOldRoomId = null;
             }
         }
-        
-//        Yii::$app->message->display('I am Yii2.0 Programmer');
-        Yii::$app->hepler->updateBilling($this->admn_id);
+
+        if ($this->admission_status == 'A') {
+            Yii::$app->hepler->addRecurring($this);
+        }else if($this->admission_status == 'TR'){
+//            Yii::$app->hepler->transferRecurring($this);
+        }else if($this->admission_status == 'C'){
+            Yii::$app->hepler->cancelRecurring($this);
+        }
 
         return parent::afterSave($insert, $changedAttributes);
     }

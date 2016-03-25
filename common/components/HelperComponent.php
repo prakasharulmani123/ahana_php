@@ -47,21 +47,22 @@ class HelperComponent extends Component {
 //        $recurring_model->save();
     }
 
-    public function updateBilling($admn_id) {
-        $admission = PatAdmission::find()->tenant()->andWhere(['admn_id' => $admn_id])->one();
+//    public function updateBilling($admn_id) {
+//        $admission = PatAdmission::find()->tenant()->andWhere(['admn_id' => $admn_id])->one();
+//
+//        switch ($admission->admission_status) {
+//            case 'A':
+//                $this->syncAdmission($admission);
+//                break;
+//            case 'TR':
+//                break;
+//            case 'C':
+//                $this->syncCancel($admission);
+//                break;
+//        }
+//    }
 
-        switch ($admission->admission_status) {
-            case 'A':
-                $this->syncAdmission($admission);
-                break;
-            case 'TR':
-                break;
-            case 'C':
-                break;
-        }
-    }
-
-    public function syncAdmission($admission) {
+    public function addRecurring($admission) {
         $room_charges = $this->getRoomChargeItems($admission->tenant_id, $admission->room_type_id);
 
         $from_date = $to_date = date('Y-m-d');
@@ -92,11 +93,11 @@ class HelperComponent extends Component {
         }
     }
 
-    public function syncTransfer() {
+    public function transferRecurring() {
         
     }
 
-    public function syncCancel() {
+    public function cancelRecurring($admission) {
         
     }
 
