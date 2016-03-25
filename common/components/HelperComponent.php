@@ -93,7 +93,8 @@ class HelperComponent extends Component {
         }
     }
 
-    public function transferRecurring() {
+    public function transferRecurring($admission) {
+        //Save tranfer room type charges
         
     }
 

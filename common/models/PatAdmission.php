@@ -68,6 +68,10 @@ class PatAdmission extends RActiveRecord {
     }
 
     public function validateAdmissionStatus($attribute, $params) {
+        if($this->admission_status == 'A'){
+            return true;
+        }
+        
         $current_admission = $this->encounter->patCurrentAdmission;
 
         if ($this->admission_status == 'TR' && !$this->isSwapping) {
@@ -212,7 +216,7 @@ class PatAdmission extends RActiveRecord {
         if ($this->admission_status == 'A') {
             Yii::$app->hepler->addRecurring($this);
         }else if($this->admission_status == 'TR'){
-//            Yii::$app->hepler->transferRecurring($this);
+            Yii::$app->hepler->transferRecurring($this);
         }else if($this->admission_status == 'C'){
             Yii::$app->hepler->cancelRecurring($this);
         }
