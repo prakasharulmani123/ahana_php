@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use Yii;
 use yii\db\ActiveQuery;
 
 /**
@@ -202,6 +203,8 @@ class PatAdmission extends RActiveRecord {
                 $this->vacantOldRoomId = null;
             }
         }
+        
+        Yii::$app->myHepler->syncBilling($this->tenant_id, $this->encounter_id);
 
         return parent::afterSave($insert, $changedAttributes);
     }

@@ -2,7 +2,7 @@
 
 namespace common\models;
 
-use Yii;
+use yii\db\ActiveQuery;
 
 /**
  * This is the model class for table "pat_billing_recurring".
@@ -25,6 +25,7 @@ use Yii;
  * @property integer $modified_by
  * @property string $modified_at
  * @property string $deleted_at
+ * @property string $executed_at
  *
  * @property CoRoomChargeItem $chargeItem
  * @property PatEncounter $encounter
@@ -32,7 +33,7 @@ use Yii;
  * @property CoRoomType $roomType
  * @property CoTenant $tenant
  */
-class PatBillingRecurring extends \common\models\RActiveRecord
+class PatBillingRecurring extends RActiveRecord
 {
     /**
      * @inheritdoc
@@ -50,7 +51,7 @@ class PatBillingRecurring extends \common\models\RActiveRecord
         return [
             [['tenant_id', 'encounter_id', 'patient_id', 'room_type_id', 'room_type', 'charge_item_id', 'charge_item', 'from_date', 'created_by'], 'required'],
             [['tenant_id', 'encounter_id', 'patient_id', 'room_type_id', 'charge_item_id', 'duration', 'created_by', 'modified_by'], 'integer'],
-            [['from_date', 'to_date', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
+            [['from_date', 'to_date', 'created_at', 'modified_at', 'deleted_at', 'executed_at'], 'safe'],
             [['charge_amount'], 'number'],
             [['status'], 'string'],
             [['room_type', 'charge_item'], 'string', 'max' => 255]
@@ -85,7 +86,7 @@ class PatBillingRecurring extends \common\models\RActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getChargeItem()
     {
@@ -93,7 +94,7 @@ class PatBillingRecurring extends \common\models\RActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getEncounter()
     {
@@ -101,7 +102,7 @@ class PatBillingRecurring extends \common\models\RActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getPatient()
     {
@@ -109,7 +110,7 @@ class PatBillingRecurring extends \common\models\RActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getRoomType()
     {
@@ -117,7 +118,7 @@ class PatBillingRecurring extends \common\models\RActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getTenant()
     {
