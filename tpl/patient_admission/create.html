@@ -7,7 +7,7 @@
             {% include 'tpl/blocks/alert.html' %}
         </div>
         <div class="row">
-            <div class="col-sm-12" ng-init="initForm(); initAdmissionForm(); data.formtype = 'create'" ng-show="showForm">
+            <div class="col-sm-12" ng-init="initForm(); initAdmissionForm(); data.formtype = 'create' ; data.PatAdmission.admission_status = 'A';" ng-show="showForm">
                 <form name="patientAdmissionForm" class="form-horizontal form-validation" novalidate="">
                     <div ng-include="'tpl/patient_admission/_form.html'">
                         {% include 'tpl/patient_admission/_form.html' %}
