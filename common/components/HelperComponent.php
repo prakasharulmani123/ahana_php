@@ -99,7 +99,20 @@ class HelperComponent extends Component {
     }
 
     public function cancelRecurring($admission) {
+        PatBillingRecurring::deleteAll("tenant_id = :tenant_id AND status = '1' AND encounter_id = :encounter_id AND room_type_id = :room_type_id", [
+            ':tenant_id' => $admission->tenant_id,
+            ':encounter_id' => $admission->encounter_id,
+            ':room_type_id' => $admission->room_type_id,
+        ]);
         
+        //Update Recurring Billings
+        $current_admission = $admission->encounter->patCurrentAdmission;
+        $recurring_bills = PatBillingRecurring::find()->tenant()->status('0')->andWhere(['room_type_id' => $current_admission->room_type_id, 'encounter_id' => $current_admission->encounter_id])->all();
+        
+        echo '<pre>';
+        print_r($current_admission);
+        print_r($recurring_bills);
+        exit;
     }
 
     public function getRoomChargeItems($tenant_id, $room_type_id) {
