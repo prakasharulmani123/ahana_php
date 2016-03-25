@@ -8,8 +8,14 @@ angular.module('app')
         .run(run)
         .config(config);
 
-config.$inject = ['$stateProvider', '$urlRouterProvider', '$httpProvider'];
-function config($stateProvider, $urlRouterProvider, $httpProvider) {
+config.$inject = ['$stateProvider', '$urlRouterProvider', '$httpProvider', 'ivhTreeviewOptionsProvider'];
+function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOptionsProvider) {
+
+    ivhTreeviewOptionsProvider.set({
+        twistieExpandedTpl: '-',
+        twistieCollapsedTpl: '+',
+    });
+
 //    var newBaseUrl = "";
 //    
 //    if (window.location.hostname == "localhost") {
@@ -2119,7 +2125,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider) {
                         }]
                 }
             })
-            
+
             //Patient Billing Add Concession Amount
             .state('patient.addConcessionAmount', {
                 url: '/addConcessionAmount/{id}/{ec_type}/{link_id}',
