@@ -34,7 +34,7 @@ function setClientDb() {
         $client['username'] = "{$read->org_db_username}";
         $client['password'] = "{$read->org_db_password}";
     }
-    
+
     Yii::$app->session['client'] = $client;
     Yii::$app->session['current_domain_path'] = DOMAIN_PATH;
     Yii::$app->session['is_read'] = $is_read;

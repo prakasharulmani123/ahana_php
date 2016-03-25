@@ -17,6 +17,9 @@ return [
         ],
     ],
     'components' => [
+        'myHelper' => [
+           'class' => 'common\components\HelperComponent',
+	],
         'user' => [
             'identityClass' => 'common\models\CoLogin',
             'enableSession' => false,
