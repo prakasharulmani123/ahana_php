@@ -12,6 +12,24 @@ MySQL - 5.6.14 : Database - ahana
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+/*Table structure for table `app_configuration` */
+
+DROP TABLE IF EXISTS `app_configuration`;
+
+CREATE TABLE `app_configuration` (
+  `config_id` int(11) NOT NULL AUTO_INCREMENT,
+  `tenant_id` int(11) NOT NULL,
+  `key` text NOT NULL,
+  `value` text NOT NULL,
+  PRIMARY KEY (`config_id`),
+  KEY `FK_app_configuration_tenant` (`tenant_id`),
+  CONSTRAINT `FK_app_configuration_tenant` FOREIGN KEY (`tenant_id`) REFERENCES `co_tenant` (`tenant_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+/*Data for the table `app_configuration` */
+
+insert  into `app_configuration`(`config_id`,`tenant_id`,`key`,`value`) values (1,58,'ROOM_CHARGE_CONFIG','12');
+
 /*Table structure for table `co_alert` */
 
 DROP TABLE IF EXISTS `co_alert`;
