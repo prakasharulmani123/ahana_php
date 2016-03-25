@@ -49,7 +49,7 @@ class PatBillingRecurring extends RActiveRecord
     public function rules()
     {
         return [
-            [['tenant_id', 'encounter_id', 'patient_id', 'room_type_id', 'room_type', 'charge_item_id', 'charge_item', 'from_date', 'created_by'], 'required'],
+            [['encounter_id', 'patient_id', 'room_type_id', 'room_type', 'charge_item_id', 'charge_item', 'from_date'], 'required'],
             [['tenant_id', 'encounter_id', 'patient_id', 'room_type_id', 'charge_item_id', 'duration', 'created_by', 'modified_by'], 'integer'],
             [['from_date', 'to_date', 'created_at', 'modified_at', 'deleted_at', 'executed_at'], 'safe'],
             [['charge_amount'], 'number'],

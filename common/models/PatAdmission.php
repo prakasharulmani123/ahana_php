@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\models\query\PatAdmissionQuery;
 use Yii;
 use yii\db\ActiveQuery;
 
@@ -160,6 +161,10 @@ class PatAdmission extends RActiveRecord {
         return $this->hasOne(CoRoomType::className(), ['room_type_id' => 'room_type_id']);
     }
 
+    public static function find() {
+        return new PatAdmissionQuery(get_called_class());
+    }
+    
     public function beforeValidate() {
         $this->setCurrentData();
         return parent::beforeValidate();
@@ -204,7 +209,8 @@ class PatAdmission extends RActiveRecord {
             }
         }
         
-        Yii::$app->myHepler->syncBilling($this->tenant_id, $this->encounter_id);
+//        Yii::$app->message->display('I am Yii2.0 Programmer');
+        Yii::$app->hepler->updateBilling($this->admn_id);
 
         return parent::afterSave($insert, $changedAttributes);
     }

@@ -17,7 +17,7 @@ return [
         ],
     ],
     'components' => [
-        'myHelper' => [
+        'hepler' => [
            'class' => 'common\components\HelperComponent',
 	],
         'user' => [
