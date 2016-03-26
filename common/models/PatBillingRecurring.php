@@ -16,11 +16,10 @@ use yii\db\ActiveQuery;
  * @property string $room_type
  * @property integer $charge_item_id
  * @property string $charge_item
- * @property string $from_date
- * @property string $to_date
- * @property integer $duration
+ * @property string $recurr_date
  * @property string $charge_amount
  * @property string $status
+ * @property integer $recurr_group
  * @property integer $created_by
  * @property string $created_at
  * @property integer $modified_by
@@ -50,9 +49,9 @@ class PatBillingRecurring extends RActiveRecord
     public function rules()
     {
         return [
-            [['encounter_id', 'patient_id', 'room_type_id', 'room_type', 'charge_item_id', 'charge_item', 'from_date'], 'required'],
-            [['tenant_id', 'encounter_id', 'patient_id', 'room_type_id', 'charge_item_id', 'duration', 'created_by', 'modified_by'], 'integer'],
-            [['from_date', 'to_date', 'created_at', 'modified_at', 'deleted_at', 'executed_at'], 'safe'],
+            [['encounter_id', 'patient_id', 'room_type_id', 'room_type', 'charge_item_id', 'charge_item'], 'required'],
+            [['tenant_id', 'encounter_id', 'patient_id', 'room_type_id', 'charge_item_id', 'created_by', 'modified_by'], 'integer'],
+            [['recurr_date', 'recurr_group', 'created_at', 'modified_at', 'deleted_at', 'executed_at'], 'safe'],
             [['charge_amount'], 'number'],
             [['status'], 'string'],
             [['room_type', 'charge_item'], 'string', 'max' => 255]
@@ -73,9 +72,8 @@ class PatBillingRecurring extends RActiveRecord
             'room_type' => 'Room Type',
             'charge_item_id' => 'Charge Item ID',
             'charge_item' => 'Charge Item',
-            'from_date' => 'From Date',
-            'to_date' => 'To Date',
-            'duration' => 'Duration',
+            'recurr_date' => 'Recurr Date',
+            'recurr_group' => 'Recurr Group',
             'charge_amount' => 'Charge Amount',
             'status' => 'Status',
             'created_by' => 'Created By',

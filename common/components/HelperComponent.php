@@ -1,6 +1,7 @@
 <?php
 
 namespace common\components;
+
 //use Faker\Provider\zh_TW\DateTime;
 
 
@@ -65,14 +66,9 @@ class HelperComponent extends Component {
     public function addRecurring($admission) {
         $room_charges = $this->getRoomChargeItems($admission->tenant_id, $admission->room_type_id);
 
-        $from_date = $to_date = date('Y-m-d');
-
-        $date1 = new DateTime($from_date);
-        $date2 = new DateTime($to_date);
-
-        $diff = $date2->diff($date1)->format("%a");
-
         foreach ($room_charges as $key => $charge) {
+            $recurring_model = new PatBillingRecurring;
+            
             $data = [
                 'encounter_id' => $admission->encounter_id,
                 'patient_id' => $admission->patient_id,
@@ -80,14 +76,10 @@ class HelperComponent extends Component {
                 'room_type' => $admission->roomType->room_type_name,
                 'charge_item_id' => $charge->charge_item_id,
                 'charge_item' => $charge->roomChargeItem->charge_item_name,
-                'from_date' => $from_date,
-                'to_date' => $to_date,
-                'duration' => $diff,
+                'recurr_date' => $admission->status_date,
                 'charge_amount' => $charge->charge,
-                'status' => '1',
             ];
 
-            $recurring_model = new PatBillingRecurring;
             $recurring_model->attributes = $data;
             $recurring_model->save();
         }
@@ -95,28 +87,45 @@ class HelperComponent extends Component {
 
     public function transferRecurring($admission) {
         //Save tranfer room type charges
-        
     }
 
     public function cancelRecurring($admission) {
+        //Delete Recurring Billings
         PatBillingRecurring::deleteAll("tenant_id = :tenant_id AND status = '1' AND encounter_id = :encounter_id AND room_type_id = :room_type_id", [
             ':tenant_id' => $admission->tenant_id,
             ':encounter_id' => $admission->encounter_id,
             ':room_type_id' => $admission->room_type_id,
         ]);
-        
+
         //Update Recurring Billings
         $current_admission = $admission->encounter->patCurrentAdmission;
         $recurring_bills = PatBillingRecurring::find()->tenant()->status('0')->andWhere(['room_type_id' => $current_admission->room_type_id, 'encounter_id' => $current_admission->encounter_id])->all();
-        
-        echo '<pre>';
-        print_r($current_admission);
-        print_r($recurring_bills);
-        exit;
+
+        foreach ($recurring_bills as $key => $recurring_model) {
+            
+            $from_date = $recurring_model->from_date;
+            $to_date = date('Y-m-d');
+            $diff = $this->_getDayDiff($from_date, $to_date);
+
+            $data = [
+                'to_date' => $to_date,
+                'duration' => $diff,
+                'status' => '1',
+            ];
+            $recurring_model->attributes = $data;
+            $recurring_model->save();
+        }
     }
 
     public function getRoomChargeItems($tenant_id, $room_type_id) {
         return CoRoomCharge::find()->tenant($tenant_id)->status()->active()->andWhere(['room_type_id' => $room_type_id])->all();
+    }
+    
+    private function _getDayDiff($from_date, $to_date){
+        $date1 = new DateTime($from_date);
+        $date2 = new DateTime($to_date);
+
+        return $date2->diff($date1)->format("%a");
     }
 
 }
