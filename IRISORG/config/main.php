@@ -17,6 +17,7 @@ return [
         ],
     ],
     'components' => [
+//        'schedule' => 'omnilight\scheduling\Schedule',
         'hepler' => [
            'class' => 'common\components\HelperComponent',
 	],

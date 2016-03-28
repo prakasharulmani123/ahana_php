@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\models\query\PatEncounterQuery;
+use DateTime;
 use yii\db\ActiveQuery;
 
 /**
@@ -132,7 +133,7 @@ class PatEncounter extends RActiveRecord {
     public function getPatLiveAppointmentArrival() {
         return $this->hasOne(PatAppointment::className(), ['encounter_id' => 'encounter_id'])->andWhere('appt_status = "A"')->orderBy(['created_at' => SORT_DESC]);
     }
-    
+
     /**
      * @return ActiveQuery
      */
@@ -151,6 +152,10 @@ class PatEncounter extends RActiveRecord {
         return $this->hasMany(PatAdmission::className(), ['encounter_id' => 'encounter_id'])->andWhere(['NOT IN', 'admission_status', ['C']])->orderBy(['created_at' => SORT_DESC]);
     }
 
+    public function getPatAdmissionDischarge() {
+        return $this->hasOne(PatAdmission::className(), ['encounter_id' => 'encounter_id'])->andWhere('admission_status = "D"')->orderBy(['created_at' => SORT_DESC]);
+    }
+    
     public function fields() {
         $extend = [
             'patient' => function ($model) {
@@ -199,6 +204,21 @@ class PatEncounter extends RActiveRecord {
             },
             'sts_status' => function ($model) {
                 return !$this->sts_status;
+            },
+            'discharge_date' => function ($model) {
+                if (!empty($model->patAdmissionDischarge))
+                    return $model->patAdmissionDischarge->status_date;
+            },
+            'stay_duration' => function ($model) {
+                if (!empty($model->patAdmissionDischarge))
+                    $end_date = $model->patAdmissionDischarge->status_date;
+                else
+                    $end_date = date('Y-m-d');
+                
+                $date1 = new DateTime(date('Y-m-d', strtotime($model->encounter_date)));
+                $date2 = new DateTime($end_date);
+
+                return $date2->diff($date1)->format("%a") + 1;
             },
         ];
         $fields = array_merge(parent::fields(), $extend);
