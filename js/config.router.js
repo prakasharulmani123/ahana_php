@@ -2154,6 +2154,18 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
+            
+            //Patient Billing Room Concession
+            .state('patient.roomConcession', {
+                url: '/roomConcession/{id}/{encounter_id}',
+                templateUrl: 'tpl/patient_billing/room_concession.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/patient_billing/patient_billing.js']);
+                        }]
+                }
+            })
 
     $httpProvider.interceptors.push('APIInterceptor');
 
