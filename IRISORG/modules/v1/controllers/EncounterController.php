@@ -4,14 +4,13 @@ namespace IRISORG\modules\v1\controllers;
 
 use common\models\PatAdmission;
 use common\models\PatAppointment;
-use common\models\PatBillingOtherCharges;
-use common\models\PatBillingPayment;
 use common\models\PatEncounter;
 use common\models\PatPatient;
 use common\models\VBillingAdvanceCharges;
 use common\models\VBillingOtherCharges;
 use common\models\VBillingProcedures;
 use common\models\VBillingProfessionals;
+use common\models\VBillingRecurring;
 use common\models\VEncounter;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -283,6 +282,19 @@ class EncounterController extends ActiveController {
             $data['Consults'] = VBillingProfessionals::find()->where(['encounter_id' => $encounter_id, 'tenant_id' => $tenant_id])->all();
             $data['OtherCharge'] = VBillingOtherCharges::find()->where(['encounter_id' => $encounter_id, 'tenant_id' => $tenant_id])->all();
             $data['Advance'] = VBillingAdvanceCharges::find()->where(['encounter_id' => $encounter_id, 'tenant_id' => $tenant_id])->all();
+        }
+        return $data;
+    }
+    
+    public function actionGetrecurringbilling() {
+        $get = Yii::$app->getRequest()->get();
+
+        $data = [];
+        if (!empty($get) && $get['encounter_id']) {
+            $encounter_id = $get['encounter_id'];
+            $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+            
+            $data['recurring'] = VBillingRecurring::find()->where(['encounter_id' => $encounter_id, 'tenant_id' => $tenant_id])->all();
         }
         return $data;
     }
