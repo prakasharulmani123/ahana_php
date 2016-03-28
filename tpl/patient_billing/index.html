@@ -7,23 +7,75 @@
         <div ng-include="'tpl/blocks/alert.html'">
             {% include 'tpl/blocks/alert.html' %}
         </div>
-        
-        <div class="row">
-            <div class="col-sm-4"> 
-                <div class="btn-group btn-group-justified">
-                    <b>Encounter Id: </b>
-                    <br />
-                    <ui-select ng-model="enc.selected" theme="bootstrap">
-                        <ui-select-match placeholder="Select Encounter Id">{{$select.selected.encounter_id}}</ui-select-match>
-                        <ui-select-choices repeat="item in encounters | filter: $select.search | orderBy: 'encounter_id' : true">
-                            <div ng-bind-html="item.encounter_id | highlight: $select.search"></div>
-                        </ui-select-choices>
-                    </ui-select>
-                    <br />
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Encounter # </label>
+                    <div class="col-sm-9">
+                        <div class="btn-group btn-group-justified">
+                            <ui-select ng-model="enc.selected" theme="bootstrap">
+                                <ui-select-match placeholder="Select Encounter Id">{{$select.selected.encounter_id}}</ui-select-match>
+                                <ui-select-choices repeat="item in encounters | filter: $select.search | orderBy: 'encounter_id' : true">
+                                    <div ng-bind-html="item.encounter_id | highlight: $select.search"></div>
+                                </ui-select-choices>
+                            </ui-select>
+                            <br />
+                        </div>
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg "></div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Admission Date  </label>
+                    <div class="col-sm-9">
+                        {{enc.selected.encounter_date}}
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg "></div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Discharge Date  </label>
+                    <div class="col-sm-9">
+                        {{enc.selected.discharge_date}}
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg "></div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Total Amount  </label>
+                    <div class="col-sm-9">
+                        {{billing.total.price + recurr_billing.total.recurring_total | number:2}}
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg "></div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Paid Amount  </label>
+                    <div class="col-sm-9">
+                        {{billing.total.advance_charge| number:2}}
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg "></div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Amount Payable  </label>
+                    <div class="col-sm-9">
+                        {{(billing.total.price + recurr_billing.total.recurring_total) - billing.total.advance_charge| number:2}}
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg "></div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Stay Duration </label>
+                    <div class="col-sm-9">
+                        {{enc.selected.stay_duration}}
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg "></div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Discount </label>
+                    <div class="col-sm-9">
+                        {{billing.total.concession + parseFloat(enc.selected.concession_amount) | number:2}}  ( Rm_Dis: {{enc.selected.concession_amount | number:2}} ,Otr_Dis: {{billing.total.concession | number:2}} )
+                    </div>
                 </div>
             </div>
         </div>
-        
+
         <!-- Recurring Charges -->
         <div class="panel panel-default">
             <div class="row wrapper">
@@ -32,22 +84,22 @@
                         &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
                     </button>
                     &nbsp; &nbsp
-<!--                    <div ng-if="more_li.length > 0 && (key + 1) <= more_max" ng-repeat="(key, li) in more_li" class="btn-group">
-                        <button ng-if="li.mode == 'sref'" ui-sref="{{li.href}}" class="btn btn-sm btn-grey"> {{li.name}}</button>    
-                        <button ng-if="li.mode == 'click'" ng-click="{{li.href}}" class="btn btn-sm btn-grey"> {{li.name}}</button>    &nbsp; &nbsp
-                    </div>
-
-                    <div class="btn-group" dropdown is-open="status.isopen" ng-if="more_li.length > more_max">
-                        <button type="button" class=" btn btn-sm btn-grey" dropdown-toggle ng-disabled="disabled">
-                            More &nbsp;&nbsp;<span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" role="menu">
-                            <li ng-if="(key + 1) > more_max" ng-repeat="(key, li) in more_li">
-                                <a ng-if="li.mode == 'sref'" ui-sref="{{li.href}}">{{li.name}}</a>
-                                <a ng-if="li.mode == 'click'" ng-click="{{li.href}}">{{li.name}}</a>
-                            </li>
-                        </ul>
-                    </div>        -->
+                    <!--                    <div ng-if="more_li.length > 0 && (key + 1) <= more_max" ng-repeat="(key, li) in more_li" class="btn-group">
+                                            <button ng-if="li.mode == 'sref'" ui-sref="{{li.href}}" class="btn btn-sm btn-grey"> {{li.name}}</button>    
+                                            <button ng-if="li.mode == 'click'" ng-click="{{li.href}}" class="btn btn-sm btn-grey"> {{li.name}}</button>    &nbsp; &nbsp
+                                        </div>
+                    
+                                        <div class="btn-group" dropdown is-open="status.isopen" ng-if="more_li.length > more_max">
+                                            <button type="button" class=" btn btn-sm btn-grey" dropdown-toggle ng-disabled="disabled">
+                                                More &nbsp;&nbsp;<span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu" role="menu">
+                                                <li ng-if="(key + 1) > more_max" ng-repeat="(key, li) in more_li">
+                                                    <a ng-if="li.mode == 'sref'" ui-sref="{{li.href}}">{{li.name}}</a>
+                                                    <a ng-if="li.mode == 'click'" ng-click="{{li.href}}">{{li.name}}</a>
+                                                </li>
+                                            </ul>
+                                        </div>        -->
                 </div>
                 <div class="col-sm-2">
                 </div>
@@ -70,7 +122,7 @@
                             <th>Total Charge</th>
                         </tr>
                     </thead>
-                    <tbody ng-hide="isLoading" ng-init="billing.total = {}">
+                    <tbody ng-hide="isLoading" ng-init="recurr_billing.total = {}">
                         <!-- Recurring -->
                         <tr ng-show="expanded" ng-repeat="(key, row) in recurring_charges">
                             <td>{{row.charge_item}} </td>
@@ -79,7 +131,7 @@
                             <td> {{row.from_date}} </td>
                             <td> {{row.to_date}} </td>
                             <td> {{row.duration}} </td>
-                            <td ng-init="row_recurring_total = getTotalRecurringPrice(row); billing.total.recurring_total = billing.total.recurring_total + row_recurring_total; "> {{row_recurring_total | number:2}} </td>
+                            <td ng-init="row_recurring_total = getTotalRecurringPrice(row); recurr_billing.total.recurring_total = recurr_billing.total.recurring_total + row_recurring_total; "> {{row_recurring_total| number:2}} </td>
                         </tr>
 
                     </tbody>
@@ -91,7 +143,7 @@
                     <tfoot>
                         <tr>
                             <td colspan="6" class="text-right"><b>Total :</b></td>
-                            <td>{{billing.total.recurring_total | number:2}}</td>
+                            <td>{{recurr_billing.total.recurring_total| number:2}}</td>
                         </tr>                    
                     </tfoot>
                 </table>
@@ -100,7 +152,7 @@
                 <!--<div st-pagination="" st-items-by-page="itemsByPage" st-template="pagination.custom.html" st-displayed-pages="7"></div>-->
             </footer>    
         </div>
-        
+
         <!-- Non Recurring Charges -->
         <div class="panel panel-default">
             <div class="row wrapper">
@@ -261,7 +313,7 @@
                 <!--<div st-pagination="" st-items-by-page="itemsByPage" st-template="pagination.custom.html" st-displayed-pages="7"></div>-->
             </footer>    
         </div>
-        
+
         <!-- Advance Charges -->
         <div class="panel panel-default">
             <div class="row wrapper">
@@ -317,7 +369,7 @@
                     <tfoot>
                         <tr>
                             <td colspan="4" class="text-right"><b>Total Amount Paid:</b></td>
-                            <td>{{billing.total.advance_charge | number:2}}</td>
+                            <td>{{billing.total.advance_charge| number:2}}</td>
                         </tr>                    
                     </tfoot>
                 </table>
