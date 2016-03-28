@@ -14,8 +14,44 @@ use yii\base\Component;
 
 class HelperComponent extends Component {
 
+    public function updateRecurring($admission) {
+        if (empty($admission))
+            return;
+
+        //Check Recurring Exists on that date
+        $recurr_date = date('Y-m-d');
+        $current_recurring = PatBillingRecurring::find()->select(['SUM(charge_amount) as charge_amount', 'room_type_id'])->tenant($admission->tenant_id)->andWhere(['encounter_id' => $admission->encounter_id, 'recurr_date' => $recurr_date])->groupBy(['recurr_date', 'room_type_id'])->one();
+
+        if (empty($current_recurring)) {
+            $room_charges = $this->getRoomChargeItems($admission->tenant_id, $admission->room_type_id);
+
+            if (empty($room_charges))
+                return;
+
+
+            foreach ($room_charges as $key => $charge) {
+                $data = [
+                    'tenant_id' => $admission->tenant_id,
+                    'encounter_id' => $admission->encounter_id,
+                    'patient_id' => $admission->patient_id,
+                    'room_type_id' => $admission->room_type_id,
+                    'room_type' => $admission->roomType->room_type_name,
+                    'charge_item_id' => $charge->charge_item_id,
+                    'charge_item' => $charge->roomChargeItem->charge_item_name,
+                    'recurr_date' => $recurr_date,
+                    'charge_amount' => $charge->charge,
+                    'recurr_group' => $admission->admn_id,
+                ];
+                $this->_insertRecurringModel($data);
+            }
+        }
+    }
+
     public function addRecurring($admission) {
         $room_charges = $this->getRoomChargeItems($admission->tenant_id, $admission->room_type_id);
+
+        if (empty($room_charges))
+            return;
 
         foreach ($room_charges as $key => $charge) {
             $data = [
@@ -45,7 +81,7 @@ class HelperComponent extends Component {
             if ($admission->room_type_id != $current_recurring->room_type_id) {
                 $room_charge = CoRoomCharge::find()->select(['SUM(charge) as charge'])->tenant()->status()->active()->andWhere(['room_type_id' => $admission->room_type_id])->groupBy(['room_type_id'])->one();
 
-                //Current Charge is lesser than Calculated Charge
+                //Current Charge (Room Rent: 500, DMO: 400) is lesser than Calculated Charge (Room Rent: 400, DMO: 100)
                 if ($current_recurring->charge_amount < $room_charge->charge) {
                     //Delete Current Recurring Billings
                     PatBillingRecurring::deleteAll("tenant_id = :tenant_id AND encounter_id = :encounter_id AND room_type_id = :room_type_id AND recurr_date = :recurr_date", [
@@ -54,6 +90,7 @@ class HelperComponent extends Component {
                         ':room_type_id' => $current_recurring->room_type_id,
                         ':recurr_date' => $recurr_date,
                     ]);
+                    //Add New Recurring Billings.
                     $this->addRecurring($admission);
                 }
             }
@@ -80,19 +117,21 @@ class HelperComponent extends Component {
         for ($i = 1; $i <= $diff_days; $i++) {
             $room_charges = $this->getRoomChargeItems($current_admission->tenant_id, $current_admission->room_type_id);
 
-            foreach ($room_charges as $key => $charge) {
-                $data = [
-                    'encounter_id' => $current_admission->encounter_id,
-                    'patient_id' => $current_admission->patient_id,
-                    'room_type_id' => $current_admission->room_type_id,
-                    'room_type' => $current_admission->roomType->room_type_name,
-                    'charge_item_id' => $charge->charge_item_id,
-                    'charge_item' => $charge->roomChargeItem->charge_item_name,
-                    'recurr_date' => date('Y-m-d', strtotime($current_admission->status_date . "+$i days")),
-                    'charge_amount' => $charge->charge,
-                    'recurr_group' => $current_admission->admn_id,
-                ];
-                $this->_insertRecurringModel($data);
+            if (!empty($room_charges)) {
+                foreach ($room_charges as $key => $charge) {
+                    $data = [
+                        'encounter_id' => $current_admission->encounter_id,
+                        'patient_id' => $current_admission->patient_id,
+                        'room_type_id' => $current_admission->room_type_id,
+                        'room_type' => $current_admission->roomType->room_type_name,
+                        'charge_item_id' => $charge->charge_item_id,
+                        'charge_item' => $charge->roomChargeItem->charge_item_name,
+                        'recurr_date' => date('Y-m-d', strtotime($current_admission->status_date . "+$i days")),
+                        'charge_amount' => $charge->charge,
+                        'recurr_group' => $current_admission->admn_id,
+                    ];
+                    $this->_insertRecurringModel($data);
+                }
             }
         }
     }

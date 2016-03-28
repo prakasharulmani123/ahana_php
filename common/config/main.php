@@ -8,6 +8,7 @@ if (defined('DOMAIN_PATH')) {
         $client['client'] = setClientDb();
     }
 }
+
 return [
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
     'components' => array_merge(['cache' => [

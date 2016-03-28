@@ -51,7 +51,7 @@ class PatBillingRecurring extends RActiveRecord
         return [
             [['encounter_id', 'patient_id', 'room_type_id', 'room_type', 'charge_item_id', 'charge_item'], 'required'],
             [['tenant_id', 'encounter_id', 'patient_id', 'room_type_id', 'charge_item_id', 'created_by', 'modified_by'], 'integer'],
-            [['recurr_date', 'recurr_group', 'created_at', 'modified_at', 'deleted_at', 'executed_at'], 'safe'],
+            [['recurr_date', 'recurr_group', 'created_at', 'modified_at', 'deleted_at', 'executed_at', 'created_by'], 'safe'],
             [['charge_amount'], 'number'],
             [['status'], 'string'],
             [['room_type', 'charge_item'], 'string', 'max' => 255]

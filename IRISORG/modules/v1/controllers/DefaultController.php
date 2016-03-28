@@ -9,6 +9,7 @@ use common\models\CoMasterState;
 use common\models\CoOrganization;
 use common\models\CoRolesResources;
 use common\models\CoUsersRoles;
+use common\models\PatEncounter;
 use Yii;
 use yii\filters\auth\QueryParamAuth;
 use yii\filters\ContentNegotiator;
@@ -127,12 +128,47 @@ class DefaultController extends Controller {
 
         return ['navigation' => $menus[0]['children']];
     }
-    
+
     public function actionGetconsultantcharges() {
         $get = Yii::$app->request->get();
-        if(!empty($get)){
+        if (!empty($get)) {
             $charge_code_id = $get['consultant_id'];
             return ['success' => true, 'chargesList' => CoChargePerCategory::getConsultantCharges($charge_code_id)];
+        }
+    }
+
+    public function actionDailycron() {
+        $organizations = CoOrganization::find()->andWhere(['status' => '1'])->all();
+        
+        foreach ($organizations as $key => $organization) {
+            foreach ($organization->coTenants as $key => $tenant) {
+
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, "{$organization->org_domain}/api/IRISORG/web/v1/default/updatebilling");
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, ['tenant_id' => $tenant->tenant_id]);  //Post Fields
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+                $headers = array();
+                $headers[] = "x-domain-path: {$organization->org_domain}";
+
+                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+                $server_output = curl_exec($ch);
+                curl_close($ch);
+
+//                print $server_output;
+            }
+        }
+    }
+
+    public function actionUpdatebilling() {
+        $post = Yii::$app->request->post();
+        if (!empty($post)) {
+            $active_encounters = PatEncounter::find()->tenant($post['tenant_id'])->status()->active()->all();
+            
+            foreach ($active_encounters as $key => $active_encounter) {
+                Yii::$app->hepler->updateRecurring($active_encounter->patCurrentAdmission);
+            }
         }
     }
 
