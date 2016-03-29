@@ -43,7 +43,7 @@ class PatPatientCasesheet extends RActiveRecord {
             [['start_date', 'end_date', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['status'], 'string'],
             [['casesheet_no'], 'string', 'max' => 50],
-            [['casesheet_no'], 'unique', 'targetAttribute' => ['tenant_id', 'patient_id', 'casesheet_no'], 'message' => 'The combination of Tenant ID, Patient ID and Casesheet No has already been taken.']
+            [['casesheet_no'], 'unique', 'targetAttribute' => ['tenant_id', 'patient_id', 'casesheet_no'], 'message' => 'The combination of Casesheet No has already been taken.']
         ];
     }
 

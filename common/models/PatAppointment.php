@@ -149,11 +149,15 @@ class PatAppointment extends RActiveRecord {
                 break;
             case 'A':
                 $header = "Patient Arrived";
-                $message = "Patient Arrived.";
+                $message = "Patient Arrived. $consultant";
                 break;
             case 'S':
                 $header = "Doctor Seen";
                 $message = "Seen by Consultant. $consultant";
+                break;
+            case 'C':
+                $header = "Appointment Cancel";
+                $message = "Appointment Cancelled. $consultant";
                 break;
         }
         PatTimeline::insertTimeLine($this->patient_id, $this->status_date.' '.$this->status_time, $header, $header_sub, $message);

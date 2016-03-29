@@ -248,7 +248,7 @@ class PatAdmission extends RActiveRecord {
                 $message = "Patient Discharged. $bed_details";
                 break;
             case 'C':
-                $header = "Cancelation";
+                $header = "Cancellation";
                 $message = $this->notes;
                 break;
         }
