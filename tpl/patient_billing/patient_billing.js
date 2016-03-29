@@ -32,7 +32,7 @@ app.filter('propsFilter', function () {
     };
 })
 
-app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$filter', function ($rootScope, $scope, $timeout, $http, $state, $filter) {
+app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$filter', '$modal', function ($rootScope, $scope, $timeout, $http, $state, $filter, $modal) {
 
         $scope.app.settings.patientTopBar = true;
         $scope.app.settings.patientSideMenu = true;
@@ -266,6 +266,29 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
                 )
             }
         };
+
+        $scope.password_auth = function (encounter_id, column, value) {
+            var modalInstance = $modal.open({
+                templateUrl: 'tpl/modal_form/modal.password_auth.html',
+                controller: "PasswordAuthController",
+                resolve: {
+                    scope: function () {
+                        return $scope;
+                    },
+                }
+            });
+            modalInstance.data = {
+                encounter_id: encounter_id,
+                column: column,
+                value: value,
+            };
+
+            modalInstance.result.then(function (selectedItem) {
+                $scope.selected = selectedItem;
+            }, function () {
+                $log.info('Modal dismissed at: ' + new Date());
+            });
+        }
 
         //Delete
         $scope.removeRow = function (row) {

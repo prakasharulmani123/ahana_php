@@ -41,7 +41,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">Total Amount  </label>
                     <div class="col-sm-9">
-                        {{billing.total.price + recurr_billing.total.recurring_total | number:2}}
+                        {{billing.total.price + recurr_billing.total.recurring_total| number:2}}
                     </div>
                 </div>
                 <div class="line line-dashed b-b line-lg "></div>
@@ -69,7 +69,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">Discount </label>
                     <div class="col-sm-9">
-                        {{billing.total.concession + parseFloat(enc.selected.concession_amount) | number:2}}  ( Rm_Dis: {{enc.selected.concession_amount | number:2}} ,Otr_Dis: {{billing.total.concession | number:2}} )
+                        {{billing.total.concession + parseFloat(enc.selected.concession_amount) | number:2}}  ( Rm_Dis: {{enc.selected.concession_amount| number:2}} ,Otr_Dis: {{billing.total.concession| number:2}} )
                     </div>
                 </div>
             </div>
@@ -78,7 +78,7 @@
         <!-- Recurring Charges -->
         <div class="panel panel-default">
             <div class="row wrapper">
-                <div class="col-sm-6 m-b-xs">
+                <div class="col-sm-5 m-b-xs">
                     <button class="btn btn-sm btn-grey" ng-click="loadBillingCharges(enc.selected.encounter_id)"> 
                         &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
                     </button>
@@ -102,7 +102,23 @@
                 </div>
                 <div class="col-sm-2">
                 </div>
-                <div class="col-sm-4 pull-right right">
+                <div class="col-sm-5 pull-right right">
+                    <button ng-show="enc.selected.finalize == '0'" ng-click="password_auth(enc.selected.encounter_id, 'finalize', '1')" class="btn btn-sm btn-info">
+                        <i class="fa fa-plus"></i> &nbsp; Finalize
+                    </button>&nbsp; &nbsp; &nbsp; &nbsp;
+                    
+                    <button ng-show="enc.selected.authorize == '0'" ng-click="password_auth(enc.selected.encounter_id, 'authorize', '1')" class="btn btn-sm btn-info">
+                        <i class="fa fa-plus"></i> &nbsp; Authorize
+                    </button>&nbsp; &nbsp; &nbsp; &nbsp;
+                    
+                    <button ng-show="enc.selected.finalize != '0'" ng-click="password_auth(enc.selected.encounter_id, 'finalize', '0')" class="btn btn-sm btn-info">
+                        <i class="fa fa-plus"></i> &nbsp; Un Finalize
+                    </button>&nbsp; &nbsp; &nbsp; &nbsp;
+                    
+                    <button ng-show="enc.selected.authorize != '0'" ng-click="password_auth(enc.selected.encounter_id, 'authorize', '0')" class="btn btn-sm btn-info">
+                        <i class="fa fa-plus"></i> &nbsp; Un Authorize
+                    </button>&nbsp; &nbsp; &nbsp; &nbsp;
+                    
                     <button ng-show="enc.selected.status == '1'" ng-click="$state.go('patient.roomConcession', {id: $state.params.id, encounter_id: enc.selected.encounter_id})" class="btn btn-sm btn-info">
                         <i class="fa fa-plus"></i> &nbsp; Room Concession
                     </button>&nbsp; &nbsp; &nbsp; &nbsp; 

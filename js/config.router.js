@@ -2043,7 +2043,10 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['smart-table', 'ui.select']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/patient_billing/patient_billing.js');
+                                        return $ocLazyLoad.load([
+                                            'tpl/patient_billing/patient_billing.js',
+                                            'tpl/modal_form/modal.password_auth.js',
+                                        ]);
                                     }
                             );
                         }]
@@ -2154,7 +2157,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
-            
+
             //Patient Billing Room Concession
             .state('patient.roomConcession', {
                 url: '/roomConcession/{id}/{encounter_id}',
