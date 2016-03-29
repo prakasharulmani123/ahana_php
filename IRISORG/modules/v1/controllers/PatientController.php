@@ -188,7 +188,7 @@ class PatientController extends ActiveController {
     public function actionGetpatienttimeline() {
         $guid = Yii::$app->getRequest()->post('guid');
         $patient = PatPatient::find()->where(['patient_guid' => $guid])->one();
-        return ['timeline' => PatTimeline::find()->tenant()->andWhere(['patient_id' => $patient->patient_id])->all()];
+        return ['timeline' => PatTimeline::find()->tenant()->andWhere(['patient_id' => $patient->patient_id])->orderBy(['created_at' => SORT_ASC])->all()];
     }
 
 }
