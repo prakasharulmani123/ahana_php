@@ -14,5 +14,12 @@ app.controller('PatientTimelineController', ['$rootScope', '$scope', '$timeout',
                         $scope.errorData = "An Error has occured while loading patient!";
                     });
         }
-
+        
     }]);
+
+
+app.filter('moment', function () {
+    return function (dateString, format) {
+        return moment(dateString).format(format);
+    };
+});
