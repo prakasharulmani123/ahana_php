@@ -168,7 +168,6 @@ angular.module('app')
                                         $scope.errorData = "Invalid Access !";
                                         $state.go('configuration.organization');
                                     } else {
-                                        $scope.app.patientDetail.patientId = '';
                                         $scope.app.patientDetail.patientTitleCode = patient.patient_title_code;
                                         $scope.app.patientDetail.patientName = patient.patient_firstname;
                                         $scope.app.patientDetail.patientId = patient.patient_id;

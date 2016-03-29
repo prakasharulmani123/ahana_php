@@ -16,7 +16,7 @@
                                 <span class="arrow {{key % 2 == 0 ? 'left' : 'right'}} pull-up"></span>
                                 <div class="text-lt m-b-sm">
                                     <div class="timeline-heading"> 
-                                        <b> {{row.header}} </b>  <br/> <span> {{row.header_sub}} </span>
+                                        <b ng-bind-html="row.header"></b>  <br/> <span ng-bind-html="row.header_sub"></span>
                                     </div>  
                                     <div class="timeline-timedetails">  
                                         <i class="fa fa-clock-o"></i>  {{row.date_time| moment:'hh:mma'}}  &nbsp; &nbsp; {{row.date_time| moment:'DDMMM'}}<br/> <span> {{row.date_time| moment:'dddd'}} </span>

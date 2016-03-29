@@ -10,7 +10,7 @@
         </div>
         <div class="panel panel-default">
             <div class="row wrapper">
-                <div class="col-sm-6 m-b-xs">
+                <div class="col-sm-7 m-b-xs">
                     <button class="btn btn-sm btn-grey" ng-show="encounterView == 'Current'" ng-click="loadPatientEncounters('Current');"> &nbsp; &nbsp; <i class="fa fa-repeat"></i>  &nbsp; &nbsp; </button>    
                     <button class="btn btn-sm btn-grey" ng-show="encounterView == 'Previous'" ng-click="loadPatientEncounters('Previous');"> &nbsp; &nbsp; <i class="fa fa-repeat"></i>  &nbsp; &nbsp; </button>    
                     &nbsp; &nbsp
@@ -35,7 +35,7 @@
                         </ul>
                     </div>        
                 </div>
-                <div class="col-sm-2">
+                <div class="col-sm-1">
                 </div>
                 <div class="col-sm-4 pull-right right">
                     <button ng-if="activeEncounter == null" ng-click="$state.go('patient.admission', {id: $state.params.id})" class="btn btn-info"><i class="fa fa-plus"></i> New Admission </button>
