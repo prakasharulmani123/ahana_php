@@ -60,7 +60,6 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
                     $scope.encounters = response;
                     if (response != null) {
                         $scope.enc.selected = $scope.encounters[0];
-                        console.log($scope.enc.selected);
                     }
                 });
             }
@@ -116,6 +115,7 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
 
         $scope.loadBillingCharges = function (enc_id) {
             $scope.billing = {};
+            $scope.recurr_billing = {};
             $scope.loadRecurringBilling(enc_id);
             $scope.loadNonRecurringBilling(enc_id);
         }

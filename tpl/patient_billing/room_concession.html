@@ -27,16 +27,16 @@
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
                             
-<!--                            <div class="form-group">
+                            <div class="form-group" ng-init="roomCharge = {}">
                                 <label class="col-sm-3 control-label">Amount</label>
                                 <div class="col-sm-9">
                                     <span ng-repeat="(key, row) in recurring_charges">
-                                        {{row_recurring_total = getTotalRecurringPrice(row); billing.total.recurring_total = billing.total.recurring_total + row_recurring_total;}} 
+                                        <span ng-init="roomCharge.Total = roomCharge.Total + parseFloat(row.total_charge)"></span>
                                     </span>
-                                    {{billing.total.recurring_total}}
+                                    {{ roomCharge.Total | number:2 }}
                                 </div>
                             </div>
-                            <div class="line line-dashed b-b line-lg "></div>-->
+                            <div class="line line-dashed b-b line-lg "></div>
 
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Concession Amount * </label>
