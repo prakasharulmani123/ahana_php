@@ -11,6 +11,8 @@ use common\models\CoUser;
 use common\models\CoUsersRoles;
 use common\models\LoginForm;
 use common\models\PasswordResetRequestForm;
+use common\models\PatEncounter;
+use common\models\PatTimeline;
 use common\models\ResetPasswordForm;
 use IRISORG\models\ContactForm;
 use Yii;
@@ -55,7 +57,7 @@ class UserController extends ActiveController {
         $behaviors = parent::behaviors();
         $behaviors['authenticator'] = [
             'class' => QueryParamAuth::className(),
-            'only' => ['dashboard', 'createuser', 'updateuser', 'getuser', 'getlogin', 'updatelogin', 'getuserdata', 'getuserslistbyuser', 'assignroles', 'getdoctorslist', 'checkstateaccess', 'getusercredentialsbytoken'],
+            'only' => ['dashboard', 'createuser', 'updateuser', 'getuser', 'getlogin', 'updatelogin', 'getuserdata', 'getuserslistbyuser', 'assignroles', 'getdoctorslist', 'checkstateaccess', 'getusercredentialsbytoken', 'passwordauth'],
         ];
         $behaviors['contentNegotiator'] = [
             'class' => ContentNegotiator::className(),
@@ -122,7 +124,7 @@ class UserController extends ActiveController {
         $role_ids = ArrayHelper::map(CoUsersRoles::find()->where(['user_id' => $user_id])->all(), 'role_id', 'role_id');
         $resource_ids = ArrayHelper::map(CoRolesResources::find()->where(['IN', 'role_id', $role_ids])->andWhere(['tenant_id' => $tenant_id])->all(), 'resource_id', 'resource_id');
         $resources = ArrayHelper::map(CoResources::find()->where(['IN', 'resource_id', $resource_ids])->all(), 'resource_url', 'resource_url');
-        
+
         return $resources;
     }
 
@@ -136,7 +138,7 @@ class UserController extends ActiveController {
 
     public function actionLogin() {
         $model = new LoginForm();
-        
+
         if ($model->load(Yii::$app->getRequest()->getBodyParams(), '') && $model->login()) {
             return ['success' => true, 'access_token' => Yii::$app->user->identity->getAuthKey(), 'resources' => self::Getuserrolesresources(), 'credentials' => self::GetuserCredentials(\Yii::$app->request->post('tenant_id'))];
         } elseif (!$model->validate()) {
@@ -145,18 +147,18 @@ class UserController extends ActiveController {
     }
 
     public function actionLogout() {
-        if(empty(Yii::$app->user->identity)){
+        if (empty(Yii::$app->user->identity)) {
             return ['success' => true];
         }
-        
+
         $model = CoLogin::findOne(['login_id' => Yii::$app->user->identity->login_id]);
-        if(!empty($model)){
-            $model->attributes = ['authtoken' => '','logged_tenant_id' => ''];
-            if($model->save(false))
+        if (!empty($model)) {
+            $model->attributes = ['authtoken' => '', 'logged_tenant_id' => ''];
+            if ($model->save(false))
                 return ['success' => true];
             else
                 return ['success' => false, 'message' => Html::errorSummary([$model])];
-        } else{
+        } else {
             return ['success' => false, 'message' => 'Try again later'];
         }
     }
@@ -296,10 +298,10 @@ class UserController extends ActiveController {
 
     public function actionGetuser() {
         $id = Yii::$app->request->get('id');
-        
-        if(empty($id))
+
+        if (empty($id))
             $id = Yii::$app->user->identity->user->user_id;
-        
+
         if (!empty($id)) {
             $data = CoUser::find()->where(['user_id' => $id])->one();
             $return = $this->excludeColumns($data->attributes);
@@ -459,6 +461,64 @@ class UserController extends ActiveController {
         } else {
             return ['success' => false, 'message' => 'Invalid Access'];
         }
+    }
+
+    public function actionPasswordauth() {
+        $post = Yii::$app->request->post();
+
+        if (!isset($post['verify_password']) || empty($post['verify_password'])) {
+            return ['success' => false, 'message' => 'Please enter password'];
+        }
+
+        $check = Yii::$app->security->validatePassword($post['verify_password'], Yii::$app->user->identity->password);
+
+        if ($check) {
+            $encounter = PatEncounter::find()->where(['encounter_id' => $post['encounter_id']])->one();
+
+            $column = $post['column'];
+            $value = $post['value'];
+
+            if ($value)
+                $encounter->$column = Yii::$app->user->identity->user_id;
+            else
+                $encounter->$column = 0;
+
+            $encounter->save(false);
+
+            $this->_insertTimeline($encounter, $column, $value);
+            return ['success' => true];
+        } else {
+            return ['success' => false, 'message' => 'Password is not valid'];
+        }
+    }
+
+    private function _insertTimeline($encounter, $column, $value) {
+        $header_sub = "Encounter # {$encounter->encounter_id}";
+        
+        $full_name = Yii::$app->user->identity->user->title_code . ' ' . Yii::$app->user->identity->user->name;
+
+        switch ($column) {
+            case 'finalize':
+                if ($value > 0) {
+                    $header = "Bill Finalize";
+                    $message = "Bill Finalized By " . $full_name;
+                } else {
+                    $header = "Bill Un Finalize";
+                    $message = "Bill Un Finalized By " . $full_name;
+                }
+                break;
+            case 'authorize':
+                if ($value > 0) {
+                    $header = "Bill Authorize";
+                    $message = "Bill Authorize By " . $full_name;
+                } else {
+                    $header = "Bill Un Authorize";
+                    $message = "Bill Un Authorize By " . $full_name;
+                }
+                break;
+        }
+        $date_time = date("Y-m-d H:i:s");
+        PatTimeline::insertTimeLine($encounter->patient_id, $date_time, $header, $header_sub, $message);
     }
 
 }
