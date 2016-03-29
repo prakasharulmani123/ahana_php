@@ -2166,6 +2166,18 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
+            
+            //Patient Billing Room Concession
+            .state('patient.timeLine', {
+                url: '/timeLine/{id}',
+                templateUrl: 'tpl/patient/timeline.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/patient/timeline.js']);
+                        }]
+                }
+            })
 
     $httpProvider.interceptors.push('APIInterceptor');
 
