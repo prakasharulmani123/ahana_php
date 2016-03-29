@@ -174,8 +174,16 @@ class PatPatient extends RActiveRecord {
     public function afterSave($insert, $changedAttributes) {
         if ($insert) {
             CoInternalCode::increaseInternalCode("P");
+            
+            $header = "Patient Registration";
+            $message = "{$this->patient_title_code} {$this->patient_firstname} Registered Successfully.";
+        }else{
+            $header = "Patient Update";
+            $message = "Patient Details Updated Successfully.";
         }
 
+        PatTimeline::insertTimeLine($this->patient_id, $this->patient_reg_date, $header, '', $message);
+            
         if (is_object($this->patient_guid))
             $this->patient_guid = $this->patient_guid->toString();
 

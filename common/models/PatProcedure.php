@@ -110,15 +110,15 @@ class PatProcedure extends RActiveRecord {
 
     public function beforeSave($insert) {
         $this->_setConsultId();
-        
+
         $type = $this->encounter->encounter_type;
-        
-        if($type == 'IP'){
+
+        if ($type == 'IP') {
             $charge_link_id = $this->encounter->patCurrentAdmission->room_type_id;
-        }else{
+        } else {
             $charge_link_id = $this->patient->patient_category_id;
         }
-        
+
         $this->charge_amount = CoChargePerCategory::getChargeAmount(1, 'C', $this->charge_subcat_id, $type, $charge_link_id);
         return parent::beforeSave($insert);
     }
@@ -126,6 +126,11 @@ class PatProcedure extends RActiveRecord {
     public function afterSave($insert, $changedAttributes) {
         if ($insert) {
             $this->proc_consultant_ids = Json::decode($this->proc_consultant_ids);
+
+            $procedure = "Procedure : <b>{$this->chargeCat->charge_subcat_name}</b>";
+            $message = $this->proc_description != '' ? "{$this->proc_description} <br /> $procedure" : $procedure;
+            
+            PatTimeline::insertTimeLine($this->patient_id, $this->proc_date, 'Procedure', '', $message);
         }
         $this->_updateConsultant($insert);
 

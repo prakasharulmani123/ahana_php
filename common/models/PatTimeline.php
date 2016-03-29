@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\models\query\PatTimelineQuery;
 use Yii;
 use yii\db\ActiveQuery;
 
@@ -86,7 +87,7 @@ class PatTimeline extends RActiveRecord {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
 
-    public function insertTimeLine($patient_id, $date_time, $header, $header_sub, $message) {
+    public static function insertTimeLine($patient_id, $date_time, $header, $header_sub, $message) {
         $model = new PatTimeline;
         $model->attributes = [
             'patient_id' => $patient_id,
@@ -99,4 +100,7 @@ class PatTimeline extends RActiveRecord {
         $model->save(false);
     }
 
+    public static function find() {
+        return new PatTimelineQuery(get_called_class());
+    }
 }

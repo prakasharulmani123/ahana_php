@@ -134,9 +134,31 @@ class PatAppointment extends RActiveRecord {
             }
         }
 
+        $this->_insertTimeline();
         return parent::afterSave($insert, $changedAttributes);
     }
 
+    private function _insertTimeline() {
+        $header_sub = "Encounter # {$this->encounter_id}";
+        $consultant = "<br />Consultant : <b>{$this->consultant->title_code} {$this->consultant->name}</b>";
+        
+        switch ($this->appt_status) {
+            case 'B':
+                $header = "Appoinment Booked";
+                $message = "Appoinment Booked. $consultant";
+                break;
+            case 'A':
+                $header = "Patient Arrived";
+                $message = "Patient Arrived.";
+                break;
+            case 'S':
+                $header = "Doctor Seen";
+                $message = "Seen by Consultant. $consultant";
+                break;
+        }
+        PatTimeline::insertTimeLine($this->patient_id, $this->status_date.' '.$this->status_time, $header, $header_sub, $message);
+    }
+    
     public function setCurrentData() {
         if (isset($this) && isset($this->encounter) && isset($this->encounter->patLiveAppointmentBooking))
             $this->consultant_id = $this->encounter->patLiveAppointmentBooking->consultant_id;

@@ -73,7 +73,7 @@ class PatConsultant extends RActiveRecord {
             'tenant_id' => 'Tenant ID',
             'encounter_id' => 'Encounter ID',
             'patient_id' => 'Patient ID',
-            'consultant_id' => 'Consultant ID',
+            'consultant_id' => 'Consultant',
             'consult_date' => 'Consult Date',
             'notes' => 'Notes',
             'status' => 'Status',
@@ -132,4 +132,13 @@ class PatConsultant extends RActiveRecord {
         return parent::beforeSave($insert);
     }
 
+    public function afterSave($insert, $changedAttributes) {
+        $consultant = "Consultant : <b>{$this->consultant->title_code} {$this->consultant->name}</b>";
+        if ($insert) {
+            $message = $this->notes != '' ? "{$this->notes} <br /> $consultant" : $consultant;
+            PatTimeline::insertTimeLine($this->patient_id, $this->consult_date, 'Consultation', '', $message);
+        }
+        
+        return parent::afterSave($insert, $changedAttributes);
+    }
 }

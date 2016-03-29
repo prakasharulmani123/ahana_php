@@ -238,7 +238,7 @@ class PatEncounter extends RActiveRecord {
         if ($insert) {
             if (isset($this->patient->patActiveCasesheetno) && !empty($this->patient->patActiveCasesheetno)) {
                 $this->casesheet_no = $this->patient->patActiveCasesheetno->casesheet_no;
-            } else if (isset($this->add_casesheet_no) && !empty($this->add_casesheet_no)) {
+            } else if (isset($this->add_casesheet_no) && !empty($this->add_casesheet_no) && $this->encounter_type == 'IP') {
                 $model = new PatPatientCasesheet();
                 $model->attributes = [
                     'casesheet_no' => $this->add_casesheet_no,

@@ -68,10 +68,10 @@ class PatAdmission extends RActiveRecord {
     }
 
     public function validateAdmissionStatus($attribute, $params) {
-        if($this->admission_status == 'A'){
+        if ($this->admission_status == 'A') {
             return true;
         }
-        
+
         $current_admission = $this->encounter->patCurrentAdmission;
 
         if ($this->admission_status == 'TR' && !$this->isSwapping) {
@@ -212,16 +212,47 @@ class PatAdmission extends RActiveRecord {
                 $this->vacantOldRoomId = null;
             }
         }
+        
+        $this->_insertTimeline();
 
         if ($this->admission_status == 'A') {
             Yii::$app->hepler->addRecurring($this);
-        }else if($this->admission_status == 'TR'){
+        } else if ($this->admission_status == 'TR') {
             Yii::$app->hepler->transferRecurring($this);
-        }else if($this->admission_status == 'C'){
+        } else if ($this->admission_status == 'C') {
             Yii::$app->hepler->cancelRecurring($this);
         }
 
         return parent::afterSave($insert, $changedAttributes);
+    }
+
+    private function _insertTimeline() {
+        $header_sub = "Encounter # {$this->encounter_id}";
+        $bed_details = "<br /> Bed No: <b>{$this->room->bed_name} ({$this->roomType->room_type_name})</b>";
+        
+        switch ($this->admission_status) {
+            case 'A':
+                $header = "Patient Admission";
+                $message = "Patient Admitted. $bed_details";
+                break;
+            case 'TR':
+                $header = "Room Transfer";
+                $message = "Patient Room Transfered. $bed_details";
+                break;
+            case 'TD':
+                $header = "Doctor Transfer";
+                $message = "Patient's Doctor Transfered. <br />Consultant Incharge: {$this->consultant->title_code} {$this->consultant->name}";
+                break;
+            case 'D':
+                $header = "Discharge";
+                $message = "Patient Discharged. $bed_details";
+                break;
+            case 'C':
+                $header = "Cancelation";
+                $message = $this->notes;
+                break;
+        }
+        PatTimeline::insertTimeLine($this->patient_id, $this->status_date, $header, $header_sub, $message);
     }
 
     public function setCurrentData() {

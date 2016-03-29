@@ -5,6 +5,7 @@ namespace IRISORG\modules\v1\controllers;
 use common\models\CoPatient;
 use common\models\PatPatient;
 use common\models\PatPatientAddress;
+use common\models\PatTimeline;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -182,6 +183,12 @@ class PatientController extends ActiveController {
     public function actionGetpatientbyguid() {
         $guid = Yii::$app->getRequest()->post('guid');
         return PatPatient::find()->where(['patient_guid' => $guid])->one();
+    }
+
+    public function actionGetpatienttimeline() {
+        $guid = Yii::$app->getRequest()->post('guid');
+        $patient = PatPatient::find()->where(['patient_guid' => $guid])->one();
+        return ['timeline' => PatTimeline::find()->tenant()->andWhere(['patient_id' => $patient->patient_id])->all()];
     }
 
 }

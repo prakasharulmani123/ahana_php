@@ -85,4 +85,10 @@ class PatPatientCasesheet extends RActiveRecord {
         return new PatPatientCasesheetQuery(get_called_class());
     }
 
+    public function afterSave($insert, $changedAttributes) {
+        if($insert){
+            PatTimeline::insertTimeLine($this->patient_id, $this->created_at, 'Casesheet No.', "Casesheet No.: {$this->casesheet_no} Added.", $message);
+        }
+        return parent::afterSave($insert, $changedAttributes);
+    }
 }

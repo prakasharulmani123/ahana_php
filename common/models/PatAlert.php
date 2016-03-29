@@ -99,4 +99,15 @@ class PatAlert extends RActiveRecord {
         return $fields;
     }
 
+    public function afterSave($insert, $changedAttributes) {
+        if ($insert) {
+            $message = "Patient Alert ({$this->alert_description}) added.";
+        }else{
+            $message = "Patient Alert ({$this->alert_description}) updated.";
+        }
+        PatTimeline::insertTimeLine($this->patient_id, $this->created_at, 'Patient Alert', '', $message);
+        
+        return parent::afterSave($insert, $changedAttributes);
+    }
+
 }
