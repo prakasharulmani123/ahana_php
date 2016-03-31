@@ -146,6 +146,10 @@ class PatPatient extends RActiveRecord {
         return $this->hasOne(PatEncounter::className(), ['patient_id' => 'patient_id'])->status()->orderBy(['encounter_date' => SORT_DESC]);
     }
 
+    public function getPatLastAppointment() {
+        return $this->hasOne(PatAppointment::className(), ['patient_id' => 'patient_id'])->status()->orderBy(['created_at' => SORT_DESC]);
+    }
+
     public function getPatActiveIp() {
         return $this->hasOne(PatEncounter::className(), ['patient_id' => 'patient_id'])->status()->encounterType()->orderBy(['encounter_date' => SORT_DESC]);
     }
@@ -164,7 +168,7 @@ class PatPatient extends RActiveRecord {
         if ($insert) {
             $this->patient_guid = UuidHelpers::uuid();
             $this->patient_reg_date = date('Y-m-d H:i:s');
-            
+
             $this->patient_int_code = CoInternalCode::find()->tenant()->codeType("P")->one()->Fullcode;
         }
 
@@ -174,16 +178,16 @@ class PatPatient extends RActiveRecord {
     public function afterSave($insert, $changedAttributes) {
         if ($insert) {
             CoInternalCode::increaseInternalCode("P");
-            
+
             $header = "Patient Registration";
             $message = "{$this->patient_title_code} {$this->patient_firstname} Registered Successfully.";
-        }else{
+        } else {
             $header = "Patient Update";
             $message = "Patient Details Updated Successfully.";
         }
 
         PatTimeline::insertTimeLine($this->patient_id, $this->patient_reg_date, $header, '', $message);
-            
+
         if (is_object($this->patient_guid))
             $this->patient_guid = $this->patient_guid->toString();
 
@@ -255,7 +259,7 @@ class PatPatient extends RActiveRecord {
                 }
             },
             'activeCasesheetno' => function ($model) {
-                 if (isset($model->patActiveCasesheetno))
+                if (isset($model->patActiveCasesheetno))
                     return $model->patActiveCasesheetno->casesheet_no;
             },
             'patActiveIp' => function ($model) {
@@ -265,17 +269,16 @@ class PatPatient extends RActiveRecord {
                 return isset($model->patActiveIp) ? date('Y-m-d', strtotime($model->patActiveIp->encounter_date)) : '';
             },
             'current_room' => function ($model) {
-                if(isset($model->patActiveIp)){
+                if (isset($model->patActiveIp)) {
                     $admission = $model->patActiveIp->patCurrentAdmission;
                     return "{$admission->floor->floor_name} > {$admission->ward->ward_name} > {$admission->room->bed_name} ({$admission->roomType->room_type_name})";
-                }else{
+                } else {
                     return '-';
                 }
             },
-//            'activeEncounter' => function ($model) {
-//                if (isset($model->patActiveEncounter))
-//                    return $model->patActiveEncounter;
-//            },
+            'last_consultant_id' => function ($model) {
+                return isset($model->patLastAppointment) ? $model->patLastAppointment->consultant_id : '';
+            },
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;

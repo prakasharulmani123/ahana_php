@@ -2,6 +2,8 @@
 
 namespace common\models;
 
+use common\models\query\PatAppointmentQuery;
+use Faker\Provider\zh_TW\DateTime;
 use yii\db\ActiveQuery;
 
 /**
@@ -141,7 +143,7 @@ class PatAppointment extends RActiveRecord {
     private function _insertTimeline() {
         $header_sub = "Encounter # {$this->encounter_id}";
         $consultant = "<br />Consultant : <b>{$this->consultant->title_code} {$this->consultant->name}</b>";
-        
+
         switch ($this->appt_status) {
             case 'B':
                 $header = "Appoinment Booked";
@@ -160,9 +162,9 @@ class PatAppointment extends RActiveRecord {
                 $message = "Appointment Cancelled. $consultant";
                 break;
         }
-        PatTimeline::insertTimeLine($this->patient_id, $this->status_date.' '.$this->status_time, $header, $header_sub, $message);
+        PatTimeline::insertTimeLine($this->patient_id, $this->status_date . ' ' . $this->status_time, $header, $header_sub, $message);
     }
-    
+
     public function setCurrentData() {
         if (isset($this) && isset($this->encounter) && isset($this->encounter->patLiveAppointmentBooking))
             $this->consultant_id = $this->encounter->patLiveAppointmentBooking->consultant_id;
@@ -174,14 +176,18 @@ class PatAppointment extends RActiveRecord {
                 return $model->status_date . ' ' . $model->status_time;
             },
             'waiting_elapsed' => function ($model) {
-                $date = date('Y-m-d', strtotime($model->status_date)).' '.date('H:i:s', strtotime($model->status_time));
-                $start_date = new \DateTime($date);
-                $since_start = $start_date->diff(new \DateTime(date('Y-m-d H:i:s')));
+                $date = date('Y-m-d', strtotime($model->status_date)) . ' ' . date('H:i:s', strtotime($model->status_time));
+                $start_date = new DateTime($date);
+                $since_start = $start_date->diff(new DateTime(date('Y-m-d H:i:s')));
                 return ($since_start->h >= 1);
             },
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
+    }
+
+    public static function find() {
+        return new PatAppointmentQuery(get_called_class());
     }
 
 }
