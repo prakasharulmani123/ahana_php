@@ -165,13 +165,17 @@ class PhaPurchaseItem extends RActiveRecord {
     //Insert Batch
     private function _insertBatch() {
         $batch = $this->_getBatchData();
+        
+        $tot_qty = ($this->quantity + $this->free_quantity);
+        
         if (empty($batch)) {
             $batch = new PhaProductBatch;
-            $batch->total_qty = $batch->available_qty = $this->quantity;
+            $batch->total_qty = $batch->available_qty = $tot_qty;
         } else {
-            $batch->total_qty = $batch->total_qty + $this->quantity;
-            $batch->available_qty = $batch->available_qty + $this->quantity;
+            $batch->total_qty = $batch->total_qty + $tot_qty;
+            $batch->available_qty = $batch->available_qty + $tot_qty;
         }
+        
         $batch->attributes = [
             'product_id' => $this->product_id,
             'batch_no' => $this->batch_no,
@@ -186,10 +190,10 @@ class PhaPurchaseItem extends RActiveRecord {
         $batch = $this->_getBatchData();
         if (empty($batch)) {
             $batch = new PhaProductBatch;
-            $batch->total_qty = $batch->available_qty = $this->quantity;
+            $batch->total_qty = $batch->available_qty = ($this->quantity + $this->free_quantity);
         } else {
-            $old_qty = $this->getOldAttribute('quantity');
-            $new_qty = $this->quantity;
+            $old_qty = ($this->getOldAttribute('quantity') + $this->getOldAttribute('free_quantity'));
+            $new_qty = ($this->quantity + $this->free_quantity);
 
             //Add New Quantity
             if ($old_qty < $new_qty) {
