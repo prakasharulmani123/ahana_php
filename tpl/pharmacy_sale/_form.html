@@ -9,7 +9,7 @@
                             <div class="panel-body">
                                 <div class="form-group">
                                     <label class="col-lg-4 control-label">Patient Name *</label>
-                                    <div class="col-lg-8">
+                                    <div class="col-lg-7">
                                         <input autocomplete="off"
                                                placeholder="Patient Name"
                                                type="text"
@@ -20,6 +20,11 @@
                                                typeahead-editable="false" 
                                                typeahead="fullname as patient.fullname for patient in patients | filter:$viewValue"
                                                typeahead-on-select="formatPatient($item, $model, $label)" />
+                                    </div>
+                                    <div class="col-lg-0">
+                                        <button type="button" class="btn btn-primary" ng-click="$state.go('patient.registration')">
+                                            <i class="fa fa-plus text ng-scope"></i>
+                                        </button>
                                     </div>
                                 </div>
                                 <div class="line line-dashed b-b line-lg "></div>
@@ -124,7 +129,7 @@
                                 </td>
                                 <td>
                                     <span>
-                                        {{ showExpiryDate(saleitem) }}
+                                        {{ showExpiryDate(saleitem)}}
                                     </span>
                                 </td>
                                 <td>
