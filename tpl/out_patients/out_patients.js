@@ -81,6 +81,9 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
         $scope.changeAppointmentStatus = function (_data, key) {
             $scope.errorData = "";
             $scope.successMessage = "";
+            
+//            console.log(_data);
+//            return false;
 
             $scope.loadbar('show');
             $http({

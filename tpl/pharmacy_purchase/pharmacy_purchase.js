@@ -167,6 +167,8 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             }
         };
 
+        $scope.minDate = $scope.minDate ? null : new Date();
+
         $scope.updateBatchRow = function (item, model, label, key) {
             $scope.purchaseitems[key].batch_no = item.batch_no;
             $scope.purchaseitems[key].temp_expiry_date = item.expiry_date;

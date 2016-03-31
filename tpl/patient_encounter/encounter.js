@@ -236,9 +236,6 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
             $scope.errorData = "";
             $scope.successMessage = "";
 
-//            console.log(_data);
-//            return false;
-
             $scope.loadbar('show');
             $http({
                 method: 'POST',
