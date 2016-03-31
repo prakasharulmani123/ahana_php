@@ -407,5 +407,34 @@ body {
 }
 
 .bg-light.lter.b-b.wrapper-md.ng-scope {
-  padding: 5px 20px !important;
+    padding: 5px 20px !important;
+}
+
+.ivh-treeview-twistie-expanded {
+    background: #51c6ea  none repeat scroll 0 0;
+    border-radius: 4px;
+    color: #ffffff;
+    float: left;
+    font-size: 12px;
+    font-weight: bold;
+    height: 15px;
+    line-height: 16px;
+    text-align: center;
+    width: 15px;
+    margin-right: 5px;
+}
+
+.ivh-treeview-twistie-collapsed
+{
+    background: #51c6ea  none repeat scroll 0 0;
+    border-radius: 4px;
+    color: #ffffff;
+    float: left;
+    font-size: 12px;
+    font-weight: bold;
+    height: 15px;
+    line-height: 16px;
+    text-align: center;
+    width: 15px;
+    margin-right: 5px;
 }

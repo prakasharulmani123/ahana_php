@@ -12,8 +12,9 @@ config.$inject = ['$stateProvider', '$urlRouterProvider', '$httpProvider', 'ivhT
 function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOptionsProvider) {
 
     ivhTreeviewOptionsProvider.set({
-        twistieExpandedTpl: '-',
-        twistieCollapsedTpl: '+',
+        twistieExpandedTpl: '<i class="fa fa-caret-right"></i>',
+        twistieCollapsedTpl: '<i class="fa fa-caret-down"></i>',
+        twistieLeafTpl: '',
     });
 
 //    var newBaseUrl = "";

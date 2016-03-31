@@ -57,6 +57,7 @@ angular.module('app')
                         patientActiveCasesheetno: '',
                         patientActiveIP: '',
                         patientCurrentRoom: '',
+                        patientLastConsultantId: '',
                     }
                 }
 
@@ -183,6 +184,7 @@ angular.module('app')
                                         $scope.app.patientDetail.patientActiveCasesheetno = patient.activeCasesheetno;
                                         $scope.app.patientDetail.patientActiveIp = patient.patActiveIp;
                                         $scope.app.patientDetail.patientCurrentRoom = patient.current_room;
+                                        $scope.app.patientDetail.patientLastConsultantId = patient.last_consultant_id;
                                         $rootScope.commonService.GetLabelFromValue(patient.patient_gender, 'GetGenderList', function (response) {
                                             $scope.app.patientDetail.patientSex = response;
                                         });

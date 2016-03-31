@@ -140,6 +140,10 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
         $scope.initAppointmentForm = function () {
             $scope.data = {};
             $scope.data.status_date = moment().format('YYYY-MM-DD');
+            $timeout(function () {
+                $scope.data.consultant_id = $scope.app.patientDetail.patientLastConsultantId;
+                $scope.getTimeSlots($scope.data.consultant_id, $scope.data.status_date);
+            }, 1000);
         }
 
         $scope.initChangeStatusForm = function () {
@@ -186,14 +190,18 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
         $scope.getTimeOfAppointment = function () {
             if (typeof (this.data) != "undefined") {
                 if (typeof (this.data.consultant_id) != 'undefined' && typeof (this.data.status_date != 'undefined')) {
-                    $http.post($rootScope.IRISOrgServiceUrl + '/doctorschedule/getdoctortimeschedule', {doctor_id: this.data.consultant_id, schedule_date: this.data.status_date})
-                            .success(function (response) {
-                                $scope.timeslots = response.timerange;
-                            }, function (x) {
-                                response = {success: false, message: 'Server Error'};
-                            });
+                    $scope.getTimeSlots(this.data.consultant_id, this.data.status_date);
                 }
             }
+        }
+
+        $scope.getTimeSlots = function (doctor_id, date) {
+            $http.post($rootScope.IRISOrgServiceUrl + '/doctorschedule/getdoctortimeschedule', {doctor_id: doctor_id, schedule_date: date})
+                    .success(function (response) {
+                        $scope.timeslots = response.timerange;
+                    }, function (x) {
+                        response = {success: false, message: 'Server Error'};
+                    });
         }
 
         //Save Both Add Data
