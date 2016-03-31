@@ -115,37 +115,28 @@ class CoOrganization extends GActiveRecord {
 
     public function beforeSave($insert) {
         if ($insert) {
-            $salt = Yii::$app->params['SECURITY_SALT'];
-            
-            $this->org_db_host = Yii::$app->getSecurity()->encryptByPassword($this->org_db_host, $salt);
-//            $this->org_db_host = utf8_encode(Yii::$app->security->encryptByKey($this->org_db_host, $salt));
-//            $this->org_db_username = utf8_encode(Yii::$app->security->encryptByKey($this->org_db_username, $salt));
-//            $this->org_db_password = utf8_encode(Yii::$app->security->encryptByKey($this->org_db_password, $salt));
-//            $this->org_database = utf8_encode(Yii::$app->security->encryptByKey($this->org_database, $salt));
+            $this->org_db_host = base64_encode($this->org_db_host);
+            $this->org_db_host = base64_encode($this->org_db_host);
+            $this->org_db_username = base64_encode($this->org_db_username);
+            $this->org_db_password = base64_encode($this->org_db_password);
+            $this->org_database = base64_encode($this->org_database);
         }
         return parent::beforeSave($insert);
     }
 
     public function afterFind() {
-        $salt = Yii::$app->params['SECURITY_SALT'];
-        
-            $this->org_db_host = Yii::$app->getSecurity()->decryptByPassword($this->org_db_host, $salt);
-//        $this->org_db_host = Yii::$app->security->decryptByKey(utf8_decode($this->org_db_host), $salt);
-//        $this->org_db_username = Yii::$app->security->decryptByKey(utf8_decode($this->org_db_username), $salt);
-//        $this->org_db_password = Yii::$app->security->decryptByKey(utf8_decode($this->org_db_password), $salt);
-//        $this->org_database = Yii::$app->security->decryptByKey(utf8_decode($this->org_database), $salt);
-        
+        $this->org_db_host = base64_decode($this->org_db_host);
+        $this->org_db_host = base64_decode($this->org_db_host);
+        $this->org_db_username = base64_decode($this->org_db_username);
+        $this->org_db_password = base64_decode($this->org_db_password);
+        $this->org_database = base64_decode($this->org_database);
+
         return parent::afterFind();
     }
 
     public function afterSave($insert, $changedAttributes) {
         if ($insert) {
             $model = self::find()->where(['org_id' => $this->org_id])->one();
-            
-            echo '<pre>';
-            print_r($model);
-            exit;
-            
             $connection = new Connection([
                 'dsn' => "mysql:host={$model->org_db_host};dbname={$model->org_database}",
                 'username' => $model->org_db_username,
