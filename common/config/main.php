@@ -31,6 +31,12 @@ function setClientDb() {
     $is_read = false;
     if (!empty($read)) {
         $is_read = true;
+        
+        $read->org_db_host = base64_decode($read->org_db_host);
+        $read->org_db_username = base64_decode($read->org_db_username);
+        $read->org_db_password = base64_decode($read->org_db_password);
+        $read->org_database = base64_decode($read->org_database);
+        
         $client['dsn'] = "mysql:host={$read->org_db_host};dbname={$read->org_database}";
         $client['username'] = "{$read->org_db_username}";
         $client['password'] = "{$read->org_db_password}";

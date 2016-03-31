@@ -116,7 +116,6 @@ class CoOrganization extends GActiveRecord {
     public function beforeSave($insert) {
         if ($insert) {
             $this->org_db_host = base64_encode($this->org_db_host);
-            $this->org_db_host = base64_encode($this->org_db_host);
             $this->org_db_username = base64_encode($this->org_db_username);
             $this->org_db_password = base64_encode($this->org_db_password);
             $this->org_database = base64_encode($this->org_database);
@@ -125,7 +124,6 @@ class CoOrganization extends GActiveRecord {
     }
 
     public function afterFind() {
-        $this->org_db_host = base64_decode($this->org_db_host);
         $this->org_db_host = base64_decode($this->org_db_host);
         $this->org_db_username = base64_decode($this->org_db_username);
         $this->org_db_password = base64_decode($this->org_db_password);
