@@ -2,6 +2,8 @@
 
 namespace common\models;
 
+use Exception;
+use Yii;
 use yii\db\ActiveQuery;
 use yii\db\Connection;
 
@@ -106,21 +108,52 @@ class CoOrganization extends GActiveRecord {
             ]);
             $connection->open();
             $connection->close();
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             $this->addError($attribute, $ex->getMessage());
         }
     }
 
+    public function beforeSave($insert) {
+        if ($insert) {
+            $salt = Yii::$app->params['SECURITY_SALT'];
+            
+            $this->org_db_host = Yii::$app->getSecurity()->encryptByPassword($this->org_db_host, $salt);
+//            $this->org_db_host = utf8_encode(Yii::$app->security->encryptByKey($this->org_db_host, $salt));
+//            $this->org_db_username = utf8_encode(Yii::$app->security->encryptByKey($this->org_db_username, $salt));
+//            $this->org_db_password = utf8_encode(Yii::$app->security->encryptByKey($this->org_db_password, $salt));
+//            $this->org_database = utf8_encode(Yii::$app->security->encryptByKey($this->org_database, $salt));
+        }
+        return parent::beforeSave($insert);
+    }
+
+    public function afterFind() {
+        $salt = Yii::$app->params['SECURITY_SALT'];
+        
+            $this->org_db_host = Yii::$app->getSecurity()->decryptByPassword($this->org_db_host, $salt);
+//        $this->org_db_host = Yii::$app->security->decryptByKey(utf8_decode($this->org_db_host), $salt);
+//        $this->org_db_username = Yii::$app->security->decryptByKey(utf8_decode($this->org_db_username), $salt);
+//        $this->org_db_password = Yii::$app->security->decryptByKey(utf8_decode($this->org_db_password), $salt);
+//        $this->org_database = Yii::$app->security->decryptByKey(utf8_decode($this->org_database), $salt);
+        
+        return parent::afterFind();
+    }
+
     public function afterSave($insert, $changedAttributes) {
         if ($insert) {
+            $model = self::find()->where(['org_id' => $this->org_id])->one();
+            
+            echo '<pre>';
+            print_r($model);
+            exit;
+            
             $connection = new Connection([
-                'dsn' => "mysql:host={$this->org_db_host};dbname={$this->org_database}",
-                'username' => $this->org_db_username,
-                'password' => $this->org_db_password,
+                'dsn' => "mysql:host={$model->org_db_host};dbname={$model->org_database}",
+                'username' => $model->org_db_username,
+                'password' => $model->org_db_password,
             ]);
             $connection->open();
 
-            $command = $connection->createCommand("INSERT INTO co_organization VALUES({$this->org_id},'{$this->org_name}','{$this->org_description}','{$this->org_db_host}','{$this->org_db_username}','{$this->org_db_password}','{$this->org_database}','{$this->org_domain}','{$this->status}',{$this->created_by},'{$this->created_at}',{$this->modified_by},'{$this->modified_at}','{$this->deleted_at}')");
+            $command = $connection->createCommand("INSERT INTO co_organization VALUES({$model->org_id},'{$model->org_name}','{$model->org_description}','{$model->org_db_host}','{$model->org_db_username}','{$model->org_db_password}','{$model->org_database}','{$model->org_domain}','{$model->status}',{$model->created_by},'{$model->created_at}',{$model->modified_by},'{$model->modified_at}','{$model->deleted_at}')");
             $command->execute();
             $connection->close();
         }
