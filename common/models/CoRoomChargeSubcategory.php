@@ -40,7 +40,8 @@ class CoRoomChargeSubcategory extends RActiveRecord {
             [['tenant_id', 'charge_cat_id', 'created_by', 'modified_by'], 'integer'],
             [['status'], 'string'],
             [['created_at', 'modified_at', 'deleted_at'], 'safe'],
-            [['charge_subcat_name'], 'string', 'max' => 50]
+            [['charge_subcat_name'], 'string', 'max' => 50],
+            [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'charge_cat_id', 'charge_subcat_name', 'deleted_at'], 'message' => 'The combination of Subcategory Name has already been taken.']
         ];
     }
 
