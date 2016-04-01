@@ -120,6 +120,8 @@ class PhaSale extends RActiveRecord {
                     $sale_billing_model = new PhaSaleBilling();
                 } else {
                     $sale_billing_model = PhaSaleBilling::find()->where(['sale_id' => $this->sale_id])->one();
+                    if(empty($sale_billing_model))
+                        $sale_billing_model = new PhaSaleBilling();
                 }
 
                 $sale_billing_model->sale_id = $this->sale_id;
