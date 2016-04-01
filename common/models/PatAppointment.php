@@ -3,7 +3,7 @@
 namespace common\models;
 
 use common\models\query\PatAppointmentQuery;
-use Faker\Provider\zh_TW\DateTime;
+use DateTime;
 use yii\db\ActiveQuery;
 
 /**
