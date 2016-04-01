@@ -58,6 +58,7 @@ angular.module('app')
                         patientActiveIP: '',
                         patientCurrentRoom: '',
                         patientLastConsultantId: '',
+                        patientLastConsultantName: '',
                     }
                 }
 
@@ -185,6 +186,7 @@ angular.module('app')
                                         $scope.app.patientDetail.patientActiveIp = patient.patActiveIp;
                                         $scope.app.patientDetail.patientCurrentRoom = patient.current_room;
                                         $scope.app.patientDetail.patientLastConsultantId = patient.last_consultant_id;
+                                        $scope.app.patientDetail.patientLastConsultantName = patient.consultant_name;
                                         $rootScope.commonService.GetLabelFromValue(patient.patient_gender, 'GetGenderList', function (response) {
                                             $scope.app.patientDetail.patientSex = response;
                                         });

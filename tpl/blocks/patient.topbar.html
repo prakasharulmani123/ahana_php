@@ -1,40 +1,45 @@
 <div class="row">
     <div class="col-sm-12" ng-init="loadPatientDetail()">
         <form name="formValidate" class="form-horizontal form-validation">
+<!--            <div ng-show="app.patientDetail.patientHasAlert">
+                <img src="img/symbol2.png"  alt="" />&nbsp;&nbsp;{{app.patientDetail.patientAlert}}
+            </div>-->
+
             <div class="panel panel-default patient-panel">
                 <div class="panel-body">                    
                     <div class="row"> 
                         <div class="col-xs-12 col-sm-1 col-md-1"> <img src="img/patient-img.png"  alt="" /></div>
-                        <div class="col-xs-4 col-sm-4 col-md-3"> 
-                            <a ng-click="$state.go('patient.view', {id: app.patientDetail.patientGuid})">
-                                {{app.patientDetail.patientTitleCode}} 
-                                {{app.patientDetail.patientName}} 
-                                <span ng-if="app.patientDetail.patActiveIp">
-                                    ({{app.patientDetail.patientActiveCasesheetno}})
-                                </span>
-                                
-                            </a> 
-                            <a ng-show="app.patientDetail.patientActiveIp" ng-click="$state.go('patient.view', {id: app.patientDetail.patientGuid})"> ({{app.patientDetail.patientActiveCasesheetno}})</a>
-                            <br/>
-                            <span> {{app.patientDetail.patientIntCode}}  </span>
+                        <div class="col-xs-4 col-sm-4 col-md-3 panel-details"> 
+                            <b> 
+                                <a ng-click="$state.go('patient.view', {id: app.patientDetail.patientGuid})">
+                                    {{app.patientDetail.patientTitleCode}} 
+                                    {{app.patientDetail.patientName}} 
+                                    <span ng-if="app.patientDetail.patActiveIp">
+                                        ({{app.patientDetail.patientActiveCasesheetno}})
+                                    </span>
+                                </a>
+                            </b>
                         </div>
-                        <div class="col-xs-2 col-sm-2 col-md-2"> 
-                            {{app.patientDetail.patientSex}} ({{app.patientDetail.patientAge}}y)
+                        <div class="col-xs-2 col-sm-2 col-md-2 panel-details"> 
+                            <b> Sex :</b> <span>{{app.patientDetail.patientSex}} ({{app.patientDetail.patientAge}}y)</span>
                         </div>
-                        <div class="col-xs-2 col-sm-2 col-md-2">
+                        <div class="col-xs-2 col-sm-2 col-md-2 panel-details"> 
                             <div ng-show="app.patientDetail.patientActiveIp">
-                                DOA: {{app.patientDetail.patientDOA}}
-                            <br/>
-                            <span> {{app.patientDetail.patientCurrentRoom}}  </span>
+                                <b> DOA :</b> <span> {{app.patientDetail.patientDOA}} </span>
                             </div>
                         </div>
-                        <div class="col-xs-2 col-sm-2 col-md-2"> 
-                            Org: {{app.patientDetail.patientOrg}}
+                        <div class="col-xs-3 col-sm-3 col-md-3 panel-details"> 
+                            <i class="fa fa-hospital-o"></i> <b> Org : </b> <span>{{app.patientDetail.patientOrg}}</span>
                         </div>
-                        <div class="col-xs-2 col-sm-2 col-md-2">
-                            <div ng-show="app.patientDetail.patientHasAlert">
-                                <img src="img/symbol2.png"  alt="" />&nbsp;&nbsp;{{app.patientDetail.patientAlert}}
-                            </div>
+                        <div class="clear-fix"></div>
+                        <div class="col-xs-4 col-sm-4 col-md-3"> 
+                            <b> Patient Id :</b> <span> {{app.patientDetail.patientIntCode}} </span>
+                        </div>
+                        <div class="col-xs-2 col-sm-2 col-md-4"> 
+                            <i class="fa fa-wheelchair"></i>  <b> Ward :  </b><span>{{app.patientDetail.patientCurrentRoom}}</span>
+                        </div>
+                        <div class="col-xs-2 col-sm-2 col-md-4"> 
+                            <i class="fa fa-user-md"></i><span> {{app.patientDetail.patientLastConsultantName}} </span>
                         </div>
                     </div>
                 </div>
