@@ -53,8 +53,7 @@
                     <div class="col-sm-4">
                         <div class="form-group">
                             <div class="col-sm-5">  <b>Total Amount : </b>   </div>
-                            <div class="col-sm-7"> 	<span class="label bg-dark"> {{billing.total_price = (billing.total.price + recurr_billing.total.recurring_total) - billing.discount | number
-                                            :2}} </span> </div>
+                            <div class="col-sm-7"> 	<span class="label bg-dark"> {{billing.total_price = (billing.total.price + recurr_billing.total.recurring_total) - enc.selected.concession_amount | number:2}} </span> </div>
                         </div>
                         <div class="form-group">
                             <div class="col-sm-5">  <b>Amount Paid : </b>   </div>
@@ -74,11 +73,11 @@
             <div class="panel-heading no-border bg-primary"> <i class="fa fa-medkit"></i> Recurring Charges</div>
             <div class="panel-body">
                 <div class="form-group">
+                    <a  class="btn btn-default" ng-show="enc.selected.finalize == '0'" ng-click="$state.go('patient.roomConcession', {id: $state.params.id, encounter_id: enc.selected.encounter_id})"> <i class="fa fa-plus-square"></i> &nbsp;Room Concession</a>
                     <a  class="btn btn-default" ng-show="enc.selected.finalize == '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'finalize', '1', 'Finalize')"> <i class="fa fa-check-square-o"></i> Finalize</a>
-                    <a  class="btn btn-default" ng-show="enc.selected.authorize == '0' &&  enc.selected.finalize != '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'finalize', '0', 'Un Finalize')"> <i class="fa fa-ban"></i> Un Finalize</a>
+                    <a  class="btn btn-default" ng-show="enc.selected.authorize == '0' && enc.selected.finalize != '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'finalize', '0', 'Un Finalize')"> <i class="fa fa-ban"></i> Un Finalize</a>
                     <a  class="btn btn-default" ng-show="enc.selected.finalize != '0' && enc.selected.authorize == '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'authorize', '1', 'Authorize')"> <i class="fa fa-eye"></i> Authorize</a>
                     <a  class="btn btn-default" ng-show="enc.selected.authorize != '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'authorize', '0', 'Un Authorize')"> <i class="fa fa-eye-slash"></i> Un Authorize</a>
-                    <a  class="btn btn-default" ng-show="enc.selected.status == '1'" ng-click="$state.go('patient.roomConcession', {id: $state.params.id, encounter_id: enc.selected.encounter_id})"> Room Concession</a>
                 </div>
                 <div class="m-b-sm">
                 </div>
@@ -100,7 +99,7 @@
                         <td> {{row.to_date}} </td>
                         <td> {{row.duration}} </td>
                         <td align="right" ng-init="row_recurring_total = getTotalRecurringPrice(row);
-                                    recurr_billing.total.recurring_total = recurr_billing.total.recurring_total + row_recurring_total;
+                                            recurr_billing.total.recurring_total = recurr_billing.total.recurring_total + row_recurring_total;
                             "> {{row_recurring_total| number:2}} </td>
                     </tr>
                     <tr>
@@ -115,18 +114,16 @@
         <div class="panel panel-default m-b">
             <div class="panel-heading bg-info font-bold"> <i class="fa fa-medkit"></i> Balance Sheet</div>
             <div class="panel-body">
-                <div ng-if="enc.selected.finalize == '0'"> 
-                    <div class="form-group"> 
-                        <a ng-click="$state.go('patient.addOtherCharge', {id: $state.params.id})" class="btn btn-default">
-                            <i class="fa fa-plus"></i> &nbsp; Add other charges
-                        </a>
-                        <span ng-repeat="(key, li) in more_li">
-                            <a ng-if="li.mode == 'sref'" class="btn btn-default" ui-sref="{{li.href}}"><i class="{{li.i_class}}"></i> {{li.name}}</a>
-                            <a ng-if="li.mode == 'click'" class="btn btn-default" ng-click="{{li.href}}"><i class="{{li.i_class}}"></i> {{li.name}}</a>
-                        </span>
-                    </div>
-                    <div class="m-b-sm"></div>
+                <div class="form-group" ng-if="enc.selected.finalize == '0'"> 
+                    <a ng-click="$state.go('patient.addOtherCharge', {id: $state.params.id, enc_id: enc.selected.encounter_id})" class="btn btn-default">
+                        <i class="fa fa-plus-square"></i> &nbsp; Add other charges
+                    </a>
+                    <span ng-repeat="(key, li) in more_li">
+                        <a ng-if="li.mode == 'sref'" class="btn btn-default" ui-sref="{{li.href}}"><i class="{{li.i_class}}"></i> &nbsp; {{li.name}}</a>
+                        <a ng-if="li.mode == 'click'" class="btn btn-default" ng-click="{{li.href}}"><i class="{{li.i_class}}"></i> &nbsp; {{li.name}}</a>
+                    </span>
                 </div>
+                <div class="m-b-sm" ng-if="enc.selected.finalize == '0'"></div>
                 <table  class="table table-striped b-t b-light">
                     <thead>
                         <tr>
@@ -145,12 +142,12 @@
                     </thead>
                     <tbody ng-hide="isLoading" ng-init="billing.total = {}">
                         <!-- Procedures -->
-                        <tr ng-init="expanded = true;" ng-show="procedures">
+                        <tr ng-init="expanded_1 = true;" ng-show="procedures">
                             <td align="center" valign="middle"></td>
                             <td> 
-                                <button ng-click="expanded = !expanded" target="#moreless" ui-toggle-class="show" class="btn btn-sm btn-default hms-plus">
-                                    <i ng-if="!expanded" class="fa fa-plus text"></i>
-                                    <i ng-if="expanded" class="fa fa-minus text"></i>
+                                <button ng-click="expanded_1 = !expanded_1" target="#moreless" ui-toggle-class="show" class="btn btn-sm btn-default hms-plus">
+                                    <i ng-if="!expanded_1" class="fa fa-plus text"></i>
+                                    <i ng-if="expanded_1" class="fa fa-minus text"></i>
                                 </button>
                             </td>
                             <td colspan="9">
@@ -159,7 +156,7 @@
                                 </b>
                             </td>
                         </tr>
-                        <tr ng-show="expanded" ng-repeat="(key, row) in procedures">
+                        <tr ng-show="expanded_1" ng-repeat="(key, row) in procedures">
                             <td align="center" valign="middle"></td>
                             <td>
                                 <label class="i-checks m-b-none">
@@ -178,16 +175,16 @@
                             <td ng-init="billing.total.extra = billing.total.extra + parseFloat(row.extra_amount);
                                 "> {{row.extra_amount}} </td>
                             <td align="right" ng-init="row_total = getTotalPrice(row);
-                                            billing.total.price = billing.total.price + row_total;
+                                                billing.total.price = billing.total.price + row_total;
                                 "> {{row_total| number:2}} </td>
                         </tr>
                         <!-- Consultants -->
-                        <tr ng-init="expanded = true;" ng-show="consultants">
+                        <tr ng-init="expanded_2 = true;" ng-show="consultants">
                             <td align="center" valign="middle"></td>
                             <td> 
-                                <button ng-click="expanded = !expanded" target="#moreless" ui-toggle-class="show" class="btn btn-sm btn-default hms-plus">
-                                    <i ng-if="!expanded" class="fa fa-plus text"></i>
-                                    <i ng-if="expanded" class="fa fa-minus text"></i>
+                                <button ng-click="expanded_2 = !expanded_2" target="#moreless" ui-toggle-class="show" class="btn btn-sm btn-default hms-plus">
+                                    <i ng-if="!expanded_2" class="fa fa-plus text"></i>
+                                    <i ng-if="expanded_2" class="fa fa-minus text"></i>
                                 </button>
                             </td>
                             <td colspan="9">
@@ -196,7 +193,7 @@
                                 </b>
                             </td>
                         </tr>
-                        <tr ng-show="expanded" ng-repeat="(key, row) in consultants">
+                        <tr ng-show="expanded_2" ng-repeat="(key, row) in consultants">
                             <td align="center" valign="middle"></td>
                             <td>
                                 <label class="i-checks m-b-none">
@@ -215,16 +212,16 @@
                             <td ng-init="billing.total.extra = billing.total.extra + parseFloat(row.extra_amount);
                                 "> {{row.extra_amount}} </td>
                             <td align="right" ng-init="row_total = getTotalPrice(row);
-                                            billing.total.price = billing.total.price + row_total;
+                                                billing.total.price = billing.total.price + row_total;
                                 "> {{row_total| number:2}} </td>
                         </tr>
                         <!-- Other Charges -->
-                        <tr ng-init="expanded = true;" ng-show="other_charges">
+                        <tr ng-init="expanded_3 = true;" ng-show="other_charges">
                             <td align="center" valign="middle"></td>
                             <td> 
-                                <button ng-click="expanded = !expanded" target="#moreless" ui-toggle-class="show" class="btn btn-sm btn-default hms-plus">
-                                    <i ng-if="!expanded" class="fa fa-plus text"></i>
-                                    <i ng-if="expanded" class="fa fa-minus text"></i>
+                                <button ng-click="expanded_3 = !expanded_3" target="#moreless" ui-toggle-class="show" class="btn btn-sm btn-default hms-plus">
+                                    <i ng-if="!expanded_3" class="fa fa-plus text"></i>
+                                    <i ng-if="expanded_3" class="fa fa-minus text"></i>
                                 </button>
                             </td>
                             <td colspan="9">
@@ -233,7 +230,7 @@
                                 </b>
                             </td>
                         </tr>
-                        <tr ng-show="expanded" ng-repeat="(key, row) in other_charges">
+                        <tr ng-show="expanded_3" ng-repeat="(key, row) in other_charges">
                             <td align="center" valign="middle"></td>
                             <td>
                                 <label class="i-checks m-b-none">
@@ -250,7 +247,7 @@
                             <td> {{row.concession_amount}} </td>
                             <td> {{row.extra_amount}} </td>
                             <td align="right" ng-init="row_total = getTotalPrice(row);
-                                            billing.total.price = billing.total.price + row_total;
+                                                billing.total.price = billing.total.price + row_total;
                                 "> {{row_total| number:2}} </td>
                         </tr>
                         <tr>
@@ -270,19 +267,16 @@
         <div class="panel panel-default m-b">
             <div class="panel-heading panel-heading bg-dark font-bold"> <i class="fa fa-medkit"></i> Advance Charge</div>
             <div class="panel-body">
-                <div ng-if="enc.selected.finalize == '0'"> 
-                    <div class="form-group"> 
-                        <a ng-click="$state.go('patient.addPayment', {id: $state.params.id})" class="btn btn-default">
-                            <i class="fa fa-plus-square"></i>&nbsp; Add Payment
-                        </a>
-                        <span ng-if="more_advance_li.length > 0" ng-repeat="(key, li) in more_advance_li">
-                            <a ng-if="li.mode == 'sref'" ui-sref="{{li.href}}" class="btn btn-default"> <i class="{{li.i_class}}"></i> {{li.name}}</a>    
-                            <a ng-if="li.mode == 'click'" ng-click="{{li.href}}" class="btn btn-default"> <i class="{{li.i_class}}"></i> {{li.name}}</a>
-                        </span>
-                    </div>
-                    <div class="m-b-sm">
-                    </div>
+                <div class="form-group" ng-if="enc.selected.finalize == '0'"> 
+                    <a ng-click="$state.go('patient.addPayment', {id: $state.params.id, enc_id: enc.selected.encounter_id})" class="btn btn-default">
+                        <i class="fa fa-plus-square"></i>&nbsp; Add Payment
+                    </a>
+                    <span ng-if="more_advance_li.length > 0" ng-repeat="(key, li) in more_advance_li">
+                        <a ng-if="li.mode == 'sref'" ui-sref="{{li.href}}" class="btn btn-default"> <i class="{{li.i_class}}"></i> &nbsp;{{li.name}}</a>    
+                        <a ng-if="li.mode == 'click'" ng-click="{{li.href}}" class="btn btn-default"> <i class="{{li.i_class}}"></i> &nbsp;{{li.name}}</a>
+                    </span>
                 </div>
+                <div class="m-b-sm" ng-if="enc.selected.finalize == '0'"></div>
                 <table  class="table table-striped b-t b-light">
                     <thead>
                         <tr>
@@ -306,7 +300,7 @@
                             <td> {{row.headers}} </td>
                             <td> {{row.trans_mode}} </td>
                             <td align="right" ng-init="row_total = parseFloat(row.total_charge);
-                                            billing.total.advance_charge = billing.total.advance_charge + row_total;
+                                                billing.total.advance_charge = billing.total.advance_charge + row_total;
                                 "> {{row_total| number:2}} </td>
                         </tr>
                         <tr>
