@@ -29,39 +29,40 @@
                         </div>
                         <div class="form-group">
                             <div class="row">  
-                                <div class="col-sm-4">  <b>  Admission Date:</b>   </div>
-                                <div class="col-sm-8"> {{enc.selected.encounter_date | moment:'DD/MM/YYYY - hh:mm A'}} </div>
+                                <div class="col-sm-4">  <b>Admission Date:</b>   </div>
+                                <div class="col-sm-8"> {{enc.selected.encounter_date| moment:'DD/MM/YYYY - hh:mm A'}} </div>
                             </div> </div>
                         <div class="form-group">
                             <div class="row">  
                                 <div class="col-sm-4">  <b> Discharge Date:</b>   </div>
-                                <div class="col-sm-8"> {{enc.selected.discharge_date | moment:'DD/MM/YYYY - hh:mm A'}}</div>
+                                <div class="col-sm-8" ng-show="enc.selected.discharge_date"> {{enc.selected.discharge_date| moment:'DD/MM/YYYY - hh:mm A'}}</div>
                             </div> </div>
                     </div>
                     <div class="col-sm-4">
                         <div class="row">
                             <div class="form-group">
-                                <div class="col-sm-4">  <b>  	Stay Duration :</b>   </div>
+                                <div class="col-sm-4">  <b>Stay Duration :</b>   </div>
                                 <div class="col-sm-8">  {{enc.selected.stay_duration}}  </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-sm-4">  <b> 	Discount :</b>   </div>
-                                <div class="col-sm-8"> <span class="label bg-light dk"> {{billing.total.concession + parseFloat(enc.selected.concession_amount) | number:2}}  ( Rm_Dis: {{enc.selected.concession_amount| number:2}} ,Otr_Dis: {{billing.total.concession| number:2}} )</span>  </div>
+                                <div class="col-sm-4">  <b>Discount :</b>   </div>
+                                <div class="col-sm-8"> <span class="label bg-light dk"> {{billing.discount = billing.total.concession + parseFloat(enc.selected.concession_amount) | number:2}}  ( Rm_Dis: {{enc.selected.concession_amount| number:2}} ,Otr_Dis: {{billing.total.concession| number:2}} )</span> </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-sm-4">
                         <div class="form-group">
-                            <div class="col-sm-5">  <b> 	Total Amount : </b>   </div>
-                            <div class="col-sm-7"> 	<span class="label bg-dark"> {{billing.total.price + recurr_billing.total.recurring_total| number:2}} </span> </div>
+                            <div class="col-sm-5">  <b>Total Amount : </b>   </div>
+                            <div class="col-sm-7"> 	<span class="label bg-dark"> {{billing.total_price = (billing.total.price + recurr_billing.total.recurring_total) - billing.discount | number
+                                            :2}} </span> </div>
                         </div>
                         <div class="form-group">
-                            <div class="col-sm-5">  <b> 	 	Amount Paid : </b>   </div>
+                            <div class="col-sm-5">  <b>Amount Paid : </b>   </div>
                             <div class="col-sm-7"> <span class="label bg-success">{{billing.total.advance_charge| number:2}}  </span>	</div>
                         </div>
                         <div class="form-group">
-                            <div class="col-sm-5">  <b> 	 	 	Amount Payable : </b>   </div>
-                            <div class="col-sm-7"> <span class="label bg-danger">-{{(billing.total.price + recurr_billing.total.recurring_total) - billing.total.advance_charge| number:2}}</span>  </span>	</div>
+                            <div class="col-sm-5">  <b>Amount Payable : </b>   </div>
+                            <div class="col-sm-7"> <span class="label bg-danger">{{(billing.total_price) - billing.total.advance_charge| number:2}}</span>  </span>	</div>
                         </div>
                     </div>
                 </div>
@@ -72,23 +73,12 @@
         <div class="panel panel-default m-b">
             <div class="panel-heading no-border bg-primary"> <i class="fa fa-medkit"></i> Recurring Charges</div>
             <div class="panel-body">
-                <div class="form-group"> 
-                    <a href="#" class="btn btn-default"> <i class="fa fa-plus-square"></i>  Add Payment </a>
-                    <a href="#" class="btn btn-default"> <i class="fa fa-pencil"></i> Modify Payment</a>
-                    <a href="#" class="btn btn-default"> <i class="fa fa-trash"></i> Delete Payment</a>
-                    <div class="btn-group dropdown pull-right" dropdown>
-                        <button class="btn btn-default" dropdown-toggle>More <span class="caret"></span></button>
-                        <ul class="dropdown-menu">
-                            <li> <a href="#"> Add Other Charges</a></li>
-                            <li> <a href="#"> Room Concession</a></li>
-                            <li>   <a href="#">Concession</a></li>
-                            <li>   <a href="#"> Extra Amount</a></li>
-                            <li> <a href="#">Modify Bill</a></li>
-                            <li>  <a href="#">Print Bill</a></li>
-                            <li> <a href="#"> Modify Allied Charge</a></li>
-                            <li> <a href="#"> Vouchers</a></li>
-                        </ul>
-                    </div>
+                <div class="form-group">
+                    <a  class="btn btn-default" ng-show="enc.selected.finalize == '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'finalize', '1', 'Finalize')"> <i class="fa fa-check-square-o"></i> Finalize</a>
+                    <a  class="btn btn-default" ng-show="enc.selected.authorize == '0' &&  enc.selected.finalize != '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'finalize', '0', 'Un Finalize')"> <i class="fa fa-ban"></i> Un Finalize</a>
+                    <a  class="btn btn-default" ng-show="enc.selected.finalize != '0' && enc.selected.authorize == '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'authorize', '1', 'Authorize')"> <i class="fa fa-eye"></i> Authorize</a>
+                    <a  class="btn btn-default" ng-show="enc.selected.authorize != '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'authorize', '0', 'Un Authorize')"> <i class="fa fa-eye-slash"></i> Un Authorize</a>
+                    <a  class="btn btn-default" ng-show="enc.selected.status == '1'" ng-click="$state.go('patient.roomConcession', {id: $state.params.id, encounter_id: enc.selected.encounter_id})"> Room Concession</a>
                 </div>
                 <div class="m-b-sm">
                 </div>
@@ -109,7 +99,9 @@
                         <td> {{row.from_date}} </td>
                         <td> {{row.to_date}} </td>
                         <td> {{row.duration}} </td>
-                        <td align="right" ng-init="row_recurring_total = getTotalRecurringPrice(row); recurr_billing.total.recurring_total = recurr_billing.total.recurring_total + row_recurring_total; "> {{row_recurring_total| number:2}} </td>
+                        <td align="right" ng-init="row_recurring_total = getTotalRecurringPrice(row);
+                                    recurr_billing.total.recurring_total = recurr_billing.total.recurring_total + row_recurring_total;
+                            "> {{row_recurring_total| number:2}} </td>
                     </tr>
                     <tr>
                         <td colspan="6">&nbsp;</td>   
@@ -123,15 +115,23 @@
         <div class="panel panel-default m-b">
             <div class="panel-heading bg-info font-bold"> <i class="fa fa-medkit"></i> Balance Sheet</div>
             <div class="panel-body">
+                <div ng-if="enc.selected.finalize == '0'"> 
+                    <div class="form-group"> 
+                        <a ng-click="$state.go('patient.addOtherCharge', {id: $state.params.id})" class="btn btn-default">
+                            <i class="fa fa-plus"></i> &nbsp; Add other charges
+                        </a>
+                        <span ng-repeat="(key, li) in more_li">
+                            <a ng-if="li.mode == 'sref'" class="btn btn-default" ui-sref="{{li.href}}"><i class="{{li.i_class}}"></i> {{li.name}}</a>
+                            <a ng-if="li.mode == 'click'" class="btn btn-default" ng-click="{{li.href}}"><i class="{{li.i_class}}"></i> {{li.name}}</a>
+                        </span>
+                    </div>
+                    <div class="m-b-sm"></div>
+                </div>
                 <table  class="table table-striped b-t b-light">
                     <thead>
                         <tr>
                             <th></th>
-                            <th> 
-<!--                                <label class="i-checks m-b-none">
-                                    <input type="checkbox"><i></i>
-                                </label>-->
-                            </th>
+                            <th></th>
                             <th>Category</th>
                             <th>Headers</th>
                             <th>Charge</th>
@@ -171,10 +171,15 @@
                             <td> {{row.charge}} </td>
                             <td> {{row.visit_count}} </td>
                             <td> {{row.trans_mode}} </td>
-                            <td ng-init="billing.total.charge = billing.total.charge + parseFloat(row.total_charge); "> {{row.total_charge}} </td>
-                            <td ng-init="billing.total.concession = billing.total.concession + parseFloat(row.concession_amount); "> {{row.concession_amount}} </td>
-                            <td ng-init="billing.total.extra = billing.total.extra + parseFloat(row.extra_amount); "> {{row.extra_amount}} </td>
-                            <td align="right" ng-init="row_total = getTotalPrice(row); billing.total.price = billing.total.price + row_total; "> {{row_total| number:2}} </td>
+                            <td ng-init="billing.total.charge = billing.total.charge + parseFloat(row.total_charge);
+                                "> {{row.total_charge}} </td>
+                            <td ng-init="billing.total.concession = billing.total.concession + parseFloat(row.concession_amount);
+                                "> {{row.concession_amount}} </td>
+                            <td ng-init="billing.total.extra = billing.total.extra + parseFloat(row.extra_amount);
+                                "> {{row.extra_amount}} </td>
+                            <td align="right" ng-init="row_total = getTotalPrice(row);
+                                            billing.total.price = billing.total.price + row_total;
+                                "> {{row_total| number:2}} </td>
                         </tr>
                         <!-- Consultants -->
                         <tr ng-init="expanded = true;" ng-show="consultants">
@@ -203,10 +208,15 @@
                             <td> {{row.charge}} </td>
                             <td> {{row.visit_count}} </td>
                             <td> {{row.trans_mode}} </td>
-                            <td ng-init="billing.total.charge = billing.total.charge + parseFloat(row.total_charge); "> {{row.total_charge}} </td>
-                            <td ng-init="billing.total.concession = billing.total.concession + parseFloat(row.concession_amount); "> {{row.concession_amount}} </td>
-                            <td ng-init="billing.total.extra = billing.total.extra + parseFloat(row.extra_amount); "> {{row.extra_amount}} </td>
-                            <td align="right" ng-init="row_total = getTotalPrice(row); billing.total.price = billing.total.price + row_total; "> {{row_total| number:2}} </td>
+                            <td ng-init="billing.total.charge = billing.total.charge + parseFloat(row.total_charge);
+                                "> {{row.total_charge}} </td>
+                            <td ng-init="billing.total.concession = billing.total.concession + parseFloat(row.concession_amount);
+                                "> {{row.concession_amount}} </td>
+                            <td ng-init="billing.total.extra = billing.total.extra + parseFloat(row.extra_amount);
+                                "> {{row.extra_amount}} </td>
+                            <td align="right" ng-init="row_total = getTotalPrice(row);
+                                            billing.total.price = billing.total.price + row_total;
+                                "> {{row_total| number:2}} </td>
                         </tr>
                         <!-- Other Charges -->
                         <tr ng-init="expanded = true;" ng-show="other_charges">
@@ -235,10 +245,13 @@
                             <td> {{row.charge}} </td>
                             <td> {{row.visit_count}} </td>
                             <td> {{row.trans_mode}} </td>
-                            <td ng-init="billing.total.charge = billing.total.charge + parseFloat(row.total_charge); "> {{row.total_charge}} </td>
+                            <td ng-init="billing.total.charge = billing.total.charge + parseFloat(row.total_charge);
+                                "> {{row.total_charge}} </td>
                             <td> {{row.concession_amount}} </td>
                             <td> {{row.extra_amount}} </td>
-                            <td align="right" ng-init="row_total = getTotalPrice(row); billing.total.price = billing.total.price + row_total; "> {{row_total| number:2}} </td>
+                            <td align="right" ng-init="row_total = getTotalPrice(row);
+                                            billing.total.price = billing.total.price + row_total;
+                                "> {{row_total| number:2}} </td>
                         </tr>
                         <tr>
                             <td align="center" valign="middle"></td>
@@ -257,25 +270,18 @@
         <div class="panel panel-default m-b">
             <div class="panel-heading panel-heading bg-dark font-bold"> <i class="fa fa-medkit"></i> Advance Charge</div>
             <div class="panel-body">
-                <div class="form-group"> 
-                    <a href="#" class="btn btn-default"> <i class="fa fa-plus-square"></i>  Add Payment </a>
-                    <a href="#" class="btn btn-default"> <i class="fa fa-pencil"></i> Modify Payment</a>
-                    <a href="#" class="btn btn-default"> <i class="fa fa-trash"></i> Delete Payment</a>
-                    <div class="btn-group dropdown pull-right" dropdown>
-                        <button class="btn btn-default" dropdown-toggle>More <span class="caret"></span></button>
-                        <ul class="dropdown-menu">
-                            <li> <a href="#"> Add Other Charges</a></li>
-                            <li> <a href="#"> Room Concession</a></li>
-                            <li>   <a href="#">Concession</a></li>
-                            <li>   <a href="#"> Extra Amount</a></li>
-                            <li> <a href="#">Modify Bill</a></li>
-                            <li>  <a href="#">Print Bill</a></li>
-                            <li> <a href="#"> Modify Allied Charge</a></li>
-                            <li> <a href="#"> Vouchers</a></li>
-                        </ul>
+                <div ng-if="enc.selected.finalize == '0'"> 
+                    <div class="form-group"> 
+                        <a ng-click="$state.go('patient.addPayment', {id: $state.params.id})" class="btn btn-default">
+                            <i class="fa fa-plus-square"></i>&nbsp; Add Payment
+                        </a>
+                        <span ng-if="more_advance_li.length > 0" ng-repeat="(key, li) in more_advance_li">
+                            <a ng-if="li.mode == 'sref'" ui-sref="{{li.href}}" class="btn btn-default"> <i class="{{li.i_class}}"></i> {{li.name}}</a>    
+                            <a ng-if="li.mode == 'click'" ng-click="{{li.href}}" class="btn btn-default"> <i class="{{li.i_class}}"></i> {{li.name}}</a>
+                        </span>
                     </div>
-                </div>
-                <div class="m-b-sm">
+                    <div class="m-b-sm">
+                    </div>
                 </div>
                 <table  class="table table-striped b-t b-light">
                     <thead>
@@ -299,7 +305,9 @@
                             <td>{{row.category}} </td>
                             <td> {{row.headers}} </td>
                             <td> {{row.trans_mode}} </td>
-                            <td align="right" ng-init="billing.total.advance_charge = parseFloat(row.total_charge);"> {{ parseFloat(row.total_charge) | number:2}} </td>
+                            <td align="right" ng-init="row_total = parseFloat(row.total_charge);
+                                            billing.total.advance_charge = billing.total.advance_charge + row_total;
+                                "> {{row_total| number:2}} </td>
                         </tr>
                         <tr>
                             <td align="center" valign="middle"></td>

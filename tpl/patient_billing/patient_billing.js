@@ -32,7 +32,7 @@ app.filter('propsFilter', function () {
     };
 })
 
-app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$filter', '$modal', function ($rootScope, $scope, $timeout, $http, $state, $filter, $modal) {
+app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$filter', '$modal', '$log', function ($rootScope, $scope, $timeout, $http, $state, $filter, $modal, $log) {
 
         $scope.app.settings.patientTopBar = true;
         $scope.app.settings.patientSideMenu = true;
@@ -183,14 +183,14 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
             if ($(row_id).is(':checked')) {
                 if (type == 'advance') {
                     $scope.more_advance_li = [
-                        {href: 'patient.editPayment({id: "' + $state.params.id + '", payment_id: ' + pk_id + '})', name: 'Modify Payment', mode: 'sref'},
-                        {href: "deletePayment('" + $state.params.id + "', " + pk_id + ")", name: 'Delete Payment', mode: 'click'}
+                        {href: 'patient.editPayment({id: "' + $state.params.id + '", payment_id: ' + pk_id + '})', name: 'Modify Payment', mode: 'sref', i_class: 'fa fa-pencil'},
+                        {href: "deletePayment('" + $state.params.id + "', " + pk_id + ")", name: 'Delete Payment', mode: 'click', i_class: 'fa fa-trash'}
                     ];
                 }
 
                 if (type == 'other') {
                     $scope.more_li = [
-                        {href: 'patient.editOtherCharge({id: "' + $state.params.id + '", other_charge_id: ' + pk_id + '})', name: 'Modify Other Charge', mode: 'sref'},
+                        {href: 'patient.editOtherCharge({id: "' + $state.params.id + '", other_charge_id: ' + pk_id + '})', name: 'Modify Other Charge', mode: 'sref', i_class: 'fa fa-pencil'},
                     ];
                 } else if (type == 'procedure' || type == 'consultant') {
                     var ec_type = '';
@@ -203,21 +203,21 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
 
                     if (extra_amount == '0.00') {
                         $scope.more_li = [
-                            {href: 'patient.addExtraAmount({id: "' + $state.params.id + '", ec_type: "' + ec_type + '", link_id: "' + link_id + '"})', name: 'Add Extra Amount', mode: 'sref'},
+                            {href: 'patient.addExtraAmount({id: "' + $state.params.id + '", ec_type: "' + ec_type + '", link_id: "' + link_id + '"})', name: 'Add Extra Amount', mode: 'sref', i_class: 'fa fa-pencil'},
                         ];
                     } else {
                         $scope.more_li = [
-                            {href: 'patient.editExtraAmount({id: "' + $state.params.id + '", ec_id: "' + pk_id + '"})', name: 'Edit Extra Amount', mode: 'sref'},
+                            {href: 'patient.editExtraAmount({id: "' + $state.params.id + '", ec_id: "' + pk_id + '"})', name: 'Edit Extra Amount', mode: 'sref', i_class: 'fa fa-pencil'},
                         ];
                     }
 
                     if (concession_amount == '0.00') {
                         $scope.more_li.push(
-                                {href: 'patient.addConcessionAmount({id: "' + $state.params.id + '", ec_type: "' + ec_type + '", link_id: "' + link_id + '"})', name: 'Add Concession Amount', mode: 'sref'}
+                                {href: 'patient.addConcessionAmount({id: "' + $state.params.id + '", ec_type: "' + ec_type + '", link_id: "' + link_id + '"})', name: 'Add Concession Amount', mode: 'sref', i_class: 'fa fa-pencil'}
                         );
                     } else {
                         $scope.more_li.push(
-                                {href: 'patient.editConcessionAmount({id: "' + $state.params.id + '", ec_id: "' + pk_id + '"})', name: 'Edit Concession Amount', mode: 'sref'}
+                                {href: 'patient.editConcessionAmount({id: "' + $state.params.id + '", ec_id: "' + pk_id + '"})', name: 'Edit Concession Amount', mode: 'sref', i_class: 'fa fa-pencil'}
                         );
                     }
                 }
@@ -257,7 +257,8 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
                                         $scope.loadBillingCharges(newValue);
                                     }
                                 }, true);
-                                $scope.successMessage = 'Patient Consultant Deleted Successfully';
+                                $scope.more_advance_li = {};
+                                $scope.successMessage = 'Advance Payment Deleted Successfully';
                             }
                             else {
                                 $scope.errorData = response.data.message;
@@ -267,7 +268,7 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
             }
         };
 
-        $scope.password_auth = function (encounter_id, column, value) {
+        $scope.password_auth = function (encounter_id, column, value, title) {
             var modalInstance = $modal.open({
                 templateUrl: 'tpl/modal_form/modal.password_auth.html',
                 controller: "PasswordAuthController",
@@ -281,6 +282,7 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
                 encounter_id: encounter_id,
                 column: column,
                 value: value,
+                title: title,
             };
 
             modalInstance.result.then(function (selectedItem) {

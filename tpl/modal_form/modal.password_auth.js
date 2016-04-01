@@ -3,6 +3,12 @@ app.controller('PasswordAuthController', ['scope', '$scope', '$modalInstance', '
         var encounter_id = $modalInstance.data.encounter_id;
         var column = $modalInstance.data.column;
         var value = $modalInstance.data.value;
+        
+        $scope.title = $modalInstance.data.title;
+        
+        $scope.getTitle = function(){
+            return $modalInstance.data.title;
+        };
 
         $scope.open = function ($event) {
             $event.preventDefault();
@@ -44,9 +50,10 @@ app.controller('PasswordAuthController', ['scope', '$scope', '$modalInstance', '
                             $scope.successMessage = succ_msg;
                             $scope.data = {};
                             $timeout(function () {
-//                                scope.loadSaleItemList(sale_payment_type);
                                 $modalInstance.dismiss('cancel');
-//                                $state.go('pharmacy.sales');
+                                scope.enc.selected = response.encounter;
+                                scope.loadBillingCharges(encounter_id);
+                                scope.loadRoomConcession(encounter_id);
                             }, 1000)
                         }
                     }
