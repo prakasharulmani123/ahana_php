@@ -153,6 +153,10 @@ class PatPatient extends RActiveRecord {
     public function getPatActiveIp() {
         return $this->hasOne(PatEncounter::className(), ['patient_id' => 'patient_id'])->status()->encounterType()->orderBy(['encounter_date' => SORT_DESC]);
     }
+    
+    public function getPatActiveOp() {
+        return $this->hasOne(PatEncounter::className(), ['patient_id' => 'patient_id'])->status()->encounterType('OP')->orderBy(['encounter_date' => SORT_DESC]);
+    }
 
     /**
      * @return ActiveQuery
@@ -266,7 +270,7 @@ class PatPatient extends RActiveRecord {
                 return isset($model->patActiveIp);
             },
             'doa' => function ($model) {
-                return isset($model->patActiveIp) ? date('Y-m-d', strtotime($model->patActiveIp->encounter_date)) : '';
+                return isset($model->patActiveIp) ? date('d/m/Y', strtotime($model->patActiveIp->encounter_date)) : '';
             },
             'current_room' => function ($model) {
                 if (isset($model->patActiveIp)) {
@@ -279,6 +283,17 @@ class PatPatient extends RActiveRecord {
             'last_consultant_id' => function ($model) {
                 return isset($model->patLastAppointment) ? $model->patLastAppointment->consultant_id : '';
             },
+            'consultant_name' => function ($model) {
+                if (isset($model->patActiveIp)) {
+                    $consultant = $model->patActiveIp->patCurrentAdmission->consultant;
+                    return $consultant->title_code . $consultant->name;
+                } else if (isset($model->patActiveOp)) {
+                    $consultant = $model->patActiveOp->patLiveAppointmentBooking->consultant;
+                    return $consultant->title_code . $consultant->name;
+                } else {
+                    return '-';
+                }
+            }
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
