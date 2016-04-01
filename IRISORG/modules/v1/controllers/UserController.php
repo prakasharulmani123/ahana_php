@@ -486,7 +486,7 @@ class UserController extends ActiveController {
             $encounter->save(false);
 
             $this->_insertTimeline($encounter, $column, $value);
-            return ['success' => true];
+            return ['success' => true, 'encounter' => $encounter];
         } else {
             return ['success' => false, 'message' => 'Password is not valid'];
         }
