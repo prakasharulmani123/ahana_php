@@ -15,10 +15,8 @@
                                                type="text"
                                                class="form-control"
                                                ng-model="data.patient_name"
-                                               ng-keyup="data.patient_id = ''" 
-                                               ng-keydown="data.patient_id = ''"
                                                typeahead-editable="false" 
-                                               typeahead="fullname as patient.fullname for patient in patients | filter:$viewValue"
+                                               typeahead="patient as patient.fullname for patient in patients | filter:$viewValue"
                                                typeahead-on-select="formatPatient($item, $model, $label)" />
                                     </div>
                                     <div class="col-lg-0">

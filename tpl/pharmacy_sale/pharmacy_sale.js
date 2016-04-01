@@ -296,6 +296,9 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
         //Save Both Add & Update Data
         $scope.saveForm = function (mode) {
+            if(!$scope.tableform.$valid){
+                $scope.data.patient_id = '';
+            }
             _that = this;
 
             $scope.errorData = "";
