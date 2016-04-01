@@ -9,47 +9,10 @@
                 <button class="btn btn-sm btn-grey" ng-click="loadInPatientsList()"> 
                     &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
                 </button>
-<!--                <div class="btn-group" dropdown is-open="status.isopen">
-                    <button type="button" class=" btn btn-sm btn-grey" dropdown-toggle ng-disabled="disabled">
-                        More &nbsp;&nbsp;<span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" role="menu">
-                        <li><a href>Action</a></li>
-                        <li><a href>Another action</a></li>
-                        <li><a href>Something else here</a></li>
-                        <li class="divider"></li>
-                        <li><a href>Separated link</a></li>
-                    </ul>
-                </div>        -->
             </div>
             <div class="col-sm-4"></div>
-            <div class="col-sm-2 pull-right text-right">
-                <h4>Census: {{displayedCollection.length}}</h4>
-<!--                <div class="btn-group navbar-right" dropdown>
-                    <button type="button" class=" btn btn-sm no-bg" dropdown-toggle >
-                        &nbsp;&nbsp;  <img src="img/actions-icon.png"  alt="" />
-                    </button>
-                    <ul class="dropdown-menu" role="menu1">
-                        <li><a href>Action</a></li>
-                        <li><a href>Another action</a></li>
-                        <li><a href>Something else here</a></li>
-                        <li class="divider"></li>
-                        <li><a href>Separated link</a></li>
-                    </ul>
-                </div>
-
-                <div class="btn-group pull-right" dropdown>
-                    <button type="button" class=" btn btn-sm btn-grey" dropdown-toggle >
-                        &nbsp;&nbsp; Select &nbsp;&nbsp;<span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" role="menu1">
-                        <li><a href>Action</a></li>
-                        <li><a href>Another action</a></li>
-                        <li><a href>Something else here</a></li>
-                        <li class="divider"></li>
-                        <li><a href>Separated link</a></li>
-                    </ul>
-                </div>-->
+            <div class="col-sm-3 pull-right text-right">
+                <h4 class="label bg-primary"> <b> Census: {{displayedCollection.length}} </b></h4>
             </div>
         </div>
 
@@ -57,29 +20,20 @@
             <table st-table="displayedCollection"  st-safe-src="rowCollection" class="table table-striped b-t b-light">
                 <thead>
                     <tr>
-                        <th width="21"  style="width:20px;">
-<!--                            <label class="i-checks m-b-none">
-                                <input type="checkbox"><i></i>
-                            </label>-->
-                        </th>
-                        <th style="width:40px;">&nbsp;</th>
+                        <th style="width:60px;">&nbsp;</th>
                         <th st-sort="patient_firstname">Patient</th>
-<!--                        <th>Case sheet#</th>-->
+                        <th>Case sheet#</th>
                         <th>Admission Date</th>
                         <th>ROOM#</th>
-                        <th style="width:180px;"> Actions </th>
+                        <th>consultant</th>
+                        <th style="width:250px;"> Actions </th>
                     </tr>
                 </thead>
                 <tbody ng-hide="isLoading">
                     <tr ng-repeat="row in displayedCollection| orderBy: patient_firstname">
                         <td align="center" valign="middle">
-<!--                            <label class="i-checks m-b-none">
-                                <input type="checkbox" name="post[]"><i></i>
-                            </label>-->
-                        </td>
-                        <td align="center" valign="middle">
-                            <img ng-if="row.patient.hasalert" class="pull-left" src="img/symbol1.png"  alt="" />
-                            <img ng-if="row.patient.address.incomplete_profile" class="pull-left" src="img/question.png"  alt="" />
+                            <img ng-if="row.patient.hasalert" class="pull-left" src="img/symbol1.png"  alt="" tooltip="Has Alert" tooltip-trigger tooltip-animation="false" tooltip-placement="right"  />
+                            <img ng-if="row.patient.address.incomplete_profile" class="pull-left" src="img/question.png"  alt="" tooltip="Incomplete Profile" tooltip-trigger tooltip-animation="false" tooltip-placement="right" />
                         </td>
                         <td>
                             <img ng-if="$even" class="pull-left" src="img/man-icon.png" width="49" height="49" alt="" />  
@@ -89,36 +43,48 @@
                             </a>({{row.patient.patient_age}}y) <br/> 
                             {{row.patient.patient_int_code}}
                         </td>
-                        <!--<td>{{row.casesheetno}}</td>-->
+                        <td>{{row.casesheet_no}}</td>
                         <td>
                             {{row.doe}} <br/>  <span class="text-muted"> {{row.doeTimeago}} </span>
                         </td>
                         <td>{{row.room_name}} <br/> <span class="text-muted"> {{row.room_type_name}} </span> </td>
-                        <td> 
-                            <div class="actions-icons-cont"> 
-                                <a ui-sref="patient.view({id: row.patient.patient_guid})" title="Details">  
-                                    <img src="img/small-icon1.png"  alt="" /> 
-                                </a>
-                                <a ui-sref="patient.encounter({id: row.patient.patient_guid})" title="Encounter">  
-                                    <img src="img/small-icon3.png"  alt="" /> 
-                                </a>
-                                <a ui-sref="patient.notes({id: row.patient.patient_guid})" title="Notes">  
-                                    <img src="img/small-icon4.png"  alt="" /> 
-                                </a>
-                                <a ui-sref="patient.consultant({id: row.patient.patient_guid})" title="Consultant">  
-                                    <img src="img/small-icon6.png"  alt="" /> 
-                                </a>
-                                <a ui-sref="patient.procedure({id: row.patient.patient_guid})" title="Procedure">  
-                                    <img src="img/small-icon2.png"  alt="" /> 
-                                </a>
-                                <a ui-sref="patient.alert({id: row.patient.patient_guid})" title="Alert">  
-                                    <img src="img/small-icon8.png"  alt="" /> 
-                                </a>
-<!--                                <a href="#">  
-                                    <i tooltip="Cancel" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" class="fa fa-times-circle"></i>  
-                                </a>-->
-                                
-                            </div>  
+                        <td>{{row.patient.consultant_name}}</td>
+                        <td align="left">
+                            <a ui-sref="patient.view({id: row.patient.patient_guid})">
+                                <img src="img/small-icon1.png"  alt="" tooltip="Details" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
+                            </a>
+
+                            <a ui-sref="patient.procedure({id: row.patient.patient_guid})">
+                                <img src="img/small-icon2.png"  alt="" tooltip="Procedures" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
+                            </a>
+
+                            <a ui-sref="patient.encounter({id: row.patient.patient_guid})">
+                                <img src="img/small-icon3.png"  alt="" tooltip="Encounters " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
+                            </a>
+
+                            <a ui-sref="patient.notes({id: row.patient.patient_guid})">
+                                <img src="img/small-icon4.png"  alt="" tooltip=" Notes " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
+                            </a>
+
+                            <a href="#">
+                                <img src="img/small-icon5.png"  alt="" tooltip="Prescriptions " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
+                            </a>
+
+                            <a ui-sref="patient.consultant({id: row.patient.patient_guid})">
+                                <img src="img/small-icon6.png"  alt="" tooltip="Consultation " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
+                            </a>
+
+                            <a href="#">
+                                <img src="img/small-icon7.png"  alt="" tooltip="Documents " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
+                            </a>
+
+                            <a ui-sref="patient.alert({id: row.patient.patient_guid})">
+                                <img src="img/small-icon8.png"  alt="" tooltip="Alerts  " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
+                            </a>
+
+                            <a ui-sref="patient.billing({id: row.patient.patient_guid})">
+                                <img src="img/small-icon9.png"  alt="" tooltip="Billing" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
+                            </a>
                         </td>
                     </tr>
                 </tbody>
