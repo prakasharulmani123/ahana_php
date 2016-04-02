@@ -5,6 +5,8 @@ namespace IRISORG\modules\v1\controllers;
 use common\models\CoPatient;
 use common\models\PatPatient;
 use common\models\PatPatientAddress;
+use common\models\PatPrescriptionFrequency;
+use common\models\PatPrescriptionRoute;
 use common\models\PatTimeline;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -191,4 +193,33 @@ class PatientController extends ActiveController {
         return ['timeline' => PatTimeline::find()->tenant()->andWhere(['patient_id' => $patient->patient_id])->orderBy(['created_at' => SORT_DESC])->all()];
     }
 
+    public function actionGetpatientroutelist() {
+        $get = Yii::$app->getRequest()->get();
+
+        if (isset($get['tenant']))
+            $tenant = $get['tenant'];
+
+        if (isset($get['status']))
+            $status = strval($get['status']);
+
+        if (isset($get['deleted']))
+            $deleted = $get['deleted'] == 'true';
+
+        return ['routelist' => PatPrescriptionRoute::getRoutelist($tenant, $status, $deleted)];
+    }
+
+    public function actionGetpatientfrequencylist() {
+        $get = Yii::$app->getRequest()->get();
+
+        if (isset($get['tenant']))
+            $tenant = $get['tenant'];
+
+        if (isset($get['status']))
+            $status = strval($get['status']);
+
+        if (isset($get['deleted']))
+            $deleted = $get['deleted'] == 'true';
+
+        return ['frequencylist' => PatPrescriptionFrequency::getFrequencylist($tenant, $status, $deleted)];
+    }
 }
