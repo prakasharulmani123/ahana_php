@@ -12,4 +12,7 @@ class PhaDrugClassQuery extends CommonQuery {
         return $this->andWhere(['NOT IN', 'drug_class_id', $ids]);
     }
 
+    public function nameLike($name = NULL) {
+        return $this->andWhere("product_name LIKE '%$name%'");
+    }
 }

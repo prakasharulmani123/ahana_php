@@ -2,6 +2,8 @@
 
 namespace IRISORG\modules\v1\controllers;
 
+use common\models\PhaDrugClass;
+use common\models\PhaDrugGeneric;
 use common\models\PhaProduct;
 use common\models\PhaProductBatch;
 use common\models\PhaProductDescription;
@@ -81,6 +83,26 @@ class PharmacyproductController extends ActiveController {
         $get = Yii::$app->getRequest()->get();
         $name = $get['name'];
         return ['productList' => PhaProduct::find()->tenant()->nameLike($name)->active()->all()];
+    }
+
+    public function actionGetdrugclasslistbyname() {
+        $get = Yii::$app->getRequest()->get();
+        $name = $get['name'];
+        return ['drugclassList' => PhaDrugClass::find()->tenant()->nameLike($name)->active()->all()];
+    }
+
+    public function actionGetgenericlistbydrugclass() {
+        $get = Yii::$app->getRequest()->get();
+        $id = $get['drug_class_id'];
+        
+        return ['genericList' => PhaDrugGeneric::find()->tenant()->andWhere(['drug_class_id' => $id])->active()->all()];
+    }
+
+    public function actionGetproductlistbygeneric() {
+        $get = Yii::$app->getRequest()->get();
+        $id = $get['generic_id'];
+        
+        return ['productList' => PhaProduct::find()->tenant()->andWhere(['generic_id' => $id])->active()->all()];
     }
 
     public function actionGetproductdescriptionlist() {

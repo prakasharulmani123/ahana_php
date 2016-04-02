@@ -80,7 +80,7 @@ return [
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/pharmacyvat'], 'extraPatterns' => ['POST remove' => 'remove', 'GET getvatlist' => 'getvatlist']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/pharmacydruggeneric'], 'extraPatterns' => ['POST remove' => 'remove', 'POST savedruggeneric' => 'savedruggeneric', 'POST updatedruggeneric' => 'updatedruggeneric']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/patientcasesheet'], 'extraPatterns' => ['POST createcasesheet' => 'createcasesheet']],
-                ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/pharmacyproduct'], 'extraPatterns' => ['POST remove' => 'remove', 'GET getproductlist' => 'getproductlist', 'GET getproductdescriptionlist' => 'getproductdescriptionlist', 'GET getproductlistbyname' => 'getproductlistbyname', 'POST searchbycriteria' => 'searchbycriteria', 'POST adjuststock' => 'adjuststock', 'POST updatebatch' => 'updatebatch']],
+                ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/pharmacyproduct'], 'extraPatterns' => ['POST remove' => 'remove', 'GET getproductlist' => 'getproductlist', 'GET getproductdescriptionlist' => 'getproductdescriptionlist', 'GET getproductlistbyname' => 'getproductlistbyname', 'POST searchbycriteria' => 'searchbycriteria', 'POST adjuststock' => 'adjuststock', 'POST updatebatch' => 'updatebatch', 'GET getdrugclasslistbyname' => 'getdrugclasslistbyname', 'GET getgenericlistbydrugclass' => 'getgenericlistbydrugclass', 'GET getproductlistbygeneric' => 'getproductlistbygeneric']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/pharmacypurchase'], 'extraPatterns' => ['POST remove' => 'remove', 'POST savepurchase' => 'savepurchase', 'GET reportlist' => 'reportlist', 'GET getpurchases' => 'getpurchases']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/pharmacyproductbatch'], 'extraPatterns' => ['POST remove' => 'remove', 'GET getbatchbyproduct' => 'getbatchbyproduct']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/pharmacysale'], 'extraPatterns' => ['POST remove' => 'remove', 'POST savesale' => 'savesale', 'GET getsales' => 'getsales']],
@@ -91,6 +91,7 @@ return [
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/patientbillingpayment'], 'extraPatterns' => ['POST remove' => 'remove']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/patientbillingothercharge'], 'extraPatterns' => ['POST remove' => 'remove']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/patientbillingextraconcession'], 'extraPatterns' => ['POST remove' => 'remove', 'POST addcharge' => 'addcharge']],
+                ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/patientprescription'], 'extraPatterns' => ['POST remove' => 'remove', 'POST saveprescription' => 'saveprescription']],
             ],
         ],
         'log' => [
