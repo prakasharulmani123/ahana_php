@@ -46,6 +46,7 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
     service.GetProductListByName = GetProductListByName;
     service.GetPackageUnitList = GetPackageUnitList;
     service.GetBatchListByProduct = GetBatchListByProduct;
+    service.GetDrugClassListByName = GetDrugClassListByName;
 
     service.GetLabelFromValue = GetLabelFromValue;
     service.FoundVlaue = FoundVlaue;
@@ -441,6 +442,18 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
         var response;
 
         $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/getproductlistbyname?name=' + name)
+                .success(function (response) {
+                    callback(response);
+                }, function (x) {
+                    response = {success: false, message: 'Server Error'};
+                    callback(response);
+                });
+    }
+
+    function GetDrugClassListByName(name, callback) {
+        var response;
+
+        $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/getdrugclasslistbyname?name=' + name)
                 .success(function (response) {
                     callback(response);
                 }, function (x) {

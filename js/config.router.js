@@ -2183,6 +2183,24 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 }
             })
 
+            //Patient Prescription
+            .state('patient.prescription', {
+                url: '/prescription/{id}',
+                templateUrl: 'tpl/patient_prescription/index.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table', 'ui.select']).then(
+                                    function () {
+                                        return $ocLazyLoad.load([
+                                            'tpl/patient_prescription/patient_prescription.js'
+                                        ]);
+                                    }
+                            );
+                        }]
+                }
+            })
+
     $httpProvider.interceptors.push('APIInterceptor');
 
 }
