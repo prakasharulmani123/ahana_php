@@ -1,0 +1,197 @@
+<div ng-controller="PrescriptionController">
+    <div class="hbox hbox-auto-xs hbox-auto-sm">
+        <div class="col">
+            <div class="bg-light lter b-b wrapper-md">
+                <h1 class="m-n h3">Prescription</h1>
+            </div>
+            <div class="wrapper-md p-b">
+                <div ng-include="'tpl/blocks/alert.html'">
+                    {% include 'tpl/blocks/alert.html' %}
+                </div>
+                <form name="prescForm" class="form-horizontal form-validation" novalidate="">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="panel panel-default"> 
+                                <!--<div class="panel-heading">
+                              Responsive Table
+                            </div>-->
+                                <div class="row wrapper pb-sm">
+                                    <div class="col-sm-3 m-b-xs">
+                                        <div class="btn-group btn-group-justified">
+                                            <ui-select ng-model="enc.selected" theme="bootstrap">
+                                                <ui-select-match placeholder="Select Encounter Id">{{$select.selected.encounter_id}}</ui-select-match>
+                                                <ui-select-choices repeat="item in encounters | filter: $select.search | orderBy: 'encounter_id' : true">
+                                                    <div ng-bind-html="item.encounter_id | highlight: $select.search"></div>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                            <br />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3 m-b-xs">
+                                        <select class="form-control" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors | orderBy: name" ng-change="getTimeOfAppointment();">
+                                            <option value="">Select Consultant</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-2 m-b-xs"> 
+                                        <button class="btn m-b-xs  btn-dark">  <i class="fa fa-times"></i> Clear </button>
+                                    </div>
+                                    <div class="col-sm-4 pull-right right">
+                                        <div class="btn-group navbar-right" dropdown>
+                                            <div class="col-sm-2 m-b-xs">
+                                                <div class="btn-group" dropdown is-open="status.isopen">
+                                                    <button type="button" class=" btn btn-sm btn-grey" dropdown-toggle ng-disabled="disabled"> More &nbsp;&nbsp;<span class="caret"></span> </button>
+                                                    <ul class="dropdown-menu" role="menu">
+                                                        <li><a href>New Prescription </a></li>
+                                                        <li><a href> Repeat Prescription </a></li>
+                                                        <li><a href> Edit Prescription </a></li>
+                                                        <li><a href> Delete Prescription </a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button class="btn btn-info"> <i class="fa fa-plus"></i> New  </button>
+                                    </div>
+                                </div>
+                                <div class="table-responsive in-patient-table">
+                                    <div class="wrapper-md p-b">
+                                        <div  class="row" style="height:220px;overflow-y: auto;" >
+                                            <table  class="table table-striped b-t b-light">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="60" align="left">Favorite </th>
+                                                        <th width="251" align="left">Product </th>
+                                                        <th width="45" align="left">Route </th>
+                                                        <th width="43" align="left">Freq</th>
+                                                        <th width="70" align="center">No.of Days </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr ng-repeat="(key, item) in data.prescriptionItems">
+                                                        <td > <a href="#"> <i class="fa fa-star"></i> </a></td>
+                                                        <td>{{item.product_name}}</td>
+                                                        <td>{{item.route}}</td>
+                                                        <td>{{item.frequency}}</td>
+                                                        <td align="center">{{item.number_of_days}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <footer class="panel-footer">
+                                    <div class="row">
+                                        <div class="col-sm-2 "> <i class="fa fa-calendar"></i> <b> Next Vist </b> </div>
+                                        <div class="col-sm-1 ">
+                                            <label> Date </label>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="row">
+                                                <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="data.next_visit" is-open="opened" datepicker-options="dateOptions" close-text="Close"  min-date="minDate" ng-click="open($event)" prevent-enter="true"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-1 ">
+                                            <label> No.of.Days </label>
+                                        </div>
+                                        <div class="col-sm-2 ">
+                                            <input autocomplete="off" type="text" ng-model="data.number_of_days" class="form-control m-b" number-mask="" required>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <button class="btn m-b-xs  btn-success save-btn" ng-click="saveForm()"> <i class="fa fa-check"></i> Save </button>
+                                            &nbsp;
+                                            <button class="btn m-b-xs  btn-dark"> <i class="fa fa-print"></i> Print </button>
+                                            &nbsp; </div>
+                                    </div>
+                                </footer>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="wrapper-md p-b" ng-init="initForm()">
+                <form name="searchForm" class="form-horizontal form-validation" novalidate="">
+                    <div class="panel panel-default">
+                        <div class="panel-heading font-bold"> <i class="fa fa-medkit"></i> Search & Add</div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label> Drug Class</label>
+                                    <input autocomplete="off"
+                                           placeholder="Drug Class"
+                                           type="text"
+                                           class="form-control"
+                                           ng-model="addData.drug_class"
+                                           typeahead-editable="false"
+                                           typeahead="drug as drug.drug_name for drug in drugs | filter:$viewValue"
+                                           typeahead-on-select="getGeneric($item, $model, $label)" />
+                                </div>
+                                <div class="col-sm-3">
+                                    <label> Generic </label>
+                                    <input autocomplete="off"
+                                           placeholder="Generic"
+                                           type="text"
+                                           class="form-control"
+                                           ng-model="addData.generic"
+                                           typeahead-editable="false"
+                                           typeahead="generic as generic.generic_name for generic in generics | filter:$viewValue"
+                                           typeahead-on-select="getProduct($item, $model, $label)" />
+                                </div>
+                                <div class="col-sm-3">
+                                    <label> Product</label>
+                                    <input autocomplete="off"
+                                           placeholder="Product"
+                                           type="text"
+                                           class="form-control"
+                                           ng-model="addData.product"
+                                           typeahead-editable="false"
+                                           typeahead="product as product.full_name for product in products | filter:$viewValue"
+                                           />
+                                </div>
+                                <div class="col-sm-3">
+                                    <label> Freq</label>
+                                    <input autocomplete="off" type="text" name="masked" ui-mask="9-9-9" ng-model="addData.frequency" model-view-value="true" class="form-control m-b" required>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label> Route </label>
+                                    <input autocomplete="off" type="text" ng-model="addData.route" class="form-control m-b" required>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label>No.of.Days </label>
+                                    <input autocomplete="off" type="text" ng-model="addData.number_of_days" class="form-control m-b" number-mask="" required>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label> </label>
+                                    <br/>
+                                    <button class="btn m-b-xs  btn-success save-btn" ng-click="addForm(data.formtype)">Add</button>
+                                    &nbsp;
+                                    <button class="btn m-b-xs  btn-dark"> <i class="fa fa-repeat"></i> Reset</button>
+                                    &nbsp; </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col w-sm pres-div bg-light dk b-r bg-auto" style="width:110px;">
+            <div class="wrapper pres-right hidden-sm hidden-xs" id="email-menu">
+                <ul class="nav nav-pills nav-stacked nav-sm">
+                    <li ng-repeat="fold in folds" ui-sref-active="active">
+                        <a ui-sref="app.mail.list({fold:fold.filter})">
+                            {{fold.name}}
+                        </a>
+                    </li>
+                </ul>
+                <ul class="nav nav-pills nav-stacked nav-sm">
+                    <li><a href="#" class="active4"> 
+                            <i class="fa fa-medkit"></i> <br/>
+                            Prescription</a></li>
+                    <li><a href="#"> 
+                            <i class="fa fa-file-text"></i> <br/>
+                            Results </a></li>
+                    <li> <a href="#">  <i class="fa fa-heart"></i> <br/> favorites</a></li>
+                    <li><a href="#"><i class="fa fa-pencil"></i> <br/>  Notes</a></li>
+                    <li><a href="#"> <i class="fa fa-heartbeat"></i> <br/>  Vitals</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
