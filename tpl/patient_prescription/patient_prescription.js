@@ -7,6 +7,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$timeout', '$
 
         $scope.enc = {};
         $scope.drugs = {};
+        $scope.routes = {};
+        $scope.frequencies = {};
 
         $scope.$watch('app.patientDetail.patientId', function (newValue, oldValue) {
             if (newValue != '') {
@@ -34,14 +36,20 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$timeout', '$
             $http.get($rootScope.IRISOrgServiceUrl + '/pharmacydrugclass')
                     .success(function (response) {
                         $scope.drugs = response;
-
-                        $rootScope.commonService.GetDoctorList('', '1', false, '1', function (response) {
-                            $scope.doctors = response.doctorsList;
-                        });
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading drugclass!";
                     });
+
+            $rootScope.commonService.GetDoctorList('', '1', false, '1', function (response) {
+                $scope.doctors = response.doctorsList;
+            });
+            $rootScope.commonService.GetPatientRoute('', '1', false, function (response) {
+                $scope.routes = response.routelist;
+            });
+            $rootScope.commonService.GetPatientFrequency('', '1', false, function (response) {
+                $scope.frequencies = response.frequencylist;
+            });
         }
 
         $scope.getGeneric = function ($item, $model, $label) {
@@ -129,7 +137,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$timeout', '$
 //                            $timeout(function () {
 //                                $state.go('patient.prescription', {id: $state.params.id});
 //                            }, 1000)
-                        }else{
+                        } else {
                             $scope.errorData = response.message;
                         }
                     }

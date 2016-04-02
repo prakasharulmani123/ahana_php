@@ -47,6 +47,8 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
     service.GetPackageUnitList = GetPackageUnitList;
     service.GetBatchListByProduct = GetBatchListByProduct;
     service.GetDrugClassListByName = GetDrugClassListByName;
+    service.GetPatientFrequency = GetPatientFrequency;
+    service.GetPatientRoute = GetPatientRoute;
 
     service.GetLabelFromValue = GetLabelFromValue;
     service.FoundVlaue = FoundVlaue;
@@ -486,8 +488,30 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
                 });
     }
     
-    
-    
+
+    function GetPatientRoute(tenant, sts, del_sts, callback) {
+        var response;
+
+        $http.get($rootScope.IRISOrgServiceUrl + '/patient/getpatientroutelist?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts)
+                .success(function (response) {
+                    callback(response);
+                }, function (x) {
+                    response = {success: false, message: 'Server Error'};
+                    callback(response);
+                });
+    }
+
+    function GetPatientFrequency(tenant, sts, del_sts, callback) {
+        var response;
+
+        $http.get($rootScope.IRISOrgServiceUrl + '/patient/getpatientfrequencylist?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts)
+                .success(function (response) {
+                    callback(response);
+                }, function (x) {
+                    response = {success: false, message: 'Server Error'};
+                    callback(response);
+                });
+    }
 
     function GetLabelFromValue(val, func, callback) {
         if (func == 'GetGenderList') {

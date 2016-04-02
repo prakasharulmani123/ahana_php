@@ -148,11 +148,25 @@
                                 </div>
                                 <div class="col-sm-3">
                                     <label> Freq</label>
-                                    <input autocomplete="off" type="text" name="masked" ui-mask="9-9-9" ng-model="addData.frequency" model-view-value="true" class="form-control m-b" required>
+                                    <!--Ui-mask & Typeahead Not working -->
+                                    <input autocomplete="off" 
+                                           type="text" 
+                                           name="masked" 
+                                           ui-mask="9-9-9" 
+                                           ng-model="addData.frequency" 
+                                           model-view-value="true" 
+                                           class="form-control m-b"
+                                           typeahead="frequency as frequency.freq_name for frequency in frequencies | filter:$viewValue"
+                                           required>
                                 </div>
                                 <div class="col-sm-3">
                                     <label> Route </label>
-                                    <input autocomplete="off" type="text" ng-model="addData.route" class="form-control m-b" required>
+                                    <input autocomplete="off" 
+                                           type="text" 
+                                           ng-model="addData.route" 
+                                           class="form-control m-b" 
+                                           typeahead="route as route.route_name for route in routes | filter:$viewValue"
+                                           required>
                                 </div>
                                 <div class="col-sm-3">
                                     <label>No.of.Days </label>

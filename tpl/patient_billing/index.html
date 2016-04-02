@@ -57,7 +57,10 @@
                         </div>
                         <div class="form-group">
                             <div class="col-sm-5">  <b>Amount Paid : </b>   </div>
-                            <div class="col-sm-7"> <span class="label bg-success">{{billing.total.advance_charge| number:2}}  </span>	</div>
+                            <div class="col-sm-7"> 
+                                <span class="label bg-success" ng-if="billing.total.advance_charge">{{billing.total.advance_charge| number:2}}  </span>	
+                                <span class="label bg-success" ng-if="!billing.total.advance_charge">0.00  </span>	
+                            </div>
                         </div>
                         <div class="form-group">
                             <div class="col-sm-5">  <b>Amount Payable : </b>   </div>
