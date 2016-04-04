@@ -120,7 +120,7 @@ class PatConsultant extends RActiveRecord {
     public function fields() {
         $extend = [
             'consultant_name' => function ($model) {
-                return (isset($model->consultant->name)) ? $model->consultant->name : '-';
+                return (isset($model->consultant->name)) ? $model->consultant->title_code.$model->consultant->name : '-';
             },
         ];
         $fields = array_merge(parent::fields(), $extend);
