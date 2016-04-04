@@ -1,6 +1,7 @@
 <div class="bg-light lter b-b wrapper-md">
     <h1 class="m-n h3">Out-Patient</h1>
 </div>
+
 <div class="wrapper-md" ng-controller="OutPatientsController" ng-init="loadOutPatientsList()">
     <div ng-include="'tpl/blocks/alert.html'">
         {% include 'tpl/blocks/alert.html' %}
@@ -9,58 +10,14 @@
         <div class="row wrapper">
             <div class="col-sm-5 m-b-xs">
                 <button class="btn btn-sm btn-grey" ng-click="loadOutPatientsList()"> &nbsp; &nbsp; <i class="fa fa-repeat"></i>  &nbsp; &nbsp; </button>    
-                <!--                <div class="btn-group" dropdown is-open="status.isopen">
-                                    <button type="button" class=" btn btn-sm btn-grey" dropdown-toggle ng-disabled="disabled">
-                                        More &nbsp;&nbsp;<span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu" role="menu">
-                                        <li><a href>Action</a></li>
-                                        <li><a href>Another action</a></li>
-                                        <li><a href>Something else here</a></li>
-                                        <li class="divider"></li>
-                                        <li><a href>Separated link</a></li>
-                                    </ul>
-                                </div>        -->
             </div>
-            <div class="col-sm-4">
-            </div>
-            <!--            <div class="col-sm-2 pull-right">
-                            <div class="btn-group navbar-right" dropdown>
-                                <button type="button" class=" btn btn-sm no-bg" dropdown-toggle >
-                                    &nbsp;&nbsp;  <img src="img/actions-icon.png"  alt="" />
-                                </button>
-                                <ul class="dropdown-menu" role="menu1">
-                                    <li><a href>Action</a></li>
-                                    <li><a href>Another action</a></li>
-                                    <li><a href>Something else here</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href>Separated link</a></li>
-                                </ul>
-                            </div>
-                            <div class="btn-group pull-right" dropdown>
-                                <button type="button" class=" btn btn-sm btn-grey" dropdown-toggle >
-                                    &nbsp;&nbsp; Select &nbsp;&nbsp;<span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu" role="menu1">
-                                    <li><a href>Action</a></li>
-                                    <li><a href>Another action</a></li>
-                                    <li><a href>Something else here</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href>Separated link</a></li>
-                                </ul>
-                            </div>
-                        </div>-->
+            <div class="col-sm-4"></div>
         </div>
         <div class="table-responsive in-patient-table">
             <table st-table="displayedCollection"  st-safe-src="rowCollection" class="table table-striped b-t b-light">
                 <thead>
                     <tr>
-                        <th width="21"  style="width:20px;">
-                            <!--                            <label class="i-checks m-b-none">
-                                                            <input type="checkbox"><i></i>
-                                                        </label>-->
-                        </th>
-                        <th style="width:40px;">&nbsp;</th>
+                        <th style="width:60px;">&nbsp;</th>
                         <th>Patient</th>
                         <th>Category</th>
                         <th>Contact#</th>
@@ -70,17 +27,14 @@
                             Time</th>
                         <th>status</th>
                         <th>consultant</th>
-                        <th style="width:180px;"> Actions</th>
+                        <th style="width:250px;"> Actions</th>
                     </tr>
                 </thead>
                 <tbody ng-hide="isLoading">
                     <tr ng-repeat="(key, row) in displayedCollection| orderBy: patient_firstname">
                         <td align="center" valign="middle">
-                            <!--<label class="i-checks m-b-none"><input type="checkbox" name="post[]"><i></i></label>-->
-                        </td>
-                        <td align="center" valign="middle">
-                            <img ng-if="(row.liveAppointmentArrival != '-' && row.liveAppointmentArrival.waiting_elapsed)" class="pull-left" src="img/elapsed-waiting-time.png"  alt="" />
-                            <img ng-if="row.patient.address.incomplete_profile" class="pull-left" src="img/question.png"  alt="" />
+                            <img ng-if="(row.liveAppointmentArrival != '-' && row.liveAppointmentArrival.waiting_elapsed)" class="pull-left" src="img/elapsed-waiting-time.png"  alt="" tooltip="Elapsing Waiting Time" tooltip-trigger tooltip-animation="false" tooltip-placement="right"/>
+                            <img ng-if="row.patient.address.incomplete_profile" class="pull-left" src="img/question.png"  alt="" tooltip="Incomplete Profile" tooltip-trigger tooltip-animation="false" tooltip-placement="right"/>
                         </td>
                         <td>
                             <img ng-if="$even" class="pull-left" src="img/man-icon.png" width="49" height="49" alt="" />  
@@ -91,12 +45,14 @@
                             {{row.patient.patient_int_code}}
                         </td>
                         <td valign="middle">
-                            {{row.patient.patient_category}} - {{row.patient.billing_type}}
-                            <!--<img src="img/cate-1.png"  alt="" />-->
+                            <div class="category_badge" style="background-color: {{row.patient.patient_category_color}}">
+                                {{row.patient.patient_category}}{{row.patient.billing_type}}
+                            </div>
                         </td>
                         <td>
-                            <!--{{row.patient.patient_mobile}}-->
-                            <a editable-text="row.patient.patient_mobile" e-number-mask="" onbeforesave="updatePatient(row.patient.patient_id, {'patient_mobile': $data}, $data)">{{row.patient.patient_mobile}}</a>
+                            <a editable-text="row.patient.patient_mobile" e-number-mask="" onbeforesave="updatePatient(row.patient.patient_id, {'patient_mobile': $data}, $data)">
+                                {{row.patient.patient_mobile}}
+                            </a>
                         </td>
                         <td>{{row.liveAppointmentBooking.status_datetime| moment:'hh:mm A'}}<br/>  <span class="text-muted"> {{row.liveAppointmentBooking.status_date}}</span></td>
                         <td>
@@ -118,7 +74,6 @@
                                 {{row.liveAppointmentArrival.status_datetime| moment:'hh:mm A'}} <br/> 
                                 <span class="text-muted"> {{row.liveAppointmentArrival.status_date}} </span>
                             </div>
-
                         </td>
                         <td>
                             <div ng-if="row.liveAppointmentArrival == '-'">
@@ -168,27 +123,42 @@
                             </div>
                         </td>
                         <td>{{row.liveAppointmentConsultant.title_code}} {{row.liveAppointmentConsultant.name}}</td>
-                        <td> 
-                            <div class="actions-icons-cont">  
-                                <a ui-sref="patient.view({id: row.patient.patient_guid})" title="Details">  
-                                    <img src="img/small-icon1.png"  alt="" /> 
-                                </a>
-                                <a ui-sref="patient.encounter({id: row.patient.patient_guid})" title="Encounter">  
-                                    <img src="img/small-icon3.png"  alt="" /> 
-                                </a>
-                                <a ui-sref="patient.notes({id: row.patient.patient_guid})" title="Notes">  
-                                    <img src="img/small-icon4.png"  alt="" /> 
-                                </a>
-                                <a ui-sref="patient.consultant({id: row.patient.patient_guid})" title="Consultant">  
-                                    <img src="img/small-icon6.png"  alt="" /> 
-                                </a>
-                                <a ui-sref="patient.procedure({id: row.patient.patient_guid})" title="Procedure">  
-                                    <img src="img/small-icon2.png"  alt="" /> 
-                                </a>
-                                <a ui-sref="patient.alert({id: row.patient.patient_guid})" title="Alert">  
-                                    <img src="img/small-icon8.png"  alt="" /> 
-                                </a>
-                            </div>  
+                        <td align="left">
+                            <a ui-sref="patient.view({id: row.patient.patient_guid})">
+                                <img src="img/small-icon1.png"  alt="" tooltip="Details" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
+                            </a>
+
+                            <a ui-sref="patient.procedure({id: row.patient.patient_guid})">
+                                <img src="img/small-icon2.png"  alt="" tooltip="Procedures" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
+                            </a>
+
+                            <a ui-sref="patient.encounter({id: row.patient.patient_guid})">
+                                <img src="img/small-icon3.png"  alt="" tooltip="Encounters " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
+                            </a>
+
+                            <a ui-sref="patient.notes({id: row.patient.patient_guid})">
+                                <img src="img/small-icon4.png"  alt="" tooltip=" Notes " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
+                            </a>
+
+                            <a href="#">
+                                <img src="img/small-icon5.png"  alt="" tooltip="Prescriptions " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
+                            </a>
+
+                            <a ui-sref="patient.consultant({id: row.patient.patient_guid})">
+                                <img src="img/small-icon6.png"  alt="" tooltip="Consultation " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
+                            </a>
+
+                            <a href="#">
+                                <img src="img/small-icon7.png"  alt="" tooltip="Documents " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
+                            </a>
+
+                            <a ui-sref="patient.alert({id: row.patient.patient_guid})">
+                                <img src="img/small-icon8.png"  alt="" tooltip="Alerts  " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
+                            </a>
+
+                            <a ui-sref="patient.billing({id: row.patient.patient_guid})">
+                                <img src="img/small-icon9.png"  alt="" tooltip="Billing" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
+                            </a>
                         </td>
                     </tr>
                 </tbody>
@@ -206,27 +176,5 @@
                 </tfoot>
             </table>
         </div>
-        <!--        <footer class="panel-footer">
-                    <div class="row">
-                        <div class="col-sm-4 hidden-xs">
-        
-        
-                        </div>
-                        <div class="col-sm-4 text-center">
-                            <small class="text-muted inline m-t-sm m-b-sm">showing 20-30 of 50 items</small>
-                        </div>
-                        <div class="col-sm-4 text-right text-center-xs">                
-                            <ul class="pagination pagination-sm m-t-none m-b-none">
-                                <li><a href><i class="fa fa-chevron-left"></i></a></li>
-                                <li><a href>1</a></li>
-                                <li><a href>2</a></li>
-                                <li><a href>3</a></li>
-                                <li><a href>4</a></li>
-                                <li><a href>5</a></li>
-                                <li><a href><i class="fa fa-chevron-right"></i></a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </footer>-->
     </div>
 </div>

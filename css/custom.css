@@ -67,3 +67,16 @@ th[st-sort] {
   margin: 0;
 }
 
+.category_badge{
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background-color: #119BC0;
+    font-size: 17px;
+    color: #ffffff;
+    line-height: 35px;
+    font-weight: bold;
+    font-family: 'Roboto Condensed', sans-serif;
+    text-align: center;
+}
+
