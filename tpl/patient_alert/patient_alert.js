@@ -1,10 +1,28 @@
-app.controller('AlertsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', function ($rootScope, $scope, $timeout, $http, $state) {
+app.controller('AlertsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$filter', '$anchorScroll', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $filter, $anchorScroll) {
 
         $scope.app.settings.patientTopBar = true;
         $scope.app.settings.patientSideMenu = true;
         $scope.app.settings.patientContentClass = 'app-content patient_content ';
         $scope.app.settings.patientFooterClass = 'app-footer';
-        
+
+        editableThemes.bs3.inputClass = 'input-sm';
+        editableThemes.bs3.buttonsClass = 'btn-sm';
+        editableOptions.theme = 'bs3';
+
+        $scope.checkName = function (data) {
+            if (data == '') {
+                return "Value should not empty";
+            }
+        };
+
+        $scope.showStatus = function (row) {
+            var selected = [];
+            if (row && row.alert_type) {
+                selected = $filter('filter')($scope.alerts, {alert_name: row.alert_type});
+            }
+            return selected.length ? selected[0].alert_name : 'Not set';
+        };
+
         //Index Page
         $scope.loadAlertsList = function () {
             $scope.isLoading = true;
@@ -32,6 +50,30 @@ app.controller('AlertsController', ['$rootScope', '$scope', '$timeout', '$http',
             });
         }
 
+        $scope.updateAlert = function ($data, pat_alert_id) {
+            $scope.errorData = "";
+            $scope.successMessage = "";
+            
+            $scope.loadbar('show');
+            $http({
+                method: 'PUT',
+                url: $rootScope.IRISOrgServiceUrl + '/patientalerts/' + pat_alert_id,
+                data: $data,
+            }).success(
+                    function (response) {
+                        $scope.loadbar('hide');
+                        $scope.successMessage = response.alert_description + ' (Alert) updated successfully';
+                        $anchorScroll();
+                    }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        }
+
         //Save Both Add & Update Data
         $scope.saveForm = function (mode) {
             _that = this;
@@ -43,7 +85,7 @@ app.controller('AlertsController', ['$rootScope', '$scope', '$timeout', '$http',
                 post_url = $rootScope.IRISOrgServiceUrl + '/patientalerts';
                 method = 'POST';
                 succ_msg = 'Alert saved successfully';
-                
+
                 angular.extend(_that.data, {patient_id: $scope.app.patientDetail.patientId});
             } else {
                 post_url = $rootScope.IRISOrgServiceUrl + '/patientalerts/' + _that.data.pat_alert_id;
@@ -64,7 +106,9 @@ app.controller('AlertsController', ['$rootScope', '$scope', '$timeout', '$http',
                         $scope.app.patientDetail.patientHasAlert = true;
                         $scope.app.patientDetail.patientAlert = response.alert_description;
                         $timeout(function () {
-                            $state.go('patient.alert', {id: $state.params.id});
+                            $scope.loadAlertsList();
+                            $anchorScroll();
+//                            $state.go('patient.alert', {id: $state.params.id});
                         }, 1000)
 
                     }

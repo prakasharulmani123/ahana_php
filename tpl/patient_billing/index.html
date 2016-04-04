@@ -145,7 +145,7 @@
                     </thead>
                     <tbody ng-hide="isLoading" ng-init="billing.total = {}">
                         <!-- Procedures -->
-                        <tr ng-init="expanded_1 = true;" ng-show="procedures">
+                        <tr ng-init="expanded_1 = true;" ng-show="procedures.length > 0">
                             <td align="center" valign="middle"></td>
                             <td> 
                                 <button ng-click="expanded_1 = !expanded_1" target="#moreless" ui-toggle-class="show" class="btn btn-sm btn-default hms-plus">
@@ -182,7 +182,7 @@
                                 "> {{row_total| number:2}} </td>
                         </tr>
                         <!-- Consultants -->
-                        <tr ng-init="expanded_2 = true;" ng-show="consultants">
+                        <tr ng-init="expanded_2 = true;" ng-show="consultants.length > 0">
                             <td align="center" valign="middle"></td>
                             <td> 
                                 <button ng-click="expanded_2 = !expanded_2" target="#moreless" ui-toggle-class="show" class="btn btn-sm btn-default hms-plus">
@@ -219,7 +219,7 @@
                                 "> {{row_total| number:2}} </td>
                         </tr>
                         <!-- Other Charges -->
-                        <tr ng-init="expanded_3 = true;" ng-show="other_charges">
+                        <tr ng-init="expanded_3 = true;" ng-show="other_charges.length > 0">
                             <td align="center" valign="middle"></td>
                             <td> 
                                 <button ng-click="expanded_3 = !expanded_3" target="#moreless" ui-toggle-class="show" class="btn btn-sm btn-default hms-plus">

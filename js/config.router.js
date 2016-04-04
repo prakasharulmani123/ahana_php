@@ -1215,7 +1215,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load(['smart-table']).then(
+                            return $ocLazyLoad.load(['xeditable', 'smart-table']).then(
                                     function () {
                                         return $ocLazyLoad.load('tpl/patient_alert/patient_alert.js');
                                     }
@@ -1223,7 +1223,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
-
+            
             //Patient Alert Create
             .state('patient.alertCreate', {
                 url: '/alertCreate/{id}',

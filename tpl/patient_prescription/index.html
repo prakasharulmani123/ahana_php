@@ -165,7 +165,7 @@
                                            type="text" 
                                            ng-model="addData.route" 
                                            class="form-control m-b" 
-                                           typeahead="route as route.route_name for route in routes | filter:$viewValue"
+                                           typeahead="route.route_name for route in routes | filter:$viewValue"
                                            required>
                                 </div>
                                 <div class="col-sm-3">
