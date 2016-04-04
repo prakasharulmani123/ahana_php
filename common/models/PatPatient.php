@@ -153,7 +153,7 @@ class PatPatient extends RActiveRecord {
     public function getPatActiveIp() {
         return $this->hasOne(PatEncounter::className(), ['patient_id' => 'patient_id'])->status()->encounterType()->orderBy(['encounter_date' => SORT_DESC]);
     }
-    
+
     public function getPatActiveOp() {
         return $this->hasOne(PatEncounter::className(), ['patient_id' => 'patient_id'])->status()->encounterType('OP')->orderBy(['encounter_date' => SORT_DESC]);
     }
@@ -226,8 +226,15 @@ class PatPatient extends RActiveRecord {
                     return date('Y-m-d', strtotime($model->patient_reg_date));
             },
             'patient_category' => function ($model) {
-                if (isset($model->patientCategory->patient_cat_name))
-                    return $model->patientCategory->patient_cat_name;
+                if (isset($model->patientCategory->patient_cat_name)){
+                    $category_name = $model->patientCategory->patient_cat_name;
+                    return $category_name[0];
+                }
+            },
+            'patient_category_color' => function ($model) {
+                if (isset($model->patientCategory->patient_cat_color) && $model->patientCategory->patient_cat_color != '#ffffff'){
+                    return $model->patientCategory->patient_cat_color;
+                }
             },
             'address' => function ($model) {
                 if (isset($model->patPatientAddress))
@@ -243,12 +250,7 @@ class PatPatient extends RActiveRecord {
             },
             'billing_type' => function ($model) {
                 if (isset($model->patient_bill_type) && $model->patient_bill_type != '') {
-                    if ($model->patient_bill_type == 'N')
-                        return "Normal";
-                    elseif ($model->patient_bill_type == 'F')
-                        return "Free";
-                } else {
-                    return '-';
+                    return $model->patient_bill_type;
                 }
             },
             'fullcurrentaddress' => function ($model) {
