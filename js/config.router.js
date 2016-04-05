@@ -643,11 +643,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('smart-table').then(
-                                    function () {
-                                        return $ocLazyLoad.load('tpl/specialities/speciality.js');
-                                    }
-                            );
+                            return $ocLazyLoad.load('tpl/specialities/speciality.js');
                         }]
                 }
             })
@@ -821,11 +817,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('smart-table').then(
-                                    function () {
-                                        return $ocLazyLoad.load('tpl/patient_categories/patient_category.js');
-                                    }
-                            );
+                            return $ocLazyLoad.load('tpl/patient_categories/patient_category.js');
                         }]
                 }
             })

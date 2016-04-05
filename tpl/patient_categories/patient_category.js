@@ -3,17 +3,16 @@ app.controller('PatientCategoriesController', ['$rootScope', '$scope', '$timeout
         //Index Page
         $scope.loadPatientCategoriesList = function () {
             $scope.isLoading = true;
-            // pagination set up
-            $scope.rowCollection = [];  // base collection
-            $scope.itemsByPage = 10; // No.of records per page
-            $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
+            $scope.rowCollection = [];
 
             // Get data's from service
             $http.get($rootScope.IRISOrgServiceUrl + '/patientcategory')
                     .success(function (patientcategories) {
                         $scope.isLoading = false;
                         $scope.rowCollection = patientcategories;
-                        $scope.displayedCollection = [].concat($scope.rowCollection);
+
+                        //Avoid pagination problem, when come from other pages.
+                        $scope.footable_redraw();
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading patientcategories!";

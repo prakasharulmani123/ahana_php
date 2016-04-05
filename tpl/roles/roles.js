@@ -12,9 +12,7 @@ app.controller('RolesController', ['$rootScope', '$scope', '$timeout', '$http', 
                         $scope.rowCollection = roles;
 
                         //Avoid pagination problem, when come from other pages.
-                        $timeout(function () {
-                            $('.table').trigger('footable_redraw');
-                        }, 100);
+                        $scope.footable_redraw();
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading roles!";

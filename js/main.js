@@ -222,6 +222,12 @@ angular.module('app')
                     }
                 }, true);
 
-
+                //Avoid pagination problem, when come from other pages. 
+                //Used in all the controller index function.
+                $scope.footable_redraw = function () {
+                    $timeout(function () {
+                        $('.table').trigger('footable_redraw');
+                    }, 100);
+                }
 
             }]);
