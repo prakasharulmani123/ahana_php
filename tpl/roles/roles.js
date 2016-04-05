@@ -3,19 +3,18 @@ app.controller('RolesController', ['$rootScope', '$scope', '$timeout', '$http', 
         //Index Page
         $scope.loadRolesList = function () {
             $scope.isLoading = true;
-            // pagination set up
-            $scope.rowCollection = [];  // base collection
-            $scope.itemsByPage = 10; // No.of records per page
-            $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
-            
-//            Restangular.all('role').getList();
-            
+            $scope.rowCollection = [];
+
             // Get data's from service
             $http.get($rootScope.IRISOrgServiceUrl + '/role')
                     .success(function (roles) {
                         $scope.isLoading = false;
                         $scope.rowCollection = roles;
-                        $scope.displayedCollection = [].concat($scope.rowCollection);
+
+                        //Avoid pagination problem, when come from other pages.
+                        $timeout(function () {
+                            $('.table').trigger('footable_redraw');
+                        }, 100);
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading roles!";

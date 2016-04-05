@@ -97,11 +97,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('smart-table').then(
-                                    function () {
-                                        return $ocLazyLoad.load('tpl/roles/roles.js');
-                                    }
-                            );
+                            return $ocLazyLoad.load('tpl/roles/roles.js');
                         }]
                 }
             })
@@ -1223,7 +1219,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
-            
+
             //Patient Alert Create
             .state('patient.alertCreate', {
                 url: '/alertCreate/{id}',
@@ -2170,7 +2166,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
-            
+
             //Patient Billing Room Concession
             .state('patient.timeLine', {
                 url: '/timeLine/{id}',
