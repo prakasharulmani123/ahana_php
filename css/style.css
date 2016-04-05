@@ -101,7 +101,7 @@ tr:nth-child(odd) .actions-icons-cont { background: #f9f9f9}
     width:100%;
     text-align:center;
     font-size:18px;
-    margin-top:100px;
+    margin-top:150px;
     float:left;
     text-transform:uppercase;
 }
@@ -412,85 +412,85 @@ body {
 /*prescription */
 
 .pres-right {
-	padding-left:0px;
-	padding-right:0px;
-	padding-top:0px;
+    padding-left:0px;
+    padding-right:0px;
+    padding-top:0px;
 }
 .pres-right ul li {
-	text-align:center;
+    text-align:center;
 }
 #email-menu .nav-pills > li > a {
-	border-radius: 0px;
+    border-radius: 0px;
 }
 #email-menu .nav > li > a:hover, #email-menu .nav > li > a:focus {
-	background-color: #23b7e5;
-	color:#ffffff;
+    background-color: #23b7e5;
+    color:#ffffff;
 }
 #email-menu .nav-pills > li > a i {
-	font-size:20px;
+    font-size:20px;
 }
 .active4 {
-	background-color: #23b7e5;
-	color:#ffffff;
+    background-color: #23b7e5;
+    color:#ffffff;
 }
 .bg-light.lter.b-b.wrapper-md.ng-scope {
-	padding: 5px 20px;
+    padding: 5px 20px;
 }
 .col.w-sm.pres-div.bg-light.dk.b-r.bg-auto {
-	width: 110px;
+    width: 110px;
 }
 .pb-sm {
-	padding-bottom:0px;
+    padding-bottom:0px;
 }
 /*user registration*/
 
 
 .logindeatils p {
-	margin-bottom:0px;
+    margin-bottom:0px;
 }
 /*Charge Categories*/
 
 .label, .badge {
-	color:#ffffff !important;
-	font-size:14px;
+    color:#ffffff !important;
+    font-size:14px;
 }
 .hms-plus {
-	background: #191f36 none repeat scroll 0 0 !important;
-	border: medium none;
-	border-radius: 50%;
-	height: 20px;
-	padding: 0;
-	text-align: center;
-	width: 20px;
-	color:#ffffff !important;
+    background: #191f36 none repeat scroll 0 0 !important;
+    border: medium none;
+    border-radius: 50%;
+    height: 20px;
+    padding: 0;
+    text-align: center;
+    width: 20px;
+    color:#ffffff !important;
 }
 .sub-cate {
-	border:none;
+    border:none;
 }
 button.badge {
-	border:none;
+    border:none;
 }
 button.label {
-	border:none;
-	font-size:14px;
+    border:none;
+    font-size:14px;
 }
 .list-group-item .editable-input {
-	width: 150px !important;
+    width: 150px !important;
 }
 .inner-panel {
-	margin-bottom:0px;
+    margin-bottom:0px;
 }
 .inner-panel .table {
-	margin-bottom:0px !important;
+    margin-bottom:0px !important;
 }
 .doc-timing {
-	padding:0px;
+    padding:0px;
 }
 .p-b {
-	padding-bottom:0px;
+    padding-bottom:0px;
 }
 .m-b {
-	margin-bottom:0px;
+    margin-bottom:0px;
 }
 
 
@@ -498,15 +498,15 @@ button.label {
 
 .patient-panel
 {
-	background:#faeb82;
-	font-size:17px;
-	margin-bottom:0px;
+    background:#faeb82;
+    font-size:17px;
+    margin-bottom:0px;
 }
 
 
 .panel-details
 {
-	margin-bottom:5px;
+    margin-bottom:5px;
 }
 
 .ivh-treeview-twistie-expanded {
@@ -539,82 +539,82 @@ button.label {
 }
 
 .table > caption + thead > tr:first-child > th, .table > colgroup + thead > tr:first-child > th, .table > thead:first-child > tr:first-child > th, .table > caption + thead > tr:first-child > td, .table > colgroup + thead > tr:first-child > td, .table > thead:first-child > tr:first-child > td {
-  border-top:#dddddd solid 1px;
+    border-top:#dddddd solid 1px;
 }
 
 .form-group
 {
-	width:100%;
-	float:left;
+    width:100%;
+    float:left;
 }
 
 .control-label
 {
-	padding-top:7px;
+    padding-top:7px;
 }
 
 .in-patient-table img {
-  margin-right: 5px;
+    margin-right: 5px;
 }
 
 .bg-light
 {
-	color:#000000 !important;
+    color:#000000 !important;
 }
 
 .table > thead > tr > th {
-  text-transform: capitalize;
+    text-transform: capitalize;
 }
 .tooltip
 {
-	text-transform: capitalize;
+    text-transform: capitalize;
 }
 
 
 .pagination > li > a, .pagination > li > span {
-  color: #000000;
-   padding: 0 7px;
+    color: #000000;
+    padding: 0 7px;
 }
 
 .table {
-  margin-bottom: 0px;
+    margin-bottom: 0px;
 }
 
 .pagination {
-	margin:0px;
+    margin:0px;
 }
 
 .panel-heading.bg-primary
 {
-	background:#7266ba !important;
-	color:#ffffff !important;
-	font-weight:bold;
+    background:#7266ba !important;
+    color:#ffffff !important;
+    font-weight:bold;
 }
 
 
 .panel-heading.bg-info
 {
-	background:#16aad8 !important;
-	color:#ffffff !important;
-	font-weight:bold;
+    background:#16aad8 !important;
+    color:#ffffff !important;
+    font-weight:bold;
 }
 
 .panel-heading.bg-dark {
-  background-color: #3a3f51 !important;
-  color: #ffffff !important;
+    background-color: #3a3f51 !important;
+    color: #ffffff !important;
 }
 
 .text-lt span {
-	font-size:14px;
-	color:#000000 !important;
+    font-size:14px;
+    color:#000000 !important;
 }
 
 
 .badge, .label {
-  font-weight: normal;
+    font-weight: normal;
 }
 
 .extra-menu .btn
 {
-	padding:5px 10px;
+    padding:5px 10px;
 }
