@@ -3,20 +3,19 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
         //Index Page
         $scope.loadList = function () {
             $scope.isLoading = true;
-            // pagination set up
-            $scope.rowCollection = [];  // base collection
-            $scope.itemsByPage = 10; // No.of records per page
-            $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
+            $scope.rowCollection = [];
 
             // Get data's from service
             $http.get($rootScope.IRISOrgServiceUrl + '/user/getuserdata')
-                    .success(function (roles) {
+                    .success(function (users) {
                         $scope.isLoading = false;
-                        $scope.rowCollection = roles;
-                        $scope.displayedCollection = [].concat($scope.rowCollection);
+                        $scope.rowCollection = users;
+
+                        //Avoid pagination problem, when come from other pages.
+                        $scope.footable_redraw();
                     })
                     .error(function () {
-                        $scope.errorData = "An Error has occured while loading roles!";
+                        $scope.errorData = "An Error has occured while loading users!";
                     });
         };
 
@@ -37,9 +36,9 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
 
                             $rootScope.commonService.GetSpecialityList('', '1', false, function (response) {
                                 $scope.specialities = response.specialityList;
-                                
+
                                 $scope.loadbar('hide');
-                                if($scope.data.formrole == 'update'){
+                                if ($scope.data.formrole == 'update') {
                                     $scope.loadForm();
                                 }
                             });

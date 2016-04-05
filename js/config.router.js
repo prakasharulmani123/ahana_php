@@ -140,11 +140,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('smart-table').then(
-                                    function () {
-                                        return $ocLazyLoad.load('tpl/registration/registration.js');
-                                    }
-                            );
+                            return $ocLazyLoad.load('tpl/registration/registration.js');
                         }]
                 }
             })
