@@ -7,22 +7,25 @@ app.controller('RoomChargeCategoriesController', ['$rootScope', '$scope', '$time
         //Index Page
         $scope.loadRoomChargeCategoriesList = function () {
             $scope.isLoading = true;
-            // pagination set up
-            $scope.rowCollection = [];  // base collection
-            $scope.itemsByPage = 10; // No.of records per page
-            $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
+            $scope.rowCollection = [];
 
             // Get data's from service
             $http.get($rootScope.IRISOrgServiceUrl + '/roomchargecategories/getroomchargelist')
                     .success(function (roomChargeCategorys) {
                         $scope.isLoading = false;
 
-                        var prof_charge = {"tenant_id": null, "charge_cat_name": "Professional Charges", "charge_cat_code": "PRF", "charge_cat_description": "Professional Charges",
-                            "subcategories": [{"charge_subcat_name": "Users who have been assigned 'Care Provider' status in user registration will be listed as the sub-categories"}]}
+                        var prof_charge = {
+                            "tenant_id": null, 
+                            "charge_cat_name": "Professional Charges", 
+                            "charge_cat_code": "PRF", 
+                            "charge_cat_description": "Professional Charges",
+                            "subcategories": [{
+                                    "charge_subcat_name": "Users who have been assigned 'Care Provider' status in user registration will be listed as the sub-categories"
+                                }]
+                        }
                         roomChargeCategorys.list = roomChargeCategorys.list.concat([prof_charge]);
                         
                         $scope.rowCollection = roomChargeCategorys.list;
-                        $scope.displayedCollection = [].concat($scope.rowCollection);
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading roomChargeCategorys!";
