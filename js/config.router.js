@@ -220,11 +220,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('smart-table').then(
-                                    function () {
-                                        return $ocLazyLoad.load('tpl/floors/floors.js');
-                                    }
-                            );
+                            return $ocLazyLoad.load('tpl/floors/floors.js');
                         }]
                 }
             })
@@ -291,11 +287,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('smart-table').then(
-                                    function () {
-                                        return $ocLazyLoad.load('tpl/wards/wards.js');
-                                    }
-                            );
+                            return $ocLazyLoad.load('tpl/wards/wards.js');
                         }]
                 }
             })
@@ -529,11 +521,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('smart-table').then(
-                                    function () {
-                                        return $ocLazyLoad.load('tpl/room/room.js');
-                                    }
-                            );
+                            return $ocLazyLoad.load('tpl/room/room.js');
                         }]
                 }
             })
@@ -666,11 +654,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('smart-table').then(
-                                    function () {
-                                        return $ocLazyLoad.load('tpl/countries/countries.js');
-                                    }
-                            );
+                            return $ocLazyLoad.load('tpl/countries/countries.js');
                         }]
                 }
             })
@@ -701,11 +685,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('smart-table').then(
-                                    function () {
-                                        return $ocLazyLoad.load('tpl/states/states.js');
-                                    }
-                            );
+                            return $ocLazyLoad.load('tpl/states/states.js');
                         }]
                 }
             })
@@ -736,11 +716,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('smart-table').then(
-                                    function () {
-                                        return $ocLazyLoad.load('tpl/cities/cities.js');
-                                    }
-                            );
+                            return $ocLazyLoad.load('tpl/cities/cities.js');
                         }]
                 }
             })
@@ -772,11 +748,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('smart-table').then(
-                                    function () {
-                                        return $ocLazyLoad.load('tpl/alerts/alerts.js');
-                                    }
-                            );
+                            return $ocLazyLoad.load('tpl/alerts/alerts.js');
                         }]
                 }
             })

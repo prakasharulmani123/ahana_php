@@ -34,7 +34,7 @@ app.controller('RoomChargeCategoriesController', ['$rootScope', '$scope', '$time
         };
 
         $scope.addSubRow = function (id) {
-            angular.forEach($scope.displayedCollection, function (parent) {
+            angular.forEach($scope.rowCollection, function (parent) {
                 if (parent.charge_cat_id == id) {
                     $scope.inserted = {
                         temp_charge_cat_id: Math.random().toString(36).substring(7),
@@ -70,7 +70,7 @@ app.controller('RoomChargeCategoriesController', ['$rootScope', '$scope', '$time
                             $scope.successMessage = succ_msg;
 
                             //Update Subcategory
-                            angular.forEach($scope.displayedCollection, function (parent) {
+                            angular.forEach($scope.rowCollection, function (parent) {
                                 if (parent.charge_cat_id == charge_cat_id) {
                                     angular.forEach(parent.subcategories, function (sub) {
                                         if (typeof temp_charge_cat_id != 'undefined') {
@@ -97,7 +97,7 @@ app.controller('RoomChargeCategoriesController', ['$rootScope', '$scope', '$time
         $scope.deleteSubRow = function (charge_cat_id, charge_subcat_id, temp_charge_cat_id) {
             //Remove Temp Row from Table
             if (typeof temp_charge_cat_id != 'undefined') {
-                angular.forEach($scope.displayedCollection, function (parent) {
+                angular.forEach($scope.rowCollection, function (parent) {
                     if (parent.charge_cat_id == charge_cat_id) {
                         angular.forEach(parent.subcategories, function (sub) {
                             if (sub.temp_charge_cat_id == temp_charge_cat_id) {
@@ -112,7 +112,7 @@ app.controller('RoomChargeCategoriesController', ['$rootScope', '$scope', '$time
             if (typeof charge_subcat_id != 'undefined') {
                 var conf = confirm('Are you sure to delete ?');
                 if (conf) {
-                    angular.forEach($scope.displayedCollection, function (parent) {
+                    angular.forEach($scope.rowCollection, function (parent) {
                         if (parent.charge_cat_id == charge_cat_id) {
                             angular.forEach(parent.subcategories, function (sub) {
                                 if (sub.charge_subcat_id == charge_subcat_id) {
@@ -146,7 +146,7 @@ app.controller('RoomChargeCategoriesController', ['$rootScope', '$scope', '$time
         };
         //End
         $scope.checkInput = function (data, id) {
-            if (data == '') {
+            if (!data) {
                 return "Field should not be empty.";
             }
         };
@@ -287,7 +287,7 @@ app.controller('RoomChargeCategoriesController', ['$rootScope', '$scope', '$time
             var conf = confirm('Are you sure to delete ?');
             if (conf) {
                 $scope.loadbar('show');
-                var index = $scope.displayedCollection.indexOf(row);
+                var index = $scope.rowCollection.indexOf(row);
                 if (index !== -1) {
                     $http({
                         url: $rootScope.IRISOrgServiceUrl + "/roomchargecategory/remove",
@@ -298,7 +298,7 @@ app.controller('RoomChargeCategoriesController', ['$rootScope', '$scope', '$time
                                 $scope.loadbar('hide');
                                 if (response.data.success === true) {
                                     $scope.successMessage = row.charge_cat_name + ' deleted successfully !!!';
-                                    $scope.displayedCollection.splice(index, 1);
+                                    $scope.rowCollection.splice(index, 1);
                                 }
                                 else {
                                     $scope.errorData = response.data.message;

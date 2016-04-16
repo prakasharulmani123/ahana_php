@@ -5,15 +5,15 @@ app.controller('RoomChargesController', ['$rootScope', '$scope', '$timeout', '$h
             $scope.isLoading = true;
             // pagination set up
             $scope.rowCollection = [];  // base collection
-            $scope.itemsByPage = 10; // No.of records per page
-            $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
 
             // Get data's from service
             $http.get($rootScope.IRISOrgServiceUrl + '/roomcharge')
                     .success(function (roomcharges) {
                         $scope.isLoading = false;
                         $scope.rowCollection = roomcharges;
-                        $scope.displayedCollection = [].concat($scope.rowCollection);
+                        
+                        //Avoid pagination problem, when come from other pages.
+                        $scope.footable_redraw();
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading roomcharges!";
@@ -97,7 +97,7 @@ app.controller('RoomChargesController', ['$rootScope', '$scope', '$timeout', '$h
         $scope.removeRow = function (row) {
             var conf = confirm('Are you sure to delete ?');
             if (conf) {
-                var index = $scope.displayedCollection.indexOf(row);
+                var index = $scope.rowCollection.indexOf(row);
                 if (index !== -1) {
                     $http({
                         url: $rootScope.IRISOrgServiceUrl + "/roomcharge/remove",
@@ -106,7 +106,7 @@ app.controller('RoomChargesController', ['$rootScope', '$scope', '$timeout', '$h
                     }).then(
                             function (response) {
                                 if (response.data.success === true) {
-                                    $scope.displayedCollection.splice(index, 1);
+                                    $scope.rowCollection.splice(index, 1);
                                 }
                                 else {
                                     $scope.errorData = response.data.message;

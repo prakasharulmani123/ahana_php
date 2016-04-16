@@ -80,7 +80,6 @@
                                     <!--Encounter: {{encounter.encounter_id}};&nbsp; &nbsp; Type: {{encounter.encounter_type}};&nbsp; &nbsp; Doctor: {{encounter.doctor}}-->
                                 </b>
                             </td>
-
                         </tr>
                         <tr ng-repeat-end ng-show="expanded" ng-repeat="(key, item) in encounter.all">
                             <td>
@@ -121,7 +120,7 @@
                                           'status_time': item.date,
                                           'appt_status': 'A',
                                           }, key)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == item">
-                                        <span editable-select="item.sts_status" e-name="sts_status" e-form="rowform" e-ng-options="s.value as s.text for s in statuses" e-class="form-control">
+                                        <span editable-select="statuses[0].value" e-name="sts_status" e-form="rowform" e-ng-options="s.value as s.text for s in statuses" e-class="form-control">
                                             {{item.sts_status|| 'empty' }}
                                         </span>
                                         <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-primary btn-sm">
@@ -141,7 +140,7 @@
                                 <!--Arrived to Seen Form-->
                                 <div ng-if="item.type == 'Arrived' && encounter.all.length == 2">
                                     <form editable-form name="rowform" onbeforesave="$state.go('patient.changeStatus', {id: $state.params.id, enc_id: item.encounter_id})" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == item">
-                                        <span editable-select="item.sts_status" e-name="sts_status" e-form="rowform" e-ng-options="s.value as s.text for s in arr_statuses" e-class="form-control">
+                                        <span editable-select="arr_statuses[0].value" e-name="sts_status" e-form="rowform" e-ng-options="s.value as s.text for s in arr_statuses" e-class="form-control">
                                             {{item.sts_status|| 'empty' }}
                                         </span>
                                         <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-primary btn-sm">

@@ -6,14 +6,14 @@ app.controller('CitiesController', ['$rootScope', '$scope', '$timeout', '$http',
             // pagination set up
             $scope.rowCollection = [];  // base collection
             $scope.itemsByPage = 10; // No.of records per page
-            $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
+            $scope.rowCollection = [].concat($scope.rowCollection);  // displayed collection
 
             // Get data's from service
             $http.get($rootScope.IRISOrgServiceUrl + '/city')
                     .success(function (cities) {
                         $scope.isLoading = false;
                         $scope.rowCollection = cities;
-                        $scope.displayedCollection = [].concat($scope.rowCollection);
+                        $scope.rowCollection = [].concat($scope.rowCollection);
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading cities!";
@@ -138,7 +138,7 @@ app.controller('CitiesController', ['$rootScope', '$scope', '$timeout', '$http',
             var conf = confirm('Are you sure to delete ?');
             if (conf) {
                 $scope.loadbar('show');
-                var index = $scope.displayedCollection.indexOf(row);
+                var index = $scope.rowCollection.indexOf(row);
                 if (index !== -1) {
                     $http({
                         url: $rootScope.IRISOrgServiceUrl + "/city/remove",
@@ -148,7 +148,7 @@ app.controller('CitiesController', ['$rootScope', '$scope', '$timeout', '$http',
                             function (response) {
                                 $scope.loadbar('hide');
                                 if (response.data.success === true) {
-                                    $scope.displayedCollection.splice(index, 1);
+                                    $scope.rowCollection.splice(index, 1);
                                     $scope.loadCitiesList();
                                 }
                                 else {

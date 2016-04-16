@@ -52,8 +52,6 @@ app.controller('stockController', ['$rootScope', '$scope', '$timeout', '$http', 
             
             // pagination set up
             $scope.rowCollection = [];  // base collection
-            $scope.itemsByPage = 20; // No.of records per page
-            $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
 
             // Get data's from service
             $http.post($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/searchbycriteria')
@@ -64,7 +62,8 @@ app.controller('stockController', ['$rootScope', '$scope', '$timeout', '$http', 
                             angular.extend(products.productLists[key], {full_name: product.product.full_name, description_name: product.product.description_name});
                         });
                         $scope.rowCollection = products.productLists;
-                        $scope.displayedCollection = [].concat($scope.rowCollection);
+                        //Avoid pagination problem, when come from other pages.
+                        $scope.footable_redraw();
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading products!";
@@ -101,8 +100,8 @@ app.controller('stockController', ['$rootScope', '$scope', '$timeout', '$http', 
                         $scope.loadbar('hide');
                         if (response.success === true) {
                             $scope.successMessage = 'Batch Details saved successfully';
-                            $scope.displayedCollection[key].available_qty = response.batch.available_qty;
-                            $scope.displayedCollection[key].add_stock = 0;
+                            $scope.rowCollection[key].available_qty = response.batch.available_qty;
+                            $scope.rowCollection[key].add_stock = 0;
                         } else {
                             $scope.errorData = response.message;
                         }
@@ -113,7 +112,7 @@ app.controller('stockController', ['$rootScope', '$scope', '$timeout', '$http', 
         }
 
         $scope.checkInput = function (data) {
-            if (data == '' || data == 0) {
+            if (!data || data == 0) {
                 return "Field should not be empty.";
             }
         };

@@ -2,16 +2,17 @@ app.controller('WardsController', ['$rootScope', '$scope', '$timeout', '$http', 
 
         //Index Page
         $scope.loadWardsList = function () {
-            // pagination set up
             $scope.rowCollection = [];  // base collection
-            $scope.itemsByPage = 10; // No.of records per page
-            $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
-
+            $scope.isLoading = true;
+ 
             // Get data's from service
             $http.get($rootScope.IRISOrgServiceUrl + '/ward')
                     .success(function (wards) {
+                        $scope.isLoading = false;
                         $scope.rowCollection = wards;
-                        $scope.displayedCollection = [].concat($scope.rowCollection);
+                        
+                        //Avoid pagination problem, when come from other pages.
+                        $scope.footable_redraw();
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading wards!";
@@ -93,7 +94,7 @@ app.controller('WardsController', ['$rootScope', '$scope', '$timeout', '$http', 
             var conf = confirm('Are you sure to delete ? \nNote: All the Rooms under this ward will also be deleted !!!');
             if (conf) {
                 $scope.loadbar('show');
-                var index = $scope.displayedCollection.indexOf(row);
+                var index = $scope.rowCollection.indexOf(row);
                 if (index !== -1) {
                     $http({
                         url: $rootScope.IRISOrgServiceUrl + "/ward/remove",
@@ -103,7 +104,7 @@ app.controller('WardsController', ['$rootScope', '$scope', '$timeout', '$http', 
                             function (response) {
                                 $scope.loadbar('hide');
                                 if (response.data.success === true) {
-                                    $scope.displayedCollection.splice(index, 1);
+                                    $scope.rowCollection.splice(index, 1);
                                     $scope.loadWardsList();
                                 }
                                 else {

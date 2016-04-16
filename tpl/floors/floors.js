@@ -5,14 +5,14 @@ app.controller('FloorsController', ['$rootScope', '$scope', '$timeout', '$http',
             $scope.isLoading = true;
             // pagination set up
             $scope.rowCollection = [];  // base collection
-            $scope.itemsByPage = 10; // No.of records per page
-            $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
 
             $http.get($rootScope.IRISOrgServiceUrl + '/floor')
                     .success(function (floors) {
                         $scope.isLoading = false;
                         $scope.rowCollection = floors;
-                        $scope.displayedCollection = [].concat($scope.rowCollection);
+                        
+                        //Avoid pagination problem, when come from other pages.
+                        $scope.footable_redraw();
                     })
                     .error(function () {
                         $scope.error = "An Error has occured while loading floors!";
@@ -87,7 +87,7 @@ app.controller('FloorsController', ['$rootScope', '$scope', '$timeout', '$http',
             var conf = confirm('Are you sure to delete ? \nNote: All the wards & Rooms under this floor will also be deleted !!!');
             if (conf) {
                 $scope.loadbar('show');
-                var index = $scope.displayedCollection.indexOf(row);
+                var index = $scope.rowCollection.indexOf(row);
                 if (index !== -1) {
                     $http({
                         url: $rootScope.IRISOrgServiceUrl + "/floor/remove",
@@ -97,7 +97,7 @@ app.controller('FloorsController', ['$rootScope', '$scope', '$timeout', '$http',
                             function (response) {
                                 $scope.loadbar('hide');
                                 if (response.data.success === true) {
-                                    $scope.displayedCollection.splice(index, 1);
+                                    $scope.rowCollection.splice(index, 1);
                                     $scope.loadFloorsList();
                                 }
                                 else {

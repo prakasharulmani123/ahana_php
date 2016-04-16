@@ -94,7 +94,7 @@ app.controller('RoomChargeCategoryItemsController', ['$rootScope', '$scope', '$t
             var conf = confirm('Are you sure to delete ?');
             if (conf) {
                 $scope.loadbar('show');
-                var index = $scope.displayedCollection.indexOf(row);
+                var index = $scope.rowCollection.indexOf(row);
                 if (index !== -1) {
                     $http({
                         url: $rootScope.IRISOrgServiceUrl + "/roomchargeitem/remove",
@@ -104,7 +104,7 @@ app.controller('RoomChargeCategoryItemsController', ['$rootScope', '$scope', '$t
                             function (response) {
                                 $scope.loadbar('hide');
                                 if (response.data.success === true) {
-                                    $scope.displayedCollection.splice(index, 1);
+                                    $scope.rowCollection.splice(index, 1);
                                 }
                                 else {
                                     $scope.errorData = response.data.message;

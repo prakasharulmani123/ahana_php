@@ -73,7 +73,7 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                 if (type == 'IP') {
                     $scope.more_li = [
                         {href: 'patient.transfer({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Transfer', mode: 'sref'},
-                        {href: 'patient.discharge({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Discharge', mode: 'sref'},
+                        {href: 'patient.discharge({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Clinical Discharge', mode: 'sref'},
                         {href: 'patient.swapping({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Swapping', mode: 'sref'},
                     ];
 

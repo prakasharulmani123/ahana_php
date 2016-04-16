@@ -174,7 +174,7 @@ app.controller('drugGenericController', ['$rootScope', '$scope', '$timeout', '$h
         };
         //End
         $scope.checkInput = function (data, id) {
-            if (data == '') {
+            if (!data) {
                 return "Field should not be empty.";
             }
         };

@@ -142,7 +142,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
         };
 
         $scope.checkInput = function (data) {
-            if (data == '') {
+            if (!data) {
                 return "Not empty.";
             }
         };

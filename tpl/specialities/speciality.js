@@ -86,7 +86,7 @@ app.controller('SpecialitiesController', ['$rootScope', '$scope', '$timeout', '$
         $scope.removeRow = function (row) {
             var conf = confirm('Are you sure to delete ?');
             if (conf) {
-                var index = $scope.displayedCollection.indexOf(row);
+                var index = $scope.rowCollection.indexOf(row);
                 if (index !== -1) {
                     $http({
                         url: $rootScope.IRISOrgServiceUrl + "/speciality/remove",
@@ -95,7 +95,7 @@ app.controller('SpecialitiesController', ['$rootScope', '$scope', '$timeout', '$
                     }).then(
                             function (response) {
                                 if (response.data.success === true) {
-                                    $scope.displayedCollection.splice(index, 1);
+                                    $scope.rowCollection.splice(index, 1);
                                     $scope.loadSpecialitiesList();
 
                                 }

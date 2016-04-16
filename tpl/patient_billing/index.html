@@ -81,6 +81,7 @@
                     <a  class="btn btn-default" ng-show="enc.selected.authorize == '0' && enc.selected.finalize != '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'finalize', '0', 'Un Finalize')"> <i class="fa fa-ban"></i> Un Finalize</a>
                     <a  class="btn btn-default" ng-show="enc.selected.finalize != '0' && enc.selected.authorize == '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'authorize', '1', 'Authorize')"> <i class="fa fa-eye"></i> Authorize</a>
                     <a  class="btn btn-default" ng-show="enc.selected.authorize != '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'authorize', '0', 'Un Authorize')"> <i class="fa fa-eye-slash"></i> Un Authorize</a>
+                    <a  class="btn btn-default" ng-show="enc.selected.authorize != '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'discharge', '1', 'Administrative Discharge')"> <i class="fa fa-eye-slash"></i> Administrative Discharge</a>
                 </div>
                 <div class="m-b-sm">
                 </div>

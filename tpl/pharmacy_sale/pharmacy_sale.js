@@ -157,7 +157,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
         //Check all the input box.
         $scope.checkInput = function (data) {
-            if (data == '') {
+            if (!data) {
                 return "Field should not be empty.";
             }
         };

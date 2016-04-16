@@ -1,6 +1,6 @@
 <div ng-controller="PatientAdmissionController" ng-init="initCanSaveAdmission()">
     <div class="bg-light lter b-b wrapper-md">
-        <h1 class="m-n h3">Patient Discharge</h1>
+        <h1 class="m-n h3">Patient Clinical Discharge</h1>
     </div>
     <div class="wrapper-md">
         <div ng-include="'tpl/blocks/alert.html'">
@@ -11,7 +11,7 @@
                             initForm();
                             initTransferForm();
                             data.PatAdmission.status = '1';
-                            data.PatAdmission.admission_status = 'D'
+                            data.PatAdmission.admission_status = 'CD'
                  ">
                 <form name="patientAppointmentForm" class="form-horizontal form-validation" novalidate="">
                     <div class="panel panel-default">

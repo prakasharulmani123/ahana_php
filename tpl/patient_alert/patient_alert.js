@@ -10,7 +10,7 @@ app.controller('AlertsController', ['$rootScope', '$scope', '$timeout', '$http',
         editableOptions.theme = 'bs3';
 
         $scope.checkName = function (data) {
-            if (data == '') {
+            if (!data) {
                 return "Value should not empty";
             }
         };

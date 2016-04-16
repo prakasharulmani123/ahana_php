@@ -118,7 +118,7 @@ app.controller('PurchaseReturnController', ['$rootScope', '$scope', '$timeout', 
         };
 
         $scope.checkInput = function (data) {
-            if (data == '') {
+            if (!data) {
                 return "Field should not be empty.";
             }
         };

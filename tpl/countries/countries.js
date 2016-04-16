@@ -5,15 +5,15 @@ app.controller('CountrysController', ['$rootScope', '$scope', '$timeout', '$http
             $scope.isLoading = true;
             // pagination set up
             $scope.rowCollection = [];  // base collection
-            $scope.itemsByPage = 10; // No.of records per page
-            $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
 
             // Get data's from service
             $http.get($rootScope.IRISOrgServiceUrl + '/country')
                     .success(function (countries) {
                         $scope.isLoading = false;
                         $scope.rowCollection = countries;
-                        $scope.displayedCollection = [].concat($scope.rowCollection);
+                        
+                        //Avoid pagination problem, when come from other pages.
+                        $scope.footable_redraw();
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading countries!";
@@ -92,7 +92,7 @@ app.controller('CountrysController', ['$rootScope', '$scope', '$timeout', '$http
             var conf = confirm('Are you sure to delete ?');
             if (conf) {
                 $scope.loadbar('show');
-                var index = $scope.displayedCollection.indexOf(row);
+                var index = $scope.rowCollection.indexOf(row);
                 if (index !== -1) {
                     $http({
                         url: $rootScope.IRISOrgServiceUrl + "/country/remove",
@@ -102,7 +102,7 @@ app.controller('CountrysController', ['$rootScope', '$scope', '$timeout', '$http
                             function (response) {
                                 $scope.loadbar('hide');
                                 if (response.data.success === true) {
-                                    $scope.displayedCollection.splice(index, 1);
+                                    $scope.rowCollection.splice(index, 1);
                                     $scope.loadCountrysList();
                                 }
                                 else {
