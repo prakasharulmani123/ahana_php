@@ -28,7 +28,6 @@ class HelperComponent extends Component {
             if (empty($room_charges))
                 return;
 
-
             foreach ($room_charges as $key => $charge) {
                 $data = [
                     'tenant_id' => $admission->tenant_id,

@@ -52,8 +52,8 @@ class CoRoomCharge extends RActiveRecord {
         return [
             'charge_id' => 'Charge ID',
             'tenant_id' => 'Tenant ID',
-            'charge_item_id' => 'Charge Item',
-            'room_type_id' => 'Room Type',
+            'charge_item_id' => 'Room Charge Item',
+            'room_type_id' => 'Bed Type',
             'charge' => 'Charge',
             'status' => 'Status',
             'created_by' => 'Created By',

@@ -51,7 +51,7 @@ class CoRoomType extends RActiveRecord {
         return [
             'room_type_id' => 'Room Type ID',
             'tenant_id' => 'Tenant ID',
-            'room_type_name' => 'Room Type Name',
+            'room_type_name' => 'Bed Type Name',
             'status' => 'Status',
             'created_by' => 'Created By',
             'created_at' => 'Created At',

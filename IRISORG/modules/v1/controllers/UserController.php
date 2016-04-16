@@ -103,12 +103,14 @@ class UserController extends ActiveController {
             if (empty($user->login)) {
                 $data[$key]['login_link_btn'] = 'btn btn-sm btn-info';
                 $data[$key]['login_link_text'] = 'Create';
+                $data[$key]['login_link_icon_class'] = 'fa-plus';
                 $data[$key]['username'] = '-';
                 $data[$key]['activation_date'] = '-';
                 $data[$key]['Inactivation_date'] = '-';
             } else {
                 $data[$key]['login_link_btn'] = 'btn btn-sm btn-primary';
                 $data[$key]['login_link_text'] = 'Update';
+                $data[$key]['login_link_icon_class'] = 'fa-pencil';
                 $data[$key]['username'] = $user->login->username;
                 $data[$key]['activation_date'] = $user->login->activation_date;
                 $data[$key]['Inactivation_date'] = $user->login->Inactivation_date;
@@ -514,6 +516,15 @@ class UserController extends ActiveController {
                 } else {
                     $header = "Bill Un Authorize";
                     $message = "Bill Un Authorize By " . $full_name;
+                }
+                break;
+            case 'discharge':
+                if ($value > 0) {
+                    $header = "Administrative Discharge";
+                    $message = "Administrative Discharge By " . $full_name;
+                } else {
+                    $header = "Administrative Discharge Cancel";
+                    $message = "Administrative Discharge Cancel By " . $full_name;
                 }
                 break;
         }

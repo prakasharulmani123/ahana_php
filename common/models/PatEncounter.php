@@ -17,6 +17,7 @@ use yii\db\ActiveQuery;
  * @property string $inactive_date
  * @property integer $finalize
  * @property integer $authorize
+ * @property integer $discharge
  * @property string $status
  * @property integer $created_by
  * @property string $created_at
@@ -50,8 +51,8 @@ class PatEncounter extends RActiveRecord {
     public function rules() {
         return [
             [['encounter_date'], 'required'],
-            [['tenant_id', 'patient_id', 'finalize', 'authorize', 'created_by', 'modified_by'], 'integer'],
-            [['encounter_date', 'inactive_date', 'created_at', 'modified_at', 'deleted_at', 'casesheet_no'], 'safe'],
+            [['tenant_id', 'patient_id', 'finalize', 'authorize', 'created_by', 'modified_by', 'discharge'], 'integer'],
+            [['encounter_date', 'inactive_date', 'created_at', 'modified_at', 'deleted_at', 'casesheet_no', 'discharge'], 'safe'],
             [['status', 'casesheet_no', 'add_casesheet_no'], 'string'],
             [['concession_amount'], 'number'],
             [['encounter_type'], 'string', 'max' => 5],
@@ -153,7 +154,7 @@ class PatEncounter extends RActiveRecord {
     }
 
     public function getPatAdmissionDischarge() {
-        return $this->hasOne(PatAdmission::className(), ['encounter_id' => 'encounter_id'])->andWhere('admission_status = "D"')->orderBy(['created_at' => SORT_DESC]);
+        return $this->hasOne(PatAdmission::className(), ['encounter_id' => 'encounter_id'])->andWhere(['IN', 'admission_status', ['D', 'CD']])->orderBy(['created_at' => SORT_DESC]);
     }
     
     public function fields() {
@@ -249,7 +250,25 @@ class PatEncounter extends RActiveRecord {
                 $this->casesheet_no = $model->casesheet_no;
             }
         }
+        
+        $this->status = $this->discharge == 0 ? '1' : '0';
+        
         return parent::beforeSave($insert);
+    }
+    
+    public function afterSave($insert, $changedAttributes) {
+        if($this->discharge != 0){
+            $model = new PatAdmission;
+            $model->attributes = [
+                'encounter_id' => $this->encounter_id,
+                'patient_id' => $this->patient_id,
+                'status_date' => date('Y-m-d H:i:s'),
+                'admission_status' => 'D',
+            ];
+            $model->save(false);
+        }
+        
+        return parent::afterSave($insert, $changedAttributes);
     }
 
 }
