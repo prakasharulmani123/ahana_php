@@ -9,15 +9,15 @@ and open the template in the editor.
 */
 
 .navi ul.pat_nav li {
-  text-align: center !important;
+    text-align: center !important;
 }
 
 .butterbar {
-  z-index: 1026;
+    z-index: 1026;
 }
 
 .app-footer {
-  z-index: 999;
+    z-index: 999;
 }
 
 .highlighted {
@@ -60,11 +60,11 @@ th[st-sort] {
 }
 
 .bg-success {
-  color: #ffffff;
+    color: #ffffff;
 }
 
 .pagination {
-  margin: 0;
+    margin: 0;
 }
 
 .category_badge{
@@ -79,4 +79,33 @@ th[st-sort] {
     font-family: 'Roboto Condensed', sans-serif;
     text-align: center;
 }
+
+.smaller .patient-row1 {
+    display: none;
+}
+
+.patient-panel {
+    -webkit-transition: height 0.3s;
+    -moz-transition: height 0.3s;
+    -ms-transition: height 0.3s;
+    -o-transition: height 0.3s;
+    transition: height 0.3s;
+    height: 100px;
+}
+
+.patient-panel.smaller {
+    height: 35px;
+
+}
+
+.headerbg2{
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -ms-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+}
+
+
+
 

@@ -157,8 +157,8 @@ h3, .h3 {
 .patient-panel
 {
     background:#faeb82;
-    font-size:20px;
-    font-weight:700;
+    font-size:19px;
+/*    font-weight:700;*/
     margin-bottom:0px;
     position:fixed;
     width: 100%;
@@ -617,4 +617,157 @@ button.label {
 .extra-menu .btn
 {
     padding:5px 10px;
+}
+
+.col-xs-12.col-sm-4.col-md-3.col-lg-2.pull-right {
+  text-align: right;
+}
+
+
+
+.headerbg2
+{
+	width:100%;
+	float:left;
+	background:#f1df64;
+	font-size:17px;
+}
+
+.patient-details-part
+{
+	width:auto;
+	float:left;
+	border-right:#d4c143 solid 1px;
+	padding:7px 10px;
+}
+
+.patinet-id
+{
+	background:#0a0a0a;
+	color:#ffffff;
+}
+
+
+.patient-panel
+{
+	background:#faeb82;
+	font-size:17px;
+	color:#0a0a0a;
+	width:100%;
+	float:left;
+}
+
+
+.category_badge{
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background-color: #119BC0;
+    font-size: 17px;
+    color: #ffffff;
+    line-height: 35px;
+    font-weight: bold;
+    font-family: 'Roboto Condensed', sans-serif;
+    text-align: center;
+}
+
+.header-badge
+{
+	margin-top:-20px;
+	margin-top:-13px;
+}
+
+
+.b-n
+{
+	border:none;
+	padding: 0px 25px;
+}
+
+.alert_badge{
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background-color: #313854;
+    font-size: 17px;
+    color: #ffffff;
+    line-height: 35px;
+    font-weight: bold;
+    font-family: 'Roboto Condensed', sans-serif;
+    text-align: center;
+	-webkit-box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.7);
+-moz-box-shadow:    0px 1px 5px 0px rgba(0, 0, 0, 0.7);
+box-shadow:         0px 1px 5px 0px rgba(0, 0, 0, 0.7);
+}
+
+.header-badge
+{
+	z-index:1;
+	position:relative;
+}
+
+.patient-row1
+{
+	width:100%;
+	float:left;
+	padding-top:7px;
+	padding-bottom:5px;
+}
+
+.paitent-details2
+{
+	padding-top:15px;
+}
+
+.paitent-details2 i
+{
+	margin-left:40px;
+}
+
+
+.prescrip-dropdown
+{
+	min-width:650px;
+}
+
+#notes
+{
+	background:#f0f3f4;
+	height:100%;
+}
+
+
+#notes .panel-heading
+{
+	border-radius:0px;
+	background:#3a3f51;
+	font-size:16px;
+}
+
+#notes .bg-grey-only
+{
+	background:#ffffff;
+	color:#2e2e2e;
+}
+
+.expand
+{
+	background:none;
+	border:none;
+}
+
+.notes-enter
+{
+	width:100%;
+	float:left;
+
+}
+
+.notes-enter-field
+{
+	width:89%;
+	float:left;
+		position:absolute;
+	bottom:0px;
+	overflow:hidden;
 }
