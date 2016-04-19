@@ -69,18 +69,18 @@
                             </div>
                         </div>
                         <div class="wrapper m-t b-t b-light">
-                            <form class="m-b-none ng-pristine ng-valid ng-submitted">
+                            <form class="m-b-none ng-pristine ng-valid ng-submitted" ng-init="data = {}">
                                 <div class="input-group">
-                                    <input type="text" placeholder="Add Notes" class="form-control" ng-model="side_data.notes">
+                                    <input type="text" placeholder="Add Notes" class="form-control" ng-model="data.notes">
                                     <span class="input-group-btn">
-                                        <button type="button" class="btn btn-default" ng-click="addNotes()">Add</button>
+                                        <button type="button" class="btn btn-default save-btn" ng-click="addNotes()">Add</button>
                                     </span>
                                 </div>
                             </form>
                         </div>
                     </div>
                 </div>
-                <div class="notes-enter"> <input type="text" class="form-control notes-enter-field" placeholder="Enter New ...." > </div> 
+                <!--<div class="notes-enter"> <input type="text" class="form-control notes-enter-field" placeholder="Enter New ...." > </div>--> 
             </div>
 
             <!-- Prescription Vitals -->

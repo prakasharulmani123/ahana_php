@@ -27,6 +27,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$timeout', '$
         $scope.$watch('enc.selected.encounter_id', function (newValue, oldValue) {
             if (newValue != '' && typeof newValue != 'undefined') {
                 $scope.loadSideMenu();
+                $scope.$emit('encounter_id', newValue);
             }
         }, true);
 
@@ -99,12 +100,20 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$timeout', '$
                         'route': $scope.addData.route,
                         'frequency': $scope.addData.frequency,
                         'number_of_days': $scope.addData.number_of_days,
-                        'is_favourite': 1,
+                        'is_favourite': 0,
                     };
                     $scope.data.prescriptionItems.push(items);
                     $scope.addData = {};
                 }
             }
+        }
+
+        $scope.updateFavourite = function (val, id) {
+            angular.forEach($scope.data.prescriptionItems, function (item, key) {
+                if (item.product_id == id) {
+                    item.is_favourite = val;
+                }
+            });
         }
 
         $scope.open = function ($event) {
@@ -179,11 +188,4 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$timeout', '$
                     $scope.errorData = data.message;
             });
         }
-
-                $scope.addNotes = function () {
-            alert('asdasd');
-                }
-        $scope.test = function () {
-        }
-
     }]);

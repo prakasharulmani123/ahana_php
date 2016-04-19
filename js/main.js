@@ -232,8 +232,35 @@ angular.module('app')
 
                 $scope.child = {}
 
+                $scope.$on('encounter_id', function (event, data) {
+                    $scope.encounter_id = data;
+                });
+
                 $scope.addNotes = function () {
-                    $scope.$broadcast('addNotes');
+                    $scope.errorData = "";
+                    $scope.successMessage = "";
+
+                    angular.extend($scope.data, {
+                        patient_id: $scope.app.patientDetail.patientId,
+                        encounter_id: $scope.encounter_id
+                    });
+
+                    $scope.loadbar('show');
+
+                    $http.post($rootScope.IRISOrgServiceUrl + '/patientnotes', $scope.data)
+                            .success(function (response) {
+                                $scope.data = {};
+                                $scope.child.notes.push(response);
+                                $scope.loadbar('hide');
+//                                $scope.successMessage = 'Note saved successfully';
+                            })
+                            .error(function (data, status) {
+                                $scope.loadbar('hide');
+                                if (status == 422)
+                                    $scope.errorData = $scope.errorSummary(data);
+                                else
+                                    $scope.errorData = data.message;
+                            });
                 }
 
             }]);
