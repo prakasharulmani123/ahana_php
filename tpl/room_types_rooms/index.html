@@ -15,7 +15,7 @@
             </button>
         </div>
 
-        <table st-table="displayedCollection"  st-safe-src="rowCollection" class="table table-bordered table-striped">
+<!--        <table st-table="displayedCollection"  st-safe-src="rowCollection" class="table table-bordered table-striped">
             <thead>
                 <tr>
                     <th st-sort="bed_name">Bed No.</th>
@@ -59,6 +59,49 @@
                         <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7"></div>
                     </td>
                 </tr>
+            </tfoot>
+        </table>-->
+
+        <table data-page-size="5" data-filter="#filter" ui-jq="footable" class="table m-b-none footable-loaded footable default">
+            <thead>
+                <tr>
+                    <th class="footable-visible footable-sortable">Bed No.</th>
+                    <th data-hide="phone,tablet" class="footable-visible footable-sortable">Bed Types</th>
+                    <th data-name="Date Of Birth" data-hide="phone,tablet" class="footable-visible footable-sortable">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+
+
+
+                <tr style="display: table-row;" class="footable-even">
+                    <td class="footable-visible">112</td>
+                    <td class="footable-visible"><span class="label bg-primary ng-binding ng-scope">AC</span>&nbsp;<span class="label bg-primary ng-binding ng-scope">Non AC</span>&nbsp;<span class="label bg-primary ng-binding ng-scope">Deluxe</span>&nbsp;<span class="label bg-primary ng-binding ng-scope">Suite</span></td>
+                    <td data-value="78025368997" class="footable-visible"><button class="label bg-dark ng-binding ng-scope"> <i class="fa fa-pencil"></i></button></td>
+                </tr>
+
+
+                <tr style="display: table-row;" class="footable-even">
+                    <td class="footable-visible">112</td>
+                    <td class="footable-visible"><span class="label bg-primary ng-binding ng-scope">AC</span>&nbsp;<span class="label bg-primary ng-binding ng-scope">Non AC</span>&nbsp;<span class="label bg-primary ng-binding ng-scope">Deluxe</span>&nbsp;<span class="label bg-primary ng-binding ng-scope">Suite</span></td>
+                    <td data-value="78025368997" class="footable-visible"><button class="label bg-dark ng-binding ng-scope"> <i class="fa fa-pencil"></i></button></td>
+                </tr>
+
+                <tr style="display: table-row;" class="footable-even">
+                    <td class="footable-visible">112</td>
+                    <td class="footable-visible"><span class="label bg-primary ng-binding ng-scope">AC</span>&nbsp;<span class="label bg-primary ng-binding ng-scope">Non AC</span>&nbsp;<span class="label bg-primary ng-binding ng-scope">Deluxe</span>&nbsp;<span class="label bg-primary ng-binding ng-scope">Suite</span></td>
+                    <td data-value="78025368997" class="footable-visible"><button class="label bg-dark ng-binding ng-scope"> <i class="fa fa-pencil"></i></button></td>
+                </tr>
+
+                <tr style="display: table-row;" class="footable-even">
+                    <td class="footable-visible">112</td>
+                    <td class="footable-visible"><span class="label bg-primary ng-binding ng-scope">AC</span>&nbsp;<span class="label bg-primary ng-binding ng-scope">Non AC</span>&nbsp;<span class="label bg-primary ng-binding ng-scope">Deluxe</span>&nbsp;<span class="label bg-primary ng-binding ng-scope">Suite</span></td>
+                    <td data-value="78025368997" class="footable-visible"><button class="label bg-dark ng-binding ng-scope"> <i class="fa fa-pencil"></i></button></td>
+                </tr>
+
+
+            </tbody>
+            <tfoot class="hide-if-no-paging">
             </tfoot>
         </table>
 

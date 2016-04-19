@@ -732,44 +732,67 @@ box-shadow:         0px 1px 5px 0px rgba(0, 0, 0, 0.7);
 
 #notes
 {
-	background:#f0f3f4;
-	height:100%;
+ background:#f0f3f4;
+ height:100%;
 }
 
 
 #notes .panel-heading
 {
-	border-radius:0px;
-	background:#3a3f51;
-	font-size:16px;
+ border-radius:0px;
+ background:#3a3f51;
+ font-size:16px;
 }
 
 #notes .bg-grey-only
 {
-	background:#ffffff;
-	color:#2e2e2e;
+ background:#ffffff;
+ color:#2e2e2e;
 }
+
 
 .expand
 {
-	background:none;
-	border:none;
+ background:none;
+ border:none;
 }
 
 .notes-enter
 {
-	width:100%;
-	float:left;
+ width:100%;
+ float:left;
 
 }
 
 .notes-enter-field
 {
-	width:89%;
-	float:left;
-		position:absolute;
-	bottom:0px;
-	overflow:hidden;
+ width:89%;
+ float:left;
+  position:absolute;
+ bottom:0px;
+ overflow:hidden;
+}
+
+
+.app-aside-right {
+  top: 0;
+  width:17%;
+}
+
+
+
+#notes .bg-grey-only
+{
+ background:#f5f5f5 !important;
+}
+
+#notes .right-heading
+{
+ color:#ffffff;
+ background:#2e2e2e;
+ font-size:17px;
+ font-weight:bold;
+ border:none;
 }
 
 .app-aside-right {
