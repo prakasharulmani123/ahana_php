@@ -118,6 +118,7 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
             $scope.recurr_billing = {};
             $scope.loadRecurringBilling(enc_id);
             $scope.loadNonRecurringBilling(enc_id);
+            $scope.loadRoomChargeHistory(enc_id);
         }
 
         $scope.loadRecurringBilling = function (enc_id) {
@@ -163,6 +164,23 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
                         if (Object.keys(response.Advance).length)
                             $scope.advances = response.Advance;
 
+                    }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        }
+
+        $scope.loadRoomChargeHistory = function (enc_id) {
+            $http({
+                method: 'GET',
+                url: $rootScope.IRISOrgServiceUrl + '/encounter/getroomchargehistory?encounter_id=' + enc_id,
+            }).success(
+                    function (response) {
+                        $scope.charge_alerts = response.history;
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');
@@ -319,6 +337,27 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
                 }
             }
         };
+
+        $scope.changeRoomChargeHistory = function (mode, alert) {
+            if(mode == 'update'){
+                url = $rootScope.IRISOrgServiceUrl + "/encounter/updaterecurringroomcharge";
+            }else{
+                url = $rootScope.IRISOrgServiceUrl + "/encounter/cancelroomchargehistory";
+            }
+            
+            var index = $scope.charge_alerts.indexOf(alert);
+            $http({
+                url: url,
+                method: "POST",
+                data: {charge_hist_id: alert.charge_hist_id}
+            }).then(
+                    function (resp) {
+                        $scope.recurring_charges = resp.data.recurring;
+                        $scope.charge_alerts.splice(index, 1);
+                    }
+            )
+            return false;
+        }
 
     }]);
 

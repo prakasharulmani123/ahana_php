@@ -2,6 +2,16 @@
     <div class="bg-light lter b-b wrapper-md">
         <h1 class="m-n h3">Billing</h1>
     </div>
+    <div class="wrapper-md p-b" ng-if="charge_alerts.length > 0">
+        <div class="alert ng-isolate-scope alert-danger alert-dismissable">
+            <h4>Room Charge Changed !!!!</h4>
+            <div style="height: 25px;" ng-repeat="(key, alert) in charge_alerts">
+                <b>{{alert.charge_item}} ({{alert.room_type}})</b> @ <b>{{alert.charge}}</b> from <b>{{alert.from_date}}</b> to <b>{{alert.org_to_date}} </b> &nbsp;&nbsp;
+                <button class="btn btn-sm btn-primary btn-rounded badge" ng-click="changeRoomChargeHistory('update', alert)">Apply</button>
+                <button class="btn btn-sm btn-rounded btn-dark badge" ng-click="changeRoomChargeHistory('delete', alert)">Cancel</button><br />
+            </div>
+        </div>
+    </div>
     <div class="wrapper-md p-b">
         <div ng-include="'tpl/blocks/alert.html'">
             {% include 'tpl/blocks/alert.html' %}
@@ -76,12 +86,12 @@
             <div class="panel-heading no-border bg-primary"> <i class="fa fa-medkit"></i> Recurring Charges</div>
             <div class="panel-body">
                 <div class="form-group">
-                    <a  class="btn btn-default" ng-show="enc.selected.finalize == '0'" ng-click="$state.go('patient.roomConcession', {id: $state.params.id, encounter_id: enc.selected.encounter_id})"> <i class="fa fa-plus-square"></i> &nbsp;Room Concession</a>
-                    <a  class="btn btn-default" ng-show="enc.selected.finalize == '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'finalize', '1', 'Finalize')"> <i class="fa fa-check-square-o"></i> Finalize</a>
-                    <a  class="btn btn-default" ng-show="enc.selected.authorize == '0' && enc.selected.finalize != '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'finalize', '0', 'Un Finalize')"> <i class="fa fa-ban"></i> Un Finalize</a>
-                    <a  class="btn btn-default" ng-show="enc.selected.finalize != '0' && enc.selected.authorize == '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'authorize', '1', 'Authorize')"> <i class="fa fa-eye"></i> Authorize</a>
-                    <a  class="btn btn-default" ng-show="enc.selected.authorize != '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'authorize', '0', 'Un Authorize')"> <i class="fa fa-eye-slash"></i> Un Authorize</a>
-                    <a  class="btn btn-default" ng-show="enc.selected.authorize != '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'discharge', '1', 'Administrative Discharge')"> <i class="fa fa-eye-slash"></i> Administrative Discharge</a>
+                    <a class="btn btn-default" ng-show="enc.selected.finalize == '0'" ng-click="$state.go('patient.roomConcession', {id: $state.params.id, encounter_id: enc.selected.encounter_id})"> <i class="fa fa-plus-square"></i> &nbsp;Room Concession</a>
+                    <a class="btn btn-default" ng-show="enc.selected.finalize == '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'finalize', '1', 'Finalize')"> <i class="fa fa-check-square-o"></i> Finalize</a>
+                    <a class="btn btn-default" ng-show="enc.selected.authorize == '0' && enc.selected.finalize != '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'finalize', '0', 'Un Finalize')"> <i class="fa fa-ban"></i> Un Finalize</a>
+                    <a class="btn btn-default" ng-show="enc.selected.finalize != '0' && enc.selected.authorize == '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'authorize', '1', 'Authorize')"> <i class="fa fa-eye"></i> Authorize</a>
+                    <a class="btn btn-default" ng-show="enc.selected.authorize != '0' && enc.selected.discharge == '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'authorize', '0', 'Un Authorize')"> <i class="fa fa-eye-slash"></i> Un Authorize</a>
+                    <a class="btn btn-default" ng-show="enc.selected.authorize != '0' && enc.selected.discharge == '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'discharge', '1', 'Administrative Discharge')"> <i class="fa fa-eye-slash"></i> Administrative Discharge</a>
                 </div>
                 <div class="m-b-sm">
                 </div>
