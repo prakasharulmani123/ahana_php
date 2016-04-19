@@ -26,10 +26,20 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$timeout', '$
 
         $scope.$watch('enc.selected.encounter_id', function (newValue, oldValue) {
             if (newValue != '' && typeof newValue != 'undefined') {
-//                $scope.loadPrescriptionCharges(newValue);
-//                $scope.loadRoomConcession(newValue);
+                $scope.loadSideMenu();
             }
         }, true);
+
+        $scope.loadSideMenu = function () {
+            //Get Notes
+            $http.get($rootScope.IRISOrgServiceUrl + '/patientnotes/getpatientnotes?patient_id=' + $state.params.id)
+                    .success(function (notes) {
+                        $scope.child.notes = notes.result;
+                    })
+                    .error(function () {
+                        $scope.errorData = "An Error has occured while loading patientnote!";
+                    });
+        }
 
         //For Form
         $scope.initForm = function () {
@@ -170,62 +180,10 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$timeout', '$
             });
         }
 
-        //Delete
-        $scope.deletePayment = function (patient_id, payment_id) {
-            var conf = confirm('Are you sure to delete ?');
-            if (conf) {
-                $scope.loadbar('show');
-                $http({
-                    url: $rootScope.IRISOrgServiceUrl + "/patientprescriptionpayment/remove",
-                    method: "POST",
-                    data: {id: payment_id}
-                }).then(
-                        function (response) {
-                            $scope.loadbar('hide');
-                            if (response.data.success === true) {
-                                $scope.$watch('enc.selected.encounter_id', function (newValue, oldValue) {
-                                    console.log(newValue);
-                                    if (newValue != '' && typeof newValue != 'undefined') {
-                                        $scope.loadPrescriptionCharges(newValue);
-                                    }
-                                }, true);
-                                $scope.more_advance_li = {};
-                                $scope.successMessage = 'Advance Payment Deleted Successfully';
-                            }
-                            else {
-                                $scope.errorData = response.data.message;
-                            }
-                        }
-                )
-            }
-        };
-
-        //Delete
-        $scope.removeRow = function (row) {
-            var conf = confirm('Are you sure to delete ?');
-            if (conf) {
-                $scope.loadbar('show');
-                var index = $scope.displayedCollection.indexOf(row);
-                if (index !== -1) {
-                    $http({
-                        url: $rootScope.IRISOrgServiceUrl + "/patientconsultants/remove",
-                        method: "POST",
-                        data: {id: row.pat_consult_id}
-                    }).then(
-                            function (response) {
-                                $scope.loadbar('hide');
-                                if (response.data.success === true) {
-                                    $scope.displayedCollection.splice(index, 1);
-                                    $scope.loadPatConsultantsList();
-                                    $scope.successMessage = 'Patient Consultant Deleted Successfully';
-                                }
-                                else {
-                                    $scope.errorData = response.data.message;
-                                }
-                            }
-                    )
+                $scope.addNotes = function () {
+            alert('asdasd');
                 }
-            }
-        };
+        $scope.test = function () {
+        }
 
     }]);

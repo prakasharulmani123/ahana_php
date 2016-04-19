@@ -339,7 +339,11 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
         };
 
         $scope.changeRoomChargeHistory = function (mode, alert) {
-            if(mode == 'update'){
+            var conf = confirm('Are you sure to ' + mode + ' ?');
+            if (!conf)
+                return;
+            
+            if(mode == 'apply'){
                 url = $rootScope.IRISOrgServiceUrl + "/encounter/updaterecurringroomcharge";
             }else{
                 url = $rootScope.IRISOrgServiceUrl + "/encounter/cancelroomchargehistory";
@@ -352,6 +356,8 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
                 data: {charge_hist_id: alert.charge_hist_id}
             }).then(
                     function (resp) {
+                        $scope.recurr_billing.total = {};
+                        $scope.recurring_charges = null;
                         $scope.recurring_charges = resp.data.recurring;
                         $scope.charge_alerts.splice(index, 1);
                     }
@@ -361,8 +367,8 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
 
     }]);
 
-app.filter('moment', function () {
-    return function (dateString, format) {
-        return moment(dateString).format(format);
-    };
-});
+//app.filter('moment', function () {
+//    return function (dateString, format) {
+//        return moment(dateString).format(format);
+//    };
+//});

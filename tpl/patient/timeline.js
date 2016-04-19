@@ -18,8 +18,8 @@ app.controller('PatientTimelineController', ['$rootScope', '$scope', '$timeout',
     }]);
 
 
-app.filter('moment', function () {
-    return function (dateString, format) {
-        return moment(dateString).format(format);
-    };
-});
+//app.filter('moment', function () {
+//    return function (dateString, format) {
+//        return moment(dateString).format(format);
+//    };
+//});

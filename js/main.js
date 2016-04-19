@@ -230,4 +230,16 @@ angular.module('app')
                     }, 100);
                 }
 
+                $scope.child = {}
+
+                $scope.addNotes = function () {
+                    $scope.$broadcast('addNotes');
+                }
+
             }]);
+
+angular.module('app').filter('moment', function () {
+    return function (dateString, format) {
+        return moment(dateString).format(format);
+    };
+});

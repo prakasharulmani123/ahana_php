@@ -4,11 +4,11 @@
     </div>
     <div class="wrapper-md p-b" ng-if="charge_alerts.length > 0">
         <div class="alert ng-isolate-scope alert-danger alert-dismissable">
-            <h4>Room Charge Changed !!!!</h4>
+            <h4>Implement changes in pricing structure for recurring charges ?</h4>
             <div style="height: 25px;" ng-repeat="(key, alert) in charge_alerts">
                 <b>{{alert.charge_item}} ({{alert.room_type}})</b> @ <b>{{alert.charge}}</b> from <b>{{alert.from_date}}</b> to <b>{{alert.org_to_date}} </b> &nbsp;&nbsp;
-                <button class="btn btn-sm btn-primary btn-rounded badge" ng-click="changeRoomChargeHistory('update', alert)">Apply</button>
-                <button class="btn btn-sm btn-rounded btn-dark badge" ng-click="changeRoomChargeHistory('delete', alert)">Cancel</button><br />
+                <button class="btn btn-sm btn-primary btn-rounded badge" ng-click="changeRoomChargeHistory('apply', alert)">Yes</button>
+                <button class="btn btn-sm btn-rounded btn-dark badge" ng-click="changeRoomChargeHistory('cancel', alert)">No</button><br />
             </div>
         </div>
     </div>
@@ -105,7 +105,7 @@
                         <th>	Stay Duration</th>
                         <th align="right" style="text-align:right;">Total Charge</th>
                     </tr>
-                    <tr ng-repeat="(key, row) in recurring_charges">
+                    <tr ng-repeat="(key, row) in recurring_charges | orderBy:from_date">
                         <td>{{row.charge_item}} </td>
                         <td> {{row.charge_amount}} </td>
                         <td> {{row.room_type}} </td>
