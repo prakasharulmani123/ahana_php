@@ -379,7 +379,7 @@ class EncounterController extends ActiveController {
     }
     
     private function _getBillingRecurring($encounter_id, $tenant_id){
-        return VBillingRecurring::find()->where(['encounter_id' => $encounter_id, 'tenant_id' => $tenant_id])->all();
+        return VBillingRecurring::find()->where(['encounter_id' => $encounter_id, 'tenant_id' => $tenant_id])->orderBy(['from_date' => SORT_ASC])->all();
     }
 
 }
