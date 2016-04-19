@@ -315,8 +315,17 @@
 		
 		// Toggle right Slidebar
 		$( '.sb-toggle-right' ).on( 'touchend click', function ( event ) {
+			target = $(this).data('target');
+			parClass = $(this).data('parent-class');
 			eventHandler( event, $( this ) ); // Handle the event.
 			toggle( 'right' ); // Toggle the right Slidbar.
+			
+			$right.find('.sb-slidebar-content').hide();
+			if(target){
+				$right.find(target+'.sb-slidebar-content').show();
+			}else{
+				$right.find('#user-info.sb-slidebar-content').show();				
+			}
 		} );
 		
 		// Open left Slidebar
@@ -327,8 +336,16 @@
 		
 		// Open right Slidebar
 		$( '.sb-open-right' ).on( 'touchend click', function ( event ) {
+			target = $(this).data('target');
 			eventHandler( event, $( this ) ); // Handle the event.
 			open( 'right' ); // Open the right Slidebar.
+			
+			$right.find('.sb-slidebar-content').hide();
+			if(target){
+				$right.find(target+'.sb-slidebar-content').show();
+			}else{
+				$right.find('#user-info.sb-slidebar-content').show();				
+			}
 		} );
 		
 		// Close Slidebar
