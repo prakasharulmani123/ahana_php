@@ -4,6 +4,8 @@ namespace IRISORG\modules\v1\controllers;
 
 use common\models\PatAdmission;
 use common\models\PatAppointment;
+use common\models\PatBillingRecurring;
+use common\models\PatBillingRoomChargeHistory;
 use common\models\PatEncounter;
 use common\models\PatPatient;
 use common\models\VBillingAdvanceCharges;
@@ -295,7 +297,7 @@ class EncounterController extends ActiveController {
         if (!empty($get) && $get['encounter_id']) {
             $encounter_id = $get['encounter_id'];
             $tenant_id = Yii::$app->user->identity->logged_tenant_id;
-            
+
             $data['Procedure'] = VBillingProcedures::find()->where(['encounter_id' => $encounter_id, 'tenant_id' => $tenant_id])->all();
             $data['Consults'] = VBillingProfessionals::find()->where(['encounter_id' => $encounter_id, 'tenant_id' => $tenant_id])->all();
             $data['OtherCharge'] = VBillingOtherCharges::find()->where(['encounter_id' => $encounter_id, 'tenant_id' => $tenant_id])->all();
@@ -303,7 +305,7 @@ class EncounterController extends ActiveController {
         }
         return $data;
     }
-    
+
     public function actionGetrecurringbilling() {
         $get = Yii::$app->getRequest()->get();
 
@@ -311,10 +313,73 @@ class EncounterController extends ActiveController {
         if (!empty($get) && $get['encounter_id']) {
             $encounter_id = $get['encounter_id'];
             $tenant_id = Yii::$app->user->identity->logged_tenant_id;
-            
-            $data['recurring'] = VBillingRecurring::find()->where(['encounter_id' => $encounter_id, 'tenant_id' => $tenant_id])->all();
+
+            $data['recurring'] = $this->_getBillingRecurring($encounter_id, $tenant_id);
         }
         return $data;
+    }
+
+    public function actionGetroomchargehistory() {
+        $get = Yii::$app->getRequest()->get();
+
+        $data = [];
+        if (!empty($get) && $get['encounter_id']) {
+            $encounter_id = $get['encounter_id'];
+            $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+
+            $data['history'] = PatBillingRoomChargeHistory::find()->tenant()->status()->andWhere(['encounter_id' => $encounter_id])->all();
+        }
+        return $data;
+    }
+
+    public function actionUpdaterecurringroomcharge() {
+        $post = Yii::$app->getRequest()->post();
+
+        $data = [];
+        if (!empty($post)) {
+            $charge_hist = PatBillingRoomChargeHistory::find()->tenant()->andWhere(['charge_hist_id' => $post['charge_hist_id']])->one();
+
+            if (empty($charge_hist))
+                return;
+
+            $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+
+            $recurring_charges = PatBillingRecurring::find()
+                    ->tenant()
+                    ->status()
+                    ->andWhere(['encounter_id' => $charge_hist->encounter_id, 'room_type_id' => $charge_hist->room_type_id, 'charge_item_id' => $charge_hist->charge_item_id])
+                    ->andWhere(['between', 'recurr_date', $charge_hist->from_date, $charge_hist->org_to_date])
+                    ->all();
+
+            foreach ($recurring_charges as $key => $recurring_charge) {
+                $recurring_charge->charge_amount = $charge_hist->charge;
+                $recurring_charge->save(false);
+            }
+
+            $data['recurring'] = $this->_getBillingRecurring($charge_hist->encounter_id, $tenant_id);
+            $charge_hist->delete();
+        }
+        return $data;
+    }
+
+    public function actionCancelroomchargehistory() {
+        $post = Yii::$app->getRequest()->post();
+
+        $data = [];
+        if (!empty($post)) {
+            $charge_hist = PatBillingRoomChargeHistory::find()->tenant()->andWhere(['charge_hist_id' => $post['charge_hist_id']])->one();
+            
+            if (empty($charge_hist))
+                return;
+            
+            $data['recurring'] = $this->_getBillingRecurring($charge_hist->encounter_id, $tenant_id);
+            $charge_hist->delete();
+        }
+        return $data;
+    }
+    
+    private function _getBillingRecurring($encounter_id, $tenant_id){
+        return VBillingRecurring::find()->where(['encounter_id' => $encounter_id, 'tenant_id' => $tenant_id])->all();
     }
 
 }

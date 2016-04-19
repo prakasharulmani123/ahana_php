@@ -100,4 +100,50 @@ class CoRoomCharge extends RActiveRecord {
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
     }
+
+    public function afterSave($insert, $changedAttributes) {
+        $this->_updatePatientChargeHistory();
+        return parent::afterSave($insert, $changedAttributes);
+    }
+
+    private function _updatePatientChargeHistory() {
+        $encounters = PatEncounter::find()
+                ->tenant()
+                ->status()
+                ->unfinalized()
+                ->encounterType("IP")
+                ->all();
+
+        $from_date = date('Y-m-d');
+
+        foreach ($encounters as $key => $encounter) {
+            // Check Current Admission Room Type
+            if ($encounter->patCurrentAdmission->room_type_id == $this->room_type_id) {
+                $condition = [
+                    'encounter_id' => $encounter->encounter_id,
+                    'patient_id' => $encounter->patient_id,
+                    'charge_item_id' => $this->charge_item_id,
+                    'room_type_id' => $this->room_type_id,
+                ];
+
+                $history_model = PatBillingRoomChargeHistory::find()->tenant()->status()->andWhere($condition)->orderBy([
+                            'charge_hist_id' => SORT_DESC,
+                        ])->one();
+
+                if (!empty($history_model)) {
+                    $history_model->to_date = $from_date;
+                    $history_model->save(false);
+                }
+
+                $new_model = new PatBillingRoomChargeHistory;
+                $attr = array_merge($condition, [
+                    'from_date' => $from_date,
+                    'charge' => $this->charge,
+                ]);
+                $new_model->attributes = $attr;
+                $new_model->save(false);
+            }
+        }
+    }
+
 }
