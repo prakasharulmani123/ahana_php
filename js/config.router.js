@@ -597,11 +597,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('smart-table').then(
-                                    function () {
-                                        return $ocLazyLoad.load('tpl/room_types_rooms/room_types_rooms.js');
-                                    }
-                            );
+                            return $ocLazyLoad.load('tpl/room_types_rooms/room_types_rooms.js');
                         }]
                 }
             })
