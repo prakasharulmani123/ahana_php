@@ -2,6 +2,7 @@
 
 namespace IRISORG\modules\v1\controllers;
 
+use common\models\PatPatient;
 use common\models\PatVitals;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -59,4 +60,12 @@ class PatientvitalsController extends ActiveController {
         }
     }
 
+    public function actionGetpatientvitals(){
+        $get = Yii::$app->getRequest()->get();
+        if(!empty($get)){
+            $patient = PatPatient::getPatientByGuid($get['patient_id']);
+            $model = PatVitals::find()->tenant()->active()->andWhere(['patient_id' => $patient->patient_id])->orderBy(['created_at' => SORT_DESC])->all();
+            return ['success' => true, 'result' => $model];
+        }
+    }
 }
