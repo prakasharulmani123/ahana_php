@@ -2138,7 +2138,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load(['smart-table', 'ui.select']).then(
+                            return $ocLazyLoad.load(['smart-table', 'ui.select', 'xeditable']).then(
                                     function () {
                                         return $ocLazyLoad.load([
                                             'tpl/patient_prescription/patient_prescription.js'

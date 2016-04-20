@@ -94,7 +94,7 @@
                                 <div class="cell-inner padder">
                                     <!-- vitals list -->
                                     <div ng-repeat="vital in child.vitals" class="vitals-cont"> 
-                                        <div class="vitals-cont-date"> <span class="label bg-success ng-binding ng-scope"> {{vital.created_at| moment:'DD/MM/YYYY hh:mm A'}}</span></div>
+                                        <div class="vitals-cont-date"> <span class="label bg-success ng-binding ng-scope"> {{vital.vital_time| moment:'DD/MM/YYYY hh:mm A'}}</span></div>
                                         <div class="vitals-table"> 
                                             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table table-bordered" >
                                                 <tr>

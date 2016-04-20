@@ -16,7 +16,75 @@
                               Responsive Table
                             </div>-->
                                 <div class="row wrapper pb-sm">
-                                    <div class="col-sm-3 m-b-xs">
+                                    <div class="col-sm-8 m-b-xs " style="width:680px;" > 
+
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" placeholder="Enter Your Prescription">
+                                            <div dropdown="" class="input-group-btn dropdown">
+                                                <button dropdown-toggle="" class="btn btn-default" type="button" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></button>
+                                                <div class="dropdown-menu pull-right prescrip-dropdown">
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-heading font-bold"> <i class="fa fa-medkit"></i> Search & Add</div>
+                                                        <div class="panel-body">
+                                                            <div class="row">
+                                                                <div class="col-sm-3">
+                                                                    <label> Search Medicine</label>
+                                                                    <input type="text" class="form-control" placeholder="" >
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <label> Drug Class</label>
+                                                                    <select ="" ng-model="f.b" class="form-control  ng-pristine ng-invalid ng-invalid- ng-touched">
+                                                                        <option value=""> Class 1 </option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <label> Product</label>
+                                                                    <select ="" ng-model="f.b" class="form-control  ng-pristine ng-invalid ng-invalid- ng-touched">
+                                                                        <option value=""> Product 1 </option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <label> Freq</label>
+                                                                    <select ="" ng-model="f.b" class="form-control  ng-pristine ng-invalid ng-invalid- ng-touched">
+                                                                        <option value=""> Freq 1 </option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <label> Generic </label>
+                                                                    <select ="" ng-model="f.b" class="form-control  ng-pristine ng-invalid ng-invalid- ng-touched">
+                                                                        <option value=""> Generic 1 </option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <label> Route </label>
+                                                                    <select ="" ng-model="f.b" class="form-control  ng-pristine ng-invalid ng-invalid- ng-touched">
+                                                                        <option value=""> Route 1 </option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <label>No.of.Days </label>
+                                                                    <select ="" ng-model="f.b" class="form-control  ng-pristine ng-invalid ng-invalid- ng-touched">
+                                                                        <option value=""> 1 day </option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <label> </label>
+                                                                    <br/>
+                                                                    <button class="btn m-b-xs  btn-success "> <i class="fa fa-plus"></i> Add</button>
+                                                                    &nbsp;
+                                                                    <button class="btn m-b-xs  btn-dark"> <i class="fa fa-repeat"></i> Reset</button>
+                                                                    &nbsp; </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <button tabindex="-1" class="btn btn-default btn-dark" type="button">Action</button>
+
+                                            </div><!-- /btn-group -->
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2 m-b-xs">
                                         <div class="btn-group btn-group-justified">
                                             <ui-select ng-model="enc.selected" theme="bootstrap">
                                                 <ui-select-match placeholder="Select Encounter Id">{{$select.selected.encounter_id}}</ui-select-match>
@@ -27,30 +95,30 @@
                                             <br />
                                         </div>
                                     </div>
-                                    <div class="col-sm-3 m-b-xs">
+                                    <div class="col-sm-2 m-b-xs">
                                         <select class="form-control" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors | orderBy: name" ng-change="getTimeOfAppointment();">
                                             <option value="">Select Consultant</option>
                                         </select>
                                     </div>
-                                    <div class="col-sm-2 m-b-xs"> 
+                                    <div class="col-sm-1 m-b-xs"> 
                                         <button class="btn m-b-xs  btn-dark">  <i class="fa fa-times"></i> Clear </button>
                                     </div>
-                                    <div class="col-sm-4 pull-right right">
-                                        <div class="btn-group navbar-right" dropdown>
-                                            <div class="col-sm-2 m-b-xs">
-                                                <div class="btn-group" dropdown is-open="status.isopen">
-                                                    <button type="button" class=" btn btn-sm btn-grey" dropdown-toggle ng-disabled="disabled"> More &nbsp;&nbsp;<span class="caret"></span> </button>
-                                                    <ul class="dropdown-menu" role="menu">
-                                                        <li><a href>New Prescription </a></li>
-                                                        <li><a href> Repeat Prescription </a></li>
-                                                        <li><a href> Edit Prescription </a></li>
-                                                        <li><a href> Delete Prescription </a></li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <button class="btn btn-info"> <i class="fa fa-plus"></i> New  </button>
-                                    </div>
+                                    <!--                                    <div class="col-sm-4 pull-right right">
+                                                                            <div class="btn-group navbar-right" dropdown>
+                                                                                <div class="col-sm-2 m-b-xs">
+                                                                                    <div class="btn-group" dropdown is-open="status.isopen">
+                                                                                        <button type="button" class=" btn btn-sm btn-grey" dropdown-toggle ng-disabled="disabled"> More &nbsp;&nbsp;<span class="caret"></span> </button>
+                                                                                        <ul class="dropdown-menu" role="menu">
+                                                                                            <li><a href>New Prescription </a></li>
+                                                                                            <li><a href> Repeat Prescription </a></li>
+                                                                                            <li><a href> Edit Prescription </a></li>
+                                                                                            <li><a href> Delete Prescription </a></li>
+                                                                                        </ul>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <button class="btn btn-info"> <i class="fa fa-plus"></i> New  </button>
+                                                                        </div>-->
                                 </div>
                                 <div class="table-responsive in-patient-table">
                                     <div class="wrapper-md p-b">
@@ -63,6 +131,7 @@
                                                         <th width="45" align="left">Route </th>
                                                         <th width="43" align="left">Freq</th>
                                                         <th width="70" align="center">No.of Days </th>
+                                                        <th width="70" align="center">Actions</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -73,10 +142,18 @@
                                                                 <i class="fa fa-star text-info text-active" ng-click="updateFavourite(0, item.product_id)"></i> 
                                                             </a>
                                                         </td>
-                                                        <td>{{item.product_name}}</td>
+                                                        <td>
+                                                            <span editable-text="item.product_name" e-name="product_name" e-form="nameform" onbeforesave="checkInput($data)">
+                                                                {{ item.product_name || 'empty' }}
+                                                            </span>
+                                                        </td>
                                                         <td>{{item.route}}</td>
                                                         <td>{{item.frequency}}</td>
                                                         <td align="center">{{item.number_of_days}}</td>
+                                                        <td align="left">
+                                                            <a href="#" class="label bg-dark"> <i class="fa fa-pencil"></i></a>
+                                                            <a href="#" class="label bg-info"> <i class=" fa fa-trash"></i></a>
+                                                        </td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -180,7 +257,7 @@
                                 <div class="col-sm-3">
                                     <label> </label>
                                     <br/>
-                                    <button class="btn m-b-xs  btn-success save-btn" ng-click="addForm(data.formtype)">Add</button>
+                                    <button class="btn m-b-xs  btn-success save-btn" ng-click="addForm(data.formtype)"><i class="fa fa-plus"></i> Add</button>
                                     &nbsp;
                                     <button class="btn m-b-xs  btn-dark"> <i class="fa fa-repeat"></i> Reset</button>
                                     &nbsp; </div>
