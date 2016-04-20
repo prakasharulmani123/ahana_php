@@ -268,7 +268,7 @@ angular.module('app')
                                     $scope.errorData = data.message;
                             });
                 }
-                
+
                 //Toggle favorite product status in prescription page.
                 $scope.toggleFavourite = function (favourite_id) {
                     $http({
@@ -280,6 +280,11 @@ angular.module('app')
 //                                console.log(response);
                             }
                     )
+                }
+                
+                //Pass fav id to patient_prescription.js
+                $scope.addFavouritePrescForm = function (fav) {
+                    $scope.$broadcast('presc_fav', fav);
                 }
 
             }]);

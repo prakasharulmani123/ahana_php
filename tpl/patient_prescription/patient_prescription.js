@@ -1,4 +1,4 @@
-app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll', '$http', '$state', '$filter', '$modal', '$log', function ($rootScope, $scope, $anchorScroll, $http, $state, $filter, $modal, $log) {
+app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll', '$http', '$state', '$filter', '$modal', '$log', '$timeout', function ($rootScope, $scope, $anchorScroll, $http, $state, $filter, $modal, $log, $timeout) {
 
         $scope.app.settings.patientTopBar = true;
         $scope.app.settings.patientSideMenu = true;
@@ -128,6 +128,33 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 }
             }
         }
+
+        //Get the value from main.js
+        $scope.$on('presc_fav', function (event, args) {
+            var result = $filter('filter')($scope.data.prescriptionItems, {product_id: args.product_id});
+            if (result.length > 0) {
+                alert('This Product already added');
+            } else {
+                items = {
+                    'product_id': args.product_id,
+                    'product_name': args.product_name,
+                    'generic_id': args.generic_id,
+                    'generic_name': args.generic_name,
+                    'drug_class_id': args.drug_class_id,
+                    'drug_name': args.drug_name,
+                    'is_favourite': 1,
+                };
+                $scope.data.prescriptionItems.push(items);
+
+                $timeout(function () {
+                    $scope.setFocus('route', $scope.data.prescriptionItems.length - 1);
+                });
+            }
+        });
+        
+        $scope.setFocus = function (id, index) {
+            angular.element(document.querySelectorAll("#" + id))[index].focus();
+        };
 
         $scope.updateFavourite = function (val, id) {
             angular.forEach($scope.data.prescriptionItems, function (item, key) {
