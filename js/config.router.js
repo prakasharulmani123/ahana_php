@@ -2148,6 +2148,34 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
+            
+            //Patient Vitals
+            .state('patient.vitals', {
+                url: '/vitals/{id}',
+                templateUrl: 'tpl/patient_vitals/index.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/patient_vitals/patient_vitals.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+
+            //Patient Vital Create
+            .state('patient.vitalCreate', {
+                url: '/vitalCreate/{id}',
+                templateUrl: 'tpl/patient_vitals/create.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/patient_vitals/patient_vitals.js']);
+                        }]
+                }
+            })
 
     $httpProvider.interceptors.push('APIInterceptor');
 
