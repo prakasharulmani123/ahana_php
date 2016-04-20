@@ -92,6 +92,7 @@ return [
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/patientbillingothercharge'], 'extraPatterns' => ['POST remove' => 'remove']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/patientbillingextraconcession'], 'extraPatterns' => ['POST remove' => 'remove', 'POST addcharge' => 'addcharge']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/patientprescription'], 'extraPatterns' => ['POST remove' => 'remove', 'POST saveprescription' => 'saveprescription']],
+                ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/patientvitals'], 'extraPatterns' => ['POST remove' => 'remove']],
             ],
         ],
         'log' => [
