@@ -8,7 +8,7 @@
                 <div ng-include="'tpl/blocks/alert.html'">
                     {% include 'tpl/blocks/alert.html' %}
                 </div>
-                <form name="prescForm" class="form-horizontal form-validation" novalidate="">
+                <form editable-form name="tableform" name="prescForm" class="form-horizontal form-validation" novalidate="" shown="true" onaftersave="saveForm()">
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="panel panel-default"> 
@@ -123,7 +123,7 @@
                                 <div class="table-responsive in-patient-table">
                                     <div class="wrapper-md p-b">
                                         <div  class="row" style="height:220px;overflow-y: auto;" >
-                                            <table  class="table table-striped b-t b-light">
+                                            <table class="table table-striped b-t b-light" id="prescription_item">
                                                 <thead>
                                                     <tr>
                                                         <th width="60" align="left">Favorite </th>
@@ -143,16 +143,49 @@
                                                             </a>
                                                         </td>
                                                         <td>
-                                                            <span editable-text="item.product_name" e-name="product_name" e-form="nameform" onbeforesave="checkInput($data)">
+                                                            <span editable-text="item.product_name"
+                                                                  e-class="form-control"
+                                                                  e-name="product_name" 
+                                                                  e-form="tableform" 
+                                                                  onbeforesave="checkInput($data)"
+                                                                  e-typeahead-editable="false"
+                                                                  e-typeahead="product as product.full_name for product in products | filter:$viewValue"
+                                                                  e-autocomplete="off"
+                                                                  e-placeholder="Product"
+                                                                  e-required>
                                                                 {{ item.product_name || 'empty' }}
                                                             </span>
                                                         </td>
-                                                        <td>{{item.route}}</td>
-                                                        <td>{{item.frequency}}</td>
+                                                        <td>
+                                                            <span editable-text="item.route"
+                                                                  e-class="form-control m-b"
+                                                                  e-name="route" 
+                                                                  e-form="tableform" 
+                                                                  onbeforesave="checkInput($data)"
+                                                                  e-typeahead="route.route_name for route in routes | filter:$viewValue"
+                                                                  e-autocomplete="off"
+                                                                  e-placeholder="Route"
+                                                                  e-required>
+                                                                {{ item.route || 'empty' }}
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <span editable-text="item.frequency"
+                                                                  e-class="form-control m-b"
+                                                                  e-name="masked" 
+                                                                  e-ui-mask="9-9-9"
+                                                                  e-model-view-value="true"
+                                                                  e-form="tableform" 
+                                                                  e-typeahead="frequency as frequency.freq_name for frequency in frequencies | filter:$viewValue"
+                                                                  e-autocomplete="off"
+                                                                  e-required>
+                                                                {{ item.frequency || 'empty' }}
+                                                            </span>
+                                                        </td>
                                                         <td align="center">{{item.number_of_days}}</td>
                                                         <td align="left">
-                                                            <a href="#" class="label bg-dark"> <i class="fa fa-pencil"></i></a>
-                                                            <a href="#" class="label bg-info"> <i class=" fa fa-trash"></i></a>
+                                                            <!--<button class="label bg-dark" ng-click="tableform.$show()"><i class="fa fa-pencil"></i></button>-->
+                                                            <button type="button" class="label bg-info" ng-click="removeItem(item)"><i class=" fa fa-trash"></i></button>
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -168,19 +201,21 @@
                                         </div>
                                         <div class="col-sm-3">
                                             <div class="row">
-                                                <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="data.next_visit" is-open="opened" datepicker-options="dateOptions" close-text="Close"  min-date="minDate" ng-click="open($event)" prevent-enter="true"/>
+                                                <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="data.next_visit" is-open="opened" datepicker-options="dateOptions" close-text="Close"  min-date="minDate" ng-click="open($event)" prevent-enter="true" ng-change="setDayEmpty();
+                            getDays();"/>
                                             </div>
                                         </div>
                                         <div class="col-sm-1 ">
                                             <label> No.of.Days </label>
                                         </div>
                                         <div class="col-sm-2 ">
-                                            <input autocomplete="off" type="text" ng-model="data.number_of_days" class="form-control m-b" number-mask="" required>
+                                            <input autocomplete="off" type="text" ng-model="data.number_of_days" class="form-control m-b" number-mask="" ng-change="setDateEmpty();
+                            getVisit();" required>
                                         </div>
                                         <div class="col-sm-3">
-                                            <button class="btn m-b-xs  btn-success save-btn" ng-click="saveForm()"> <i class="fa fa-check"></i> Save </button>
+                                            <button type="submit" class="btn m-b-xs  btn-success save-btn"> <i class="fa fa-check"></i> Save </button>
                                             &nbsp;
-                                            <button class="btn m-b-xs  btn-dark"> <i class="fa fa-print"></i> Print </button>
+                                            <button type="button" class="btn m-b-xs  btn-dark"> <i class="fa fa-print"></i> Print </button>
                                             &nbsp; </div>
                                     </div>
                                 </footer>

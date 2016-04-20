@@ -1,4 +1,4 @@
-app.controller('PrescriptionController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$filter', '$modal', '$log', function ($rootScope, $scope, $timeout, $http, $state, $filter, $modal, $log) {
+app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll', '$http', '$state', '$filter', '$modal', '$log', function ($rootScope, $scope, $anchorScroll, $http, $state, $filter, $modal, $log) {
 
         $scope.app.settings.patientTopBar = true;
         $scope.app.settings.patientSideMenu = true;
@@ -57,6 +57,11 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$timeout', '$
                         $scope.errorData = "An Error has occured while loading patientvitals!";
                     });
         }
+
+        //Always Form visible
+        $scope.$watch('tableform.$visible', function () {
+            $scope.tableform.$show();
+        });
 
         //For Form
         $scope.initForm = function () {
@@ -157,6 +162,15 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$timeout', '$
                 pres_date: moment().format('YYYY-MM-DD HH:mm:ss'),
             });
 
+            angular.forEach(_that.data.prescriptionItems, function (prescriptionItem, key) {
+                console.log(angular.isObject(prescriptionItem.product_name));
+                if (angular.isObject(prescriptionItem.product_name)) {
+                    _that.data.prescriptionItems[key].product_name = prescriptionItem.product_name.full_name;
+                } else if (typeof prescriptionItem.product_name == 'undefined') {
+                    _that.data.prescriptionItems[key].product_name = '';
+                }
+            });
+
             $scope.loadbar('show');
             $http({
                 method: method,
@@ -164,6 +178,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$timeout', '$
                 data: _that.data,
             }).success(
                     function (response) {
+                        $anchorScroll();
                         $scope.loadbar('hide');
 
                         if (response.success == 'true') {
@@ -177,12 +192,18 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$timeout', '$
                         }
                     }
             ).error(function (data, status) {
+                $anchorScroll();
                 $scope.loadbar('hide');
                 if (status == 422)
                     $scope.errorData = $scope.errorSummary(data);
                 else
                     $scope.errorData = data.message;
             });
+        }
+
+        $scope.removeItem = function (item) {
+            var index = $scope.data.prescriptionItems.indexOf(item);
+            $scope.data.prescriptionItems.splice(index, 1);
         }
 
         $scope.loadRecurringPrescription = function (enc_id) {
@@ -203,5 +224,43 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$timeout', '$
                 else
                     $scope.errorData = data.message;
             });
+        }
+
+        $scope.setDayEmpty = function () {
+            $scope.data.number_of_days = '';
+        }
+
+        $scope.getDays = function () {
+            var newValue = moment(this.data.next_visit).format('YYYY-MM-DD');
+            if (newValue != '') {
+                $http({
+                    method: 'POST',
+                    url: $rootScope.IRISOrgServiceUrl + '/patient/getnextvisitdaysfromdate',
+                    data: {'date': newValue},
+                }).success(
+                        function (response) {
+                            $scope.data.number_of_days = response.days;
+                        }
+                );
+            }
+        }
+
+        $scope.setDateEmpty = function () {
+            $scope.data.next_visit = '';
+        }
+
+        $scope.getVisit = function () {
+            var newValue = this.data.number_of_days;
+            if (parseInt(newValue) && !isNaN(newValue)) {
+                $http({
+                    method: 'POST',
+                    url: $rootScope.IRISOrgServiceUrl + '/patient/getdatefromdays',
+                    data: {'days': newValue},
+                }).success(
+                        function (response) {
+                            $scope.data.next_visit = response.date;
+                        }
+                );
+            }
         }
     }]);
