@@ -42,7 +42,7 @@ class PatVitals extends RActiveRecord {
      */
     public function rules() {
         return [
-//            [['tenant_id', 'encounter_id', 'patient_id', 'vital_time', 'created_by'], 'required'],
+            [['temperature'], 'required'],
             [['tenant_id', 'encounter_id', 'patient_id', 'created_by', 'modified_by'], 'integer'],
             [['vital_time', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['status'], 'string'],
