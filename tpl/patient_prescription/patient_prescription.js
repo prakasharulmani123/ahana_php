@@ -263,4 +263,10 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 );
             }
         }
+        
+        $scope.checkInput = function (data) {
+            if (!data) {
+                return "Not empty.";
+            }
+        };
     }]);

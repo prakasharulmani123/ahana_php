@@ -182,7 +182,17 @@
                                                                 {{ item.frequency || 'empty' }}
                                                             </span>
                                                         </td>
-                                                        <td align="center">{{item.number_of_days}}</td>
+                                                        <td align="center">
+                                                            <span editable-text="item.number_of_days"
+                                                                  e-class="form-control"
+                                                                  e-name="number_of_days" 
+                                                                  e-form="tableform" 
+                                                                  onbeforesave="checkInput($data)"
+                                                                  e-autocomplete="off"
+                                                                  e-required>
+                                                                {{ item.number_of_days || 'empty' }}
+                                                            </span>
+                                                        </td>
                                                         <td align="left">
                                                             <!--<button class="label bg-dark" ng-click="tableform.$show()"><i class="fa fa-pencil"></i></button>-->
                                                             <button type="button" class="label bg-info" ng-click="removeItem(item)"><i class=" fa fa-trash"></i></button>
