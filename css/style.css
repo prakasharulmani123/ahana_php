@@ -881,3 +881,24 @@ box-shadow:         0px 1px 5px 0px rgba(0, 0, 0, 0.7);
 {
 	background:#f5f5f5
 }
+
+#fav .bg-grey-only
+{
+	background:#f5f5f5 !important;
+}
+
+#fav .right-heading
+{
+	color:#ffffff;
+	background:#2e2e2e;
+	font-size:17px;
+	font-weight:bold;
+	border:none;
+}
+
+
+#fav .list-group
+{
+	margin-top:15px;
+	font-weight:bold;
+}

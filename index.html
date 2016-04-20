@@ -68,7 +68,9 @@
                             </div>
                         </div>
                         <div class="wrapper m-t b-t b-light">
-                            <form class="m-b-none ng-pristine ng-valid ng-submitted" ng-init="data = {}; notes_error = false;">
+                            <form class="m-b-none ng-pristine ng-valid ng-submitted" ng-init="data = {};
+                                       
+                                            notes_error = false;">
                                 <div class="input-group">
                                     <input type="text" placeholder="Say something" class="form-control" ng-model="data.notes">
                                     <span class="input-group-btn">
@@ -123,6 +125,37 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- Prescription Favorites -->
+            <div id="fav" class="sb-slidebar-content">  
+                <div class="app-aside-right pos-fix no-padder w-auto-xs bg-white b-l animated fadeInRight hide ng-scope show">
+                    <div class="vbox">
+                        <div class="wrapper b-b b-t b-light m-b right-heading">
+                            <a target=".app-aside-right" class="pull-right text-muted text-md" href="">
+                                <i aria-hidden="true" class="fa fa-expand"></i>
+                            </a>
+                            Favourites
+                        </div>
+                        <div class="row-row">
+                            <div class="cell">
+                                <div class="cell-inner padder">
+                                    <!-- notes list -->
+                                    <ul class="list-group no-radius ">
+                                        <li class="list-group-item" ng-repeat="favourite in child.favourites">
+                                            <a class="btn btn-default btn-xs active" ui-toggle-class="" href="#" ng-click="toggleFavourite(favourite.pres_fav_id)">
+                                                <i class="fa fa-star-o text-muted text"></i>
+                                                <i class="fa fa-star text-danger text-active"></i> 
+                                            </a>   {{favourite.product_name}}
+                                        </li>
+                                    </ul>
+                                    <!-- / notes list -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
         </div>
         <script type="text/javascript" src="node_modules/moment/moment.js"></script>
         <!-- Angular -->
@@ -203,21 +236,21 @@
         <!-- Lazy loading -->
         <script type="text/javascript" src="js/classie.js"></script>
         <script>
-                                                    function init() {
-                                                        window.addEventListener('scroll', function (e) {
-                                                            var distanceY = window.pageYOffset || document.documentElement.scrollTop,
-                                                                    shrinkOn = 100,
-                                                                    header = document.querySelector("div.patient-panel");
-                                                            if (distanceY > shrinkOn) {
-                                                                classie.add(header, "smaller");
-                                                            } else {
-                                                                if (classie.has(header, "smaller")) {
-                                                                    classie.remove(header, "smaller");
+                                                                function init() {
+                                                                    window.addEventListener('scroll', function (e) {
+                                                                        var distanceY = window.pageYOffset || document.documentElement.scrollTop,
+                                                                                shrinkOn = 100,
+                                                                                header = document.querySelector("div.patient-panel");
+                                                                        if (distanceY > shrinkOn) {
+                                                                            classie.add(header, "smaller");
+                                                                        } else {
+                                                                            if (classie.has(header, "smaller")) {
+                                                                                classie.remove(header, "smaller");
+                                                                            }
+                                                                        }
+                                                                    });
                                                                 }
-                                                            }
-                                                        });
-                                                    }
-                                                    window.onload = init();
+                                                                window.onload = init();
         </script>
     </body>
 </html>

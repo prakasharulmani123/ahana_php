@@ -237,12 +237,12 @@ angular.module('app')
                 });
 
                 $scope.addNotes = function () {
-                    if(jQuery.isEmptyObject($scope.data)){
+                    if (jQuery.isEmptyObject($scope.data)) {
                         $scope.notes_error = true;
                         return;
                     }
                     $scope.notes_error = false;
-                    
+
                     $scope.errorData = "";
                     $scope.successMessage = "";
 
@@ -267,6 +267,19 @@ angular.module('app')
                                 else
                                     $scope.errorData = data.message;
                             });
+                }
+                
+                //Toggle favorite product status in prescription page.
+                $scope.toggleFavourite = function (favourite_id) {
+                    $http({
+                        url: $rootScope.IRISOrgServiceUrl + "/patientprescriptionfavourite/togglefavourite",
+                        method: "POST",
+                        data: {id: favourite_id}
+                    }).then(
+                            function (response) {
+//                                console.log(response);
+                            }
+                    )
                 }
 
             }]);

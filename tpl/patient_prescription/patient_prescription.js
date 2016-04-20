@@ -48,6 +48,14 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$timeout', '$
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading patientvitals!";
                     });
+            //Get Fav
+            $http.get($rootScope.IRISOrgServiceUrl + '/patientprescriptionfavourite/getpatientprescriptionfavourite?patient_id=' + $state.params.id)
+                    .success(function (favourites) {
+                        $scope.child.favourites = favourites.result;
+                    })
+                    .error(function () {
+                        $scope.errorData = "An Error has occured while loading patientvitals!";
+                    });
         }
 
         //For Form
