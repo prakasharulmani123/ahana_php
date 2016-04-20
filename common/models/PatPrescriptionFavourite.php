@@ -141,4 +141,17 @@ class PatPrescriptionFavourite extends RActiveRecord
     public static function find() {
         return new PatPrescriptionFavouriteQuery(get_called_class());
     }
+    
+    public function fields() {
+        $extend = [
+            'generic_name' => function ($model) {
+                return (isset($model->generic->generic_name) ? $model->generic->generic_name : '-');
+            },
+            'drug_name' => function ($model) {
+                return (isset($model->drugClass->drug_name) ? $model->drugClass->drug_name : '-');
+            },
+        ];
+        $fields = array_merge(parent::fields(), $extend);
+        return $fields;
+    }
 }
