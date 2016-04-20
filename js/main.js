@@ -237,6 +237,12 @@ angular.module('app')
                 });
 
                 $scope.addNotes = function () {
+                    if(jQuery.isEmptyObject($scope.data)){
+                        $scope.notes_error = true;
+                        return;
+                    }
+                    $scope.notes_error = false;
+                    
                     $scope.errorData = "";
                     $scope.successMessage = "";
 

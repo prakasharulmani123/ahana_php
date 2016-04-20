@@ -31,10 +31,8 @@
         <div id="sb-site">
             <div class="app" id="app" ng-class="{'app-header-fixed':app.settings.headerFixed,  'app-aside-folded':app.settings.asideFolded, 'app-aside-dock':app.settings.asideDock, 'container':app.settings.container}" ui-view></div>
         </div>
-
         <!-- Your right Slidebar content. -->
         <div class="sb-slidebar sb-right">
-
             <!-- User Info. -->
             <div id="user-info" class="sb-slidebar-content">
                 <div class="thumb-bg">
@@ -49,9 +47,8 @@
                     <b>  HMS </b>
                 </div>
             </div>
-
             <!-- Prescription Notes -->
-            <div id="notes"  class="sb-slidebar-content"> 
+            <div id="notes"  class="sb-slidebar-content">
                 <div class="app-aside-right pos-fix no-padder w-auto-xs bg-white b-l animated fadeInRight hide ng-scope show">
                     <div class="vbox">
                         <div class="wrapper b-b b-t b-light m-b right-heading">
@@ -61,32 +58,71 @@
                         <div class="row-row">
                             <div class="cell">
                                 <div class="cell-inner padder">
+                                    <!-- notes list -->
                                     <div ng-repeat="note in child.notes" class="bg-grey-only r r-2x m-b-xs wrapper-sm b-l b-2x b-info">
                                         {{note.notes}}
                                         <div class="text-xs text-muted ng-binding">{{note.created_at| moment:'MMM DD - YYYY'}}</div>
                                     </div>
+                                    <!-- / notes list -->
                                 </div>
                             </div>
                         </div>
                         <div class="wrapper m-t b-t b-light">
-                            <form class="m-b-none ng-pristine ng-valid ng-submitted" ng-init="data = {}">
+                            <form class="m-b-none ng-pristine ng-valid ng-submitted" ng-init="data = {}; notes_error = false;">
                                 <div class="input-group">
-                                    <input type="text" placeholder="Add Notes" class="form-control" ng-model="data.notes">
+                                    <input type="text" placeholder="Say something" class="form-control" ng-model="data.notes">
                                     <span class="input-group-btn">
                                         <button type="button" class="btn btn-default save-btn" ng-click="addNotes()">Add</button>
                                     </span>
                                 </div>
+                                <span class="text-danger" ng-show="notes_error">Enter Text !!! </span>
                             </form>
                         </div>
                     </div>
                 </div>
-                <!--<div class="notes-enter"> <input type="text" class="form-control notes-enter-field" placeholder="Enter New ...." > </div>--> 
             </div>
-
             <!-- Prescription Vitals -->
-            <div id="vitals"  class="sb-slidebar-content"> vitals</div>
-
-
+            <div id="vitals"  class="sb-slidebar-content">
+                <div class="app-aside-right pos-fix no-padder w-auto-xs bg-white b-l animated fadeInRight hide ng-scope show">
+                    <div class="vbox">
+                        <div class="wrapper b-b b-t b-light m-b right-heading">
+                            <a target=".app-aside-right" class="pull-right text-muted text-md" href=""><i aria-hidden="true" class="fa fa-expand"></i></a>
+                            Vitals
+                        </div>
+                        <div class="row-row">
+                            <div class="cell">
+                                <div class="cell-inner padder">
+                                    <!-- vitals list -->
+                                    <div ng-repeat="vital in child.vitals" class="vitals-cont"> 
+                                        <div class="vitals-cont-date"> <span class="label bg-success ng-binding ng-scope"> {{vital.created_at| moment:'DD/MM/YYYY hh:mm A'}}</span></div>
+                                        <div class="vitals-table"> 
+                                            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table table-bordered" >
+                                                <tr>
+                                                    <th>Pulse</th>
+                                                    <td>{{vital.pulse_rate}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Blood pressure</th>
+                                                    <td>{{vital.blood_pressure}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Temperature</th>
+                                                    <td>{{vital.temperature}} °C</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Weight</th>
+                                                    <td>{{vital.weight}} Kg </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <!-- / vitals list -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <script type="text/javascript" src="node_modules/moment/moment.js"></script>
         <!-- Angular -->

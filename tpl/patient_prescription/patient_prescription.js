@@ -40,6 +40,15 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$timeout', '$
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading patientnote!";
                     });
+            //Get Vitals
+            $http.get($rootScope.IRISOrgServiceUrl + '/patientvitals/getpatientvitals?patient_id=' + $state.params.id)
+                    .success(function (vitals) {
+                        $scope.child.vitals = vitals.result;
+                        console.log($scope.child.vitals);
+                    })
+                    .error(function () {
+                        $scope.errorData = "An Error has occured while loading patientnote!";
+                    });
         }
 
         //For Form
