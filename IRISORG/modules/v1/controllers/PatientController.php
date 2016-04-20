@@ -152,6 +152,16 @@ class PatientController extends ActiveController {
         return ['age' => $age];
     }
 
+    public function actionGetnextvisitdaysfromdate() {
+        $post = Yii::$app->request->post();
+        $days = '';
+        if (isset($post['date'])) {
+            $days = PatPatient::getPatientNextVisitDays($post['date']);
+        }
+
+        return ['days' => $days];
+    }
+
     public function actionGetdatefromage() {
         $post = Yii::$app->request->post();
         $dob = '';
@@ -160,6 +170,16 @@ class PatientController extends ActiveController {
         }
 
         return ['dob' => $dob];
+    }
+
+    public function actionGetdatefromdays() {
+        $post = Yii::$app->request->post();
+        $date = '';
+        if (isset($post['days'])) {
+            $date = PatPatient::getPatientNextvisitDate($post['days']);
+        }
+
+        return ['date' => $date];
     }
 
     public function actionGetpatientaddress() {

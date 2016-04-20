@@ -226,13 +226,13 @@ class PatPatient extends RActiveRecord {
                     return date('Y-m-d', strtotime($model->patient_reg_date));
             },
             'patient_category' => function ($model) {
-                if (isset($model->patientCategory->patient_cat_name)){
+                if (isset($model->patientCategory->patient_cat_name)) {
                     $category_name = $model->patientCategory->patient_cat_name;
                     return $category_name[0];
                 }
             },
             'patient_category_color' => function ($model) {
-                if (isset($model->patientCategory->patient_cat_color) && $model->patientCategory->patient_cat_color != '#ffffff'){
+                if (isset($model->patientCategory->patient_cat_color) && $model->patientCategory->patient_cat_color != '#ffffff') {
                     return $model->patientCategory->patient_cat_color;
                 }
             },
@@ -339,6 +339,18 @@ class PatPatient extends RActiveRecord {
             $this->patient_guid = $this->patient_guid->toString();
 
         return parent::afterFind();
+    }
+
+    public static function getPatientNextVisitDays($date) {
+        $now = strtotime(date('Y-m-d'));
+        $date = strtotime($date);
+        $datediff = abs($now - $date);
+        return floor($datediff / (60 * 60 * 24));
+    }
+
+    public static function getPatientNextvisitDate($days) {
+        $date = date('Y-m-d');
+        return date('Y-m-d', strtotime($date . "+$days days"));
     }
 
 }

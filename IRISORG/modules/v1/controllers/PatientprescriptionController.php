@@ -70,7 +70,7 @@ class PatientprescriptionController extends ActiveController {
     public function actionSaveprescription() {
         $post = Yii::$app->getRequest()->post();
         
-        if(!empty($post)){
+        if(!empty($post) && !empty($post['prescriptionItems'])){
             $model = new PatPrescription;
             $model->attributes = $post;
             
@@ -102,10 +102,8 @@ class PatientprescriptionController extends ActiveController {
                 return ['success' => false, 'message' => Html::errorSummary([$model, $item_model])];
             }
         }else{
-            return ['success' => false, 'message' => 'Fill the Form'];
+            return ['success' => false, 'message' => 'Prescriptions cannot be blank'];
         }
-        echo 'hi';
-        exit;
     }
 
 }
