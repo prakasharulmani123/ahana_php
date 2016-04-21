@@ -653,13 +653,13 @@ button.label {
 
 
 .category_badge{
-    width: 35px;
-    height: 35px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     background-color: #119BC0;
     font-size: 17px;
     color: #ffffff;
-    line-height: 35px;
+    line-height: 30px;
     font-weight: bold;
     font-family: 'Roboto Condensed', sans-serif;
     text-align: center;
@@ -667,31 +667,27 @@ button.label {
 
 .header-badge
 {
-	margin-top:-20px;
-	margin-top:-13px;
+	margin-top:4px;
 }
 
 
 .b-n
 {
 	border:none;
-	padding: 0px 25px;
+	padding: 0px 15px;
 }
 
 .alert_badge{
-    width: 35px;
-    height: 35px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     background-color: #313854;
-    font-size: 17px;
+    font-size: 16px;
     color: #ffffff;
-    line-height: 35px;
+    line-height: 30px;
     font-weight: bold;
     font-family: 'Roboto Condensed', sans-serif;
     text-align: center;
-	-webkit-box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.7);
--moz-box-shadow:    0px 1px 5px 0px rgba(0, 0, 0, 0.7);
-box-shadow:         0px 1px 5px 0px rgba(0, 0, 0, 0.7);
 }
 
 .header-badge
