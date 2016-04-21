@@ -339,4 +339,22 @@
     </div>
 </div>
 
+<script>
+    $(function () {
+        if ($.isFunction($.slidebars)) {
+            slidebar();
+        } else {
+            $.getScript("js/slidebars.js", function (data, textStatus, jqxhr) {
+                slidebar();
+            });
+        }
+    });
+
+    function slidebar() {
+        $.slidebars({
+            scrollLock: true
+        });
+    }
+</script>
+
 
