@@ -216,6 +216,8 @@ class PharmacyproductController extends ActiveController {
 
         if (isset($post['search']) && !empty($post['search'])) {
             $connection = Yii::$app->client;
+            $limit = 10;
+            
             $command = $connection->createCommand("
                 SELECT a.product_id, a.product_name, b.generic_id, b.generic_name, c.drug_class_id, c.drug_name, 
                 CONCAT(b.generic_name, ' / ', a.product_name, ' | ', a.product_unit_count, ' | ', a.product_unit) AS prescription
@@ -229,7 +231,7 @@ class PharmacyproductController extends ActiveController {
                 OR MATCH(b.generic_name) AGAINST(:search_text IN BOOLEAN MODE)
                 OR MATCH(c.drug_name) AGAINST(:search_text IN BOOLEAN MODE)
                 ORDER BY  a.product_name
-                LIMIT 0,10", [':search_text' => $post['search'] . '*']
+                LIMIT 0,:limit", [':search_text' => $post['search'] . '*', ':limit' => $limit]
             );
             $products = $command->queryAll();
 
@@ -238,7 +240,7 @@ class PharmacyproductController extends ActiveController {
                 FROM pat_prescription_route
                 WHERE MATCH(route_name) AGAINST(:search_text IN BOOLEAN MODE)
                 ORDER BY  route_name
-                LIMIT 0,10", [':search_text' => $post['search'] . '*']
+                LIMIT 0,:limit", [':search_text' => $post['search'] . '*', ':limit' => $limit]
             );
             $routes = $command->queryAll();
 
