@@ -23,58 +23,75 @@
                                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></button>
 
                                             <!--<button class="btn btn-default" type="button" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></button>-->
-                                            <div class="dropdown-menu pull-right prescrip-dropdown">
-                                                <form class="form-horizontal">
+                                            <div class="dropdown-menu pull-right prescrip-dropdown" ng-init="initForm()" id="search-form">
+                                                <form name="searchForm" class="form-horizontal form-validation" novalidate="">
                                                     <div class="panel panel-default">
-                                                        <div class="panel-heading font-bold"> 
-                                                            <i class="fa fa-medkit"></i> Search & Add
-                                                        </div>
+                                                        <div class="panel-heading font-bold"> <i class="fa fa-medkit"></i> Search & Add</div>
                                                         <div class="panel-body">
                                                             <div class="row">
                                                                 <div class="col-sm-3">
-                                                                    <label> Search Medicine</label>
-                                                                    <input type="text" class="form-control" placeholder="" >
-                                                                </div>
-                                                                <div class="col-sm-3">
                                                                     <label> Drug Class</label>
-                                                                    <select ="" ng-model="f.b" class="form-control  ng-pristine ng-invalid ng-invalid- ng-touched">
-                                                                        <option value=""> Class 1 </option>
-                                                                    </select>
-                                                                </div>
-                                                                <div class="col-sm-3">
-                                                                    <label> Product</label>
-                                                                    <select ="" ng-model="f.b" class="form-control  ng-pristine ng-invalid ng-invalid- ng-touched">
-                                                                        <option value=""> Product 1 </option>
-                                                                    </select>
-                                                                </div>
-                                                                <div class="col-sm-3">
-                                                                    <label> Freq</label>
-                                                                    <select ="" ng-model="f.b" class="form-control  ng-pristine ng-invalid ng-invalid- ng-touched">
-                                                                        <option value=""> Freq 1 </option>
-                                                                    </select>
+                                                                    <input autocomplete="off"
+                                                                           placeholder="Drug Class"
+                                                                           type="text"
+                                                                           class="form-control"
+                                                                           ng-model="addData.drug_class"
+                                                                           typeahead-editable="false"
+                                                                           typeahead="drug as drug.drug_name for drug in drugs | filter:$viewValue"
+                                                                           typeahead-on-select="getGeneric($item, $model, $label)" />
                                                                 </div>
                                                                 <div class="col-sm-3">
                                                                     <label> Generic </label>
-                                                                    <select ="" ng-model="f.b" class="form-control  ng-pristine ng-invalid ng-invalid- ng-touched">
-                                                                        <option value=""> Generic 1 </option>
-                                                                    </select>
+                                                                    <input autocomplete="off"
+                                                                           placeholder="Generic"
+                                                                           type="text"
+                                                                           class="form-control"
+                                                                           ng-model="addData.generic"
+                                                                           typeahead-editable="false"
+                                                                           typeahead="generic as generic.generic_name for generic in generics | filter:$viewValue"
+                                                                           typeahead-on-select="getProduct($item, $model, $label)" />
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <label> Product</label>
+                                                                    <input autocomplete="off"
+                                                                           placeholder="Product"
+                                                                           type="text"
+                                                                           class="form-control"
+                                                                           ng-model="addData.product"
+                                                                           typeahead-editable="false"
+                                                                           typeahead="product as product.full_name for product in products | filter:$viewValue"
+                                                                           />
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <label> Freq</label>
+                                                                    <!--Ui-mask & Typeahead Not working -->
+                                                                    <input autocomplete="off" 
+                                                                           type="text" 
+                                                                           name="masked" 
+                                                                           ui-mask="9-9-9" 
+                                                                           ng-model="addData.frequency" 
+                                                                           model-view-value="true" 
+                                                                           class="form-control m-b"
+                                                                           typeahead="frequency as frequency.freq_name for frequency in frequencies | filter:$viewValue"
+                                                                           required>
                                                                 </div>
                                                                 <div class="col-sm-3">
                                                                     <label> Route </label>
-                                                                    <select ="" ng-model="f.b" class="form-control  ng-pristine ng-invalid ng-invalid- ng-touched">
-                                                                        <option value=""> Route 1 </option>
-                                                                    </select>
+                                                                    <input autocomplete="off" 
+                                                                           type="text" 
+                                                                           ng-model="addData.route" 
+                                                                           class="form-control m-b" 
+                                                                           typeahead="route.route_name for route in routes | filter:$viewValue"
+                                                                           required>
                                                                 </div>
                                                                 <div class="col-sm-3">
                                                                     <label>No.of.Days </label>
-                                                                    <select ="" ng-model="f.b" class="form-control  ng-pristine ng-invalid ng-invalid- ng-touched">
-                                                                        <option value=""> 1 day </option>
-                                                                    </select>
+                                                                    <input autocomplete="off" type="text" ng-model="addData.number_of_days" class="form-control m-b" number-mask="" required>
                                                                 </div>
                                                                 <div class="col-sm-3">
                                                                     <label> </label>
                                                                     <br/>
-                                                                    <button class="btn m-b-xs  btn-success "> <i class="fa fa-plus"></i> Add</button>
+                                                                    <button class="btn m-b-xs  btn-success save-btn" ng-click="addForm(data.formtype)"><i class="fa fa-plus"></i> Add</button>
                                                                     &nbsp;
                                                                     <button class="btn m-b-xs  btn-dark"> <i class="fa fa-repeat"></i> Reset</button>
                                                                     &nbsp; </div>
@@ -240,83 +257,7 @@
                     </div>
                 </div>
             </div>
-            <div class="wrapper-md p-b" ng-init="initForm()">
-                <form name="searchForm" class="form-horizontal form-validation" novalidate="">
-                    <div class="panel panel-default">
-                        <div class="panel-heading font-bold"> <i class="fa fa-medkit"></i> Search & Add</div>
-                        <div class="panel-body">
-                            <div class="row">
-                                <div class="col-sm-3">
-                                    <label> Drug Class</label>
-                                    <input autocomplete="off"
-                                           placeholder="Drug Class"
-                                           type="text"
-                                           class="form-control"
-                                           ng-model="addData.drug_class"
-                                           typeahead-editable="false"
-                                           typeahead="drug as drug.drug_name for drug in drugs | filter:$viewValue"
-                                           typeahead-on-select="getGeneric($item, $model, $label)" />
-                                </div>
-                                <div class="col-sm-3">
-                                    <label> Generic </label>
-                                    <input autocomplete="off"
-                                           placeholder="Generic"
-                                           type="text"
-                                           class="form-control"
-                                           ng-model="addData.generic"
-                                           typeahead-editable="false"
-                                           typeahead="generic as generic.generic_name for generic in generics | filter:$viewValue"
-                                           typeahead-on-select="getProduct($item, $model, $label)" />
-                                </div>
-                                <div class="col-sm-3">
-                                    <label> Product</label>
-                                    <input autocomplete="off"
-                                           placeholder="Product"
-                                           type="text"
-                                           class="form-control"
-                                           ng-model="addData.product"
-                                           typeahead-editable="false"
-                                           typeahead="product as product.full_name for product in products | filter:$viewValue"
-                                           />
-                                </div>
-                                <div class="col-sm-3">
-                                    <label> Freq</label>
-                                    <!--Ui-mask & Typeahead Not working -->
-                                    <input autocomplete="off" 
-                                           type="text" 
-                                           name="masked" 
-                                           ui-mask="9-9-9" 
-                                           ng-model="addData.frequency" 
-                                           model-view-value="true" 
-                                           class="form-control m-b"
-                                           typeahead="frequency as frequency.freq_name for frequency in frequencies | filter:$viewValue"
-                                           required>
-                                </div>
-                                <div class="col-sm-3">
-                                    <label> Route </label>
-                                    <input autocomplete="off" 
-                                           type="text" 
-                                           ng-model="addData.route" 
-                                           class="form-control m-b" 
-                                           typeahead="route.route_name for route in routes | filter:$viewValue"
-                                           required>
-                                </div>
-                                <div class="col-sm-3">
-                                    <label>No.of.Days </label>
-                                    <input autocomplete="off" type="text" ng-model="addData.number_of_days" class="form-control m-b" number-mask="" required>
-                                </div>
-                                <div class="col-sm-3">
-                                    <label> </label>
-                                    <br/>
-                                    <button class="btn m-b-xs  btn-success save-btn" ng-click="addForm(data.formtype)"><i class="fa fa-plus"></i> Add</button>
-                                    &nbsp;
-                                    <button class="btn m-b-xs  btn-dark"> <i class="fa fa-repeat"></i> Reset</button>
-                                    &nbsp; </div>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
+
         </div>
         <div class="col w-sm pres-div bg-light dk b-r bg-auto" style="width:110px;">
             <div class="wrapper pres-right hidden-sm hidden-xs" id="email-menu">
@@ -340,8 +281,12 @@
 </div>
 
 <script>
-    $(function () {
-        if ($.isFunction($.slidebars)) {
+    $(document).ready(function () {
+        $('#search-form').on('click', function (e) {
+            e.stopPropagation();
+        });
+
+	if ($.isFunction($.slidebars)) {
             slidebar();
         } else {
             $.getScript("js/slidebars.js", function (data, textStatus, jqxhr) {
@@ -350,7 +295,7 @@
         }
     });
 
-    function slidebar() {
+	function slidebar() {
         $.slidebars({
             scrollLock: true
         });

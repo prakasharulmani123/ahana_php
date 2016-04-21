@@ -125,6 +125,10 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     };
                     $scope.data.prescriptionItems.push(items);
                     $scope.addData = {};
+                    
+                    $timeout(function () {
+                        $scope.setFocus('route', $scope.data.prescriptionItems.length - 1);
+                    });
                 }
             }
         }
@@ -151,7 +155,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 });
             }
         });
-        
+
         $scope.setFocus = function (id, index) {
             angular.element(document.querySelectorAll("#" + id))[index].focus();
         };
@@ -290,7 +294,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 );
             }
         }
-        
+
         $scope.checkInput = function (data) {
             if (!data) {
                 return "Not empty.";
