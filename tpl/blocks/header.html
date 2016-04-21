@@ -23,7 +23,7 @@
                 <div class="input-group">
                     <!--<input type="text" ng-model="patientselected" typeahead="patient_list.Patient.patient_firstname for patient_list in patient_lists | filter:$viewValue | limitTo:8" class="form-control input-sm bg-light no-border rounded padder" placeholder="Search....">-->
                     <input type="text" ng-model="patientselected" class="form-control input-sm bg-light no-border rounded padder header_search_input" placeholder="Search....">
-                    <ul class="search-patientcont-header" ng-if="patientselected != ''">
+                    <ul class="search-patientcont-header" ng-if="patientselected != ''" id='patientcont-header'>
                         <li ng-repeat="patient in patient_lists | filter:patientselected">
                             <div class="row"> 
                                 <div class="col-xs-12 col-sm-2 col-md-2"> 

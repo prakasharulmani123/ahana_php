@@ -300,4 +300,32 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 return "Not empty.";
             }
         };
+        
+        $scope.prescription = '';
+
+        var changeTimer = false;
+
+        $scope.$watch('prescription', function (newValue, oldValue) {
+            if (newValue != '') {
+                if (changeTimer !== false)
+                    clearTimeout(changeTimer);
+
+                changeTimer = setTimeout(function () {
+                    $http({
+                        method: 'POST',
+                        url: $rootScope.IRISOrgServiceUrl + '/pharmacyproduct/getprescription',
+                        data: {'search': newValue},
+                    }).success(
+                            function (response) {
+                                $scope.prescription_lists = response.prescription;
+                                console.log(response);
+                            }
+                    );
+                    changeTimer = false;
+                }, 300);
+
+
+
+            }
+        }, true);
     }]);

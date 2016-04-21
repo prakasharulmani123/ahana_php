@@ -18,7 +18,28 @@
                                 <div class="col-sm-8 m-b-xs " style="width:680px;" > 
 
                                     <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="Enter Your Prescription">
+                                        <input type="text" 
+                                               class="form-control prescription_search_input" 
+                                               placeholder="Enter Your Prescription" 
+                                               ng-model='prescription'
+                                               />
+                                        <ul class="search-patientcont-header" id='prescriptioncont-header'>
+                                            <li ng-repeat="prescription_list in prescription_lists">
+                                                <div class="row"> 
+                                                    <div class="col-xs-12 col-sm-2 col-md-2"> 
+                                                        <div class="row ng-binding">
+                                                            &nbsp;
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-10 col-md-10"> 
+                                                        <div class="row ng-binding">
+                                                            <a ng-bind-html="prescription_list.prescription | highlight:patientselected" href="javascript:void(0)" class="ng-binding"></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+
                                         <div class="input-group-btn dropdown">
                                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></button>
 
@@ -286,7 +307,7 @@
             e.stopPropagation();
         });
 
-	if ($.isFunction($.slidebars)) {
+        if ($.isFunction($.slidebars)) {
             slidebar();
         } else {
             $.getScript("js/slidebars.js", function (data, textStatus, jqxhr) {
@@ -295,7 +316,7 @@
         }
     });
 
-	function slidebar() {
+    function slidebar() {
         $.slidebars({
             scrollLock: true
         });
