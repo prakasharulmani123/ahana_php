@@ -38,7 +38,7 @@ class HelperComponent extends Component {
                     'charge_item_id' => $charge->charge_item_id,
                     'charge_item' => $charge->roomChargeItem->charge_item_name,
                     'recurr_date' => $recurr_date,
-                    'charge_amount' => $charge->charge,
+                    'charge_amount' => $this->_getChargeAmount($admission, $charge),
                     'recurr_group' => $admission->admn_id,
                 ];
                 $this->_insertRecurringModel($data);
@@ -61,7 +61,7 @@ class HelperComponent extends Component {
                 'charge_item_id' => $charge->charge_item_id,
                 'charge_item' => $charge->roomChargeItem->charge_item_name,
                 'recurr_date' => $admission->status_date,
-                'charge_amount' => $charge->charge,
+                'charge_amount' => $this->_getChargeAmount($admission, $charge),
                 'recurr_group' => $admission->admn_id,
             ];
             $this->_insertRecurringModel($data);
@@ -150,6 +150,24 @@ class HelperComponent extends Component {
         $recurring_model = new PatBillingRecurring;
         $recurring_model->attributes = $data;
         $recurring_model->save();
+    }
+    
+    private function _getChargeAmount($admission, $charge){
+        //Get Patient Past Room charge when he was admitted.
+        $bill_recurring = PatBillingRecurring::find()
+                ->tenant($admission->tenant_id)
+                ->status()
+                ->active()
+                ->andWhere([
+                    'encounter_id' => $admission->encounter_id, 
+                    'patient_id' => $admission->patient_id,
+                    'room_type_id' => $admission->room_type_id,
+                    'charge_item_id' => $charge->charge_item_id
+                        ])
+                ->orderBy(['recurr_date' => SORT_DESC])
+                ->one();
+        
+        return !empty($bill_recurring) ? $bill_recurring->charge_amount : $charge->charge;
     }
 
 }

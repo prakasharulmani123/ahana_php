@@ -149,14 +149,34 @@ class PatEncounter extends RActiveRecord {
         return $this->hasOne(PatAdmission::className(), ['encounter_id' => 'encounter_id'])->andWhere(['NOT IN', 'admission_status', ['C']])->orderBy(['created_at' => SORT_DESC]);
     }
 
+    /**
+     * 
+     * @return type
+     */
+    public function getPatCurrentAdmissionExecptClinicalDischarge() {
+        return $this->hasOne(PatAdmission::className(), ['encounter_id' => 'encounter_id'])->andWhere(['NOT IN', 'admission_status', ['C', 'CD']])->orderBy(['created_at' => SORT_DESC]);
+    }
+
+    /**
+     * 
+     * @return type
+     */
     public function getPatLastRoomAdmission() {
         return $this->hasMany(PatAdmission::className(), ['encounter_id' => 'encounter_id'])->andWhere(['NOT IN', 'admission_status', ['C']])->orderBy(['created_at' => SORT_DESC]);
     }
 
+    /**
+     * 
+     * @return type
+     */
     public function getPatAdmissionDischarge() {
         return $this->hasOne(PatAdmission::className(), ['encounter_id' => 'encounter_id'])->andWhere(['IN', 'admission_status', ['D', 'CD']])->orderBy(['created_at' => SORT_DESC]);
     }
     
+    /**
+     * 
+     * @return type
+     */
     public function fields() {
         $extend = [
             'patient' => function ($model) {

@@ -167,7 +167,7 @@ class DefaultController extends Controller {
             $active_encounters = PatEncounter::find()->tenant($post['tenant_id'])->status()->active()->all();
             
             foreach ($active_encounters as $key => $active_encounter) {
-                Yii::$app->hepler->updateRecurring($active_encounter->patCurrentAdmission);
+                Yii::$app->hepler->updateRecurring($active_encounter->patCurrentAdmissionExecptClinicalDischarge);
             }
         }
     }

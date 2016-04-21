@@ -372,6 +372,8 @@ class EncounterController extends ActiveController {
             if (empty($charge_hist))
                 return;
             
+            $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+            
             $data['recurring'] = $this->_getBillingRecurring($charge_hist->encounter_id, $tenant_id);
             $charge_hist->delete();
         }
@@ -379,7 +381,7 @@ class EncounterController extends ActiveController {
     }
     
     private function _getBillingRecurring($encounter_id, $tenant_id){
-        return VBillingRecurring::find()->where(['encounter_id' => $encounter_id, 'tenant_id' => $tenant_id])->orderBy(['from_date' => SORT_ASC])->all();
+        return VBillingRecurring::find()->where(['encounter_id' => $encounter_id, 'tenant_id' => $tenant_id])->orderBy(['from_date' => SORT_ASC, 'charge_item' => SORT_ASC])->all();
     }
 
 }
