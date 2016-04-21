@@ -157,6 +157,11 @@ class PatPatient extends RActiveRecord {
     public function getPatActiveOp() {
         return $this->hasOne(PatEncounter::className(), ['patient_id' => 'patient_id'])->status()->encounterType('OP')->orderBy(['encounter_date' => SORT_DESC]);
     }
+    
+    //Last completed encounter so status is 0
+    public function getPatPreviousEncounter() {
+        return $this->hasOne(PatEncounter::className(), ['patient_id' => 'patient_id'])->status('0')->orderBy(['encounter_date' => SORT_DESC]);
+    }
 
     /**
      * @return ActiveQuery

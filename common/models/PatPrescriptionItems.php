@@ -126,7 +126,7 @@ class PatPrescriptionItems extends RActiveRecord {
     /**
      * @return ActiveQuery
      */
-    public function getRoute() {
+    public function getPresRoute() {
         return $this->hasOne(PatPrescriptionRoute::className(), ['route_id' => 'route_id']);
     }
 
@@ -194,6 +194,19 @@ class PatPrescriptionItems extends RActiveRecord {
             ];
             $model->save(false);
         }
+    }
+
+    public function fields() {
+        $extend = [
+            'frequency_name' => function ($model) {
+                return (isset($model->freq) ? $model->freq->freq_name : '-');
+            },
+            'route_name' => function ($model) {
+                return (isset($model->presRoute) ? $model->presRoute->route_name : '-');
+            },
+        ];
+        $fields = array_merge(parent::fields(), $extend);
+        return $fields;
     }
 
 }

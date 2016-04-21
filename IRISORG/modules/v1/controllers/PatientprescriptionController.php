@@ -2,8 +2,10 @@
 
 namespace IRISORG\modules\v1\controllers;
 
+use common\models\PatPatient;
 use common\models\PatPrescription;
 use common\models\PatPrescriptionItems;
+use common\models\PatVitals;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -57,7 +59,7 @@ class PatientprescriptionController extends ActiveController {
         if ($id) {
             $model = PatPrescription::find()->where(['ward_id' => $id])->one();
             $model->remove();
-            
+
             //Remove all related records
             foreach ($model->room as $room) {
                 $room->remove();
@@ -66,16 +68,16 @@ class PatientprescriptionController extends ActiveController {
             return ['success' => true];
         }
     }
-    
+
     public function actionSaveprescription() {
         $post = Yii::$app->getRequest()->post();
-        
-        if(!empty($post) && !empty($post['prescriptionItems'])){
+
+        if (!empty($post) && !empty($post['prescriptionItems'])) {
             $model = new PatPrescription;
             $model->attributes = $post;
-            
+
             $valid = $model->validate();
-            
+
             foreach ($post['prescriptionItems'] as $key => $item) {
                 $item_model = new PatPrescriptionItems();
                 $item_model->scenario = 'saveform';
@@ -84,10 +86,10 @@ class PatientprescriptionController extends ActiveController {
                 if (!$valid)
                     break;
             }
-            
-            if($valid){
+
+            if ($valid) {
                 $model->save(false);
-                
+
                 foreach ($post['prescriptionItems'] as $key => $item) {
                     $item_model = new PatPrescriptionItems();
                     $item_model->pres_id = $model->pres_id;
@@ -96,13 +98,28 @@ class PatientprescriptionController extends ActiveController {
                     $item_model->setRouteId();
                     $item_model->save(false);
                 }
-                
+
                 return ['success' => true];
-            }else{
+            } else {
                 return ['success' => false, 'message' => Html::errorSummary([$model, $item_model])];
             }
-        }else{
+        } else {
             return ['success' => false, 'message' => 'Prescriptions cannot be blank'];
+        }
+    }
+
+    public function actionGetpreviousprescription() {
+        $get = Yii::$app->getRequest()->get();
+
+        if (isset($get['patient_id'])) {
+            $patient = PatPatient::getPatientByGuid($get['patient_id']);
+            $previous_encounter_id = $patient->patPreviousEncounter->encounter_id;
+            if ($previous_encounter_id) {
+                $data = PatPrescription::find()->tenant()->active()->andWhere(['patient_id' => $patient->patient_id, 'encounter_id' => $previous_encounter_id])->all();
+                return ['success' => true, 'prescriptions' => $data];
+            }
+        } else {
+            return ['success' => false, 'message' => 'Invalid Access'];
         }
     }
 

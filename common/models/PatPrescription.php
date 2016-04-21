@@ -117,7 +117,28 @@ class PatPrescription extends RActiveRecord
         return $this->hasMany(PatPrescriptionItems::className(), ['pres_id' => 'pres_id']);
     }
     
+    /**
+     * @return ActiveQuery
+     */
+    public function getConsultant() {
+        return $this->hasOne(CoUser::className(), ['user_id' => 'consultant_id']);
+    }
+    
     public static function find() {
         return new PatPrescriptionQuery(get_called_class());
+    }
+    
+    public function fields() {
+        $extend = [
+            'items' => function ($model) {
+                return (isset($model->patPrescriptionItems) ? $model->patPrescriptionItems : '-');
+            },
+            'consultant_name' => function ($model) {
+                return (isset($model->consultant) ? $model->consultant->title_code .  $model->consultant->name: '-');
+            },
+                    
+        ];
+        $fields = array_merge(parent::fields(), $extend);
+        return $fields;
     }
 }
