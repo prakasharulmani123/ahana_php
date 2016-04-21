@@ -282,7 +282,7 @@ angular.module('app')
                     )
                 }
                 
-                //Pass fav id to patient_prescription.js
+                //Pass fav to patient_prescription.js
                 $scope.addFavouritePrescForm = function (fav) {
                     $scope.$broadcast('presc_fav', fav);
                 }

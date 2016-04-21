@@ -8,23 +8,27 @@
                 <div ng-include="'tpl/blocks/alert.html'">
                     {% include 'tpl/blocks/alert.html' %}
                 </div>
-                <form editable-form name="tableform" name="prescForm" class="form-horizontal form-validation" novalidate="" shown="true" onaftersave="saveForm()">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="panel panel-default"> 
-                                <!--<div class="panel-heading">
-                              Responsive Table
-                            </div>-->
-                                <div class="row wrapper pb-sm">
-                                    <div class="col-sm-8 m-b-xs " style="width:680px;" > 
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="panel panel-default"> 
+                            <!--<div class="panel-heading">
+                          Responsive Table
+                        </div>-->
+                            <div class="row wrapper pb-sm">
+                                <div class="col-sm-8 m-b-xs " style="width:680px;" > 
 
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" placeholder="Enter Your Prescription">
-                                            <div dropdown="" class="input-group-btn dropdown">
-                                                <button dropdown-toggle="" class="btn btn-default" type="button" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></button>
-                                                <div class="dropdown-menu pull-right prescrip-dropdown">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Enter Your Prescription">
+                                        <div class="input-group-btn dropdown">
+                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></button>
+
+                                            <!--<button class="btn btn-default" type="button" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></button>-->
+                                            <div class="dropdown-menu pull-right prescrip-dropdown">
+                                                <form class="form-horizontal">
                                                     <div class="panel panel-default">
-                                                        <div class="panel-heading font-bold"> <i class="fa fa-medkit"></i> Search & Add</div>
+                                                        <div class="panel-heading font-bold"> 
+                                                            <i class="fa fa-medkit"></i> Search & Add
+                                                        </div>
                                                         <div class="panel-body">
                                                             <div class="row">
                                                                 <div class="col-sm-3">
@@ -77,49 +81,49 @@
                                                             </div>
                                                         </div>
                                                     </div>
-
-                                                </div>
-                                                <button tabindex="-1" class="btn btn-default btn-dark" type="button">Action</button>
-
-                                            </div><!-- /btn-group -->
-                                        </div>
+                                                </form>
+                                            </div>
+                                            <button tabindex="-1" class="btn btn-default btn-dark" type="button">Action</button>
+                                        </div><!-- /btn-group -->
                                     </div>
-                                    <div class="col-sm-2 m-b-xs">
-                                        <div class="btn-group btn-group-justified">
-                                            <ui-select ng-model="enc.selected" theme="bootstrap">
-                                                <ui-select-match placeholder="Select Encounter Id">{{$select.selected.encounter_id}}</ui-select-match>
-                                                <ui-select-choices repeat="item in encounters | filter: $select.search | orderBy: 'encounter_id' : true">
-                                                    <div ng-bind-html="item.encounter_id | highlight: $select.search"></div>
-                                                </ui-select-choices>
-                                            </ui-select>
-                                            <br />
-                                        </div>
+                                </div>
+                                <div class="col-sm-2 m-b-xs">
+                                    <div class="btn-group btn-group-justified">
+                                        <ui-select ng-model="enc.selected" theme="bootstrap">
+                                            <ui-select-match placeholder="Select Encounter Id">{{$select.selected.encounter_id}}</ui-select-match>
+                                            <ui-select-choices repeat="item in encounters | filter: $select.search | orderBy: 'encounter_id' : true">
+                                                <div ng-bind-html="item.encounter_id | highlight: $select.search"></div>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                        <br />
                                     </div>
-                                    <div class="col-sm-2 m-b-xs">
-                                        <select class="form-control" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors | orderBy: name" ng-change="getTimeOfAppointment();">
-                                            <option value="">Select Consultant</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-sm-1 m-b-xs"> 
-                                        <button class="btn m-b-xs  btn-dark">  <i class="fa fa-times"></i> Clear </button>
-                                    </div>
-                                    <!--                                    <div class="col-sm-4 pull-right right">
-                                                                            <div class="btn-group navbar-right" dropdown>
-                                                                                <div class="col-sm-2 m-b-xs">
-                                                                                    <div class="btn-group" dropdown is-open="status.isopen">
-                                                                                        <button type="button" class=" btn btn-sm btn-grey" dropdown-toggle ng-disabled="disabled"> More &nbsp;&nbsp;<span class="caret"></span> </button>
-                                                                                        <ul class="dropdown-menu" role="menu">
-                                                                                            <li><a href>New Prescription </a></li>
-                                                                                            <li><a href> Repeat Prescription </a></li>
-                                                                                            <li><a href> Edit Prescription </a></li>
-                                                                                            <li><a href> Delete Prescription </a></li>
-                                                                                        </ul>
-                                                                                    </div>
+                                </div>
+                                <div class="col-sm-2 m-b-xs">
+                                    <select class="form-control" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors | orderBy: name" ng-change="getTimeOfAppointment();">
+                                        <option value="">Select Consultant</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-1 m-b-xs"> 
+                                    <button class="btn m-b-xs  btn-dark">  <i class="fa fa-times"></i> Clear </button>
+                                </div>
+                                <!--                                    <div class="col-sm-4 pull-right right">
+                                                                        <div class="btn-group navbar-right" dropdown>
+                                                                            <div class="col-sm-2 m-b-xs">
+                                                                                <div class="btn-group" dropdown is-open="status.isopen">
+                                                                                    <button type="button" class=" btn btn-sm btn-grey" dropdown-toggle ng-disabled="disabled"> More &nbsp;&nbsp;<span class="caret"></span> </button>
+                                                                                    <ul class="dropdown-menu" role="menu">
+                                                                                        <li><a href>New Prescription </a></li>
+                                                                                        <li><a href> Repeat Prescription </a></li>
+                                                                                        <li><a href> Edit Prescription </a></li>
+                                                                                        <li><a href> Delete Prescription </a></li>
+                                                                                    </ul>
                                                                                 </div>
                                                                             </div>
-                                                                            <button class="btn btn-info"> <i class="fa fa-plus"></i> New  </button>
-                                                                        </div>-->
-                                </div>
+                                                                        </div>
+                                                                        <button class="btn btn-info"> <i class="fa fa-plus"></i> New  </button>
+                                                                    </div>-->
+                            </div>
+                            <form editable-form name="tableform" name="prescForm" class="form-horizontal form-validation" novalidate="" shown="true" onaftersave="saveForm()">
                                 <div class="table-responsive in-patient-table">
                                     <div class="wrapper-md p-b">
                                         <div  class="row" style="height:220px;overflow-y: auto;" >
@@ -213,7 +217,7 @@
                                         <div class="col-sm-3">
                                             <div class="row">
                                                 <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="data.next_visit" is-open="opened" datepicker-options="dateOptions" close-text="Close"  min-date="minDate" ng-click="open($event)" prevent-enter="true" ng-change="setDayEmpty();
-                            getDays();"/>
+                                                                getDays();"/>
                                             </div>
                                         </div>
                                         <div class="col-sm-1 ">
@@ -221,7 +225,7 @@
                                         </div>
                                         <div class="col-sm-2 ">
                                             <input autocomplete="off" type="text" ng-model="data.number_of_days" class="form-control m-b" number-mask="" ng-change="setDateEmpty();
-                            getVisit();" required>
+                                                            getVisit();" required>
                                         </div>
                                         <div class="col-sm-3">
                                             <button type="submit" class="btn m-b-xs  btn-success save-btn"> <i class="fa fa-check"></i> Save </button>
@@ -230,10 +234,11 @@
                                             &nbsp; </div>
                                     </div>
                                 </footer>
-                            </div>
+                            </form>
+
                         </div>
                     </div>
-                </form>
+                </div>
             </div>
             <div class="wrapper-md p-b" ng-init="initForm()">
                 <form name="searchForm" class="form-horizontal form-validation" novalidate="">
