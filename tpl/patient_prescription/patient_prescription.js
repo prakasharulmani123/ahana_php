@@ -125,8 +125,9 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     };
                     $scope.data.prescriptionItems.push(items);
                     $scope.addData = {};
-                    
+
                     $timeout(function () {
+                        $("#search-form-div").removeClass('open');
                         $scope.setFocus('route', $scope.data.prescriptionItems.length - 1);
                     });
                 }
@@ -300,8 +301,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 return "Not empty.";
             }
         };
-        
-        $scope.prescription = '';
+
+	$scope.prescription = '';
 
         var changeTimer = false;
 
@@ -328,4 +329,31 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
             }
         }, true);
+
+        $scope.prev_pre = '0';
+        $scope.prescriptionStauts = function (status) {
+            if (status == '0') {
+                $scope.prev_pre = '1';
+            } else {
+                $scope.prev_pre = '0';
+            }
+        }
+
+        $scope.loadPrevPrescriptionsList = function () {
+            // pagination set up
+            $scope.rowCollection = [];  // base collection
+            $scope.itemsByPage = 10; // No.of records per page
+            $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
+
+            // Get data's from service
+            $http.get($rootScope.IRISOrgServiceUrl + '/patientprescription/getpreviousprescription?patient_id=' + $state.params.id)
+                    .success(function (prescriptionList) {
+                        $scope.isLoading = false;
+                        $scope.rowCollection = prescriptionList.prescriptions;
+                        $scope.displayedCollection = [].concat($scope.rowCollection);
+                    })
+                    .error(function () {
+                        $scope.errorData = "An Error has occured while loading list!";
+                    });
+        };
     }]);

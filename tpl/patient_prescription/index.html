@@ -1,6 +1,6 @@
 <div ng-controller="PrescriptionController">
     <div class="hbox hbox-auto-xs hbox-auto-sm">
-        <div class="col">
+        <div class="col" ng-show="prev_pre == '0'">
             <div class="bg-light lter b-b wrapper-md">
                 <h1 class="m-n h3">Prescription</h1>
             </div>
@@ -40,11 +40,11 @@
                                             </li>
                                         </ul>
 
-                                        <div class="input-group-btn dropdown">
+                                        <div class="input-group-btn dropdown" id="search-form-div">
                                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></button>
 
                                             <!--<button class="btn btn-default" type="button" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></button>-->
-                                            <div class="dropdown-menu pull-right prescrip-dropdown" ng-init="initForm()" id="search-form">
+                                            <div class="dropdown-menu pull-right prescrip-dropdown {{search_form}}" ng-init="initForm()" id="search-form">
                                                 <form name="searchForm" class="form-horizontal form-validation" novalidate="">
                                                     <div class="panel panel-default">
                                                         <div class="panel-heading font-bold"> <i class="fa fa-medkit"></i> Search & Add</div>
@@ -112,9 +112,9 @@
                                                                 <div class="col-sm-3">
                                                                     <label> </label>
                                                                     <br/>
-                                                                    <button class="btn m-b-xs  btn-success save-btn" ng-click="addForm(data.formtype)"><i class="fa fa-plus"></i> Add</button>
+                                                                    <button class="btn m-b-xs  btn-success save-btn" ng-click="addForm()"><i class="fa fa-plus"></i> Add</button>
                                                                     &nbsp;
-                                                                    <button class="btn m-b-xs  btn-dark"> <i class="fa fa-repeat"></i> Reset</button>
+                                                                    <button class="btn m-b-xs  btn-dark" ng-click="addData = {}"> <i class="fa fa-repeat"></i> Reset</button>
                                                                     &nbsp; </div>
                                                             </div>
                                                         </div>
@@ -280,6 +280,14 @@
             </div>
 
         </div>
+
+        <!--<div class="col" ng-if="app.settings.patientSideMenu == true">-->
+        <div class="col" ng-show="prev_pre == '1'">
+            <div ng-include="'tpl/patient_prescription/_previous_prescription.html'">
+                {% include 'tpl/patient_prescription/_previous_prescription.html' %}
+            </div>
+        </div>
+
         <div class="col w-sm pres-div bg-light dk b-r bg-auto" style="width:110px;">
             <div class="wrapper pres-right hidden-sm hidden-xs" id="email-menu">
                 <ul class="nav nav-pills nav-stacked nav-sm">
@@ -290,11 +298,12 @@
                     </li>
                 </ul>
                 <ul class="nav nav-pills nav-stacked nav-sm">
-                    <li><a href="#" class="active4"><i class="fa fa-medkit"></i> <br/>Prescription</a></li>
-                    <li><a href="#"><i class="fa fa-file-text"></i> <br/>Results </a></li>
-                    <li><a href="#" class="sb-open-right" data-target="#fav"><i class="fa fa-heart"></i> <br/> Favorites</a></li>
-                    <li><a href="#" class="sb-open-right" data-target="#notes"><i class="fa fa-pencil"></i> <br/>  Notes</a></li>
-                    <li><a href="#" class="sb-open-right" data-target="#vitals"> <i class="fa fa-heartbeat"></i> <br/>  Vitals</a></li>
+                    <li><a href="javascript:void(0)" class="active4" ng-click="prescriptionStauts('1')"><i class="fa fa-medkit"></i> <br/>Prescription</a></li>
+                    <li><a href="javascript:void(0)" ng-click="prescriptionStauts('0')"><i class="fa fa-history"></i> <br/>Prev-Prescr</a></li>
+                    <li><a href="javascript:void(0)"><i class="fa fa-file-text"></i> <br/>Results </a></li>
+                    <li><a href="javascript:void(0)" class="sb-open-right" data-target="#fav"><i class="fa fa-heart"></i> <br/> Favorites</a></li>
+                    <li><a href="javascript:void(0)" class="sb-open-right" data-target="#notes"><i class="fa fa-pencil"></i> <br/>  Notes</a></li>
+                    <li><a href="javascript:void(0)" class="sb-open-right" data-target="#vitals"> <i class="fa fa-heartbeat"></i> <br/>  Vitals</a></li>
                 </ul>
             </div>
         </div>

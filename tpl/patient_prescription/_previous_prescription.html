@@ -1,0 +1,65 @@
+<div class="bg-light lter b-b wrapper-md">
+    <h1 class="m-n h3">Previous Prescription</h1>
+</div>
+<div class="wrapper-md p-b" ng-init="loadPrevPrescriptionsList()">
+    <a ng-click="loadPrevPrescriptionsList()">sdf</a>
+    <div class="panel panel-default">
+        <table st-table="displayedCollection"  st-safe-src="rowCollection" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th style="width: 5%">
+                        <button class="btn btn-sm btn-default" type="button" ng-click="ctrl.expandAll(allExpanded = !allExpanded)">
+                            <i ng-if="!allExpanded" class="fa fa-plus text"></i>
+                            <i ng-if="allExpanded" class="fa fa-minus text"></i>
+                        </button>
+                    </th>
+                    <th>Prescription Date</th>
+                    <th>Consultant Name</th>
+                    <th>Next Visit</th>
+                    <th>No of days</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat-start="(key, row) in displayedCollection">
+                    <td style="width: 5%">
+                        <button ng-click="expanded = !expanded" expand class="btn btn-sm btn-default">
+                            <i ng-if="!expanded" class="fa fa-plus text"></i>
+                            <i ng-if="expanded" class="fa fa-minus text"></i>
+                        </button>
+                    </td>
+                    <td>{{row.pres_date}}</td>
+                    <td>{{row.consultant_name}}</td>
+                    <td>{{row.next_visit}}</td>
+                    <td>{{row.number_of_days}}</td>
+                </tr>
+                <tr ng-repeat-end ng-show="expanded">
+                    <td></td>
+                    <td colspan="11">
+                        <table class="table table-condensed table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Product Name</th>
+                                    <th>Generic Name</th>
+                                    <th>Drug Name</th>
+                                    <th>Route</th>
+                                    <th>Frequency</th>
+                                    <th>No of days</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="(gKey, prescriptionitem) in row.items | orderBy: prescriptionitem">
+                                    <td>{{ prescriptionitem.product_name}}</td>
+                                    <td>{{ prescriptionitem.generic_name}}</td>
+                                    <td>{{ prescriptionitem.drug_name}}</td>
+                                    <td>{{ prescriptionitem.route_name}}</td>
+                                    <td>{{ prescriptionitem.frequency_name}}</td>
+                                    <td>{{ prescriptionitem.number_of_days}}</td>
+                                </tr>
+                            </tbody>
+                        </table>                            
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
