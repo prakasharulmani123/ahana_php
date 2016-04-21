@@ -94,14 +94,14 @@ class PharmacyproductController extends ActiveController {
     public function actionGetgenericlistbydrugclass() {
         $get = Yii::$app->getRequest()->get();
         $id = $get['drug_class_id'];
-        
+
         return ['genericList' => PhaDrugGeneric::find()->tenant()->andWhere(['drug_class_id' => $id])->active()->all()];
     }
 
     public function actionGetproductlistbygeneric() {
         $get = Yii::$app->getRequest()->get();
         $id = $get['generic_id'];
-        
+
         return ['productList' => PhaProduct::find()->tenant()->andWhere(['generic_id' => $id])->active()->all()];
     }
 
@@ -200,7 +200,7 @@ class PharmacyproductController extends ActiveController {
                 if ($valid) {
                     $model->save(false);
                     $rate->save(false);
-                    
+
                     return ['success' => true, 'batch' => $model];
                 } else {
                     return ['success' => false, 'message' => Html::errorSummary([$model, $rate])];
@@ -209,6 +209,52 @@ class PharmacyproductController extends ActiveController {
         } else {
             return ['success' => false, 'message' => 'Invalid Access'];
         }
+    }
+
+    public function actionGetprescription() {
+        $post = Yii::$app->getRequest()->post();
+
+        if (isset($post['search']) && !empty($post['search'])) {
+            $connection = Yii::$app->client;
+            $command = $connection->createCommand("
+                SELECT a.product_id, a.product_name, b.generic_id, b.generic_name, c.drug_class_id, c.drug_name, 
+                CONCAT(b.generic_name, ' / ', a.product_name, ' | ', a.product_unit_count, ' | ', a.product_unit) AS prescription
+                FROM pha_product a
+                JOIN pha_generic b
+                ON b.generic_id = a.generic_id
+                LEFT OUTER JOIN pha_drug_class c
+                ON c.drug_class_id = a.drug_class_id
+                WHERE 
+                MATCH(a.product_name) AGAINST(:search_text IN BOOLEAN MODE)
+                OR MATCH(b.generic_name) AGAINST(:search_text IN BOOLEAN MODE)
+                OR MATCH(c.drug_name) AGAINST(:search_text IN BOOLEAN MODE)
+                ORDER BY  a.product_name
+                LIMIT 0,10", [':search_text' => $post['search'] . '*']
+            );
+            $products = $command->queryAll();
+
+            $command = $connection->createCommand("
+                SELECT route_id, route_name
+                FROM pat_prescription_route
+                WHERE MATCH(route_name) AGAINST(:search_text IN BOOLEAN MODE)
+                ORDER BY  route_name
+                LIMIT 0,10", [':search_text' => $post['search'] . '*']
+            );
+            $routes = $command->queryAll();
+
+            if (!empty($routes)) {
+                $new_result = [];
+                foreach ($routes as $rkey => $route) {
+                    foreach ($products as $pkey => $product) {
+                        $prescription = ['prescription' => $product['prescription'].' / '.$route['route_name']];
+                        $new_result[] = array_merge($product, $route, $prescription);
+                    }
+                }
+                $products = $new_result;
+            }
+        }
+        
+        return ['prescription' => $products];
     }
 
 }
