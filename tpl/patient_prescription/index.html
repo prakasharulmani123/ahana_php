@@ -158,7 +158,7 @@
                                                 <tbody>
                                                     <tr ng-repeat="(key, item) in data.prescriptionItems">
                                                         <td>
-                                                            <a href ui-toggle-class>
+                                                            <a href ui-toggle-class class="{{item.is_favourite ? 'active' : ''}}">
                                                                 <i class="fa fa-star-o text-muted text" ng-click="updateFavourite(1, item.product_id)"></i>
                                                                 <i class="fa fa-star text-info text-active" ng-click="updateFavourite(0, item.product_id)"></i> 
                                                             </a>
