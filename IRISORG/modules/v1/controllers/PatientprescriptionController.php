@@ -111,11 +111,11 @@ class PatientprescriptionController extends ActiveController {
     public function actionGetpreviousprescription() {
         $get = Yii::$app->getRequest()->get();
 
-        if (isset($get['patient_id'])) {
+        if (isset($get['patient_id']) && isset($get['encounter_id'])) {
             $patient = PatPatient::getPatientByGuid($get['patient_id']);
-            $previous_encounter_id = $patient->patPreviousEncounter->encounter_id;
-            if ($previous_encounter_id) {
-                $data = PatPrescription::find()->tenant()->active()->andWhere(['patient_id' => $patient->patient_id, 'encounter_id' => $previous_encounter_id])->all();
+            $encounter_id = $get['encounter_id'];
+            if ($encounter_id) {
+                $data = PatPrescription::find()->tenant()->active()->andWhere(['patient_id' => $patient->patient_id, 'encounter_id' => $encounter_id])->all();
                 return ['success' => true, 'prescriptions' => $data];
             }
         } else {
