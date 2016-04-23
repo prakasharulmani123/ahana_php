@@ -359,14 +359,15 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             }
         }
 
-        $scope.loadPrevPrescriptionsList = function () {
+        $scope.loadPrevPrescriptionsList = function (encounter_id) {
+            $scope.isLoading = true;
             // pagination set up
             $scope.rowCollection = [];  // base collection
             $scope.itemsByPage = 10; // No.of records per page
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
 
             // Get data's from service
-            $http.get($rootScope.IRISOrgServiceUrl + '/patientprescription/getpreviousprescription?patient_id=' + $state.params.id)
+            $http.get($rootScope.IRISOrgServiceUrl + '/patientprescription/getpreviousprescription?patient_id=' + $state.params.id + '&encounter_id=' + encounter_id)
                     .success(function (prescriptionList) {
                         $scope.isLoading = false;
                         $scope.rowCollection = prescriptionList.prescriptions;

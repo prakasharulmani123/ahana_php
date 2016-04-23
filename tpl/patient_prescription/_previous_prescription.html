@@ -1,9 +1,19 @@
 <div class="bg-light lter b-b wrapper-md">
     <h1 class="m-n h3">Previous Prescription</h1>
 </div>
-<div class="wrapper-md p-b" ng-init="loadPrevPrescriptionsList()">
-    <a ng-click="loadPrevPrescriptionsList()">sdf</a>
+<div class="wrapper-md p-b" ng-init="loadPrevPrescriptionsList(enc.selected.encounter_id)">
     <div class="panel panel-default">
+        <div class="col-sm-2 m-b-xs">
+            <div class="btn-group btn-group-justified">
+                <ui-select ng-model="enc.selected" theme="bootstrap" on-select="loadPrevPrescriptionsList($item.encounter_id)">
+                    <ui-select-match placeholder="Select Encounter Id">{{$select.selected.encounter_id}}</ui-select-match>
+                    <ui-select-choices repeat="item in encounters | filter: $select.search | orderBy: 'encounter_id' : true">
+                        <div ng-bind-html="item.encounter_id | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+                <br />
+            </div>
+        </div>
         <table st-table="displayedCollection"  st-safe-src="rowCollection" class="table table-bordered table-striped">
             <thead>
                 <tr>
@@ -19,7 +29,7 @@
                     <th>No of days</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody ng-hide="isLoading">
                 <tr ng-repeat-start="(key, row) in displayedCollection">
                     <td style="width: 5%">
                         <button ng-click="expanded = !expanded" expand class="btn btn-sm btn-default">
@@ -58,6 +68,11 @@
                             </tbody>
                         </table>                            
                     </td>
+                </tr>
+            </tbody>
+            <tbody ng-show="isLoading">
+                <tr>
+                    <td colspan="5" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
                 </tr>
             </tbody>
         </table>
