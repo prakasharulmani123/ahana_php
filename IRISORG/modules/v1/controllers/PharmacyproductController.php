@@ -214,13 +214,20 @@ class PharmacyproductController extends ActiveController {
     public function actionGetprescription() {
         $post = Yii::$app->getRequest()->post();
 
-        if (isset($post['search']) && !empty($post['search'])) {
+        $products = [];
+        if (isset($post['search']) && !empty($post['search']) && strlen($post['search']) > 1) {
+            $text = $post['search'];
+            $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+
             $connection = Yii::$app->client;
             $limit = 10;
+
+            $text_search = str_replace(' ', '* ', $text);
             
+            //Get Products
             $command = $connection->createCommand("
                 SELECT a.product_id, a.product_name, b.generic_id, b.generic_name, c.drug_class_id, c.drug_name, 
-                CONCAT(b.generic_name, ' / ', a.product_name, ' | ', a.product_unit_count, ' | ', a.product_unit) AS prescription
+                CONCAT(b.generic_name, ' // ', a.product_name, ' | ', a.product_unit_count, ' | ', a.product_unit) AS prescription
                 FROM pha_product a
                 JOIN pha_generic b
                 ON b.generic_id = a.generic_id
@@ -230,33 +237,74 @@ class PharmacyproductController extends ActiveController {
                 MATCH(a.product_name) AGAINST(:search_text IN BOOLEAN MODE)
                 OR MATCH(b.generic_name) AGAINST(:search_text IN BOOLEAN MODE)
                 OR MATCH(c.drug_name) AGAINST(:search_text IN BOOLEAN MODE)
+                AND a.tenant_id = :tenant_id
                 ORDER BY  a.product_name
-                LIMIT 0,:limit", [':search_text' => $post['search'] . '*', ':limit' => $limit]
+                LIMIT 0,:limit", [':search_text' => $text_search . '*', ':limit' => $limit, ':tenant_id' => $tenant_id]
             );
             $products = $command->queryAll();
-
+            
+            //Get Routes
             $command = $connection->createCommand("
-                SELECT route_id, route_name
+                SELECT route_id, route_name as route
                 FROM pat_prescription_route
                 WHERE MATCH(route_name) AGAINST(:search_text IN BOOLEAN MODE)
+                AND tenant_id = :tenant_id
                 ORDER BY  route_name
-                LIMIT 0,:limit", [':search_text' => $post['search'] . '*', ':limit' => $limit]
+                LIMIT 0,:limit", [':search_text' => $text_search . '*', ':limit' => $limit, ':tenant_id' => $tenant_id]
             );
             $routes = $command->queryAll();
 
             if (!empty($routes)) {
-                $new_result = [];
-                foreach ($routes as $rkey => $route) {
-                    foreach ($products as $pkey => $product) {
-                        $prescription = ['prescription' => $product['prescription'].' / '.$route['route_name']];
-                        $new_result[] = array_merge($product, $route, $prescription);
-                    }
+                $products = $this->_mergeArrayWithProducts($products, $routes, 'route');
+            }
+
+            $strings = $this->_getFrquenceyMatchStrings($text);
+            
+            if (!empty($strings)) {
+                //Get Frequencies
+                $query = "SELECT freq_id, freq_name as frequency 
+                    FROM pat_prescription_frequency 
+                    WHERE";
+                foreach ($strings as $key => $string) {
+                    $query .= " freq_name like '%$string%' OR";
                 }
-                $products = $new_result;
+                $query = rtrim($query, ' OR');
+                $query .= "AND tenant_id = :tenant_id
+                    ORDER BY  freq_name
+                    LIMIT 0,:limit";
+
+                $command = $connection->createCommand($query, [':limit' => $limit, ':tenant_id' => $tenant_id]);
+                $frequencies = $command->queryAll();
+
+                if (!empty($frequencies)) {
+                    $products = $this->_mergeArrayWithProducts($products, $frequencies, 'frequency');
+                }
             }
         }
-        
+
         return ['prescription' => $products];
+    }
+
+    private function _getFrquenceyMatchStrings($string) {
+        $words = explode(' ', $string);
+
+        $match_words = [];
+        foreach ($words as $key => $word) {
+            if (substr_count($word, '-') >= 1)
+                $match_words[] = $word;
+        }
+        return $match_words;
+    }
+
+    private function _mergeArrayWithProducts($products, $array, $pres_string) {
+        $new_result = [];
+        foreach ($array as $rkey => $val) {
+            foreach ($products as $pkey => $product) {
+                $prescription = ['prescription' => $product['prescription'] . ' // ' . $val[$pres_string]];
+                $new_result[] = array_merge($product, $val, $prescription);
+            }
+        }
+        return $new_result;
     }
 
 }
