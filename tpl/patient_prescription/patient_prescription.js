@@ -134,6 +134,27 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             }
         }
 
+        $scope.addPres = function (prescription) {
+            var result = $filter('filter')($scope.data.prescriptionItems, {product_id: prescription.product_id});
+
+            if (result.length > 0) {
+                alert('This Product already added');
+            } else {
+                $scope.data.prescriptionItems.push(prescription);
+
+                $timeout(function () {
+                    $("#prescriptioncont-header.search-patientcont-header").hide();
+                    if(!prescription.hasOwnProperty('route')){
+                        $scope.setFocus('route', $scope.data.prescriptionItems.length - 1);
+                    }else if(!prescription.hasOwnProperty('frequency')){
+                        $scope.setFocus('frequency', $scope.data.prescriptionItems.length - 1);
+                    }else{
+                        $scope.setFocus('number_of_days', $scope.data.prescriptionItems.length - 1);
+                    }
+                });
+            }
+        }
+
         //Get the value from main.js
         $scope.$on('presc_fav', function (event, args) {
             var result = $filter('filter')($scope.data.prescriptionItems, {product_id: args.product_id});
@@ -195,7 +216,6 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             });
 
             angular.forEach(_that.data.prescriptionItems, function (prescriptionItem, key) {
-                console.log(angular.isObject(prescriptionItem.product_name));
                 if (angular.isObject(prescriptionItem.product_name)) {
                     _that.data.prescriptionItems[key].product_name = prescriptionItem.product_name.full_name;
                 } else if (typeof prescriptionItem.product_name == 'undefined') {
@@ -213,9 +233,9 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         $anchorScroll();
                         $scope.loadbar('hide');
 
-                        if (response.success == 'true') {
+                        if (response.success) {
                             $scope.successMessage = succ_msg;
-//                            $scope.data = {};
+                            $scope.data = {};
 //                            $timeout(function () {
 //                                $state.go('patient.prescription', {id: $state.params.id});
 //                            }, 1000)
@@ -302,9 +322,11 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             }
         };
 
-	$scope.prescription = '';
+        $scope.prescription = '';
 
         var changeTimer = false;
+
+        $scope.prescription_lists = {};
 
         $scope.$watch('prescription', function (newValue, oldValue) {
             if (newValue != '') {
@@ -319,14 +341,12 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     }).success(
                             function (response) {
                                 $scope.prescription_lists = response.prescription;
-                                console.log(response);
                             }
                     );
                     changeTimer = false;
                 }, 300);
-
-
-
+            }else{
+                $scope.prescription_lists = {};
             }
         }, true);
 

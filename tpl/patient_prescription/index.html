@@ -23,7 +23,7 @@
                                                placeholder="Enter Your Prescription" 
                                                ng-model='prescription'
                                                />
-                                        <ul class="search-patientcont-header" id='prescriptioncont-header'>
+                                        <ul class="search-patientcont-header" id='prescriptioncont-header' ng-show="prescription_lists.length > 0">
                                             <li ng-repeat="prescription_list in prescription_lists">
                                                 <div class="row"> 
                                                     <div class="col-xs-12 col-sm-2 col-md-2"> 
@@ -33,7 +33,7 @@
                                                     </div>
                                                     <div class="col-xs-12 col-sm-10 col-md-10"> 
                                                         <div class="row ng-binding">
-                                                            <a ng-bind-html="prescription_list.prescription | highlight:patientselected" href="javascript:void(0)" class="ng-binding"></a>
+                                                            <a ng-bind-html="prescription_list.prescription | highlight:prescription" href="javascript:void(0)" class="ng-binding" ng-click="addPres(prescription_list)"></a>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -121,7 +121,7 @@
                                                     </div>
                                                 </form>
                                             </div>
-                                            <button tabindex="-1" class="btn btn-default btn-dark" type="button">Action</button>
+                                            <!--<button tabindex="-1" class="btn btn-default btn-dark" type="button">Action</button>-->
                                         </div><!-- /btn-group -->
                                     </div>
                                 </div>
@@ -221,6 +221,7 @@
                                                                   e-form="tableform" 
                                                                   e-typeahead="frequency as frequency.freq_name for frequency in frequencies | filter:$viewValue"
                                                                   e-autocomplete="off"
+                                                                  e-id="frequency"
                                                                   e-required>
                                                                 {{ item.frequency || 'empty' }}
                                                             </span>
@@ -232,6 +233,7 @@
                                                                   e-form="tableform" 
                                                                   onbeforesave="checkInput($data)"
                                                                   e-autocomplete="off"
+                                                                  e-id="number_of_days"
                                                                   e-required>
                                                                 {{ item.number_of_days || 'empty' }}
                                                             </span>
