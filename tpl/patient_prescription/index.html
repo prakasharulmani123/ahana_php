@@ -1,9 +1,31 @@
 <div ng-controller="PrescriptionController">
     <div class="hbox hbox-auto-xs hbox-auto-sm">
         <div class="col" ng-show="prev_pre == '0'">
-            <div class="bg-light lter b-b wrapper-md">
-                <h1 class="m-n h3">Prescription</h1>
+            <div class="bg-light lter b-b wrapper-md" style="width:100%;float:left; padding:10px; padding-bottom:0px; margin-bottom:15px;">
+
+
+                <div class="col-sm-3 m-b-xs">  <h1 class="m-n h3">Prescription</h1> </div>
+                <div class="col-sm-3 m-b-xs">
+                    <div class="btn-group btn-group-justified">
+                        <ui-select ng-model="enc.selected" theme="bootstrap">
+                            <ui-select-match placeholder="Select Encounter Id">{{$select.selected.encounter_id}}</ui-select-match>
+                            <ui-select-choices repeat="item in encounters | filter: $select.search | orderBy: 'encounter_id' : true">
+                                <div ng-bind-html="item.encounter_id | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                        <br />
+                    </div>
+                </div>
+                <div class="col-sm-3 m-b-xs">
+                    <select class="form-control" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors | orderBy: name" ng-change="getTimeOfAppointment();">
+                        <option value="">Select Consultant</option>
+                    </select>
+                </div>
+                <div class="col-sm-2 m-b-xs"> 
+                    <button class="btn m-b-xs  btn-dark">  <i class="fa fa-times"></i> Clear </button>
+                </div>
             </div>
+
             <div class="wrapper-md p-b">
                 <div ng-include="'tpl/blocks/alert.html'">
                     {% include 'tpl/blocks/alert.html' %}
@@ -121,45 +143,9 @@
                                                     </div>
                                                 </form>
                                             </div>
-                                            <!--<button tabindex="-1" class="btn btn-default btn-dark" type="button">Action</button>-->
-                                        </div><!-- /btn-group -->
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-2 m-b-xs">
-                                    <div class="btn-group btn-group-justified">
-                                        <ui-select ng-model="enc.selected" theme="bootstrap">
-                                            <ui-select-match placeholder="Select Encounter Id">{{$select.selected.encounter_id}}</ui-select-match>
-                                            <ui-select-choices repeat="item in encounters | filter: $select.search | orderBy: 'encounter_id' : true">
-                                                <div ng-bind-html="item.encounter_id | highlight: $select.search"></div>
-                                            </ui-select-choices>
-                                        </ui-select>
-                                        <br />
-                                    </div>
-                                </div>
-                                <div class="col-sm-2 m-b-xs">
-                                    <select class="form-control" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors | orderBy: name" ng-change="getTimeOfAppointment();">
-                                        <option value="">Select Consultant</option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-1 m-b-xs"> 
-                                    <button class="btn m-b-xs  btn-dark">  <i class="fa fa-times"></i> Clear </button>
-                                </div>
-                                <!--                                    <div class="col-sm-4 pull-right right">
-                                                                        <div class="btn-group navbar-right" dropdown>
-                                                                            <div class="col-sm-2 m-b-xs">
-                                                                                <div class="btn-group" dropdown is-open="status.isopen">
-                                                                                    <button type="button" class=" btn btn-sm btn-grey" dropdown-toggle ng-disabled="disabled"> More &nbsp;&nbsp;<span class="caret"></span> </button>
-                                                                                    <ul class="dropdown-menu" role="menu">
-                                                                                        <li><a href>New Prescription </a></li>
-                                                                                        <li><a href> Repeat Prescription </a></li>
-                                                                                        <li><a href> Edit Prescription </a></li>
-                                                                                        <li><a href> Delete Prescription </a></li>
-                                                                                    </ul>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <button class="btn btn-info"> <i class="fa fa-plus"></i> New  </button>
-                                                                    </div>-->
                             </div>
                             <form editable-form name="tableform" name="prescForm" class="form-horizontal form-validation" novalidate="" shown="true" onaftersave="saveForm()">
                                 <div class="table-responsive in-patient-table">
@@ -317,7 +303,6 @@
         $('#search-form').on('click', function (e) {
             e.stopPropagation();
         });
-
         if ($.isFunction($.slidebars)) {
             slidebar();
         } else {
@@ -326,7 +311,6 @@
             });
         }
     });
-
     function slidebar() {
         $.slidebars({
             scrollLock: true

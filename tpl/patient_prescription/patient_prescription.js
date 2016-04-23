@@ -123,12 +123,18 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         'number_of_days': $scope.addData.number_of_days,
                         'is_favourite': 0,
                     };
+                    var fav = $filter('filter')($scope.child.favourites, {product_id: $scope.addData.product.product_id});
+
+                    if (fav.length > 0) {
+                        angular.extend(items, {is_favourite: 1});
+                    }
+                    
                     $scope.data.prescriptionItems.push(items);
                     $scope.addData = {};
 
                     $timeout(function () {
                         $("#search-form-div").removeClass('open');
-                        $scope.setFocus('route', $scope.data.prescriptionItems.length - 1);
+                        $scope.setFocus('number_of_days', $scope.data.prescriptionItems.length - 1);
                     });
                 }
             }
@@ -140,15 +146,21 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             if (result.length > 0) {
                 alert('This Product already added');
             } else {
+                var fav = $filter('filter')($scope.child.favourites, {product_id: prescription.product_id});
+
+                if (fav.length > 0) {
+                    angular.extend(prescription, {is_favourite: 1});
+                }
+
                 $scope.data.prescriptionItems.push(prescription);
 
                 $timeout(function () {
                     $("#prescriptioncont-header.search-patientcont-header").hide();
-                    if(!prescription.hasOwnProperty('route')){
+                    if (!prescription.hasOwnProperty('route')) {
                         $scope.setFocus('route', $scope.data.prescriptionItems.length - 1);
-                    }else if(!prescription.hasOwnProperty('frequency')){
+                    } else if (!prescription.hasOwnProperty('frequency')) {
                         $scope.setFocus('frequency', $scope.data.prescriptionItems.length - 1);
-                    }else{
+                    } else {
                         $scope.setFocus('number_of_days', $scope.data.prescriptionItems.length - 1);
                     }
                 });
@@ -345,7 +357,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     );
                     changeTimer = false;
                 }, 300);
-            }else{
+            } else {
                 $scope.prescription_lists = {};
             }
         }, true);
