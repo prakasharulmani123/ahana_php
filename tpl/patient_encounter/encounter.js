@@ -64,6 +64,7 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
         }
 
         $scope.moreOptions = function (key, enc_id, type, row_sts, id, status, is_swap) {
+            console.log(row_sts);
             $scope.more_li = {};
 
             $('.enc_chk').not('#enc_' + enc_id + key).attr('checked', false);
@@ -84,11 +85,15 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                         $scope.more_li.push({href: "cancelAdmission(" + enc_id + ", " + id + ", '" + row_sts + "')", name: 'Cancel', mode: 'click'});
                     }
                 } else if (type == 'OP') {
-                    $scope.more_li = [
-                        {href: 'patient.changeStatus({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Change Status', mode: 'sref'},
-                        {href: "cancelAppointment(" + enc_id + ")", name: 'Cancel Appointment', mode: 'click'},
-                        {href: 'patient.editDoctorFee({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Edit Doctor Fee', mode: 'sref'},
-                    ];
+                    if (status == '1') {
+                        $scope.more_li.push(
+                                {href: 'patient.changeStatus({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Change Status', mode: 'sref'},
+                        {href: "cancelAppointment(" + enc_id + ")", name: 'Cancel Appointment', mode: 'click'});
+                    }
+
+                    $scope.more_li.push(
+                            {href: 'patient.editDoctorFee({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Edit Doctor Fee', mode: 'sref'});
+
                 }
             }
         }

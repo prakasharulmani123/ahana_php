@@ -163,6 +163,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     } else {
                         $scope.setFocus('number_of_days', $scope.data.prescriptionItems.length - 1);
                     }
+                    $scope.prescription = '';
                 });
             }
         }

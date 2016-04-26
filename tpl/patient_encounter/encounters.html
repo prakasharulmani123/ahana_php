@@ -37,7 +37,7 @@
                 </div>
                 <div class="col-sm-1">
                 </div>
-                <div class="col-sm-4 pull-right right">
+                <div class="col-sm-4 pull-right right" ng-hide="isLoading">
                     <button ng-if="activeEncounter == null" ng-click="$state.go('patient.admission', {id: $state.params.id})" class="btn btn-info"><i class="fa fa-plus"></i> New Admission </button>
                     <button ng-if="activeEncounter == null" ng-click="$state.go('patient.appointment', {id: $state.params.id})" class="btn btn-primary"><i class="fa fa-plus"></i> New Appointment </button>
                     <!--<button class="btn btn-default"><i class="fa fa-print"></i> Print</button>-->
@@ -60,7 +60,7 @@
                             <th>Date</th>
                             <th>Type</th>
                             <th>Details</th>
-                            <th>DoctorsName</th>
+                            <th>Doctors Name</th>
                         </tr>
                     </thead>
                     <tbody ng-hide="isLoading">
@@ -83,7 +83,7 @@
                         </tr>
                         <tr ng-repeat-end ng-show="expanded" ng-repeat="(key, item) in encounter.all">
                             <td>
-                                <label ng-show="(item.status == 1 || item.type == 'Seen')" class="i-checks m-b-none"><input id="enc_{{item.encounter_id}}{{key}}" class="enc_chk" type="checkbox" name="b[]" ng-click="moreOptions(key, item.encounter_id, item.encounter_type, item.row_sts, item.id, item.status, item.is_swap)"><i></i></label>
+                                <label ng-show="(item.status == 1 || item.type == 'Seen') && encounter.row_sts != 'CD'" class="i-checks m-b-none"><input id="enc_{{item.encounter_id}}{{key}}" class="enc_chk" type="checkbox" name="b[]" ng-click="moreOptions(key, item.encounter_id, item.encounter_type, item.row_sts, item.id, item.status, item.is_swap)"><i></i></label>
                             </td>
                             <td> {{item.encounter_id}} </td>
                             <td> 
@@ -109,6 +109,11 @@
 
                                 <div ng-if="item.type !== 'Booked' || encounter.all.length > 1" ng-show="item.type !== 'Arrived'">
                                     {{item.type}} <span ng-if="item.is_swap == 1">( Swapping )</span>
+                                </div>
+                                
+                                <!--Static-->
+                                <div ng-show="item.type == 'Arrived' && encounter.all.length > 2">
+                                    {{item.type}}
                                 </div>
                                 <!--Booked to Arrival Form-->
                                 <div ng-if="item.type == 'Booked' && encounter.all.length == 1">

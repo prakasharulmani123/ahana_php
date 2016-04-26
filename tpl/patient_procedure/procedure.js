@@ -84,6 +84,36 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
                     });
         };
 
+        $scope.isPatientHaveActiveEncounter = function (callback) {
+            $http.post($rootScope.IRISOrgServiceUrl + '/encounter/patienthaveactiveencounter', {patient_id: $state.params.id})
+                    .success(function (response) {
+                        callback(response);
+                    }, function (x) {
+                        response = {success: false, message: 'Server Error'};
+                        callback(response);
+                    });
+        }
+        
+        $scope.initCanSaveAdmission = function () {
+            $scope.showForm = false;
+            $scope.isPatientHaveActiveEncounter(function (response) {
+                is_success = true;
+                if (response.success == true) {
+                    if (response.model.encounter_id != $state.params.enc_id) {
+                        is_success = false;
+                    }
+                } else {
+                    is_success = false;
+                }
+
+                if (!is_success) {
+                    alert("This is not an active Encounter");
+                    $state.go("patient.procedure", {id: $state.params.id});
+                }
+                $scope.showForm = true;
+            });
+        }
+        
         $scope.initForm = function () {
             $scope.loadbar('show');
             $scope.data = {};
