@@ -241,15 +241,27 @@ class EncounterController extends ActiveController {
             $patient = PatPatient::find()->where(['patient_guid' => $post['patient_id']])->one();
             $model = PatEncounter::find()
                     ->tenant()
-                    ->status()
                     ->andWhere(['patient_id' => $patient->patient_id])
+                    ->orderBy(['encounter_id' => SORT_DESC])
                     ->one();
 
-            if (!empty($model)) {
+            if ((empty($model->patAdmissionDischarge) && $model->encounter_type == 'IP') || $model->status == '1') {
                 return ['success' => true, 'model' => $model];
             } else {
                 return ['success' => false];
             }
+            
+//            $model = PatEncounter::find()
+//                    ->tenant()
+//                    ->status()
+//                    ->andWhere(['patient_id' => $patient->patient_id])
+//                    ->one();
+//
+//            if (!empty($model)) {
+//                return ['success' => true, 'model' => $model];
+//            } else {
+//                return ['success' => false];
+//            }
         }
     }
 
