@@ -81,7 +81,14 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
         }
 
         $scope.saveRoomConcession = function () {
+            var total = 0;
+            angular.forEach($scope.recurring_charges, function (recurring_charge) {
+                total = total + parseFloat(recurring_charge.total_charge);
+            });
+
             _that = this;
+
+            angular.extend(_that.data, {total_amount: total});
 
             $scope.errorData = "";
             $scope.successMessage = "";
@@ -342,13 +349,13 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
             var conf = confirm('Are you sure to ' + mode + ' ?');
             if (!conf)
                 return;
-            
-            if(mode == 'apply'){
+
+            if (mode == 'apply') {
                 url = $rootScope.IRISOrgServiceUrl + "/encounter/updaterecurringroomcharge";
-            }else{
+            } else {
                 url = $rootScope.IRISOrgServiceUrl + "/encounter/cancelroomchargehistory";
             }
-            
+
             var index = $scope.charge_alerts.indexOf(alert);
             $http({
                 url: url,
