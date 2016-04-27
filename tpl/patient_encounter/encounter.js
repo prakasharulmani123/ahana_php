@@ -65,7 +65,7 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
 
         $scope.moreOptions = function (key, enc_id, type, row_sts, id, status, is_swap) {
             console.log(row_sts);
-            $scope.more_li = {};
+            $scope.more_li = [];
 
             $('.enc_chk').not('#enc_' + enc_id + key).attr('checked', false);
 

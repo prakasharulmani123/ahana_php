@@ -408,9 +408,6 @@ body {
     background: #f0f3f4 !important;
 }
 
-.bg-light.lter.b-b.wrapper-md.ng-scope {
-    padding: 5px 20px !important;
-}
 /*prescription */
 
 .pres-right {
@@ -435,7 +432,7 @@ body {
     background-color: #23b7e5;
     color:#ffffff;
 }
-.bg-light.lter.b-b.wrapper-md.ng-scope {
+.bg-light.lter.b-b.wrapper-md {
     padding: 5px 20px;
 }
 .col.w-sm.pres-div.bg-light.dk.b-r.bg-auto {
@@ -907,6 +904,4 @@ button.label {
 
 }
 
-.full-cont .patient_aside, .patient_content {
-  margin-top: 145px;
-}
+

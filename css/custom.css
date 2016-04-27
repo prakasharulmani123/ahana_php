@@ -97,6 +97,10 @@ th[st-sort] {
     transition: all 0.3s;
 }
 
+.full-cont .patient_aside, .full-cont .patient_content {
+  margin-top: 145px;
+}
+
 
 
 

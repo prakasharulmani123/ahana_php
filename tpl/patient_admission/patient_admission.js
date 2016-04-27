@@ -189,6 +189,15 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
             $scope.opened = true;
         };
 
+        $scope.beforeRender = function ($view, $dates, $leftDate, $upDate, $rightDate) {
+            var today_date = new Date().valueOf();
+            angular.forEach($dates, function (date, key) {
+                if (today_date < date.localDateValue()) {
+                    $dates[key].selectable = false;
+                }
+            });
+        }
+
         $scope.updateWard = function () {
             $scope.availableWards = [];
             $scope.availableRooms = [];

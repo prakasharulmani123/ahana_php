@@ -12,14 +12,14 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
         //Index Page
         $scope.loadPurchaseItemList = function (payment_type) {
             $scope.errorData = $scope.successMessage = '';
-            if(payment_type == 'CA'){
+            if (payment_type == 'CA') {
                 $scope.purchase_payment_type_name = 'Cash';
             }
-            if(payment_type == 'CR'){
+            if (payment_type == 'CR') {
                 $scope.purchase_payment_type_name = 'Credit';
             }
             $scope.purchase_payment_type = payment_type;
-            
+
             $scope.isLoading = true;
             // pagination set up
             $scope.rowCollection = [];  // base collection
@@ -114,6 +114,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                 purchase_amount: '0',
                 batch_no: '0',
                 is_temp: '0',
+                exp_warning: ''
             };
             $scope.purchaseitems.push($scope.inserted);
 
@@ -150,6 +151,25 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
         $scope.checkAmount = function (data) {
             if (data <= 0) {
                 return "Not be 0.";
+            }
+        };
+
+        $scope.checkExpDate = function (data, key) {
+            var choosen_date = new Date(data);
+            var choosen_date_month = choosen_date.getMonth();
+            var choosen_date_year = choosen_date.getYear();
+            
+            var today_date = new Date();
+            var today_date_month = today_date.getMonth();
+            var today_date_year = today_date.getYear();
+            
+            var show_warning_count = '3';
+            var show_warning = parseFloat(choosen_date_month) - parseFloat(today_date_month);
+
+            if (show_warning < show_warning_count && today_date_year == choosen_date_year) {
+                $scope.purchaseitems[key].exp_warning = 'short expiry drug';
+            } else {
+                $scope.purchaseitems[key].exp_warning = '';
             }
         };
 
@@ -421,6 +441,10 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                     $scope.errorData = data.message;
             });
         };
+
+        $scope.select = function (data) {
+            console.log(data);
+        }
 
     }]);
 

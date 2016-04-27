@@ -100,9 +100,10 @@
                             </td>
                             <td>
                                 <div id="i_expiry_date_{{key}}">
-                                    <span editable-text="purchaseitem.expiry_date" e-ng-value="purchaseitem.expiry_date" e-form="tableform" e-class="form-control" e-datepicker-popup="MMM yyyy" e-is-open="$parent.opened2" e-ng-click="$parent.opened2=true" e-ng-focus="$parent.opened2=true" e-datepicker-options="{minMode: 'month'}" e-close-text="Close" e-datepicker-mode="'month'" e-autocomplete="off" e-prevent-enter="true" e-min-date="minDate">
+                                    <span editable-text="purchaseitem.expiry_date" e-ng-value="purchaseitem.expiry_date" e-form="tableform" e-class="form-control" e-datepicker-popup="MMM yyyy" e-is-open="$parent.opened2" e-ng-click="$parent.opened2=true" e-ng-focus="$parent.opened2=true" e-datepicker-options="{minMode: 'month'}" e-close-text="Close" e-datepicker-mode="'month'" e-autocomplete="off" e-prevent-enter="true" e-min-date="minDate" e-ng-change="checkExpDate($data, key)">
                                         {{ purchaseitem.expiry_date | moment:'MMM YYYY' || 'empty' }}
                                     </span>
+                                    <div class="text-danger-dk" style="" ng-show="purchaseitem.exp_warning"> {{purchaseitem.exp_warning }}</div>
                                 </div>
                                 <span id="t_expiry_date_{{key}}" class="hide">
                                     {{ purchaseitem.temp_expiry_date | moment:'MMM YYYY' || 'empty' }}

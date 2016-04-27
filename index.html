@@ -69,8 +69,8 @@
                         </div>
                         <div class="wrapper m-t b-t b-light">
                             <form class="m-b-none ng-pristine ng-valid ng-submitted" ng-init="data = {};
-                                       
-                                            notes_error = false;">
+
+                                                            notes_error = false;">
                                 <div class="input-group">
                                     <input type="text" placeholder="Say something" class="form-control" ng-model="data.notes">
                                     <span class="input-group-btn">
@@ -125,7 +125,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Prescription Favorites -->
             <div id="fav" class="sb-slidebar-content">  
                 <div class="app-aside-right pos-fix no-padder w-auto-xs bg-white b-l animated fadeInRight hide ng-scope show">
@@ -158,7 +158,7 @@
                     </div>
                 </div>
             </div>
-            
+
         </div>
         <script type="text/javascript" src="node_modules/moment/moment.js"></script>
         <!-- Angular -->
@@ -239,21 +239,24 @@
         <!-- Lazy loading -->
         <script type="text/javascript" src="js/classie.js"></script>
         <script>
-                                                                function init() {
-                                                                    window.addEventListener('scroll', function (e) {
-                                                                        var distanceY = window.pageYOffset || document.documentElement.scrollTop,
-                                                                                shrinkOn = 100,
-                                                                                header = document.querySelector("div.patient-panel");
-                                                                        if (distanceY > shrinkOn) {
-                                                                            classie.add(header, "smaller");
-                                                                        } else {
-                                                                            if (classie.has(header, "smaller")) {
-                                                                                classie.remove(header, "smaller");
-                                                                            }
+                                                            function init() {
+                                                                window.addEventListener('scroll', function (e) {
+                                                                    var distanceY = window.pageYOffset || document.documentElement.scrollTop,
+                                                                            shrinkOn = 100,
+                                                                            header = document.querySelector("div.patient-panel");
+                                                                    body_class = document.querySelector("body");
+                                                                    if (distanceY > shrinkOn) {
+                                                                        classie.add(header, "smaller");
+                                                                        classie.add(body_class, "full-cont");
+                                                                    } else {
+                                                                        if (classie.has(header, "smaller")) {
+                                                                            classie.remove(header, "smaller");
+                                                                            classie.remove(body_class, "full-cont");
                                                                         }
-                                                                    });
-                                                                }
-                                                                window.onload = init();
+                                                                    }
+                                                                });
+                                                            }
+                                                            window.onload = init();
         </script>
     </body>
 </html>

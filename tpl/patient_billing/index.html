@@ -51,12 +51,20 @@
                     <div class="col-sm-4">
                         <div class="row">
                             <div class="form-group">
-                                <div class="col-sm-4">  <b>Stay Duration :</b>   </div>
-                                <div class="col-sm-8">  {{enc.selected.stay_duration}}  </div>
+                                <div class="col-sm-5">  <b>Stay Duration :</b>   </div>
+                                <div class="col-sm-7">  {{enc.selected.stay_duration}}  </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-sm-4">  <b>Discount :</b>   </div>
-                                <div class="col-sm-8"> <span class="label bg-light dk"> {{billing.discount = billing.total.concession + parseFloat(enc.selected.concession_amount) | number:2}}  ( Rm_Dis: {{enc.selected.concession_amount| number:2}} ,Otr_Dis: {{billing.total.concession| number:2}} )</span> </div>
+                                <div class="col-sm-5">  <b>Room Discount :</b>   </div>
+                                <div class="col-sm-7"> <span class="label bg-light dk"> {{enc.selected.concession_amount | number:2}} </span> </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-5">  <b>Other Discount :</b>   </div>
+                                <div class="col-sm-7"> <span class="label bg-light dk"> {{billing.total.concession || "0" | number:2}} </span> </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-5">  <b>Total Discount :</b>   </div>
+                                <div class="col-sm-7"> <span class="label bg-light dk"> {{billing.discount = billing.total.concession + parseFloat(enc.selected.concession_amount) | number:2}} </span> </div>
                             </div>
                         </div>
                     </div>
@@ -92,6 +100,7 @@
                     <a class="btn btn-default" ng-show="enc.selected.finalize != '0' && enc.selected.authorize == '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'authorize', '1', 'Authorize')"> <i class="fa fa-eye"></i> Authorize</a>
                     <a class="btn btn-default" ng-show="enc.selected.authorize != '0' && enc.selected.discharge == '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'authorize', '0', 'Un Authorize')"> <i class="fa fa-eye-slash"></i> Un Authorize</a>
                     <a class="btn btn-default" ng-show="enc.selected.authorize != '0' && enc.selected.discharge == '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'discharge', '1', 'Administrative Discharge')"> <i class="fa fa-home"></i> Administrative Discharge</a>
+                    <span class="pull-right"> <b> Concession amount : </b><span class="label bg-success"> {{enc.selected.concession_amount| number:2}} </span></span>
                 </div>
                 <div class="m-b-sm">
                 </div>

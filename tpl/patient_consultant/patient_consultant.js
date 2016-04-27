@@ -235,7 +235,7 @@ app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', 
                             var upto_date = (today_date.setDate(today_date.getDate() + 3)).valueOf();
 
                             angular.forEach($dates, function (date, key) {
-                                if (current > date.utcDateValue || upto_date < date.utcDateValue) {
+                                if (current > date.localDateValue() || upto_date < date.localDateValue()) {
                                     $dates[key].selectable = false;
                                 }
                             });
