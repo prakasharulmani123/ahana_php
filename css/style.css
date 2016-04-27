@@ -906,3 +906,7 @@ button.label {
 	color:#2e2e2e;
 
 }
+
+.full-cont .patient_aside, .patient_content {
+  margin-top: 145px;
+}
