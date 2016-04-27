@@ -44,6 +44,8 @@ tr:nth-child(odd) .actions-icons-cont { background: #f9f9f9}
 
 
 
+
+
 .input-sm {
     padding: 5px 5px;
 }
@@ -674,7 +676,12 @@ button.label {
 .b-n
 {
 	border:none;
-	padding: 0px 15px;
+	padding: 0px 10px;
+}
+
+.category_badge
+{
+	margin-left:10px;	
 }
 
 .alert_badge{
