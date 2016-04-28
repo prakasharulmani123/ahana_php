@@ -11,7 +11,7 @@
                 &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
             </button>
             <button check-access-button ng-click="$state.go('pharmacy.saleReturnCreate')" class="btn btn-sm btn-info pull-right">
-                <i class="fa fa-plus"></i> &nbsp; Add new Sale Return
+                <i class="fa fa-plus"></i> &nbsp; Add New Sale Return
             </button>
         </div>
         <table st-table="displayedCollection"  st-safe-src="rowCollection" class="table table-bordered table-striped">
@@ -51,7 +51,7 @@
                     <td>{{row.roundoff_amount}}</td>
                     <td>{{row.bill_amount}}</td>
                     <td>
-                        <a title="Edit" check-access  ui-sref="pharmacy.saleReturnUpdate({id: '{{row.sale_ret_id}}'})">
+                        <a class="label bg-dark" title="Edit" check-access  ui-sref="pharmacy.saleReturnUpdate({id: '{{row.sale_ret_id}}'})">
                             <i class="fa fa-pencil"></i>
                         </a>
                     </td>

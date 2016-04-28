@@ -147,7 +147,7 @@ app.controller('RoomChargeCategoriesController', ['$rootScope', '$scope', '$time
         //End
         $scope.checkInput = function (data, id) {
             if (!data) {
-                return "Field should not be empty.";
+                return "Not empty";
             }
         };
 

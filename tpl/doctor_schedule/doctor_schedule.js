@@ -89,7 +89,7 @@ app.controller('DoctorSchedulesController', ['$rootScope', '$scope', '$timeout',
 
         $scope.checkInput = function (data) {
             if (typeof data === 'undefined' || !data) {
-                return "Field should not be empty.";
+                return "Not empty";
             }
         };
 

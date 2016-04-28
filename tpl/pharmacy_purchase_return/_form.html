@@ -23,8 +23,8 @@
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="form-group">
-                    <label class="col-lg-3 control-label">Supplier Name *</label>
-                    <div class="col-lg-9">
+                    <label class="col-lg-4 control-label">Supplier Name *</label>
+                    <div class="col-lg-8">
                         <select class="form-control" ng-model="data.supplier_id" ng-options="supplier.supplier_id as supplier.supplier_name for supplier in suppliers | orderBy: supplier_name">
                             <option value="">Select Supplier</option>
                         </select>
@@ -42,7 +42,7 @@
                 <b>Purchase Return Items</b>
             </div>
             <div class="panel-body">
-                <div class="form-group">
+                <div class="row">
                     <div class="col-sm-12">
 
                         <table class="table table-bordered table-hover table-condensed bg-white-only" id="item_table">
@@ -54,8 +54,8 @@
                                 <td><span>MRP</span></td>
                                 <td><span>P.Price</span></td>
                                 <td><span>Amt</span></td>
-                                <td><span>Disc. %</span></td>
-                                <td><span>Disc. Amt</span></td>
+                                <td><span>Disc %</span></td>
+                                <td><span>Disc Amt</span></td>
                                 <td><span>P.Vat</span></td>
                                 <td><span>Vat Amt</span></td>
                                 <td><span>P.Unit</span></td>
@@ -103,7 +103,7 @@
                                 <td><span>{{purchasereturnitem.vat_percent}}</span></td>
                                 <td><span>{{purchasereturnitem.vat_amount}}</span></td>
                                 <td>
-                                        {{ purchasereturnitem.package_name || '-' }}
+                                    {{ purchasereturnitem.package_name || '-' }}
                                 </td>
                                 <td><span>{{purchasereturnitem.total_amount}}</span></td>
 
@@ -113,8 +113,9 @@
                             </tr>
                         </table>
                         <div class="btn-form">
+                            <br>
                             <button type="button" ng-click="tableform.$show();
-                                addRow()" class="btn btn-default pull-left btn-primary">Add Product</button>
+                                    addRow()" class="btn btn-default pull-left btn-primary">Add Product</button>
                             <button type="button" ng-show="!tableform.$visible;" ng-click="tableform.$show();" class="btn btn-default pull-left btn-info">Edit Products</button>
                         </div>
                     </div>
@@ -146,7 +147,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-lg-2 control-label">Disc. %</label>
+                    <label class="col-lg-2 control-label">Disc %</label>
                     <div class="col-lg-2">
                         <input type="text" class="form-control" ng-model="data.discount_percent" ng-change="updatePurchaseReturnRate()" limit-to="2">
                     </div>

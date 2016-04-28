@@ -109,10 +109,10 @@ app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', 
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
 
             // Get data's from service
-            $http.get($rootScope.IRISOrgServiceUrl + '/patientconsultant/getpatconsultantsbyencounter?enc_id=' + enc_id)
+            $http.get($rootScope.IRISOrgServiceUrl + '/patientconsultant/getpatconsultantsbyencounter?patient_id=' + $state.params.id)
                     .success(function (patientconsultants) {
                         $scope.isLoading = false;
-                        $scope.rowCollection = patientconsultants;
+                        $scope.rowCollection = patientconsultants.result;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
                     })
                     .error(function () {

@@ -113,7 +113,7 @@ app.controller('stockController', ['$rootScope', '$scope', '$timeout', '$http', 
 
         $scope.checkInput = function (data) {
             if (!data || data == 0) {
-                return "Field should not be empty.";
+                return "Not empty";
             }
         };
     }]);
