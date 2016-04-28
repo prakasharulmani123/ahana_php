@@ -50,13 +50,18 @@ class PatientnotesController extends ActiveController {
             'pagination' => false,
         ]);
     }
-    
-    public function actionGetpatientnotes(){
+
+    public function actionGetpatientnotes() {
         $get = Yii::$app->getRequest()->get();
-        if(!empty($get)){
+        if (!empty($get)) {
             $patient = PatPatient::getPatientByGuid($get['patient_id']);
-            $model = PatNotes::find()->tenant()->active()->andWhere(['patient_id' => $patient->patient_id])->orderBy(['created_at' => SORT_DESC])->all();
-            return ['success' => true, 'result' => $model];
+            $result = [];
+            $data = PatNotes::find()->tenant()->active()->andWhere(['patient_id' => $patient->patient_id])->groupBy('encounter_id')->orderBy(['encounter_id' => SORT_DESC])->all();
+            foreach ($data as $key => $value) {
+                $details = PatNotes::find()->where(['patient_id' => $patient->patient_id, 'encounter_id' => $value->encounter_id])->orderBy(['pat_note_id' => SORT_ASC])->all();
+                $result[$key] = ['data' => $value, 'all' => $details];
+            }
+            return ['success' => true, 'result' => $result];
         }
     }
 

@@ -119,6 +119,18 @@ class PatConsultant extends RActiveRecord {
 
     public function fields() {
         $extend = [
+            'short_notes' => function ($model) {
+                if (isset($model->notes)) {
+                    if (strlen($model->notes) > 40) {
+                        $notes = substr($model->notes, 0, 40) . '...';
+                    } else {
+                        $notes = $model->notes;
+                    }
+                    return $notes;
+                } else {
+                    return '-';
+                }
+            },
             'consultant_name' => function ($model) {
                 return (isset($model->consultant->name)) ? $model->consultant->title_code.$model->consultant->name : '-';
             },

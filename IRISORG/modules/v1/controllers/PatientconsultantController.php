@@ -3,6 +3,7 @@
 namespace IRISORG\modules\v1\controllers;
 
 use common\models\PatConsultant;
+use common\models\PatPatient;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -49,32 +50,58 @@ class PatientconsultantController extends ActiveController {
             'pagination' => false,
         ]);
     }
-    
+
     public function actionRemove() {
         $id = Yii::$app->getRequest()->post('id');
-        if($id){
+        if ($id) {
             $model = PatConsultant::find()->where(['pat_consult_id' => $id])->one();
             $model->remove();
             return ['success' => true];
         }
     }
-    
+
+//    public function actionGetpatconsultantsbyencounter() {
+//        $enc_id = Yii::$app->getRequest()->get('enc_id');
+//
+//        if (!empty($enc_id)) {
+//            $model = PatConsultant::find()
+//                    ->tenant()
+//                    ->status()
+//                    ->active()
+//                    ->andWhere(['encounter_id' => $enc_id])
+//                    ->orderBy([
+//                        'consult_date' => SORT_DESC,
+//                    ])
+//                    ->all();
+//        }
+//
+//        return $model;
+//    }
+
     public function actionGetpatconsultantsbyencounter() {
-        $enc_id = Yii::$app->getRequest()->get('enc_id');
-
-        if (!empty($enc_id)) {
-            $model = PatConsultant::find()
+        $get = Yii::$app->getRequest()->get();
+        if (!empty($get)) {
+            $patient = PatPatient::getPatientByGuid($get['patient_id']);
+            $result = [];
+            $data = PatConsultant::find()
                     ->tenant()
-                    ->status()
                     ->active()
-                    ->andWhere(['encounter_id' => $enc_id])
-                    ->orderBy([
-                        'consult_date' => SORT_DESC,
-                    ])
+                    ->status()
+                    ->andWhere(['patient_id' => $patient->patient_id])
+                    ->groupBy('encounter_id')
+                    ->orderBy(['encounter_id' => SORT_DESC])
                     ->all();
-        }
 
-        return $model;
+            foreach ($data as $key => $value) {
+                $details = PatConsultant::find()
+                        ->where(['patient_id' => $patient->patient_id, 'encounter_id' => $value->encounter_id])
+                        ->orderBy(['consult_date' => SORT_DESC])
+                        ->all();
+
+                $result[$key] = ['data' => $value, 'all' => $details];
+            }
+            return ['success' => true, 'result' => $result];
+        }
     }
-    
+
 }

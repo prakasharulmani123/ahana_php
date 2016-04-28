@@ -96,8 +96,8 @@ class PatNotes extends RActiveRecord {
         $extend = [
             'short_notes' => function ($model) {
                 if (isset($model->notes)) {
-                    if (strlen($model->notes) > 10) {
-                        $notes = substr($model->notes, 0, 10) . '...';
+                    if (strlen($model->notes) > 40) {
+                        $notes = substr($model->notes, 0, 40) . '...';
                     } else {
                         $notes = $model->notes;
                     }
