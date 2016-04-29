@@ -2176,6 +2176,19 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
+            
+            //ChangePassword
+            .state('configuration.changePassword', {
+                url: '/changePassword',
+                templateUrl: 'tpl/organization/change_password.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/organization/org.js']);
+                        }]
+
+                }
+            })
 
     $httpProvider.interceptors.push('APIInterceptor');
 
