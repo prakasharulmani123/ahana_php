@@ -57,7 +57,7 @@ class UserController extends ActiveController {
         $behaviors = parent::behaviors();
         $behaviors['authenticator'] = [
             'class' => QueryParamAuth::className(),
-            'only' => ['dashboard', 'createuser', 'updateuser', 'getuser', 'getlogin', 'updatelogin', 'getuserdata', 'getuserslistbyuser', 'assignroles', 'getdoctorslist', 'checkstateaccess', 'getusercredentialsbytoken', 'passwordauth'],
+            'only' => ['dashboard', 'createuser', 'updateuser', 'getuser', 'getlogin', 'updatelogin', 'getuserdata', 'getuserslistbyuser', 'assignroles', 'getdoctorslist', 'checkstateaccess', 'getusercredentialsbytoken', 'passwordauth', 'changepassword'],
         ];
         $behaviors['contentNegotiator'] = [
             'class' => ContentNegotiator::className(),
@@ -496,7 +496,7 @@ class UserController extends ActiveController {
 
     private function _insertTimeline($encounter, $column, $value) {
         $header_sub = "Encounter # {$encounter->encounter_id}";
-        
+
         $full_name = Yii::$app->user->identity->user->title_code . ' ' . Yii::$app->user->identity->user->name;
 
         switch ($column) {
@@ -530,6 +530,27 @@ class UserController extends ActiveController {
         }
         $date_time = date("Y-m-d H:i:s");
         PatTimeline::insertTimeLine($encounter->patient_id, $date_time, $header, $header_sub, $message);
+    }
+
+    public function actionChangepassword() {
+        $post = Yii::$app->request->post();
+        if (!empty($post)) {
+            $model = CoLogin::find()->where(['login_id' => Yii::$app->user->identity->login_id])->one();
+            $model->scenario = 'change_password';
+            $model->attributes = $post;
+
+            $valid = $model->validate();
+
+            if ($valid) {
+                $model->setPassword($post['new_password']);
+                $model->save(false);
+                return ['success' => true];
+            } else {
+                return ['success' => false, 'message' => Html::errorSummary([$model])];
+            }
+        } else {
+            return ['success' => false, 'message' => 'Please Fill the Form'];
+        }
     }
 
 }

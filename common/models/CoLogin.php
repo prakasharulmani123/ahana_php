@@ -29,8 +29,12 @@ use yii\web\IdentityInterface;
  * @property CoUser $user
  */
 class CoLogin extends ActiveRecord implements IdentityInterface {
-    
+
     public $access_tenant_id;
+    public $old_password;
+    public $new_password;
+    public $confirm_password;
+
     /**
      * @inheritdoc
      */
@@ -68,6 +72,10 @@ class CoLogin extends ActiveRecord implements IdentityInterface {
             [['password'], 'required', 'on' => 'create'],
             [['username'], 'validateUsername'],
             [['password'], 'validateUserpassword'],
+            [['old_password', 'new_password', 'confirm_password'], 'required', 'on' => 'change_password'],
+            [['new_password'], 'validateUserpassword'],
+            ['old_password', 'findPasswords', 'on' => 'change_password'],
+            ['confirm_password', 'compare', 'compareAttribute' => 'new_password', 'on' => 'change_password'],
 //            [['username', 'password'], 'string', 'min' => 6],
             [['user_id', 'created_by', 'modified_by', 'logged_tenant_id', 'access_tenant_id'], 'integer'],
             [['created_at', 'modified_at', 'activation_date', 'Inactivation_date', 'logged_tenant_id', 'access_tenant_id'], 'safe'],
@@ -75,18 +83,22 @@ class CoLogin extends ActiveRecord implements IdentityInterface {
             ['username', 'unique'],
         ];
     }
-    
-    public function validateUsername($attribute, $params)
-    {
+
+    public function findPasswords($attribute, $params) {
+        $check = Yii::$app->security->validatePassword($this->old_password, Yii::$app->user->identity->password);
+        if (!$check)
+            $this->addError($attribute, 'Old password is incorrect');
+    }
+
+    public function validateUsername($attribute, $params) {
         if (preg_match('/\\s/', $this->$attribute) || preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬-]/', $this->$attribute)) {
-             $this->addError($attribute, 'Invalid characters in username.(Spaces or Special Characters not Allowed)');
+            $this->addError($attribute, 'Invalid characters in username.(Spaces or Special Characters not Allowed)');
         }
     }
 
-    public function validateUserpassword($attribute, $params)
-    {
+    public function validateUserpassword($attribute, $params) {
         if (preg_match('/\\s/', $this->$attribute)) {
-             $this->addError($attribute, 'Invalid characters in password.(Space not Allowed)');
+            $this->addError($attribute, 'Invalid characters in password.(Space not Allowed)');
         }
     }
 
@@ -190,7 +202,7 @@ class CoLogin extends ActiveRecord implements IdentityInterface {
     public function getAuthKey() {
         return $this->authtoken;
     }
-    
+
     /**
      * @inheritdoc
      */
@@ -237,8 +249,9 @@ class CoLogin extends ActiveRecord implements IdentityInterface {
     public function removePasswordResetToken() {
         $this->password_reset_token = null;
     }
-    
+
     public static function getDb() {
         return Yii::$app->client;
     }
+
 }
