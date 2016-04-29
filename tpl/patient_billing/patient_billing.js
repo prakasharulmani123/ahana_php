@@ -55,7 +55,13 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
             if (newValue != '') {
                 $rootScope.commonService.GetEncounterListByPatient('', '0,1', false, $scope.patientObj.patient_id, function (response) {
                     angular.forEach(response, function (resp) {
-                        resp.encounter_id = resp.encounter_id.toString();
+                        console.log(resp);
+                        if (resp.encounter_type == 'IP') {
+                            resp.encounter_id = resp.encounter_id.toString();
+                        } else {
+                            var index = response.indexOf(resp);
+                            response.splice(index, 1);
+                        }
                     });
                     $scope.encounters = response;
                     if (response != null) {

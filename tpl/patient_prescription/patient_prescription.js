@@ -170,7 +170,10 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
         //Get the value from main.js
         $scope.$on('presc_fav', function (event, args) {
+            console.log($scope.data.prescriptionItems);
+            console.log(args.product_id);
             var result = $filter('filter')($scope.data.prescriptionItems, {product_id: args.product_id});
+            console.log(result);
             if (result.length > 0) {
                 alert('This Product already added');
             } else {
@@ -248,7 +251,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
                         if (response.success) {
                             $scope.successMessage = succ_msg;
-                            $scope.data = {};
+                            $scope.data = {prescriptionItems: []};
 //                            $timeout(function () {
 //                                $state.go('patient.prescription', {id: $state.params.id});
 //                            }, 1000)
