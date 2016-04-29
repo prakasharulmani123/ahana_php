@@ -3,6 +3,7 @@
 namespace IRISORG\modules\v1\controllers;
 
 use common\models\CoUser;
+use common\models\PatPatient;
 use common\models\PatProcedure;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -60,25 +61,50 @@ class ProcedureController extends ActiveController {
         }
     }
 
+//    public function actionGetprocedurebyencounter() {
+//        $enc_id = Yii::$app->getRequest()->get('enc_id');
+//
+//        if (!empty($enc_id)) {
+//            $model = PatProcedure::find()
+//                    ->tenant()
+//                    ->status()
+//                    ->active()
+//                    ->andWhere(['encounter_id' => $enc_id])
+//                    ->orderBy([
+//                        'proc_date' => SORT_DESC,
+//                    ])
+//                    ->all();
+//        }
+//
+//        return $model;
+//    }
+
     public function actionGetprocedurebyencounter() {
-        $enc_id = Yii::$app->getRequest()->get('enc_id');
-
-        if (!empty($enc_id)) {
-            $model = PatProcedure::find()
+        $get = Yii::$app->getRequest()->get();
+        if (!empty($get)) {
+            $patient = PatPatient::getPatientByGuid($get['patient_id']);
+            $result = [];
+            $data = PatProcedure::find()
                     ->tenant()
-                    ->status()
                     ->active()
-                    ->andWhere(['encounter_id' => $enc_id])
-                    ->orderBy([
-                        'proc_date' => SORT_DESC,
-                    ])
+                    ->status()
+                    ->andWhere(['patient_id' => $patient->patient_id])
+                    ->groupBy('encounter_id')
+                    ->orderBy(['encounter_id' => SORT_DESC])
                     ->all();
+
+            foreach ($data as $key => $value) {
+                $details = PatProcedure::find()
+                        ->where(['patient_id' => $patient->patient_id, 'encounter_id' => $value->encounter_id])
+                        ->orderBy(['proc_date' => SORT_DESC])
+                        ->all();
+
+                $result[$key] = ['data' => $value, 'all' => $details];
+            }
+            return ['success' => true, 'result' => $result];
         }
-
-        return $model;
     }
-
-
+    
     public function actionGetconsultantsbyprocedure() {
         $proc_id = Yii::$app->getRequest()->get('proc_id');
 
