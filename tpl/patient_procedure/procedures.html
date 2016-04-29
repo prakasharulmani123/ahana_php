@@ -7,22 +7,22 @@
         <div ng-include="'tpl/blocks/alert.html'">
             {% include 'tpl/blocks/alert.html' %}
         </div>
-        <div class="row">
-            
-                <div class="col-sm-4"> 
-                    <div class="btn-group btn-group-justified">
-                        <b>Encounter Id: </b>
-                        <br />
-                        <ui-select ng-model="enc.selected" theme="bootstrap">
-                            <ui-select-match placeholder="Select Encounter Id">{{$select.selected.encounter_id}}</ui-select-match>
-                            <ui-select-choices repeat="item in encounters | filter: $select.search | orderBy: 'encounter_id' : true">
-                                <div ng-bind-html="item.encounter_id | highlight: $select.search"></div>
-                            </ui-select-choices>
-                        </ui-select>
-                        <br />
-                    </div>
-                </div>
-        </div>
+        <!--        <div class="row">
+                    
+                        <div class="col-sm-4"> 
+                            <div class="btn-group btn-group-justified">
+                                <b>Encounter Id: </b>
+                                <br />
+                                <ui-select ng-model="enc.selected" theme="bootstrap">
+                                    <ui-select-match placeholder="Select Encounter Id">{{$select.selected.encounter_id}}</ui-select-match>
+                                    <ui-select-choices repeat="item in encounters | filter: $select.search | orderBy: 'encounter_id' : true">
+                                        <div ng-bind-html="item.encounter_id | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                                <br />
+                            </div>
+                        </div>
+                </div>-->
     </div>
     <div class="wrapper-md">
 
@@ -46,39 +46,59 @@
                 <table st-table="displayedCollection"  st-safe-src="rowCollection"  class="table table-striped b-t b-light">
                     <thead>
                         <tr>
-                            <th></th>
-                            <th>Date of Procedure </th>
+                            <th width="22" >
+                                <button class="btn btn-sm btn-default hms-plus" type="button" ng-click="ctrl.expandAll(allExpanded = !allExpanded)">
+                                    <i ng-if="!allExpanded" class="fa fa-plus text"></i>
+                                    <i ng-if="allExpanded" class="fa fa-minus text"></i>
+                                </button>
+                            </th>
+                            <th> Date of Procedure </th>
                             <th>Procedure Name</th>
                             <th>Notes</th>
                             <th>Doctors Name</th>
                             <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody ng-hide="isLoading" ng-show="displayedCollection.length > 0">
-                        <tr ng-repeat="row in displayedCollection">
 
-                            <td align="center" valign="middle"></td>
-                            <td> {{row.proc_date}} </td>
-                            <td> {{row.procedure_name}} </td>
-                            <td> {{row.proc_description}} </td>
-                            <td> {{row.doctors}} </td>
+                    <tbody ng-hide="isLoading" ng-show="displayedCollection.length > 0">
+                        <tr ng-repeat-start="(key, value) in displayedCollection" ng-init="expanded = (key == 0) ? true : false;">
+                            <td> <button ng-click="expanded = !expanded" expand class="btn btn-sm btn-default hms-plus">
+                                    <i ng-if="!expanded" class="fa fa-plus text"></i>
+                                    <i ng-if="expanded" class="fa fa-minus text"></i>
+                                </button>
+                            </td>
+                            <td colspan="5"> 
+                                <span class="badge bg-primary">Encounter: {{value.data.encounter_id}}</span>&nbsp; &nbsp; 
+                            </td>
+                        </tr>
+                        <tr ng-repeat-end ng-show="expanded" ng-repeat="(patprocedure_key, patProcedure) in value.all">
+                            <td>&nbsp;</td>
+                            <td> 
+                                {{patProcedure.proc_date| moment:'DD/MM/YYYY'}} &nbsp;
+                                <span class="label bg-light dk">{{patProcedure.proc_date| moment:'hh:mm A'}}</span> 
+                            </td>
+                            <td> {{patProcedure.procedure_name}} </td>
+                            <td valign="middle"> {{patProcedure.proc_description}} </td>
+                            <td valign="middle"> {{patProcedure.doctors}} </td>
                             <td>
-                                <div ng-show="enc.selected.status == '1'">
-                                    <a title="Edit" check-access  ui-sref="patient.edit_procedure({id: $state.params.id, proc_id : row.proc_id})">
+                                <div ng-if="patProcedure.tenant_id != null" ng-show="enc.selected.status == '1'">
+                                    <a title="Edit" check-access  ui-sref="patient.edit_procedure({id: $state.params.id, proc_id : patProcedure.proc_id})" class="label bg-info dk">
                                         <i class="fa fa-pencil"></i>
                                     </a>&nbsp;&nbsp;&nbsp;
-                                    <a title="Delete" ng-click="removeRow(row.proc_id)">
+                                    <a title="Delete" ng-click="removeRow(patProcedure.proc_id)" class="label bg-dark dk">
                                         <i class="fa fa-trash"></i>
                                     </a>
                                 </div>
                             </td>
                         </tr>
                     </tbody>
+
                     <tbody ng-show="isLoading">
                         <tr>
                             <td colspan="6" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
                         </tr>
                     </tbody>
+                    
                     <tfoot>
                         <tr>
                             <td colspan="6" class="text-center">
@@ -88,11 +108,7 @@
                         </tr>
                     </tfoot>
                 </table>
-
             </div>
-            <footer class="panel-footer">
-                <!--<div st-pagination="" st-items-by-page="itemsByPage" st-template="pagination.custom.html" st-displayed-pages="7"></div>-->
-            </footer>    
         </div>
     </div>
 </div>

@@ -1,4 +1,4 @@
-<div ng-controller="ProcedureController" ng-init="initCanSaveAdmission();">
+<div ng-controller="ProcedureController">
     <div class="bg-light lter b-b wrapper-md">
         <h1 class="m-n h3">Update Patient Procedure</h1>
     </div>
@@ -7,10 +7,10 @@
             {% include 'tpl/blocks/alert.html' %}
         </div>
         <div class="row">
-            <div class="col-sm-12" ng-init="data.formtype = 'update';
+            <div class="col-sm-7" ng-init="data.formtype = 'update';
                                 initForm();
                                 loadForm();
-                                " ng-show="showForm">
+                                ">
                 <form name="procForm" class="form-horizontal form-validation" novalidate="">
                     <div ng-include="'tpl/patient_procedure/_form.html'">
                         {% include 'tpl/patient_procedure/_form.html' %}

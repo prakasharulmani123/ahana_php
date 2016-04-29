@@ -37,6 +37,13 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
         $scope.app.settings.patientSideMenu = true;
         $scope.app.settings.patientContentClass = 'app-content patient_content ';
         $scope.app.settings.patientFooterClass = 'app-footer';
+        
+        $scope.ctrl = {};
+        $scope.allExpanded = true;
+        $scope.expanded = true;
+        $scope.ctrl.expandAll = function (expanded) {
+            $scope.$broadcast('onExpandAll', {expanded: expanded});
+        };
 
         $scope.enc = {};
         $scope.$watch('app.patientDetail.patientId', function (newValue, oldValue) {
@@ -72,11 +79,11 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
 
             // Get data's from service
-            $http.get($rootScope.IRISOrgServiceUrl + '/procedure/getprocedurebyencounter?enc_id=' + enc_id)
+            $http.get($rootScope.IRISOrgServiceUrl + '/procedure/getprocedurebyencounter?patient_id=' + $state.params.id)
                     .success(function (procedures) {
                         $scope.loadbar('hide');
                         $scope.isLoading = false;
-                        $scope.rowCollection = procedures;
+                        $scope.rowCollection = procedures.result;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
                     })
                     .error(function () {
