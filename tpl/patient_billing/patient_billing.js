@@ -55,7 +55,6 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
             if (newValue != '') {
                 $rootScope.commonService.GetEncounterListByPatient('', '0,1', false, $scope.patientObj.patient_id, function (response) {
                     angular.forEach(response, function (resp) {
-                        console.log(resp);
                         if (resp.encounter_type == 'IP') {
                             resp.encounter_id = resp.encounter_id.toString();
                         } else {
