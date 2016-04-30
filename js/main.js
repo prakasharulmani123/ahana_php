@@ -3,8 +3,8 @@
 /* Controllers */
 
 angular.module('app')
-        .controller('AppCtrl', ['$scope', '$translate', '$localStorage', '$window', '$rootScope', '$state', '$cookieStore', 'CommonService', '$timeout', '$http',
-            function ($scope, $translate, $localStorage, $window, $rootScope, $state, $cookieStore, CommonService, $timeout, $http) {
+        .controller('AppCtrl', ['$scope', '$translate', '$localStorage', '$window', '$rootScope', '$state', '$cookieStore', 'CommonService', '$timeout', '$http', 'AuthenticationService',
+            function ($scope, $translate, $localStorage, $window, $rootScope, $state, $cookieStore, CommonService, $timeout, $http, AuthenticationService) {
                 // add 'ie' classes to html
                 var isIE = !!navigator.userAgent.match(/MSIE/i);
                 isIE && angular.element($window.document.body).addClass('ie');
@@ -61,9 +61,11 @@ angular.module('app')
                     $http.post($rootScope.IRISAdminServiceUrl + '/user/logout')
                             .success(function (response) {
                                 if (response.success) {
-                                    $rootScope.globals = {};
-                                    $cookieStore.remove('globals');
-                                    $window.location.reload();
+                                    if (AuthenticationService.ClearCredentials()) {
+                                        $timeout(function () {
+                                            $window.location.reload();
+                                        }, 1000);
+                                    }
                                 } else {
                                     $scope.errorData = response.message;
                                 }
@@ -110,7 +112,7 @@ angular.module('app')
                 }
 
                 $scope.onlyLetters = /^[a-zA-Z0-9]*$/;
-                
+
                 //error Summary
                 $scope.errorSummary = function (error) {
                     var html = '<div><p>Please fix the following errors:</p><ul>';
