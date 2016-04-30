@@ -92,7 +92,8 @@
                                     <a class="dropdown-toggle" id="dropdown2" role="button" data-toggle="dropdown" data-target="#" href="javascript:void(0)">
                                         <div class="input-group">
                                             <span editable-text="item.date" e-name="date" e-form="hiddenform">
-                                                {{item.date| moment:'YYYY-MM-DD hh:mm A'}}
+                                                {{item.date| moment:'DD/MM/YYYY'}} &nbsp;
+                                                <span class="label bg-light dk">{{item.date| moment:'hh:mm A'}}</span> 
                                             </span>
                                         </div>
                                     </a>
@@ -102,7 +103,8 @@
                                 </div>
 
                                 <div ng-if="item.type !== 'Booked' || encounter.all.length > 1">
-                                    {{item.date| moment:'YYYY-MM-DD hh:mm A'}}
+                                    {{item.date| moment:'DD/MM/YYYY'}} &nbsp;
+                                    <span class="label bg-light dk">{{item.date| moment:'hh:mm A'}}</span> 
                                 </div>
                             </td>
                             <td> 
@@ -110,7 +112,7 @@
                                 <div ng-if="item.type !== 'Booked' || encounter.all.length > 1" ng-show="item.type !== 'Arrived'">
                                     {{item.type}} <span ng-if="item.is_swap == 1">( Swapping )</span>
                                 </div>
-                                
+
                                 <!--Static-->
                                 <div ng-show="item.type == 'Arrived' && encounter.all.length > 2">
                                     {{item.type}}

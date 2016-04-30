@@ -101,6 +101,15 @@ th[st-sort] {
   margin-top: 145px;
 }
 
+.prescrip-header{
+    width:100%;
+    float:left;
+    padding:10px; 
+    padding-bottom:0px; 
+    margin-bottom:15px; 
+    height:60px
+}
+
 
 
 

@@ -1,10 +1,11 @@
 <div ng-controller="PrescriptionController">
     <div class="hbox hbox-auto-xs hbox-auto-sm">
         <div class="col" ng-show="prev_pre == '0'">
-            <div class="bg-light lter b-b wrapper-md" style="width:100%;float:left; padding:10px; padding-bottom:0px; margin-bottom:15px;">
+            <div class="bg-light lter b-b wrapper-md prescrip-header">
 
 
-                <div class="col-sm-3 m-b-xs">  <h1 class="m-n h3">Prescription</h1> </div>
+                <div class="col-sm-2 m-b-xs">  <h1 class="m-n h3">Prescription</h1> </div>
+                <div class="col-sm-2 m-b-xs right">  <b>Encounter Id:</b> </div>
                 <div class="col-sm-3 m-b-xs">
                     <div class="btn-group btn-group-justified">
                         <ui-select ng-model="enc.selected" theme="bootstrap">

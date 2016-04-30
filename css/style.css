@@ -86,7 +86,7 @@ background: #f9f9f9
 }
 h3, .h3 {
 	color: #000000;
-	font-size: 24px;
+	font-size: 20px;
 	font-family: 'Roboto Condensed', sans-serif;
 }
 .form-horizontal .control-label {
@@ -430,7 +430,7 @@ body {
 	color:#ffffff;
 }
 .bg-light.lter.b-b.wrapper-md {
-	padding: 5px 20px;
+	padding: 7px 20px;
 }
 .col.w-sm.pres-div.bg-light.dk.b-r.bg-auto {
 	width: 110px;
@@ -587,7 +587,7 @@ button.label {
 	width:100%;
 	float:left;
 	background:#f1df64;
-	font-size:17px;
+	font-size:15px;
 }
 .patient-details-part {
 	width:auto;
