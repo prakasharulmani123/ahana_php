@@ -129,9 +129,11 @@ class DoctorscheduleController extends ActiveController {
                 $schedule_day = date('N', strtotime($post['schedule_date']));
 
                 $all_schedules = CoDoctorSchedule::find()
-                        ->where('schedule_day = :day', [':day' => $schedule_day])
-                        ->orWhere('schedule_day = :allday', [':allday' => "-1"])
+                        ->tenant()
+                        ->active()
                         ->andWhere('user_id = :doctor_id', [':doctor_id' => $doctor_id])
+                        ->andWhere('schedule_day = :day', [':day' => $schedule_day])
+                        ->orWhere('schedule_day = :allday', [':allday' => "-1"])
                         ->orderBy('schedule_time_in')
                         ->all();
 
