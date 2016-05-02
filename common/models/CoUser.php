@@ -158,7 +158,7 @@ class CoUser extends RActiveRecord {
                 return (isset($model->speciality) ? $model->speciality->speciality_name : '-');
             },
             'fullname' => function ($model) {
-                return $model->title_code . $model->name;
+                return $model->title_code . ucfirst($model->name);
             },
         ];
         $fields = array_merge(parent::fields(), $extend);

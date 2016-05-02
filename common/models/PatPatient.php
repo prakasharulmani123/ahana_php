@@ -210,7 +210,7 @@ class PatPatient extends RActiveRecord {
     public function fields() {
         $extend = [
             'fullname' => function ($model) {
-                return $model->patient_title_code . $model->patient_firstname;
+                return $model->patient_title_code . ucfirst($model->patient_firstname);
             },
             'patient_age' => function ($model) {
                 $age = '';
