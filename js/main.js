@@ -44,6 +44,7 @@ angular.module('app')
                     patientDetail: {
                         patientTitleCode: '',
                         patientName: '',
+                        patientFullname: '',
                         patientId: '',
                         patientGuid: '',
                         patientIntCode: '',
@@ -173,6 +174,7 @@ angular.module('app')
                                     } else {
                                         $scope.app.patientDetail.patientTitleCode = patient.patient_title_code;
                                         $scope.app.patientDetail.patientName = patient.patient_firstname;
+                                        $scope.app.patientDetail.patientFullname = patient.fullname;
                                         $scope.app.patientDetail.patientId = patient.patient_id;
                                         $scope.app.patientDetail.patientIntCode = patient.patient_int_code;
                                         $scope.app.patientDetail.patientGuid = patient.patient_guid;

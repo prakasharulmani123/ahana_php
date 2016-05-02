@@ -7,7 +7,7 @@
         <div class="col-md-11 paitent-details2"> 
             <b>
                 <a ng-click="$state.go('patient.view', {id: app.patientDetail.patientGuid})">
-                    {{app.patientDetail.patientTitleCode}}{{app.patientDetail.patientName}}
+                    {{app.patientDetail.patientFullname}}
                 </a>
             </b>
             <span ng-if="app.patientDetail.patientActiveIp">({{app.patientDetail.patientActiveCasesheetno}})</span>     
