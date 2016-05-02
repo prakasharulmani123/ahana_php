@@ -173,6 +173,15 @@ class CoTenant extends GActiveRecord {
                 $internal_code->code = '1';
                 $internal_code->save(false);
             }
+
+            $app_configurations = AppConfiguration::getConfigurations();
+            foreach ($app_configurations as $key => $app_configuration) {
+                $configuration = new AppConfiguration;
+                $configuration->tenant_id = $this->tenant_id;
+                $configuration->key = $key;
+                $configuration->value = $app_configuration;
+                $configuration->save(false);
+            }
         }
 
         return parent::afterSave($insert, $changedAttributes);
