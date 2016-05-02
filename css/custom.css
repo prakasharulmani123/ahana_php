@@ -98,7 +98,7 @@ th[st-sort] {
 }
 
 .full-cont .patient_aside, .full-cont .patient_content {
-  margin-top: 145px;
+    margin-top: 145px;
 }
 
 .prescrip-header{
@@ -110,6 +110,10 @@ th[st-sort] {
     height:60px
 }
 
-
-
-
+.linkDisabled {
+    cursor: not-allowed;
+    pointer-events: none;
+    color: grey;
+    opacity: 0.2;
+    filter: alpha(opacity=20); /* For IE8 and earlier */
+}

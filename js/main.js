@@ -60,6 +60,7 @@ angular.module('app')
                         patientCurrentRoom: '',
                         patientLastConsultantId: '',
                         patientLastConsultantName: '',
+                        patientHaveEncounter: '',
                     }
                 }
 
@@ -189,6 +190,7 @@ angular.module('app')
                                         $scope.app.patientDetail.patientCurrentRoom = patient.current_room;
                                         $scope.app.patientDetail.patientLastConsultantId = patient.last_consultant_id;
                                         $scope.app.patientDetail.patientLastConsultantName = patient.consultant_name;
+                                        $scope.app.patientDetail.patientHaveEncounter = patient.have_encounter;
                                         $rootScope.commonService.GetLabelFromValue(patient.patient_gender, 'GetGenderList', function (response) {
                                             $scope.app.patientDetail.patientSex = response;
                                         });
