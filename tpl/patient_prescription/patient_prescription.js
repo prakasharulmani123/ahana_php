@@ -19,6 +19,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     $scope.encounters = response;
                     if (response != null) {
                         $scope.enc.selected = $scope.encounters[0];
+                        $scope.data.consultant_id = $scope.encounters[0].liveAdmission.consultant_id;
                     }
                 });
             }
