@@ -73,9 +73,9 @@
                             </div>
                         </div>
                         <div class="wrapper m-t b-t b-light">
-                            <form class="m-b-none ng-pristine ng-valid ng-submitted" ng-init="data = {};
+                                            <form class="m-b-none ng-pristine ng-valid ng-submitted" ng-init="data = {};
 
-                                                            notes_error = false;">
+                                        notes_error = false;">
                                 <div class="input-group">
                                     <input type="text" placeholder="Say something" class="form-control" ng-model="data.notes">
                                     <span class="input-group-btn">
@@ -243,25 +243,6 @@
         <!--<script src="js/angular-local-storage.js"></script>-->
         <!-- Lazy loading -->
         <script type="text/javascript" src="js/classie.js"></script>
-        <script>
-                                                            function init() {
-                                                                window.addEventListener('scroll', function (e) {
-                                                                    var distanceY = window.pageYOffset || document.documentElement.scrollTop,
-                                                                            shrinkOn = 100,
-                                                                            header = document.querySelector("div.patient-panel");
-                                                                    body_class = document.querySelector("body");
-                                                                    if (distanceY > shrinkOn) {
-                                                                        classie.add(header, "smaller");
-                                                                        classie.add(body_class, "full-cont");
-                                                                    } else {
-                                                                        if (classie.has(header, "smaller")) {
-                                                                            classie.remove(header, "smaller");
-                                                                            classie.remove(body_class, "full-cont");
-                                                                        }
-                                                                    }
-                                                                });
-                                                            }
-                                                            window.onload = init();
-        </script>
+        <script type="text/javascript" src="js/classie_script.js"></script>
     </body>
 </html>
