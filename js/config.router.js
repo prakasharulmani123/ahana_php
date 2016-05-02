@@ -2189,6 +2189,19 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
 
                 }
             })
+            
+            //App Configuration
+            .state('configuration.settings', {
+                url: '/settings/{code}',
+                templateUrl: 'tpl/organization/settings.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/organization/org.js']);
+                        }]
+
+                }
+            })
 
     $httpProvider.interceptors.push('APIInterceptor');
 

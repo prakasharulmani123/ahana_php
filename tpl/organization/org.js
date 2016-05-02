@@ -53,4 +53,54 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                     $scope.errorData = data.message;
             });
         }
+
+        $scope.initSettings = function () {
+            $scope.loadbar('show');
+            _that = this;
+            $scope.errorData = "";
+            $http({
+                url: $rootScope.IRISOrgServiceUrl + "/appconfiguration/getsetting?code=" + $state.params.code,
+                method: "GET"
+            }).success(
+                    function (response) {
+                        $scope.loadbar('hide');
+                        $scope.data = response.config;
+                    }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        }
+
+        $scope.saveSetting = function () {
+            _that = this;
+
+            $scope.errorData = "";
+            $scope.successMessage = "";
+
+            post_url = $rootScope.IRISOrgServiceUrl + '/appconfigurations/' + _that.data.config_id;
+            method = 'PUT';
+            succ_msg = 'Updated successfully';
+
+            $scope.loadbar('show');
+            $http({
+                method: method,
+                url: post_url,
+                data: _that.data,
+            }).success(
+                    function (response) {
+                        $scope.loadbar('hide');
+                        $scope.successMessage = succ_msg;
+                    }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        }
     }]);

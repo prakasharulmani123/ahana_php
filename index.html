@@ -41,9 +41,16 @@
                     <div class="clearfix"></div>
                     <h2> {{app.name}} ({{app.org_name}})</h2>
                     <img src="img/user-thumb.jpg"  alt="" class="thumb-img">
+                    
                     <p> 
                         <a href="" ui-sref="configuration.changePassword">  
                             <i class="fa fa-lock"></i> Change Password  
+                        </a> 
+                    </p>
+                    
+                    <p> 
+                        <a href="" ui-sref="configuration.settings({code: 'ET'})">  
+                            <i class="fa fa-clock-o"></i> Change Elapsed Time
                         </a> 
                     </p>
                     <p> <a href="" ng-click="logout();">  <i class="fa fa-sign-out"></i> Logout  </a> </p>
