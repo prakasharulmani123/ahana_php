@@ -141,7 +141,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             }
         }
 
-        $scope.addPres = function (prescription) {
+        $scope.addGlobalSearch = function (prescription) {
             var result = $filter('filter')($scope.data.prescriptionItems, {product_id: prescription.product_id});
 
             if (result.length > 0) {

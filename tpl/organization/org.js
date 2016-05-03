@@ -20,6 +20,10 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
         };
 
         //ChangePassword
+        $scope.initChangePassword = function () {
+            $('.sb-toggle-right').trigger('click');
+        }
+        
         $scope.changePassword = function () {
             _that = this;
 

@@ -28,11 +28,11 @@
             </div>
 
             <div class="wrapper-md p-b">
-                <div ng-include="'tpl/blocks/alert.html'">
-                    {% include 'tpl/blocks/alert.html' %}
-                </div>
                 <div class="row">
                     <div class="col-sm-12">
+                        <div ng-include="'tpl/blocks/alert.html'">
+                            {% include 'tpl/blocks/alert.html' %}
+                        </div>
                         <div class="panel panel-default"> 
                             <div class="row wrapper pb-sm">
                                 <div class="col-sm-8 m-b-xs " style="width:680px;" > 
@@ -53,7 +53,7 @@
                                                     </div>
                                                     <div class="col-xs-12 col-sm-10 col-md-11"> 
                                                         <div class="row ng-binding">
-                                                            <a ng-bind-html="prescription_list.prescription | highlight:prescription" href="javascript:void(0)" class="ng-binding" ng-click="addPres(prescription_list)"></a>
+                                                            <a ng-bind-html="prescription_list.prescription | highlight:prescription" href="javascript:void(0)" class="ng-binding" ng-click="addGlobalSearch(prescription_list)"></a>
                                                         </div>
                                                     </div>
                                                 </div>
