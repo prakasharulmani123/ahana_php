@@ -179,12 +179,12 @@ class PatAppointment extends RActiveRecord {
                 $date = date('Y-m-d', strtotime($model->status_date)) . ' ' . date('H:i:s', strtotime($model->status_time));
                 $start_date = new DateTime($date);
                 $since_start = $start_date->diff(new DateTime(date('Y-m-d H:i:s')));
-                
+
                 $default_elapsed_time = 1;
                 $get_elapsed_time = AppConfiguration::getConfigurationByKey('ELAPSED_TIME');
-                if(isset($get_elapsed_time))
+                if (isset($get_elapsed_time))
                     $default_elapsed_time = $get_elapsed_time->value;
-                
+
                 return ($since_start->h >= $default_elapsed_time);
             },
         ];
@@ -194,6 +194,11 @@ class PatAppointment extends RActiveRecord {
 
     public static function find() {
         return new PatAppointmentQuery(get_called_class());
+    }
+
+    public static function checkAvailableSlot($consultant_id, $schedule_date, $schedule_time) {
+        $is_available = self::find()->joinWith('encounter')->where(['status_date' => $schedule_date, 'status_time' => $schedule_time, 'consultant_id' => $consultant_id, 'appt_status' => 'B', 'pat_encounter.status' => '1'])->count();
+        return ($is_available == 0 ? true : false) ;
     }
 
 }

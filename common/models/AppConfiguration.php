@@ -57,7 +57,7 @@ class AppConfiguration extends RActiveRecord {
     //Basic configuration for the branches
     public static function getConfigurations() {
         return array(
-            'ROOM_CHARGE_CONFIG' => '12',
+//            'ROOM_CHARGE_CONFIG' => '12',
             'ELAPSED_TIME' => '1'
         );
     }

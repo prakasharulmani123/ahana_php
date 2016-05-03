@@ -3,6 +3,7 @@
 namespace IRISORG\modules\v1\controllers;
 
 use common\models\CoDoctorSchedule;
+use common\models\PatAppointment;
 use Yii;
 use yii\bootstrap\Html;
 use yii\data\ActiveDataProvider;
@@ -129,21 +130,22 @@ class DoctorscheduleController extends ActiveController {
                 $schedule_day = date('N', strtotime($post['schedule_date']));
 
                 $all_schedules = CoDoctorSchedule::find()
+                        ->where('schedule_day = :day', [':day' => $schedule_day])
+                        ->orWhere('schedule_day = :allday', [':allday' => "-1"])
+                        ->andWhere('user_id = :doctor_id', [':doctor_id' => $doctor_id])
                         ->tenant()
                         ->active()
-                        ->andWhere('user_id = :doctor_id', [':doctor_id' => $doctor_id])
-                        ->andWhere('schedule_day = :day', [':day' => $schedule_day])
-                        ->orWhere('schedule_day = :allday', [':allday' => "-1"])
                         ->orderBy('schedule_time_in')
                         ->all();
 
-                $timerange = array();
+                $timerange = [];
                 if (!empty($all_schedules)) {
                     foreach ($all_schedules as $all_schedule) {
-                        $timerange = $timerange + self::getTimeScheduleSlots($all_schedule['schedule_time_in'], $all_schedule['schedule_time_out'], '5');
+                        $timerange = array_merge($timerange, self::getTimeScheduleSlots($post['doctor_id'], $post['schedule_date'], $all_schedule['schedule_time_in'], $all_schedule['schedule_time_out'], '5'));
                     }
                 }
 
+                $timerange = array_unique($timerange, SORT_REGULAR);
                 return ['success' => true, 'timerange' => $timerange];
             } else {
                 return ['success' => false];
@@ -153,17 +155,20 @@ class DoctorscheduleController extends ActiveController {
         }
     }
 
-    public static function getTimeScheduleSlots($startTime, $endTime, $interval) {
+    public static function getTimeScheduleSlots($doctor_id, $schedule_date, $startTime, $endTime, $interval) {
         $array_of_time = array();
         $start_time = strtotime($startTime);
         $end_time = strtotime($endTime);
         $interval_mins = $interval * 60;
 
         while ($start_time <= $end_time) {
-            $array_of_time[] = array("time" => date("H:i:s", $start_time));
+            $slot = date("H:i:s", $start_time);
+            $isAvailable = PatAppointment::checkAvailableSlot($doctor_id, $schedule_date, $slot);
+            if($isAvailable)
+                $array_of_time[] = array("time" => $slot);
             $start_time += $interval_mins;
         }
-
+        
         return $array_of_time;
     }
 
