@@ -2148,7 +2148,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
-            
+
             //Patient Vitals
             .state('patient.vitals', {
                 url: '/vitals/{id}',
@@ -2176,7 +2176,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
-            
+
             //ChangePassword
             .state('configuration.changePassword', {
                 url: '/changePassword',
@@ -2189,17 +2189,20 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
 
                 }
             })
-            
+
             //App Configuration
             .state('configuration.settings', {
-                url: '/settings/{code}',
+                url: '/settings',
                 templateUrl: 'tpl/organization/settings.html',
                 resolve: {
-                    deps: ['uiLoad',
-                        function (uiLoad) {
-                            return uiLoad.load(['tpl/organization/org.js']);
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['xeditable', 'smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/organization/org.js');
+                                    }
+                            );
                         }]
-
                 }
             })
 

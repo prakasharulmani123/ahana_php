@@ -1,5 +1,9 @@
-app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$http', '$state', function ($rootScope, $scope, $timeout, $http, $state) {
+app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes) {
 
+        editableThemes.bs3.inputClass = 'input-sm';
+        editableThemes.bs3.buttonsClass = 'btn-sm';
+        editableOptions.theme = 'bs3';
+        
         //Organization Index
         $scope.loadData = function () {
             _that = this;
@@ -58,46 +62,44 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
             });
         }
 
+        $scope.checkValue = function (data) {
+            if (!data) {
+                return "Not empty";
+            }
+        };
+
         $scope.initSettings = function () {
-            $scope.loadbar('show');
-            _that = this;
-            $scope.errorData = "";
-            $http({
-                url: $rootScope.IRISOrgServiceUrl + "/appconfiguration/getsetting?code=" + $state.params.code,
-                method: "GET"
-            }).success(
-                    function (response) {
-                        $scope.loadbar('hide');
-                        $scope.data = response.config;
-                    }
-            ).error(function (data, status) {
-                $scope.loadbar('hide');
-                if (status == 422)
-                    $scope.errorData = $scope.errorSummary(data);
-                else
-                    $scope.errorData = data.message;
-            });
+            $scope.isLoading = true;
+            // pagination set up
+            $scope.rowCollection = [];  // base collection
+            $scope.itemsByPage = 10; // No.of records per page
+            $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
+
+            // Get data's from service
+            $http.get($rootScope.IRISOrgServiceUrl + '/appconfigurations')
+                    .success(function (configurations) {
+                        $scope.isLoading = false;
+                        $scope.rowCollection = configurations;
+                        $scope.displayedCollection = [].concat($scope.rowCollection);
+                    })
+                    .error(function () {
+                        $scope.errorData = "An Error has occured while loading settings!";
+                    });
         }
 
-        $scope.saveSetting = function () {
-            _that = this;
-
+        $scope.updateSetting = function ($data, config_id) {
             $scope.errorData = "";
             $scope.successMessage = "";
 
-            post_url = $rootScope.IRISOrgServiceUrl + '/appconfigurations/' + _that.data.config_id;
-            method = 'PUT';
-            succ_msg = 'Updated successfully';
-
             $scope.loadbar('show');
             $http({
-                method: method,
-                url: post_url,
-                data: _that.data,
+                method: 'PUT',
+                url: $rootScope.IRISOrgServiceUrl + '/appconfigurations/' + config_id,
+                data: $data,
             }).success(
                     function (response) {
                         $scope.loadbar('hide');
-                        $scope.successMessage = succ_msg;
+                        $scope.successMessage = 'Updated successfully';
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');

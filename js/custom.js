@@ -1,5 +1,7 @@
 $(document).ready(function () {
-
+    $("a[class='custom-close-sidebar']").click(function () {
+        $.slidebars.close();
+    })
 });
 
 $(document).mouseup(function (e) {
