@@ -10,7 +10,6 @@ use yii\db\ActiveQuery;
  *
  * @property integer $config_id
  * @property integer $tenant_id
- * @property string $code
  * @property string $key
  * @property string $value
  *
@@ -65,6 +64,11 @@ class AppConfiguration extends RActiveRecord {
     
     public static function find() {
         return new AppConfigurationQuery(get_called_class());
+    }
+    
+    public static function getConfigurationByKey($key){
+        $result = self::find()->tenant()->active()->andWhere(['key' => $key])->one();
+        return $result;
     }
 
 }

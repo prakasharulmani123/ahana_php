@@ -2,8 +2,6 @@
 
 namespace IRISORG\modules\v1\controllers;
 
-use common\models\AppConfiguration;
-use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
 use yii\filters\auth\QueryParamAuth;
@@ -48,15 +46,5 @@ class AppconfigurationController extends ActiveController {
             'query' => $modelClass::find()->tenant()->active()->orderBy(['created_at' => SORT_DESC]),
             'pagination' => false,
         ]);
-    }
-    
-    public function actionGetsetting() {
-        $get = Yii::$app->getRequest()->get();
-        $config = '';
-        if(isset($get)){
-            $config = AppConfiguration::find()->tenant()->active()->andWhere(['code' => $get['code']])->one();
-        }
-
-        return ['config' => $config];
     }
 }

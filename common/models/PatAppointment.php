@@ -179,7 +179,13 @@ class PatAppointment extends RActiveRecord {
                 $date = date('Y-m-d', strtotime($model->status_date)) . ' ' . date('H:i:s', strtotime($model->status_time));
                 $start_date = new DateTime($date);
                 $since_start = $start_date->diff(new DateTime(date('Y-m-d H:i:s')));
-                return ($since_start->h >= 1);
+                
+                $default_elapsed_time = 1;
+                $get_elapsed_time = AppConfiguration::getConfigurationByKey('ELAPSED_TIME');
+                if(isset($get_elapsed_time))
+                    $default_elapsed_time = $get_elapsed_time->value;
+                
+                return ($since_start->h >= $default_elapsed_time);
             },
         ];
         $fields = array_merge(parent::fields(), $extend);
