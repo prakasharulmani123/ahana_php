@@ -198,7 +198,10 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
         $scope.getTimeSlots = function (doctor_id, date) {
             $http.post($rootScope.IRISOrgServiceUrl + '/doctorschedule/getdoctortimeschedule', {doctor_id: doctor_id, schedule_date: date})
                     .success(function (response) {
-                        $scope.timeslots = response.timerange;
+                        $scope.timeslots = [];
+                        angular.forEach(response.timerange, function (value) {
+                            $scope.timeslots.push(value.time);
+                        });
                     }, function (x) {
                         response = {success: false, message: 'Server Error'};
                     });

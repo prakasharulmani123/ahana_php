@@ -27,7 +27,7 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">Time of Appointment * </label>
             <div class="col-sm-3">
-                <select class="form-control" ng-model="data.status_time" ng-options="timeslot.time as timeslot.time for timeslot in timeslots | orderBy: time">
+                <select class="form-control" ng-model="data.status_time" ng-options="timeslot as timeslot for timeslot in timeslots | orderBy: time">
                     <option value="">Select Time</option>
                 </select>
             </div>
