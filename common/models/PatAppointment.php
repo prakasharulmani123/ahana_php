@@ -34,6 +34,8 @@ use yii\db\ActiveQuery;
  * @property CoTenant $tenant
  */
 class PatAppointment extends RActiveRecord {
+    
+    public $consultant_perday_appt_count;
 
     /**
      * @inheritdoc
@@ -47,7 +49,7 @@ class PatAppointment extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['status_date', 'status_time', 'consultant_id', 'appt_status'], 'required'],
+            [['status_date', 'status_time', 'consultant_id', 'appt_status', 'patient_id'], 'required'],
             [['patient_cat_id', 'amount'], 'required', 'on' => 'seen_status'],
             [['tenant_id', 'patient_id', 'encounter_id', 'consultant_id', 'created_by', 'modified_by'], 'integer'],
             [['status_date', 'status_time', 'amount', 'notes', 'patient_cat_id', 'created_at', 'modified_at', 'deleted_at', 'patient_bill_type'], 'safe'],
@@ -187,6 +189,15 @@ class PatAppointment extends RActiveRecord {
 
                 return ($since_start->h >= $default_elapsed_time);
             },
+            'consultant_name' => function ($model) {
+                if(isset($model->consultant))
+                    return $model->consultant->title_code . $model->consultant->name;
+                else
+                    return '-';
+            },
+            'consultant_perday_appt_count' => function ($model) {
+                return isset($model->consultant_perday_appt_count) ? $model->consultant_perday_appt_count : '-';
+            },
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
@@ -198,7 +209,18 @@ class PatAppointment extends RActiveRecord {
 
     public static function checkAvailableSlot($consultant_id, $schedule_date, $schedule_time) {
         $is_available = self::find()->joinWith('encounter')->where(['status_date' => $schedule_date, 'status_time' => $schedule_time, 'consultant_id' => $consultant_id, 'appt_status' => 'B', 'pat_encounter.status' => '1'])->count();
-        return ($is_available == 0 ? true : false) ;
+        return ($is_available == 0 ? true : false);
+    }
+
+    public static function getFutureAppointments() {
+        $future_appointments = self::find()
+                ->joinWith('encounter')
+                ->where(['>', 'status_date', date("Y-m-d")])
+                ->andWhere(['appt_status' => 'B', 'pat_encounter.status' => '1'])
+                ->addSelect(["*", 'COUNT(*) AS consultant_perday_appt_count'])
+                ->groupBy(['consultant_id', 'status_date'])
+                ->all();
+        return $future_appointments;
     }
 
 }

@@ -77,5 +77,10 @@ class AppointmentController extends ActiveController {
             return ['success' => true];
         }
     }
+    
+    public function actionGetfutureappointments(){
+        $future_appointments = PatAppointment::getFutureAppointments();
+        return $future_appointments;
+    }
 
 }
