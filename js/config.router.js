@@ -8,8 +8,8 @@ angular.module('app')
         .run(run)
         .config(config);
 
-config.$inject = ['$stateProvider', '$urlRouterProvider', '$httpProvider', 'ivhTreeviewOptionsProvider'];
-function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOptionsProvider) {
+config.$inject = ['$stateProvider', '$urlRouterProvider', '$httpProvider', 'ivhTreeviewOptionsProvider', 'JQ_CONFIG'];
+function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOptionsProvider, JQ_CONFIG) {
 
     ivhTreeviewOptionsProvider.set({
         twistieExpandedTpl: '<i class="fa fa-caret-right"></i>',
@@ -2202,6 +2202,28 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                                         return $ocLazyLoad.load('tpl/organization/org.js');
                                     }
                             );
+                        }]
+                }
+            })
+
+            // fullCalendar
+            .state('patient.futureAppointment', {
+                url: '/futureAppointment',
+                templateUrl: 'tpl/future_appointment/index.html',
+                // use resolve to load other dependences
+                resolve: {
+                    deps: ['$ocLazyLoad', 'uiLoad',
+                        function ($ocLazyLoad, uiLoad) {
+                            return uiLoad.load(
+                                    JQ_CONFIG.fullcalendar.concat('tpl/future_appointment/future_appointment.js')
+                                    ).then(
+                                    function () {
+                                        return $ocLazyLoad.load([
+                                            'ui.calendar',
+                                            'tpl/modal_form/modal.patient_appointment.js'
+                                        ]);
+                                    }
+                            )
                         }]
                 }
             })
