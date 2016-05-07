@@ -1,192 +1,325 @@
-app.controller('FutureAppointmentController', ['$rootScope', '$scope', '$http', '$modal', '$log', '$filter', function ($rootScope, $scope, $http, $modal, $log, $filter) {
+app.controller('FutureAppointmentController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$filter', 'modalService', function ($rootScope, $scope, $timeout, $http, $state, $filter, modalService) {
 
         $scope.app.settings.patientTopBar = false;
         $scope.app.settings.patientSideMenu = false;
         $scope.app.settings.patientContentClass = 'app-content app-content3';
         $scope.app.settings.patientFooterClass = 'app-footer app-footer3';
 
-        var date = new Date();
-        var d = date.getDate();
-        var m = date.getMonth();
-        var y = date.getFullYear();
+        $scope.more_max = 4;
 
-        /* event source that pulls from google.com */
-        $scope.eventSource = {
-            url: "http://www.google.com/calendar/feeds/usa__en%40holiday.calendar.google.com/public/basic",
-            className: 'gcal-event', // an option!
-            currentTimezone: 'America/Chicago' // an option!
+        $scope.ctrl = {};
+        $scope.allExpanded = true;
+        $scope.expanded = true;
+        $scope.ctrl.expandAll = function (expanded) {
+            $scope.$broadcast('onExpandAll', {expanded: expanded});
         };
 
-        $scope.consultant_colors = ["b-l b-2x b-danger", "b-l b-2x b-info", "b-l b-2x b-warning", "b-l b-2x b-primary"];
+        $scope.encounterIDs = [];
+        //Encounter Page
+        $scope.loadFutureAppointmentsList = function () {
+            $scope.errorData = '';
+            $scope.isLoading = true;
+            $scope.rowCollection = [];  // base collection
+            $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
 
-        $scope.events = [];
-        $http.get($rootScope.IRISOrgServiceUrl + '/appointment/getfutureappointments')
-                .success(function (data) {
-                    angular.forEach(data, function (item) {
-                        result = $scope.groupConsultants(item);
-                        $scope.events.push({
-                            id: item.consultant_id,
-                            title: item.consultant_name + " - " + item.consultant_perday_appt_count,
-                            start: item.status_date,
-                            end: item.status_date,
-                            className: result.className
-                        });
+            $http.get($rootScope.IRISOrgServiceUrl + '/appointment/getfutureappointmentslist?consultant_id=' + $state.params.consultant_id + '&date=' + $state.params.date)
+                    .success(function (response) {
+                        if (response.success == true) {
+                            $scope.isLoading = false;
+                            $scope.rowCollection = response.result;
+                            $scope.displayedCollection = [].concat($scope.rowCollection);
+
+                            $scope.more_li = {};
+
+                            angular.forEach(response.result[0].all, function (value) {
+                                $scope.encounterIDs.push({
+                                    'encounterID': value.encounter_id,
+                                    'patientID': value.patient_id,
+                                    'selected': false
+                                })
+                            });
+                        } else {
+                            $scope.errorData = response.message;
+                        }
+                    })
+                    .error(function () {
+                        $scope.errorData = "An Error has occured while loading encounter!";
                     });
-                });
 
-        $scope.consultants = [];
-        $scope.groupConsultants = function (data) {
-            var result = {};
-            if ($scope.consultants.length == 0) {
-                result = $scope.pushConsultant(data);
+
+        };
+
+        $scope.selectedIDs = [];
+        $scope.cancelSelected = function () {
+            angular.forEach($scope.encounterIDs, function (item) {
+                if (item.selected) {
+                    $scope.selectedIDs.push({
+                        'encounter_id' : item.encounterID,
+                        'patient_id' : item.patientID,
+                    });
+                }
+            });
+            $scope.cancelFutureAppointments();
+        };
+
+
+        $scope.cancelFutureAppointments = function () {
+            $scope.loadbar('show');
+            post_url = $rootScope.IRISOrgServiceUrl + '/appointment/bulkcancel';
+            method = 'POST';
+            succ_msg = 'Appointment cancelled successfully';
+            var PatAppointment = $scope.selectedIDs;
+            $http({
+                method: method,
+                url: post_url,
+                data: PatAppointment,
+            }).success(
+                    function (response) {
+                        $scope.successMessage = succ_msg;
+                        $scope.loadbar('hide');
+                        $scope.loadFutureAppointmentsList();
+                    }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        }
+
+
+
+
+
+
+
+
+
+
+        $scope.statuses = [
+            {value: 'A', text: 'Arrived'},
+        ];
+
+        $scope.arr_statuses = [
+            {value: 'S', text: 'Seen'},
+        ];
+
+        $scope.setTimings = function (key, mode) {
+            if (mode == 'set') {
+                st_d = moment().format('YYYY-MM-DD');
+                st_t = moment().format('hh:mm A');
             } else {
-                checkConsultantExists = $filter('filter')($scope.consultants, {id: data.consultant_id});
-                if (typeof checkConsultantExists[0] == 'undefined') {
-                    result = $scope.pushConsultant(data);
-                } else {
-                    checkConsultantExists[0].visit_count = parseInt(checkConsultantExists[0].visit_count) + parseInt(data.consultant_perday_appt_count);
-                    result = checkConsultantExists[0];
-                }
+                st_d = st_t = '';
             }
-            return result;
-        };
-
-        $scope.pushConsultant = function (data) {
-            var result = {
-                'id': data.consultant_id,
-                'title': data.consultant_name,
-                'visit_count': data.consultant_perday_appt_count,
-                'className': []
-            };
-            $scope.consultants.push(result);
-            $filter('filter')($scope.consultants, function (item) {
-                if (item.id == data.consultant_id) {
-                    key = $scope.consultants.indexOf(item);
-                    item.className = [$scope.consultant_colors[key % 4]];
-                }
-            });
-            return result;
-        }
-        
-        /* toggle event */
-        $scope.showHideEvents = function (consultant, key) {
-            key ? $scope.add(consultant) : $scope.remove(consultant);
-        };
-
-        /* remove event */
-        $scope.removedevents = [];
-        $scope.remove = function (consultant) {
-            result = $filter('filter')($scope.events, {id: consultant.id});
-            angular.forEach(result, function (item) {
-                $scope.removedevents.push(item);
-                $scope.events.splice($scope.events.indexOf(item), 1);
-                $('.calendar').fullCalendar('removeEvents', consultant.id);
-            });
-        };
-        
-        /* add event */
-        $scope.add = function (consultant) {
-            result = $filter('filter')($scope.removedevents, {id: consultant.id});
-            angular.forEach(result, function (item) {
-                $scope.events.push(item);
-                $scope.removedevents.splice($scope.removedevents.indexOf(item), 1);
-            });
-        };
-        
-        //Add New Event
-        $scope.add_appointment = function (date) {
-            var modalInstance = $modal.open({
-                templateUrl: 'tpl/modal_form/modal.patient_appointment.html',
-                controller: "ModalPatientAppointmentController",
-                resolve: {
-                    scope: function () {
-                        return $scope;
-                    },
-                }
-            });
-
-            modalInstance.data = {
-                title: 'Add Future Appointment',
-                date: date
-            };
-
-            modalInstance.result.then(function (selectedItem) {
-                $scope.selected = selectedItem;
-            }, function () {
-                $log.info('Modal dismissed at: ' + new Date());
-            });
-        }
-        
-        /* alert on dayClick */
-        $scope.precision = 400;
-        $scope.lastClickTime = 0;
-        $scope.alertOnEventClick = function (date, jsEvent, view) {
-            var time = new Date().getTime();
-            if (time - $scope.lastClickTime <= $scope.precision) {
-                $scope.add_appointment(date);
-            }
-            $scope.lastClickTime = time;
-        };
-        
-        /* alert on Drop */
-        $scope.alertOnDrop = function (event, delta, revertFunc, jsEvent, ui, view) {
-            $scope.alertMessage = ('Event Droped to make dayDelta ' + delta);
-        };
-        /* alert on Resize */
-        $scope.alertOnResize = function (event, delta, revertFunc, jsEvent, ui, view) {
-            $scope.alertMessage = ('Event Resized to make dayDelta ' + delta);
-        };
-
-        $scope.overlay = $('.fc-overlay');
-        $scope.alertOnMouseOver = function (event, jsEvent, view) {
-            $scope.event = event;
-            $scope.overlay.removeClass('left right top').find('.arrow').removeClass('left right top pull-up');
-            var wrap = $(jsEvent.target).closest('.fc-event');
-            var cal = wrap.closest('.calendar');
-            var left = wrap.offset().left - cal.offset().left;
-            var right = cal.width() - (wrap.offset().left - cal.offset().left + wrap.width());
-            var top = cal.height() - (wrap.offset().top - cal.offset().top + wrap.height());
-            if (right > $scope.overlay.width()) {
-                $scope.overlay.addClass('left').find('.arrow').addClass('left pull-up')
-            } else if (left > $scope.overlay.width()) {
-                $scope.overlay.addClass('right').find('.arrow').addClass('right pull-up');
-            } else {
-                $scope.overlay.find('.arrow').addClass('top');
-            }
-            if (top < $scope.overlay.height()) {
-                $scope.overlay.addClass('top').find('.arrow').removeClass('pull-up').addClass('pull-down')
-            }
-            (wrap.find('.fc-overlay').length == 0) && wrap.append($scope.overlay);
+            $scope.displayedCollection[key].sts_date = st_d;
+            $scope.displayedCollection[key].sts_time = st_t;
         }
 
-        /* config object */
-        $scope.uiConfig = {
-            calendar: {
-                height: 450,
-                editable: false,
-                draggable: false,
-                header: {
-                    left: 'prev',
-                    center: 'title',
-                    right: 'next'
-                },
-                dayClick: $scope.alertOnEventClick,
-//                eventDrop: $scope.alertOnDrop,
-//                eventResize: $scope.alertOnResize,
-//                eventMouseover: $scope.alertOnMouseOver
+        $scope.onTimeSet = function (newDate, oldDate, main_key, key) {
+            $scope.displayedCollection[main_key].all[key].date = moment(newDate).format('YYYY-MM-DD hh:mm A');
+        }
+
+        $scope.moreOptions = function (key, enc_id, type, row_sts, id, status, is_swap) {
+            console.log(row_sts);
+            $scope.more_li = [];
+
+            $('.enc_chk').not('#enc_' + enc_id + key).attr('checked', false);
+
+            if ($('#enc_' + enc_id + key).is(':checked')) {
+                if (type == 'IP') {
+                    $scope.more_li = [
+                        {href: 'patient.transfer({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Transfer', mode: 'sref'},
+                        {href: 'patient.discharge({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Clinical Discharge', mode: 'sref'},
+                        {href: 'patient.swapping({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Swapping', mode: 'sref'},
+                    ];
+
+                    if (status == '1' && row_sts != 'A') {
+
+                        if (is_swap == '1')
+                            row_sts = 'SW';
+
+                        $scope.more_li.push({href: "cancelAdmission(" + enc_id + ", " + id + ", '" + row_sts + "')", name: 'Cancel', mode: 'click'});
+                    }
+                } else if (type == 'OP') {
+                    if (status == '1') {
+                        $scope.more_li.push(
+                                {href: 'patient.changeStatus({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Change Status', mode: 'sref'},
+                        {href: "cancelAppointment(" + enc_id + ")", name: 'Cancel Appointment', mode: 'click'});
+                    }
+
+                    $scope.more_li.push(
+                            {href: 'patient.editDoctorFee({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Edit Doctor Fee', mode: 'sref'});
+
+                }
             }
+        }
+
+        $scope.isPatientHaveActiveEncounter = function (callback) {
+            $scope.loadbar('show');
+            $http.post($rootScope.IRISOrgServiceUrl + '/encounter/patienthaveactiveencounter', {patient_id: $state.params.id})
+                    .success(function (response) {
+                        $scope.loadbar('hide');
+                        callback(response);
+                    }, function (x) {
+                        response = {success: false, message: 'Server Error'};
+                        callback(response);
+                    });
+        }
+
+        $scope.cancelAdmission = function (enc_id, id, row_sts) {
+            $scope.isPatientHaveActiveEncounter(function (response) {
+                if (response.success == true) {
+                    if (response.model.encounter_id != enc_id) {
+                        alert("This is not an active Encounter");
+                        $state.go("patient.encounter", {id: $state.params.id});
+                    } else {
+                        $scope.errorData = "";
+
+                        var notes = '';
+                        var headerText = '';
+                        var bodyText = '';
+
+                        if (row_sts == 'TR') {
+                            notes = 'Transfer (Room) Cancelled';
+                            headerText = 'Cancel Room Transfer?';
+                            bodyText = 'Are you sure you want to cancel this Room Transfer?';
+                        } else if (row_sts == 'TD') {
+                            notes = 'Transfer (Doctor) Cancelled';
+                            headerText = 'Cancel Doctor Transfer?';
+                            bodyText = 'Are you sure you want to cancel this Doctor Transfer?';
+                        } else if (row_sts == 'SW') {
+                            notes = 'Room Swapping Cancelled';
+                            headerText = 'Cancel Room Swapping?';
+                            bodyText = 'Are you sure you want to cancel this Room Swapping?';
+                        }
+
+                        var modalOptions = {
+                            closeButtonText: 'No',
+                            actionButtonText: 'Yes',
+                            headerText: headerText,
+                            bodyText: bodyText
+                        };
+                        modalService.showModal({}, modalOptions).then(function (result) {
+                            $scope.loadbar('show');
+                            post_url = $rootScope.IRISOrgServiceUrl + '/admission/canceladmission';
+                            method = 'POST';
+                            succ_msg = 'Room Transfer cancelled successfully';
+
+                            var PatAdmission = {
+                                admn_id: id,
+                                admission_status: "C",
+                                status_date: moment().format('YYYY-MM-DD HH:mm:ss'),
+                                patient_id: $scope.app.patientDetail.patientId,
+                                encounter_id: enc_id,
+                                status: '0',
+                                notes: notes,
+                                row_sts: row_sts,
+                            };
+                            $http({
+                                method: method,
+                                url: post_url,
+                                data: PatAdmission,
+                            }).success(
+                                    function (response) {
+                                        $scope.loadbar('hide');
+                                        if (response.success) {
+                                            $scope.successMessage = succ_msg;
+                                            $scope.loadPatientEncounters('Current');
+                                        } else {
+                                            $scope.errorData = response.message;
+
+                                        }
+                                    }
+                            ).error(function (data, status) {
+                                $scope.loadbar('hide');
+                                if (status == 422)
+                                    $scope.errorData = $scope.errorSummary(data);
+                                else
+                                    $scope.errorData = data.message;
+                            });
+                        });
+                    }
+                }
+            });
         };
 
-        /* Change View */
-        $scope.changeView = function (view, calendar) {
-            $('.calendar').fullCalendar('changeView', view);
+        $scope.cancelAppointment = function (enc_id) {
+            $scope.isPatientHaveActiveEncounter(function (response) {
+                if (response.success == true) {
+                    if (response.model.encounter_id != enc_id) {
+                        alert("This is not an active Encounter");
+                        $state.go("patient.encounter", {id: $state.params.id});
+                    } else {
+                        $scope.errorData = "";
+                        var modalOptions = {
+                            closeButtonText: 'No',
+                            actionButtonText: 'Yes',
+                            headerText: 'Cancel Appointment?',
+                            bodyText: 'Are you sure you want to cancel this appointment?'
+                        };
+                        modalService.showModal({}, modalOptions).then(function (result) {
+                            $scope.loadbar('show');
+                            post_url = $rootScope.IRISOrgServiceUrl + '/appointments';
+                            method = 'POST';
+                            succ_msg = 'Appointment cancelled successfully';
+                            var PatAppointment = {
+                                appt_status: "C",
+                                status_time: moment().format('HH:mm:ss'),
+                                status_date: moment().format('YYYY-MM-DD'),
+                                patient_id: $scope.app.patientDetail.patientId,
+                                encounter_id: enc_id
+                            };
+                            $http({
+                                method: method,
+                                url: post_url,
+                                data: PatAppointment,
+                            }).success(
+                                    function (response) {
+                                        $scope.successMessage = succ_msg;
+                                        $scope.loadbar('hide');
+                                        $scope.loadPatientEncounters('Current');
+                                    }
+                            ).error(function (data, status) {
+                                $scope.loadbar('hide');
+                                if (status == 422)
+                                    $scope.errorData = $scope.errorSummary(data);
+                                else
+                                    $scope.errorData = data.message;
+                            });
+                        });
+                    }
+                }
+            });
         };
 
-        $scope.today = function (calendar) {
-            $('.calendar').fullCalendar('today');
-        };
+        $scope.changeAppointmentStatus = function (_data, key) {
+            $scope.errorData = "";
+            $scope.successMessage = "";
 
-        /* event sources array*/
-        $scope.eventSources = [$scope.events];
+            $scope.loadbar('show');
+            $http({
+                method: 'POST',
+                url: $rootScope.IRISOrgServiceUrl + '/appointments',
+                data: _data,
+            }).success(
+                    function (response) {
+                        $scope.loadbar('hide');
+                        $scope.successMessage = 'Status changed successfully';
+                        $scope.loadPatientEncounters('Current');
+                    }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        };
     }]);
-/* EOF */
+
+//app.filter('moment', function () {
+//    return function (dateString, format) {
+//        return moment(dateString).format(format);
+//    };
+//});

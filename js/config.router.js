@@ -2215,7 +2215,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                     deps: ['$ocLazyLoad', 'uiLoad',
                         function ($ocLazyLoad, uiLoad) {
                             return uiLoad.load(
-                                    JQ_CONFIG.fullcalendar.concat('tpl/future_appointment/future_appointment.js')
+                                    JQ_CONFIG.fullcalendar.concat('tpl/future_appointment/future_appointment_calender.js')
                                     ).then(
                                     function () {
                                         return $ocLazyLoad.load([
@@ -2224,6 +2224,22 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                                         ]);
                                     }
                             )
+                        }]
+                }
+            })
+            
+            //Future appointments list
+            .state('patient.futureAppointmentList', {
+                url: '/futureAppointmentList/{consultant_id}/{date}',
+                templateUrl: 'tpl/future_appointment/list.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/future_appointment/future_appointment.js');
+                                    }
+                            );
                         }]
                 }
             })

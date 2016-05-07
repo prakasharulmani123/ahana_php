@@ -1,7 +1,21 @@
 <div class="bg-light lter b-b wrapper-md">
     <h1 class="m-n h3">Out-Patient</h1>
 </div>
-
+<div class="wrapper-md tab-btn">
+    <div class="row">
+        <div class="col-sm-4"> 
+            <div class="btn-group btn-group-justified">
+                <a class="btn btn-info" ng-click="loadSaleItemList('CA')">
+                    <i class="fa fa-money"></i>  Current Out-Patients
+                </a>
+                <a class="btn btn-success" ui-sref="patient.futureAppointment">  
+                    <i class="fa fa-list-alt"></i>
+                    Future Appointments
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="wrapper-md" ng-controller="OutPatientsController" ng-init="loadOutPatientsList()">
     <div ng-include="'tpl/blocks/alert.html'">
         {% include 'tpl/blocks/alert.html' %}
@@ -98,7 +112,8 @@
                                     </button>
                                 </form>
                                 <div class="buttons" ng-show="!rowform.$visible">
-                                    <a ng-click="rowform.$show(); row.sts_status = 'A';
+                                    <a ng-click="rowform.$show();
+                                                    row.sts_status = 'A';
                                                     setTimings(key, 'set')" class="ng-scope ng-binding editable editable-click"> Booked </a><br />
                                     <span class="text-danger-dk">Waiting!</span>
                                 </div> 
