@@ -64,7 +64,6 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
         }
 
         $scope.moreOptions = function (key, enc_id, type, row_sts, id, status, is_swap) {
-            console.log(row_sts);
             $scope.more_li = [];
 
             $('.enc_chk').not('#enc_' + enc_id + key).attr('checked', false);
@@ -83,17 +82,28 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                             row_sts = 'SW';
 
                         $scope.more_li.push({href: "cancelAdmission(" + enc_id + ", " + id + ", '" + row_sts + "')", name: 'Cancel', mode: 'click'});
+                    } else if (status == '1' && row_sts == 'A') {
+                        $scope.more_li.push({href: "cancelAdmissionCloseEncounter(" + enc_id + ", " + id + ", '" + row_sts + "')", name: 'Admission Cancel', mode: 'click'});
                     }
                 } else if (type == 'OP') {
                     if (status == '1') {
-                        $scope.more_li.push(
-                                {href: 'patient.changeStatus({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Change Status', mode: 'sref'},
-                        {href: "cancelAppointment(" + enc_id + ")", name: 'Cancel Appointment', mode: 'click'});
+                        $scope.more_li.push({
+                            href: 'patient.changeStatus({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})',
+                            name: 'Change Status',
+                            mode: 'sref'
+                        },
+                        {
+                            href: "cancelAppointment(" + enc_id + ")",
+                            name: 'Cancel Appointment',
+                            mode: 'click'
+                        });
                     }
 
-                    $scope.more_li.push(
-                            {href: 'patient.editDoctorFee({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Edit Doctor Fee', mode: 'sref'});
-
+                    $scope.more_li.push({
+                        href: 'patient.editDoctorFee({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})',
+                        name: 'Edit Doctor Fee',
+                        mode: 'sref'
+                    });
                 }
             }
         }
@@ -109,6 +119,72 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                         callback(response);
                     });
         }
+
+        $scope.cancelAdmissionCloseEncounter = function (enc_id, id, row_sts) {
+            $scope.isPatientHaveActiveEncounter(function (response) {
+                if (response.success == true) {
+                    if (response.model.encounter_id != enc_id) {
+                        alert("This is not an active Encounter");
+                        $state.go("patient.encounter", {id: $state.params.id});
+                    } else {
+                        $scope.errorData = "";
+
+                        var notes = '';
+                        var headerText = '';
+                        var bodyText = '';
+
+                        if (row_sts == 'A') {
+                            notes = 'Admission Cancelled';
+                            headerText = 'Admission Cancelled?';
+                            bodyText = 'Are you sure you want to cancel this Admission?';
+                        }
+
+                        var modalOptions = {
+                            closeButtonText: 'No',
+                            actionButtonText: 'Yes',
+                            headerText: headerText,
+                            bodyText: bodyText
+                        };
+                        modalService.showModal({}, modalOptions).then(function (result) {
+                            $scope.loadbar('show');
+                            post_url = $rootScope.IRISOrgServiceUrl + '/admissions'
+                            method = 'POST';
+                            succ_msg = 'Admission cancelled successfully';
+
+                            var PatAdmission = {
+                                admission_status: "AC",
+                                status_date: moment().format('YYYY-MM-DD HH:mm:ss'),
+                                patient_id: $scope.app.patientDetail.patientId,
+                                encounter_id: enc_id,
+                                status: '1',
+                                notes: notes,
+                            };
+                            $http({
+                                method: method,
+                                url: post_url,
+                                data: PatAdmission,
+                            }).success(
+                                    function (response) {
+                                        $scope.loadbar('hide');
+                                        if (response.success == false) {
+                                            $scope.errorData = response.message;
+                                        } else {
+                                            $scope.successMessage = succ_msg;
+                                            $scope.loadPatientEncounters('Current');
+                                        }
+                                    }
+                            ).error(function (data, status) {
+                                $scope.loadbar('hide');
+                                if (status == 422)
+                                    $scope.errorData = $scope.errorSummary(data);
+                                else
+                                    $scope.errorData = data.message;
+                            });
+                        });
+                    }
+                }
+            });
+        };
 
         $scope.cancelAdmission = function (enc_id, id, row_sts) {
             $scope.isPatientHaveActiveEncounter(function (response) {
@@ -260,9 +336,3 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
             });
         };
     }]);
-
-//app.filter('moment', function () {
-//    return function (dateString, format) {
-//        return moment(dateString).format(format);
-//    };
-//});

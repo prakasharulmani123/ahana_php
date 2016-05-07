@@ -54,8 +54,8 @@ app.controller('FutureAppointmentController', ['$rootScope', '$scope', '$timeout
             angular.forEach($scope.encounterIDs, function (item) {
                 if (item.selected) {
                     $scope.selectedIDs.push({
-                        'encounter_id' : item.encounterID,
-                        'patient_id' : item.patientID,
+                        'encounter_id': item.encounterID,
+                        'patient_id': item.patientID,
                     });
                 }
             });
@@ -64,28 +64,31 @@ app.controller('FutureAppointmentController', ['$rootScope', '$scope', '$timeout
 
 
         $scope.cancelFutureAppointments = function () {
-            $scope.loadbar('show');
-            post_url = $rootScope.IRISOrgServiceUrl + '/appointment/bulkcancel';
-            method = 'POST';
-            succ_msg = 'Appointment cancelled successfully';
-            var PatAppointment = $scope.selectedIDs;
-            $http({
-                method: method,
-                url: post_url,
-                data: PatAppointment,
-            }).success(
-                    function (response) {
-                        $scope.successMessage = succ_msg;
-                        $scope.loadbar('hide');
-                        $scope.loadFutureAppointmentsList();
-                    }
-            ).error(function (data, status) {
-                $scope.loadbar('hide');
-                if (status == 422)
-                    $scope.errorData = $scope.errorSummary(data);
-                else
-                    $scope.errorData = data.message;
-            });
+            var conf = confirm('Are you sure to cancel these appointments ?');
+            if (conf) {
+                $scope.loadbar('show');
+                post_url = $rootScope.IRISOrgServiceUrl + '/appointment/bulkcancel';
+                method = 'POST';
+                succ_msg = 'Appointment cancelled successfully';
+                var PatAppointment = $scope.selectedIDs;
+                $http({
+                    method: method,
+                    url: post_url,
+                    data: PatAppointment,
+                }).success(
+                        function (response) {
+                            $scope.successMessage = succ_msg;
+                            $scope.loadbar('hide');
+                            $scope.loadFutureAppointmentsList();
+                        }
+                ).error(function (data, status) {
+                    $scope.loadbar('hide');
+                    if (status == 422)
+                        $scope.errorData = $scope.errorSummary(data);
+                    else
+                        $scope.errorData = data.message;
+                });
+            }
         }
 
 
