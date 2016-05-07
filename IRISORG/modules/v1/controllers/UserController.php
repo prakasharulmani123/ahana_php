@@ -480,11 +480,11 @@ class UserController extends ActiveController {
             $column = $post['column'];
             $value = $post['value'];
 
-            if ($value)
+            if ($value || $column == 'discharge')
                 $encounter->$column = Yii::$app->user->identity->user_id;
             else
                 $encounter->$column = 0;
-
+            
             $encounter->save(false);
 
             $this->_insertTimeline($encounter, $column, $value);

@@ -282,8 +282,8 @@ class PatEncounter extends RActiveRecord {
             }
         }
         
-        if($this->encounter_type == 'IP')
-            $this->status = $this->discharge == 0 ? '1' : '0';
+//        if($this->encounter_type == 'IP')
+//            $this->status = $this->discharge == 0 ? '1' : '0';
         
         return parent::beforeSave($insert);
     }

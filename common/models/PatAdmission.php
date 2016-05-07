@@ -198,11 +198,11 @@ class PatAdmission extends RActiveRecord {
         }
 
         if ($insert) {
-            //Close Encounter when Discharge
-//            if ($this->admission_status == 'D') {
-//                $this->encounter->status = '0';
-//                $this->encounter->save(false);
-//            }
+            //Close Encounter when Admission cancel
+            if ($this->admission_status == 'AC') {
+                $this->encounter->status = '0';
+                $this->encounter->save(false);
+            }
 
             //Change Old room status to vacant if Room Transfer
             if (!is_null($this->vacantOldRoomId)) {
@@ -255,18 +255,22 @@ class PatAdmission extends RActiveRecord {
                 $header = "Cancellation";
                 $message = $this->notes;
                 break;
+            case 'AC':
+                $header = "Admission Cancel";
+                $message = $this->notes;
+                break;
         }
         PatTimeline::insertTimeLine($this->patient_id, $this->status_date, $header, $header_sub, $message);
     }
 
     public function setCurrentData() {
-        if ($this->admission_status == 'TD' || $this->admission_status == 'D' || $this->admission_status == 'CD') {
+        if ($this->admission_status == 'TD' || $this->admission_status == 'D' || $this->admission_status == 'CD' || $this->admission_status == 'AC') {
             $this->floor_id = $this->encounter->patCurrentAdmission->floor_id;
             $this->ward_id = $this->encounter->patCurrentAdmission->ward_id;
             $this->room_id = $this->encounter->patCurrentAdmission->room_id;
             $this->room_type_id = $this->encounter->patCurrentAdmission->room_type_id;
 
-            if ($this->admission_status == 'D' || $this->admission_status == 'CD') {
+            if ($this->admission_status == 'D' || $this->admission_status == 'CD' || $this->admission_status == 'AC') {
                 $this->consultant_id = $this->encounter->patCurrentAdmission->consultant_id;
             }
         } else if ($this->admission_status == 'TR') {
