@@ -34,7 +34,7 @@ use yii\db\ActiveQuery;
  * @property CoTenant $tenant
  */
 class PatAppointment extends RActiveRecord {
-    
+
     public $consultant_perday_appt_count;
 
     /**
@@ -190,13 +190,31 @@ class PatAppointment extends RActiveRecord {
                 return ($since_start->h >= $default_elapsed_time);
             },
             'consultant_name' => function ($model) {
-                if(isset($model->consultant))
+                if (isset($model->consultant))
                     return $model->consultant->title_code . $model->consultant->name;
                 else
                     return '-';
             },
             'consultant_perday_appt_count' => function ($model) {
                 return isset($model->consultant_perday_appt_count) ? $model->consultant_perday_appt_count : '-';
+            },
+            'patient_name' => function ($model) {
+                if (isset($model->patient))
+                    return $model->patient->patient_title_code . $model->patient->patient_firstname;
+                else
+                    return '-';
+            },
+            'patient_mobile' => function ($model) {
+                if (isset($model->patient))
+                    return $model->patient->patient_mobile;
+                else
+                    return '-';
+            },
+            'patient_guid' => function ($model) {
+                if (isset($model->patient))
+                    return $model->patient->patient_guid;
+                else
+                    return '-';
             },
         ];
         $fields = array_merge(parent::fields(), $extend);

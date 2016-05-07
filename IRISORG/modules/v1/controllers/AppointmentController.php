@@ -1,4 +1,5 @@
 <?php
+
 namespace IRISORG\modules\v1\controllers;
 
 use common\models\PatAppointment;
@@ -77,10 +78,68 @@ class AppointmentController extends ActiveController {
             return ['success' => true];
         }
     }
-    
-    public function actionGetfutureappointments(){
+
+    public function actionBulkcancel() {
+        $post = Yii::$app->getRequest()->post();
+        if(!empty($post)){
+            foreach($post as $key => $value){
+                $data = array();
+                $data['appt_status'] = "C";
+                $data['encounter_id'] = $value['encounter_id'];
+                $data['status_time'] = date("H:i:s");
+                $data['status_date'] = date("Y-m-d");
+                $data['patient_id'] = $value['patient_id'];
+                
+                $model = new PatAppointment;
+                $model->attributes = $data;
+                $model->save(false);
+            }
+        }
+    }
+
+    public function actionGetfutureappointments() {
         $future_appointments = PatAppointment::getFutureAppointments();
         return $future_appointments;
+    }
+
+    public function actionGetfutureappointmentslist() {
+        $get = Yii::$app->getRequest()->get();
+
+        if (isset($get['consultant_id']) && isset($get['date'])) {
+            $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+            $result = [];
+            $data = PatAppointment::find()
+                    ->joinWith('encounter')
+                    ->where([
+                        'consultant_id' => $get['consultant_id'],
+                        'status_date' => $get['date'],
+                        'appt_status' => 'B',
+                        'pat_encounter.status' => '1',
+                        'pat_encounter.tenant_id' => $tenant_id
+                    ])
+                    ->groupBy('consultant_id')
+                    ->orderBy(['status_date' => SORT_ASC])
+                    ->all();
+
+            foreach ($data as $key => $value) {
+                $details = PatAppointment::find()
+                        ->joinWith('encounter')
+                        ->where([
+                            'consultant_id' => $value->consultant_id,
+                            'status_date' => $value->status_date,
+                            'appt_status' => 'B',
+                            'pat_encounter.status' => '1',
+                            'pat_encounter.tenant_id' => $tenant_id
+                        ])
+                        ->orderBy(['status_date' => SORT_ASC])
+                        ->all();
+
+                $result[$key] = ['data' => $value, 'all' => $details];
+            }
+            return ['success' => true, 'result' => $result];
+        } else {
+            return ['success' => false, 'message' => 'Invalid Access'];
+        }
     }
 
 }
