@@ -26,39 +26,8 @@ app.controller('ExtraConcessionController', ['$rootScope', '$scope', '$timeout',
                     $scope.data.formtype = 'add';
                     $scope.data.ec_type = $state.params.ec_type;
 
-                    if ($scope.data.ec_type == 'P') {
-                        $scope.data.type = 'Procedure Charges';
-                        post_url = $rootScope.IRISOrgServiceUrl + "/roomchargesubcategories/" + $state.params.link_id;
-                        method = 'GET';
-                    } else if ($scope.data.ec_type == 'C') {
-                        $scope.data.type = 'Consultant Charges';
-                        post_url = $rootScope.IRISOrgServiceUrl + "/users/" + $state.params.link_id;
-                        method = 'GET';
-                    }
-
-                    $scope.loadbar('show');
-                    $http({
-                        method: method,
-                        url: post_url,
-                    }).success(
-                            function (response) {
-                                $scope.loadbar('hide');
-                                $scope.data.link = response;
-
-                                if ($scope.data.ec_type == 'P') {
-                                    $scope.data.link_id = response.charge_subcat_id;
-                                } else if ($scope.data.ec_type == 'C') {
-                                    $scope.data.link_id = response.user_id;
-                                }
-                            }
-                    ).error(function (data, status) {
-                        $scope.loadbar('hide');
-                        if (status == 422)
-                            $scope.errorData = $scope.errorSummary(data);
-                        else
-                            $scope.errorData = data.message;
-                    });
-
+                    console.log($state.params.ec_type);
+                    $scope.initCategory($state.params.enc_id, $scope.patientObj.patient_id, $state.params.link_id, $state.params.ec_type);
                 }
             });
         }
@@ -141,11 +110,8 @@ app.controller('ExtraConcessionController', ['$rootScope', '$scope', '$timeout',
                             function (response) {
                                 $scope.loadbar('hide');
                                 $scope.data = response;
-                                if ($scope.data.ec_type == 'P') {
-                                    $scope.data.type = 'Procedure Charges';
-                                } else if ($scope.data.ec_type == 'C') {
-                                    $scope.data.type = 'Consultant Charges';
-                                }
+                                $scope.initCategory(response.encounter_id, response.patient_id, response.link_id, response.ec_type);
+
                             }
                     ).error(function (data, status) {
                         $scope.loadbar('hide');
@@ -157,6 +123,38 @@ app.controller('ExtraConcessionController', ['$rootScope', '$scope', '$timeout',
                 }
             });
         };
+        
+        //Init Category (Procedure or Consultant)
+        $scope.initCategory = function(enc_id, patient_id, category_id, mode){
+            if(mode == 'P'){
+                post_url = $rootScope.IRISOrgServiceUrl + '/encounter/getnonrecurringprocedures?encounter_id=' + enc_id;
+            }else if(mode == 'C'){
+                post_url = $rootScope.IRISOrgServiceUrl + '/encounter/getnonrecurringprofessionals?encounter_id=' + enc_id;
+            }
+            post_url += '&patient_id=' + patient_id;
+            post_url += '&category_id=' + category_id;
+            method = 'GET';
+
+            $scope.loadbar('show');
+            $http({
+                method: method,
+                url: post_url,
+            }).success(
+                    function (response) {
+                        $scope.loadbar('hide');
+                        $scope.data.link_id = response.category_id;
+                        $scope.data.total_charge = response.total_charge;
+                        $scope.data.headers = response.headers;
+                        $scope.data.type = response.category;
+                    }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        }
 
         //Delete
         $scope.removeRow = function (row) {

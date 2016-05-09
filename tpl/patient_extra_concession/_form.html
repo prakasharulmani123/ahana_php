@@ -16,22 +16,21 @@
         </div>
         <div class="line line-dashed b-b line-lg "></div>
 
-        <div ng-if="data.ec_type == 'P'">
-            <div class="form-group">
-                <label class="col-sm-3 control-label">Procedure </label>
-                <div class="col-sm-9">
-                    {{data.link.charge_subcat_name}}
-                </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">{{data.ec_type == 'P' ? 'Procedure' : 'Consultant'}} </label>
+            <div class="col-sm-9">
+                {{data.headers}}
             </div>
         </div>
-        <div ng-if="data.ec_type == 'C'">
-            <div class="form-group">
-                <label class="col-sm-3 control-label">Consultant </label>
-                <div class="col-sm-9">
-                    {{data.link.name}}
-                </div>
+        <div class="line line-dashed b-b line-lg "></div>
+        
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Total Charge Amount </label>
+            <div class="col-sm-9">
+                {{data.total_charge}}
             </div>
         </div>
+        
         <div class="line line-dashed b-b line-lg "></div>
 
         <div ng-if="$state.params.mode == 'E'">

@@ -203,7 +203,7 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
             });
         }
 
-        $scope.moreOptions = function (key, type, pk_id, link_id, concession_amount, extra_amount) {
+        $scope.moreOptions = function (key, type, pk_id, link_id, concession_amount, extra_amount, mode_id) {
             var row_id = '#enc_' + type + '_' + key;
             $scope.more_li = {};
             $scope.more_advance_li = {};
@@ -243,7 +243,7 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
 
                     if (concession_amount == '0.00') {
                         $scope.more_li.push(
-                                {href: 'patient.addConcessionAmount({id: "' + $state.params.id + '", ec_type: "' + ec_type + '", link_id: "' + link_id + '", enc_id: "' + $scope.enc.selected.encounter_id + '"})', name: 'Add Concession Amount', mode: 'sref', i_class: 'fa fa-plus-square'}
+                            {href: 'patient.addConcessionAmount({id: "' + $state.params.id + '", ec_type: "' + ec_type + '", link_id: "' + link_id + '", enc_id: "' + $scope.enc.selected.encounter_id + '"})', name: 'Add Concession Amount', mode: 'sref', i_class: 'fa fa-plus-square'}
                         );
                     } else {
                         $scope.more_li.push(
