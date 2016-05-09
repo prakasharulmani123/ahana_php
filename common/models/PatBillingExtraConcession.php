@@ -53,10 +53,17 @@ class PatBillingExtraConcession extends RActiveRecord {
     }
 
     public function validateAmount($attribute, $params) {
-        $amount = $this->mode == 'E' ? $this->extra_amount : $this->concession_amount;
-        $name = $this->mode == 'E' ? 'Extra Amount' : 'Concession Amount';
+        if ($this->mode == 'E') {
+            $attribute_name = 'extra_amount';
+            $amount = $this->extra_amount;
+            $name = 'Extra Amount';
+        } else {
+            $attribute_name = 'concession_amount';
+            $amount = $this->concession_amount;
+            $name = 'Concession Amount';
+        }
 
-        if (empty($amount) || $amount < 1) {
+        if (empty($amount) || $amount < 1 && $attribute_name == $attribute) {
             $this->addError($attribute, "{$name} can not be empty");
         }
     }
@@ -96,11 +103,11 @@ class PatBillingExtraConcession extends RActiveRecord {
     public function getPatient() {
         return $this->hasOne(PatPatient::className(), ['patient_id' => 'patient_id']);
     }
-    
+
     public function getRoomchargesubcategory() {
         return $this->hasOne(CoRoomChargeSubcategory::className(), ['charge_subcat_id' => 'link_id']);
     }
-    
+
     public function getUser() {
         return $this->hasOne(CoUser::className(), ['user_id' => 'link_id']);
     }
