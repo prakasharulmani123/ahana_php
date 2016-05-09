@@ -1,4 +1,4 @@
-app.controller('FutureAppointmentController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$filter', 'modalService', function ($rootScope, $scope, $timeout, $http, $state, $filter, modalService) {
+app.controller('FutureAppointmentController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$filter', 'modalService', '$modal', '$log', function ($rootScope, $scope, $timeout, $http, $state, $filter, modalService, $modal, $log) {
 
         $scope.app.settings.patientTopBar = false;
         $scope.app.settings.patientSideMenu = false;
@@ -33,8 +33,12 @@ app.controller('FutureAppointmentController', ['$rootScope', '$scope', '$timeout
 
                             angular.forEach(response.result[0].all, function (value) {
                                 $scope.encounterIDs.push({
+                                    'consultantID': value.consultant_id,
+                                    'consultantName': value.consultant_name,
+                                    'statusDate': value.status_date,
                                     'encounterID': value.encounter_id,
                                     'patientID': value.patient_id,
+                                    'patientName': value.patient_name,
                                     'selected': false
                                 })
                             });
@@ -49,8 +53,8 @@ app.controller('FutureAppointmentController', ['$rootScope', '$scope', '$timeout
 
         };
 
-        $scope.selectedIDs = [];
         $scope.cancelSelected = function () {
+            $scope.selectedIDs = [];
             angular.forEach($scope.encounterIDs, function (item) {
                 if (item.selected) {
                     $scope.selectedIDs.push({
@@ -62,6 +66,52 @@ app.controller('FutureAppointmentController', ['$rootScope', '$scope', '$timeout
             $scope.cancelFutureAppointments();
         };
 
+        $scope.rescheduleSelected = function () {
+            $scope.selectedIDs = [];
+            angular.forEach($scope.encounterIDs, function (item) {
+                if (item.selected) {
+                    $scope.selectedIDs.push({
+                        'consultant_id': item.consultantID,
+                        'status_date': item.statusDate,
+                        'encounter_id': item.encounterID,
+                        'patient_id': item.patientID,
+                    });
+                }
+            });
+            $scope.initRescheduleForm();
+        };
+
+        $scope.initRescheduleForm = function () {
+            var modalInstance = $modal.open({
+                templateUrl: 'tpl/modal_form/modal.patient_appointment_reschedule.html',
+                controller: "AppointmentRescheduleController",
+                resolve: {
+                    scope: function () {
+                        return $scope;
+                    },
+                }
+            });
+            modalInstance.data = $scope.selectedIDs;
+
+            modalInstance.result.then(function (selectedItem) {
+                $scope.selected = selectedItem;
+            }, function () {
+                $log.info('Modal dismissed at: ' + new Date());
+            });
+        }
+        
+
+        $scope.getTimeSlots = function (doctor_id, date) {
+            $http.post($rootScope.IRISOrgServiceUrl + '/doctorschedule/getdoctortimeschedule', {doctor_id: doctor_id, schedule_date: date})
+                    .success(function (response) {
+                        $scope.timeslots = [];
+                        angular.forEach(response.timerange, function (value) {
+                            $scope.timeslots.push(value.time);
+                        });
+                    }, function (x) {
+                        response = {success: false, message: 'Server Error'};
+                    });
+        }
 
         $scope.cancelFutureAppointments = function () {
             var conf = confirm('Are you sure to cancel these appointments ?');
@@ -79,6 +129,8 @@ app.controller('FutureAppointmentController', ['$rootScope', '$scope', '$timeout
                         function (response) {
                             $scope.successMessage = succ_msg;
                             $scope.loadbar('hide');
+                            $scope.encounterIDs = [];
+                            $scope.selectedIDs = [];
                             $scope.loadFutureAppointmentsList();
                         }
                 ).error(function (data, status) {
@@ -88,8 +140,13 @@ app.controller('FutureAppointmentController', ['$rootScope', '$scope', '$timeout
                     else
                         $scope.errorData = data.message;
                 });
+            } else {
+                $scope.encounterIDs = [];
+                $scope.selectedIDs = [];
             }
         }
+
+
 
 
 
