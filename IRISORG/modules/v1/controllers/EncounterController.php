@@ -396,4 +396,43 @@ class EncounterController extends ActiveController {
         return VBillingRecurring::find()->where(['encounter_id' => $encounter_id, 'tenant_id' => $tenant_id])->orderBy(['from_date' => SORT_ASC, 'charge_item' => SORT_ASC])->all();
     }
 
+    public function actionGetnonrecurringprocedures() {
+        $get = Yii::$app->getRequest()->get();
+
+        $data = [];
+        if (!empty($get) && $get['encounter_id']) {
+            $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+            $encounter_id = $get['encounter_id'];
+            $category_id = $get['category_id'];
+            $patient_id = $get['patient_id'];
+
+            $data = VBillingProcedures::find()->where([
+                'encounter_id' => $encounter_id, 
+                'tenant_id' => $tenant_id,
+                'category_id' => $category_id,
+                'patient_id' => $patient_id
+                    ])->one();
+        }
+        return $data;
+    }
+    
+    public function actionGetnonrecurringprofessionals() {
+        $get = Yii::$app->getRequest()->get();
+
+        $data = [];
+        if (!empty($get) && $get['encounter_id']) {
+            $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+            $encounter_id = $get['encounter_id'];
+            $category_id = $get['category_id'];
+            $patient_id = $get['patient_id'];
+
+            $data = VBillingProfessionals::find()->where([
+                'encounter_id' => $encounter_id, 
+                'tenant_id' => $tenant_id,
+                'category_id' => $category_id,
+                'patient_id' => $patient_id
+                    ])->one();
+        }
+        return $data;
+    }
 }

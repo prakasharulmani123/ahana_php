@@ -4,6 +4,7 @@ namespace common\models;
 
 use common\models\query\PatBillingExtraConcessionQuery;
 use yii\db\ActiveQuery;
+use yii\helpers\BaseInflector;
 
 /**
  * This is the model class for table "pat_billing_extra_concession".
@@ -49,22 +50,35 @@ class PatBillingExtraConcession extends RActiveRecord {
             [['extra_amount', 'concession_amount'], 'number'],
             [['created_at', 'modified_at', 'deleted_at', 'mode'], 'safe'],
             [['extra_amount', 'concession_amount'], 'validateAmount'],
+            [['concession_amount'], 'validateMaxAmount'],
         ];
     }
 
     public function validateAmount($attribute, $params) {
-        if ($this->mode == 'E') {
-            $attribute_name = 'extra_amount';
-            $amount = $this->extra_amount;
-            $name = 'Extra Amount';
-        } else {
-            $attribute_name = 'concession_amount';
-            $amount = $this->concession_amount;
-            $name = 'Concession Amount';
-        }
+        $attribute_name = ($this->mode == 'E') ? 'extra_amount' : 'concession_amount';
+        $name = BaseInflector::camel2words($attribute_name);
 
-        if (empty($amount) || $amount < 1 && $attribute_name == $attribute) {
+        if (empty($this->$attribute_name) || $this->$attribute_name < 1 && $attribute_name == $attribute) {
             $this->addError($attribute, "{$name} can not be empty");
+        }
+    }
+
+    public function validateMaxAmount($attribute, $params) {
+        $view = ($this->ec_type == 'P') ? 'common\models\VBillingProcedures' : 'common\models\VBillingProfessionals';
+        $nonRecurr = $view::find()->where([
+                    'encounter_id' => $this->encounter_id,
+                    'tenant_id' => $this->tenant_id,
+                    'patient_id' => $this->patient_id,
+                    'category_id' => $this->link_id
+                ])->one();
+
+        if (!empty($nonRecurr)) {
+            $attribute_name = ($this->mode == 'E') ? 'extra_amount' : 'concession_amount';
+            $name = BaseInflector::camel2words($attribute_name);
+
+            if ($this->$attribute_name > $nonRecurr->total_charge && $attribute_name == $attribute) {
+                $this->addError($attribute, "{$name} should be lesser than Charge Amount ({$nonRecurr->total_charge})");
+            }
         }
     }
 
