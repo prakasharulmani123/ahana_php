@@ -14,6 +14,11 @@ angular.module('app')
                 $scope.app = {
                     name: 'IRIS',
                     org_name: '',
+                    org_address: '',
+                    org_country: '',
+                    org_state: '',
+                    org_city: '',
+                    org_mobile: '',
                     version: '',
                     // for chart colors
                     color: {
@@ -208,6 +213,11 @@ angular.module('app')
                 $scope.loadUserCredentials = function () {
                     var user = AuthenticationService.getCurrentUser();
                     $scope.app.org_name = user.credentials.org;
+                    $scope.app.org_address = user.credentials.org_address;
+                    $scope.app.org_country = user.credentials.org_country;
+                    $scope.app.org_state = user.credentials.org_state;
+                    $scope.app.org_city = user.credentials.org_city;
+                    $scope.app.org_mobile = user.credentials.org_mobile;
                 };
 
                 $scope.checkAccess = function (url) {

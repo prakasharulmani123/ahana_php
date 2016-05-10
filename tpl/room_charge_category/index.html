@@ -13,7 +13,7 @@
                     &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
                 </button>
             </div>
-            <!--<input id="filter" type="text" class="form-control input-sm w-sm inline m-r" placeholder="Search"/>-->
+            <input id="filter" type="text" class="form-control input-sm w-sm inline m-r" placeholder="Search" ng-model="form_filter"/>
             <div class="col-sm-4 pull-right right">
                 <button check-access-button ng-click="$state.go('configuration.roomChargeCategoryCreate')" class="btn btn-sm btn-info pull-right">
                     <i class="fa fa-plus"></i> &nbsp; Add New Charge Category
@@ -22,7 +22,7 @@
         </div>
 
         <div>
-            <table data-page-size="5" data-filter="#filter" ui-jq="footable" class="table m-b-none footable-loaded footable default">
+            <table data-filter="#filter" data-filtering="true" ui-jq="footable" class="table m-b-none footable-loaded footable default">
                 <thead>
                     <tr>
                         <th align="left" valign="top" data-toggle="true">
@@ -32,10 +32,10 @@
                             </button>
                         </th>
                         <th>Charge Category name</th>
-                        <th data-hide="phone,tablet">Charge Category Description</th>
-                        <th data-name="Date Of Birth" data-hide="phone,tablet">Charge Category Code</th>
-                        <th data-hide="phone">Status</th>
-                        <th data-hide="phone">Action</th>
+                        <th>Charge Category Description</th>
+                        <th>Charge Category Code</th>
+                        <th>Status</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -75,10 +75,10 @@
                         </td>
                     </tr>
 
-                    <tr ng-repeat-end ng-show="expanded">
-                        <td>&nbsp;</td>
+                    <tr ng-repeat-end ng-show="expanded" data-value="{{row.charge_cat_name}} {{row.charge_cat_description}} {{row.charge_cat_code}}">
+                        <td data-value="{{row.charge_cat_name}} {{row.charge_cat_description}} {{row.charge_cat_code}}">&nbsp;</td>
 
-                        <td colspan="3">
+                        <td colspan="3" data-value="{{row.charge_cat_name}} {{row.charge_cat_description}} {{row.charge_cat_code}}">
                             <div class="row" ng-if="row.charge_cat_code == 'PRF'">
                                 <div class="col-sm-12">
                                     <ul>
@@ -131,7 +131,7 @@
                             </div>
                         </td>
 
-                        <td colspan="2"></td>
+                        <td colspan="2" data-value="{{row.charge_cat_name}} {{row.charge_cat_description}} {{row.charge_cat_code}}"></td>
                     </tr>
                 </tbody>
                 <tfoot class="hide-if-no-paging"></tfoot>

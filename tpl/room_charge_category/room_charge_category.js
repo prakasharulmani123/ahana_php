@@ -15,23 +15,36 @@ app.controller('RoomChargeCategoriesController', ['$rootScope', '$scope', '$time
                         $scope.isLoading = false;
 
                         var prof_charge = {
-                            "tenant_id": null, 
-                            "charge_cat_name": "Professional Charges", 
-                            "charge_cat_code": "PRF", 
+                            "tenant_id": null,
+                            "charge_cat_name": "Professional Charges",
+                            "charge_cat_code": "PRF",
                             "charge_cat_description": "Professional Charges",
                             "subcategories": [{
                                     "charge_subcat_name": "Users who have been assigned 'Care Provider' status in user registration will be listed as the sub-categories"
                                 }]
                         }
                         roomChargeCategorys.list = roomChargeCategorys.list.concat([prof_charge]);
-                        
+
                         $scope.rowCollection = roomChargeCategorys.list;
+                        $scope.form_filter = null;
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading roomChargeCategorys!";
                     });
 
         };
+
+        $scope.$watch('form_filter', function (newValue, oldValue) {
+            if (typeof newValue != 'undefined' && newValue != '' && newValue != null) {
+                var footableFilter = $('table').data('footable-filter');
+                footableFilter.clearFilter();
+                footableFilter.filter(newValue);
+            } 
+            
+            if(newValue == '') {
+                $scope.loadRoomChargeCategoriesList();
+            }
+        }, true);
 
         $scope.addSubRow = function (id) {
             angular.forEach($scope.rowCollection, function (parent) {

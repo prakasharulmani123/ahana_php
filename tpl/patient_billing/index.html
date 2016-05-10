@@ -325,7 +325,7 @@
                                 <td> {{row.headers}} </td>
                                 <td> {{row.trans_mode}} </td>
                                 <td>                             
-                                    <button class="btn btn-primary" ng-click="setVoucher(row)"><i class="fa fa-print"></i> Print</button>
+                                    <button class="btn btn-primary" ng-click="setVoucher(row, 'voucherPrint')"><i class="fa fa-print"></i> Print</button>
                                     <!--<button class="btn btn-primary" ng-print print-element-id="voucherPrint"><i class="fa fa-print"></i> Print</button>-->
                                 </td>
                                 <td align="right" ng-init="row_total = parseFloat(row.total_charge);
@@ -344,7 +344,7 @@
         </div>
     </div>
     
-    <div id='voucherPrint'>
+    <div id='voucherPrint' class="hide">
         <div ng-include="'tpl/patient_billing/_voucher_print.html'">
             {% include 'tpl/patient_billing/_voucher_print.html' %}
         </div>
