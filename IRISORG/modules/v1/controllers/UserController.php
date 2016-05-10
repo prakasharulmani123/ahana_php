@@ -133,7 +133,12 @@ class UserController extends ActiveController {
     public static function GetuserCredentials($tenant_id) {
         $tenant = CoTenant::findOne(['tenant_id' => $tenant_id]);
         $credentials = [
-            'org' => $tenant->tenant_name
+            'org' => $tenant->tenant_name,
+            'org_address' => $tenant->tenant_address,
+            'org_country' => $tenant->coMasterCountry->country_name,
+            'org_state' => $tenant->coMasterState->state_name,
+            'org_city' => $tenant->coMasterCity->city_name,
+            'org_mobile' => $tenant->tenant_mobile,
         ];
         return $credentials;
     }

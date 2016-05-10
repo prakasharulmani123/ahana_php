@@ -65,4 +65,18 @@ class VBillingAdvanceCharges extends \common\models\RActiveRecord
             'concession_amount' => 'Concession Amount',
         ];
     }
+    
+    public function fields() {
+        $extend = [
+            'total_charge_words' => function ($model) {
+                if(isset($model->total_charge)) {
+                    return Yii::$app->hepler->convert_number_to_words((int) $model->total_charge) . ' Rupees Only';
+                } else {
+                    return '-';
+                }
+            },
+        ];
+        $fields = array_merge(parent::fields(), $extend);
+        return $fields;
+    }
 }
