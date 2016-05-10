@@ -123,7 +123,7 @@
                             <td> {{row.to_date}} </td>
                             <td> {{row.duration}} </td>
                             <td align="right" ng-init="row_recurring_total = getTotalRecurringPrice(row);
-                                            recurr_billing.total.recurring_total = recurr_billing.total.recurring_total + row_recurring_total;
+                                                recurr_billing.total.recurring_total = recurr_billing.total.recurring_total + row_recurring_total;
                                 "> {{row_recurring_total| number:2}} </td>
                         </tr>
                         <tr>
@@ -199,7 +199,7 @@
                                 <td ng-init="billing.total.extra = billing.total.extra + parseFloat(row.extra_amount);
                                     "> {{row.extra_amount}} </td>
                                 <td align="right" ng-init="row_total = getTotalPrice(row);
-                                                billing.total.price = billing.total.price + row_total;
+                                                    billing.total.price = billing.total.price + row_total;
                                     "> {{row_total| number:2}} </td>
                             </tr>
                             <!-- Consultants -->
@@ -236,7 +236,7 @@
                                 <td ng-init="billing.total.extra = billing.total.extra + parseFloat(row.extra_amount);
                                     "> {{row.extra_amount}} </td>
                                 <td align="right" ng-init="row_total = getTotalPrice(row);
-                                                billing.total.price = billing.total.price + row_total;
+                                                    billing.total.price = billing.total.price + row_total;
                                     "> {{row_total| number:2}} </td>
                             </tr>
                             <!-- Other Charges -->
@@ -271,7 +271,7 @@
                                 <td> {{row.concession_amount}} </td>
                                 <td> {{row.extra_amount}} </td>
                                 <td align="right" ng-init="row_total = getTotalPrice(row);
-                                                billing.total.price = billing.total.price + row_total;
+                                                    billing.total.price = billing.total.price + row_total;
                                     "> {{row_total| number:2}} </td>
                             </tr>
                             <tr>
@@ -308,6 +308,7 @@
                                 <th>Category</th>
                                 <th>Headers</th>
                                 <th>Mode</th>
+                                <th>Print Bill</th>
                                 <th align="right" style="text-align:right;">Paid Amount</th>
                             </tr>
                         </thead>
@@ -323,8 +324,12 @@
                                 <td>{{row.category}} </td>
                                 <td> {{row.headers}} </td>
                                 <td> {{row.trans_mode}} </td>
+                                <td>                             
+                                    <button class="btn btn-primary" ng-click="setVoucher(row)"><i class="fa fa-print"></i> Print</button>
+                                    <!--<button class="btn btn-primary" ng-print print-element-id="voucherPrint"><i class="fa fa-print"></i> Print</button>-->
+                                </td>
                                 <td align="right" ng-init="row_total = parseFloat(row.total_charge);
-                                                billing.total.advance_charge = billing.total.advance_charge + row_total;
+                                                    billing.total.advance_charge = billing.total.advance_charge + row_total;
                                     "> {{row_total| number:2}} </td>
                             </tr>
                             <tr>
@@ -339,19 +344,25 @@
         </div>
     </div>
     
+    <div id='voucherPrint'>
+        <div ng-include="'tpl/patient_billing/_voucher_print.html'">
+            {% include 'tpl/patient_billing/_voucher_print.html' %}
+        </div>
+    </div>
+
     <div class="wrapper-md p-b" ng-show="encounters.length == 0">
-            <div ng-include="'tpl/blocks/alert.html'">
-                {% include 'tpl/blocks/alert.html' %}
-            </div>
-            <div class="panel panel-default m-b">
-                <div class="panel-heading font-bold"> <i class="fa fa-medkit"></i> Billing Details</div>
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            No Encounters Found
-                        </div>
+        <div ng-include="'tpl/blocks/alert.html'">
+            {% include 'tpl/blocks/alert.html' %}
+        </div>
+        <div class="panel panel-default m-b">
+            <div class="panel-heading font-bold"> <i class="fa fa-medkit"></i> Billing Details</div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        No Encounters Found
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 </div>

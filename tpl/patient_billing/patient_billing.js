@@ -205,23 +205,24 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
 
         $scope.moreOptions = function (key, type, pk_id, link_id, concession_amount, extra_amount, mode_id) {
             var row_id = '#enc_' + type + '_' + key;
-            $scope.more_li = {};
-            $scope.more_advance_li = {};
+            $scope.more_li = [];
+            $scope.more_advance_li = [];
 
             $('.enc_chk').not(row_id).attr('checked', false);
 
             if ($(row_id).is(':checked')) {
                 if (type == 'advance') {
-                    $scope.more_advance_li = [
-                        {href: 'patient.editPayment({id: "' + $state.params.id + '", payment_id: ' + pk_id + ', enc_id: "' + $scope.enc.selected.encounter_id + '"})', name: 'Modify Payment', mode: 'sref', i_class: 'fa fa-pencil'},
-                        {href: "deletePayment('" + $state.params.id + "', " + pk_id + ")", name: 'Delete Payment', mode: 'click', i_class: 'fa fa-trash'}
-                    ];
+                    $scope.more_li.push(
+                            [
+                                {href: 'patient.editPayment({id: "' + $state.params.id + '", payment_id: ' + pk_id + ', enc_id: "' + $scope.enc.selected.encounter_id + '"})', name: 'Modify Payment', mode: 'sref', i_class: 'fa fa-pencil'},
+                                {href: "deletePayment('" + $state.params.id + "', " + pk_id + ")", name: 'Delete Payment', mode: 'click', i_class: 'fa fa-trash'},
+                            ]);
                 }
 
                 if (type == 'other') {
-                    $scope.more_li = [
+                    $scope.more_li.push([
                         {href: 'patient.editOtherCharge({id: "' + $state.params.id + '", other_charge_id: ' + pk_id + '})', name: 'Modify Other Charge', mode: 'sref', i_class: 'fa fa-pencil'},
-                    ];
+                    ]);
                 } else if (type == 'procedure' || type == 'consultant') {
                     var ec_type = '';
                     if (type == 'procedure') {
@@ -232,18 +233,18 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
                     }
 
                     if (extra_amount == '0.00') {
-                        $scope.more_li = [
+                        $scope.more_li.push([
                             {href: 'patient.addExtraAmount({id: "' + $state.params.id + '", ec_type: "' + ec_type + '", link_id: "' + link_id + '", enc_id: "' + $scope.enc.selected.encounter_id + '"})', name: 'Add Extra Amount', mode: 'sref', i_class: 'fa fa-plus-square'},
-                        ];
+                        ]);
                     } else {
-                        $scope.more_li = [
+                        $scope.more_li.push([
                             {href: 'patient.editExtraAmount({id: "' + $state.params.id + '", ec_id: "' + pk_id + '", enc_id: "' + $scope.enc.selected.encounter_id + '"})', name: 'Edit Extra Amount', mode: 'sref', i_class: 'fa fa-pencil'},
-                        ];
+                        ]);
                     }
 
                     if (concession_amount == '0.00') {
                         $scope.more_li.push(
-                            {href: 'patient.addConcessionAmount({id: "' + $state.params.id + '", ec_type: "' + ec_type + '", link_id: "' + link_id + '", enc_id: "' + $scope.enc.selected.encounter_id + '"})', name: 'Add Concession Amount', mode: 'sref', i_class: 'fa fa-plus-square'}
+                                {href: 'patient.addConcessionAmount({id: "' + $state.params.id + '", ec_type: "' + ec_type + '", link_id: "' + link_id + '", enc_id: "' + $scope.enc.selected.encounter_id + '"})', name: 'Add Concession Amount', mode: 'sref', i_class: 'fa fa-plus-square'}
                         );
                     } else {
                         $scope.more_li.push(
@@ -377,10 +378,9 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
             return false;
         }
 
-    }]);
+        $scope.printVoucher = {};
+        $scope.setVoucher = function(row){
+            $scope.printVoucher = row;
+        }
 
-//app.filter('moment', function () {
-//    return function (dateString, format) {
-//        return moment(dateString).format(format);
-//    };
-//});
+    }]);
