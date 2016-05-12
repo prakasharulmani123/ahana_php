@@ -85,16 +85,16 @@
         <ul class="nav navbar-nav hidden-sm">
             <li><a href="#"> My Works </a></li>
             <li ui-sref-active="active">
-                <a ui-sref="patient.inPatients" href="#/patient/inPatients"> In-Patient </a>
+                <a ui-sref="patient.inPatients" check-access> In-Patient </a>
             </li>
             <li ui-sref-active="active">
-                <a ui-sref="patient.outPatients" href="#/patient/outPatients"> Out-Patients </a>
+                <a ui-sref="patient.outPatients" check-access> Out-Patients </a>
             </li>
             <li ui-sref-active="active">
-                <a ui-sref="pharmacy.purchaseCreate">Pharmacy </a>
+                <a ui-sref="pharmacy.purchaseCreate" check-access>Pharmacy </a>
             </li>
             <li ui-sref-active="active">
-                <a ui-sref="configuration.organization" href="#">Configuration</a>
+                <a ui-sref="configuration.organization" check-access>Configuration</a>
             </li>
         </ul>
         <!-- / link and dropdown --> 

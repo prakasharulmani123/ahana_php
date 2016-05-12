@@ -126,9 +126,13 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 url: '/organization',
                 templateUrl: 'tpl/organization/index.html',
                 resolve: {
-                    deps: ['uiLoad',
-                        function (uiLoad) {
-                            return uiLoad.load(['tpl/organization/org.js']);
+                     deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['xeditable', 'smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/organization/org.js');
+                                    }
+                            );
                         }]
 
                 }
@@ -2183,9 +2187,13 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 url: '/changePassword',
                 templateUrl: 'tpl/organization/change_password.html',
                 resolve: {
-                    deps: ['uiLoad',
-                        function (uiLoad) {
-                            return uiLoad.load(['tpl/organization/org.js']);
+                     deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['xeditable', 'smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/organization/org.js');
+                                    }
+                            );
                         }]
 
                 }
@@ -2301,14 +2309,14 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
     });
 
     //Check Access
-//    $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
-//        var stateName = toState.name;
-//        if (stateName) {
-//            $rootScope.commonService.CheckStateAccess(stateName, function (response) {
-//                if (!response) {
-//                    $state.go('configuration.organization');
-//                }
-//            });
-//        }
-//    });
+    $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+        var stateName = toState.name;
+        if (stateName) {
+            $rootScope.commonService.CheckStateAccess(stateName, function (response) {
+                if (!response) {
+                    $state.go('configuration.organization');
+                }
+            });
+        }
+    });
 }
