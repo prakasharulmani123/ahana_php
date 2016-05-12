@@ -1995,6 +1995,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                                         return $ocLazyLoad.load([
                                             'tpl/patient_billing/patient_billing.js',
                                             'tpl/modal_form/modal.password_auth.js',
+                                            'tpl/modal_form/modal.print_bill.js',
                                         ]);
                                     }
                             );

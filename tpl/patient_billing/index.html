@@ -17,6 +17,11 @@
             <div ng-include="'tpl/blocks/alert.html'">
                 {% include 'tpl/blocks/alert.html' %}
             </div>
+            
+            <button class="btn btn-default"  ng-click="openPrintBill('lg')"> 
+                <i class="fa fa-print"></i> Print Bill
+            </button>
+            
             <div class="panel panel-default m-b">
                 <div class="panel-heading font-bold"> <i class="fa fa-medkit"></i> Billing Details</div>
                 <div class="panel-body">
@@ -334,7 +339,7 @@
                             </tr>
                             <tr>
                                 <td align="center" valign="middle"></td>
-                                <td colspan="4">&nbsp;</td>
+                                <td colspan="5">&nbsp;</td>
                                 <td align="right"><strong>{{billing.total.advance_charge| number:2}}</strong></td>
                             </tr>
                         </tbody>

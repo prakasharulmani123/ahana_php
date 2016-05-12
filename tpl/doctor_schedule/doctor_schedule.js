@@ -50,11 +50,24 @@ app.controller('DoctorSchedulesController', ['$rootScope', '$scope', '$timeout',
 //                        $scope.displayedCollection = [].concat($scope.rowCollection);
                         $scope.displayedCollection = doctorSchedules;
                         $scope.isLoading = false;
+                        $scope.form_filter = null;
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading roomChargesubCategorys!";
                     });
         };
+
+        $scope.$watch('form_filter', function (newValue, oldValue) {
+            if (typeof newValue != 'undefined' && newValue != '' && newValue != null) {
+                var footableFilter = $('table').data('footable-filter');
+                footableFilter.clearFilter();
+                footableFilter.filter(newValue);
+            }
+
+            if (newValue == '') {
+                $scope.loadDoctorSchedulesList();
+            }
+        }, true);
 
         //For Form
         $scope.initForm = function () {

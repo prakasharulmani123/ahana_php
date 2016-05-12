@@ -1,199 +1,93 @@
-<style type="text/css">
-    @page
-    {
-        margin: 30px 10px 10px 10px;
-        width: 295px;
-        height: 842px;
-        font-family: "Helvetica Neue" , "Lucida Grande" , "Segoe UI" , Arial, Helvetica, Verdana, sans-serif;
-    }
-    body
-    {
-        margin: none;
-    }
-    .main_container
-    {
-        border-style: solid solid solid solid;
-        border-width: 2pt;
-        border-color: #460000;
-    }
-    .orgcss
-    {
-        color: #460000;
-        font-size: 20px;
-        font-weight: bold;
-    }
-    table tr td
-    {
-        padding-left: 10px;
-    }
-    .orgimg
-    {
-        border-style: none solid solid none;
-        border-width: 2pt;
-        border-color: #460000;
-    }
-    .orgtable
-    {
-        border-style: none none solid none;
-        border-width: 2pt;
-        border-color: #460000;
-    }
-    .orgtable2
-    {
-        border-style: none none solid solid;
-        border-width: 2pt;
-        border-color: #460000;
-    }
-    .SplCss
-    {
-        color: #460000;
-        font-size: 15px;
-        font-weight: normal;
-    }
-    .DateCss
-    {
-        color: #460000;
-        font-size: 15px;
-        font-weight: normal;
-        border-bottom: 1px dotted #460000;
-    }
-    .PatCss
-    {
-        color: #460000;
-        font-size: 16px;
-        font-weight: normal;
-    }
-    .PatCss tr td
-    {
-        padding: 4pt;
-    }
-    #divwatermark
-    {
-        height:v2h;
-        max-height:100%;
-        position: absolute;
-        z-index: 3; left: 250px; top: 150px; width: auto; height: auto; display: block;
-        font-size:50px;
-        color:#D9D6D6;filter: alpha(opacity=20); opacity: 0.2;
-    }
-    #divwatermark2
-    {
-        height:v2h;
-        max-height:100%;
-        position: absolute;
-        z-index: 3; left: 250px; top: 520px; width: auto; height: auto; display: block;
-        font-size:50px;
-        color:#D9D6D6;filter: alpha(opacity=20); opacity: 0.2
-    }
-</style>
-
-<div id="divwatermark">ORIGINAL</div>   
-<table class="main_container" cellpadding="0" cellspacing="0" width="100%">
+<table width="100%" cellspacing="0" cellpadding="0" class="voucher-table">
     <tbody>
         <tr>
-            <td rowspan="3" class="orgimg" width="10px">
-                <img src="../../img/AHANA-COLOUR.png" alt="AHANA HOSPITALS" height="60px" width="60x">
+            <td width="10px" class="orgimg" rowspan="2">
+                <img width="60" height="60" alt="AHANA HOSPITALS" src="css/images/ah-logo.png">
             </td>
             <td>
-                <span id="lblOrganisation" class="orgcss" style="display:inline-block;width:100%;">
-                    {{app.org_name}}
-                </span>
+                <span style="display:inline-block;width:100%;" class="orgcss" id="lblOrganisation">{{app.org_name}}</span>
             </td>
-            <td style="width: 25%" class="orgtable2">
-                <span id="lblvourcherno" class="SplCss" style="display:inline-block;width:100%;">
+            <td class="orgtable2" style="width: 25%">
+                <span style="display:inline-block;width:100%;" class="SplCss" id="lblvourcherno">
                     Voucher No : <b>{{printVoucher.payment_id}}</b>
                 </span>
             </td>
         </tr>
         <tr>
-            <td rowspan="2" class="orgtable">
-                <div id="lbladdress" class="SplCss">
-                    {{app.org_address}}<br>
-                    {{app.org_city}} {{app.org_state}} {{app.org_country}}<br>
-                    Ph : {{app.org_mobile}}
-                </div>
+            <td class="orgtable" rowspan="1"> 
+                {{app.org_address}}<br>
+                {{app.org_city}} {{app.org_state}} {{app.org_country}}<br>
+                Ph : {{app.org_mobile}}
             </td>
-            <td class="orgtable2">
-                <span id="lblDate" class="DateCss" style="display:inline-block;width:100%;">
+            <td class="orgtable2"><span style="display:inline-block;width:100%;" class="DateCss" id="lblDate">
                     <span class="SplCss">Date : </span>{{printVoucher.payment_date}}
-                </span>
             </td>
         </tr>
         <tr>
-            <td class="orgtable2">
-                <span id="lblroomNo" class="DateCss" style="display:inline-block;width:100%;">Room No</span>
-            </td>
-        </tr>
-        <tr>
-            <td>
-            </td>
-            <td>
-            </td>
-            <td class="orgtable2">
-            </td>
-        </tr>
-        <tr>
-            <td colspan="3">
-                <div id="divdata" class="SplCss" style="width: 100%">
-                    <p width="100%">
-                        Received with thanks from 
-                        <span class="DateCss">
-                            <b>{{app.patientDetail.patientFullname}} ({{app.patientDetail.patientAge}}y)</b> 
-                        </span>
-                        <br>
-                        <br>
-                        a sum of rupees <span class="DateCss"><b>{{printVoucher.total_charge}}</b> </span>
-                        <br>
-                        <br>
-                        <span class="DateCss"><b>{{printVoucher.total_charge_words}}</b> </span>on account of
-                        <br>
-                        <br>
-                        <span class="DateCss">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;
-                            &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;
-                            &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;
-                            &nbsp; &nbsp;
-                        </span>
-                    </p>
+            <td colspan="3" class="recived-details">
+                Received with thanks from 
+                <span> <strong>{{app.patientDetail.patientFullname}} ({{app.patientDetail.patientAge}}y)</strong> </span> 
+                <br />
+                <br />
+                a sum of rupees <span><strong>{{printVoucher.total_charge}}</strong></span> 
+                <br />
+                <br />
+                <span><strong>{{printVoucher.total_charge_words}}</strong></span> on account of 
+                <br />
+                <br />
+                <br />
+                <div class="amount">{{printVoucher.total_charge}}</div>
+                <div class="sign">
+                    For {{app.org_name}} 
+                    <br/>
+                    <br/>
+                    <span> Authorised signatory</span> 
                 </div>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="3">
-                <table width="100%">
-                    <tbody>
-                        <tr>
-                            <td>
-                                <table class="main_container">
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                <span class="Rupees">Rs.</span>
-                                            </td>
-                                            <td width="100%">
-                                                <span id="lbltotal_charge" class="DateCss" style="display:inline-block;width:100%;">
-                                                    {{printVoucher.total_charge}}
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </td>
-                            <td style="text-align: right;">
-                                <span id="lblorganisation2" class="orgcss">
-                                    <span class="SplCss">For</span>&nbsp;{{app.org_name}}
-                                </span>
-                                <br>
-                                <br>
-                                <br>
-                                <span class="rupees">Authorised signatory</span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <br />
             </td>
         </tr>
     </tbody>
 </table>
-<br>
-<br>
-<span id="lblprintby" style="display:inline-block;width:100%;"></span>
+
+<table width="100%" cellspacing="0" cellpadding="0" class="voucher-table">
+    <tbody>
+        <tr>
+            <td width="10px" class="orgimg" rowspan="2">
+                <img width="60" height="60" alt="AHANA HOSPITALS" src="css/images/ah-logo.png">
+            </td>
+            <td>
+                <span style="display:inline-block;width:100%;" class="orgcss" id="lblOrganisation">{{app.org_name}}</span>
+            </td>
+            <td class="orgtable2" style="width: 25%">
+                <span style="display:inline-block;width:100%;" class="SplCss" id="lblvourcherno">
+                    Voucher No : <b>{{printVoucher.payment_id}}</b>
+                </span>
+            </td>
+        </tr>
+        <tr>
+            <td class="orgtable" rowspan="1"> 
+                {{app.org_address}}<br>
+                {{app.org_city}} {{app.org_state}} {{app.org_country}}<br>
+                Ph : {{app.org_mobile}}
+            </td>
+            <td class="orgtable2"><span style="display:inline-block;width:100%;" class="DateCss" id="lblDate">
+                    <span class="SplCss">Date : </span>{{printVoucher.payment_date}}
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3" class="recived-details">Received with thanks from <span> <strong>{{app.patientDetail.patientFullname}} ({{app.patientDetail.patientAge}}y)</strong> </span> <br />
+                <br />
+                a sum of rupees <span><strong>{{printVoucher.total_charge}}</strong></span> <br />
+                <br />
+                <span><strong>{{printVoucher.total_charge_words}}</strong></span> on account of <br />
+                <br />
+                <br />
+                <div class="amount">{{printVoucher.total_charge}}</div>
+                <div class="sign">For {{app.org_name}} <br/>
+                    <br/>
+                    <span> Authorised signatory</span> </div>
+                <br />
+            </td>
+        </tr>
+    </tbody>
+</table>

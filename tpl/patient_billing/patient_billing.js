@@ -385,9 +385,32 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
                 var innerContents = document.getElementById(id).innerHTML;
                 var popupWinindow = window.open('', '_blank', 'width=600,height=700,scrollbars=no,menubar=no,toolbar=no,location=no,status=no,titlebar=no');
                 popupWinindow.document.open();
-                popupWinindow.document.write('<html><head><link rel="stylesheet" type="text/css" href="style.css" /></head><body onload="window.print()">' + innerContents + '</html>');
+                popupWinindow.document.write('<html><head><link href="css/print.css" rel="stylesheet" type="text/css" /></head><body onload="window.print()">' + innerContents + '</html>');
                 popupWinindow.document.close();
             }, 1000)
+        }
+        
+        $scope.openPrintBill = function (size) {
+            var modalInstance = $modal.open({
+                templateUrl: 'tpl/modal_form/modal.print_bill.html',
+                controller: "PrintBillController",
+                size: size,
+                resolve: {
+                    scope: function () {
+                        return $scope;
+                    },
+                }
+            });
+            
+//            modalInstance.data = {
+//                enc: $scope.enc,
+//            };
+
+            modalInstance.result.then(function (selectedItem) {
+                $scope.selected = selectedItem;
+            }, function () {
+                $log.info('Modal dismissed at: ' + new Date());
+            });
         }
 
     }]);
