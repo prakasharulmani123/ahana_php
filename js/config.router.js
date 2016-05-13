@@ -8,8 +8,10 @@ angular.module('app')
         .run(run)
         .config(config);
 
-config.$inject = ['$stateProvider', '$urlRouterProvider', '$httpProvider', 'ivhTreeviewOptionsProvider', 'JQ_CONFIG'];
-function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOptionsProvider, JQ_CONFIG) {
+config.$inject = ['$stateProvider', '$urlRouterProvider', '$httpProvider', 'ivhTreeviewOptionsProvider', 'JQ_CONFIG', 'hotkeysProvider'];
+function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOptionsProvider, JQ_CONFIG, hotkeysProvider) {
+
+    hotkeysProvider.template = '<div class="my-own-cheatsheet">Hai</div>';
 
     ivhTreeviewOptionsProvider.set({
         twistieExpandedTpl: '<i class="fa fa-caret-right"></i>',
@@ -18,7 +20,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
     });
 
 //    var newBaseUrl = "";
-//    
+//
 //    if (window.location.hostname == "localhost") {
 //        newBaseUrl = "http://hms.ark/api/IRISORG/web/v1";
 //    } else {
@@ -2326,6 +2328,6 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
                 });
             }
         }
-            
+
     });
 }

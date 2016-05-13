@@ -35,6 +35,7 @@
   "dependencies": {
     "angular-bootstrap-datetimepicker": "^1.0.0",
     "angular-date-time-input": "^1.0.0",
+    "angular-hotkeys": "^1.7.0",
     "moment": "^2.11.1"
   },
   "devDependencies": {

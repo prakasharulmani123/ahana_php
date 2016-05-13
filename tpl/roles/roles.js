@@ -1,5 +1,17 @@
 app.controller('RolesController', ['$rootScope', '$scope', '$timeout', '$http', '$state', function ($rootScope, $scope, $timeout, $http, $state) {
 
+
+        $scope.$on('HK_CREATE', function (e) {
+            $state.go('configuration.role_create');
+        });
+        $scope.$on('HK_SAVE', function (e) {
+            submitted = true; $scope.saveForm($scope.data.formrole);
+            e.preventDefault();
+        });
+        $scope.$on('HK_SEARCH', function (e) {
+            $('#filter').focus();
+        });
+
         //Index Page
         $scope.loadRolesList = function () {
             $scope.isLoading = true;

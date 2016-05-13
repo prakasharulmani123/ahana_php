@@ -19,6 +19,7 @@
         <link rel="stylesheet" href="bower_components/angularjs-toaster/toaster.css" type="text/css" />
         <link rel="stylesheet" href="css/colorpicker.css" type="text/css" />
         <link rel="stylesheet" href="css/jquery.timepicker.css" type="text/css" />
+        <link rel="stylesheet" href="node_modules/angular-hotkeys/build/hotkeys.css" type="text/css" />
         <link rel="stylesheet" href="css/custom.css" type="text/css" />
         <link rel="stylesheet" href="node_modules/angular-bootstrap-datetimepicker/src/css/datetimepicker.css"/>
         <!-- jQuery -->
@@ -26,7 +27,7 @@
         <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
         <script src="js/jquery.timepicker.min.js"></script>
         <script src="js/slidebars.js"></script>
-        
+
         <link rel="stylesheet" href="css/print.css" type="text/css" />
     </head>
     <body ng-controller="AppCtrl" prevent-right-click>
@@ -43,17 +44,17 @@
                     <div class="clearfix"></div>
                     <h2> {{app.name}} ({{app.org_name}})</h2>
                     <img src="img/user-thumb.jpg"  alt="" class="thumb-img">
-                    
-                    <p> 
-                        <a href="" ui-sref="configuration.changePassword" class="custom-close-sidebar">  
-                            <i class="fa fa-lock"></i> Change Password  
-                        </a> 
+
+                    <p>
+                        <a href="" ui-sref="configuration.changePassword" class="custom-close-sidebar">
+                            <i class="fa fa-lock"></i> Change Password
+                        </a>
                     </p>
-                    
-                    <p> 
-                        <a href="" ui-sref="configuration.settings" class="custom-close-sidebar">  
+
+                    <p>
+                        <a href="" ui-sref="configuration.settings" class="custom-close-sidebar">
                             <i class="fa fa-cog"></i> Settings
-                        </a> 
+                        </a>
                     </p>
                     <p> <a href="" ng-click="logout();">  <i class="fa fa-sign-out"></i> Logout  </a> </p>
                 </div>
@@ -109,9 +110,9 @@
                             <div class="cell">
                                 <div class="cell-inner padder">
                                     <!-- vitals list -->
-                                    <div ng-repeat="vital in child.vitals" class="vitals-cont"> 
+                                    <div ng-repeat="vital in child.vitals" class="vitals-cont">
                                         <div class="vitals-cont-date"> <span class="label bg-success ng-binding ng-scope"> {{vital.vital_time| moment:'DD/MM/YYYY hh:mm A'}}</span></div>
-                                        <div class="vitals-table"> 
+                                        <div class="vitals-table">
                                             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table table-bordered" >
                                                 <tr>
                                                     <th>Pulse</th>
@@ -141,7 +142,7 @@
             </div>
 
             <!-- Prescription Favorites -->
-            <div id="fav" class="sb-slidebar-content">  
+            <div id="fav" class="sb-slidebar-content">
                 <div class="app-aside-right pos-fix no-padder w-auto-xs bg-white b-l animated fadeInRight hide ng-scope show">
                     <div class="vbox">
                         <div class="wrapper b-b b-t b-light m-b right-heading">
@@ -158,8 +159,8 @@
                                         <li class="list-group-item" ng-repeat="favourite in child.favourites">
                                             <a class="btn btn-default btn-xs active" ui-toggle-class="" href="#" ng-click="toggleFavourite(favourite.pres_fav_id)">
                                                 <i class="fa fa-star-o text-muted text"></i>
-                                                <i class="fa fa-star text-danger text-active"></i> 
-                                            </a> &nbsp;   
+                                                <i class="fa fa-star text-danger text-active"></i>
+                                            </a> &nbsp;
                                             <a href="javascript:void(0)" ng-click="addFavouritePrescForm(favourite)">
                                                 {{favourite.product_name}}
                                             </a>
@@ -248,6 +249,7 @@
         <script type="text/javascript" src="node_modules/angular-bootstrap-datetimepicker/src/js/datetimepicker.js"></script>
         <script type="text/javascript" src="node_modules/angular-bootstrap-datetimepicker/src/js/datetimepicker.templates.js"></script>
         <script type="text/javascript" src="node_modules/angular-date-time-input/src/dateTimeInput.js"></script>
+        <script type="text/javascript" src="node_modules/angular-hotkeys/build/hotkeys.js"></script>
         <!--<script src="js/directives/extra.js"></script>-->
         <!--<script src="js/angular-local-storage.js"></script>-->
         <!-- Lazy loading -->

@@ -3,8 +3,8 @@
 /* Controllers */
 
 angular.module('app')
-        .controller('AppCtrl', ['$scope', '$localStorage', '$window', '$rootScope', '$state', '$cookieStore', '$http', 'CommonService', '$timeout', 'AuthenticationService', 'toaster',
-            function ($scope, $localStorage, $window, $rootScope, $state, $cookieStore, $http, CommonService, $timeout, AuthenticationService, toaster) {
+        .controller('AppCtrl', ['$scope', '$localStorage', '$window', '$rootScope', '$state', '$cookieStore', '$http', 'CommonService', '$timeout', 'AuthenticationService', 'toaster', 'hotkeys',
+            function ($scope, $localStorage, $window, $rootScope, $state, $cookieStore, $http, CommonService, $timeout, AuthenticationService, toaster, hotkeys) {
                 // add 'ie' classes to html
                 var isIE = !!navigator.userAgent.match(/MSIE/i);
                 isIE && angular.element($window.document.body).addClass('ie');
@@ -91,7 +91,7 @@ angular.module('app')
 //                    return Boolean($rootScope.globals.currentUser);
 //                };
 
-//               
+//
                 $scope.logout = function () {
                     $http.post($rootScope.IRISOrgServiceUrl + '/user/logout')
                             .success(function (response) {
@@ -142,7 +142,8 @@ angular.module('app')
                         $('.save-btn').attr('disabled', true).html("<i class='fa fa-spin fa-spinner'></i> Please Wait...");
                     } else if (mode == 'hide') {
                         $('.butterbar').removeClass('active').addClass('hide');
-                        $('.save-btn').attr('disabled', false).html("Save");;
+                        $('.save-btn').attr('disabled', false).html("Save");
+                        ;
                     }
                 }
 
@@ -236,7 +237,7 @@ angular.module('app')
                     }
                 }, true);
 
-                //Avoid pagination problem, when come from other pages. 
+                //Avoid pagination problem, when come from other pages.
                 //Used in all the controller index function.
                 $scope.footable_redraw = function () {
                     $timeout(function () {
@@ -295,12 +296,56 @@ angular.module('app')
                             }
                     )
                 }
-                
+
                 //Pass fav to patient_prescription.js
                 $scope.addFavouritePrescForm = function (fav) {
                     $scope.$broadcast('presc_fav', fav);
                 }
 
+                console.log(hotkeys);
+                hotkeys.add({
+                    combo: 'ctrl+n',
+                    description: 'Create',
+                    callback: function (event) {
+                        $scope.$broadcast('HK_CREATE');
+                        event.preventDefault();
+                    }
+                });
+
+                hotkeys.add({
+                    combo: 'ctrl+s',
+                    description: 'Save',
+                    allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
+                    callback: function (event) {
+                        $scope.$broadcast('HK_SAVE');
+                        event.preventDefault();
+                    }
+                });
+
+                hotkeys.add({
+                    combo: 's',
+                    description: 'Search',
+                    callback: function (event) {
+                        $scope.$broadcast('HK_SEARCH');
+                        event.preventDefault();
+                    }
+                });
+
+                hotkeys.add({
+                    combo: 'ctrl+left',
+                    description: 'Back',
+                    callback: function () {
+                        $window.history.back();
+                    }
+                });
+
+                hotkeys.add({
+                    combo: 'ctrl+right',
+                    description: 'Forward',
+                    callback: function () {
+                        $window.history.forward();
+                    }
+                });
             }]);
 
 angular.module('app').filter('moment', function () {
