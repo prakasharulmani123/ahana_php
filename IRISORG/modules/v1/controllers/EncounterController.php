@@ -310,10 +310,27 @@ class EncounterController extends ActiveController {
             $encounter_id = $get['encounter_id'];
             $tenant_id = Yii::$app->user->identity->logged_tenant_id;
 
-            $data['Procedure'] = VBillingProcedures::find()->where(['encounter_id' => $encounter_id, 'tenant_id' => $tenant_id])->all();
-            $data['Consults'] = VBillingProfessionals::find()->where(['encounter_id' => $encounter_id, 'tenant_id' => $tenant_id])->all();
-            $data['OtherCharge'] = VBillingOtherCharges::find()->where(['encounter_id' => $encounter_id, 'tenant_id' => $tenant_id])->all();
-            $data['Advance'] = VBillingAdvanceCharges::find()->where(['encounter_id' => $encounter_id, 'tenant_id' => $tenant_id])->all();
+            $procedure = VBillingProcedures::find()->where(['encounter_id' => $encounter_id, 'tenant_id' => $tenant_id])->all();
+            $consults = VBillingProfessionals::find()->where(['encounter_id' => $encounter_id, 'tenant_id' => $tenant_id])->all();
+            $otherCharge = VBillingOtherCharges::find()->where(['encounter_id' => $encounter_id, 'tenant_id' => $tenant_id])->all();
+            $advance = VBillingAdvanceCharges::find()->where(['encounter_id' => $encounter_id, 'tenant_id' => $tenant_id])->all();
+            
+            $data = array_merge($data,
+                    $this->_addNetAmount($procedure, 'Procedure', 'total_charge'),
+                    $this->_addNetAmount($consults, 'Consults', 'total_charge'),
+                    $this->_addNetAmount($otherCharge, 'OtherCharge', 'total_charge'),
+                    $this->_addNetAmount($advance, 'Advance', 'total_charge')
+                    );
+        }
+        return $data;
+    }
+    
+    private function _addNetAmount($bills, $name, $charge_column){
+        $data[$name] = [];
+        foreach ($bills as $key => $bill) {
+            $prev_amount = $key == 0 ? 0 : $bills[$key - 1]->$charge_column;
+            $data[$name][$key] = $bill->attributes;
+            $data[$name][$key]['net_amount'] = $prev_amount + $bill->$charge_column;
         }
         return $data;
     }
@@ -326,10 +343,12 @@ class EncounterController extends ActiveController {
             $encounter_id = $get['encounter_id'];
             $tenant_id = Yii::$app->user->identity->logged_tenant_id;
 
-            $data['recurring'] = $this->_getBillingRecurring($encounter_id, $tenant_id);
+            $recurrings = $this->_getBillingRecurring($encounter_id, $tenant_id);
+            $data = $this->_addNetAmount($recurrings, 'recurring', 'charge_amount');
         }
         return $data;
     }
+    
 
     public function actionGetroomchargehistory() {
         $get = Yii::$app->getRequest()->get();
