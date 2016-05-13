@@ -245,7 +245,7 @@ class EncounterController extends ActiveController {
                     ->orderBy(['encounter_id' => SORT_DESC])
                     ->one();
 
-            if ((empty($model->patAdmissionDischarge) && empty($model->patAdmissionCancel) && $model->encounter_type == 'IP') || $model->status == '1') {
+            if (!empty($model) && ((empty($model->patAdmissionDischarge) && empty($model->patAdmissionCancel) && $model->encounter_type == 'IP') || $model->status == '1')) {
                 return ['success' => true, 'model' => $model];
             } else {
                 return ['success' => false];
