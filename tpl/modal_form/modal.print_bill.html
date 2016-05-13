@@ -4,25 +4,39 @@
     </div>
 
     <div class="wrapper-md">
-        <form name="myForm">
-            <input type="radio" ng-model="bill_type" value="bill_summary"> Bill Summary &nbsp;
-            <input type="radio" ng-model="bill_type" value="detailed_bill"> Detailed Bill<br/>
-        </form>
+        <div class="panel panel-info" draggable="true">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <form name="myForm">
+                            <input type="radio" ng-model="bill_type" value="bill_summary"> <b>Bill Summary</b> &nbsp;
+                            <input type="radio" ng-model="bill_type" value="detailed_bill"> <b>Detailed Bill</b><br/>
+                        </form>
+                    </div>
+                    <div class="col-sm-4">
+                        <button ng-click="printBill()" class="btn btn-default pull-right"> 
+                            <i class="fa fa-print"></i> Print Bill
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        <div ng-show="isShown('bill_summary')">
+
+        <div ng-show="isShown('bill_summary')" id="bill_summary">
             <div class="bill-cont">
                 <div class="bill-header"> 
                     <div id="logo"> <h1> {{app.org_name}} </h1> </div>
                     <div class="bill-heading"> <h1>BILLING SUMMARY</h1> </div>
                     <div id="company">
                         <div id="invoice">
-                            <h1>Bill No : <span> Dft0006</span></h1>
-                            <div class="date">Report Genarated On : 01/06/2014</div>
+                            <h1>Bill No : <span> {{enc.selected.bill_no}} </span></h1>
+                            <div class="date">Report Genarated On : {{report_generated_date}}</div>
                         </div>
                     </div>
                 </div>
                 <div class="clearfix"></div>
-                
+
                 <main>
                     <div class="clearfix" id="details">
                         <div id="patient-detail">
@@ -93,10 +107,12 @@
                         </div>
                     </div>
 
-                    <div class="bill-heading2"> <h2>	
+                    <div class="bill-heading2"> 
+                        <h2>	
                             Bill Summary:
                         </h2> 
                     </div>
+
                     <table cellspacing="0" cellpadding="0" border="0" width="100%">
                         <thead>
                             <tr>
@@ -109,12 +125,12 @@
                             <tr>
 
                                 <td class="desc">Recurring Charges</td>
-                                <td class="unit">{{recurr_billing.total.recurring_total | number:2}}</td>
+                                <td class="unit">{{recurr_billing.total.recurring_total| number:2}}</td>
                             </tr>
                             <tr>
 
                                 <td class="desc">Non-recurring charges</td>
-                                <td class="unit">{{billing.total.price | number:2}}</td>
+                                <td class="unit">{{billing.total.price| number:2}}</td>
                             </tr>
                         </tbody>
                         <tfoot>
@@ -132,7 +148,7 @@
                             <tr>
                                 <td>Discount :</td>
                                 <td>
-                                    {{enc.selected.concession_amount | number:2}}
+                                    {{enc.selected.concession_amount| number:2}}
                                 </td>
                             </tr>
                             <tr>
@@ -141,20 +157,261 @@
                             </tr>
                         </tfoot>
                     </table>
+
                     <div id="notices">
                         <div></div>
                         <div class="notice">
                             <span id="ReportViewer_ReportViewer3">
-                                No:11, Subburaman st., Gandhi Nagar, Madurai- 625020. Ph :+91 452 253 3444   Fax : +91 452 253 3111
+                                {{app.org_address}}
+                                {{app.org_city}} 
+                                {{app.org_state}} 
+                                {{app.org_country}}. 
+                                Ph :{{app.org_mobile}}
                             </span>
                         </div>
                     </div>
                 </main>
             </div>
         </div>
-        
-        <div ng-show="isShown('detailed_bill')">
-            sfdsdf
+
+        <div ng-show="isShown('detailed_bill')" id="detailed_bill">
+            <div class="bill-cont">
+                <div class="bill-header"> 
+                    <div id="logo"> <h1> {{app.org_name}} </h1> </div>
+                    <div class="bill-heading"> <h1>DETAILED BILLING SUMMARY</h1> </div>
+                    <div id="company">
+                        <div id="invoice">
+                            <h1>Bill No : <span> {{enc.selected.bill_no}} </span></h1>
+                            <div class="date">Report Genarated On : {{report_generated_date}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+
+                <main>
+                    <div class="clearfix" id="details">
+                        <div id="patient-detail">
+                            <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td colspan="2"> <h2>Patient Detail:</h2></td>
+                                </tr>
+                                <tr>
+                                    <td align="left" valign="top">
+                                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                            <tr>
+                                                <td><strong>Hospital No</strong></td>
+                                                <td>:</td>
+                                                <td>22040</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Name</span></strong></td>
+                                                <td>:</td>
+                                                <td>{{app.patientDetail.patientFullname}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Age</strong></td>
+                                                <td>:</td>
+                                                <td>{{app.patientDetail.patientAge}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Sex</strong></td>
+                                                <td>:</td>
+                                                <td>{{app.patientDetail.patientSex}}</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                            <tr>
+                                                <td><strong>Admission Date</strong></td>
+                                                <td>:</td>
+                                                <td>{{enc.selected.encounter_date| moment:'DD/MM/YYYY - hh:mm A'}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Discharge Date</span></strong></td>
+                                                <td>:</td>
+                                                <td>{{enc.selected.discharge_date| moment:'DD/MM/YYYY - hh:mm A'}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Ward No</strong></td>
+                                                <td>:</td>
+                                                <td>{{app.patientDetail.patientCurrentRoom}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>No.of Days</strong></td>
+                                                <td>:</td>
+                                                <td>{{enc.selected.stay_duration}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <strong>
+                                                        <span id="ReportViewer_ReportViewer">
+                                                            Consultant Name
+                                                        </span>
+                                                    </strong>
+                                                </td>
+                                                <td>:</td>
+                                                <td>
+                                                    <span id="ReportViewer_ReportViewer2">
+                                                        {{app.patientDetail.patientLastConsultantName}}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="bill-heading2">
+                        <h2> Bill Summary: </h2>
+                    </div>
+                    <table cellspacing="0" cellpadding="0" border="0"  class="detail-table">
+                        <thead>
+                            <tr>
+                                <th class="desc unit  unit2"><strong>Date</strong></th>
+                                <th class="desc"><strong>DESCRIPTION </strong></th>
+                                <th class="unit"><strong>Debit</strong></th>
+                                <th class="qty"><strong>Credit</strong></th>
+                                <th class="total"><strong>Net TOTAL</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="desc unit  unit2">12-May-16</td>
+                                <td class="desc"> NURSING CHARGES(100*12)(Non AC)</td>
+                                <td align="center" class="unit">1200</td>
+                                <td class="qty">&nbsp;</td>
+                                <td align="center" class="total">1200</td>
+                            </tr>
+                            <tr>
+                                <td class="desc unit  unit2">12-May-16</td>
+                                <td class="desc"> DMO(200*12)(Non AC)</td>
+                                <td align="center" class="unit">2400</td>
+                                <td class="qty">&nbsp;</td>
+                                <td align="center" class="total">3600</td>
+                            </tr>
+                            <tr>
+                                <td class="desc unit  unit2">12-May-16</td>
+                                <td class="desc"> Service Charge(250*12)(Non AC)</td>
+                                <td align="center" class="unit">3000</td>
+                                <td class="qty">&nbsp;</td>
+                                <td align="center" class="total">6600</td>
+                            </tr>
+                            <tr>
+                                <td class="desc unit  unit2">12-May-16</td>
+                                <td class="desc"> ROOM RENT(1150*12)(Non AC)</td>
+                                <td align="center" class="unit">13800 </td>
+                                <td class="qty">&nbsp;</td>
+                                <td align="center" class="total">20400</td>
+                            </tr>
+                            <tr class="bn">
+                                <td class="desc">&nbsp;</td>
+                                <td align="right" class="unit "><strong>Sub Total</strong></td>
+                                <td align="center" class="unit bb"><strong>120400</strong></td>
+                                <td class="qty">&nbsp;</td>
+                                <td class="total">20400</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                        </tfoot>
+                    </table>
+                    <div class="bill-heading2">
+                        <h2> Professional Charges: </h2>
+                    </div>
+                    <table cellspacing="0" cellpadding="0" border="0"  class="detail-table">
+                        <thead>
+                            <tr>
+                                <th class="desc unit  unit2"><strong>Date</strong></th>
+                                <th class="desc"><strong>DESCRIPTION </strong></th>
+                                <th class="unit"><strong>Debit</strong></th>
+                                <th class="qty"><strong>Credit</strong></th>
+                                <th class="total"><strong>Net TOTAL</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="desc unit  unit2">12-May-16</td>
+                                <td class="desc">Professional Charges<br />
+                                    (DMO)</td>
+                                <td align="center" class="unit">FREE</td>
+                                <td class="qty">&nbsp;</td>
+                                <td align="center" class="total">20400</td>
+                            </tr>
+                            <tr>
+                                <td class="desc unit  unit2">12-May-16</td>
+                                <td class="desc"> Professional Charges<br/>
+                                    (Dr.C.Ramasubramanian M.D., D.P.M.,) </td>
+                                <td align="center" class="unit">4500</td>
+                                <td class="qty">&nbsp;</td>
+                                <td align="center" class="total">24900</td>
+                            </tr>
+                            <tr class="bn">
+                                <td class="desc">&nbsp;</td>
+                                <td align="right" class="unit"><strong>Sub Total</strong></td>
+                                <td align="center" class="unit bb"><strong>120400</strong></td>
+                                <td class="qty">&nbsp;</td>
+                                <td class="total">20400</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                        </tfoot>
+                    </table>
+                    <div class="bill-heading2">
+                        <h2> Advance: </h2>
+                    </div>
+                    <table cellspacing="0" cellpadding="0" border="0"  class="detail-table">
+                        <thead>
+                            <tr>
+                                <th class="desc unit  unit2"><strong>Date</strong></th>
+                                <th class="desc"><strong>DESCRIPTION </strong></th>
+                                <th class="unit"><strong>Debit</strong></th>
+                                <th class="qty"><strong>Credit</strong></th>
+                                <th class="total"><strong>Net TOTAL</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="desc unit  unit2">12-May-16</td>
+                                <td class="desc">Payment(90412)</td>
+                                <td align="center" class="unit">10000</td>
+                                <td class="qty">&nbsp;</td>
+                                <td align="center" class="total">16250</td>
+                            </tr>
+                            <tr>
+                                <td class="desc unit  unit2">12-May-16</td>
+                                <td class="desc"> 	
+                                    Payment(91062) </td>
+                                <td align="center" class="unit">10000</td>
+                                <td class="qty">&nbsp;</td>
+                                <td align="center" class="total">6250</td>
+                            </tr>
+                            <tr class="bn">
+                                <td class="desc">&nbsp;</td>
+                                <td align="right" class="unit"><strong>Grand Total</strong></td>
+                                <td align="center" class="unit bb"><strong>26249</strong></td>
+                                <td class="qty unit bb"><strong>20000</strong></td>
+                                <td class="total">20400</td>
+                            </tr>
+                            <tr class="bn">
+                                <td class="desc">&nbsp;</td>
+                                <td align="right" class="unit"><strong> Net Total</strong></td>
+                                <td align="center" class="unit bb"><strong>26249</strong></td>
+                                <td class="qty unit bb">&nbsp;</td>
+                                <td class="total">20400</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                        </tfoot>
+                    </table>
+
+                    <div id="notices">
+                        <div></div>
+                        <div class="notice"><span id="ReportViewer_ReportViewer3">No:11, Subburaman st., Gandhi Nagar, Madurai- 625020. Ph :+91 452 253 3444   Fax : +91 452 253 3111</span></div>
+                    </div>
+                </main>
+            </div>
         </div>
     </div>
 </div>

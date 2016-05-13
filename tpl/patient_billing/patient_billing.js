@@ -389,7 +389,7 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
                 popupWinindow.document.close();
             }, 1000)
         }
-        
+
         $scope.openPrintBill = function (size) {
             var modalInstance = $modal.open({
                 templateUrl: 'tpl/modal_form/modal.print_bill.html',
@@ -401,7 +401,7 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
                     },
                 }
             });
-            
+
 //            modalInstance.data = {
 //                enc: $scope.enc,
 //            };
@@ -412,5 +412,7 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
                 $log.info('Modal dismissed at: ' + new Date());
             });
         }
+
+        
 
     }]);
