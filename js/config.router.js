@@ -2314,13 +2314,18 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
 
     //Check Access
     $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
-        var stateName = toState.name;
-        if (stateName) {
-            $rootScope.commonService.CheckStateAccess(stateName, function (response) {
-                if (!response) {
-                    $state.go('configuration.organization');
-                }
-            });
+        var currentUser = AuthenticationService.getCurrentUser();
+        var loggedIn = Boolean(currentUser);
+        if (loggedIn) {
+            var stateName = toState.name;
+            if (stateName) {
+                $rootScope.commonService.CheckStateAccess(stateName, function (response) {
+                    if (!response) {
+                        $state.go('configuration.organization');
+                    }
+                });
+            }
         }
+            
     });
 }

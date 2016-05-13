@@ -1,41 +1,4 @@
-<!-- list -->
-<!--<ul class="nav">
-    <li ng-repeat="menu in navigationMenu"> 
-        <a href class="auto"> 
-            <span class="pull-right text-muted"> 
-                <i class="fa fa-fw fa-angle-right text"></i> 
-                <i class="fa fa-fw fa-angle-down text-active"></i> 
-            </span> 
-            <i class="fa fa-hospital-o icon text-info-lter"></i> 
-            <span class="font-bold"> {{menu.label}} </span> 
-        </a>
-        <ul class="nav nav-sub dk">
-            <li ui-sref-active="active" ng-repeat="child in menu.children"> 
-                <a check-access ui-sref="{{child.url}}"> <span>{{child.label}}</span> </a> 
-            </li>
-        </ul>
-    </li>
-</ul>-->
-
 <ul class="nav ng-scope" ng-init="app.settings.asideFolded = false">
-<!--    <li class="ng-scope" ng-show="checkAccess('configuration')"> 
-        <a class="auto" href=""> 
-            <span class="pull-right text-muted"> 
-                <i class="fa fa-fw fa-angle-right text"></i> 
-                <i class="fa fa-fw fa-angle-down text-active"></i> 
-            </span> 
-            <i class="fa fa-hospital-o icon text-info-lter"></i> 
-            <span class="font-bold ng-binding"> Organization Module</span> 
-        </a>
-        <ul class="nav nav-sub dk">
-            <li ui-sref-active="active"> 
-                <a check-access ui-sref="configuration.organization" href="#/configuration/organization"> <span>Organization</span> </a> 
-            </li>
-            <li ui-sref-active="active"> 
-                <a check-access ui-sref="configuration.organizationModule" href="#/configuration/organizationModule"> <span>Organization Module</span> </a> 
-            </li>
-        </ul>
-    </li>-->
     <li class="ng-scope active" ng-show="checkAccess('administrative')"> 
         <a class="auto" href=""> 
             <span class="pull-right text-muted"> 

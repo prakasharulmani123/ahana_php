@@ -19,4 +19,15 @@ angular.module('app').directive('checkAccessButton', function () {
         }
     }
 });
+angular.module('app').directive('checkAccessCustom', function () {
+    return {
+        link: function ($scope, element, attrs) {
+            var url = element.data('button');
+            element.addClass('hide');
+            if ($scope.checkAccess(url)) {
+                element.addClass('show');
+            }
+        }
+    }
+});
 

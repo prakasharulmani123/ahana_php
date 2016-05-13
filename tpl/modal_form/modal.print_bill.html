@@ -174,7 +174,7 @@
             </div>
         </div>
 
-        <div ng-show="isShown('detailed_bill')" id="detailed_bill">
+        <div ng-show="isShown('detailed_bill')" id="detailed_bill" ng-init="detailed_billing.total = {}">
             <div class="bill-cont">
                 <div class="bill-header"> 
                     <div id="logo"> <h1> {{app.org_name}} </h1> </div>
@@ -290,17 +290,11 @@
                                 <td align="center" class="unit" ng-init="
                                             row_recurring_total = getTotalRecurringPrice(row);
                                             detailed_recurr_billing.total.recurring_total = detailed_recurr_billing.total.recurring_total + row_recurring_total;
+                                            detailed_billing.total.net_total = detailed_billing.total.net_total + row_recurring_total;
                                     "> {{row_recurring_total| number:2}}</td>
                                 <td class="qty">&nbsp;</td>
-                                <td align="center" class="total" ng-init="net_value = {};">
-                                    <span class="hide" ng-repeat="(key_1, row_1) in recurring_charges" ng-if="key_1 <= key">
-                                        <b ng-init="net_value.total = net_value.total + parseFloat(row_1.total_charge);">{{net_value.total}}</b>
-                                        
-                                    </span>
-                                    <span id="ReportViewer_ReportViewer4">
-                                        {{net_value.total | number:2}}
-                                        <!--{{detailed_recurr_billing.total.net_row_total}}-->
-                                    </span>
+                                <td align="center" class="total">
+                                    {{row.net_amount| number:2}}
                                 </td>
                             </tr>
                             <tr class="bn">
@@ -312,7 +306,7 @@
                                     <strong>{{detailed_recurr_billing.total.recurring_total| number:2}}</strong>
                                 </td>
                                 <td class="qty">&nbsp;</td>
-                                <td class="total">20400</td>
+                                <td class="total"></td>
                             </tr>
                         </tbody>
                         <tfoot>
@@ -320,7 +314,7 @@
                     </table>
 
                     <div class="bill-heading2">
-                        <h2> Professional Charges: </h2>
+                        <h2> Professional Charges: {{detailed_billing.total.net_total}} </h2>
                     </div>
                     <table cellspacing="0" cellpadding="0" border="0"  class="detail-table" ng-init="detailed_non_billing.total = {};">
                         <thead>
@@ -333,38 +327,39 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr ng-repeat="(key, row) in procedures">
+                            <tr ng-init="detailed_billing.total.net_step_1_total = detailed_recurr_billing.total.recurring_total" ng-repeat="(key, row) in procedures">
                                 <td class="desc unit  unit2">12-May-16</td>
                                 <td class="desc">{{row.category}}</td>
-                                <td align="center" class="unit" ng-init="detailed_non_billing.total.charge = detailed_non_billing.total.charge + parseFloat(row.total_charge);
-                                    ">{{row.total_charge}}</td>
+                                <td align="center" class="unit" ng-init="
+                                    detailed_non_billing.total.charge = detailed_non_billing.total.charge + parseFloat(row.total_charge);
+                                    detailed_billing.total.net_total = detailed_billing.total.net_total + parseFloat(row.total_charge);
+                                    ">{{row.total_charge| number:2}}</td>
                                 <td class="qty">&nbsp;</td>
-                                <td align="center" class="total" ng-init="net_value.total = detailed_recurr_billing.total.recurring_total;">
-                                    <span class="hide" ng-repeat="(key_1, row_1) in procedures" ng-if="key_1 <= key">
-                                        <b ng-init="net_value.total = net_value.total + parseFloat(row_1.total_charge);">{{net_value.total}}</b>
-                                        
-                                    </span>
-                                    <span id="ReportViewer_ReportViewer4">
-                                        {{net_value.total | number:2}}
-                                        <!--{{detailed_recurr_billing.total.net_row_total}}-->
-                                    </span>
+                                <td align="center" class="total" ng-init="detailed_billing.total.net_step_next_total = detailed_billing.total.net_step_1_total + row.net_amount">
+                                    {{(detailed_billing.total.net_step_1_total + row.net_amount)| number:2}}
+                                    {{(detailed_billing.total.net_step_1_total + row.total_charge)| number:2}}
                                 </td>
                             </tr>
-                            <tr ng-repeat="(key, row) in consultants">
+                            <tr ng-init="detailed_billing.total.net_step_2_total = detailed_billing.total.net_step_next_total" ng-repeat="(key, row) in consultants">
                                 <td class="desc unit  unit2">12-May-16</td>
                                 <td class="desc">{{row.category}}</td>
                                 <td align="center" class="unit" ng-init="detailed_non_billing.total.charge = detailed_non_billing.total.charge + parseFloat(row.total_charge);
-                                    ">{{row.total_charge}}</td>
+                                    ">{{row.total_charge| number:2}}</td>
                                 <td class="qty">&nbsp;</td>
-                                <td align="center" class="total">sf</td>
+                                <td align="center" class="total" ng-init="detailed_billing.total.net_step_next_total = detailed_billing.total.net_step_2_total + row.net_amount">
+                                    {{(detailed_billing.total.net_step_2_total + row.net_amount)| number:2}}
+                                    {{(detailed_billing.total.net_step_2_total + row.total_charge)| number:2}}
+                                </td>
                             </tr>
-                            <tr ng-repeat="(key, row) in other_charges">
+                            <tr ng-init="detailed_billing.total.net_step_3_total = detailed_billing.total.net_step_next_total" ng-repeat="(key, row) in other_charges">
                                 <td class="desc unit  unit2">12-May-16</td>
                                 <td class="desc">{{row.category}}</td>
                                 <td align="center" class="unit" ng-init="detailed_non_billing.total.charge = detailed_non_billing.total.charge + parseFloat(row.total_charge);
-                                    ">{{row.total_charge}}</td>
+                                    ">{{row.total_charge| number:2}}</td>
                                 <td class="qty">&nbsp;</td>
-                                <td align="center" class="total">sf</td>
+                                <td align="center" class="total" ng-init="detailed_billing.total.net_step_next_total = detailed_billing.total.net_step_3_total + row.net_amount">
+                                    {{(detailed_billing.total.net_step_3_total + row.net_amount)| number:2}}
+                                </td>
                             </tr>
                             
                             <tr class="bn">
@@ -393,34 +388,12 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
+                            <tr ng-repeat="(key, row) in advances">
                                 <td class="desc unit  unit2">12-May-16</td>
-                                <td class="desc">Payment(90412)</td>
-                                <td align="center" class="unit">10000</td>
+                                <td class="desc">{{row.headers}}</td>
+                                <td align="center" class="unit">{{row.total_charge| number:2}}</td>
                                 <td class="qty">&nbsp;</td>
-                                <td align="center" class="total">16250</td>
-                            </tr>
-                            <tr>
-                                <td class="desc unit  unit2">12-May-16</td>
-                                <td class="desc"> 	
-                                    Payment(91062) </td>
-                                <td align="center" class="unit">10000</td>
-                                <td class="qty">&nbsp;</td>
-                                <td align="center" class="total">6250</td>
-                            </tr>
-                            <tr class="bn">
-                                <td class="desc">&nbsp;</td>
-                                <td align="right" class="unit"><strong>Grand Total</strong></td>
-                                <td align="center" class="unit bb"><strong>26249</strong></td>
-                                <td class="qty unit bb"><strong>20000</strong></td>
-                                <td class="total">20400</td>
-                            </tr>
-                            <tr class="bn">
-                                <td class="desc">&nbsp;</td>
-                                <td align="right" class="unit"><strong> Net Total</strong></td>
-                                <td align="center" class="unit bb"><strong>26249</strong></td>
-                                <td class="qty unit bb">&nbsp;</td>
-                                <td class="total">20400</td>
+                                <td align="center" class="total">{{row.net_amount| number:2}}</td>
                             </tr>
                         </tbody>
                         <tfoot>
