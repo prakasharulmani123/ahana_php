@@ -33,6 +33,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                         $scope.isLoading = false;
                         $scope.rowCollection = purchaseList.purchases;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
+                        $scope.form_filter = null;
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading purchaseList!";
@@ -40,6 +41,18 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
 
 
         };
+        
+        $scope.$watch('form_filter', function (newValue, oldValue) {
+            if (typeof newValue != 'undefined' && newValue != '' && newValue != null) {
+                var footableFilter = $('table').data('footable-filter');
+                footableFilter.clearFilter();
+                footableFilter.filter(newValue);
+            }
+
+            if (newValue == '') {
+                $scope.loadPurchaseItemList($scope.purchase_payment_type);
+            }
+        }, true);
 
         //For Form
         $scope.initForm = function () {

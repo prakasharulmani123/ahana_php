@@ -26,11 +26,12 @@
                 <button class="btn btn-sm btn-grey" ng-click="loadPurchaseItemList(purchase_payment_type)"> 
                     &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
                 </button>
+                <input id="filter" type="text" class="form-control input-sm w-sm inline m-r" placeholder="Search" ng-model="form_filter"/>
                 <button check-access-button ng-click="$state.go('pharmacy.purchaseCreate')" class="btn btn-sm btn-info pull-right">
                     <i class="fa fa-plus"></i> &nbsp; Add new Purchase
                 </button>
             </div>
-            <table st-table="displayedCollection"  st-safe-src="rowCollection" class="table table-bordered table-striped">
+            <table data-filter="#filter" data-filtering="true" ui-jq="footable" class="table m-b-none footable-loaded footable default">
                 <thead>
                     <tr>
                         <th style="width: 5%">
@@ -78,9 +79,9 @@
                             </a>
                         </td>
                     </tr>
-                    <tr ng-repeat-end ng-show="expanded">
-                        <td></td>
-                        <td colspan="12">
+                    <tr ng-repeat-end ng-show="expanded" data-value="{{row.invoice_no}}">
+                        <td data-value="{{row.invoice_no}}"></td>
+                        <td colspan="12" data-value="{{row.invoice_no}}">
                             <table class="table table-condensed table-bordered">
                                 <thead>
                                     <tr>

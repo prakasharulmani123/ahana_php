@@ -18,6 +18,7 @@ app.controller('ChargePerCategoriesController', ['$rootScope', '$scope', '$timeo
                         $scope.isLoading = false;
                         $scope.rowCollection = charge_per_categories;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
+                        $scope.form_filter = null;
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading charges!";
@@ -42,6 +43,19 @@ app.controller('ChargePerCategoriesController', ['$rootScope', '$scope', '$timeo
                 $scope.allSubCategories = data;
             });
         };
+        
+        $scope.$watch('form_filter', function (newValue, oldValue) {
+            if (typeof newValue != 'undefined' && newValue != '' && newValue != null) {
+                var footableFilter = $('table').data('footable-filter');
+                footableFilter.clearFilter();
+                footableFilter.filter(newValue);
+            }
+
+            if (newValue == '') {
+                $scope.loadChargePerCategoriesList();
+            }
+        }, true);
+        
         $scope.ctrl = {};
         $scope.ctrl.expandAll = function (expanded) {
             $scope.$broadcast('onExpandAll', {expanded: expanded});

@@ -126,7 +126,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 url: '/organization',
                 templateUrl: 'tpl/organization/index.html',
                 resolve: {
-                     deps: ['$ocLazyLoad',
+                    deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['xeditable', 'smart-table']).then(
                                     function () {
@@ -816,7 +816,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load(['xeditable', 'smart-table']).then(
+                            return $ocLazyLoad.load(['xeditable']).then(
                                     function () {
                                         return $ocLazyLoad.load('tpl/charge_per_category/charge_per_category.js');
                                     }
@@ -2187,7 +2187,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 url: '/changePassword',
                 templateUrl: 'tpl/organization/change_password.html',
                 resolve: {
-                     deps: ['$ocLazyLoad',
+                    deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['xeditable', 'smart-table']).then(
                                     function () {
@@ -2236,7 +2236,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
-            
+
             //Future appointments list
             .state('patient.futureAppointmentList', {
                 url: '/futureAppointmentList/{consultant_id}/{date}',
@@ -2272,7 +2272,7 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
         serviceUrl = 'http://hms.ark/api/IRISORG/web/v1'
         orgUrl = 'http://hms.ark/client';
         clientURL = 'http://hms.ark';
-    }else if ($location.host() == 'apollo.local') {
+    } else if ($location.host() == 'apollo.local') {
         serviceUrl = 'http://apollo.local/api/IRISORG/web/v1'
         orgUrl = 'http://apollo.local/client';
         clientURL = 'http://apollo.local';
