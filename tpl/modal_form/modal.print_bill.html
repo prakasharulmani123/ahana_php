@@ -264,13 +264,15 @@
                         </div>
                     </div>
                     <div class="clearfix"></div>
-                    <div class="bill-heading2">
-                        <h2> Bill Summary: </h2>
+                    <div class="bill-heading2"> <h2>	
+                            Bill Summary:
+                        </h2> 
                     </div>
-                    <table cellspacing="0" cellpadding="0" border="0"  class="detail-table">
+
+                    <table cellspacing="0" cellpadding="0" border="0" ng-init="detailed_recurr_billing.total = {}">
                         <thead>
                             <tr>
-                                <th class="desc unit  unit2"><strong>Date</strong></th>
+                                <th class="desc unit unit2"><strong>Date</strong></th>
                                 <th class="desc"><strong>DESCRIPTION </strong></th>
                                 <th class="unit"><strong>Debit</strong></th>
                                 <th class="qty"><strong>Credit</strong></th>
@@ -278,38 +280,37 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td class="desc unit  unit2">12-May-16</td>
-                                <td class="desc"> NURSING CHARGES(100*12)(Non AC)</td>
-                                <td align="center" class="unit">1200</td>
+                            <tr ng-repeat="(key, row) in recurring_charges">
+                                <td class="desc unit unit2">
+                                    <span id="ReportViewer_ReportViewer3">12-May-16</span>
+                                </td>
+                                <td class="desc">
+                                    {{row.charge_item}} ({{row.charge_amount}} * {{row.duration}}) ({{row.room_type}}) 
+                                </td>
+                                <td align="center" class="unit" ng-init="
+                                            row_recurring_total = getTotalRecurringPrice(row);
+                                            detailed_recurr_billing.total.recurring_total = detailed_recurr_billing.total.recurring_total + row_recurring_total;
+                                    "> {{row_recurring_total| number:2}}</td>
                                 <td class="qty">&nbsp;</td>
-                                <td align="center" class="total">1200</td>
-                            </tr>
-                            <tr>
-                                <td class="desc unit  unit2">12-May-16</td>
-                                <td class="desc"> DMO(200*12)(Non AC)</td>
-                                <td align="center" class="unit">2400</td>
-                                <td class="qty">&nbsp;</td>
-                                <td align="center" class="total">3600</td>
-                            </tr>
-                            <tr>
-                                <td class="desc unit  unit2">12-May-16</td>
-                                <td class="desc"> Service Charge(250*12)(Non AC)</td>
-                                <td align="center" class="unit">3000</td>
-                                <td class="qty">&nbsp;</td>
-                                <td align="center" class="total">6600</td>
-                            </tr>
-                            <tr>
-                                <td class="desc unit  unit2">12-May-16</td>
-                                <td class="desc"> ROOM RENT(1150*12)(Non AC)</td>
-                                <td align="center" class="unit">13800 </td>
-                                <td class="qty">&nbsp;</td>
-                                <td align="center" class="total">20400</td>
+                                <td align="center" class="total" ng-init="net_value = {};">
+                                    <span class="hide" ng-repeat="(key_1, row_1) in recurring_charges" ng-if="key_1 <= key">
+                                        <b ng-init="net_value.total = net_value.total + parseFloat(row_1.total_charge);">{{net_value.total}}</b>
+                                        
+                                    </span>
+                                    <span id="ReportViewer_ReportViewer4">
+                                        {{net_value.total | number:2}}
+                                        <!--{{detailed_recurr_billing.total.net_row_total}}-->
+                                    </span>
+                                </td>
                             </tr>
                             <tr class="bn">
                                 <td class="desc">&nbsp;</td>
-                                <td align="right" class="unit "><strong>Sub Total</strong></td>
-                                <td align="center" class="unit bb"><strong>120400</strong></td>
+                                <td align="right" class="unit">
+                                    <strong>Sub Total</strong>
+                                </td>
+                                <td align="center" class="unit bb">
+                                    <strong>{{detailed_recurr_billing.total.recurring_total| number:2}}</strong>
+                                </td>
                                 <td class="qty">&nbsp;</td>
                                 <td class="total">20400</td>
                             </tr>
@@ -317,10 +318,11 @@
                         <tfoot>
                         </tfoot>
                     </table>
+
                     <div class="bill-heading2">
                         <h2> Professional Charges: </h2>
                     </div>
-                    <table cellspacing="0" cellpadding="0" border="0"  class="detail-table">
+                    <table cellspacing="0" cellpadding="0" border="0"  class="detail-table" ng-init="detailed_non_billing.total = {};">
                         <thead>
                             <tr>
                                 <th class="desc unit  unit2"><strong>Date</strong></th>
@@ -331,26 +333,44 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
+                            <tr ng-repeat="(key, row) in procedures">
                                 <td class="desc unit  unit2">12-May-16</td>
-                                <td class="desc">Professional Charges<br />
-                                    (DMO)</td>
-                                <td align="center" class="unit">FREE</td>
+                                <td class="desc">{{row.category}}</td>
+                                <td align="center" class="unit" ng-init="detailed_non_billing.total.charge = detailed_non_billing.total.charge + parseFloat(row.total_charge);
+                                    ">{{row.total_charge}}</td>
                                 <td class="qty">&nbsp;</td>
-                                <td align="center" class="total">20400</td>
+                                <td align="center" class="total" ng-init="net_value.total = detailed_recurr_billing.total.recurring_total;">
+                                    <span class="hide" ng-repeat="(key_1, row_1) in procedures" ng-if="key_1 <= key">
+                                        <b ng-init="net_value.total = net_value.total + parseFloat(row_1.total_charge);">{{net_value.total}}</b>
+                                        
+                                    </span>
+                                    <span id="ReportViewer_ReportViewer4">
+                                        {{net_value.total | number:2}}
+                                        <!--{{detailed_recurr_billing.total.net_row_total}}-->
+                                    </span>
+                                </td>
                             </tr>
-                            <tr>
+                            <tr ng-repeat="(key, row) in consultants">
                                 <td class="desc unit  unit2">12-May-16</td>
-                                <td class="desc"> Professional Charges<br/>
-                                    (Dr.C.Ramasubramanian M.D., D.P.M.,) </td>
-                                <td align="center" class="unit">4500</td>
+                                <td class="desc">{{row.category}}</td>
+                                <td align="center" class="unit" ng-init="detailed_non_billing.total.charge = detailed_non_billing.total.charge + parseFloat(row.total_charge);
+                                    ">{{row.total_charge}}</td>
                                 <td class="qty">&nbsp;</td>
-                                <td align="center" class="total">24900</td>
+                                <td align="center" class="total">sf</td>
                             </tr>
+                            <tr ng-repeat="(key, row) in other_charges">
+                                <td class="desc unit  unit2">12-May-16</td>
+                                <td class="desc">{{row.category}}</td>
+                                <td align="center" class="unit" ng-init="detailed_non_billing.total.charge = detailed_non_billing.total.charge + parseFloat(row.total_charge);
+                                    ">{{row.total_charge}}</td>
+                                <td class="qty">&nbsp;</td>
+                                <td align="center" class="total">sf</td>
+                            </tr>
+                            
                             <tr class="bn">
                                 <td class="desc">&nbsp;</td>
                                 <td align="right" class="unit"><strong>Sub Total</strong></td>
-                                <td align="center" class="unit bb"><strong>120400</strong></td>
+                                <td align="center" class="unit bb"><strong>{{detailed_non_billing.total.charge}}</strong></td>
                                 <td class="qty">&nbsp;</td>
                                 <td class="total">20400</td>
                             </tr>
@@ -358,6 +378,7 @@
                         <tfoot>
                         </tfoot>
                     </table>
+
                     <div class="bill-heading2">
                         <h2> Advance: </h2>
                     </div>
@@ -406,10 +427,10 @@
                         </tfoot>
                     </table>
 
-                    <div id="notices">
-                        <div></div>
-                        <div class="notice"><span id="ReportViewer_ReportViewer3">No:11, Subburaman st., Gandhi Nagar, Madurai- 625020. Ph :+91 452 253 3444   Fax : +91 452 253 3111</span></div>
-                    </div>
+                    <!--                    <div id="notices">
+                                            <div>NOTICE:</div>
+                                            <div class="notice">A finance charge of 1.5% will be made on unpaid balances after 30 days.</div>
+                                        </div>-->
                 </main>
             </div>
         </div>

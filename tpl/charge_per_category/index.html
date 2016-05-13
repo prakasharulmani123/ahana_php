@@ -13,12 +13,12 @@
             <button class="btn btn-sm btn-grey" ng-click="loadChargePerCategoriesList()"> 
                 &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
             </button>
+            <input id="filter" type="text" class="form-control input-sm w-sm inline m-r" placeholder="Search" ng-model="form_filter"/>
             <button check-access-button ng-click="$state.go('configuration.chargePerCategoryCreate')" class="btn btn-sm btn-info pull-right">
                 <i class="fa fa-plus"></i> &nbsp; Add new Charges for Category
             </button>
         </div>
-
-        <table st-table="displayedCollection"  st-safe-src="rowCollection" class="table table-bordered table-striped">
+        <table data-filter="#filter" data-filtering="true" ui-jq="footable" class="table m-b-none footable-loaded footable default">
             <thead>
                 <tr>
                     <th>
@@ -35,7 +35,7 @@
             <tbody ng-hide="isLoading">
                 <tr ng-repeat-start="row in displayedCollection| orderBy: charge_cat_name">
                     <td>
-                        <button ng-click="expanded = !expanded" expand class="btn btn-sm btn-default">
+                        <button ng-click="expanded = !expanded" expand class="btn btn-sm btn-default hms-plus">
                             <i ng-if="!expanded" class="fa fa-plus text"></i>
                             <i ng-if="expanded" class="fa fa-minus text"></i>
                         </button>
@@ -74,25 +74,67 @@
                         </table>
                     </td>
                 </tr>
+
+                <tr ng-repeat-end ng-show="expanded" data-value="{{row.charge_cat_name}} {{row.charge_code_name}}">
+                    <td data-value="{{row.charge_cat_name}} {{row.charge_code_name}}"></td>
+                    <td colspan="3" data-value="{{row.name}}">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="panel panel-default inner-panel">
+
+                                    <div class="panel-heading">
+                                        <b> Out-Patient </b>
+                                    </div>
+
+                                    <div class="panel-body doc-timing"> 
+                                        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table">
+                                            <tr>
+                                                <th>Department</th>
+                                                <th>Amount</th>
+                                                <th>Time Out</th>
+                                            </tr>
+                                            <tr ng-repeat="op in patient_categories">
+                                                <td>{{op.patient_cat_name}}</td>
+                                                <td>
+                                                    <span editable-text="timing.schedule_time_out" e-name="schedule_time_out" e-form="rowform" onbeforesave="checkInput($data)" onshow="initTimepicker();" e-class="timepicker" e-onkeydown="return false;">
+                                                        {{timing.schedule_time_out|| 'empty' }}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <form editable-form name="rowform" onbeforesave="updateTimings($data, timing.schedule_id)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == timing">
+                                                        <button type="submit" ng-disabled="rowform.$waiting" class="badge bg-success">
+                                                            Save
+                                                        </button>
+                                                        &nbsp;&nbsp;
+                                                        <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()" class="badge bg-dark">
+                                                            Cancel
+                                                        </button>
+                                                    </form>
+                                                    <div class="buttons" ng-show="!rowform.$visible">
+                                                        <button class="badge bg-dark" ng-click="rowform.$show()">Edit</button>
+                                                        &nbsp;&nbsp;
+                                                        <button class="badge bg-danger" ng-click="deleteTiming(timing.schedule_id, row.user_id, day.schedule_day);">Delete</button>
+                                                    </div> 
+                                                </td>
+                                            </tr>
+
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+
                 <tr ng-repeat-end ng-show="expanded">
                     <td></td>
                     <td colspan="3">
                         <table class="table table-condensed table-bordered">
-                            <thead>
-                                <tr>
-                                    <th style="width: 50%;">Out-Patient Department</th>
-                                    <th style="width: 30%;">Amount</th>
-                                    <th style="width: 20%;">Action</th>
-                                </tr>
-                            </thead>
+                            
                             <tbody>
-                                <tr ng-repeat="op in patient_categories">
-                                    <td>{{op.patient_cat_name}}</td>
-                                    <td>
-                                        <span editable-text="allSubCategories['OP'][row.charge_code_id][op.patient_cat_id]['amount']" e-name="charge_amount" e-form="rowform" e-number-mask="">
-                                            {{ allSubCategories['OP'][row.charge_code_id][op.patient_cat_id]['amount'] || 'empty' }}
-                                        </span>
-                                    </td>
+                                <tr >
+                                    
+                                    
                                     <td>
                                         <form editable-form name="rowform" onbeforesave="updateAmount($data, allSubCategories['OP'][row.charge_code_id][op.patient_cat_id]['id'], row.charge_id, 'OP', op.patient_cat_id)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == op">
                                             <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-sm btn-success">
