@@ -2272,6 +2272,10 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
         serviceUrl = 'http://hms.ark/api/IRISORG/web/v1'
         orgUrl = 'http://hms.ark/client';
         clientURL = 'http://hms.ark';
+    }else if ($location.host() == 'apollo.local') {
+        serviceUrl = 'http://apollo.local/api/IRISORG/web/v1'
+        orgUrl = 'http://apollo.local/client';
+        clientURL = 'http://apollo.local';
     } else {
         clientURL = orgUrl = $location.absUrl().split('#')[0].slice(0, -1);
 //        clientURL = orgUrl = $location.protocol() + '://' + $location.host();
