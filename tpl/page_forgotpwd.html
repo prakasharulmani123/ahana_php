@@ -18,28 +18,10 @@
                     </select>
                 </div>
             </div>
-            <button id="forgot_btn" type="submit" ng-disabled="request.$invalid" class="btn btn-lg btn-{{forgotpasswordButtonClass}} btn-block" ng-click="passwordrequest()">{{forgotpasswordButtonText}}</button>
+            <button id="forgot_btn" type="submit" ng-disabled="request.$invalid" class="btn btn-lg btn-{{forgotpasswordButtonClass}} btn-block" ng-click="passwordrequest()" data-loading-text="<i class='fa fa-spin fa-spinner'></i> Please Wait ....">Send Request</button>
 
             <div class="text-center m-t m-b"><a ui-sref="access.signin">Sign in</a></div>
         </form>
-        <!--    <form name="request">
-                <div ng-include="'tpl/blocks/alert.html'">
-                    {% include 'tpl/blocks/alert.html' %}
-                </div>
-              <div class="list-group list-group-sm">
-                <div class="list-group-item">
-                  <input type="text" placeholder="Email" ng-model="email" class="form-control no-border" required>
-                </div>
-              </div>
-                <div class="list-group-item">
-                            <select class="form-control" name="Country" ng-model="user.tenant_id" ng-options="tenant.value as tenant.label for tenant in tenants | orderBy: label" required>
-                                <option value="">Select Organization</option>
-                            </select>
-                        </div>
-              <button id="forgot_btn" type="submit" ng-disabled="request.$invalid" class="btn btn-lg btn-primary btn-block" ng-click="passwordrequest()">{{forgotpasswordButtonText}}</button>
-            </form>-->
-        <!--<div class="text-center m-t m-b"><a ui-sref="access.signin">Sign in</a></div>-->
-
     </div>
     <div class="text-center" ng-include="'tpl/blocks/page_footer.html'">
         {% include 'blocks/page_footer.html' %}

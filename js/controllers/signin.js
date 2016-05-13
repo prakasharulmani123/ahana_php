@@ -4,29 +4,30 @@
 // signin controller
 app.controller('SigninFormController', SignInForm);
 
-SignInForm.$inject = ['$scope', '$state', 'AuthenticationService', '$http', '$rootScope', '$location', '$timeout'];
-function SignInForm($scope, $state, AuthenticationService, $http, $rootScope, $location, $timeout) {
+SignInForm.$inject = ['$scope', '$state', 'AuthenticationService', '$http', '$rootScope', '$location', '$timeout','$localStorage'];
+function SignInForm($scope, $state, AuthenticationService, $http, $rootScope, $location, $timeout, $localStorage) {
     $scope.user = {};
     $scope.authError = null;
-    $scope.loginButtonText = 'Log in';
-    $scope.forgotpasswordButtonText = 'Send Request';
     $scope.forgotpasswordButtonClass = 'primary';
 
     $rootScope.commonService.GetTenantList(function (response) {
         $scope.tenants = response.tenantList;
+        if(!$localStorage.system_tenant)
+            $localStorage.system_tenant = $scope.tenants[0].value;
+
+            $scope.user.tenant_id = $localStorage.system_tenant;
     });
     $scope.login = function () {
         $scope.authError = null;
-        $scope.loginButtonText = 'Logging in...Please Wait ....';
-        $('#login_btn').attr('disabled', true);
+        $('#login_btn').button('loading');
         // Try to login
         AuthenticationService.Login($scope.user.username, $scope.user.password, $scope.user.tenant_id, function (response) {
             if (response.success) {
                 AuthenticationService.setCurrentUser(response);
+                $localStorage.system_tenant = $scope.user.tenant_id;
                 $state.go('configuration.roles');
             } else {
-                $scope.loginButtonText = 'Log in';
-                $('#login_btn').attr('disabled', false);
+                $('#login_btn').button('reset');
                 $scope.authError = response.message;
             }
         });
@@ -35,8 +36,7 @@ function SignInForm($scope, $state, AuthenticationService, $http, $rootScope, $l
 
     $scope.passwordrequest = function () {
         $scope.errorData = $scope.successMessage = '';
-        $scope.forgotpasswordButtonText = 'Please Wait ....';
-        $('#forgot_btn').attr('disabled', true);
+        $('#forgot_btn').button('loading');
 
         $http({
             method: "POST",
@@ -48,12 +48,12 @@ function SignInForm($scope, $state, AuthenticationService, $http, $rootScope, $l
                         $scope.successMessage = response.data.message;
                         $scope.errorData = '';
                         $scope.email = '';
-                        $scope.forgotpasswordButtonText = 'Request Sent';
-                        $('#forgot_btn').attr('disabled', true);
+//                        $('#forgot_btn').button('reset');
+                        $('#forgot_btn').attr('disabled', true).text('Request Sent');
                         $scope.forgotpasswordButtonClass = 'success';
                     } else {
                         $scope.forgotpasswordButtonText = 'Send';
-                        $('#forgot_btn').attr('disabled', false);
+                        $('#forgot_btn').button('reset');
                         $scope.errorData = response.data.message;
                     }
                 }

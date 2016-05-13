@@ -43,7 +43,9 @@
 //        }
 
         function ClearCredentials() {
-            $localStorage.$reset();
+            $localStorage.$reset({
+                system_tenant : $localStorage.system_tenant
+            });
             return true;
 
 //            $rootScope.globals = {};
