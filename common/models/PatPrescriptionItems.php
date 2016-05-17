@@ -204,6 +204,9 @@ class PatPrescriptionItems extends RActiveRecord {
             'route_name' => function ($model) {
                 return (isset($model->presRoute) ? $model->presRoute->route_name : '-');
             },
+            'product' => function ($model) {
+                return (isset($model->product) ? $model->product : '-');
+            },
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;

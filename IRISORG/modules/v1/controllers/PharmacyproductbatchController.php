@@ -61,7 +61,7 @@ class PharmacyproductbatchController extends ActiveController {
 
     public function actionGetbatchbyproduct() {
         $get = Yii::$app->getRequest()->get();
-        $product_id = $get['product_id'];
+        $product_id = explode(',', $get['product_id']);
 
         return ['batchList' => PhaProductBatch::find()->tenant()->andWhere(['product_id' => $product_id])->all()];
     }
