@@ -6,12 +6,14 @@
     <div class="panel panel-default">
         <div class="row wrapper">
             <div class="col-sm-12">
-                <button ng-click="cancelSelected()" class="btn m-b-xs btn-dark">
-                    <i class="fa fa-times"></i> Cancel Appointment 
-                </button>
-<!--                <button ng-click="rescheduleSelected()" class="btn m-b-xs btn-dark">
-                    <i class="fa fa-times"></i> Reschedule Appointment 
-                </button>-->
+                <span ng-show="futureappointmentSelected > 0">
+                    <button ng-click="cancelSelected()" class="btn m-b-xs btn-dark">
+                        <i class="fa fa-times"></i> Cancel Appointment 
+                    </button>
+                    <button ng-click="rescheduleAppointments()" class="btn m-b-xs btn-dark">
+                        <i class="fa fa-times"></i> Reschedule Appointments 
+                    </button>
+                </span>
                 <button ng-click="$state.go('patient.futureAppointment')" class="btn m-b-xs  btn-dark pull-right">
                     <i class="fa fa-repeat"></i> Back 
                 </button>
@@ -49,8 +51,9 @@
                     </tr>
                     <tr ng-repeat-end ng-show="expanded" ng-repeat="(appointment_key, appointment) in value.all">
                         <td>
-                             <label class="i-checks "> 
-                                <input type="checkbox" name="status" ng-model="encounterIDs[appointment_key].selected"> 
+                            <label class="i-checks "> 
+                                <!--<input type="checkbox" name="status" ng-model="encounterIDs[appointment_key].selected">--> 
+                                <input type="checkbox" name="status" ng-model="checkboxes.items[appointment.appt_id]"> 
                                 <i></i> 
                             </label>
                         </td>

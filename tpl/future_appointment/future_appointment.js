@@ -14,6 +14,10 @@ app.controller('FutureAppointmentController', ['$rootScope', '$scope', '$timeout
             $scope.$broadcast('onExpandAll', {expanded: expanded});
         };
 
+        $scope.checkboxes = {'checked': false, items: {}};
+        $scope.futureappointmentSelectedItems = [];
+        $scope.futureappointmentSelected = 0;
+
         $scope.encounterIDs = [];
         //Encounter Page
         $scope.loadFutureAppointmentsList = function () {
@@ -42,6 +46,10 @@ app.controller('FutureAppointmentController', ['$rootScope', '$scope', '$timeout
                                     'selected': false
                                 })
                             });
+
+                            $scope.checkboxes = {'checked': false, items: {}};
+                            $scope.futureappointmentSelectedItems = [];
+                            $scope.futureappointmentSelected = 0;
                         } else {
                             $scope.errorData = response.message;
                         }
@@ -49,9 +57,33 @@ app.controller('FutureAppointmentController', ['$rootScope', '$scope', '$timeout
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading encounter!";
                     });
-
-
         };
+
+        // watch for data checkboxes
+        $scope.$watch('checkboxes.items', function (values) {
+            $scope.futureappointmentSelectedItems = [];
+            if (!$scope.rowCollection) {
+                return;
+            }
+            var checked = 0, unchecked = 0, total = 0;
+
+            if ($scope.rowCollection.length > 0) {
+                total = $scope.rowCollection[0].all.length;
+                angular.forEach($scope.rowCollection[0].all, function (item) {
+                    if ($scope.checkboxes.items[item.appt_id]) {
+                        $scope.futureappointmentSelectedItems.push(item);
+                    }
+                    checked += ($scope.checkboxes.items[item.appt_id]) || 0;
+                    unchecked += (!$scope.checkboxes.items[item.appt_id]) || 0;
+                });
+            }
+
+            if ((unchecked == 0) || (checked == 0)) {
+                $scope.checkboxes.checked = (checked == total);
+            }
+
+            $scope.futureappointmentSelected = checked;
+        }, true);
 
         $scope.cancelSelected = function () {
             $scope.selectedIDs = [];
@@ -66,22 +98,7 @@ app.controller('FutureAppointmentController', ['$rootScope', '$scope', '$timeout
             $scope.cancelFutureAppointments();
         };
 
-        $scope.rescheduleSelected = function () {
-            $scope.selectedIDs = [];
-            angular.forEach($scope.encounterIDs, function (item) {
-                if (item.selected) {
-                    $scope.selectedIDs.push({
-                        'consultant_id': item.consultantID,
-                        'status_date': item.statusDate,
-                        'encounter_id': item.encounterID,
-                        'patient_id': item.patientID,
-                    });
-                }
-            });
-            $scope.initRescheduleForm();
-        };
-
-        $scope.initRescheduleForm = function () {
+        $scope.rescheduleAppointments = function () {
             var modalInstance = $modal.open({
                 templateUrl: 'tpl/modal_form/modal.patient_appointment_reschedule.html',
                 controller: "AppointmentRescheduleController",
@@ -91,15 +108,14 @@ app.controller('FutureAppointmentController', ['$rootScope', '$scope', '$timeout
                     },
                 }
             });
-            modalInstance.data = $scope.selectedIDs;
+            modalInstance.data = $scope.futureappointmentSelectedItems;
 
             modalInstance.result.then(function (selectedItem) {
                 $scope.selected = selectedItem;
             }, function () {
                 $log.info('Modal dismissed at: ' + new Date());
             });
-        }
-        
+        };
 
         $scope.getTimeSlots = function (doctor_id, date) {
             $http.post($rootScope.IRISOrgServiceUrl + '/doctorschedule/getdoctortimeschedule', {doctor_id: doctor_id, schedule_date: date})

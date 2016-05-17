@@ -7,34 +7,43 @@
             {% include 'tpl/blocks/alert.html' %}
         </div>
         <div class="row">
+            <div class="col-sm-12">
+                <div class="col-sm-6">
+                    <select class="form-control" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors | orderBy: name" ng-change="getTimeOfAppointment();">
+                        <option value="">Select Consultant</option>
+                    </select>
+                </div>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="data.status_date" is-open="$parent.opened" datepicker-options="dateOptions" close-text="Close"  min-date="minDate" ng-change="getTimeOfAppointment();" prevent-enter="true"/>
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                </div>
+            </div>
+
             <div class="col-sm-12" ng-init="initRescheduleForm()">
                 <form name="passwordVerificationForm" class="form-horizontal form-validation" novalidate="">
                     <div class="modal-body wrapper-lg">
                         <div class="panel panel-default">
 
-                            <table class="table table-bordered table-hover table-condensed bg-white-only">
-                                <tr style="font-weight: bold">
-                                    <td><span>Patient Name</span></td>
-                                    <td><span>Consultant Name</span></td>
-                                    <td><span>Date</span></td>
-                                    <td><span>Time</span></td>
-                                </tr>
-                                <tr ng-repeat="(key, item) in rescheduledata">
-                                    <td>
-                                        {{item.patient_id}}
-                                    </td>
-                                    <td>
-                                        {{item.patient_id}}
-                                    </td>
-                                    <td>
-                                        {{item.patient_id}}
-                                    </td>
-                                    <td>
-                                        {{item.patient_id}}
-                                    </td>
-                                </tr>
-                            </table>
-                            
+                                <table class="table table-bordered table-hover table-condensed bg-white-only">
+                                    <tr style="font-weight: bold">
+                                        <td><span>Patient Name</span></td>
+                                        <td><span>Time</span></td>
+                                    </tr>
+                                    <tr ng-repeat="(key, item) in rescheduledata">
+                                        <td>
+                                            {{item.patient_name}}
+                                        </td>
+                                        <td ng-form="cellForm">
+                                            <select name='slots' class="form-control" ng-model="item.status_time" ng-options="timeslot as timeslot for timeslot in timeslots | orderBy: time" required>
+                                                <option value="">Select Time</option>
+                                            </select>
+                                            <p class="help-block" ng-show="cellForm.slots.$error.required"> Choose </p>
+                                        </td>
+                                    </tr>
+                                </table>
+
                             <footer class="panel-footer text-right bg-light lter">
                                 <button class="btn m-b-xs  btn-success save-btn" ng-click="saveForm()">Submit</button>
                                 &nbsp;

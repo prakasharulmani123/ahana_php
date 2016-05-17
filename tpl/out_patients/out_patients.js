@@ -8,6 +8,13 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
         editableThemes.bs3.inputClass = 'input-sm';
         editableThemes.bs3.buttonsClass = 'btn-sm';
         editableOptions.theme = 'bs3';
+        
+        $scope.ctrl = {};
+        $scope.allExpanded = true;
+        $scope.expanded = true;
+        $scope.ctrl.expandAll = function (expanded) {
+            $scope.$broadcast('onExpandAll', {expanded: expanded});
+        };
 
         $scope.encounterIDs = [];
 
@@ -23,17 +30,17 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
             $http.get($rootScope.IRISOrgServiceUrl + '/encounter/outpatients')
                     .success(function (OutPatients) {
                         $scope.isLoading = false;
-                        $scope.rowCollection = OutPatients;
+                        $scope.rowCollection = OutPatients.result;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
                         $scope.more_li = [];
 
-                        angular.forEach(OutPatients, function (value) {
-                            $scope.encounterIDs.push({
-                                'encounterID': value.encounter_id,
-                                'patientID': value.patient_id,
-                                'selected': false
-                            })
-                        });
+//                        angular.forEach(OutPatients, function (value) {
+//                            $scope.encounterIDs.push({
+//                                'encounterID': value.encounter_id,
+//                                'patientID': value.patient_id,
+//                                'selected': false
+//                            })
+//                        });
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading patients!";
