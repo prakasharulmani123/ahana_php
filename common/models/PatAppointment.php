@@ -163,12 +163,16 @@ class PatAppointment extends RActiveRecord {
                 $header = "Appointment Cancel";
                 $message = "Appointment Cancelled. $consultant";
                 break;
+            case 'R':
+                $header = "Appointment Rescheduled";
+                $message = "Appointment Rescheduled. $consultant";
+                break;
         }
         PatTimeline::insertTimeLine($this->patient_id, $this->status_date . ' ' . $this->status_time, $header, $header_sub, $message);
     }
 
     public function setCurrentData() {
-        if (isset($this) && isset($this->encounter) && isset($this->encounter->patLiveAppointmentBooking))
+        if (isset($this) && isset($this->encounter) && isset($this->encounter->patLiveAppointmentBooking) && $this->appt_status != 'R')
             $this->consultant_id = $this->encounter->patLiveAppointmentBooking->consultant_id;
     }
 

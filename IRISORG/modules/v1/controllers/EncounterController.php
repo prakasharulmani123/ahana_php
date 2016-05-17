@@ -202,17 +202,41 @@ class EncounterController extends ActiveController {
                 $query = "DATE(encounter_date) > '{$date}'";
         }
 
-        $model = PatEncounter::find()
-                ->tenant()
-                ->status()
+        $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+        $result = [];
+
+        $data = PatEncounter::find()
+                ->joinWith('patAppointments')
+                ->where([
+                    'pat_encounter.status' => '1',
+                    'pat_encounter.tenant_id' => $tenant_id
+                ])
                 ->encounterType("OP")
                 ->andWhere($query)
+                ->groupBy('pat_appointment.consultant_id')
                 ->orderBy([
                     'encounter_date' => SORT_DESC,
                 ])
                 ->all();
+        
+        foreach ($data as $key => $value) {
+            $details = PatEncounter::find()
+                    ->joinWith('patAppointments')
+                    ->where([
+                        'pat_encounter.status' => '1',
+                        'pat_encounter.tenant_id' => $tenant_id,
+                        'pat_appointment.consultant_id' => $value->patAppointments[0]->consultant_id,
+                    ])
+                    ->encounterType("OP")
+                    ->andWhere($query)
+                    ->orderBy([
+                        'encounter_date' => SORT_DESC,
+                    ])
+                    ->all();
 
-        return $model;
+            $result[$key] = ['data' => $value, 'all' => $details];
+        }
+        return ['success' => true, 'result' => $result];
     }
 
     public function actionGetencounterlistbypatient() {
@@ -250,7 +274,7 @@ class EncounterController extends ActiveController {
             } else {
                 return ['success' => false];
             }
-            
+
 //            $model = PatEncounter::find()
 //                    ->tenant()
 //                    ->status()
@@ -314,18 +338,14 @@ class EncounterController extends ActiveController {
             $consults = VBillingProfessionals::find()->where(['encounter_id' => $encounter_id, 'tenant_id' => $tenant_id])->all();
             $otherCharge = VBillingOtherCharges::find()->where(['encounter_id' => $encounter_id, 'tenant_id' => $tenant_id])->all();
             $advance = VBillingAdvanceCharges::find()->where(['encounter_id' => $encounter_id, 'tenant_id' => $tenant_id])->all();
-            
-            $data = array_merge($data,
-                    $this->_addNetAmount($procedure, 'Procedure', 'total_charge'),
-                    $this->_addNetAmount($consults, 'Consults', 'total_charge'),
-                    $this->_addNetAmount($otherCharge, 'OtherCharge', 'total_charge'),
-                    $this->_addNetAmount($advance, 'Advance', 'total_charge')
-                    );
+
+            $data = array_merge($data, $this->_addNetAmount($procedure, 'Procedure', 'total_charge'), $this->_addNetAmount($consults, 'Consults', 'total_charge'), $this->_addNetAmount($otherCharge, 'OtherCharge', 'total_charge'), $this->_addNetAmount($advance, 'Advance', 'total_charge')
+            );
         }
         return $data;
     }
-    
-    private function _addNetAmount($bills, $name, $charge_column){
+
+    private function _addNetAmount($bills, $name, $charge_column) {
         $data[$name] = [];
         foreach ($bills as $key => $bill) {
             $prev_amount = $key == 0 ? 0 : $bills[$key - 1]->$charge_column;
@@ -348,7 +368,6 @@ class EncounterController extends ActiveController {
         }
         return $data;
     }
-    
 
     public function actionGetroomchargehistory() {
         $get = Yii::$app->getRequest()->get();
@@ -399,19 +418,19 @@ class EncounterController extends ActiveController {
         $data = [];
         if (!empty($post)) {
             $charge_hist = PatBillingRoomChargeHistory::find()->tenant()->andWhere(['charge_hist_id' => $post['charge_hist_id']])->one();
-            
+
             if (empty($charge_hist))
                 return;
-            
+
             $tenant_id = Yii::$app->user->identity->logged_tenant_id;
-            
+
             $data['recurring'] = $this->_getBillingRecurring($charge_hist->encounter_id, $tenant_id);
             $charge_hist->delete();
         }
         return $data;
     }
-    
-    private function _getBillingRecurring($encounter_id, $tenant_id){
+
+    private function _getBillingRecurring($encounter_id, $tenant_id) {
         return VBillingRecurring::find()->where(['encounter_id' => $encounter_id, 'tenant_id' => $tenant_id])->orderBy(['from_date' => SORT_ASC, 'charge_item' => SORT_ASC])->all();
     }
 
@@ -426,15 +445,15 @@ class EncounterController extends ActiveController {
             $patient_id = $get['patient_id'];
 
             $data = VBillingProcedures::find()->where([
-                'encounter_id' => $encounter_id, 
-                'tenant_id' => $tenant_id,
-                'category_id' => $category_id,
-                'patient_id' => $patient_id
+                        'encounter_id' => $encounter_id,
+                        'tenant_id' => $tenant_id,
+                        'category_id' => $category_id,
+                        'patient_id' => $patient_id
                     ])->one();
         }
         return $data;
     }
-    
+
     public function actionGetnonrecurringprofessionals() {
         $get = Yii::$app->getRequest()->get();
 
@@ -446,12 +465,13 @@ class EncounterController extends ActiveController {
             $patient_id = $get['patient_id'];
 
             $data = VBillingProfessionals::find()->where([
-                'encounter_id' => $encounter_id, 
-                'tenant_id' => $tenant_id,
-                'category_id' => $category_id,
-                'patient_id' => $patient_id
+                        'encounter_id' => $encounter_id,
+                        'tenant_id' => $tenant_id,
+                        'category_id' => $category_id,
+                        'patient_id' => $patient_id
                     ])->one();
         }
         return $data;
     }
+
 }

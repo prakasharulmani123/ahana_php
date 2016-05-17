@@ -96,6 +96,26 @@ class AppointmentController extends ActiveController {
             }
         }
     }
+    
+    public function actionBulkreschedule() {
+        $post = Yii::$app->getRequest()->post();
+
+        if(!empty($post)){
+            foreach($post['appointments'] as $key => $value){
+                $data = array();
+                $data['appt_status'] = "R";
+                $data['encounter_id'] = $value['encounter_id'];
+                $data['status_time'] = $value['status_time'];
+                $data['status_date'] = $post['data']['status_date'];
+                $data['patient_id'] = $value['patient_id'];
+                $data['consultant_id'] = $post['data']['consultant_id'];
+                
+                $model = new PatAppointment;
+                $model->attributes = $data;
+                $model->save(false);
+            }
+        }
+    }
 
     public function actionGetfutureappointments() {
         $future_appointments = PatAppointment::getFutureAppointments();

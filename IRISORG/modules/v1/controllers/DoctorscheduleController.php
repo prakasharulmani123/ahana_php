@@ -163,8 +163,8 @@ class DoctorscheduleController extends ActiveController {
 
         while ($start_time <= $end_time) {
             $slot = date("H:i:s", $start_time);
-            $isAvailable = PatAppointment::checkAvailableSlot($doctor_id, $schedule_date, $slot);
-            if($isAvailable)
+//            $isAvailable = PatAppointment::checkAvailableSlot($doctor_id, $schedule_date, $slot);
+//            if($isAvailable)
                 $array_of_time[] = array("time" => $slot);
             $start_time += $interval_mins;
         }
