@@ -45,9 +45,12 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         //For Form
         $scope.initForm = function () {
             //Patients List
-            $rootScope.commonService.GetPatientList('', '1', false, function (response) {
-                $scope.patients = response.patientlist;
-            });
+//            $rootScope.commonService.GetPatientList('', '1', false, function (response) {
+//                $scope.patients = response.patientlist;
+//            });
+            $scope.data.patient_name = undefined;
+            $scope.patients = [];
+            $scope.encounters = [];
 
             //Consultant List
             $rootScope.commonService.GetDoctorList('', '1', false, '1', function (response) {
@@ -80,18 +83,36 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         };
 
         $scope.formatPatient = function ($item, $model, $label) {
-            $scope.data.patient_id = $item.patient_id;
-            $scope.data.patient_name = $item.fullname;
+            id = $item.Patient.patient_id;
+            $scope.data.patient_id = id;
+            $scope.data.patient_guid = $item.Patient.patient_guid;
+            $scope.data.patient_name = $item.Patient.patient_firstname;
+            $scope.data.consultant_id = $item.Patient.last_consultant_id;
 
-            $scope.getPatientMobileNo($item.patient_id);
+            $scope.getEncounter(id);
+            $scope.getPatientMobileNo(id);
+        }
+
+        $scope.getEncounter = function (patient_id) {
+            $rootScope.commonService.GetEncounterListByPatient('', '0,1', false, patient_id, function (response) {
+                angular.forEach(response, function (resp) {
+                    resp.encounter_id = resp.encounter_id.toString();
+                });
+                $scope.encounters = response;
+                
+                if (response != null) {
+                    $scope.data.encounter_id = response[0].encounter_id;
+                    $scope.getPrescription();
+                }
+            });
         }
 
         //Get selected patient mobile no.
         $scope.getPatientMobileNo = function (id) {
             var patient_id = id;
             var patient_mobile_no = $.grep($scope.patients, function (patient) {
-                return patient.patient_id == patient_id;
-            })[0].patient_mobile;
+                return patient.Patient.patient_id == patient_id;
+            })[0].Patient.patient_mobile;
             $scope.data.mobile_no = patient_mobile_no;
         }
 
@@ -195,10 +216,21 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
             $scope.loadbar('show');
             $scope.updateRow(key);
-            $rootScope.commonService.GetBatchListByProduct(item.product_id, function (response) {
-                $scope.batches = response.batchList;
+
+            ids = [];
+            angular.forEach($scope.saleItems, function (item) {
+                ids.push(item.product_id);
+            });
+
+            $rootScope.commonService.GetBatchListByProduct(ids, function (response) {
                 $scope.loadbar('hide');
 
+                angular.forEach(response.batchList, function (item) {
+                    $scope.batches.push(item);
+                });
+
+//                $scope.saleItems[key].batch_details = response.batchList[0].batch_details;
+//                $scope.saleItems[key].batch_no = response.batchList[0].batch_no;
                 $scope.saleItems[key].batch_no = '';
                 $scope.saleItems[key].expiry_date = '';
                 $scope.saleItems[key].mrp = 0;
@@ -206,8 +238,16 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             });
         }
 
+        $scope.showBatch = function (batch) {
+            var selected = [];
+            if (batch.batch_no) {
+                selected = $filter('filter')($scope.batches, {value: batch.batch_no});
+            }
+            return selected.length ? selected[0].batch_no : 'Not set';
+        };
+
         //After barch choosed, then update some values in the row.
-        $scope.updateBatchRow = function (item, model, label, key) {
+        $scope.updateBatchRow = function (item, key) {
             $scope.saleItems[key].batch_no = item.batch_no;
             $scope.saleItems[key].expiry_date = item.expiry_date;
             $scope.saleItems[key].mrp = item.mrp;
@@ -296,7 +336,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
         //Save Both Add & Update Data
         $scope.saveForm = function (mode) {
-            if(!$scope.tableform.$valid){
+            if (!$scope.tableform.$valid) {
                 $scope.data.patient_id = '';
             }
             _that = this;
@@ -429,10 +469,74 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             });
         }
 
-    }]);
+        var changeTimer = false;
 
-//app.filter('moment', function () {
-//    return function (dateString, format) {
-//        return moment(dateString).format(format);
-//    };
-//});
+        $scope.$watch('data.patient_name', function (newValue, oldValue) {
+            if (newValue != '') {
+
+                if (changeTimer !== false)
+                    clearTimeout(changeTimer);
+
+                $scope.loadbar('show');
+                changeTimer = setTimeout(function () {
+                    $http({
+                        method: 'POST',
+                        url: $rootScope.IRISOrgServiceUrl + '/patient/search',
+                        data: {'search': newValue},
+                    }).success(
+                            function (response) {
+                                $scope.patients = response.patients;
+                                $scope.loadbar('hide');
+                            }
+                    );
+                    changeTimer = false;
+                }, 300);
+            }
+        }, true);
+
+        $scope.getPrescription = function () {
+            $scope.loadbar('show');
+            $http.get($rootScope.IRISOrgServiceUrl + '/patientprescription/getpreviousprescription?patient_id=' + $scope.data.patient_guid + '&encounter_id=' + $scope.data.encounter_id)
+                    .success(function (prescriptionList) {
+                        $scope.loadbar('hide');
+                        $scope.saleItems = [];
+
+                        ids = [];
+                        angular.forEach(prescriptionList.prescriptions, function (prescription) {
+                            angular.forEach(prescription.items, function (item) {
+                                $scope.inserted = {
+                                    full_name: item.product_name,
+                                    batch_details: '',
+                                    product_id: item.product_id,
+                                    product_name: item.product_name,
+                                    package_name: '',
+                                    vat_percent: '0',
+                                    batch_no: '',
+                                    expiry_date: '',
+                                    mrp: '0',
+                                    quantity: '0',
+                                    vat_amount: '0',
+                                    item_amount: '0',
+                                };
+                                $scope.saleItems.push($scope.inserted);
+                                ids.push(item.product_id);
+                            });
+                        });
+                        
+                        $rootScope.commonService.GetBatchListByProduct(ids, function (response) {
+                            $scope.batches = response.batchList;
+                        });
+
+                        if ($scope.saleItems.length == 0) {
+                            $scope.addRow();
+                        }
+
+                        $timeout(function () {
+                            $scope.setFocus('full_name', $scope.saleItems.length - 1);
+                        });
+                    })
+                    .error(function () {
+                        $scope.errorData = "An Error has occured while loading list!";
+                    });
+        }
+    }]);

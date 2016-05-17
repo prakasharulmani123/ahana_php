@@ -302,7 +302,7 @@ angular.module('app')
                     $scope.$broadcast('presc_fav', fav);
                 }
 
-                console.log(hotkeys);
+                //Hot Keys
                 hotkeys.add({
                     combo: 'ctrl+n',
                     description: 'Create',
@@ -346,6 +346,18 @@ angular.module('app')
                         $window.history.forward();
                     }
                 });
+                
+                $scope.$on('HK_CREATE', function (e) {
+                    alert('create');
+                    angular.element(document.querySelectorAll("[hot-key-create]")).trigger('click');
+                });
+                $scope.$on('HK_SAVE', function (e) {
+                    alert('create');
+                });
+                $scope.$on('HK_SEARCH', function (e) {
+                    alert('create');
+                });
+                
             }]);
 
 angular.module('app').filter('moment', function () {

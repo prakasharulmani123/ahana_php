@@ -8,27 +8,41 @@
                         <div class="panel panel-default">
                             <div class="panel-body">
                                 <div class="form-group">
-                                    <label class="col-lg-4 control-label">Patient Name *</label>
-                                    <div class="col-lg-7">
+                                    <label class="col-lg-4 control-label">Patient Name</label>
+                                    <div class="col-lg-8">
                                         <input autocomplete="off"
                                                placeholder="Patient Name"
                                                type="text"
                                                class="form-control"
                                                ng-model="data.patient_name"
-                                               typeahead-editable="false" 
-                                               typeahead="patient as patient.fullname for patient in patients | filter:$viewValue"
-                                               typeahead-on-select="formatPatient($item, $model, $label)" />
+                                               typeahead="patient.Patient as patient.Patient.patient_firstname for patient in patients | filter:$viewValue"
+                                               typeahead-on-select="formatPatient($item, $model, $label)" 
+                                               />
                                     </div>
-                                    <div class="col-lg-0">
+<!--                                    <div class="col-lg-0">
                                         <button type="button" class="btn btn-primary" ng-click="$state.go('patient.registration')">
                                             <i class="fa fa-plus text ng-scope"></i>
                                         </button>
+                                    </div>-->
+                                </div>
+                                <div class="line line-dashed b-b line-lg "></div>
+
+                                <div class="form-group">
+                                    <label class="col-lg-4 control-label">Encounter #</label>
+                                    <div class="col-lg-8">
+                                        <select class="form-control" 
+                                                ng-model="data.encounter_id" 
+                                                ng-options="encounter.encounter_id as encounter.encounter_id for encounter in encounters | orderBy: encounter_id"
+                                                ng-change="getPrescription()"
+                                                >
+                                            <option value="">Select Encounter</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="line line-dashed b-b line-lg "></div>
 
                                 <div class="form-group">
-                                    <label class="col-lg-4 control-label">Mobile No *</label>
+                                    <label class="col-lg-4 control-label">Mobile No</label>
                                     <div class="col-lg-8">
                                         <input type="text" class="form-control" ng-model="data.mobile_no"/>
                                     </div>
@@ -117,9 +131,12 @@
                                 </td>
                                 <td>
                                     <div id="i_batch_details_{{key}}">
-                                        <span editable-text="saleitem.batch_details" e-name="batch_details" e-form="tableform" onbeforesave="checkInput($data)" e-typeahead="batch as batch.batch_details for batch in batches | filter:$viewValue | limitTo:8" e-typeahead-editable="false" e-autocomplete="off" e-typeahead-on-select="updateBatchRow($item, $model, $label, key)">
-                                            {{ saleitem.batch_details || 'empty' }}
+                                        <span editable-select="saleitem.batch_details" e-name="batch_details" e-form="tableform" onbeforesave="checkInput($data)" e-ng-options="batch as batch.batch_details for batch in batches | filter:$viewValue | limitTo:8| filter:{product_id : saleitem.product_id}" e-ng-change="updateBatchRow($data, key)">
+                                            {{ showBatch(saleitem) }}
                                         </span>
+<!--                                        <span editable-text="saleitem.batch_details" e-name="batch_details" e-form="tableform" onbeforesave="checkInput($data)" e-typeahead="batch as batch.batch_details for batch in batches | filter:$viewValue | limitTo:8| filter:{product_id : saleitem.product_id}" e-typeahead-editable="false" e-autocomplete="off" e-typeahead-on-select="updateBatchRow($item, $model, $label, key)">
+                                            {{ saleitem.batch_details || 'empty' }}
+                                        </span>-->
                                     </div>
                                     <span id="t_batch_details_{{key}}" class="hide">
                                         {{ saleitem.batch_details || 'empty' }}

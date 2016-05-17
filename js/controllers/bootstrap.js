@@ -328,9 +328,6 @@ app.controller('PatientSearchController', ['$scope', '$http', '$rootScope', '$st
                     );
                     changeTimer = false;
                 }, 300);
-
-
-
             }
         }, true);
 
