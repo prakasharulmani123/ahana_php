@@ -1,15 +1,21 @@
 app.controller('AppointmentRescheduleController', ['scope', '$scope', '$modalInstance', '$rootScope', '$timeout', '$http', '$state', function (scope, $scope, $modalInstance, $rootScope, $timeout, $http, $state) {
 
-        $scope.open = function ($event) {
-            $event.preventDefault();
-            $event.stopPropagation();
-            $scope.opened = true;
+        //Datepicker
+        $scope.open = function () {
+            $timeout(function () {
+                $scope.opened = true;
+            });
         };
+        $scope.toggleMin = function () {
+            $scope.minDate = $scope.minDate ? null : new Date();
+            $scope.minDate.setDate($scope.minDate.getDate() + 1);
+        };
+        $scope.toggleMin();
 
+        //Initialize reschedule form
+        $scope.rescheduledata = [];
         $scope.initRescheduleForm = function () {
-            $scope.rescheduledata = [];
             $scope.rescheduledata = $modalInstance.data;
-            
             $rootScope.commonService.GetDoctorList('', '1', false, '1', function (response) {
                 $scope.doctors = response.doctorsList;
             });
@@ -19,7 +25,7 @@ app.controller('AppointmentRescheduleController', ['scope', '$scope', '$modalIns
             $scope.data.consultant_id = $scope.rescheduledata[0].consultant_id;
             $scope.getTimeSlots($scope.data.consultant_id, $scope.data.status_date);
         }
-        
+
         $scope.getTimeOfAppointment = function () {
             if (typeof (this.data) != "undefined") {
                 if (typeof (this.data.consultant_id) != 'undefined' && typeof (this.data.status_date != 'undefined')) {
@@ -33,7 +39,10 @@ app.controller('AppointmentRescheduleController', ['scope', '$scope', '$modalIns
                     .success(function (response) {
                         $scope.timeslots = [];
                         angular.forEach(response.timerange, function (value) {
-                            $scope.timeslots.push(value.time);
+                            $scope.timeslots.push({
+                                time: value.time,
+                                color: value.color,
+                            });
                         });
                     }, function (x) {
                         response = {success: false, message: 'Server Error'};
@@ -41,45 +50,49 @@ app.controller('AppointmentRescheduleController', ['scope', '$scope', '$modalIns
         }
 
         $scope.saveForm = function () {
-            _that = this;
+            if ($scope.rescheduleForm.$valid) {
 
-            $scope.errorData = "";
-            $scope.successMessage = "";
+                _that = this;
 
-            post_url = $rootScope.IRISOrgServiceUrl + '/appointment/bulkreschedule';
-            method = 'POST';
-            succ_msg = 'Rescheduled successfully';
+                $scope.errorData = "";
+                $scope.successMessage = "";
 
-            scope.loadbar('show');
-            $http({
-                method: method,
-                url: post_url,
-                data: {appointments: _that.rescheduledata, data: _that.data},
-            }).success(
-                    function (response) {
-                        if (response.success == false) {
-                            scope.loadbar('hide');
-                            if (status == 422)
-                                $scope.errorData = scope.errorSummary(data);
-                            else
-                                $scope.errorData = response.message;
-                        } else {
-                            scope.loadbar('hide');
-                            $scope.successMessage = succ_msg;
-                            $scope.data = {};
-                            $timeout(function () {
-                                $modalInstance.dismiss('cancel');
-                                scope.loadFutureAppointmentsList();
-                            }, 1000)
+                post_url = $rootScope.IRISOrgServiceUrl + '/appointment/bulkreschedule';
+                method = 'POST';
+                succ_msg = 'Rescheduled successfully';
+
+                scope.loadbar('show');
+                $http({
+                    method: method,
+                    url: post_url,
+                    data: {appointments: _that.rescheduledata, data: _that.data},
+                }).success(
+                        function (response) {
+                            if (response.success == false) {
+                                scope.loadbar('hide');
+                                if (status == 422)
+                                    $scope.errorData = scope.errorSummary(data);
+                                else
+                                    $scope.errorData = response.message;
+                            } else {
+                                scope.loadbar('hide');
+                                $scope.successMessage = succ_msg;
+                                $scope.data = {};
+                                $scope.rescheduledata = [];
+                                $timeout(function () {
+                                    $modalInstance.dismiss('cancel');
+                                    scope.loadFutureAppointmentsList();
+                                }, 1000)
+                            }
                         }
-                    }
-            ).error(function (data, status) {
-                scope.loadbar('hide');
-                if (status == 422)
-                    $scope.errorData = scope.errorSummary(data);
-                else
-                    $scope.errorData = data.message;
-            });
+                ).error(function (data, status) {
+                    scope.loadbar('hide');
+                    if (status == 422)
+                        $scope.errorData = scope.errorSummary(data);
+                    else
+                        $scope.errorData = data.message;
+                });
+            }
         };
 
         $scope.cancel = function () {

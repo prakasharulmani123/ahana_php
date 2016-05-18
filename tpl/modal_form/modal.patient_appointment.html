@@ -9,10 +9,11 @@
         <div class="row">
             <div class="col-sm-12">
                 <form name="patientAppointmentForm" class="form-horizontal form-validation" novalidate="" ng-init="data.formtype = 'add';
-                            initForm(); initAppointmentForm();
-                            data.status = '1';
-                            data.appt_status = 'B';
-                 ">
+                        initForm();
+                        initAppointmentForm();
+                        data.status = '1';
+                        data.appt_status = 'B';
+                      ">
                     <div class="modal-body wrapper-lg">
                         <div class="panel panel-default">
                             <div class="panel-body">
@@ -25,7 +26,7 @@
                                     </div>
                                 </div>
                                 <div class="line line-dashed b-b line-lg "></div>
-                                
+
                                 <div class="form-group">
                                     <label class="col-sm-5 control-label">Patient Name * </label>
                                     <div class="col-sm-7">
@@ -40,7 +41,7 @@
                                     </div>
                                 </div>
                                 <div class="line line-dashed b-b line-lg "></div>
-                                
+
                                 <div class="form-group">
                                     <label class="col-sm-5 control-label">Consultant * </label>
                                     <div class="col-sm-7">
@@ -54,8 +55,11 @@
                                 <div class="form-group">
                                     <label class="col-sm-5 control-label">Time of Appointment * </label>
                                     <div class="col-sm-7">
-                                        <select class="form-control" ng-model="data.status_time" ng-options="timeslot as timeslot for timeslot in timeslots | orderBy: time">
-                                            <option value="">Select Time</option>
+                                        <select ng-model="data.status_time" class="form-control">
+                                            <option value="" selected="">Select Time</option>
+                                            <option style="color: {{timeslot.color}}" ng-repeat="timeslot in timeslots" value="{{timeslot.time}}">
+                                                {{timeslot.time}}
+                                            </option>
                                         </select>
                                     </div>
                                 </div>

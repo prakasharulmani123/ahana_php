@@ -200,7 +200,10 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
                     .success(function (response) {
                         $scope.timeslots = [];
                         angular.forEach(response.timerange, function (value) {
-                            $scope.timeslots.push(value.time);
+                            $scope.timeslots.push({
+                                time: value.time,
+                                color: value.color,
+                            });
                         });
                     }, function (x) {
                         response = {success: false, message: 'Server Error'};

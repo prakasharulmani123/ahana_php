@@ -77,7 +77,7 @@
                         <td align="center" valign="middle"></td>
                         <td>
                             <label class="i-checks "> 
-                                <input type="checkbox" name="status" ng-model="encounterIDs[key].selected" ng-click="moreOptions(key, row.encounter_id)"> 
+                                <input class="oplist" id="oplist_{{op_key}}_{{key}}" type="checkbox" name="status" ng-model="encounterIDs[key].selected" ng-click="moreOptions(key, row.encounter_id, op_key)"> 
                                 <i></i> 
                             </label>
                         </td>

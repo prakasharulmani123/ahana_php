@@ -8,7 +8,7 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
         editableThemes.bs3.inputClass = 'input-sm';
         editableThemes.bs3.buttonsClass = 'btn-sm';
         editableOptions.theme = 'bs3';
-        
+
         $scope.ctrl = {};
         $scope.allExpanded = true;
         $scope.expanded = true;
@@ -47,7 +47,9 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                     });
         };
 
-        $scope.moreOptions = function (key, enc_id) {
+        $scope.moreOptions = function (key, enc_id, op_key) {
+            $('.oplist').not('#oplist_' + op_key + '_' + key).attr('checked', true);
+
             $scope.more_li = [];
             $scope.more_li.push({
                 href: "cancelSelected()",

@@ -2217,7 +2217,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 }
             })
 
-            // fullCalendar
+            // fullCalendar - Future Appointments
             .state('patient.futureAppointment', {
                 url: '/futureAppointment',
                 templateUrl: 'tpl/future_appointment/index.html',

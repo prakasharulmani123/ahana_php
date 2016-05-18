@@ -1,6 +1,6 @@
 <div class="panel panel-default">
     <div class="panel-body">
-        
+
         <div class="form-group">
             <label class="col-sm-3 control-label">Consultant * </label>
             <div class="col-sm-9">
@@ -27,8 +27,11 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">Time of Appointment * </label>
             <div class="col-sm-3">
-                <select class="form-control" ng-model="data.status_time" ng-options="timeslot as timeslot for timeslot in timeslots | orderBy: time">
-                    <option value="">Select Time</option>
+                <select ng-model="data.status_time" class="form-control">
+                    <option value="" selected="">Select Time</option>
+                    <option style="color: {{timeslot.color}}" ng-repeat="timeslot in timeslots" value="{{timeslot.time}}">
+                        {{timeslot.time}}
+                    </option>
                 </select>
             </div>
         </div>
