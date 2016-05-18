@@ -53,6 +53,8 @@ class PatientnotesController extends ActiveController {
 
     public function actionGetpatientnotes() {
         $get = Yii::$app->getRequest()->get();
+        $user_id = Yii::$app->user->identity->user->user_id;
+        
         if (!empty($get)) {
             $patient = PatPatient::getPatientByGuid($get['patient_id']);
             $result = [];
@@ -61,7 +63,8 @@ class PatientnotesController extends ActiveController {
                 $details = PatNotes::find()->where(['patient_id' => $patient->patient_id, 'encounter_id' => $value->encounter_id])->orderBy(['pat_note_id' => SORT_ASC])->all();
                 $result[$key] = ['data' => $value, 'all' => $details];
             }
-            return ['success' => true, 'result' => $result];
+            $uservitals = \common\models\PatVitalsUsers::find()->tenant()->andWhere(['user_id' => $user_id])->all();
+            return ['success' => true, 'result' => $result, 'uservitals' => $uservitals];
         }
     }
 

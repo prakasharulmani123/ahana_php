@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\models\query\PatNotesQuery;
+use Yii;
 use yii\db\ActiveQuery;
 
 /**
@@ -117,5 +118,4 @@ class PatNotes extends RActiveRecord {
     public static function find() {
         return new PatNotesQuery(get_called_class());
     }
-
 }

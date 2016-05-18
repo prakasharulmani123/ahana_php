@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\models\query\PatVitalsQuery;
+use Yii;
 use yii\db\ActiveQuery;
 
 /**
@@ -95,8 +96,21 @@ class PatVitals extends RActiveRecord {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
     
+    /**
+     * @return ActiveQuery
+     */
+    public function getVitalsUsers() {
+        return $this->hasMany(PatVitalsUsers::className(), ['vital_id' => 'vital_id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getUsers() {
+        return $this->hasMany(CoUser::className(), ['user_id' => 'user_id'])->via('vitalsUsers');
+    }
+    
     public static function find() {
         return new PatVitalsQuery(get_called_class());
     }
-
 }

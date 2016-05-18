@@ -2,11 +2,14 @@
 
 namespace IRISORG\modules\v1\controllers;
 
+use common\models\CoUser;
 use common\models\PatPatient;
 use common\models\PatVitals;
+use common\models\PatVitalsUsers;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
+use yii\db\Expression;
 use yii\filters\auth\QueryParamAuth;
 use yii\filters\ContentNegotiator;
 use yii\rest\ActiveController;
@@ -62,10 +65,29 @@ class PatientvitalsController extends ActiveController {
 
     public function actionGetpatientvitals(){
         $get = Yii::$app->getRequest()->get();
+        $user_id = Yii::$app->user->identity->user->user_id;
+        
         if(!empty($get)){
             $patient = PatPatient::getPatientByGuid($get['patient_id']);
             $model = PatVitals::find()->tenant()->active()->andWhere(['patient_id' => $patient->patient_id])->orderBy(['created_at' => SORT_DESC])->all();
-            return ['success' => true, 'result' => $model];
+            $uservitals = PatVitalsUsers::find()->tenant()->andWhere(['user_id' => $user_id, 'seen' => '0'])->all();
+            return ['success' => true, 'result' => $model, 'uservitals' => $uservitals];
         }
+    }
+    
+    public function actionAssignvitals() {
+        $post = Yii::$app->request->post();
+        $user_id = Yii::$app->user->identity->user->user_id;
+        $tenant_id = Yii::$app->user->identity->user->tenant_id;
+
+        $user = CoUser::find()->where(['user_id' => $user_id])->one();
+        $patient = PatPatient::getPatientByGuid($post['patient_guid']);
+        $vitals = PatVitals::find()->tenant()->andWhere(['patient_id' => $patient->patient_id])->andWhere("created_by != $user_id")->all();
+        
+        $extraColumns = ['tenant_id' => $tenant_id, 'modified_by' => Yii::$app->user->identity->user_id, 'modified_at' => new Expression('NOW()')]; // extra columns to be saved to the many to many table
+        $unlink = true; // unlink tags not in the list
+        $delete = true; // delete unlinked tags
+        $user->linkAll('vitals', $vitals, $extraColumns, $unlink, $delete);
+        return ['success' => true];
     }
 }
