@@ -4,9 +4,9 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
         $scope.app.settings.patientSideMenu = true;
         $scope.app.settings.patientContentClass = 'app-content patient_content ';
         $scope.app.settings.patientFooterClass = 'app-footer';
-        
+
         $scope.orgData = {};
-        
+
         $scope.changeMode = function (mode) {
             $scope.mode = mode;
 //            if(mode == 'update'){
@@ -17,7 +17,7 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
 //                $scope.setViewData($scope.orgData);
 //            }
         }
-        
+
         $scope.loadView = function () {
             $scope.mode = 'view';
             $http.post($rootScope.IRISOrgServiceUrl + '/patient/getpatientbyguid', {guid: $state.params.id})
@@ -29,8 +29,8 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
                         $scope.errorData = "An Error has occured while loading patient!";
                     });
         }
-        
-        $scope.setViewData = function(patient){
+
+        $scope.setViewData = function (patient) {
             $scope.view_data = {};
             $scope.view_data = patient;
             $rootScope.commonService.GetLabelFromValue(patient.patient_bill_type, 'GetPatientBillingList', function (response) {
@@ -45,17 +45,17 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
                 $scope.view_data.marital_status = response;
             });
         }
-        
+
         $scope.$watch('app.patientDetail.patientId', function (newValue, oldValue) {
             if (newValue != '') {
                 $scope.data = {};
                 $scope.data.PatPatient = $scope.patientObj;
                 $scope.data.PatPatientAddress = $scope.patientObj.address;
-                
+
                 $scope.initForm();
-                
+
 //                $scope.orgData = $scope.patientObj;
-                
+
             }
         }, true);
 
@@ -210,9 +210,9 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
                 );
             }
         }
-        
-        $scope.CopyAddress = function(){
-            if($scope.data.is_permanent){
+
+        $scope.CopyAddress = function () {
+            if ($scope.data.is_permanent) {
                 $scope.data.PatPatientAddress.addr_perm_address = $scope.data.PatPatientAddress.addr_current_address;
                 $scope.data.PatPatientAddress.addr_perm_country_id = $scope.data.PatPatientAddress.addr_country_id;
                 $scope.data.PatPatientAddress.addr_perm_state_id = $scope.data.PatPatientAddress.addr_state_id;
@@ -235,7 +235,7 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
             succ_msg = 'Patient saved successfully';
 
             _that.data.PatPatient.patient_dob = moment(_that.data.PatPatient.patient_dob).format('YYYY-MM-DD');
-            
+
             $scope.loadbar('show');
             $http({
                 method: method,
@@ -247,9 +247,9 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
                         $scope.loadbar('hide');
                         if (response.success == true) {
                             $scope.successMessage = succ_msg;
-                            
+
                             $scope.app.patientDetail.patientId = '';
-                            
+
                             $scope.app.patientDetail.patientTitleCode = response.patient.patient_title_code;
                             $scope.app.patientDetail.patientName = response.patient.patient_firstname;
                             $scope.app.patientDetail.patientId = response.patient.patient_id;
@@ -260,10 +260,10 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
                             $rootScope.commonService.GetLabelFromValue(response.patient.patient_gender, 'GetGenderList', function (response) {
                                 $scope.app.patientDetail.patientSex = response;
                             });
-                            
+
                             $scope.patientObj = $scope.orgData = response;
                             $scope.setViewData(response.patient);
-                            
+
                             $timeout(function () {
                                 $scope.mode = 'view';
                                 $scope.successMessage = succ_msg;
@@ -282,4 +282,15 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
                     $scope.errorData = data.message;
             });
         };
+
+
+        $http({
+            method: 'POST',
+            url: $rootScope.IRISOrgServiceUrl + '/patientvitals/assignvitals',
+            data: {'patient_guid': $state.params.id},
+        }).success(
+                function (response) {
+                    console.log(response);
+                }
+        );
     }]);

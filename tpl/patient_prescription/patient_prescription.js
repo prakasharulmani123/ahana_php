@@ -36,7 +36,16 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             //Get Notes
             $http.get($rootScope.IRISOrgServiceUrl + '/patientnotes/getpatientnotes?patient_id=' + $state.params.id)
                     .success(function (notes) {
-                        $scope.child.notes = notes.result;
+                        
+                        $scope.child.notes = [];
+                        angular.forEach(notes.result, function(result){
+                            angular.forEach(result.all, function(note){
+                                $scope.child.notes.push(note);
+                            });
+                        });
+                        
+//                        var unseen = $filter('filter')($scope.child.notes, {seen_by: 0});
+//                        $scope.unseen_notes = unseen.length;
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading patientnote!";
@@ -45,6 +54,20 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $http.get($rootScope.IRISOrgServiceUrl + '/patientvitals/getpatientvitals?patient_id=' + $state.params.id)
                     .success(function (vitals) {
                         $scope.child.vitals = vitals.result;
+                        $scope.unseen_vitals = vitals.uservitals;
+                        $scope.unseen_vitals_count = vitals.uservitals.length;
+                        
+                        angular.forEach($scope.child.vitals, function(vital){
+                            vital.seen_by = 1;
+                        });
+                
+                        angular.forEach(vitals.uservitals, function(vital){
+                            seen_filter_vital = $filter('filter')($scope.child.vitals, {vital_id: vital.vital_id});
+                            
+                            if(seen_filter_vital.length > 0){
+                                seen_filter_vital[0].seen_by = 0;
+                            }
+                        });
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading patientvitals!";

@@ -286,8 +286,8 @@
                     <li><a href="javascript:void(0)" ng-click="prescriptionStauts('0')"><i class="fa fa-history"></i> <br/>Prev-Prescr</a></li>
                     <li><a href="javascript:void(0)"><i class="fa fa-file-text"></i> <br/>Results </a></li>
                     <li><a href="javascript:void(0)" class="sb-open-right" data-target="#fav"><i class="fa fa-heart"></i> <br/> Favorites</a></li>
-                    <li><a href="javascript:void(0)" class="sb-open-right" data-target="#notes"><i class="fa fa-pencil"></i> <br/>  Notes</a></li>
-                    <li><a href="javascript:void(0)" class="sb-open-right" data-target="#vitals"> <i class="fa fa-heartbeat"></i> <br/>  Vitals</a></li>
+                    <li><a href="javascript:void(0)" class="sb-open-right" data-target="#notes"><i class="fa fa-pencil"></i> <br/>  <span class="label label-danger">{{unseen_notes}}</span> Notes</a></li>
+                    <li><a href="javascript:void(0)" class="sb-open-right" data-target="#vitals"> <i class="fa fa-heartbeat"></i> <br/>  <span class="label label-danger">{{unseen_vitals_count}}</span> Vitals</a></li>
                 </ul>
             </div>
         </div>
