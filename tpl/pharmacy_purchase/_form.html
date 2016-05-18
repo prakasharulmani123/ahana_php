@@ -148,7 +148,9 @@
                                 <td><span>{{purchaseitem.total_amount}}</span></td>
 
                                 <td>
-                                    <button type="button" ng-click="removeSubcat($index, purchaseitem.full_name)" class="btn btn-sm btn-danger pull-right">Remove</button>
+                                    <a ng-click="removeSubcat($index, purchaseitem.full_name)" title="Delete">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
                                 </td>
                             </tr>
                         </table>

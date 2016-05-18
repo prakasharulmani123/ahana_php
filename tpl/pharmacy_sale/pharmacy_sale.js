@@ -45,11 +45,14 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         //For Form
         $scope.initForm = function () {
             //Patients List
-//            $rootScope.commonService.GetPatientList('', '1', false, function (response) {
-//                $scope.patients = response.patientlist;
-//            });
-            $scope.data.patient_name = undefined;
-            $scope.patients = [];
+            $rootScope.commonService.GetPatientList('', '1', false, function (response) {
+                $scope.patients = [];
+                angular.forEach(response.patientlist, function (list) {
+                    $scope.patients.push({'Patient': list});
+                });
+            });
+//            $scope.data.patient_name = undefined;
+//            $scope.patients = [];
             $scope.encounters = [];
 
             //Consultant List
@@ -83,26 +86,29 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         };
 
         $scope.formatPatient = function ($item, $model, $label) {
+            console.log($item.Patient);
             id = $item.Patient.patient_id;
             $scope.data.patient_id = id;
             $scope.data.patient_guid = $item.Patient.patient_guid;
             $scope.data.patient_name = $item.Patient.patient_firstname;
             $scope.data.consultant_id = $item.Patient.last_consultant_id;
 
-            $scope.getEncounter(id);
+            $scope.getEncounter(id,  'add', '');
             $scope.getPatientMobileNo(id);
         }
 
-        $scope.getEncounter = function (patient_id) {
+        $scope.getEncounter = function (patient_id, mode, encounter_id) {
             $rootScope.commonService.GetEncounterListByPatient('', '0,1', false, patient_id, function (response) {
                 angular.forEach(response, function (resp) {
                     resp.encounter_id = resp.encounter_id.toString();
+                    $scope.encounters.push(resp);
                 });
-                $scope.encounters = response;
-                
-                if (response != null) {
+
+                if (response != null && mode == 'add') {
                     $scope.data.encounter_id = response[0].encounter_id;
                     $scope.getPrescription();
+                }else if(mode == 'edit'){
+                    $scope.data.encounter_id = encounter_id.toString();
                 }
             });
         }
@@ -336,6 +342,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
         //Save Both Add & Update Data
         $scope.saveForm = function (mode) {
+            console.log(mode);
             if (!$scope.tableform.$valid) {
                 $scope.data.patient_id = '';
             }
@@ -376,11 +383,24 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                         $anchorScroll();
                         if (response.success == true) {
                             $scope.loadbar('hide');
-                            $scope.successMessage = 'Sale added successfully';
-                            $scope.data = {};
-                            $timeout(function () {
-                                $state.go('pharmacy.sales');
-                            }, 1000)
+                            
+                            if(mode == 'add'){
+                                msg = 'New bill generated ' + response.model.bill_no;
+                                
+                                $scope.data = {};
+                                $scope.data.sale_date = moment().format('YYYY-MM-DD');
+                                $scope.data.formtype = 'add';
+                                $scope.data.payment_type = 'CA';
+                                $scope.saleItems = [];
+                                $scope.addRow();
+                                $scope.tableform.$show();
+                            }else{
+                                msg = 'Bill updated successfully';
+                            }
+                            $scope.successMessage = msg;
+//                            $timeout(function () {
+//                                $state.go('pharmacy.sales');
+//                            }, 1000)
                         } else {
                             $scope.loadbar('hide');
                             $scope.errorData = response.message;
@@ -415,6 +435,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
                         $scope.data = response;
                         $scope.data.patient_name = response.patient.fullname;
+                        $scope.data.patient_guid = response.patient.patient_guid;
                         $scope.products = [];
 //                        $scope.products = response2.productList;
 
@@ -432,6 +453,8 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                             });
                         });
 
+                        $scope.getEncounter(response.patient.patient_id,  'edit', response.encounter_id);
+            
                         $timeout(function () {
                             delete $scope.data.items;
                         }, 3000);
@@ -469,30 +492,30 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             });
         }
 
-        var changeTimer = false;
-
-        $scope.$watch('data.patient_name', function (newValue, oldValue) {
-            if (newValue != '') {
-
-                if (changeTimer !== false)
-                    clearTimeout(changeTimer);
-
-                $scope.loadbar('show');
-                changeTimer = setTimeout(function () {
-                    $http({
-                        method: 'POST',
-                        url: $rootScope.IRISOrgServiceUrl + '/patient/search',
-                        data: {'search': newValue},
-                    }).success(
-                            function (response) {
-                                $scope.patients = response.patients;
-                                $scope.loadbar('hide');
-                            }
-                    );
-                    changeTimer = false;
-                }, 300);
-            }
-        }, true);
+//        var changeTimer = false;
+//
+//        $scope.$watch('data.patient_name', function (newValue, oldValue) {
+//            if (newValue != '') {
+//
+//                if (changeTimer !== false)
+//                    clearTimeout(changeTimer);
+//
+//                $scope.loadbar('show');
+//                changeTimer = setTimeout(function () {
+//                    $http({
+//                        method: 'POST',
+//                        url: $rootScope.IRISOrgServiceUrl + '/patient/search',
+//                        data: {'search': newValue},
+//                    }).success(
+//                            function (response) {
+//                                $scope.patients = response.patients;
+//                                $scope.loadbar('hide');
+//                            }
+//                    );
+//                    changeTimer = false;
+//                }, 300);
+//            }
+//        }, true);
 
         $scope.getPrescription = function () {
             $scope.loadbar('show');
@@ -505,7 +528,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                         angular.forEach(prescriptionList.prescriptions, function (prescription) {
                             angular.forEach(prescription.items, function (item) {
                                 $scope.inserted = {
-                                    full_name: item.product_name,
+                                    full_name: item.product.full_name,
                                     batch_details: '',
                                     product_id: item.product_id,
                                     product_name: item.product_name,
@@ -518,11 +541,15 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                     vat_amount: '0',
                                     item_amount: '0',
                                 };
-                                $scope.saleItems.push($scope.inserted);
-                                ids.push(item.product_id);
+                                
+                                exists = $filter('filter')($scope.saleItems, {product_id: item.product_id});
+                                if(exists.length == 0){
+                                    $scope.saleItems.push($scope.inserted);
+                                    ids.push(item.product_id);
+                                }
                             });
                         });
-                        
+
                         $rootScope.commonService.GetBatchListByProduct(ids, function (response) {
                             $scope.batches = response.batchList;
                         });

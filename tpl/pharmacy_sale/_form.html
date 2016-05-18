@@ -16,7 +16,7 @@
                                                class="form-control"
                                                ng-model="data.patient_name"
                                                typeahead="patient.Patient as patient.Patient.patient_firstname for patient in patients | filter:$viewValue"
-                                               typeahead-on-select="formatPatient($item, $model, $label)" 
+                                               typeahead-on-select="formatPatient($item, $model, $label)"
                                                />
                                     </div>
 <!--                                    <div class="col-lg-0">
@@ -24,20 +24,6 @@
                                             <i class="fa fa-plus text ng-scope"></i>
                                         </button>
                                     </div>-->
-                                </div>
-                                <div class="line line-dashed b-b line-lg "></div>
-
-                                <div class="form-group">
-                                    <label class="col-lg-4 control-label">Encounter #</label>
-                                    <div class="col-lg-8">
-                                        <select class="form-control" 
-                                                ng-model="data.encounter_id" 
-                                                ng-options="encounter.encounter_id as encounter.encounter_id for encounter in encounters | orderBy: encounter_id"
-                                                ng-change="getPrescription()"
-                                                >
-                                            <option value="">Select Encounter</option>
-                                        </select>
-                                    </div>
                                 </div>
                                 <div class="line line-dashed b-b line-lg "></div>
 
@@ -58,6 +44,20 @@
                                     </div>
                                 </div>
                                 <div class="line line-dashed b-b line-lg "></div>
+                                
+                                <div class="form-group">
+                                    <label class="col-lg-4 control-label">Encounter #</label>
+                                    <div class="col-lg-8">
+                                        <select class="form-control" 
+                                                ng-model="data.encounter_id" 
+                                                ng-options="encounter.encounter_id as encounter.encounter_id for encounter in encounters | orderBy: encounter_id"
+                                                ng-change="getPrescription()"
+                                                >
+                                            <option value="">Select Encounter</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="line line-dashed b-b line-lg "></div>
                             </div>
                         </div>
                     </div>
@@ -65,6 +65,14 @@
                     <div class="col-sm-6">
                         <div class="panel panel-default">
                             <div class="panel-body">
+                                <div class="form-group" ng-if="data.bill_no">
+                                    <label class="col-lg-4 control-label">Bill No</label>
+                                    <div class="col-lg-8">
+                                        {{data.bill_no}}
+                                    </div>
+                                </div>
+                                <div class="line line-dashed b-b line-lg"  ng-if="data.bill_no"></div>
+
                                 <div class="form-group">
                                     <label class="col-lg-4 control-label">Sale Date *</label>
                                     <div class="col-lg-8">
@@ -174,7 +182,9 @@
                                 </td>
                                 <td><span>{{saleitem.item_amount}}</span></td>
                                 <td>
-                                    <button type="button" ng-click="removeSaleItem($index)" class="btn btn-sm btn-danger pull-right">Delete</button>
+                                    <a ng-click="removeSaleItem($index)" title="Delete">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
                                 </td>
                             </tr>
                         </table>
@@ -182,7 +192,7 @@
                             <br>
                             <button type="button" ng-click="tableform.$show();
                                 addRow()" class="btn btn-default pull-left btn-primary">Add Product</button>
-                            <button type="button" ng-show="!tableform.$visible;" ng-click="tableform.$show();" class="btn btn-default pull-left btn-info">Edit Products</button>
+                            <button id="edit_products" type="button" ng-show="!tableform.$visible;" ng-click="tableform.$show();" class="btn btn-default pull-left btn-info">Edit Products</button>
                         </div>
                     </div>
                 </div>
