@@ -127,7 +127,8 @@ class DoctorscheduleController extends ActiveController {
         if (!empty($post)) {
             if (isset($post['doctor_id']) && isset($post['schedule_date']) && $post['doctor_id'] != '' && $post['schedule_date'] != '') {
                 $doctor_id = $post['doctor_id'];
-                $schedule_day = date('N', strtotime($post['schedule_date']));
+                $date = date("Y-m-d", strtotime($post['schedule_date']));
+                $schedule_day = date('N', strtotime($date));
 
                 $all_schedules = CoDoctorSchedule::find()
                         ->where('schedule_day = :day', [':day' => $schedule_day])
@@ -141,7 +142,7 @@ class DoctorscheduleController extends ActiveController {
                 $timerange = [];
                 if (!empty($all_schedules)) {
                     foreach ($all_schedules as $all_schedule) {
-                        $timerange = array_merge($timerange, self::getTimeScheduleSlots($post['doctor_id'], $post['schedule_date'], $all_schedule['schedule_time_in'], $all_schedule['schedule_time_out'], '5'));
+                        $timerange = array_merge($timerange, self::getTimeScheduleSlots($post['doctor_id'], $date, $all_schedule['schedule_time_in'], $all_schedule['schedule_time_out'], '5'));
                     }
                 }
 
@@ -163,12 +164,16 @@ class DoctorscheduleController extends ActiveController {
 
         while ($start_time <= $end_time) {
             $slot = date("H:i:s", $start_time);
-//            $isAvailable = PatAppointment::checkAvailableSlot($doctor_id, $schedule_date, $slot);
-//            if($isAvailable)
-                $array_of_time[] = array("time" => $slot);
+            $isAvailable = PatAppointment::checkAvailableSlot($doctor_id, $schedule_date, $slot);
+            if ($isAvailable)
+                $color = 'black';
+            else
+                $color = 'red';
+            
+            $array_of_time[] = array("time" => $slot, 'color' => $color);
             $start_time += $interval_mins;
         }
-        
+
         return $array_of_time;
     }
 
