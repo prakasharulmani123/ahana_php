@@ -488,8 +488,10 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         }
 
         $scope.scrollBottom = function () {
-            if($(".vbox .row-row .cell").is(':visible'))
-                $(".vbox .row-row .cell:visible").animate({ scrollTop: $('.vbox .row-row .cell:visible').prop("scrollHeight")}, 1000);
+            if($(".vbox .row-row .cell").is(':visible')){
+                elem = $(".vbox .row-row .cell:visible");
+                elem.animate({ scrollTop: elem.prop("scrollHeight")}, 1000);
+            }
         }
 
     }]);
