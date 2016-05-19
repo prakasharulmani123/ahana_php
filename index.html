@@ -74,7 +74,7 @@
                             <div class="cell">
                                 <div class="cell-inner padder">
                                     <!-- notes list -->
-                                    <div ng-repeat="note in child.notes" class="bg-grey-only r r-2x m-b-xs wrapper-sm b-l b-2x b-{{note.seen_by == 0 ? 'danger' : 'info'}}">
+                                    <div ng-repeat="note in child.notes | orderBy: 'pat_note_id'" class="bg-grey-only r r-2x m-b-xs wrapper-sm b-l b-2x b-{{note.seen_by == 0 ? 'danger' : 'info'}}">
                                         {{note.notes}}
                                         <div class="text-xs text-muted ng-binding">{{note.created_at| moment:'MMM DD - YYYY'}}</div>
                                     </div>

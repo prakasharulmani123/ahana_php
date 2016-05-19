@@ -9,6 +9,9 @@ app.controller('AlertsController', ['$rootScope', '$scope', '$timeout', '$http',
         editableThemes.bs3.buttonsClass = 'btn-sm';
         editableOptions.theme = 'bs3';
 
+        //Notifications
+        $scope.assignNotifications();
+        
         $scope.checkName = function (data) {
             if (!data) {
                 return "Value should not empty";

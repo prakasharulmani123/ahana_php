@@ -4,7 +4,10 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
         $scope.app.settings.patientSideMenu = true;
         $scope.app.settings.patientContentClass = 'app-content patient_content ';
         $scope.app.settings.patientFooterClass = 'app-footer';
-
+        
+        //Notifications
+        $scope.assignNotifications();
+        
         $scope.orgData = {};
 
         $scope.changeMode = function (mode) {
@@ -282,15 +285,4 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
                     $scope.errorData = data.message;
             });
         };
-
-
-        $http({
-            method: 'POST',
-            url: $rootScope.IRISOrgServiceUrl + '/patientvitals/assignvitals',
-            data: {'patient_guid': $state.params.id},
-        }).success(
-                function (response) {
-                    console.log(response);
-                }
-        );
     }]);

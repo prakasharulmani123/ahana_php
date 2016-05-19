@@ -38,6 +38,9 @@ app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', 
         $scope.app.settings.patientContentClass = 'app-content patient_content ';
         $scope.app.settings.patientFooterClass = 'app-footer';
 
+        //Notifications
+        $scope.assignNotifications();
+        
         $scope.isPatientHaveActiveEncounter = function (callback) {
             $http.post($rootScope.IRISOrgServiceUrl + '/encounter/patienthaveactiveencounter', {patient_id: $state.params.id})
                     .success(function (response) {

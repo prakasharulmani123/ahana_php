@@ -7,6 +7,8 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
 
         $scope.more_max = 4;
 
+        //Notifications
+        $scope.assignNotifications();
         //Encounter Page
         $scope.loadPatientEncounters = function (type) {
             $scope.errorData = '';

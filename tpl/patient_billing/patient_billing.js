@@ -39,6 +39,9 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
         $scope.app.settings.patientContentClass = 'app-content patient_content ';
         $scope.app.settings.patientFooterClass = 'app-footer';
 
+        //Notifications
+        $scope.assignNotifications();
+        
         $scope.more_max = 4;
         $scope.total_billing = 0;
 

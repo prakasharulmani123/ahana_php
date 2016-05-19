@@ -20,6 +20,7 @@ angular.module('app')
                     org_city: '',
                     org_mobile: '',
                     version: '',
+                    username: '',
                     // for chart colors
                     color: {
                         primary: '#7266ba',
@@ -219,6 +220,7 @@ angular.module('app')
                     $scope.app.org_state = user.credentials.org_state;
                     $scope.app.org_city = user.credentials.org_city;
                     $scope.app.org_mobile = user.credentials.org_mobile;
+                    $scope.app.username = user.credentials.username;
                 };
 
                 $scope.checkAccess = function (url) {
@@ -273,6 +275,8 @@ angular.module('app')
                                 $scope.data = {};
                                 $scope.child.notes.push(response);
                                 $scope.loadbar('hide');
+
+                                $(".vbox .row-row .cell:visible").animate({scrollTop: $('.vbox .row-row .cell:visible').prop("scrollHeight")}, 1000);
 //                                $scope.successMessage = 'Note saved successfully';
                             })
                             .error(function (data, status) {
@@ -346,7 +350,7 @@ angular.module('app')
                         $window.history.forward();
                     }
                 });
-                
+
                 $scope.$on('HK_CREATE', function (e) {
                     alert('create');
                     angular.element(document.querySelectorAll("[hot-key-create]")).trigger('click');
@@ -357,7 +361,23 @@ angular.module('app')
                 $scope.$on('HK_SEARCH', function (e) {
                     alert('create');
                 });
-                
+
+                $scope.assignNotifications = function () {
+                    //Assign Notes
+                    $http({
+                        method: 'POST',
+                        url: $rootScope.IRISOrgServiceUrl + '/patientnotes/assignnotes',
+                        data: {'patient_guid': $state.params.id},
+                    });
+
+                    //Assign Vitals
+                    $http({
+                        method: 'POST',
+                        url: $rootScope.IRISOrgServiceUrl + '/patientvitals/assignvitals',
+                        data: {'patient_guid': $state.params.id},
+                    });
+                }
+
             }]);
 
 angular.module('app').filter('moment', function () {

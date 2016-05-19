@@ -38,6 +38,9 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
         $scope.app.settings.patientContentClass = 'app-content patient_content ';
         $scope.app.settings.patientFooterClass = 'app-footer';
         
+        //Notifications
+        $scope.assignNotifications();
+        
         $scope.ctrl = {};
         $scope.allExpanded = true;
         $scope.expanded = true;

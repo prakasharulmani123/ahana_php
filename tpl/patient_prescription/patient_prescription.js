@@ -5,6 +5,9 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.app.settings.patientContentClass = 'app-content patient_content ';
         $scope.app.settings.patientFooterClass = 'app-footer';
 
+        //Notifications
+        $scope.assignNotifications();
+        
         $scope.enc = {};
         $scope.drugs = {};
         $scope.routes = {};
@@ -36,16 +39,30 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             //Get Notes
             $http.get($rootScope.IRISOrgServiceUrl + '/patientnotes/getpatientnotes?patient_id=' + $state.params.id)
                     .success(function (notes) {
-                        
+
                         $scope.child.notes = [];
-                        angular.forEach(notes.result, function(result){
-                            angular.forEach(result.all, function(note){
+                        angular.forEach(notes.result, function (result) {
+                            angular.forEach(result.all, function (note) {
                                 $scope.child.notes.push(note);
                             });
                         });
-                        
+
 //                        var unseen = $filter('filter')($scope.child.notes, {seen_by: 0});
 //                        $scope.unseen_notes = unseen.length;
+                        $scope.unseen_notes = notes.usernotes;
+                        $scope.unseen_notes_count = notes.usernotes.length;
+
+                        angular.forEach($scope.child.notes, function (note) {
+                            note.seen_by = 1;
+                        });
+
+                        angular.forEach(notes.usernotes, function (note) {
+                            seen_filter_note = $filter('filter')($scope.child.notes, {pat_note_id: note.note_id});
+
+                            if (seen_filter_note.length > 0) {
+                                seen_filter_note[0].seen_by = 0;
+                            }
+                        });
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading patientnote!";
@@ -56,15 +73,15 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         $scope.child.vitals = vitals.result;
                         $scope.unseen_vitals = vitals.uservitals;
                         $scope.unseen_vitals_count = vitals.uservitals.length;
-                        
-                        angular.forEach($scope.child.vitals, function(vital){
+
+                        angular.forEach($scope.child.vitals, function (vital) {
                             vital.seen_by = 1;
                         });
-                
-                        angular.forEach(vitals.uservitals, function(vital){
+
+                        angular.forEach(vitals.uservitals, function (vital) {
                             seen_filter_vital = $filter('filter')($scope.child.vitals, {vital_id: vital.vital_id});
-                            
-                            if(seen_filter_vital.length > 0){
+
+                            if (seen_filter_vital.length > 0) {
                                 seen_filter_vital[0].seen_by = 0;
                             }
                         });
@@ -152,7 +169,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     if (fav.length > 0) {
                         angular.extend(items, {is_favourite: 1});
                     }
-                    
+
                     $scope.data.prescriptionItems.push(items);
                     $scope.addData = {};
 
@@ -417,4 +434,62 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         $scope.errorData = "An Error has occured while loading list!";
                     });
         };
+
+        $scope.seen_notes = function () {
+            $scope.scrollBottom();
+            if ($scope.unseen_notes_count > 0) {
+                unseen_filter_note = $filter('filter')($scope.child.notes, {seen_by: 0});
+                note_ids = [];
+                angular.forEach(unseen_filter_note, function (unseen, key) {
+                    note_ids.push(unseen.pat_note_id);
+                });
+
+                $http({
+                    method: 'POST',
+                    url: $rootScope.IRISOrgServiceUrl + '/patientnotes/seennotes',
+                    data: {'ids': note_ids, 'patient_guid': $state.params.id},
+                }).success(
+                        function (response) {
+                            $timeout(function () {
+                                angular.forEach($scope.child.notes, function (note, key) {
+                                    note.seen_by = 1;
+                                });
+                                $scope.unseen_notes_count = 0;
+                            }, 5000);
+                        }
+                );
+            }
+        }
+
+        $scope.seen_vitals = function () {
+//            $scope.scrollBottom();
+            if ($scope.unseen_vitals_count > 0) {
+                unseen_filter_vital = $filter('filter')($scope.child.vitals, {seen_by: 0});
+                vital_ids = [];
+                angular.forEach(unseen_filter_vital, function (unseen, key) {
+                    vital_ids.push(unseen.vital_id);
+                });
+                
+                $http({
+                    method: 'POST',
+                    url: $rootScope.IRISOrgServiceUrl + '/patientvitals/seenvitals',
+                    data: {'ids': vital_ids, 'patient_guid': $state.params.id},
+                }).success(
+                        function (response) {
+                            $timeout(function () {
+                                angular.forEach($scope.child.vitals, function (vital, key) {
+                                    vital.seen_by = 1;
+                                });
+                                $scope.unseen_vitals_count = 0;
+                            }, 5000);
+                        }
+                );
+            }
+        }
+
+        $scope.scrollBottom = function () {
+            if($(".vbox .row-row .cell").is(':visible'))
+                $(".vbox .row-row .cell:visible").animate({ scrollTop: $('.vbox .row-row .cell:visible').prop("scrollHeight")}, 1000);
+        }
+
     }]);
