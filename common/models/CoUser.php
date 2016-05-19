@@ -141,12 +141,32 @@ class CoUser extends RActiveRecord {
         return $this->hasMany(CoRole::className(), ['role_id' => 'role_id'])->via('usersRoles');
     }
 
+    /**
+     * @return ActiveQuery
+     */
     public function getUsersVitals() {
         return $this->hasMany(PatVitalsUsers::className(), ['user_id' => 'user_id']);
     }
 
+    /**
+     * @return ActiveQuery
+     */
     public function getVitals() {
         return $this->hasMany(PatVitals::className(), ['vital_id' => 'vital_id'])->via('usersVitals');
+    }
+    
+    /**
+     * @return ActiveQuery
+     */
+    public function getUsersNotes() {
+        return $this->hasMany(PatNotesUsers::className(), ['user_id' => 'user_id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getNotes() {
+        return $this->hasMany(PatNotes::className(), ['pat_note_id' => 'note_id'])->via('usersNotes');
     }
     
     /**

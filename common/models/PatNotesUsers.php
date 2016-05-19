@@ -2,34 +2,36 @@
 
 namespace common\models;
 
-use common\models\query\PatVitalsUsersQuery;
+use common\models\query\PatNotesUsersQuery;
 use yii\db\ActiveQuery;
 
 /**
- * This is the model class for table "pat_vitals_users".
+ * This is the model class for table "pat_notes_users".
  *
- * @property integer $vital_user_id
+ * @property integer $vital_note_id
  * @property integer $tenant_id
- * @property integer $vital_id
+ * @property integer $note_id
  * @property integer $user_id
+ * @property integer $patient_id
  * @property string $seen
  * @property integer $created_by
  * @property string $created_at
  * @property integer $modified_by
  * @property string $modified_at
+ * @property string $deleted_at
  *
+ * @property PatNotes $note
  * @property CoTenant $tenant
  * @property CoUser $user
- * @property PatVitals $vital
  */
-class PatVitalsUsers extends RActiveRecord
+class PatNotesUsers extends RActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'pat_vitals_users';
+        return 'pat_notes_users';
     }
 
     /**
@@ -38,10 +40,10 @@ class PatVitalsUsers extends RActiveRecord
     public function rules()
     {
         return [
-            [['tenant_id', 'vital_id', 'user_id'], 'required'],
-            [['tenant_id', 'vital_id', 'user_id', 'created_by', 'modified_by'], 'integer'],
+            [['tenant_id', 'note_id', 'user_id', 'patient_id', 'created_by'], 'required'],
+            [['tenant_id', 'note_id', 'user_id', 'patient_id', 'created_by', 'modified_by'], 'integer'],
             [['seen'], 'string'],
-            [['created_at', 'modified_at', 'patient_id'], 'safe']
+            [['created_at', 'modified_at', 'deleted_at'], 'safe']
         ];
     }
 
@@ -51,16 +53,26 @@ class PatVitalsUsers extends RActiveRecord
     public function attributeLabels()
     {
         return [
-            'vital_user_id' => 'Vital User ID',
+            'vital_note_id' => 'Vital Note ID',
             'tenant_id' => 'Tenant ID',
-            'vital_id' => 'Vital ID',
+            'note_id' => 'Note ID',
             'user_id' => 'User ID',
+            'patient_id' => 'Patient ID',
             'seen' => 'Seen',
             'created_by' => 'Created By',
             'created_at' => 'Created At',
             'modified_by' => 'Modified By',
             'modified_at' => 'Modified At',
+            'deleted_at' => 'Deleted At',
         ];
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getNote()
+    {
+        return $this->hasOne(PatNotes::className(), ['pat_note_id' => 'note_id']);
     }
 
     /**
@@ -78,16 +90,8 @@ class PatVitalsUsers extends RActiveRecord
     {
         return $this->hasOne(CoUser::className(), ['user_id' => 'user_id']);
     }
-
-    /**
-     * @return ActiveQuery
-     */
-    public function getVital()
-    {
-        return $this->hasOne(PatVitals::className(), ['vital_id' => 'vital_id']);
-    }
     
     public static function find() {
-        return new PatVitalsUsersQuery(get_called_class());
+        return new PatNotesUsersQuery(get_called_class());
     }
 }

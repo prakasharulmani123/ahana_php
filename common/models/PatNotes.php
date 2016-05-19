@@ -92,7 +92,21 @@ class PatNotes extends RActiveRecord {
     public function getCreatedUser() {
         return $this->hasOne(CoUser::className(), ['user_id' => 'created_by']);
     }
+    
+    /**
+     * @return ActiveQuery
+     */
+    public function getNotesUsers() {
+        return $this->hasMany(PatNotesUsers::className(), ['pat_note_id' => 'note_id']);
+    }
 
+    /**
+     * @return ActiveQuery
+     */
+    public function getUsers() {
+        return $this->hasMany(CoUser::className(), ['user_id' => 'user_id'])->via('notesUsers');
+    }
+    
     public function fields() {
         $extend = [
             'short_notes' => function ($model) {
