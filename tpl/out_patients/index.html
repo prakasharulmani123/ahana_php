@@ -63,6 +63,11 @@
                     </tr>
                 </thead>
                 <tbody ng-hide="isLoading">
+                    <tr ng-if="displayedCollection.length == 0">
+                        <td colspan="11" class="text-center">
+                            No O/P records
+                        </td>
+                    </tr>
                     <tr ng-repeat-start="(op_key, value) in displayedCollection" ng-init="expanded = true;">
                         <td>
                             <button ng-click="expanded = !expanded" expand class="btn btn-sm btn-default hms-plus">

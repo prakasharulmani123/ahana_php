@@ -2,7 +2,7 @@
     <div class="bg-light lter b-b wrapper-md">
         <h1 class="m-n h3">Billing</h1>
     </div>
-    <div class="wrapper-md p-b" ng-if="charge_alerts.length > 0">
+    <div class="wrapper-md p-b" ng-if="charge_alerts.length > 0 && enc.selected.finalize == '0'">
         <div class="alert ng-isolate-scope alert-danger alert-dismissable">
             <h4>Implement changes in pricing structure for recurring charges ?</h4>
             <div style="height: 25px;" ng-repeat="(key, alert) in charge_alerts">

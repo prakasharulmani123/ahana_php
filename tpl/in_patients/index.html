@@ -30,10 +30,17 @@
                     </tr>
                 </thead>
                 <tbody ng-hide="isLoading">
+                    <tr ng-if="displayedCollection.length == 0">
+                        <td colspan="11" class="text-center">
+                            No I/P records
+                        </td>
+                    </tr>
                     <tr ng-repeat="row in displayedCollection| orderBy: patient_firstname">
                         <td align="center" valign="middle">
+                            <div style="margin-top: -10px; position: absolute;">
                             <img ng-if="row.patient.hasalert" class="pull-left" src="img/symbol1.png"  alt="" tooltip="Has Alert" tooltip-trigger tooltip-animation="false" tooltip-placement="right"  />
                             <img ng-if="row.patient.address.incomplete_profile" class="pull-left" src="img/question.png"  alt="" tooltip="Incomplete Profile" tooltip-trigger tooltip-animation="false" tooltip-placement="right" />
+                            </div>
                         </td>
                         <td>
                             <img ng-if="$even" class="pull-left" src="img/man-icon.png" width="49" height="49" alt="" />  

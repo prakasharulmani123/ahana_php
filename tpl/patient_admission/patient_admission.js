@@ -127,6 +127,10 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
             $scope.data.PatEncounter.encounter_date = moment().format('YYYY-MM-DD HH:mm:ss');
             $scope.data.validate_casesheet = ($scope.app.patientDetail.patientCasesheetno == null || $scope.app.patientDetail.patientCasesheetno == '');
         }
+        
+        $scope.$watch('app.patientDetail.patientCasesheetno', function (newValue, oldValue) {
+            $scope.data.validate_casesheet = ($scope.app.patientDetail.patientCasesheetno == null || $scope.app.patientDetail.patientCasesheetno == '');
+        }, true);
 
         $scope.initTransferForm = function () {
             $scope.transferTypes = [{'value': 'TD', 'label': 'Consultant'}, {'value': 'TR', 'label': 'Room'}];
@@ -289,9 +293,9 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
                 method = 'POST';
                 form_data = _that.data;
             } else if (mode == 'update') {
-                post_url = $rootScope.IRISOrgServiceUrl + '/admissions/' + _that.data.PatAdmission.admn_id;
+                post_url = $rootScope.IRISOrgServiceUrl + '/encounter/updateadmission';
                 method = 'PUT';
-                form_data = _that.data.PatAdmission;
+                form_data = _that.data;
             }
             succ_msg = 'Admission saved successfully';
 
@@ -382,6 +386,7 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
         };
 
         $scope.loadAdmissionForm = function () {
+            $scope.showForm = false;
             $scope.loadbar('show');
             _that = this;
             $scope.errorData = "";
@@ -390,6 +395,11 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
                 method: "GET"
             }).success(
                     function (response) {
+                        if(response.currentAdmission.admission_status != 'A'){
+                            alert("You can't modify a this admission");
+                            $state.go("patient.encounter", {id: $state.params.id});
+                        }
+                        $scope.showForm = true;
                         $scope.loadbar('hide');
                         $scope.data = {};
                         $scope.data.formtype = 'update'
@@ -397,8 +407,9 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
                         $scope.data.PatAdmission = response.liveAdmission;
                         $scope.updateWard();
 
-                        $rootScope.commonService.GetRoomList('', '1', false, '1', function (response) {
-                            angular.extend($scope.rooms, response.roomList);
+                        $rootScope.commonService.GetRoomList('', '1', false, '0', function (list) {
+                            $scope.rooms = list.roomList;
+                            $scope.rooms.push(response.currentAdmission.room);
                             $scope.updateRoom();
                             $scope.updateRoomType();
                         });

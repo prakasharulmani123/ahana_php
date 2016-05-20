@@ -148,6 +148,10 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
             }, 1000);
         }
 
+        $scope.$watch('app.patientDetail.patientCasesheetno', function (newValue, oldValue) {
+            $scope.data.validate_casesheet = ($scope.app.patientDetail.patientCasesheetno == null || $scope.app.patientDetail.patientCasesheetno == '');
+        }, true);
+        
         $scope.initChangeStatusForm = function () {
             $rootScope.commonService.GetPatientBillingList(function (response) {
                 $scope.bill_types = response;

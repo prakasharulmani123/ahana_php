@@ -5,7 +5,7 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
         $scope.app.settings.patientContentClass = 'app-content patient_content ';
         $scope.app.settings.patientFooterClass = 'app-footer';
 
-        $scope.more_max = 4;
+        $scope.more_max = 3;
 
         //Notifications
         $scope.assignNotifications();
@@ -72,13 +72,13 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
 
             if ($('#enc_' + enc_id + key).is(':checked')) {
                 if (type == 'IP') {
-                    $scope.more_li = [
-                        {href: 'patient.update_admission({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Modify', mode: 'sref'},
-                        {href: 'patient.transfer({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Transfer', mode: 'sref'},
-                        {href: 'patient.discharge({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Clinical Discharge', mode: 'sref'},
-                        {href: 'patient.swapping({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Swapping', mode: 'sref'},
-                    ];
-
+                    if($('.enc_chk_' + enc_id).length == 1)
+                        $scope.more_li.push({href: 'patient.update_admission({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Modify Admission', mode: 'sref'});
+                    
+                    $scope.more_li.push({href: 'patient.transfer({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Transfer', mode: 'sref'});
+                    $scope.more_li.push({href: 'patient.discharge({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Clinical Discharge', mode: 'sref'});
+                    $scope.more_li.push({href: 'patient.swapping({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Swapping', mode: 'sref'});
+                    
                     if (status == '1' && row_sts != 'A') {
 
                         if (is_swap == '1')
