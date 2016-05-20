@@ -8,6 +8,7 @@ use common\models\PatBillingRecurring;
 use common\models\PatBillingRoomChargeHistory;
 use common\models\PatEncounter;
 use common\models\PatPatient;
+use common\models\PatPatientCasesheet;
 use common\models\VBillingAdvanceCharges;
 use common\models\VBillingOtherCharges;
 use common\models\VBillingProcedures;
@@ -82,11 +83,13 @@ class EncounterController extends ActiveController {
         if (!empty($post)) {
             $model = new PatEncounter();
             $appt_model = new PatAppointment();
+            $case_model = new PatPatientCasesheet();
 
             $model_attr = array(
                 'patient_id' => (isset($post['patient_id']) ? $post['patient_id'] : ''),
                 'encounter_type' => 'OP',
                 'encounter_date' => $post['status_date'],
+                'add_casesheet_no' => $post['PatEncounter']['add_casesheet_no']
             );
             $model->attributes = $model_attr;
 
@@ -94,6 +97,15 @@ class EncounterController extends ActiveController {
 
             $valid = $model->validate();
             $valid = $appt_model->validate() && $valid;
+
+            if (isset($post['PatEncounter']['add_casesheet_no'])) {
+                $case_model->attributes = array(
+                    'patient_id' => (isset($post['patient_id']) ? $post['patient_id'] : ''),
+                    'add_casesheet_no' => $post['PatEncounter']['add_casesheet_no']
+                );
+
+                $valid = $case_model->validate() && $valid;
+            }
 
             if ($valid) {
                 $model->save(false);
@@ -115,7 +127,7 @@ class EncounterController extends ActiveController {
 
                 return ['success' => true];
             } else {
-                return ['success' => false, 'message' => Html::errorSummary([$model, $appt_model])];
+                return ['success' => false, 'message' => Html::errorSummary([$model, $appt_model, $case_model])];
             }
         } else {
             return ['success' => false, 'message' => 'Please Fill the Form'];
@@ -143,6 +155,7 @@ class EncounterController extends ActiveController {
             $valid = $admission_model->validate() && $valid;
 
             if ($valid) {
+
                 $model->save(false);
 
                 $admission_model->encounter_id = $model->encounter_id;
@@ -218,7 +231,7 @@ class EncounterController extends ActiveController {
                     'encounter_date' => SORT_DESC,
                 ])
                 ->all();
-        
+
         foreach ($data as $key => $value) {
             $details = PatEncounter::find()
                     ->joinWith('patAppointments')
