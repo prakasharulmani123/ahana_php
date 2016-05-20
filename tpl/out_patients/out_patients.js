@@ -1,4 +1,4 @@
-app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes) {
+app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$filter', '$modal', '$log', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $filter, $modal, $log) {
 
         $scope.app.settings.patientTopBar = false;
         $scope.app.settings.patientSideMenu = false;
@@ -16,15 +16,18 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
             $scope.$broadcast('onExpandAll', {expanded: expanded});
         };
 
-        $scope.encounterIDs = [];
+        //Checkbox initialize
+        $scope.checkboxes = {'checked': false, items: []};
+        $scope.currentAppointmentSelectedItems = [];
+        $scope.currentAppointmentSelected = 0;
 
         //Index Page
         $scope.loadOutPatientsList = function () {
             $scope.isLoading = true;
             // pagination set up
-            $scope.rowCollection = [];  // base collection
+            $scope.rowCollection = []; // base collection
             $scope.itemsByPage = 10; // No.of records per page
-            $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
+            $scope.displayedCollection = [].concat($scope.rowCollection); // displayed collection
 
             // Get data's from service
             $http.get($rootScope.IRISOrgServiceUrl + '/encounter/outpatients')
@@ -32,43 +35,73 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                         $scope.isLoading = false;
                         $scope.rowCollection = OutPatients.result;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
-                        $scope.more_li = [];
 
-//                        angular.forEach(OutPatients, function (value) {
-//                            $scope.encounterIDs.push({
-//                                'encounterID': value.encounter_id,
-//                                'patientID': value.patient_id,
-//                                'selected': false
-//                            })
-//                        });
+                        //Checkbox initialize
+                        $scope.checkboxes = {'checked': false, items: []};
+                        $scope.currentAppointmentSelectedItems = [];
+                        $scope.currentAppointmentSelected = 0;
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading patients!";
                     });
         };
 
-        $scope.moreOptions = function (key, enc_id, op_key) {
-            $('.oplist').not('#oplist_' + op_key + '_' + key).attr('checked', true);
-
-            $scope.more_li = [];
-            $scope.more_li.push({
-                href: "cancelSelected()",
-                name: 'Cancel Appointment',
-                mode: 'click'
-            });
+        $scope.moreOptions = function (op_key, key, consultant_id, appt_id, row) {
+            appt_exists = $filter('filter')($scope.checkboxes.items, {appt_id: appt_id});
+            if ($('#oplist_' + op_key + '_' + key).is(':checked')) {
+                if (appt_exists.length == 0) {
+                    consultant_exists = $filter('filter')($scope.checkboxes.items, {consultant_id: consultant_id});
+                    if (consultant_exists.length == 0) {
+                        $('.oplistcheckbox').not('#oplist_' + op_key + '_' + key).attr('checked', false);
+                        $scope.checkboxes.items = [];
+                        $scope.checkboxes.items.push({
+                            appt_id: appt_id,
+                            consultant_id: consultant_id,
+                            row: row.liveAppointmentBooking
+                        });
+                    } else {
+                        $scope.checkboxes.items.push({
+                            appt_id: appt_id,
+                            consultant_id: consultant_id,
+                            row: row.liveAppointmentBooking
+                        });
+                    }
+                }
+            } else {
+                if (appt_exists.length > 0) {
+                    $scope.checkboxes.items.splice($scope.checkboxes.items.indexOf(appt_exists[0]), 1);
+                }
+            }
+            $scope.prepareMoreOptions();
         }
 
-        $scope.selectedIDs = [];
-        $scope.cancelSelected = function () {
-            angular.forEach($scope.encounterIDs, function (item) {
-                if (item.selected) {
-                    $scope.selectedIDs.push({
-                        'encounter_id': item.encounterID,
-                        'patient_id': item.patientID,
-                    });
+        $scope.prepareMoreOptions = function () {
+            $scope.currentAppointmentSelectedItems = [];
+            angular.forEach($scope.checkboxes.items, function (item) {
+                $scope.currentAppointmentSelectedItems.push(item.row);
+            });
+
+            $scope.currentAppointmentSelected = $scope.currentAppointmentSelectedItems.length;
+        }
+
+        $scope.rescheduleAppointments = function () {
+            var modalInstance = $modal.open({
+                templateUrl: 'tpl/modal_form/modal.patient_appointment_reschedule.html',
+                controller: "AppointmentRescheduleController",
+                resolve: {
+                    scope: function () {
+                        return $scope;
+                    },
                 }
             });
-            $scope.cancelAppointments();
+            modalInstance.data = $scope.currentAppointmentSelectedItems;
+
+            modalInstance.result.then(function (selectedItem) {
+                $scope.selected = selectedItem;
+            }, function () {
+                $scope.loadOutPatientsList();
+                $log.info('Modal dismissed at: ' + new Date());
+            });
         };
 
         $scope.cancelAppointments = function () {
@@ -78,11 +111,10 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                 post_url = $rootScope.IRISOrgServiceUrl + '/appointment/bulkcancel';
                 method = 'POST';
                 succ_msg = 'Appointment cancelled successfully';
-                var PatAppointment = $scope.selectedIDs;
                 $http({
                     method: method,
                     url: post_url,
-                    data: PatAppointment,
+                    data: $scope.currentAppointmentSelectedItems,
                 }).success(
                         function (response) {
                             $scope.successMessage = succ_msg;
@@ -96,6 +128,8 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                     else
                         $scope.errorData = data.message;
                 });
+            } else {
+                $scope.loadOutPatientsList();
             }
         }
 
@@ -132,28 +166,25 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
             });
         }
 
-        $scope.setTimings = function (key, mode) {
+        $scope.setTimings = function (op_key, key, mode) {
             if (mode == 'set') {
                 st_d = moment().format('YYYY-MM-DD');
                 st_t = moment().format('hh:mm A');
             } else {
                 st_d = st_t = '';
             }
-            $scope.displayedCollection[key].sts_date = st_d;
-            $scope.displayedCollection[key].sts_time = st_t;
+            $scope.displayedCollection[op_key]['all'][key].sts_date = st_d;
+            $scope.displayedCollection[op_key]['all'][key].sts_time = st_t;
         }
 
-        $scope.onTimeSet = function (newDate, oldDate, key) {
-            $scope.displayedCollection[key].sts_date = moment(newDate).format('YYYY-MM-DD');
-            $scope.displayedCollection[key].sts_time = moment(newDate).format('hh:mm A');
+        $scope.onTimeSet = function (newDate, oldDate, op_key, key) {
+            $scope.displayedCollection[op_key]['all'][key].sts_date = moment(newDate).format('YYYY-MM-DD');
+            $scope.displayedCollection[op_key]['all'][key].sts_time = moment(newDate).format('hh:mm A');
         }
 
-        $scope.changeAppointmentStatus = function (_data, key) {
+        $scope.changeAppointmentStatus = function (_data, op_key, key) {
             $scope.errorData = "";
             $scope.successMessage = "";
-
-//            console.log(_data);
-//            return false;
 
             $scope.loadbar('show');
             $http({
@@ -164,7 +195,7 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                     function (response) {
                         $scope.loadbar('hide');
                         $scope.successMessage = 'Status changed successfully';
-                        $scope.displayedCollection[key].liveAppointmentArrival = response;
+                        $scope.displayedCollection[op_key]['all'][key].liveAppointmentArrival = response;
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');
@@ -174,12 +205,4 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                     $scope.errorData = data.message;
             });
         };
-
-
     }]);
-
-//app.filter('moment', function () {
-//    return function (dateString, format) {
-//        return moment(dateString).format(format);
-//    };
-//});

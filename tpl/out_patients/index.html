@@ -3,6 +3,9 @@
 </div>
 
 <div class="wrapper-md tab-btn">
+    <div ng-include="'tpl/blocks/alert.html'">
+        {% include 'tpl/blocks/alert.html' %}
+    </div>
     <div class="row">
         <div class="col-sm-4"> 
             <div class="btn-group btn-group-justified">
@@ -19,21 +22,22 @@
 </div>
 
 <div class="wrapper-md" ng-controller="OutPatientsController" ng-init="loadOutPatientsList()">
-    <div ng-include="'tpl/blocks/alert.html'">
-        {% include 'tpl/blocks/alert.html' %}
-    </div>
     <div class="panel panel-default">
         <div class="row wrapper">
             <div class="col-sm-5 m-b-xs">
-                <button class="btn btn-sm btn-grey" ng-click="loadOutPatientsList()"> &nbsp; &nbsp; <i class="fa fa-repeat"></i>  &nbsp; &nbsp; </button>    
-                <div ng-if="more_li.length > 0" ng-repeat="(key, li) in more_li" class="btn-group">
-                    <button ng-if="li.mode == 'sref'" ui-sref="{{li.href}}" class="btn btn-sm btn-grey"> {{li.name}}</button>    
-                    <button ng-if="li.mode == 'click'" ng-click="{{li.href}}" class="btn btn-sm btn-grey"> {{li.name}}</button>    &nbsp; &nbsp
-                </div>
+                <button class="btn btn-sm btn-grey" ng-click="loadOutPatientsList()"> &nbsp; &nbsp; <i class="fa fa-refresh"></i>  &nbsp; &nbsp; </button>    
+                <span ng-show="currentAppointmentSelected > 0">
+                    <button ng-click="rescheduleAppointments()" class="btn btn-sm btn-primary">
+                        <i class="fa fa-retweet"></i> Reschedule Appointments 
+                    </button>
+                    <button ng-click="cancelAppointments()" class="btn btn-sm btn-dark">
+                        <i class="fa fa-times"></i> Cancel Appointment 
+                    </button>
+                </span>
             </div>
             <div class="col-sm-4"></div>
         </div>
-        
+
         <div class="table-responsive in-patient-table">
             <table st-table="displayedCollection"  st-safe-src="rowCollection"  class="table table-striped b-t b-light">
                 <thead>
@@ -72,12 +76,12 @@
                             </b>
                         </td>
                     </tr>
-                    
+
                     <tr ng-repeat-end ng-show="expanded" ng-repeat="(key, row) in value.all">
                         <td align="center" valign="middle"></td>
                         <td>
-                            <label class="i-checks "> 
-                                <input class="oplist" id="oplist_{{op_key}}_{{key}}" type="checkbox" name="status" ng-model="encounterIDs[key].selected" ng-click="moreOptions(key, row.encounter_id, op_key)"> 
+                            <label class="i-checks" ng-if="row.liveAppointmentArrival == '-'"> 
+                                <input class="oplistcheckbox" id="oplist_{{op_key}}_{{key}}" type="checkbox" name="status" ng-click="moreOptions(op_key, key, row.liveAppointmentConsultant.user_id, row.liveAppointmentBooking.appt_id, row)"> 
                                 <i></i> 
                             </label>
                         </td>
@@ -115,7 +119,7 @@
                                     </div>
                                 </a>
                                 <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                                    <datetimepicker data-ng-model="arr_date" data-datetimepicker-config="{ dropdownSelector: '#dropdown2' }" data-on-set-time="onTimeSet(newDate, oldDate, key)"/>
+                                    <datetimepicker data-ng-model="arr_date" data-datetimepicker-config="{ dropdownSelector: '#dropdown2' }" data-on-set-time="onTimeSet(newDate, oldDate, op_key, key)"/>
                                 </ul>
                             </div>
 
@@ -134,7 +138,7 @@
                                       'status_time': row.sts_time,
                                       'consultant_id': row.liveAppointmentBooking.consultant_id,
                                       'appt_status': 'A',
-                                      }, key)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == row">
+                                      }, op_key, key)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == row">
                                     <span editable-select="statuses[0].value" e-name="sts_status" e-form="rowform" e-ng-options="s.value as s.text for s in statuses">
                                         {{row.sts_status|| 'empty' }}
                                     </span>
@@ -142,14 +146,14 @@
                                         <span class="glyphicon glyphicon-ok"></span>
                                     </button>
                                     <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel();
-                                                setTimings(key, 'unset')" class="btn btn-default btn-sm">
+                                                    setTimings(op_key, key, 'unset')" class="btn btn-default btn-sm">
                                         <span class="glyphicon glyphicon-remove"></span>
                                     </button>
                                 </form>
                                 <div class="buttons" ng-show="!rowform.$visible">
                                     <a ng-click="rowform.$show();
-                                                row.sts_status = 'A';
-                                                setTimings(key, 'set')" class="ng-scope ng-binding editable editable-click"> Booked </a><br />
+                                                    row.sts_status = 'A';
+                                                    setTimings(op_key, key, 'set')" class="ng-scope ng-binding editable editable-click"> Booked </a><br />
                                     <span class="text-danger-dk">Waiting!</span>
                                 </div> 
                             </div>
@@ -220,7 +224,7 @@
                         <td colspan="11" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
                     </tr>
                 </tbody>
-                
+
                 <tfoot>
                     <tr>
                         <td colspan="11" class="text-center">

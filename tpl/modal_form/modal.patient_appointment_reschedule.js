@@ -8,7 +8,7 @@ app.controller('AppointmentRescheduleController', ['scope', '$scope', '$modalIns
         };
         $scope.toggleMin = function () {
             $scope.minDate = $scope.minDate ? null : new Date();
-            $scope.minDate.setDate($scope.minDate.getDate() + 1);
+//            $scope.minDate.setDate($scope.minDate.getDate() + 1);
         };
         $scope.toggleMin();
 
@@ -81,7 +81,6 @@ app.controller('AppointmentRescheduleController', ['scope', '$scope', '$modalIns
                                 $scope.rescheduledata = [];
                                 $timeout(function () {
                                     $modalInstance.dismiss('cancel');
-                                    scope.loadFutureAppointmentsList();
                                 }, 1000)
                             }
                         }

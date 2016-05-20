@@ -1066,7 +1066,10 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['smart-table', 'xeditable']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/out_patients/out_patients.js');
+                                        return $ocLazyLoad.load([
+                                            'tpl/out_patients/out_patients.js', 
+                                            'tpl/modal_form/modal.patient_appointment_reschedule.js'
+                                        ]);
                                     }
                             );
                         }]

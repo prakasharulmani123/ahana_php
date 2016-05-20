@@ -55,7 +55,7 @@
                                         <select name='slots_{{ $index}}' ng-model="item.status_time" class="form-control" required>
                                             <option value="" selected="">Select Time</option>
                                             <option style="color: {{timeslot.color}}"
-                                                ng-selected="{{item.status_time == timeslot}}"
+                                                ng-selected="{{item.status_time == timeslot.time}}"
                                                 ng-repeat="timeslot in timeslots" value="{{timeslot.time}}"
                                                 >
                                                 {{timeslot.time}}

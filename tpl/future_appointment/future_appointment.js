@@ -71,7 +71,7 @@ app.controller('FutureAppointmentController', ['$rootScope', '$scope', '$timeout
 
             $scope.futureappointmentSelected = checked;
         }, true);
-        
+
         $scope.rescheduleAppointments = function () {
             var modalInstance = $modal.open({
                 templateUrl: 'tpl/modal_form/modal.patient_appointment_reschedule.html',
@@ -87,6 +87,7 @@ app.controller('FutureAppointmentController', ['$rootScope', '$scope', '$timeout
             modalInstance.result.then(function (selectedItem) {
                 $scope.selected = selectedItem;
             }, function () {
+                $scope.loadFutureAppointmentsList();
                 $log.info('Modal dismissed at: ' + new Date());
             });
         };
