@@ -3,7 +3,7 @@ angular.module('app').directive('checkAccess', function () {
         link: function (scope, element, attrs) {
             element.addClass('hide');
             if (scope.checkAccess(element.attr('ui-sref'))) {
-                element.addClass('show');
+                element.addClass('show2');
             }
         }
     }
@@ -14,7 +14,7 @@ angular.module('app').directive('checkAccessButton', function () {
             var url = element.attr('ng-click').match(/'([^']+)'/)[1];
             element.addClass('hide');
             if ($scope.checkAccess(url)) {
-                element.addClass('show');
+                element.addClass('show2');
             }
         }
     }
@@ -25,7 +25,7 @@ angular.module('app').directive('checkAccessCustom', function () {
             var url = element.data('button');
             element.addClass('hide');
             if ($scope.checkAccess(url)) {
-                element.addClass('show');
+                element.addClass('show2');
             }
         }
     }

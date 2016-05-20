@@ -117,3 +117,7 @@ th[st-sort] {
     opacity: 0.2;
     filter: alpha(opacity=20); /* For IE8 and earlier */
 }
+
+.show2{
+    display: inline-block !important;
+}
