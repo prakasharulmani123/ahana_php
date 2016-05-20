@@ -8,7 +8,7 @@
             {% include 'tpl/blocks/alert.html' %}
         </div>
         <div class="row">
-            <div class="col-sm-12" ng-init="data.formtype = 'add'; data.status = '1'; data.patient_cat_color = '#FFFFFF'">
+            <div class="col-sm-6" ng-init="data.formtype = 'add'; data.status = '1'; data.patient_cat_color = '#FFFFFF'">
                 <form name="patientCategoryForm" class="form-horizontal form-validation" novalidate="">
                     <div ng-include="'tpl/patient_categories/_form.html'">
                         {% include 'tpl/patient_categories/_form.html' %}

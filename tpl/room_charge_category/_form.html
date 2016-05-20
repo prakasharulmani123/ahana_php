@@ -29,33 +29,27 @@
         </div>
 
         <div class="line line-dashed b-b line-lg "></div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label">Sub Categories</label>
-            <div class="col-sm-9">
-                <table class="table table-bordered table-hover table-condensed bg-white-only">
-                    <tr style="font-weight: bold">
-                        <td style="width:70%">Name</td>
-                        <td style="width:30%"><span>Action</span></td>
-                    </tr>
-                    <tr ng-repeat="subcategory in subcategories">
-                        <td>
-                            <!-- editable username (text with validation) -->
-                            <span editable-text="subcategory.charge_subcat_name" e-name="charge_subcat_name" e-form="nameform" onbeforesave="checkInput($data)">
-                                {{ subcategory.charge_subcat_name || 'empty' }}
-                            </span>
-                        </td>
-                        <td>
-                            <button type="button" ng-click="removeSubcat($index, subcategory.charge_subcat_id)" class="btn btn-sm btn-danger pull-right">Delete</button>
-                        </td>
-                    </tr>
-                </table>
-                <div class="btn-form">
-                    <!--<button type="button" ng-click="tableform.$show();" class="btn btn-default pull-left btn-info">Edit</button>-->
-                    &nbsp;
-                    <button type="button" ng-click="tableform.$show(); addRow()" class="btn btn-default pull-left btn-primary">Add Row</button>
+        
+        <div class="form-group">         
+            <div class="col-sm-12">
+              <div class="panel panel-default inner-panel">
+                <div class="panel-heading"><b> Sub Categories </b>                    
+                  <button type="button" ng-click="tableform.$show(); addRow()" class="label bg-primary pull-right">Add Row</button>  
                 </div>
+                <ul class="list-group no-radius" ng-repeat="subcategory in subcategories">
+                  <li class="list-group-item"> <span class="pull-right">
+                    <button type="button" ng-click="removeSubcat($index, subcategory.charge_subcat_id)" class="badge bg-danger ng-binding">Delete</button>
+                      </span>
+                     <span editable-text="subcategory.charge_subcat_name" e-name="charge_subcat_name" e-form="nameform" onbeforesave="checkInput($data)">
+                        {{ subcategory.charge_subcat_name || 'empty' }}
+                    </span>
+                  </li>
+                  
+                </ul>
+              </div>
             </div>
         </div>
+        
     </div>
     <footer class="panel-footer text-right bg-light lter">
         <button class="btn m-b-xs  btn-success save-btn" >Save</button>
