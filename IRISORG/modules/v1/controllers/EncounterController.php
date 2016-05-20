@@ -238,7 +238,7 @@ class EncounterController extends ActiveController {
                 ->andWhere($query)
                 ->groupBy('pat_appointment.consultant_id')
                 ->orderBy([
-                    'encounter_date' => SORT_DESC,
+                    'encounter_id' => SORT_ASC,
                 ])
                 ->all();
 
