@@ -487,10 +487,14 @@ class UserController extends ActiveController {
             $column = $post['column'];
             $value = $post['value'];
 
-            if ($value || $column == 'discharge')
+            if ($value || $column == 'discharge'){
                 $encounter->$column = Yii::$app->user->identity->user_id;
-            else
+                
+                if ($column == 'discharge')
+                    $encounter->status = 0;
+            }else{
                 $encounter->$column = 0;
+            }
             
             $encounter->save(false);
 

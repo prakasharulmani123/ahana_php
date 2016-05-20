@@ -38,12 +38,12 @@ class PatPatientCasesheet extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['casesheet_no'], 'required'],
+            [['casesheet_no', 'patient_id'], 'required'],
             [['tenant_id', 'patient_id', 'created_by', 'modified_by'], 'integer'],
             [['start_date', 'end_date', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['status'], 'string'],
             [['casesheet_no'], 'string', 'max' => 50],
-            [['casesheet_no'], 'unique', 'targetAttribute' => ['tenant_id', 'patient_id', 'casesheet_no'], 'message' => 'The combination of Casesheet No has already been taken.']
+            [['casesheet_no'], 'unique', 'targetAttribute' => ['tenant_id', 'casesheet_no'], 'message' => 'This Casesheet No has already been taken.']
         ];
     }
 

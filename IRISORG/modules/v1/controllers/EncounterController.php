@@ -85,12 +85,12 @@ class EncounterController extends ActiveController {
             $appt_model = new PatAppointment();
             $case_model = new PatPatientCasesheet();
 
-            $model_attr = array(
+            $model_attr = [
                 'patient_id' => (isset($post['patient_id']) ? $post['patient_id'] : ''),
                 'encounter_type' => 'OP',
                 'encounter_date' => $post['status_date'],
-                'add_casesheet_no' => $post['PatEncounter']['add_casesheet_no']
-            );
+                'add_casesheet_no' => (isset($post['PatEncounter']['add_casesheet_no']) ? $post['PatEncounter']['add_casesheet_no'] : '')
+            ];
             $model->attributes = $model_attr;
 
             $appt_model->attributes = $post;
@@ -98,11 +98,11 @@ class EncounterController extends ActiveController {
             $valid = $model->validate();
             $valid = $appt_model->validate() && $valid;
 
-            if (isset($post['PatEncounter']['add_casesheet_no'])) {
-                $case_model->attributes = array(
+            if ($post['validate_casesheet']) {
+                $case_model->attributes = [
                     'patient_id' => (isset($post['patient_id']) ? $post['patient_id'] : ''),
-                    'add_casesheet_no' => $post['PatEncounter']['add_casesheet_no']
-                );
+                    'casesheet_no' => (isset($post['PatEncounter']['add_casesheet_no']) ? $post['PatEncounter']['add_casesheet_no'] : '')
+                ];
 
                 $valid = $case_model->validate() && $valid;
             }
@@ -139,6 +139,7 @@ class EncounterController extends ActiveController {
         if (!empty($post)) {
             $model = new PatEncounter();
             $admission_model = new PatAdmission();
+            $case_model = new PatPatientCasesheet();
 
             if (isset($post['PatEncounter'])) {
                 $model->encounter_type = "IP";
@@ -154,6 +155,15 @@ class EncounterController extends ActiveController {
             $valid = $model->validate();
             $valid = $admission_model->validate() && $valid;
 
+            if ($post['validate_casesheet']) {
+                $case_model->attributes = [
+                    'patient_id' => (isset($post['PatAdmission']['patient_id']) ? $post['PatAdmission']['patient_id'] : ''),
+                    'casesheet_no' => (isset($post['PatEncounter']['add_casesheet_no']) ? $post['PatEncounter']['add_casesheet_no'] : '')
+                ];
+
+                $valid = $case_model->validate() && $valid;
+            }
+            
             if ($valid) {
 
                 $model->save(false);
@@ -163,7 +173,7 @@ class EncounterController extends ActiveController {
 
                 return ['success' => true];
             } else {
-                return ['success' => false, 'message' => Html::errorSummary([$model, $admission_model])];
+                return ['success' => false, 'message' => Html::errorSummary([$model, $admission_model, $case_model])];
             }
         } else {
             return ['success' => false, 'message' => 'Please Fill the Form'];
