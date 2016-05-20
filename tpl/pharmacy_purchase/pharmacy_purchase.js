@@ -345,14 +345,19 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             $scope.data.roundoff_amount = roundoff_amount.toFixed(2);
             $scope.data.net_amount = net_amount.toFixed(2);
         }
-
+        
+        $scope.getBtnId = function(btnid)
+        { 
+          $scope.btnid = btnid;              
+        }
+        
         //Save Both Add & Update Data
         $scope.saveForm = function (mode) {
             _that = this;
 
             $scope.errorData = "";
-            $scope.successMessage = "";
-
+            $scope.successMessage = "";   
+            
             $scope.data.invoice_date = moment($scope.data.invoice_date).format('YYYY-MM-DD');
 
             angular.forEach($scope.purchaseitems, function (purchaseitem, key) {
@@ -381,7 +386,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                     $scope.purchaseitems[key].batch_no = purchaseitem.batch_details;
                 }
             });
-
+            
             angular.extend(_that.data, {product_items: $scope.purchaseitems});
             $scope.loadbar('show');
             $http({
@@ -392,12 +397,11 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                     function (response) {
                         $anchorScroll();
                         if (response.success == true) {
+                            
                             $scope.loadbar('hide');
                             $scope.successMessage = 'Purchase Saved successfully';
                             $scope.data = {};
-                            $timeout(function () {
-                                $state.go('pharmacy.purchase');
-                            }, 1000)
+                            save_success(); 
                         } else {
                             $scope.loadbar('hide');
                             $scope.errorData = response.message;
@@ -413,6 +417,21 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                 else
                     $scope.errorData = data.message;
             });
+            
+            var save_success = function(){
+                if($scope.btnid == "print")
+                {    
+                    var innerContents = document.getElementById("Getprintval").innerHTML;                   
+                    var popupWinindow = window.open('', '_blank', 'width=600,height=700,scrollbars=no,menubar=no,toolbar=no,location=no,status=no,titlebar=no');
+                    popupWinindow.document.open();
+                    popupWinindow.document.write('<html><head><link href="css/print.css" rel="stylesheet" type="text/css" /></head><body onload="window.print()">' + innerContents + '</html>');
+                    popupWinindow.document.close();
+                }else{
+                    $timeout(function () {
+                          $state.go('pharmacy.purchase');
+                    }, 1000)
+                } 
+            }
         };
 
         //Get Data for update Form

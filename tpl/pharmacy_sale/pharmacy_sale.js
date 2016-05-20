@@ -92,7 +92,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             id = $item.Patient.patient_id;
             $scope.data.patient_id = id;
             $scope.data.patient_guid = $item.Patient.patient_guid;
-            $scope.data.patient_name = $item.Patient.patient_firstname;
+            //$scope.data.patient_name = $item.Patient.patient_firstname;
             $scope.data.consultant_id = $item.Patient.last_consultant_id;
 
             $scope.getEncounter(id,  'add', '');
@@ -341,6 +341,11 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             $scope.data.roundoff_amount = roundoff_amount.toFixed(2);
             $scope.data.bill_amount = bill_amount.toFixed(2);
         }
+        
+        $scope.getBtnId = function(btnid)
+        { 
+          $scope.btnid = btnid;              
+        }
 
         //Save Both Add & Update Data
         $scope.saveForm = function (mode) {
@@ -385,21 +390,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                         $anchorScroll();
                         if (response.success == true) {
                             $scope.loadbar('hide');
-                            
-                            if(mode == 'add'){
-                                msg = 'New bill generated ' + response.model.bill_no;
-                                
-                                $scope.data = {};
-                                $scope.data.sale_date = moment().format('YYYY-MM-DD');
-                                $scope.data.formtype = 'add';
-                                $scope.data.payment_type = 'CA';
-                                $scope.saleItems = [];
-                                $scope.addRow();
-                                $scope.tableform.$show();
-                            }else{
-                                msg = 'Bill updated successfully';
-                            }
-                            $scope.successMessage = msg;
+                            save_success();
 //                            $timeout(function () {
 //                                $state.go('pharmacy.sales');
 //                            }, 1000)
@@ -419,6 +410,33 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                     $scope.errorData = data.message;
             });
         };
+        
+        var save_success = function(){
+        
+            if(mode == 'add'){
+                msg = 'New bill generated ' + response.model.bill_no;
+
+                $scope.data = {};
+                $scope.data.sale_date = moment().format('YYYY-MM-DD');
+                $scope.data.formtype = 'add';
+                $scope.data.payment_type = 'CA';
+                $scope.saleItems = [];
+                $scope.addRow();
+                $scope.tableform.$show();
+            }else{
+                msg = 'Bill updated successfully';
+            }
+            $scope.successMessage = msg;
+            
+            if($scope.btnid == "print")
+            {    
+                var innerContents = document.getElementById("Getprintval").innerHTML;                   
+                var popupWinindow = window.open('', '_blank', 'width=600,height=700,scrollbars=no,menubar=no,toolbar=no,location=no,status=no,titlebar=no');
+                popupWinindow.document.open();
+                popupWinindow.document.write('<html><head><link href="css/print.css" rel="stylesheet" type="text/css" /></head><body onload="window.print()">' + innerContents + '</html>');
+                popupWinindow.document.close();
+            }           
+        }
 
         //Get Data for update Form
         $scope.loadForm = function () {
