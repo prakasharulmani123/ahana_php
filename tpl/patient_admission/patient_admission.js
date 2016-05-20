@@ -125,6 +125,7 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
             $scope.data = {};
             $scope.data.PatEncounter = {};
             $scope.data.PatEncounter.encounter_date = moment().format('YYYY-MM-DD HH:mm:ss');
+            $scope.data.validate_casesheet = ($scope.app.patientDetail.patientCasesheetno == null || $scope.app.patientDetail.patientCasesheetno == '');
         }
 
         $scope.initTransferForm = function () {

@@ -128,13 +128,6 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
         }
 
         $scope.initForm = function () {
-            if($scope.app.patientDetail.patientCasesheetno != null)
-            {    
-                alert($scope.app.patientDetail.patientCasesheetno);
-                $scope.data.PatEncounter = {};
-                $scope.data.PatEncounter.add_casesheet_no =   $scope.app.patientDetail.patientCasesheetno;
-            }    
-                
             //Load Doctor List
             $rootScope.commonService.GetDoctorList('', '1', false, '1', function (response) {
                 $scope.doctors = response.doctorsList;
@@ -147,6 +140,8 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
         $scope.initAppointmentForm = function () {
             $scope.data = {};
             $scope.data.status_date = moment().format('YYYY-MM-DD');
+            $scope.data.validate_casesheet = ($scope.app.patientDetail.patientCasesheetno == null || $scope.app.patientDetail.patientCasesheetno == '');
+            
             $timeout(function () {
                 $scope.data.consultant_id = $scope.app.patientDetail.patientLastConsultantId;
                 $scope.getTimeSlots($scope.data.consultant_id, $scope.data.status_date);
