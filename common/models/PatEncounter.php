@@ -63,7 +63,7 @@ class PatEncounter extends RActiveRecord {
     }
     
     public function validateConcessionAmount($attribute, $params) {
-        if ($this->concession_amount > $this->total_amount)
+        if (($this->total_amount > 0) && $this->concession_amount > $this->total_amount)
             $this->addError($attribute, "Concession Amount ({$this->concession_amount}) must be lesser than Total Amount ({$this->total_amount})");
     }
 

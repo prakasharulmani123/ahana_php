@@ -224,7 +224,7 @@ class HelperComponent extends Component {
         $diff_days = $this->_getDayDiff($from_date, $to_date);
 
         //Insert Recurring upto current date
-        for ($i = 1; $i <= $diff_days; $i++) {
+        for ($i = 0; $i <= $diff_days; $i++) {
             $room_charges = $this->getRoomChargeItems($current_admission->tenant_id, $current_admission->room_type_id);
 
             if (!empty($room_charges)) {

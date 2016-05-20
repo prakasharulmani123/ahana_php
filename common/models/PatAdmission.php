@@ -92,6 +92,9 @@ class PatAdmission extends RActiveRecord {
                     $current_admission = $this->encounter->patCurrentAdmission;
                     if ($current_admission->status_date > $this->status_date)
                         $this->addError($attribute, "Date must be greater than {$current_admission->status_date}");
+                }else if ($this->admission_status == 'A') {
+                    if (date('Y-m-d', strtotime($this->status_date)) > date('Y-m-d'))
+                        $this->addError($attribute, "Date must be lesser than " . date('d-m-Y'));
                 }
             }
         }
@@ -182,8 +185,15 @@ class PatAdmission extends RActiveRecord {
             $this->setCurrentData();
 
             //Set Old room status to vacant
-            if (($this->admission_status == 'TR' || $this->admission_status == 'D') && !$this->isSwapping) {
+            if (($this->admission_status == 'TR' || $this->admission_status == 'D' || $this->admission_status == 'AC') && !$this->isSwapping) {
                 $this->vacantOldRoomId = $this->encounter->patCurrentAdmission->room_id;
+            }
+        } else {
+            //Modify Admission
+            if ($this->admission_status == 'A') {
+                //Vacant Old room
+                if ($this->encounter->patCurrentAdmission->room_id != $this->room_id)
+                    $this->vacantOldRoomId = $this->encounter->patCurrentAdmission->room_id;
             }
         }
         return parent::beforeSave($insert);
@@ -203,37 +213,44 @@ class PatAdmission extends RActiveRecord {
                 $this->encounter->status = '0';
                 $this->encounter->save(false);
             }
+        }
 
-            //Change Old room status to vacant if Room Transfer
-            if (!is_null($this->vacantOldRoomId)) {
-                $room = CoRoom::find()->where(['room_id' => $this->vacantOldRoomId])->one();
-                $room->occupied_status = 0;
-                $room->save(false);
-                $this->vacantOldRoomId = null;
-            }
+        //Change Old room status to vacant if Room Transfer
+        if (!is_null($this->vacantOldRoomId)) {
+            $room = CoRoom::find()->where(['room_id' => $this->vacantOldRoomId])->one();
+            $room->occupied_status = 0;
+            $room->save(false);
+            $this->vacantOldRoomId = null;
+        }
+
+        $this->_insertTimeline($insert);
+
+        switch ($this->admission_status) {
+            case 'A':
+                if ($insert)
+                    Yii::$app->hepler->addRecurring($this);
+                else
+                    Yii::$app->hepler->cancelRecurring($this);
+                break;
+            case 'TR':
+                Yii::$app->hepler->transferRecurring($this);
+                break;
+            case 'C':
+                Yii::$app->hepler->cancelRecurring($this);
+                break;
         }
         
-        $this->_insertTimeline();
-
-        if ($this->admission_status == 'A') {
-            Yii::$app->hepler->addRecurring($this);
-        } else if ($this->admission_status == 'TR') {
-            Yii::$app->hepler->transferRecurring($this);
-        } else if ($this->admission_status == 'C') {
-            Yii::$app->hepler->cancelRecurring($this);
-        }
-
         return parent::afterSave($insert, $changedAttributes);
     }
 
-    private function _insertTimeline() {
+    private function _insertTimeline($insert) {
         $header_sub = "Encounter # {$this->encounter_id}";
         $bed_details = "<br /> Bed No: <b>{$this->room->bed_name} ({$this->roomType->room_type_name})</b>";
-        
+
         switch ($this->admission_status) {
             case 'A':
                 $header = "Patient Admission";
-                $message = "Patient Admitted. $bed_details";
+                $message = $insert ? "Patient Admitted. $bed_details" : "Patient Admission Modified. $bed_details";
                 break;
             case 'TR':
                 $header = "Room Transfer";

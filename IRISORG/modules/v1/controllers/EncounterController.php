@@ -163,7 +163,7 @@ class EncounterController extends ActiveController {
 
                 $valid = $case_model->validate() && $valid;
             }
-            
+
             if ($valid) {
 
                 $model->save(false);
@@ -174,6 +174,32 @@ class EncounterController extends ActiveController {
                 return ['success' => true];
             } else {
                 return ['success' => false, 'message' => Html::errorSummary([$model, $admission_model, $case_model])];
+            }
+        } else {
+            return ['success' => false, 'message' => 'Please Fill the Form'];
+        }
+    }
+
+    public function actionUpdateadmission() {
+        $post = Yii::$app->getRequest()->post();
+        if (!empty($post)) {
+            $model = PatEncounter::find()->where(['encounter_id' => $post['PatEncounter']['encounter_id']])->one();
+            $admission_model = PatAdmission::find()->where(['admn_id' => $post['PatAdmission']['admn_id']])->one();
+            
+            $admission_model->attributes = $post['PatAdmission'];
+            if (isset($post['PatEncounter']['encounter_date']))
+                $model->encounter_date = $admission_model->status_date = $post['PatEncounter']['encounter_date'];
+
+            $valid = $model->validate();
+            $valid = $admission_model->validate() && $valid;
+
+            if ($valid) {
+                $model->save(false);
+                $admission_model->save(false);
+
+                return ['success' => true];
+            } else {
+                return ['success' => false, 'message' => Html::errorSummary([$model, $admission_model])];
             }
         } else {
             return ['success' => false, 'message' => 'Please Fill the Form'];
