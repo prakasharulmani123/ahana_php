@@ -19,6 +19,8 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                 $scope.purchase_payment_type_name = 'Credit';
             }
             $scope.purchase_payment_type = payment_type;
+            
+            $scope.activeMenu = payment_type;
 
             $scope.isLoading = true;
             // pagination set up

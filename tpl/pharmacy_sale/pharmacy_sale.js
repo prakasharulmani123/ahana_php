@@ -24,6 +24,8 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 $scope.sale_payment_type_name = 'Cash On Deleivery';
             }
             $scope.sale_payment_type = payment_type;
+            
+            $scope.activeMenu = payment_type;
 
             // pagination set up
             $scope.rowCollection = [];  // base collection

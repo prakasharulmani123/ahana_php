@@ -6,10 +6,10 @@
         <div class="row">
             <div class="col-sm-4"> 
                 <div class="btn-group btn-group-justified">
-                    <a class="btn btn-info" ng-click="loadPurchaseItemList('CA')">
+                    <a class="btn btn-info" ng-class="{active : activeMenu === 'CA'}" ng-click="loadPurchaseItemList('CA')">
                         <i class="fa fa-money"></i>  Cash
                     </a>
-                    <a class="btn btn-success" ng-click="loadPurchaseItemList('CR')">  
+                    <a class="btn btn-info" ng-class="{active : activeMenu === 'CR'}" ng-click="loadPurchaseItemList('CR')">  
                         <i class="fa fa-list-alt"></i>
                         Credit
                     </a>
