@@ -128,6 +128,13 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
         }
 
         $scope.initForm = function () {
+            if($scope.app.patientDetail.patientCasesheetno != null)
+            {    
+                alert($scope.app.patientDetail.patientCasesheetno);
+                $scope.data.PatEncounter = {};
+                $scope.data.PatEncounter.add_casesheet_no =   $scope.app.patientDetail.patientCasesheetno;
+            }    
+                
             //Load Doctor List
             $rootScope.commonService.GetDoctorList('', '1', false, '1', function (response) {
                 $scope.doctors = response.doctorsList;
