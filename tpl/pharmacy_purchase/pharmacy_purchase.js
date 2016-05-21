@@ -19,7 +19,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                 $scope.purchase_payment_type_name = 'Credit';
             }
             $scope.purchase_payment_type = payment_type;
-            
+
             $scope.activeMenu = payment_type;
 
             $scope.isLoading = true;
@@ -43,7 +43,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
 
 
         };
-        
+
         $scope.$watch('form_filter', function (newValue, oldValue) {
             if (typeof newValue != 'undefined' && newValue != '' && newValue != null) {
                 var footableFilter = $('table').data('footable-filter');
@@ -173,11 +173,11 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             var choosen_date = new Date(data);
             var choosen_date_month = choosen_date.getMonth();
             var choosen_date_year = choosen_date.getYear();
-            
+
             var today_date = new Date();
             var today_date_month = today_date.getMonth();
             var today_date_year = today_date.getYear();
-            
+
             var show_warning_count = '3';
             var show_warning = parseFloat(choosen_date_month) - parseFloat(today_date_month);
 
@@ -345,19 +345,19 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             $scope.data.roundoff_amount = roundoff_amount.toFixed(2);
             $scope.data.net_amount = net_amount.toFixed(2);
         }
-        
-        $scope.getBtnId = function(btnid)
-        { 
-          $scope.btnid = btnid;              
+
+        $scope.getBtnId = function (btnid)
+        {
+            $scope.btnid = btnid;
         }
-        
+
         //Save Both Add & Update Data
         $scope.saveForm = function (mode) {
             _that = this;
 
             $scope.errorData = "";
-            $scope.successMessage = "";   
-            
+            $scope.successMessage = "";
+
             $scope.data.invoice_date = moment($scope.data.invoice_date).format('YYYY-MM-DD');
 
             angular.forEach($scope.purchaseitems, function (purchaseitem, key) {
@@ -386,7 +386,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                     $scope.purchaseitems[key].batch_no = purchaseitem.batch_details;
                 }
             });
-            
+
             angular.extend(_that.data, {product_items: $scope.purchaseitems});
             $scope.loadbar('show');
             $http({
@@ -397,11 +397,11 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                     function (response) {
                         $anchorScroll();
                         if (response.success == true) {
-                            
+
                             $scope.loadbar('hide');
                             $scope.successMessage = 'Purchase Saved successfully';
-                            $scope.data = {};
-                            save_success(); 
+//                            $scope.data2 = _that.data;                           
+                            save_success();
                         } else {
                             $scope.loadbar('hide');
                             $scope.errorData = response.message;
@@ -417,22 +417,47 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                 else
                     $scope.errorData = data.message;
             });
-            
-            var save_success = function(){
-                if($scope.btnid == "print")
-                {    
-                    var innerContents = document.getElementById("Getprintval").innerHTML;                   
+
+            var save_success = function () {
+                if ($scope.btnid == "print")
+                {
+                    var innerContents = document.getElementById("Getprintval").innerHTML;
                     var popupWinindow = window.open('', '_blank', 'width=600,height=700,scrollbars=no,menubar=no,toolbar=no,location=no,status=no,titlebar=no');
                     popupWinindow.document.open();
                     popupWinindow.document.write('<html><head><link href="css/print.css" rel="stylesheet" type="text/css" /></head><body onload="window.print()">' + innerContents + '</html>');
                     popupWinindow.document.close();
-                }else{
+                } else {
+                    $scope.data = {};
                     $timeout(function () {
-                          $state.go('pharmacy.purchase');
+                        $state.go('pharmacy.purchase');
                     }, 1000)
-                } 
+                }
             }
         };
+
+        $scope.changeGetSupplier = function () {
+            _that = this;
+            $scope.getSupplierDetail(_that.data.supplier_id);
+        }
+
+        $scope.getSupplierDetail = function (supplier_id) {
+            supplier_details = $filter('filter')($scope.suppliers, {supplier_id: supplier_id});
+            $scope.supplier_name_taken = supplier_details[0].supplier_name;
+        }
+        
+        $scope.changeGetPayType = function () {
+            _that = this;
+            $scope.getPaytypeDetail(_that.data.payment_type);
+        }
+        
+        $scope.getPaytypeDetail = function (payment_type) {
+            if (payment_type == 'CA') {
+                $scope.purchase_type_name = 'Cash';
+            }
+            if (payment_type == 'CR') {
+                $scope.purchase_type_name = 'Credit';
+            }
+        }
 
         //Get Data for update Form
         $scope.loadForm = function () {
@@ -450,6 +475,8 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                         $scope.loadbar('hide');
 
                         $scope.data = response;
+                        $scope.getSupplierDetail($scope.data.supplier_id);
+                        $scope.getPaytypeDetail($scope.data.payment_type);
                         $scope.products = [];
 //                            $scope.products = response2.productList;
 

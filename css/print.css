@@ -312,3 +312,59 @@
 {
 	margin-bottom:40px !important;
 }
+
+
+/*purchase-list*/
+
+.purchase-list-tab
+{
+	background:none;
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:13px;
+		border-collapse:collapse !important;
+		margin-bottom:25px;
+}
+
+.purchase-list-tab th,  .purchase-list-tab td
+{
+	background:#ffffff !important;
+	border:#bbbbbb solid 1px;
+	border-collapse:collapse !important;
+	padding:10px;
+}
+
+.purchase-list-tab th
+{
+	font-weight:bold !important;
+	background:#f0f0f0 !important;
+	
+}
+
+.purchase-list-tab2 th, .purchase-list-tab2 td 
+{
+	border:none !important;
+}
+
+.purchase-list-tab2 th
+{
+	background:none !important;
+}
+
+.invoice-details1
+{
+	width:250px;
+	float:left;
+	font-size:14px !important;
+}
+
+.invoice-details2
+{
+	width:290px;
+	float:right;
+	
+}
+
+.invoice-details1 th, .invoice-details1 td
+{
+	font-size:15px;
+}
