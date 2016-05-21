@@ -454,7 +454,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                         $scope.loadbar('hide');
 
                         $scope.data = response;
-                        $scope.data.patient_name = response.patient.fullname;
+//                        $scope.data.patient_name = response.patient.fullname;
                         $scope.data.patient_guid = response.patient.patient_guid;
                         $scope.products = [];
 //                        $scope.products = response2.productList;
