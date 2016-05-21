@@ -38,7 +38,7 @@
                                 <div class="form-group">
                                     <label class="col-lg-4 control-label">Consultant *</label>
                                     <div class="col-lg-8">
-                                        <select class="form-control" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors | orderBy: fullname">
+                                        <select class="form-control" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors | orderBy: fullname" data-ng-change="changeGetConsultant()">
                                             <option value="">Select Consultant</option>
                                         </select>
                                     </div>
@@ -86,7 +86,7 @@
                                     <div class="col-lg-8 col-sm-9">
                                         <div class="input-group w-md">
                                             <label class="i-checks" ng-repeat="paymentType in paymentTypes">
-                                                <input type="radio" checked="" value="{{paymentType.value}}" name="paymentType" ng-model="data.payment_type">
+                                                <input type="radio" checked="" value="{{paymentType.value}}" name="paymentType" ng-model="data.payment_type"  ng-change="changeGetPayType()">
                                                 <i></i>
                                                 {{paymentType.label}}&nbsp; &nbsp;
                                             </label>
@@ -266,8 +266,102 @@
 </div>
 
 
+
+<!--Print Bill-->
 <div id="Getprintval" style="display: none">
-This is sample
-</div>    
+    <div class="invoice-details1">
+       <table width="100%" border="0" align="right" cellpadding="0" cellspacing="0" class="purchase-list-tab purchase-list-tab2 ">
+          <tr>
+             <th align="left">Patient Name :  </th>
+             <td align="left">{{data.patient_name}}</td>
+          </tr>
+          <tr>
+             <th align="left">Mobile No :  </th>
+             <td align="left">{{data.mobile_no}}</td>
+          </tr>
+          <tr>
+             <th align="left">Consultant :  </th>
+             <td align="left">{{consultant_name_taken}}</td>
+          </tr>
+          <tr>
+             <th align="left">Encounter# :  </th>
+             <td align="left">{{data.encounter_id}}</td>
+          </tr>
+       </table>
+    </div>
+    <div class="invoice-details1 invoice-details2">
+       <table width="100%" border="0" align="right" cellpadding="0" cellspacing="0" class="purchase-list-tab purchase-list-tab2 ">
+            <tr>
+             <th align="left">Bill num  :  </th>
+             <td align="left">{{data.bill_no}}</td>
+           </tr>
+           <tr>
+             <th align="left">Sale Date  :  </th>
+             <td align="left">{{data.sale_date}}</td>
+           </tr>
+           <tr>
+             <th align="left">Payment Type  :  </th>
+             <td align="left">
+               {{ purchase_type_name }}
+             </td>
+          </tr>         
+       </table>
+    </div>
+    <div class="clearfix"></div>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="purchase-list-tab">
+       <tr>
+         <td><span>Product Name</span></td>
+        <td><span>Batch No</span></td>
+        <td><span>Exp Date</span></td>
+        <td><span>Qty</span></td>
+        <td><span>Unit</span></td>
+        <td><span>MRP</span></td>
+        <td><span>Vat</span></td>
+        <td><span>Vat Amt</span></td>
+        <td><span>Total Amt</span></td>
+       </tr>
+       <tr ng-repeat="(key, saleitem) in saleItems">
+            <td> {{ saleitem.full_name || 'empty' }}</td>
+            <td> {{ saleitem.batch_details || 'empty' }}</td>
+            <td> {{ showExpiryDate(saleitem)}}</td>
+            <td> {{saleitem.quantity|| 0}}</td>
+            <td> {{ saleitem.package_name || 'empty' }}</td>
+            <td> {{saleitem.mrp|| 0}}</td>
+            <td> {{saleitem.vat_percent}}</td>
+            <td> {{saleitem.vat_amount}}</td>
+            <td> {{saleitem.item_amount}}</td>
+       </tr>      
+    </table>
+    <table width="300" border="0" align="right" cellpadding="0" cellspacing="0" class="purchase-list-tab purchase-list-tab2 ">
+       <tr>
+          <th align="right">Total Item Vat Amount : </th>
+          <td>{{data.total_item_vat_amount}}</td>
+       </tr>
+       <tr>
+          <th align="right">Total Item Sale Amount : </th>
+          <td>{{data.total_item_sale_amount}}</td>
+       </tr>
+       <tr>
+          <th align="right">Disc % :  </th>
+          <td>{{data.total_item_discount_percent}}</td>
+       </tr>
+        <tr>
+          <th align="right">Total Amount :  </th>
+          <td>{{data.total_item_amount}}</td>
+       </tr>
+        <tr>
+          <th align="right">Welfare Amount :  </th>
+          <td>{{data.welfare_amount}}</td>
+       </tr>
+       <tr>
+          <th align="right">Round Off :  </th>
+          <td>{{data.roundoff_amount}}</td>
+       </tr>
+        <tr>
+          <th align="right">Bill Amount :  </th>
+          <td>{{data.bill_amount}}</td>
+       </tr>
+    </table>
+</div>     
 
 

@@ -390,7 +390,23 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                         $anchorScroll();
                         if (response.success == true) {
                             $scope.loadbar('hide');
-                            save_success(mode);
+                            if(mode == 'add'){
+                                msg = 'New bill generated ' + response.model.bill_no;                               
+                               // $scope.data = {};
+                                $scope.data.sale_date = moment().format('YYYY-MM-DD');
+                                $scope.data.formtype = 'add';
+                                $scope.data.payment_type = 'CA';
+                                $scope.getPaytypeDetail(_that.data.payment_type);
+                                $scope.saleItems = [];
+                                $scope.addRow();
+                                $scope.tableform.$show();                               
+                                $scope.data.bill_no = response.model.bill_no;                                
+                            }else{
+                                msg = 'Bill updated successfully';
+                            }
+                            
+                            $scope.successMessage = msg;
+                            save_success();
 //                            $timeout(function () {
 //                                $state.go('pharmacy.sales');
 //                            }, 1000)
@@ -411,23 +427,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             });
         };
         
-        var save_success = function(mode){
-        
-            if(mode == 'add'){
-                msg = 'New bill generated ' + response.model.bill_no;
-
-                $scope.data = {};
-                $scope.data.sale_date = moment().format('YYYY-MM-DD');
-                $scope.data.formtype = 'add';
-                $scope.data.payment_type = 'CA';
-                $scope.saleItems = [];
-                $scope.addRow();
-                $scope.tableform.$show();
-            }else{
-                msg = 'Bill updated successfully';
-            }
-            $scope.successMessage = msg;
-            
+        var save_success = function(){            
             if($scope.btnid == "print")
             {    
                 var innerContents = document.getElementById("Getprintval").innerHTML;                   
@@ -435,6 +435,30 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 popupWinindow.document.open();
                 popupWinindow.document.write('<html><head><link href="css/print.css" rel="stylesheet" type="text/css" /></head><body onload="window.print()">' + innerContents + '</html>');
                 popupWinindow.document.close();
+            }           
+        }
+        
+        $scope.changeGetConsultant = function () {
+            _that = this;            
+            $scope.getConsultantDetail(_that.data.consultant_id);
+        }
+        
+        $scope.getConsultantDetail = function (consultant_id) {
+            consultant_details = $filter('filter')( $scope.doctors, {user_id: consultant_id});
+            $scope.consultant_name_taken = consultant_details[0].name;          
+        }
+         
+        $scope.changeGetPayType = function () {
+            _that = this;
+            $scope.getPaytypeDetail(_that.data.payment_type);
+        }
+        
+        $scope.getPaytypeDetail = function (payment_type) {            
+            if (payment_type == 'CA') {
+                $scope.purchase_type_name = 'Cash';
+            }
+            if (payment_type == 'CR') {
+                $scope.purchase_type_name = 'Credit';
             }           
         }
 
@@ -456,6 +480,8 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                         $scope.data = response;
 //                        $scope.data.patient_name = response.patient.fullname;
                         $scope.data.patient_guid = response.patient.patient_guid;
+                        $scope.getConsultantDetail($scope.data.consultant_id);                       
+                        $scope.getPaytypeDetail($scope.data.payment_type);
                         $scope.products = [];
 //                        $scope.products = response2.productList;
 
