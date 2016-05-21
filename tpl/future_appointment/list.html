@@ -7,11 +7,11 @@
         <div class="row wrapper">
             <div class="col-sm-12">
                 <span ng-show="futureappointmentSelected > 0">
-                    <button ng-click="cancelAppointments()" class="btn m-b-xs btn-dark">
-                        <i class="fa fa-times"></i> Cancel Appointment 
+                    <button ng-click="rescheduleAppointments()" class="btn btn-sm btn-primary">
+                        <i class="fa fa-retweet"></i> Reschedule Appointments 
                     </button>
-                    <button ng-click="rescheduleAppointments()" class="btn m-b-xs btn-dark">
-                        <i class="fa fa-times"></i> Reschedule Appointments 
+                    <button ng-click="cancelAppointments()" class="btn btn-sm btn-dark">
+                        <i class="fa fa-times"></i> Cancel Appointment 
                     </button>
                 </span>
                 <button ng-click="$state.go('patient.futureAppointment')" class="btn m-b-xs  btn-dark pull-right">

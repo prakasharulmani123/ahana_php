@@ -1067,7 +1067,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                             return $ocLazyLoad.load(['smart-table', 'xeditable']).then(
                                     function () {
                                         return $ocLazyLoad.load([
-                                            'tpl/out_patients/out_patients.js', 
+                                            'tpl/out_patients/out_patients.js',
                                             'tpl/modal_form/modal.patient_appointment_reschedule.js'
                                         ]);
                                     }
@@ -2319,16 +2319,20 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
 
     //Check Access
     $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+        var restrictedPage = $.inArray($location.path(), ['/configuration/changePassword', '/configuration/settings']) === -1;
         var currentUser = AuthenticationService.getCurrentUser();
         var loggedIn = Boolean(currentUser);
+        
         if (loggedIn) {
             var stateName = toState.name;
             if (stateName) {
-                $rootScope.commonService.CheckStateAccess(stateName, function (response) {
-                    if (!response) {
-                        $state.go('configuration.organization');
-                    }
-                });
+                if (restrictedPage) {
+                    $rootScope.commonService.CheckStateAccess(stateName, function (response) {
+                        if (!response) {
+                            $state.go('configuration.organization');
+                        }
+                    });
+                }
             }
         }
 

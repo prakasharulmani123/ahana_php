@@ -1,6 +1,8 @@
 $(document).ready(function () {
     $("a[class='custom-close-sidebar']").click(function () {
-        $.slidebars.close();
+        setTimeout(function () { // Wait for closing animation to finish.
+            $.slidebars.close();
+        }, 400);
     })
 });
 
