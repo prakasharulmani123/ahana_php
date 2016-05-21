@@ -92,7 +92,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             id = $item.Patient.patient_id;
             $scope.data.patient_id = id;
             $scope.data.patient_guid = $item.Patient.patient_guid;
-            //$scope.data.patient_name = $item.Patient.patient_firstname;
+            $scope.data.patient_name = $item.Patient.patient_firstname;
             $scope.data.consultant_id = $item.Patient.last_consultant_id;
 
             $scope.getEncounter(id,  'add', '');
@@ -390,7 +390,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                         $anchorScroll();
                         if (response.success == true) {
                             $scope.loadbar('hide');
-                            save_success();
+                            save_success(mode);
 //                            $timeout(function () {
 //                                $state.go('pharmacy.sales');
 //                            }, 1000)
@@ -411,7 +411,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             });
         };
         
-        var save_success = function(){
+        var save_success = function(mode){
         
             if(mode == 'add'){
                 msg = 'New bill generated ' + response.model.bill_no;

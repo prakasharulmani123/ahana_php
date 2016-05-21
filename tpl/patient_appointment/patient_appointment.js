@@ -370,4 +370,15 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
                 }
             });
         };
+        
+        $scope.beforeRender = function ($view, $dates, $leftDate, $upDate, $rightDate) {
+            if (!$scope.checkAccess('patient.backdateappointment')) {
+                var today_date = new Date().valueOf();
+                angular.forEach($dates, function (date, key) {
+                    if (today_date > date.localDateValue()) {
+                        $dates[key].selectable = false;
+                    }
+                });
+            }
+        }
     }]);

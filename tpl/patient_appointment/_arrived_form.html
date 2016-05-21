@@ -18,7 +18,7 @@
                             </div>
                         </a>
                         <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                            <datetimepicker data-ng-model="data.PatAppointment.status_date" data-datetimepicker-config="{ dropdownSelector: '#dropdown2' }" data-on-set-time="onTimeSet(newDate, oldDate)"/>
+                            <datetimepicker data-ng-model="data.PatAppointment.status_date" data-datetimepicker-config="{ dropdownSelector: '#dropdown2' }" data-on-set-time="onTimeSet(newDate, oldDate)" data-before-render="beforeRender($view, $dates, $leftDate, $upDate, $rightDate)" />
                         </ul>
                     </div>
                 </div>
