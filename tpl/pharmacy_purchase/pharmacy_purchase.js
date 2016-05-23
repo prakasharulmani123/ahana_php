@@ -387,6 +387,11 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                 }
             });
 
+            $scope.data2 = _that.data;  
+            $scope.purchaseitems2 =  $scope.purchaseitems;
+            $scope.getSupplierDetail(_that.data.supplier_id);
+            $scope.getPaytypeDetail(_that.data.payment_type);
+            
             angular.extend(_that.data, {product_items: $scope.purchaseitems});
             $scope.loadbar('show');
             $http({
@@ -399,8 +404,16 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                         if (response.success == true) {
 
                             $scope.loadbar('hide');
-                            $scope.successMessage = 'Purchase Saved successfully';
-//                            $scope.data2 = _that.data;                           
+                            if(mode == 'add'){
+                                $scope.data = {};  
+                                $scope.successMessage = 'Purchase Saved successfully';
+                                $scope.data.invoice_date = moment().format('YYYY-MM-DD');
+                                $scope.data.formtype = 'add';
+                                $scope.data.payment_type = 'CA';
+                                $scope.purchaseitems = [];
+                            }else{
+                                 $scope.successMessage = 'Purchase updated successfully';
+                            }
                             save_success();
                         } else {
                             $scope.loadbar('hide');

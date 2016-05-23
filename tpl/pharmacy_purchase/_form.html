@@ -244,11 +244,11 @@
        <table width="100%" border="0" align="right" cellpadding="0" cellspacing="0" class="purchase-list-tab purchase-list-tab2 ">
           <tr>
              <th align="left">Invoice No :  </th>
-             <td align="left">{{data.invoice_no}}</td>
+             <td align="left">{{data2.invoice_no}}</td>
           </tr>
           <tr>
              <th align="left">Invoice Date :  </th>
-             <td align="left">{{data.invoice_date}}</td>
+             <td align="left">{{data2.invoice_date}}</td>
           </tr>
        </table>
     </div>
@@ -285,7 +285,7 @@
           <th>P.Unit</th>
           <th>Total Amt</th>
        </tr>
-       <tr ng-repeat="(key, purchaseitem) in purchaseitems">
+       <tr ng-repeat="(key, purchaseitem) in purchaseitems2">
           <td>{{ purchaseitem.full_name || 'empty' }}</td>
           <td>{{ purchaseitem.batch_details || 'empty' }}</td>
           <td>{{ purchaseitem.temp_expiry_date | moment:'MMM YYYY' || 'empty' }}</td>
@@ -306,35 +306,35 @@
     <table width="300" border="0" align="right" cellpadding="0" cellspacing="0" class="purchase-list-tab purchase-list-tab2 ">
        <tr>
           <th align="right">Total Disc. Amount : </th>
-          <td>{{data.total_item_discount_amount}}</td>
+          <td>{{data2.total_item_discount_amount}}</td>
        </tr>
        <tr>
           <th align="right">Total Vat Amount : </th>
-          <td>{{data.total_item_vat_amount}}</td>
+          <td>{{data2.total_item_vat_amount}}</td>
        </tr>
        <tr>
           <th align="right">Total Amount : </th>
-          <td>{{data.total_item_purchase_amount}}</td>
+          <td>{{data2.total_item_purchase_amount}}</td>
        </tr>
        <tr>
-          <th align="right">Disc % ({{data.discount_percent}}) : </th>
-          <td>{{data.discount_amount}}</td>
+          <th align="right">Disc % ({{data2.discount_percent}}) : </th>
+          <td>{{data2.discount_amount}}</td>
        </tr>      
        <tr>
           <th align="right">Before Disc. Total : </th>
-          <td>{{data.before_disc_amount}}</td>
+          <td>{{data2.before_disc_amount}}</td>
        </tr>
        <tr>
           <th align="right">After Disc. Total : </th>
-          <td>{{data.after_disc_amount}}</td>
+          <td>{{data2.after_disc_amount}}</td>
        </tr>
        <tr>
           <th align="right">Round Off : </th>
-          <td>{{data.roundoff_amount}}</td>
+          <td>{{data2.roundoff_amount}}</td>
        </tr>
        <tr>
           <th align="right">Net Amount : </th>
-          <td>{{data.net_amount}}</td>
+          <td>{{data2.net_amount}}</td>
        </tr>
     </table>
 </div>    
