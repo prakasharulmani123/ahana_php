@@ -16,6 +16,10 @@ angular.module('app').factory('APIInterceptor', function ($localStorage, $rootSc
             }
             return config;
         },
+        response: function(response) {
+            $('.selectpicker').selectpicker('refresh');
+            return response;
+        },
         responseError: function (rejection) {
             // do something on error
             if (rejection.status === 401) {

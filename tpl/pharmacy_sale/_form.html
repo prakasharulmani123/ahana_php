@@ -38,7 +38,7 @@
                                 <div class="form-group">
                                     <label class="col-lg-4 control-label">Consultant *</label>
                                     <div class="col-lg-8">
-                                        <select class="form-control" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors | orderBy: fullname" data-ng-change="changeGetConsultant()">
+                                        <select class="form-control selectpicker" data-live-search="true" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors | orderBy: fullname" data-ng-change="changeGetConsultant()">
                                             <option value="">Select Consultant</option>
                                         </select>
                                     </div>
@@ -48,7 +48,7 @@
                                 <div class="form-group">
                                     <label class="col-lg-4 control-label">Encounter #</label>
                                     <div class="col-lg-8">
-                                        <select class="form-control" 
+                                        <select class="form-control selectpicker" data-live-search="true" 
                                                 ng-model="data.encounter_id" 
                                                 ng-options="encounter.encounter_id as encounter.encounter_id for encounter in encounters | orderBy: encounter_id"
                                                 ng-change="getPrescription()"
@@ -57,7 +57,6 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="line line-dashed b-b line-lg "></div>
                             </div>
                         </div>
                     </div>
@@ -93,7 +92,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="line line-dashed b-b line-lg "></div>
                             </div>
                         </div>
                     </div>

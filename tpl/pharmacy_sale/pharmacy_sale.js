@@ -24,7 +24,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 $scope.sale_payment_type_name = 'Cash On Deleivery';
             }
             $scope.sale_payment_type = payment_type;
-            
+
             $scope.activeMenu = payment_type;
 
             // pagination set up
@@ -88,14 +88,13 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         };
 
         $scope.formatPatient = function ($item, $model, $label) {
-            console.log($item.Patient);
             id = $item.Patient.patient_id;
             $scope.data.patient_id = id;
             $scope.data.patient_guid = $item.Patient.patient_guid;
             $scope.data.patient_name = $item.Patient.patient_firstname;
             $scope.data.consultant_id = $item.Patient.last_consultant_id;
 
-            $scope.getEncounter(id,  'add', '');
+            $scope.getEncounter(id, 'add', '');
             $scope.getPatientMobileNo(id);
         }
 
@@ -103,13 +102,13 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             $rootScope.commonService.GetEncounterListByPatient('', '0,1', false, patient_id, function (response) {
                 angular.forEach(response, function (resp) {
                     resp.encounter_id = resp.encounter_id.toString();
-                    $scope.encounters.push(resp);
                 });
+                $scope.encounters = response;
 
                 if (response != null && mode == 'add') {
                     $scope.data.encounter_id = response[0].encounter_id;
                     $scope.getPrescription();
-                }else if(mode == 'edit'){
+                } else if (mode == 'edit') {
                     $scope.data.encounter_id = encounter_id.toString();
                 }
             });
@@ -341,15 +340,14 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             $scope.data.roundoff_amount = roundoff_amount.toFixed(2);
             $scope.data.bill_amount = bill_amount.toFixed(2);
         }
-        
-        $scope.getBtnId = function(btnid)
-        { 
-          $scope.btnid = btnid;              
+
+        $scope.getBtnId = function (btnid)
+        {
+            $scope.btnid = btnid;
         }
 
         //Save Both Add & Update Data
         $scope.saveForm = function (mode) {
-            console.log(mode);
             if (!$scope.tableform.$valid) {
                 $scope.data.patient_id = '';
             }
@@ -402,6 +400,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                 $scope.data.sale_date = moment().format('YYYY-MM-DD');
                                 $scope.data.formtype = 'add';
                                 $scope.data.payment_type = 'CA';
+                                $scope.getPaytypeDetail(_that.data.payment_type);
                                 $scope.saleItems = [];
                                 $scope.addRow();
                                 $scope.tableform.$show();                               
@@ -430,35 +429,34 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                     $scope.errorData = data.message;
             });
         };
-        
-        var save_success = function(){   
-             
-            if($scope.btnid == "print")
-            {    
-                var innerContents = document.getElementById("Getprintval").innerHTML;                   
+
+        var save_success = function () {
+            if ($scope.btnid == "print")
+            {
+                var innerContents = document.getElementById("Getprintval").innerHTML;
                 var popupWinindow = window.open('', '_blank', 'width=600,height=700,scrollbars=no,menubar=no,toolbar=no,location=no,status=no,titlebar=no');
                 popupWinindow.document.open();
                 popupWinindow.document.write('<html><head><link href="css/print.css" rel="stylesheet" type="text/css" /></head><body onload="window.print()">' + innerContents + '</html>');
                 popupWinindow.document.close();
-            }           
+            }
         }
-        
+
         $scope.changeGetConsultant = function () {
             _that = this;            
             $scope.getConsultantDetail(_that.data.consultant_id);
         }
-        
-        $scope.getConsultantDetail = function (consultant_id) {           
-            consultant_details = $filter('filter')( $scope.doctors, {user_id: consultant_id});
-            $scope.consultant_name_taken = consultant_details[0].fullname;             
+
+        $scope.getConsultantDetail = function (consultant_id) {
+            consultant_details = $filter('filter')($scope.doctors, {user_id: consultant_id});
+            $scope.consultant_name_taken = consultant_details[0].name;
         }
-         
+
         $scope.changeGetPayType = function () {
             _that = this;
             $scope.getPaytypeDetail(_that.data.payment_type);
         }
-        
-        $scope.getPaytypeDetail = function (payment_type) {            
+
+        $scope.getPaytypeDetail = function (payment_type) {
             if (payment_type == 'CA') {
                 $scope.purchase_type_name = 'Cash';
             }
@@ -488,7 +486,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                         $scope.data = response;
 //                        $scope.data.patient_name = response.patient.fullname;
                         $scope.data.patient_guid = response.patient.patient_guid;
-                        $scope.getConsultantDetail($scope.data.consultant_id);                       
+                        $scope.getConsultantDetail($scope.data.consultant_id);
                         $scope.getPaytypeDetail($scope.data.payment_type);
                         $scope.products = [];
 //                        $scope.products = response2.productList;
@@ -507,8 +505,8 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                             });
                         });
 
-                        $scope.getEncounter(response.patient.patient_id,  'edit', response.encounter_id);
-            
+                        $scope.getEncounter(response.patient.patient_id, 'edit', response.encounter_id);
+
                         $timeout(function () {
                             delete $scope.data.items;
                         }, 3000);
@@ -523,10 +521,13 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             });
         };
 
-        $scope.make_payment = function (sale_id, bill_amount, paid, balance, sale_payment_type) {
+        $scope.make_payment = function (sale_id, bill_amount, paid, balance, sale_payment_type, checked_sale_id) {
+            sale = $filter('filter')($scope.displayedCollection, {sale_id: sale_id});
+
             var modalInstance = $modal.open({
                 templateUrl: 'tpl/pharmacy_sale/modal.makepayment.html',
                 controller: "SaleMakePaymentController",
+                size: 'lg',
                 resolve: {
                     scope: function () {
                         return $scope;
@@ -535,10 +536,8 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             });
             modalInstance.data = {
                 sale_id: sale_id,
-                bill_amount: bill_amount,
-                paid: paid,
-                balance: balance,
-                sale_payment_type: sale_payment_type,
+                sale: sale[0],
+                checked_sale_id: checked_sale_id,
             };
 
             modalInstance.result.then(function (selectedItem) {
@@ -595,9 +594,9 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                     vat_amount: '0',
                                     item_amount: '0',
                                 };
-                                
+
                                 exists = $filter('filter')($scope.saleItems, {product_id: item.product_id});
-                                if(exists.length == 0){
+                                if (exists.length == 0) {
                                     $scope.saleItems.push($scope.inserted);
                                     ids.push(item.product_id);
                                 }

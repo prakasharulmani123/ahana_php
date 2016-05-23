@@ -44,15 +44,11 @@
                             </button>
                         </th>
                         <th st-sort="patient.fullname">Patient Name</th>
-                        <th st-sort="bill_no">Bill No</th>
-                        <th st-sort="sale_date">Sale Date</th>
-                        <th st-sort="mobile_no">Contact No</th>
-                        <th st-sort="total_item_sale_amount">Total Item Amount</th>
-                        <th st-sort="total_item_discount_amount">Disc Amount</th>
-                        <th st-sort="total_item_vat_amount">Vat Amount</th>
-                        <th st-sort="welfare_amount">Welfare Amount</th>
-                        <th st-sort="roundoff_amount">Roundoff Amount</th>
-                        <th st-sort="bill_amount">Bill Amount</th>
+                        <!--<th st-sort="mobile_no">Contact No</th>-->
+                        <th st-sort="mobile_no">Encounter #</th>
+                        <th st-sort="sum_bill_amount">Total Bill Amount</th>
+                        <th st-sort="sum_paid_amount">Total Paid</th>
+                        <th st-sort="sum_balance_amount">Total Balance</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -64,23 +60,16 @@
                                 <i ng-if="expanded" class="fa fa-minus text"></i>
                             </button>
                         </td>
-                        <td>{{row.patient_name}}</td>
-                        <td>{{row.bill_no}}</td>
-                        <td>{{row.sale_date}}</td>
-                        <td>{{row.mobile_no}}</td>
-                        <td>{{row.total_item_sale_amount}}</td>
-                        <td>{{row.total_item_discount_amount}}</td>
-                        <td>{{row.total_item_vat_amount}}</td>
-                        <td>{{row.welfare_amount}}</td>
-                        <td>{{row.roundoff_amount}}</td>
-                        <td>{{row.bill_amount}}</td>
+                        <td>{{row.patient_name|| 'UnKnown Person'}}</td>
+                        <!--<td>{{row.mobile_no}}</td>-->
+                        <td>{{row.encounter_id}}</td>
+                        <td>{{row.sum_bill_amount}}</td>
+                        <td>{{row.sum_paid_amount}}</td>
+                        <td>{{row.sum_balance_amount}}</td>
                         <td>
-                            <a class="label bg-dark" title="Edit" check-access  ui-sref="pharmacy.saleUpdate({id: '{{row.sale_id}}'})">
-                                <i class="fa fa-pencil"></i>
-                            </a>
-                            <span ng-if="row.payment_type != 'CA' && row.payment_status != 'C'">
-                                <a title="Make Payment" ng-click="make_payment(row.sale_id, row.bill_amount, row.billings_total_paid_amount, row.billings_total_balance_amount, sale_payment_type)" check-access ">
-                                   <i class="fa fa-money"></i>
+                            <span ng-if="saleitem.payment_type != 'CA' && row.sum_balance_amount > 0">
+                                <a class="label bg-dark" title="Make Payment" ng-click="make_payment(row.sale_id, saleitem.bill_amount, saleitem.billings_total_paid_amount, saleitem.billings_total_balance_amount, sale_payment_type, null)" data-button="pharmacy.makePayment" check-access-custom>
+                                    <i class="fa fa-money"></i>
                                 </a>
                             </span>
                         </td>
@@ -91,28 +80,31 @@
                             <table class="table table-condensed table-bordered">
                                 <thead>
                                     <tr>
-                                        <th>Product Name</th>
-                                        <th>Batch No</th>
-                                        <th>Exp Date</th>
-                                        <th>Qty</th>
-                                        <th>S.Unit</th>
-                                        <th>MRP</th>
-                                        <th>Vat</th>
-                                        <th>Vat Amt</th>
-                                        <th>Total Amt</th>
+                                        <th st-sort="bill_no">Bill No</th>
+                                        <th st-sort="sale_date">Sale Date</th>
+                                        <th st-sort="bill_amount">Bill Amount</th>
+                                        <th st-sort="billings_total_paid_amount">Paid Amount</th>
+                                        <th st-sort="billings_total_balance_amount">Balance Amount</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr ng-repeat="(gKey, saleitem) in row.items | orderBy: saleitem">
-                                        <td>{{ saleitem.product.full_name}}</td>
-                                        <td>{{ saleitem.batch.batch_no}}</td>
-                                        <td>{{ saleitem.batch.expiry_date | moment:'MMM YYYY' || 'empty' }}</td>
-                                        <td>{{ saleitem.quantity}}</td>
-                                        <td>{{ saleitem.package_name}}</td>
-                                        <td>{{ saleitem.mrp}}</td>
-                                        <td>{{ saleitem.vat_percent}}</td>
-                                        <td>{{ saleitem.vat_amount}}</td>
-                                        <td>{{ saleitem.item_amount}}</td>
+                                        <td>{{saleitem.bill_no}}</td>
+                                        <td>{{saleitem.sale_date}}</td>
+                                        <td>{{saleitem.bill_amount}}</td>
+                                        <td>{{saleitem.billings_total_paid_amount}}</td>
+                                        <td>{{saleitem.billings_total_balance_amount}}</td>
+                                        <td>
+                                            <a class="label bg-dark" title="Edit" check-access  ui-sref="pharmacy.saleUpdate({id: '{{row.sale_id}}'})">
+                                                <i class="fa fa-pencil"></i>
+                                            </a>
+                                            <span ng-if="saleitem.payment_type != 'CA' && saleitem.payment_status != 'C'">
+                                                <a class="label bg-dark" title="Make Payment" ng-click="make_payment(row.sale_id, saleitem.bill_amount, saleitem.billings_total_paid_amount, saleitem.billings_total_balance_amount, sale_payment_type, saleitem.sale_id)" data-button="pharmacy.makePayment" check-access-custom>
+                                                    <i class="fa fa-money"></i>
+                                                </a>
+                                            </span>
+                                        </td> 
                                     </tr>
                                 </tbody>
                             </table>                            

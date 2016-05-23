@@ -13,35 +13,44 @@
                         <div class="panel panel-default">
                             <div class="panel-body">
                                 <div class="form-group">
-                                    <label class="col-sm-3 control-label">Bill Amount</label>
+                                    <label class="col-sm-3 control-label">Name</label>
                                     <div class="col-sm-9">
                                         <div class="input-group">
-                                            {{bill_amount}}
+                                            {{patient_name}}
                                         </div>
                                     </div>
                                 </div>
                                 <div class="line line-dashed b-b line-lg "></div>
-                                
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">Bill Amount</label>
+                                    <div class="col-sm-9">
+                                        <div class="input-group">
+                                            {{bill_amount| number:2}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="line line-dashed b-b line-lg "></div>
+
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">Paid</label>
                                     <div class="col-sm-9">
                                         <div class="input-group">
-                                            {{paid}}
+                                            {{paid| number:2}}
                                         </div>
                                     </div>
                                 </div>
                                 <div class="line line-dashed b-b line-lg "></div>
-                                
+
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">Balance</label>
                                     <div class="col-sm-9">
                                         <div class="input-group">
-                                            {{balance}}
+                                            {{balance| number:2}}
                                         </div>
                                     </div>
                                 </div>
                                 <div class="line line-dashed b-b line-lg "></div>
-                                
+
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">Date *</label>
                                     <div class="col-sm-9">
@@ -54,11 +63,43 @@
                                     </div>
                                 </div>
                                 <div class="line line-dashed b-b line-lg "></div>
+                                
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">Paying Bills</label>
+                                    <div class="col-sm-9">
+                                        <table class="table table-condensed table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>&nbsp;</th>
+                                                    <th st-sort="bill_no">Bill No</th>
+                                                    <th st-sort="bill_amount">Bill Amount</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="(gKey, saleitem) in saleitems | orderBy: saleitem">
+                                                    <td>
+                                                        <label class="i-checks "> 
+                                                            <input type="checkbox" ng-checked="saleitem.checked" value="{{saleitem.billings_total_balance_amount}}" class="chk" ng-click="updatePaid()" data-bill="{{saleitem.sale_id}}" /> 
+                                                            <i></i>
+                                                        </label>
+                                                    </td>
+                                                    <td>{{saleitem.bill_no}}</td>
+                                                    <td>{{saleitem.billings_total_balance_amount}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2" class="text-right"><b>Total</b></td>
+                                                    <td>{{paid_amount| number:2}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="line line-dashed b-b line-lg "></div>
 
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">Amount * </label>
                                     <div class="col-sm-9">
-                                        <input type="text" ng-model="data.paid_amount" maxlength="50" class="form-control" placeholder="Amount" number-mask="">
+                                        <input type="text" ng-model="data.paid_amount" maxlength="50" class="form-control" placeholder="Amount" number-mask="" value="{{balance}}">
                                     </div>
                                 </div>
 
