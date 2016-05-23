@@ -378,7 +378,13 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                     $scope.saleItems[key].batch_no = saleitem.batch_details;
                 }
             });
-
+            
+            /* For print bill */
+            $scope.data2 =  _that.data;
+            $scope.saleItems2 = $scope.saleItems;
+            $scope.getConsultantDetail(_that.data.consultant_id); 
+            $scope.getPaytypeDetail(_that.data.payment_type);
+            
             angular.extend(_that.data, {product_items: $scope.saleItems});
             $scope.loadbar('show');
             $http({
@@ -391,25 +397,23 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                         if (response.success == true) {
                             $scope.loadbar('hide');
                             if(mode == 'add'){
-                                msg = 'New bill generated ' + response.model.bill_no;                               
-                               // $scope.data = {};
+                                msg = 'New bill generated ' + response.model.bill_no;            
+                                $scope.data = {};                                
                                 $scope.data.sale_date = moment().format('YYYY-MM-DD');
                                 $scope.data.formtype = 'add';
                                 $scope.data.payment_type = 'CA';
-                                $scope.getPaytypeDetail(_that.data.payment_type);
                                 $scope.saleItems = [];
                                 $scope.addRow();
                                 $scope.tableform.$show();                               
-                                $scope.data.bill_no = response.model.bill_no;                                
+                                $scope.data2.bill_no = response.model.bill_no;                                
                             }else{
                                 msg = 'Bill updated successfully';
-                            }
-                            
-                            $scope.successMessage = msg;
-                            save_success();
-//                            $timeout(function () {
-//                                $state.go('pharmacy.sales');
-//                            }, 1000)
+                            }                          
+                           $scope.successMessage = msg;   
+                           $timeout(function () {
+    //                                $state.go('pharmacy.sales');
+                                    save_success();
+                                }, 1000)    
                         } else {
                             $scope.loadbar('hide');
                             $scope.errorData = response.message;
@@ -427,7 +431,8 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             });
         };
         
-        var save_success = function(){            
+        var save_success = function(){   
+             
             if($scope.btnid == "print")
             {    
                 var innerContents = document.getElementById("Getprintval").innerHTML;                   
@@ -443,9 +448,9 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             $scope.getConsultantDetail(_that.data.consultant_id);
         }
         
-        $scope.getConsultantDetail = function (consultant_id) {
+        $scope.getConsultantDetail = function (consultant_id) {           
             consultant_details = $filter('filter')( $scope.doctors, {user_id: consultant_id});
-            $scope.consultant_name_taken = consultant_details[0].name;          
+            $scope.consultant_name_taken = consultant_details[0].fullname;             
         }
          
         $scope.changeGetPayType = function () {
@@ -459,7 +464,10 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             }
             if (payment_type == 'CR') {
                 $scope.purchase_type_name = 'Credit';
-            }           
+            }  
+             if (payment_type == 'COD') {
+                $scope.purchase_type_name = 'Cash On Delivery';
+            }  
         }
 
         //Get Data for update Form

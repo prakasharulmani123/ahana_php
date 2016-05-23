@@ -273,11 +273,11 @@
        <table width="100%" border="0" align="right" cellpadding="0" cellspacing="0" class="purchase-list-tab purchase-list-tab2 ">
           <tr>
              <th align="left">Patient Name :  </th>
-             <td align="left">{{data.patient_name}}</td>
+             <td align="left">{{data2.patient_name}}</td>
           </tr>
           <tr>
              <th align="left">Mobile No :  </th>
-             <td align="left">{{data.mobile_no}}</td>
+             <td align="left">{{data2.mobile_no}}</td>
           </tr>
           <tr>
              <th align="left">Consultant :  </th>
@@ -285,7 +285,7 @@
           </tr>
           <tr>
              <th align="left">Encounter# :  </th>
-             <td align="left">{{data.encounter_id}}</td>
+             <td align="left">{{data2.encounter_id}}</td>
           </tr>
        </table>
     </div>
@@ -293,11 +293,11 @@
        <table width="100%" border="0" align="right" cellpadding="0" cellspacing="0" class="purchase-list-tab purchase-list-tab2 ">
             <tr>
              <th align="left">Bill num  :  </th>
-             <td align="left">{{data.bill_no}}</td>
+             <td align="left">{{data2.bill_no}}</td>
            </tr>
            <tr>
              <th align="left">Sale Date  :  </th>
-             <td align="left">{{data.sale_date}}</td>
+             <td align="left">{{data2.sale_date}}</td>
            </tr>
            <tr>
              <th align="left">Payment Type  :  </th>
@@ -320,7 +320,7 @@
         <td><span>Vat Amt</span></td>
         <td><span>Total Amt</span></td>
        </tr>
-       <tr ng-repeat="(key, saleitem) in saleItems">
+       <tr ng-repeat="(key, saleitem) in saleItems2">
             <td> {{ saleitem.full_name || 'empty' }}</td>
             <td> {{ saleitem.batch_details || 'empty' }}</td>
             <td> {{ showExpiryDate(saleitem)}}</td>
@@ -335,31 +335,31 @@
     <table width="300" border="0" align="right" cellpadding="0" cellspacing="0" class="purchase-list-tab purchase-list-tab2 ">
        <tr>
           <th align="right">Total Item Vat Amount : </th>
-          <td>{{data.total_item_vat_amount}}</td>
+          <td>{{data2.total_item_vat_amount}}</td>
        </tr>
        <tr>
           <th align="right">Total Item Sale Amount : </th>
-          <td>{{data.total_item_sale_amount}}</td>
+          <td>{{data2.total_item_sale_amount}}</td>
        </tr>
        <tr>
           <th align="right">Disc % :  </th>
-          <td>{{data.total_item_discount_percent}}</td>
+          <td>{{data2.total_item_discount_percent}}</td>
        </tr>
         <tr>
           <th align="right">Total Amount :  </th>
-          <td>{{data.total_item_amount}}</td>
+          <td>{{data2.total_item_amount}}</td>
        </tr>
         <tr>
           <th align="right">Welfare Amount :  </th>
-          <td>{{data.welfare_amount}}</td>
+          <td>{{data2.welfare_amount}}</td>
        </tr>
        <tr>
           <th align="right">Round Off :  </th>
-          <td>{{data.roundoff_amount}}</td>
+          <td>{{data2.roundoff_amount}}</td>
        </tr>
         <tr>
           <th align="right">Bill Amount :  </th>
-          <td>{{data.bill_amount}}</td>
+          <td>{{data2.bill_amount}}</td>
        </tr>
     </table>
 </div>     
