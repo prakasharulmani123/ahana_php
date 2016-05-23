@@ -12,6 +12,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
         //Index Page
         $scope.loadSaleItemList = function (payment_type) {
+            console.log(payment_type);
             $scope.errorData = $scope.successMessage = '';
             $scope.isLoading = true;
             if (payment_type == 'CA') {

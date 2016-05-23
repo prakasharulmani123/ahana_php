@@ -8,7 +8,7 @@ app.controller('SaleMakePaymentController', ['scope', '$scope', '$modalInstance'
         var bill_amount = sale.sum_bill_amount;
         var paid = sale.sum_paid_amount;
         var balance = sale.sum_balance_amount;
-        var sale_payment_type = sale.sale_payment_type;
+        var sale_payment_type = sale.payment_type;
         
         $scope.bill_amount = bill_amount;
         $scope.paid = paid;
