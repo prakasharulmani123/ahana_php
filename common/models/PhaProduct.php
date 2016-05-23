@@ -15,7 +15,8 @@ use yii\db\ActiveQuery;
  * @property string $product_unit
  * @property string $product_unit_count
  * @property integer $product_description_id
- * @property integer $product_reorder
+ * @property integer $product_reorder_min
+ * @property integer $product_reorder_max
  * @property string $product_price
  * @property string $product_location
  * @property integer $brand_id
@@ -61,8 +62,8 @@ class PhaProduct extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['product_name', 'product_unit', 'product_unit_count', 'product_description_id', 'product_reorder', 'brand_id', 'division_id', 'generic_id', 'purchase_vat_id', 'purchase_package_id', 'sales_vat_id', 'sales_package_id'], 'required'],
-            [['tenant_id', 'product_description_id', 'product_reorder', 'brand_id', 'division_id', 'generic_id', 'drug_class_id', 'purchase_vat_id', 'purchase_package_id', 'sales_vat_id', 'sales_package_id', 'created_by', 'modified_by'], 'integer'],
+            [['product_name', 'product_unit', 'product_unit_count', 'product_description_id', 'product_reorder_min', 'product_reorder_max', 'brand_id', 'division_id', 'generic_id', 'purchase_vat_id', 'purchase_package_id', 'sales_vat_id', 'sales_package_id'], 'required'],
+            [['tenant_id', 'product_description_id', 'product_reorder_min', 'product_reorder_max', 'brand_id', 'division_id', 'generic_id', 'drug_class_id', 'purchase_vat_id', 'purchase_package_id', 'sales_vat_id', 'sales_package_id', 'created_by', 'modified_by'], 'integer'],
             [['product_price'], 'number'],
             [['status'], 'string'],
             [['created_at', 'modified_at', 'deleted_at'], 'safe'],
@@ -85,7 +86,8 @@ class PhaProduct extends RActiveRecord {
             'product_unit' => 'Product Unit',
             'product_unit_count' => 'Product Unit Count',
             'product_description_id' => 'Product Description',
-            'product_reorder' => 'Product Reorder',
+            'product_reorder_min' => 'Product Reorder Min',
+            'product_reorder_max' => 'Product Reorder Max',
             'product_price' => 'Product Price',
             'product_location' => 'Product Location',
             'brand_id' => 'Brand Name',
