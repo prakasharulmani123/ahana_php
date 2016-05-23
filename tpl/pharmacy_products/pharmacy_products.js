@@ -61,6 +61,15 @@ app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http
             $rootScope.commonService.GetPackageUnitList('', '1', false, function (response) {
                 $scope.packingUnits = response.packingList;
             });
+            
+            $rootScope.commonService.GetSupplierList('', '1', false, function (response) {
+                    $scope.suppliers = response.supplierList;
+            });  
+            
+            if ($scope.data.formtype == 'add') {
+                $scope.data.product_reorder_min = 0;
+                $scope.data.product_reorder_max = 50;
+            }
         }
 
         //Save Both Add & Update Data

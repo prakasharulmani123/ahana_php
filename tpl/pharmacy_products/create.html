@@ -7,8 +7,7 @@
             {% include 'tpl/blocks/alert.html' %}
         </div>
         <div class="row">
-            <div class="col-sm-12" ng-init="initForm();
-                            data.formtype = 'add';
+            <div class="col-sm-12" ng-init="data.formtype = 'add';initForm();
                             data.product_unit = 'MG';
                             data.product_reorder = '50'">
                 <form name="productForm" class="form-horizontal form-validation" novalidate="">
