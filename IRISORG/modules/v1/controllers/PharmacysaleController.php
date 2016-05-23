@@ -65,7 +65,24 @@ class PharmacysaleController extends ActiveController {
         $get = Yii::$app->getRequest()->get();
 
         if (isset($get['payment_type'])) {
-            $data = PhaSale::find()->tenant()->active()->andWhere(['payment_type' => $get['payment_type']])->all();
+            $data = [];
+            $sales = PhaSale::find()->tenant()->active()->andWhere(['payment_type' => $get['payment_type']])->groupBy(['encounter_id'])->all();
+            foreach ($sales as $key => $sale) {
+                $data[$key] = $sale->attributes;
+                
+                if(!empty($sale->encounter_id))
+                    $sale_item = PhaSale::find()->tenant()->andWhere(['encounter_id' => $sale->encounter_id, 'payment_type' => $get['payment_type']]);
+                else
+                    $sale_item = PhaSale::find()->tenant()->andWhere(['sale_id' => $sale->sale_id, 'payment_type' => $get['payment_type']]);
+                
+                $sale_ids = \yii\helpers\ArrayHelper::map($sale_item->all(), 'sale_id', 'sale_id');
+                $sum_paid_amount = \common\models\PhaSaleBilling::find()->tenant()->andWhere(['sale_id' => $sale_ids])->sum('paid_amount');
+                
+                $data[$key]['items'] = $sale_item->all();
+                $data[$key]['sum_bill_amount'] = $sale_item->sum('bill_amount');
+                $data[$key]['sum_paid_amount'] = !is_null($sum_paid_amount) ? $sum_paid_amount : 0;
+                $data[$key]['sum_balance_amount'] = $data[$key]['sum_bill_amount'] - $sum_paid_amount;
+            }
             return ['success' => true, 'sales' => $data];
         } else {
             return ['success' => false, 'message' => 'Invalid Access'];

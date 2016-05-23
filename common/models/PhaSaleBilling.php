@@ -25,6 +25,8 @@ use yii\db\ActiveQuery;
  */
 class PhaSaleBilling extends RActiveRecord {
 
+    public $sale_ids;
+
     /**
      * @inheritdoc
      */
@@ -39,7 +41,7 @@ class PhaSaleBilling extends RActiveRecord {
         return [
             [['paid_date', 'paid_amount'], 'required'],
             [['sale_id', 'tenant_id', 'created_by', 'modified_by'], 'integer'],
-            [['paid_date', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
+            [['paid_date', 'created_at', 'modified_at', 'deleted_at', 'sale_ids'], 'safe'],
             [['paid_amount'], 'number'],
             [['status'], 'string'],
             ['paid_amount', 'validateBillAmount'],
@@ -47,8 +49,15 @@ class PhaSaleBilling extends RActiveRecord {
     }
 
     public function validateBillAmount($attribute, $params) {
-        if ($this->paid_amount > $this->sale->bill_amount) {
-            $this->addError($attribute, "Amount ({$this->paid_amount}) must be lesser than or equal to Bill Amount ({$this->sale->bill_amount})");
+        if (isset($this->sale_ids)) {
+            $bill_amount = PhaSale::find()->tenant()->andWhere(['sale_id' => $this->sale_ids])->sum('bill_amount');
+            
+            if ($this->paid_amount > $bill_amount) {
+                $this->addError($attribute, "Amount ({$this->paid_amount}) must be lesser than or equal to Bill Amount ({$bill_amount})");
+            }
+        }
+        if ($this->paid_amount <= 0) {
+            $this->addError($attribute, "Amount should be greater than zero");
         }
     }
 

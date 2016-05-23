@@ -63,12 +63,33 @@ class PharmacysalebillingController extends ActiveController {
     public function actionMakepayment() {
         $post = Yii::$app->getRequest()->post();
 
-        if (!empty($post)) {
+        if (!empty($post) && !empty($post['sale_ids'])) {
             $model = new PhaSaleBilling;
             $model->attributes = $post;
             $valid = $model->validate();
+            
             if ($valid) {
-                $model->save(false);
+                $sales = \common\models\PhaSale::find()->tenant()->andWhere(['sale_id' => $post['sale_ids']])->all();
+                $paid_amount = $post['paid_amount'];
+                
+                foreach ($sales as $key => $sale) {
+                    $model = new PhaSaleBilling;
+                    
+                    $paid = $sale->bill_amount;
+                    
+                    if($paid_amount < $sale->bill_amount){
+                        $paid = $paid_amount;
+                    }
+                    
+                    $model->attributes = [
+                        'paid_date' => $post['paid_date'],
+                        'sale_id' => $sale->sale_id,
+                        'paid_amount' => $paid,
+                    ];
+                    $paid_amount = $paid_amount - $paid;
+                    
+                    $model->save(false);
+                }
                 return ['success' => true];
             } else {
                 return ['success' => false, 'message' => Html::errorSummary([$model])];
