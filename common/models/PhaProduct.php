@@ -47,7 +47,7 @@ use yii\db\ActiveQuery;
  * @property PhaPurchaseItem[] $phaPurchaseItems
  */
 class PhaProduct extends RActiveRecord {
-    
+
     public $full_name;
     public $supplier_ids = false;
 
@@ -61,51 +61,46 @@ class PhaProduct extends RActiveRecord {
     /**
      * @inheritdoc
      */
-   
     public function rules() {
         return [
             [['product_name', 'product_unit', 'product_unit_count', 'product_description_id', 'product_reorder_min', 'product_reorder_max', 'brand_id', 'division_id', 'generic_id', 'purchase_vat_id', 'purchase_package_id', 'sales_vat_id', 'sales_package_id'], 'required'],
             [['tenant_id', 'product_description_id', 'product_reorder_min', 'product_reorder_max', 'brand_id', 'division_id', 'generic_id', 'drug_class_id', 'purchase_vat_id', 'purchase_package_id', 'sales_vat_id', 'sales_package_id', 'created_by', 'modified_by'], 'integer'],
             [['product_price'], 'number'],
-            [['status'], 'string'],            
-            [['product_reorder_max'],'validateReorderchck'],
+            [['status'], 'string'],
+            [['product_reorder_max'], 'validateReorderchck'],
             //[['supplier_ids'], 'validateSupplieronetime'],
-        //    [['supplier_id_1','supplier_id_2','supplier_id_3'], 'validateSupplieronetime'],
-            [['created_at', 'modified_at', 'deleted_at','supplier_id_1','supplier_id_2','supplier_id_3','supplier_ids'], 'safe'],
+            [['supplier_id_1', 'supplier_id_2', 'supplier_id_3'], 'validateSupplieronetime'],
+            [['created_at', 'modified_at', 'deleted_at', 'supplier_id_1', 'supplier_id_2', 'supplier_id_3', 'supplier_ids'], 'safe'],
             [['product_code'], 'string', 'max' => 50],
             [['product_name', 'product_location'], 'string', 'max' => 255],
             [['product_unit', 'product_unit_count'], 'string', 'max' => 25],
             [['tenant_id', 'product_name'], 'unique', 'targetAttribute' => ['tenant_id', 'product_name'], 'message' => 'The combination of Tenant ID and Product Name has already been taken.']
         ];
     }
-    
-    public function validateReorderchck($attribute, $params) 
-    {
-        if($this->product_reorder_max < $this->product_reorder_min )
-        {    
-            $this->addError($attribute, "Re-Order Level (Min) value is lower than Re-Order Level (Max) value.");    
-        }    
-    }        
-    
-//    public function validateSupplieronetime($attribute, $params) 
-//    {   
-//        $str_arr = array();
-//        
-//        if(isset($this->supplier_id_1) && $this->supplier_id_1!="")
-//        $str_arr[] = $this->supplier_id_1;
-//        
-//        if(isset($this->supplier_id_2) &&  $this->supplier_id_2!="")
-//        $str_arr[] = $this->supplier_id_2;
-//        
-//        if(isset($this->supplier_id_3) &&  $this->supplier_id_3!="")
-//        $str_arr[] = $this->supplier_id_3;
-//        
-//        if(!$this->supplier_ids && count(array_unique($str_arr)) == 1)
-//        {
-//            $this->addError($attribute, "Please choose different suppliers.");  
-//            $this->supplier_ids = true;
-//        }           
-//    }        
+
+    public function validateReorderchck($attribute, $params) {
+        if ($this->product_reorder_max < $this->product_reorder_min) {
+            $this->addError($attribute, "Re-Order Level (Min) value is lower than Re-Order Level (Max) value.");
+        }
+    }
+
+    public function validateSupplieronetime($attribute, $params) {
+        $count = 0;
+        $str_arr = [];
+
+        for ($i = 1; $i <= 3; $i++) {
+            $col = "supplier_id_$i";
+            if (isset($this->$col) && $this->$col != "") {
+                $str_arr[] = $this->$col;
+                $count++;
+            }
+        }
+
+        if (count(array_unique($str_arr)) != $count) {
+            $this->addError('supplier_id_1', "Please choose different suppliers.");
+            $this->supplier_ids = true;
+        }
+    }
 
     /**
      * @inheritdoc
@@ -170,6 +165,7 @@ class PhaProduct extends RActiveRecord {
     public function getGeneric() {
         return $this->hasOne(PhaGeneric::className(), ['generic_id' => 'generic_id']);
     }
+
     /**
      * @return ActiveQuery
      */
@@ -225,9 +221,9 @@ class PhaProduct extends RActiveRecord {
     public function getPhaPurchaseItems() {
         return $this->hasMany(PhaPurchaseItem::className(), ['product_id' => 'product_id']);
     }
-    
+
     public function getFullName() {
-        return $this->product_name.' | '.$this->product_unit_count. ' | '.$this->product_unit;
+        return $this->product_name . ' | ' . $this->product_unit_count . ' | ' . $this->product_unit;
     }
 
     public static function find() {
@@ -247,7 +243,7 @@ class PhaProduct extends RActiveRecord {
     public function fields() {
         $extend = [
             'full_name' => function ($model) {
-                return $model->product_name.' | '.$model->product_unit_count. ' | '.$model->product_unit;
+                return $model->product_name . ' | ' . $model->product_unit_count . ' | ' . $model->product_unit;
             },
             'purchaseVat' => function ($model) {
                 return (isset($model->purchaseVat) ? $model->purchaseVat : '-');
