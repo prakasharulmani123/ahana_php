@@ -70,7 +70,7 @@ class PhaProduct extends RActiveRecord {
             [['status'], 'string'],            
             [['product_reorder_max'],'validateReorderchck'],
             //[['supplier_ids'], 'validateSupplieronetime'],
-            //[['supplier_id_1','supplier_id_2','supplier_id_3'], 'validateSupplieronetime'],
+        //    [['supplier_id_1','supplier_id_2','supplier_id_3'], 'validateSupplieronetime'],
             [['created_at', 'modified_at', 'deleted_at','supplier_id_1','supplier_id_2','supplier_id_3','supplier_ids'], 'safe'],
             [['product_code'], 'string', 'max' => 50],
             [['product_name', 'product_location'], 'string', 'max' => 255],
@@ -88,13 +88,23 @@ class PhaProduct extends RActiveRecord {
     }        
     
 //    public function validateSupplieronetime($attribute, $params) 
-//    {     
-//        if(!$this->supplier_ids && ($this->supplier_id_1==$this->supplier_id_2 || $this->supplier_id_2==$this->supplier_id_3 || $this->supplier_id_3==$this->supplier_id_1))
+//    {   
+//        $str_arr = array();
+//        
+//        if(isset($this->supplier_id_1) && $this->supplier_id_1!="")
+//        $str_arr[] = $this->supplier_id_1;
+//        
+//        if(isset($this->supplier_id_2) &&  $this->supplier_id_2!="")
+//        $str_arr[] = $this->supplier_id_2;
+//        
+//        if(isset($this->supplier_id_3) &&  $this->supplier_id_3!="")
+//        $str_arr[] = $this->supplier_id_3;
+//        
+//        if(!$this->supplier_ids && count(array_unique($str_arr)) == 1)
 //        {
-//            $this->addError($attribute, "Please choose different suppliers.");
+//            $this->addError($attribute, "Please choose different suppliers.");  
 //            $this->supplier_ids = true;
-//        }
-//           
+//        }           
 //    }        
 
     /**
