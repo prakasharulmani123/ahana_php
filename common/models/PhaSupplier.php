@@ -50,7 +50,7 @@ class PhaSupplier extends RActiveRecord
     public function rules()
     {
         return [
-            [['supplier_name', 'supplier_code', 'supplier_address'], 'required'],
+            [['supplier_name', 'supplier_mobile', 'cst_no', 'tin_no', 'supplier_address'], 'required'],
             [['tenant_id', 'city_id', 'state_id', 'country_id', 'created_by', 'modified_by'], 'integer'],
             [['supplier_address', 'status'], 'string'],
             [['created_at', 'modified_at', 'deleted_at'], 'safe'],
