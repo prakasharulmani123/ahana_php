@@ -76,7 +76,8 @@
                                 <!--<b> Encounter: {{encounter.$key}};</b>-->
                                 <b> 
                                     <span class="badge bg-primary">Encounter: {{encounter.encounter_id}}</span>&nbsp; &nbsp; 
-                                    <span class="badge bg-success">Type: {{encounter.encounter_type}}</span>&nbsp; &nbsp; 
+                                    <span class="badge bg-black">Date: {{encounter.all[0].date| moment:'DD/MM/YYYY'}}</span>&nbsp; &nbsp; 
+                                    <span class="badge bg-success">{{encounter.encounter_type}}</span>&nbsp; &nbsp; 
                                     <span class="badge bg-info">Doctor: {{encounter.doctor}}</span>
                                     <!--Encounter: {{encounter.encounter_id}};&nbsp; &nbsp; Type: {{encounter.encounter_type}};&nbsp; &nbsp; Doctor: {{encounter.doctor}}-->
                                 </b>
