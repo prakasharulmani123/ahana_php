@@ -31,7 +31,7 @@
                 </thead>
                 <tbody ng-hide="isLoading">
                     <tr ng-if="displayedCollection.length == 0">
-                        <td colspan="11" class="text-center">
+                        <td colspan="7" class="text-center">
                             No I/P records
                         </td>
                     </tr>
@@ -57,31 +57,31 @@
                         <td>{{row.room_name}} <br/> <span class="text-muted"> {{row.room_type_name}} </span> </td>
                         <td>{{row.patient.consultant_name}}</td>
                         <td align="left">
-                            <a ui-sref="patient.view({id: row.patient.patient_guid})">
+<!--                            <a ui-sref="patient.view({id: row.patient.patient_guid})">
                                 <img src="img/small-icon1.png"  alt="" tooltip="Details" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
-                            </a>
+                            </a>-->
 
                             <a ui-sref="patient.procedure({id: row.patient.patient_guid})">
-                                <img src="img/small-icon2.png"  alt="" tooltip="Procedures" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
+                                <img src="img/medi-icon1.png"  alt="" tooltip="Procedures" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
                             </a>
 
                             <a ui-sref="patient.encounter({id: row.patient.patient_guid})">
-                                <img src="img/small-icon3.png"  alt="" tooltip="Encounters " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
+                                <img src="img/medi-icon2.png"  alt="" tooltip="Encounters " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
                             </a>
 
                             <a ui-sref="patient.notes({id: row.patient.patient_guid})">
-                                <img src="img/small-icon4.png"  alt="" tooltip=" Notes " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
+                                <img src="img/medi-icon3.png"  alt="" tooltip=" Notes " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
                             </a>
 
                             <a ui-sref="patient.prescription({id: row.patient.patient_guid})">
-                                <img src="img/small-icon5.png"  alt="" tooltip="Prescriptions " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
+                                <img src="img/medi-icon4.png"  alt="" tooltip="Prescriptions " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
                             </a>
 
                             <a ui-sref="patient.consultant({id: row.patient.patient_guid})">
-                                <img src="img/small-icon6.png"  alt="" tooltip="Consultation " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
+                                <img src="img/medi-icon5.png"  alt="" tooltip="Consultation " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
                             </a>
 
-                            <a href="#">
+<!--                            <a href="#">
                                 <img src="img/small-icon7.png"  alt="" tooltip="Documents " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
                             </a>
 
@@ -91,7 +91,7 @@
 
                             <a ui-sref="patient.billing({id: row.patient.patient_guid})">
                                 <img src="img/small-icon9.png"  alt="" tooltip="Billing" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
-                            </a>
+                            </a>-->
                         </td>
                     </tr>
                 </tbody>

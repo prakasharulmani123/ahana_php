@@ -7,7 +7,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
         //Notifications
         $scope.assignNotifications();
-        
+
         $scope.enc = {};
         $scope.drugs = {};
         $scope.routes = {};
@@ -123,6 +123,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $rootScope.commonService.GetPatientFrequency('', '1', false, function (response) {
                 $scope.frequencies = response.frequencylist;
             });
+            
+            $("#current_prescription").focus();
         }
 
         $scope.getGeneric = function ($item, $model, $label) {
@@ -469,7 +471,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 angular.forEach(unseen_filter_vital, function (unseen, key) {
                     vital_ids.push(unseen.vital_id);
                 });
-                
+
                 $http({
                     method: 'POST',
                     url: $rootScope.IRISOrgServiceUrl + '/patientvitals/seenvitals',
@@ -488,9 +490,9 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         }
 
         $scope.scrollBottom = function () {
-            if($(".vbox .row-row .cell").is(':visible')){
+            if ($(".vbox .row-row .cell").is(':visible')) {
                 elem = $(".vbox .row-row .cell:visible");
-                elem.animate({ scrollTop: elem.prop("scrollHeight")}, 1000);
+                elem.animate({scrollTop: elem.prop("scrollHeight")}, 1000);
             }
         }
 
