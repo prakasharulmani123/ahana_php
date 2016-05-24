@@ -389,7 +389,11 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
 
             $scope.data2 = _that.data;  
             $scope.purchaseitems2 =  $scope.purchaseitems;
+            
+            if(_that.data.supplier_id != null)
             $scope.getSupplierDetail(_that.data.supplier_id);
+        
+            if(_that.data.payment_type != null)
             $scope.getPaytypeDetail(_that.data.payment_type);
             
             angular.extend(_that.data, {product_items: $scope.purchaseitems});
@@ -453,9 +457,9 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             $scope.getSupplierDetail(_that.data.supplier_id);
         }
 
-        $scope.getSupplierDetail = function (supplier_id) {
+        $scope.getSupplierDetail = function (supplier_id) {              
             supplier_details = $filter('filter')($scope.suppliers, {supplier_id: supplier_id});
-            $scope.supplier_name_taken = supplier_details[0].supplier_name;
+            $scope.supplier_name_taken = supplier_details[0].supplier_name;            
         }
         
         $scope.changeGetPayType = function () {
