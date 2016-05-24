@@ -210,22 +210,18 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
             var row_id = '#enc_' + type + '_' + key;
             $scope.more_li = [];
             $scope.more_advance_li = [];
+            $scope.more_advance_hidden = [];
 
             $('.enc_chk').not(row_id).attr('checked', false);
 
             if ($(row_id).is(':checked')) {
                 if (type == 'advance') {
-                    $scope.more_li.push(
-                            [
-                                {href: 'patient.editPayment({id: "' + $state.params.id + '", payment_id: ' + pk_id + ', enc_id: "' + $scope.enc.selected.encounter_id + '"})', name: 'Modify Payment', mode: 'sref', i_class: 'fa fa-pencil'},
-                                {href: "deletePayment('" + $state.params.id + "', " + pk_id + ")", name: 'Delete Payment', mode: 'click', i_class: 'fa fa-trash'},
-                            ]);
+                    $scope.more_advance_li.push({href: 'patient.editPayment({id: "' + $state.params.id + '", payment_id: ' + pk_id + ', enc_id: "' + $scope.enc.selected.encounter_id + '"})', name: 'Modify Payment', mode: 'sref', i_class: 'fa fa-pencil'});
+                    $scope.more_advance_li.push({href: "deletePayment('" + $state.params.id + "', " + pk_id + ")", name: 'Delete Payment', mode: 'click', i_class: 'fa fa-trash', url: 'patient.deletePayment'});
                 }
 
                 if (type == 'other') {
-                    $scope.more_li.push([
-                        {href: 'patient.editOtherCharge({id: "' + $state.params.id + '", other_charge_id: ' + pk_id + '})', name: 'Modify Other Charge', mode: 'sref', i_class: 'fa fa-pencil'},
-                    ]);
+                    $scope.more_li.push({href: 'patient.editOtherCharge({id: "' + $state.params.id + '", other_charge_id: ' + pk_id + '})', name: 'Modify Other Charge', mode: 'sref', i_class: 'fa fa-pencil'});
                 } else if (type == 'procedure' || type == 'consultant') {
                     var ec_type = '';
                     if (type == 'procedure') {
@@ -236,13 +232,9 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
                     }
 
                     if (extra_amount == '0.00') {
-                        $scope.more_li.push([
-                            {href: 'patient.addExtraAmount({id: "' + $state.params.id + '", ec_type: "' + ec_type + '", link_id: "' + link_id + '", enc_id: "' + $scope.enc.selected.encounter_id + '"})', name: 'Add Extra Amount', mode: 'sref', i_class: 'fa fa-plus-square'},
-                        ]);
+                        $scope.more_li.push({href: 'patient.addExtraAmount({id: "' + $state.params.id + '", ec_type: "' + ec_type + '", link_id: "' + link_id + '", enc_id: "' + $scope.enc.selected.encounter_id + '"})', name: 'Add Extra Amount', mode: 'sref', i_class: 'fa fa-plus-square'});
                     } else {
-                        $scope.more_li.push([
-                            {href: 'patient.editExtraAmount({id: "' + $state.params.id + '", ec_id: "' + pk_id + '", enc_id: "' + $scope.enc.selected.encounter_id + '"})', name: 'Edit Extra Amount', mode: 'sref', i_class: 'fa fa-pencil'},
-                        ]);
+                        $scope.more_li.push({href: 'patient.editExtraAmount({id: "' + $state.params.id + '", ec_id: "' + pk_id + '", enc_id: "' + $scope.enc.selected.encounter_id + '"})', name: 'Edit Extra Amount', mode: 'sref', i_class: 'fa fa-pencil'});
                     }
 
                     if (concession_amount == '0.00') {
@@ -286,7 +278,6 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
                             $scope.loadbar('hide');
                             if (response.data.success === true) {
                                 $scope.$watch('enc.selected.encounter_id', function (newValue, oldValue) {
-                                    console.log(newValue);
                                     if (newValue != '' && typeof newValue != 'undefined') {
                                         $scope.loadBillingCharges(newValue);
                                     }

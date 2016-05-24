@@ -148,7 +148,7 @@
                             <i class="fa fa-plus-square"></i> &nbsp; Add other charges
                         </a>
                         <span ng-repeat="(key, li) in more_li">
-                            <a check-access ng-if="li.mode == 'sref'" class="btn btn-default" ui-sref="{{li.href}}"><i class="{{li.i_class}}"></i> &nbsp; {{li.name}}</a>
+                            <a check-access-custom2 ng-if="li.mode == 'sref'" class="btn btn-default" ui-sref="{{li.href}}"><i class="{{li.i_class}}"></i> &nbsp; {{li.name}}</a>
                             <a check-access-button ng-if="li.mode == 'click'" class="btn btn-default" ng-click="{{li.href}}"><i class="{{li.i_class}}"></i> &nbsp; {{li.name}}</a>
                         </span>
                     </div>
@@ -301,8 +301,8 @@
                             <i class="fa fa-plus-square"></i>&nbsp; Add Payment
                         </a>
                         <span ng-if="more_advance_li.length > 0" ng-repeat="(key, li) in more_advance_li">
-                            <a check-access ng-if="li.mode == 'sref'" ui-sref="{{li.href}}" class="btn btn-default"> <i class="{{li.i_class}}"></i> &nbsp;{{li.name}}</a>    
-                            <a check-access-button ng-if="li.mode == 'click'" ng-click="{{li.href}}" class="btn btn-default"> <i class="{{li.i_class}}"></i> &nbsp;{{li.name}}</a>
+                            <a check-access-custom2 ng-if="li.mode == 'sref'" ui-sref="{{li.href}}" class="btn btn-default"> <i class="{{li.i_class}}"></i> &nbsp;{{li.name}}</a>    
+                            <a check-access-custom3 ng-if="li.mode == 'click'" ng-click="{{li.href}}" class="btn btn-default" data-url='{{li.url}}'> <i class="{{li.i_class}}"></i> &nbsp;{{li.name}}</a>
                         </span>
                     </div>
                     <div class="m-b-sm" ng-if="enc.selected.finalize == '0'"></div>

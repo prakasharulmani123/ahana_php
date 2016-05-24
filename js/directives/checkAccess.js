@@ -30,4 +30,29 @@ angular.module('app').directive('checkAccessCustom', function () {
         }
     }
 });
+angular.module('app').directive('checkAccessCustom2', function () {
+    return {
+        link: function ($scope, element, attrs) {
+            exp = element.attr('href').split('/');
+            url = exp[1] + '.' + exp[2];
+            element.addClass('hide');
+            if ($scope.checkAccess(url)) {
+                element.addClass('show2');
+            }
+        }
+    }
+});
+angular.module('app').directive('checkAccessCustom3', function ($timeout) {
+    return {
+        link: function ($scope, element, attrs) {
+            element.addClass('hide');
+            $timeout(function () {
+                var url = element.data('url');
+                if ($scope.checkAccess(url)) {
+                    element.addClass('show2');
+                }
+            }, 1000);
+        }
+    }
+});
 

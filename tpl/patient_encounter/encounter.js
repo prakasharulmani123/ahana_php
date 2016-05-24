@@ -84,9 +84,9 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                         if (is_swap == '1')
                             row_sts = 'SW';
 
-                        $scope.more_li.push({href: "cancelAdmission(" + enc_id + ", " + id + ", '" + row_sts + "')", name: 'Cancel', mode: 'click'});
+                        $scope.more_li.push({href: "cancelAdmission(" + enc_id + ", " + id + ", '" + row_sts + "')", name: 'Cancel', mode: 'click', url: 'patient.cancelLastEncounter'});
                     } else if (status == '1' && row_sts == 'A') {
-                        $scope.more_li.push({href: "cancelAdmissionCloseEncounter(" + enc_id + ", " + id + ", '" + row_sts + "')", name: 'Admission Cancel', mode: 'click'});
+                        $scope.more_li.push({href: "cancelAdmissionCloseEncounter(" + enc_id + ", " + id + ", '" + row_sts + "')", name: 'Admission Cancel', mode: 'click', url: 'patient.cancelAdmission'});
                     }
                 } else if (type == 'OP') {
                     if (status == '1') {
@@ -98,7 +98,8 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                         {
                             href: "cancelAppointment(" + enc_id + ")",
                             name: 'Cancel Appointment',
-                            mode: 'click'
+                            mode: 'click',
+                            url: 'patient.cancelAppointment'
                         });
                     }
 

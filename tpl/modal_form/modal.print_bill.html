@@ -281,6 +281,7 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <!----Recurring Charges--->
                             <tr ng-repeat="(key, row) in recurring_charges">
                                 <td class="desc unit2">
                                     <span id="ReportViewer_ReportViewer3">{{row.from_date| moment:'DD-MMM-YYYY'}}</span>
@@ -329,6 +330,7 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <!----Procedure charges--->
                             <tr ng-init="detailed_billing.total.net_step_1_total = detailed_recurr_billing.total.recurring_total" ng-repeat="(key, row) in procedures">
                                 <td class="desc">{{row.category}}</td>
                                 <td align="center" class="unit" ng-init="
@@ -340,6 +342,11 @@
                                     {{(detailed_billing.total.net_step_1_total + row.net_amount)| number:2}}
                                 </td>
                             </tr>
+                            <tr ng-if="!detailed_billing.total.procedure_net_total">
+                                <td colspan="4" ng-init="detailed_billing.total.procedure_net_total = detailed_recurr_billing.total.recurring_total"></td>
+                            </tr>
+                            
+                            <!----Professional charges--->
                             <tr ng-init="detailed_billing.total.net_step_2_total = detailed_billing.total.procedure_net_total;" ng-repeat="(key, row) in consultants">
                                 <td class="desc">{{row.category}}</td>
                                 <td align="center" class="unit" ng-init="
@@ -351,6 +358,11 @@
                                     {{(detailed_billing.total.net_step_2_total + row.net_amount)| number:2}}
                                 </td>
                             </tr>
+                            <tr ng-if="!detailed_billing.total.consultant_net_total">
+                                <td colspan="4" ng-init="detailed_billing.total.consultant_net_total = detailed_billing.total.procedure_net_total"></td>
+                            </tr>
+                            
+                            <!----other charges--->
                             <tr ng-init="detailed_billing.total.net_step_3_total = detailed_billing.total.consultant_net_total" ng-repeat="(key, row) in other_charges">
                                 <td class="desc">{{row.category}}</td>
                                 <td align="center" class="unit" ng-init="
@@ -361,6 +373,9 @@
                                 <td align="center" class="total">
                                     {{(detailed_billing.total.net_step_3_total + row.net_amount)| number:2}}
                                 </td>
+                            </tr>
+                            <tr ng-if="!detailed_billing.total.other_net_total">
+                                <td colspan="4" ng-init="detailed_billing.total.other_net_total = detailed_billing.total.consultant_net_total"></td>
                             </tr>
                             
                             <tr class="bn">

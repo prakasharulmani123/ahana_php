@@ -354,7 +354,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             $scope.data.total_item_discount_amount = disc_amount;
 
             var after_discount_item_amount = (parseFloat(before_discount_total) - parseFloat(disc_amount));
-            $scope.data.total_item_amount = after_discount_item_amount;
+            $scope.data.total_item_amount = after_discount_item_amount.toFixed(2);
 
             //Get Welfare Amount
             var welfare = 0;
