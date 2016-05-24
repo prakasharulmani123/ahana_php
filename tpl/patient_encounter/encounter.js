@@ -72,13 +72,13 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
 
             if ($('#enc_' + enc_id + key).is(':checked')) {
                 if (type == 'IP') {
-                    if($('.enc_chk_' + enc_id).length == 1)
+                    if ($('.enc_chk_' + enc_id).length == 1)
                         $scope.more_li.push({href: 'patient.update_admission({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Modify Admission', mode: 'sref'});
-                    
+
                     $scope.more_li.push({href: 'patient.transfer({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Transfer', mode: 'sref'});
                     $scope.more_li.push({href: 'patient.discharge({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Clinical Discharge', mode: 'sref'});
                     $scope.more_li.push({href: 'patient.swapping({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})', name: 'Swapping', mode: 'sref'});
-                    
+
                     if (status == '1' && row_sts != 'A') {
 
                         if (is_swap == '1')
@@ -318,6 +318,11 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
         $scope.changeAppointmentStatus = function (_data, key) {
             $scope.errorData = "";
             $scope.successMessage = "";
+
+            angular.extend(_data, {
+                status_date: moment().format('YYYY-MM-DD'),
+                status_time: moment().format('hh:mm A')
+            });
 
             $scope.loadbar('show');
             $http({
