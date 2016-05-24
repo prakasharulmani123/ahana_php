@@ -58,7 +58,7 @@ class PhaPurchaseItem extends RActiveRecord {
             [['product_id', 'quantity', 'mrp', 'purchase_rate', 'purchase_amount', 'package_name', 'vat_amount'], 'required'],
             [['batch_no'], 'required', 'on' => 'saveform'],
             [['tenant_id', 'purchase_id', 'product_id', 'quantity', 'free_quantity', 'created_by', 'modified_by'], 'integer'],
-            [['mrp', 'purchase_rate', 'purchase_amount', 'discount_percent', 'discount_amount', 'total_amount', 'vat_amount', 'vat_percent', 'free_quantity_unit'], 'number'],
+            [['mrp', 'purchase_rate', 'purchase_amount', 'discount_percent', 'discount_amount', 'total_amount', 'vat_amount', 'vat_percent'], 'number'],
             [['status'], 'string'],
             [['created_at', 'modified_at', 'deleted_at', 'vat_percent', 'batch_id', 'expiry_date', 'free_quantity_unit', 'batch_no'], 'safe'],
             [['package_name'], 'string', 'max' => 255],
@@ -153,7 +153,7 @@ class PhaPurchaseItem extends RActiveRecord {
 
         $this->batch_id = $batch->batch_id;
         $this->free_quantity = (!empty($this->free_quantity)) ? $this->free_quantity : 0;
-        $this->free_quantity_unit = (!empty($this->free_quantity_unit)) ? $this->free_quantity_unit : 0;
+        //$this->free_quantity_unit = (!empty($this->free_quantity_unit)) ? $this->free_quantity_unit : 0;
 
         return parent::beforeSave($insert);
     }

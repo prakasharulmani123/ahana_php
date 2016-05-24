@@ -57,10 +57,10 @@ class PhaPurchaseReturnItem extends RActiveRecord
         return [
             [['product_id', 'quantity', 'mrp', 'purchase_ret_rate', 'purchase_ret_amount', 'package_name', 'vat_amount'], 'required'],
             [['batch_no'], 'required', 'on' => 'saveform'],
-            [['tenant_id', 'purchase_ret_id', 'product_id', 'batch_id', 'quantity', 'free_quantity', 'free_quantity_unit', 'created_by', 'modified_by'], 'integer'],
+            [['tenant_id', 'purchase_ret_id', 'product_id', 'batch_id', 'quantity', 'free_quantity', 'created_by', 'modified_by'], 'integer'],
             [['mrp', 'purchase_ret_rate', 'purchase_ret_amount', 'discount_percent', 'discount_amount', 'total_amount', 'vat_amount', 'vat_percent'], 'number'],
             [['status'], 'string'],
-            [['created_at', 'modified_at', 'deleted_at', 'expiry_date', 'batch_no'], 'safe'],
+            [['created_at', 'modified_at', 'deleted_at', 'expiry_date', 'batch_no','free_quantity_unit'], 'safe'],
             [['package_name'], 'string', 'max' => 255],
             ['purchase_ret_rate', 'validateProductRate'],
             [['quantity', 'mrp', 'purchase_ret_rate', 'purchase_ret_amount', 'total_amount'], 'validateAmount'],
