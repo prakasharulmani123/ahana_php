@@ -127,7 +127,7 @@
                             <tr ng-repeat="(key, saleitem) in saleItems">
                                 <td>
                                     <div id="i_full_name_{{key}}">
-                                        <span editable-text="saleitem.full_name" e-class="fullname" e-name="full_name" e-form="tableform" onbeforesave="checkInput($data)" e-typeahead="product as product.full_name for product in products | filter:$viewValue | limitTo:8" e-typeahead-editable="false" e-typeahead-on-select="updateProductRow($item, $model, $label, key)" e-ng-keyup="getProduct(tableform)" e-ng-keydown="getProduct(tableform)" e-autocomplete="off" data-e-id="full_name" e-name='full_name'>
+                                        <span editable-text="saleitem.full_name" e-class="fullname" e-name="full_name" e-form="tableform" onbeforesave="checkInput($data, key, $index)" e-typeahead="product as product.full_name for product in products | filter:$viewValue | limitTo:8" e-typeahead-editable="false" e-typeahead-on-select="updateProductRow($item, $model, $label, key)" e-ng-keyup="getProduct(tableform)" e-ng-keydown="getProduct(tableform)" e-autocomplete="off" data-e-id="full_name" e-name='full_name'>
                                             {{ saleitem.full_name || 'empty' }}
                                         </span>
                                     </div>
@@ -137,10 +137,10 @@
                                 </td>
                                 <td>
                                     <div id="i_batch_details_{{key}}">
-                                        <span editable-select="saleitem.batch_details" e-name="batch_details" e-form="tableform" onbeforesave="checkInput($data)" e-ng-options="batch as batch.batch_details for batch in batches | filter:$viewValue | limitTo:8| filter:{product_id : saleitem.product_id}" e-ng-change="updateBatchRow($data, key)">
+                                        <span editable-select="saleitem.batch_details" e-name="batch_details" e-form="tableform" onbeforesave="checkInput($data, key, $index)" e-ng-options="batch as batch.batch_details for batch in batches | filter:$viewValue | limitTo:8| filter:{product_id : saleitem.product_id}" e-ng-change="updateBatchRow($data, key, $index)">
                                             {{ showBatch(saleitem) }}
                                         </span>
-<!--                                        <span editable-text="saleitem.batch_details" e-name="batch_details" e-form="tableform" onbeforesave="checkInput($data)" e-typeahead="batch as batch.batch_details for batch in batches | filter:$viewValue | limitTo:8| filter:{product_id : saleitem.product_id}" e-typeahead-editable="false" e-autocomplete="off" e-typeahead-on-select="updateBatchRow($item, $model, $label, key)">
+<!--                                        <span editable-text="saleitem.batch_details" e-name="batch_details" e-form="tableform" onbeforesave="checkInput($data, key, $index)" e-typeahead="batch as batch.batch_details for batch in batches | filter:$viewValue | limitTo:8| filter:{product_id : saleitem.product_id}" e-typeahead-editable="false" e-autocomplete="off" e-typeahead-on-select="updateBatchRow($item, $model, $label, key)">
                                             {{ saleitem.batch_details || 'empty' }}
                                         </span>-->
                                     </div>
@@ -154,7 +154,7 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <span editable-text="saleitem.quantity" e-number-mask="" e-name="quantity" e-number-mask="" e-form="tableform" onbeforesave="checkInput($data); checkAmount($data)" e-ng-keydown="updateColumn($data, key, 'quantity')"  e-ng-keyup="updateColumn($data, key, 'quantity')" e-autocomplete="off" e-limit-to="7">
+                                    <span editable-text="saleitem.quantity" e-number-mask="" e-name="quantity" e-number-mask="" e-form="tableform" onbeforesave="checkInput($data, key, $index); checkAmount($data, key, $index)" e-ng-keydown="updateColumn($data, key, $index, 'quantity')"  e-ng-keyup="updateColumn($data, key, $index, 'quantity')" e-autocomplete="off" e-limit-to="7" data-e-id="quantity" e-select-on-click ng-click="addRowWhenFocus(key)">
                                         {{saleitem.quantity|| 0}}
                                     </span>
                                 </td>
@@ -189,7 +189,7 @@
                         <div class="btn-form">
                             <br>
                             <button type="button" ng-click="tableform.$show();
-                                addRow()" class="btn btn-default pull-left btn-primary">Add Product</button>
+                                addRow(true)" class="btn btn-default pull-left btn-primary">Add Product</button>
                             <button id="edit_products" type="button" ng-show="!tableform.$visible;" ng-click="tableform.$show();" class="btn btn-default pull-left btn-info">Edit Products</button>
                         </div>
                     </div>

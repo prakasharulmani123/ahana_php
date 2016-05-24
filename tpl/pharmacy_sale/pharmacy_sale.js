@@ -12,7 +12,6 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
         //Index Page
         $scope.loadSaleItemList = function (payment_type) {
-            console.log(payment_type);
             $scope.errorData = $scope.successMessage = '';
             $scope.isLoading = true;
             if (payment_type == 'CA') {
@@ -142,7 +141,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         // Sale Items Array
         $scope.saleItems = [];
         // Add first row in sale item table.
-        $scope.addRow = function () {
+        $scope.addRow = function (focus) {
             $scope.inserted = {
                 full_name: '',
                 batch_details: '',
@@ -159,12 +158,21 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             };
             $scope.saleItems.push($scope.inserted);
 
-            if ($scope.saleItems.length > 1) {
-                $timeout(function () {
-                    $scope.setFocus('full_name', $scope.saleItems.length - 1);
-                });
+            if (focus) {
+                if ($scope.saleItems.length > 1) {
+                    $timeout(function () {
+                        $scope.setFocus('full_name', $scope.saleItems.length - 1);
+                    });
+                }
             }
         };
+        
+        $scope.addRowWhenFocus = function(key){
+            //Add New Row when focus Quantity
+            if (key + 1 == $scope.saleItems.length) {
+                $scope.addRow(false);
+            }
+        }
 
         // Remove Sale Item
         $scope.removeSaleItem = function (index) {
@@ -185,15 +193,29 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         };
 
         //Check all the input box.
-        $scope.checkInput = function (data) {
-            if (!data) {
-                return "Not empty";
+        $scope.checkInput = function (data, key, index) {
+            item = $scope.saleItems[key];
+            if (typeof item != 'undefined') {
+                if (key > 0 && item.product_name == '' && item.batch_no == '' && item.quantity == 0) {
+                    $scope.removeSaleItem(index);
+                } else {
+                    if (!data) {
+                        return "Not empty";
+                    }
+                }
             }
         };
 
-        $scope.checkAmount = function (data) {
-            if (data <= 0) {
-                return "Not be 0";
+        $scope.checkAmount = function (data, key, index) {
+            item = $scope.saleItems[key];
+            if (typeof item != 'undefined') {
+                if (key > 0 && item.product_name == '' && item.batch_no == '' && item.quantity == 0) {
+//                    $scope.removeSaleItem(index);
+                } else {
+                    if (data <= 0) {
+                        return "Not be 0";
+                    }
+                }
             }
         };
 
@@ -234,7 +256,10 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 $scope.loadbar('hide');
 
                 angular.forEach(response.batchList, function (item) {
-                    $scope.batches.push(item);
+                    selected = $filter('filter')($scope.batches, {batch_no: item.batch_no});
+                    if(selected.length == 0){
+                        $scope.batches.push(item);
+                    }
                 });
 
 //                $scope.saleItems[key].batch_details = response.batchList[0].batch_details;
@@ -249,16 +274,20 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         $scope.showBatch = function (batch) {
             var selected = [];
             if (batch.batch_no) {
-                selected = $filter('filter')($scope.batches, {value: batch.batch_no});
+                selected = $filter('filter')($scope.batches, {batch_no: batch.batch_no});
             }
-            return selected.length ? selected[0].batch_no : 'Not set';
+            return selected.length ? selected[0].batch_details : 'Not set';
         };
 
         //After barch choosed, then update some values in the row.
         $scope.updateBatchRow = function (item, key) {
+            $scope.saleItems[key].batch_details = item.batch_details;
             $scope.saleItems[key].batch_no = item.batch_no;
             $scope.saleItems[key].expiry_date = item.expiry_date;
             $scope.saleItems[key].mrp = item.mrp;
+
+            $scope.setFocus('quantity', key);
+            $scope.addRowWhenFocus(key);
         }
 
         $scope.showOrHideProductBatch = function (mode, key) {
@@ -377,13 +406,13 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                     $scope.saleItems[key].batch_no = saleitem.batch_details;
                 }
             });
-            
+
             /* For print bill */
-            $scope.data2 =  _that.data;
+            $scope.data2 = _that.data;
             $scope.saleItems2 = $scope.saleItems;
-            $scope.getConsultantDetail(_that.data.consultant_id); 
+            $scope.getConsultantDetail(_that.data.consultant_id);
             $scope.getPaytypeDetail(_that.data.payment_type);
-            
+
             angular.extend(_that.data, {product_items: $scope.saleItems});
             $scope.loadbar('show');
             $http({
@@ -395,26 +424,27 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                         $anchorScroll();
                         if (response.success == true) {
                             $scope.loadbar('hide');
-                            if(mode == 'add'){
-                                msg = 'New bill generated ' + response.model.bill_no;            
-                                $scope.data = {};                                
+                            if (mode == 'add') {
+                                msg = 'New bill generated ' + response.model.bill_no;
+                                $scope.data = {};
                                 $scope.data.sale_date = moment().format('YYYY-MM-DD');
                                 $scope.data.formtype = 'add';
                                 $scope.data.payment_type = 'CA';
                                 $scope.getPaytypeDetail(_that.data.payment_type);
                                 $scope.saleItems = [];
                                 $scope.addRow();
-                                $scope.tableform.$show();                               
-                                $scope.data2.bill_no = response.model.bill_no;                                
-                            }else{
+                                $scope.tableform.$show();
+                                $scope.data2.bill_no = response.model.bill_no;
+                            } else {
                                 msg = 'Bill updated successfully';
-                            }                          
-                           $scope.successMessage = msg;   
-                           $timeout(function () {
-    //                                $state.go('pharmacy.sales');
-                                    save_success();
-                                }, 1000)    
+                            }
+                            $scope.successMessage = msg;
+                            $timeout(function () {
+                                //                                $state.go('pharmacy.sales');
+                                save_success();
+                            }, 1000)
                         } else {
+//                            $scope.tableform.$show();
                             $scope.loadbar('hide');
                             $scope.errorData = response.message;
                         }
@@ -443,13 +473,13 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         }
 
         $scope.changeGetConsultant = function () {
-            _that = this;            
+            _that = this;
             $scope.getConsultantDetail(_that.data.consultant_id);
         }
 
         $scope.getConsultantDetail = function (consultant_id) {
             consultant_details = $filter('filter')($scope.doctors, {user_id: consultant_id});
-            $scope.consultant_name_taken = consultant_details[0].name;
+            $scope.consultant_name_taken = consultant_details.length > 0 ? consultant_details[0].name : '';
         }
 
         $scope.changeGetPayType = function () {
@@ -463,10 +493,10 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             }
             if (payment_type == 'CR') {
                 $scope.purchase_type_name = 'Credit';
-            }  
-             if (payment_type == 'COD') {
+            }
+            if (payment_type == 'COD') {
                 $scope.purchase_type_name = 'Cash On Delivery';
-            }  
+            }
         }
 
         //Get Data for update Form
@@ -540,10 +570,6 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 sale: sale[0],
                 checked_sale_id: checked_sale_id,
             };
-
-            modalInstance.result.then(function (selectedItem) {
-                console.log('hi');
-            });
         }
 
 //        var changeTimer = false;
