@@ -16,6 +16,13 @@
                         <input type="text" placeholder="Invoice Date" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="data.invoice_date" is-open="$parent.opened1" datepicker-options="dateOptions" close-text="Close"  min-date="minDate" ng-click="open($event, 'opened1')" ng-focus="open($event, 'opened1')" prevent-enter="true"/>
                     </div>
                 </div>
+                <div class="line line-dashed b-b line-lg "></div>
+                <div class="form-group">
+                    <label class="col-lg-4 control-label">Goods Received Number (GR No.)</label>
+                    <div class="col-lg-8">
+                        <input type="text" placeholder="Goods Received Number" class="form-control" ng-model="data.gr_num"  focus-me="true"/>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -249,6 +256,10 @@
           <tr>
              <th align="left">Invoice Date :  </th>
              <td align="left">{{data2.invoice_date}}</td>
+          </tr>
+          <tr>
+             <th align="left">Goods Received Number (GR No.):  </th>
+             <td align="left">{{data2.gr_num}}</td>
           </tr>
        </table>
     </div>
