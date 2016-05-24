@@ -114,7 +114,8 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                 temp_expiry_date: '',
                 quantity: '0',
                 free_quantity: '0',
-                free_quantity_unit: '0',
+                free_quantity_unit: '',
+                temp_free_quantity_unit: '',
                 mrp: '0',
                 temp_mrp: '0',
                 purchase_rate: '0',
@@ -209,6 +210,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             $scope.purchaseitems[key].temp_expiry_date = item.expiry_date;
             $scope.purchaseitems[key].temp_mrp = item.mrp;
             $scope.purchaseitems[key].temp_package_name = item.product.purchasePackageName;
+           // $scope.purchaseitems[key].temp_free_quantity_unit = "welcome";
 
             $scope.showOrHideRowEdit('hide', key);
         }
@@ -232,7 +234,8 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                 $scope.purchaseitems[key].temp_package_name = '';
                 $scope.purchaseitems[key].quantity = 0;
                 $scope.purchaseitems[key].free_quantity = 0;
-                $scope.purchaseitems[key].free_quantity_unit = 0;
+                $scope.purchaseitems[key].free_quantity_unit = "";
+                $scope.purchaseitems[key].temp_free_quantity_unit = "";
                 $scope.purchaseitems[key].purchase_rate = 0;
                 $scope.purchaseitems[key].discount_percent = 0;
 
@@ -252,10 +255,12 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             $('#i_expiry_date_' + key).addClass(i_addclass).removeClass(i_removeclass);
             $('#i_mrp_' + key).addClass(i_addclass).removeClass(i_removeclass);
             $('#i_package_name_' + key).addClass(i_addclass).removeClass(i_removeclass);
+            $('#i_free_quantity_unit_' + key).addClass(i_addclass).removeClass(i_removeclass);
 
             $('#t_expiry_date_' + key).addClass(t_addclass).removeClass(t_removeclass);
             $('#t_mrp_' + key).addClass(t_addclass).removeClass(t_removeclass);
             $('#t_package_name_' + key).addClass(t_addclass).removeClass(t_removeclass);
+            $('#t_free_quantity_unit_' + key).addClass(t_addclass).removeClass(t_removeclass);
         }
 
         $scope.showOrHideProductBatch = function (mode, key) {
@@ -366,6 +371,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                     exp_date = purchaseitem.temp_expiry_date;
                     $scope.purchaseitems[key].mrp = purchaseitem.temp_mrp;
                     $scope.purchaseitems[key].package_name = purchaseitem.temp_package_name;
+                    $scope.purchaseitems[key].free_quantity_unit = purchaseitem.temp_free_quantity_unit;
                 } else {
                     exp_date = purchaseitem.expiry_date;
                 }
@@ -387,15 +393,15 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                 }
             });
 
-            $scope.data2 = _that.data;  
-            $scope.purchaseitems2 =  $scope.purchaseitems;
-            
-            if(_that.data.supplier_id != null)
-            $scope.getSupplierDetail(_that.data.supplier_id);
-        
-            if(_that.data.payment_type != null)
-            $scope.getPaytypeDetail(_that.data.payment_type);
-            
+            $scope.data2 = _that.data;
+            $scope.purchaseitems2 = $scope.purchaseitems;
+
+            if (_that.data.supplier_id != null)
+                $scope.getSupplierDetail(_that.data.supplier_id);
+
+            if (_that.data.payment_type != null)
+                $scope.getPaytypeDetail(_that.data.payment_type);
+
             angular.extend(_that.data, {product_items: $scope.purchaseitems});
             $scope.loadbar('show');
             $http({
@@ -408,15 +414,15 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                         if (response.success == true) {
 
                             $scope.loadbar('hide');
-                            if(mode == 'add'){
-                                $scope.data = {};  
+                            if (mode == 'add') {
+                                $scope.data = {};
                                 $scope.successMessage = 'Purchase Saved successfully';
                                 $scope.data.invoice_date = moment().format('YYYY-MM-DD');
                                 $scope.data.formtype = 'add';
                                 $scope.data.payment_type = 'CA';
                                 $scope.purchaseitems = [];
-                            }else{
-                                 $scope.successMessage = 'Purchase updated successfully';
+                            } else {
+                                $scope.successMessage = 'Purchase updated successfully';
                             }
                             save_success();
                         } else {
@@ -457,16 +463,16 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             $scope.getSupplierDetail(_that.data.supplier_id);
         }
 
-        $scope.getSupplierDetail = function (supplier_id) {              
+        $scope.getSupplierDetail = function (supplier_id) {
             supplier_details = $filter('filter')($scope.suppliers, {supplier_id: supplier_id});
-            $scope.supplier_name_taken = supplier_details[0].supplier_name;            
+            $scope.supplier_name_taken = supplier_details[0].supplier_name;
         }
-        
+
         $scope.changeGetPayType = function () {
             _that = this;
             $scope.getPaytypeDetail(_that.data.payment_type);
         }
-        
+
         $scope.getPaytypeDetail = function (payment_type) {
             if (payment_type == 'CA') {
                 $scope.purchase_type_name = 'Cash';
@@ -492,14 +498,18 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                         $scope.loadbar('hide');
 
                         $scope.data = response;
-                        $scope.getSupplierDetail($scope.data.supplier_id);
-                        $scope.getPaytypeDetail($scope.data.payment_type);
+                        if ($scope.data.supplier_id != null)
+                            $scope.getSupplierDetail($scope.data.supplier_id);
+
+                        if ($scope.data.payment_type != null)
+                            $scope.getPaytypeDetail($scope.data.payment_type);
+
                         $scope.products = [];
 //                            $scope.products = response2.productList;
 
                         $scope.purchaseitems = response.items;
                         angular.forEach($scope.purchaseitems, function (item, key) {
-                            angular.extend($scope.purchaseitems[key], {is_temp: '0', full_name: item.product.full_name, batch_no: item.batch.batch_no, batch_details: item.batch.batch_details, temp_expiry_date: item.batch.expiry_date, temp_mrp: item.batch.mrp, temp_package_name: item.package_name});
+                            angular.extend($scope.purchaseitems[key], {is_temp: '0', full_name: item.product.full_name, batch_no: item.batch.batch_no, batch_details: item.batch.batch_details, temp_expiry_date: item.batch.expiry_date, temp_mrp: item.batch.mrp, temp_package_name: item.package_name, temp_free_quantity_unit: item.free_quantity_unit});
                             $timeout(function () {
                                 $scope.showOrHideRowEdit('hide', key);
                                 $scope.showOrHideProductBatch('hide', key);

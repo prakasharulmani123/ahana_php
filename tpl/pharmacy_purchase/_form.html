@@ -123,7 +123,19 @@
                                 <td>
                                     <span editable-text="purchaseitem.free_quantity"  e-number-mask="" e-form="tableform" e-autocomplete="off" e-limit-to="7">{{purchaseitem.free_quantity|| 0}}</span>
                                 </td>
-                                <td><span>{{purchaseitem.free_quantity_unit}}</span></td>
+                                
+                                 <td>
+                                    <div id="i_free_quantity_unit_{{key}}">
+                                        <span editable-select="purchaseitem.free_quantity_unit" e-form="tableform" e-ng-options="s.package_name as s.package_name for s in packings" e-autocomplete="off">
+                                            {{ purchaseitem.free_quantity_unit || 'empty' }}
+                                        </span>
+                                    </div>
+                                    <span  id="t_free_quantity_unit_{{key}}" class="hide">
+                                        {{ purchaseitem.temp_free_quantity_unit || 'empty' }}
+                                    </span>
+                                      
+                                </td>
+<!--                                <td><span>{{purchaseitem.free_quantity_unit}}</span></td>-->
                                 <td>
                                     <div id="i_mrp_{{key}}">
                                         <span editable-text="purchaseitem.mrp" e-number-mask="" e-form="tableform" e-autocomplete="off" e-limit-to="7">{{purchaseitem.mrp|| 0}}</span>
