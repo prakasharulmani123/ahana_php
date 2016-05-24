@@ -130,10 +130,14 @@
                                             {{ purchaseitem.free_quantity_unit || 'empty' }}
                                         </span>
                                     </div>
-                                    <span  id="t_free_quantity_unit_{{key}}" class="hide">
+                                    <span  id="t_free_quantity_unit_{{key}}" class="hide" ng-if="purchaseitem.temp_free_quantity_unit!=''">
                                         {{ purchaseitem.temp_free_quantity_unit || 'empty' }}
                                     </span>
-                                      
+                                    <span  id="t_free_quantity_unit_{{key}}" class="hide" ng-if="purchaseitem.temp_free_quantity_unit==''">
+                                        <span editable-select="purchaseitem.free_quantity_unit" e-form="tableform" e-ng-options="s.package_name as s.package_name for s in packings" e-autocomplete="off">
+                                            {{ purchaseitem.free_quantity_unit || 'empty' }}
+                                        </span>
+                                    </span>                                      
                                 </td>
 <!--                                <td><span>{{purchaseitem.free_quantity_unit}}</span></td>-->
                                 <td>

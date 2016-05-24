@@ -206,11 +206,12 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
         $scope.minDate = $scope.minDate ? null : new Date();
 
         $scope.updateBatchRow = function (item, model, label, key) {
+            //console.log(item); return false;
             $scope.purchaseitems[key].batch_no = item.batch_no;
             $scope.purchaseitems[key].temp_expiry_date = item.expiry_date;
             $scope.purchaseitems[key].temp_mrp = item.mrp;
             $scope.purchaseitems[key].temp_package_name = item.product.purchasePackageName;
-           // $scope.purchaseitems[key].temp_free_quantity_unit = "welcome";
+           // $scope.purchaseitems[key].temp_free_quantity_unit = model.free_quantity_unit;
 
             $scope.showOrHideRowEdit('hide', key);
         }
@@ -366,14 +367,14 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             $scope.data.invoice_date = moment($scope.data.invoice_date).format('YYYY-MM-DD');
 
             angular.forEach($scope.purchaseitems, function (purchaseitem, key) {
-                //Manual functions for Temp records//
+                //Manual functions for Temp records//               
                 if (purchaseitem.is_temp == '1') {
                     exp_date = purchaseitem.temp_expiry_date;
                     $scope.purchaseitems[key].mrp = purchaseitem.temp_mrp;
                     $scope.purchaseitems[key].package_name = purchaseitem.temp_package_name;
-                    $scope.purchaseitems[key].free_quantity_unit = purchaseitem.temp_free_quantity_unit;
+                    $scope.purchaseitems[key].free_quantity_unit = purchaseitem.free_quantity_unit;
                 } else {
-                    exp_date = purchaseitem.expiry_date;
+                    exp_date = purchaseitem.expiry_date;                    
                 }
 
                 $scope.purchaseitems[key].expiry_date = moment(exp_date).format('YYYY-MM-DD');
