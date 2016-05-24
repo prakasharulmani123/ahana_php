@@ -53,12 +53,13 @@ class PhaPurchase extends RActiveRecord
     public function rules()
     {
         return [
-            [['invoice_date', 'invoice_no', 'supplier_id'], 'required'],
+            [['invoice_date', 'invoice_no', 'supplier_id'], 'required'],           
             [['tenant_id', 'supplier_id', 'created_by', 'modified_by'], 'integer'],
             [['invoice_date', 'created_at', 'modified_at', 'deleted_at','gr_num'], 'safe'],
             [['payment_type', 'status'], 'string'],
             [['total_item_purchase_amount', 'total_item_vat_amount', 'total_item_discount_amount', 'discount_percent', 'discount_amount', 'roundoff_amount', 'net_amount', 'before_disc_amount', 'after_disc_amount'], 'number'],
-            [['purchase_code', 'invoice_no'], 'string', 'max' => 50]
+            [['purchase_code', 'invoice_no'], 'string', 'max' => 50],            
+            [['invoice_no'], 'unique', 'targetAttribute' => ['invoice_no'], 'message' => 'Invoice Number has already been taken.']
         ];
     }
 
