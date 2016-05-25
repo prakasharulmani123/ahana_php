@@ -141,10 +141,12 @@ angular.module('app')
                     if (mode == 'show') {
                         $('.butterbar').removeClass('hide').addClass('active');
                         $('.save-btn').attr('disabled', true).html("<i class='fa fa-spin fa-spinner'></i> Please Wait...");
+                        $('.get-report').attr('disabled', true).html("<i class='fa fa-spin fa-spinner'></i> Please Wait...");
                     } else if (mode == 'hide') {
                         $('.butterbar').removeClass('active').addClass('hide');
                         $('.save-btn').attr('disabled', false).html("Save");
-                        ;
+                        $('.get-report').attr('disabled', false).html("Get Report");
+                       
                     }
                 }
 

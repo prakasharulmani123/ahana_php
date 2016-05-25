@@ -34,6 +34,9 @@ app.controller('reportController', ['$rootScope', '$scope', '$timeout', '$http',
         $scope.initReport = function () {
             $scope.mode = $state.params.mode;
             $scope.show_search = true;
+            $scope.data.from = '';
+            $scope.data.to = '';
+            
 
             if ($scope.mode == 'purchase') {
                 $scope.report_title = 'Purchase Report';

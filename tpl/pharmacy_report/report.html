@@ -7,82 +7,94 @@
             {% include 'tpl/blocks/alert.html' %}
         </div>
         <div class="row">
-            <div class="col-sm-12">
-                <div ng-show='show_search'>
-                    <form name="searchForm" class="form-horizontal form-validation">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="panel panel-default">
-                                    <div class="panel-body">
-                                        <div class="form-group">
-                                            <label class="col-lg-3 control-label">From</label>
-                                            <div class="col-lg-6">
-                                                <div class="input-group w-md">
-                                                    <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="data.from" is-open="opened1" datepicker-options="dateOptions" close-text="Close"/>
-                                                    <span class="input-group-btn">
-                                                        <button type="button" class="btn btn-default" ng-click="open($event, 'opened1')"><i class="glyphicon glyphicon-calendar"></i></button>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-lg-3 control-label">To</label>
-                                            <div class="col-lg-6">
-                                                <div class="input-group w-md">
-                                                    <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="data.to" is-open="opened2" datepicker-options="dateOptions" close-text="Close"/>
-                                                    <span class="input-group-btn">
-                                                        <button type="button" class="btn btn-default" ng-click="open($event, 'opened2')"><i class="glyphicon glyphicon-calendar"></i></button>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-lg-3 control-label"></label>
-                                            <div class="col-lg-6">
-                                                <button class="btn m-b-xs  btn-success save-btn" ng-click="loadReport()">Get Report</button>
-                                                &nbsp;
-                                                <button class="btn m-b-xs  btn-dark" ng-click="data.from = '';
-                                                            data.to = '';
-                                                            showTable = false;">Cancel</button>
+            <div class="col-sm-12" ng-show='show_search'>
+                <form class="form-horizontal form-validation" name="searchForm">
+                    <div class="panel panel-default">
+                        <div class="panel-body p-b ">            
+                            <div class="row"> 
+                                <div class="col-sm-4"> 
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">From  : </label>
+                                        <div class="col-sm-9">
+                                            <div class="input-group ">
+                                                <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="data.from" is-open="opened1" datepicker-options="dateOptions" close-text="Close"/>
+                                                <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-default" ng-click="open($event, 'opened1')"><i class="glyphicon glyphicon-calendar"></i></button>
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-sm-4"> 
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">To  : </label>
+                                        <div class="col-sm-9">
+                                            <div class="input-group ">
+                                                <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="data.to" is-open="opened2" datepicker-options="dateOptions" close-text="Close"/>
+                                                <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-default" ng-click="open($event, 'opened2')"><i class="glyphicon glyphicon-calendar"></i></button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div> 
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label"></label>
+                                        <div class="col-lg-12">
+                                            <button class="btn m-b-xs  btn-success get-report" ng-click="loadReport()">Get Report</button>
+                                            &nbsp;
+                                            <button class="btn m-b-xs  btn-dark" ng-click="data.from = '';
+                                                        data.to = '';
+                                                        showTable = false;">Cancel</button>
+                                        </div>
+                                    </div> 
+                                </div>
                             </div>
                         </div>
-                    </form>
-                </div>
-                <div class="row" ng-show='showTable'>
-                    <div class="wrapper-md">
-                        <div class='text-right'>
-                            <div class="btn-group dropdown" dropdown>
-                                <button class="btn btn-danger" dropdown-toggle> Export <span class="caret"></span></button>
-                                <ul class="dropdown-menu">
-                                    <li><a ng-click="exportAction('excel')">EXCEL</a></li>
-                                    <!--<li><a ng-click="exportAction('pdf')">PDF</a></li>-->
-                                    <li><a ng-click="exportAction('doc')">DOC</a></li>
-                                    <!--<li><a ng-click="exportAction('png')">PNG</a></li>-->
-                                    <li><a ng-click="exportAction('powerpoint')">POWER POINT</a></li>
-                                </ul>
+                    </div>
+                </form>
+            </div>
+            <div class="col-sm-12" ng-show='showTable'>
+                <div class="panel panel-default">
+                    <div class="panel-heading font-bold">{{app.name}} ({{app.org_name}}) - {{report_title}} </div>
+                    <div class="row wrapper">
+                        <div class="col-sm-3 m-b-xs"> <b> Report Generated On : </b> {{ date}} </div>
+                        <div class="col-sm-2 m-b-xs" ng-show="data.from !=  ''"> <b> From Date  : </b>{{ data.from | date:'dd-MM-yyyy'}}</div>
+                        <div class="col-sm-2 m-b-xs" ng-show="data.to !=  ''"> <b> To Date  : </b> {{ data.to | date:'dd-MM-yyyy'}} </div>
+                        <div class="col-sm-4 pull-right right"> 
+                            <!-- modal -->
+                            <div class="text-right">
+                                <div class="btn-group dropdown" dropdown>
+                                    <button class="btn btn-danger" dropdown-toggle> <i class="fa fa-download"></i> Export <span class="caret"></span></button>
+                                    <ul class="dropdown-menu">
+                                        <li><a ng-click="exportAction('excel')">EXCEL</a></li>
+                                        <!--<li><a ng-click="exportAction('pdf')">PDF</a></li>-->
+                                        <li><a ng-click="exportAction('doc')">DOC</a></li>
+                                        <!--<li><a ng-click="exportAction('png')">PNG</a></li>-->
+                                        <li><a ng-click="exportAction('powerpoint')">POWER POINT</a></li>
+                                    </ul>
+                                </div>
+                                &nbsp;
+                                <button class="btn btn-primary" ng-print print-element-id="printThisElement"><i class="fa fa-print"></i> Print</button>
                             </div>
-                            &nbsp;
-                            <button class="btn btn-primary" ng-print print-element-id="printThisElement"><i class="fa fa-print"></i> Print</button>
+                            <!-- /modal --> 
                         </div>
-                        <div id='printThisElement'>
-                            <div ng-if="mode == 'purchase'">
-                                <div ng-include="'tpl/pharmacy_report/_purchase_report.html'">
-                                    {% include 'tpl/pharmacy_report/_purchase_report.html' %}
-                                </div>
+                    </div>
+                    <div id='printThisElement'>
+                        <div ng-if="mode == 'purchase'">
+                            <div ng-include="'tpl/pharmacy_report/_purchase_report.html'">
+                                {% include 'tpl/pharmacy_report/_purchase_report.html' %}
                             </div>
-                            <div ng-if="mode == 'sale'">
-                                <div ng-include="'tpl/pharmacy_report/_sale_report.html'">
-                                    {% include 'tpl/pharmacy_report/_sale_report.html' %}
-                                </div>
+                        </div>
+                        <div ng-if="mode == 'sale'">
+                            <div ng-include="'tpl/pharmacy_report/_sale_report.html'">
+                                {% include 'tpl/pharmacy_report/_sale_report.html' %}
                             </div>
-                            <div ng-if="mode == 'stock'">
-                                <div ng-include="'tpl/pharmacy_report/_stock_report.html'">
-                                    {% include 'tpl/pharmacy_report/_stock_report.html' %}
-                                </div>
+                        </div>
+                        <div ng-if="mode == 'stock'">
+                            <div ng-include="'tpl/pharmacy_report/_stock_report.html'">
+                                {% include 'tpl/pharmacy_report/_stock_report.html' %}
                             </div>
                         </div>
                     </div>
