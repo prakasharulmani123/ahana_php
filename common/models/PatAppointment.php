@@ -179,15 +179,19 @@ class PatAppointment extends RActiveRecord {
             },
             'waiting_elapsed' => function ($model) {
                 $date = date('Y-m-d', strtotime($model->status_date)) . ' ' . date('H:i:s', strtotime($model->status_time));
+        
                 $start_date = new DateTime($date);
-                $since_start = $start_date->diff(new DateTime(date('Y-m-d H:i:s')));
+//                $since_start = $start_date->diff(new DateTime(date('Y-m-d H:i:s')));
 
-                $default_elapsed_time = 1;
+                $default_elapsed_time = 3600; //One Hour
                 $get_elapsed_time = AppConfiguration::getConfigurationByKey('ELAPSED_TIME');
                 if (isset($get_elapsed_time))
                     $default_elapsed_time = $get_elapsed_time->value;
-
-                return ($since_start->h >= $default_elapsed_time);
+                
+                $now = new DateTime('now');
+                $diff_seconds =  $now->getTimestamp() - $start_date->getTimestamp();
+                
+                return ($diff_seconds >= $default_elapsed_time);
             },
             'consultant_name' => function ($model) {
                 if (isset($model->consultant))

@@ -12,6 +12,7 @@ use yii\db\ActiveQuery;
  * @property integer $tenant_id
  * @property string $key
  * @property string $value
+ * @property string $notes
  *
  * @property CoTenant $tenant
  */
@@ -31,7 +32,7 @@ class AppConfiguration extends RActiveRecord {
         return [
             [['value'], 'required'],
             [['tenant_id'], 'integer'],
-            [['key', 'value'], 'string']
+            [['key', 'value', 'notes'], 'string']
         ];
     }
 
