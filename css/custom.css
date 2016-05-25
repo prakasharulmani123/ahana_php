@@ -121,3 +121,7 @@ th[st-sort] {
 .show2{
     display: inline-block !important;
 }
+
+.navi ul.nav li a {
+    width: 100% !important;
+}
