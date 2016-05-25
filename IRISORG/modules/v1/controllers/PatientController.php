@@ -245,7 +245,6 @@ class PatientController extends ActiveController {
 
     public function actionUploadimage() {
         $file = '';
-
         $post = Yii::$app->getRequest()->post();
         
         if (!empty($_FILES) && getimagesize($_FILES['file']['tmp_name'])) {
