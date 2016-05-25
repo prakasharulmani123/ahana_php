@@ -42,7 +42,7 @@
                             </b>
                         </td>
                     </tr>
-                    <tr ng-repeat-end ng-show="expanded" ng-repeat="(note_key, note) in value.all">
+                    <tr ng-repeat-end ng-show="expanded" ng-repeat="(note_key, note) in value.all | orderBy: pat_note_id:reverse">
                         <td align="center" valign="middle"></td>
                         <td valign="middle">
                             <span class="label bg-info">  {{note.created_by_name}} </span>

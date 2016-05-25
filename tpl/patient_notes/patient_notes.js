@@ -24,6 +24,8 @@ app.controller('NotesController', ['$rootScope', '$scope', '$timeout', '$http', 
                     alert("Sorry, you can't create a note");
                     $state.go("patient.view", {id: $state.params.id});
                 } else {
+                    $scope.data = {};
+                    $scope.data.formtype = 'add';
                     $scope.encounter = response.model
                 }
             });

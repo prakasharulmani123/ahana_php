@@ -51,8 +51,9 @@
                                     {{row.ward_name}}
                                 </td>
                                 <td>
-                                    {{row.roomstatus}}<br />
-                                    <span class="text-danger-dk" ng-if="row.occupied_status == '2'">>> {{row.notes}}</span>
+                                    <span class="label label-{{row.occupied_status == '2' ? 'warning' : row.occupied_status == '1' ? 'danger': 'success'}}" tooltip="{{row.notes}}" tooltip-trigger tooltip-animation="false" tooltip-placement="right">{{row.roomstatus}}</span>
+<!--                                    {{row.roomstatus}}<br />
+                                    <span class="text-danger-dk" ng-if="row.occupied_status == '2'">>> {{row.notes}}</span>-->
                                 </td>
                                 <!--                    <td>
                                                         {{row.maintain_name}}
@@ -67,7 +68,7 @@
                                     <a class="btn btn-dark" title="Edit" check-access  ui-sref="configuration.roomUpdate({id: '{{row.room_id}}'})">
                                         <i class="fa fa-pencil"></i>
                                     </a>&nbsp;&nbsp;&nbsp;
-                                    <a class="btn btn-dark" ng-if="row.occupied_status != '1'" title="Update Maintenance" ui-sref="configuration.updateMaintenance({id: '{{row.room_id}}'})">
+                                    <a check-access class="btn btn-dark" ng-if="row.occupied_status != '1'" title="Update Maintenance" ui-sref="configuration.updateMaintenance({id: '{{row.room_id}}'})">
                                         <i class="fa fa-exclamation-triangle"></i>
                                     </a>
                                 </td>
