@@ -76,7 +76,7 @@
                             <div class="cell">
                                 <div class="cell-inner padder">
                                     <!-- notes list -->
-                                    <div ng-repeat="note in child.notes | orderBy: 'pat_note_id'" class="bg-grey-only r r-2x m-b-xs wrapper-sm b-l b-2x b-{{note.seen_by == 0 ? 'danger' : 'info'}}">
+                                    <div ng-repeat="note in child.notes| orderBy: 'pat_note_id'" class="bg-grey-only r r-2x m-b-xs wrapper-sm b-l b-2x b-{{note.seen_by == 0 ? 'danger' : 'info'}}">
                                         {{note.notes}}
                                         <div class="text-xs text-muted ng-binding">{{note.created_at| moment:'MMM DD - YYYY'}}</div>
                                     </div>
@@ -85,9 +85,9 @@
                             </div>
                         </div>
                         <div class="wrapper m-t b-t b-light">
-                                            <form class="m-b-none ng-pristine ng-valid ng-submitted" ng-init="data = {};
+                            <form class="m-b-none ng-pristine ng-valid ng-submitted" ng-init="data = {};
 
-                                        notes_error = false;">
+                                            notes_error = false;">
                                 <div class="input-group">
                                     <input type="text" placeholder="Say something" class="form-control" ng-model="data.notes">
                                     <span class="input-group-btn">
@@ -252,6 +252,8 @@
         <script src="js/exportTable/jspdf/libs/sprintf.js"></script>
         <script src="js/exportTable/jspdf/jspdf.js"></script>
         <script src="js/exportTable/jspdf/libs/base64.js"></script>
+        <script src="js/directives/camera.js"></script>
+
         <script type="text/javascript" src="node_modules/angular-bootstrap-datetimepicker/src/js/datetimepicker.js"></script>
         <script type="text/javascript" src="node_modules/angular-bootstrap-datetimepicker/src/js/datetimepicker.templates.js"></script>
         <script type="text/javascript" src="node_modules/angular-date-time-input/src/dateTimeInput.js"></script>

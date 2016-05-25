@@ -23,7 +23,6 @@ angular.module('app', [
     'ngMessages',
     'toaster',
     'cfp.hotkeys',
-    'camera',
     'file-model'
 //    'restangular'
 //    'LocalStorageModule',

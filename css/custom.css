@@ -129,3 +129,8 @@ th[st-sort] {
 .hms-plus:focus { 
   color: #ffffff !important;
 }
+
+video {
+    width: 100% !important;
+    height: 100% !important;
+}
