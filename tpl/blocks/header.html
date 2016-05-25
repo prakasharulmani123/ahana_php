@@ -27,8 +27,8 @@
                         <li ng-repeat="patient in patient_lists | filter:patientselected">
                             <div class="row"> 
                                 <div class="col-xs-12 col-sm-2 col-md-2"> 
-                                    <img ng-if="$even" alt="" src="img/man-icon.png">
-                                    <img ng-if="$odd" alt="" src="img/man-icon2.png">
+                                    <img ng-if="$even" alt="" src="{{app.patientDetail.patientImage ? app.patientDetail.patientImage : 'img/man-icon.png'}}">
+                                    <img ng-if="$odd" alt="" src="{{app.patientDetail.patientImage ? app.patientDetail.patientImage : 'img/man-icon2.png'}}">
                                 </div>
                                 <div class="col-xs-12 col-sm-5 col-md-6"> 
                                     <div class="row ng-binding"> 

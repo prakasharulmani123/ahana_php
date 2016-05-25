@@ -413,10 +413,10 @@ angular.module('app').factory('fileUpload', ['$http', function ($http) {
                     transformRequest: angular.identity,
                     headers: {'Content-Type': undefined}
                 })
-                        .success(function (response) {
-                        })
-                        .error(function (response) {
-                        });
+                .success(function (response) {
+                })
+                .error(function (data, status) {
+                });
             }
         }
     }]);
@@ -428,13 +428,18 @@ angular.module('app').controller('PatientImageController', ['scope', '$scope', '
         $scope.uploadFile = function () {
             var file = $scope.myFile;
             var uploadUrl = $rootScope.IRISOrgServiceUrl + '/patient/uploadimage?patient_id=' + $state.params.id;
-            fileUpload.uploadFileToUrl(file, uploadUrl).success(function (response) {
-                if (response.success) {
+            fileUpload.uploadFileToUrl(file, uploadUrl).success(function(response){
+                if(response.success){
                     scope.app.patientDetail.patientImage = response.patient.patient_image;
                     $scope.cancel();
-                } else {
+                }else{
                     $scope.errorData2 = response.message;
                 }
+            }).error(function (data, status) {
+                if (status == 422)
+                    $scope.errorData2 = $scope.errorSummary(data);
+                else
+                    $scope.errorData2 = data.message;
             });
         };
 
