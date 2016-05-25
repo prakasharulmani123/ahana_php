@@ -23,13 +23,6 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
             )
         };
 
-        $scope.picture = {};
-
-        $scope.$watch('picture', function (newValue, oldValue) {
-            console.log($scope.picture);
-        }, true);
-
-
         //ChangePassword
         $scope.initChangePassword = function () {
             $('.sb-toggle-right').trigger('click');

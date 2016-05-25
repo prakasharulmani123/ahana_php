@@ -413,31 +413,56 @@ angular.module('app').factory('fileUpload', ['$http', function ($http) {
                     transformRequest: angular.identity,
                     headers: {'Content-Type': undefined}
                 })
-                .success(function (response) {
-                })
-                .error(function (response) {
-                });
+                        .success(function (response) {
+                        })
+                        .error(function (response) {
+                        });
             }
         }
     }]);
 
 //Patient image upload
-angular.module('app').controller('PatientImageController', ['scope', '$scope', '$modalInstance', '$rootScope', '$timeout', 'fileUpload', '$state', function (scope, $scope, $modalInstance, $rootScope, $timeout, fileUpload, $state) {
+angular.module('app').controller('PatientImageController', ['scope', '$scope', '$modalInstance', '$rootScope', '$timeout', 'fileUpload', '$state', '$http', function (scope, $scope, $modalInstance, $rootScope, $timeout, fileUpload, $state, $http) {
         $scope.fileUpload = fileUpload;
 
         $scope.uploadFile = function () {
             var file = $scope.myFile;
             var uploadUrl = $rootScope.IRISOrgServiceUrl + '/patient/uploadimage?patient_id=' + $state.params.id;
-            fileUpload.uploadFileToUrl(file, uploadUrl).success(function(response){
-                if(response.success){
+            fileUpload.uploadFileToUrl(file, uploadUrl).success(function (response) {
+                if (response.success) {
                     scope.app.patientDetail.patientImage = response.patient.patient_image;
                     $scope.cancel();
-                }else{
+                } else {
                     $scope.errorData2 = response.message;
                 }
             });
         };
 
+        $scope.picture = '';
+
+        $scope.$watch('picture', function (newValue, oldValue) {
+            if (newValue != '') {
+                $http({
+                    method: "POST",
+                    url: $rootScope.IRISOrgServiceUrl + '/patient/uploadimage?patient_id=' + $state.params.id,
+                    data: {file_data: newValue},
+                }).success(
+                        function (response) {
+                            if (response.success) {
+                                scope.app.patientDetail.patientImage = response.patient.patient_image;
+                                $scope.cancel();
+                            } else {
+                                $scope.errorData2 = response.message;
+                            }
+                        }
+                ).error(function (data, status) {
+                    if (status == 422)
+                        $scope.errorData = $scope.errorSummary(data);
+                    else
+                        $scope.errorData = data.message;
+                });
+            }
+        }, true);
 
         $scope.cancel = function () {
             $modalInstance.dismiss('cancel');

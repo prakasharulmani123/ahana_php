@@ -10,7 +10,26 @@
                     <div class="modal-body wrapper-lg">
                         <div class="panel panel-default">
                             <div class="panel-body">
-                                <input type = "file" file-model = "myFile" accept="image/*"/>
+
+                                <ng-camera
+                                    capture-message="Cheeeese!"
+                                    countdown="3"
+                                    output-height="160"
+                                    output-width="213"
+                                    viewer-height="320"
+                                    viewer-width="426"
+                                    crop-height="90"
+                                    crop-width="120"
+                                    image-format="jpeg"
+                                    jpeg-quality="100"
+                                    action-message="Take picture"
+                                    snapshot="picture"
+                                    flash-fallback-url="/vendors/webcamjs/webcam.swf"
+                                    overlay-url="/client/bower_components/ng-camera/app/overlay.png"
+                                    shutter-url="/client/bower_components/ng-camera/app/shutter.mp3"
+                                    ></ng-camera>
+
+                                <img src="{{picture}}">
                             </div>
                             <footer class="panel-footer text-right bg-light lter">
                                 <button class="btn m-b-xs  btn-success save-btn" ng-click="uploadFile()">Submit</button>
