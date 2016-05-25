@@ -125,3 +125,7 @@ th[st-sort] {
 .navi ul.nav li a {
     width: 100% !important;
 }
+
+.hms-plus:focus { 
+  color: #ffffff !important;
+}

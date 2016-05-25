@@ -7,69 +7,67 @@
     <div ng-include="'tpl/blocks/alert.html'">
         {% include 'tpl/blocks/alert.html' %}
     </div>
-
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <button class="btn btn-sm btn-grey" ng-click="loadBrandDivisionsList()"> 
-                &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
-            </button>
-            <button check-access-button ng-click="$state.go('pharmacy.brandDivisionCreate')" class="btn btn-sm btn-info pull-right">
-                <i class="fa fa-plus"></i> &nbsp; Add new Brand Division
-            </button>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <b> Brand Division Management </b>
+                </div>
+                <div class="panel-body b-b b-light">                   
+                    <input id="filter" type="text" class="form-control input-sm w-sm inline m-r" placeholder="Search"/>                   
+                    <button check-access-button ng-click="$state.go('pharmacy.brandDivisionCreate')" class="btn btn-sm btn-info pull-right">
+                        <i class="fa fa-plus"></i> &nbsp; Add new Brand Division
+                    </button>
+                </div>
+                <div>
+                    <table class="table m-b-none" ui-jq="footable" data-filter="#filter" data-page-size="10">
+                        <thead>
+                            <tr>                              
+                                <th >Brand Division name</th>
+                                <th data-sort-ignore="true">Status</th>
+                                <th data-sort-ignore="true">Action</th>
+                            </tr>
+                        </thead>  
+                        <tbody ng-if="isLoading == true">
+                            <tr>
+                                <td colspan="3" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
+                            </tr>
+                        </tbody>  
+                        <tbody ng-if="isLoading == false">
+                            <tr ng-repeat="row in displayedCollection| orderBy: product_name">
+                                <td>
+                                    {{row.division_name}}
+                                </td>
+                                <td>
+                                    <div ng-if="row.tenant_id != null">
+                                        <label class="i-checks "> 
+                                            <input type="checkbox" checked="" ng-true-value="'1'" ng-false-value="'0'" name="status" ng-model="row.status" ng-change='updateStatus("PhaBrandDivision", row.brand_id)'> 
+                                            <i></i>
+                                        </label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div ng-if="row.tenant_id != null">
+                                        <a class=" label bg-dark" title="Edit" check-access  ui-sref="pharmacy.brandDivisionUpdate({id: row.division_id})">
+                                            <i class="fa fa-pencil"></i>
+                                        </a>&nbsp;&nbsp;&nbsp;
+                                        <a class="hide" title="Delete" ng-click="removeRow(row)">
+                                            <i class="fa fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot class="hide-if-no-paging">
+                            <tr>
+                                <td colspan="3" class="text-right">
+                                    <ul class="pagination"></ul>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
         </div>
-
-        <table st-table="displayedCollection"  st-safe-src="rowCollection" class="table table-bordered table-striped">
-            <thead>
-                <tr>
-                    <th st-sort="division_name">Brand Division name</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                </tr>
-                <tr>
-                    <th>
-                        <input st-search="'division_name'" placeholder="search for division name" class="input-sm form-control" type="search"/>
-                    </th>
-                    <th colspan="2">&nbsp;</th>
-                </tr>
-            </thead>
-            <tbody ng-hide="isLoading">
-                <tr ng-repeat="row in displayedCollection| orderBy: division_name">
-                    <td>
-                        {{row.division_name}}
-                    </td>
-                    <td>
-                        <div ng-if="row.tenant_id != null">
-                            <label class="i-checks "> 
-                                <input type="checkbox" checked="" ng-true-value="'1'" ng-false-value="'0'" name="status" ng-model="row.status" ng-change='updateStatus("PhaBrandDivision", row.brand_id)'> 
-                                <i></i>
-                            </label>
-                        </div>
-                    </td>
-                    <td>
-                        <div ng-if="row.tenant_id != null">
-                            <a title="Edit" check-access  ui-sref="pharmacy.brandDivisionUpdate({id: row.division_id})">
-                                <i class="fa fa-pencil"></i>
-                            </a>&nbsp;&nbsp;&nbsp;
-                            <a class="hide" title="Delete" ng-click="removeRow(row)">
-                                <i class="fa fa-trash"></i>
-                            </a>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-            <tbody ng-show="isLoading">
-                <tr>
-                    <td colspan="4" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
-                </tr>
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="4" class="text-center">
-                        <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7"></div>
-                    </td>
-                </tr>
-            </tfoot>
-        </table>
-
     </div>
 </div>
