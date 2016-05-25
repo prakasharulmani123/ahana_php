@@ -63,7 +63,7 @@ class PatientnotesController extends ActiveController {
             $result = [];
             $data = PatNotes::find()->tenant()->active()->andWhere(['patient_id' => $patient->patient_id])->groupBy('encounter_id')->orderBy(['encounter_id' => SORT_DESC])->all();
             foreach ($data as $key => $value) {
-                $details = PatNotes::find()->where(['patient_id' => $patient->patient_id, 'encounter_id' => $value->encounter_id])->orderBy(['pat_note_id' => SORT_ASC])->all();
+                $details = PatNotes::find()->where(['patient_id' => $patient->patient_id, 'encounter_id' => $value->encounter_id])->orderBy(['pat_note_id' => SORT_DESC])->all();
                 $result[$key] = ['data' => $value, 'all' => $details];
             }
             $usernotes = PatNotesUsers::find()->tenant()->andWhere(['user_id' => $user_id, 'seen' => '0', 'patient_id' => $patient->patient_id])->all();
