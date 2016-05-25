@@ -98,7 +98,7 @@ class EncounterController extends ActiveController {
             $valid = $model->validate();
             $valid = $appt_model->validate() && $valid;
 
-            if ($post['validate_casesheet']) {
+            if (isset($post['validate_casesheet'])) {
                 $case_model->attributes = [
                     'patient_id' => (isset($post['patient_id']) ? $post['patient_id'] : ''),
                     'casesheet_no' => (isset($post['PatEncounter']['add_casesheet_no']) ? $post['PatEncounter']['add_casesheet_no'] : '')
