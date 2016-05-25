@@ -1,4 +1,4 @@
-app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$filter', 'modalService', function ($rootScope, $scope, $timeout, $http, $state, $filter, modalService) {
+app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$filter', 'modalService', '$modal', '$log', function ($rootScope, $scope, $timeout, $http, $state, $filter, modalService, $modal, $log) {
 
         $scope.app.settings.patientTopBar = true;
         $scope.app.settings.patientSideMenu = true;
@@ -141,7 +141,7 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
             $scope.data = {};
             $scope.data.status_date = moment().format('YYYY-MM-DD');
             $scope.data.validate_casesheet = ($scope.app.patientDetail.patientCasesheetno == null || $scope.app.patientDetail.patientCasesheetno == '');
-            
+
             $timeout(function () {
                 $scope.data.consultant_id = $scope.app.patientDetail.patientLastConsultantId;
                 $scope.getTimeSlots($scope.data.consultant_id, $scope.data.status_date);
@@ -151,7 +151,7 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
         $scope.$watch('app.patientDetail.patientCasesheetno', function (newValue, oldValue) {
             $scope.data.validate_casesheet = ($scope.app.patientDetail.patientCasesheetno == null || $scope.app.patientDetail.patientCasesheetno == '');
         }, true);
-        
+
         $scope.initChangeStatusForm = function () {
             $rootScope.commonService.GetPatientBillingList(function (response) {
                 $scope.bill_types = response;
@@ -280,7 +280,7 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
             if (mode == 'arrived') {
                 post_url = $rootScope.IRISOrgServiceUrl + '/appointments';
                 _that.data.PatAppointment.appt_status = "A";
-            } else if (mode == 'seen') {
+            } else if (mode == 'seen' || mode == 'seen_future') {
                 if (_that.data.PatAppointment.appt_id) {
                     post_url = $rootScope.IRISOrgServiceUrl + '/appointments/' + _that.data.PatAppointment.appt_id;
                     method = 'PUT';
@@ -300,11 +300,16 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
                     function (response) {
                         $scope.loadbar('hide');
                         if (response.success == true || mode == 'arrived') {
-                            $scope.data = {};
                             $scope.successMessage = succ_msg;
-                            $timeout(function () {
-                                $state.go("patient.encounter", {id: $state.params.id});
-                            }, 1000)
+                            if (mode == 'seen_future') {
+                                $scope.add_appointment();
+                            } else {
+                                $scope.data = {};
+                                $timeout(function () {
+                                    $state.go("patient.encounter", {id: $state.params.id});
+                                }, 1000)
+                            }
+
                         } else {
                             $scope.errorData = response.message;
                         }
@@ -370,7 +375,7 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
                 }
             });
         };
-        
+
         $scope.beforeRender = function ($view, $dates, $leftDate, $upDate, $rightDate) {
             if (!$scope.checkAccess('patient.backdateappointment')) {
                 var today_date = new Date().valueOf();
@@ -380,5 +385,30 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
                     }
                 });
             }
+        }
+
+        //Add New Event
+        $scope.add_appointment = function () {
+            var modalInstance = $modal.open({
+                templateUrl: 'tpl/modal_form/modal.patient_future_appointment.html',
+                controller: "ModalPatientFutureAppointmentController",
+                resolve: {
+                    scope: function () {
+                        return $scope;
+                    },
+                }
+            });
+
+            modalInstance.data = {
+                title: 'Add Future Appointment',
+                data: $scope.data
+            };
+
+            modalInstance.result.then(function (selectedItem) {
+                $scope.selected = selectedItem;
+            }, function () {
+                $state.go("patient.encounter", {id: $state.params.id});
+                $log.info('Modal dismissed at: ' + new Date());
+            });
         }
     }]);

@@ -22,7 +22,8 @@ angular.module('app', [
     'ui.dateTimeInput',
     'ngMessages',
     'toaster',
-    'cfp.hotkeys'
+    'cfp.hotkeys',
+    'camera'
 //    'restangular'
 //    'LocalStorageModule',
 ]);

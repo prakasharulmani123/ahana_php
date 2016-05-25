@@ -1142,7 +1142,10 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['smart-table', 'ui.select']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/patient_appointment/patient_appointment.js');
+                                        return $ocLazyLoad.load([
+                                            'tpl/patient_appointment/patient_appointment.js',
+                                            'tpl/modal_form/modal.patient_future_appointment.js'
+                                        ]);
                                     }
                             );
                         }]

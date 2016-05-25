@@ -3,7 +3,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
         editableThemes.bs3.inputClass = 'input-sm';
         editableThemes.bs3.buttonsClass = 'btn-sm';
         editableOptions.theme = 'bs3';
-        
+
         //Organization Index
         $scope.loadData = function () {
             _that = this;
@@ -23,11 +23,18 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
             )
         };
 
+        $scope.picture = {};
+
+        $scope.$watch('picture', function (newValue, oldValue) {
+            console.log($scope.picture);
+        }, true);
+
+
         //ChangePassword
         $scope.initChangePassword = function () {
             $('.sb-toggle-right').trigger('click');
         }
-        
+
         $scope.changePassword = function () {
             _that = this;
 
