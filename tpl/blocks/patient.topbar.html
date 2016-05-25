@@ -2,7 +2,9 @@
 
     <div class="patient-row1">
         <div class="col-md-1"> 
-            <img src="img/patient-img.png"  alt="" />
+            <a ng-click="openUploadForm()">
+                <img src="{{app.patientDetail.patientImage ? app.patientDetail.patientImage : 'img/patient-img.png'}}"  alt="" width="58" height="58" />
+            </a>
         </div>
         <div class="col-md-11 paitent-details2"> 
             <b>

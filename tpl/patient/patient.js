@@ -1,13 +1,13 @@
-app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$anchorScroll', function ($rootScope, $scope, $timeout, $http, $state, $anchorScroll) {
+app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$anchorScroll', 'fileUpload', function ($rootScope, $scope, $timeout, $http, $state, $anchorScroll, fileUpload) {
 
         $scope.app.settings.patientTopBar = true;
         $scope.app.settings.patientSideMenu = true;
         $scope.app.settings.patientContentClass = 'app-content patient_content ';
         $scope.app.settings.patientFooterClass = 'app-footer';
-        
+
         //Notifications
         $scope.assignNotifications();
-        
+
         $scope.orgData = {};
 
         $scope.changeMode = function (mode) {

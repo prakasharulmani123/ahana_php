@@ -78,7 +78,11 @@
                                 <span class="label bg-light dk">{{patProcedure.proc_date| moment:'hh:mm A'}}</span> 
                             </td>
                             <td> {{patProcedure.procedure_name}} </td>
-                            <td valign="middle"> {{patProcedure.proc_description}} </td>
+                            <td valign="middle">
+                                <div style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden; width: 160px;">
+                                    {{patProcedure.proc_description}}
+                                </div>
+                            </td>
                             <td valign="middle"> {{patProcedure.doctors}} </td>
                             <td>
                                 <div ng-if="patProcedure.tenant_id != null" ng-show="enc.selected.status == '1'">

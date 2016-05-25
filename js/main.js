@@ -3,8 +3,8 @@
 /* Controllers */
 
 angular.module('app')
-        .controller('AppCtrl', ['$scope', '$localStorage', '$window', '$rootScope', '$state', '$cookieStore', '$http', 'CommonService', '$timeout', 'AuthenticationService', 'toaster', 'hotkeys',
-            function ($scope, $localStorage, $window, $rootScope, $state, $cookieStore, $http, CommonService, $timeout, AuthenticationService, toaster, hotkeys) {
+        .controller('AppCtrl', ['$scope', '$localStorage', '$window', '$rootScope', '$state', '$cookieStore', '$http', 'CommonService', '$timeout', 'AuthenticationService', 'toaster', 'hotkeys', '$modal',
+            function ($scope, $localStorage, $window, $rootScope, $state, $cookieStore, $http, CommonService, $timeout, AuthenticationService, toaster, hotkeys, $modal) {
                 // add 'ie' classes to html
                 var isIE = !!navigator.userAgent.match(/MSIE/i);
                 isIE && angular.element($window.document.body).addClass('ie');
@@ -67,6 +67,7 @@ angular.module('app')
                         patientLastConsultantId: '',
                         patientLastConsultantName: '',
                         patientHaveEncounter: '',
+                        patientImage: '',
                     }
                 }
 
@@ -146,7 +147,7 @@ angular.module('app')
                         $('.butterbar').removeClass('active').addClass('hide');
                         $('.save-btn').attr('disabled', false).html("Save");
                         $('.get-report').attr('disabled', false).html("Get Report");
-                       
+
                     }
                 }
 
@@ -200,6 +201,7 @@ angular.module('app')
                                         $scope.app.patientDetail.patientLastConsultantId = patient.last_consultant_id;
                                         $scope.app.patientDetail.patientLastConsultantName = patient.consultant_name;
                                         $scope.app.patientDetail.patientHaveEncounter = patient.have_encounter;
+                                        $scope.app.patientDetail.patientImage = patient.patient_image;
                                         $rootScope.commonService.GetLabelFromValue(patient.patient_gender, 'GetGenderList', function (response) {
                                             $scope.app.patientDetail.patientSex = response;
                                         });
@@ -380,10 +382,64 @@ angular.module('app')
                     });
                 }
 
+                $scope.openUploadForm = function () {
+                    var modalInstance = $modal.open({
+                        templateUrl: 'tpl/modal_form/modal.patient_image.html',
+                        controller: "PatientImageController",
+                        resolve: {
+                            scope: function () {
+                                return $scope;
+                            },
+                        }
+                    });
+                }
             }]);
 
+//Moment Filter
 angular.module('app').filter('moment', function () {
     return function (dateString, format) {
         return moment(dateString).format(format);
     };
 });
+
+//Form Upload with file data
+angular.module('app').factory('fileUpload', ['$http', function ($http) {
+        return {
+            uploadFileToUrl: function (file, uploadUrl) {
+                var fd = new FormData();
+                fd.append('file', file);
+
+                return $http.post(uploadUrl, fd, {
+                    transformRequest: angular.identity,
+                    headers: {'Content-Type': undefined}
+                })
+                .success(function (response) {
+                })
+                .error(function (response) {
+                });
+            }
+        }
+    }]);
+
+//Patient image upload
+angular.module('app').controller('PatientImageController', ['scope', '$scope', '$modalInstance', '$rootScope', '$timeout', 'fileUpload', '$state', function (scope, $scope, $modalInstance, $rootScope, $timeout, fileUpload, $state) {
+        $scope.fileUpload = fileUpload;
+
+        $scope.uploadFile = function () {
+            var file = $scope.myFile;
+            var uploadUrl = $rootScope.IRISOrgServiceUrl + '/patient/uploadimage?patient_id=' + $state.params.id;
+            fileUpload.uploadFileToUrl(file, uploadUrl).success(function(response){
+                if(response.success){
+                    scope.app.patientDetail.patientImage = response.patient.patient_image;
+                    $scope.cancel();
+                }else{
+                    $scope.errorData2 = response.message;
+                }
+            });
+        };
+
+
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
+    }]);

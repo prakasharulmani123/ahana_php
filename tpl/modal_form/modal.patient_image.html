@@ -1,0 +1,39 @@
+<div>
+    <div class="bg-light lter b-b wrapper-md">
+        <h1 class="m-n h3"> Upload Image</h1>
+    </div>
+    <div class="wrapper-md">
+        <div class="alert ng-isolate-scope alert-danger alert-dismissable" ng-show="errorData2" ng-bind-html="errorData2"></div>
+        <div class="row">
+            <div class="col-sm-12" ng-init="data.verify_password = ''">
+                <form name="uploadimage" class="form-horizontal form-validation" novalidate="">
+                    <div class="modal-body wrapper-lg">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <input type = "file" file-model = "myFile" accept="image/*"/>
+                            </div>
+                            <footer class="panel-footer text-right bg-light lter">
+                                <button class="btn m-b-xs  btn-success save-btn" ng-click="uploadFile()">Submit</button>
+                                &nbsp;
+                                <button class="btn m-b-xs  btn-dark" ng-click="cancel()"><i class="fa fa-times"></i> Cancel</button>
+                                &nbsp;
+                            </footer>
+                        </div>
+                        <div class="text-center">--OR--</div><br />
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <input type="file" file-model="myFile" accept="image/*" ui-jq="filestyle" type="file" data-icon="false" data-classButton="btn btn-default" data-classInput="form-control inline v-middle input-s">
+                            </div>
+                            <footer class="panel-footer text-right bg-light lter">
+                                <button class="btn m-b-xs  btn-success save-btn" ng-click="uploadFile()">Submit</button>
+                                &nbsp;
+                                <button class="btn m-b-xs  btn-dark" ng-click="cancel()"><i class="fa fa-times"></i> Cancel</button>
+                                &nbsp;
+                            </footer>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

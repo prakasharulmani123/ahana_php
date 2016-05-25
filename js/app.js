@@ -24,6 +24,7 @@ angular.module('app', [
     'toaster',
     'cfp.hotkeys',
     'camera'
+    'file-model'
 //    'restangular'
 //    'LocalStorageModule',
 ]);
