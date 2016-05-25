@@ -242,4 +242,24 @@ class PatientController extends ActiveController {
 
         return ['frequencylist' => PatPrescriptionFrequency::getFrequencylist($tenant, $status, $deleted)];
     }
+    
+    public function actionUploadimage() {
+        $file = '';
+        
+        if(!empty($_FILES) && getimagesize($_FILES['file']['tmp_name'])){
+            $file = addslashes($_FILES['file']['tmp_name']);
+            $file = file_get_contents($file);
+            $file = base64_encode($file);
+            $file = "data:{$_FILES['file']['type']};base64,$file";
+        }
+        
+        if($file){
+            $model = PatPatient::find()->tenant()->andWhere(['patient_guid' => $_GET['patient_id']])->one();
+            $model->patient_image = $file;
+            $model->save(false);
+            return ['success' => true, 'patient' => $model];
+        }else{
+            return ['success' => false, 'message' => 'Invalid File'];
+        }
+    }
 }

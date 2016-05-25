@@ -68,7 +68,7 @@ class PatPatient extends RActiveRecord {
         return [
             [['patient_title_code', 'patient_firstname', 'patient_gender', 'patient_reg_mode', 'patient_mobile', 'patient_dob'], 'required'],
             [['casesheetno', 'tenant_id', 'patient_care_taker', 'patient_category_id', 'created_by', 'modified_by'], 'integer'],
-            [['patient_reg_date', 'patient_dob', 'created_at', 'modified_at', 'deleted_at', 'patient_mobile', 'patient_bill_type', 'patient_guid'], 'safe'],
+            [['patient_reg_date', 'patient_dob', 'created_at', 'modified_at', 'deleted_at', 'patient_mobile', 'patient_bill_type', 'patient_guid', 'patient_image'], 'safe'],
             [['status'], 'string'],
             [['patient_title_code'], 'string', 'max' => 10],
             [['patient_firstname', 'patient_lastname', 'patient_relation_name', 'patient_care_taker_name', 'patient_occupation', 'patient_email', 'patient_ref_id'], 'string', 'max' => 50],
@@ -76,6 +76,7 @@ class PatPatient extends RActiveRecord {
             [['patient_blood_group'], 'string', 'max' => 5],
             [['patient_ref_hospital'], 'string', 'max' => 255],
             ['patient_mobile', 'match', 'pattern' => '/^[0-9]{10}$/', 'message' => 'Mobile must be 10 digits only'],
+//            ['patient_image', 'file', 'extensions'=> 'jpg, gif, png'],
             [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'casesheetno'], 'message' => 'The combination of Casesheetno has already been taken.', 'on' => 'casesheetunique'],
             [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'patient_int_code'], 'message' => 'The combination of Patient Internal Code has already been taken.'],
         ];
@@ -308,7 +309,7 @@ class PatPatient extends RActiveRecord {
             },
             'have_encounter' => function($model) {
                 return (isset($model->patHaveEncounter));
-            }
+            },
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
