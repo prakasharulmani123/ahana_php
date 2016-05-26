@@ -18,6 +18,10 @@ app.controller('SpecialitiesController', ['$rootScope', '$scope', '$timeout', '$
                         $scope.errorData = "An Error has occured while loading specialities!";
                     });
         };
+        
+        $scope.initForm = function(){
+            $scope.data = {};
+        }
 
         //Save Both Add & Update Data
         $scope.saveForm = function (mode) {
