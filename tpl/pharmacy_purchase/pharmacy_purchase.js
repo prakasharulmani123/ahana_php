@@ -40,8 +40,6 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading purchaseList!";
                     });
-
-
         };
 
         $scope.$watch('form_filter', function (newValue, oldValue) {

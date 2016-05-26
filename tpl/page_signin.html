@@ -4,11 +4,11 @@
         <div class="wrapper text-center">
             <strong>Sign in to get in touch</strong>
         </div>
-        <form name="form" class="form-validation">
+        <form name="form" class="form-validation" novalidate="">
             <div class="alert ng-isolate-scope alert-danger alert-dismissable" ng-show="authError" ng-bind-html="authError"></div>
             <div class="list-group list-group-sm">
                 <div class="list-group-item">
-                    <input type="text" placeholder="Username" class="form-control no-border" ng-model="user.username" required>
+                    <input type="text" placeholder="Username" class="form-control no-border" ng-model="user.username" focus-me="true" required>
                 </div>
                 <div class="list-group-item">
                     <input type="password" placeholder="Password" class="form-control no-border" ng-model="user.password" required>
