@@ -65,7 +65,7 @@ class PharmacypurchaseController extends ActiveController {
         $get = Yii::$app->getRequest()->get();
 
         if (isset($get['payment_type'])) {
-            $data = PhaPurchase::find()->tenant()->active()->andWhere(['payment_type' => $get['payment_type']])->all();
+            $data = PhaPurchase::find()->tenant()->active()->andWhere(['payment_type' => $get['payment_type']])->orderBy(['created_at' => SORT_DESC])->all();
             return ['success' => true, 'purchases' => $data];
         } else {
             return ['success' => false, 'message' => 'Invalid Access'];
