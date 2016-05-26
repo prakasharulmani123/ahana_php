@@ -113,9 +113,12 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
             _that = this;
             var charge = $filter('filter')($scope.chargesList, {patient_cat_id: _that.data.PatAppointment.patient_cat_id});
             if (typeof charge[0] != 'undefined')
+            {
                 $scope.chargeAmount = $scope.data.PatAppointment.amount = charge[0].charge_amount;
-            else
+                $scope.cat_name_taken = charge[0].op_dept;
+            } else {
                 $scope.chargeAmount = $scope.data.PatAppointment.amount = 0;
+            }
         }
 
         $scope.updateFreeCharge = function () {
@@ -125,6 +128,12 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
             } else {
                 $scope.updateCharge();
             }
+            $scope.getBillName(_that.data.PatAppointment.patient_bill_type);
+        }
+
+        $scope.getBillName = function (bill_type) {
+            var billinfo = $filter('filter')($scope.bill_types, {value: bill_type});
+            $scope.bill_type_taken = billinfo[0].label;
         }
 
         $scope.initForm = function () {
@@ -216,12 +225,15 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
                     });
         }
 
+
         //Save Both Add Data
         $scope.saveForm = function (mode) {
             _that = this;
 
             $scope.errorData = "";
             $scope.successMessage = "";
+
+            $scope.getCatDetail(_that.data.patient_cat_id);
 
             post_url = $rootScope.IRISOrgServiceUrl + '/encounter/createappointment';
             method = 'POST';
@@ -280,7 +292,7 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
             if (mode == 'arrived') {
                 post_url = $rootScope.IRISOrgServiceUrl + '/appointments';
                 _that.data.PatAppointment.appt_status = "A";
-            } else if (mode == 'seen' || mode == 'seen_future') {
+            } else if (mode == 'seen' || mode == 'seen_future' || mode == 'seen_print') {
                 if (_that.data.PatAppointment.appt_id) {
                     post_url = $rootScope.IRISOrgServiceUrl + '/appointments/' + _that.data.PatAppointment.appt_id;
                     method = 'PUT';
@@ -303,6 +315,8 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
                             $scope.successMessage = succ_msg;
                             if (mode == 'seen_future') {
                                 $scope.add_appointment();
+                            } else if (mode == 'seen_print') {
+                                $scope.save_success();
                             } else {
                                 $scope.data = {};
                                 $timeout(function () {
@@ -322,6 +336,18 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
                     $scope.errorData = data.message;
             });
         };
+
+        $scope.save_success = function () {
+            var innerContents = document.getElementById("Getprintval").innerHTML;
+            var popupWinindow = window.open('', '_blank', 'width=600,height=700,scrollbars=no,menubar=no,toolbar=no,location=no,status=no,titlebar=no');
+            popupWinindow.document.open();
+            popupWinindow.document.write('<html><head><link href="css/print.css" rel="stylesheet" type="text/css" /></head><body onload="window.print()">' + innerContents + '</html>');
+            popupWinindow.document.close();
+            $scope.data = {};
+            $timeout(function () {
+                $state.go("patient.encounter", {id: $state.params.id});
+            }, 1000)
+        }
 
         $scope.cancelAppointment = function () {
             $scope.isPatientHaveActiveEncounter(function (response) {

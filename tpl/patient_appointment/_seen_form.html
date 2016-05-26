@@ -57,9 +57,73 @@
         </div>
 
         <footer class="panel-footer text-right bg-light lter">
-            <button class="btn m-b-xs  btn-success save-btn" ng-click="changeAppointmentStatus('seen_future')">Save & Future Appointment</button> &nbsp;
-            <button class="btn m-b-xs  btn-success save-btn" ng-click="changeAppointmentStatus('seen')">Save</button> &nbsp;
-            <button class="btn m-b-xs  btn-dark" ng-click="$state.go('patient.encounter', {id: $state.params.id})"><i class="fa fa-times"></i> Cancel</button>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="pull-left">
+                        <button class="btn m-b-xs  btn-primary" ng-click="changeAppointmentStatus('seen_print')"> <i class="fa fa-print"></i> Save and Print Bill</button>
+                         &nbsp;
+                        <button class="btn m-b-xs  btn-success save-btn" ng-click="changeAppointmentStatus('seen_future')">Save & Future Appointment</button> &nbsp;
+                    </div>
+                    <div class="pull-right">
+                        <button class="btn m-b-xs  btn-success save-btn" ng-click="changeAppointmentStatus('seen')">Save</button> &nbsp;
+                        <button class="btn m-b-xs  btn-dark" ng-click="$state.go('patient.encounter', {id: $state.params.id})"><i class="fa fa-times"></i> Cancel</button>
+                    </div>
+                </div>    
+            </div>    
         </footer>
     </div>
 </form>
+
+<div id="Getprintval" ng-hide="1">
+    <div class="invoice-details1">
+       <table width="100%" border="0" align="right" cellpadding="0" cellspacing="0" class="purchase-list-tab purchase-list-tab2 ">
+          <tr>
+             <th align="left">Patent Name :  </th>
+             <td align="left"> {{app.patientDetail.patientFullname}} ({{app.patientDetail.patientActiveCasesheetno}})</td>
+          </tr>
+          <tr>
+             <th align="left">Patent Id :  </th>
+             <td align="left">{{app.patientDetail.patientIntCode}}</td>
+          </tr>
+          <tr>
+             <th align="left">Sex:  </th>
+             <td align="left">{{app.patientDetail.patientSex}}</td>
+          </tr>
+       </table>
+    </div>
+    <div class="invoice-details1 invoice-details2">
+       <table width="100%" border="0" align="right" cellpadding="0" cellspacing="0" class="purchase-list-tab purchase-list-tab2 ">         
+          <tr>
+             <th align="left">Consultant Name  :  </th>
+             <td align="left">{{app.patientDetail.patientLastConsultantName}}</td>
+          </tr>
+           <tr>
+             <th align="left">Organization  :  </th>
+             <td align="left">{{app.patientDetail.patientOrg}} </td>
+          </tr>
+           <tr>
+             <th align="left">Age  :  </th>
+             <td align="left">
+               {{app.patientDetail.patientAge}}y
+             </td>
+          </tr>
+       </table>
+    </div>
+    <div class="clearfix"></div>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="purchase-list-tab">
+       <tr>
+          <th>Status</th>
+          <th>Timing</th>
+          <th>Billing</th>
+          <th>Patient Category</th>
+          <th>OP Amount</th>         
+       </tr>
+       <tr>
+           <td>Seen</td>
+           <td>{{data.PatAppointment.status_date}}</td>
+           <td>{{bill_type_taken}}</td>
+           <td>{{cat_name_taken}}</td>
+           <td>{{data.PatAppointment.amount}}</td>
+       </tr>      
+    </table>
+</div>    
