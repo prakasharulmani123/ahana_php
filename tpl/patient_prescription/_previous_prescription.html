@@ -3,15 +3,17 @@
 </div>
 <div class="wrapper-md p-b" ng-init="loadPrevPrescriptionsList(enc.selected.encounter_id)">
     <div class="panel panel-default">
-        <div class="col-sm-2 m-b-xs">
-            <div class="btn-group btn-group-justified">
-                <ui-select ng-model="enc.selected" theme="bootstrap" on-select="loadPrevPrescriptionsList($item.encounter_id)">
-                    <ui-select-match placeholder="Select Encounter Id">{{$select.selected.encounter_id}}</ui-select-match>
-                    <ui-select-choices repeat="item in encounters | filter: $select.search | orderBy: 'encounter_id' : true">
-                        <div ng-bind-html="item.encounter_id | highlight: $select.search"></div>
-                    </ui-select-choices>
-                </ui-select>
-                <br />
+        <div class="row wrapper pb-sm">
+            <div class="col-sm-2 m-b-xs">
+                <div class="btn-group btn-group-justified">
+                    <ui-select ng-model="enc.selected" theme="bootstrap" on-select="loadPrevPrescriptionsList($item.encounter_id)">
+                        <ui-select-match placeholder="Select Encounter Id">{{$select.selected.encounter_id}}</ui-select-match>
+                        <ui-select-choices repeat="item in encounters | filter: $select.search | orderBy: 'encounter_id' : true">
+                            <div ng-bind-html="item.encounter_id | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                    <br />
+                </div>
             </div>
         </div>
         <table st-table="displayedCollection"  st-safe-src="rowCollection" class="table table-bordered table-striped">

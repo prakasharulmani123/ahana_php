@@ -67,7 +67,7 @@
                                         <div class="input-group-btn dropdown" id="search-form-div">
                                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></button>
                                             <div class="dropdown-menu pull-right prescrip-dropdown {{search_form}}" ng-init="initForm()" id="search-form">
-                                                <form name="searchForm" class="form-horizontal form-validation" novalidate="">
+                                                <form id="advanceSearchForm" name="searchForm" class="form-horizontal form-validation" novalidate="">
                                                     <div class="panel panel-default">
                                                         <div class="panel-heading font-bold"> <i class="fa fa-medkit"></i> Search & Add</div>
                                                         <div class="panel-body">
@@ -136,7 +136,7 @@
                                                                     <br/>
                                                                     <button class="btn m-b-xs  btn-success save-btn" ng-click="addForm()"><i class="fa fa-plus"></i> Add</button>
                                                                     &nbsp;
-                                                                    <button class="btn m-b-xs  btn-dark" ng-click="addData = {}"> <i class="fa fa-repeat"></i> Reset</button>
+                                                                    <button class="btn m-b-xs  btn-dark" onclick="$('#advanceSearchForm')[0].reset();" > <i class="fa fa-repeat"></i> Reset</button>
                                                                     &nbsp; </div>
                                                             </div>
                                                         </div>
@@ -152,7 +152,9 @@
                                     </select>
                                 </div>
                                 <div class="col-sm-2 m-b-xs"> 
-                                    <button class="btn m-b-xs  btn-dark">  <i class="fa fa-times"></i> Clear </button>
+                                    <button class="btn m-b-xs  btn-dark" ng-click="prescription = ''; data.consultant_id = ''">  
+                                        <i class="fa fa-times"></i> Clear 
+                                    </button>
                                 </div>
                             </div>
                             <form editable-form name="tableform" name="prescForm" class="form-horizontal form-validation" novalidate="" shown="true" onaftersave="saveForm()">

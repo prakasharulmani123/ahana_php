@@ -38,11 +38,24 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                         $scope.isLoading = false;
                         $scope.rowCollection = saleList.sales;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
+                        $scope.form_filter = null;
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading saleList!";
                     });
         };
+
+        $scope.$watch('form_filter', function (newValue, oldValue) {
+            if (typeof newValue != 'undefined' && newValue != '' && newValue != null) {
+                var footableFilter = $('table').data('footable-filter');
+                footableFilter.clearFilter();
+                footableFilter.filter(newValue);
+            }
+
+            if (newValue == '') {
+                $scope.loadSaleItemList($scope.sale_payment_type);
+            }
+        }, true);
 
         //For Form
         $scope.initForm = function () {
@@ -95,7 +108,8 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             $scope.data.consultant_id = $item.Patient.last_consultant_id;
 
             $scope.getEncounter(id, 'add', '');
-            $scope.getPatientMobileNo(id);
+            //Hided the below one 
+//            $scope.getPatientMobileNo(id);
         }
 
         $scope.getEncounter = function (patient_id, mode, encounter_id) {
@@ -166,8 +180,8 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 }
             }
         };
-        
-        $scope.addRowWhenFocus = function(key){
+
+        $scope.addRowWhenFocus = function (key) {
             //Add New Row when focus Quantity
             if (key + 1 == $scope.saleItems.length) {
                 $scope.addRow(false);
@@ -257,7 +271,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
                 angular.forEach(response.batchList, function (item) {
                     selected = $filter('filter')($scope.batches, {batch_no: item.batch_no});
-                    if(selected.length == 0){
+                    if (selected.length == 0) {
                         $scope.batches.push(item);
                     }
                 });
