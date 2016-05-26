@@ -141,13 +141,14 @@ angular.module('app')
                 $scope.loadbar = function (mode) {
                     if (mode == 'show') {
                         $('.butterbar').removeClass('hide').addClass('active');
-                        $('.save-btn').attr('disabled', true).html("<i class='fa fa-spin fa-spinner'></i> Please Wait...");
-                        $('.get-report').attr('disabled', true).html("<i class='fa fa-spin fa-spinner'></i> Please Wait...");
+                        $('.save-btn,.get-report,.search-btn,.save-print,.save-future').attr('disabled', true).html("<i class='fa fa-spin fa-spinner'></i> Please Wait...");
                     } else if (mode == 'hide') {
                         $('.butterbar').removeClass('active').addClass('hide');
                         $('.save-btn').attr('disabled', false).html("Save");
                         $('.get-report').attr('disabled', false).html("Get Report");
-
+                        $('.search-btn').attr('disabled', false).html("Search");
+                        $('.save-print').attr('disabled', false).html("<i class='fa fa-print'></i> Save and Print Bill");
+                        $('.save-future').attr('disabled', false).html("Save & Future Appointment");
                     }
                 }
 
