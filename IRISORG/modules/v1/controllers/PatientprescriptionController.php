@@ -115,7 +115,7 @@ class PatientprescriptionController extends ActiveController {
             $patient = PatPatient::getPatientByGuid($get['patient_id']);
             $encounter_id = $get['encounter_id'];
             if ($encounter_id) {
-                $data = PatPrescription::find()->tenant()->active()->andWhere(['patient_id' => $patient->patient_id, 'encounter_id' => $encounter_id])->all();
+                $data = PatPrescription::find()->tenant()->active()->andWhere(['patient_id' => $patient->patient_id, 'encounter_id' => $encounter_id])->orderBy(['created_at' => SORT_DESC])->all();
                 return ['success' => true, 'prescriptions' => $data];
             }
         } else {
