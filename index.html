@@ -37,7 +37,7 @@
             <div class="app" id="app" ng-class="{'app-header-fixed':app.settings.headerFixed,  'app-aside-folded':app.settings.asideFolded, 'app-aside-dock':app.settings.asideDock, 'container':app.settings.container}" ui-view></div>
         </div>
         <!-- Your right Slidebar content. -->
-        <div class="sb-slidebar sb-right">
+        <div class="sb-slidebar sb-right" id="makeit-full" >
             <!-- User Info. -->
             <div id="user-info" class="sb-slidebar-content">
                 <div class="thumb-bg">
@@ -66,10 +66,10 @@
             </div>
             <!-- Prescription Notes -->
             <div id="notes"  class="sb-slidebar-content">
-                <div class="app-aside-right pos-fix no-padder w-auto-xs bg-white b-l animated fadeInRight hide ng-scope show">
+                <div id="note-max" class="app-aside-right pos-fix no-padder w-auto-xs bg-white b-l animated fadeInRight hide ng-scope show note-full">
                     <div class="vbox">
                         <div class="wrapper b-b b-t b-light m-b right-heading">
-                            <a target=".app-aside-right" class="pull-right text-muted text-md" href=""><i aria-hidden="true" class="fa fa-expand"></i></a>
+                            <a target=".app-aside-right" class="pull-right text-muted text-md expand-notes" href=""><i aria-hidden="true" class="fa fa-expand"></i></a>
                             Notes
                         </div>
                         <div class="row-row">
@@ -86,7 +86,6 @@
                         </div>
                         <div class="wrapper m-t b-t b-light">
                             <form class="m-b-none ng-pristine ng-valid ng-submitted" ng-init="data = {};
-
                                             notes_error = false;">
                                 <div class="input-group">
                                     <input type="text" placeholder="Say something" class="form-control" ng-model="data.notes">
@@ -102,10 +101,10 @@
             </div>
             <!-- Prescription Vitals -->
             <div id="vitals"  class="sb-slidebar-content">
-                <div class="app-aside-right pos-fix no-padder w-auto-xs bg-white b-l animated fadeInRight hide ng-scope show">
+                <div class="app-aside-right pos-fix no-padder w-auto-xs bg-white b-l animated fadeInRight hide ng-scope show note-full">
                     <div class="vbox">
                         <div class="wrapper b-b b-t b-light m-b right-heading">
-                            <a target=".app-aside-right" class="pull-right text-muted text-md" href=""><i aria-hidden="true" class="fa fa-expand"></i></a>
+                            <a target=".app-aside-right" class="pull-right text-muted text-md expand-notes" href=""><i aria-hidden="true" class="fa fa-expand"></i></a>
                             Vitals
                         </div>
                         <div class="row-row">
@@ -145,10 +144,10 @@
 
             <!-- Prescription Favorites -->
             <div id="fav" class="sb-slidebar-content">
-                <div class="app-aside-right pos-fix no-padder w-auto-xs bg-white b-l animated fadeInRight hide ng-scope show">
+                <div class="app-aside-right pos-fix no-padder w-auto-xs bg-white b-l animated fadeInRight hide ng-scope show note-full">
                     <div class="vbox">
                         <div class="wrapper b-b b-t b-light m-b right-heading">
-                            <a target=".app-aside-right" class="pull-right text-muted text-md" href="">
+                            <a target=".app-aside-right" class="pull-right text-muted text-md expand-notes" href="">
                                 <i aria-hidden="true" class="fa fa-expand"></i>
                             </a>
                             Favourites
@@ -159,7 +158,7 @@
                                     <!-- notes list -->
                                     <ul class="list-group no-radius ">
                                         <li class="list-group-item" ng-repeat="favourite in child.favourites">
-                                            <a class="btn btn-default btn-xs active" ui-toggle-class="" href="#" ng-click="toggleFavourite(favourite.pres_fav_id)">
+                                            <a class="btn btn-default btn-xs active" ui-toggle-class="" href="#"  ng-click="toggleFavourite(favourite.pres_fav_id)">
                                                 <i class="fa fa-star-o text-muted text"></i>
                                                 <i class="fa fa-star text-danger text-active"></i>
                                             </a> &nbsp;

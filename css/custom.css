@@ -134,3 +134,13 @@ video {
     width: 100% !important;
     height: 100% !important;
 }
+
+#makeit-full.fullscreen{
+    z-index: 9999; 
+    width: 50%; 
+ }
+
+.app-aside-right.fullscreen{
+    width: 50%; 
+}
+    

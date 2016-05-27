@@ -7,29 +7,29 @@
                     <b> Encounter Id : </b> {{enc.selected.encounter_id}}
                 </div>
             </div>
-<!--            <div class="bg-light lter b-b wrapper-md prescrip-header">
-                <div class="col-sm-2 m-b-xs">  <h1 class="m-n h3">Prescription</h1> </div>
-                <div class="col-sm-2 m-b-xs right">  <b>Encounter Id:</b> </div>
-                <div class="col-sm-3 m-b-xs">
-                    <div class="btn-group btn-group-justified">
-                        <ui-select ng-model="enc.selected" theme="bootstrap">
-                            <ui-select-match placeholder="Select Encounter Id">{{$select.selected.encounter_id}}</ui-select-match>
-                            <ui-select-choices repeat="item in encounters | filter: $select.search | orderBy: 'encounter_id' : true">
-                                <div ng-bind-html="item.encounter_id | highlight: $select.search"></div>
-                            </ui-select-choices>
-                        </ui-select>
-                        <br />
-                    </div>
-                </div>
-                <div class="col-sm-3 m-b-xs">
-                    <select class="form-control" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors | orderBy: name" ng-change="getTimeOfAppointment();">
-                        <option value="">Select Consultant</option>
-                    </select>
-                </div>
-                <div class="col-sm-2 m-b-xs"> 
-                    <button class="btn m-b-xs  btn-dark">  <i class="fa fa-times"></i> Clear </button>
-                </div>
-            </div>-->
+            <!--            <div class="bg-light lter b-b wrapper-md prescrip-header">
+                            <div class="col-sm-2 m-b-xs">  <h1 class="m-n h3">Prescription</h1> </div>
+                            <div class="col-sm-2 m-b-xs right">  <b>Encounter Id:</b> </div>
+                            <div class="col-sm-3 m-b-xs">
+                                <div class="btn-group btn-group-justified">
+                                    <ui-select ng-model="enc.selected" theme="bootstrap">
+                                        <ui-select-match placeholder="Select Encounter Id">{{$select.selected.encounter_id}}</ui-select-match>
+                                        <ui-select-choices repeat="item in encounters | filter: $select.search | orderBy: 'encounter_id' : true">
+                                            <div ng-bind-html="item.encounter_id | highlight: $select.search"></div>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                    <br />
+                                </div>
+                            </div>
+                            <div class="col-sm-3 m-b-xs">
+                                <select class="form-control" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors | orderBy: name" ng-change="getTimeOfAppointment();">
+                                    <option value="">Select Consultant</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-2 m-b-xs"> 
+                                <button class="btn m-b-xs  btn-dark">  <i class="fa fa-times"></i> Clear </button>
+                            </div>
+                        </div>-->
 
             <div class="wrapper-md p-b">
                 <div class="row">
@@ -152,7 +152,8 @@
                                     </select>
                                 </div>
                                 <div class="col-sm-2 m-b-xs"> 
-                                    <button class="btn m-b-xs  btn-dark" ng-click="prescription = ''; data.consultant_id = ''">  
+                                    <button class="btn m-b-xs  btn-dark" ng-click="prescription = '';
+                                                data.consultant_id = ''">  
                                         <i class="fa fa-times"></i> Clear 
                                     </button>
                                 </div>
@@ -296,7 +297,7 @@
                     </li>
                 </ul>
                 <ul class="nav nav-pills nav-stacked nav-sm">
-<!--                    class="active4"-->
+                    <!--                    class="active4"-->
                     <li><a id="current_prescription" href="javascript:void(0)" ng-click="prescriptionStauts('1')"><i class="fa fa-medkit"></i> <br/>Prescription</a></li>
                     <li><a href="javascript:void(0)" ng-click="prescriptionStauts('0')"><i class="fa fa-history"></i> <br/>Prev-Prescr</a></li>
                     <li><a href="javascript:void(0)"><i class="fa fa-file-text"></i> <br/>Results </a></li>
@@ -308,7 +309,6 @@
         </div>
     </div>
 </div>
-
 <script>
     $(document).ready(function () {
         $('#search-form').on('click', function (e) {
@@ -321,6 +321,15 @@
                 slidebar();
             });
         }
+//        prescription right navigation
+        $('.expand-notes').click(function (e) {
+            $('#makeit-full').toggleClass('fullscreen');
+            $('.note-full').toggleClass('fullscreen');
+            setTimeout(function () {
+                var div_width = '-' + $('#makeit-full').css('width');
+                $('#sb-site').css('transform', 'translate('+div_width+')');
+            }, 100);
+        });
     });
     function slidebar() {
         $.slidebars({
