@@ -647,7 +647,7 @@ button.label {
 	padding-bottom:5px;
 }
 .paitent-details2 {
-	padding-top:15px;
+	padding-top:20px;
 }
 .paitent-details2 i {
 	margin-left:40px;
@@ -783,4 +783,99 @@ button.label {
 #search-form .panel
 {
 	margin-bottom:0px;
+}
+
+
+
+/*prescription*/
+
+
+.freq-bg
+{
+	text-align:center;
+	border-right:#ffffff solid 2px;
+	padding:2px 0px 0px 0px !important;
+}
+
+
+.freq-bg img
+{
+	margin-right:0px;
+}
+
+.pres-table th
+{
+	text-align:center;
+}
+
+.txt-left
+{
+	text-align:left !important;
+}
+
+.txt-right
+{
+	text-align:right !important;
+}
+
+.form-control {
+  padding: 6px 8px;
+}
+
+.nextvisit
+{
+	width:130px;
+	border-right:#edf1f2 solid 2px;
+	padding-bottom:7px;
+}
+
+.next-vist-txt
+{
+	width:auto;
+}
+
+
+
+
+
+
+
+.header-new
+{
+	width:100%;
+	float:left;
+	margin-bottom:20px;
+}
+
+
+.headerbg2 i
+{
+	 margin-left: 0px;
+}
+
+.header-new i {
+  margin-left: 15px;
+}
+
+.paitent-details2
+{
+	padding-right:0px;
+	padding-left:13px;
+}
+
+.pati-thumb
+{
+	position:relative;
+}
+
+.pati-cate
+{
+	background:#119bc0;
+	color:#ffffff;
+	font-size:20px;
+	padding:5px;
+	position:absolute;
+	top:0px;
+	right:0px;
+	font-weight:bold;
 }
