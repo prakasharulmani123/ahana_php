@@ -143,4 +143,10 @@ video {
 .app-aside-right.fullscreen{
     width: 50%; 
 }
+
+.cropArea {
+    overflow: hidden;
+    width:100%;
+    height:250px;
+}
     

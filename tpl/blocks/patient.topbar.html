@@ -1,60 +1,60 @@
 <div class="patient-panel" ng-init="loadPatientDetail()">
 
-    <div class="patient-row1">
-        <div class="col-md-1"> 
-            <a ng-click="openUploadForm()">
-                <img src="{{app.patientDetail.patientImage ? app.patientDetail.patientImage : 'img/patient-img.png'}}"  alt="" width="58" height="58" />
-            </a>
-        </div>
-        <div class="col-md-11 paitent-details2"> 
-            <b>
-                <a ng-click="$state.go('patient.view', {id: app.patientDetail.patientGuid})">
-                    {{app.patientDetail.patientFullname}}
-                </a>
-            </b>
-            <span ng-if="app.patientDetail.patientActiveCasesheetno">({{app.patientDetail.patientActiveCasesheetno}})</span>     
-            <!--<span ng-if="app.patientDetail.patientActiveIp">({{app.patientDetail.patientActiveCasesheetno}})</span>-->     
-            
-            <span ng-show="app.patientDetail.patientActiveIp">
-                <i class="fa fa-calendar"></i>  
-                <b> DOA: </b> <span> {{app.patientDetail.patientDOA}}</span>  
-            </span>  
-            
-            <i class="fa fa-venus-mars"></i> 
-            <b> Sex : </b> 
-            <span>{{app.patientDetail.patientSex}} ({{app.patientDetail.patientAge}}y)</span>  
-            
-            <i class="fa fa-phone"></i> <b> Phone : </b> 9443444567
-        </div>
-    </div>
-
-    <div class="headerbg2">  
-        <div class="patient-details-part patinet-id"> 
-            <b> Patient Id : </b> {{app.patientDetail.patientIntCode}}
-        </div>
-        
-        <div class="patient-details-part">  
-            <i class="fa fa-wheelchair"></i> <b> Ward : </b> {{app.patientDetail.patientCurrentRoom}}
-        </div>
-        
-        <div class="patient-details-part">  
-            <i class="fa fa-user-md"></i> {{app.patientDetail.patientLastConsultantName}}
-        </div>
-        
-        <div class="patient-details-part">  
-            <i class="fa fa-hospital-o"></i> <b> Org :  </b> {{app.patientDetail.patientOrg}} 
-        </div>
-        
-        <div class="patient-details-part b-n">  
-            <div class="category_badge header-badge" tooltip="Business Free" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom"> 
-                BF
+    <div class="patient-row1"> 
+        <div class="patient-panel">
+            <div class="col-md-1 pati-thumb"> 
+                <div class="row"> 
+                    <a ng-click="openUploadForm()">
+                        <img src="{{app.patientDetail.patientImage ? app.patientDetail.patientImage : 'img/patient-img2.jpg'}}"  alt="" width="125" height="103" />
+                    </a>
+                </div>
             </div>
-        </div>
-        
-        <div class="patient-details-part b-n" ng-show="app.patientDetail.patientHasAlert">  
-            <div class="alert_badge header-badge" tooltip="{{app.patientDetail.patientAlert}}" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom">
-                <i class="fa fa-warning"></i>
-            </div> 
+            <div class="col-md-11 paitent-details2"> 
+                <div class="header-new"> 
+                    <i aria-hidden="true" class="fa fa-user"></i> 
+                    <b> {{app.patientDetail.patientFullname}}  </b>
+                    <span ng-if="app.patientDetail.patientActiveCasesheetno">
+                        ({{app.patientDetail.patientActiveCasesheetno}})
+                    </span>     
+                    <span ng-if="app.patientDetail.patientActiveIp">
+                        ({{app.patientDetail.patientActiveCasesheetno}})
+                    </span>  
+                    <span ng-show="app.patientDetail.patientActiveIp">
+                        <i class="fa fa-calendar"></i>  
+                        {{app.patientDetail.patientDOA}}
+                    </span>
+                    
+                    <i class="fa fa-venus-mars"></i> {{app.patientDetail.patientSex}} ({{app.patientDetail.patientAge}}y)                       	
+                    <i class="fa fa-phone"></i>  9443444567      
+                    <i aria-hidden="true" class="fa fa-exclamation-triangle"></i>  
+                    <span> Alerts Message </span>   
+                    <i aria-hidden="true" class="fa fa-ban"></i> 
+                    <b> Allergies : </b>  
+                    <div class="pati-cate">OP</div>
+                </div>   
+                <div class="headerbg2">  
+                    <div class="patient-details-part patinet-id"> 
+                        <b> Patient Id : </b> {{app.patientDetail.patientIntCode}} 
+                    </div>
+                    <div class="patient-details-part">  
+                        <i class="fa fa-wheelchair"></i> <b> Ward : </b>{{app.patientDetail.patientCurrentRoom}} 
+                    </div>
+                    <div class="patient-details-part">  
+                        <i class="fa fa-user-md"></i> {{app.patientDetail.patientLastConsultantName}}
+                    </div>
+                    <div class="patient-details-part">  
+                        <i class="fa fa-hospital-o"></i> <b> Org :  </b> {{app.patientDetail.patientOrg}} 
+                    </div>
+                    <div class="patient-details-part b-n">  
+                        <div class="category_badge header-badge" tooltip="Business Free" tooltip-trigger tooltip-animation="false" tooltip-placement="top"> 
+                            BF
+                        </div> 
+                    </div>
+                    <div class="patient-details-part b-n" ng-show="app.patientDetail.patientHasAlert">  
+                        <div class="alert_badge header-badge" tooltip="{{app.patientDetail.patientAlert}}" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom"><i class="fa fa-warning"></i></div> 
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

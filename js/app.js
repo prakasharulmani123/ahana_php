@@ -23,7 +23,8 @@ angular.module('app', [
     'ngMessages',
     'toaster',
     'cfp.hotkeys',
-    'file-model'
+    'file-model',
+    'ngImgCrop'
 //    'restangular'
 //    'LocalStorageModule',
 ]);
