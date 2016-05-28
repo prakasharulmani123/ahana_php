@@ -284,6 +284,12 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 $scope.saleItems[key].quantity = 0;
             });
         }
+        
+        $scope.updateDisplayCollection = function(enc_id, resp){
+            selected = $filter('filter')($scope.displayedCollection, {encounter_id: enc_id});
+            console.log(selected[0]);
+            selected[0] = resp;
+        }
 
         $scope.showBatch = function (batch) {
             var selected = [];
@@ -566,7 +572,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             });
         };
 
-        $scope.make_payment = function (sale_id, bill_amount, paid, balance, sale_payment_type, checked_sale_id) {
+        $scope.make_payment = function (sale_id, checked_sale_id) {
             sale = $filter('filter')($scope.displayedCollection, {sale_id: sale_id});
 
             var modalInstance = $modal.open({

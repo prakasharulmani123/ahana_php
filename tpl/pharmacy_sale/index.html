@@ -101,7 +101,7 @@
                                                 <i class="fa fa-pencil"></i>
                                             </a>
                                             <span ng-if="saleitem.payment_type != 'CA' && saleitem.payment_status != 'C'">
-                                                <a class="label bg-dark" title="Make Payment" ng-click="make_payment(row.sale_id, saleitem.bill_amount, saleitem.billings_total_paid_amount, saleitem.billings_total_balance_amount, sale_payment_type, saleitem.sale_id)" data-button="pharmacy.makePayment" check-access-custom>
+                                                <a class="label bg-dark" title="Make Payment" ng-click="make_payment(row.sale_id, saleitem.sale_id)" data-button="pharmacy.makePayment" check-access-custom>
                                                     <i class="fa fa-money"></i>
                                                 </a>
                                             </span>

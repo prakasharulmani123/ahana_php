@@ -9,6 +9,7 @@ app.controller('SaleMakePaymentController', ['scope', '$scope', '$modalInstance'
         var paid = sale.sum_paid_amount;
         var balance = sale.sum_balance_amount;
         var sale_payment_type = sale.payment_type;
+        var encounter_id = sale.encounter_id;
         
         $scope.bill_amount = bill_amount;
         $scope.paid = paid;
@@ -17,6 +18,8 @@ app.controller('SaleMakePaymentController', ['scope', '$scope', '$modalInstance'
         $scope.data.paid_date = moment().format('YYYY-MM-DD');
         $scope.data.paid_amount = balance;
         $scope.patient_name = sale.patient_name;
+        $scope.sale_payment_type = sale_payment_type;
+        $scope.encounter_id = encounter_id;
 
         $scope.saleitems = [];
         angular.forEach(sale.items, function(item){
@@ -52,7 +55,6 @@ app.controller('SaleMakePaymentController', ['scope', '$scope', '$modalInstance'
                 amt = amt + a;
             }
         });
-        console.log(amt);
         $scope.paid_amount = amt;
         $scope.data.paid_amount = amt;
         
@@ -76,7 +78,6 @@ app.controller('SaleMakePaymentController', ['scope', '$scope', '$modalInstance'
 
         $scope.saveForm = function () {
             _that = this;
-            angular.extend(_that.data, {sale_ids: $scope.bills});
 
             $scope.errorData = "";
             $scope.successMessage = "";
@@ -85,6 +86,7 @@ app.controller('SaleMakePaymentController', ['scope', '$scope', '$modalInstance'
             method = 'POST';
             succ_msg = 'Payment added successfully';
 
+            angular.extend(_that.data, {sale_ids: $scope.bills, encounter_id: $scope.encounter_id, payment_type: $scope.sale_payment_type});
             scope.loadbar('show');
             $http({
                 method: method,
@@ -103,7 +105,8 @@ app.controller('SaleMakePaymentController', ['scope', '$scope', '$modalInstance'
                             $scope.successMessage = succ_msg;
                             $scope.data = {};
                             $timeout(function () {
-                                scope.loadSaleItemList(sale_payment_type);
+                                scope.updateDisplayCollection($scope.encounter_id, response.sales[0]);
+//                                scope.loadSaleItemList(sale_payment_type);
                                 $modalInstance.dismiss('cancel');
                                 
 //                                $state.go('pharmacy.sales');
