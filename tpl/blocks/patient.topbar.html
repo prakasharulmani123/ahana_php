@@ -16,9 +16,6 @@
                     <span ng-if="app.patientDetail.patientActiveCasesheetno">
                         ({{app.patientDetail.patientActiveCasesheetno}})
                     </span>     
-                    <span ng-if="app.patientDetail.patientActiveIp">
-                        ({{app.patientDetail.patientActiveCasesheetno}})
-                    </span>  
                     <span ng-show="app.patientDetail.patientActiveIp">
                         <i class="fa fa-calendar"></i>  
                         {{app.patientDetail.patientDOA}}
@@ -46,8 +43,8 @@
                         <i class="fa fa-hospital-o"></i> <b> Org :  </b> {{app.patientDetail.patientOrg}} 
                     </div>
                     <div class="patient-details-part b-n">  
-                        <div class="category_badge header-badge" tooltip="Business Free" tooltip-trigger tooltip-animation="false" tooltip-placement="top"> 
-                            BF
+                        <div style="background-color: {{patientObj.patient_category_color}}" class="category_badge header-badge" tooltip="{{patientObj.patient_category_fullname}}" tooltip-trigger tooltip-animation="false" tooltip-placement="top"> 
+                           {{patientObj.patient_category}} 
                         </div> 
                     </div>
                     <div class="patient-details-part b-n" ng-show="app.patientDetail.patientHasAlert">  

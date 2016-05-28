@@ -240,6 +240,7 @@
 					$( 'html' ).removeClass( 'sb-active sb-active-left sb-active-right' ); // Remove active classes.
 					if ( $left ) $left.removeClass( 'sb-active' );
 					if ( $right ) $right.removeClass( 'sb-active' );
+					if ( $right ) $( 'body div' ).removeClass( 'fullscreen' ); //custom class removed for fullscreen mode.
 					if ( typeof url !== 'undefined' ) { // If a link has been passed to the function, go to it.
 						if ( typeof target === undefined ) target = '_self'; // Set to _self if undefined.
 						window.open( url, target ); // Open the url.

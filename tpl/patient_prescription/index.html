@@ -146,12 +146,12 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-3 m-b-xs">
+                                <div class="col-sm-2 m-b-xs">
                                     <select class="form-control" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors | orderBy: name" ng-change="getTimeOfAppointment();">
                                         <option value="">Select Consultant</option>
                                     </select>
                                 </div>
-                                <div class="col-sm-2 m-b-xs"> 
+                                <div class="col-sm-1 m-b-xs"> 
                                     <button class="btn m-b-xs  btn-dark" ng-click="prescription = '';
                                                 data.consultant_id = ''">  
                                         <i class="fa fa-times"></i> Clear 
@@ -302,8 +302,26 @@
                     <li><a href="javascript:void(0)" ng-click="prescriptionStauts('0')"><i class="fa fa-history"></i> <br/>Prev-Prescr</a></li>
                     <li><a href="javascript:void(0)"><i class="fa fa-file-text"></i> <br/>Results </a></li>
                     <li><a href="javascript:void(0)" class="sb-open-right" data-target="#fav"><i class="fa fa-heart"></i> <br/> Favorites</a></li>
-                    <li><a href="javascript:void(0)" class="sb-open-right" data-target="#notes" ng-click="seen_notes()"><i class="fa fa-pencil"></i> <br/>  <span class="label label-danger" ng-show="unseen_notes_count > 0">{{unseen_notes_count}}</span> Notes</a></li>
-                    <li><a href="javascript:void(0)" class="sb-open-right" data-target="#vitals" ng-click="seen_vitals()"> <i class="fa fa-heartbeat"></i> <br/>  <span class="label label-danger" ng-show="unseen_vitals_count > 0">{{unseen_vitals_count}}</span> Vitals</a></li>
+                    <li>
+                        <a href="javascript:void(0)" class="sb-open-right" data-target="#notes" ng-click="seen_notes()">
+                            <i class="fa fa-pencil"></i>
+                            <span class="badge badge-sm up bg-danger pull-right-xs" ng-show="unseen_notes_count > 0">
+                                {{unseen_notes_count}}
+                            </span> 
+                            <br>
+                            Notes
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" class="sb-open-right" data-target="#vitals" ng-click="seen_vitals()"> 
+                            <i class="fa fa-heartbeat"></i>  
+                            <span class="badge badge-sm up bg-danger pull-right-xs" ng-show="unseen_vitals_count > 0">
+                                {{unseen_vitals_count}}
+                            </span>
+                            <br>
+                            Vitals
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -327,7 +345,7 @@
             $('.note-full').toggleClass('fullscreen');
             setTimeout(function () {
                 var div_width = '-' + $('#makeit-full').css('width');
-                $('#sb-site').css('transform', 'translate('+div_width+')');
+                $('#sb-site').css('transform', 'translate(' + div_width + ')');
             }, 100);
         });
     });

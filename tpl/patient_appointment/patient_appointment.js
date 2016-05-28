@@ -233,8 +233,6 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
             $scope.errorData = "";
             $scope.successMessage = "";
 
-            $scope.getCatDetail(_that.data.patient_cat_id);
-
             post_url = $rootScope.IRISOrgServiceUrl + '/encounter/createappointment';
             method = 'POST';
             succ_msg = 'Appointment saved successfully';
