@@ -242,6 +242,12 @@ class PatPatient extends RActiveRecord {
                     return $category_name[0];
                 }
             },
+            'patient_category_fullname' => function ($model) {
+                if (isset($model->patientCategory->patient_cat_name)) {
+                    $category_name = $model->patientCategory->patient_cat_name;
+                    return $category_name;
+                }
+            },
             'patient_category_color' => function ($model) {
                 if (isset($model->patientCategory->patient_cat_color) && $model->patientCategory->patient_cat_color != '#ffffff') {
                     return $model->patientCategory->patient_cat_color;
