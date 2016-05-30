@@ -54,7 +54,7 @@
                     </tr>
                 </thead>
                 <tbody ng-if="isLoading == false">
-                    <tr ng-repeat-start="(key, row) in displayedCollection">
+                    <tr ng-repeat-start="(key, row) in displayedCollection | orderBy: '-sale_id'">
                         <td style="width: 5%">
                             <button ng-click="expanded = !expanded" expand class="btn btn-sm btn-default hms-plus">
                                 <i ng-if="!expanded" class="fa fa-plus text"></i>
@@ -64,9 +64,9 @@
                         <td>{{row.patient_name|| 'UnKnown Person'}}</td>
                         <!--<td>{{row.mobile_no}}</td>-->
                         <td>{{row.encounter_id}}</td>
-                        <td>{{row.sum_bill_amount}}</td>
-                        <td>{{row.sum_paid_amount}}</td>
-                        <td>{{row.sum_balance_amount}}</td>
+                        <td>{{row.sum_bill_amount| number:2}}</td>
+                        <td>{{row.sum_paid_amount| number:2}}</td>
+                        <td>{{row.sum_balance_amount| number:2}}</td>
                         <td>
                             <span ng-if="saleitem.payment_type != 'CA' && row.sum_balance_amount > 0">
                                 <a class="label bg-dark" title="Make Payment" ng-click="make_payment(row.sale_id, saleitem.bill_amount, saleitem.billings_total_paid_amount, saleitem.billings_total_balance_amount, sale_payment_type, null)" data-button="pharmacy.makePayment" check-access-custom>
@@ -90,12 +90,12 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="(gKey, saleitem) in row.items | orderBy: saleitem">
+                                    <tr ng-repeat="(gKey, saleitem) in row.items | orderBy: sale_id">
                                         <td>{{saleitem.bill_no}}</td>
                                         <td>{{saleitem.sale_date}}</td>
-                                        <td>{{saleitem.bill_amount}}</td>
-                                        <td>{{saleitem.billings_total_paid_amount}}</td>
-                                        <td>{{saleitem.billings_total_balance_amount}}</td>
+                                        <td>{{saleitem.bill_amount | number:2}}</td>
+                                        <td>{{saleitem.billings_total_paid_amount | number:2}}</td>
+                                        <td>{{saleitem.billings_total_balance_amount | number:2}}</td>
                                         <td>
                                             <a class="label bg-dark" title="Edit" check-access  ui-sref="pharmacy.saleUpdate({id: '{{row.sale_id}}'})">
                                                 <i class="fa fa-pencil"></i>

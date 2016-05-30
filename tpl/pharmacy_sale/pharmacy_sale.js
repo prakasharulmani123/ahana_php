@@ -287,8 +287,9 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         
         $scope.updateDisplayCollection = function(enc_id, resp){
             selected = $filter('filter')($scope.displayedCollection, {encounter_id: enc_id});
-            console.log(selected[0]);
-            selected[0] = resp;
+            var index = $scope.displayedCollection.indexOf(selected[0]);
+            $scope.displayedCollection.splice(index, 1);
+            $scope.displayedCollection.push(resp);
         }
 
         $scope.showBatch = function (batch) {
