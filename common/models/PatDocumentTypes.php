@@ -1,10 +1,9 @@
 <?php
 
-use common\models\CoTenant;
-use common\models\RActiveRecord;
-use yii\db\ActiveQuery;
-
 namespace common\models;
+
+use common\models\query\PatDocumentTypesQuery;
+use yii\db\ActiveQuery;
 
 /**
  * This is the model class for table "pat_document_types".
@@ -12,6 +11,7 @@ namespace common\models;
  * @property integer $doc_type_id
  * @property integer $tenant_id
  * @property string $doc_type
+ * @property string $doc_type_name
  * @property string $document_xml
  * @property string $document_xslt
  * @property string $status
@@ -23,26 +23,24 @@ namespace common\models;
  *
  * @property CoTenant $tenant
  */
-class PatDocumentTypes extends RActiveRecord
-{
+class PatDocumentTypes extends RActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'pat_document_types';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            [['doc_type', 'document_xml', 'document_xslt'], 'required'],
+            [['doc_type_name', 'document_xml', 'document_xslt'], 'required'],
             [['tenant_id', 'created_by', 'modified_by'], 'integer'],
             [['document_xml', 'document_xslt', 'status'], 'string'],
-            [['created_at', 'modified_at', 'deleted_at'], 'safe'],
+            [['created_at', 'modified_at', 'deleted_at', 'doc_type', 'doc_type_name'], 'safe'],
             [['doc_type'], 'string', 'max' => 50]
         ];
     }
@@ -50,8 +48,7 @@ class PatDocumentTypes extends RActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'doc_type_id' => 'Doc Type ID',
             'tenant_id' => 'Tenant ID',
@@ -70,8 +67,16 @@ class PatDocumentTypes extends RActiveRecord
     /**
      * @return ActiveQuery
      */
-    public function getTenant()
-    {
+    public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
+
+    public static function getDocumentType($type) {
+        return self::find()->tenant()->andWhere(['doc_type' => $type])->one();
+    }
+
+    public static function find() {
+        return new PatDocumentTypesQuery(get_called_class());
+    }
+
 }

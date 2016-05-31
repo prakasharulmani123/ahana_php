@@ -74,35 +74,4 @@ class AlertController extends ActiveController {
         return ['alertList' => CoAlert::getAlertlist($tenant, $status, $deleted)];
     }
 
-    public function actionXml() {
-        $post = Yii::$app->getRequest()->post();
-        
-        $xml = '<tool>
-  <field id="prodName" ng_name="prodName">
-    <value>sdfsdfsdfsdf</value>
-  </field>
-  <field id="prodNo" ng_name="data.prodNo">
-    <value>2233</value>
-  </field>
-  <field id="price" ng_name="data.price">
-    <value>22@</value>
-  </field>
-</tool>';
-        
-        $xmlLoad = simplexml_load_string($xml);
-        $postKeys = array_keys($post);
-
-
-        foreach ($xmlLoad->children() as $x) {
-            foreach ($post as $key => $value) {
-                if ($key == $x->attributes()) {
-                    $x->value = $value;
-                }
-            }
-        }
-        
-        $xml = $xmlLoad->asXML();
-        return ['success' => true, 'xml' => $xml];
-    }
-
 }

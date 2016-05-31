@@ -1,13 +1,9 @@
 <?php
 
-use common\models\CoTenant;
-use common\models\PatDocumentTypes;
-use common\models\PatEncounter;
-use common\models\PatPatient;
-use common\models\RActiveRecord;
-use yii\db\ActiveQuery;
-
 namespace common\models;
+
+use common\models\query\PatDocumentsQuery;
+use yii\db\ActiveQuery;
 
 /**
  * This is the model class for table "pat_documents".
@@ -30,21 +26,19 @@ namespace common\models;
  * @property PatPatient $patient
  * @property CoTenant $tenant
  */
-class PatDocuments extends RActiveRecord
-{
+class PatDocuments extends RActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'pat_documents';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['tenant_id', 'patient_id', 'doc_type_id', 'encounter_id', 'created_by'], 'required'],
             [['tenant_id', 'patient_id', 'doc_type_id', 'encounter_id', 'created_by', 'modified_by'], 'integer'],
@@ -56,8 +50,7 @@ class PatDocuments extends RActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'doc_id' => 'Doc ID',
             'tenant_id' => 'Tenant ID',
@@ -77,32 +70,33 @@ class PatDocuments extends RActiveRecord
     /**
      * @return ActiveQuery
      */
-    public function getDocType()
-    {
+    public function getDocType() {
         return $this->hasOne(PatDocumentTypes::className(), ['doc_type_id' => 'doc_type_id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getEncounter()
-    {
+    public function getEncounter() {
         return $this->hasOne(PatEncounter::className(), ['encounter_id' => 'encounter_id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getPatient()
-    {
+    public function getPatient() {
         return $this->hasOne(PatPatient::className(), ['patient_id' => 'patient_id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getTenant()
-    {
+    public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
+
+    public static function find() {
+        return new PatDocumentsQuery(get_called_class());
+    }
+
 }
