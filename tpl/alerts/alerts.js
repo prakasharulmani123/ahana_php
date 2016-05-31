@@ -11,7 +11,7 @@ app.controller('AlertsController', ['$rootScope', '$scope', '$timeout', '$http',
                     .success(function (alerts) {
                         $scope.isLoading = false;
                         $scope.rowCollection = alerts;
- 
+
                         //Avoid pagination problem, when come from other pages.
                         $scope.footable_redraw();
                     })
@@ -23,6 +23,9 @@ app.controller('AlertsController', ['$rootScope', '$scope', '$timeout', '$http',
         //For Form
         $scope.initForm = function () {
         }
+
+        $scope.xml = '';
+        $scope.xslt = '';
 
         //Save Both Add & Update Data
         $scope.saveForm = function (mode) {
@@ -115,4 +118,10 @@ app.controller('AlertsController', ['$rootScope', '$scope', '$timeout', '$http',
                 }
             }
         };
+    }]);
+
+app.filter("sanitize", ['$sce', function ($sce) {
+        return function (htmlCode) {
+            return $sce.trustAsHtml(htmlCode);
+        }
     }]);

@@ -24,7 +24,8 @@ angular.module('app', [
     'toaster',
     'cfp.hotkeys',
     'file-model',
-    'ngImgCrop'
+    'ngImgCrop',
+    'ngXslt'
 //    'restangular'
 //    'LocalStorageModule',
 ]);
