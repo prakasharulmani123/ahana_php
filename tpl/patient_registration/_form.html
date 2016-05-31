@@ -54,6 +54,16 @@
             </div>
             <div class="line line-dashed b-b line-lg "></div>
             <div class="form-group">
+                <label class="col-sm-3 control-label">Mobile No * </label>
+                <div class="col-sm-9">
+                    <input type="text" ng-model="data.PatPatient.patient_mobile"  name="patient_mobile" class="form-control" placeholder="" number-mask="" required>
+                    <div style="color:maroon">
+                        <div ng-show="submitted && patientForm.patient_mobile.$error.required">Mobile No cannot be blank.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="line line-dashed b-b line-lg "></div>
+            <div class="form-group">
                 <label class="col-sm-3 control-label">Address </label>
                 <div class="col-sm-9">
                     <textarea ng-model="data.PatPatientAddress.addr_current_address" class="form-control" placeholder="" ></textarea>
@@ -82,16 +92,7 @@
                 </div>
             </div>
             <div class="line line-dashed b-b line-lg "></div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label">Mobile No * </label>
-                <div class="col-sm-9">
-                    <input type="text" ng-model="data.PatPatient.patient_mobile"  name="patient_mobile" class="form-control" placeholder="" number-mask="" required>
-                    <div style="color:maroon">
-                        <div ng-show="submitted && patientForm.patient_mobile.$error.required">Mobile No cannot be blank.</div>
-                    </div>
-                </div>
-            </div>
-            <div class="line line-dashed b-b line-lg "></div>
+            
             <div class="form-group">
                 <label class="col-sm-3 control-label">Billing</label>
                 <div class="col-sm-9">
