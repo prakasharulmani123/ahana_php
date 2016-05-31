@@ -2267,13 +2267,37 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             })
             
             //XML FORM - TESTING
-            .state('configuration.xmlForm', {
-                url: '/xmlForm',
-                templateUrl: 'tpl/alerts/xml_form.html',
+            .state('patient.document', {
+                url: '/document/{id}',
+                templateUrl: 'tpl/patient_documents/index.html',
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/alerts/alerts.js']);
+                            return uiLoad.load(['tpl/patient_documents/patient_documents.js']);
+                        }]
+                }
+            })
+            
+            //XML FORM - TESTING
+            .state('patient.addDocument', {
+                url: '/addDocument/{id}',
+                templateUrl: 'tpl/patient_documents/create.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/patient_documents/patient_documents.js']);
+                        }]
+                }
+            })
+            
+            //XML FORM - TESTING
+            .state('patient.editDocument', {
+                url: '/editDocument/{id}/{doc_id}',
+                templateUrl: 'tpl/patient_documents/update.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/patient_documents/patient_documents.js']);
                         }]
                 }
             })
@@ -2336,7 +2360,7 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
 
     //Check Access
     $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
-        var restrictedPage = $.inArray($location.path(), ['/configuration/changePassword', '/configuration/settings', '/configuration/xmlForm']) === -1;
+        var restrictedPage = $.inArray($location.path(), ['/configuration/changePassword', '/configuration/settings']) === -1;
         var currentUser = AuthenticationService.getCurrentUser();
         var loggedIn = Boolean(currentUser);
         

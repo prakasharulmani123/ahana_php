@@ -1,0 +1,23 @@
+<div ng-controller="DocumentsController">
+    <div class="bg-light lter b-b wrapper-md">
+        <h1 class="m-n h3">Create Document</h1>
+    </div>
+    <div class="wrapper-md">
+        <div ng-include="'tpl/blocks/alert.html'">
+            {% include 'tpl/blocks/alert.html' %}
+        </div>
+        <div class="row">
+            <div class="col-sm-6" ng-init="data.form_type = 'create';
+                            initForm();">
+                <textarea ng-model="xml" rows="10" class="form-control ng-pristine ng-untouched ng-valid" id="xml"></textarea>
+                <textarea ng-model="xslt" rows="10" class="form-control ng-pristine ng-untouched ng-valid" id="xslt"></textarea>
+                <div class="panel panel-default">
+                    <div ng-bind-html="xml | xslt:xslt | sanitize"></div>
+                </div>
+                <footer class="panel-footer text-right bg-light lter">
+                    <input type="submit" class="btn m-b-xs  btn-success save-btn" id="btn_sub" name="btn_sub" value="Submit" ng-click="submitXsl()"  />
+                </footer>
+            </div>
+        </div>
+    </div>
+</div>
