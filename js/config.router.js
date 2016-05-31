@@ -2313,45 +2313,45 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
 
     $rootScope.globals = $cookieStore.get('globals') || {};
 
-//    $rootScope.$on('$locationChangeStart', function (event, next, current) {
-//        if ($location.path() == '/access/resetpwd') {
-//            var token = $location.search().token;
-//            $rootScope.commonService.GetPasswordResetAccess(token, function (response) {
-//                if (response.success === false) {
-////                    $scope.authError = response.message;
-//                    $location.path('/access/signin');
-//                }
-//            });
-//        } else {
-//            var restrictedPage = $.inArray($location.path(), ['/access/signin', '/access/forgotpwd', '/access/resetpwd']) === -1;
-//            var currentUser = AuthenticationService.getCurrentUser();
-//            var loggedIn = Boolean(currentUser);
-//            if (restrictedPage && !loggedIn) {
-//                $location.path('/access/signin');
-//            } else if (!restrictedPage && loggedIn) {
-//                $location.path('/configuration/organization');
-//            }
-//        }
-//    });
-//
-//    //Check Access
-//    $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
-//        var restrictedPage = $.inArray($location.path(), ['/configuration/changePassword', '/configuration/settings']) === -1;
-//        var currentUser = AuthenticationService.getCurrentUser();
-//        var loggedIn = Boolean(currentUser);
-//        
-//        if (loggedIn) {
-//            var stateName = toState.name;
-//            if (stateName) {
-//                if (restrictedPage) {
-//                    $rootScope.commonService.CheckStateAccess(stateName, function (response) {
-//                        if (!response) {
-//                            $state.go('configuration.organization');
-//                        }
-//                    });
-//                }
-//            }
-//        }
-//
-//    });
+    $rootScope.$on('$locationChangeStart', function (event, next, current) {
+        if ($location.path() == '/access/resetpwd') {
+            var token = $location.search().token;
+            $rootScope.commonService.GetPasswordResetAccess(token, function (response) {
+                if (response.success === false) {
+//                    $scope.authError = response.message;
+                    $location.path('/access/signin');
+                }
+            });
+        } else {
+            var restrictedPage = $.inArray($location.path(), ['/access/signin', '/access/forgotpwd', '/access/resetpwd']) === -1;
+            var currentUser = AuthenticationService.getCurrentUser();
+            var loggedIn = Boolean(currentUser);
+            if (restrictedPage && !loggedIn) {
+                $location.path('/access/signin');
+            } else if (!restrictedPage && loggedIn) {
+                $location.path('/configuration/organization');
+            }
+        }
+    });
+
+    //Check Access
+    $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+        var restrictedPage = $.inArray($location.path(), ['/configuration/changePassword', '/configuration/settings', '/configuration/xmlForm']) === -1;
+        var currentUser = AuthenticationService.getCurrentUser();
+        var loggedIn = Boolean(currentUser);
+        
+        if (loggedIn) {
+            var stateName = toState.name;
+            if (stateName) {
+                if (restrictedPage) {
+                    $rootScope.commonService.CheckStateAccess(stateName, function (response) {
+                        if (!response) {
+                            $state.go('configuration.organization');
+                        }
+                    });
+                }
+            }
+        }
+
+    });
 }
