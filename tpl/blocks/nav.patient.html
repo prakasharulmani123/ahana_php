@@ -5,7 +5,7 @@
 <ul class="nav pat_nav">
     <li ui-sref-active="active"> <a check-access ui-sref="patient.view({id: $state.params.id})">  <img src="img/icon1.png"  alt="" /> <br/> Details </a>  </li>
     <li ui-sref-active="active"> <a check-access ui-sref="patient.timeLine({id: $state.params.id})">  <img src="img/icon2.png"  alt="" /> <br/> Timeline </a>  </li>
-    <li ui-sref-active="active"> <a check-access ui-sref="patient.documents"  class="{{app.patientDetail.patientHaveEncounter ? '' : 'linkDisabled'}}">  <img src="img/icon3.png"  alt="" /> <br/> Documents </a>  </li>
+    <li ui-sref-active="active"> <a check-access ui-sref="patient.document({id: $state.params.id})"  class="{{app.patientDetail.patientHaveEncounter ? '' : 'linkDisabled'}}">  <img src="img/icon3.png"  alt="" /> <br/> Documents </a>  </li>
     <li ui-sref-active="active"> <a check-access ui-sref="patient.encounter({id: $state.params.id})">  <img src="img/icon4.png"  alt="" /> <br/> Encounters </a>  </li>
     <li ui-sref-active="active"> <a check-access ui-sref="patient.notes({id: $state.params.id})"  class="{{app.patientDetail.patientHaveEncounter ? '' : 'linkDisabled'}}">  <img src="img/icon5.png"  alt="" /> <br/> Nurse's Notes </a>  </li>
     <li ui-sref-active="active"> <a check-access ui-sref="patient.billing({id: $state.params.id})"  class="{{app.patientDetail.patientHaveEncounter ? '' : 'linkDisabled'}}">  <img src="img/icon11.png"  alt="" /> <br/> Billing </a>  </li>

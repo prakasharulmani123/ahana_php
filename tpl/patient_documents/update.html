@@ -1,4 +1,5 @@
-<div ng-controller="DocumentsController" ng-init="data.form_type='update'; initForm()">
+<div ng-controller="DocumentsController" ng-init="data.form_type = 'update';
+                initForm()">
     <textarea ng-model="xml" rows="10" class="form-control ng-pristine ng-untouched ng-valid" id="xml"></textarea>
     <textarea ng-model="xslt" rows="10" class="form-control ng-pristine ng-untouched ng-valid" id="xslt"></textarea>
     <div ng-bind-html="xml | xslt:xslt | sanitize"></div>

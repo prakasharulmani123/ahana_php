@@ -1,7 +1,28 @@
-<div ng-controller="DocumentsController" ng-init="initForm()">
-    <textarea ng-model="xml" rows="10" class="form-control ng-pristine ng-untouched ng-valid" id="xml"></textarea>
-    <textarea ng-model="xslt" rows="10" class="form-control ng-pristine ng-untouched ng-valid" id="xslt"></textarea>
-    <div ng-bind-html="xml | xslt:xslt | sanitize"></div>
-    <input type="submit" id="btn_sub" name="btn_sub" value="Submit" ng-click="submitXsl()"  />
-    <input type="reset" id="btn_res" name="btn_res" value="Reset" />
+<div class="bg-light lter b-b wrapper-md">
+    <h1 class="m-n font-thin h3">Documents</h1>
+</div>
+
+<div class="wrapper-md" ng-controller="DocumentsController" ng-init="loadAlertsList()">
+
+    <div ng-include="'tpl/blocks/alert.html'">
+        {% include 'tpl/blocks/alert.html' %}
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <b> Alerts Management </b>
+                </div>
+                <div class="panel-body b-b b-light">
+                    <button check-access-button ng-click="$state.go('patient.addDocument', {id: $state.params.id})" class="btn btn-sm btn-info pull-right">
+                        <i class="fa fa-plus"></i> &nbsp; Add New Document
+                    </button>
+                </div>
+                <div>
+                    Coming soon...
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
