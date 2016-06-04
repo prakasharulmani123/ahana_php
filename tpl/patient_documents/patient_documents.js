@@ -69,6 +69,20 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     });
         }
 
+        $scope.updateDocumentType = function () {
+            _data = {xml: $scope.xml, xslt: $scope.xslt};
+            $http({
+                url: $rootScope.IRISOrgServiceUrl + "/patientdocuments/updatedocumenttype",
+                method: "POST",
+                data: _data,
+            }).then(
+                    function (response) {
+                        $scope.loadbar('hide');
+//                        $scope.xml = response.data.xml;
+                    }
+            );
+        }
+
         $scope.submitXsl = function () {
             $("#encounter_id").val($scope.encounter.encounter_id);
             $("#patient_id").val($state.params.id);
@@ -82,7 +96,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
             }).then(
                     function (response) {
                         $scope.loadbar('hide');
-                        $scope.xml = response.data.xml;
+//                        $scope.xml = response.data.xml;
                     }
             );
         }
