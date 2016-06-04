@@ -68,6 +68,16 @@ class PatientdocumentsController extends ActiveController {
         }
     }
 
+    public function actionUpdatedocumenttype() {
+        $post = Yii::$app->getRequest()->post();
+        $model = PatDocumentTypes::find()->where(['doc_type_id' => 1])->one();
+        $model->attributes = array(
+            'document_xml' => $post['xml'],
+            'document_xslt' => $post['xslt'],
+        );
+        $model->save(false);
+    }
+
     public function actionSavedocument() {
         $post = Yii::$app->getRequest()->post();
 
@@ -79,10 +89,24 @@ class PatientdocumentsController extends ActiveController {
         $xmlLoad = simplexml_load_string($xml);
         $postKeys = array_keys($post);
 
-        foreach ($xmlLoad->children() as $x) {
-            foreach ($post as $key => $value) {
-                if ($key == $x->attributes()) {
-                    $x->value = $value;
+        foreach ($xmlLoad->children() as $group) {
+            foreach ($group->PANELBODY->FIELD as $x) {
+                foreach ($post as $key => $value) {
+                    if ($key == $x->attributes()) {
+                        $type = $x->attributes()->type;
+                        //Checkbox
+                        if ($type == 'CheckBoxList') {
+                            $post_referral_details = $value;
+                            $list_referral_details = $x->LISTITEMS->LISTITEM;
+                            foreach ($list_referral_details as $list_value) {
+                                if (in_array($list_value, $post_referral_details)) {
+                                    $list_value->attributes()['Selected'] = 'true';
+                                }
+                            }
+                        } else {
+                            $x->value = $value;
+                        }
+                    }
                 }
             }
         }
