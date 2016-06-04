@@ -2,7 +2,7 @@
     <div class="panel-body">
         <p> <h4 ng-show="matchings.length == 0">  <i class="fa fa-exclamation-triangle"></i> No Matching Records!  </h4></p>     
         <p> <h4 ng-show="matchings.length > 0">  <i class="fa fa-exclamation-triangle"></i> One or more particulars matching to existing patient records!  </h4></p>     
-        <div class="search-patientcont" ng-repeat="patient in matchings">
+        <div class="search-patientcont" ng-repeat="(key, patient) in matchings">
             <div class="row"> 
                 <div class="col-xs-12 col-sm-2 col-md-2"> <img src="img/man-icon.png"  alt="" /></div>
                 <div class="col-xs-12 col-sm-5 col-md-5"> 
@@ -11,10 +11,16 @@
                         </a> 
                         ({{patient.Patient.patient_age}}y) <br/>
                         {{patient.Patient.patient_int_code}} 
-                        <p class="m-t"> 
+                        <p class="m-t" ng-if="patient.same_branch"> 
                             {{patient.PatientAddress.addr_current_address}} <br/> 
                             {{patient.PatientAddress.city_name}} {{patient.PatientAddress.addr_zip}} <br/> 
                             {{patient.PatientAddress.state_name}}</p>
+                        <p class="m-t" ng-if="patient.same_branch == false">
+                            <span> 
+                                Organization: <b>{{patient.Patient.org_name}}</b> <br/> 
+                                Branch: <b>{{patient.Patient.tenant_name}}</b> <br/> 
+                            </span>
+                        </p>  
                         <p>  
                             <span> 
                                 <b>Contact No.s</b> <br/> 
@@ -24,7 +30,7 @@
                         </p>
                     </div>
                 </div>
-                <div class="col-xs-12 col-sm-5 col-md-5"> 
+                <div class="col-xs-12 col-sm-5 col-md-5" ng-if="patient.same_branch"> 
 <!--                                        Last visited on <span> <b> 23-jan-2015 </b></span> <br/> 
                                         Consultation with <span> <b> Dr.Vikram </b> </span>-->
                     <p class="m-t-xxl "> 
@@ -37,6 +43,13 @@
                         <span class="label label-primary admission_details" ng-show="patient.PatientActiveEncounter.liveAppointmentBooking.hasOwnProperty('appt_id') == true">
                             Appointed
                         </span>
+                    </p>
+                </div>
+                <div class="col-xs-12 col-sm-5 col-md-5" ng-if="patient.same_branch == false"> 
+                    <p class=""> 
+                        <button class="btn btn-primary" id="import_{{key}}" ng-click="importPatient(patient.Patient, key)">
+                            IMPORT BASIC DATA
+                        </button>
                     </p>
                 </div>
             </div>

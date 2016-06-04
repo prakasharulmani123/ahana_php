@@ -43,7 +43,7 @@
                         <i class="fa fa-hospital-o"></i> <b> Org :  </b> {{app.patientDetail.patientOrg}} 
                     </div>
                     <div class="patient-details-part b-n">  
-                        <div style="background-color: {{patientObj.patient_category_color}}" class="category_badge header-badge" tooltip="{{patientObj.patient_category_fullname}}" tooltip-trigger tooltip-animation="false" tooltip-placement="top"> 
+                        <div ng-if="patientObj.patient_category" style="background-color: {{patientObj.patient_category_color}}" class="category_badge header-badge" tooltip="{{patientObj.patient_category_fullname}}" tooltip-trigger tooltip-animation="false" tooltip-placement="top"> 
                            {{patientObj.patient_category}} 
                         </div> 
                     </div>

@@ -395,6 +395,41 @@ angular.module('app')
                         }
                     });
                 }
+
+                $scope.importPatient = function (patient, key) {
+                    $scope.errorData = "";
+                    $scope.successMessage = "";
+
+                    $scope.loadbar('show');
+                    $('#import_' + key).attr('disabled', true).html("<i class='fa fa-spin fa-spinner'></i> Please Wait...");
+
+                    $http({
+                        method: 'POST',
+                        url: $rootScope.IRISOrgServiceUrl + '/patient/importpatient',
+                        data: patient,
+                    }).success(
+                            function (response) {
+                                $scope.loadbar('hide');
+                                if (response.success == true) {
+                                    $scope.successMessage = 'Patient imported successfully';
+                                    var patient_guid = response.patient.patient_guid;
+                                    $('#import_' + key).html('Completed').toggleClass('btn-success').removeAttr('ng-click');
+                                    $timeout(function () {
+                                        $state.go('patient.view', {id: patient_guid});
+                                    }, 1000);
+                                } else {
+                                    $scope.errorData = response.message;
+                                }
+
+                            }
+                    ).error(function (data, status) {
+                        $scope.loadbar('hide');
+                        if (status == 422)
+                            $scope.errorData = $scope.errorSummary(data);
+                        else
+                            $scope.errorData = data.message;
+                    });
+                }
             }]);
 
 //Moment Filter
@@ -447,7 +482,7 @@ angular.module('app').controller('PatientImageController', ['scope', '$scope', '
 
         //Take Picture From WebCam.
         $scope.picture = '';
-        
+
         $scope.$watch('picture', function (newValue, oldValue) {
             if (newValue != '') {
                 $scope.uploadPatientPicture(newValue);
@@ -457,7 +492,7 @@ angular.module('app').controller('PatientImageController', ['scope', '$scope', '
         //Crop Picture Concept.
         $scope.myImage = '';
         $scope.myCroppedImage = '';
-        
+
         var handleFileSelect = function (evt) {
             var file = evt.currentTarget.files[0];
             var reader = new FileReader();
@@ -472,7 +507,7 @@ angular.module('app').controller('PatientImageController', ['scope', '$scope', '
         $timeout(function () {
             angular.element(document.querySelector('#fileInput')).on('change', handleFileSelect);
         }, 1000, false);
-        
+
         //Upload file in database
         $scope.uploadPatientPicture = function (image_data) {
             $http({

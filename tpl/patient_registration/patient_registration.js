@@ -1,4 +1,4 @@
-app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout', '$http', '$state', function ($rootScope, $scope, $timeout, $http, $state) {
+app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$anchorScroll', function ($rootScope, $scope, $timeout, $http, $state, $anchorScroll) {
 
         $scope.app.settings.patientTopBar = false;
         $scope.app.settings.patientSideMenu = false;
@@ -201,6 +201,7 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
                 data: _that.data,
             }).success(
                     function (response) {
+                        $anchorScroll();
                         $scope.loadbar('hide');
                         if (response.success == true) {
                             $scope.successMessage = succ_msg;
@@ -213,13 +214,14 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
                                 } else {
                                     $state.go('patient.view', {id: patient_guid});
                                 }
-                            }, 1000)
+                            }, 1000);
                         } else {
                             $scope.errorData = response.message;
                         }
 
                     }
             ).error(function (data, status) {
+                $anchorScroll();
                 $scope.loadbar('hide');
                 if (status == 422)
                     $scope.errorData = $scope.errorSummary(data);
@@ -276,8 +278,9 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
                 }
             }
         };
-    }])
-        .filter('highlight', function ($sce) {
+    }]);
+
+app.filter('highlight', function ($sce) {
             return function (text, phrase) {
                 if (phrase)
                     text = text.replace(new RegExp('(' + phrase + ')', 'gi'),

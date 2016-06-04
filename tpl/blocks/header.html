@@ -24,7 +24,7 @@
                     <!--<input type="text" ng-model="patientselected" typeahead="patient_list.Patient.patient_firstname for patient_list in patient_lists | filter:$viewValue | limitTo:8" class="form-control input-sm bg-light no-border rounded padder" placeholder="Search....">-->
                     <input type="text" ng-model="patientselected" class="form-control input-sm bg-light no-border rounded padder header_search_input" placeholder="Search....">
                     <ul class="search-patientcont-header" ng-if="patientselected != '' && patient_lists" id='patientcont-header'>
-                        <li ng-repeat="patient in patient_lists | filter:patientselected">
+                        <li ng-repeat="(key, patient) in patient_lists| filter:patientselected">
                             <div class="row"> 
                                 <div class="col-xs-12 col-sm-2 col-md-2"> 
                                     <img ng-if="$even" alt="" src="{{patient.Patient.patient_image ? patient.Patient.patient_image : 'img/man-icon.png'}}">
@@ -40,7 +40,7 @@
                                         &nbsp; &nbsp;<span ng-bind-html="patient.Patient.patient_mobile | highlight:patientselected"> </span> 
                                     </div>
                                 </div>
-                                <div class="col-xs-12 col-sm-5 col-md-4 pull-right right"> 
+                                <div class="col-xs-12 col-sm-5 col-md-4 pull-right right" ng-if="patient.same_branch">
                                     <button class="btn m-b-xs w-xs btn-info" ng-show="patient.PatientActiveEncounter.hasOwnProperty('encounter_id') != true" ng-click="goToAppointment(patient.Patient.patient_guid)">
                                         BOOK
                                     </button>
@@ -50,6 +50,13 @@
                                     <span class="label label-primary admission_details" ng-show="patient.PatientActiveEncounter.liveAppointmentBooking.hasOwnProperty('appt_id') == true">
                                         Booked
                                     </span>
+                                </div>
+                                <div class="col-xs-12 col-sm-5 col-md-4 pull-right right" ng-if="patient.same_branch == false"> 
+                                    <p class=""> 
+                                        <button class="btn btn-primary" id="import_{{key}}" ng-click="importPatient(patient.Patient, key)">
+                                            IMPORT DATA
+                                        </button>
+                                    </p>
                                 </div>
                             </div>
                         </li>
