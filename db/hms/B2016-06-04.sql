@@ -187,6 +187,69 @@ CREATE TABLE `co_tenant` (
 
 insert  into `co_tenant`(`tenant_id`,`org_id`,`tenant_guid`,`tenant_name`,`tenant_address`,`tenant_city_id`,`tenant_state_id`,`tenant_country_id`,`tenant_contact1`,`tenant_contact2`,`tenant_fax`,`tenant_mobile`,`tenant_email`,`tenant_url`,`slug`,`status`,`created_by`,`created_at`,`modified_by`,`modified_at`,`deleted_at`) values (58,7,'','Ahana','Gandhi Nagar 2 ',1,1,1,'123',NULL,NULL,NULL,'vikhram@ahana.com','http://ahana.com','','1',-1,'2016-02-02 22:26:38',-1,'2016-03-01 13:41:11','0000-00-00 00:00:00'),(59,7,'','Ark Infotec','Bye-pass',4,3,2,'123','','','','gayatri@ark.com','http://ark.com','','0',-1,'2016-02-02 22:43:11',-1,'2016-03-01 13:46:12','0000-00-00 00:00:00'),(60,7,'','Radianz','rad',2,1,1,'123123',NULL,NULL,NULL,'abc@radianz.com',NULL,'','1',-1,'2016-02-17 06:28:38',-1,'2016-03-01 13:46:25','0000-00-00 00:00:00'),(61,7,NULL,'test','test',1,8,7,'99999999',NULL,NULL,NULL,'test.t@gm.xc','http://ahanahospitals.in/',NULL,'1',-1,'2016-02-21 23:16:05',-1,'2016-02-21 23:16:05','0000-00-00 00:00:00'),(62,0,NULL,'test test','test',5,8,7,'2323232323','',NULL,NULL,'34343@3444.3',NULL,NULL,'1',-1,'2016-02-29 02:00:01',-1,'2016-02-29 02:08:44','0000-00-00 00:00:00'),(63,8,NULL,'Apollo','Apollo',1,1,1,'1232313123',NULL,NULL,NULL,'test@test.com',NULL,NULL,'1',-1,'2016-03-01 13:34:42',-1,'2016-03-01 13:45:30','0000-00-00 00:00:00'),(64,9,NULL,'Apollo',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'1',-1,'2016-04-29 16:40:49',-1,'2016-04-29 16:40:49','0000-00-00 00:00:00'),(65,10,NULL,'Apollo',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'1',-1,'2016-04-29 16:45:21',-1,'2016-04-29 16:45:21','0000-00-00 00:00:00'),(66,11,NULL,'Apollo',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'1',-1,'2016-04-29 16:52:40',-1,'2016-04-29 16:52:40','0000-00-00 00:00:00'),(67,12,NULL,'Apollo New','adsdsadasd',1,1,1,'2312323123',NULL,NULL,NULL,'adsd!@adasd.com',NULL,NULL,'1',-1,'2016-05-12 17:11:20',-1,'2016-05-12 17:16:11','0000-00-00 00:00:00');
 
+/*Table structure for table `gl_patient` */
+
+DROP TABLE IF EXISTS `gl_patient`;
+
+CREATE TABLE `gl_patient` (
+  `patient_id` int(11) NOT NULL AUTO_INCREMENT,
+  `patient_global_guid` varchar(50) NOT NULL,
+  `patient_guid` varchar(50) CHARACTER SET latin1 NOT NULL,
+  `casesheetno` int(11) DEFAULT NULL,
+  `patient_int_code` varchar(30) CHARACTER SET latin1 NOT NULL,
+  `tenant_id` int(11) NOT NULL,
+  `patient_reg_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `patient_title_code` varchar(10) CHARACTER SET latin1 NOT NULL,
+  `patient_firstname` varchar(50) CHARACTER SET latin1 NOT NULL,
+  `patient_lastname` varchar(50) CHARACTER SET latin1 DEFAULT NULL,
+  `patient_relation_code` varchar(2) CHARACTER SET latin1 DEFAULT NULL,
+  `patient_relation_name` varchar(50) CHARACTER SET latin1 DEFAULT NULL,
+  `patient_care_taker` int(11) DEFAULT NULL,
+  `patient_care_taker_name` varchar(50) CHARACTER SET latin1 DEFAULT NULL,
+  `patient_dob` date DEFAULT NULL,
+  `patient_gender` varchar(2) CHARACTER SET latin1 NOT NULL,
+  `patient_marital_status` varchar(2) CHARACTER SET latin1 DEFAULT NULL,
+  `patient_occupation` varchar(50) CHARACTER SET latin1 DEFAULT NULL,
+  `patient_blood_group` varchar(5) CHARACTER SET latin1 DEFAULT NULL,
+  `patient_category_id` int(11) DEFAULT NULL,
+  `patient_email` varchar(50) CHARACTER SET latin1 DEFAULT NULL,
+  `patient_reg_mode` varchar(2) CHARACTER SET latin1 NOT NULL,
+  `patient_type` varchar(2) CHARACTER SET latin1 DEFAULT NULL,
+  `patient_ref_hospital` varchar(255) CHARACTER SET latin1 DEFAULT NULL,
+  `patient_ref_id` varchar(50) CHARACTER SET latin1 DEFAULT NULL,
+  `patient_mobile` varchar(50) CHARACTER SET latin1 DEFAULT NULL,
+  `patient_bill_type` varchar(2) CHARACTER SET latin1 DEFAULT NULL,
+  `patient_image` longblob,
+  `status` enum('0','1') CHARACTER SET latin1 DEFAULT '1',
+  `created_by` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `modified_by` int(11) DEFAULT NULL,
+  `modified_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`patient_id`),
+  KEY `FK_pat_patient_tenant` (`tenant_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+
+/*Data for the table `gl_patient` */
+
+insert  into `gl_patient`(`patient_id`,`patient_global_guid`,`patient_guid`,`casesheetno`,`patient_int_code`,`tenant_id`,`patient_reg_date`,`patient_title_code`,`patient_firstname`,`patient_lastname`,`patient_relation_code`,`patient_relation_name`,`patient_care_taker`,`patient_care_taker_name`,`patient_dob`,`patient_gender`,`patient_marital_status`,`patient_occupation`,`patient_blood_group`,`patient_category_id`,`patient_email`,`patient_reg_mode`,`patient_type`,`patient_ref_hospital`,`patient_ref_id`,`patient_mobile`,`patient_bill_type`,`patient_image`,`status`,`created_by`,`created_at`,`modified_by`,`modified_at`,`deleted_at`) values (10,'75575eec-cd44-5ec9-8594-ed8c08b2aa0e','8a69a7e7-3dd4-51bf-bdf5-46221ce5cd73',NULL,'RA0000014',60,'2016-06-04 19:09:27','Mr.','Nadeshh','S',NULL,NULL,NULL,NULL,'1991-06-04','M',NULL,NULL,NULL,NULL,NULL,'NO',NULL,NULL,NULL,'9789741406',NULL,NULL,'1',51,'2016-06-04 19:04:52',51,NULL,'0000-00-00 00:00:00');
+
+/*Table structure for table `gl_patient_tenant` */
+
+DROP TABLE IF EXISTS `gl_patient_tenant`;
+
+CREATE TABLE `gl_patient_tenant` (
+  `pat_tenant_id` int(11) NOT NULL AUTO_INCREMENT,
+  `org_id` int(11) NOT NULL,
+  `tenant_id` int(11) NOT NULL,
+  `patient_global_guid` varchar(50) NOT NULL,
+  PRIMARY KEY (`pat_tenant_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+/*Data for the table `gl_patient_tenant` */
+
+insert  into `gl_patient_tenant`(`pat_tenant_id`,`org_id`,`tenant_id`,`patient_global_guid`) values (2,7,58,'75575eec-cd44-5ec9-8594-ed8c08b2aa0e'),(3,7,60,'75575eec-cd44-5ec9-8594-ed8c08b2aa0e');
+
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;

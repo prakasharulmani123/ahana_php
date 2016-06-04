@@ -3,6 +3,7 @@
 namespace IRISORG\modules\v1\controllers;
 
 use common\models\CoPatient;
+use common\models\GlPatient;
 use common\models\PatPatient;
 use common\models\PatPatientAddress;
 use common\models\PatPrescriptionFrequency;
@@ -93,18 +94,20 @@ class PatientController extends ActiveController {
                 }
             }
 
+            $valid = $model->validate();
+            
             if (isset($post['PatPatientAddress'])) {
                 $addr_model->attributes = $post['PatPatientAddress'];
+                $valid = $addr_model->validate() && $valid;
             }
-
-            $valid = $model->validate();
-            $valid = $addr_model->validate() && $valid;
 
             if ($valid) {
                 $model->save(false);
 
-                $addr_model->patient_id = $model->patient_id;
-                $addr_model->save(false);
+                if (isset($post['PatPatientAddress'])) {
+                    $addr_model->patient_id = $model->patient_id;
+                    $addr_model->save(false);
+                }
 
                 return ['success' => true, 'patient_id' => $model->patient_id, 'patient_guid' => $model->patient_guid, 'patient' => $model];
             } else {
@@ -121,6 +124,8 @@ class PatientController extends ActiveController {
         $limit = 10;
 
         if (isset($post['search']) && !empty($post['search']) && strlen($post['search']) >= 2) {
+            $text = $post['search'];
+
             $lists = PatPatient::find()
                     ->tenant()
                     ->active()
@@ -129,7 +134,7 @@ class PatientController extends ActiveController {
                     ->orOnCondition("patient_mobile like :search")
                     ->orOnCondition("patient_int_code like :search")
                     ->orOnCondition("casesheetno like :search")
-                    ->addParams([':search' => "%{$post['search']}%"])
+                    ->addParams([':search' => "%{$text}%"])
                     ->limit($limit)
                     ->all();
 
@@ -137,6 +142,28 @@ class PatientController extends ActiveController {
                 $patients[$key]['Patient'] = $patient;
                 $patients[$key]['PatientAddress'] = $patient->patPatientAddress;
                 $patients[$key]['PatientActiveEncounter'] = $patient->patActiveEncounter;
+                $patients[$key]['same_branch'] = true;
+            }
+
+            //Search from HMS Database
+            if (empty($patients)) {
+                $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+
+                $lists = GlPatient::find()
+                        ->andWhere("status = '1' AND tenant_id != $tenant_id")
+                        ->orOnCondition("patient_firstname like :search")
+                        ->orOnCondition("patient_lastname like :search")
+                        ->orOnCondition("patient_mobile like :search")
+                        ->orOnCondition("patient_int_code like :search")
+                        ->orOnCondition("casesheetno like :search")
+                        ->addParams([':search' => "%{$text}%"])
+                        ->limit($limit)
+                        ->all();
+
+                foreach ($lists as $key => $patient) {
+                    $patients[$key]['Patient'] = $patient;
+                    $patients[$key]['same_branch'] = false;
+                }
             }
         }
         return ['patients' => $patients];
@@ -246,7 +273,7 @@ class PatientController extends ActiveController {
     public function actionUploadimage() {
         $file = '';
         $post = Yii::$app->getRequest()->post();
-        
+
         if (!empty($_FILES) && getimagesize($_FILES['file']['tmp_name'])) {
             $file = addslashes($_FILES['file']['tmp_name']);
             $file = file_get_contents($file);
@@ -265,6 +292,40 @@ class PatientController extends ActiveController {
             return ['success' => true, 'patient' => $model];
         } else {
             return ['success' => false, 'message' => 'Invalid File'];
+        }
+    }
+
+    public function actionImportpatient() {
+        $post = Yii::$app->getRequest()->post();
+
+        if (!empty($post)) {
+            $model = new PatPatient;
+
+            $unset_attr = [
+                'patient_id',
+                'patient_guid',
+                'patient_int_code',
+                'tenant_id',
+                'status',
+                'created_by',
+                'created_at',
+                'modified_by',
+                'modified_at',
+                'fullname',
+                'patient_age',
+                'tenant_name',
+                'org_name',
+            ];
+            $unset_attr = array_combine($unset_attr, $unset_attr);
+            $post = array_diff_key($post, $unset_attr);
+
+            $model->attributes = $post;
+
+            if ($model->save(false)) {
+                return ['success' => true, 'patient' => $model];
+            } else {
+                return ['success' => false, 'message' => 'Failed to import'];
+            }
         }
     }
 
