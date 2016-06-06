@@ -91,6 +91,40 @@ class PatientdocumentsController extends ActiveController {
 
         foreach ($xmlLoad->children() as $group) {
             foreach ($group->PANELBODY->FIELD as $x) {
+
+                //Child FIELD
+                if (isset($x->FIELD)) {
+                    foreach ($x->FIELD as $y) {
+                        foreach ($post as $key => $value) {
+                            if ($key == $y->attributes()) {
+                                $type = $y->attributes()->type;
+                                
+                                if ($type == 'CheckBoxList') {
+                                    $post_referral_details = $value; // Array
+                                    $list_referral_details = $y->LISTITEMS->LISTITEM;
+                                    foreach ($list_referral_details as $list_value) {
+                                        if (in_array($list_value, $post_referral_details)) {
+                                            $list_value->attributes()['Selected'] = 'true';
+                                        }
+                                    }
+                                } elseif ($type == 'DropDownList' || $type == 'RadioButtonList') {
+                                    $post_referral_details = $value; // String
+                                    $list_referral_details = $y->LISTITEMS->LISTITEM;
+                                    foreach ($list_referral_details as $list_value) {
+                                        if ($list_value == $post_referral_details) {
+                                            $list_value->attributes()['Selected'] = 'true';
+                                        }
+                                    }
+                                } else {
+                                    $text_box_value = $y->PROPERTIES->addChild('PROPERTY', $value);
+                                    $text_box_value->addAttribute('name', 'value');
+                                }
+                            }
+                        }
+                    }
+                }
+
+                //Main FIELD
                 foreach ($post as $key => $value) {
                     if ($key == $x->attributes()) {
                         $type = $x->attributes()->type;
@@ -103,8 +137,17 @@ class PatientdocumentsController extends ActiveController {
                                     $list_value->attributes()['Selected'] = 'true';
                                 }
                             }
+                        } elseif ($type == 'DropDownList' || $type == 'RadioButtonList') {
+                            $post_referral_details = $value;
+                            $list_referral_details = $x->LISTITEMS->LISTITEM;
+                            foreach ($list_referral_details as $list_value) {
+                                if ($list_value == $post_referral_details) {
+                                    $list_value->attributes()['Selected'] = 'true';
+                                }
+                            }
                         } else {
-                            $x->value = $value;
+                            $text_box_value = $x->PROPERTIES->addChild('PROPERTY', $value);
+                            $text_box_value->addAttribute('name', 'value');
                         }
                     }
                 }
