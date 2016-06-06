@@ -188,7 +188,7 @@ class PatPatient extends RActiveRecord {
             $this->patient_reg_date = date('Y-m-d H:i:s');
 
             $this->patient_int_code = CoInternalCode::find()->tenant()->codeType("P")->one()->Fullcode;
-            
+
             //If Global ID empty means we will generate otherwise it could be imported data
             if (empty($this->patient_global_guid))
                 $this->patient_global_guid = self::guid();
@@ -228,7 +228,7 @@ class PatPatient extends RActiveRecord {
             $header = "Patient Update";
             $message = "Patient Details Updated Successfully.";
         }
-        
+
         $this->savetoHms($insert);
 
         PatTimeline::insertTimeLine($this->patient_id, $this->patient_reg_date, $header, '', $message);
@@ -236,59 +236,93 @@ class PatPatient extends RActiveRecord {
         return parent::afterSave($insert, $changedAttributes);
     }
 
-    /* Use to prevent the save to HMS*/
+    public function getUnsetcols() {
+        $unset_cols = ['patient_id', 'created_at', 'modified_at', 'status'];
+        return array_combine($unset_cols, $unset_cols);
+    }
+
+    /* Use to prevent the save to HMS */
+
     public $saveHms = true;
+
+    /* Save to HMS Database */
 
     public function savetoHms($insert) {
         if ($this->saveHms) {
-            $unset_cols = ['patient_id', 'created_at', 'modified_at', 'status'];
-            $unset_cols = array_combine($unset_cols, $unset_cols);
+            $unset_cols = $this->getUnsetcols();
 
             $patient = GlPatient::find()->where(['patient_global_guid' => $this->patient_global_guid])->one();
-            
+
+            $save = false;
             if ($insert) {
                 if (empty($patient)) {
                     $model = new GlPatient;
-                    $attr = array_diff_key($this->attributes, $unset_cols);
-                    
-                    $model->attributes = $attr;
-                    $model->save(false);
+                    $save = true;
                 }
-            }else{
+            } else {
                 if (!empty($patient)) {
                     $model = $patient;
-                    $attr = array_diff_key($this->attributes, $unset_cols);
-                    $model->attributes = $attr;
-                    $model->save(false);
-                    
+                    $save = true;
                     $this->updateAllPatient($patient);
                 }
             }
-            
+
+            if ($save) {
+                $attr = array_diff_key($this->attributes, $unset_cols);
+                $model->attributes = $attr;
+                $model->save(false);
+            }
+
             // Link Patient and Tenant
             $pat_ten_attr = [
-                'tenant_id' => $this->tenant_id, 
-                'org_id' => $this->tenant->org_id, 
+                'tenant_id' => $this->tenant_id,
+                'org_id' => $this->tenant->org_id,
                 'patient_global_guid' => $this->patient_global_guid
-                ];
-            
+            ];
+
             $patient_tenant = GlPatientTenant::find()->where($pat_ten_attr)->one();
 
-            if(empty($patient_tenant)){
+            if (empty($patient_tenant)) {
                 $model = new GlPatientTenant;
                 $model->attributes = $pat_ten_attr;
                 $model->save(false);
             }
         }
     }
-    
+
+    /* Update Patient details to all Database */
+
     public function updateAllPatient($patient) {
-//        $tenants = GlPatientTenant::find()->where(['patient_global_guid' => $this->patient_global_guid])->all();
-//        
-//        forea
-//        echo '<pre>';
-//        print_r($patient);
-//        exit;
+        $unset_cols = $this->getUnsetcols();
+        
+        $newAttrs = $this->getAttributes();
+        $oldAttrs = $this->oldAttributes;
+
+        $result = array_diff_assoc($newAttrs, $oldAttrs);
+        $attr = array_diff_key($result, $unset_cols);
+
+        if (!empty($attr)) {
+            $tenants = GlPatientTenant::find()->where(['patient_global_guid' => $this->patient_global_guid])->all();
+            foreach ($tenants as $key => $tenant) {
+                $connection = new Connection([
+                    'dsn' => "mysql:host={$tenant->org->org_db_host};dbname={$tenant->org->org_database}",
+                    'username' => $tenant->org->org_db_username,
+                    'password' => $tenant->org->org_db_password,
+                ]);
+                $connection->open();
+
+                $query = "UPDATE pat_patient ";
+                foreach ($attr as $col => $value) {
+                    $query .= "SET $col = '$value',";
+                }
+                $query = rtrim($query, ',');
+                $query .= " WHERE patient_global_guid = '{$this->patient_global_guid}' ";
+
+                $command = $connection->createCommand($query);
+                $command->execute();
+                $connection->close();
+            }
+        }
     }
 
     public static function find() {
@@ -436,10 +470,13 @@ class PatPatient extends RActiveRecord {
         return self::getActiveEncounterByPatientId($patient->patient_id);
     }
 
+    protected $oldAttributes;
+
     public function afterFind() {
         if (is_object($this->patient_guid))
             $this->patient_guid = $this->patient_guid->toString();
 
+        $this->oldAttributes = $this->attributes;
         return parent::afterFind();
     }
 
