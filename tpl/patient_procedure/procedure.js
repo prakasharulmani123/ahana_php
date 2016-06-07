@@ -49,7 +49,7 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
         };
 
         $scope.enc = {};
-        $scope.$watch('app.patientDetail.patientId', function (newValue, oldValue) {
+        $scope.$watch('patientObj.patient_id', function (newValue, oldValue) {
             if (newValue != '') {
                 $rootScope.commonService.GetEncounterListByPatient('', '0,1', false, $scope.patientObj.patient_id, function (response) {
                     angular.forEach(response, function (resp){
@@ -151,7 +151,7 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
                 docIds.push(list.user_id);
             });
             _that.data.proc_consultant_ids = docIds;
-            angular.extend(_that.data, {patient_id: $scope.app.patientDetail.patientId});
+            angular.extend(_that.data, {patient_id: $scope.patientObj.patient_id});
             _that.data.proc_date = moment(_that.data.proc_date).format('YYYY-MM-DD HH:mm:ss');
 
             if (mode == 'add') {
@@ -175,7 +175,7 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
                         $scope.successMessage = succ_msg;
                         $scope.data = {};
                         $timeout(function () {
-                            $state.go('patient.procedure', {id: $scope.app.patientDetail.patientGuid});
+                            $state.go('patient.procedure', {id: $scope.patientObj.patient_guid});
                         }, 1000)
 
                     }

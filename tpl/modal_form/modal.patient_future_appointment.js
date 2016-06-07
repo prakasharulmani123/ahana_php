@@ -15,16 +15,16 @@ app.controller('ModalPatientFutureAppointmentController', ['scope', '$scope', '$
         $scope.initAppointmentForm = function () {
             $scope.data = {};
             $scope.data.status_date = moment($scope.date).format('YYYY-MM-DD');
-            $scope.data.patient_id = $scope.app.patientDetail.patientId;
-            $scope.data.consultant_id = $scope.app.patientDetail.patientLastConsultantId;
+            $scope.data.patient_id = $scope.patientObj.patient_id;
+            $scope.data.consultant_id = $scope.patientObj.last_consultant_id;
             $scope.getTimeOfAppointment();
         }
 
         //Time Slots Preparation
         $scope.getTimeOfAppointment = function () {
             if (typeof (this.data) != "undefined") {
-                if (typeof ($scope.app.patientDetail.patientLastConsultantId) != 'undefined' && typeof (this.data.status_date != 'undefined')) {
-                    $scope.getTimeSlots($scope.app.patientDetail.patientLastConsultantId, this.data.status_date);
+                if (typeof ($scope.patientObj.last_consultant_id) != 'undefined' && typeof (this.data.status_date != 'undefined')) {
+                    $scope.getTimeSlots($scope.patientObj.last_consultant_id, this.data.status_date);
                 }
             }
         }

@@ -48,7 +48,7 @@ app.controller('BillingOtherChargeController', ['$rootScope', '$scope', '$timeou
                 succ_msg = 'Billing other charge saved successfully';
 
                 angular.extend(_that.data, {
-                    patient_id: $scope.app.patientDetail.patientId,
+                    patient_id: $scope.patientObj.patient_id,
                     encounter_id: $scope.encounter.encounter_id
                 });
             } else {

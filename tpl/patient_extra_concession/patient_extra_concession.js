@@ -47,7 +47,7 @@ app.controller('ExtraConcessionController', ['$rootScope', '$scope', '$timeout',
 
             if (mode == 'add') {
                 angular.extend(_that.data, {
-                    patient_id: $scope.app.patientDetail.patientId,
+                    patient_id: $scope.patientObj.patient_id,
                     encounter_id: $scope.encounter.encounter_id,
                 });
                 post_url = $rootScope.IRISOrgServiceUrl + '/patientbillingextraconcession/addcharge';

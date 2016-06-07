@@ -80,7 +80,7 @@ app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', 
         };
 
         $scope.enc = {};
-        $scope.$watch('app.patientDetail.patientId', function (newValue, oldValue) {
+        $scope.$watch('patientObj.patient_id', function (newValue, oldValue) {
             if (newValue != '') {
                 $rootScope.commonService.GetEncounterListByPatient('', '0,1', false, $scope.patientObj.patient_id, function (response) {
                     angular.forEach(response, function (resp) {
@@ -142,7 +142,7 @@ app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', 
                 method = 'POST';
                 succ_msg = 'Consultant saved successfully';
 
-                angular.extend(_that.data, {patient_id: $scope.app.patientDetail.patientId, encounter_id: $state.params.enc_id});
+                angular.extend(_that.data, {patient_id: $scope.patientObj.patient_id, encounter_id: $state.params.enc_id});
             } else {
                 post_url = $rootScope.IRISOrgServiceUrl + '/patientconsultants/' + _that.data.pat_consult_id;
                 method = 'PUT';

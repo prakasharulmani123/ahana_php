@@ -13,7 +13,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.routes = {};
         $scope.frequencies = {};
 
-        $scope.$watch('app.patientDetail.patientId', function (newValue, oldValue) {
+        $scope.$watch('patientObj.patient_id', function (newValue, oldValue) {
             if (newValue != '') {
                 $rootScope.commonService.GetEncounterListByPatient('', '0,1', false, $scope.patientObj.patient_id, function (response) {
                     angular.forEach(response, function (resp) {
@@ -270,7 +270,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
             angular.extend($scope.data, {
                 encounter_id: $scope.enc.selected.encounter_id,
-                patient_id: $scope.app.patientDetail.patientId,
+                patient_id: $scope.patientObj.patient_id,
                 pres_date: moment().format('YYYY-MM-DD HH:mm:ss'),
             });
 

@@ -26,7 +26,7 @@
         <tr>
             <td colspan="3" class="recived-details">
                 Received with thanks from 
-                <span> <strong>{{app.patientDetail.patientFullname}} ({{app.patientDetail.patientAge}}y)</strong> </span> 
+                <span> <strong>{{patientObj.fullname}} ({{patientObj.patient_age}}y)</strong> </span> 
                 <br />
                 <br />
                 a sum of rupees <span><strong>{{printVoucher.total_charge}}</strong></span> 
@@ -75,7 +75,7 @@
             </td>
         </tr>
         <tr>
-            <td colspan="3" class="recived-details">Received with thanks from <span> <strong>{{app.patientDetail.patientFullname}} ({{app.patientDetail.patientAge}}y)</strong> </span> <br />
+            <td colspan="3" class="recived-details">Received with thanks from <span> <strong>{{patientObj.fullname}} ({{patientObj.patient_age}}y)</strong> </span> <br />
                 <br />
                 a sum of rupees <span><strong>{{printVoucher.total_charge}}</strong></span> <br />
                 <br />

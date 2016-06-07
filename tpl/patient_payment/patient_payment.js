@@ -42,7 +42,7 @@ app.controller('BillingPaymentController', ['$rootScope', '$scope', '$timeout', 
                 succ_msg = 'Billing payment saved successfully';
 
                 angular.extend(_that.data, {
-                    patient_id: $scope.app.patientDetail.patientId,
+                    patient_id: $scope.patientObj.patient_id,
                     encounter_id: $scope.encounter.encounter_id
                 });
             } else {

@@ -8,7 +8,7 @@ app.controller('PatientCaseSheetController', ['$rootScope', '$scope', '$timeout'
         //Patient Casesheet Form
         $scope.loadPatientCaseSheetForm = function () {
             $scope.loadbar('show');
-            $scope.$watch('app.patientDetail.patientActiveCasesheetno', function (newValue, oldValue) {
+            $scope.$watch('patientObj.activeCasesheetno', function (newValue, oldValue) {
                 if (newValue != '') {
                     $scope.data = {};
                     $scope.data.casesheet_no = newValue;
@@ -27,7 +27,7 @@ app.controller('PatientCaseSheetController', ['$rootScope', '$scope', '$timeout'
             method = 'POST';
             succ_msg = 'Case Sheet No saved successfully';
 
-            angular.extend(_that.data, {patient_id: $scope.app.patientDetail.patientId});
+            angular.extend(_that.data, {patient_id: $scope.patientObj.patient_id});
 
             $scope.loadbar('show');
             $http({
@@ -39,7 +39,7 @@ app.controller('PatientCaseSheetController', ['$rootScope', '$scope', '$timeout'
                         $scope.loadbar('hide');
                         if(response.success == true){
                             $scope.successMessage = succ_msg;
-                            $scope.app.patientDetail.patientActiveCasesheetno = _that.data.casesheet_no;
+                            $scope.patientObj.activeCasesheetno = _that.data.casesheet_no;
                         } else {
                             $scope.errorData = response.message;
                         }

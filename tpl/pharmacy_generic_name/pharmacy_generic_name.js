@@ -32,7 +32,7 @@ app.controller('GenericNameController', ['$rootScope', '$scope', '$timeout', '$h
                 method = 'POST';
                 succ_msg = 'GenericName saved successfully';
 
-                angular.extend(_that.data, {patient_id: $scope.app.patientDetail.patientId});
+                angular.extend(_that.data, {patient_id: $scope.patientObj.patient_id});
             } else {
                 post_url = $rootScope.IRISOrgServiceUrl + '/genericnames/' + _that.data.generic_id;
                 method = 'PUT';

@@ -125,11 +125,11 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
             $scope.data = {};
             $scope.data.PatEncounter = {};
             $scope.data.PatEncounter.encounter_date = moment().format('YYYY-MM-DD HH:mm:ss');
-            $scope.data.validate_casesheet = ($scope.app.patientDetail.patientCasesheetno == null || $scope.app.patientDetail.patientCasesheetno == '');
+            $scope.data.validate_casesheet = ($scope.patientObj.activeCasesheetno == null || $scope.patientObj.activeCasesheetno == '');
         }
         
-        $scope.$watch('app.patientDetail.patientCasesheetno', function (newValue, oldValue) {
-            $scope.data.validate_casesheet = ($scope.app.patientDetail.patientCasesheetno == null || $scope.app.patientDetail.patientCasesheetno == '');
+        $scope.$watch('patientObj.activeCasesheetno', function (newValue, oldValue) {
+            $scope.data.validate_casesheet = ($scope.patientObj.activeCasesheetno == null || $scope.patientObj.activeCasesheetno == '');
         }, true);
 
         $scope.initTransferForm = function () {
@@ -275,11 +275,11 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
 
             if (typeof (_that.data) != "undefined") {
                 if (_that.data.hasOwnProperty('PatAdmission')) {
-                    angular.extend(_that.data.PatAdmission, {patient_id: $scope.app.patientDetail.patientId});
+                    angular.extend(_that.data.PatAdmission, {patient_id: $scope.patientObj.patient_id});
                 }
 
                 if (_that.data.hasOwnProperty('PatEncounter')) {
-                    angular.extend(_that.data.PatEncounter, {patient_id: $scope.app.patientDetail.patientId});
+                    angular.extend(_that.data.PatEncounter, {patient_id: $scope.patientObj.patient_id});
                 }
             }
 
@@ -333,7 +333,7 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
 
             if (typeof (_that.data) != "undefined") {
                 if (_that.data.hasOwnProperty('PatAdmission')) {
-                    angular.extend(_that.data.PatAdmission, {patient_id: $scope.app.patientDetail.patientId, encounter_id: $state.params.enc_id});
+                    angular.extend(_that.data.PatAdmission, {patient_id: $scope.patientObj.patient_id, encounter_id: $state.params.enc_id});
                 }
             }
 

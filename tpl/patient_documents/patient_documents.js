@@ -151,7 +151,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                 succ_msg = 'Note saved successfully';
 
                 angular.extend(_that.data, {
-                    patient_id: $scope.app.patientDetail.patientId,
+                    patient_id: $scope.patientObj.patient_id,
                     encounter_id: $scope.encounter.encounter_id
                 });
             } else {

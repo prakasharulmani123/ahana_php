@@ -149,16 +149,16 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
         $scope.initAppointmentForm = function () {
             $scope.data = {};
             $scope.data.status_date = moment().format('YYYY-MM-DD');
-            $scope.data.validate_casesheet = ($scope.app.patientDetail.patientCasesheetno == null || $scope.app.patientDetail.patientCasesheetno == '');
+            $scope.data.validate_casesheet = ($scope.patientObj.activeCasesheetno == null || $scope.patientObj.activeCasesheetno == '');
 
             $timeout(function () {
-                $scope.data.consultant_id = $scope.app.patientDetail.patientLastConsultantId;
+                $scope.data.consultant_id = $scope.patientObj.last_consultant_id;
                 $scope.getTimeSlots($scope.data.consultant_id, $scope.data.status_date);
             }, 1000);
         }
 
-        $scope.$watch('app.patientDetail.patientCasesheetno', function (newValue, oldValue) {
-            $scope.data.validate_casesheet = ($scope.app.patientDetail.patientCasesheetno == null || $scope.app.patientDetail.patientCasesheetno == '');
+        $scope.$watch('patientObj.activeCasesheetno', function (newValue, oldValue) {
+            $scope.data.validate_casesheet = ($scope.patientObj.activeCasesheetno == null || $scope.patientObj.activeCasesheetno == '');
         }, true);
 
         $scope.initChangeStatusForm = function () {
@@ -236,7 +236,7 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
             post_url = $rootScope.IRISOrgServiceUrl + '/encounter/createappointment';
             method = 'POST';
             succ_msg = 'Appointment saved successfully';
-            angular.extend(_that.data, {patient_id: $scope.app.patientDetail.patientId});
+            angular.extend(_that.data, {patient_id: $scope.patientObj.patient_id});
 
             _that.data.status_date = moment(_that.data.status_date).format('YYYY-MM-DD');
             $scope.loadbar('show');
@@ -275,7 +275,7 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
 
             if (typeof (_that.data) != "undefined") {
                 if (_that.data.hasOwnProperty('PatAppointment')) {
-                    angular.extend(_that.data.PatAppointment, {patient_id: $scope.app.patientDetail.patientId, encounter_id: $state.params.enc_id});
+                    angular.extend(_that.data.PatAppointment, {patient_id: $scope.patientObj.patient_id, encounter_id: $state.params.enc_id});
                 }
             }
 
@@ -370,7 +370,7 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
                                 appt_status: "C",
                                 status_time: moment().format('HH:mm:ss'),
                                 status_date: moment().format('YYYY-MM-DD'),
-                                patient_id: $scope.app.patientDetail.patientId,
+                                patient_id: $scope.patientObj.patient_id,
                                 encounter_id: $state.params.enc_id
                             };
                             $http({

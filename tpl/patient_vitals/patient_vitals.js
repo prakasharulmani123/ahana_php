@@ -71,7 +71,7 @@ app.controller('VitalsController', ['$rootScope', '$scope', '$timeout', '$http',
                 succ_msg = 'Vital saved successfully';
 
                 angular.extend(_that.data, {
-                    patient_id: $scope.app.patientDetail.patientId,
+                    patient_id: $scope.patientObj.patient_id,
                     encounter_id: $scope.encounter.encounter_id,
                 });
             } else {

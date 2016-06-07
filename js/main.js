@@ -48,26 +48,7 @@ angular.module('app')
                         patientFooterClass: 'app-footer app-footer2',
                     },
                     patientDetail: {
-                        patientTitleCode: '',
-                        patientName: '',
-                        patientFullname: '',
-                        patientId: '',
-                        patientGuid: '',
-                        patientIntCode: '',
-                        patientSex: '',
-                        patientDOA: '',
-                        patientOrg: '',
-                        patientAge: '',
-                        patientCasesheetno: '',
-                        patientHasAlert: '',
-                        patientAlert: '',
-                        patientActiveCasesheetno: '',
-                        patientActiveIP: '',
-                        patientCurrentRoom: '',
-                        patientLastConsultantId: '',
-                        patientLastConsultantName: '',
-                        patientHaveEncounter: '',
-                        patientImage: '',
+                        patientSex: ''
                     }
                 }
 
@@ -184,30 +165,11 @@ angular.module('app')
                                         $scope.errorData = "Invalid Access !";
                                         $state.go('configuration.organization');
                                     } else {
-                                        $scope.app.patientDetail.patientTitleCode = patient.patient_title_code;
-                                        $scope.app.patientDetail.patientName = patient.patient_firstname;
-                                        $scope.app.patientDetail.patientFullname = patient.fullname;
-                                        $scope.app.patientDetail.patientId = patient.patient_id;
-                                        $scope.app.patientDetail.patientIntCode = patient.patient_int_code;
-                                        $scope.app.patientDetail.patientGuid = patient.patient_guid;
-                                        $scope.app.patientDetail.patientDOA = patient.doa;
-                                        $scope.app.patientDetail.patientOrg = patient.org_name;
-                                        $scope.app.patientDetail.patientAge = patient.patient_age;
-                                        $scope.app.patientDetail.patientCasesheetno = patient.activeCasesheetno;
-                                        $scope.app.patientDetail.patientHasAlert = patient.hasalert;
-                                        $scope.app.patientDetail.patientAlert = patient.alert;
-                                        $scope.app.patientDetail.patientActiveCasesheetno = patient.activeCasesheetno;
-                                        $scope.app.patientDetail.patientActiveIp = patient.patActiveIp;
-                                        $scope.app.patientDetail.patientCurrentRoom = patient.current_room;
-                                        $scope.app.patientDetail.patientLastConsultantId = patient.last_consultant_id;
-                                        $scope.app.patientDetail.patientLastConsultantName = patient.consultant_name;
-                                        $scope.app.patientDetail.patientHaveEncounter = patient.have_encounter;
-                                        $scope.app.patientDetail.patientImage = patient.patient_image;
+                                        $scope.patientObj = patient;
                                         $rootScope.commonService.GetLabelFromValue(patient.patient_gender, 'GetGenderList', function (response) {
                                             $scope.app.patientDetail.patientSex = response;
                                         });
 
-                                        $scope.patientObj = patient;
                                     }
 
                                 })
@@ -467,7 +429,7 @@ angular.module('app').controller('PatientImageController', ['scope', '$scope', '
             var uploadUrl = $rootScope.IRISOrgServiceUrl + '/patient/uploadimage?patient_id=' + $state.params.id;
             fileUpload.uploadFileToUrl(file, uploadUrl).success(function (response) {
                 if (response.success) {
-                    scope.app.patientDetail.patientImage = response.patient.patient_image;
+                    scope.patientObj.patient_image = response.patient.patient_image;
                     $scope.cancel();
                 } else {
                     $scope.errorData2 = response.message;
@@ -517,7 +479,7 @@ angular.module('app').controller('PatientImageController', ['scope', '$scope', '
             }).success(
                     function (response) {
                         if (response.success) {
-                            scope.app.patientDetail.patientImage = response.patient.patient_image;
+                            scope.patientObj.patient_image = response.patient.patient_image;
                             $scope.cancel();
                         } else {
                             $scope.errorData2 = response.message;

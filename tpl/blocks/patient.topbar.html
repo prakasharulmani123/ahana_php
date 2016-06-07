@@ -5,50 +5,50 @@
             <div class="col-md-1 pati-thumb"> 
                 <div class="row"> 
                     <a ng-click="openUploadForm()">
-                        <img src="{{app.patientDetail.patientImage ? app.patientDetail.patientImage : 'img/patient-img2.jpg'}}"  alt="" width="125" height="103" />
+                        <img src="{{patientObj.patient_image ? patientObj.patient_image : 'img/patient-img2.jpg'}}"  alt="" width="125" height="103" />
                     </a>
                 </div>
             </div>
             <div class="col-md-11 paitent-details2"> 
                 <div class="header-new"> 
                     <i aria-hidden="true" class="fa fa-user"></i> 
-                    <b> {{app.patientDetail.patientFullname}}  </b>
-                    <span ng-if="app.patientDetail.patientActiveCasesheetno">
-                        ({{app.patientDetail.patientActiveCasesheetno}})
+                    <b> {{patientObj.fullname}}  </b>
+                    <span ng-if="patientObj.activeCasesheetno">
+                        ({{patientObj.activeCasesheetno}})
                     </span>     
-                    <span ng-show="app.patientDetail.patientActiveIp">
+                    <span ng-show="patientObj.patActiveIp">
                         <i class="fa fa-calendar"></i>  
-                        {{app.patientDetail.patientDOA}}
+                        {{patientObj.doa}}
                     </span>
                     
-                    <i class="fa fa-venus-mars"></i> {{app.patientDetail.patientSex}} ({{app.patientDetail.patientAge}}y)                       	
+                    <i class="fa fa-venus-mars"></i> {{app.patientDetail.patientSex}} ({{patientObj.patient_age}}y)                       	
                     <i class="fa fa-phone"></i>  9443444567      
-                    <i aria-hidden="true" class="fa fa-exclamation-triangle"></i>  
-                    <span> Alerts Message </span>   
-                    <i aria-hidden="true" class="fa fa-ban"></i> 
-                    <b> Allergies : </b>  
-                    <div class="pati-cate">OP</div>
+                    <i ng-show="patientObj.hasalert" aria-hidden="true" class="fa fa-exclamation-triangle"></i>  
+                    <span> {{patientObj.alert}} </span>   
+                    <i aria-hidden="true" class="fa fa-ban" ng-show="false"></i> 
+                    <b ng-show="false"> Allergies : </b>  
+                    <div class="pati-cate" ng-show="patientObj.have_encounter">{{patientObj.encounter_type}}</div>
                 </div>   
                 <div class="headerbg2">  
                     <div class="patient-details-part patinet-id"> 
-                        <b> Patient Id : </b> {{app.patientDetail.patientIntCode}} 
+                        <b> Patient Id : </b> {{patientObj.patient_int_code}} 
                     </div>
                     <div class="patient-details-part">  
-                        <i class="fa fa-wheelchair"></i> <b> Ward : </b>{{app.patientDetail.patientCurrentRoom}} 
+                        <i class="fa fa-wheelchair"></i> <b> Ward : </b>{{patientObj.current_room}} 
                     </div>
                     <div class="patient-details-part">  
-                        <i class="fa fa-user-md"></i> {{app.patientDetail.patientLastConsultantName}}
+                        <i class="fa fa-user-md"></i> {{patientObj.consultant_name}}
                     </div>
                     <div class="patient-details-part">  
-                        <i class="fa fa-hospital-o"></i> <b> Org :  </b> {{app.patientDetail.patientOrg}} 
+                        <i class="fa fa-hospital-o"></i> <b> Org :  </b> {{patientObj.org_name}} 
                     </div>
                     <div class="patient-details-part b-n">  
                         <div ng-if="patientObj.patient_category" style="background-color: {{patientObj.patient_category_color}}" class="category_badge header-badge" tooltip="{{patientObj.patient_category_fullname}}" tooltip-trigger tooltip-animation="false" tooltip-placement="top"> 
                            {{patientObj.patient_category}} 
                         </div> 
                     </div>
-                    <div class="patient-details-part b-n" ng-show="app.patientDetail.patientHasAlert">  
-                        <div class="alert_badge header-badge" tooltip="{{app.patientDetail.patientAlert}}" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom"><i class="fa fa-warning"></i></div> 
+                    <div class="patient-details-part b-n" ng-show="patientObj.hasalert">  
+                        <div class="alert_badge header-badge" tooltip="{{patientObj.alert}}" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom"><i class="fa fa-warning"></i></div> 
                     </div>
                 </div>
             </div>

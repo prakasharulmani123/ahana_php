@@ -54,7 +54,7 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
         };
 
         $scope.enc = {};
-        $scope.$watch('app.patientDetail.patientId', function (newValue, oldValue) {
+        $scope.$watch('patientObj.patient_id', function (newValue, oldValue) {
             if (newValue != '') {
                 $rootScope.commonService.GetEncounterListByPatient('', '0,1', false, $scope.patientObj.patient_id, function (response) {
                     angular.forEach(response, function (resp) {

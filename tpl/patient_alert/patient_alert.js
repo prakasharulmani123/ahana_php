@@ -89,7 +89,7 @@ app.controller('AlertsController', ['$rootScope', '$scope', '$timeout', '$http',
                 method = 'POST';
                 succ_msg = 'Alert saved successfully';
 
-                angular.extend(_that.data, {patient_id: $scope.app.patientDetail.patientId});
+                angular.extend(_that.data, {patient_id: $scope.patientObj.patient_id});
             } else {
                 post_url = $rootScope.IRISOrgServiceUrl + '/patientalerts/' + _that.data.pat_alert_id;
                 method = 'PUT';
@@ -106,8 +106,8 @@ app.controller('AlertsController', ['$rootScope', '$scope', '$timeout', '$http',
                         $scope.loadbar('hide');
                         $scope.successMessage = succ_msg;
                         $scope.data = {};
-                        $scope.app.patientDetail.patientHasAlert = true;
-                        $scope.app.patientDetail.patientAlert = response.alert_description;
+                        $scope.patientObj.hasalert = true;
+                        $scope.patientObj.alert = response.alert_description;
                         $timeout(function () {
                             $scope.loadAlertsList();
                             $anchorScroll();

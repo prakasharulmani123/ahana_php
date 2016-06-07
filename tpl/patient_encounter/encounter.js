@@ -158,7 +158,7 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                             var PatAdmission = {
                                 admission_status: "AC",
                                 status_date: moment().format('YYYY-MM-DD HH:mm:ss'),
-                                patient_id: $scope.app.patientDetail.patientId,
+                                patient_id: $scope.patientObj.patient_id,
                                 encounter_id: enc_id,
                                 status: '1',
                                 notes: notes,
@@ -175,6 +175,7 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                                         } else {
                                             $scope.successMessage = succ_msg;
                                             $scope.loadPatientEncounters('Current');
+                                            $scope.loadView();
                                         }
                                     }
                             ).error(function (data, status) {
@@ -233,7 +234,7 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                                 admn_id: id,
                                 admission_status: "C",
                                 status_date: moment().format('YYYY-MM-DD HH:mm:ss'),
-                                patient_id: $scope.app.patientDetail.patientId,
+                                patient_id: $scope.patientObj.patient_id,
                                 encounter_id: enc_id,
                                 status: '0',
                                 notes: notes,
@@ -249,6 +250,7 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                                         if (response.success) {
                                             $scope.successMessage = succ_msg;
                                             $scope.loadPatientEncounters('Current');
+                                            $scope.loadView();
                                         } else {
                                             $scope.errorData = response.message;
 
@@ -290,7 +292,7 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                                 appt_status: "C",
                                 status_time: moment().format('HH:mm:ss'),
                                 status_date: moment().format('YYYY-MM-DD'),
-                                patient_id: $scope.app.patientDetail.patientId,
+                                patient_id: $scope.patientObj.patient_id,
                                 encounter_id: enc_id
                             };
                             $http({
@@ -302,6 +304,7 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                                         $scope.successMessage = succ_msg;
                                         $scope.loadbar('hide');
                                         $scope.loadPatientEncounters('Current');
+                                        $scope.loadView();
                                     }
                             ).error(function (data, status) {
                                 $scope.loadbar('hide');
@@ -335,6 +338,7 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                         $scope.loadbar('hide');
                         $scope.successMessage = 'Status changed successfully';
                         $scope.loadPatientEncounters('Current');
+                        $scope.loadView();
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');
@@ -344,4 +348,20 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                     $scope.errorData = data.message;
             });
         };
+
+        $scope.loadView = function () {
+            $timeout(function () {
+                $scope.mode = 'view';
+                $http.post($rootScope.IRISOrgServiceUrl + '/patient/getpatientbyguid', {guid: $state.params.id})
+                        .success(function (patient) {
+                            $scope.patientObj = patient;
+                            $rootScope.commonService.GetLabelFromValue(patient.patient_gender, 'GetGenderList', function (response) {
+                                $scope.app.patientDetail.patientSex = response;
+                            });
+                        })
+                        .error(function () {
+                            $scope.errorData = "An Error has occured while loading patient!";
+                        });
+            }, 3000)
+        }
     }]);

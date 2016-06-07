@@ -27,6 +27,7 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
                     .success(function (patient) {
                         $scope.orgData = patient;
                         $scope.setViewData(patient);
+                        $scope.setFormData(patient);
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading patient!";
@@ -49,16 +50,19 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
             });
         }
 
-        $scope.$watch('app.patientDetail.patientId', function (newValue, oldValue) {
+        $scope.setFormData = function (patient) {
+            $scope.patdata = {};
+            $scope.patdata.PatPatient = patient;
+            $scope.patdata.PatPatientAddress = patient.address;
+        }
+
+        $scope.$watch('patientObj.patient_id', function (newValue, oldValue) {
             if (newValue != '') {
                 $scope.data = {};
                 $scope.data.PatPatient = $scope.patientObj;
                 $scope.data.PatPatientAddress = $scope.patientObj.address;
 
                 $scope.initForm();
-
-//                $scope.orgData = $scope.patientObj;
-
             }
         }, true);
 
@@ -227,7 +231,7 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
         }
 
         //Save Both Add Data
-        $scope.saveForm = function (mode) {
+        $scope.saveForm = function () {
             _that = this;
 
             $scope.errorData = "";
@@ -243,7 +247,7 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
             $http({
                 method: method,
                 url: post_url,
-                data: _that.data,
+                data: _that.patdata,
             }).success(
                     function (response) {
                         $anchorScroll();
@@ -251,27 +255,19 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
                         if (response.success == true) {
                             $scope.successMessage = succ_msg;
 
-                            $scope.app.patientDetail.patientId = '';
-
-                            $scope.app.patientDetail.patientTitleCode = response.patient.patient_title_code;
-                            $scope.app.patientDetail.patientName = response.patient.patient_firstname;
-                            $scope.app.patientDetail.patientId = response.patient.patient_id;
-                            $scope.app.patientDetail.patientDOA = response.patient.doa;
-                            $scope.app.patientDetail.patientOrg = response.patient.org_name;
-                            $scope.app.patientDetail.patientAge = response.patient.patient_age;
-                            $scope.app.patientDetail.patientCasesheetno = response.patient.casesheetno;
+                            $scope.patientObj = $scope.orgData = response;
                             $rootScope.commonService.GetLabelFromValue(response.patient.patient_gender, 'GetGenderList', function (response) {
                                 $scope.app.patientDetail.patientSex = response;
                             });
 
-                            $scope.patientObj = $scope.orgData = response;
                             $scope.setViewData(response.patient);
-
+                            $scope.setFormData(response.patient);
+                            
                             $timeout(function () {
                                 $scope.mode = 'view';
                                 $scope.successMessage = succ_msg;
 //                                $state.go('patient.view', {id: response.patient.patient_guid});
-                            }, 1000)
+                            }, 3000)
                         } else {
                             $scope.errorData = response.message;
                         }
