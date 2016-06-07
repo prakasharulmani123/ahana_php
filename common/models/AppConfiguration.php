@@ -59,7 +59,10 @@ class AppConfiguration extends RActiveRecord {
     public static function getConfigurations() {
         return array(
 //            'ROOM_CHARGE_CONFIG' => '12',
-            'ELAPSED_TIME' => '1'
+            'ELAPSED_TIME' => [
+                'value' => '3600',
+                'notes' => 'seconds',
+            ]
         );
     }
     

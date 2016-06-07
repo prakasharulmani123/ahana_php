@@ -82,7 +82,9 @@ class PatientController extends ActiveController {
                 $patient = PatPatient::find()->where(['patient_id' => $post['PatPatient']['patient_id']])->one();
                 if (!empty($patient)) {
                     $model = $patient;
-                    $addr_model = $patient->patPatientAddress;
+                    
+                    if(!empty($patient->patPatientAddress))
+                        $addr_model = $patient->patPatientAddress;
                 }
             }
 

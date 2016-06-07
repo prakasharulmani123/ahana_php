@@ -372,5 +372,4 @@ class PatientdocumentsController extends ActiveController {
         $xml = $xmlLoad->asXML();
         return $xml;
     }
-
 }

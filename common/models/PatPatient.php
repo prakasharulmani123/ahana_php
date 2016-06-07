@@ -167,9 +167,12 @@ class PatPatient extends RActiveRecord {
         return $this->hasOne(PatEncounter::className(), ['patient_id' => 'patient_id'])->status('0')->orderBy(['encounter_date' => SORT_DESC]);
     }
 
-    //Last completed encounter so status is 0
+    public function getPatHaveOneEncounter() {
+        return $this->hasOne(PatEncounter::className(), ['patient_id' => 'patient_id'])->orderBy(['encounter_date' => SORT_DESC]);    
+    }
+
     public function getPatHaveEncounter() {
-        return $this->hasOne(PatEncounter::className(), ['patient_id' => 'patient_id'])->orderBy(['encounter_date' => SORT_DESC]);
+        return $this->hasOne(PatEncounter::className(), ['patient_id' => 'patient_id'])->status('1')->orderBy(['encounter_id' => SORT_DESC]);
     }
 
     /**
@@ -224,14 +227,16 @@ class PatPatient extends RActiveRecord {
 
             $header = "Patient Registration";
             $message = "{$this->patient_title_code} {$this->patient_firstname} Registered Successfully.";
+            $date = $this->patient_reg_date;
         } else {
             $header = "Patient Update";
             $message = "Patient Details Updated Successfully.";
+            $date = date('Y-m-d H:i:s');
         }
 
         $this->savetoHms($insert);
 
-        PatTimeline::insertTimeLine($this->patient_id, $this->patient_reg_date, $header, '', $message);
+        PatTimeline::insertTimeLine($this->patient_id, $date, $header, '', $message);
 
         return parent::afterSave($insert, $changedAttributes);
     }
@@ -311,9 +316,9 @@ class PatPatient extends RActiveRecord {
                 ]);
                 $connection->open();
 
-                $query = "UPDATE pat_patient ";
+                $query = "UPDATE pat_patient SET";
                 foreach ($attr as $col => $value) {
-                    $query .= "SET $col = '$value',";
+                    $query .= " $col = '$value',";
                 }
                 $query = rtrim($query, ',');
                 $query .= " WHERE patient_global_guid = '{$this->patient_global_guid}' ";
@@ -344,10 +349,6 @@ class PatPatient extends RActiveRecord {
                 if (isset($this->tenant->tenant_name))
                     return $this->tenant->tenant_name;
             },
-//            'doa' => function ($model) {
-//                if (isset($model->patient_reg_date))
-//                    return date('Y-m-d', strtotime($model->patient_reg_date));
-//            },
             'sex' => function ($model) {
                 if (isset($model->patient_reg_date))
                     return date('Y-m-d', strtotime($model->patient_reg_date));
@@ -431,6 +432,12 @@ class PatPatient extends RActiveRecord {
             },
             'have_encounter' => function($model) {
                 return (isset($model->patHaveEncounter));
+            },
+            'have_atleast_encounter' => function($model) {
+                return (isset($model->patHaveOneEncounter));
+            },
+            'encounter_type' => function($model) {
+                return (isset($model->patHaveEncounter)) ? $model->patHaveEncounter->encounter_type : '';
             },
         ];
         $fields = array_merge(parent::fields(), $extend);
