@@ -84,9 +84,37 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
         }
 
         $scope.submitXsl = function () {
-            $("#encounter_id").val($scope.encounter.encounter_id);
-            $("#patient_id").val($state.params.id);
-            _data = $('#xmlform').serialize();
+            _data = $('#xmlform').serialize() + '&' + $.param({
+                'encounter_id': $scope.encounter.encounter_id,
+                'patient_id': $state.params.id,
+            });
+
+            $scope.loadbar('show');
+            $http({
+                url: $rootScope.IRISOrgServiceUrl + "/patientdocuments/savedocument",
+                method: "POST",
+                transformRequest: transformRequestAsFormPost,
+                data: _data,
+            }).then(
+                    function (response) {
+                        $scope.loadbar('hide');
+                        $scope.xml = response.data.xml;
+                    }
+            );
+        }
+
+        $("body").on("click", ".addMore", function () {
+            var button_id = $(this).attr('id');
+            var table_id = $(this).data('table-id');
+            var rowCount = $('#' + table_id + ' tbody  tr').length;
+
+            _data = $('#xmlform').serialize() + '&' + $.param({
+                'encounter_id': $scope.encounter.encounter_id,
+                'patient_id': $state.params.id,
+                'button_id': button_id,
+                'table_id': table_id,
+                'rowCount': rowCount,
+            });
 
             $http({
                 url: $rootScope.IRISOrgServiceUrl + "/patientdocuments/savedocument",
@@ -96,10 +124,19 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
             }).then(
                     function (response) {
                         $scope.loadbar('hide');
-//                        $scope.xml = response.data.xml;
+                        $scope.xml = response.data.xml;
                     }
             );
-        }
+        });
+
+
+
+
+
+
+
+
+
 
         //Save Both Add & Update Data
         $scope.saveForm = function (mode) {
@@ -169,6 +206,8 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     $scope.errorData = data.message;
             });
         };
+
+
     }]);
 
 
