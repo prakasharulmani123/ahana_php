@@ -100,7 +100,11 @@ class PatientdocumentsController extends ActiveController {
         $result = $this->prepareXml($xml, $post);
 
         if (isset($post['button_id'])) {
-            $result = $this->preparePresentingComplaintsXml($result, $post['button_id'], $post['table_id'], $post['rowCount']);
+            if ($post['table_id'] == 'RGCompliant') {
+                $result = $this->preparePresentingComplaintsXml($result,  $post['table_id'], $post['rowCount']);
+            } elseif ($post['table_id'] == 'RGMedicalHistory') {
+                $result = $this->preparePastMedicalHistoryXml($result, $post['table_id'], $post['rowCount']);
+            }
         }
 
         $patient_document->attributes = [
@@ -298,7 +302,11 @@ class PatientdocumentsController extends ActiveController {
         return $xml;
     }
 
-    protected function preparePresentingComplaintsXml($xml, $button_id, $table_id, $rowCount) {
+    protected function preparePastMedicalHistoryXml($xml, $table_id, $rowCount) {
+        
+    }
+    
+    protected function preparePresentingComplaintsXml($xml, $table_id, $rowCount) {
         $xmlLoad = simplexml_load_string($xml);
         foreach ($xmlLoad->children() as $group) {
             foreach ($group->PANELBODY->FIELD as $x) {
@@ -372,4 +380,6 @@ class PatientdocumentsController extends ActiveController {
         $xml = $xmlLoad->asXML();
         return $xml;
     }
+    
+
 }
