@@ -101,7 +101,7 @@ class PatientdocumentsController extends ActiveController {
 
         if (isset($post['button_id'])) {
             if ($post['table_id'] == 'RGCompliant') {
-                $result = $this->preparePresentingComplaintsXml($result,  $post['table_id'], $post['rowCount']);
+                $result = $this->preparePresentingComplaintsXml($result, $post['table_id'], $post['rowCount']);
             } elseif ($post['table_id'] == 'RGMedicalHistory') {
                 $result = $this->preparePastMedicalHistoryXml($result, $post['table_id'], $post['rowCount']);
             }
@@ -124,7 +124,182 @@ class PatientdocumentsController extends ActiveController {
         foreach ($xmlLoad->children() as $group) {
             foreach ($group->PANELBODY->FIELD as $x) {
 
-                //GRID
+                //Main Field - PanelBar
+                if ($x->attributes()->type == 'PanelBar') {
+                    foreach ($x->FIELD as $pb) {
+                        if ($pb->attributes()->type == 'RadGrid') {
+                            foreach ($pb->COLUMNS as $columns) {
+                                foreach ($columns->FIELD as $field) {
+                                    //Child FIELD
+                                    if (isset($field->FIELD)) {
+                                        foreach ($field->FIELD as $y) {
+                                            foreach ($post as $key => $value) {
+                                                if ($key == $y->attributes()) {
+                                                    $type = $y->attributes()->type;
+
+                                                    if ($type == 'CheckBoxList') {
+                                                        $post_referral_details = $value; // Array
+                                                        $list_referral_details = $y->LISTITEMS->LISTITEM;
+                                                        foreach ($list_referral_details as $list_value) {
+                                                            if (in_array($list_value, $post_referral_details)) {
+                                                                $list_value->attributes()['Selected'] = 'true';
+                                                            }
+                                                        }
+                                                    } elseif ($type == 'DropDownList' || $type == 'RadioButtonList') {
+                                                        $post_referral_details = $value; // String
+                                                        $list_referral_details = $y->LISTITEMS->LISTITEM;
+                                                        foreach ($list_referral_details as $list_value) {
+                                                            if ($list_value == $post_referral_details) {
+                                                                $list_value->attributes()['Selected'] = 'true';
+                                                            }
+                                                        }
+                                                    } elseif ($type == 'textareaFull') {
+                                                        if (isset($y->VALUE)) {
+                                                            unset($y->VALUE);
+                                                        }
+                                                        $y->addChild('VALUE', $value);
+                                                    } else {
+                                                        foreach ($y->PROPERTIES->PROPERTY as $text_pro) {
+                                                            if ($text_pro['name'] == 'value') {
+                                                                $dom = dom_import_simplexml($text_pro);
+                                                                $dom->parentNode->removeChild($dom);
+                                                            }
+                                                        }
+                                                        $text_box_value = $y->PROPERTIES->addChild('PROPERTY', $value);
+                                                        $text_box_value->addAttribute('name', 'value');
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    //Main FIELD
+                                    foreach ($post as $key => $value) {
+                                        if ($key == $field->attributes()) {
+                                            $type = $field->attributes()->type;
+                                            //Checkbox
+                                            if ($type == 'CheckBoxList') {
+                                                $post_referral_details = $value;
+                                                $list_referral_details = $field->LISTITEMS->LISTITEM;
+                                                foreach ($list_referral_details as $list_value) {
+                                                    if (in_array($list_value, $post_referral_details)) {
+                                                        $list_value->attributes()['Selected'] = 'true';
+                                                    }
+                                                }
+                                            } elseif ($type == 'DropDownList' || $type == 'RadioButtonList') {
+                                                $post_referral_details = $value;
+                                                $list_referral_details = $field->LISTITEMS->LISTITEM;
+                                                foreach ($list_referral_details as $list_value) {
+                                                    if ($list_value == $post_referral_details) {
+                                                        $list_value->attributes()['Selected'] = 'true';
+                                                    }
+                                                }
+                                            } elseif ($type == 'textareaFull') {
+                                                if (isset($field->VALUE)) {
+                                                    unset($field->VALUE);
+                                                }
+                                                $field->addChild('VALUE', $value);
+                                            } else {
+                                                foreach ($field->PROPERTIES->PROPERTY as $text_pro) {
+                                                    if ($text_pro['name'] == 'value') {
+                                                        $dom = dom_import_simplexml($text_pro);
+                                                        $dom->parentNode->removeChild($dom);
+                                                    }
+                                                }
+                                                $text_box_value = $field->PROPERTIES->addChild('PROPERTY', $value);
+                                                $text_box_value->addAttribute('name', 'value');
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        //Main FIELD Inside Panel Bar- Normal Checkbox, Radio, Input, etc...
+                        foreach ($post as $key => $value) {
+                            if ($key == $pb->attributes()) {
+                                $type = $pb->attributes()->type;
+                                //Checkbox
+                                if ($type == 'CheckBoxList') {
+                                    $post_referral_details = $value;
+                                    $list_referral_details = $pb->LISTITEMS->LISTITEM;
+                                    foreach ($list_referral_details as $list_value) {
+                                        if (in_array($list_value, $post_referral_details)) {
+                                            $list_value->attributes()['Selected'] = 'true';
+                                        }
+                                    }
+                                } elseif ($type == 'DropDownList' || $type == 'RadioButtonList') {
+                                    $post_referral_details = $value;
+                                    $list_referral_details = $pb->LISTITEMS->LISTITEM;
+                                    foreach ($list_referral_details as $list_value) {
+                                        if ($list_value == $post_referral_details) {
+                                            $list_value->attributes()['Selected'] = 'true';
+                                        }
+                                    }
+                                } elseif ($type == 'textareaFull') {
+                                    if (isset($pb->VALUE)) {
+                                        unset($pb->VALUE);
+                                    }
+                                    $pb->addChild('VALUE', $value);
+                                } else {
+                                    foreach ($pb->PROPERTIES->PROPERTY as $text_pro) {
+                                        if ($text_pro['name'] == 'value') {
+                                            $dom = dom_import_simplexml($text_pro);
+                                            $dom->parentNode->removeChild($dom);
+                                        }
+                                    }
+                                    $text_box_value = $pb->PROPERTIES->addChild('PROPERTY', $value);
+                                    $text_box_value->addAttribute('name', 'value');
+                                }
+                            }
+                        }
+
+                        //Child FIELD Inside Panel Bar- Normal Checkbox, Radio, Input, etc...
+                        if (isset($pb->FIELD)) {
+                            foreach ($pb->FIELD as $pbchild) {
+                                foreach ($post as $key => $value) {
+                                    if ($key == $pbchild->attributes()) {
+                                        $type = $pbchild->attributes()->type;
+
+                                        if ($type == 'CheckBoxList') {
+                                            $post_referral_details = $value; // Array
+                                            $list_referral_details = $pbchild->LISTITEMS->LISTITEM;
+                                            foreach ($list_referral_details as $list_value) {
+                                                if (in_array($list_value, $post_referral_details)) {
+                                                    $list_value->attributes()['Selected'] = 'true';
+                                                }
+                                            }
+                                        } elseif ($type == 'DropDownList' || $type == 'RadioButtonList') {
+                                            $post_referral_details = $value; // String
+                                            $list_referral_details = $pbchild->LISTITEMS->LISTITEM;
+                                            foreach ($list_referral_details as $list_value) {
+                                                if ($list_value == $post_referral_details) {
+                                                    $list_value->attributes()['Selected'] = 'true';
+                                                }
+                                            }
+                                        } elseif ($type == 'textareaFull') {
+                                            if (isset($pbchild->VALUE)) {
+                                                unset($pbchild->VALUE);
+                                            }
+                                            $pbchild->addChild('VALUE', $value);
+                                        } else {
+                                            foreach ($pbchild->PROPERTIES->PROPERTY as $text_pro) {
+                                                if ($text_pro['name'] == 'value') {
+                                                    $dom = dom_import_simplexml($text_pro);
+                                                    $dom->parentNode->removeChild($dom);
+                                                }
+                                            }
+                                            $text_box_value = $pbchild->PROPERTIES->addChild('PROPERTY', $value);
+                                            $text_box_value->addAttribute('name', 'value');
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                //Main Field - GRID
                 if ($x->attributes()->type == 'RadGrid') {
                     foreach ($x->COLUMNS as $columns) {
                         foreach ($columns->FIELD as $field) {
@@ -213,6 +388,45 @@ class PatientdocumentsController extends ActiveController {
                     }
                 }
 
+                //Main FIELD - Normal Checkbox, Radio, Input, etc...
+                foreach ($post as $key => $value) {
+                    if ($key == $x->attributes()) {
+                        $type = $x->attributes()->type;
+                        //Checkbox
+                        if ($type == 'CheckBoxList') {
+                            $post_referral_details = $value;
+                            $list_referral_details = $x->LISTITEMS->LISTITEM;
+                            foreach ($list_referral_details as $list_value) {
+                                if (in_array($list_value, $post_referral_details)) {
+                                    $list_value->attributes()['Selected'] = 'true';
+                                }
+                            }
+                        } elseif ($type == 'DropDownList' || $type == 'RadioButtonList') {
+                            $post_referral_details = $value;
+                            $list_referral_details = $x->LISTITEMS->LISTITEM;
+                            foreach ($list_referral_details as $list_value) {
+                                if ($list_value == $post_referral_details) {
+                                    $list_value->attributes()['Selected'] = 'true';
+                                }
+                            }
+                        } elseif ($type == 'textareaFull') {
+                            if (isset($x->VALUE)) {
+                                unset($x->VALUE);
+                            }
+                            $x->addChild('VALUE', $value);
+                        } else {
+                            foreach ($x->PROPERTIES->PROPERTY as $text_pro) {
+                                if ($text_pro['name'] == 'value') {
+                                    $dom = dom_import_simplexml($text_pro);
+                                    $dom->parentNode->removeChild($dom);
+                                }
+                            }
+                            $text_box_value = $x->PROPERTIES->addChild('PROPERTY', $value);
+                            $text_box_value->addAttribute('name', 'value');
+                        }
+                    }
+                }
+
                 //Child FIELD
                 if (isset($x->FIELD)) {
                     foreach ($x->FIELD as $y) {
@@ -255,45 +469,6 @@ class PatientdocumentsController extends ActiveController {
                         }
                     }
                 }
-
-                //Main FIELD
-                foreach ($post as $key => $value) {
-                    if ($key == $x->attributes()) {
-                        $type = $x->attributes()->type;
-                        //Checkbox
-                        if ($type == 'CheckBoxList') {
-                            $post_referral_details = $value;
-                            $list_referral_details = $x->LISTITEMS->LISTITEM;
-                            foreach ($list_referral_details as $list_value) {
-                                if (in_array($list_value, $post_referral_details)) {
-                                    $list_value->attributes()['Selected'] = 'true';
-                                }
-                            }
-                        } elseif ($type == 'DropDownList' || $type == 'RadioButtonList') {
-                            $post_referral_details = $value;
-                            $list_referral_details = $x->LISTITEMS->LISTITEM;
-                            foreach ($list_referral_details as $list_value) {
-                                if ($list_value == $post_referral_details) {
-                                    $list_value->attributes()['Selected'] = 'true';
-                                }
-                            }
-                        } elseif ($type == 'textareaFull') {
-                            if (isset($x->VALUE)) {
-                                unset($x->VALUE);
-                            }
-                            $x->addChild('VALUE', $value);
-                        } else {
-                            foreach ($x->PROPERTIES->PROPERTY as $text_pro) {
-                                if ($text_pro['name'] == 'value') {
-                                    $dom = dom_import_simplexml($text_pro);
-                                    $dom->parentNode->removeChild($dom);
-                                }
-                            }
-                            $text_box_value = $x->PROPERTIES->addChild('PROPERTY', $value);
-                            $text_box_value->addAttribute('name', 'value');
-                        }
-                    }
-                }
             }
         }
 
@@ -305,7 +480,7 @@ class PatientdocumentsController extends ActiveController {
     protected function preparePastMedicalHistoryXml($xml, $table_id, $rowCount) {
         
     }
-    
+
     protected function preparePresentingComplaintsXml($xml, $table_id, $rowCount) {
         $xmlLoad = simplexml_load_string($xml);
         foreach ($xmlLoad->children() as $group) {
@@ -380,6 +555,5 @@ class PatientdocumentsController extends ActiveController {
         $xml = $xmlLoad->asXML();
         return $xml;
     }
-    
 
 }
