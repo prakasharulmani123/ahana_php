@@ -10,6 +10,7 @@ use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
 use yii\filters\auth\QueryParamAuth;
 use yii\filters\ContentNegotiator;
+use yii\helpers\Html;
 use yii\rest\ActiveController;
 use yii\web\Response;
 
@@ -81,7 +82,8 @@ class PatientdocumentsController extends ActiveController {
     public function actionSavedocument() {
         $post = Yii::$app->getRequest()->post();
         $patient = PatPatient::getPatientByGuid($post['patient_id']);
-        $case_history_xml = PatDocumentTypes::getDocumentType('CH');
+        $type = 'CH';
+        $case_history_xml = PatDocumentTypes::getDocumentType($type);
 
         $doc_exists = PatDocuments::find()->tenant()->andWhere([
                     'patient_id' => $patient->patient_id,
@@ -96,31 +98,39 @@ class PatientdocumentsController extends ActiveController {
             $patient_document = new PatDocuments;
             $xml = $case_history_xml->document_xml;
         }
-
-        $result = $this->prepareXml($xml, $post);
-
-        if (isset($post['button_id'])) {
-            if ($post['table_id'] == 'RGCompliant') {
-                $result = $this->preparePresentingComplaintsXml($result, $post['table_id'], $post['rowCount']);
-            } elseif ($post['table_id'] == 'RGMedicalHistory') {
-                $result = $this->preparePastMedicalHistoryXml($result, $post['table_id'], $post['rowCount']);
-            } elseif ($post['table_id'] == 'RGPhamaco') {
-                $result = $this->preparePhamacotherapyXml($result, $post['table_id'], $post['rowCount']);
-            } elseif ($post['table_id'] == 'RGfamily') {
-                $result = $this->prepareFamilyHistoryXml($result, $post['table_id'], $post['rowCount']);
-            } elseif ($post['table_id'] == 'RGalt') {
-                $result = $this->prepareAlternativeTherapiesXml($result, $post['table_id'], $post['rowCount']);
-            }
-        }
-
-        $patient_document->attributes = [
+        $patient_document->scenario = $type;
+        
+        $attr = [
             'patient_id' => $patient->patient_id,
             'encounter_id' => $post['encounter_id'],
-            'doc_type_id' => $case_history_xml->doc_type_id,
-            'document_xml' => $result,
+            'doc_type_id' => $case_history_xml->doc_type_id
         ];
-        $patient_document->save(false);
-        return ['success' => true, 'xml' => $result];
+        $attr = array_merge($post, $attr);
+        $patient_document->attributes = $attr;
+        
+        if ($patient_document->validate()) {
+            $result = $this->prepareXml($xml, $post);
+
+            if (isset($post['button_id'])) {
+                if ($post['table_id'] == 'RGCompliant') {
+                    $result = $this->preparePresentingComplaintsXml($result, $post['table_id'], $post['rowCount']);
+                } elseif ($post['table_id'] == 'RGMedicalHistory') {
+                    $result = $this->preparePastMedicalHistoryXml($result, $post['table_id'], $post['rowCount']);
+                } elseif ($post['table_id'] == 'RGPhamaco') {
+                    $result = $this->preparePhamacotherapyXml($result, $post['table_id'], $post['rowCount']);
+                } elseif ($post['table_id'] == 'RGfamily') {
+                    $result = $this->prepareFamilyHistoryXml($result, $post['table_id'], $post['rowCount']);
+                } elseif ($post['table_id'] == 'RGalt') {
+                    $result = $this->prepareAlternativeTherapiesXml($result, $post['table_id'], $post['rowCount']);
+                }
+            }
+
+            $patient_document->document_xml = $result;
+            $patient_document->save(false);
+            return ['success' => true, 'xml' => $result];
+        } else {
+            return ['success' => false, 'message' => Html::errorSummary([$patient_document])];
+        }
     }
 
     protected function prepareXml($xml, $post) {
@@ -792,7 +802,7 @@ class PatientdocumentsController extends ActiveController {
 
                             $property2 = $properties1->addChild('PROPERTY', $dropdown);
                             $property2->addAttribute('name', 'name');
-                            
+
                             $listitems = $field1->addChild('LISTITEMS');
 
                             $listitem1 = $listitems->addChild('LISTITEM', '--Select--');
@@ -820,19 +830,19 @@ class PatientdocumentsController extends ActiveController {
 
                             $property5 = $properties2->addChild('PROPERTY', $radio);
                             $property5->addAttribute('name', 'name');
-                            
+
                             $listitems = $field2->addChild('LISTITEMS');
 
                             $listitem1 = $listitems->addChild('LISTITEM', 'Yes');
                             $listitem1->addAttribute('value', 'Yes');
-                            $listitem1->addAttribute('id', 'radio_pb_taken1'.$rowCount);
+                            $listitem1->addAttribute('id', 'radio_pb_taken1' . $rowCount);
                             $listitem1->addAttribute('Selected', 'False');
 
                             $listitem2 = $listitems->addChild('LISTITEM', 'No');
                             $listitem2->addAttribute('value', 'No');
-                            $listitem2->addAttribute('id', 'radio_pb_taken2'.$rowCount);
+                            $listitem2->addAttribute('id', 'radio_pb_taken2' . $rowCount);
                             $listitem2->addAttribute('Selected', 'False');
-                            
+
                             //FIELD 3
                             $field2 = $columns->addChild('FIELD');
                             $field2->addAttribute('id', $radio2);
@@ -842,22 +852,22 @@ class PatientdocumentsController extends ActiveController {
 
                             $property5 = $properties2->addChild('PROPERTY', $radio2);
                             $property5->addAttribute('name', 'name');
-                            
+
                             $listitems = $field2->addChild('LISTITEMS');
 
                             $listitem1 = $listitems->addChild('LISTITEM', 'Adequate');
                             $listitem1->addAttribute('value', 'Adequate');
-                            $listitem1->addAttribute('id', 'radio_pb_currently_under_taken1'.$rowCount);
+                            $listitem1->addAttribute('id', 'radio_pb_currently_under_taken1' . $rowCount);
                             $listitem1->addAttribute('Selected', 'False');
 
                             $listitem2 = $listitems->addChild('LISTITEM', 'Inadequate');
                             $listitem2->addAttribute('value', 'Inadequate');
-                            $listitem2->addAttribute('id', 'radio_pb_currently_under_taken2'.$rowCount);
+                            $listitem2->addAttribute('id', 'radio_pb_currently_under_taken2' . $rowCount);
                             $listitem2->addAttribute('Selected', 'False');
 
                             $listitem3 = $listitems->addChild('LISTITEM', 'Partial');
                             $listitem3->addAttribute('value', 'Partial');
-                            $listitem3->addAttribute('id', 'radio_pb_currently_under_taken3'.$rowCount);
+                            $listitem3->addAttribute('id', 'radio_pb_currently_under_taken3' . $rowCount);
                             $listitem3->addAttribute('Selected', 'False');
                         }
                     }
@@ -896,7 +906,7 @@ class PatientdocumentsController extends ActiveController {
 
                             $property2 = $properties1->addChild('PROPERTY', $dropdown);
                             $property2->addAttribute('name', 'name');
-                            
+
                             $listitems = $field1->addChild('LISTITEMS');
 
                             $listitem1 = $listitems->addChild('LISTITEM', '--Select--');
@@ -936,17 +946,17 @@ class PatientdocumentsController extends ActiveController {
 
                             $property5 = $properties2->addChild('PROPERTY', $radio);
                             $property5->addAttribute('name', 'name');
-                            
+
                             $listitems = $field2->addChild('LISTITEMS');
 
                             $listitem1 = $listitems->addChild('LISTITEM', 'Similar Illness');
-                            $listitem1->addAttribute('id', 'radio_pb_illnesstype1'.$rowCount);
+                            $listitem1->addAttribute('id', 'radio_pb_illnesstype1' . $rowCount);
                             $listitem1->addAttribute('value', 'Similar Illness');
                             $listitem1->addAttribute('Selected', 'False');
                             $listitem1->addAttribute('onclick', "OThersvisible(this.id,'$text_box','none');");
 
                             $listitem2 = $listitems->addChild('LISTITEM', 'Other Illness');
-                            $listitem2->addAttribute('id', 'radio_pb_illnesstype2'.$rowCount);
+                            $listitem2->addAttribute('id', 'radio_pb_illnesstype2' . $rowCount);
                             $listitem2->addAttribute('value', 'Other Illness');
                             $listitem2->addAttribute('Selected', 'False');
                             $listitem2->addAttribute('onclick', "OThersvisible(this.id,'$text_box','block');");
@@ -997,9 +1007,6 @@ class PatientdocumentsController extends ActiveController {
         }
 
         $xml = $xmlLoad->asXML();
-//        echo '<pre>';
-//        print_r($xml);
-//        exit;
         return $xml;
     }
 

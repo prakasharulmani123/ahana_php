@@ -4,9 +4,9 @@ namespace common\models;
 
 use common\models\query\PatPatientQuery;
 use p2made\helpers\Uuid\UuidHelpers;
-use Yii;
 use yii\db\ActiveQuery;
 use yii\db\Connection;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "pat_patient".
@@ -168,7 +168,7 @@ class PatPatient extends RActiveRecord {
     }
 
     public function getPatHaveOneEncounter() {
-        return $this->hasOne(PatEncounter::className(), ['patient_id' => 'patient_id'])->orderBy(['encounter_date' => SORT_DESC]);    
+        return $this->hasOne(PatEncounter::className(), ['patient_id' => 'patient_id'])->orderBy(['encounter_date' => SORT_DESC]);
     }
 
     public function getPatHaveEncounter() {
@@ -252,7 +252,7 @@ class PatPatient extends RActiveRecord {
 
     /* Save to HMS Database */
 
-    public function savetoHms($insert) {
+    protected function savetoHms($insert) {
         if ($this->saveHms) {
             $unset_cols = $this->getUnsetcols();
 
@@ -279,27 +279,18 @@ class PatPatient extends RActiveRecord {
             }
 
             // Link Patient and Tenant
-            $pat_ten_attr = [
-                'tenant_id' => $this->tenant_id,
-                'org_id' => $this->tenant->org_id,
-                'patient_global_guid' => $this->patient_global_guid
-            ];
+            $this->updatePatientTenant();
 
-            $patient_tenant = GlPatientTenant::find()->where($pat_ten_attr)->one();
-
-            if (empty($patient_tenant)) {
-                $model = new GlPatientTenant;
-                $model->attributes = $pat_ten_attr;
-                $model->save(false);
-            }
+            // Link Patient and Share
+            $this->updatePatientShare();
         }
     }
 
     /* Update Patient details to all Database */
 
-    public function updateAllPatient($patient) {
+    protected function updateAllPatient($patient) {
         $unset_cols = $this->getUnsetcols();
-        
+
         $newAttrs = $this->getAttributes();
         $oldAttrs = $this->oldAttributes;
 
@@ -327,6 +318,42 @@ class PatPatient extends RActiveRecord {
                 $command->execute();
                 $connection->close();
             }
+        }
+    }
+
+    protected function updatePatientTenant() {
+        $pat_ten_attr = [
+            'tenant_id' => $this->tenant_id,
+            'org_id' => $this->tenant->org_id,
+            'patient_global_guid' => $this->patient_global_guid
+        ];
+
+        $patient_tenant = GlPatientTenant::find()->where($pat_ten_attr)->one();
+
+        if (empty($patient_tenant)) {
+            $model = new GlPatientTenant;
+            $model->attributes = $pat_ten_attr;
+            $model->save(false);
+        }
+    }
+
+    public function updatePatientShare() {
+        $pat_share_attr = [
+            'tenant_id' => $this->tenant_id,
+            'org_id' => $this->tenant->org_id,
+            'patient_global_guid' => $this->patient_global_guid
+        ];
+
+        GlPatientShareResources::deleteAll($pat_share_attr);
+
+        $share_config = AppConfiguration::find()->tenant($this->tenant_id)->andWhere("`key` like '%SHARE_%' AND `value` = '1'")->all();
+        $share_resources = ArrayHelper::map($share_config, 'key', 'code');
+        
+        foreach ($share_resources as $key => $share_resource) {
+            $patient_share = new GlPatientShareResources;
+            $pat_share_attr['resource'] = $share_resource;
+            $patient_share->attributes = $pat_share_attr;
+            $patient_share->save(false);
         }
     }
 

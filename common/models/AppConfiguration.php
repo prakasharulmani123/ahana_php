@@ -60,9 +60,40 @@ class AppConfiguration extends RActiveRecord {
         return array(
 //            'ROOM_CHARGE_CONFIG' => '12',
             'ELAPSED_TIME' => [
+                'code' => 'ET',
                 'value' => '3600',
                 'notes' => 'seconds',
-            ]
+            ],
+            'SHARE_ENCOUNTER' => [
+                'code' => 'ENCOUNTER',
+                'value' => '0',
+                'notes' => 'Share Encounter',
+            ],
+            'SHARE_NOTES' => [
+                'code' => 'NOTES',
+                'value' => '0',
+                'notes' => 'Share Notes',
+            ],
+            'SHARE_CONSULTANT' => [
+                'code' => 'CONSULTANT',
+                'value' => '0',
+                'notes' => 'Share Consultant',
+            ],
+            'SHARE_ALERT' => [
+                'code' => 'ALERT',
+                'value' => '0',
+                'notes' => 'Share Alert',
+            ],
+            'SHARE_VITALS' => [
+                'code' => 'VITALS',
+                'value' => '0',
+                'notes' => 'Share Vitals',
+            ],
+            'SHARE_PRESCRIPTION' => [
+                'code' => 'PRESCRIPTION',
+                'value' => '0',
+                'notes' => 'Share Prescription',
+            ],
         );
     }
     

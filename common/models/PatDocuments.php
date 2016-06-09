@@ -28,6 +28,20 @@ use yii\db\ActiveQuery;
  */
 class PatDocuments extends RActiveRecord {
 
+    public $name;
+    public $age;
+    public $gender;
+    public $address;
+    public $education;
+    public $martial_status;
+    public $relationship;
+    public $primary_care_giver;
+    public $information;
+    public $total_duration;
+    public $mode_of_onset;
+    public $course_type;
+    public $nature;
+    
     /**
      * @inheritdoc
      */
@@ -40,10 +54,12 @@ class PatDocuments extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['tenant_id', 'patient_id', 'doc_type_id', 'encounter_id', 'created_by'], 'required'],
+            [['patient_id', 'doc_type_id', 'encounter_id'], 'required'],
+            [['name', 'age', 'gender', 'address', 'education', 'martial_status', 'relationship'], 'required', 'on' => 'CH'],
+            [['information', 'total_duration', 'mode_of_onset', 'course_type', 'nature'], 'required', 'on' => 'CH'],
             [['tenant_id', 'patient_id', 'doc_type_id', 'encounter_id', 'created_by', 'modified_by'], 'integer'],
             [['document_xml', 'status'], 'string'],
-            [['created_at', 'modified_at', 'deleted_at'], 'safe']
+            [['created_at', 'modified_at', 'deleted_at'], 'safe'],
         ];
     }
 

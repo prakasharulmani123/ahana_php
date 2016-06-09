@@ -179,6 +179,7 @@ class CoTenant extends GActiveRecord {
                 $configuration = new AppConfiguration;
                 $configuration->tenant_id = $this->tenant_id;
                 $configuration->key = $key;
+                $configuration->code = $app_configuration['code'];
                 $configuration->value = $app_configuration['value'];
                 $configuration->notes = $app_configuration['notes'];
                 $configuration->save(false);

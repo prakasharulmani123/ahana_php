@@ -17,7 +17,7 @@ use yii\web\Response;
  * OrganizationController implements the CRUD actions for CoTenant model.
  */
 class OrganizationController extends ActiveController {
-    
+
     public $modelClass = 'common\models\CoTenant';
 
     public function behaviors() {
@@ -49,7 +49,7 @@ class OrganizationController extends ActiveController {
         $access_tenant_id = Yii::$app->user->identity->access_tenant_id;
         $tenant_super_role = CoRole::getTenantSuperRole($tenant_id);
         $tenant_super_role_id = $tenant_super_role->role_id;
-        
+
         if (!empty($tenant_id)) {
             $return = array();
             $organization = CoTenant::find()->where(['tenant_id' => $tenant_id])->one();
@@ -64,7 +64,7 @@ class OrganizationController extends ActiveController {
         $tenant_id = Yii::$app->user->identity->logged_tenant_id;
         $tenant_super_role = CoRole::getTenantSuperRole($tenant_id);
         $tenant_super_role_id = $tenant_super_role->role_id;
-        
+
         $post = Yii::$app->request->post();
         if (!empty($post)) {
             $role_id = Yii::$app->request->post('role_id');
@@ -82,10 +82,10 @@ class OrganizationController extends ActiveController {
                     $model = CoRole::findOne(['role_id' => Yii::$app->request->post('Module')['role_id']]);
 
                     $resources = CoResources::find()->where(['in', 'resource_id', $resource_id])->all();
-                    
+
                     // extra columns to be saved to the many to many table
-                    $extraColumns = ['tenant_id' => Yii::$app->user->identity->logged_tenant_id, 'created_by' => Yii::$app->user->identity->user_id, 'status' => '1', 'role_id' => Yii::$app->request->post('Module')['role_id']]; 
-                    
+                    $extraColumns = ['tenant_id' => Yii::$app->user->identity->logged_tenant_id, 'created_by' => Yii::$app->user->identity->user_id, 'status' => '1', 'role_id' => Yii::$app->request->post('Module')['role_id']];
+
                     $unlink = true; // unlink tags not in the list
                     $delete = true; // delete unlinked tags
                     $model->linkAll('resources', $resources, $extraColumns, $unlink, $delete);
@@ -98,6 +98,19 @@ class OrganizationController extends ActiveController {
         } else {
             return ['success' => false, 'message' => 'Please Fill the Form'];
         }
+    }
+
+    public function actionUpdatesharing() {
+        $post = Yii::$app->request->post();
+        $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+
+        $unset_configs = \common\models\AppConfiguration::updateAll(['value' => '0'], "tenant_id = {$tenant_id} AND `key` like '%SHARE_%'");
+
+        if (isset($post['share'])) {
+            $share_resources = array_keys($post['share']);
+            $set_configs = \common\models\AppConfiguration::updateAll(['value' => '1'], ['tenant_id' => $tenant_id, 'code' => $share_resources]);
+        }
+        return ['success' => true];
     }
 
 }
