@@ -104,6 +104,12 @@ class PatientdocumentsController extends ActiveController {
                 $result = $this->preparePresentingComplaintsXml($result, $post['table_id'], $post['rowCount']);
             } elseif ($post['table_id'] == 'RGMedicalHistory') {
                 $result = $this->preparePastMedicalHistoryXml($result, $post['table_id'], $post['rowCount']);
+            } elseif ($post['table_id'] == 'RGPhamaco') {
+                $result = $this->preparePhamacotherapyXml($result, $post['table_id'], $post['rowCount']);
+            } elseif ($post['table_id'] == 'RGfamily') {
+                $result = $this->prepareFamilyHistoryXml($result, $post['table_id'], $post['rowCount']);
+            } elseif ($post['table_id'] == 'RGalt') {
+                $result = $this->prepareAlternativeTherapiesXml($result, $post['table_id'], $post['rowCount']);
             }
         }
 
@@ -478,19 +484,523 @@ class PatientdocumentsController extends ActiveController {
     }
 
     protected function preparePastMedicalHistoryXml($xml, $table_id, $rowCount) {
-        
+        $xmlLoad = simplexml_load_string($xml);
+        foreach ($xmlLoad->children() as $group) {
+            foreach ($group->PANELBODY->FIELD as $x) {
+                if ($x->attributes()->type == 'RadGrid' && $x->attributes()->AddButtonTableId == $table_id) {
+                    $dropdown = 'DDLMedHis' . $rowCount;
+                    $text_box = 'TxtMedHisDuration' . $rowCount;
+                    $radio = 'radio_med_his_currently_under_treatment' . $rowCount;
+                    $dropdown_2 = 'DDLMedHisDuration' . $rowCount;
+
+                    $columns = $x->addChild('COLUMNS');
+
+                    //FIELD 1
+                    $field1 = $columns->addChild('FIELD');
+                    $field1->addAttribute('id', $dropdown);
+                    $field1->addAttribute('type', 'DropDownList');
+
+                    $properties1 = $field1->addChild('PROPERTIES');
+
+                    $property1 = $properties1->addChild('PROPERTY', $dropdown);
+                    $property1->addAttribute('name', 'id');
+
+                    $property2 = $properties1->addChild('PROPERTY', $dropdown);
+                    $property2->addAttribute('name', 'name');
+
+                    $listitems = $field1->addChild('LISTITEMS');
+
+                    $listitem1 = $listitems->addChild('LISTITEM', '--Select--');
+                    $listitem1->addAttribute('value', '--Select--');
+                    $listitem1->addAttribute('Selected', 'False');
+
+                    $listitem2 = $listitems->addChild('LISTITEM', 'Diabetes');
+                    $listitem2->addAttribute('value', 'Diabetes');
+                    $listitem2->addAttribute('Selected', 'False');
+
+                    $listitem3 = $listitems->addChild('LISTITEM', 'Hypertension');
+                    $listitem3->addAttribute('value', 'Hypertension');
+                    $listitem3->addAttribute('Selected', 'False');
+
+                    $listitem4 = $listitems->addChild('LISTITEM', 'Tuberculosis');
+                    $listitem4->addAttribute('value', 'Tuberculosis');
+                    $listitem4->addAttribute('Selected', 'False');
+
+                    $listitem5 = $listitems->addChild('LISTITEM', 'Hepatitis');
+                    $listitem5->addAttribute('value', 'Hepatitis');
+                    $listitem5->addAttribute('Selected', 'False');
+
+                    $listitem6 = $listitems->addChild('LISTITEM', 'Asthma');
+                    $listitem6->addAttribute('value', 'Asthma');
+                    $listitem6->addAttribute('Selected', 'False');
+
+                    $listitem7 = $listitems->addChild('LISTITEM', 'Bronchitis');
+                    $listitem7->addAttribute('value', 'Bronchitis');
+                    $listitem7->addAttribute('Selected', 'False');
+
+                    $listitem8 = $listitems->addChild('LISTITEM', 'Head injury/LOC');
+                    $listitem8->addAttribute('value', 'Head injury/LOC');
+                    $listitem8->addAttribute('Selected', 'False');
+
+                    $listitem9 = $listitems->addChild('LISTITEM', 'Seizures');
+                    $listitem9->addAttribute('value', 'Seizures');
+                    $listitem9->addAttribute('Selected', 'False');
+
+                    $listitem10 = $listitems->addChild('LISTITEM', 'Cerebrovascular Accidents');
+                    $listitem10->addAttribute('value', 'Cerebrovascular Accidents');
+                    $listitem10->addAttribute('Selected', 'False');
+
+                    $listitem11 = $listitems->addChild('LISTITEM', 'Immuno compromised state');
+                    $listitem11->addAttribute('value', 'Immuno compromised state');
+                    $listitem11->addAttribute('Selected', 'False');
+
+                    $listitem12 = $listitems->addChild('LISTITEM', 'Mycocardial Infarction');
+                    $listitem12->addAttribute('value', 'Mycocardial Infarction');
+                    $listitem12->addAttribute('Selected', 'False');
+
+                    $listitem13 = $listitems->addChild('LISTITEM', 'Allergies');
+                    $listitem13->addAttribute('value', 'Allergies');
+                    $listitem13->addAttribute('Selected', 'False');
+
+                    $listitem14 = $listitems->addChild('LISTITEM', 'IHD');
+                    $listitem14->addAttribute('value', 'IHD');
+                    $listitem14->addAttribute('Selected', 'False');
+
+                    //FIELD 2
+                    $field2 = $columns->addChild('FIELD');
+                    $field2->addAttribute('id', $text_box);
+                    $field2->addAttribute('type', 'TextBox');
+
+                    $properties2 = $field2->addChild('PROPERTIES');
+
+                    $property3 = $properties2->addChild('PROPERTY', $text_box);
+                    $property3->addAttribute('name', 'id');
+
+                    $property4 = $properties2->addChild('PROPERTY', 'return isNumericKeyStroke()');
+                    $property4->addAttribute('name', 'onkeydown');
+
+                    $property5 = $properties2->addChild('PROPERTY', $text_box);
+                    $property5->addAttribute('name', 'name');
+
+                    //SUB FIELD 1
+                    $subfield1 = $field2->addChild('FIELD');
+                    $subfield1->addAttribute('id', $dropdown_2);
+                    $subfield1->addAttribute('type', 'DropDownList');
+
+                    $properties3 = $subfield1->addChild('PROPERTIES');
+
+                    $property6 = $properties3->addChild('PROPERTY', $dropdown_2);
+                    $property6->addAttribute('name', 'id');
+
+                    $property7 = $properties3->addChild('PROPERTY', $dropdown_2);
+                    $property7->addAttribute('name', 'name');
+
+                    $listitems = $subfield1->addChild('LISTITEMS');
+
+                    $listitem1 = $listitems->addChild('LISTITEM', 'Yrs');
+                    $listitem1->addAttribute('value', 'Yrs');
+                    $listitem1->addAttribute('Selected', 'False');
+
+                    $listitem2 = $listitems->addChild('LISTITEM', 'Months');
+                    $listitem2->addAttribute('value', 'Months');
+                    $listitem2->addAttribute('Selected', 'False');
+
+                    $listitem3 = $listitems->addChild('LISTITEM', 'Weeks');
+                    $listitem3->addAttribute('value', 'Weeks');
+                    $listitem3->addAttribute('Selected', 'False');
+
+                    $listitem4 = $listitems->addChild('LISTITEM', 'Days');
+                    $listitem4->addAttribute('value', 'Days');
+                    $listitem4->addAttribute('Selected', 'False');
+
+                    //FIELD 3
+                    $field3 = $columns->addChild('FIELD');
+                    $field3->addAttribute('id', $radio);
+                    $field3->addAttribute('type', 'RadioButtonList');
+
+                    $properties1 = $field3->addChild('PROPERTIES');
+
+                    $property2 = $properties1->addChild('PROPERTY', $radio);
+                    $property2->addAttribute('name', 'name');
+
+                    $listitems = $field3->addChild('LISTITEMS');
+
+                    $listitem1 = $listitems->addChild('LISTITEM', 'Yes');
+                    $listitem1->addAttribute('value', 'Yes');
+                    $listitem1->addAttribute('id', 'radio_med_his_currently_under_treatment1' . $rowCount);
+                    $listitem1->addAttribute('Selected', 'False');
+
+                    $listitem2 = $listitems->addChild('LISTITEM', 'No');
+                    $listitem2->addAttribute('value', 'No');
+                    $listitem2->addAttribute('id', 'radio_med_his_currently_under_treatment2' . $rowCount);
+                    $listitem2->addAttribute('Selected', 'False');
+                }
+            }
+        }
+
+        $xml = $xmlLoad->asXML();
+        return $xml;
     }
-    
+
     protected function preparePhamacotherapyXml($xml, $table_id, $rowCount) {
-        
+        $xmlLoad = simplexml_load_string($xml);
+        foreach ($xmlLoad->children() as $group) {
+            foreach ($group->PANELBODY->FIELD as $y) {
+                if ($y->attributes()->type == 'PanelBar') {
+                    foreach ($y->FIELD as $x) {
+                        if ($x->attributes()->type == 'RadGrid' && $x->attributes()->AddButtonTableId == $table_id) {
+
+                            $text_box = 'txtPhamacoDrugName' . $rowCount; //Textbox1 Name
+                            $text_box2 = 'txtPhamacoDuration' . $rowCount; //Textbox2 Name
+                            $text_box3 = 'txtPhamacoSideEffects' . $rowCount; //Textbox2 Name
+                            $radio = 'radioPhamacoCurrentlyUnderTreatment' . $rowCount; //DDL Name
+                            $dropdown = 'DDLPhamacoDuration' . $rowCount; //DDL Name
+
+                            $columns = $x->addChild('COLUMNS');
+
+                            //FIELD 1
+                            $field1 = $columns->addChild('FIELD');
+                            $field1->addAttribute('id', $text_box);
+                            $field1->addAttribute('type', 'TextBox');
+
+                            $properties1 = $field1->addChild('PROPERTIES');
+
+                            $property1 = $properties1->addChild('PROPERTY', $text_box);
+                            $property1->addAttribute('name', 'id');
+
+                            $property2 = $properties1->addChild('PROPERTY', $text_box);
+                            $property2->addAttribute('name', 'name');
+
+                            //FIELD 2
+                            $field2 = $columns->addChild('FIELD');
+                            $field2->addAttribute('id', $text_box2);
+                            $field2->addAttribute('type', 'TextBox');
+
+                            $properties2 = $field2->addChild('PROPERTIES');
+
+                            $property3 = $properties2->addChild('PROPERTY', $text_box2);
+                            $property3->addAttribute('name', 'id');
+
+                            $property4 = $properties2->addChild('PROPERTY', 'return isNumericKeyStroke()');
+                            $property4->addAttribute('name', 'onkeydown');
+
+                            $property5 = $properties2->addChild('PROPERTY', $text_box2);
+                            $property5->addAttribute('name', 'name');
+
+                            $subfield1 = $field2->addChild('FIELD');
+                            $subfield1->addAttribute('id', $dropdown);
+                            $subfield1->addAttribute('type', 'DropDownList');
+
+                            $properties3 = $subfield1->addChild('PROPERTIES');
+
+                            $property6 = $properties3->addChild('PROPERTY', $dropdown);
+                            $property6->addAttribute('name', 'id');
+
+                            $property7 = $properties3->addChild('PROPERTY', $dropdown);
+                            $property7->addAttribute('name', 'name');
+
+                            $listitems = $subfield1->addChild('LISTITEMS');
+
+                            $listitem1 = $listitems->addChild('LISTITEM', 'Yrs');
+                            $listitem1->addAttribute('value', 'Yrs');
+                            $listitem1->addAttribute('Selected', 'False');
+
+                            $listitem2 = $listitems->addChild('LISTITEM', 'Months');
+                            $listitem2->addAttribute('value', 'Months');
+                            $listitem2->addAttribute('Selected', 'False');
+
+                            $listitem3 = $listitems->addChild('LISTITEM', 'Weeks');
+                            $listitem3->addAttribute('value', 'Weeks');
+                            $listitem3->addAttribute('Selected', 'False');
+
+                            $listitem4 = $listitems->addChild('LISTITEM', 'Days');
+                            $listitem4->addAttribute('value', 'Days');
+                            $listitem4->addAttribute('Selected', 'False');
+
+                            //FIELD 3
+                            $field3 = $columns->addChild('FIELD');
+                            $field3->addAttribute('id', $radio);
+                            $field3->addAttribute('type', 'RadioButtonList');
+
+                            $properties1 = $field3->addChild('PROPERTIES');
+
+                            $property2 = $properties1->addChild('PROPERTY', $radio);
+                            $property2->addAttribute('name', 'name');
+
+                            $listitems = $field3->addChild('LISTITEMS');
+
+                            $listitem1 = $listitems->addChild('LISTITEM', 'Adequate');
+                            $listitem1->addAttribute('value', 'Adequate');
+                            $listitem1->addAttribute('id', 'radioPhamacoCurrentlyUnderTreatment1' . $rowCount);
+                            $listitem1->addAttribute('Selected', 'False');
+
+                            $listitem2 = $listitems->addChild('LISTITEM', 'Inadequate');
+                            $listitem2->addAttribute('value', 'Inadequate');
+                            $listitem2->addAttribute('id', 'radioPhamacoCurrentlyUnderTreatment2' . $rowCount);
+                            $listitem2->addAttribute('Selected', 'False');
+
+                            $listitem3 = $listitems->addChild('LISTITEM', 'Partial');
+                            $listitem3->addAttribute('value', 'Partial');
+                            $listitem3->addAttribute('id', 'radioPhamacoCurrentlyUnderTreatment3' . $rowCount);
+                            $listitem3->addAttribute('Selected', 'False');
+
+                            //FIELD 4
+                            $field4 = $columns->addChild('FIELD');
+                            $field4->addAttribute('id', $text_box3);
+                            $field4->addAttribute('type', 'TextBox');
+
+                            $properties1 = $field4->addChild('PROPERTIES');
+
+                            $property1 = $properties1->addChild('PROPERTY', $text_box3);
+                            $property1->addAttribute('name', 'id');
+
+                            $property2 = $properties1->addChild('PROPERTY', $text_box3);
+                            $property2->addAttribute('name', 'name');
+                        }
+                    }
+                }
+            }
+        }
+
+        $xml = $xmlLoad->asXML();
+        return $xml;
     }
-    
+
     protected function prepareAlternativeTherapiesXml($xml, $table_id, $rowCount) {
-        
+        $xmlLoad = simplexml_load_string($xml);
+        foreach ($xmlLoad->children() as $group) {
+            foreach ($group->PANELBODY->FIELD as $y) {
+                if ($y->attributes()->type == 'PanelBar') {
+                    foreach ($y->FIELD as $x) {
+                        if ($x->attributes()->type == 'RadGrid' && $x->attributes()->AddButtonTableId == $table_id) {
+
+                            $dropdown = 'ddl_pb_therapy' . $rowCount; //DDL Name
+                            $radio = 'radio_pb_taken' . $rowCount; //DDL Name
+                            $radio2 = 'radio_pb_currently_under_taken' . $rowCount; //DDL Name
+
+                            $columns = $x->addChild('COLUMNS');
+
+                            //FIELD 1
+                            $field1 = $columns->addChild('FIELD');
+                            $field1->addAttribute('id', $dropdown);
+                            $field1->addAttribute('type', 'DropDownList');
+
+                            $properties1 = $field1->addChild('PROPERTIES');
+
+                            $property1 = $properties1->addChild('PROPERTY', $dropdown);
+                            $property1->addAttribute('name', 'id');
+
+                            $property2 = $properties1->addChild('PROPERTY', $dropdown);
+                            $property2->addAttribute('name', 'name');
+                            
+                            $listitems = $field1->addChild('LISTITEMS');
+
+                            $listitem1 = $listitems->addChild('LISTITEM', '--Select--');
+                            $listitem1->addAttribute('value', '--Select--');
+                            $listitem1->addAttribute('Selected', 'False');
+
+                            $listitem2 = $listitems->addChild('LISTITEM', 'Magico Religious');
+                            $listitem2->addAttribute('value', 'Magico Religious');
+                            $listitem2->addAttribute('Selected', 'False');
+
+                            $listitem3 = $listitems->addChild('LISTITEM', 'Homeopathy');
+                            $listitem3->addAttribute('value', 'Homeopathy');
+                            $listitem3->addAttribute('Selected', 'False');
+
+                            $listitem4 = $listitems->addChild('LISTITEM', 'Ayurveda');
+                            $listitem4->addAttribute('value', 'Ayurveda');
+                            $listitem4->addAttribute('Selected', 'False');
+
+                            //FIELD 2
+                            $field2 = $columns->addChild('FIELD');
+                            $field2->addAttribute('id', $radio);
+                            $field2->addAttribute('type', 'RadioButtonList');
+
+                            $properties2 = $field2->addChild('PROPERTIES');
+
+                            $property5 = $properties2->addChild('PROPERTY', $radio);
+                            $property5->addAttribute('name', 'name');
+                            
+                            $listitems = $field2->addChild('LISTITEMS');
+
+                            $listitem1 = $listitems->addChild('LISTITEM', 'Yes');
+                            $listitem1->addAttribute('value', 'Yes');
+                            $listitem1->addAttribute('id', 'radio_pb_taken1'.$rowCount);
+                            $listitem1->addAttribute('Selected', 'False');
+
+                            $listitem2 = $listitems->addChild('LISTITEM', 'No');
+                            $listitem2->addAttribute('value', 'No');
+                            $listitem2->addAttribute('id', 'radio_pb_taken2'.$rowCount);
+                            $listitem2->addAttribute('Selected', 'False');
+                            
+                            //FIELD 3
+                            $field2 = $columns->addChild('FIELD');
+                            $field2->addAttribute('id', $radio2);
+                            $field2->addAttribute('type', 'RadioButtonList');
+
+                            $properties2 = $field2->addChild('PROPERTIES');
+
+                            $property5 = $properties2->addChild('PROPERTY', $radio2);
+                            $property5->addAttribute('name', 'name');
+                            
+                            $listitems = $field2->addChild('LISTITEMS');
+
+                            $listitem1 = $listitems->addChild('LISTITEM', 'Adequate');
+                            $listitem1->addAttribute('value', 'Adequate');
+                            $listitem1->addAttribute('id', 'radio_pb_currently_under_taken1'.$rowCount);
+                            $listitem1->addAttribute('Selected', 'False');
+
+                            $listitem2 = $listitems->addChild('LISTITEM', 'Inadequate');
+                            $listitem2->addAttribute('value', 'Inadequate');
+                            $listitem2->addAttribute('id', 'radio_pb_currently_under_taken2'.$rowCount);
+                            $listitem2->addAttribute('Selected', 'False');
+
+                            $listitem3 = $listitems->addChild('LISTITEM', 'Partial');
+                            $listitem3->addAttribute('value', 'Partial');
+                            $listitem3->addAttribute('id', 'radio_pb_currently_under_taken3'.$rowCount);
+                            $listitem3->addAttribute('Selected', 'False');
+                        }
+                    }
+                }
+            }
+        }
+
+        $xml = $xmlLoad->asXML();
+        return $xml;
     }
-    
+
     protected function prepareFamilyHistoryXml($xml, $table_id, $rowCount) {
-        
+        $xmlLoad = simplexml_load_string($xml);
+        foreach ($xmlLoad->children() as $group) {
+            foreach ($group->PANELBODY->FIELD as $y) {
+                if ($y->attributes()->type == 'PanelBar') {
+                    foreach ($y->FIELD as $x) {
+                        if ($x->attributes()->type == 'RadGrid' && $x->attributes()->AddButtonTableId == $table_id) {
+
+                            $radio = 'radio_pb_illnesstype' . $rowCount; //DDL Name
+                            $radio2 = 'radio_pb_treatment' . $rowCount; //DDL Name
+                            $dropdown = 'ddl_pb_relation' . $rowCount; //DDL Name
+                            $text_box = 'radio_pb_illnesstype_note' . $rowCount; //Textbox1 Name
+
+                            $columns = $x->addChild('COLUMNS');
+
+                            //FIELD 1
+                            $field1 = $columns->addChild('FIELD');
+                            $field1->addAttribute('id', $dropdown);
+                            $field1->addAttribute('type', 'DropDownList');
+
+                            $properties1 = $field1->addChild('PROPERTIES');
+
+                            $property1 = $properties1->addChild('PROPERTY', $dropdown);
+                            $property1->addAttribute('name', 'id');
+
+                            $property2 = $properties1->addChild('PROPERTY', $dropdown);
+                            $property2->addAttribute('name', 'name');
+                            
+                            $listitems = $field1->addChild('LISTITEMS');
+
+                            $listitem1 = $listitems->addChild('LISTITEM', '--Select--');
+                            $listitem1->addAttribute('value', '--Select--');
+                            $listitem1->addAttribute('Selected', 'False');
+
+                            $listitem2 = $listitems->addChild('LISTITEM', 'GrandParents');
+                            $listitem2->addAttribute('value', 'GrandParents');
+                            $listitem2->addAttribute('Selected', 'False');
+
+                            $listitem3 = $listitems->addChild('LISTITEM', 'Parents');
+                            $listitem3->addAttribute('value', 'Parents');
+                            $listitem3->addAttribute('Selected', 'False');
+
+                            $listitem4 = $listitems->addChild('LISTITEM', 'Siblings');
+                            $listitem4->addAttribute('value', 'Siblings');
+                            $listitem4->addAttribute('Selected', 'False');
+
+                            $listitem5 = $listitems->addChild('LISTITEM', 'Spouse');
+                            $listitem5->addAttribute('value', 'Spouse');
+                            $listitem5->addAttribute('Selected', 'False');
+
+                            $listitem6 = $listitems->addChild('LISTITEM', 'Children');
+                            $listitem6->addAttribute('value', 'Children');
+                            $listitem6->addAttribute('Selected', 'False');
+
+                            $listitem7 = $listitems->addChild('LISTITEM', 'Uncle/Aunt');
+                            $listitem7->addAttribute('value', 'Uncle/Aunt');
+                            $listitem7->addAttribute('Selected', 'False');
+
+                            //FIELD 2
+                            $field2 = $columns->addChild('FIELD');
+                            $field2->addAttribute('id', $radio);
+                            $field2->addAttribute('type', 'RadioButtonList');
+
+                            $properties2 = $field2->addChild('PROPERTIES');
+
+                            $property5 = $properties2->addChild('PROPERTY', $radio);
+                            $property5->addAttribute('name', 'name');
+                            
+                            $listitems = $field2->addChild('LISTITEMS');
+
+                            $listitem1 = $listitems->addChild('LISTITEM', 'Similar Illness');
+                            $listitem1->addAttribute('id', 'radio_pb_illnesstype1'.$rowCount);
+                            $listitem1->addAttribute('value', 'Similar Illness');
+                            $listitem1->addAttribute('Selected', 'False');
+                            $listitem1->addAttribute('onclick', "OThersvisible(this.id,'$text_box','none');");
+
+                            $listitem2 = $listitems->addChild('LISTITEM', 'Other Illness');
+                            $listitem2->addAttribute('id', 'radio_pb_illnesstype2'.$rowCount);
+                            $listitem2->addAttribute('value', 'Other Illness');
+                            $listitem2->addAttribute('Selected', 'False');
+                            $listitem2->addAttribute('onclick', "OThersvisible(this.id,'$text_box','block');");
+
+                            $subfield1 = $field2->addChild('FIELD');
+                            $subfield1->addAttribute('id', $text_box);
+                            $subfield1->addAttribute('type', 'TextBox');
+
+                            $properties3 = $subfield1->addChild('PROPERTIES');
+
+                            $property6 = $properties3->addChild('PROPERTY', $text_box);
+                            $property6->addAttribute('name', 'id');
+
+                            $property7 = $properties3->addChild('PROPERTY', $text_box);
+                            $property7->addAttribute('name', 'name');
+
+                            $property8 = $properties3->addChild('PROPERTY', 'form-control hide');
+                            $property8->addAttribute('name', 'class');
+
+                            $property9 = $properties3->addChild('PROPERTY', 'Notes');
+                            $property9->addAttribute('name', 'placeholder');
+
+                            //FIELD 3
+                            $field3 = $columns->addChild('FIELD');
+                            $field3->addAttribute('id', $radio2);
+                            $field3->addAttribute('type', 'RadioButtonList');
+
+                            $properties1 = $field3->addChild('PROPERTIES');
+
+                            $property2 = $properties1->addChild('PROPERTY', $radio2);
+                            $property2->addAttribute('name', 'name');
+
+                            $listitems = $field3->addChild('LISTITEMS');
+
+                            $listitem1 = $listitems->addChild('LISTITEM', 'Treated');
+                            $listitem1->addAttribute('value', 'Treated');
+                            $listitem1->addAttribute('id', 'radio_pb_treatment1' . $rowCount);
+                            $listitem1->addAttribute('Selected', 'False');
+
+                            $listitem2 = $listitems->addChild('LISTITEM', 'Untreated');
+                            $listitem2->addAttribute('value', 'Untreated');
+                            $listitem2->addAttribute('id', 'radio_pb_treatment2' . $rowCount);
+                            $listitem2->addAttribute('Selected', 'False');
+                        }
+                    }
+                }
+            }
+        }
+
+        $xml = $xmlLoad->asXML();
+//        echo '<pre>';
+//        print_r($xml);
+//        exit;
+        return $xml;
     }
 
     protected function preparePresentingComplaintsXml($xml, $table_id, $rowCount) {
