@@ -129,15 +129,6 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
             );
         });
 
-
-
-
-
-
-
-
-
-
         //Save Both Add & Update Data
         $scope.saveForm = function (mode) {
             _that = this;
