@@ -480,6 +480,18 @@ class PatientdocumentsController extends ActiveController {
     protected function preparePastMedicalHistoryXml($xml, $table_id, $rowCount) {
         
     }
+    
+    protected function preparePhamacotherapyXml($xml, $table_id, $rowCount) {
+        
+    }
+    
+    protected function prepareAlternativeTherapiesXml($xml, $table_id, $rowCount) {
+        
+    }
+    
+    protected function prepareFamilyHistoryXml($xml, $table_id, $rowCount) {
+        
+    }
 
     protected function preparePresentingComplaintsXml($xml, $table_id, $rowCount) {
         $xmlLoad = simplexml_load_string($xml);
