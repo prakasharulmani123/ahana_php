@@ -1,4 +1,4 @@
-app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'transformRequestAsFormPost', function ($rootScope, $scope, $timeout, $http, $state, transformRequestAsFormPost) {
+app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'transformRequestAsFormPost', '$anchorScroll', function ($rootScope, $scope, $timeout, $http, $state, transformRequestAsFormPost, $anchorScroll) {
 
         $scope.app.settings.patientTopBar = true;
         $scope.app.settings.patientSideMenu = true;
@@ -98,7 +98,12 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
             }).then(
                     function (response) {
                         $scope.loadbar('hide');
-                        $scope.xml = response.data.xml;
+                        if(response.success == true){
+                            $scope.xml = response.data.xml;
+                        }else{
+                            $scope.errorData = response.data.message;
+                            $anchorScroll();
+                        }
                     }
             );
         }
@@ -124,7 +129,12 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
             }).then(
                     function (response) {
                         $scope.loadbar('hide');
-                        $scope.xml = response.data.xml;
+                        if(response.success == true){
+                            $scope.xml = response.data.xml;
+                        }else{
+                            $scope.errorData = response.data.message;
+                            $anchorScroll();
+                        }
                     }
             );
         });

@@ -254,10 +254,10 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
                         $scope.loadbar('hide');
                         if (response.success == true) {
                             $scope.successMessage = succ_msg;
-
-                            $scope.patientObj = $scope.orgData = response;
-                            $rootScope.commonService.GetLabelFromValue(response.patient.patient_gender, 'GetGenderList', function (response) {
-                                $scope.app.patientDetail.patientSex = response;
+                            $scope.patientObj = response.patient;
+                            $scope.orgData = response;
+                            $rootScope.commonService.GetLabelFromValue(response.patient.patient_gender, 'GetGenderList', function (resp) {
+                                $scope.app.patientDetail.patientSex = resp;
                             });
 
                             $scope.setViewData(response.patient);

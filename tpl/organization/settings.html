@@ -1,75 +1,100 @@
 <div ng-controller="OrganizationController" ng-init="initSettings()">
     <div class="bg-light lter b-b wrapper-md">
-        <h1 class="m-n h3">Settings</h1>
+        <h1 class="m-n h3">Application Settings</h1>
     </div>
 
     <div class="wrapper-md">
+        <div ng-include="'tpl/blocks/alert.html'">
+            {% include 'tpl/blocks/alert.html' %}
+        </div>
         <div class="panel panel-default col-sm-6">
-<!--            <div class="col-sm-12">   -->
-               <div class="row wrapper">
-                   <div class="col-sm-5 m-b-xs">
-                       <button class="btn btn-sm btn-grey" ng-click="initSettings()"> 
-                           &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
-                       </button>      
-                   </div>
-               </div>
-               <div class="table-responsive">
-                   <table  st-table="displayedCollection"  st-safe-src="rowCollection" class="table table-striped b-t b-light">
-                       <thead>
-                           <tr>
-                               <th>Key</th>
-                               <th>Value</th>
-                               <th>Action</th>
-                           </tr>
-                       </thead>
+            <div class="row wrapper">
+                <div class="col-sm-5 m-b-xs">
+                    <button class="btn btn-sm btn-grey" ng-click="initSettings()"> 
+                        &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
+                    </button>      
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table  st-table="displayedCollection"  st-safe-src="rowCollection" class="table table-striped b-t b-light">
+                    <thead>
+                        <tr>
+                            <th>Key</th>
+                            <th>Value</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
 
-                       <tbody ng-hide="isLoading">
-                           <tr ng-repeat="row in displayedCollection | orderBy: key">
-                               <td>
-                                   {{row.key}}
-                               </td>
-                               <td class="v-middle">
-                                   <span editable-text="row.value" e-name="value" e-form="rowform" onbeforesave="checkValue($data)" e-required>
-                                       {{ row.value || 'empty' }}
-                                   </span>
-                                   <span>
-                                       {{ row.notes || 'empty' }}
-                                   </span>
-                               </td>
-                               <td style="white-space: nowrap">
-                                   <!-- form -->
-                                   <form editable-form name="rowform" onbeforesave="updateSetting($data, row.config_id)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == row">
-                                       <button type="submit" ng-disabled="rowform.$waiting" class="btn m-b-xs btn-info save-btn">
-                                           Save
-                                       </button>
-                                       <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()" class="btn m-b-xs btn-default">
-                                           Cancel
-                                       </button>
-                                   </form>
-                                   <div class="buttons" ng-show="!rowform.$visible">
-                                       <button class="btn m-b-xs  btn-primary " ng-click="rowform.$show()"> <i class="fa fa-pencil"></i> Edit</button> 
-                                   </div>  
-                               </td>
-                           </tr>
-                       </tbody>
+                    <tbody ng-hide="isLoading">
+                        <tr ng-repeat="row in displayedCollection| orderBy: key">
+                            <td>
+                                {{row.key}}
+                            </td>
+                            <td class="v-middle">
+                                <span editable-text="row.value" e-name="value" e-form="rowform" onbeforesave="checkValue($data)" e-required>
+                                    {{ row.value || 'empty' }}
+                                </span>
+                                <span>
+                                    {{ row.notes || 'empty' }}
+                                </span>
+                            </td>
+                            <td style="white-space: nowrap">
+                                <!-- form -->
+                                <form editable-form name="rowform" onbeforesave="updateSetting($data, row.config_id)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == row">
+                                    <button type="submit" ng-disabled="rowform.$waiting" class="btn m-b-xs btn-info save-btn">
+                                        Save
+                                    </button>
+                                    <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()" class="btn m-b-xs btn-default">
+                                        Cancel
+                                    </button>
+                                </form>
+                                <div class="buttons" ng-show="!rowform.$visible">
+                                    <button class="btn m-b-xs  btn-primary " ng-click="rowform.$show()"> <i class="fa fa-pencil"></i> Edit</button> 
+                                </div>  
+                            </td>
+                        </tr>
+                    </tbody>
 
-                       <tbody ng-show="isLoading">
-                           <tr>
-                               <td colspan="3" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
-                           </tr>
-                       </tbody>
+                    <tbody ng-show="isLoading">
+                        <tr>
+                            <td colspan="3" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
+                        </tr>
+                    </tbody>
 
-                       <tfoot>
-                           <tr>
-                               <td colspan="3" class="text-center">
-                                   <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7"></div>
-                               </td>
-                           </tr>
-                       </tfoot>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3" class="text-center">
+                                <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7"></div>
+                            </td>
+                        </tr>
+                    </tfoot>
 
-                   </table>
-               </div>
-<!--            </div>    -->
+                </table>
+            </div>
+            <!--            </div>    -->
+        </div>
+        <div class="col-sm-6">
+            <form name="shareform" class="form-horizontal form-validation" id="shareform">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Patient Share Modules *</label>
+                            <div class="col-sm-8">
+                                <div ng-repeat="share_data in config_share_data">
+                                    <label class="i-checks">
+                                        <input type="checkbox" ng-checked="share_data.value == '1'" id="{{share_data.code}}" name="share[{{share_data.code}}]" /> 
+                                        <i></i> 
+                                    </label> 
+                                    <label for='{{share_data.code}}'>{{share_data.code}}</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <footer class="panel-footer text-right bg-light lter">
+                        <button class="btn m-b-xs  btn-success save-btn" ng-click="updateShareSetting()">Save</button>
+                    </footer>
+                </div>
+            </form>
         </div>
     </div>
 </div>
