@@ -4,7 +4,10 @@
         <p> <h4 ng-show="matchings.length > 0">  <i class="fa fa-exclamation-triangle"></i> One or more particulars matching to existing patient records!  </h4></p>     
         <div class="search-patientcont" ng-repeat="(key, patient) in matchings">
             <div class="row"> 
-                <div class="col-xs-12 col-sm-2 col-md-2"> <img src="img/man-icon.png"  alt="" /></div>
+                <div class="col-xs-12 col-sm-2 col-md-2"> 
+                    <img ng-if="$even" alt="" width="49" height="49" src="{{patient.Patient.patient_image ? patient.Patient.patient_image : 'img/man-icon.png'}}">
+                    <img ng-if="$odd" alt="" width="49" height="49" src="{{patient.Patient.patient_image ? patient.Patient.patient_image : 'img/man-icon2.png'}}">
+                </div>
                 <div class="col-xs-12 col-sm-5 col-md-5"> 
                     <div class="row"> 
                         <a ng-bind-html="patient.Patient.fullname | highlight:data.PatPatient.patient_firstname" ui-sref="patient.view({id: patient.Patient.patient_guid})">

@@ -24,6 +24,9 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
         };
 
         $scope.initForm = function () {
+            $scope.errorData = "";
+            $scope.successMessage = "";
+
             $rootScope.commonService.GetFloorList('', '1', false, function (response) {
                 $scope.floors = response.floorList;
             });
@@ -281,12 +284,12 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
     }]);
 
 app.filter('highlight', function ($sce) {
-            return function (text, phrase) {
-                if (phrase)
-                    text = text.replace(new RegExp('(' + phrase + ')', 'gi'),
-                            '<span class="highlighted">$1</span>')
+    return function (text, phrase) {
+        if (phrase)
+            text = text.replace(new RegExp('(' + phrase + ')', 'gi'),
+                    '<span class="highlighted">$1</span>')
 
-                return $sce.trustAsHtml(text)
-            }
-        });
+        return $sce.trustAsHtml(text)
+    }
+});
 ;

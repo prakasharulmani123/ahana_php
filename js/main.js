@@ -198,7 +198,7 @@ angular.module('app')
                     return ret;
                 }
 
-                $scope.$watch('successMessage', function () {
+                $scope.$watch('successMessage', function (newValue, oldValue) {
                     if ($scope.successMessage) {
                         $timeout(function () {
                             $scope.successMessage = false;

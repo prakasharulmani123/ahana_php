@@ -69,6 +69,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
         };
 
         $scope.initSettings = function () {
+            $('.sb-toggle-right').trigger('click');
             $scope.isLoading = true;
             // pagination set up
             $scope.rowCollection = [];  // base collection

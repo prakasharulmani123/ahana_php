@@ -2301,6 +2301,18 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
+            
+            //Assisgn Patient Sharing
+            .state('patient.assignShare', {
+                url: '/assignShare/{id}',
+                templateUrl: 'tpl/patient_share/assign.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/patient_share/patient_share.js']);
+                        }]
+                }
+            })
 
     $httpProvider.interceptors.push('APIInterceptor');
 
@@ -2360,7 +2372,7 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
 
     //Check Access
     $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
-        var restrictedPage = $.inArray($location.path(), ['/configuration/changePassword', '/configuration/settings']) === -1;
+        var restrictedPage = $.inArray($location.path(), ['/configuration/changePassword']) === -1;
         var currentUser = AuthenticationService.getCurrentUser();
         var loggedIn = Boolean(currentUser);
         

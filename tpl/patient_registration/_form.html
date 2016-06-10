@@ -8,7 +8,7 @@
                     </select>
                 </div>
                 <div class="col-sm-4">
-                    <input type="text" name="patient_firstname" ng-model="data.PatPatient.patient_firstname" class="form-control" placeholder="First Name" ng-minlength="3" required>
+                    <input type="text" name="patient_firstname" ng-model="data.PatPatient.patient_firstname" class="form-control" placeholder="First Name" ng-minlength="3" focus-me="true" required>
                     <div style="color:maroon">
                         <div ng-show="submitted && patientForm.patient_firstname.$error.required">First Name cannot be blank.</div>
                         <div ng-show="submitted && patientForm.patient_firstname.$error.minlength">First Name is too short</div>

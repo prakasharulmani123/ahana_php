@@ -115,12 +115,14 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
 
             _that = this;
             angular.forEach($scope.states, function (value) {
-                if (value.countryId == _that.data.PatPatientAddress.addr_country_id) {
-                    var obj = {
-                        value: value.value,
-                        label: value.label
-                    };
-                    $scope.availableStates2.push(obj);
+                if (_that.data.PatPatientAddress != null) {
+                    if (value.countryId == _that.data.PatPatientAddress.addr_country_id) {
+                        var obj = {
+                            value: value.value,
+                            label: value.label
+                        };
+                        $scope.availableStates2.push(obj);
+                    }
                 }
             });
         }
@@ -130,12 +132,14 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
 
             _that = this;
             angular.forEach($scope.cities, function (value) {
-                if (value.stateId == _that.data.PatPatientAddress.addr_state_id) {
-                    var obj = {
-                        value: value.value,
-                        label: value.label
-                    };
-                    $scope.availableCities2.push(obj);
+                if (_that.data.PatPatientAddress != null) {
+                    if (value.stateId == _that.data.PatPatientAddress.addr_state_id) {
+                        var obj = {
+                            value: value.value,
+                            label: value.label
+                        };
+                        $scope.availableCities2.push(obj);
+                    }
                 }
             });
         }
@@ -146,12 +150,14 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
 
             _that = this;
             angular.forEach($scope.states, function (value) {
-                if (value.countryId == _that.data.PatPatientAddress.addr_perm_country_id) {
-                    var obj = {
-                        value: value.value,
-                        label: value.label
-                    };
-                    $scope.availableStates.push(obj);
+                if (_that.data.PatPatientAddress != null) {
+                    if (value.countryId == _that.data.PatPatientAddress.addr_perm_country_id) {
+                        var obj = {
+                            value: value.value,
+                            label: value.label
+                        };
+                        $scope.availableStates.push(obj);
+                    }
                 }
             });
         }
@@ -161,12 +167,14 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
 
             _that = this;
             angular.forEach($scope.cities, function (value) {
-                if (value.stateId == _that.data.PatPatientAddress.addr_perm_state_id) {
-                    var obj = {
-                        value: value.value,
-                        label: value.label
-                    };
-                    $scope.availableCities.push(obj);
+                if (_that.data.PatPatientAddress != null) {
+                    if (value.stateId == _that.data.PatPatientAddress.addr_perm_state_id) {
+                        var obj = {
+                            value: value.value,
+                            label: value.label
+                        };
+                        $scope.availableCities.push(obj);
+                    }
                 }
             });
         }
@@ -262,7 +270,7 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
 
                             $scope.setViewData(response.patient);
                             $scope.setFormData(response.patient);
-                            
+
                             $timeout(function () {
                                 $scope.mode = 'view';
                                 $scope.successMessage = succ_msg;
