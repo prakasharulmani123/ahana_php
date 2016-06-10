@@ -169,7 +169,9 @@ class CoTenant extends GActiveRecord {
                 $internal_code = new CoInternalCode;
                 $internal_code->tenant_id = $this->tenant_id;
                 $internal_code->code_type = $code_type;
-                $internal_code->code_prefix = strtoupper(substr($this->tenant_name, 0, 2));
+                $string = str_replace(' ', '-', $this->tenant_name);
+                $string = preg_replace('/[^A-Za-z0-9\-]/', '', $string);
+                $internal_code->code_prefix = strtoupper(substr($string, 0, 2));
                 $internal_code->code = '1';
                 $internal_code->save(false);
             }

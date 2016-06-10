@@ -2,14 +2,19 @@
 
 namespace IRISORG\modules\v1\controllers;
 
+use common\models\AppConfiguration;
+use common\models\CoOrganization;
 use common\models\CoResources;
 use common\models\CoRole;
 use common\models\CoRolesResources;
 use common\models\CoTenant;
 use common\models\CoUsersRoles;
+use common\models\GlPatientShareResources;
+use common\models\PatPatient;
 use Yii;
 use yii\filters\auth\QueryParamAuth;
 use yii\filters\ContentNegotiator;
+use yii\helpers\ArrayHelper;
 use yii\rest\ActiveController;
 use yii\web\Response;
 
@@ -104,11 +109,78 @@ class OrganizationController extends ActiveController {
         $post = Yii::$app->request->post();
         $tenant_id = Yii::$app->user->identity->logged_tenant_id;
 
-        $unset_configs = \common\models\AppConfiguration::updateAll(['value' => '0'], "tenant_id = {$tenant_id} AND `key` like '%SHARE_%'");
+        $unset_configs = AppConfiguration::updateAll(['value' => '0'], "tenant_id = {$tenant_id} AND `key` like '%SHARE_%'");
 
         if (isset($post['share'])) {
             $share_resources = array_keys($post['share']);
-            $set_configs = \common\models\AppConfiguration::updateAll(['value' => '1'], ['tenant_id' => $tenant_id, 'code' => $share_resources]);
+            $set_configs = AppConfiguration::updateAll(['value' => '1'], ['tenant_id' => $tenant_id, 'code' => $share_resources]);
+        }
+        return ['success' => true];
+    }
+
+    public function actionGetshareorglist() {
+        $organizations = CoOrganization::find()->all();
+        $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+
+        $ret = [];
+        foreach ($organizations as $key => $organization) {
+            $ret[$key]['org_id'] = $organization->org_id;
+            $ret[$key]['org_name'] = $organization->org_name;
+
+            foreach ($organization->coTenants as $key_2 => $tenant) {
+                if ($tenant_id != $tenant->tenant_id) {
+                    $ret[$key]['branch'][$key_2]['tenant_id'] = $tenant->tenant_id;
+                    $ret[$key]['branch'][$key_2]['tenant_name'] = $tenant->tenant_name;
+                }
+            }
+        }
+        return ['success' => true, 'org' => $ret];
+    }
+
+    public function actionGetpatientshareresources() {
+        $get = Yii::$app->request->get();
+
+        if (isset($get['patient_id'])) {
+            $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+            $org_id = Yii::$app->user->identity->user->org_id;
+
+            $patient = PatPatient::find()->where(['patient_guid' => $get['patient_id']])->one();
+            $pat_share_attr = [
+                'tenant_id' => $tenant_id,
+                'org_id' => $org_id,
+                'patient_global_guid' => $patient->patient_global_guid
+            ];
+
+            $resources = GlPatientShareResources::find()->where($pat_share_attr)->all();
+//            $list = ArrayHelper::map($resources, 'resource', 'resource');
+
+            return ['success' => true, 'resources' => $resources];
+        }
+    }
+
+    public function actionUpdatepatientsharing() {
+        $post = Yii::$app->request->post();
+
+        if (isset($post['patient_id'])) {
+            $share_resources = $post['share'];
+            $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+            $org_id = Yii::$app->user->identity->user->org_id;
+            
+            $patient = PatPatient::find()->where(['patient_guid' => $post['patient_id']])->one();
+            $pat_share_attr = [
+                'tenant_id' => $tenant_id,
+                'org_id' => $org_id,
+                'patient_global_guid' => $patient->patient_global_guid
+            ];
+
+            GlPatientShareResources::deleteAll($pat_share_attr);
+
+            foreach ($share_resources as $share_resource) {
+                $patient_share = new GlPatientShareResources;
+                $pat_share_attr['resource'] = $share_resource;
+                $patient_share->attributes = $pat_share_attr;
+                $patient_share->save(false);
+            }
         }
         return ['success' => true];
     }

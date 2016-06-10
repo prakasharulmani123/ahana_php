@@ -127,6 +127,9 @@ class UserController extends ActiveController {
         $resource_ids = ArrayHelper::map(CoRolesResources::find()->where(['IN', 'role_id', $role_ids])->andWhere(['tenant_id' => $tenant_id])->all(), 'resource_id', 'resource_id');
         $resources = ArrayHelper::map(CoResources::find()->where(['IN', 'resource_id', $resource_ids])->all(), 'resource_url', 'resource_url');
 
+        if(Yii::$app->user->identity->user->tenant_id == 0){
+            $resources['configuration.settings'] = 'configuration.settings';
+        }
         return $resources;
     }
 

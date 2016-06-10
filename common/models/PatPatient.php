@@ -281,8 +281,10 @@ class PatPatient extends RActiveRecord {
             // Link Patient and Tenant
             $this->updatePatientTenant();
 
-            // Link Patient and Share
-            $this->updatePatientShare();
+            if ($insert) {
+                // Link Patient and Share
+                $this->insertPatientResource();
+            }
         }
     }
 
@@ -337,7 +339,7 @@ class PatPatient extends RActiveRecord {
         }
     }
 
-    public function updatePatientShare() {
+    public function insertPatientResource() {
         $pat_share_attr = [
             'tenant_id' => $this->tenant_id,
             'org_id' => $this->tenant->org_id,
@@ -348,7 +350,7 @@ class PatPatient extends RActiveRecord {
 
         $share_config = AppConfiguration::find()->tenant($this->tenant_id)->andWhere("`key` like '%SHARE_%' AND `value` = '1'")->all();
         $share_resources = ArrayHelper::map($share_config, 'key', 'code');
-        
+
         foreach ($share_resources as $key => $share_resource) {
             $patient_share = new GlPatientShareResources;
             $pat_share_attr['resource'] = $share_resource;
