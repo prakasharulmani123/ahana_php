@@ -8,4 +8,7 @@ function OThersvisible(current_id, target_id, status) {
     if (status == 'none') {
         $("#" + target_id).addClass('hide');
     }
+    if (status == 'block') {
+        $("#" + target_id).removeClass('hide');
+    }
 }
