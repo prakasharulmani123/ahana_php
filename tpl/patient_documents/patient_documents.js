@@ -1,4 +1,4 @@
-app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'transformRequestAsFormPost', '$anchorScroll', function ($rootScope, $scope, $timeout, $http, $state, transformRequestAsFormPost, $anchorScroll) {
+app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'transformRequestAsFormPost', '$anchorScroll', '$filter', function ($rootScope, $scope, $timeout, $http, $state, transformRequestAsFormPost, $anchorScroll, $filter) {
 
         $scope.app.settings.patientTopBar = true;
         $scope.app.settings.patientSideMenu = true;
@@ -87,6 +87,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
             _data = $('#xmlform').serialize() + '&' + $.param({
                 'encounter_id': $scope.encounter.encounter_id,
                 'patient_id': $state.params.id,
+                'novalidate': false,
             });
 
             $scope.loadbar('show');
@@ -98,9 +99,9 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
             }).then(
                     function (response) {
                         $scope.loadbar('hide');
-                        if(response.success == true){
+                        if (response.data.success == true) {
                             $scope.xml = response.data.xml;
-                        }else{
+                        } else {
                             $scope.errorData = response.data.message;
                             $anchorScroll();
                         }
@@ -108,17 +109,36 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
             );
         }
 
+
+        $scope.panel_bars = [];
+        $scope.page_offest = '';
+
+        $("body").on("click", ".panel-heading", function () {
+            next_div = $(this).next('div');
+
+            result = $filter('filter')($scope.panel_bars, {div: next_div.attr('id')});
+            if (result.length > 0) {
+                var index = $scope.panel_bars.indexOf(result[0]);
+                $scope.panel_bars.splice(index, 1);
+            }
+
+            $scope.panel_bars.push({div: next_div.attr('id'), opened: !next_div.is(":visible")});
+        });
+
         $("body").on("click", ".addMore", function () {
             var button_id = $(this).attr('id');
             var table_id = $(this).data('table-id');
             var rowCount = $('#' + table_id + ' tbody  tr').length;
-
+            
+            $scope.page_offest = $(this).offset();
+            
             _data = $('#xmlform').serialize() + '&' + $.param({
                 'encounter_id': $scope.encounter.encounter_id,
                 'patient_id': $state.params.id,
                 'button_id': button_id,
                 'table_id': table_id,
                 'rowCount': rowCount,
+                'novalidate': true,
             });
 
             $http({
@@ -129,9 +149,20 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
             }).then(
                     function (response) {
                         $scope.loadbar('hide');
-                        if(response.success == true){
+                        if (response.data.success == true) {
                             $scope.xml = response.data.xml;
-                        }else{
+
+                            $timeout(function () {
+                                angular.forEach($scope.panel_bars, function (bar) {
+                                    if (bar.opened) {
+                                        $('#' + bar.div).toggleClass('collapse in').attr('aria-expanded', true).removeAttr("style");
+                                    } else {
+                                        $('#' + bar.div).toggleClass('collapse').attr('aria-expanded', false);
+                                    }
+                                });
+                                $('html').scrollTop($scope.page_offest.top);
+                            }, 500);
+                        } else {
                             $scope.errorData = response.data.message;
                             $anchorScroll();
                         }
