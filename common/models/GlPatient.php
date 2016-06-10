@@ -144,9 +144,13 @@ class GlPatient extends ActiveRecord {
                 return $age;
             },
             'org_name' => function ($model) {
+                if (isset($this->tenant->coOrganization))
+                    return $this->tenant->coOrganization->org_name;
+            },
+            'tenant_name' => function ($model) {
                 if (isset($this->tenant->tenant_name))
                     return $this->tenant->tenant_name;
-            }
+            },
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
