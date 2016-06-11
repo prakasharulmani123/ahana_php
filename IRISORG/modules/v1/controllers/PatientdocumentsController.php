@@ -53,6 +53,30 @@ class PatientdocumentsController extends ActiveController {
         ]);
     }
 
+    public function actionRemove() {
+        $id = Yii::$app->getRequest()->post('doc_id');
+        if ($id) {
+            $model = PatDocuments::find()->where(['doc_id' => $id])->one();
+            $model->delete();
+            return ['success' => true];
+        }
+    }
+
+    public function actionGetpatientdocuments() {
+        $get = Yii::$app->getRequest()->get();
+
+        if (!empty($get)) {
+            $patient = PatPatient::getPatientByGuid($get['patient_id']);
+            $result = [];
+            $data = PatDocuments::find()->tenant()->andWhere(['patient_id' => $patient->patient_id])->groupBy('encounter_id')->orderBy(['encounter_id' => SORT_DESC])->all();
+            foreach ($data as $key => $value) {
+                $details = PatDocuments::find()->tenant()->andWhere(['patient_id' => $patient->patient_id, 'encounter_id' => $value->encounter_id])->orderBy(['doc_id' => SORT_DESC])->all();
+                $result[$key] = ['data' => $value, 'all' => $details];
+            }
+            return ['success' => true, 'result' => $result];
+        }
+    }
+
     public function actionGetdocumenttype() {
         $get = Yii::$app->getRequest()->get();
         if (!empty($get)) {
@@ -126,6 +150,8 @@ class PatientdocumentsController extends ActiveController {
                     $result = $this->prepareSubstanceHistoryXml($result, $post['table_id'], $post['rowCount']);
                 }
             }
+            if (isset($post['status']))
+                $patient_document->status = $post['status'];
 
             $patient_document->document_xml = $result;
             $patient_document->save(false);

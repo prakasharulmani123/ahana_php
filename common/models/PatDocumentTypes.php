@@ -71,12 +71,12 @@ class PatDocumentTypes extends RActiveRecord {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
 
-    public static function getDocumentType($type) {
-        return self::find()->tenant()->andWhere(['doc_type' => $type])->one();
-    }
-
     public static function find() {
         return new PatDocumentTypesQuery(get_called_class());
+    }
+    
+    public static function getDocumentType($type) {
+        return self::find()->tenant()->andWhere(['doc_type' => $type])->one();
     }
 
 }

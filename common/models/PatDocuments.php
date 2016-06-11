@@ -41,7 +41,7 @@ class PatDocuments extends RActiveRecord {
     public $mode_of_onset;
     public $course_type;
     public $nature;
-    
+
     /**
      * @inheritdoc
      */
@@ -113,6 +113,19 @@ class PatDocuments extends RActiveRecord {
 
     public static function find() {
         return new PatDocumentsQuery(get_called_class());
+    }
+
+    public function fields() {
+        $extend = [
+            'document_name' => function ($model) {
+                if (isset($model->docType))
+                    return $model->docType->doc_type_name;
+                else
+                    return '-';
+            },
+        ];
+        $fields = array_merge(parent::fields(), $extend);
+        return $fields;
     }
 
 }
