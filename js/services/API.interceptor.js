@@ -5,7 +5,8 @@ angular.module('app').factory('APIInterceptor', function ($localStorage, $rootSc
 
             var is_api = config.url.indexOf($rootScope.IRISOrgServiceUrl);
             if (is_api >= 0) {
-                config.headers['x-domain-path'] = $rootScope.clientUrl;
+                if(typeof config.headers['x-domain-path'] == 'undefined' || config.headers['x-domain-path'] == '')
+                    config.headers['x-domain-path'] = $rootScope.clientUrl;
             }
 
             if (typeof $localStorage.user != 'undefined') {

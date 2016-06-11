@@ -10,7 +10,9 @@
                 </div>
                 <div class="col-xs-12 col-sm-5 col-md-5"> 
                     <div class="row"> 
-                        <a ng-bind-html="patient.Patient.fullname | highlight:data.PatPatient.patient_firstname" ui-sref="patient.view({id: patient.Patient.patient_guid})">
+                        <a ng-if="patient.same_branch == true" ng-bind-html="patient.Patient.fullname | highlight:data.PatPatient.patient_firstname" ui-sref="patient.view({id: patient.Patient.patient_guid})">
+                        </a> 
+                        <a ng-if="patient.same_branch == false" ng-bind-html="patient.Patient.fullname | highlight:data.PatPatient.patient_firstname" href="javascript:void(0)">
                         </a> 
                         ({{patient.Patient.patient_age}}y) <br/>
                         {{patient.Patient.patient_int_code}} 

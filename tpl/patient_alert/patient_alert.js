@@ -106,6 +106,7 @@ app.controller('AlertsController', ['$rootScope', '$scope', '$timeout', '$http',
                         $scope.loadbar('hide');
                         $scope.successMessage = succ_msg;
                         $scope.data = {};
+                        $scope.data.formtype = 'add';
                         $scope.patientObj.hasalert = true;
                         $scope.patientObj.alert = response.alert_description;
                         $timeout(function () {

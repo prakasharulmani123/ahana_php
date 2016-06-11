@@ -318,16 +318,16 @@ angular.module('app')
                     }
                 });
 
-                $scope.$on('HK_CREATE', function (e) {
-                    alert('create');
-                    angular.element(document.querySelectorAll("[hot-key-create]")).trigger('click');
-                });
-                $scope.$on('HK_SAVE', function (e) {
-                    alert('create');
-                });
-                $scope.$on('HK_SEARCH', function (e) {
-                    alert('create');
-                });
+//                $scope.$on('HK_CREATE', function (e) {
+//                    alert('create');
+//                    angular.element(document.querySelectorAll("[hot-key-create]")).trigger('click');
+//                });
+//                $scope.$on('HK_SAVE', function (e) {
+//                    alert('create');
+//                });
+//                $scope.$on('HK_SEARCH', function (e) {
+//                    alert('create');
+//                });
 
                 $scope.assignNotifications = function () {
                     //Assign Notes
@@ -359,6 +359,11 @@ angular.module('app')
                 }
 
                 $scope.importPatient = function (patient, key) {
+                    var conf = confirm('Are you sure to import basic data ?')
+                    
+                    if(!conf)
+                        return;
+                    
                     $scope.errorData = "";
                     $scope.successMessage = "";
 

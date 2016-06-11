@@ -3,7 +3,7 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">Name * </label>
             <div class="col-sm-9">
-                <input type="text" maxlength="50" name="roleName" class="form-control" placeholder="Role Name" ng-model="data.description" required>
+                <input type="text" maxlength="50" name="roleName" class="form-control" placeholder="Role Name" ng-model="data.description" required focus-me="true">
                 <div style="color:maroon">
                     <div ng-show="submitted && roleForm.roleName.$error.required">Role cannot be blank.</div>
                 </div>
