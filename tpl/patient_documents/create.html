@@ -7,9 +7,11 @@
         <div ng-include="'tpl/blocks/alert.html'">
             {% include 'tpl/blocks/alert.html' %}
         </div>
-        <textarea ng-model="xml" rows="10" class="form-control ng-pristine ng-untouched ng-valid" id="xml"></textarea>
-        <textarea ng-model="xslt" rows="10" class="form-control ng-pristine ng-untouched ng-valid" id="xslt"></textarea>
-        <input type="submit" class="btn m-b-xs  btn-success save-btn" id="btn_sub" name="btn_sub" value="Temp Update" ng-click="updateDocumentType()"  />
+        
+        <textarea ng-model="xml" rows="10"></textarea>
+        <textarea ng-model="xslt" rows="10"></textarea>
+        <input type="submit" value="Temp Update" ng-click="updateDocumentType()"  />
+        
         <div ng-bind-html="xml | xslt:xslt | sanitize"></div>
         <footer class="panel-footer text-right bg-light lter">
             <input type="submit" class="btn m-b-xs  btn-success save-btn" id="btn_sub" name="btn_sub" value="Submit" ng-click="submitXsl()"  />

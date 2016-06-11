@@ -5,7 +5,26 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
         $scope.app.settings.patientContentClass = 'app-content patient_content ';
         $scope.app.settings.patientFooterClass = 'app-footer';
 
-        //Notifications
+        $scope.xml = '';
+        $scope.xslt = '';
+        $scope.data = {};
+
+        //Documents Index Page
+        $scope.loadPatDocumentsList = function () {
+            $scope.isLoading = true;
+            $scope.rowCollection = [];
+
+            $http.get($rootScope.IRISOrgServiceUrl + '/patientdocuments/getpatientdocuments?patient_id=' + $state.params.id)
+                    .success(function (documents) {
+                        $scope.isLoading = false;
+                        $scope.rowCollection = documents.result;
+                    })
+                    .error(function () {
+                        $scope.errorData = "An Error has occured while loading patient document!";
+                    });
+        };
+
+        // Check patient have active encounter
         $scope.isPatientHaveActiveEncounter = function (callback) {
             $http.post($rootScope.IRISOrgServiceUrl + '/encounter/patienthaveactiveencounter', {patient_id: $state.params.id})
                     .success(function (response) {
@@ -16,39 +35,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     });
         }
 
-        $scope.xml = '';
-        $scope.xslt = '';
-        $scope.data = {};
-
-        $scope.initForm = function () {
-            $scope.isPatientHaveActiveEncounter(function (response) {
-                if (response.success == false) {
-                    alert("Sorry, you can't create a document");
-                    $state.go("patient.view", {id: $state.params.id});
-                } else {
-                    $scope.encounter = response.model;
-
-                    $scope.getDocumentType(function (response) {
-                        if (response.success == false) {
-                            alert("Sorry, you can't create a document");
-                            $state.go("patient.view", {id: $state.params.id});
-                        } else {
-                            if ($scope.data.form_type == 'create') {
-                                $scope.xml = response.result.document_xml;
-
-                            } else {
-                                var doc_id = $state.params.doc_id;
-                                $scope.getDocument(doc_id, function (response) {
-                                    $scope.xml = response.result.document_xml;
-                                });
-                            }
-                            $scope.xslt = response.result.document_xslt;
-                        }
-                    });
-                }
-            });
-        }
-
+        // Get Case History Document Template - Create
         $scope.getDocumentType = function (callback) {
             $http.get($rootScope.IRISOrgServiceUrl + '/patientdocuments/getdocumenttype?doc_type=CH')
                     .success(function (response) {
@@ -59,6 +46,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     });
         }
 
+        // Get Patient Document Template - Update
         $scope.getDocument = function (doc_id, callback) {
             $http.get($rootScope.IRISOrgServiceUrl + '/patientdocuments/getdocument?doc_id=' + doc_id)
                     .success(function (response) {
@@ -67,6 +55,35 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                         response = {success: false, message: 'Server Error'};
                         callback(response);
                     });
+        }
+
+        // Initialize Create and Update Form
+        $scope.initForm = function () {
+            $scope.isPatientHaveActiveEncounter(function (response) {
+                if (response.success == false) {
+                    alert("Sorry, you can't create a document");
+                    $state.go("patient.document", {id: $state.params.id});
+                } else {
+                    $scope.encounter = response.model;
+
+                    $scope.getDocumentType(function (doc_type_response) {
+                        if (doc_type_response.success == false) {
+                            alert("Sorry, you can't create a document");
+                            $state.go("patient.document", {id: $state.params.id});
+                        } else {
+                            $scope.xslt = doc_type_response.result.document_xslt;
+                            if ($scope.data.form_type == 'create') {
+                                $scope.xml = doc_type_response.result.document_xml;
+                            } else {
+                                var doc_id = $state.params.doc_id;
+                                $scope.getDocument(doc_id, function (pat_doc_response) {
+                                    $scope.xml = pat_doc_response.result.document_xml;
+                                });
+                            }
+                        }
+                    });
+                }
+            });
         }
 
         $scope.updateDocumentType = function () {
@@ -88,6 +105,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                 'encounter_id': $scope.encounter.encounter_id,
                 'patient_id': $state.params.id,
                 'novalidate': false,
+                'status': '1',
             });
 
             $scope.loadbar('show');
@@ -129,9 +147,9 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
             var button_id = $(this).attr('id');
             var table_id = $(this).data('table-id');
             var rowCount = $('#' + table_id + ' tbody  tr').length;
-            
+
             $scope.page_offest = $(this).offset();
-            
+
             _data = $('#xmlform').serialize() + '&' + $.param({
                 'encounter_id': $scope.encounter.encounter_id,
                 'patient_id': $state.params.id,
@@ -170,79 +188,34 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
             );
         });
 
-        //Save Both Add & Update Data
-        $scope.saveForm = function (mode) {
-            _that = this;
-
-            $scope.errorData = "";
-            $scope.successMessage = "";
-
-            if (mode == 'add') {
-                post_url = $rootScope.IRISOrgServiceUrl + '/patientnotes';
-                method = 'POST';
-                succ_msg = 'Note saved successfully';
-
-                angular.extend(_that.data, {
-                    patient_id: $scope.patientObj.patient_id,
-                    encounter_id: $scope.encounter.encounter_id
-                });
-            } else {
-                post_url = $rootScope.IRISOrgServiceUrl + '/patientnotes/' + _that.data.pat_note_id;
-                method = 'PUT';
-                succ_msg = 'Note updated successfully';
+        //Delete
+        $scope.deleteDocument = function (doc_id) {
+            var conf = confirm('Are you sure to delete ?');
+            if (conf) {
+                $scope.loadbar('show');
+                $http({
+                    url: $rootScope.IRISOrgServiceUrl + "/patientdocuments/remove",
+                    method: "POST",
+                    data: {doc_id: doc_id}
+                }).then(
+                        function (response) {
+                            $scope.loadbar('hide');
+                            if (response.data.success === true) {
+                                $scope.loadPatDocumentsList();
+                                $scope.successMessage = 'Document Deleted Successfully';
+                            }
+                            else {
+                                $scope.errorData = response.data.message;
+                            }
+                        }
+                )
             }
-
-            $scope.loadbar('show');
-            $http({
-                method: method,
-                url: post_url,
-                data: _that.data,
-            }).success(
-                    function (response) {
-                        $scope.loadbar('hide');
-                        $scope.successMessage = succ_msg;
-                        $scope.data = {};
-                        $timeout(function () {
-                            $state.go('patient.notes', {id: $state.params.id});
-                        }, 1000)
-
-                    }
-            ).error(function (data, status) {
-                $scope.loadbar('hide');
-                if (status == 422)
-                    $scope.errorData = $scope.errorSummary(data);
-                else
-                    $scope.errorData = data.message;
-            });
-        };
-
-        //Get Data for update Form
-        $scope.loadForm = function () {
-            $scope.loadbar('show');
-            _that = this;
-            $scope.errorData = "";
-            $http({
-                url: $rootScope.IRISOrgServiceUrl + "/patientnotes/" + $state.params.note_id,
-                method: "GET"
-            }).success(
-                    function (response) {
-                        $scope.loadbar('hide');
-                        $scope.data = response;
-                        $scope.encounter = {encounter_id: response.encounter_id};
-                    }
-            ).error(function (data, status) {
-                $scope.loadbar('hide');
-                if (status == 422)
-                    $scope.errorData = $scope.errorSummary(data);
-                else
-                    $scope.errorData = data.message;
-            });
         };
 
 
     }]);
 
-
+// Filter HTML Code
 app.filter("sanitize", ['$sce', function ($sce) {
         return function (htmlCode) {
             return $sce.trustAsHtml(htmlCode);

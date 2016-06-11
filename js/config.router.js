@@ -2266,7 +2266,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 }
             })
             
-            //XML FORM - TESTING
+            //Patient document - Index
             .state('patient.document', {
                 url: '/document/{id}',
                 templateUrl: 'tpl/patient_documents/index.html',
@@ -2278,7 +2278,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 }
             })
             
-            //XML FORM - TESTING
+            //Patient Document - Create
             .state('patient.addDocument', {
                 url: '/addDocument/{id}',
                 templateUrl: 'tpl/patient_documents/create.html',
@@ -2290,7 +2290,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 }
             })
             
-            //XML FORM - TESTING
+            //Patient document - Update
             .state('patient.editDocument', {
                 url: '/editDocument/{id}/{doc_id}',
                 templateUrl: 'tpl/patient_documents/update.html',
