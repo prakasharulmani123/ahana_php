@@ -132,4 +132,15 @@ class PatNotes extends RActiveRecord {
     public static function find() {
         return new PatNotesQuery(get_called_class());
     }
+    
+    public function afterSave($insert, $changedAttributes) {
+        if ($insert) {
+            $message = $this->notes;
+        }else{
+            $message = "Updated: {$this->notes}";
+        }
+        PatTimeline::insertTimeLine($this->patient_id, $this->created_at, 'Notes', '', $message, 'NOTES', $this->encounter_id);
+
+        return parent::afterSave($insert, $changedAttributes);
+    }
 }

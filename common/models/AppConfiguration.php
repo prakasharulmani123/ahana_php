@@ -94,6 +94,21 @@ class AppConfiguration extends RActiveRecord {
                 'value' => '0',
                 'notes' => 'Share Prescription',
             ],
+            'SHARE_BILLING' => [
+                'code' => 'BILLING',
+                'value' => '0',
+                'notes' => 'Share Billing',
+            ],
+            'SHARE_PROCEDURE' => [
+                'code' => 'PROCEDURE',
+                'value' => '0',
+                'notes' => 'Share Procedure',
+            ],
+            'SHARE_BASIC_DATA' => [
+                'code' => 'BASIC',
+                'value' => '1',
+                'notes' => 'Share Basic Data',
+            ],
         );
     }
     

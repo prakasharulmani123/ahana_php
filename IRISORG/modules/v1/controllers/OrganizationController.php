@@ -10,11 +10,11 @@ use common\models\CoRolesResources;
 use common\models\CoTenant;
 use common\models\CoUsersRoles;
 use common\models\GlPatientShareResources;
+use common\models\GlPatientTenant;
 use common\models\PatPatient;
 use Yii;
 use yii\filters\auth\QueryParamAuth;
 use yii\filters\ContentNegotiator;
-use yii\helpers\ArrayHelper;
 use yii\rest\ActiveController;
 use yii\web\Response;
 
@@ -183,6 +183,18 @@ class OrganizationController extends ActiveController {
             }
         }
         return ['success' => true];
+    }
+
+    public function actionGetpatientsharetenants() {
+        $get = Yii::$app->request->get();
+
+        if (isset($get['patient_id'])) {
+            $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+            $patient = PatPatient::find()->where(['patient_guid' => $get['patient_id']])->one();
+            $tenants = GlPatientTenant::find()->where(['patient_global_guid' => $patient->patient_global_guid])->all();
+            
+            return ['success' => true, 'tenants' => $tenants, 'tenant_id' => $tenant_id];
+        }
     }
 
 }

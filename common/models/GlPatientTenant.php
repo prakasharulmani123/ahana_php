@@ -11,6 +11,7 @@ use yii\db\ActiveRecord;
  * @property integer $org_id
  * @property integer $tenant_id
  * @property string $patient_global_guid
+ * @property string $patient_guid
  */
 class GlPatientTenant extends ActiveRecord
 {
@@ -30,7 +31,8 @@ class GlPatientTenant extends ActiveRecord
         return [
             [['org_id', 'tenant_id', 'patient_global_guid'], 'required'],
             [['org_id', 'tenant_id'], 'integer'],
-            [['patient_global_guid'], 'string', 'max' => 50]
+            [['patient_global_guid'], 'string', 'max' => 50],
+            [['patient_guid'], 'safe']
         ];
     }
 
@@ -59,5 +61,24 @@ class GlPatientTenant extends ActiveRecord
      */
     public function getOrg() {
         return $this->hasOne(CoOrganization::className(), ['org_id' => 'org_id']);
+    }
+    
+    public function fields() {
+        $extend = [
+            'tenant_name' => function ($model) {
+                return $model->tenant->tenant_name;
+            },
+            'org_name' => function ($model) {
+                return $model->org->org_name;
+            },
+            'branch_name' => function ($model) {
+                return $model->org->org_name.' - '.$model->tenant->tenant_name;
+            },
+            'org_domain' => function ($model) {
+                return $model->org->org_domain;
+            },
+        ];
+        $fields = array_merge(parent::fields(), $extend);
+        return $fields;
     }
 }

@@ -148,8 +148,10 @@ class PatConsultant extends RActiveRecord {
         $consultant = "Consultant : <b>{$this->consultant->title_code} {$this->consultant->name}</b>";
         if ($insert) {
             $message = $this->notes != '' ? "{$this->notes} <br /> $consultant" : $consultant;
-            PatTimeline::insertTimeLine($this->patient_id, $this->consult_date, 'Consultation', '', $message);
+        }else{
+            $message = $this->notes != '' ? "Updated: {$this->notes} <br /> $consultant" : "Updated: $consultant";
         }
+        PatTimeline::insertTimeLine($this->patient_id, $this->consult_date, 'Consultation', '', $message, 'CONSULTANT', $this->encounter_id);
         
         return parent::afterSave($insert, $changedAttributes);
     }

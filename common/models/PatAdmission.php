@@ -277,7 +277,7 @@ class PatAdmission extends RActiveRecord {
                 $message = $this->notes;
                 break;
         }
-        PatTimeline::insertTimeLine($this->patient_id, $this->status_date, $header, $header_sub, $message);
+        PatTimeline::insertTimeLine($this->patient_id, $this->status_date, $header, $header_sub, $message, 'ENCOUNTER', $this->encounter_id);
     }
 
     public function setCurrentData() {

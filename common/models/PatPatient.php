@@ -236,7 +236,7 @@ class PatPatient extends RActiveRecord {
 
         $this->savetoHms($insert);
 
-        PatTimeline::insertTimeLine($this->patient_id, $date, $header, '', $message);
+        PatTimeline::insertTimeLine($this->patient_id, $date, $header, '', $message, 'BASIC', null);
 
         return parent::afterSave($insert, $changedAttributes);
     }
@@ -327,7 +327,8 @@ class PatPatient extends RActiveRecord {
         $pat_ten_attr = [
             'tenant_id' => $this->tenant_id,
             'org_id' => $this->tenant->org_id,
-            'patient_global_guid' => $this->patient_global_guid
+            'patient_global_guid' => $this->patient_global_guid,
+            'patient_guid' => $this->patient_guid
         ];
 
         $patient_tenant = GlPatientTenant::find()->where($pat_ten_attr)->one();

@@ -18,6 +18,8 @@ use yii\db\ActiveQuery;
  * @property string $message
  * @property string $ip_adderss
  * @property string $status
+ * @property string $resource
+ * @property integer $encounter_id
  * @property integer $created_by
  * @property string $created_at
  * @property integer $modified_by
@@ -43,7 +45,7 @@ class PatTimeline extends RActiveRecord {
         return [
             [['tenant_id', 'patient_id', 'date_time', 'header', 'message'], 'required'],
             [['tenant_id', 'patient_id', 'created_by', 'modified_by'], 'integer'],
-            [['date_time', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
+            [['date_time', 'created_at', 'modified_at', 'deleted_at', 'resource', 'encounter_id'], 'safe'],
             [['status'], 'string'],
             [['header', 'header_sub'], 'string', 'max' => 100],
             [['message'], 'string', 'max' => 255],
@@ -87,7 +89,7 @@ class PatTimeline extends RActiveRecord {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
 
-    public static function insertTimeLine($patient_id, $date_time, $header, $header_sub, $message) {
+    public static function insertTimeLine($patient_id, $date_time, $header, $header_sub, $message, $resource, $encounter_id = null) {
         $model = new PatTimeline;
         $model->attributes = [
             'patient_id' => $patient_id,
@@ -95,6 +97,8 @@ class PatTimeline extends RActiveRecord {
             'header' => $header,
             'header_sub' => $header_sub,
             'message' => $message,
+            'resource' => $resource,
+            'encounter_id' => $encounter_id,
             'ip_adderss' => Yii::$app->getRequest()->getUserIP()
         ];
         $model->save(false);

@@ -124,14 +124,15 @@ class PatProcedure extends RActiveRecord {
     }
 
     public function afterSave($insert, $changedAttributes) {
+        $procedure = "Procedure : <b>{$this->chargeCat->charge_subcat_name}</b>";
+        
         if ($insert) {
             $this->proc_consultant_ids = Json::decode($this->proc_consultant_ids);
-
-            $procedure = "Procedure : <b>{$this->chargeCat->charge_subcat_name}</b>";
             $message = $this->proc_description != '' ? "{$this->proc_description} <br /> $procedure" : $procedure;
-            
-            PatTimeline::insertTimeLine($this->patient_id, $this->proc_date, 'Procedure', '', $message);
+        }else{
+            $message = $this->proc_description != '' ? "Updated: {$this->proc_description} <br /> $procedure" : "Updated: $procedure";
         }
+        PatTimeline::insertTimeLine($this->patient_id, $this->proc_date, 'Procedure', '', $message, 'PROCEDURE', $this->encounter_id);
         $this->_updateConsultant($insert);
 
         return parent::afterSave($insert, $changedAttributes);

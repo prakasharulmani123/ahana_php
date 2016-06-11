@@ -164,7 +164,7 @@ class PatAppointment extends RActiveRecord {
                 $message = "Appointment Cancelled. $consultant";
                 break;
         }
-        PatTimeline::insertTimeLine($this->patient_id, $this->status_date . ' ' . $this->status_time, $header, $header_sub, $message);
+        PatTimeline::insertTimeLine($this->patient_id, $this->status_date . ' ' . $this->status_time, $header, $header_sub, $message, 'ENCOUNTER', $this->encounter_id);
     }
 
     public function setCurrentData() {

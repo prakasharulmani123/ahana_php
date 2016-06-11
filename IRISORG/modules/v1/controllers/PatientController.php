@@ -4,6 +4,8 @@ namespace IRISORG\modules\v1\controllers;
 
 use common\models\CoPatient;
 use common\models\GlPatient;
+use common\models\GlPatientShareResources;
+use common\models\GlPatientTenant;
 use common\models\PatPatient;
 use common\models\PatPatientAddress;
 use common\models\PatPrescriptionFrequency;
@@ -12,8 +14,10 @@ use common\models\PatTimeline;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
+use yii\db\Connection;
 use yii\filters\auth\QueryParamAuth;
 use yii\filters\ContentNegotiator;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\rest\ActiveController;
 use yii\web\Response;
@@ -28,7 +32,8 @@ class PatientController extends ActiveController {
     public function behaviors() {
         $behaviors = parent::behaviors();
         $behaviors['authenticator'] = [
-            'class' => QueryParamAuth::className()
+            'class' => QueryParamAuth::className(),
+            'except' => ['getpatienttimeline2']
         ];
         $behaviors['contentNegotiator'] = [
             'class' => ContentNegotiator::className(),
@@ -82,8 +87,8 @@ class PatientController extends ActiveController {
                 $patient = PatPatient::find()->where(['patient_id' => $post['PatPatient']['patient_id']])->one();
                 if (!empty($patient)) {
                     $model = $patient;
-                    
-                    if(!empty($patient->patPatientAddress))
+
+                    if (!empty($patient->patPatientAddress))
                         $addr_model = $patient->patPatientAddress;
                 }
             }
@@ -97,7 +102,7 @@ class PatientController extends ActiveController {
             }
 
             $valid = $model->validate();
-            
+
             if (isset($post['PatPatientAddress'])) {
                 $addr_model->attributes = $post['PatPatientAddress'];
                 $valid = $addr_model->validate() && $valid;
@@ -237,9 +242,64 @@ class PatientController extends ActiveController {
     }
 
     public function actionGetpatienttimeline() {
-        $guid = Yii::$app->getRequest()->post('guid');
+        $post = Yii::$app->request->post();
+        $guid = $post['guid'];
         $patient = PatPatient::find()->where(['patient_guid' => $guid])->one();
         return ['timeline' => PatTimeline::find()->tenant()->andWhere(['patient_id' => $patient->patient_id])->orderBy(['created_at' => SORT_DESC])->all()];
+    }
+
+    public function actionGetpatienttimeline2() {
+        $post = Yii::$app->request->post();
+
+        if (!empty($post)) {
+            $guid = $post['guid'];
+
+            if ($post['tenant_id'] == 'all') {
+                $patient_tenants = GlPatientTenant::find()->where(['patient_global_guid' => $guid])->all();
+                
+                $timelines = [];
+                foreach ($patient_tenants as $key => $patient_tenant) {
+                    $connection = new Connection([
+                        'dsn' => "mysql:host={$patient_tenant->org->org_db_host};dbname={$patient_tenant->org->org_database}",
+                        'username' => $patient_tenant->org->org_db_username,
+                        'password' => $patient_tenant->org->org_db_password,
+                    ]);
+                    $connection->open();
+
+                    $command = $connection->createCommand("SELECT * FROM pat_patient WHERE patient_global_guid = :guid");
+                    $command->bindValue(':guid', $guid);
+                    $patient = $command->queryAll();
+                    
+                    $resource_lists = $this->_getPatientResourceList($patient_tenant->org_id, $patient_tenant->tenant_id, $patient_tenant->patient_global_guid);
+                    $in_cond = "'".implode("','", $resource_lists)."'";
+                    
+                    $command = $connection->createCommand("SELECT * FROM pat_timeline WHERE patient_id = :id AND tenant_id = :tenant_id AND resource IN ($in_cond)");
+                    $command->bindValues([':id' => $patient[0]['patient_id'], ':tenant_id' => $patient_tenant->tenant_id]);
+                    $timeline = $command->queryAll();
+                    
+                    $connection->close();
+                    
+                    $timelines = array_merge($timelines, $timeline);
+                }
+            } else {
+                $patient = PatPatient::find()->tenant($post['tenant_id'])->andWhere(['patient_global_guid' => $guid])->one();
+                $resource_lists = $this->_getPatientResourceList($patient->tenant->org_id, $post['tenant_id'], $guid);
+                $timelines = PatTimeline::find()->tenant($post['tenant_id'])->andWhere([
+                            'patient_id' => $patient->patient_id,
+                            'resource' => $resource_lists])->orderBy(['created_at' => SORT_DESC])->all();
+            }
+
+            return ['timeline' => $timelines];
+        }
+    }
+    
+    protected function _getPatientResourceList($org_id, $tenant_id, $guid) {
+        $patient_resources = GlPatientShareResources::find()->where([
+                    'org_id' => $org_id,
+                    'tenant_id' => $tenant_id,
+                    'patient_global_guid' => $guid])->all();
+
+        return ArrayHelper::map($patient_resources, 'resource', 'resource');
     }
 
     public function actionGetpatientroutelist() {

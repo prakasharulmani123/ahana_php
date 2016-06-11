@@ -543,7 +543,7 @@ class UserController extends ActiveController {
                 break;
         }
         $date_time = date("Y-m-d H:i:s");
-        PatTimeline::insertTimeLine($encounter->patient_id, $date_time, $header, $header_sub, $message);
+        PatTimeline::insertTimeLine($encounter->patient_id, $date_time, $header, $header_sub, $message, 'BILLING', $encounter->encounter_id);
     }
 
     public function actionChangepassword() {
