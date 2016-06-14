@@ -14,6 +14,7 @@ use yii\db\ActiveQuery;
  * @property string $doc_type_name
  * @property string $document_xml
  * @property string $document_xslt
+ * @property string $document_out_xslt
  * @property string $status
  * @property integer $created_by
  * @property string $created_at
@@ -37,9 +38,9 @@ class PatDocumentTypes extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['doc_type_name', 'document_xml', 'document_xslt'], 'required'],
+            [['doc_type_name', 'document_xml', 'document_xslt', 'document_out_xslt'], 'required'],
             [['tenant_id', 'created_by', 'modified_by'], 'integer'],
-            [['document_xml', 'document_xslt', 'status'], 'string'],
+            [['document_xml', 'document_xslt', 'document_out_xslt', 'status'], 'string'],
             [['created_at', 'modified_at', 'deleted_at', 'doc_type', 'doc_type_name'], 'safe'],
             [['doc_type'], 'string', 'max' => 50]
         ];
@@ -55,6 +56,7 @@ class PatDocumentTypes extends RActiveRecord {
             'doc_type' => 'Doc Type',
             'document_xml' => 'Document Xml',
             'document_xslt' => 'Document Xslt',
+            'document_out_xslt' => 'Document Output Xslt',
             'status' => 'Status',
             'created_by' => 'Created By',
             'created_at' => 'Created At',

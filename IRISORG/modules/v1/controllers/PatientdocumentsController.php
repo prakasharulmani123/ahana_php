@@ -440,20 +440,36 @@ class PatientdocumentsController extends ActiveController {
                         if ($type == 'CheckBoxList') {
                             $post_referral_details = $value;
                             $list_referral_details = $x->LISTITEMS->LISTITEM;
+                            $x->attributes()['Backcontrols'] = 'hide';
                             foreach ($list_referral_details as $list_value) {
                                 if (in_array($list_value, $post_referral_details)) {
                                     $list_value->attributes()['Selected'] = 'true';
+                                    if ($list_value == 'Others') {
+                                        $x->attributes()['Backcontrols'] = 'show';
+                                    }
+                                } else {
+                                    $list_value->attributes()['Selected'] = 'false';
                                 }
                             }
                         } elseif ($type == 'DropDownList' || $type == 'RadioButtonList') {
                             $post_referral_details = $value;
                             $list_referral_details = $x->LISTITEMS->LISTITEM;
+                            $x->attributes()['Backcontrols'] = 'hide';
                             foreach ($list_referral_details as $list_value) {
                                 if ($list_value == $post_referral_details) {
+                                    if ($key == 'religion' || $key == 'relationship') { // Religion Radio Button
+                                        if ($list_value == 'Others') {
+                                            $x->attributes()['Backcontrols'] = 'show';
+                                        }
+                                    } else {
+                                        $x->attributes()['Backcontrols'] = 'show';
+                                    }
                                     $list_value->attributes()['Selected'] = 'true';
+                                } else {
+                                    $list_value->attributes()['Selected'] = 'false';
                                 }
                             }
-                        } elseif ($type == 'textareaFull') {
+                        } elseif ($type == 'textareaFull' || $type == 'TextArea') {
                             if (isset($x->VALUE)) {
                                 unset($x->VALUE);
                             }
@@ -484,14 +500,18 @@ class PatientdocumentsController extends ActiveController {
                                     foreach ($list_referral_details as $list_value) {
                                         if (in_array($list_value, $post_referral_details)) {
                                             $list_value->attributes()['Selected'] = 'true';
+                                        } else {
+                                            $list_value->attributes()['Selected'] = 'false';
                                         }
                                     }
                                 } elseif ($type == 'DropDownList' || $type == 'RadioButtonList') {
-                                    $post_referral_details = $value; // String
+                                    $post_referral_details = $value;
                                     $list_referral_details = $y->LISTITEMS->LISTITEM;
                                     foreach ($list_referral_details as $list_value) {
                                         if ($list_value == $post_referral_details) {
                                             $list_value->attributes()['Selected'] = 'true';
+                                        } else {
+                                            $list_value->attributes()['Selected'] = 'false';
                                         }
                                     }
                                 } elseif ($type == 'textareaFull') {
