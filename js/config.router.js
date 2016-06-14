@@ -2302,6 +2302,18 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 }
             })
             
+            //Patient document - View
+            .state('patient.viewDocument', {
+                url: '/viewDocument/{id}/{doc_id}',
+                templateUrl: 'tpl/patient_documents/view.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/patient_documents/patient_documents.js']);
+                        }]
+                }
+            })
+            
             //Assisgn Patient Sharing
             .state('patient.assignShare', {
                 url: '/assignShare/{id}',

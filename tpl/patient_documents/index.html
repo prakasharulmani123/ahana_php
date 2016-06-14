@@ -52,7 +52,7 @@
                         <td valign="middle"> {{doc.created_at| moment:'DD/MM/YYYY - hh:mm A'}} </td>
                         <td valign="middle"> {{doc.document_name}} </td>
                         <td valign="middle">
-                            <a class="label bg-dark" title="View" check-access  ui-sref="patient.noteView({id: '{{$state.params.id}}', doc_id: '{{doc.doc_id}}'})">
+                            <a class="label bg-dark" title="View" check-access  ui-sref="patient.viewDocument({id: '{{$state.params.id}}', doc_id: '{{doc.doc_id}}'})">
                                 <i class="fa fa-eye"></i>
                             </a>&nbsp;&nbsp;&nbsp;
                             <a class="label bg-dark" title="Edit" check-access  ui-sref="patient.editDocument({id: '{{$state.params.id}}', doc_id: '{{doc.doc_id}}'})">

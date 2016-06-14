@@ -1,15 +1,19 @@
 function OThersvisible(current_id, target_id, status) {
     if ($("#" + current_id).is(':checked')) {
         $("#" + target_id).removeClass('hide');
+        $("#" + target_id).addClass('show');
     } else {
+        $("#" + target_id).removeClass('show');
         $("#" + target_id).addClass('hide');
     }
 
     if (status == 'none') {
+        $("#" + target_id).removeClass('show');
         $("#" + target_id).addClass('hide');
     }
     if (status == 'block') {
         $("#" + target_id).removeClass('hide');
+        $("#" + target_id).addClass('show');
     }
 }
 
