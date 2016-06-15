@@ -187,6 +187,8 @@ class PatientdocumentsController extends ActiveController {
                                                         foreach ($list_referral_details as $list_value) {
                                                             if (in_array($list_value, $post_referral_details)) {
                                                                 $list_value->attributes()['Selected'] = 'true';
+                                                            } else {
+                                                                $list_value->attributes()['Selected'] = 'false';
                                                             }
                                                         }
                                                     } elseif ($type == 'DropDownList' || $type == 'RadioButtonList') {
@@ -195,6 +197,8 @@ class PatientdocumentsController extends ActiveController {
                                                         foreach ($list_referral_details as $list_value) {
                                                             if ($list_value == $post_referral_details) {
                                                                 $list_value->attributes()['Selected'] = 'true';
+                                                            } else {
+                                                                $list_value->attributes()['Selected'] = 'false';
                                                             }
                                                         }
                                                     } elseif ($type == 'textareaFull') {
@@ -228,14 +232,28 @@ class PatientdocumentsController extends ActiveController {
                                                 foreach ($list_referral_details as $list_value) {
                                                     if (in_array($list_value, $post_referral_details)) {
                                                         $list_value->attributes()['Selected'] = 'true';
+                                                    } else {
+                                                        $list_value->attributes()['Selected'] = 'false';
                                                     }
                                                 }
                                             } elseif ($type == 'DropDownList' || $type == 'RadioButtonList') {
+                                                $field->attributes()['Backcontrols'] = 'hide';
+//                                                $radio_field_id = ['radio_pb_illnesstype'];
+                                                $list_values_array = ['Other Illness'];
+
                                                 $post_referral_details = $value;
                                                 $list_referral_details = $field->LISTITEMS->LISTITEM;
+
                                                 foreach ($list_referral_details as $list_value) {
                                                     if ($list_value == $post_referral_details) {
+//                                                        if (in_array($key, $radio_field_id)) {
+                                                        if (in_array($list_value, $list_values_array)) {
+                                                            $field->attributes()['Backcontrols'] = 'show';
+                                                        }
+//                                                        }
                                                         $list_value->attributes()['Selected'] = 'true';
+                                                    } else {
+                                                        $list_value->attributes()['Selected'] = 'false';
                                                     }
                                                 }
                                             } elseif ($type == 'textareaFull') {
@@ -267,17 +285,37 @@ class PatientdocumentsController extends ActiveController {
                                 if ($type == 'CheckBoxList') {
                                     $post_referral_details = $value;
                                     $list_referral_details = $pb->LISTITEMS->LISTITEM;
+                                    $pb->attributes()['Backcontrols'] = 'hide';
                                     foreach ($list_referral_details as $list_value) {
                                         if (in_array($list_value, $post_referral_details)) {
                                             $list_value->attributes()['Selected'] = 'true';
+                                            if ($list_value == 'Others') {
+                                                $pb->attributes()['Backcontrols'] = 'show';
+                                            }
+                                        } else {
+                                            $list_value->attributes()['Selected'] = 'false';
                                         }
                                     }
                                 } elseif ($type == 'DropDownList' || $type == 'RadioButtonList') {
+                                    $pb->attributes()['Backcontrols'] = 'hide';
+                                    $radio_field_id = ['previous_ects', 'rb_pb_Response1', 'RBtypeofmarriage', 'RBpbprenatal', 'RBpbperinatal2', 'RBpbmajorillness', 'RBpbdevelopmentmilestone', 'RBpbmajorillnessduringchild', 'RBpbhomeatmosphere', 'RBpbhomeatmosphereadole', 'RBpbbreakstudy', 'RBpbfrechangeschool', 'RBpbmedium', 'RBpbteacherrelation', 'RBpbstudentrelation', 'RBpbworkrecord', 'RBRegularity', 'RBObsession', 'RBOrientation'];
+                                    $list_values_array = ['Yes', 'Discontinued', 'Consanguineous', 'Eventful', 'Delayed', 'Unsatisfactory', 'Others', 'Irregular', 'Present', 'Oriented'];
+
                                     $post_referral_details = $value;
                                     $list_referral_details = $pb->LISTITEMS->LISTITEM;
+
                                     foreach ($list_referral_details as $list_value) {
                                         if ($list_value == $post_referral_details) {
+                                            if (in_array($key, $radio_field_id)) {
+                                                if (in_array($list_value, $list_values_array)) {
+                                                    $pb->attributes()['Backcontrols'] = 'show';
+                                                }
+                                            } else {
+                                                $pb->attributes()['Backcontrols'] = 'show';
+                                            }
                                             $list_value->attributes()['Selected'] = 'true';
+                                        } else {
+                                            $list_value->attributes()['Selected'] = 'false';
                                         }
                                     }
                                 } elseif ($type == 'textareaFull') {
@@ -311,6 +349,8 @@ class PatientdocumentsController extends ActiveController {
                                             foreach ($list_referral_details as $list_value) {
                                                 if (in_array($list_value, $post_referral_details)) {
                                                     $list_value->attributes()['Selected'] = 'true';
+                                                } else {
+                                                    $list_value->attributes()['Selected'] = 'false';
                                                 }
                                             }
                                         } elseif ($type == 'DropDownList' || $type == 'RadioButtonList') {
@@ -319,6 +359,8 @@ class PatientdocumentsController extends ActiveController {
                                             foreach ($list_referral_details as $list_value) {
                                                 if ($list_value == $post_referral_details) {
                                                     $list_value->attributes()['Selected'] = 'true';
+                                                } else {
+                                                    $list_value->attributes()['Selected'] = 'false';
                                                 }
                                             }
                                         } elseif ($type == 'textareaFull') {
@@ -351,7 +393,7 @@ class PatientdocumentsController extends ActiveController {
                             if (isset($field->FIELD)) {
                                 foreach ($field->FIELD as $y) {
                                     foreach ($post as $key => $value) {
-                                        if ($key == $y->attributes()) {
+                                        if ($key == $y->attributes()->id) {
                                             $type = $y->attributes()->type;
 
                                             if ($type == 'CheckBoxList') {
@@ -360,6 +402,8 @@ class PatientdocumentsController extends ActiveController {
                                                 foreach ($list_referral_details as $list_value) {
                                                     if (in_array($list_value, $post_referral_details)) {
                                                         $list_value->attributes()['Selected'] = 'true';
+                                                    } else {
+                                                        $list_value->attributes()['Selected'] = 'false';
                                                     }
                                                 }
                                             } elseif ($type == 'DropDownList' || $type == 'RadioButtonList') {
@@ -368,9 +412,11 @@ class PatientdocumentsController extends ActiveController {
                                                 foreach ($list_referral_details as $list_value) {
                                                     if ($list_value == $post_referral_details) {
                                                         $list_value->attributes()['Selected'] = 'true';
+                                                    } else {
+                                                        $list_value->attributes()['Selected'] = 'false';
                                                     }
                                                 }
-                                            } elseif ($type == 'textareaFull') {
+                                            } elseif ($type == 'textareaFull' || $type == 'TextArea') {
                                                 if (isset($y->VALUE)) {
                                                     unset($y->VALUE);
                                                 }
@@ -392,7 +438,7 @@ class PatientdocumentsController extends ActiveController {
 
                             //Main FIELD
                             foreach ($post as $key => $value) {
-                                if ($key == $field->attributes()) {
+                                if ($key == $field->attributes()->id) {
                                     $type = $field->attributes()->type;
                                     //Checkbox
                                     if ($type == 'CheckBoxList') {
@@ -401,17 +447,30 @@ class PatientdocumentsController extends ActiveController {
                                         foreach ($list_referral_details as $list_value) {
                                             if (in_array($list_value, $post_referral_details)) {
                                                 $list_value->attributes()['Selected'] = 'true';
+                                            } else {
+                                                $list_value->attributes()['Selected'] = 'false';
                                             }
                                         }
                                     } elseif ($type == 'DropDownList' || $type == 'RadioButtonList') {
+                                        $field->attributes()['Backcontrols'] = 'hide';
+//                                        $radio_field_id = ['radio_med_his_currently_under_treatment'];
+                                        $list_values_array = ['No'];
+
                                         $post_referral_details = $value;
                                         $list_referral_details = $field->LISTITEMS->LISTITEM;
                                         foreach ($list_referral_details as $list_value) {
                                             if ($list_value == $post_referral_details) {
+//                                                if (in_array($key, $radio_field_id)) {
+                                                if (in_array($list_value, $list_values_array)) {
+                                                    $field->attributes()['Backcontrols'] = 'show';
+                                                }
+//                                                }
                                                 $list_value->attributes()['Selected'] = 'true';
+                                            } else {
+                                                $list_value->attributes()['Selected'] = 'false';
                                             }
                                         }
-                                    } elseif ($type == 'textareaFull') {
+                                    } elseif ($type == 'textareaFull' || $type == 'TextArea') {
                                         if (isset($field->VALUE)) {
                                             unset($field->VALUE);
                                         }
@@ -434,7 +493,7 @@ class PatientdocumentsController extends ActiveController {
 
                 //Main FIELD - Normal Checkbox, Radio, Input, etc...
                 foreach ($post as $key => $value) {
-                    if ($key == $x->attributes()) {
+                    if ($key == $x->attributes()->id) {
                         $type = $x->attributes()->type;
                         //Checkbox
                         if ($type == 'CheckBoxList') {
@@ -452,13 +511,17 @@ class PatientdocumentsController extends ActiveController {
                                 }
                             }
                         } elseif ($type == 'DropDownList' || $type == 'RadioButtonList') {
+                            $x->attributes()['Backcontrols'] = 'hide';
+                            $radio_field_id = ['religion', 'relationship', 'social_functioning', 'occupational_functioning', 'similar_episodes'];
+                            $list_values_array = ['Others', 'Impaired', 'Yes'];
+
                             $post_referral_details = $value;
                             $list_referral_details = $x->LISTITEMS->LISTITEM;
-                            $x->attributes()['Backcontrols'] = 'hide';
+
                             foreach ($list_referral_details as $list_value) {
                                 if ($list_value == $post_referral_details) {
-                                    if ($key == 'religion' || $key == 'relationship') { // Religion Radio Button
-                                        if ($list_value == 'Others') {
+                                    if (in_array($key, $radio_field_id)) {
+                                        if (in_array($list_value, $list_values_array)) {
                                             $x->attributes()['Backcontrols'] = 'show';
                                         }
                                     } else {
@@ -491,7 +554,7 @@ class PatientdocumentsController extends ActiveController {
                 if (isset($x->FIELD)) {
                     foreach ($x->FIELD as $y) {
                         foreach ($post as $key => $value) {
-                            if ($key == $y->attributes()) {
+                            if ($key == $y->attributes()->id) {
                                 $type = $y->attributes()->type;
 
                                 if ($type == 'CheckBoxList') {
@@ -514,7 +577,7 @@ class PatientdocumentsController extends ActiveController {
                                             $list_value->attributes()['Selected'] = 'false';
                                         }
                                     }
-                                } elseif ($type == 'textareaFull') {
+                                } elseif ($type == 'textareaFull' || $type == 'TextArea') {
                                     if (isset($y->VALUE)) {
                                         unset($y->VALUE);
                                     }
@@ -549,6 +612,7 @@ class PatientdocumentsController extends ActiveController {
                     $dropdown = 'DDLMedHis' . $rowCount;
                     $text_box = 'TxtMedHisDuration' . $rowCount;
                     $radio = 'radio_med_his_currently_under_treatment' . $rowCount;
+                    $radio_back_div = 'med_his_currently_under_treatment_reason_div' . $rowCount;
                     $dropdown_2 = 'DDLMedHisDuration' . $rowCount;
 
                     $columns = $x->addChild('COLUMNS');
@@ -634,7 +698,7 @@ class PatientdocumentsController extends ActiveController {
                     $property3 = $properties2->addChild('PROPERTY', $text_box);
                     $property3->addAttribute('name', 'id');
 
-                    $property4 = $properties2->addChild('PROPERTY', 'return isNumericKeyStroke()');
+                    $property4 = $properties2->addChild('PROPERTY', 'return isNumericKeyStroke(event)');
                     $property4->addAttribute('name', 'onkeydown');
 
                     $property5 = $properties2->addChild('PROPERTY', $text_box);
@@ -675,6 +739,8 @@ class PatientdocumentsController extends ActiveController {
                     $field3 = $columns->addChild('FIELD');
                     $field3->addAttribute('id', $radio);
                     $field3->addAttribute('type', 'RadioButtonList');
+                    $field3->addAttribute('Backcontrols', 'hide');
+                    $field3->addAttribute('Backdivid', $radio_back_div);
 
                     $properties1 = $field3->addChild('PROPERTIES');
 
@@ -687,11 +753,32 @@ class PatientdocumentsController extends ActiveController {
                     $listitem1->addAttribute('value', 'Yes');
                     $listitem1->addAttribute('id', 'radio_med_his_currently_under_treatment1' . $rowCount);
                     $listitem1->addAttribute('Selected', 'False');
+                    $listitem1->addAttribute('onclick', "OThersvisible(this.id, '$radio_back_div', 'none');");
 
                     $listitem2 = $listitems->addChild('LISTITEM', 'No');
                     $listitem2->addAttribute('value', 'No');
                     $listitem2->addAttribute('id', 'radio_med_his_currently_under_treatment2' . $rowCount);
                     $listitem2->addAttribute('Selected', 'False');
+                    $listitem2->addAttribute('onclick', "OThersvisible(this.id, '$radio_back_div', 'block');");
+
+                    //SUB FIELD 1
+                    $field3_sub = $field3->addChild('FIELD');
+                    $field3_sub->addAttribute('id', 'med_his_currently_under_treatment_reason' . $rowCount);
+                    $field3_sub->addAttribute('type', 'TextBox');
+
+                    $field3_properties = $field3_sub->addChild('PROPERTIES');
+
+                    $property8 = $field3_properties->addChild('PROPERTY', 'med_his_currently_under_treatment_reason' . $rowCount);
+                    $property8->addAttribute('name', 'id');
+
+                    $property9 = $field3_properties->addChild('PROPERTY', 'med_his_currently_under_treatment_reason' . $rowCount);
+                    $property9->addAttribute('name', 'name');
+
+                    $property10 = $field3_properties->addChild('PROPERTY', 'form-control');
+                    $property10->addAttribute('name', 'class');
+
+                    $property11 = $field3_properties->addChild('PROPERTY', 'Reason');
+                    $property11->addAttribute('name', 'placeholder');
                 }
             }
         }
@@ -739,7 +826,7 @@ class PatientdocumentsController extends ActiveController {
                             $property3 = $properties2->addChild('PROPERTY', $text_box2);
                             $property3->addAttribute('name', 'id');
 
-                            $property4 = $properties2->addChild('PROPERTY', 'return isNumericKeyStroke()');
+                            $property4 = $properties2->addChild('PROPERTY', 'return isNumericKeyStroke(event)');
                             $property4->addAttribute('name', 'onkeydown');
 
                             $property5 = $properties2->addChild('PROPERTY', $text_box2);
@@ -888,7 +975,7 @@ class PatientdocumentsController extends ActiveController {
                             $property3 = $properties2->addChild('PROPERTY', $text_box);
                             $property3->addAttribute('name', 'id');
 
-                            $property4 = $properties2->addChild('PROPERTY', 'return isNumericKeyStroke()');
+                            $property4 = $properties2->addChild('PROPERTY', 'return isNumericKeyStroke(event)');
                             $property4->addAttribute('name', 'onkeydown');
 
                             $property5 = $properties2->addChild('PROPERTY', $text_box);
@@ -1075,6 +1162,7 @@ class PatientdocumentsController extends ActiveController {
                             $radio2 = 'radio_pb_treatment' . $rowCount; //DDL Name
                             $dropdown = 'ddl_pb_relation' . $rowCount; //DDL Name
                             $text_box = 'radio_pb_illnesstype_note' . $rowCount; //Textbox1 Name
+                            $back_div_id = 'radio_pb_illnesstype_note_div' . $rowCount; //Textbox1 Name
 
                             $columns = $x->addChild('COLUMNS');
 
@@ -1125,6 +1213,8 @@ class PatientdocumentsController extends ActiveController {
                             $field2 = $columns->addChild('FIELD');
                             $field2->addAttribute('id', $radio);
                             $field2->addAttribute('type', 'RadioButtonList');
+                            $field2->addAttribute('Backcontrols', 'hide');
+                            $field2->addAttribute('Backdivid', $back_div_id);
 
                             $properties2 = $field2->addChild('PROPERTIES');
 
@@ -1137,13 +1227,13 @@ class PatientdocumentsController extends ActiveController {
                             $listitem1->addAttribute('id', 'radio_pb_illnesstype1' . $rowCount);
                             $listitem1->addAttribute('value', 'Similar Illness');
                             $listitem1->addAttribute('Selected', 'False');
-                            $listitem1->addAttribute('onclick', "OThersvisible(this.id,'$text_box','none');");
+                            $listitem1->addAttribute('onclick', "OThersvisible(this.id,'$back_div_id','none');");
 
                             $listitem2 = $listitems->addChild('LISTITEM', 'Other Illness');
                             $listitem2->addAttribute('id', 'radio_pb_illnesstype2' . $rowCount);
                             $listitem2->addAttribute('value', 'Other Illness');
                             $listitem2->addAttribute('Selected', 'False');
-                            $listitem2->addAttribute('onclick', "OThersvisible(this.id,'$text_box','block');");
+                            $listitem2->addAttribute('onclick', "OThersvisible(this.id,'$back_div_id','block');");
 
                             $subfield1 = $field2->addChild('FIELD');
                             $subfield1->addAttribute('id', $text_box);
@@ -1157,7 +1247,7 @@ class PatientdocumentsController extends ActiveController {
                             $property7 = $properties3->addChild('PROPERTY', $text_box);
                             $property7->addAttribute('name', 'name');
 
-                            $property8 = $properties3->addChild('PROPERTY', 'form-control hide');
+                            $property8 = $properties3->addChild('PROPERTY', 'form-control');
                             $property8->addAttribute('name', 'class');
 
                             $property9 = $properties3->addChild('PROPERTY', 'Notes');
@@ -1226,7 +1316,7 @@ class PatientdocumentsController extends ActiveController {
                     $property3 = $properties2->addChild('PROPERTY', $text_box2);
                     $property3->addAttribute('name', 'id');
 
-                    $property4 = $properties2->addChild('PROPERTY', 'return isNumericKeyStroke()');
+                    $property4 = $properties2->addChild('PROPERTY', 'return isNumericKeyStroke(event)');
                     $property4->addAttribute('name', 'onkeydown');
 
                     $property5 = $properties2->addChild('PROPERTY', $text_box2);
