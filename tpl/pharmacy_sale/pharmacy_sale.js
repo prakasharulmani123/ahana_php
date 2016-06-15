@@ -181,12 +181,13 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             }
         };
 
-        $scope.addRowWhenFocus = function (key) {
-            //Add New Row when focus Quantity
-            if (key + 1 == $scope.saleItems.length) {
-                $scope.addRow(false);
-            }
-        }
+        //Hide by Nad.
+//        $scope.addRowWhenFocus = function (key) {
+//            //Add New Row when focus Quantity
+//            if (key + 1 == $scope.saleItems.length) {
+//                $scope.addRow(false);
+//            }
+//        }
 
         // Remove Sale Item
         $scope.removeSaleItem = function (index) {
@@ -308,7 +309,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             $scope.saleItems[key].mrp = item.mrp;
 
             $scope.setFocus('quantity', key);
-            $scope.addRowWhenFocus(key);
+//            $scope.addRowWhenFocus(key);
         }
 
         $scope.showOrHideProductBatch = function (mode, key) {

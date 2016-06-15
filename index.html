@@ -48,22 +48,24 @@
                     <div class="clearfix"></div>
                     <h2> {{app.name}} ({{app.org_name}})</h2>
                     <img src="img/user-thumb.jpg"  alt="" class="thumb-img">
-
+                </div>
+                <div class="doctor-name">
+                    <b>  {{app.username}} </b>
                     <p>
                         <a ui-sref="configuration.changePassword" class="custom-close-sidebar">
                             <i class="fa fa-lock"></i> Change Password
                         </a>
                     </p>
-                    
                     <p>
                         <a ui-sref="configuration.settings" class="custom-close-sidebar">
                             <i class="fa fa-cog"></i> Application Settings
                         </a>
                     </p>
-                    <p> <a href="" ng-click="logout();">  <i class="fa fa-sign-out"></i> Logout  </a> </p>
-                </div>
-                <div class="doctor-name">
-                    <b>  HMS </b>
+                    <p> 
+                        <a href="" ng-click="logout();">  
+                            <i class="fa fa-sign-out"></i> Logout  
+                        </a> 
+                    </p>
                 </div>
             </div>
             <!-- Prescription Notes -->
@@ -89,8 +91,8 @@
                             </div>
                         </div>
                         <div class="wrapper m-t b-t b-light">
-                            <form class="m-b-none ng-pristine ng-valid ng-submitted" ng-init="data = {};
-                                            notes_error = false;">
+                                            <form class="m-b-none ng-pristine ng-valid ng-submitted" ng-init="data = {};
+                                        notes_error = false;">
                                 <div class="input-group">
                                     <input type="text" placeholder="Say something" class="form-control" ng-model="data.notes">
                                     <span class="input-group-btn">
