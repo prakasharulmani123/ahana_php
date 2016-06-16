@@ -53,29 +53,16 @@ class PatientdocumentsController extends ActiveController {
         ]);
     }
 
-    public function actionRemove() {
-        $id = Yii::$app->getRequest()->post('doc_id');
-        if ($id) {
-            $model = PatDocuments::find()->where(['doc_id' => $id])->one();
-            $model->delete();
-            return ['success' => true];
-        }
-    }
-
-    public function actionGetpatientdocuments() {
-        $get = Yii::$app->getRequest()->get();
-
-        if (!empty($get)) {
-            $patient = PatPatient::getPatientByGuid($get['patient_id']);
-            $result = [];
-            $data = PatDocuments::find()->tenant()->andWhere(['patient_id' => $patient->patient_id])->groupBy('encounter_id')->orderBy(['encounter_id' => SORT_DESC])->all();
-            foreach ($data as $key => $value) {
-                $details = PatDocuments::find()->tenant()->andWhere(['patient_id' => $patient->patient_id, 'encounter_id' => $value->encounter_id])->orderBy(['doc_id' => SORT_DESC])->all();
-                $result[$key] = ['data' => $value, 'all' => $details];
-            }
-            return ['success' => true, 'result' => $result];
-        }
-    }
+    //Hide by Nad.
+//    public function actionUpdatedocumenttype() {
+//        $post = Yii::$app->getRequest()->post();
+//        $model = PatDocumentTypes::find()->where(['doc_type_id' => 1])->one();
+//        $model->attributes = array(
+//            'document_xml' => $post['xml'],
+//            'document_xslt' => $post['xslt'],
+//        );
+//        $model->save(false);
+//    }
 
     public function actionGetdocumenttype() {
         $get = Yii::$app->getRequest()->get();
@@ -93,16 +80,33 @@ class PatientdocumentsController extends ActiveController {
         }
     }
 
-    public function actionUpdatedocumenttype() {
-        $post = Yii::$app->getRequest()->post();
-        $model = PatDocumentTypes::find()->where(['doc_type_id' => 1])->one();
-        $model->attributes = array(
-            'document_xml' => $post['xml'],
-            'document_xslt' => $post['xslt'],
-        );
-        $model->save(false);
+    //Delete Function
+    public function actionRemove() {
+        $id = Yii::$app->getRequest()->post('doc_id');
+        if ($id) {
+            $model = PatDocuments::find()->where(['doc_id' => $id])->one();
+            $model->delete();
+            return ['success' => true];
+        }
     }
 
+    //Index Function
+    public function actionGetpatientdocuments() {
+        $get = Yii::$app->getRequest()->get();
+
+        if (!empty($get)) {
+            $patient = PatPatient::getPatientByGuid($get['patient_id']);
+            $result = [];
+            $data = PatDocuments::find()->tenant()->andWhere(['patient_id' => $patient->patient_id])->groupBy('encounter_id')->orderBy(['encounter_id' => SORT_DESC])->all();
+            foreach ($data as $key => $value) {
+                $details = PatDocuments::find()->tenant()->andWhere(['patient_id' => $patient->patient_id, 'encounter_id' => $value->encounter_id])->orderBy(['doc_id' => SORT_DESC])->all();
+                $result[$key] = ['data' => $value, 'all' => $details];
+            }
+            return ['success' => true, 'result' => $result];
+        }
+    }
+
+    //Save Create / Update
     public function actionSavedocument() {
         $post = Yii::$app->getRequest()->post();
         $patient = PatPatient::getPatientByGuid($post['patient_id']);
@@ -289,7 +293,7 @@ class PatientdocumentsController extends ActiveController {
                                     foreach ($list_referral_details as $list_value) {
                                         if (in_array($list_value, $post_referral_details)) {
                                             $list_value->attributes()['Selected'] = 'true';
-                                            if ($list_value == 'Others') {
+                                            if ($list_value == 'Others' || $key == 'CBDelusions') {
                                                 $pb->attributes()['Backcontrols'] = 'show';
                                             }
                                         } else {
@@ -604,6 +608,90 @@ class PatientdocumentsController extends ActiveController {
         return $xml;
     }
 
+    protected function preparePresentingComplaintsXml($xml, $table_id, $rowCount) {
+        $xmlLoad = simplexml_load_string($xml);
+        foreach ($xmlLoad->children() as $group) {
+            foreach ($group->PANELBODY->FIELD as $x) {
+                if ($x->attributes()->type == 'RadGrid' && $x->attributes()->AddButtonTableId == $table_id) {
+                    $text_box = 'txtComplaints' . $rowCount; //Textbox1 Name
+                    $text_box2 = 'txtDuration' . $rowCount; //Textbox2 Name
+                    $dropdown = 'DDLDuration' . $rowCount; //DDL Name
+
+                    $columns = $x->addChild('COLUMNS');
+
+                    $field1 = $columns->addChild('FIELD');
+                    $field1->addAttribute('id', $text_box);
+                    $field1->addAttribute('type', 'TextBox');
+
+                    $properties1 = $field1->addChild('PROPERTIES');
+
+                    $property1 = $properties1->addChild('PROPERTY', $text_box);
+                    $property1->addAttribute('name', 'id');
+
+                    $property2 = $properties1->addChild('PROPERTY', $text_box);
+                    $property2->addAttribute('name', 'name');
+
+                    $property3 = $properties1->addChild('PROPERTY', 'form-control');
+                    $property3->addAttribute('name', 'class');
+
+                    $field2 = $columns->addChild('FIELD');
+                    $field2->addAttribute('id', $text_box2);
+                    $field2->addAttribute('type', 'TextBoxDDL');
+
+                    $properties2 = $field2->addChild('PROPERTIES');
+
+                    $property4 = $properties2->addChild('PROPERTY', $text_box2);
+                    $property4->addAttribute('name', 'id');
+
+                    $property5 = $properties2->addChild('PROPERTY', 'return isNumericKeyStroke(event)');
+                    $property5->addAttribute('name', 'onkeydown');
+
+                    $property6 = $properties2->addChild('PROPERTY', $text_box2);
+                    $property6->addAttribute('name', 'name');
+
+                    $property7 = $properties2->addChild('PROPERTY', 'form-control');
+                    $property7->addAttribute('name', 'class');
+
+                    $subfield1 = $field2->addChild('FIELD');
+                    $subfield1->addAttribute('id', $dropdown);
+                    $subfield1->addAttribute('type', 'DropDownList');
+
+                    $properties3 = $subfield1->addChild('PROPERTIES');
+
+                    $property8 = $properties3->addChild('PROPERTY', $dropdown);
+                    $property8->addAttribute('name', 'id');
+
+                    $property9 = $properties3->addChild('PROPERTY', $dropdown);
+                    $property9->addAttribute('name', 'name');
+
+                    $property10 = $properties3->addChild('PROPERTY', 'form-control');
+                    $property10->addAttribute('name', 'class');
+
+                    $listitems = $subfield1->addChild('LISTITEMS');
+
+                    $listitem1 = $listitems->addChild('LISTITEM', 'Yrs');
+                    $listitem1->addAttribute('value', 'Yrs');
+                    $listitem1->addAttribute('Selected', 'False');
+
+                    $listitem2 = $listitems->addChild('LISTITEM', 'Months');
+                    $listitem2->addAttribute('value', 'Months');
+                    $listitem2->addAttribute('Selected', 'False');
+
+                    $listitem3 = $listitems->addChild('LISTITEM', 'Weeks');
+                    $listitem3->addAttribute('value', 'Weeks');
+                    $listitem3->addAttribute('Selected', 'False');
+
+                    $listitem4 = $listitems->addChild('LISTITEM', 'Days');
+                    $listitem4->addAttribute('value', 'Days');
+                    $listitem4->addAttribute('Selected', 'False');
+                }
+            }
+        }
+
+        $xml = $xmlLoad->asXML();
+        return $xml;
+    }
+
     protected function preparePastMedicalHistoryXml($xml, $table_id, $rowCount) {
         $xmlLoad = simplexml_load_string($xml);
         foreach ($xmlLoad->children() as $group) {
@@ -629,6 +717,9 @@ class PatientdocumentsController extends ActiveController {
 
                     $property2 = $properties1->addChild('PROPERTY', $dropdown);
                     $property2->addAttribute('name', 'name');
+
+                    $property22 = $properties1->addChild('PROPERTY', 'form-control');
+                    $property22->addAttribute('name', 'class');
 
                     $listitems = $field1->addChild('LISTITEMS');
 
@@ -691,7 +782,7 @@ class PatientdocumentsController extends ActiveController {
                     //FIELD 2
                     $field2 = $columns->addChild('FIELD');
                     $field2->addAttribute('id', $text_box);
-                    $field2->addAttribute('type', 'TextBox');
+                    $field2->addAttribute('type', 'TextBoxDDL');
 
                     $properties2 = $field2->addChild('PROPERTIES');
 
@@ -703,6 +794,9 @@ class PatientdocumentsController extends ActiveController {
 
                     $property5 = $properties2->addChild('PROPERTY', $text_box);
                     $property5->addAttribute('name', 'name');
+
+                    $property55 = $properties2->addChild('PROPERTY', 'form-control');
+                    $property55->addAttribute('name', 'class');
 
                     //SUB FIELD 1
                     $subfield1 = $field2->addChild('FIELD');
@@ -716,6 +810,9 @@ class PatientdocumentsController extends ActiveController {
 
                     $property7 = $properties3->addChild('PROPERTY', $dropdown_2);
                     $property7->addAttribute('name', 'name');
+
+                    $property77 = $properties3->addChild('PROPERTY', 'form-control');
+                    $property77->addAttribute('name', 'class');
 
                     $listitems = $subfield1->addChild('LISTITEMS');
 
@@ -765,6 +862,7 @@ class PatientdocumentsController extends ActiveController {
                     $field3_sub = $field3->addChild('FIELD');
                     $field3_sub->addAttribute('id', 'med_his_currently_under_treatment_reason' . $rowCount);
                     $field3_sub->addAttribute('type', 'TextBox');
+                    $field3_sub->addAttribute('label', 'Reason: ');
 
                     $field3_properties = $field3_sub->addChild('PROPERTIES');
 
@@ -816,10 +914,13 @@ class PatientdocumentsController extends ActiveController {
                             $property2 = $properties1->addChild('PROPERTY', $text_box);
                             $property2->addAttribute('name', 'name');
 
+                            $property22 = $properties1->addChild('PROPERTY', 'form-control');
+                            $property22->addAttribute('name', 'class');
+
                             //FIELD 2
                             $field2 = $columns->addChild('FIELD');
                             $field2->addAttribute('id', $text_box2);
-                            $field2->addAttribute('type', 'TextBox');
+                            $field2->addAttribute('type', 'TextBoxDDL');
 
                             $properties2 = $field2->addChild('PROPERTIES');
 
@@ -832,6 +933,9 @@ class PatientdocumentsController extends ActiveController {
                             $property5 = $properties2->addChild('PROPERTY', $text_box2);
                             $property5->addAttribute('name', 'name');
 
+                            $property55 = $properties2->addChild('PROPERTY', 'form-control');
+                            $property55->addAttribute('name', 'class');
+
                             $subfield1 = $field2->addChild('FIELD');
                             $subfield1->addAttribute('id', $dropdown);
                             $subfield1->addAttribute('type', 'DropDownList');
@@ -843,6 +947,9 @@ class PatientdocumentsController extends ActiveController {
 
                             $property7 = $properties3->addChild('PROPERTY', $dropdown);
                             $property7->addAttribute('name', 'name');
+
+                            $property77 = $properties3->addChild('PROPERTY', 'form-control');
+                            $property77->addAttribute('name', 'class');
 
                             $listitems = $subfield1->addChild('LISTITEMS');
 
@@ -901,6 +1008,9 @@ class PatientdocumentsController extends ActiveController {
 
                             $property2 = $properties1->addChild('PROPERTY', $text_box3);
                             $property2->addAttribute('name', 'name');
+                            
+                            $property222 = $properties1->addChild('PROPERTY', 'form-control');
+                            $property222->addAttribute('name', 'class');
                         }
                     }
                 }
@@ -910,143 +1020,7 @@ class PatientdocumentsController extends ActiveController {
         $xml = $xmlLoad->asXML();
         return $xml;
     }
-
-    protected function prepareSubstanceHistoryXml($xml, $table_id, $rowCount) {
-        $xmlLoad = simplexml_load_string($xml);
-        foreach ($xmlLoad->children() as $group) {
-            foreach ($group->PANELBODY->FIELD as $y) {
-                if ($y->attributes()->type == 'PanelBar') {
-                    foreach ($y->FIELD as $x) {
-                        if ($x->attributes()->type == 'RadGrid' && $x->attributes()->AddButtonTableId == $table_id) {
-
-                            $text_box = 'txtPBDuration' . $rowCount; //Textbox1 Name
-                            $dropdown = 'ddl_pb_substance' . $rowCount; //DDL Name
-                            $dropdown2 = 'DDLPBDuration' . $rowCount; //DDL Name
-                            $checkbox = 'CBPBpattern' . $rowCount; //DDL Name
-
-                            $columns = $x->addChild('COLUMNS');
-
-                            //FIELD 1
-                            $field1 = $columns->addChild('FIELD');
-                            $field1->addAttribute('id', $dropdown);
-                            $field1->addAttribute('type', 'DropDownList');
-
-                            $properties1 = $field1->addChild('PROPERTIES');
-
-                            $property1 = $properties1->addChild('PROPERTY', $dropdown);
-                            $property1->addAttribute('name', 'id');
-
-                            $property2 = $properties1->addChild('PROPERTY', $dropdown);
-                            $property2->addAttribute('name', 'name');
-
-                            $listitems = $field1->addChild('LISTITEMS');
-
-                            $listitem1 = $listitems->addChild('LISTITEM', '--Select--');
-                            $listitem1->addAttribute('value', '--Select--');
-                            $listitem1->addAttribute('Selected', 'False');
-
-                            $listitem2 = $listitems->addChild('LISTITEM', 'Smoking');
-                            $listitem2->addAttribute('value', 'Smoking');
-                            $listitem2->addAttribute('Selected', 'False');
-
-                            $listitem3 = $listitems->addChild('LISTITEM', 'Alcohol');
-                            $listitem3->addAttribute('value', 'Alcohol');
-                            $listitem3->addAttribute('Selected', 'False');
-
-                            $listitem4 = $listitems->addChild('LISTITEM', 'Cannabis');
-                            $listitem4->addAttribute('value', 'Cannabis');
-                            $listitem4->addAttribute('Selected', 'False');
-
-                            $listitem5 = $listitems->addChild('LISTITEM', 'Solvents/Inhalants');
-                            $listitem5->addAttribute('value', 'Solvents/Inhalants');
-                            $listitem5->addAttribute('Selected', 'False');
-
-                            $listitem6 = $listitems->addChild('LISTITEM', 'Others');
-                            $listitem6->addAttribute('value', 'Others');
-                            $listitem6->addAttribute('Selected', 'False');
-
-                            //FIELD 2
-                            $field2 = $columns->addChild('FIELD');
-                            $field2->addAttribute('id', $text_box);
-                            $field2->addAttribute('type', 'TextBox');
-
-                            $properties2 = $field2->addChild('PROPERTIES');
-
-                            $property3 = $properties2->addChild('PROPERTY', $text_box);
-                            $property3->addAttribute('name', 'id');
-
-                            $property4 = $properties2->addChild('PROPERTY', 'return isNumericKeyStroke(event)');
-                            $property4->addAttribute('name', 'onkeydown');
-
-                            $property5 = $properties2->addChild('PROPERTY', $text_box);
-                            $property5->addAttribute('name', 'name');
-
-                            $subfield1 = $field2->addChild('FIELD');
-                            $subfield1->addAttribute('id', $dropdown2);
-                            $subfield1->addAttribute('type', 'DropDownList');
-
-                            $properties3 = $subfield1->addChild('PROPERTIES');
-
-                            $property6 = $properties3->addChild('PROPERTY', $dropdown2);
-                            $property6->addAttribute('name', 'id');
-
-                            $property7 = $properties3->addChild('PROPERTY', $dropdown2);
-                            $property7->addAttribute('name', 'name');
-
-                            $listitems = $subfield1->addChild('LISTITEMS');
-
-                            $listitem1 = $listitems->addChild('LISTITEM', 'Yrs');
-                            $listitem1->addAttribute('value', 'Yrs');
-                            $listitem1->addAttribute('Selected', 'False');
-
-                            $listitem2 = $listitems->addChild('LISTITEM', 'Months');
-                            $listitem2->addAttribute('value', 'Months');
-                            $listitem2->addAttribute('Selected', 'False');
-
-                            $listitem3 = $listitems->addChild('LISTITEM', 'Weeks');
-                            $listitem3->addAttribute('value', 'Weeks');
-                            $listitem3->addAttribute('Selected', 'False');
-
-                            $listitem4 = $listitems->addChild('LISTITEM', 'Days');
-                            $listitem4->addAttribute('value', 'Days');
-                            $listitem4->addAttribute('Selected', 'False');
-
-                            //FIELD 3
-                            $field3 = $columns->addChild('FIELD');
-                            $field3->addAttribute('id', $checkbox);
-                            $field3->addAttribute('type', 'CheckBoxList');
-
-                            $properties1 = $field3->addChild('PROPERTIES');
-
-                            $property2 = $properties1->addChild('PROPERTY', "CBPBpattern{$rowCount}[]");
-                            $property2->addAttribute('name', 'name');
-
-                            $listitems = $field3->addChild('LISTITEMS');
-
-                            $listitem1 = $listitems->addChild('LISTITEM', 'Use');
-                            $listitem1->addAttribute('value', 'Use');
-                            $listitem1->addAttribute('id', 'CBPBpattern1' . $rowCount);
-                            $listitem1->addAttribute('Selected', 'False');
-
-                            $listitem2 = $listitems->addChild('LISTITEM', 'Abuse');
-                            $listitem2->addAttribute('value', 'Abuse');
-                            $listitem2->addAttribute('id', 'CBPBpattern2' . $rowCount);
-                            $listitem2->addAttribute('Selected', 'False');
-
-                            $listitem3 = $listitems->addChild('LISTITEM', 'Dependence');
-                            $listitem3->addAttribute('value', 'Dependence');
-                            $listitem3->addAttribute('id', 'CBPBpattern3' . $rowCount);
-                            $listitem3->addAttribute('Selected', 'False');
-                        }
-                    }
-                }
-            }
-        }
-
-        $xml = $xmlLoad->asXML();
-        return $xml;
-    }
-
+    
     protected function prepareAlternativeTherapiesXml($xml, $table_id, $rowCount) {
         $xmlLoad = simplexml_load_string($xml);
         foreach ($xmlLoad->children() as $group) {
@@ -1073,6 +1047,9 @@ class PatientdocumentsController extends ActiveController {
 
                             $property2 = $properties1->addChild('PROPERTY', $dropdown);
                             $property2->addAttribute('name', 'name');
+                            
+                            $property22 = $properties1->addChild('PROPERTY', 'form-control');
+                            $property22->addAttribute('name', 'class');
 
                             $listitems = $field1->addChild('LISTITEMS');
 
@@ -1149,7 +1126,7 @@ class PatientdocumentsController extends ActiveController {
         $xml = $xmlLoad->asXML();
         return $xml;
     }
-
+    
     protected function prepareFamilyHistoryXml($xml, $table_id, $rowCount) {
         $xmlLoad = simplexml_load_string($xml);
         foreach ($xmlLoad->children() as $group) {
@@ -1178,6 +1155,9 @@ class PatientdocumentsController extends ActiveController {
 
                             $property2 = $properties1->addChild('PROPERTY', $dropdown);
                             $property2->addAttribute('name', 'name');
+                            
+                            $property22 = $properties1->addChild('PROPERTY', 'form-control');
+                            $property22->addAttribute('name', 'class');
 
                             $listitems = $field1->addChild('LISTITEMS');
 
@@ -1238,6 +1218,7 @@ class PatientdocumentsController extends ActiveController {
                             $subfield1 = $field2->addChild('FIELD');
                             $subfield1->addAttribute('id', $text_box);
                             $subfield1->addAttribute('type', 'TextBox');
+                            $subfield1->addAttribute('label', 'Other: ');
 
                             $properties3 = $subfield1->addChild('PROPERTIES');
 
@@ -1250,7 +1231,7 @@ class PatientdocumentsController extends ActiveController {
                             $property8 = $properties3->addChild('PROPERTY', 'form-control');
                             $property8->addAttribute('name', 'class');
 
-                            $property9 = $properties3->addChild('PROPERTY', 'Notes');
+                            $property9 = $properties3->addChild('PROPERTY', 'Other');
                             $property9->addAttribute('name', 'placeholder');
 
                             //FIELD 3
@@ -1284,73 +1265,144 @@ class PatientdocumentsController extends ActiveController {
         return $xml;
     }
 
-    protected function preparePresentingComplaintsXml($xml, $table_id, $rowCount) {
+    // Substance History
+    protected function prepareSubstanceHistoryXml($xml, $table_id, $rowCount) {
         $xmlLoad = simplexml_load_string($xml);
         foreach ($xmlLoad->children() as $group) {
-            foreach ($group->PANELBODY->FIELD as $x) {
-                if ($x->attributes()->type == 'RadGrid' && $x->attributes()->AddButtonTableId == $table_id) {
-                    $text_box = 'txtComplaints' . $rowCount; //Textbox1 Name
-                    $text_box2 = 'txtDuration' . $rowCount; //Textbox2 Name
-                    $dropdown = 'DDLDuration' . $rowCount; //DDL Name
+            foreach ($group->PANELBODY->FIELD as $y) {
+                if ($y->attributes()->type == 'PanelBar') {
+                    foreach ($y->FIELD as $x) {
+                        if ($x->attributes()->type == 'RadGrid' && $x->attributes()->AddButtonTableId == $table_id) {
 
-                    $columns = $x->addChild('COLUMNS');
+                            $text_box = 'txtPBDuration' . $rowCount; //Textbox1 Name
+                            $dropdown = 'ddl_pb_substance' . $rowCount; //DDL Name
+                            $dropdown2 = 'DDLPBDuration' . $rowCount; //DDL Name
+                            $checkbox = 'CBPBpattern' . $rowCount; //DDL Name
 
-                    $field1 = $columns->addChild('FIELD');
-                    $field1->addAttribute('id', $text_box);
-                    $field1->addAttribute('type', 'TextBox');
+                            $columns = $x->addChild('COLUMNS');
 
-                    $properties1 = $field1->addChild('PROPERTIES');
+                            //FIELD 1
+                            $field1 = $columns->addChild('FIELD');
+                            $field1->addAttribute('id', $dropdown);
+                            $field1->addAttribute('type', 'DropDownList');
 
-                    $property1 = $properties1->addChild('PROPERTY', $text_box);
-                    $property1->addAttribute('name', 'id');
+                            $properties1 = $field1->addChild('PROPERTIES');
 
-                    $property2 = $properties1->addChild('PROPERTY', $text_box);
-                    $property2->addAttribute('name', 'name');
+                            $property1 = $properties1->addChild('PROPERTY', $dropdown);
+                            $property1->addAttribute('name', 'id');
 
-                    $field2 = $columns->addChild('FIELD');
-                    $field2->addAttribute('id', $text_box2);
-                    $field2->addAttribute('type', 'TextBox');
+                            $property2 = $properties1->addChild('PROPERTY', $dropdown);
+                            $property2->addAttribute('name', 'name');
+                            
+                            $property22 = $properties1->addChild('PROPERTY', 'form-control');
+                            $property22->addAttribute('name', 'class');
 
-                    $properties2 = $field2->addChild('PROPERTIES');
+                            $listitems = $field1->addChild('LISTITEMS');
 
-                    $property3 = $properties2->addChild('PROPERTY', $text_box2);
-                    $property3->addAttribute('name', 'id');
+                            $listitem1 = $listitems->addChild('LISTITEM', '--Select--');
+                            $listitem1->addAttribute('value', '--Select--');
+                            $listitem1->addAttribute('Selected', 'False');
 
-                    $property4 = $properties2->addChild('PROPERTY', 'return isNumericKeyStroke(event)');
-                    $property4->addAttribute('name', 'onkeydown');
+                            $listitem2 = $listitems->addChild('LISTITEM', 'Smoking');
+                            $listitem2->addAttribute('value', 'Smoking');
+                            $listitem2->addAttribute('Selected', 'False');
 
-                    $property5 = $properties2->addChild('PROPERTY', $text_box2);
-                    $property5->addAttribute('name', 'name');
+                            $listitem3 = $listitems->addChild('LISTITEM', 'Alcohol');
+                            $listitem3->addAttribute('value', 'Alcohol');
+                            $listitem3->addAttribute('Selected', 'False');
 
-                    $subfield1 = $field2->addChild('FIELD');
-                    $subfield1->addAttribute('id', $dropdown);
-                    $subfield1->addAttribute('type', 'DropDownList');
+                            $listitem4 = $listitems->addChild('LISTITEM', 'Cannabis');
+                            $listitem4->addAttribute('value', 'Cannabis');
+                            $listitem4->addAttribute('Selected', 'False');
 
-                    $properties3 = $subfield1->addChild('PROPERTIES');
+                            $listitem5 = $listitems->addChild('LISTITEM', 'Solvents/Inhalants');
+                            $listitem5->addAttribute('value', 'Solvents/Inhalants');
+                            $listitem5->addAttribute('Selected', 'False');
 
-                    $property6 = $properties3->addChild('PROPERTY', $dropdown);
-                    $property6->addAttribute('name', 'id');
+                            $listitem6 = $listitems->addChild('LISTITEM', 'Others');
+                            $listitem6->addAttribute('value', 'Others');
+                            $listitem6->addAttribute('Selected', 'False');
 
-                    $property7 = $properties3->addChild('PROPERTY', $dropdown);
-                    $property7->addAttribute('name', 'name');
+                            //FIELD 2
+                            $field2 = $columns->addChild('FIELD');
+                            $field2->addAttribute('id', $text_box);
+                            $field2->addAttribute('type', 'TextBoxDDL');
 
-                    $listitems = $subfield1->addChild('LISTITEMS');
+                            $properties2 = $field2->addChild('PROPERTIES');
 
-                    $listitem1 = $listitems->addChild('LISTITEM', 'Yrs');
-                    $listitem1->addAttribute('value', 'Yrs');
-                    $listitem1->addAttribute('Selected', 'False');
+                            $property3 = $properties2->addChild('PROPERTY', $text_box);
+                            $property3->addAttribute('name', 'id');
 
-                    $listitem2 = $listitems->addChild('LISTITEM', 'Months');
-                    $listitem2->addAttribute('value', 'Months');
-                    $listitem2->addAttribute('Selected', 'False');
+                            $property4 = $properties2->addChild('PROPERTY', 'return isNumericKeyStroke(event)');
+                            $property4->addAttribute('name', 'onkeydown');
 
-                    $listitem3 = $listitems->addChild('LISTITEM', 'Weeks');
-                    $listitem3->addAttribute('value', 'Weeks');
-                    $listitem3->addAttribute('Selected', 'False');
+                            $property5 = $properties2->addChild('PROPERTY', $text_box);
+                            $property5->addAttribute('name', 'name');
+                            
+                            $property55 = $properties2->addChild('PROPERTY', 'form-control');
+                            $property55->addAttribute('name', 'class');
 
-                    $listitem4 = $listitems->addChild('LISTITEM', 'Days');
-                    $listitem4->addAttribute('value', 'Days');
-                    $listitem4->addAttribute('Selected', 'False');
+                            $subfield1 = $field2->addChild('FIELD');
+                            $subfield1->addAttribute('id', $dropdown2);
+                            $subfield1->addAttribute('type', 'DropDownList');
+
+                            $properties3 = $subfield1->addChild('PROPERTIES');
+
+                            $property6 = $properties3->addChild('PROPERTY', $dropdown2);
+                            $property6->addAttribute('name', 'id');
+
+                            $property7 = $properties3->addChild('PROPERTY', $dropdown2);
+                            $property7->addAttribute('name', 'name');
+                            
+                            $property77 = $properties3->addChild('PROPERTY', 'form-control');
+                            $property77->addAttribute('name', 'class');
+
+                            $listitems = $subfield1->addChild('LISTITEMS');
+
+                            $listitem1 = $listitems->addChild('LISTITEM', 'Yrs');
+                            $listitem1->addAttribute('value', 'Yrs');
+                            $listitem1->addAttribute('Selected', 'False');
+
+                            $listitem2 = $listitems->addChild('LISTITEM', 'Months');
+                            $listitem2->addAttribute('value', 'Months');
+                            $listitem2->addAttribute('Selected', 'False');
+
+                            $listitem3 = $listitems->addChild('LISTITEM', 'Weeks');
+                            $listitem3->addAttribute('value', 'Weeks');
+                            $listitem3->addAttribute('Selected', 'False');
+
+                            $listitem4 = $listitems->addChild('LISTITEM', 'Days');
+                            $listitem4->addAttribute('value', 'Days');
+                            $listitem4->addAttribute('Selected', 'False');
+
+                            //FIELD 3
+                            $field3 = $columns->addChild('FIELD');
+                            $field3->addAttribute('id', $checkbox);
+                            $field3->addAttribute('type', 'CheckBoxList');
+
+                            $properties1 = $field3->addChild('PROPERTIES');
+
+                            $property2 = $properties1->addChild('PROPERTY', "CBPBpattern{$rowCount}[]");
+                            $property2->addAttribute('name', 'name');
+
+                            $listitems = $field3->addChild('LISTITEMS');
+
+                            $listitem1 = $listitems->addChild('LISTITEM', 'Use');
+                            $listitem1->addAttribute('value', 'Use');
+                            $listitem1->addAttribute('id', 'CBPBpattern1' . $rowCount);
+                            $listitem1->addAttribute('Selected', 'False');
+
+                            $listitem2 = $listitems->addChild('LISTITEM', 'Abuse');
+                            $listitem2->addAttribute('value', 'Abuse');
+                            $listitem2->addAttribute('id', 'CBPBpattern2' . $rowCount);
+                            $listitem2->addAttribute('Selected', 'False');
+
+                            $listitem3 = $listitems->addChild('LISTITEM', 'Dependence');
+                            $listitem3->addAttribute('value', 'Dependence');
+                            $listitem3->addAttribute('id', 'CBPBpattern3' . $rowCount);
+                            $listitem3->addAttribute('Selected', 'False');
+                        }
+                    }
                 }
             }
         }
@@ -1358,5 +1410,7 @@ class PatientdocumentsController extends ActiveController {
         $xml = $xmlLoad->asXML();
         return $xml;
     }
+
+    
 
 }
