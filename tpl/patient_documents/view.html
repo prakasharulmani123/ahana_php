@@ -1,0 +1,8 @@
+<div ng-controller="DocumentsController">
+    <div class="bg-light lter b-b wrapper-md">
+        <h1 class="m-n h3">View Document</h1>
+    </div>
+    <div class="wrapper-md" ng-init="viewDocument();">
+        <div ng-bind-html="xml | xslt:xslt | sanitize"></div>
+    </div>
+</div>
