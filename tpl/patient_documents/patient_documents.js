@@ -59,8 +59,10 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
 
         // Initialize Create and Update Form
         $scope.initForm = function () {
+            $scope.isLoading = true;
             $scope.isPatientHaveActiveEncounter(function (response) {
                 if (response.success == false) {
+                    $scope.isLoading = false;
                     alert("Sorry, you can't create a document");
                     $state.go("patient.document", {id: $state.params.id});
                 } else {
@@ -72,24 +74,39 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                             $state.go("patient.document", {id: $state.params.id});
                         } else {
                             $scope.xslt = doc_type_response.result.document_xslt;
-                            if ($scope.data.form_type == 'create') {
-                                $scope.xml = doc_type_response.result.document_xml;
-                            } else {
-                                var doc_id = $state.params.doc_id;
-                                $scope.getDocument(doc_id, function (pat_doc_response) {
-                                    $scope.xml = pat_doc_response.result.document_xml;
-                                });
-                            }
+                            $scope.xml = doc_type_response.result.document_xml;
+                            $scope.isLoading = false;
                         }
                     });
                 }
             });
         }
 
-        //View Document
-        $scope.viewDocument = function () {
+        // Initialize Create and Update Form
+        $scope.initFormUpdate = function () {
+            $scope.isLoading = true;
             $scope.getDocumentType(function (doc_type_response) {
                 if (doc_type_response.success == false) {
+                    $scope.isLoading = false;
+                    alert("Sorry, you can't update a document");
+                    $state.go("patient.document", {id: $state.params.id});
+                } else {
+                    $scope.xslt = doc_type_response.result.document_xslt;
+                    var doc_id = $state.params.doc_id;
+                    $scope.getDocument(doc_id, function (pat_doc_response) {
+                        $scope.xml = pat_doc_response.result.document_xml;
+                    });
+                    $scope.isLoading = false;
+                }
+            });
+        }
+
+        //View Document
+        $scope.viewDocument = function () {
+            $scope.isLoading = true;
+            $scope.getDocumentType(function (doc_type_response) {
+                if (doc_type_response.success == false) {
+                    $scope.isLoading = false;
                     alert("Sorry, you can't view a document");
                     $state.go("patient.document", {id: $state.params.id});
                 } else {
@@ -98,6 +115,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     $scope.getDocument(doc_id, function (pat_doc_response) {
                         $scope.xml = pat_doc_response.result.document_xml;
                     });
+                    $scope.isLoading = false;
                 }
             });
         }
@@ -106,7 +124,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
             _data = $('#xmlform').serialize() + '&' + $.param({
                 'encounter_id': $scope.encounter.encounter_id,
                 'patient_id': $state.params.id,
-                'novalidate': true,
+                'novalidate': false,
                 'status': '1',
             });
 

@@ -58,7 +58,9 @@
                             <a class="label bg-dark" title="Edit" check-access  ui-sref="patient.editDocument({id: '{{$state.params.id}}', doc_id: '{{doc.doc_id}}'})">
                                 <i class="fa fa-pencil"></i>
                             </a>&nbsp;&nbsp;&nbsp;
-                            <button type="button" ng-click="deleteDocument(doc.doc_id)" class="badge bg-danger ng-binding">Delete</button>
+                            <button type="button" title="Delete"  ng-click="deleteDocument(doc.doc_id)" class="label bg-dark">
+                                <i class="fa fa-trash"></i>
+                            </button>
                         </td>
                     </tr>
                 </tbody>
