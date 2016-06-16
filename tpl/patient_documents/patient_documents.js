@@ -90,7 +90,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
         $scope.viewDocument = function () {
             $scope.getDocumentType(function (doc_type_response) {
                 if (doc_type_response.success == false) {
-                    alert("Sorry, you can't create a document");
+                    alert("Sorry, you can't view a document");
                     $state.go("patient.document", {id: $state.params.id});
                 } else {
                     $scope.xslt = doc_type_response.result.document_out_xslt;
@@ -100,20 +100,6 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     });
                 }
             });
-        }
-
-        $scope.updateDocumentType = function () {
-            _data = {xml: $scope.xml, xslt: $scope.xslt};
-            $http({
-                url: $rootScope.IRISOrgServiceUrl + "/patientdocuments/updatedocumenttype",
-                method: "POST",
-                data: _data,
-            }).then(
-                    function (response) {
-                        $scope.loadbar('hide');
-//                        $scope.xml = response.data.xml;
-                    }
-            );
         }
 
         $scope.submitXsl = function () {
@@ -142,7 +128,6 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     }
             );
         }
-
 
         $scope.panel_bars = [];
         $scope.page_offest = '';
