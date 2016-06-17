@@ -3,6 +3,14 @@
         <h1 class="m-n h3">View Document</h1>
     </div>
     <div class="wrapper-md" ng-init="viewDocument();">
-        <div ng-bind-html="xml | xslt:xslt | sanitize"></div>
+        <div ng-include="'tpl/blocks/alert.html'">
+            {% include 'tpl/blocks/alert.html' %}
+        </div>
+        <div ng-show="isLoading">
+            <i class="fa fa-spin fa-refresh"></i>
+        </div>
+        <div ng-hide="isLoading">
+            <div ng-bind-html="xml | xslt:xslt | sanitize"></div>
+        </div>
     </div>
 </div>

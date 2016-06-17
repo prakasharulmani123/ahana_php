@@ -8,6 +8,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
         $scope.xml = '';
         $scope.xslt = '';
         $scope.data = {};
+        $scope.encounter = {};
 
         //Documents Index Page
         $scope.loadPatDocumentsList = function () {
@@ -57,7 +58,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     });
         }
 
-        // Initialize Create and Update Form
+        // Initialize Create Form
         $scope.initForm = function () {
             $scope.isLoading = true;
             $scope.isPatientHaveActiveEncounter(function (response) {
@@ -82,7 +83,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
             });
         }
 
-        // Initialize Create and Update Form
+        // Initialize Update Form
         $scope.initFormUpdate = function () {
             $scope.isLoading = true;
             $scope.getDocumentType(function (doc_type_response) {
@@ -95,6 +96,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     var doc_id = $state.params.doc_id;
                     $scope.getDocument(doc_id, function (pat_doc_response) {
                         $scope.xml = pat_doc_response.result.document_xml;
+                        $scope.encounter = {encounter_id: pat_doc_response.result.encounter_id};
                     });
                     $scope.isLoading = false;
                 }
@@ -120,6 +122,30 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
             });
         }
 
+        //Delete
+        $scope.deleteDocument = function (doc_id) {
+            var conf = confirm('Are you sure to delete ?');
+            if (conf) {
+                $scope.loadbar('show');
+                $http({
+                    url: $rootScope.IRISOrgServiceUrl + "/patientdocuments/remove",
+                    method: "POST",
+                    data: {doc_id: doc_id}
+                }).then(
+                        function (response) {
+                            $scope.loadbar('hide');
+                            if (response.data.success === true) {
+                                $scope.loadPatDocumentsList();
+                                $scope.successMessage = 'Document Deleted Successfully';
+                            }
+                            else {
+                                $scope.errorData = response.data.message;
+                            }
+                        }
+                )
+            }
+        };
+
         $scope.submitXsl = function () {
             _data = $('#xmlform').serialize() + '&' + $.param({
                 'encounter_id': $scope.encounter.encounter_id,
@@ -138,7 +164,8 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     function (response) {
                         $scope.loadbar('hide');
                         if (response.data.success == true) {
-                            $scope.xml = response.data.xml;
+                            $scope.successMessage = 'Document Saved Successfully';
+                            $state.go('patient.document', {id: $state.params.id});
                         } else {
                             $scope.errorData = response.data.message;
                             $anchorScroll();
@@ -207,29 +234,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
             );
         });
 
-        //Delete
-        $scope.deleteDocument = function (doc_id) {
-            var conf = confirm('Are you sure to delete ?');
-            if (conf) {
-                $scope.loadbar('show');
-                $http({
-                    url: $rootScope.IRISOrgServiceUrl + "/patientdocuments/remove",
-                    method: "POST",
-                    data: {doc_id: doc_id}
-                }).then(
-                        function (response) {
-                            $scope.loadbar('hide');
-                            if (response.data.success === true) {
-                                $scope.loadPatDocumentsList();
-                                $scope.successMessage = 'Document Deleted Successfully';
-                            }
-                            else {
-                                $scope.errorData = response.data.message;
-                            }
-                        }
-                )
-            }
-        };
+
 
 
     }]);
