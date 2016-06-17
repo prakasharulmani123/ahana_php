@@ -164,6 +164,7 @@ class CoTenant extends GActiveRecord {
         Yii::$app->client->password = $this->coOrganization->org_db_password;
 
         if ($insert) {
+            //Internal code.
             $code_types = CoInternalCode::getCodeTypes();
             foreach ($code_types as $code_type) {
                 $internal_code = new CoInternalCode;
@@ -176,6 +177,7 @@ class CoTenant extends GActiveRecord {
                 $internal_code->save(false);
             }
 
+            //Application configuration.
             $app_configurations = AppConfiguration::getConfigurations();
             foreach ($app_configurations as $key => $app_configuration) {
                 $configuration = new AppConfiguration;
@@ -186,13 +188,21 @@ class CoTenant extends GActiveRecord {
                 $configuration->notes = $app_configuration['notes'];
                 $configuration->save(false);
             }
+            
+            //Tenant Documents
+            $tenant_doc_types = PatDocumentTypes::getTenantDocumentTypes();
+            foreach ($tenant_doc_types as $key => $tenant_doc_type) {
+                $tenant_doc_types = new PatDocumentTypes;
+                $tenant_doc_types->tenant_id = $this->tenant_id;
+                $tenant_doc_types->doc_type = $key;
+                $tenant_doc_types->doc_type_name = $tenant_doc_type['doc_type_name'];
+                $tenant_doc_types->document_xml = $tenant_doc_type['document_xml'];
+                $tenant_doc_types->document_xslt = $tenant_doc_type['document_xslt'];
+                $tenant_doc_types->document_out_xslt = $tenant_doc_type['document_out_xslt'];
+                $tenant_doc_types->save(false);
+            }
         }
 
         return parent::afterSave($insert, $changedAttributes);
     }
-
-//    public function extraFields() {
-//        parent::extraFields();
-//        return ['coMasterCity', 'coMasterState', 'coMasterCountry'];
-//    }
 }

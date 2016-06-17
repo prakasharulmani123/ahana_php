@@ -4,6 +4,7 @@ namespace common\models;
 
 use common\models\query\PatDocumentTypesQuery;
 use yii\db\ActiveQuery;
+use yii\helpers\Url;
 
 /**
  * This is the model class for table "pat_document_types".
@@ -76,9 +77,20 @@ class PatDocumentTypes extends RActiveRecord {
     public static function find() {
         return new PatDocumentTypesQuery(get_called_class());
     }
-    
+
     public static function getDocumentType($type) {
         return self::find()->tenant()->andWhere(['doc_type' => $type])->one();
+    }
+
+    public static function getTenantDocumentTypes() {
+        return array(
+            'CH' => [
+                'doc_type_name' => 'Case History',
+                'document_xml' => file_get_contents(Url::base(true) . '/case_history.xml'),
+                'document_xslt' => file_get_contents(Url::base(true) . '/case_history.xslt'),
+                'document_out_xslt' => file_get_contents(Url::base(true) . '/case_history_out.xslt'),
+            ]
+        );
     }
 
 }
