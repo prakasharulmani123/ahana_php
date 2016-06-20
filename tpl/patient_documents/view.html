@@ -6,10 +6,22 @@
         <div ng-include="'tpl/blocks/alert.html'">
             {% include 'tpl/blocks/alert.html' %}
         </div>
+        <div class="text-right">
+<!--            <div class="btn-group dropdown" dropdown>
+                <button class="btn btn-danger" dropdown-toggle> <i class="fa fa-download"></i> Export <span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                    <li><a ng-click="exportAction('excel')">EXCEL</a></li>
+                    <li><a ng-click="exportAction('pdf')">PDF</a></li>
+                    <li><a ng-click="exportAction('doc')">DOC</a></li>
+                </ul>
+            </div>
+            &nbsp;-->
+            <button class="btn btn-primary" ng-print print-element-id="printThisElement"><i class="fa fa-print"></i> Print</button>
+        </div>
         <div ng-show="isLoading">
             <i class="fa fa-spin fa-refresh"></i>
         </div>
-        <div ng-hide="isLoading">
+        <div ng-hide="isLoading" id='printThisElement'>
             <div ng-bind-html="xml | xslt:xslt | sanitize"></div>
         </div>
     </div>

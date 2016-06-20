@@ -154,3 +154,28 @@ video {
     line-height: 40px;
     text-transform:uppercase;
 }
+
+/* 2016-06-20 */
+.form-group {
+    margin-bottom: 5px;
+}
+
+.line-lg {
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+
+.control-label {
+    padding-top: 0px;
+}
+
+#xmlform h2{
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+#xmlform .label, .badge {
+  color: #ffffff !important;
+  font-size: 15px;
+  font-weight: 600;
+}
