@@ -575,6 +575,7 @@
                                                 </xsl:if>
                                             </div>
                                         </div>
+                                        <div class="line line-dashed b-b line-lg "></div>
                                     </xsl:when>
                                     
                                     <!-- Main Panel Bar -->
@@ -836,6 +837,7 @@
                                                                     </xsl:if>
                                                                 </div>
                                                             </div>
+                                                            <div class="line line-dashed b-b line-lg "></div>
                                                         </xsl:when>
                                                         
                                                         <!-- Panel Bar Main Radio Button -->
