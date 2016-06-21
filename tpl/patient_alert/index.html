@@ -6,7 +6,7 @@
         <div ng-include="'tpl/blocks/alert.html'">
             {% include 'tpl/blocks/alert.html' %}
         </div>
-        <div class="panel panel-default m-b"  ng-init="data.formtype = 'add';
+        <div class="panel panel-default m-b"  ng-init="data = {}; data.formtype = 'add';
                         initForm();
                         data.status = '1'">
             <form name="alertForm" class="form-horizontal form-validation" novalidate="">

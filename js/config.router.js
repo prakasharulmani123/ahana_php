@@ -158,7 +158,10 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/registration/registration.js']);
+                            return uiLoad.load([
+                                'tpl/registration/registration.js',
+                                'tpl/modal_form/modal.description.js'
+                            ]);
                         }]
                 }
             })

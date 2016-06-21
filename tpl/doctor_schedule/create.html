@@ -7,7 +7,7 @@
             {% include 'tpl/blocks/alert.html' %}
         </div>
         <div class="row">
-            <div class="col-sm-6" ng-init="data.formtype = 'add'; data.status = '1'; initForm();">
+            <div class="col-sm-6" ng-init="data = {}; data.formtype = 'add'; data.status = '1'; initForm();">
                 <form editable-form name="tableform" name="DoctorScheduleForm" class="form-horizontal form-validation" onaftersave="saveForm('add')" novalidate="">
                     <div ng-include="'tpl/doctor_schedule/_form.html'">
                         {% include 'tpl/doctor_schedule/_form.html' %}

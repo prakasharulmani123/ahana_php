@@ -1,4 +1,4 @@
-app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', '$state', function ($rootScope, $scope, $timeout, $http, $state) {
+app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$modal', '$log', function ($rootScope, $scope, $timeout, $http, $state, $modal, $log) {
 
         //Index Page
         $scope.loadList = function () {
@@ -243,5 +243,27 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
 
         $scope.disabled = function (date, mode) {
             return mode === 'day' && (date.getDay() === 0 || date.getDay() === 6);
+        };
+        
+        $scope.open = function (size, ctrlr, tmpl, update_col) {
+            var modalInstance = $modal.open({
+                templateUrl: tmpl,
+                controller: ctrlr,
+                size: size,
+                resolve: {
+                    scope: function () {
+                        return $scope;
+                    },
+                    column: function () {
+                        return update_col;
+                    },
+                }
+            });
+
+            modalInstance.result.then(function (selectedItem) {
+                $scope.selected = selectedItem;
+            }, function () {
+                $log.info('Modal dismissed at: ' + new Date());
+            });
         };
     }]);
