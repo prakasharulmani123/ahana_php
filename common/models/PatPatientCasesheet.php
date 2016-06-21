@@ -86,9 +86,14 @@ class PatPatientCasesheet extends RActiveRecord {
     }
 
     public function afterSave($insert, $changedAttributes) {
-        if($insert){
-            PatTimeline::insertTimeLine($this->patient_id, $this->created_at, 'Casesheet No.', 'Casesheet No', "Casesheet No.: {$this->casesheet_no} Added.", 'ENCOUNTER', null);
+        if ($insert) {
+            $encounter_id = !empty($this->patient->patActiveEncounter) ? $this->patient->patActiveEncounter->encounter_id : null;
+            if (is_null($encounter_id)) {
+                $encounter_id = !empty($this->patient->patPreviousEncounter) ? $this->patient->patPreviousEncounter->encounter_id : null;
+            }
+            PatTimeline::insertTimeLine($this->patient_id, $this->created_at, 'Casesheet No.', 'Casesheet No', "Casesheet No.: {$this->casesheet_no} Added.", 'ENCOUNTER', $encounter_id);
         }
         return parent::afterSave($insert, $changedAttributes);
     }
+
 }

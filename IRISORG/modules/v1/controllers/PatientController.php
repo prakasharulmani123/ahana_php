@@ -273,7 +273,16 @@ class PatientController extends ActiveController {
                     $resource_lists = $this->_getPatientResourceList($patient_tenant->org_id, $patient_tenant->tenant_id, $patient_tenant->patient_global_guid);
                     $in_cond = "'".implode("','", $resource_lists)."'";
                     
-                    $command = $connection->createCommand("SELECT * FROM pat_timeline WHERE patient_id = :id AND tenant_id = :tenant_id AND resource IN ($in_cond)");
+                    $command = $connection->createCommand("SELECT a.*, concat(b.tenant_name, ' - ', c.org_name) as branch "
+                            . "FROM pat_timeline a "
+                            . "JOIN co_tenant b "
+                            . "ON b.tenant_id = a.tenant_id "
+                            . "JOIN co_organization c "
+                            . "ON c.org_id = b.org_id "
+                            . "WHERE a.patient_id = :id "
+                            . "AND a.tenant_id = :tenant_id "
+                            . "AND a.resource IN ($in_cond) "
+                            . "");
                     $command->bindValues([':id' => $patient[0]['patient_id'], ':tenant_id' => $patient_tenant->tenant_id]);
                     $timeline = $command->queryAll();
                     

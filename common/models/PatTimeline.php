@@ -98,7 +98,7 @@ class PatTimeline extends RActiveRecord {
             'header_sub' => $header_sub,
             'message' => $message,
             'resource' => $resource,
-            'encounter_id' => $encounter_id,
+            'encounter_id' => is_null($encounter_id) ? 0 : $encounter_id,
             'ip_adderss' => Yii::$app->getRequest()->getUserIP()
         ];
         $model->save(false);

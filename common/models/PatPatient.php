@@ -236,7 +236,12 @@ class PatPatient extends RActiveRecord {
 
         $this->savetoHms($insert);
 
-        PatTimeline::insertTimeLine($this->patient_id, $date, $header, '', $message, 'BASIC', null);
+        $encounter_id = !empty($this->patActiveEncounter) ? $this->patActiveEncounter->encounter_id : null;
+        
+        if(is_null($encounter_id)){
+            $encounter_id = !empty($this->patPreviousEncounter) ? $this->patPreviousEncounter->encounter_id : null;
+        }
+        PatTimeline::insertTimeLine($this->patient_id, $date, $header, '', $message, 'BASIC', $encounter_id);
 
         return parent::afterSave($insert, $changedAttributes);
     }
