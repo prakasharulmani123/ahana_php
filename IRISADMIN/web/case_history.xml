@@ -3,7 +3,7 @@
     <GROUP>
         <PANELHEADER>
             <PROPERTIES>
-                <PROPERTY name="class">panel-heading bg-primary</PROPERTY>
+                <PROPERTY name="class">panel-heading bg-default</PROPERTY>
             </PROPERTIES>
             <VALUE>Demographic Details</VALUE>
         </PANELHEADER>
@@ -242,7 +242,7 @@
     <GROUP>
         <PANELHEADER>
             <PROPERTIES>
-                <PROPERTY name="class">panel-heading bg-primary</PROPERTY>
+                <PROPERTY name="class">panel-heading bg-default</PROPERTY>
             </PROPERTIES>
             <VALUE>Presenting Compliants (In chronological order)</VALUE>
         </PANELHEADER>
@@ -372,7 +372,7 @@
     <GROUP>
         <PANELHEADER>
             <PROPERTIES>
-                <PROPERTY name="class">panel-heading bg-primary</PROPERTY>
+                <PROPERTY name="class">panel-heading bg-default</PROPERTY>
             </PROPERTIES>
             <VALUE>History Of Presenting Illness</VALUE>
         </PANELHEADER>
@@ -478,7 +478,7 @@
     <GROUP>
         <PANELHEADER>
             <PROPERTIES>
-                <PROPERTY name="class">panel-heading bg-primary</PROPERTY>
+                <PROPERTY name="class">panel-heading bg-default</PROPERTY>
             </PROPERTIES>
             <VALUE>Past History</VALUE>
         </PANELHEADER>
@@ -2454,7 +2454,7 @@
     <GROUP>
         <PANELHEADER>
             <PROPERTIES>
-                <PROPERTY name="class">panel-heading bg-primary</PROPERTY>
+                <PROPERTY name="class">panel-heading bg-default</PROPERTY>
             </PROPERTIES>
             <VALUE>Diagnosis</VALUE>
         </PANELHEADER>

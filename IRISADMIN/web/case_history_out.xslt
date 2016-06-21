@@ -337,14 +337,15 @@
                                     <div class="panel panel-default">
                                         <div class="panel-heading">
                                             <h4 class="panel-title">
-                                                <a class="accordion-toggle" data-toggle="collapse" data-target="#{@target_div}" href="javascript:void(0)">
+                                                <!--<a class="accordion-toggle" data-toggle="collapse" data-target="#{@target_div}" href="javascript:void(0)">-->
+                                                <a class="accordion-toggle" href="javascript:void(0)">
                                                     <span>
                                                         <xsl:value-of select="@label"></xsl:value-of>
                                                     </span>
                                                 </a>
                                             </h4>
                                         </div>
-                                        <div id="{@target_div}" class="collapse panel-body">
+                                        <div id="{@target_div}" class="panel-body">
                                             <xsl:for-each select="FIELD">
                                                 <xsl:choose>
                                                     <xsl:when test="@type='Header2'">

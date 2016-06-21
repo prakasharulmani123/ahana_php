@@ -139,9 +139,9 @@ class UserController extends ActiveController {
         $credentials = [
             'org' => $tenant->tenant_name,
             'org_address' => $tenant->tenant_address,
-            'org_country' => $tenant->coMasterCountry->country_name,
-            'org_state' => $tenant->coMasterState->state_name,
-            'org_city' => $tenant->coMasterCity->city_name,
+            'org_country' => (isset($tenant->coMasterCountry) ? $tenant->coMasterCountry->country_name : '-'),
+            'org_state' => (isset($tenant->coMasterState) ? $tenant->coMasterState->state_name : '-'),
+            'org_city' => (isset($tenant->coMasterCity) ? $tenant->coMasterCity->city_name : '-'),
             'org_mobile' => $tenant->tenant_mobile,
             'username' => Yii::$app->user->identity->user->name,
         ];
