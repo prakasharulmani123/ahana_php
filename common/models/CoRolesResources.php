@@ -253,17 +253,19 @@ class CoRolesResources extends ActiveRecord {
 
                     $tot2 = $checked2 = $unchecked2 = 0;
 
-                    foreach ($child['children'] as $cKey2 => $child2) {
-                        if (in_array($child2['value'], $role_resources_ids)) {
-                            $tree[$key]['children'][$cKey]['children'][$cKey2]['selected'] = true;
-                            $checked2++;
-                            $checked++;
-                        } else {
-                            $unchecked2++;
-                            $unchecked++;
+                    if (isset($child['children'])) {
+                        foreach ($child['children'] as $cKey2 => $child2) {
+                            if (isset($child2['value']) && in_array($child2['value'], $role_resources_ids)) {
+                                $tree[$key]['children'][$cKey]['children'][$cKey2]['selected'] = true;
+                                $checked2++;
+                                $checked++;
+                            } else {
+                                $unchecked2++;
+                                $unchecked++;
+                            }
+                            $tot++;
+                            $tot2++;
                         }
-                        $tot++;
-                        $tot2++;
                     }
 
                     if ($tot2 == $checked2)
@@ -301,7 +303,7 @@ class CoRolesResources extends ActiveRecord {
             },
         ];
     }
-    
+
     public static function getDb() {
         return Yii::$app->client;
     }

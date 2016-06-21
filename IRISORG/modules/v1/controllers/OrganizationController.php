@@ -69,11 +69,14 @@ class OrganizationController extends ActiveController {
         $tenant_id = Yii::$app->user->identity->logged_tenant_id;
         $tenant_super_role = CoRole::getTenantSuperRole($tenant_id);
         $tenant_super_role_id = $tenant_super_role->role_id;
-
+        
         $post = Yii::$app->request->post();
+        
         if (!empty($post)) {
             $role_id = Yii::$app->request->post('role_id');
-            return ['success' => true, 'modules' => CoRolesResources::getOrgModuletreeByRole($tenant_id, $tenant_super_role_id, $role_id)];
+            $modules = CoRolesResources::getOrgModuletreeByRole($tenant_id, $tenant_super_role_id, $role_id);
+            
+            return ['success' => true, 'modules' => $modules];
         }
     }
 
