@@ -1,4 +1,4 @@
-app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$anchorScroll', function ($rootScope, $scope, $timeout, $http, $state, $anchorScroll) {
+app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$anchorScroll', '$modal', '$log', function ($rootScope, $scope, $timeout, $http, $state, $anchorScroll, $modal, $log) {
 
         $scope.app.settings.patientTopBar = false;
         $scope.app.settings.patientSideMenu = false;
@@ -281,6 +281,62 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
                 }
             }
         };
+        
+        $scope.open = function (size, ctrlr, tmpl, update_col) {
+            if(typeof $scope.data.PatPatientAddress == 'undefined'){
+                $scope.data.PatPatientAddress = {};
+            }
+            
+            var modalInstance = $modal.open({
+                templateUrl: tmpl,
+                controller: ctrlr,
+                size: size,
+                resolve: {
+                    scope: function () {
+                        return $scope;
+                    },
+                    column: function () {
+                        return update_col;
+                    },
+                    country_id: function () {
+                        return $scope.data.PatPatientAddress.addr_country_id;
+                    },
+                    state_id: function () {
+                        return $scope.data.PatPatientAddress.addr_state_id;
+                    },
+                }
+            });
+
+            modalInstance.result.then(function (selectedItem) {
+                $scope.selected = selectedItem;
+            }, function () {
+                $log.info('Modal dismissed at: ' + new Date());
+            });
+        };
+        
+        $scope.afterCountryAdded = function(country_id){
+            if(typeof $scope.data.PatPatientAddress == 'undefined'){
+                $scope.data.PatPatientAddress = {};
+            }
+            $scope.data.PatPatientAddress.addr_country_id = country_id;
+            $scope.updateState2();
+        }
+        
+        $scope.afterStateAdded = function(state_id){
+            if(typeof $scope.data.PatPatientAddress == 'undefined'){
+                $scope.data.PatPatientAddress = {};
+            }
+            $scope.data.PatPatientAddress.addr_state_id = state_id;
+            $scope.updateState2();
+        }
+
+        $scope.afterCityAdded = function(city_id){
+            if(typeof $scope.data.PatPatientAddress == 'undefined'){
+                $scope.data.PatPatientAddress = {};
+            }
+            $scope.data.PatPatientAddress.addr_city_id = city_id;
+            $scope.updateCity2();
+        }
     }]);
 
 app.filter('highlight', function ($sce) {

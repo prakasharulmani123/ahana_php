@@ -160,7 +160,9 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function (uiLoad) {
                             return uiLoad.load([
                                 'tpl/registration/registration.js',
-                                'tpl/modal_form/modal.description.js'
+                                'tpl/modal_form/modal.country.js',
+                                'tpl/modal_form/modal.state.js',
+                                'tpl/modal_form/modal.city.js'
                             ]);
                         }]
                 }
@@ -171,7 +173,12 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/registration/registration.js']);
+                            return uiLoad.load([
+                                'tpl/registration/registration.js',
+                                'tpl/modal_form/modal.country.js',
+                                'tpl/modal_form/modal.state.js',
+                                'tpl/modal_form/modal.city.js'
+                            ]);
                         }]
                 }
             })
@@ -914,7 +921,12 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/patient_registration/patient_registration.js']);
+                            return uiLoad.load([
+                                'tpl/patient_registration/patient_registration.js',
+                                'tpl/modal_form/modal.country.js',
+                                'tpl/modal_form/modal.state.js',
+                                'tpl/modal_form/modal.city.js'
+                            ]);
                         }]
                 }
             })

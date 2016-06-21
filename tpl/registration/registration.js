@@ -48,7 +48,7 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
             });
 
         }
-
+        
         $scope.updateState2 = function () {
             $scope.availableStates2 = [];
             $scope.availableCities2 = [];
@@ -257,6 +257,12 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
                     column: function () {
                         return update_col;
                     },
+                    country_id: function () {
+                        return $scope.data.country_id;
+                    },
+                    state_id: function () {
+                        return $scope.data.state_id;
+                    },
                 }
             });
 
@@ -266,4 +272,19 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
                 $log.info('Modal dismissed at: ' + new Date());
             });
         };
+        
+        $scope.afterCountryAdded = function(country_id){
+            $scope.data.country_id = country_id;
+            $scope.updateState2();
+        }
+        
+        $scope.afterStateAdded = function(state_id){
+            $scope.data.state_id = state_id;
+            $scope.updateState2();
+        }
+
+        $scope.afterCityAdded = function(city_id){
+            $scope.data.city_id = city_id;
+            $scope.updateCity2();
+        }
     }]);
