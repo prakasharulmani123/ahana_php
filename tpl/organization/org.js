@@ -1,4 +1,4 @@
-app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$http', '$state', function ($rootScope, $scope, $timeout, $http, $state) {
+app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$modal', '$log', function ($rootScope, $scope, $timeout, $http, $state, $modal, $log) {
 
         //Index Page
         //  pagination
@@ -448,4 +448,93 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
             });
         }
 
+        $scope.modalDetails = {};
+
+        $scope.open = function (size, ctrlr, tmpl, mode) {
+            $scope.modalDetails.mode = mode;
+
+            if ($scope.modalDetails.mode == 'branch') {
+                if (typeof $scope.data.Tenant == 'undefined') {
+                    $scope.data.Tenant = {};
+                }
+                $scope.modalDetails.country_id = $scope.data.Tenant.tenant_country_id;
+                $scope.modalDetails.state_id = $scope.data.Tenant.tenant_state_id;
+            } else if ($scope.modalDetails.mode == 'tenant') {
+                if (typeof $scope.data.User == 'undefined') {
+                    $scope.data.User = {};
+                }
+                $scope.modalDetails.country_id = $scope.data.User.country_id;
+                $scope.modalDetails.state_id = $scope.data.User.state_id;
+            }
+            var modalInstance = $modal.open({
+                templateUrl: tmpl,
+                controller: ctrlr,
+                size: size,
+                resolve: {
+                    scope: function () {
+                        return $scope;
+                    },
+                    country_id: function () {
+                        return $scope.modalDetails.country_id;
+                    },
+                    state_id: function () {
+                        return $scope.modalDetails.state_id;
+                    },
+                }
+            });
+
+            modalInstance.result.then(function (selectedItem) {
+                $scope.selected = selectedItem;
+            }, function () {
+                $log.info('Modal dismissed at: ' + new Date());
+            });
+        };
+
+        $scope.afterCountryAdded = function (country_id) {
+            if ($scope.modalDetails.mode == 'branch') {
+                if (typeof $scope.data.Tenant == 'undefined') {
+                    $scope.data.Tenant = {};
+                }
+                $scope.data.Tenant.tenant_country_id = country_id;
+                $scope.updateState();
+            } else if ($scope.modalDetails.mode == 'tenant') {
+                if (typeof $scope.data.User == 'undefined') {
+                    $scope.data.User = {};
+                }
+                $scope.data.User.country_id = country_id;
+                $scope.updateState2();
+            }
+        }
+
+        $scope.afterStateAdded = function (state_id) {
+            if ($scope.modalDetails.mode == 'branch') {
+                if (typeof $scope.data.Tenant == 'undefined') {
+                    $scope.data.Tenant = {};
+                }
+                $scope.data.Tenant.tenant_state_id = state_id;
+                $scope.updateState();
+            } else if ($scope.modalDetails.mode == 'tenant') {
+                if (typeof $scope.data.User == 'undefined') {
+                    $scope.data.User = {};
+                }
+                $scope.data.User.state_id = state_id;
+                $scope.updateState2();
+            }
+        }
+
+        $scope.afterCityAdded = function (city_id) {
+            if ($scope.modalDetails.mode == 'branch') {
+                if (typeof $scope.data.Tenant == 'undefined') {
+                    $scope.data.Tenant = {};
+                }
+                $scope.data.Tenant.tenant_city_id = city_id;
+                $scope.updateCity();
+            } else if ($scope.modalDetails.mode == 'tenant') {
+                if (typeof $scope.data.User == 'undefined') {
+                    $scope.data.User = {};
+                }
+                $scope.data.User.city_id = city_id;
+                $scope.updateCity2();
+            }
+        }
     }]);
