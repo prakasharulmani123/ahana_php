@@ -70,7 +70,12 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/organization/org.js']);
+                            return uiLoad.load([
+                                'tpl/organization/org.js',
+                                'tpl/modal_form/modal.country.js',
+                                'tpl/modal_form/modal.state.js',
+                                'tpl/modal_form/modal.city.js'
+                            ]);
                         }]
                 }
             })
@@ -90,7 +95,12 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/organization/org.js']);
+                            return uiLoad.load([
+                                'tpl/organization/org.js',
+                                'tpl/modal_form/modal.country.js',
+                                'tpl/modal_form/modal.state.js',
+                                'tpl/modal_form/modal.city.js'
+                            ]);
                         }]
                 }
             })
@@ -100,7 +110,12 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/organization/org.js']);
+                            return uiLoad.load([
+                                'tpl/organization/org.js',
+                                'tpl/modal_form/modal.country.js',
+                                'tpl/modal_form/modal.state.js',
+                                'tpl/modal_form/modal.city.js'
+                            ]);
                         }]
                 }
             })
