@@ -38,7 +38,7 @@ class CoState extends GActiveRecord
     {
         return [
             [['tenant_id', 'country_id', 'created_by', 'modified_by'], 'integer'],
-            [['country_id', 'state_name', 'created_by'], 'required'],
+            [['country_id', 'state_name'], 'required'],
             [['status'], 'string'],
             [['created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['state_name'], 'string', 'max' => 50],
@@ -54,7 +54,7 @@ class CoState extends GActiveRecord
         return [
             'state_id' => 'State ID',
             'tenant_id' => 'Tenant ID',
-            'country_id' => 'Country ID',
+            'country_id' => 'Country',
             'state_name' => 'State Name',
             'status' => 'Status',
             'created_by' => 'Created By',

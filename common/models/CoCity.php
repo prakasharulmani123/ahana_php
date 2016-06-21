@@ -39,7 +39,7 @@ class CoCity extends GActiveRecord
     {
         return [
             [['tenant_id', 'state_id', 'created_by', 'modified_by'], 'integer'],
-            [['state_id', 'city_name', 'created_by'], 'required'],
+            [['state_id', 'city_name'], 'required'],
             [['status'], 'string'],
             [['created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['city_name'], 'string', 'max' => 50],
@@ -55,7 +55,7 @@ class CoCity extends GActiveRecord
         return [
             'city_id' => 'City ID',
             'tenant_id' => 'Tenant ID',
-            'state_id' => 'State ID',
+            'state_id' => 'State',
             'city_name' => 'City Name',
             'status' => 'Status',
             'created_by' => 'Created By',
