@@ -45,7 +45,7 @@ app.controller('PatientTimelineController', ['$rootScope', '$scope', '$timeout',
             }
         }
         
-        $scope.encounter_colors = ["b-black", "b-danger", "b-info", "b-warning", "b-primary", "b-success", "b-white"];
+        $scope.encounter_colors = ["b-info", "b-success", "b-primary", "b-black", "b-danger", "b-warning", "b-white"];
 
         $scope.getTimeline = function (url, data, domain_path) {
             $scope.loadbar('hide');

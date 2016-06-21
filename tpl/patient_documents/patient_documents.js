@@ -115,6 +115,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     $scope.xslt = doc_type_response.result.document_out_xslt;
                     var doc_id = $state.params.doc_id;
                     $scope.getDocument(doc_id, function (pat_doc_response) {
+                        $scope.created_at = pat_doc_response.result.created_at;
                         $scope.xml = pat_doc_response.result.document_xml;
                     });
                     $scope.isLoading = false;
