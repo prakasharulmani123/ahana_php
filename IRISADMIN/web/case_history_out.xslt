@@ -162,11 +162,6 @@
                                                                         <xsl:value-of select="@value"></xsl:value-of>
                                                                     </xsl:if>
                                                                 </xsl:for-each>
-                                                                <xsl:for-each select="PROPERTIES/PROPERTY">
-                                                                    <xsl:attribute name="{@name}">
-                                                                        <xsl:value-of select="current()"></xsl:value-of>
-                                                                    </xsl:attribute>
-                                                                </xsl:for-each>
                                                             </xsl:when>
                                                         </xsl:choose>
                                                     </xsl:for-each>
