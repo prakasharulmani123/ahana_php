@@ -113,6 +113,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     $state.go("patient.document", {id: $state.params.id});
                 } else {
                     $scope.xslt = doc_type_response.result.document_out_xslt;
+//                    $scope.printxslt = doc_type_response.result.document_out_print_xslt;
                     var doc_id = $state.params.doc_id;
                     $scope.getDocument(doc_id, function (pat_doc_response) {
                         $scope.created_at = pat_doc_response.result.created_at;
