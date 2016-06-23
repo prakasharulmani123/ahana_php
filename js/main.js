@@ -231,7 +231,7 @@ angular.module('app')
                     $scope.successMessage = "";
 
                     angular.extend($scope.data, {
-                        patient_id: $scope.app.patientDetail.patientId,
+                        patient_id: $scope.patientObj.patient_id,
                         encounter_id: $scope.encounter_id
                     });
 
