@@ -1,4 +1,4 @@
-app.controller('NotesController', ['$rootScope', '$scope', '$timeout', '$http', '$state', function ($rootScope, $scope, $timeout, $http, $state) {
+app.controller('NotesController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'modalService', function ($rootScope, $scope, $timeout, $http, $state, modalService) {
 
         $scope.app.settings.patientTopBar = true;
         $scope.app.settings.patientSideMenu = true;
@@ -7,7 +7,7 @@ app.controller('NotesController', ['$rootScope', '$scope', '$timeout', '$http', 
 
         //Notifications
         $scope.assignNotifications();
-        
+
         $scope.isPatientHaveActiveEncounter = function (callback) {
             $http.post($rootScope.IRISOrgServiceUrl + '/encounter/patienthaveactiveencounter', {patient_id: $state.params.id})
                     .success(function (response) {
@@ -128,36 +128,33 @@ app.controller('NotesController', ['$rootScope', '$scope', '$timeout', '$http', 
         };
 
         //Delete
-        $scope.removeRow = function (row) {
-            var conf = confirm('Are you sure to delete ?');
-            if (conf) {
-                $scope.loadbar('show');
-                var index = $scope.displayedCollection.indexOf(row);
-                if (index !== -1) {
-                    $http({
-                        url: $rootScope.IRISOrgServiceUrl + "/patientnotes/remove",
-                        method: "POST",
-                        data: {id: row.pat_note_id}
-                    }).then(
-                            function (response) {
-                                $scope.loadbar('hide');
-                                if (response.data.success === true) {
-                                    $scope.displayedCollection.splice(index, 1);
-                                    $scope.loadPatNotesList();
-                                    $scope.successMessage = 'Patient Note Deleted Successfully';
-                                }
-                                else {
-                                    $scope.errorData = response.data.message;
-                                }
-                            }
-                    )
-                }
-            }
-        };
-    }]);
+        $scope.removeRow = function (note_id) {
+            var modalOptions = {
+                closeButtonText: 'No',
+                actionButtonText: 'Yes',
+                headerText: 'Delete Note?',
+                bodyText: 'Are you sure you want to delete this note?'
+            };
 
-//app.filter('moment', function () {
-//    return function (dateString, format) {
-//        return moment(dateString).format(format);
-//    };
-//});
+            modalService.showModal({}, modalOptions).then(function (result) {
+                $scope.loadbar('show');
+                $http({
+                    method: 'POST',
+                    url: $rootScope.IRISOrgServiceUrl + "/patientnotes/remove",
+                    data: {id: note_id},
+                }).then(
+                        function (response) {
+                            $scope.loadbar('hide');
+                            if (response.data.success === true) {
+                                $scope.loadPatNotesList();
+                                $scope.successMessage = 'Patient Note Deleted Successfully';
+                            }
+                            else {
+                                $scope.errorData = response.data.message;
+                            }
+                        }
+                );
+            });
+        };
+        
+    }]);

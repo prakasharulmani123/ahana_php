@@ -55,6 +55,9 @@
                             </a>&nbsp;&nbsp;&nbsp;
                             <a class="label bg-dark" title="Edit" check-access  ui-sref="patient.noteUpdate({id: '{{$state.params.id}}', note_id: '{{note.pat_note_id}}'})">
                                 <i class="fa fa-pencil"></i>
+                            </a>&nbsp;&nbsp;&nbsp;
+                            <a data-button="patient.noteDelete" check-access-custom class="label bg-dark" title="Delete" ng-click="removeRow(note.pat_note_id)">
+                                <i class="fa fa-trash"></i>
                             </a>
                         </td>
                     </tr>

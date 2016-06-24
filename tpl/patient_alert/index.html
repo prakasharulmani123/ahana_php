@@ -6,9 +6,11 @@
         <div ng-include="'tpl/blocks/alert.html'">
             {% include 'tpl/blocks/alert.html' %}
         </div>
-        <div class="panel panel-default m-b"  ng-init="data = {}; data.formtype = 'add';
+        <div class="panel panel-default m-b"  ng-init="data = {};
+           
+                        data.formtype = 'add';
                         initForm();
-                        data.status = '1'">
+                    data.status = '1'">
             <form name="alertForm" class="form-horizontal form-validation" novalidate="">
                 <div class="panel-heading font-bold"> <i class="fa fa-medkit"></i> Patient Alert Details</div>
                 <div class="panel-body">
@@ -28,7 +30,10 @@
                             <br/>
                             <button class="btn m-b-xs  btn-success save-btn" ng-click="saveForm(data.formtype)"><i class="fa fa-pencil"></i> Add</button>
                             &nbsp;
-                            <button class="btn m-b-xs  btn-dark" ng-click="data.alert_id = ''; data.alert_description = ''; successMessage = ''; errorData = ''"> <i class="fa fa-repeat"></i> Reset</button>
+                            <button class="btn m-b-xs  btn-dark" ng-click="data.alert_id = '';
+                                        data.alert_description = '';
+                                        successMessage = '';
+                                        errorData = ''"> <i class="fa fa-repeat"></i> Reset</button>
                             &nbsp; </div>
                     </div>
                 </div>
@@ -62,7 +67,7 @@
                         <tr ng-repeat="row in displayedCollection| orderBy: alert_description">
                             <td>
                                 <span editable-select="row.alert_id" e-name="alert_id" e-form="rowform" e-ng-options="alert.alert_id as alert.alert_name for alert in alerts | orderBy: alert_name">
-                                    {{ showStatus(row) }}
+                                    {{ showStatus(row)}}
                                 </span>
                             </td>
                             <td class="v-middle">
@@ -82,16 +87,10 @@
                                 </form>
                                 <div class="buttons" ng-show="!rowform.$visible">
                                     <button class="btn m-b-xs  btn-primary " ng-click="rowform.$show()"> <i class="fa fa-pencil"></i> Edit</button> 
-                                    <!--<button class="btn btn-sm btn-danger" ng-click="removeUser($index)">del</button>-->
+                                    <a data-button="patient.alertDelete" check-access-custom class="btn m-b-xs btn-dark" title="Delete" ng-click="removeRow(row)">
+                                        <i class="fa fa-trash"></i> Delete
+                                    </a>
                                 </div>  
-                                <!--                                <button class="btn m-b-xs  btn-dark hide"> <i class="fa fa-trash"></i> Delete</button>
-                                                                <a title="Edit" check-access  ui-sref="patient.alertUpdate({id: $state.params.id, alert_id: row.pat_alert_id})"  class="btn m-b-xs  btn-primary">
-                                                                    <i class="fa fa-pencil"></i> Edit
-                                                                </a>&nbsp;&nbsp;&nbsp;
-                                                                <a class="hide btn m-b-xs  btn-dark " title="Delete" ng-click="removeRow(row)">
-                                                                    <i class="fa fa-trash"></i> Delete
-                                                                </a>-->
-
                             </td>
                         </tr>
                     </tbody>

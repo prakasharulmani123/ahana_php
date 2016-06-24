@@ -1,6 +1,6 @@
 <div ng-controller="PrescriptionController">
     <div class="hbox hbox-auto-xs hbox-auto-sm">
-        <div class="col" ng-show="prev_pre == '0'">
+        <div class="col" ng-show="pres_status == 'current'">
             <div class="bg-light lter b-b wrapper-md" style="width:100%;float:left; padding:10px; padding-bottom:0px; margin-bottom:15px;">
                 <div class="col-sm-3 m-b-xs">  <h1 class="m-n h3">Prescription</h1> </div>
                 <div class="col-sm-3 m-b-xs pull-right right">
@@ -281,7 +281,7 @@
         </div>
 
         <!--<div class="col" ng-if="app.settings.patientSideMenu == true">-->
-        <div class="col" ng-show="prev_pre == '1'">
+        <div class="col" ng-show="pres_status == 'prev'">
             <div ng-include="'tpl/patient_prescription/_previous_prescription.html'">
                 {% include 'tpl/patient_prescription/_previous_prescription.html' %}
             </div>
@@ -298,8 +298,8 @@
                 </ul>
                 <ul class="nav nav-pills nav-stacked nav-sm">
                     <!--                    class="active4"-->
-                    <li><a id="current_prescription" href="javascript:void(0)" ng-click="prescriptionStauts('1')"><i class="fa fa-medkit"></i> <br/>Prescription</a></li>
-                    <li><a href="javascript:void(0)" ng-click="prescriptionStauts('0')"><i class="fa fa-history"></i> <br/>Prev-Prescr</a></li>
+                    <li><a id="current_prescription" href="javascript:void(0)" ng-click="prescriptionStauts('current')"><i class="fa fa-medkit"></i> <br/>Prescription</a></li>
+                    <li><a href="javascript:void(0)" ng-click="prescriptionStauts('prev')"><i class="fa fa-history"></i> <br/>Prev-Prescr</a></li>
                     <li><a href="javascript:void(0)"><i class="fa fa-file-text"></i> <br/>Results </a></li>
                     <li><a href="javascript:void(0)" class="sb-open-right" data-target="#fav"><i class="fa fa-heart"></i> <br/> Favorites</a></li>
                     <li>

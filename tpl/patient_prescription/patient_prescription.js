@@ -14,7 +14,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.frequencies = {};
 
         $scope.$watch('patientObj.patient_id', function (newValue, oldValue) {
-            if (newValue != '') {
+            if (typeof newValue !== 'undefined' && newValue != '') {
                 $rootScope.commonService.GetEncounterListByPatient('', '0,1', false, $scope.patientObj.patient_id, function (response) {
                     angular.forEach(response, function (resp) {
                         resp.encounter_id = resp.encounter_id.toString();
@@ -22,7 +22,11 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     $scope.encounters = response;
                     if (response != null) {
                         $scope.enc.selected = $scope.encounters[0];
-                        $scope.data.consultant_id = $scope.encounters[0].liveAdmission.consultant_id;
+                        if ($scope.encounters[0].encounter_type == 'IP') {
+                            $scope.data.consultant_id = $scope.encounters[0].liveAdmission.consultant_id;
+                        } else if ($scope.encounters[0].encounter_type == 'OP') {
+                            $scope.data.consultant_id = $scope.encounters[0].liveAppointmentBooking.consultant_id;
+                        }
                     }
                 });
             }
@@ -67,6 +71,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading patientnote!";
                     });
+
             //Get Vitals
             $http.get($rootScope.IRISOrgServiceUrl + '/patientvitals/getpatientvitals?patient_id=' + $state.params.id)
                     .success(function (vitals) {
@@ -89,6 +94,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading patientvitals!";
                     });
+
             //Get Fav
             $http.get($rootScope.IRISOrgServiceUrl + '/patientprescriptionfavourite/getpatientprescriptionfavourite?patient_id=' + $state.params.id)
                     .success(function (favourites) {
@@ -123,7 +129,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $rootScope.commonService.GetPatientFrequency('', '1', false, function (response) {
                 $scope.frequencies = response.frequencylist;
             });
-            
+
             $("#current_prescription").focus();
         }
 
@@ -409,13 +415,11 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             }
         }, true);
 
-        $scope.prev_pre = '0';
+        $scope.pres_status = 'current';
         $scope.prescriptionStauts = function (status) {
-            if (status == '0') {
-                $scope.prev_pre = '1';
-            } else {
-                $scope.prev_pre = '0';
-            }
+            $scope.pres_status = status;
+            if(status == 'prev')
+                $scope.loadPrevPrescriptionsList($scope.enc.selected.encounter_id);
         }
 
         $scope.loadPrevPrescriptionsList = function (encounter_id) {

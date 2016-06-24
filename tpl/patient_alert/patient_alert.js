@@ -1,4 +1,4 @@
-app.controller('AlertsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$filter', '$anchorScroll', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $filter, $anchorScroll) {
+app.controller('AlertsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$filter', '$anchorScroll', 'modalService', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $filter, $anchorScroll, modalService) {
 
         $scope.app.settings.patientTopBar = true;
         $scope.app.settings.patientSideMenu = true;
@@ -149,29 +149,31 @@ app.controller('AlertsController', ['$rootScope', '$scope', '$timeout', '$http',
 
         //Delete
         $scope.removeRow = function (row) {
-            var conf = confirm('Are you sure to delete ?');
-            if (conf) {
+            var modalOptions = {
+                closeButtonText: 'No',
+                actionButtonText: 'Yes',
+                headerText: 'Delete Alert?',
+                bodyText: 'Are you sure you want to delete this alert?'
+            };
+
+            modalService.showModal({}, modalOptions).then(function (result) {
                 $scope.loadbar('show');
-                var index = $scope.displayedCollection.indexOf(row);
-                if (index !== -1) {
-                    $http({
-                        url: $rootScope.IRISOrgServiceUrl + "/patientalert/remove",
-                        method: "POST",
-                        data: {id: row.alert_id}
-                    }).then(
-                            function (response) {
-                                $scope.loadbar('hide');
-                                if (response.data.success === true) {
-                                    $scope.displayedCollection.splice(index, 1);
-                                    $scope.loadAlertsList();
-                                    $scope.successMessage = 'Alert Deleted Successfully';
-                                }
-                                else {
-                                    $scope.errorData = response.data.message;
-                                }
+                $http({
+                    method: 'POST',
+                    url: $rootScope.IRISOrgServiceUrl + "/patientalert/remove",
+                    data: {id: row.pat_alert_id},
+                }).then(
+                        function (response) {
+                            $scope.loadbar('hide');
+                            if (response.data.success === true) {
+                                $scope.loadAlertsList();
+                                $scope.successMessage = 'Alert deleted successfully';
                             }
-                    )
-                }
-            }
+                            else {
+                                $scope.errorData = response.data.message;
+                            }
+                        }
+                );
+            });
         };
     }]);

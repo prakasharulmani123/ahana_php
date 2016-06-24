@@ -1,6 +1,6 @@
 // this is a lazy load controller, 
 // so start with "app." to register this controller
- 
+
 app.filter('propsFilter', function () {
     return function (items, props) {
         var out = [];
@@ -31,16 +31,16 @@ app.filter('propsFilter', function () {
         return out;
     };
 })
-app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$timeout', '$filter', function ($rootScope, $scope, $timeout, $http, $state, $timeout, $filter) {
+app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$timeout', '$filter', 'modalService', function ($rootScope, $scope, $timeout, $http, $state, $timeout, $filter, modalService) {
 
         $scope.app.settings.patientTopBar = true;
         $scope.app.settings.patientSideMenu = true;
         $scope.app.settings.patientContentClass = 'app-content patient_content ';
         $scope.app.settings.patientFooterClass = 'app-footer';
-        
+
         //Notifications
         $scope.assignNotifications();
-        
+
         $scope.ctrl = {};
         $scope.allExpanded = true;
         $scope.expanded = true;
@@ -52,11 +52,11 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
         $scope.$watch('patientObj.patient_id', function (newValue, oldValue) {
             if (newValue != '') {
                 $rootScope.commonService.GetEncounterListByPatient('', '0,1', false, $scope.patientObj.patient_id, function (response) {
-                    angular.forEach(response, function (resp){
-                        resp.encounter_id = resp.encounter_id.toString(); 
+                    angular.forEach(response, function (resp) {
+                        resp.encounter_id = resp.encounter_id.toString();
                     });
                     $scope.encounters = response;
-                    if(response != null){
+                    if (response != null) {
                         $scope.enc.selected = $scope.encounters[0];
                     }
                 });
@@ -72,7 +72,7 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
         $scope.initProcedureIndex = function () {
             $scope.data = {};
         }
-        
+
         $scope.loadProceduresList = function (enc_id) {
             $scope.loadbar('show');
             $scope.isLoading = true;
@@ -103,7 +103,7 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
                         callback(response);
                     });
         }
-        
+
         $scope.initCanSaveAdmission = function () {
             $scope.showForm = false;
             $scope.isPatientHaveActiveEncounter(function (response) {
@@ -123,7 +123,7 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
                 $scope.showForm = true;
             });
         }
-        
+
         $scope.initForm = function () {
             $scope.loadbar('show');
             $scope.data = {};
@@ -222,29 +222,32 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
 
         //Delete
         $scope.removeRow = function (id) {
-            var conf = confirm('Are you sure to delete ?');
-            if (conf) {
+            var modalOptions = {
+                closeButtonText: 'No',
+                actionButtonText: 'Yes',
+                headerText: 'Delete Procedure?',
+                bodyText: 'Are you sure you want to delete this procedure?'
+            };
+
+            modalService.showModal({}, modalOptions).then(function (result) {
                 $scope.loadbar('show');
-//                var index = $scope.displayedCollection.indexOf(row);
-//                if (index !== -1) {
                 $http({
+                    method: 'POST',
                     url: $rootScope.IRISOrgServiceUrl + "/procedure/remove",
-                    method: "POST",
-                    data: {id: id}
+                    data: {id: id},
                 }).then(
                         function (response) {
                             $scope.loadbar('hide');
                             if (response.data.success === true) {
                                 $scope.loadProceduresList();
-                                $scope.successMessage = 'Procedure Deleted Successfully';
+                                $scope.successMessage = 'Procedure deleted successfully';
                             }
                             else {
                                 $scope.errorData = response.data.message;
                             }
                         }
-                )
-//                }
-            }
+                );
+            });
         };
 
         //For Datepicker
