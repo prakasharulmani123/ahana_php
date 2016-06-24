@@ -15,7 +15,8 @@ use yii\db\ActiveQuery;
  * @property integer $patient_id
  * @property string $vital_time
  * @property string $temperature
- * @property string $blood_pressure
+ * @property string $blood_pressure_systolic
+ * @property string $blood_pressure_diastolic
  * @property string $pulse_rate
  * @property string $weight
  * @property string $status
@@ -47,7 +48,7 @@ class PatVitals extends RActiveRecord {
             [['tenant_id', 'encounter_id', 'patient_id', 'created_by', 'modified_by'], 'integer'],
             [['vital_time', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['status'], 'string'],
-            [['temperature', 'blood_pressure', 'pulse_rate'], 'string', 'max' => 20],
+            [['temperature', 'blood_pressure_systolic', 'blood_pressure_diastolic', 'pulse_rate'], 'string', 'max' => 20],
             [['weight'], 'string', 'max' => 10]
         ];
     }
@@ -63,7 +64,8 @@ class PatVitals extends RActiveRecord {
             'patient_id' => 'Patient ID',
             'vital_time' => 'Vital Time',
             'temperature' => 'Temperature',
-            'blood_pressure' => 'Blood Pressure',
+            'blood_pressure_systolic' => 'Blood Pressure Systolic',
+            'blood_pressure_diastolic' => 'Blood Pressure Diastolic',
             'pulse_rate' => 'Pulse Rate',
             'weight' => 'Weight',
             'status' => 'Status',

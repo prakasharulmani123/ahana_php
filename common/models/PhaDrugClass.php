@@ -40,7 +40,7 @@ class PhaDrugClass extends RActiveRecord {
             [['status'], 'string'],
             [['created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['drug_name'], 'string', 'max' => 255],
-            [['tenant_id', 'drug_name', 'deleted_at'], 'unique', 'targetAttribute' => ['tenant_id', 'drug_name', 'deleted_at'], 'message' => 'The combination of Tenant ID, Drug Name and Deleted At has already been taken.']
+            [['drug_name'], 'unique', 'targetAttribute' => ['tenant_id', 'drug_name', 'deleted_at'], 'message' => 'The combination of Tenant ID, Drug Name and Deleted At has already been taken.']
         ];
     }
 
