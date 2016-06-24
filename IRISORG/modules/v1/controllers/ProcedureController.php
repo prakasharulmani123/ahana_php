@@ -95,7 +95,10 @@ class ProcedureController extends ActiveController {
 
             foreach ($data as $key => $value) {
                 $details = PatProcedure::find()
-                        ->where(['patient_id' => $patient->patient_id, 'encounter_id' => $value->encounter_id])
+                        ->tenant()
+                        ->active()
+                        ->status()
+                        ->andWhere(['patient_id' => $patient->patient_id, 'encounter_id' => $value->encounter_id])
                         ->orderBy(['proc_date' => SORT_DESC])
                         ->all();
 
@@ -104,20 +107,19 @@ class ProcedureController extends ActiveController {
             return ['success' => true, 'result' => $result];
         }
     }
-    
+
     public function actionGetconsultantsbyprocedure() {
         $proc_id = Yii::$app->getRequest()->get('proc_id');
 
         $consultants = [];
         if (!empty($proc_id)) {
             $model = PatProcedure::find()->where(['proc_id' => $proc_id])->one();
-            
-            if(!empty($model->proc_consultant_ids)){
+
+            if (!empty($model->proc_consultant_ids)) {
                 foreach ($model->proc_consultant_ids as $key => $id) {
                     $consultants[$key] = CoUser::find()->where(['user_id' => $id])->one();
                 }
             }
-            
         }
 
         return $consultants;
