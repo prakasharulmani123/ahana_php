@@ -26,7 +26,7 @@ app.controller('VitalsController', ['$rootScope', '$scope', '$timeout', '$http',
             });
         }
 
-//        //Index Page
+        //Index Page
         $scope.loadPatVitalsList = function () {
             $scope.isLoading = true;
             // pagination set up
@@ -75,9 +75,9 @@ app.controller('VitalsController', ['$rootScope', '$scope', '$timeout', '$http',
                     encounter_id: $scope.encounter.encounter_id,
                 });
             } else {
-                post_url = $rootScope.IRISOrgServiceUrl + '/patientvitals/' + _that.data.pat_note_id;
+                post_url = $rootScope.IRISOrgServiceUrl + '/patientvitals/' + _that.data.vital_id;
                 method = 'PUT';
-                succ_msg = 'Note updated successfully';
+                succ_msg = 'Vital updated successfully';
             }
 
             $scope.loadbar('show');
@@ -110,7 +110,7 @@ app.controller('VitalsController', ['$rootScope', '$scope', '$timeout', '$http',
             _that = this;
             $scope.errorData = "";
             $http({
-                url: $rootScope.IRISOrgServiceUrl + "/patientvitals/" + $state.params.note_id,
+                url: $rootScope.IRISOrgServiceUrl + "/patientvitals/" + $state.params.vital_id,
                 method: "GET"
             }).success(
                     function (response) {
@@ -125,33 +125,5 @@ app.controller('VitalsController', ['$rootScope', '$scope', '$timeout', '$http',
                 else
                     $scope.errorData = data.message;
             });
-        };
-
-        //Delete
-        $scope.removeRow = function (row) {
-            var conf = confirm('Are you sure to delete ?');
-            if (conf) {
-                $scope.loadbar('show');
-                var index = $scope.displayedCollection.indexOf(row);
-                if (index !== -1) {
-                    $http({
-                        url: $rootScope.IRISOrgServiceUrl + "/patientvitals/remove",
-                        method: "POST",
-                        data: {id: row.pat_note_id}
-                    }).then(
-                            function (response) {
-                                $scope.loadbar('hide');
-                                if (response.data.success === true) {
-                                    $scope.displayedCollection.splice(index, 1);
-                                    $scope.loadPatVitalsList();
-                                    $scope.successMessage = 'Patient Note Deleted Successfully';
-                                }
-                                else {
-                                    $scope.errorData = response.data.message;
-                                }
-                            }
-                    )
-                }
-            }
         };
     }]);

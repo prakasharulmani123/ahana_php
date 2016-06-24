@@ -40,7 +40,7 @@ app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', 
 
         //Notifications
         $scope.assignNotifications();
-        
+
         $scope.isPatientHaveActiveEncounter = function (callback) {
             $http.post($rootScope.IRISOrgServiceUrl + '/encounter/patienthaveactiveencounter', {patient_id: $state.params.id})
                     .success(function (response) {
@@ -125,6 +125,8 @@ app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', 
 
         //For Form
         $scope.initForm = function () {
+            $scope.data = {};
+            $scope.data.consult_date = moment().format('YYYY-MM-DD HH:mm:ss');
             $rootScope.commonService.GetDoctorList('', '1', false, '1', function (response) {
                 $scope.doctors = response.doctorsList;
             });

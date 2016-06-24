@@ -2206,6 +2206,18 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
+            
+            //Patient Vital Update
+            .state('patient.vitalUpdate', {
+                url: '/vitalUpdate/{id}/{vital_id}',
+                templateUrl: 'tpl/patient_vitals/update.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/patient_vitals/patient_vitals.js']);
+                        }]
+                }
+            })
 
             //ChangePassword
             .state('configuration.changePassword', {

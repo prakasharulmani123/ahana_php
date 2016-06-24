@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" data-ng-app="app">
+<html lang="en" data-ng-app="app" ng-controller="AppCtrl">
     <head>
         <meta charset="utf-8" />
-        <title>IRISOrg</title>
+        <title ng-if="app.name && app.org_name">{{app.name}} ({{app.org_name}})</title>
         <meta name="description" content="" />
         <meta name="keywords" content="" />
         <!--        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />-->
@@ -34,7 +34,7 @@
 
         <link rel="stylesheet" href="css/print.css" type="text/css" />
     </head>
-    <body ng-controller="AppCtrl" prevent-right-click>
+    <body prevent-right-click>
         <div id="sb-site">
             <div class="app" id="app" ng-class="{'app-header-fixed':app.settings.headerFixed,  'app-aside-folded':app.settings.asideFolded, 'app-aside-dock':app.settings.asideDock, 'container':app.settings.container}" ui-view></div>
         </div>
