@@ -355,6 +355,9 @@ class PatientController extends ActiveController {
         if (isset($post['file_data'])) {
             $file = $post['file_data'];
         }
+        
+        if($post['block'] == 'register')
+            return ['success' => true, 'file' => $file];
 
         if ($file) {
             $model = PatPatient::find()->tenant()->andWhere(['patient_guid' => $_GET['patient_id']])->one();

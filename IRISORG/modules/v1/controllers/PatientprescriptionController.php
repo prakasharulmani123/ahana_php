@@ -99,7 +99,7 @@ class PatientprescriptionController extends ActiveController {
                     $item_model->save(false);
                 }
 
-                return ['success' => true];
+                return ['success' => true, 'date' => date('d-M-Y H:i')];
             } else {
                 return ['success' => false, 'message' => Html::errorSummary([$model, $item_model])];
             }
