@@ -4,21 +4,34 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
         $scope.app.settings.patientSideMenu = true;
         $scope.app.settings.patientContentClass = 'app-content patient_content ';
         $scope.app.settings.patientFooterClass = 'app-footer';
+        
+        $scope.open = function ($event) {
+            $event.preventDefault();
+            $event.stopPropagation();
+            $scope.opened = true;
+        };
 
         $scope.more_max = 3;
 
         //Notifications
         $scope.assignNotifications();
         //Encounter Page
-        $scope.loadPatientEncounters = function (type) {
+        $scope.loadPatientEncounters = function (type, date) {
             $scope.errorData = '';
             $scope.encounterView = type;
             $scope.isLoading = true;
             $scope.rowCollection = [];  // base collection
 //            $scope.itemsByPage = 10; // No.of records per page
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
+            
+            if (typeof date == 'undefined') {
+                url = $rootScope.IRISOrgServiceUrl + '/encounter/getencounters?id=' + $state.params.id + '&type=' + type;
+            } else {
+                date = moment(date).format('YYYY-MM-DD');
+                url = $rootScope.IRISOrgServiceUrl + '/encounter/getencounters?id=' + $state.params.id + '&type=' + type + '&date=' + date;
+            }
 
-            $http.get($rootScope.IRISOrgServiceUrl + '/encounter/getencounters?id=' + $state.params.id + '&type=' + type)
+            $http.get(url)
                     .success(function (response) {
                         if (response.success == true) {
                             $scope.isLoading = false;

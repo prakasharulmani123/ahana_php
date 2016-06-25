@@ -37,6 +37,12 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
         $scope.app.settings.patientSideMenu = true;
         $scope.app.settings.patientContentClass = 'app-content patient_content ';
         $scope.app.settings.patientFooterClass = 'app-footer';
+        
+        $scope.open_date = function ($event) {
+            $event.preventDefault();
+            $event.stopPropagation();
+            $scope.opened_date = true;
+        };
 
         //Notifications
         $scope.assignNotifications();
@@ -65,7 +71,7 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
 
         $scope.$watch('enc.selected.encounter_id', function (newValue, oldValue) {
             if (newValue != '' && typeof newValue != 'undefined') {
-                $scope.loadProceduresList(newValue);
+                $scope.loadProceduresList();
             }
         }, true);
 
@@ -73,16 +79,23 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
             $scope.data = {};
         }
 
-        $scope.loadProceduresList = function (enc_id) {
+        $scope.loadProceduresList = function (date) {
             $scope.loadbar('show');
             $scope.isLoading = true;
             // pagination set up
             $scope.rowCollection = [];  // base collection
             $scope.itemsByPage = 10; // No.of records per page
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
+            
+            if (typeof date == 'undefined') {
+                url = $rootScope.IRISOrgServiceUrl + '/procedure/getprocedurebyencounter?patient_id=' + $state.params.id;
+            } else {
+                date = moment(date).format('YYYY-MM-DD');
+                url = $rootScope.IRISOrgServiceUrl + '/procedure/getprocedurebyencounter?patient_id=' + $state.params.id + '&date=' + date;
+            }
 
             // Get data's from service
-            $http.get($rootScope.IRISOrgServiceUrl + '/procedure/getprocedurebyencounter?patient_id=' + $state.params.id)
+            $http.get(url)
                     .success(function (procedures) {
                         $scope.loadbar('hide');
                         $scope.isLoading = false;

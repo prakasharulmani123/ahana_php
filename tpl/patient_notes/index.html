@@ -6,9 +6,28 @@
 <div class="wrapper-md" ng-controller="NotesController" ng-init="loadPatNotesList();">
     <div class="panel panel-default">
         <div class="row wrapper">
-            <div class="col-sm-4">
+            <div class="col-sm-6">
                 <button class="btn btn-info" ng-click="$state.go('patient.noteCreate', {id: $state.params.id})">
                     <i class="fa fa-plus"></i> Create Note 
+                </button>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Filter:</label>
+                    <div class="col-sm-9">
+                        <div class="input-group">
+                            <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="filterdate" is-open="opened" datepicker-options="dateOptions" close-text="Close" max-date="maxDate" date-disabled="disabled(date, mode)" ng-change="loadPatNotesList(filterdate);"/>
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <button ng-click="filterdate = '';
+                            loadPatNotesList()" class="btn m-b-xs  btn-dark">  
+                    <i class="fa fa-times"></i> Clear 
                 </button>
             </div>
         </div>

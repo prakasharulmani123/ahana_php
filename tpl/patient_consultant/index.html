@@ -32,6 +32,26 @@
                     <i class="fa fa-plus"></i> &nbsp; Add consultant visit
                 </button>
             </div>
+            <div class="col-sm-2 pull-right">
+                <button ng-click="filterdate = '';
+                            loadPatConsultantsList()" class="btn m-b-xs  btn-dark">  
+                    <i class="fa fa-times"></i> Clear 
+                </button>
+            </div>
+            <div class="col-sm-4 pull-right">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Filter:</label>
+                    <div class="col-sm-9">
+                        <div class="input-group">
+                            <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="filterdate" is-open="opened" datepicker-options="dateOptions" close-text="Close" max-date="maxDate" date-disabled="disabled(date, mode)" ng-change="loadPatConsultantsList(filterdate);"/>
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
         </div>
         <div class="table-responsive in-patient-table">
             <table st-table="displayedCollection"  st-safe-src="rowCollection"  class="table table-striped b-t b-light">

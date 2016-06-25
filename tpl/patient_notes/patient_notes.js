@@ -5,6 +5,12 @@ app.controller('NotesController', ['$rootScope', '$scope', '$timeout', '$http', 
         $scope.app.settings.patientContentClass = 'app-content patient_content ';
         $scope.app.settings.patientFooterClass = 'app-footer';
 
+        $scope.open = function ($event) {
+            $event.preventDefault();
+            $event.stopPropagation();
+            $scope.opened = true;
+        };
+
         //Notifications
         $scope.assignNotifications();
 
@@ -32,15 +38,21 @@ app.controller('NotesController', ['$rootScope', '$scope', '$timeout', '$http', 
         }
 
 //        //Index Page
-        $scope.loadPatNotesList = function () {
+        $scope.loadPatNotesList = function (date) {
             $scope.isLoading = true;
             // pagination set up
             $scope.rowCollection = [];  // base collection
             $scope.itemsByPage = 10; // No.of records per page
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
 
+            if (typeof date == 'undefined') {
+                url = $rootScope.IRISOrgServiceUrl + '/patientnotes/getpatientnotes?patient_id=' + $state.params.id;
+            } else {
+                date = moment(date).format('YYYY-MM-DD');
+                url = $rootScope.IRISOrgServiceUrl + '/patientnotes/getpatientnotes?patient_id=' + $state.params.id + '&date=' + date;
+            }
             // Get data's from service
-            $http.get($rootScope.IRISOrgServiceUrl + '/patientnotes/getpatientnotes?patient_id=' + $state.params.id)
+            $http.get(url)
                     .success(function (notes) {
                         $scope.isLoading = false;
                         $scope.rowCollection = notes.result;
@@ -156,5 +168,5 @@ app.controller('NotesController', ['$rootScope', '$scope', '$timeout', '$http', 
                 );
             });
         };
-        
+
     }]);
