@@ -210,9 +210,32 @@ class EncounterController extends ActiveController {
         $get = Yii::$app->getRequest()->get();
 
         if (isset($get['id'])) {
-            $data = VEncounter::find()->where(['patient_guid' => $get['id']])->groupBy('encounter_id')->orderBy(['encounter_id' => SORT_DESC])->asArray()->all();
+            $condition = [
+                'patient_guid' => $get['id'],
+            ];
+            
+            if (isset($get['date'])) {
+                $condition = [
+                    'patient_guid' => $get['id'],
+                    'DATE(date)' => $get['date'],
+                ];
+            }
+            
+            $data = VEncounter::find()
+                    ->where($condition)
+                    ->groupBy('encounter_id')
+                    ->orderBy(['encounter_id' => SORT_DESC])
+                    ->asArray()
+                    ->all();
+            
             foreach ($data as $key => $value) {
-                $details = VEncounter::find()->where(['patient_guid' => $get['id'], 'encounter_id' => $value['encounter_id']])->orderBy(['id' => SORT_ASC])->asArray()->all();
+                $details = VEncounter::find()
+                        ->where(['encounter_id' => $value['encounter_id']])
+                        ->andWhere($condition)
+                        ->orderBy(['id' => SORT_ASC])
+                        ->asArray()
+                        ->all();
+                
                 $data[$key]['all'] = $details;
             }
 

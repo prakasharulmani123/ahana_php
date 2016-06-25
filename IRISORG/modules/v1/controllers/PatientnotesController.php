@@ -60,11 +60,22 @@ class PatientnotesController extends ActiveController {
 
         if (!empty($get)) {
             $patient = PatPatient::getPatientByGuid($get['patient_id']);
+
+            $condition = [
+                'patient_id' => $patient->patient_id,
+            ];
+            
+            if (isset($get['date'])) {
+                $condition = [
+                    'patient_id' => $patient->patient_id,
+                    'DATE(created_at)' => $get['date'],
+                ];
+            }
             $result = [];
             $data = PatNotes::find()
                     ->tenant()
                     ->active()
-                    ->andWhere(['patient_id' => $patient->patient_id])
+                    ->andWhere($condition)
                     ->groupBy('encounter_id')
                     ->orderBy(['encounter_id' => SORT_DESC])
                     ->all();
@@ -73,7 +84,8 @@ class PatientnotesController extends ActiveController {
                 $details = PatNotes::find()
                         ->tenant()
                         ->active()
-                        ->andWhere(['patient_id' => $patient->patient_id, 'encounter_id' => $value->encounter_id])
+                        ->andWhere($condition)
+                        ->andWhere(['encounter_id' => $value->encounter_id])
                         ->orderBy(['pat_note_id' => SORT_DESC])
                         ->all();
                 $result[$key] = ['data' => $value, 'all' => $details];

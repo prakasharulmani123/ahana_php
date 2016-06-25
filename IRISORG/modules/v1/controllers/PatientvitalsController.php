@@ -69,8 +69,30 @@ class PatientvitalsController extends ActiveController {
         
         if(!empty($get)){
             $patient = PatPatient::getPatientByGuid($get['patient_id']);
-            $model = PatVitals::find()->tenant()->active()->andWhere(['patient_id' => $patient->patient_id])->orderBy(['created_at' => SORT_DESC])->all();
-            $uservitals = PatVitalsUsers::find()->tenant()->andWhere(['user_id' => $user_id, 'seen' => '0', 'patient_id' => $patient->patient_id])->all();
+            
+            $condition = [
+                'patient_id' => $patient->patient_id,
+            ];
+            
+            if (isset($get['date'])) {
+                $condition = [
+                    'patient_id' => $patient->patient_id,
+                    'DATE(created_at)' => $get['date'],
+                ];
+            }
+            
+            $model = PatVitals::find()
+                    ->tenant()
+                    ->active()
+                    ->andWhere($condition)
+                    ->orderBy(['created_at' => SORT_DESC])
+                    ->all();
+            
+            $uservitals = PatVitalsUsers::find()
+                    ->tenant()
+                    ->andWhere(['user_id' => $user_id, 'seen' => '0', 'patient_id' => $patient->patient_id])
+                    ->all();
+            
             return ['success' => true, 'result' => $model, 'uservitals' => $uservitals];
         }
     }

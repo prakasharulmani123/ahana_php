@@ -83,12 +83,23 @@ class ProcedureController extends ActiveController {
         $get = Yii::$app->getRequest()->get();
         if (!empty($get)) {
             $patient = PatPatient::getPatientByGuid($get['patient_id']);
+            
+            $condition = [
+                'patient_id' => $patient->patient_id,
+            ];
+            
+            if (isset($get['date'])) {
+                $condition = [
+                    'patient_id' => $patient->patient_id,
+                    'DATE(created_at)' => $get['date'],
+                ];
+            }
             $result = [];
             $data = PatProcedure::find()
                     ->tenant()
                     ->active()
                     ->status()
-                    ->andWhere(['patient_id' => $patient->patient_id])
+                    ->andWhere($condition)
                     ->groupBy('encounter_id')
                     ->orderBy(['encounter_id' => SORT_DESC])
                     ->all();
@@ -98,7 +109,8 @@ class ProcedureController extends ActiveController {
                         ->tenant()
                         ->active()
                         ->status()
-                        ->andWhere(['patient_id' => $patient->patient_id, 'encounter_id' => $value->encounter_id])
+                        ->andWhere($condition)
+                        ->andWhere(['encounter_id' => $value->encounter_id])
                         ->orderBy(['proc_date' => SORT_DESC])
                         ->all();
 

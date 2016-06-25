@@ -82,19 +82,34 @@ class PatientconsultantController extends ActiveController {
         $get = Yii::$app->getRequest()->get();
         if (!empty($get)) {
             $patient = PatPatient::getPatientByGuid($get['patient_id']);
+
+            $condition = [
+                'patient_id' => $patient->patient_id,
+            ];
+
+            if (isset($get['date'])) {
+                $condition = [
+                    'patient_id' => $patient->patient_id,
+                    'DATE(created_at)' => $get['date'],
+                ];
+            }
             $result = [];
             $data = PatConsultant::find()
                     ->tenant()
                     ->active()
                     ->status()
-                    ->andWhere(['patient_id' => $patient->patient_id])
+                    ->andWhere($condition)
                     ->groupBy('encounter_id')
                     ->orderBy(['encounter_id' => SORT_DESC])
                     ->all();
 
             foreach ($data as $key => $value) {
                 $details = PatConsultant::find()
-                        ->where(['patient_id' => $patient->patient_id, 'encounter_id' => $value->encounter_id])
+                        ->tenant()
+                        ->active()
+                        ->status()
+                        ->andWhere($condition)
+                        ->andWhere(['encounter_id' => $value->encounter_id])
                         ->orderBy(['consult_date' => SORT_DESC])
                         ->all();
 
