@@ -137,18 +137,32 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/getgenericlistbydrugclass?drug_class_id=' + $item.drug_class_id)
                     .success(function (response) {
                         $scope.generics = response.genericList;
+                        $scope.products = $scope.allproducts = response.productList;
                     }, function (x) {
                         $scope.errorData = "An Error has occured while loading generic!";
                     });
         }
 
+        $scope.setGeneric = function () {
+            result = $filter('filter')($scope.generics, {generic_id: $scope.addData.product.generic_id});
+            if(result.length > 0)
+                $scope.addData.generic = result[0];
+        }
+
         $scope.getProduct = function ($item, $model, $label) {
-            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/getproductlistbygeneric?generic_id=' + $item.generic_id)
-                    .success(function (response) {
-                        $scope.products = response.productList;
-                    }, function (x) {
-                        $scope.errorData = "An Error has occured while loading generic!";
-                    });
+            if(!$item)
+                $item = $scope.addData.generic;
+            
+            result = $filter('filter')($scope.allproducts, {generic_id: $item.generic_id});
+            if(result.length > 0)
+                $scope.products = result;
+            
+//            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/getproductlistbygeneric?generic_id=' + $item.generic_id)
+//                    .success(function (response) {
+//                        $scope.products = response.productList;
+//                    }, function (x) {
+//                        $scope.errorData = "An Error has occured while loading generic!";
+//                    });
         }
 
         $scope.data = {};

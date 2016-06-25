@@ -19,6 +19,9 @@ angular.module('app').factory('APIInterceptor', function ($localStorage, $rootSc
         },
         response: function(response) {
             $('.selectpicker').selectpicker('refresh');
+            $timeout(function () {
+                $('.selectpicker').selectpicker('refresh');
+            }, 3000);
             return response;
         },
         responseError: function (rejection) {

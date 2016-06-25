@@ -53,8 +53,64 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
 
             $scope.products = [];
             $scope.batches = [];
+            
+            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacysale')
+                    .success(function (saleList) {
+                        $scope.sales = saleList;
+                            $timeout(function () {
+                                $('.selectpicker').selectpicker('refresh');
+                            }, 1000);
+                    })
+                    .error(function () {
+                        $scope.errorData = "An Error has occured while loading saleList!";
+                    });
+        }
+        
+        $scope.getSaleReturnItems = function(){
+            $scope.saleItems = [];
+            result = $filter('filter')($scope.sales, {sale_id: $scope.data.sale_id});
+            if(result.length > 0){
+                $scope.data.sale_date = result[0].sale_date;
+                $scope.data.patient_id = result[0].patient_id;
+                $scope.data.patient_name = result[0].patient_name ? result[0].patient_name : '-';
+                $scope.data.mobile_no = result[0].mobile_no ? result[0].mobile_no : '-';
+                
+                angular.forEach(result[0].items, function(item, key){
+                    $scope.inserted = {
+                        full_name: item.product.full_name,
+                        batch_details: item.batch.batch_details,
+                        sale_quantity: item.quantity,
+                        quantity: 0,
+                        free_quantity: item.free_quantity,
+                        free_quantity_unit: item.free_quantity_unit,
+                        sale_ret_rate: item.sale_rate,
+                        discount_percent: item.discount_percent,
+                        discount_amount: item.discount_amount,
+                        vat_percent: item.vat_percent,
+                        vat_amount: item.vat_amount,
+                        total_amount: item.total_amount,
+                        product_id: item.product_id,
+                        sale_ret_amount: item.sale_amount,
+                        batch_no: item.batch.batch_no,
+                        batch_id: item.batch.batch_id,
+                        mrp: item.mrp,
+                        sale_item_id: item.sale_item_id,
+                        package_name: item.package_name,
+                    };
+                    $scope.saleItems.push($scope.inserted);
+                    
+                    $scope.updateRow(key);
+                });
+//                $scope.updatePurchaseReturnRate();
+            }
         }
 
+        $scope.checkMaxValue = function (data, max) {
+            if (max < data) {
+                return "Not greater than " + max;
+            }
+        };
+        
         //Get selected patient mobile no.
         $scope.getPatientMobileNo = function (id) {
             var patient_id = id;

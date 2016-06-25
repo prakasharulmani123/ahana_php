@@ -7,10 +7,30 @@
             {% include 'tpl/blocks/alert.html' %}
         </div>
         <div class="row">
-            <div class="col-sm-12" ng-init="data = {}; data.formtype = 'add';initForm();
-                            data.status = '1';">
-                            <form editable-form name="tableform" name="PurchaseReturnForm" class="form-horizontal form-validation" onaftersave="saveForm('add'); tableform.$show();" novalidate="" oncancel="cancel()" shown="true">
-                    <div ng-include="'tpl/pharmacy_purchase_return/_form.html'">
+            <div class="col-sm-12" ng-init="data = {};
+                        data.formtype = 'add
+                            ';
+                    
+                            initForm();
+                        data.status = '1';">
+                <form editable-form name="tableform" name="PurchaseReturnForm" class="form-horizontal form-validation" onaftersave="saveForm('add'); tableform.$show();" novalidate="" oncancel="cancel()" shown="true">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <label class="col-lg-2 control-label">Purchase Invoice No.</label>
+                                        <div class="col-lg-4">
+                                            <select class="form-control selectpicker" data-live-search="true" ng-model="data.purchase_id" ng-options="purchase.purchase_id as purchase.invoice_no for purchase in purchases | orderBy: invoice_no"  data-ng-change="getPurchaseReturnItems()">
+                                            <option value="">Select Purchase Invoice No.</option>
+                                        </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-include="'tpl/pharmacy_purchase_return/_form.html'" ng-show="data.purchase_id">
                         {% include 'tpl/pharmacy_purchase_return/_form.html' %}
                     </div>
 

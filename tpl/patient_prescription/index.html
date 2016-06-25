@@ -85,25 +85,31 @@
                                                                 </div>
                                                                 <div class="col-sm-3">
                                                                     <label> Generic </label>
-                                                                    <input autocomplete="off"
+                                                                    <select class="form-control" name="Generic" ng-model="addData.generic" ng-options="generic as generic.generic_name for generic in generics | filter:$viewValue" data-ng-change="getProduct(false, null, null)">
+                                                                        <option value="">Select Generic</option>
+                                                                    </select>
+<!--                                                                    <input autocomplete="off"
                                                                            placeholder="Generic"
                                                                            type="text"
                                                                            class="form-control"
                                                                            ng-model="addData.generic"
                                                                            typeahead-editable="false"
                                                                            typeahead="generic as generic.generic_name for generic in generics | filter:$viewValue"
-                                                                           typeahead-on-select="getProduct($item, $model, $label)" />
+                                                                           typeahead-on-select="getProduct($item, $model, $label)" />-->
                                                                 </div>
                                                                 <div class="col-sm-3">
                                                                     <label> Product</label>
-                                                                    <input autocomplete="off"
+                                                                    <select class="form-control" name="Generic" ng-model="addData.product" ng-options="product as product.full_name for product in products | filter:$viewValue" data-ng-change="setGeneric()">
+                                                                        <option value="">Select Product</option>
+                                                                    </select>
+<!--                                                                    <input autocomplete="off"
                                                                            placeholder="Product"
                                                                            type="text"
                                                                            class="form-control"
                                                                            ng-model="addData.product"
                                                                            typeahead-editable="false"
                                                                            typeahead="product as product.full_name for product in products | filter:$viewValue"
-                                                                           />
+                                                                           />-->
                                                                 </div>
                                                                 <div class="col-sm-3">
                                                                     <label> Freq</label>
@@ -129,7 +135,7 @@
                                                                 </div>
                                                                 <div class="col-sm-3">
                                                                     <label>No.of.Days </label>
-                                                                    <input autocomplete="off" type="text" ng-model="addData.number_of_days" class="form-control m-b" number-mask="" required>
+                                                                    <input autocomplete="off" type="text" ng-model="addData.number_of_days" class="form-control m-b" number-mask="">
                                                                 </div>
                                                                 <div class="col-sm-3">
                                                                     <label> </label>

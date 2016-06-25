@@ -11,7 +11,23 @@
                             data.payment_type = 'CA';
                             initForm();">
                 <form editable-form name="tableform" name="SaleReturnForm" class="form-horizontal form-validation" onaftersave="saveForm('add'); tableform.$show();" novalidate="" oncancel="cancel()" shown="true">
-                    <div ng-include="'tpl/pharmacy_sale_return/_form.html'">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <label class="col-lg-2 control-label">Sale Bill No.</label>
+                                        <div class="col-lg-4">
+                                            <select class="form-control selectpicker" data-live-search="true" ng-model="data.sale_id" ng-options="sale.sale_id as sale.bill_no for sale in sales | orderBy: invoice_no"  data-ng-change="getSaleReturnItems()">
+                                            <option value="">Select Bill No.</option>
+                                        </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-include="'tpl/pharmacy_sale_return/_form.html'" ng-show="data.sale_id">
                         {% include 'tpl/pharmacy_sale_return/_form.html' %}
                     </div>
                 </form>

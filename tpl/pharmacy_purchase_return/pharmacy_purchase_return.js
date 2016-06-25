@@ -42,7 +42,7 @@ app.controller('PurchaseReturnController', ['$rootScope', '$scope', '$timeout', 
                     $scope.loadForm();
                 } else {
                     $scope.data.invoice_date = moment().format('YYYY-MM-DD');
-                    $scope.addRow();
+//                    $scope.addRow();
                 }
                 $scope.products = [];
                 $scope.batches = [];
@@ -50,6 +50,56 @@ app.controller('PurchaseReturnController', ['$rootScope', '$scope', '$timeout', 
                 $scope.loadbar('hide');
 
             });
+            
+            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacypurchase')
+                    .success(function (purchaseList) {
+                        $scope.purchases = purchaseList;
+                            $timeout(function () {
+                                $('.selectpicker').selectpicker('refresh');
+                            }, 1000);
+                    })
+                    .error(function () {
+                        $scope.errorData = "An Error has occured while loading purchaseList!";
+                    });
+        }
+        
+        $scope.getPurchaseReturnItems = function(){
+            $scope.purchasereturnitems = [];
+            result = $filter('filter')($scope.purchases, {purchase_id: $scope.data.purchase_id});
+            if(result.length > 0){
+                $scope.data.supplier_id = result[0].supplier_id;
+                $scope.data.supplier_name = result[0].supplier.supplier_name;
+                $scope.data.purchase_date = result[0].invoice_date;
+                $scope.data.purchase_id = result[0].purchase_id;
+                
+                angular.forEach(result[0].items, function(item, key){
+                    $scope.inserted = {
+                        full_name: item.product.full_name,
+                        batch_details: item.batch.batch_details,
+                        purchase_quantity: item.quantity,
+                        quantity: 0,
+                        free_quantity: item.free_quantity,
+                        free_quantity_unit: item.free_quantity_unit,
+                        purchase_ret_rate: item.purchase_rate,
+                        discount_percent: item.discount_percent,
+                        discount_amount: item.discount_amount,
+                        vat_percent: item.vat_percent,
+                        vat_amount: item.vat_amount,
+                        total_amount: item.total_amount,
+                        product_id: item.product_id,
+                        purchase_ret_amount: item.purchase_amount,
+                        batch_no: item.batch.batch_no,
+                        batch_id: item.batch.batch_id,
+                        mrp: item.mrp,
+                        purchase_item_id: item.purchase_item_id,
+                        package_name: item.package_name,
+                    };
+                    $scope.purchasereturnitems.push($scope.inserted);
+                    
+                    $scope.updateRow(key);
+                });
+//                $scope.updatePurchaseReturnRate();
+            }
         }
 
         var changeTimer = false;
@@ -126,6 +176,12 @@ app.controller('PurchaseReturnController', ['$rootScope', '$scope', '$timeout', 
         $scope.checkAmount = function (data) {
             if (data <= 0) {
                 return "Not be 0";
+            }
+        };
+
+        $scope.checkMaxValue = function (data, max) {
+            if (max < data) {
+                return "Not greater than " + max;
             }
         };
 
@@ -341,12 +397,14 @@ app.controller('PurchaseReturnController', ['$rootScope', '$scope', '$timeout', 
 
                             $scope.purchasereturnitems = response.items;
                             angular.forEach($scope.purchasereturnitems, function (item, key) {
-                                angular.extend($scope.purchasereturnitems[key], {full_name: item.product.full_name, batch_no: item.batch.batch_no, batch_details: item.batch.batch_details, expiry_date: item.batch.expiry_date});
+                                angular.extend($scope.purchasereturnitems[key], {full_name: item.product.full_name, batch_no: item.batch.batch_no, batch_details: item.batch.batch_details, expiry_date: item.batch.expiry_date, purchase_quantity: item.purchase_quantity});
                                 $timeout(function () {
                                     $scope.showOrHideProductBatch('hide', key);
                                 });
                             });
 
+                            $scope.data.supplier_name = $scope.data.supplier.supplier_name;
+                        
                             $timeout(function () {
                                 delete $scope.data.supplier;
                                 delete $scope.data.items;

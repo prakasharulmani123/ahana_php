@@ -3,7 +3,7 @@
         <div class="form-group">
             <label class="col-lg-4 control-label">Country *</label>
             <div class="col-lg-8">
-                <select class="form-control" name="Country" ng-model="data.country_id" ng-options="country.value as country.label for country in countries | orderBy: label" data-ng-change="updateState()" required>
+                <select class="form-control" name="Country" ng-model="data.country_id" ng-options="country.value as country.label for country in countries | orderBy: label" data-ng-change="updateState()">
                     <option value="">Select Country</option>
                 </select>
             </div>
@@ -12,7 +12,7 @@
         <div class="form-group">
             <label class="col-lg-4 control-label">State *</label>
             <div class="col-lg-8">
-                <select class="form-control" name="State" ng-model="data.state_id" ng-options="state.value as state.label for state in availableStates | orderBy: label" data-ng-change="updateCity()" required>
+                <select class="form-control" name="State" ng-model="data.state_id" ng-options="state.value as state.label for state in availableStates | orderBy: label" data-ng-change="updateCity()">
                     <option value="">Select State</option>
                 </select>
             </div>

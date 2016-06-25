@@ -88,7 +88,13 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 $scope.addRow();
             }
 
-            $scope.products = [];
+            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct')
+                    .success(function (products) {
+                        $scope.products = products;
+                    })
+                    .error(function () {
+                        $scope.errorData = "An Error has occured while loading brand!";
+                    });
             $scope.batches = [];
         }
 

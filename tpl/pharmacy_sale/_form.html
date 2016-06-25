@@ -36,7 +36,7 @@
                                 <div class="line line-dashed b-b line-lg "></div>-->
 
                                 <div class="form-group">
-                                    <label class="col-lg-4 control-label">Consultant *</label>
+                                    <label class="col-lg-4 control-label">Consultant </label>
                                     <div class="col-lg-8">
                                         <select class="form-control selectpicker" data-live-search="true" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors | orderBy: fullname" data-ng-change="changeGetConsultant()">
                                             <option value="">Select Consultant</option>
@@ -127,9 +127,12 @@
                             <tr ng-repeat="(key, saleitem) in saleItems">
                                 <td>
                                     <div id="i_full_name_{{key}}">
-                                        <span editable-text="saleitem.full_name" e-class="fullname" e-name="full_name" e-form="tableform" onbeforesave="checkInput($data, key, $index)" e-typeahead="product as product.full_name for product in products | filter:$viewValue | limitTo:8" e-typeahead-editable="false" e-typeahead-on-select="updateProductRow($item, $model, $label, key)" e-ng-keyup="getProduct(tableform)" e-ng-keydown="getProduct(tableform)" e-autocomplete="off" data-e-id="full_name" e-name='full_name'>
-                                            {{ saleitem.full_name || 'empty' }}
+                                        <span editable-select="saleitem.full_name" e-form="tableform" onbeforesave="checkInput($data, key, $index)" e-ng-options="product as product.full_name for product in products | filter:$viewValue | limitTo:8" e-ng-change="updateProductRow($data, $model, $label, key)" data-e-id="full_name" e-name='full_name'>
+                                            {{ showBatch(saleitem) }}
                                         </span>
+<!--                                        <span editable-text="saleitem.full_name" e-class="fullname" e-name="full_name" e-form="tableform" onbeforesave="checkInput($data, key, $index)" e-typeahead="product as product.full_name for product in products | filter:$viewValue | limitTo:8" e-typeahead-editable="false" e-typeahead-on-select="updateProductRow($item, $model, $label, key)" e-ng-keyup="getProduct(tableform)" e-ng-keydown="getProduct(tableform)" e-autocomplete="off" data-e-id="full_name" e-name='full_name'>
+                                            {{ saleitem.full_name || 'empty' }}
+                                        </span>-->
                                     </div>
                                     <span id="t_full_name_{{key}}" class="hide">
                                         {{ saleitem.full_name || 'empty' }}
