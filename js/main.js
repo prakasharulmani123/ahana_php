@@ -122,12 +122,13 @@ angular.module('app')
                 $scope.loadbar = function (mode) {
                     if (mode == 'show') {
                         $('.butterbar').removeClass('hide').addClass('active');
-                        $('.save-btn,.get-report,.search-btn,.save-print,.save-future').attr('disabled', true).html("<i class='fa fa-spin fa-spinner'></i> Please Wait...");
+                        $('.save-btn,.get-report,.search-btn,.save-print,.save-future,.save-btn-1').attr('disabled', true).html("<i class='fa fa-spin fa-spinner'></i> Please Wait...");
                     } else if (mode == 'hide') {
                         $('.butterbar').removeClass('active').addClass('hide');
                         $('.save-btn').attr('disabled', false).html("Save");
                         $('.get-report').attr('disabled', false).html("Get Report");
                         $('.search-btn').attr('disabled', false).html("Search");
+                        $('.save-btn-1').attr('disabled', false).html("<i class='fa fa-check'></i> Save");
                         $('.save-print').attr('disabled', false).html("<i class='fa fa-print'></i> Save and Print Bill");
                         $('.save-future').attr('disabled', false).html("Save & Future Appointment");
                     }
@@ -345,7 +346,7 @@ angular.module('app')
                     });
                 }
 
-                $scope.openUploadForm = function () {
+                $scope.openUploadForm = function (block) {
                     var modalInstance = $modal.open({
                         templateUrl: 'tpl/modal_form/modal.patient_image.html',
                         controller: "PatientImageController",
@@ -353,6 +354,9 @@ angular.module('app')
                         resolve: {
                             scope: function () {
                                 return $scope;
+                            },
+                            block: function () {
+                                return block;
                             },
                         }
                     });
@@ -426,8 +430,9 @@ angular.module('app').factory('fileUpload', ['$http', function ($http) {
     }]);
 
 //Patient image upload
-angular.module('app').controller('PatientImageController', ['scope', '$scope', '$modalInstance', '$rootScope', '$timeout', 'fileUpload', '$state', '$http', function (scope, $scope, $modalInstance, $rootScope, $timeout, fileUpload, $state, $http) {
+angular.module('app').controller('PatientImageController', ['scope', '$scope', '$modalInstance', '$rootScope', '$timeout', 'fileUpload', '$state', '$http', 'block', function (scope, $scope, $modalInstance, $rootScope, $timeout, fileUpload, $state, $http, block) {
         $scope.fileUpload = fileUpload;
+        $scope.block = block;
 
         $scope.uploadFile = function () {
             var file = $scope.myFile;
@@ -452,7 +457,7 @@ angular.module('app').controller('PatientImageController', ['scope', '$scope', '
 
         $scope.$watch('picture', function (newValue, oldValue) {
             if (newValue != '') {
-                $scope.uploadPatientPicture(newValue);
+                $scope.uploadPatientPicture(newValue, 'topbar');
             }
         }, true);
 
@@ -476,15 +481,20 @@ angular.module('app').controller('PatientImageController', ['scope', '$scope', '
         }, 1000, false);
 
         //Upload file in database
-        $scope.uploadPatientPicture = function (image_data) {
+        $scope.uploadPatientPicture = function (image_data, block) {
             $http({
                 method: "POST",
                 url: $rootScope.IRISOrgServiceUrl + '/patient/uploadimage?patient_id=' + $state.params.id,
-                data: {file_data: image_data},
+                data: {file_data: image_data, block: block},
             }).success(
                     function (response) {
                         if (response.success) {
-                            scope.patientObj.patient_image = response.patient.patient_image;
+                            if(block == 'topbar')
+                                scope.patientObj.patient_image = response.patient.patient_image;
+                            
+                            if(block == 'register'){
+                                scope.$broadcast('register_patient_image', response.file);
+                            }
                             $scope.cancel();
                         } else {
                             $scope.errorData2 = response.message;

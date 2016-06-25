@@ -88,28 +88,28 @@
                                                                     <select class="form-control" name="Generic" ng-model="addData.generic" ng-options="generic as generic.generic_name for generic in generics | filter:$viewValue" data-ng-change="getProduct(false, null, null)">
                                                                         <option value="">Select Generic</option>
                                                                     </select>
-<!--                                                                    <input autocomplete="off"
-                                                                           placeholder="Generic"
-                                                                           type="text"
-                                                                           class="form-control"
-                                                                           ng-model="addData.generic"
-                                                                           typeahead-editable="false"
-                                                                           typeahead="generic as generic.generic_name for generic in generics | filter:$viewValue"
-                                                                           typeahead-on-select="getProduct($item, $model, $label)" />-->
+                                                                    <!--                                                                    <input autocomplete="off"
+                                                                                                                                               placeholder="Generic"
+                                                                                                                                               type="text"
+                                                                                                                                               class="form-control"
+                                                                                                                                               ng-model="addData.generic"
+                                                                                                                                               typeahead-editable="false"
+                                                                                                                                               typeahead="generic as generic.generic_name for generic in generics | filter:$viewValue"
+                                                                                                                                               typeahead-on-select="getProduct($item, $model, $label)" />-->
                                                                 </div>
                                                                 <div class="col-sm-3">
                                                                     <label> Product</label>
                                                                     <select class="form-control" name="Generic" ng-model="addData.product" ng-options="product as product.full_name for product in products | filter:$viewValue" data-ng-change="setGeneric()">
                                                                         <option value="">Select Product</option>
                                                                     </select>
-<!--                                                                    <input autocomplete="off"
-                                                                           placeholder="Product"
-                                                                           type="text"
-                                                                           class="form-control"
-                                                                           ng-model="addData.product"
-                                                                           typeahead-editable="false"
-                                                                           typeahead="product as product.full_name for product in products | filter:$viewValue"
-                                                                           />-->
+                                                                    <!--                                                                    <input autocomplete="off"
+                                                                                                                                               placeholder="Product"
+                                                                                                                                               type="text"
+                                                                                                                                               class="form-control"
+                                                                                                                                               ng-model="addData.product"
+                                                                                                                                               typeahead-editable="false"
+                                                                                                                                               typeahead="product as product.full_name for product in products | filter:$viewValue"
+                                                                                                                                               />-->
                                                                 </div>
                                                                 <div class="col-sm-3">
                                                                     <label> Freq</label>
@@ -117,7 +117,7 @@
                                                                     <input autocomplete="off" 
                                                                            type="text" 
                                                                            name="masked" 
-                                                                           ui-mask="9-9-9" 
+                                                                           ui-mask="9-9-9-9" 
                                                                            ng-model="addData.frequency" 
                                                                            model-view-value="true" 
                                                                            class="form-control m-b"
@@ -219,7 +219,7 @@
                                                             <span editable-text="item.frequency"
                                                                   e-class="form-control m-b"
                                                                   e-name="masked" 
-                                                                  e-ui-mask="9-9-9"
+                                                                  e-ui-mask="9-9-9-9"
                                                                   e-model-view-value="true"
                                                                   e-form="tableform" 
                                                                   e-typeahead="frequency as frequency.freq_name for frequency in frequencies | filter:$viewValue"
@@ -271,9 +271,9 @@
                                                             getVisit();" required>
                                         </div>
                                         <div class="col-sm-3">
-                                            <button type="submit" class="btn m-b-xs  btn-success save-btn"> <i class="fa fa-check"></i> Save </button>
+                                            <button class="btn m-b-xs  btn-success save-btn-1" ng-click="getBtnId('save')"> <i class="fa fa-check"></i> Save </button>
                                             &nbsp;
-                                            <button type="button" class="btn m-b-xs  btn-dark"> <i class="fa fa-print"></i> Print </button>
+                                            <button class="btn m-b-xs  btn-dark save-print" ng-click="getBtnId('print')"> <i class="fa fa-print"></i> Save & Print </button>
                                             &nbsp; </div>
                                     </div>
                                 </footer>
@@ -332,6 +332,44 @@
             </div>
         </div>
     </div>
+
+    <!--Print Bill-->
+    <div id="Getprintval" style="display: block">
+        <table border="1" class="table-border">
+            <thead>
+                <tr>
+                    <th colspan="3">
+                        <img width="60" height="60" alt="AHANA HOSPITALS" src="css/images/ah-logo.png">
+                    </th>
+                    <th colspan="2"><io-barcode code="{{patientObj.patient_int_code}}" type="CODE128B"></io-barcode><br />{{patientObj.patient_int_code}}</th>
+            </tr>
+            <tr>
+                <th colspan="3">
+                    {{patientObj.fullname}} ({{patientObj.patient_age}}y)
+                </th>
+                <th colspan="2 width="70" align="center">
+                    date : {{current_time}}
+                </th>
+            </tr>
+            <tr>
+                <th width="28" align="center" valign="middle" class="freq-bg">Description</th>
+                <th width="28" align="center" valign="middle" class="freq-bg"><img src="img/weather1.png"  alt="" /></th>
+                <th width="28" align="center" valign="middle" class="freq-bg"><img src="img/weather2.png"  alt="" /></th>
+                <th width="28" align="center" valign="middle" class="freq-bg"><img src="img/weather3.png"  alt="" /></th>
+                <th width="28" align="center" valign="middle" class="freq-bg"><img src="img/weather4.png"  alt="" /></th>
+            </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="(key, item) in prescriptionItems2">
+                    <td>{{ item.product_name || 'empty' }}<br />{{ item.number_of_days || 'empty' }}</td>
+                    <td>{{ getFrequencyExists(item.frequency, 0)}}</td>
+                    <td>{{ getFrequencyExists(item.frequency, 1)}}</td>
+                    <td>{{ getFrequencyExists(item.frequency, 2)}}</td>
+                    <td>{{ getFrequencyExists(item.frequency, 3)}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>     
 </div>
 <script>
     $(document).ready(function () {

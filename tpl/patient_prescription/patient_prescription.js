@@ -145,18 +145,18 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
         $scope.setGeneric = function () {
             result = $filter('filter')($scope.generics, {generic_id: $scope.addData.product.generic_id});
-            if(result.length > 0)
+            if (result.length > 0)
                 $scope.addData.generic = result[0];
         }
 
         $scope.getProduct = function ($item, $model, $label) {
-            if(!$item)
+            if (!$item)
                 $item = $scope.addData.generic;
-            
+
             result = $filter('filter')($scope.allproducts, {generic_id: $item.generic_id});
-            if(result.length > 0)
+            if (result.length > 0)
                 $scope.products = result;
-            
+
 //            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/getproductlistbygeneric?generic_id=' + $item.generic_id)
 //                    .success(function (response) {
 //                        $scope.products = response.productList;
@@ -302,6 +302,10 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 }
             });
 
+            /* For print bill */
+            $scope.data2 = _that.data;
+            $scope.prescriptionItems2 = $scope.data.prescriptionItems;
+
             $scope.loadbar('show');
             $http({
                 method: method,
@@ -313,11 +317,14 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         $scope.loadbar('hide');
 
                         if (response.success) {
+                            $scope.current_time = response.date;
                             $scope.successMessage = succ_msg;
                             $scope.data = {prescriptionItems: []};
-//                            $timeout(function () {
+
+                            $timeout(function () {
+                                save_success();
 //                                $state.go('patient.prescription', {id: $state.params.id});
-//                            }, 1000)
+                            }, 1000)
                         } else {
                             $scope.errorData = response.message;
                         }
@@ -330,6 +337,26 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 else
                     $scope.errorData = data.message;
             });
+        }
+
+        $scope.getBtnId = function (btnid) {
+            $scope.btnid = btnid;
+        }
+
+        var save_success = function () {
+            if ($scope.btnid == "print")
+            {
+                var innerContents = document.getElementById("Getprintval").innerHTML;
+                var popupWinindow = window.open('', '_blank', 'width=600,height=700,scrollbars=no,menubar=no,toolbar=no,location=no,status=no,titlebar=no');
+                popupWinindow.document.open();
+                popupWinindow.document.write('<html><head><link href="css/print.css" rel="stylesheet" type="text/css" /></head><body onload="window.print()">' + innerContents + '</html>');
+                popupWinindow.document.close();
+            }
+        }
+
+        $scope.getFrequencyExists = function (freq, key) {
+            var result = freq.split('-');
+            return result[key];
         }
 
         $scope.removeItem = function (item) {
@@ -432,7 +459,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.pres_status = 'current';
         $scope.prescriptionStauts = function (status) {
             $scope.pres_status = status;
-            if(status == 'prev')
+            if (status == 'prev')
                 $scope.loadPrevPrescriptionsList($scope.enc.selected.encounter_id);
         }
 
@@ -513,5 +540,4 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 elem.animate({scrollTop: elem.prop("scrollHeight")}, 1000);
             }
         }
-
     }]);

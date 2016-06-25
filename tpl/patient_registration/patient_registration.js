@@ -4,6 +4,10 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
         $scope.app.settings.patientSideMenu = false;
         $scope.app.settings.patientContentClass = 'app-content app-content3';
         $scope.app.settings.patientFooterClass = 'app-footer app-footer3';
+        
+        $scope.$on('register_patient_image', function(event, img) {
+            $scope.data.PatPatient.patient_image = img; 
+        });
 
         //Index Page
         $scope.loadPatientsList = function () {
@@ -66,6 +70,10 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
             $rootScope.commonService.GetPatientCateogryList('', '1', false, function (response) {
                 $scope.categories = response.patientcategoryList;
             });
+        }
+        
+        $scope.back = function(){
+            window.history.back();
         }
 
         $scope.updateState2 = function () {

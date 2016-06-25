@@ -25,7 +25,8 @@ angular.module('app', [
     'cfp.hotkeys',
     'file-model',
     'ngImgCrop',
-    'ngXslt'
+    'ngXslt',
+    'io-barcode'
 //    'restangular'
 //    'LocalStorageModule',
 ]);
