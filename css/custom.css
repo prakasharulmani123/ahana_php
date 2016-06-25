@@ -193,3 +193,9 @@ video {
     tfoot { display:table-footer-group !important}
 
 }
+
+.not_yet_discharge{
+    color: #c0c0c0 !important;
+    font-weight: 700;
+    text-align: center;
+}

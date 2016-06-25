@@ -25,7 +25,6 @@
             </div>
         </div>
 
-
         <div ng-show="isShown('bill_summary')" id="bill_summary">
             <div class="bill-cont">
                 <div class="bill-header"> 
@@ -33,7 +32,7 @@
                     <div class="bill-heading"> <h1>BILLING SUMMARY</h1> </div>
                     <div id="company">
                         <div id="invoice">
-                            <h1>Bill No : <span> {{enc.selected.bill_no}} </span></h1>
+                            <h1 ng-show="enc.selected.bill_no != ''">Bill No : <span> {{enc.selected.bill_no}} </span></h1>
                             <div class="date">Report Genarated On : {{report_generated_date}}</div>
                         </div>
                     </div>
@@ -50,11 +49,11 @@
                                 <tr>
                                     <td align="left" valign="top">
                                         <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                                            <tr>
-                                                <td><strong>Hospital No</strong></td>
-                                                <td>:</td>
-                                                <td>22040</td>
-                                            </tr>
+                                            <!--                                            <tr>
+                                                                                            <td><strong>Hospital No</strong></td>
+                                                                                            <td>:</td>
+                                                                                            <td>22040</td>
+                                                                                        </tr>-->
                                             <tr>
                                                 <td><strong>Name</span></strong></td>
                                                 <td>:</td>
@@ -70,27 +69,27 @@
                                                 <td>:</td>
                                                 <td>{{app.patientDetail.patientSex}}</td>
                                             </tr>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                             <tr>
                                                 <td><strong>Admission Date</strong></td>
                                                 <td>:</td>
                                                 <td>{{enc.selected.encounter_date| moment:'DD/MM/YYYY - hh:mm A'}}</td>
                                             </tr>
-                                            <tr>
-                                                <td><strong>Discharge Date</span></strong></td>
+                                            <tr ng-show="enc.selected.discharge_date">
+                                                <td><strong>Discharge Date</strong></td>
                                                 <td>:</td>
                                                 <td>{{enc.selected.discharge_date| moment:'DD/MM/YYYY - hh:mm A'}}</td>
                                             </tr>
+                                        </table>
+                                    </td>
+                                    <td align="left" valign="top">
+                                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                             <tr>
                                                 <td><strong>Ward No</strong></td>
                                                 <td>:</td>
                                                 <td>{{patientObj.current_room}}</td>
                                             </tr>
                                             <tr>
-                                                <td><strong>No.ofDays</strong></td>
+                                                <td><strong>Stay Duration</strong></td>
                                                 <td>:</td>
                                                 <td>{{enc.selected.stay_duration}}</td>
                                             </tr>
@@ -101,6 +100,12 @@
                                                     <span id="ReportViewer_ReportViewer2">
                                                         {{patientObj.consultant_name}}
                                                     </span>
+                                                </td>
+                                            </tr>
+                                            <tr ng-hide="enc.selected.discharge_date">
+                                                <td colspan="3" rowspan="2"> 
+                                                    <br>
+                                                    <h2 class="not_yet_discharge">NOT YET <br> DISCHARGED</h2>
                                                 </td>
                                             </tr>
                                         </table>
@@ -149,11 +154,23 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td>Discount :</td>
+                                <td>Room Discount :</td>
                                 <td>
                                     {{enc.selected.concession_amount| number:2}}
                                 </td>
                             </tr>
+                            <tr>
+                                <td>Other Discount :</td>
+                                <td>
+                                    {{billing.total.concession|| "0" | number:2}}
+                                </td>
+                            </tr>
+                            <!--                            <tr>
+                                                            <td>Total Discount :</td>
+                                                            <td>
+                                                                {{billing.discount = billing.total.concession + parseFloat(enc.selected.concession_amount) | number:2}}
+                                                            </td>
+                                                        </tr>-->
                             <tr>
                                 <td>NET TOTAL :</td>
                                 <td>{{(billing.total.price + recurr_billing.total.recurring_total) - billing.total.advance_charge - enc.selected.concession_amount| number:2}}</td>
@@ -161,7 +178,7 @@
                         </tfoot>
                     </table>
 
-                    <div id="notices">
+<!--                    <div id="notices">
                         <div></div>
                         <div class="notice">
                             <span id="ReportViewer_ReportViewer3">
@@ -172,7 +189,7 @@
                                 Ph :{{app.org_mobile}}
                             </span>
                         </div>
-                    </div>
+                    </div>-->
                 </main>
             </div>
         </div>
@@ -201,11 +218,11 @@
                                 <tr>
                                     <td align="left" valign="top">
                                         <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                                            <tr>
-                                                <td><strong>Hospital No</strong></td>
-                                                <td>:</td>
-                                                <td>22040</td>
-                                            </tr>
+                                            <!--                                            <tr>
+                                                                                            <td><strong>Hospital No</strong></td>
+                                                                                            <td>:</td>
+                                                                                            <td>22040</td>
+                                                                                        </tr>-->
                                             <tr>
                                                 <td><strong>Name</span></strong></td>
                                                 <td>:</td>
@@ -221,27 +238,28 @@
                                                 <td>:</td>
                                                 <td>{{app.patientDetail.patientSex}}</td>
                                             </tr>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                             <tr>
                                                 <td><strong>Admission Date</strong></td>
                                                 <td>:</td>
                                                 <td>{{enc.selected.encounter_date| moment:'DD/MM/YYYY - hh:mm A'}}</td>
                                             </tr>
-                                            <tr>
+                                            <tr ng-show="enc.selected.discharge_date">
                                                 <td><strong>Discharge Date</span></strong></td>
                                                 <td>:</td>
                                                 <td>{{enc.selected.discharge_date| moment:'DD/MM/YYYY - hh:mm A'}}</td>
                                             </tr>
+                                        </table>
+                                    </td>
+                                    <td align="left" valign="top">
+                                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+
                                             <tr>
                                                 <td><strong>Ward No</strong></td>
                                                 <td>:</td>
                                                 <td>{{patientObj.current_room}}</td>
                                             </tr>
                                             <tr>
-                                                <td><strong>No.of Days</strong></td>
+                                                <td><strong>Stay Duration</strong></td>
                                                 <td>:</td>
                                                 <td>{{enc.selected.stay_duration}}</td>
                                             </tr>
@@ -258,6 +276,12 @@
                                                     <span id="ReportViewer_ReportViewer2">
                                                         {{patientObj.consultant_name}}
                                                     </span>
+                                                </td>
+                                            </tr>
+                                            <tr ng-hide="enc.selected.discharge_date">
+                                                <td colspan="3" rowspan="2"> 
+                                                    <br>
+                                                    <h2 class="not_yet_discharge">NOT YET <br> DISCHARGED</h2>
                                                 </td>
                                             </tr>
                                         </table>
@@ -337,8 +361,8 @@
                             <tr ng-init="detailed_billing.total.net_step_1_total = detailed_recurr_billing.total.recurring_total" ng-repeat="(key, row) in procedures">
                                 <td class="desc">{{row.category}}</td>
                                 <td align="center" class="unit" ng-init="
-                                    detailed_non_billing.total.charge = detailed_non_billing.total.charge + parseFloat(row.total_charge);
-                                    detailed_billing.total.procedure_net_total = detailed_recurr_billing.total.recurring_total + parseFloat(row.net_amount);
+                                            detailed_non_billing.total.charge = detailed_non_billing.total.charge + parseFloat(row.total_charge);
+                                            detailed_billing.total.procedure_net_total = detailed_recurr_billing.total.recurring_total + parseFloat(row.net_amount);
                                     ">{{row.total_charge| number:2}}</td>
                                 <td class="qty">&nbsp;</td>
                                 <td align="center" class="total">
@@ -348,13 +372,13 @@
                             <tr ng-if="!detailed_billing.total.procedure_net_total">
                                 <td colspan="4" ng-init="detailed_billing.total.procedure_net_total = detailed_recurr_billing.total.recurring_total"></td>
                             </tr>
-                            
+
                             <!----Professional charges--->
                             <tr ng-init="detailed_billing.total.net_step_2_total = detailed_billing.total.procedure_net_total;" ng-repeat="(key, row) in consultants">
-                                <td class="desc">{{row.category}}</td>
+                                <td class="desc">{{row.category}} ({{row.headers}})</td>
                                 <td align="center" class="unit" ng-init="
-                                    detailed_non_billing.total.charge = detailed_non_billing.total.charge + parseFloat(row.total_charge);
-                                    detailed_billing.total.consultant_net_total = detailed_billing.total.procedure_net_total + parseFloat(row.net_amount);
+                                            detailed_non_billing.total.charge = detailed_non_billing.total.charge + parseFloat(row.total_charge);
+                                            detailed_billing.total.consultant_net_total = detailed_billing.total.procedure_net_total + parseFloat(row.net_amount);
                                     ">{{row.total_charge| number:2}}</td>
                                 <td class="qty">&nbsp;</td>
                                 <td align="center" class="total">
@@ -364,13 +388,13 @@
                             <tr ng-if="!detailed_billing.total.consultant_net_total">
                                 <td colspan="4" ng-init="detailed_billing.total.consultant_net_total = detailed_billing.total.procedure_net_total"></td>
                             </tr>
-                            
+
                             <!----other charges--->
                             <tr ng-init="detailed_billing.total.net_step_3_total = detailed_billing.total.consultant_net_total" ng-repeat="(key, row) in other_charges">
                                 <td class="desc">{{row.category}}</td>
                                 <td align="center" class="unit" ng-init="
-                                    detailed_non_billing.total.charge = detailed_non_billing.total.charge + parseFloat(row.total_charge);
-                                    detailed_billing.total.other_net_total = detailed_billing.total.consultant_net_total + parseFloat(row.net_amount);
+                                            detailed_non_billing.total.charge = detailed_non_billing.total.charge + parseFloat(row.total_charge);
+                                            detailed_billing.total.other_net_total = detailed_billing.total.consultant_net_total + parseFloat(row.net_amount);
                                     ">{{row.total_charge| number:2}}</td>
                                 <td class="qty">&nbsp;</td>
                                 <td align="center" class="total">
@@ -380,7 +404,7 @@
                             <tr ng-if="!detailed_billing.total.other_net_total">
                                 <td colspan="4" ng-init="detailed_billing.total.other_net_total = detailed_billing.total.consultant_net_total"></td>
                             </tr>
-                            
+
                             <tr class="bn">
                                 <td align="right" class="unit"><strong>Sub Total</strong></td>
                                 <td align="center" class="unit bb"><strong>{{detailed_non_billing.total.charge| number:2}}</strong></td>
@@ -411,8 +435,8 @@
                                 <td class="desc">{{row.headers}}</td>
                                 <td class="unit">&nbsp;</td>
                                 <td align="center" class="qty" ng-init="
-                                    detailed_non_billing.total.adv_charge = detailed_non_billing.total.adv_charge + parseFloat(row.total_charge);
-                                    detailed_billing.total.advance_net_total = detailed_billing.total.other_net_total - parseFloat(row.net_amount);
+                                            detailed_non_billing.total.adv_charge = detailed_non_billing.total.adv_charge + parseFloat(row.total_charge);
+                                            detailed_billing.total.advance_net_total = detailed_billing.total.other_net_total - parseFloat(row.net_amount);
                                     ">{{row.total_charge| number:2}}</td>
                                 <td align="center" class="total">
                                     {{(detailed_billing.total.net_step_4_total - row.net_amount)| number:2}}
@@ -427,13 +451,35 @@
                             </tr>
                         </tbody>
                         <tfoot>
+                            <tr>
+                                <td colspan="4">GRAND TOTAL :</td>
+                                <td>{{(billing.total.price + recurr_billing.total.recurring_total) | number:2}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">ADVANCE :</td>
+                                <td>
+                                    <span ng-if="billing.total.advance_charge">{{billing.total.advance_charge| number:2}} </span>	
+                                    <span ng-if="!billing.total.advance_charge"> 0.00 </span>	
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">Room Discount :</td>
+                                <td>
+                                    {{enc.selected.concession_amount| number:2}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">Other Discount :</td>
+                                <td>
+                                    {{billing.total.concession|| "0" | number:2}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">NET TOTAL :</td>
+                                <td>{{(billing.total.price + recurr_billing.total.recurring_total) - billing.total.advance_charge - enc.selected.concession_amount| number:2}}</td>
+                            </tr>
                         </tfoot>
                     </table>
-
-                    <!--                    <div id="notices">
-                                            <div>NOTICE:</div>
-                                            <div class="notice">A finance charge of 1.5% will be made on unpaid balances after 30 days.</div>
-                                        </div>-->
                 </main>
             </div>
         </div>

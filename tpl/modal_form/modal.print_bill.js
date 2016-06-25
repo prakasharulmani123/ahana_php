@@ -6,6 +6,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
 //        
         $scope.report_generated_date = moment().format('DD/MM/YYYY');
         $scope.app = scope.app;
+        $scope.patientObj = scope.patientObj;
         $scope.billing = scope.billing;
         $scope.recurr_billing = scope.recurr_billing;
         $scope.recurring_charges = scope.recurring_charges;
@@ -13,6 +14,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
         $scope.consultants = scope.consultants;
         $scope.other_charges = scope.other_charges;
         $scope.advances = scope.advances;
+        $scope.enc = scope.enc;
 
         $scope.detailed_billing = {};
         $scope.detailed_recurr_billing = {};
