@@ -13,6 +13,8 @@ use yii\helpers\ArrayHelper;
  * @property integer $tenant_id
  * @property string $bill_no
  * @property integer $patient_id
+ * @property integer $sale_id
+ * @property string $patient_name
  * @property string $mobile_no
  * @property string $sale_date
  * @property string $total_item_sale_amount
@@ -30,6 +32,7 @@ use yii\helpers\ArrayHelper;
  *
  * @property CoTenant $tenant
  * @property PatPatient $patient
+ * @property PhaSale $sale
  * @property PhaSaleReturnItem[] $phaSaleReturnItems
  */
 class PhaSaleReturn extends RActiveRecord {
@@ -46,9 +49,9 @@ class PhaSaleReturn extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['patient_id', 'mobile_no', 'sale_date'], 'required'],
+            [['sale_date'], 'required'],
             [['tenant_id', 'patient_id', 'created_by', 'modified_by'], 'integer'],
-            [['sale_date', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
+            [['sale_date', 'created_at', 'modified_at', 'deleted_at', 'sale_id', 'patient_name'], 'safe'],
             [['total_item_sale_amount', 'total_item_discount_percent', 'total_item_discount_amount', 'total_item_amount', 'roundoff_amount', 'bill_amount'], 'number'],
             [['status'], 'string'],
             [['bill_no', 'mobile_no'], 'string', 'max' => 50]
@@ -98,6 +101,13 @@ class PhaSaleReturn extends RActiveRecord {
     /**
      * @return ActiveQuery
      */
+    public function getSale() {
+        return $this->hasOne(PhaSale::className(), ['sale_id' => 'sale_id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
     public function getPhaSaleReturnItems() {
         return $this->hasMany(PhaSaleReturnItem::className(), ['sale_ret_id' => 'sale_ret_id']);
     }
@@ -129,6 +139,12 @@ class PhaSaleReturn extends RActiveRecord {
             },
             'items' => function ($model) {
                 return (isset($model->phaSaleReturnItems) ? $model->phaSaleReturnItems : '-');
+            },
+            'sale_date' => function ($model) {
+                return (isset($model->sale) ? $model->sale->sale_date : '-');
+            },
+            'sale_bill_no' => function ($model) {
+                return (isset($model->sale) ? $model->sale->bill_no : '-');
             },
         ];
         $fields = array_merge(parent::fields(), $extend);

@@ -77,12 +77,16 @@ class PharmacysalereturnController extends ActiveController {
             $valid = $model->validate();
 
             foreach ($post['product_items'] as $key => $product_item) {
-                $item_model = new PhaSaleReturnItem();
-                $item_model->scenario = 'saveform';
-                $item_model->attributes = $product_item;
-                $valid = $item_model->validate() && $valid;
-                if (!$valid)
-                    break;
+                if($product_item['quantity'] > 0){
+                    $item_model = new PhaSaleReturnItem();
+                    $item_model->scenario = 'saveform';
+                    $item_model->attributes = $product_item;
+                    $valid = $item_model->validate() && $valid;
+                    if (!$valid)
+                        break;
+                }else{
+                    unset($post['product_items'][$key]);
+                }
             }
             //End
 

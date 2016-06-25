@@ -11,6 +11,7 @@ use yii\helpers\ArrayHelper;
  *
  * @property integer $purchase_ret_id
  * @property integer $tenant_id
+ * @property integer $purchase_id
  * @property string $purchase_ret_code
  * @property string $invoice_date
  * @property string $invoice_no
@@ -33,6 +34,7 @@ use yii\helpers\ArrayHelper;
  *
  * @property PhaSupplier $supplier
  * @property CoTenant $tenant
+ * @property PhaPurchase $purchase
  * @property PhaPurchaseReturnItem[] $phaPurchaseReturnItems
  */
 class PhaPurchaseReturn extends RActiveRecord
@@ -53,7 +55,7 @@ class PhaPurchaseReturn extends RActiveRecord
         return [
             [['invoice_date', 'invoice_no', 'supplier_id'], 'required'],
             [['tenant_id', 'supplier_id', 'created_by', 'modified_by'], 'integer'],
-            [['invoice_date', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
+            [['invoice_date', 'created_at', 'modified_at', 'deleted_at', 'purchase_id'], 'safe'],
             [['total_item_purchase_ret_amount', 'total_item_vat_amount', 'total_item_discount_amount', 'before_disc_amount', 'discount_percent', 'discount_amount', 'after_disc_amount', 'roundoff_amount', 'net_amount'], 'number'],
             [['status', 'total_item_purchase_ret_amount'], 'string'],
             [['purchase_ret_code', 'invoice_no'], 'string', 'max' => 50]
@@ -114,6 +116,14 @@ class PhaPurchaseReturn extends RActiveRecord
         return $this->hasMany(PhaPurchaseReturnItem::className(), ['purchase_ret_id' => 'purchase_ret_id']);
     }
     
+    /**
+     * @return ActiveQuery
+     */
+    public function getPurchase()
+    {
+        return $this->hasOne(PhaPurchase::className(), ['purchase_id' => 'purchase_id']);
+    }
+    
     public static function find() {
         return new PhaPurchaseReturnQuery(get_called_class());
     }
@@ -129,6 +139,12 @@ class PhaPurchaseReturn extends RActiveRecord
         $extend = [
             'supplier' => function ($model) {
                 return (isset($model->supplier) ? $model->supplier : '-');
+            },
+            'purchase_date' => function ($model) {
+                return (isset($model->purchase) ? $model->purchase->invoice_date : '-');
+            },
+            'purchase_invoice_no' => function ($model) {
+                return (isset($model->purchase) ? $model->purchase->invoice_no : '-');
             },
             'items' => function ($model) {
                 return (isset($model->phaPurchaseReturnItems) ? $model->phaPurchaseReturnItems : '-');

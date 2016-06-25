@@ -55,7 +55,7 @@ class PhaSale extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['consultant_id', 'sale_date'], 'required'],
+            [['sale_date'], 'required'],
             [['tenant_id', 'patient_id', 'consultant_id', 'created_by', 'modified_by'], 'integer'],
             [['sale_date', 'created_at', 'modified_at', 'deleted_at', 'encounter_id', 'patient_name'], 'safe'],
             [['payment_type', 'payment_status', 'status'], 'string'],

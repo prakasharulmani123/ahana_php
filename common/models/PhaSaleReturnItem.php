@@ -11,6 +11,7 @@ use yii\db\ActiveQuery;
  * @property integer $sale_ret_item_id
  * @property integer $tenant_id
  * @property integer $sale_ret_id
+ * @property integer $sale_item_id
  * @property integer $product_id
  * @property integer $batch_id
  * @property integer $quantity
@@ -51,7 +52,7 @@ class PhaSaleReturnItem extends RActiveRecord {
             [['tenant_id', 'sale_ret_id', 'product_id', 'batch_id', 'quantity', 'created_by', 'modified_by'], 'integer'],
             [['mrp', 'item_amount'], 'number'],
             [['status'], 'string'],
-            [['created_at', 'modified_at', 'deleted_at', 'expiry_date', 'batch_no'], 'safe'],
+            [['created_at', 'modified_at', 'deleted_at', 'expiry_date', 'batch_no', 'sale_item_id'], 'safe'],
             [['package_name'], 'string', 'max' => 255]
         ];
     }
@@ -107,6 +108,13 @@ class PhaSaleReturnItem extends RActiveRecord {
         return $this->hasOne(PhaProduct::className(), ['product_id' => 'product_id']);
     }
 
+    /**
+     * @return ActiveQuery
+     */
+    public function getSaleItem() {
+        return $this->hasOne(PhaSaleItem::className(), ['sale_item_id' => 'sale_item_id']);
+    }
+
     public static function find() {
         return new PhaSaleReturnItemQuery(get_called_class());
     }
@@ -115,6 +123,9 @@ class PhaSaleReturnItem extends RActiveRecord {
         $extend = [
             'product' => function ($model) {
                 return (isset($model->product) ? $model->product : '-');
+            },
+            'sale_quantity' => function ($model) {
+                return (isset($model->saleItem) ? $model->saleItem->quantity : '-');
             },
             'batch' => function ($model) {
                 return (isset($model->batch) ? $model->batch : '-');

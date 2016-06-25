@@ -11,6 +11,7 @@ use yii\db\ActiveQuery;
  * @property integer $purchase_ret_item_id
  * @property integer $tenant_id
  * @property integer $purchase_ret_id
+ * @property integer $purchase_item_id
  * @property integer $product_id
  * @property integer $batch_id
  * @property integer $quantity
@@ -60,7 +61,7 @@ class PhaPurchaseReturnItem extends RActiveRecord
             [['tenant_id', 'purchase_ret_id', 'product_id', 'batch_id', 'quantity', 'free_quantity', 'created_by', 'modified_by'], 'integer'],
             [['mrp', 'purchase_ret_rate', 'purchase_ret_amount', 'discount_percent', 'discount_amount', 'total_amount', 'vat_amount', 'vat_percent'], 'number'],
             [['status'], 'string'],
-            [['created_at', 'modified_at', 'deleted_at', 'expiry_date', 'batch_no','free_quantity_unit'], 'safe'],
+            [['created_at', 'modified_at', 'deleted_at', 'expiry_date', 'batch_no','free_quantity_unit', 'purchase_item_id'], 'safe'],
             [['package_name'], 'string', 'max' => 255],
             ['purchase_ret_rate', 'validateProductRate'],
             [['quantity', 'mrp', 'purchase_ret_rate', 'purchase_ret_amount', 'total_amount'], 'validateAmount'],
@@ -136,6 +137,14 @@ class PhaPurchaseReturnItem extends RActiveRecord
     /**
      * @return ActiveQuery
      */
+    public function getPurchaseItem()
+    {
+        return $this->hasOne(PhaPurchaseItem::className(), ['purchase_item_id' => 'purchase_item_id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
     public function getTenant()
     {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
@@ -149,6 +158,9 @@ class PhaPurchaseReturnItem extends RActiveRecord
         $extend = [
             'product' => function ($model) {
                 return (isset($model->product) ? $model->product : '-');
+            },
+            'purchase_quantity' => function ($model) {
+                return (isset($model->purchaseItem) ? $model->purchaseItem->quantity : '-');
             },
             'batch' => function ($model) {
                 return (isset($model->batch) ? $model->batch : '-');
