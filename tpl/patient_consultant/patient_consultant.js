@@ -37,11 +37,16 @@ app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', 
         $scope.app.settings.patientSideMenu = true;
         $scope.app.settings.patientContentClass = 'app-content patient_content ';
         $scope.app.settings.patientFooterClass = 'app-footer';
-        
+
         $scope.open = function ($event) {
             $event.preventDefault();
             $event.stopPropagation();
             $scope.opened = true;
+        };
+
+        $scope.disabled = function (date, mode) {
+            date = moment(date).format('YYYY-MM-DD');
+            return $.inArray(date, $scope.enabled_dates) === -1;
         };
 
         //Notifications
@@ -110,13 +115,14 @@ app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', 
             $scope.data = {};
         }
 
+        $scope.enabled_dates = [];
         $scope.loadPatConsultantsList = function (date) {
             $scope.isLoading = true;
             // pagination set up
             $scope.rowCollection = [];  // base collection
             $scope.itemsByPage = 10; // No.of records per page
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
-            
+
             if (typeof date == 'undefined') {
                 url = $rootScope.IRISOrgServiceUrl + '/patientconsultant/getpatconsultantsbyencounter?patient_id=' + $state.params.id;
             } else {
@@ -130,6 +136,15 @@ app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', 
                         $scope.isLoading = false;
                         $scope.rowCollection = patientconsultants.result;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
+
+                        angular.forEach($scope.rowCollection, function (row) {
+                            angular.forEach(row.all, function (all) {
+                                var result = $filter('filter')($scope.enabled_dates, moment(all.created_at).format('YYYY-MM-DD'));
+                                if (result.length == 0)
+                                    $scope.enabled_dates.push(moment(all.created_at).format('YYYY-MM-DD'));
+                            });
+                        });
+                        $scope.$broadcast('refreshDatepickers');
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading patient consultants!";

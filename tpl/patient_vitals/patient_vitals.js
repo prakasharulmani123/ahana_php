@@ -1,14 +1,19 @@
-app.controller('VitalsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', function ($rootScope, $scope, $timeout, $http, $state) {
+app.controller('VitalsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$filter', function ($rootScope, $scope, $timeout, $http, $state, $filter) {
 
         $scope.app.settings.patientTopBar = true;
         $scope.app.settings.patientSideMenu = true;
         $scope.app.settings.patientContentClass = 'app-content patient_content ';
         $scope.app.settings.patientFooterClass = 'app-footer';
-        
+
         $scope.open = function ($event) {
             $event.preventDefault();
             $event.stopPropagation();
             $scope.opened = true;
+        };
+
+        $scope.disabled = function (date, mode) {
+            date = moment(date).format('YYYY-MM-DD');
+            return $.inArray(date, $scope.enabled_dates) === -1;
         };
 
         $scope.isPatientHaveActiveEncounter = function (callback) {
@@ -33,13 +38,14 @@ app.controller('VitalsController', ['$rootScope', '$scope', '$timeout', '$http',
         }
 
         //Index Page
+        $scope.enabled_dates = [];
         $scope.loadPatVitalsList = function (date) {
             $scope.isLoading = true;
             // pagination set up
             $scope.rowCollection = [];  // base collection
             $scope.itemsByPage = 10; // No.of records per page
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
-            
+
             if (typeof date == 'undefined') {
                 url = $rootScope.IRISOrgServiceUrl + '/patientvitals/getpatientvitals?patient_id=' + $state.params.id;
             } else {
@@ -53,6 +59,13 @@ app.controller('VitalsController', ['$rootScope', '$scope', '$timeout', '$http',
                         $scope.isLoading = false;
                         $scope.rowCollection = vitals.result;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
+
+                        angular.forEach($scope.rowCollection, function (row) {
+                            var result = $filter('filter')($scope.enabled_dates, moment(row.vital_time).format('YYYY-MM-DD'));
+                            if (result.length == 0)
+                                $scope.enabled_dates.push(moment(row.vital_time).format('YYYY-MM-DD'));
+                        });
+                        $scope.$broadcast('refreshDatepickers');
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading patientvital!";
@@ -65,7 +78,7 @@ app.controller('VitalsController', ['$rootScope', '$scope', '$timeout', '$http',
         $scope.ctrl.expandAll = function (expanded) {
             $scope.$broadcast('onExpandAll', {expanded: expanded});
         };
-        
+
         $scope.initForm = function () {
             $scope.data = {};
             $scope.data.vital_time = moment().format('YYYY-MM-DD HH:mm:ss');

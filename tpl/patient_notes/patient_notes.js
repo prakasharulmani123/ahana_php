@@ -11,10 +11,10 @@ app.controller('NotesController', ['$rootScope', '$scope', '$timeout', '$http', 
             $scope.opened = true;
         };
 
-//        $scope.disabled = function (date, mode) {
-//            date = moment(date).format('YYYY-MM-DD');
-//            return $.inArray(date, $scope.enabled_dates) === -1;
-//        };
+        $scope.disabled = function (date, mode) {
+            date = moment(date).format('YYYY-MM-DD');
+            return $.inArray(date, $scope.enabled_dates) === -1;
+        };
 
         //Notifications
         $scope.assignNotifications();
@@ -43,6 +43,7 @@ app.controller('NotesController', ['$rootScope', '$scope', '$timeout', '$http', 
         }
 
 //        //Index Page
+        $scope.enabled_dates = [];
         $scope.loadPatNotesList = function (date) {
             $scope.isLoading = true;
             // pagination set up
@@ -63,11 +64,10 @@ app.controller('NotesController', ['$rootScope', '$scope', '$timeout', '$http', 
                         $scope.rowCollection = notes.result;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
 
-                        $scope.enabled_dates = [];
                         angular.forEach($scope.rowCollection, function (row) {
                             angular.forEach(row.all, function (all) {
                                 var result = $filter('filter')($scope.enabled_dates, moment(all.created_at).format('YYYY-MM-DD'));
-                                if(result.length == 0)
+                                if (result.length == 0)
                                     $scope.enabled_dates.push(moment(all.created_at).format('YYYY-MM-DD'));
                             });
                         });

@@ -37,11 +37,16 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
         $scope.app.settings.patientSideMenu = true;
         $scope.app.settings.patientContentClass = 'app-content patient_content ';
         $scope.app.settings.patientFooterClass = 'app-footer';
-        
+
         $scope.open_date = function ($event) {
             $event.preventDefault();
             $event.stopPropagation();
             $scope.opened_date = true;
+        };
+
+        $scope.disabled = function (date, mode) {
+            date = moment(date).format('YYYY-MM-DD');
+            return $.inArray(date, $scope.enabled_dates) === -1;
         };
 
         //Notifications
@@ -79,6 +84,7 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
             $scope.data = {};
         }
 
+        $scope.enabled_dates = [];
         $scope.loadProceduresList = function (date) {
             $scope.loadbar('show');
             $scope.isLoading = true;
@@ -86,7 +92,7 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
             $scope.rowCollection = [];  // base collection
             $scope.itemsByPage = 10; // No.of records per page
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
-            
+
             if (typeof date == 'undefined') {
                 url = $rootScope.IRISOrgServiceUrl + '/procedure/getprocedurebyencounter?patient_id=' + $state.params.id;
             } else {
@@ -101,6 +107,15 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
                         $scope.isLoading = false;
                         $scope.rowCollection = procedures.result;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
+
+                        angular.forEach($scope.rowCollection, function (row) {
+                            angular.forEach(row.all, function (all) {
+                                var result = $filter('filter')($scope.enabled_dates, moment(all.created_at).format('YYYY-MM-DD'));
+                                if (result.length == 0)
+                                    $scope.enabled_dates.push(moment(all.created_at).format('YYYY-MM-DD'));
+                            });
+                        });
+                        $scope.$broadcast('refreshDatepickers');
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading procedures!";

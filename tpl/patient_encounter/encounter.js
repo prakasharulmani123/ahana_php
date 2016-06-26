@@ -4,11 +4,16 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
         $scope.app.settings.patientSideMenu = true;
         $scope.app.settings.patientContentClass = 'app-content patient_content ';
         $scope.app.settings.patientFooterClass = 'app-footer';
-        
+
         $scope.open = function ($event) {
             $event.preventDefault();
             $event.stopPropagation();
             $scope.opened = true;
+        };
+
+        $scope.disabled = function (date, mode) {
+            date = moment(date).format('YYYY-MM-DD');
+            return $.inArray(date, $scope.enabled_dates) === -1;
         };
 
         $scope.more_max = 3;
@@ -16,6 +21,7 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
         //Notifications
         $scope.assignNotifications();
         //Encounter Page
+        $scope.enabled_dates = [];
         $scope.loadPatientEncounters = function (type, date) {
             $scope.errorData = '';
             $scope.encounterView = type;
@@ -23,7 +29,7 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
             $scope.rowCollection = [];  // base collection
 //            $scope.itemsByPage = 10; // No.of records per page
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
-            
+
             if (typeof date == 'undefined') {
                 url = $rootScope.IRISOrgServiceUrl + '/encounter/getencounters?id=' + $state.params.id + '&type=' + type;
             } else {
@@ -39,6 +45,15 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                             $scope.activeEncounter = response.active_encounter;
                             $scope.displayedCollection = [].concat($scope.rowCollection);
                             $scope.more_li = {};
+
+                            angular.forEach($scope.rowCollection, function (row) {
+                                angular.forEach(row.all, function (all) {
+                                    var result = $filter('filter')($scope.enabled_dates, moment(all.date_time).format('YYYY-MM-DD'));
+                                    if (result.length == 0)
+                                        $scope.enabled_dates.push(moment(all.date_time).format('YYYY-MM-DD'));
+                                });
+                            });
+                            $scope.$broadcast('refreshDatepickers');
                         } else {
                             $scope.errorData = response.message;
                         }
