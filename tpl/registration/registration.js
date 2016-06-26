@@ -245,7 +245,7 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
             return mode === 'day' && (date.getDay() === 0 || date.getDay() === 6);
         };
         
-        $scope.open = function (size, ctrlr, tmpl, update_col) {
+        $scope.openModal = function (size, ctrlr, tmpl, update_col) {
             var modalInstance = $modal.open({
                 templateUrl: tmpl,
                 controller: ctrlr,
