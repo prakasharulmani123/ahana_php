@@ -2,35 +2,36 @@
 
     <div class="bg-light lter b-b wrapper-md">
         <h1 class="m-n h3"> Encounters</h1>
-        <div class="row">
-            <div class="col-sm-4">
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">Filter:</label>
-                    <div class="col-sm-9">
-                        <div class="input-group">
-                            <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="filterdate" is-open="opened" datepicker-options="dateOptions" close-text="Close" max-date="maxDate" date-disabled="disabled(date, mode)" ng-change="loadPatientEncounters('Current', filterdate);"/>
-                            <span class="input-group-btn">
-                                <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-2">
-                <button ng-click="filterdate = '';
-                        loadPatientEncounters('Current')" class="btn m-b-xs  btn-dark">  
-                    <i class="fa fa-times"></i> Clear 
-                </button>
-            </div>
-        </div>
+
 
     </div>
     <div class="wrapper-md" ng-init="loadPatientEncounters('Current');
-                        loadPatientDetail()">
+                loadPatientDetail()">
         <div ng-include="'tpl/blocks/alert.html'">
             {% include 'tpl/blocks/alert.html' %}
         </div>
         <div class="panel panel-default">
+            <div class="row wrapper pull-right">
+                <div class="col-sm-8">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Filter:</label>
+                        <div class="col-sm-9">
+                            <div class="input-group">
+                                <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="filterdate" is-open="opened" datepicker-options="dateOptions" close-text="Close" max-date="maxDate" date-disabled="disabled(date, mode)" ng-change="loadPatientEncounters('Current', filterdate);"/>
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <button ng-click="filterdate = '';
+                                loadPatientEncounters('Current')" class="btn m-b-xs  btn-dark">  
+                        <i class="fa fa-times"></i> Clear 
+                    </button>
+                </div>
+            </div>
             <div class="row wrapper">
                 <div class="col-sm-7 m-b-xs">
                     <button class="btn btn-sm btn-grey" ng-show="encounterView == 'Current'" ng-click="loadPatientEncounters('Current');"> &nbsp; &nbsp; <i class="fa fa-repeat"></i>  &nbsp; &nbsp; </button>    

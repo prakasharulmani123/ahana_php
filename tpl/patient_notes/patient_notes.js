@@ -1,4 +1,4 @@
-app.controller('NotesController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'modalService', function ($rootScope, $scope, $timeout, $http, $state, modalService) {
+app.controller('NotesController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'modalService', '$filter', function ($rootScope, $scope, $timeout, $http, $state, modalService, $filter) {
 
         $scope.app.settings.patientTopBar = true;
         $scope.app.settings.patientSideMenu = true;
@@ -10,6 +10,11 @@ app.controller('NotesController', ['$rootScope', '$scope', '$timeout', '$http', 
             $event.stopPropagation();
             $scope.opened = true;
         };
+
+//        $scope.disabled = function (date, mode) {
+//            date = moment(date).format('YYYY-MM-DD');
+//            return $.inArray(date, $scope.enabled_dates) === -1;
+//        };
 
         //Notifications
         $scope.assignNotifications();
@@ -57,6 +62,16 @@ app.controller('NotesController', ['$rootScope', '$scope', '$timeout', '$http', 
                         $scope.isLoading = false;
                         $scope.rowCollection = notes.result;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
+
+                        $scope.enabled_dates = [];
+                        angular.forEach($scope.rowCollection, function (row) {
+                            angular.forEach(row.all, function (all) {
+                                var result = $filter('filter')($scope.enabled_dates, moment(all.created_at).format('YYYY-MM-DD'));
+                                if(result.length == 0)
+                                    $scope.enabled_dates.push(moment(all.created_at).format('YYYY-MM-DD'));
+                            });
+                        });
+                        $scope.$broadcast('refreshDatepickers');
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading patientnote!";
