@@ -43,12 +43,14 @@ class CoOrganization extends GActiveRecord {
     public function rules() {
         return [
             [['org_name', 'org_description', 'org_db_host', 'org_db_username', 'org_database', 'org_domain'], 'required'],
+            [['org_domain'], 'url'],
             [['org_description', 'status'], 'string'],
             [['created_by', 'modified_by'], 'integer'],
             [['created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['org_name'], 'string', 'max' => 100],
             [['org_db_host', 'org_db_username', 'org_db_password', 'org_database', 'org_domain'], 'string', 'max' => 255],
-            [['org_name', 'org_database', 'org_domain'], 'unique'],
+            [['org_name', 'org_database'], 'unique'],
+            [['org_domain'], 'unique'],
             ['org_database', 'checkDB'],
         ];
     }
@@ -61,11 +63,11 @@ class CoOrganization extends GActiveRecord {
             'org_id' => 'Org ID',
             'org_name' => 'Organization Name',
             'org_description' => 'Organization Description',
-            'org_db_host' => 'Organization Database Host',
-            'org_db_username' => 'Organization Database Username',
-            'org_db_password' => 'Organization Database Password',
-            'org_database' => 'Organization Database Name',
-            'org_domain' => 'Organization Domain Name',
+            'org_db_host' => 'Host Name',
+            'org_db_username' => 'Database Username',
+            'org_db_password' => 'Database Password',
+            'org_database' => 'Database Name',
+            'org_domain' => 'Domain Name',
             'status' => 'Status',
             'created_by' => 'Created By',
             'created_at' => 'Created At',
