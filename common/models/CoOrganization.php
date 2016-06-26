@@ -114,6 +114,11 @@ class CoOrganization extends GActiveRecord {
             $this->addError($attribute, $ex->getMessage());
         }
     }
+    
+    public function beforeValidate() {
+        $this->org_domain = rtrim($this->org_domain,"/");
+        return parent::beforeValidate();
+    }
 
     public function beforeSave($insert) {
         if ($insert) {
