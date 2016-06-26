@@ -394,6 +394,13 @@
                 $('#sb-site').css('transform', 'translate(' + div_width + ')');
             }, 100);
         });
+        
+        $(".multimonthdatepicker").datepicker({
+            numberOfMonths: 2,
+            showButtonPanel: true,
+            dateFormat: 'yy-mm-dd',
+            minDate: 0
+        });
     });
     function slidebar() {
         $.slidebars({

@@ -2,7 +2,8 @@
 <html lang="en" data-ng-app="app" ng-controller="AppCtrl">
     <head>
         <meta charset="utf-8" />
-        <title ng-if="app.name && app.org_name">{{app.name}} ({{app.org_name}})</title>
+        <title ng-bind-template="{{app.page_title}}"></title>
+        <!--<title ng-if="app.name && app.org_name" ng-bind-template="{{app.name}} ({{app.org_name}})"></title>-->
         <meta name="description" content="" />
         <meta name="keywords" content="" />
         <!--        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />-->
@@ -28,6 +29,7 @@
         <link rel="stylesheet" type="text/css" href="bower_components/ngImgCrop/compile/minified/ng-img-crop.css">
         <!-- jQuery -->
         <script src="bower_components/jquery/dist/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jquery-ui.js"></script>
         <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
         <script src="js/jquery.timepicker.min.js"></script>
         <script src="js/slidebars.js"></script>
@@ -277,6 +279,5 @@
         <script type="text/javascript" src="js/classie.js"></script>
         <script type="text/javascript" src="js/classie_script.js"></script>
 
-        <script type="text/javascript" src="js/jquery-ui.js"></script>
     </body>
 </html>

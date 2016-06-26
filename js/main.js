@@ -13,6 +13,7 @@ angular.module('app')
                 // config
                 $scope.app = {
                     name: 'IRIS',
+                    page_title: 'IRIS',
                     org_name: '',
                     org_address: '',
                     org_country: '',
@@ -189,6 +190,7 @@ angular.module('app')
                     $scope.app.org_city = user.credentials.org_city;
                     $scope.app.org_mobile = user.credentials.org_mobile;
                     $scope.app.username = user.credentials.username;
+                    $scope.app.page_title = $scope.app.name + '(' + $scope.app.org_name + ')';
                 };
 
                 $scope.checkAccess = function (url) {

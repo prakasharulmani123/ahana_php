@@ -32,15 +32,6 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             }
         }, true);
         
-        $(".multimonthdatepicker").datepicker({
-            numberOfMonths: 2,
-            showButtonPanel: true,
-            dateFormat: 'yy-mm-dd',
-            minDate: 0
-        });
-        
-//        $( ".selector" ).datepicker({ numberOfMonths: [2, 3] });
-
         $scope.$watch('enc.selected.encounter_id', function (newValue, oldValue) {
             if (newValue != '' && typeof newValue != 'undefined') {
                 $scope.loadSideMenu();
