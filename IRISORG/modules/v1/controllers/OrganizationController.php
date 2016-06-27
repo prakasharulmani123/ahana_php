@@ -96,7 +96,7 @@ class OrganizationController extends ActiveController {
         
         if (!empty($post)) {
             $role_id = Yii::$app->request->post('role_id');
-            $modules = CoRolesResources::getOrgModuletreeByRole($access_tenant_id, $tenant_super_role_id, $role_id);
+            $modules = CoRolesResources::getOrgModuletreeByRole($access_tenant_id, $tenant_super_role_id, $role_id, $tenant_id);
             
             return ['success' => true, 'modules' => $modules];
         }
