@@ -22,16 +22,28 @@ app.controller('ModalPatientAppointmentController', ['scope', '$scope', '$modalI
             //Patients List
             $rootScope.commonService.GetPatientList('', '1', false, function (response) {
                 $scope.patients = response.patientlist;
+                
+                $scope.patients = $.grep($scope.patients, function (e) {
+                    return e.have_encounter == false;
+                });
             });
         }
         
         $scope.initAppointmentForm = function () {
             $scope.data = {};
             $scope.data.status_date = moment($scope.date).format('YYYY-MM-DD');
+            $scope.data.show_casesheet = false;
         }
         
         $scope.formatPatient = function ($item, $model, $label) {
             $scope.data.patient_id = $item.patient_id;
+            
+            if(typeof $scope.data.PatEncounter == 'undefined')
+                $scope.data.PatEncounter = {};
+            
+            $scope.data.PatEncounter.add_casesheet_no = $item.activeCasesheetno;
+            $scope.data.validate_casesheet = ($item.activeCasesheetno == null || $item.activeCasesheetno == '');
+            $scope.data.show_casesheet = ($item.activeCasesheetno == null || $item.activeCasesheetno == '');
         }
         
         $scope.getTimeOfAppointment = function () {

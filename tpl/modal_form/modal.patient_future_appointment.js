@@ -3,6 +3,7 @@ app.controller('ModalPatientFutureAppointmentController', ['scope', '$scope', '$
         //Scope Variables
         $scope.title = $modalInstance.data.title;
         $scope.app = scope.app;
+        $scope.patientObj = scope.patientObj;
 
         //For Datepicker
         $scope.open = function ($event) {
@@ -18,6 +19,7 @@ app.controller('ModalPatientFutureAppointmentController', ['scope', '$scope', '$
             $scope.data.patient_id = $scope.patientObj.patient_id;
             $scope.data.consultant_id = $scope.patientObj.last_consultant_id;
             $scope.getTimeOfAppointment();
+            $scope.data.validate_casesheet = ($scope.patientObj.activeCasesheetno == null || $scope.patientObj.activeCasesheetno == '');
         }
 
         //Time Slots Preparation
@@ -53,7 +55,7 @@ app.controller('ModalPatientFutureAppointmentController', ['scope', '$scope', '$
             post_url = $rootScope.IRISOrgServiceUrl + '/encounter/createappointment';
             method = 'POST';
             succ_msg = 'Appointment saved successfully';
-
+            
             scope.loadbar('show');
             $http({
                 method: method,
