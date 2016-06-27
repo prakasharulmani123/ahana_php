@@ -30,7 +30,6 @@
                                 <button class="btn m-b-xs  btn-dark">  <i class="fa fa-times"></i> Clear </button>
                             </div>
                         </div>-->
-
             <div class="wrapper-md p-b">
                 <div class="row">
                     <div class="col-sm-12">
@@ -40,7 +39,6 @@
                         <div class="panel panel-default"> 
                             <div class="row wrapper pb-sm">
                                 <div class="col-sm-8 m-b-xs " style="width:680px;" > 
-
                                     <div class="input-group">
                                         <input type="text" 
                                                class="form-control prescription_search_input" 
@@ -63,7 +61,6 @@
                                                 </div>
                                             </li>
                                         </ul>
-
                                         <div class="input-group-btn dropdown" id="search-form-div">
                                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></button>
                                             <div class="dropdown-menu pull-right prescrip-dropdown {{search_form}}" ng-init="initForm()" id="search-form">
@@ -261,8 +258,8 @@
                                             <div class="row">
                                                 <input type="text" class="form-control multimonthdatepicker" ng-model="data.next_visit" ng-click="open($event)" prevent-enter="true" ng-change="setDayEmpty();
                                                                 getDays();"/>
-<!--                                                <input type="text" class="form-control selector" datepicker-popup="yyyy-MM-dd" ng-model="data.next_visit" is-open="opened" datepicker-options="dateOptions" numberOfMonths="[2, 3]" close-text="Close"  min-date="minDate" ng-click="open($event)" prevent-enter="true" ng-change="setDayEmpty();
-                                                                getDays();"/>-->
+                                                <!--                                                <input type="text" class="form-control selector" datepicker-popup="yyyy-MM-dd" ng-model="data.next_visit" is-open="opened" datepicker-options="dateOptions" numberOfMonths="[2, 3]" close-text="Close"  min-date="minDate" ng-click="open($event)" prevent-enter="true" ng-change="setDayEmpty();
+                                                                                                                getDays();"/>-->
                                             </div>
                                         </div>
                                         <div class="col-sm-1 ">
@@ -280,21 +277,17 @@
                                     </div>
                                 </footer>
                             </form>
-
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
-
         <!--<div class="col" ng-if="app.settings.patientSideMenu == true">-->
         <div class="col" ng-show="pres_status == 'prev'">
             <div ng-include="'tpl/patient_prescription/_previous_prescription.html'">
                 {% include 'tpl/patient_prescription/_previous_prescription.html' %}
             </div>
         </div>
-
         <div class="col w-sm pres-div bg-light dk b-r bg-auto" style="width:110px;">
             <div class="wrapper pres-right hidden-sm hidden-xs" id="email-menu">
                 <ul class="nav nav-pills nav-stacked nav-sm">
@@ -334,43 +327,62 @@
             </div>
         </div>
     </div>
-
     <!--Print Bill-->
     <div id="Getprintval" style="display: none">
-        <table border="1" class="table-border">
-            <thead>
-                <tr>
-                    <th colspan="3">
-                        <img width="60" height="60" alt="AHANA HOSPITALS" src="css/images/ah-logo.png">
-                    </th>
-                    <th colspan="2"><io-barcode code="{{patientObj.patient_int_code}}" type="CODE128B"></io-barcode><br />{{patientObj.patient_int_code}}</th>
-            </tr>
-            <tr>
-                <th colspan="3">
-                    {{patientObj.fullname}} ({{patientObj.patient_age}}y)
-                </th>
-                <th colspan="2 width="70" align="center">
-                    date : {{current_time}}
-                </th>
-            </tr>
-            <tr>
-                <th width="28" align="center" valign="middle" class="freq-bg">Description</th>
-                <th width="28" align="center" valign="middle" class="freq-bg"><img src="img/weather1.png"  alt="" /></th>
-                <th width="28" align="center" valign="middle" class="freq-bg"><img src="img/weather2.png"  alt="" /></th>
-                <th width="28" align="center" valign="middle" class="freq-bg"><img src="img/weather3.png"  alt="" /></th>
-                <th width="28" align="center" valign="middle" class="freq-bg"><img src="img/weather4.png"  alt="" /></th>
-            </tr>
-            </thead>
-            <tbody>
-                <tr ng-repeat="(key, item) in prescriptionItems2">
-                    <td>{{ item.product_name || 'empty' }}<br />{{ item.number_of_days || 'empty' }}</td>
-                    <td>{{ getFrequencyExists(item.frequency, 0)}}</td>
-                    <td>{{ getFrequencyExists(item.frequency, 1)}}</td>
-                    <td>{{ getFrequencyExists(item.frequency, 2)}}</td>
-                    <td>{{ getFrequencyExists(item.frequency, 3)}}</td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="priscription-cont">
+            <main>
+                <table cellspacing="0" cellpadding="0" border="0" width="100%">
+                    <tr>
+                        <td colspan="1" align="left"><img width="60" height="60" alt="{{app.name}}" src="css/images/ah-logo.png"></td>
+                        <td colspan="2" align="right"><io-barcode code="{{patientObj.patient_int_code}}" type="{{ type }}" options="barcodeOptions"></io-barcode></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td><h2> {{patientObj.fullname}} <span>({{patientObj.patient_age}}yrs)</span></h2> </td>
+                                    <td align="right"><b>Date :</b> {{current_time}}</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3"> <div style="width:100%; min-height:500px;"> <table width="100%" border="0" cellspacing="0" cellpadding="0" >
+                                    <tr>
+                                        <th align="left" style="width:280px;"><strong>Description</strong></th>
+                                        <th align="center"><img src="img/weather1.png" width="25" height="25" alt="" /></th>
+                                        <th align="center"><img src="img/weather2.png" width="25" height="25" alt="" /></th>
+                                        <th align="center"><img src="img/weather3.png" width="25" height="25" alt="" /></th>
+                                        <th align="center"><img src="img/weather4.png" width="25" height="25" alt="" /></th>
+                                    </tr>
+                                    <tr ng-repeat="(key, item) in prescriptionItems2">
+                                        <td>{{ item.product_name || 'empty' }} <br/> <span> ({{ item.number_of_days || 'empty' }} days)</span> </td>
+                                        <td align="center">{{ getFrequencyExists(item.frequency, 0)}}</td>
+                                        <td align="center">{{ getFrequencyExists(item.frequency, 1)}}</td>
+                                        <td align="center">{{ getFrequencyExists(item.frequency, 2)}}</td>
+                                        <td align="center">{{ getFrequencyExists(item.frequency, 3)}}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td>Next Review : <b> {{data2.next_visit}}</b></td>
+                                    <td align="right">{{consultant_name}}</td>
+                                </tr>
+                            </table></td>
+                    </tr>
+                    <tr>
+                        <td style="border-top:#2e2e2e solid 1px;">&nbsp;</td>
+                        <td  align="center" style="font-size:12px; border-top:#2e2e2e solid 1px;">{{app.org_full_address}} Ph :{{app.org_mobile}}</td>
+                        <td style="border-top:#2e2e2e solid 1px;">&nbsp;</td>
+                    </tr>
+                </table>
+            </main>
+        </div>
+        
     </div>     
 </div>
 <script>
@@ -408,5 +420,3 @@
         });
     }
 </script>
-
-

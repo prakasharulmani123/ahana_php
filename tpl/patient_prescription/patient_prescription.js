@@ -1,4 +1,4 @@
-app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll', '$http', '$state', '$filter', '$modal', '$log', '$timeout', function ($rootScope, $scope, $anchorScroll, $http, $state, $filter, $modal, $log, $timeout) {
+app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll', '$http', '$state', '$filter', '$modal', '$log', '$timeout', 'IO_BARCODE_TYPES', function ($rootScope, $scope, $anchorScroll, $http, $state, $filter, $modal, $log, $timeout, IO_BARCODE_TYPES) {
 
         $scope.app.settings.patientTopBar = true;
         $scope.app.settings.patientSideMenu = true;
@@ -31,7 +31,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 });
             }
         }, true);
-        
+
         $scope.$watch('enc.selected.encounter_id', function (newValue, oldValue) {
             if (newValue != '' && typeof newValue != 'undefined') {
                 $scope.loadSideMenu();
@@ -233,10 +233,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
         //Get the value from main.js
         $scope.$on('presc_fav', function (event, args) {
-            console.log($scope.data.prescriptionItems);
-            console.log(args.product_id);
             var result = $filter('filter')($scope.data.prescriptionItems, {product_id: args.product_id});
-            console.log(result);
             if (result.length > 0) {
                 alert('This Product already added');
             } else {
@@ -320,6 +317,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                             $scope.current_time = response.date;
                             $scope.successMessage = succ_msg;
                             $scope.data = {prescriptionItems: []};
+                            
+                            $scope.consultant_name = response.model.consultant_name;
 
                             $timeout(function () {
                                 save_success();
@@ -539,5 +538,17 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 elem = $(".vbox .row-row .cell:visible");
                 elem.animate({scrollTop: elem.prop("scrollHeight")}, 1000);
             }
+        }
+
+        $scope.types = IO_BARCODE_TYPES;
+        $scope.code = '1234567890128';
+        $scope.type = 'CODE128B';
+
+        $scope.barcodeOptions = {
+            displayValue: true,
+            textAlign: 'center',
+            fontSize: 18,
+            height: 70,
+            width: 1.2,
         }
     }]);

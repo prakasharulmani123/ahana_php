@@ -20,6 +20,7 @@ angular.module('app')
                     org_state: '',
                     org_city: '',
                     org_mobile: '',
+                    org_full_address: '',
                     version: '',
                     username: '',
                     // for chart colors
@@ -189,6 +190,7 @@ angular.module('app')
                     $scope.app.org_state = user.credentials.org_state;
                     $scope.app.org_city = user.credentials.org_city;
                     $scope.app.org_mobile = user.credentials.org_mobile;
+                    $scope.app.org_full_address = user.credentials.org_address + ', ' + user.credentials.org_city;
                     $scope.app.username = user.credentials.username;
                     $scope.app.page_title = $scope.app.name + '(' + $scope.app.org_name + ')';
                 };
