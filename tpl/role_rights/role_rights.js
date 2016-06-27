@@ -85,6 +85,11 @@ app.controller('RolesRightsController', ['$rootScope', '$scope', '$timeout', '$h
                         angular.forEach(child.children, function (child2) {
                             if (child2.selected == true || child2.__ivhTreeviewIndeterminate == true)
                                 $scope.moduleList.push(child2.value);
+                            
+                            angular.forEach(child2.children, function (child3) {
+                                if (child3.selected == true || child3.__ivhTreeviewIndeterminate == true)
+                                    $scope.moduleList.push(child3.value);
+                            });
                         });
                     });
                 }
@@ -111,7 +116,8 @@ app.controller('RolesRightsController', ['$rootScope', '$scope', '$timeout', '$h
                         $anchorScroll();
                         if (response.data.success === true) {
                             $scope.successMessage = "Role rights saved successfully";
-                            $scope.data = {};
+//                            $scope.data = {};
+//                            $scope.modules = {};
                             $timeout(function () {
                                 $state.go('configuration.roleRights');
                             }, 1000)
