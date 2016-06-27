@@ -259,6 +259,32 @@ class CoRolesResources extends ActiveRecord {
                                 $tree[$key]['children'][$cKey]['children'][$cKey2]['selected'] = true;
                                 $checked2++;
                                 $checked++;
+                                
+                                /****/
+                                $tot3 = $checked3 = $unchecked3 = 0;
+
+                                if (isset($child2['children'])) {
+                                    foreach ($child2['children'] as $cKey3 => $child3) {
+                                        if (isset($child3['value']) && in_array($child3['value'], $role_resources_ids)) {
+                                            $tree[$key]['children'][$cKey]['children'][$cKey2]['children'][$cKey3]['selected'] = true;
+                                            $checked3++;
+                                            $checked++;
+                                        } else {
+                                            $unchecked3++;
+                                            $unchecked++;
+                                        }
+                                        $tot++;
+                                        $tot2++;
+                                        $tot3++;
+                                    }
+                                }
+
+                                if ($tot3 == $checked3)
+                                    $tree[$key]['children'][$cKey]['selected'] = true;
+                                if ($checked3 > 0 && $unchecked3 > 0)
+                                    $tree[$key]['children'][$cKey]['childern'][$cKey2]['__ivhTreeviewIndeterminate'] = true;
+                                /****/
+                                
                             } else {
                                 $unchecked2++;
                                 $unchecked++;
