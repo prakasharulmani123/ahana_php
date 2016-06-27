@@ -389,7 +389,7 @@ class UserController extends ActiveController {
                     $roles[] = CoRole::find()->where(['role_id' => $role_id])->one();
                 }
 
-                $extraColumns = ['tenant_id' => $tenant_id, 'modified_by' => Yii::$app->user->identity->user_id, 'modified_at' => new Expression('NOW()')]; // extra columns to be saved to the many to many table
+                $extraColumns = ['tenant_id' => $tenant_id, 'created_by' => Yii::$app->user->identity->user_id, 'modified_by' => Yii::$app->user->identity->user_id, 'modified_at' => new Expression('NOW()')]; // extra columns to be saved to the many to many table
                 $unlink = true; // unlink tags not in the list
                 $delete = true; // delete unlinked tags
                 $user->linkAll('roles', $roles, $extraColumns, $unlink, $delete);

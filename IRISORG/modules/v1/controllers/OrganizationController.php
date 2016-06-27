@@ -51,9 +51,19 @@ class OrganizationController extends ActiveController {
     //role_rights.js
     public function actionGetorg() {
         $tenant_id = Yii::$app->user->identity->logged_tenant_id;
-        $access_tenant_id = Yii::$app->user->identity->access_tenant_id;
-        $tenant_super_role = CoRole::getTenantSuperRole($tenant_id);
-        $tenant_super_role_id = $tenant_super_role->role_id;
+//        $access_tenant_id = Yii::$app->user->identity->access_tenant_id;
+        
+        $user = Yii::$app->user->identity->user;
+        //Super Admin
+        if($user->tenant_id == 0){
+            $access_tenant_id = $user->first_tenant_id;
+            $tenant_super_role = CoRole::getTenantSuperRole($access_tenant_id);
+            $tenant_super_role_id = $tenant_super_role->role_id;
+        }else{
+            $access_tenant_id = $user->tenant_id;
+            $user_roles = CoUsersRoles::find()->where(['user_id' => $user->user_id, 'tenant_id' => $access_tenant_id])->all();
+            $tenant_super_role_id = \yii\helpers\ArrayHelper::map($user_roles, 'role_id', 'role_id');
+        }
 
         if (!empty($tenant_id)) {
             $return = array();
@@ -67,14 +77,26 @@ class OrganizationController extends ActiveController {
     //role_rights.js
     public function actionGetorgmodulesbyrole() {
         $tenant_id = Yii::$app->user->identity->logged_tenant_id;
-        $tenant_super_role = CoRole::getTenantSuperRole($tenant_id);
-        $tenant_super_role_id = $tenant_super_role->role_id;
+//        $tenant_super_role = CoRole::getTenantSuperRole($tenant_id);
+//        $tenant_super_role_id = $tenant_super_role->role_id;
+        
+        //Super Admin
+        $user = Yii::$app->user->identity->user;
+        if($user->tenant_id == 0){
+            $access_tenant_id = $user->first_tenant_id;
+            $tenant_super_role = CoRole::getTenantSuperRole($access_tenant_id);
+            $tenant_super_role_id = $tenant_super_role->role_id;
+        }else{
+            $access_tenant_id = $user->tenant_id;
+            $user_roles = CoUsersRoles::find()->where(['user_id' => $user->user_id, 'tenant_id' => $access_tenant_id])->all();
+            $tenant_super_role_id = \yii\helpers\ArrayHelper::map($user_roles, 'role_id', 'role_id');
+        }
         
         $post = Yii::$app->request->post();
         
         if (!empty($post)) {
             $role_id = Yii::$app->request->post('role_id');
-            $modules = CoRolesResources::getOrgModuletreeByRole($tenant_id, $tenant_super_role_id, $role_id);
+            $modules = CoRolesResources::getOrgModuletreeByRole($access_tenant_id, $tenant_super_role_id, $role_id);
             
             return ['success' => true, 'modules' => $modules];
         }
