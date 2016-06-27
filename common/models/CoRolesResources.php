@@ -240,11 +240,6 @@ class CoRolesResources extends ActiveRecord {
         $role_resources_ids = self::find()->select(['GROUP_CONCAT(resource_id) AS resource_ids'])->where(['role_id' => $role_id, 'tenant_id' => $resource_tenant_id, 'status' => '1'])->one();
         $role_resources_ids = explode(',', $role_resources_ids->resource_ids);
 
-//        echo '<pre>';
-//        print_r($tenant_id.' ');
-//        print_r($tenant_super_role_id.' ');
-//        print_r($role_id);
-//        exit;
         foreach ($tree as $key => $parent) {
             if (in_array($parent['value'], $role_resources_ids)) {
                 $tot = $checked = $unchecked = 0;
