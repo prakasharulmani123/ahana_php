@@ -401,7 +401,7 @@ class PatPatient extends RActiveRecord {
                 }
             },
             'patient_category_color' => function ($model) {
-                if (isset($model->patientCategory->patient_cat_color) && $model->patientCategory->patient_cat_color != '#ffffff') {
+                if (isset($model->patientCategory->patient_cat_color) && strtolower($model->patientCategory->patient_cat_color) != '#ffffff') {
                     return $model->patientCategory->patient_cat_color;
                 } else {
                     return "#19A9D5";
