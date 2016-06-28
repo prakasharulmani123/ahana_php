@@ -61,7 +61,7 @@
                 <div class="col-sm-12">
                     <div class="pull-left">
                         <button class="btn m-b-xs  btn-primary save-print" ng-click="changeAppointmentStatus('seen_print')"> <i class="fa fa-print"></i> Save and Print Bill</button>
-                         &nbsp;
+                        &nbsp;
                         <button class="btn m-b-xs  btn-success save-future" ng-click="changeAppointmentStatus('seen_future')">Save & Future Appointment</button> &nbsp;
                     </div>
                     <div class="pull-right">
@@ -74,56 +74,6 @@
     </div>
 </form>
 
-<div id="Getprintval" ng-hide="1">
-    <div class="invoice-details1">
-       <table width="100%" border="0" align="right" cellpadding="0" cellspacing="0" class="purchase-list-tab purchase-list-tab2 ">
-          <tr>
-             <th align="left">Patent Name :  </th>
-             <td align="left"> {{patientObj.fullname}} ({{patientObj.activeCasesheetno}})</td>
-          </tr>
-          <tr>
-             <th align="left">Patent Id :  </th>
-             <td align="left">{{patientObj.patient_int_code}}</td>
-          </tr>
-          <tr>
-             <th align="left">Sex:  </th>
-             <td align="left">{{app.patientDetail.patientSex}}</td>
-          </tr>
-       </table>
-    </div>
-    <div class="invoice-details1 invoice-details2">
-       <table width="100%" border="0" align="right" cellpadding="0" cellspacing="0" class="purchase-list-tab purchase-list-tab2 ">         
-          <tr>
-             <th align="left">Consultant Name  :  </th>
-             <td align="left">{{patientObj.consultant_name}}</td>
-          </tr>
-           <tr>
-             <th align="left">Organization  :  </th>
-             <td align="left">{{patientObj.org_name}} </td>
-          </tr>
-           <tr>
-             <th align="left">Age  :  </th>
-             <td align="left">
-               {{patientObj.patient_age}}y
-             </td>
-          </tr>
-       </table>
-    </div>
-    <div class="clearfix"></div>
-    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="purchase-list-tab">
-       <tr>
-          <th>Status</th>
-          <th>Timing</th>
-          <th>Billing</th>
-          <th>Patient Category</th>
-          <th>OP Amount</th>         
-       </tr>
-       <tr>
-           <td>Seen</td>
-           <td>{{data.PatAppointment.status_date}}</td>
-           <td>{{bill_type_taken}}</td>
-           <td>{{cat_name_taken}}</td>
-           <td>{{data.PatAppointment.amount}}</td>
-       </tr>      
-    </table>
-</div>    
+<div ng-include="'tpl/patient_appointment/_print_op_seen_bill.html'">
+    {% include 'tpl/blocks/_print_op_seen_bill.html' %}
+</div>

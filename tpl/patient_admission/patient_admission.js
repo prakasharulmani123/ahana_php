@@ -127,7 +127,7 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
             $scope.data.PatEncounter.encounter_date = moment().format('YYYY-MM-DD HH:mm:ss');
             $scope.data.validate_casesheet = ($scope.patientObj.activeCasesheetno == null || $scope.patientObj.activeCasesheetno == '');
         }
-        
+
         $scope.$watch('patientObj.activeCasesheetno', function (newValue, oldValue) {
             $scope.data.validate_casesheet = ($scope.patientObj.activeCasesheetno == null || $scope.patientObj.activeCasesheetno == '');
         }, true);
@@ -220,6 +220,7 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
             });
         }
 
+        $scope.no_vacant_beds = false;
         $scope.updateRoom = function () {
             $scope.availableRooms = [];
             $scope.availableRoomtypes = [];
@@ -234,6 +235,12 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
                     $scope.availableRooms.push(obj);
                 }
             });
+
+            if ($scope.availableRooms.length == 0) {
+                $scope.no_vacant_beds = true;
+            } else {
+                $scope.no_vacant_beds = false;
+            }
         }
 
         $scope.updateRoomType = function () {
@@ -395,7 +402,7 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
                 method: "GET"
             }).success(
                     function (response) {
-                        if(response.currentAdmission.admission_status != 'A'){
+                        if (response.currentAdmission.admission_status != 'A') {
                             alert("You can't modify a this admission");
                             $state.go("patient.encounter", {id: $state.params.id});
                         }

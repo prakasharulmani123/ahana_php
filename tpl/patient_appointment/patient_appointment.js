@@ -314,7 +314,7 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
                             if (mode == 'seen_future') {
                                 $scope.add_appointment();
                             } else if (mode == 'seen_print') {
-                                $scope.save_success();
+                                $scope.save_success(_that.data.PatAppointment.status_date, _that.data.PatAppointment.amount);
                             } else {
                                 $scope.data = {};
                                 $timeout(function () {
@@ -335,7 +335,14 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
             });
         };
 
-        $scope.save_success = function () {
+        $scope.save_success = function (date, amount) {
+            $scope.printBillData = {};
+            $scope.printBillData.doctor = $scope.patientObj.consultant_name;
+            $scope.printBillData.op_amount = amount;
+            $scope.printBillData.date = date;
+            $scope.printBillData.patient_bill_type = $scope.bill_type_taken;
+            $scope.printBillData.patient_cat_name = $scope.cat_name_taken;
+            console.log($scope.printBillData);
             var innerContents = document.getElementById("Getprintval").innerHTML;
             var popupWinindow = window.open('', '_blank', 'width=600,height=700,scrollbars=no,menubar=no,toolbar=no,location=no,status=no,titlebar=no');
             popupWinindow.document.open();

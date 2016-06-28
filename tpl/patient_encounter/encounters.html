@@ -85,6 +85,7 @@
                             <th>Type</th>
                             <th>Details</th>
                             <th>Doctors Name</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody ng-hide="isLoading">
@@ -95,14 +96,12 @@
                                     <i ng-if="expanded" class="fa fa-minus text"></i>
                                 </button>
                             </td>
-                            <td colspan="5">
-                                <!--<b> Encounter: {{encounter.$key}};</b>-->
+                            <td colspan="6">
                                 <b> 
                                     <span class="badge bg-primary">Encounter: {{encounter.encounter_id}}</span>&nbsp; &nbsp; 
                                     <span class="badge bg-black">Date: {{encounter.all[0].date| moment:'DD/MM/YYYY'}}</span>&nbsp; &nbsp; 
                                     <span class="badge bg-success">{{encounter.encounter_type}}</span>&nbsp; &nbsp; 
                                     <span class="badge bg-info">Doctor: {{encounter.doctor}}</span>
-                                    <!--Encounter: {{encounter.encounter_id}};&nbsp; &nbsp; Type: {{encounter.encounter_type}};&nbsp; &nbsp; Doctor: {{encounter.doctor}}-->
                                 </b>
                             </td>
                         </tr>
@@ -195,26 +194,24 @@
                                 <span ng-if="item.encounter_type == 'IP'" class="label bg-success">{{item.details}}</span>
                             </td>
                             <td> {{item.doctor}} </td>
+                            <td>
+                                <button tooltip="Print Bill"  class="btn btn-primary" ng-show="(item.type == 'Seen')" ng-click="printOPBill(item)">
+                                    <i class="fa fa-print"></i>
+                                </button>
+                            </td>
                         </tr>
                     </tbody>
                     <tbody ng-show="isLoading">
                         <tr>
-                            <td colspan="6" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
+                            <td colspan="7" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
                         </tr>
                     </tbody>
-                    <!--                    <tfoot>
-                                            <tr>
-                                                <td colspan="6" class="text-center">
-                                                    <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7"></div>
-                                                </td>
-                                            </tr>
-                                        </tfoot>-->
                 </table>
-
             </div>
-            <footer class="panel-footer">
-                <!--<div st-pagination="" st-items-by-page="itemsByPage" st-template="pagination.custom.html" st-displayed-pages="7"></div>-->
-            </footer>    
         </div>
+    </div>
+
+    <div ng-include="'tpl/patient_appointment/_print_op_seen_bill.html'">
+        {% include 'tpl/blocks/_print_op_seen_bill.html' %}
     </div>
 </div>

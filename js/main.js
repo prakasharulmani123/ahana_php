@@ -224,6 +224,10 @@ angular.module('app')
                 $scope.$on('encounter_id', function (event, data) {
                     $scope.encounter_id = data;
                 });
+                
+                $scope.$on('patient_obj', function (event, data) {
+                    $scope.patientObj = data;
+                });
 
                 $scope.addNotes = function () {
                     if (jQuery.isEmptyObject($scope.data)) {
