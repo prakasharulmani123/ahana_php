@@ -1,16 +1,34 @@
 /* Controllers */
 app.controller('InternalCodeController', ['$scope', '$http', '$filter', '$state', '$rootScope', '$timeout', function ($scope, $http, $filter, $state, $rootScope, $timeout) {
 
-        //Get Billing code details
-        $rootScope.commonService.GetInternalCodeList('', 'B', '1', false, function (response) {
-            $scope.data = response.code;
-            if(response.code == null)
-                $scope.data = {formtype : 'add'};
-        });
+        $scope.billnoPrefix = function () {
+            //Get Billing code details
+            $rootScope.commonService.GetInternalCodeList('', 'B', '1', false, function (response) {
+                $scope.data = response.code;
+                if (response.code == null)
+                    $scope.data = {formtype: 'add'};
+            });
+        }
+
+        $scope.casesheetPrefix = function () {
+            //Get Billing code details
+            $rootScope.commonService.GetInternalCodeList('', 'CS', '1', false, function (response) {
+                $scope.data2 = response.code;
+                if (response.code == null)
+                    $scope.data2 = {formtype: 'add'};
+            });
+        }
+
 
         //Save Both Add & Update Data
-        $scope.saveForm = function (mode) {
-            _that = this;
+        $scope.saveForm = function (mode, data) {
+            var _that = {};
+
+            if (data == 1) {
+                _that.data = this.data
+            } else {
+                _that.data = this.data2
+            }
 
             $scope.errorData = "";
             $scope.successMessage = "";

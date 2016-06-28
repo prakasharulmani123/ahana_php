@@ -1,5 +1,5 @@
 <div class="bg-light lter b-b wrapper-md">
-    <h1 class="m-n h3">Bill No Prefix</h1>
+    <h1 class="m-n h3">Internal Code Settings</h1>
 </div>
 
 <div class="wrapper-md">
@@ -10,26 +10,57 @@
         </div>
 
         <div class="row">
-            <div class="col-sm-5">
+            <div class="col-sm-6" ng-init="billnoPrefix()">
                 <form name="internalCodeForm" class="form-horizontal form-validation">
                     <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <b> Bill No </b>
+                        </div>
                         <div class="panel-body">
                             <div class="form-group">
-                                <label class="col-sm-4 control-label">Code Prefix * </label>
-                                <div class="col-sm-8">
+                                <label class="col-sm-5 control-label">Prefix * </label>
+                                <div class="col-sm-7">
                                     <input type="hidden" ng-model="data.internal_code_id">
                                     <input type="text" ng-model="data.code_prefix" maxlength="50" class="form-control" placeholder="Code prefix">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-4 control-label">Code Start No * </label>
-                                <div class="col-sm-8">
+                                <label class="col-sm-5 control-label">Start No * </label>
+                                <div class="col-sm-7">
                                     <input type="text" number-mask ="" ng-model="data.code" maxlength="50" class="form-control" placeholder="Code start no">
                                 </div>
                             </div>
                         </div>
                         <footer class="panel-footer text-right bg-light lter">
-                            <button class="btn m-b-xs  btn-success save-btn" ng-click="saveForm(data.formtype)">Save</button>&nbsp;
+                            <button class="btn m-b-xs  btn-success save-btn" ng-click="saveForm(data.formtype, '1')">Save</button>&nbsp;
+                        </footer>
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-sm-6" ng-init="casesheetPrefix()">
+                <form name="internalCodeForm2" class="form-horizontal form-validation">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <b> Case sheet No </b>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">Prefix * </label>
+                                <div class="col-sm-7">
+                                    <input type="hidden" ng-model="data2.internal_code_id">
+                                    <input type="text" ng-model="data2.code_prefix" maxlength="50" class="form-control" placeholder="Code prefix">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">Start No * </label>
+                                <div class="col-sm-7">
+                                    <input type="text" number-mask ="" ng-model="data2.code" maxlength="50" class="form-control" placeholder="Code start no">
+                                </div>
+                            </div>
+                        </div>
+                        <footer class="panel-footer text-right bg-light lter">
+                            <button class="btn m-b-xs  btn-success save-btn" ng-click="saveForm(data2.formtype, '2')">Save</button>&nbsp;
                         </footer>
                     </div>
                 </form>
