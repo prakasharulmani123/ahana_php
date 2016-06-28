@@ -114,7 +114,7 @@ class PhaSaleReturn extends RActiveRecord {
 
     public function beforeSave($insert) {
         if ($insert) {
-            $this->bill_no = CoInternalCode::find()->tenant()->codeType("B")->one()->Fullcode;
+            $this->bill_no = CoInternalCode::generateInternalCode('SR', 'common\models\PhaSaleReturn', 'bill_no');
         }
 
         return parent::beforeSave($insert);

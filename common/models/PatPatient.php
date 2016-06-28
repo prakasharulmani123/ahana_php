@@ -190,7 +190,7 @@ class PatPatient extends RActiveRecord {
             $this->patient_guid = UuidHelpers::uuid();
             $this->patient_reg_date = date('Y-m-d H:i:s');
 
-            $this->patient_int_code = CoInternalCode::find()->tenant()->codeType("P")->one()->Fullcode;
+            $this->patient_int_code = CoInternalCode::generateInternalCode('P', 'common\models\PatPatient', 'patient_int_code');
 
             //If Global ID empty means we will generate otherwise it could be imported data
             if (empty($this->patient_global_guid))
@@ -227,7 +227,7 @@ class PatPatient extends RActiveRecord {
 
             $model = new PatPatientCasesheet();
             $model->attributes = [
-                'casesheet_no' => CoInternalCode::find()->tenant()->codeType("CS")->one()->Fullcode,
+                'casesheet_no' => CoInternalCode::generateInternalCode('CS', 'common\models\PatPatientCasesheet', 'casesheet_no'),
                 'patient_id' => $this->patient_id,
                 'start_date' => date("Y-m-d"),
             ];

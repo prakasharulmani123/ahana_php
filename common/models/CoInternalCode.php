@@ -109,4 +109,20 @@ class CoInternalCode extends RActiveRecord {
         }
     }
 
+    public static function generateInternalCode($code_type, $model, $column){
+        $code = self::find()->tenant()->codeType($code_type)->one()->Fullcode;
+        do {
+            $exists = $model::find()->where([$column => $code])->one();
+
+            if (!empty($exists)) {
+                $old_code = $code;
+                self::increaseInternalCode($code_type);
+                $code = self::find()->tenant()->codeType($code_type)->one()->Fullcode;
+            } else {
+                break;
+            }
+        } while ($old_code != $code);
+        return $code;
+    }
+
 }

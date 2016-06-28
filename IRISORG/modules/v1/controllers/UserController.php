@@ -351,12 +351,18 @@ class UserController extends ActiveController {
                 $model = new CoLogin;
                 $model->scenario = 'create';
             }
+            
+            if(empty($post['password']))
+                unset ($post['password']);
+            
             $model->attributes = $post;
 
             $valid = $model->validate();
 
             if ($valid) {
-                $model->setPassword($model->password);
+                if(isset($post['password']))
+                    $model->setPassword($model->password);
+                
                 $model->save(false);
                 return ['success' => true];
             } else {

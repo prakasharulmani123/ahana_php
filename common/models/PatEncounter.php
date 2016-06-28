@@ -288,7 +288,7 @@ class PatEncounter extends RActiveRecord {
             }
             
             if($this->encounter_type == 'IP')
-                $this->bill_no = CoInternalCode::find()->tenant()->codeType("B")->one()->Fullcode;
+                $this->bill_no = CoInternalCode::generateInternalCode('B', 'common\models\PatEncounter', 'bill_no');
         }
         
 //        if($this->encounter_type == 'IP')

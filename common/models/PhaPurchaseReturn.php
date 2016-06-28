@@ -130,7 +130,7 @@ class PhaPurchaseReturn extends RActiveRecord
     
     public function beforeSave($insert) {
         if($insert){
-            $this->purchase_ret_code = CoInternalCode::find()->tenant()->codeType("PR")->one()->Fullcode;
+            $this->purchase_ret_code = CoInternalCode::generateInternalCode('PR', 'common\models\PhaPurchaseReturn', 'purchase_ret_code');
         }
         return parent::beforeSave($insert);
     }

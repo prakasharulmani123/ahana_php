@@ -52,8 +52,21 @@ class LoginForm extends Model {
     public function validateTenant($attribute, $params) {
         if (!$this->hasErrors()) {
             $tenant = CoLogin::findByUsernameAndTenant($this->username, $this->tenant_id);
-            if (empty($tenant)){
+            if (empty($tenant)) {
                 $this->addError($attribute, 'Organization mismatch.');
+            }
+
+            if (!empty($tenant) && $tenant->user->tenant_id != 0) {
+                //Account Not Activated
+                if (empty($tenant->activation_date) || $tenant->activation_date == '0000-00-00')
+                    $this->addError($attribute, 'Your Account is not activated. Contact Admin');
+                //Account Will be Activated
+                else if (strtotime($tenant->activation_date) > strtotime(date('Y-m-d')))
+                    $this->addError($attribute, 'Your Account will be activated on ' . $tenant->activation_date);
+
+                //Account In-activated
+                if (!empty($tenant->Inactivation_date) && $tenant->Inactivation_date != '0000-00-00' && strtotime($tenant->Inactivation_date) < strtotime(date('Y-m-d')))
+                    $this->addError($attribute, 'Your Account is inactivated on ' . $tenant->Inactivation_date);
             }
         }
     }
@@ -81,7 +94,7 @@ class LoginForm extends Model {
         if ($this->_user === false) {
             $this->_user = CoLogin::findByUsername($this->username);
         }
-        
+
         return $this->_user;
     }
 

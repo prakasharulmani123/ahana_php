@@ -97,7 +97,7 @@ class PhaSale extends RActiveRecord {
 
     public function beforeSave($insert) {
         if ($insert) {
-            $this->bill_no = CoInternalCode::find()->tenant()->codeType("B")->one()->Fullcode;
+            $this->bill_no = CoInternalCode::generateInternalCode('SA', 'common\models\PhaSale', 'bill_no');
 
             //Payment Type - Credit, COD - Then payment status is pending.
             if ($this->payment_type != 'CA') {

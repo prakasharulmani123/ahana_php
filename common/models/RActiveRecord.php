@@ -68,6 +68,14 @@ class RActiveRecord extends ActiveRecord {
         return parent::beforeSave($insert);
     }
 
+    public function getCreatedUser() {
+        return (isset($this->created_by)) ? $this->hasOne(CoUser::className(), ['user_id' => 'created_by']) : '-';
+    }
+
+    public function getModifiedUser() {
+        return (isset($this->modified_by)) ? $this->hasOne(CoUser::className(), ['user_id' => 'modified_by']) : '-';
+    }
+    
     public static function timeAgo($time_ago, $cur_time = NULL) {
         if (is_null($cur_time))
             $cur_time = time();
