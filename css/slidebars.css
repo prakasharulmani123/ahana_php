@@ -95,7 +95,7 @@ html.sb-scroll-lock.sb-active:not(.sb-static) {
 	color:#ffffff;
 }
 .sb-slidebar, .sb-slidebar * {
-	-webkit-transform: translateZ( 0px ); /* Fixes issues with translated and z-indexed elements on iOS 7. */
+	/*-webkit-transform: translateZ( 0px );  Fixes issues with translated and z-indexed elements on iOS 7. */
 }
 
 .sb-left {
