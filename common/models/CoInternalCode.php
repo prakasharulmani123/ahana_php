@@ -79,11 +79,11 @@ class CoInternalCode extends RActiveRecord {
         return new CoInternalCodeQuery(get_called_class());
     }
 
-    public static function getInternalCode($tenant = null, $status = '1', $deleted = false) {
+    public static function getInternalCode($tenant = null, $status = '1', $deleted = false, $code_type = 'B') {
         if (!$deleted)
-            $list = self::find()->tenant($tenant)->status($status)->active()->one();
+            $list = self::find()->tenant($tenant)->status($status)->active()->codeType($code_type)->one();
         else
-            $list = self::find()->tenant($tenant)->deleted()->one();
+            $list = self::find()->tenant($tenant)->deleted()->codeType($code_type)->one();
 
         return $list;
     }

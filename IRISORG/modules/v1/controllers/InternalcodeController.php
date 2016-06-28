@@ -54,19 +54,22 @@ class InternalcodeController extends ActiveController {
         $tenant = null;
         $status = '1';
         $deleted = false;
-        
+
         $get = Yii::$app->getRequest()->get();
-        
-        if(isset($get['tenant']))
+
+        if (isset($get['tenant']))
             $tenant = $get['tenant'];
-        
-        if(isset($get['status']))
+
+        if (isset($get['status']))
             $status = strval($get['status']);
-        
-        if(isset($get['deleted']))
+
+        if (isset($get['code_type']))
+            $code_type = $get['code_type'];
+
+        if (isset($get['deleted']))
             $deleted = $get['deleted'] == 'true';
-        
-        return ['code' => CoInternalCode::getInternalCode($tenant, $status, $deleted)];
+
+        return ['code' => CoInternalCode::getInternalCode($tenant, $status, $deleted, $code_type)];
     }
 
     protected function excludeColumns($attrs) {

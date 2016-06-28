@@ -435,6 +435,14 @@ class PatPatient extends RActiveRecord {
             },
             'fullcurrentaddress' => function ($model) {
                 if (isset($model->patPatientAddress)) {
+                    $result = '';
+                    if($model->patPatientAddress->addr_current_address != ''){
+                        $result .= $model->patPatientAddress->addr_current_address;
+                    }
+                    
+                    if($model->patPatientAddress->addr_country_id != ''){
+                        $result .= ' ' . $model->patPatientAddress->addrCountry->country_name;
+                    }
                     if ($model->patPatientAddress->addr_current_address != '' && $model->patPatientAddress->addr_country_id != '' && $model->patPatientAddress->addr_state_id != '' && $model->patPatientAddress->addr_city_id != '') {
                         $country = $model->patPatientAddress->addrCountry->country_name;
                         $state = $model->patPatientAddress->addrState->state_name;
