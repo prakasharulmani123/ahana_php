@@ -439,16 +439,19 @@ class PatPatient extends RActiveRecord {
                         $result .= $model->patPatientAddress->addr_current_address;
                     }
                     
+                    if($model->patPatientAddress->addr_city_id != ''){
+                        $result .= ' ' . $model->patPatientAddress->addrCity->city_name;
+                    }
+                    
+                    if($model->patPatientAddress->addr_state_id != ''){
+                        $result .= ' ' . $model->patPatientAddress->addrState->state_name;
+                    }
+                    
                     if($model->patPatientAddress->addr_country_id != ''){
                         $result .= ' ' . $model->patPatientAddress->addrCountry->country_name;
                     }
-                    if ($model->patPatientAddress->addr_current_address != '' && $model->patPatientAddress->addr_country_id != '' && $model->patPatientAddress->addr_state_id != '' && $model->patPatientAddress->addr_city_id != '') {
-                        $country = $model->patPatientAddress->addrCountry->country_name;
-                        $state = $model->patPatientAddress->addrState->state_name;
-                        $city = $model->patPatientAddress->addrCity->city_name;
-                        $address = $model->patPatientAddress->addr_current_address;
-                        return $address . ' ' . $city . ' ' . $state . ' ' . $country;
-                    }
+                    
+                    return $result;
                 }
             },
             'activeCasesheetno' => function ($model) {
