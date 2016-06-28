@@ -225,6 +225,15 @@ class PatPatient extends RActiveRecord {
         if ($insert) {
             CoInternalCode::increaseInternalCode("P");
 
+            $model = new PatPatientCasesheet();
+            $model->attributes = [
+                'casesheet_no' => CoInternalCode::find()->tenant()->codeType("CS")->one()->Fullcode,
+                'patient_id' => $this->patient_id,
+                'start_date' => date("Y-m-d"),
+            ];
+            $model->save(false);
+            CoInternalCode::increaseInternalCode("CS");
+
             $header = "Patient Registration";
             $message = "{$this->patient_title_code} {$this->patient_firstname} Registered Successfully.";
             $date = $this->patient_reg_date;
@@ -237,8 +246,8 @@ class PatPatient extends RActiveRecord {
         $this->savetoHms($insert);
 
         $encounter_id = !empty($this->patActiveEncounter) ? $this->patActiveEncounter->encounter_id : null;
-        
-        if(is_null($encounter_id)){
+
+        if (is_null($encounter_id)) {
             $encounter_id = !empty($this->patPreviousEncounter) ? $this->patPreviousEncounter->encounter_id : null;
         }
         PatTimeline::insertTimeLine($this->patient_id, $date, $header, '', $message, 'BASIC', $encounter_id);
