@@ -34,6 +34,32 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                     .success(function (OutPatients) {
                         $scope.isLoading = false;
                         $scope.rowCollection = OutPatients.result;
+
+                        //Custom Order By Row collection
+                        $scope.census = 0;
+                        angular.forEach($scope.rowCollection, function (row) {
+                            var booked = 0;
+                            var arrived = 0;
+
+                            angular.forEach(row.all, function (appt) {
+                                if (appt.liveAppointmentArrival == '-') {
+                                    appt.sts = 'B';
+                                    booked++;
+                                }
+                                if (appt.liveAppointmentArrival != '-') {
+                                    appt.sts = 'A';
+                                    arrived++;
+                                }
+                                appt.selected = '0';
+                                $scope.census++;
+                            });
+
+                            row.booking_count = booked;
+                            row.arrived_count = arrived;
+                            row.selected = '0';
+                            row.all = $filter('orderBy')(row.all, 'sts');
+                        });
+
                         $scope.displayedCollection = [].concat($scope.rowCollection);
 
                         //Checkbox initialize
@@ -46,13 +72,45 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                     });
         };
 
+        $scope.updateCheckbox = function (parent, parent_key) {
+            angular.forEach($scope.displayedCollection, function (value, op_key) {
+                value.selected = '0';
+
+                if (parent_key == op_key)
+                    value.selected = parent.selected;
+                
+                angular.forEach(value.all, function (row, key) {
+                    row.selected = '0';
+                    
+                    if (parent_key == op_key){
+                        row.selected = parent.selected;
+                    }
+                });
+            });
+            
+            $timeout(function () {
+                angular.forEach($scope.displayedCollection, function (value, op_key) {
+                    angular.forEach(value.all, function (row, key) {
+                        $scope.moreOptions(op_key, key, row.liveAppointmentConsultant.user_id, row.liveAppointmentBooking.appt_id, row);
+                    });
+                });
+            }, 800)
+        }
+
         $scope.moreOptions = function (op_key, key, consultant_id, appt_id, row) {
             appt_exists = $filter('filter')($scope.checkboxes.items, {appt_id: appt_id});
             if ($('#oplist_' + op_key + '_' + key).is(':checked')) {
+                $('#oplist_' + op_key + '_' + key).closest('tr').addClass('selected_row');
+                
+                $('.tr_oplistcheckbox').not('.tr_oplistcheckbox_' + op_key).each(function(){
+                    $(this).removeClass('selected_row');
+                });
+                
                 if (appt_exists.length == 0) {
                     consultant_exists = $filter('filter')($scope.checkboxes.items, {consultant_id: consultant_id});
                     if (consultant_exists.length == 0) {
-                        $('.oplistcheckbox').not('#oplist_' + op_key + '_' + key).attr('checked', false);
+                        $('.oplistcheckbox').not('.oplistcheckbox_' + op_key).attr('checked', false);
+//                        $('.oplistcheckbox').not('#oplist_' + op_key + '_' + key).attr('checked', false);
                         $scope.checkboxes.items = [];
                         $scope.checkboxes.items.push({
                             appt_id: appt_id,
@@ -68,6 +126,7 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                     }
                 }
             } else {
+                $('#oplist_' + op_key + '_' + key).closest('tr').removeClass('selected_row');
                 if (appt_exists.length > 0) {
                     $scope.checkboxes.items.splice($scope.checkboxes.items.indexOf(appt_exists[0]), 1);
                 }

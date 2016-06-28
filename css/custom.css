@@ -199,3 +199,7 @@ video {
     font-weight: 700;
     text-align: center;
 }
+
+.selected_row, .selected_row td{
+    background-color: #ADE8BB !important;
+}

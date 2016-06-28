@@ -1,6 +1,15 @@
 <div class="panel panel-default">
     <div class="panel-body">
-         <div class="form-group">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Mode</label>
+            <div class="col-sm-9">
+                <label class="i-checks"><input type="radio" name="z" value="OP" checked="" disabled=""><i></i>OP&nbsp; &nbsp;</label>
+                <label class="i-checks"><input type="radio" name="z" value="IP" ng-click="loadbar('show'); $state.go('patient.admission', {id: $state.params.id})"><i></i>IP&nbsp; &nbsp;</label>
+            </div>
+        </div>
+        <div class="line line-dashed b-b line-lg "></div>
+
+        <div class="form-group">
             <label class="col-sm-3 control-label">Case sheet no * </label>
             <div class="col-sm-9">
                 <input type="text" ng-model="data.PatEncounter.add_casesheet_no" class="form-control" placeholder="" ng-if="patientObj.activeCasesheetno == null">
@@ -8,7 +17,7 @@
             </div>
         </div>
         <div class="line line-dashed b-b line-lg "></div>
-        
+
         <div class="form-group">
             <label class="col-sm-3 control-label">Consultant * </label>
             <div class="col-sm-9">
@@ -55,9 +64,6 @@
                 </label>
             </div>
         </div>
-        <div class="line line-dashed b-b line-lg "></div>
-
-
     </div>
     <footer class="panel-footer text-right bg-light lter">
         <button class="btn m-b-xs  btn-success save-btn" ng-click="saveForm('add')">Save</button> &nbsp;

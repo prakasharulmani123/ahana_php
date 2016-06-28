@@ -36,6 +36,9 @@
                 </span>
             </div>
             <div class="col-sm-4"></div>
+            <div class="col-sm-3 pull-right text-right">
+                <h4 class="label bg-primary"> <b> Census: {{census}} </b></h4>
+            </div>
         </div>
 
         <div class="table-responsive in-patient-table">
@@ -76,15 +79,21 @@
                         </td>
                         <td colspan="9">
                             <b> 
+                                <label class="i-checks"> 
+                                    <input ng-model="row.selected" ng-true-value="'1'" ng-false-value="'0'" ng-checked="value.selected == '1'"  type="checkbox" name="checkall" class="oplistcheckbox oplistcheckbox_{{op_key}}" ng-click="updateCheckbox(row, op_key)"> 
+                                    <i></i> 
+                                </label>&nbsp; &nbsp;
                                 <span class="badge bg-primary">Consultant: {{value.data.liveAppointmentConsultant.fullname}}</span>&nbsp; &nbsp; 
+                                <span class="badge bg-black">Booking: {{value.booking_count}}</span>&nbsp; &nbsp; 
+                                <span class="badge bg-success">Arrived: {{value.arrived_count}}</span>&nbsp; &nbsp; 
                             </b>
                         </td>
                     </tr>
 
-                    <tr ng-repeat-end ng-show="expanded" ng-repeat="(key, row) in value.all">
-                        <td>
+                    <tr ng-repeat-end ng-show="expanded" ng-repeat="(key, row) in value.all" class="tr_oplistcheckbox tr_oplistcheckbox_{{op_key}}">
+                        <td align="center">
                             <label class="i-checks" ng-if="row.liveAppointmentArrival == '-'"> 
-                                <input class="oplistcheckbox" id="oplist_{{op_key}}_{{key}}" type="checkbox" name="status" ng-click="moreOptions(op_key, key, row.liveAppointmentConsultant.user_id, row.liveAppointmentBooking.appt_id, row)"> 
+                                <input ng-model="row.selected" ng-true-value="'1'" ng-false-value="'0'" ng-checked="row.selected == '1'" class="oplistcheckbox oplistcheckbox_{{op_key}}" id="oplist_{{op_key}}_{{key}}" type="checkbox" name="status" ng-click="moreOptions(op_key, key, row.liveAppointmentConsultant.user_id, row.liveAppointmentBooking.appt_id, row)"> 
                                 <i></i> 
                             </label>
                         </td>
@@ -101,8 +110,8 @@
                             {{row.patient.patient_int_code}}
                         </td>
                         <td valign="middle">
-                            <div ng-if="row.patient.patient_category" class="category_badge" style="background-color: {{row.patient.patient_category_color}}">
-                                {{row.patient.patient_category | uppercase}}{{row.patient.billing_type}}
+                            <div ng-if="row.patient.patient_category" class="category_badge" tooltip="{{row.patient.patient_category_fullname}}" tooltip-trigger tooltip-animation="false" tooltip-placement="top" style="background-color: {{row.patient.patient_category_color}}">
+                                {{row.patient.patient_category| uppercase}}
                             </div>
                         </td>
                         <td>
@@ -113,17 +122,24 @@
                         <td>{{row.liveAppointmentBooking.status_datetime| moment:'hh:mm A'}}<br/>  <span class="text-muted"> {{row.liveAppointmentBooking.status_date}}</span></td>
                         <td>
                             <div class="input-group" ng-if="row.liveAppointmentArrival == '-'">
-                                <a class="dropdown-toggle" id="dropdown2" role="button" data-toggle="dropdown" data-target="#" href="javascript:void(0)">
-                                    <div class="input-group">
-                                        <span editable-text="row.sts_time" e-name="sts_date" e-form="hiddenform">
-                                            {{row.sts_time}} <br/> 
-                                            <span class="text-muted"> {{row.sts_date}} </span> 
-                                        </span>
-                                    </div>
-                                </a>
-                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                                    <datetimepicker data-ng-model="arr_date" data-datetimepicker-config="{ dropdownSelector: '#dropdown2' }" data-on-set-time="onTimeSet(newDate, oldDate, op_key, key)"/>
-                                </ul>
+                                <!--                                <a class="dropdown-toggle" id="dropdown2" role="button" data-toggle="dropdown" data-target="#" href="javascript:void(0)">
+                                                                    <div class="input-group">
+                                                                        <span editable-text="row.sts_time" e-name="sts_date" e-form="hiddenform">
+                                                                            {{row.sts_time}} <br/> 
+                                                                            <span class="text-muted"> {{row.sts_date}} </span> 
+                                                                        </span>
+                                                                    </div>
+                                                                </a>
+                                                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                                                    <datetimepicker data-ng-model="arr_date" data-datetimepicker-config="{ dropdownSelector: '#dropdown2' }" data-on-set-time="onTimeSet(newDate, oldDate, op_key, key)"/>
+                                                                </ul>-->
+                                <div>
+                                    <span>
+                                        {{row.sts_time}} <br/> 
+                                        <span class="text-muted"> {{row.sts_date}} </span> 
+                                    </span>
+                                </div>
+
                             </div>
 
                             <div ng-if="row.liveAppointmentArrival != '-'">
@@ -157,7 +173,6 @@
                                     <a ng-click="rowform.$show();
                                                     row.sts_status = 'A';
                                                     setTimings(op_key, key, 'set')" class="ng-scope ng-binding editable editable-click"> Booked </a><br />
-                                    <span class="text-danger-dk">Waiting!</span>
                                 </div> 
                             </div>
 
@@ -177,47 +192,48 @@
                                     </form>
                                     <div class="buttons" ng-show="!rowform.$visible">
                                         <a ng-click="rowform.$show();" class="ng-scope ng-binding editable editable-click"> Arrived </a><br />
+                                        <span class="text-danger-dk">Waiting!</span>
                                     </div> 
                                 </div>
                             </div>
                         </td>
                         <td>{{row.liveAppointmentConsultant.title_code}} {{row.liveAppointmentConsultant.name}}</td>
                         <td align="left">
-<!--                            <a ui-sref="patient.view({id: row.patient.patient_guid})">
-                                <img src="img/small-icon1.png"  alt="" tooltip="Details" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
-                            </a>-->
+                            <!--                            <a ui-sref="patient.view({id: row.patient.patient_guid})">
+                                                            <img src="img/small-icon1.png"  alt="" tooltip="Details" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
+                                                        </a>-->
 
-                            <a ui-sref="patient.procedure({id: row.patient.patient_guid})">
+                            <a check-access ui-sref="patient.procedure({id: row.patient.patient_guid})">
                                 <img src="img/medi-icon1.png"  alt="" tooltip="Procedures" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
                             </a>
 
-                            <a ui-sref="patient.encounter({id: row.patient.patient_guid})">
+                            <a check-access ui-sref="patient.encounter({id: row.patient.patient_guid})">
                                 <img src="img/medi-icon2.png"  alt="" tooltip="Encounters " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
                             </a>
 
-                            <a ui-sref="patient.notes({id: row.patient.patient_guid})">
-                                <img src="img/medi-icon3.png"  alt="" tooltip=" Notes " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
+                            <a check-access ui-sref="patient.billing({id: row.patient.patient_guid})">
+                                <img src="img/medi-icon3.png"  alt="" tooltip=" Billing " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
                             </a>
 
-                            <a ui-sref="patient.prescription({id: row.patient.patient_guid})">
+                            <a check-access ui-sref="patient.prescription({id: row.patient.patient_guid})">
                                 <img src="img/medi-icon4.png"  alt="" tooltip="Prescriptions " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
                             </a>
 
-                            <a ui-sref="patient.consultant({id: row.patient.patient_guid})">
+                            <a check-access ui-sref="patient.consultant({id: row.patient.patient_guid})">
                                 <img src="img/medi-icon5.png"  alt="" tooltip="Consultation " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
                             </a>
 
-<!--                            <a href="#">
-                                <img src="img/small-icon7.png"  alt="" tooltip="Documents " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
-                            </a>
-
-                            <a ui-sref="patient.alert({id: row.patient.patient_guid})">
-                                <img src="img/small-icon8.png"  alt="" tooltip="Alerts  " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
-                            </a>
-
-                            <a ui-sref="patient.billing({id: row.patient.patient_guid})">
-                                <img src="img/small-icon9.png"  alt="" tooltip="Billing" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
-                            </a>-->
+                            <!--                            <a href="#">
+                                                            <img src="img/small-icon7.png"  alt="" tooltip="Documents " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
+                                                        </a>
+                            
+                                                        <a ui-sref="patient.alert({id: row.patient.patient_guid})">
+                                                            <img src="img/small-icon8.png"  alt="" tooltip="Alerts  " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
+                                                        </a>
+                            
+                                                        <a ui-sref="patient.billing({id: row.patient.patient_guid})">
+                                                            <img src="img/small-icon9.png"  alt="" tooltip="Billing" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
+                                                        </a>-->
                         </td>
                     </tr>
                 </tbody>
@@ -239,3 +255,14 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('body').on('.checkall', 'click', function () {
+            alert('asdas')
+        });
+        $('.checkall').on('ifChecked', function (event) {
+            alert(event.type + ' callback');
+        });
+    });
+</script>
