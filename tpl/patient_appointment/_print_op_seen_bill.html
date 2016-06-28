@@ -1,0 +1,53 @@
+<div id="Getprintval" ng-hide="1">
+    <div class="invoice-details1">
+        <table width="100%" border="0" align="right" cellpadding="0" cellspacing="0" class="purchase-list-tab purchase-list-tab2 ">
+            <tr>
+                <th align="left">Patent Name :  </th>
+                <td align="left"> {{patientObj.fullname}} ({{patientObj.activeCasesheetno}})</td>
+            </tr>
+            <tr>
+                <th align="left">Patent Id :  </th>
+                <td align="left">{{patientObj.patient_int_code}}</td>
+            </tr>
+            <tr>
+                <th align="left">Sex:  </th>
+                <td align="left">{{app.patientDetail.patientSex}}</td>
+            </tr>
+        </table>
+    </div>
+    <div class="invoice-details1 invoice-details2">
+        <table width="100%" border="0" align="right" cellpadding="0" cellspacing="0" class="purchase-list-tab purchase-list-tab2 ">         
+            <tr>
+                <th align="left">Consultant Name  :  </th>
+                <td align="left">{{printBillData.doctor}}</td>
+            </tr>
+            <tr>
+                <th align="left">Organization  :  </th>
+                <td align="left">{{patientObj.org_name}} </td>
+            </tr>
+            <tr>
+                <th align="left">Age  :  </th>
+                <td align="left">
+                    {{patientObj.patient_age}}y
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="clearfix"></div>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="purchase-list-tab">
+        <tr>
+            <th>Status</th>
+            <th>Timing</th>
+            <th>Billing</th>
+            <th>Patient Category</th>
+            <th>OP Amount</th>         
+        </tr>
+        <tr>
+            <td>Seen</td>
+            <td>{{printBillData.date}}</td>
+            <td>{{printBillData.patient_bill_type}}</td>
+            <td>{{printBillData.patient_cat_name}}</td>
+            <td>{{printBillData.op_amount}}</td>
+        </tr>      
+    </table>
+</div>
