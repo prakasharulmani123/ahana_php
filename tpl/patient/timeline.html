@@ -3,7 +3,7 @@
             <h1 class="m-n h3">Timeline</h1>
         </div>-->
     <div class="bg-light lter b-b wrapper-md" style="width:100%;float:left; padding:10px; padding-bottom:0px; margin-bottom:15px;">
-        <div class="col-sm-3 m-b-xs">  <h1 class="m-n h3">Timeline ({{data.tenant_name}})</h1> </div>
+        <div class="col-sm-9 m-b-xs">  <h1 class="m-n h3">Timeline ({{data.tenant_name}})</h1> </div>
         <div class="col-sm-3 m-b-xs pull-right right">
             <b> Shared Organizations : </b> 
             <select class="form-control" name="Branches" ng-model="data.tenant_id" ng-options="tenant.tenant_id as tenant.branch_name for tenant in tenants | orderBy: label" data-ng-change="switchBranch()">
@@ -35,6 +35,10 @@
                                 </div>
                                 <div class="panel-body b-t b-light" ng-bind-html="row.message">
                                 </div>
+                                <span class="help-block text-right">
+                                    Created By: {{row.created_user}}<br />
+                                    Branch: {{row.tenant_name}}
+                                </span>
                             </div>
                         </div>
                     </li>

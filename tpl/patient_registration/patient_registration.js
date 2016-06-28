@@ -290,7 +290,7 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
             }
         };
         
-        $scope.open = function (size, ctrlr, tmpl, update_col) {
+        $scope.openModal = function (size, ctrlr, tmpl, update_col) {
             if(typeof $scope.data.PatPatientAddress == 'undefined'){
                 $scope.data.PatPatientAddress = {};
             }

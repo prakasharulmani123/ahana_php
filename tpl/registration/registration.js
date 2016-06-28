@@ -157,12 +157,13 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
             }).then(
                     function (response) {
                         if (response.data.success === true) {
-                            if (!jQuery.isEmptyObject(response.data.return)) {
+                            if (!jQuery.isEmptyObject(response.data.return.username)) {
                                 $scope.data = response.data.return;
                                 $scope.data.password = '';
                                 $scope.data.form_type = 'update';
                             } else {
                                 $scope.data.form_type = 'add';
+                                $scope.data.activation_date = moment($scope.data.activation_date).format('YYYY-MM-DD');
                             }
                         }
                         else {
@@ -179,8 +180,9 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
             _that.data.user_id = {};
             _that.data.user_id = $state.params.id;
 
-            _that.data.activation_date = moment(_that.data.activation_date).format('YYYY-MM-DD');
-            _that.data.Inactivation_date = moment(_that.data.Inactivation_date).format('YYYY-MM-DD');
+            if(typeof _that.data.activation_date != 'undefined' && _that.data.activation_date != '' && _that.data.activation_date != null)
+                _that.data.activation_date = moment(_that.data.activation_date).format('YYYY-MM-DD');
+//            _that.data.Inactivation_date = moment(_that.data.Inactivation_date).format('YYYY-MM-DD');
 
             $scope.errorData = "";
             $scope.successMessage = "";

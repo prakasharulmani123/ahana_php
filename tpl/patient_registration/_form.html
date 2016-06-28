@@ -38,7 +38,7 @@
                 <div class="col-sm-5">
                     <div class="input-group">
                         <input type="text" name="dob" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="data.PatPatient.patient_dob" is-open="$parent.opened" datepicker-options="dateOptions" close-text="Close" max-date="maxDate" ng-change="setAgeEmpty();
-                            getAge();" required/>
+                            getAge();" ng-click="open($event)" required/>
                         <span class="input-group-btn">
                             <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                         </span>
@@ -83,7 +83,7 @@
                         <script type="text/ng-template" id="CountryModalContent.html">
                             <div ng-include="'tpl/modal_form/modal.country.html'"></div>
                         </script>
-                        <button type="button" class="btn btn-primary" ng-click="open('lg', 'CountryModalInstanceCtrl', 'CountryModalContent.html', '')">
+                        <button type="button" class="btn btn-primary" ng-click="openModal('lg', 'CountryModalInstanceCtrl', 'CountryModalContent.html', '')">
                             <i class="fa fa-plus text ng-scope"></i>
                         </button>
                     </div>
@@ -97,7 +97,7 @@
                         <script type="text/ng-template" id="StateModalContent.html">
                             <div ng-include="'tpl/modal_form/modal.state.html'"></div>
                         </script>
-                        <button type="button" class="btn btn-primary" ng-click="open('lg', 'StateModalInstanceCtrl', 'StateModalContent.html', '')">
+                        <button type="button" class="btn btn-primary" ng-click="openModal('lg', 'StateModalInstanceCtrl', 'StateModalContent.html', '')">
                             <i class="fa fa-plus text ng-scope"></i>
                         </button>
                     </div>
@@ -110,7 +110,7 @@
                         <script type="text/ng-template" id="CityModalContent.html">
                             <div ng-include="'tpl/modal_form/modal.city.html'"></div>
                         </script>
-                        <button type="button" class="btn btn-primary" ng-click="open('lg', 'CityModalInstanceCtrl', 'CityModalContent.html', '')">
+                        <button type="button" class="btn btn-primary" ng-click="openModal('lg', 'CityModalInstanceCtrl', 'CityModalContent.html', '')">
                             <i class="fa fa-plus text ng-scope"></i>
                         </button>
                     </div>

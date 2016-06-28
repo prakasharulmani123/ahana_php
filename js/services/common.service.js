@@ -125,7 +125,7 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
     }
 
     function GetTitleCodes(callback) {
-        var response = [{value: 'Mr.', label: 'Mr.'}, {value: 'Mrs.', label: 'Mrs.'}, {value: 'Miss.', label: 'Miss.'}, {value: 'Dr.', label: 'Dr.'}];
+        var response = [{value: 'Mr.', label: 'Mr.'}, {value: 'Mrs.', label: 'Mrs.'}, {value: 'Miss.', label: 'Miss.'}, {value: 'Dr.', label: 'Dr.'}, {value: 'Master.', label: 'Master.'}];
         callback(response);
     }
 
