@@ -101,7 +101,7 @@
                             {{row.patient.patient_int_code}}
                         </td>
                         <td valign="middle">
-                            <div class="category_badge" style="background-color: {{row.patient.patient_category_color}}">
+                            <div ng-if="row.patient.patient_category" class="category_badge" style="background-color: {{row.patient.patient_category_color}}">
                                 {{row.patient.patient_category | uppercase}}{{row.patient.billing_type}}
                             </div>
                         </td>

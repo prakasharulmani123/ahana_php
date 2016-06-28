@@ -23,6 +23,7 @@
                         <th style="width:60px;">&nbsp;</th>
                         <th st-sort="patient_firstname">Patient</th>
                         <th>Case sheet#</th>
+                        <th>Category</th>
                         <th>Admission Date</th>
                         <th>ROOM#</th>
                         <th>consultant</th>
@@ -51,6 +52,11 @@
                             {{row.patient.patient_int_code}}
                         </td>
                         <td>{{row.patient.activeCasesheetno}}</td>
+                        <td valign="middle">
+                            <div ng-if="row.patient.patient_category" class="category_badge" style="background-color: {{row.patient.patient_category_color}}">
+                                {{row.patient.patient_category | uppercase}}{{row.patient.billing_type}}
+                            </div>
+                        </td>
                         <td>
                             {{row.doe}} <br/>  <span class="text-muted"> {{row.doeTimeago}} </span>
                         </td>
