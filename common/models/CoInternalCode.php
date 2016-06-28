@@ -89,8 +89,8 @@ class CoInternalCode extends RActiveRecord {
     }
 
     public static function getCodeTypes() {
-        //B-Bill, P-Patient, PU-Purchase, PR- , CS-CaseSheet
-        return array('B', 'P', 'PU', 'PR', 'CS');
+        //B-Bill, P-Patient, PU-Purchase, PR-PurchaseReturn , CS-CaseSheet, SA-Sale, SR-SaleReturn
+        return array('B', 'P', 'PU', 'PR', 'CS', 'SA', 'SR');
     }
 
     public function getFullcode() {
