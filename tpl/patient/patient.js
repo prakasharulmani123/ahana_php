@@ -115,8 +115,8 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
 
             _that = this;
             angular.forEach($scope.states, function (value) {
-                if (_that.data.PatPatientAddress != null) {
-                    if (value.countryId == _that.data.PatPatientAddress.addr_country_id) {
+                if (_that.patdata.PatPatientAddress != null) {
+                    if (value.countryId == _that.patdata.PatPatientAddress.addr_country_id) {
                         var obj = {
                             value: value.value,
                             label: value.label
@@ -132,8 +132,8 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
 
             _that = this;
             angular.forEach($scope.cities, function (value) {
-                if (_that.data.PatPatientAddress != null) {
-                    if (value.stateId == _that.data.PatPatientAddress.addr_state_id) {
+                if (_that.patdata.PatPatientAddress != null) {
+                    if (value.stateId == _that.patdata.PatPatientAddress.addr_state_id) {
                         var obj = {
                             value: value.value,
                             label: value.label
@@ -150,8 +150,8 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
 
             _that = this;
             angular.forEach($scope.states, function (value) {
-                if (_that.data.PatPatientAddress != null) {
-                    if (value.countryId == _that.data.PatPatientAddress.addr_perm_country_id) {
+                if (_that.patdata.PatPatientAddress != null) {
+                    if (value.countryId == _that.patdata.PatPatientAddress.addr_perm_country_id) {
                         var obj = {
                             value: value.value,
                             label: value.label
@@ -167,8 +167,8 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
 
             _that = this;
             angular.forEach($scope.cities, function (value) {
-                if (_that.data.PatPatientAddress != null) {
-                    if (value.stateId == _that.data.PatPatientAddress.addr_perm_state_id) {
+                if (_that.patdata.PatPatientAddress != null) {
+                    if (value.stateId == _that.patdata.PatPatientAddress.addr_perm_state_id) {
                         var obj = {
                             value: value.value,
                             label: value.label
