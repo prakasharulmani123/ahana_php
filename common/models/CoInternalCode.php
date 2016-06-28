@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\models\query\CoInternalCodeQuery;
+use Yii;
 use yii\db\ActiveQuery;
 
 /**
@@ -110,7 +111,25 @@ class CoInternalCode extends RActiveRecord {
     }
 
     public static function generateInternalCode($code_type, $model, $column){
-        $code = self::find()->tenant()->codeType($code_type)->one()->Fullcode;
+        $internal_code = self::find()->tenant()->codeType($code_type)->one();
+        
+        if(empty($internal_code)){
+            $user = Yii::$app->user->identity->user;
+            $tenant_name = CoTenant::find($user->tenant_id)->one()->tenant_name;
+            
+            $internal_code = new CoInternalCode;
+            $internal_code->tenant_id = $user->tenant_id;
+            $internal_code->code_type = $code_type;
+            $string = str_replace(' ', '-', $tenant_name);
+            $string = preg_replace('/[^A-Za-z0-9\-]/', '', $string);
+            $internal_code->code_prefix = strtoupper(substr($string, 0, 2));
+            $internal_code->code = '1';
+            $internal_code->code_padding = '7';
+            $internal_code->save(false);
+        }
+        
+        $code = $internal_code->Fullcode;
+        
         do {
             $exists = $model::find()->where([$column => $code])->one();
 
@@ -122,6 +141,7 @@ class CoInternalCode extends RActiveRecord {
                 break;
             }
         } while ($old_code != $code);
+        
         return $code;
     }
 

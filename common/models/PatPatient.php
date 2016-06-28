@@ -398,9 +398,8 @@ class PatPatient extends RActiveRecord {
                     return date('Y-m-d', strtotime($model->patient_reg_date));
             },
             'patient_category' => function ($model) {
-                if (isset($model->patientCategory->patient_cat_name)) {
-                    $category_name = $model->patientCategory->patient_cat_name;
-                    return $category_name[0];
+                if (isset($model->patientCategory->patient_short_code)) {
+                    return $model->patientCategory->patient_short_code;
                 }
             },
             'patient_category_fullname' => function ($model) {

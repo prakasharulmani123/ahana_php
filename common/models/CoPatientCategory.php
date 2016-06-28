@@ -11,6 +11,7 @@ use yii\db\ActiveQuery;
  * @property integer $patient_cat_id
  * @property integer $tenant_id
  * @property string $patient_cat_name
+ * @property string $patient_short_code
  * @property string $patient_cat_color
  * @property string $status
  * @property integer $created_by
@@ -35,12 +36,13 @@ class CoPatientCategory extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['patient_cat_name', 'patient_cat_color'], 'required'],
+            [['patient_cat_name', 'patient_cat_color', 'patient_short_code'], 'required'],
             [['tenant_id', 'created_by', 'modified_by'], 'integer'],
-            [['created_at', 'modified_at', 'deleted_at'], 'safe'],
+            [['created_at', 'modified_at', 'deleted_at', 'patient_short_code'], 'safe'],
             [['status'], 'string'],
             [['patient_cat_name'], 'string', 'max' => 50],
             [['patient_cat_color'], 'string', 'max' => 10],
+            [['patient_short_code'], 'string', 'max' => 2],
             [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'patient_cat_name', 'deleted_at'], 'message' => 'The combination of Name has already been taken.']
         ];
     }
