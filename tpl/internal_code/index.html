@@ -21,13 +21,19 @@
                                 <label class="col-sm-5 control-label">Prefix * </label>
                                 <div class="col-sm-7">
                                     <input type="hidden" ng-model="data.internal_code_id">
-                                    <input type="text" ng-model="data.code_prefix" maxlength="50" class="form-control" placeholder="Code prefix">
+                                    <input type="text" maxlength="4" ng-model="data.code_prefix" class="form-control" placeholder="Code prefix">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-5 control-label">Start No * </label>
+                                <label class="col-sm-5 control-label">Digits * </label>
                                 <div class="col-sm-7">
-                                    <input type="text" number-mask ="" ng-model="data.code" maxlength="50" class="form-control" placeholder="Code start no">
+                                    <input type="text" maxlength="1" number-mask ="" ng-model="data.code_padding" class="form-control" placeholder="Digits">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">Format </label>
+                                <div class="col-sm-7" style="padding-top: 7px">
+                                    {{data.code_prefix}}{{data.code| zpad:data.code_padding}}
                                 </div>
                             </div>
                         </div>
@@ -49,13 +55,19 @@
                                 <label class="col-sm-5 control-label">Prefix * </label>
                                 <div class="col-sm-7">
                                     <input type="hidden" ng-model="data2.internal_code_id">
-                                    <input type="text" ng-model="data2.code_prefix" maxlength="50" class="form-control" placeholder="Code prefix">
+                                    <input type="text" maxlength="4" ng-model="data2.code_prefix" maxlength="50" class="form-control" placeholder="Code prefix">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-5 control-label">Start No * </label>
+                                <label class="col-sm-5 control-label">Digits * </label>
                                 <div class="col-sm-7">
-                                    <input type="text" number-mask ="" ng-model="data2.code" maxlength="50" class="form-control" placeholder="Code start no">
+                                    <input type="text" maxlength="1" number-mask ="" ng-model="data2.code_padding" class="form-control" placeholder="Digits">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">Format</label>
+                                <div class="col-sm-7" style="padding-top: 7px">
+                                    {{data2.code_prefix}}{{data2.code| zpad:data2.code_padding}}
                                 </div>
                             </div>
                         </div>
