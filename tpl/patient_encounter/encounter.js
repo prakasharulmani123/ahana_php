@@ -142,6 +142,9 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
 
         $scope.printBillData = {};
         $scope.printOPBill = function (item) {
+            $scope.printBillData.date = item.date;
+            $scope.printBillData.doctor = item.doctor;
+
             //Patient Billing Types List
             $rootScope.commonService.GetPatientBillingList(function (response) {
                 $scope.bill_types = response;
@@ -152,18 +155,22 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                     .success(function (response) {
                         //appointment seen amount
                         $scope.printBillData.op_amount = response.model.appointmentSeen.amount;
-                        
+
                         //Get Patient Bill Type
-                        var billinfo = $filter('filter')($scope.bill_types, {
-                            value: response.model.appointmentSeen.patient_bill_type
-                        });
-                        $scope.printBillData.patient_bill_type = billinfo[0].label;
-                        
+                        if (response.model.appointmentSeen.patient_bill_type) {
+                            var billinfo = $filter('filter')($scope.bill_types, {
+                                value: response.model.appointmentSeen.patient_bill_type
+                            });
+                            $scope.printBillData.patient_bill_type = billinfo[0].label;
+                        } else {
+                            $scope.printBillData.patient_bill_type = '-';
+                        }
+
                         //Patient Cateogry
                         consultant_id = item.consultant_id;
                         $http.get($rootScope.IRISOrgServiceUrl + '/default/getconsultantcharges?consultant_id=' + consultant_id)
                                 .success(function (response2) {
-                                    $scope.chargesList = response2.chargesList;  
+                                    $scope.chargesList = response2.chargesList;
                                     var charge = $filter('filter')($scope.chargesList, {patient_cat_id: response.model.appointmentSeen.patient_cat_id});
                                     if (typeof charge[0] != 'undefined') {
                                         $scope.printBillData.patient_cat_name = charge[0].op_dept;
@@ -175,16 +182,13 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                         response = {success: false, message: 'Server Error'};
                     });
 
-            $scope.printBillData.date = item.date;
-            $scope.printBillData.doctor = item.doctor;
-
             $timeout(function () {
                 var innerContents = document.getElementById('Getprintval').innerHTML;
                 var popupWinindow = window.open('', '_blank', 'width=600,height=700,scrollbars=no,menubar=no,toolbar=no,location=no,status=no,titlebar=no');
                 popupWinindow.document.open();
                 popupWinindow.document.write('<html><head><link href="css/print.css" rel="stylesheet" type="text/css" /></head><body onload="window.print()">' + innerContents + '</html>');
                 popupWinindow.document.close();
-            }, 1000)
+            }, 1000);
         }
 
         $scope.isPatientHaveActiveEncounter = function (callback) {

@@ -60,6 +60,8 @@ app.controller('AppointmentRescheduleController', ['scope', '$scope', '$modalIns
                 post_url = $rootScope.IRISOrgServiceUrl + '/appointment/bulkreschedule';
                 method = 'POST';
                 succ_msg = 'Rescheduled successfully';
+                
+                _that.data.status_date = moment(_that.data.status_date).format('YYYY-MM-DD');
 
                 scope.loadbar('show');
                 $http({

@@ -335,23 +335,23 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
             });
         };
 
+        $scope.printBillData = {};
         $scope.save_success = function (date, amount) {
-            $scope.printBillData = {};
             $scope.printBillData.doctor = $scope.patientObj.consultant_name;
             $scope.printBillData.op_amount = amount;
             $scope.printBillData.date = date;
             $scope.printBillData.patient_bill_type = $scope.bill_type_taken;
             $scope.printBillData.patient_cat_name = $scope.cat_name_taken;
-            console.log($scope.printBillData);
-            var innerContents = document.getElementById("Getprintval").innerHTML;
-            var popupWinindow = window.open('', '_blank', 'width=600,height=700,scrollbars=no,menubar=no,toolbar=no,location=no,status=no,titlebar=no');
-            popupWinindow.document.open();
-            popupWinindow.document.write('<html><head><link href="css/print.css" rel="stylesheet" type="text/css" /></head><body onload="window.print()">' + innerContents + '</html>');
-            popupWinindow.document.close();
-            $scope.data = {};
+            
             $timeout(function () {
+                var innerContents = document.getElementById("Getprintval").innerHTML;
+                var popupWinindow = window.open('', '_blank', 'width=600,height=700,scrollbars=no,menubar=no,toolbar=no,location=no,status=no,titlebar=no');
+                popupWinindow.document.open();
+                popupWinindow.document.write('<html><head><link href="css/print.css" rel="stylesheet" type="text/css" /></head><body onload="window.print()">' + innerContents + '</html>');
+                popupWinindow.document.close();
+                $scope.data = {};
                 $state.go("patient.encounter", {id: $state.params.id});
-            }, 1000)
+            }, 1000);
         }
 
         $scope.cancelAppointment = function () {
