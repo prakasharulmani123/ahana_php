@@ -1,0 +1,268 @@
+<div class="bg-light lter b-b wrapper-md">
+    <h1 class="m-n h3">Out-Patient</h1>
+</div>
+
+<div class="wrapper-md tab-btn">
+    <div ng-include="'tpl/blocks/alert.html'">
+        {% include 'tpl/blocks/alert.html' %}
+    </div>
+    <div class="row">
+        <div class="col-sm-4"> 
+            <div class="btn-group btn-group-justified">
+                <a class="btn btn-info" ng-click="loadOutPatientsList()">
+                    <i class="fa fa-money"></i>  Current Out-Patients
+                </a>
+                <a class="btn btn-success" ui-sref="patient.futureAppointment">  
+                    <i class="fa fa-list-alt"></i>
+                    Future Appointments
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="wrapper-md" ng-controller="OutPatientsController" ng-init="loadOutPatientsList()">
+    <div class="panel panel-default">
+        <div class="row wrapper">
+            <div class="col-sm-5 m-b-xs">
+                <button class="btn btn-sm btn-grey" ng-click="loadOutPatientsList()"> &nbsp; &nbsp; <i class="fa fa-refresh"></i>  &nbsp; &nbsp; </button>    
+                <span ng-show="currentAppointmentSelected > 0">
+                    <button ng-click="rescheduleAppointments()" class="btn btn-sm btn-primary">
+                        <i class="fa fa-retweet"></i> Reschedule Appointments 
+                    </button>
+                    <button ng-click="cancelAppointments()" class="btn btn-sm btn-dark">
+                        <i class="fa fa-times"></i> Cancel Appointment 
+                    </button>
+                </span>
+            </div>
+            <div class="col-sm-4"></div>
+            <div class="col-sm-3 pull-right text-right">
+                <h4 class="label bg-primary"> <b> Census: {{census}} </b></h4>
+            </div>
+        </div>
+
+        <div class="table-responsive in-patient-table">
+            <table st-table="displayedCollection"  st-safe-src="rowCollection"  class="table table-striped b-t b-light">
+                <thead>
+                    <tr>
+                        <th>
+                            <button class="btn btn-sm btn-default hms-plus" type="button" ng-click="ctrl.expandAll(allExpanded = !allExpanded)">
+                                <i ng-if="!allExpanded" class="fa fa-plus text"></i>
+                                <i ng-if="allExpanded" class="fa fa-minus text"></i>
+                            </button>
+                        </th>
+                        <th style="width:60px;">&nbsp;</th>
+                        <th>Patient</th>
+                        <th>Category</th>
+                        <th>Contact#</th>
+                        <th>appointment<br />
+                            time</th>
+                        <th>Arrival<br />
+                            Time</th>
+                        <th>status</th>
+                        <th>consultant</th>
+                        <th style="width:250px;"> Actions</th>
+                    </tr>
+                </thead>
+                <tbody ng-hide="isLoading">
+                    <tr ng-if="displayedCollection.length == 0">
+                        <td colspan="10" class="text-center">
+                            No O/P records
+                        </td>
+                    </tr>
+                    <tr ng-repeat-start="(op_key, value) in displayedCollection" ng-init="expanded = true;">
+                        <td>
+                            <button ng-click="expanded = !expanded" expand class="btn btn-sm btn-default hms-plus">
+                                <i ng-if="!expanded" class="fa fa-plus text"></i>
+                                <i ng-if="expanded" class="fa fa-minus text"></i>
+                            </button>
+                        </td>
+                        <td colspan="9">
+                            <b> 
+                                <label class="i-checks"> 
+                                    <input ng-model="row.selected" ng-true-value="'1'" ng-false-value="'0'" ng-checked="value.selected == '1'"  type="checkbox" name="checkall" class="oplistcheckbox oplistcheckbox_{{op_key}}" ng-click="updateCheckbox(row, op_key)"> 
+                                    <i></i> 
+                                </label>&nbsp; &nbsp;
+                                <span class="badge bg-primary">Consultant: {{value.data.liveAppointmentConsultant.fullname}}</span>&nbsp; &nbsp; 
+                                <span class="badge bg-black">Booking: {{value.booking_count}}</span>&nbsp; &nbsp; 
+                                <span class="badge bg-success">Arrived: {{value.arrived_count}}</span>&nbsp; &nbsp; 
+                            </b>
+                        </td>
+                    </tr>
+
+                    <tr ng-repeat-end ng-show="expanded" ng-repeat="(key, row) in value.all" class="tr_oplistcheckbox tr_oplistcheckbox_{{op_key}}">
+                        <td align="center">
+                            <label class="i-checks" ng-if="row.liveAppointmentArrival == '-'"> 
+                                <input ng-model="row.selected" ng-true-value="'1'" ng-false-value="'0'" ng-checked="row.selected == '1'" class="oplistcheckbox oplistcheckbox_{{op_key}}" id="oplist_{{op_key}}_{{key}}" type="checkbox" name="status" ng-click="moreOptions(op_key, key, row.liveAppointmentConsultant.user_id, row.liveAppointmentBooking.appt_id, row)"> 
+                                <i></i> 
+                            </label>
+                        </td>
+                        <td align="center" valign="middle">
+                            <img ng-if="(row.liveAppointmentArrival != '-' && row.liveAppointmentArrival.waiting_elapsed)" class="pull-left" src="img/elapsed-waiting-time.png"  alt="" tooltip="Elapsing Waiting Time" tooltip-trigger tooltip-animation="false" tooltip-placement="right"/>
+                            <img ng-if="row.patient.address.incomplete_profile" class="pull-left" src="img/question.png"  alt="" tooltip="Incomplete Profile" tooltip-trigger tooltip-animation="false" tooltip-placement="right"/>
+                        </td>
+                        <td>
+                            <img ng-if="$even" class="pull-left" alt="" width="49" height="49" src="{{row.patient.patient_image ? row.patient.patient_image : 'img/man-icon.png'}}">
+                            <img ng-if="$odd" class="pull-left" alt="" width="49" height="49" src="{{row.patient.patient_image ? row.patient.patient_image : 'img/man-icon2.png'}}">
+                            <a ui-sref="patient.view({id: row.patient.patient_guid})" tooltip="{{row.patient.fullcurrentaddress}}">
+                                {{row.patient.fullname}} 
+                            </a>({{row.patient.patient_age}}y) <br/> 
+                            {{row.patient.patient_int_code}}
+                        </td>
+                        <td valign="middle">
+                            <div ng-if="row.patient.patient_category" class="category_badge" tooltip="{{row.patient.patient_category_fullname}}" tooltip-trigger tooltip-animation="false" tooltip-placement="top" style="background-color: {{row.patient.patient_category_color}}">
+                                {{row.patient.patient_category| uppercase}}
+                            </div>
+                        </td>
+                        <td>
+                            <a editable-text="row.patient.patient_mobile" e-number-mask="" onbeforesave="updatePatient(row.patient.patient_id, {'patient_mobile': $data}, $data)">
+                                {{row.patient.patient_mobile}}
+                            </a>
+                        </td>
+                        <td>{{row.liveAppointmentBooking.status_datetime| moment:'hh:mm A'}}<br/>  <span class="text-muted"> {{row.liveAppointmentBooking.status_date}}</span></td>
+                        <td>
+                            <div class="input-group" ng-if="row.liveAppointmentArrival == '-'">
+                                <!--                                <a class="dropdown-toggle" id="dropdown2" role="button" data-toggle="dropdown" data-target="#" href="javascript:void(0)">
+                                                                    <div class="input-group">
+                                                                        <span editable-text="row.sts_time" e-name="sts_date" e-form="hiddenform">
+                                                                            {{row.sts_time}} <br/> 
+                                                                            <span class="text-muted"> {{row.sts_date}} </span> 
+                                                                        </span>
+                                                                    </div>
+                                                                </a>
+                                                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                                                    <datetimepicker data-ng-model="arr_date" data-datetimepicker-config="{ dropdownSelector: '#dropdown2' }" data-on-set-time="onTimeSet(newDate, oldDate, op_key, key)"/>
+                                                                </ul>-->
+                                <div>
+                                    <span>
+                                        {{row.sts_time}} <br/> 
+                                        <span class="text-muted"> {{row.sts_date}} </span> 
+                                    </span>
+                                </div>
+
+                            </div>
+
+                            <div ng-if="row.liveAppointmentArrival != '-'">
+                                {{row.liveAppointmentArrival.status_datetime| moment:'hh:mm A'}} <br/> 
+                                <span class="text-muted"> {{row.liveAppointmentArrival.status_date}} </span>
+                            </div>
+                        </td>
+                        <td>
+                            <!-- Booking to Arrival -->
+                            <div ng-if="row.liveAppointmentArrival == '-'">
+                                <form editable-form name="rowform" onbeforesave="changeAppointmentStatus({
+                                      'patient_id': row.patient_id, 
+                                      'encounter_id': row.encounter_id,
+                                      'status_date': row.sts_date,
+                                      'status_time': row.sts_time,
+                                      'consultant_id': row.liveAppointmentBooking.consultant_id,
+                                      'appt_status': 'A',
+                                      }, op_key, key)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == row">
+                                    <span editable-select="statuses[0].value" e-name="sts_status" e-form="rowform" e-ng-options="s.value as s.text for s in statuses">
+                                        {{row.sts_status|| 'empty' }}
+                                    </span>
+                                    <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-primary btn-sm">
+                                        <span class="glyphicon glyphicon-ok"></span>
+                                    </button>
+                                    <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel();
+                                                    setTimings(op_key, key, 'unset')" class="btn btn-default btn-sm">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    </button>
+                                </form>
+                                <div class="buttons" ng-show="!rowform.$visible">
+                                    <a ng-click="rowform.$show();
+                                                    row.sts_status = 'A';
+                                                    setTimings(op_key, key, 'set')" class="ng-scope ng-binding editable editable-click"> Booked </a><br />
+                                </div> 
+                            </div>
+
+                            <!-- Arrival to Seen -->
+                            <div ng-if="row.liveAppointmentArrival != '-'">
+                                <div ng-if="row.liveAppointmentArrival.appt_status == 'A'"> 
+                                    <form editable-form name="rowform" onbeforesave="$state.go('patient.changeStatus', {id: row.patient.patient_guid, enc_id: row.encounter_id})" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == row">
+                                        <span editable-select="arr_statuses[0].value" e-name="sts_status" e-form="rowform" e-ng-options="s.value as s.text for s in arr_statuses" e-class="form-control">
+                                            {{item.sts_status|| 'empty' }}
+                                        </span>
+                                        <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-primary btn-sm">
+                                            <span class="glyphicon glyphicon-ok"></span>
+                                        </button>
+                                        <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel();" class="btn btn-default btn-sm">
+                                            <span class="glyphicon glyphicon-remove"></span>
+                                        </button>
+                                    </form>
+                                    <div class="buttons" ng-show="!rowform.$visible">
+                                        <a ng-click="rowform.$show();" class="ng-scope ng-binding editable editable-click"> Arrived </a><br />
+                                        <span class="text-danger-dk">Waiting!</span>
+                                    </div> 
+                                </div>
+                            </div>
+                        </td>
+                        <td>{{row.liveAppointmentConsultant.title_code}} {{row.liveAppointmentConsultant.name}}</td>
+                        <td align="left">
+                            <!--                            <a ui-sref="patient.view({id: row.patient.patient_guid})">
+                                                            <img src="img/small-icon1.png"  alt="" tooltip="Details" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
+                                                        </a>-->
+
+                            <a check-access ui-sref="patient.procedure({id: row.patient.patient_guid})">
+                                <img src="img/medi-icon1.png"  alt="" tooltip="Procedures" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
+                            </a>
+
+                            <a check-access ui-sref="patient.encounter({id: row.patient.patient_guid})">
+                                <img src="img/medi-icon2.png"  alt="" tooltip="Encounters " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
+                            </a>
+
+                            <a check-access ui-sref="patient.billing({id: row.patient.patient_guid})">
+                                <img src="img/medi-icon3.png"  alt="" tooltip=" Billing " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
+                            </a>
+
+                            <a check-access ui-sref="patient.prescription({id: row.patient.patient_guid})">
+                                <img src="img/medi-icon4.png"  alt="" tooltip="Prescriptions " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
+                            </a>
+
+                            <a check-access ui-sref="patient.consultant({id: row.patient.patient_guid})">
+                                <img src="img/medi-icon5.png"  alt="" tooltip="Consultation " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
+                            </a>
+
+                            <!--                            <a href="#">
+                                                            <img src="img/small-icon7.png"  alt="" tooltip="Documents " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
+                                                        </a>
+                            
+                                                        <a ui-sref="patient.alert({id: row.patient.patient_guid})">
+                                                            <img src="img/small-icon8.png"  alt="" tooltip="Alerts  " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
+                                                        </a>
+                            
+                                                        <a ui-sref="patient.billing({id: row.patient.patient_guid})">
+                                                            <img src="img/small-icon9.png"  alt="" tooltip="Billing" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
+                                                        </a>-->
+                        </td>
+                    </tr>
+                </tbody>
+
+                <tbody ng-show="isLoading">
+                    <tr>
+                        <td colspan="10" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
+                    </tr>
+                </tbody>
+
+                <tfoot>
+                    <tr>
+                        <td colspan="10" class="text-center">
+                            <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7"></div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('body').on('.checkall', 'click', function () {
+            alert('asdas')
+        });
+        $('.checkall').on('ifChecked', function (event) {
+            alert(event.type + ' callback');
+        });
+    });
+</script>

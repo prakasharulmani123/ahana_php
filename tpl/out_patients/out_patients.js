@@ -255,6 +255,13 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                         $scope.loadbar('hide');
                         $scope.successMessage = 'Status changed successfully';
                         $scope.displayedCollection[op_key]['all'][key].liveAppointmentArrival = response;
+                        
+                        angular.forEach($scope.displayedCollection, function (value, parent_key) {
+                            if (parent_key == op_key){
+                                value.booking_count--;
+                                value.arrived_count++;
+                            }
+                        });
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');
