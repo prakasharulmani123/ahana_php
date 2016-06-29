@@ -103,6 +103,13 @@ class AppointmentController extends ActiveController {
         if(!empty($post)){
             foreach($post['appointments'] as $key => $value){
                 $appointment = PatAppointment::find()->where(['appt_id' => $value['appt_id']])->one();
+                
+                //Update Encounter Table
+                $appointment_encounter = $appointment->encounter;
+                $appointment_encounter->encounter_date = $post['data']['status_date'];
+                $appointment_encounter->save(false);
+                
+                //Update Appointment Table
                 $appointment->status_time = $value['status_time'];
                 $appointment->status_date = $post['data']['status_date'];
                 $appointment->consultant_id = $post['data']['consultant_id'];
