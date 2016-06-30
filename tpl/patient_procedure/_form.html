@@ -36,7 +36,7 @@
         <div class="form-group">
             <label class="col-lg-3 control-label">Consultants</label>
             <div class="col-lg-6">
-                <ui-select multiple ng-model="data.consultant_ids" theme="bootstrap" ng-disabled="disabled">
+                <ui-select multiple ng-model="data.consultant_ids" theme="bootstrap">
                     <ui-select-match placeholder="Select doctor...">{{$item.name}} ({{$item.speciality_name}})</ui-select-match>
                     <ui-select-choices group-by="someGroupFn" repeat="doctor in doctors | propsFilter: {name: $select.search, age: $select.search}">
                         <div ng-bind-html="doctor.name | highlight: $select.search"></div>
