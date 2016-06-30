@@ -119,4 +119,22 @@ class PatientconsultantController extends ActiveController {
         }
     }
 
+    public function actionBulkinsert() {
+        $post = Yii::$app->getRequest()->post();
+
+        if (!empty($post)) {
+            foreach ($post['consultant_visit'] as $key => $value) {
+                $pat_consultant = new PatConsultant;
+                
+                $pat_consultant->encounter_id = $value['encounter_id'];
+                $pat_consultant->patient_id = $value['patient_id'];
+                $pat_consultant->consultant_id = $post['data']['consultant_id'];
+                $pat_consultant->consult_date = $post['data']['consult_date'];
+                $pat_consultant->notes = $value['notes'];
+                $pat_consultant->save(false);
+            }
+            return ['success' => true];
+        }
+    }
+
 }

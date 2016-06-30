@@ -83,11 +83,11 @@ class ProcedureController extends ActiveController {
         $get = Yii::$app->getRequest()->get();
         if (!empty($get)) {
             $patient = PatPatient::getPatientByGuid($get['patient_id']);
-            
+
             $condition = [
                 'patient_id' => $patient->patient_id,
             ];
-            
+
             if (isset($get['date'])) {
                 $condition = [
                     'patient_id' => $patient->patient_id,
@@ -135,6 +135,25 @@ class ProcedureController extends ActiveController {
         }
 
         return $consultants;
+    }
+
+    public function actionBulkinsert() {
+        $post = Yii::$app->getRequest()->post();
+
+        if (!empty($post)) {
+            foreach ($post['procedures_done'] as $key => $value) {
+                $pat_procedure = new PatProcedure;
+
+                $pat_procedure->encounter_id = $value['encounter_id'];
+                $pat_procedure->patient_id = $value['patient_id'];
+                $pat_procedure->charge_subcat_id = $post['data']['charge_subcat_id'];
+                $pat_procedure->proc_date = $post['data']['proc_date'];
+                $pat_procedure->proc_consultant_ids = $post['data']['proc_consultant_ids'];
+                $pat_procedure->proc_description = $value['notes'];
+                $pat_procedure->save(false);
+            }
+            return ['success' => true];
+        }
     }
 
 }
