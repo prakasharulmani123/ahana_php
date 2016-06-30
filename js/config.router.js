@@ -1065,9 +1065,13 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('smart-table').then(
+                            return $ocLazyLoad.load(['smart-table', 'ui.select']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/in_patients/in_patients.js');
+                                        return $ocLazyLoad.load([
+                                         'tpl/in_patients/in_patients.js',   
+                                         'tpl/modal_form/modal.patient_consultant_visit.js',
+                                         'tpl/modal_form/modal.patient_procedures.js'
+                                        ]);
                                     }
                             );
                         }]

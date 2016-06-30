@@ -229,3 +229,7 @@ video {
     content: '  \f0dd';
     color: black;
 }
+
+.patient-image {
+    border-radius: 50%;
+}

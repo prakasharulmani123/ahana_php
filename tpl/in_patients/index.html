@@ -9,6 +9,14 @@
                 <button class="btn btn-sm btn-grey" ng-click="loadInPatientsList()"> 
                     &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
                 </button>
+                <span ng-show="currentAdmissionSelected > 0">
+                    <button ng-click="addConsultantVisit()" class="btn btn-sm btn-grey">
+                        <i class="fa fa-plus"></i> Add Consultant Visit
+                    </button>
+                    <button ng-click="addProcedures()" class="btn btn-sm btn-grey">
+                        <i class="fa fa-plus"></i> Add Procedures
+                    </button>
+                </span>
             </div>
             <div class="col-sm-4"></div>
             <div class="col-sm-3 pull-right text-right">
@@ -17,71 +25,80 @@
         </div>
 
         <div class="table-responsive in-patient-table">
-            <table st-table="displayedCollection"  st-safe-src="rowCollection" class="table table-striped b-t b-light">
-                <thead>
-                    <tr>
-                        <th style="width:60px;">&nbsp;</th>
-                        <th>Patient</th>
-                        <th>Case sheet#</th>
-                        <th>Category</th>
-                        <th st-sort="doe" class="sort-header">Admission Date</th>
-                        <th st-sort="room_name" class="sort-header">ROOM#</th>
-                        <th>consultant</th>
-                        <th style="width:250px;"> Actions </th>
-                    </tr>
-                </thead>
-                <tbody ng-hide="isLoading">
-                    <tr ng-if="displayedCollection.length == 0">
-                        <td colspan="7" class="text-center">
-                            No I/P records
-                        </td>
-                    </tr>
-                    <tr ng-repeat="row in displayedCollection| orderBy: patient_firstname">
-                        <td align="center" valign="middle">
-                            <div style="margin-top: -10px; position: absolute;">
-                            <img ng-if="row.patient.hasalert" class="pull-left" src="img/symbol1.png"  alt="" tooltip="Has Alert" tooltip-trigger tooltip-animation="false" tooltip-placement="right"  />
-                            <img ng-if="row.patient.address.incomplete_profile" class="pull-left" src="img/question.png"  alt="" tooltip="Incomplete Profile" tooltip-trigger tooltip-animation="false" tooltip-placement="right" />
-                            </div>
-                        </td>
-                        <td>
-                            <img ng-if="$even" class="pull-left" alt="" width="49" height="49" src="{{row.patient.patient_image ? row.patient.patient_image : 'img/man-icon.png'}}">
-                            <img ng-if="$odd" class="pull-left" alt="" width="49" height="49" src="{{row.patient.patient_image ? row.patient.patient_image : 'img/man-icon2.png'}}">
-                            <a ui-sref="patient.view({id: row.patient.patient_guid})" tooltip="{{row.patient.fullcurrentaddress}}">
-                                {{row.patient.fullname}} 
-                            </a>({{row.patient.patient_age}}y) <br/> 
-                            {{row.patient.patient_int_code}}
-                        </td>
-                        <td>{{row.patient.activeCasesheetno}}</td>
-                        <td valign="middle">
-                            <div ng-if="row.patient.patient_category" class="category_badge" tooltip="{{row.patient.patient_category_fullname}}" tooltip-trigger tooltip-animation="false" tooltip-placement="top" style="background-color: {{row.patient.patient_category_color}}">
-                                {{row.patient.patient_category | uppercase}}
-                            </div>
-                        </td>
-                        <td>
-                            {{row.doe}} <br/>  <span class="text-muted"> {{row.doeTimeago}} </span>
-                        </td>
-                        <td>{{row.room_name}} <br/> <span class="text-muted"> {{row.room_type_name}} </span> </td>
-                        <td>{{row.patient.consultant_name}}</td>
-                        <td align="left">
-                            <div ng-include="'tpl/patient/patient_table_nav_bar.html'">
-                                {% include 'tpl/patient/patient_table_nav_bar.html' %}
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-                <tbody ng-show="isLoading">
-                    <tr>
-                        <td colspan="8" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
-                    </tr>
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan="8" class="text-center">
-                            <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7"></div>
-                        </td>
-                    </tr>
-                </tfoot>
-            </table>
+            <div  class="" style="height:250px; overflow-y: auto; overflow-x: hidden;">
+                <table st-table="displayedCollection"  st-safe-src="rowCollection" class="table table-striped b-t b-light">
+                    <thead>
+                        <tr>
+                            <th style="width:60px;">&nbsp;</th>
+                            <th style="width:60px;">&nbsp;</th>
+                            <th>Patient</th>
+                            <th>Case sheet#</th>
+                            <th>Category</th>
+                            <th st-sort="doe" class="sort-header">Admission Date</th>
+                            <th st-sort="room_name" class="sort-header">ROOM#</th>
+                            <th>consultant</th>
+                            <th style="width:250px;"> Actions </th>
+                        </tr>
+                    </thead>
+                    <tbody ng-hide="isLoading">
+                        <tr ng-if="displayedCollection.length == 0">
+                            <td colspan="9" class="text-center">
+                                No I/P records
+                            </td>
+                        </tr>
+                        <tr ng-repeat="(ip_key, row) in displayedCollection| orderBy: patient_firstname">
+                            <td align="center">
+                                <label class="i-checks"> 
+                                    <input ng-true-value="'1'" ng-false-value="'0'" class="iplistcheckbox iplistcheckbox_{{ip_key}}" id="iplist_{{ip_key}}" type="checkbox" name="status" ng-click="moreOptions(ip_key, row)"> 
+                                    <i></i> 
+                                </label>
+                            </td>
+                            <td align="center" valign="middle">
+                                <div style="margin-top: -10px; position: absolute;">
+                                    <img ng-if="row.patient.hasalert" class="pull-left" src="img/symbol1.png"  alt="" tooltip="Has Alert" tooltip-trigger tooltip-animation="false" tooltip-placement="right"  />
+                                    <img ng-if="row.patient.address.incomplete_profile" class="pull-left" src="img/question.png"  alt="" tooltip="Incomplete Profile" tooltip-trigger tooltip-animation="false" tooltip-placement="right" />
+                                </div>
+                            </td>
+                            <td>
+                                <img ng-if="$even" class="pull-left patient-image" alt="" width="49" height="49" src="{{row.patient.patient_image ? row.patient.patient_image : 'img/man-icon.png'}}">
+                                <img ng-if="$odd" class="pull-left patient-image" alt="" width="49" height="49" src="{{row.patient.patient_image ? row.patient.patient_image : 'img/man-icon2.png'}}">
+                                <a ui-sref="patient.view({id: row.patient.patient_guid})" tooltip="{{row.patient.fullcurrentaddress}}">
+                                    {{row.patient.fullname}} 
+                                </a>({{row.patient.patient_age}}y) <br/> 
+                                {{row.patient.patient_int_code}}
+                            </td>
+                            <td>{{row.patient.activeCasesheetno}}</td>
+                            <td valign="middle">
+                                <div ng-if="row.patient.patient_category" class="category_badge" tooltip="{{row.patient.patient_category_fullname}}" tooltip-trigger tooltip-animation="false" tooltip-placement="top" style="background-color: {{row.patient.patient_category_color}}">
+                                    {{row.patient.patient_category| uppercase}}
+                                </div>
+                            </td>
+                            <td>
+                                {{row.doe}} <br/>  <span class="text-muted"> {{row.doeTimeago}} </span>
+                            </td>
+                            <td>{{row.room_name}} <br/> <span class="text-muted"> {{row.room_type_name}} </span> </td>
+                            <td>{{row.patient.consultant_name}}</td>
+                            <td align="left">
+                                <div ng-include="'tpl/patient/patient_table_nav_bar.html'">
+                                    {% include 'tpl/patient/patient_table_nav_bar.html' %}
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tbody ng-show="isLoading">
+                        <tr>
+                            <td colspan="9" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="9" class="text-center">
+                                <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7"></div>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
         </div>
     </div>
 </div>
