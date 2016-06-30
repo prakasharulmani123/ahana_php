@@ -495,6 +495,12 @@ class PatPatient extends RActiveRecord {
             'encounter_type' => function($model) {
                 return (isset($model->patHaveEncounter)) ? $model->patHaveEncounter->encounter_type : '';
             },
+            'incomplete_profile' => function($model){
+                if (!isset($model->patPatientAddress))
+                    return true;
+                else
+                    return $model->patPatientAddress->isIncompleteProfile();
+            }
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;

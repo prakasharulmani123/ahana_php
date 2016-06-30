@@ -136,11 +136,7 @@ class PatPatientAddress extends RActiveRecord {
     }
     
     public function isIncompleteProfile(){
-        if (in_array(null, $this->attributes)) {
-            return true;
-        }
-        
-        return false;
+        return (in_array(null, $this->attributes));
     }
 
     public function fields() {
