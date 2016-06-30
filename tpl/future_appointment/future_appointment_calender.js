@@ -36,7 +36,6 @@ app.controller('FutureAppointmentCalenderController', ['$rootScope', '$scope', '
                             })
                         });
                     });
-                    console.log($scope.events);
                 });
 
         $scope.consultants = [];
@@ -202,5 +201,18 @@ app.controller('FutureAppointmentCalenderController', ['$rootScope', '$scope', '
 
         /* event sources array*/
         $scope.eventSources = [$scope.events];
+        
+        $scope.switch = function(type){
+            $('.view_div').hide();
+            $('.a_view').hide();
+            
+            $('#'+type).show();
+            $('#a_'+type).show();
+            
+            $scope.changeView('month');
+            if(type == 'calendar_view'){
+//                $scope.$parent.loadEvents();
+            }
+        }
     }]);
 /* EOF */

@@ -40,6 +40,10 @@ app.controller('AlertsController', ['$rootScope', '$scope', '$timeout', '$http',
                         $scope.isLoading = false;
                         $scope.rowCollection = alerts;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
+                        
+                        if($scope.rowCollection.length == 0){
+                            $scope.$emit('patient_alert', {hasalert: false, alert: ''});
+                        }
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading patientalert!";
@@ -107,8 +111,7 @@ app.controller('AlertsController', ['$rootScope', '$scope', '$timeout', '$http',
                         $scope.successMessage = succ_msg;
                         $scope.data = {};
                         $scope.data.formtype = 'add';
-                        $scope.patientObj.hasalert = true;
-                        $scope.patientObj.alert = response.alert_description;
+                        $scope.$emit('patient_alert', {hasalert: true, alert: response.alert_description});
                         $timeout(function () {
                             $scope.loadAlertsList();
                             $anchorScroll();

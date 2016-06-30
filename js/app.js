@@ -26,7 +26,7 @@ angular.module('app', [
     'file-model',
     'ngImgCrop',
     'ngXslt',
-    'io-barcode'
+    'io-barcode',
 //    'restangular'
 //    'LocalStorageModule',
 ]);

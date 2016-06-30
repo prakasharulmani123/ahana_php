@@ -9,7 +9,7 @@
     <div class="row">
         <div class="col-sm-4"> 
             <div class="btn-group btn-group-justified">
-                <a class="btn btn-info" ng-click="loadOutPatientsList()">
+                <a class="btn btn-info" ng-click="loadOutPatientsList('current')">
                     <i class="fa fa-money"></i>  Current Out-Patients
                 </a>
                 <a class="btn btn-success" ui-sref="patient.futureAppointment">  
@@ -21,11 +21,11 @@
     </div>
 </div>
 
-<div class="wrapper-md" ng-controller="OutPatientsController" ng-init="loadOutPatientsList()">
+<div class="wrapper-md" ng-controller="OutPatientsController" ng-init="loadOutPatientsList('current')">
     <div class="panel panel-default">
         <div class="row wrapper">
             <div class="col-sm-5 m-b-xs">
-                <button class="btn btn-sm btn-grey" ng-click="loadOutPatientsList()"> &nbsp; &nbsp; <i class="fa fa-refresh"></i>  &nbsp; &nbsp; </button>    
+                <button class="btn btn-sm btn-grey" ng-click="loadOutPatientsList('current')"> &nbsp; &nbsp; <i class="fa fa-refresh"></i>  &nbsp; &nbsp; </button>    
                 <span ng-show="currentAppointmentSelected > 0">
                     <button ng-click="rescheduleAppointments()" class="btn btn-sm btn-primary">
                         <i class="fa fa-retweet"></i> Reschedule Appointments 
@@ -45,13 +45,13 @@
             <table st-table="displayedCollection"  st-safe-src="rowCollection"  class="table table-striped b-t b-light">
                 <thead>
                     <tr>
+                        <th style="width:60px;">&nbsp;</th>
                         <th>
                             <button class="btn btn-sm btn-default hms-plus" type="button" ng-click="ctrl.expandAll(allExpanded = !allExpanded)">
                                 <i ng-if="!allExpanded" class="fa fa-plus text"></i>
                                 <i ng-if="allExpanded" class="fa fa-minus text"></i>
                             </button>
                         </th>
-                        <th style="width:60px;">&nbsp;</th>
                         <th>Patient</th>
                         <th>Category</th>
                         <th>Contact#</th>
@@ -71,18 +71,18 @@
                         </td>
                     </tr>
                     <tr ng-repeat-start="(op_key, value) in displayedCollection" ng-init="expanded = true;">
-                        <td>
-                            <button ng-click="expanded = !expanded" expand class="btn btn-sm btn-default hms-plus">
-                                <i ng-if="!expanded" class="fa fa-plus text"></i>
-                                <i ng-if="expanded" class="fa fa-minus text"></i>
-                            </button>
+                        <td align="center" style="width:60px;">
+                            <label class="i-checks"> 
+                                <input ng-model="row.selected" ng-true-value="'1'" ng-false-value="'0'" ng-checked="value.selected == '1'"  type="checkbox" name="checkall" class="oplistcheckbox oplistcheckbox_{{op_key}}" ng-click="updateCheckbox(row, op_key)"> 
+                                <i></i> 
+                            </label>&nbsp; &nbsp;
                         </td>
                         <td colspan="9">
                             <b> 
-                                <label class="i-checks"> 
-                                    <input ng-model="row.selected" ng-true-value="'1'" ng-false-value="'0'" ng-checked="value.selected == '1'"  type="checkbox" name="checkall" class="oplistcheckbox oplistcheckbox_{{op_key}}" ng-click="updateCheckbox(row, op_key)"> 
-                                    <i></i> 
-                                </label>&nbsp; &nbsp;
+                                <button ng-click="expanded = !expanded" expand class="btn btn-sm btn-default hms-plus">
+                                    <i ng-if="!expanded" class="fa fa-plus text"></i>
+                                    <i ng-if="expanded" class="fa fa-minus text"></i>
+                                </button>&nbsp; &nbsp;
                                 <span class="badge bg-primary">Consultant: {{value.data.liveAppointmentConsultant.fullname}}</span>&nbsp; &nbsp; 
                                 <span class="badge bg-black">Booking: {{value.booking_count}}</span>&nbsp; &nbsp; 
                                 <span class="badge bg-success">Arrived: {{value.arrived_count}}</span>&nbsp; &nbsp; 
@@ -98,8 +98,11 @@
                             </label>
                         </td>
                         <td align="center" valign="middle">
-                            <img ng-if="(row.liveAppointmentArrival != '-' && row.liveAppointmentArrival.waiting_elapsed)" class="pull-left" src="img/elapsed-waiting-time.png"  alt="" tooltip="Elapsing Waiting Time" tooltip-trigger tooltip-animation="false" tooltip-placement="right"/>
-                            <img ng-if="row.patient.address.incomplete_profile" class="pull-left" src="img/question.png"  alt="" tooltip="Incomplete Profile" tooltip-trigger tooltip-animation="false" tooltip-placement="right"/>
+                            <div style="margin-top: -10px; position: absolute;">
+                                <img ng-if="(row.liveAppointmentArrival != '-' && row.liveAppointmentArrival.waiting_elapsed)" class="pull-left" src="img/elapsed-waiting-time.png"  alt="" tooltip="Elapsing Waiting Time" tooltip-trigger tooltip-animation="false" tooltip-placement="right"/>
+                                <img ng-if="row.patient.hasalert" class="pull-left" src="img/symbol1.png"  alt="" tooltip="Has Alert" tooltip-trigger tooltip-animation="false" tooltip-placement="right"  />
+                                <img ng-if="row.patient.incomplete_profile" class="pull-left" src="img/question.png"  alt="" tooltip="Incomplete Profile" tooltip-trigger tooltip-animation="false" tooltip-placement="right" />
+                            </div>
                         </td>
                         <td>
                             <img ng-if="$even" class="pull-left" alt="" width="49" height="49" src="{{row.patient.patient_image ? row.patient.patient_image : 'img/man-icon.png'}}">
@@ -199,41 +202,9 @@
                         </td>
                         <td>{{row.liveAppointmentConsultant.title_code}} {{row.liveAppointmentConsultant.name}}</td>
                         <td align="left">
-                            <!--                            <a ui-sref="patient.view({id: row.patient.patient_guid})">
-                                                            <img src="img/small-icon1.png"  alt="" tooltip="Details" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
-                                                        </a>-->
-
-                            <a check-access ui-sref="patient.procedure({id: row.patient.patient_guid})">
-                                <img src="img/medi-icon1.png"  alt="" tooltip="Procedures" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
-                            </a>
-
-                            <a check-access ui-sref="patient.encounter({id: row.patient.patient_guid})">
-                                <img src="img/medi-icon2.png"  alt="" tooltip="Encounters " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
-                            </a>
-
-                            <a check-access ui-sref="patient.billing({id: row.patient.patient_guid})">
-                                <img src="img/medi-icon3.png"  alt="" tooltip=" Billing " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
-                            </a>
-
-                            <a check-access ui-sref="patient.prescription({id: row.patient.patient_guid})">
-                                <img src="img/medi-icon4.png"  alt="" tooltip="Prescriptions " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
-                            </a>
-
-                            <a check-access ui-sref="patient.consultant({id: row.patient.patient_guid})">
-                                <img src="img/medi-icon5.png"  alt="" tooltip="Consultation " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
-                            </a>
-
-                            <!--                            <a href="#">
-                                                            <img src="img/small-icon7.png"  alt="" tooltip="Documents " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
-                                                        </a>
-                            
-                                                        <a ui-sref="patient.alert({id: row.patient.patient_guid})">
-                                                            <img src="img/small-icon8.png"  alt="" tooltip="Alerts  " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
-                                                        </a>
-                            
-                                                        <a ui-sref="patient.billing({id: row.patient.patient_guid})">
-                                                            <img src="img/small-icon9.png"  alt="" tooltip="Billing" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
-                                                        </a>-->
+                            <div ng-include="'tpl/patient/patient_table_nav_bar.html'">
+                                {% include 'tpl/patient/patient_table_nav_bar.html' %}
+                            </div>
                         </td>
                     </tr>
                 </tbody>

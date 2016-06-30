@@ -2265,6 +2265,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                                     ).then(
                                     function () {
                                         return $ocLazyLoad.load([
+                                            'xeditable',
                                             'ui.calendar',
                                             'tpl/modal_form/modal.patient_appointment.js',
                                             'tpl/out_patients/out_patients.js'

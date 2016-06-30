@@ -22,7 +22,8 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
         $scope.currentAppointmentSelected = 0;
 
         //Index Page
-        $scope.loadOutPatientsList = function () {
+        $scope.loadOutPatientsList = function (type) {
+            $scope.op_type = type;
             $scope.isLoading = true;
             // pagination set up
             $scope.rowCollection = []; // base collection
@@ -30,37 +31,11 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
             $scope.displayedCollection = [].concat($scope.rowCollection); // displayed collection
 
             // Get data's from service
-            $http.get($rootScope.IRISOrgServiceUrl + '/encounter/outpatients')
+            $http.get($rootScope.IRISOrgServiceUrl + '/encounter/outpatients?type=' + type)
                     .success(function (OutPatients) {
-                        $scope.isLoading = false;
                         $scope.rowCollection = OutPatients.result;
 
-                        //Custom Order By Row collection
-                        $scope.census = 0;
-                        angular.forEach($scope.rowCollection, function (row) {
-                            var booked = 0;
-                            var arrived = 0;
-
-                            angular.forEach(row.all, function (appt) {
-                                if (appt.liveAppointmentArrival == '-') {
-                                    appt.sts = 'B';
-                                    booked++;
-                                }
-                                if (appt.liveAppointmentArrival != '-') {
-                                    appt.sts = 'A';
-                                    arrived++;
-                                }
-                                appt.selected = '0';
-                                $scope.census++;
-                            });
-
-                            row.booking_count = booked;
-                            row.arrived_count = arrived;
-                            row.selected = '0';
-                            row.all = $filter('orderBy')(row.all, 'sts');
-                        });
-
-                        $scope.displayedCollection = [].concat($scope.rowCollection);
+                        $scope.updateCollection();
 
                         //Checkbox initialize
                         $scope.checkboxes = {'checked': false, items: []};
@@ -78,34 +53,34 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
 
                 if (parent_key == op_key)
                     value.selected = parent.selected;
-                
+
                 angular.forEach(value.all, function (row, key) {
                     row.selected = '0';
-                    
-                    if (parent_key == op_key){
+
+                    if (parent_key == op_key) {
                         row.selected = parent.selected;
                     }
                 });
             });
-            
+
             $timeout(function () {
                 angular.forEach($scope.displayedCollection, function (value, op_key) {
                     angular.forEach(value.all, function (row, key) {
                         $scope.moreOptions(op_key, key, row.liveAppointmentConsultant.user_id, row.liveAppointmentBooking.appt_id, row);
                     });
                 });
-            }, 800)
+            }, 800);
         }
 
         $scope.moreOptions = function (op_key, key, consultant_id, appt_id, row) {
             appt_exists = $filter('filter')($scope.checkboxes.items, {appt_id: appt_id});
             if ($('#oplist_' + op_key + '_' + key).is(':checked')) {
                 $('#oplist_' + op_key + '_' + key).closest('tr').addClass('selected_row');
-                
-                $('.tr_oplistcheckbox').not('.tr_oplistcheckbox_' + op_key).each(function(){
+
+                $('.tr_oplistcheckbox').not('.tr_oplistcheckbox_' + op_key).each(function () {
                     $(this).removeClass('selected_row');
                 });
-                
+
                 if (appt_exists.length == 0) {
                     consultant_exists = $filter('filter')($scope.checkboxes.items, {consultant_id: consultant_id});
                     if (consultant_exists.length == 0) {
@@ -158,7 +133,7 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
             modalInstance.result.then(function (selectedItem) {
                 $scope.selected = selectedItem;
             }, function () {
-                $scope.loadOutPatientsList();
+                $scope.loadOutPatientsList($scope.op_type);
                 $log.info('Modal dismissed at: ' + new Date());
             });
         };
@@ -178,7 +153,7 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                         function (response) {
                             $scope.successMessage = succ_msg;
                             $scope.loadbar('hide');
-                            $scope.loadOutPatientsList();
+                            $scope.loadOutPatientsList($scope.op_type);
                         }
                 ).error(function (data, status) {
                     $scope.loadbar('hide');
@@ -188,7 +163,7 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                         $scope.errorData = data.message;
                 });
             } else {
-                $scope.loadOutPatientsList();
+                $scope.loadOutPatientsList($scope.op_type);
             }
         }
 
@@ -254,14 +229,17 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                     function (response) {
                         $scope.loadbar('hide');
                         $scope.successMessage = 'Status changed successfully';
+                        $scope.rowCollection[op_key]['all'][key].liveAppointmentArrival = response;
                         $scope.displayedCollection[op_key]['all'][key].liveAppointmentArrival = response;
-                        
+
                         angular.forEach($scope.displayedCollection, function (value, parent_key) {
-                            if (parent_key == op_key){
+                            if (parent_key == op_key) {
                                 value.booking_count--;
                                 value.arrived_count++;
                             }
                         });
+
+                        $scope.updateCollection();
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');
@@ -271,4 +249,43 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                     $scope.errorData = data.message;
             });
         };
+
+        $scope.updateCollection = function () {
+            $scope.isLoading = true;
+            rowCollection = $scope.rowCollection;
+            displayedCollection = $scope.rowCollection;
+
+            $scope.rowCollection = []; // base collection
+            $scope.displayedCollection = [].concat($scope.rowCollection); // displayed collection
+
+            $timeout(function () {
+                $scope.rowCollection = rowCollection;
+
+                $scope.census = 0;
+                angular.forEach($scope.rowCollection, function (row) {
+                    var booked = 0;
+                    var arrived = 0;
+
+                    angular.forEach(row.all, function (appt) {
+                        if (appt.liveAppointmentArrival == '-') {
+                            appt.sts = 'B';
+                            booked++;
+                        }
+                        if (appt.liveAppointmentArrival != '-') {
+                            appt.sts = 'A';
+                            arrived++;
+                        }
+                        appt.selected = '0';
+                        $scope.census++;
+                    });
+
+                    row.booking_count = booked;
+                    row.arrived_count = arrived;
+                    row.selected = '0';
+                    row.all = $filter('orderBy')(row.all, 'sts');
+                });
+                $scope.displayedCollection = [].concat($scope.rowCollection);
+                $scope.isLoading = false;
+            }, 200);
+        }
     }]);

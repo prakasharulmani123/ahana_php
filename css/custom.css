@@ -201,7 +201,7 @@ video {
 }
 
 .selected_row, .selected_row td{
-    background-color: #ADE8BB !important;
+    background-color: #E5FFE5 !important;
 }
 
 /* Smart Table - Sort Option */

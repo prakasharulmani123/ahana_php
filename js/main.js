@@ -1,10 +1,15 @@
 'use strict';
 
 /* Controllers */
-
 angular.module('app')
         .controller('AppCtrl', ['$scope', '$localStorage', '$window', '$rootScope', '$state', '$cookieStore', '$http', 'CommonService', '$timeout', 'AuthenticationService', 'toaster', 'hotkeys', '$modal',
             function ($scope, $localStorage, $window, $rootScope, $state, $cookieStore, $http, CommonService, $timeout, AuthenticationService, toaster, hotkeys, $modal) {
+//                socket.forward('someEvent', $scope);
+                
+                $scope.$on('socket:someEvent', function (ev, data) {
+                    console.log($scope.theData);
+                });
+
                 // add 'ie' classes to html
                 var isIE = !!navigator.userAgent.match(/MSIE/i);
                 isIE && angular.element($window.document.body).addClass('ie');
@@ -94,12 +99,6 @@ angular.module('app')
                                 $scope.errorData = "An Error has occured while loading patient!";
                             });
                 };
-
-                $rootScope.$on('unauthorized', function () {
-                    toaster.clear();
-                    toaster.pop('error', 'Session Expired', 'Kindly Login Again');
-                    $scope.logout();
-                });
 
                 //Change Status
                 $scope.updateStatus = function (modelName, primaryKey) {
@@ -221,14 +220,6 @@ angular.module('app')
 
                 $scope.child = {}
 
-                $scope.$on('encounter_id', function (event, data) {
-                    $scope.encounter_id = data;
-                });
-                
-                $scope.$on('patient_obj', function (event, data) {
-                    $scope.patientObj = data;
-                });
-
                 $scope.addNotes = function () {
                     if (jQuery.isEmptyObject($scope.data)) {
                         $scope.notes_error = true;
@@ -338,6 +329,25 @@ angular.module('app')
 //                    alert('create');
 //                });
 
+                $rootScope.$on('unauthorized', function () {
+                    toaster.clear();
+                    toaster.pop('error', 'Session Expired', 'Kindly Login Again');
+                    $scope.logout();
+                });
+                
+                $scope.$on('encounter_id', function (event, data) {
+                    $scope.encounter_id = data;
+                });
+                
+                $scope.$on('patient_obj', function (event, data) {
+                    $scope.patientObj = data;
+                });
+                
+                $scope.$on('patient_alert', function (event, data) {
+                    $scope.patientObj.hasalert = data.hasalert;
+                    $scope.patientObj.alert = data.alert;
+                });
+                
                 $scope.assignNotifications = function () {
                     //Assign Notes
                     $http({
