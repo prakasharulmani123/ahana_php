@@ -66,14 +66,20 @@ class PharmacysaleController extends ActiveController {
 
         if (isset($get['payment_type'])) {
             $data = [];
-            $sales = PhaSale::find()->tenant()->active()->andWhere(['payment_type' => $get['payment_type']])->groupBy(['encounter_id'])->all();
+            $sales = PhaSale::find()
+                    ->tenant()
+                    ->active()
+                    ->andWhere(['payment_type' => $get['payment_type']])
+                    ->groupBy(['patient_name', 'encounter_id'])
+                    ->all();
+            
             foreach ($sales as $key => $sale) {
                 $data[$key] = $sale->attributes;
                 
                 if(!empty($sale->encounter_id))
                     $sale_item = PhaSale::find()->tenant()->andWhere(['encounter_id' => $sale->encounter_id, 'payment_type' => $get['payment_type']]);
                 else
-                    $sale_item = PhaSale::find()->tenant()->andWhere(['sale_id' => $sale->sale_id, 'payment_type' => $get['payment_type']]);
+                    $sale_item = PhaSale::find()->tenant()->andWhere(['patient_name' => $sale->patient_name, 'payment_type' => $get['payment_type']]);
                 
                 $sale_ids = \yii\helpers\ArrayHelper::map($sale_item->all(), 'sale_id', 'sale_id');
                 $sum_paid_amount = \common\models\PhaSaleBilling::find()->tenant()->andWhere(['sale_id' => $sale_ids])->sum('paid_amount');
