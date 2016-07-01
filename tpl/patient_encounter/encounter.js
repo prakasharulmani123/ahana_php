@@ -42,6 +42,16 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                         if (response.success == true) {
                             $scope.isLoading = false;
                             $scope.rowCollection = response.encounters;
+                            
+                            angular.forEach($scope.rowCollection, function (row) {
+                                angular.forEach(row.all, function (all) {
+                                    var today_date = moment().format('YYYY-MM-DD');
+                                    var encounter_date = moment(all.date).format('YYYY-MM-DD');
+                                    var result = (moment(encounter_date).isAfter(today_date));
+                                    all.is_future = result;
+                                });
+                            });
+                            
                             $scope.activeEncounter = response.active_encounter;
                             $scope.displayedCollection = [].concat($scope.rowCollection);
                             $scope.more_li = {};

@@ -9,7 +9,7 @@ app.controller('InPatientsController', ['$rootScope', '$scope', '$timeout', '$ht
         $scope.checkboxes = {'checked': false, items: []};
         $scope.currentAdmissionSelectedItems = [];
         $scope.currentAdmissionSelected = 0;
-        
+
         //Index page height
         $scope.css = {'style': ''};
 
@@ -26,13 +26,8 @@ app.controller('InPatientsController', ['$rootScope', '$scope', '$timeout', '$ht
                     .success(function (inpatients) {
                         $scope.isLoading = false;
                         $scope.rowCollection = inpatients;
-                        $scope.displayedCollection = [].concat($scope.rowCollection);
-                        
-                        if($scope.displayedCollection.length > 6){
-                            $scope.css = {
-                                'style': 'height:550px; overflow-y: auto; overflow-x: hidden;',
-                            };
-                        }
+
+                        $scope.updateCollection();
 
                         //Checkbox initialize
                         $scope.checkboxes = {'checked': false, items: []};
@@ -42,6 +37,37 @@ app.controller('InPatientsController', ['$rootScope', '$scope', '$timeout', '$ht
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading floors!";
                     });
+        };
+
+        $scope.updateCollection = function () {
+            $scope.selectall = '0';
+            $scope.isLoading = true;
+            $timeout(function () {
+                angular.forEach($scope.rowCollection, function (row) {
+                    row.selected = '0';
+                });
+
+                $scope.displayedCollection = [].concat($scope.rowCollection);
+                $scope.isLoading = false;
+
+                if ($scope.displayedCollection.length > 6) {
+                    $scope.css = {
+                        'style': 'height:550px; overflow-y: auto; overflow-x: hidden;',
+                    };
+                }
+            }, 200);
+        };
+
+        $scope.updateCheckbox = function () {
+            angular.forEach($scope.displayedCollection, function (row) {
+                row.selected = $scope.selectall;
+            });
+
+            $timeout(function () {
+                angular.forEach($scope.displayedCollection, function (row, ip_key) {
+                    $scope.moreOptions(ip_key, row);
+                });
+            }, 800);
         };
 
         $scope.moreOptions = function (ip_key, row) {

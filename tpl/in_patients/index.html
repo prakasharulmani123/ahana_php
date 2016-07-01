@@ -29,7 +29,12 @@
                 <table st-table="displayedCollection"  st-safe-src="rowCollection" class="table table-striped b-t b-light">
                     <thead>
                         <tr>
-                            <th style="width:60px;">&nbsp;</th>
+                            <th style="width:50px;">
+                                <label class="i-checks"> 
+                                    <input ng-model="selectall" ng-true-value="'1'" ng-false-value="'0'" ng-click="updateCheckbox()" type="checkbox" name="checkall" class=""> 
+                                    <i></i> 
+                                </label>&nbsp; &nbsp;
+                            </th>
                             <th style="width:65px;">&nbsp;</th>
                             <th>Patient</th>
                             <th>Case sheet#</th>
@@ -47,9 +52,9 @@
                             </td>
                         </tr>
                         <tr ng-repeat="(ip_key, row) in displayedCollection| orderBy: patient_firstname">
-                            <td align="center">
+                            <td>
                                 <label class="i-checks"> 
-                                    <input ng-true-value="'1'" ng-false-value="'0'" class="iplistcheckbox iplistcheckbox_{{ip_key}}" id="iplist_{{ip_key}}" type="checkbox" name="status" ng-click="moreOptions(ip_key, row)"> 
+                                    <input ng-model="row.selected" ng-checked="row.selected == '1'"  ng-click="moreOptions(ip_key, row)" ng-true-value="'1'" ng-false-value="'0'" class="iplistcheckbox iplistcheckbox_{{ip_key}}" id="iplist_{{ip_key}}" type="checkbox" name="status"> 
                                     <i></i> 
                                 </label>
                             </td>

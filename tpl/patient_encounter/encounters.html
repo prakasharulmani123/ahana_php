@@ -147,7 +147,10 @@
                                     {{item.type}}
                                 </div>
                                 <!--Booked to Arrival Form-->
-                                <div ng-if="item.type == 'Booked' && encounter.all.length == 1">
+                                <div ng-if="item.type == 'Booked' && encounter.all.length == 1 && item.is_future">
+                                    Booked
+                                </div>
+                                <div ng-if="item.type == 'Booked' && encounter.all.length == 1 && item.is_future == false">
                                     <form editable-form name="rowform" onbeforesave="changeAppointmentStatus({
                                           'patient_id': item.patient_id, 
                                           'encounter_id': item.encounter_id,
