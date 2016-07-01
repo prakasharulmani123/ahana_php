@@ -25,12 +25,12 @@
         </div>
 
         <div class="table-responsive in-patient-table">
-            <div  class="" style="height:250px; overflow-y: auto; overflow-x: hidden;">
+            <div style="{{css.style}}">
                 <table st-table="displayedCollection"  st-safe-src="rowCollection" class="table table-striped b-t b-light">
                     <thead>
                         <tr>
                             <th style="width:60px;">&nbsp;</th>
-                            <th style="width:60px;">&nbsp;</th>
+                            <th style="width:65px;">&nbsp;</th>
                             <th>Patient</th>
                             <th>Case sheet#</th>
                             <th>Category</th>
@@ -54,7 +54,7 @@
                                 </label>
                             </td>
                             <td align="center" valign="middle">
-                                <div style="margin-top: -10px; position: absolute;">
+                                <div style="margin-top: -10px; position: relative;">
                                     <img ng-if="row.patient.hasalert" class="pull-left" src="img/symbol1.png"  alt="" tooltip="Has Alert" tooltip-trigger tooltip-animation="false" tooltip-placement="right"  />
                                     <img ng-if="row.patient.address.incomplete_profile" class="pull-left" src="img/question.png"  alt="" tooltip="Incomplete Profile" tooltip-trigger tooltip-animation="false" tooltip-placement="right" />
                                 </div>

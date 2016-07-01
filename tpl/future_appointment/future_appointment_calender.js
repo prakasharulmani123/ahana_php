@@ -17,7 +17,7 @@ app.controller('FutureAppointmentCalenderController', ['$rootScope', '$scope', '
             currentTimezone: 'America/Chicago' // an option!
         };
 
-        $scope.consultant_colors = ["b-l b-2x b-danger", "b-l b-2x b-info", "b-l b-2x b-warning", "b-l b-2x b-primary"];
+        $scope.consultant_colors = ["bg-light dk b-l b-2x b-danger", "bg-light dk b-l b-2x b-info", "bg-light dk b-l b-2x b-warning", "bg-light dk b-l b-2x b-primary"];
 
         $scope.events = [];
         $http.get($rootScope.IRISOrgServiceUrl + '/appointment/getfutureappointments')

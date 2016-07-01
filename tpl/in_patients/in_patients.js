@@ -9,6 +9,9 @@ app.controller('InPatientsController', ['$rootScope', '$scope', '$timeout', '$ht
         $scope.checkboxes = {'checked': false, items: []};
         $scope.currentAdmissionSelectedItems = [];
         $scope.currentAdmissionSelected = 0;
+        
+        //Index page height
+        $scope.css = {'style': ''};
 
         //Index Page
         $scope.loadInPatientsList = function () {
@@ -24,6 +27,12 @@ app.controller('InPatientsController', ['$rootScope', '$scope', '$timeout', '$ht
                         $scope.isLoading = false;
                         $scope.rowCollection = inpatients;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
+                        
+                        if($scope.displayedCollection.length > 6){
+                            $scope.css = {
+                                'style': 'height:550px; overflow-y: auto; overflow-x: hidden;',
+                            };
+                        }
 
                         //Checkbox initialize
                         $scope.checkboxes = {'checked': false, items: []};

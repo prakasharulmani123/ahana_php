@@ -21,6 +21,9 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
         $scope.currentAppointmentSelectedItems = [];
         $scope.currentAppointmentSelected = 0;
 
+        //Index page height
+        $scope.css = {'style': ''};
+
         //Index Page
         $scope.loadOutPatientsList = function (type) {
             $scope.op_type = type;
@@ -278,6 +281,12 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                         appt.selected = '0';
                         $scope.census++;
                     });
+
+                    if ($scope.census > 6) {
+                        $scope.css = {
+                            'style': 'height:550px; overflow-y: auto; overflow-x: hidden;',
+                        };
+                    }
 
                     row.booking_count = booked;
                     row.arrived_count = arrived;

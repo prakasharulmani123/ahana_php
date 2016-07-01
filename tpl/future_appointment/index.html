@@ -1,6 +1,6 @@
 <div>
-    <div class="wrapper-md bg-light b-b">
-        <h1 class="m-n font-thin h3">Future Appointments</h1>
+    <div class="bg-light lter b-b wrapper-md">
+        <h1 class="m-n h3">Future Appointments</h1>
     </div>
 
     <div class="wrapper-md tab-btn" ng-controller="FutureAppointmentCalenderController">
@@ -190,9 +190,9 @@
                     </div>
                 </div>
 
-                <div class="col w-md w-auto-xs bg-light dk bg-auto b-l">
+                <div class="col w-md w-auto-xs">
                     <div class="wrapper">
-                        <div ng-repeat="consultant in consultants" class="bg-white-only r r-2x m-b-xs wrapper-sm {{consultant.className[0]}}">      
+                        <div ng-repeat="consultant in consultants" class="r r-2x m-b-xs wrapper-sm {{consultant.className[0]}}">      
                             {{consultant.title}} - {{consultant.visit_count}}
                             <input id="{{consultant.id}}" type="checkbox" class="pull-right" ng-model="showhideevents" ng-checked="true" ng-click="showHideEvents(consultant, showhideevents)"/>
                         </div>
