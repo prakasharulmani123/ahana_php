@@ -1,4 +1,4 @@
-app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll', '$http', '$state', '$filter', '$modal', '$log', '$timeout', 'IO_BARCODE_TYPES', function ($rootScope, $scope, $anchorScroll, $http, $state, $filter, $modal, $log, $timeout, IO_BARCODE_TYPES) {
+app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll', '$http', '$state', '$filter', '$modal', '$log', '$timeout', 'IO_BARCODE_TYPES', 'toaster', function ($rootScope, $scope, $anchorScroll, $http, $state, $filter, $modal, $log, $timeout, IO_BARCODE_TYPES, toaster) {
 
         $scope.app.settings.patientTopBar = true;
         $scope.app.settings.patientSideMenu = true;
@@ -251,6 +251,9 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 $timeout(function () {
                     $scope.setFocus('route', $scope.data.prescriptionItems.length - 1);
                 });
+
+                toaster.clear();
+                toaster.pop('success', 'Favourite', 'Medicine has been added to the current prescription');
             }
         });
 
@@ -317,7 +320,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                             $scope.current_time = response.date;
                             $scope.successMessage = succ_msg;
                             $scope.data = {prescriptionItems: []};
-                            
+
                             $scope.consultant_name = response.model.consultant_name;
 
                             $timeout(function () {

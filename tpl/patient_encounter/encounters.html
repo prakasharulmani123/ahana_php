@@ -12,24 +12,23 @@
         </div>
         <div class="panel panel-default">
             <div class="row wrapper pull-right">
-                <div class="col-sm-8">
+                <div class="col-sm-12">
                     <div class="form-group">
-                        <label class="col-sm-3 control-label">Filter:</label>
                         <div class="col-sm-9">
                             <div class="input-group">
-                                <input prevent-enter type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="filterdate" is-open="opened" datepicker-options="dateOptions" close-text="Close" max-date="maxDate" date-disabled="disabled(date, mode)" ng-change="loadPatientEncounters('Current', filterdate);"/>
+                                <input placeholder="Filter by date" prevent-enter type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="filterdate" is-open="opened" datepicker-options="dateOptions" close-text="Close" max-date="maxDate" date-disabled="disabled(date, mode)" ng-change="loadPatientEncounters('Current', filterdate);"/>
                                 <span class="input-group-btn">
                                     <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                                 </span>
                             </div>
                         </div>
+                        <div class="col-sm-3">
+                            <button title="Clear" ng-click="filterdate = '';
+                                        loadPatientEncounters('Current')" class="btn m-b-xs  btn-dark">  
+                                <i class="fa fa-times"></i> 
+                            </button>
+                        </div>
                     </div>
-                </div>
-                <div class="col-sm-2">
-                    <button ng-click="filterdate = '';
-                                loadPatientEncounters('Current')" class="btn m-b-xs  btn-dark">  
-                        <i class="fa fa-times"></i> Clear 
-                    </button>
                 </div>
             </div>
             <div class="row wrapper">
