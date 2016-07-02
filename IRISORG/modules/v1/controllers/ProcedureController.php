@@ -91,7 +91,7 @@ class ProcedureController extends ActiveController {
             if (isset($get['date'])) {
                 $condition = [
                     'patient_id' => $patient->patient_id,
-                    'DATE(created_at)' => $get['date'],
+                    'DATE(proc_date)' => $get['date'],
                 ];
             }
             $result = [];

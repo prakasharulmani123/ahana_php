@@ -77,7 +77,7 @@ class PatientvitalsController extends ActiveController {
             if (isset($get['date'])) {
                 $condition = [
                     'patient_id' => $patient->patient_id,
-                    'DATE(created_at)' => $get['date'],
+                    'DATE(vital_time)' => $get['date'],
                 ];
             }
             
