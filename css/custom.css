@@ -174,7 +174,7 @@ video {
     margin-bottom: 20px;
 }
 
-#xmlform .label, .badge {
+#xmlform .label, #xmlform .badge {
     color: #ffffff !important;
     font-size: 15px;
     font-weight: 600;
@@ -232,4 +232,66 @@ video {
 
 .patient-image {
     border-radius: 50%;
+}
+
+.pb-0{
+    padding-bottom: 0px !important;
+}
+
+.pt-10{
+    padding-top: 10px !important;
+}
+
+.pb-10{
+    padding-bottom: 10px !important;
+}
+
+.mt-10{
+    margin-top: 10px !important;
+}
+
+.mb-10{
+    margin-bottom: 10px !important;
+}
+
+.wrapper {
+  padding: 5px;
+}
+
+.table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+  padding: 6px 8px;
+  line-height: 15px;
+}
+
+.in-patient-table label.i-checks{
+    margin-bottom: 0px;
+}
+
+.in-patient-table .table > thead > tr > th {
+    line-height: 5px;
+}
+
+out-patient-table .table > thead > tr > th label.i-checks{
+    margin-top: 5px;
+}
+
+.out-patient-table th{
+    line-height: 17px !important;
+}
+
+.panel-heading {
+  padding: 4px 15px;
+}
+
+.panel {
+  margin-bottom: 10px;
+}
+
+.panel-body {
+  padding: 7px;
+}
+
+.billing-panel .form-group
+{
+    margin-bottom: 10px;
 }

@@ -170,15 +170,14 @@
                                 </td>
                                 <td><span>{{purchaseitem.total_amount}}</span></td>
 
-                                <td>
+                                <td align="center">
                                     <a ng-click="removeSubcat($index, purchaseitem.full_name)" title="Delete">
                                         <i class="fa fa-trash"></i>
                                     </a>
                                 </td>
                             </tr>
                         </table>
-                        <div class="btn-form">
-                            <br>
+                        <div class="btn-form mt-10">
                             <button type="button" ng-click="tableform.$show();
                             addRow()" class="btn btn-default pull-left btn-primary">Add Product</button>
                             <button type="button" ng-show="!tableform.$visible;" ng-click="tableform.$show();" class="btn btn-default pull-left btn-info">Edit Products</button>
@@ -196,52 +195,52 @@
                 <div class="form-group">
                     <label class="col-lg-5 control-label">Total Disc. Amount</label>
                     <div class="col-lg-7">
-                        <input type="text" class="form-control" ng-value="data.total_item_discount_amount" readonly="">
+                        <input type="text" class="form-control text-right" ng-value="data.total_item_discount_amount" readonly="">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-lg-5 control-label">Total Vat Amount</label>
                     <div class="col-lg-7">
-                        <input type="text" class="form-control" ng-value="data.total_item_vat_amount" readonly="">
+                        <input type="text" class="form-control text-right" ng-value="data.total_item_vat_amount" readonly="">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-lg-5 control-label">Total Amount</label>
                     <div class="col-lg-7">
-                        <input type="text" class="form-control" ng-value="data.total_item_purchase_amount" readonly="">
+                        <input type="text" class="form-control text-right" ng-value="data.total_item_purchase_amount" readonly="">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-lg-3 control-label">Disc %</label>
                     <div class="col-lg-2">
-                        <input type="text" class="form-control" ng-model="data.discount_percent" ng-change="updatePurchaseRate()" limit-to="2">
+                        <input type="text" class="form-control text-right" ng-model="data.discount_percent" ng-change="updatePurchaseRate()" limit-to="2">
                     </div>
                     <div class="col-lg-7">
-                        <input type="text" class="form-control" ng-value="data.discount_amount" readonly="">
+                        <input type="text" class="form-control text-right" ng-value="data.discount_amount" readonly="">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-lg-5 control-label">Before Disc. Total</label>
                     <div class="col-lg-7">
-                        <input type="text" class="form-control" ng-value="data.before_disc_amount" readonly="">
+                        <input type="text" class="form-control text-right" ng-value="data.before_disc_amount" readonly="">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-lg-5 control-label">After Disc. Total</label>
                     <div class="col-lg-7">
-                        <input type="text" class="form-control" ng-value="data.after_disc_amount" readonly="">
+                        <input type="text" class="form-control text-right" ng-value="data.after_disc_amount" readonly="">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-lg-5 control-label">Round Off</label>
                     <div class="col-lg-7">
-                        <input type="text" class="form-control" ng-value="data.roundoff_amount" readonly="">
+                        <input type="text" class="form-control text-right" ng-value="data.roundoff_amount" readonly="">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-lg-5 control-label">Net Amount</label>
                     <div class="col-lg-7">
-                        <input type="text" class="form-control" ng-value="data.net_amount" readonly="">
+                        <input type="text" class="form-control text-right" ng-value="data.net_amount" readonly="">
                     </div>
                 </div>
             </div>

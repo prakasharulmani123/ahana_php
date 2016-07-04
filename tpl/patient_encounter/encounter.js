@@ -52,6 +52,16 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                                 });
                             });
                             
+                            if(response.active_encounter){
+                                $scope.class1 = 'col-sm-9';
+                                $scope.class2 = '';
+                                $scope.class3 = 'col-sm-3';
+                            } else {
+                                $scope.class1 = 'col-sm-3';
+                                $scope.class2 = 'col-sm-6';
+                                $scope.class3 = 'col-sm-3';
+                            }
+                            
                             $scope.activeEncounter = response.active_encounter;
                             $scope.displayedCollection = [].concat($scope.rowCollection);
                             $scope.more_li = {};

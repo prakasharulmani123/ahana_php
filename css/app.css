@@ -1226,6 +1226,7 @@ html {
   display: block;
   padding: 10px 20px;
   font-weight: normal;
+  text-transform: capitalize;
   /* text-transform: none; */
   -webkit-transition: background-color 0.2s ease-in-out 0s;
           transition: background-color 0.2s ease-in-out 0s;
@@ -4184,7 +4185,7 @@ a.text-#000000:hover {
 }
 
 .wrapper-md {
-  padding: 20px;
+  padding: 10px 20px;
 }
 
 .wrapper-lg {
@@ -5315,11 +5316,11 @@ a.text-#000000:hover {
 }
 
 .app-aside2 {
-  width: 225px;
+  width: 170px;
 }
 
 .app-content2, .app-footer2 {
-  margin-left: 225px;
+  margin-left: 170px;
 }
 
 .navi ul.nav li {

@@ -23,7 +23,7 @@
 
 <div class="wrapper-md" ng-controller="OutPatientsController" ng-init="loadOutPatientsList('current')">
     <div class="panel panel-default">
-        <div class="row wrapper">
+        <div class="row wrapper pb-0">
             <div class="col-sm-5 m-b-xs">
                 <button class="btn btn-sm btn-grey" ng-click="loadOutPatientsList('current')"> &nbsp; &nbsp; <i class="fa fa-refresh"></i>  &nbsp; &nbsp; </button>    
                 <span ng-show="currentAppointmentSelected > 0">
@@ -37,11 +37,11 @@
             </div>
             <div class="col-sm-4"></div>
             <div class="col-sm-3 pull-right text-right">
-                <h4 class="label bg-primary"> <b> Census: {{census}} </b></h4>
+                <h4 class="badge bg-primary mt-10"> <b> Census: {{census}} </b></h4>
             </div>
         </div>
 
-        <div class="table-responsive in-patient-table">
+        <div class="table-responsive in-patient-table out-patient-table">
             <div style="{{css.style}}">
                 <table st-table="displayedCollection"  st-safe-src="rowCollection"  class="table table-striped b-t b-light">
                     <thead>
@@ -62,7 +62,7 @@
                                 Time</th>
                             <th>status</th>
                             <th>consultant</th>
-                            <th style="width:250px;"> Actions</th>
+                            <th style="width:210px;"> Actions</th>
                         </tr>
                     </thead>
                     <tbody ng-hide="isLoading">
@@ -72,7 +72,7 @@
                             </td>
                         </tr>
                         <tr ng-repeat-start="(op_key, value) in displayedCollection" ng-init="expanded = true;">
-                            <td align="center" style="width:60px;">
+                            <td style="width:60px;">
                                 <label class="i-checks"> 
                                     <input ng-model="row.selected" ng-true-value="'1'" ng-false-value="'0'" ng-checked="value.selected == '1'"  type="checkbox" name="checkall" class="oplistcheckbox oplistcheckbox_{{op_key}}" ng-click="updateCheckbox(row, op_key)"> 
                                     <i></i> 
@@ -92,7 +92,7 @@
                         </tr>
 
                         <tr ng-repeat-end ng-show="expanded" ng-repeat="(key, row) in value.all" class="tr_oplistcheckbox tr_oplistcheckbox_{{op_key}}">
-                            <td align="center">
+                            <td>
                                 <label class="i-checks" ng-if="row.liveAppointmentArrival == '-'"> 
                                     <input ng-model="row.selected" ng-true-value="'1'" ng-false-value="'0'" ng-checked="row.selected == '1'" class="oplistcheckbox oplistcheckbox_{{op_key}}" id="oplist_{{op_key}}_{{key}}" type="checkbox" name="status" ng-click="moreOptions(op_key, key, row.liveAppointmentConsultant.user_id, row.liveAppointmentBooking.appt_id, row)"> 
                                     <i></i> 
@@ -106,8 +106,8 @@
                                 </div>
                             </td>
                             <td>
-                                <img ng-if="$even" class="pull-left patient-image" alt="" width="49" height="49" src="{{row.patient.patient_image ? row.patient.patient_image : 'img/man-icon.png'}}">
-                                <img ng-if="$odd" class="pull-left patient-image" alt="" width="49" height="49" src="{{row.patient.patient_image ? row.patient.patient_image : 'img/man-icon2.png'}}">
+                                <img ng-if="$even" class="pull-left patient-image" alt="" width="30" height="30" src="{{row.patient.patient_image ? row.patient.patient_image : 'img/man-icon.png'}}">
+                                <img ng-if="$odd" class="pull-left patient-image" alt="" width="30" height="30" src="{{row.patient.patient_image ? row.patient.patient_image : 'img/man-icon2.png'}}">
                                 <a ui-sref="patient.view({id: row.patient.patient_guid})" tooltip="{{row.patient.fullcurrentaddress}}">
                                     {{row.patient.fullname}} 
                                 </a>({{row.patient.patient_age}}y) <br/> 

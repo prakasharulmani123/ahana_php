@@ -134,7 +134,7 @@ h3, .h3 {
 }
 .tab-btn {
     padding-bottom:0px;
-    margin-bottom:-21px;
+    margin-bottom:-10px;
 }
 .notes-cont {
     width:100%;
@@ -890,3 +890,6 @@ button.label {
     width: 100%;
     margin-bottom: 0px;
 }
+
+
+

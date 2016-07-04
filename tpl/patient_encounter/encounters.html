@@ -11,28 +11,8 @@
             {% include 'tpl/blocks/alert.html' %}
         </div>
         <div class="panel panel-default">
-            <div class="row wrapper pull-right">
-                <div class="col-sm-12">
-                    <div class="form-group">
-                        <div class="col-sm-9">
-                            <div class="input-group">
-                                <input placeholder="Filter by date" prevent-enter type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="filterdate" is-open="opened" datepicker-options="dateOptions" close-text="Close" max-date="maxDate" date-disabled="disabled(date, mode)" ng-change="loadPatientEncounters('Current', filterdate);"/>
-                                <span class="input-group-btn">
-                                    <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
-                                </span>
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <button title="Clear" ng-click="filterdate = '';
-                                        loadPatientEncounters('Current')" class="btn m-b-xs  btn-dark">  
-                                <i class="fa fa-times"></i> 
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row wrapper">
-                <div class="col-sm-7 m-b-xs">
+            <div class="row wrapper pb-10">
+                <div class="{{class1}} m-b-xs">
                     <button class="btn btn-sm btn-grey" ng-show="encounterView == 'Current'" ng-click="loadPatientEncounters('Current');"> &nbsp; &nbsp; <i class="fa fa-repeat"></i>  &nbsp; &nbsp; </button>    
                     <button class="btn btn-sm btn-grey" ng-show="encounterView == 'Previous'" ng-click="loadPatientEncounters('Previous');"> &nbsp; &nbsp; <i class="fa fa-repeat"></i>  &nbsp; &nbsp; </button>    
                     &nbsp; &nbsp
@@ -58,14 +38,34 @@
                         </ul>
                     </div>        
                 </div>
-                <div class="col-sm-1">
-                </div>
-                <div class="col-sm-4 pull-right right" ng-hide="isLoading">
+
+                <div class="{{class2}}" ng-hide="isLoading">
                     <button ng-if="activeEncounter == null" ng-click="$state.go('patient.admission', {id: $state.params.id})" class="btn btn-info"><i class="fa fa-plus"></i> New Admission </button>
                     <button ng-if="activeEncounter == null" ng-click="$state.go('patient.appointment', {id: $state.params.id})" class="btn btn-primary"><i class="fa fa-plus"></i> New Appointment </button>
                     <!--<button class="btn btn-default"><i class="fa fa-print"></i> Print</button>-->
                 </div>
+
+                <div class="{{class3}}" ng-hide="isLoading">
+                    <div class="row"> 
+                        <div class="col-sm-9">  
+                            <div class="input-group">
+                                <input placeholder="Filter by date" prevent-enter type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="filterdate" is-open="opened" datepicker-options="dateOptions" close-text="Close" max-date="maxDate" date-disabled="disabled(date, mode)" ng-change="loadPatientEncounters('Current', filterdate);"/>
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-3">   
+                            <button title="Clear" ng-click="filterdate = '';
+                                    loadPatientEncounters('Current')" class="btn m-b-xs  btn-dark">  
+                                <i class="fa fa-times"></i> 
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
+            
             <div class="table-responsive in-patient-table">
                 <script type="text/ng-template" id="myModalContent.html">
                     <div ng-include="'tpl/inpatient.edit.html'"></div>

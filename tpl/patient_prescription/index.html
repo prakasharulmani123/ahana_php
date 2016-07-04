@@ -37,8 +37,8 @@
                             {% include 'tpl/blocks/alert.html' %}
                         </div>
                         <div class="panel panel-default"> 
-                            <div class="row wrapper pb-sm">
-                                <div class="col-sm-8 m-b-xs " style="width:680px;" > 
+                            <div class="row wrapper pb-sm pb-0">
+                                <div class="col-sm-8" style="width:680px;" > 
                                     <div class="input-group">
                                         <input type="text" 
                                                class="form-control prescription_search_input" 
@@ -149,12 +149,12 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-2 m-b-xs">
+                                <div class="col-sm-2">
                                     <select class="form-control" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors | orderBy: name" ng-change="getTimeOfAppointment();">
                                         <option value="">Select Consultant</option>
                                     </select>
                                 </div>
-                                <div class="col-sm-1 m-b-xs"> 
+                                <div class="col-sm-1"> 
                                     <button class="btn m-b-xs  btn-dark" ng-click="prescription = '';
                                                 data.consultant_id = ''">  
                                         <i class="fa fa-times"></i> Clear 
@@ -162,9 +162,9 @@
                                 </div>
                             </div>
                             <form editable-form name="tableform" name="prescForm" class="form-horizontal form-validation" novalidate="" shown="true" onaftersave="saveForm()">
-                                <div class="table-responsive in-patient-table">
-                                    <div class="wrapper-md p-b">
-                                        <div  class="row" style="height:220px;overflow-y: auto;" >
+                                <div class="table-responsive">
+                                    <div class="wrapper p-b">
+                                        <div  class="" style="height:220px;overflow-y: auto;" >
                                             <table class="table table-striped b-t b-light" id="prescription_item">
                                                 <thead>
                                                     <tr>

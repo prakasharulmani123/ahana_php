@@ -20,19 +20,28 @@
                 Ph : {{app.org_mobile}}
             </td>
             <td class="orgtable2"><span style="display:inline-block;width:100%;" class="DateCss" id="lblDate">
-                    <span class="SplCss">Date : </span>{{printVoucher.payment_date}}
+                    <span class="SplCss">Date : </span>{{printVoucher.payment_date| moment:'DD/MM/YYYY'}}
             </td>
         </tr>
         <tr>
             <td colspan="3" class="recived-details">
                 Received with thanks from 
-                <span> <strong>{{patientObj.fullname}} ({{patientObj.patient_age}}y)</strong> </span> 
+                <span> 
+                    <strong>
+                        {{patientObj.fullname}} 
+                        ({{patientObj.patient_age}}y) 
+                        ({{patientObj.patient_int_code}}) 
+                        <span ng-if="patientObj.current_room != '-'">
+                            ({{patientObj.current_room}})
+                        </span>
+                    </strong> 
+                </span> 
                 <br />
                 <br />
                 a sum of rupees <span><strong>{{printVoucher.total_charge}}</strong></span> 
                 <br />
                 <br />
-                <span><strong>{{printVoucher.total_charge_words}}</strong></span> on account of 
+                <span><strong>{{printVoucher.total_charge| words}}</strong></span> on account of 
                 <br />
                 <br />
                 <br />
@@ -71,15 +80,26 @@
                 Ph : {{app.org_mobile}}
             </td>
             <td class="orgtable2"><span style="display:inline-block;width:100%;" class="DateCss" id="lblDate">
-                    <span class="SplCss">Date : </span>{{printVoucher.payment_date}}
+                    <span class="SplCss">Date : </span>{{printVoucher.payment_date| moment:'DD/MM/YYYY'}}
             </td>
         </tr>
         <tr>
-            <td colspan="3" class="recived-details">Received with thanks from <span> <strong>{{patientObj.fullname}} ({{patientObj.patient_age}}y)</strong> </span> <br />
+            <td colspan="3" class="recived-details">Received with thanks from 
+                <span> 
+                    <strong>
+                        {{patientObj.fullname}} 
+                        ({{patientObj.patient_age}}y) 
+                        ({{patientObj.patient_int_code}}) 
+                        <span ng-if="patientObj.current_room != '-'">
+                            ({{patientObj.current_room}})
+                        </span>
+                    </strong> 
+                </span>
+                <br />
                 <br />
                 a sum of rupees <span><strong>{{printVoucher.total_charge}}</strong></span> <br />
                 <br />
-                <span><strong>{{printVoucher.total_charge_words}}</strong></span> on account of <br />
+                <span><strong>{{printVoucher.total_charge| words}}</strong></span> on account of <br />
                 <br />
                 <br />
                 <div class="amount">{{printVoucher.total_charge}}</div>
