@@ -16,6 +16,7 @@ use yii\db\ActiveQuery;
  * @property string $encounter_date
  * @property string $inactive_date
  * @property string $bill_no
+ * @property string $bill_notes
  * @property integer $finalize
  * @property integer $authorize
  * @property integer $discharge
@@ -54,7 +55,7 @@ class PatEncounter extends RActiveRecord {
         return [
             [['encounter_date'], 'required'],
             [['tenant_id', 'patient_id', 'finalize', 'authorize', 'created_by', 'modified_by', 'discharge'], 'integer'],
-            [['encounter_date', 'inactive_date', 'created_at', 'modified_at', 'deleted_at', 'casesheet_no', 'discharge', 'total_amount', 'bill_no'], 'safe'],
+            [['encounter_date', 'inactive_date', 'created_at', 'modified_at', 'deleted_at', 'casesheet_no', 'discharge', 'total_amount', 'bill_no', 'bill_notes'], 'safe'],
             [['status', 'casesheet_no', 'add_casesheet_no'], 'string'],
             [['concession_amount'], 'number'],
             [['encounter_type'], 'string', 'max' => 5],
@@ -286,8 +287,8 @@ class PatEncounter extends RActiveRecord {
                 $model->save(false);
                 $this->casesheet_no = $model->casesheet_no;
             }
-            
-            if($this->encounter_type == 'IP')
+        } else {
+            if($this->encounter_type == 'IP' && $this->finalize != 0 && $this->bill_no == NULL)
                 $this->bill_no = CoInternalCode::generateInternalCode('B', 'common\models\PatEncounter', 'bill_no');
         }
         
