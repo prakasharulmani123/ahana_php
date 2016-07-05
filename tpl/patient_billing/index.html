@@ -355,6 +355,7 @@
                 </div>
                 <div class="panel-body">
                     <textarea ng-model="enc.selected.bill_notes" class="form-control" placeholder="Notes"></textarea>
+                    <span class="text-danger" ng-show="notes_error">Enter Billing Notes !!! </span>
                     <footer class="panel-footer text-right">
                         <button ng-click="saveBillNotes()" class="btn m-b-xs  btn-success save-btn">Save</button>
                     </footer>

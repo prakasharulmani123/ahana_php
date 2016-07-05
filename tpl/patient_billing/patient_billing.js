@@ -113,7 +113,7 @@ function capitalise(string) {
 
 window.toWords = toWords;
 
-app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$filter', '$modal', '$log', function ($rootScope, $scope, $timeout, $http, $state, $filter, $modal, $log) {
+app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$filter', '$modal', '$log', 'toaster', function ($rootScope, $scope, $timeout, $http, $state, $filter, $modal, $log, toaster) {
 
         $scope.app.settings.patientTopBar = true;
         $scope.app.settings.patientSideMenu = true;
@@ -122,7 +122,7 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
 
         //Notifications
         $scope.assignNotifications();
-        
+
         $scope.more_max = 4;
         $scope.total_billing = 0;
 
@@ -160,9 +160,44 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
                 $scope.loadRoomConcession(newValue);
             }
         }, true);
-        
-        $scope.saveBillNotes = function(){
-            console.log($scope.enc.selected.bill_notes);
+
+        $scope.saveBillNotes = function () {
+            $scope.notes_error = false;
+            if ($scope.enc.selected.bill_notes) {
+                data = {
+                    encounter_id: $scope.enc.selected.encounter_id,
+                    bill_notes: $scope.enc.selected.bill_notes,
+                };
+                
+                $scope.errorData = "";
+
+                post_url = $rootScope.IRISOrgServiceUrl + '/encounter/savebillnote';
+                method = 'POST';
+
+                $scope.loadbar('show');
+                $http({
+                    method: method,
+                    url: post_url,
+                    data: data,
+                }).success(
+                        function (response) {
+                            if (response.success == true) {
+                                $scope.loadbar('hide');
+                                toaster.clear();
+                                toaster.pop('success', 'Success', 'Billing Notes Updated Successfully!!');
+                            }
+                        }
+                ).error(function (data, status) {
+                    $scope.loadbar('hide');
+                    if (status == 422)
+                        $scope.errorData = $scope.errorSummary(data);
+                    else
+                        $scope.errorData = data.message;
+                });
+            } else {
+                $scope.notes_error = true;
+            }
+
         }
 
         $scope.loadRoomConcession = function (enc_id) {
@@ -492,6 +527,6 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
             });
         }
 
-        
+
 
     }]);
