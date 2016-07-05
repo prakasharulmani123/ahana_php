@@ -60,12 +60,35 @@ class PatEncounter extends RActiveRecord {
             [['concession_amount'], 'number'],
             [['encounter_type'], 'string', 'max' => 5],
             ['concession_amount', 'validateConcessionAmount'],
+            ['encounter_date', 'validateAdmissionDate'],
         ];
     }
-    
+
     public function validateConcessionAmount($attribute, $params) {
         if (($this->total_amount > 0) && $this->concession_amount > $this->total_amount)
             $this->addError($attribute, "Concession Amount ({$this->concession_amount}) must be lesser than Total Amount ({$this->total_amount})");
+    }
+
+    //Check new admission date is between old admission and discharge date.
+    public function validateAdmissionDate($attribute, $params) {
+        if ($this->encounter_type == 'IP') {
+            $date = date("Y-m-d", strtotime($this->encounter_date));
+            $result = PatEncounter::find()
+                    ->joinWith('patAdmissions')
+                    ->where([
+                        'pat_encounter.tenant_id' => $this->tenant_id,
+                        'pat_encounter.patient_id' => $this->patient_id,
+                        'pat_encounter.status' => '0',
+                        'pat_admission.admission_status' => 'D',
+                    ])
+                    ->encounterType($this->encounter_type)
+                    ->andWhere("DATE(pat_encounter.encounter_date) <= '{$date}'")
+                    ->andWhere("DATE(pat_admission.status_date) >= '{$date}'")
+                    ->one();
+            
+            if(!empty($result))
+                $this->addError($attribute, "Admission already taken in this date. Kindly choose another date");
+        }
     }
 
     /**
@@ -181,15 +204,15 @@ class PatEncounter extends RActiveRecord {
     public function getPatAdmissionDischarge() {
         return $this->hasOne(PatAdmission::className(), ['encounter_id' => 'encounter_id'])->andWhere(['IN', 'admission_status', ['D', 'CD']])->orderBy(['created_at' => SORT_DESC]);
     }
-    
+
     public function getPatAdmissionCancel() {
         return $this->hasOne(PatAdmission::className(), ['encounter_id' => 'encounter_id'])->andWhere(['IN', 'admission_status', ['AC']])->orderBy(['created_at' => SORT_DESC]);
     }
-    
+
     public function getPatPrescriptions() {
         return $this->hasMany(PatPrescription::className(), ['encounter_id' => 'encounter_id'])->orderBy(['created_at' => SORT_DESC]);
     }
-    
+
     /**
      * 
      * @return type
@@ -252,7 +275,7 @@ class PatEncounter extends RActiveRecord {
                     $end_date = $model->patAdmissionDischarge->status_date;
                 else
                     $end_date = date('Y-m-d');
-                
+
                 $date1 = new DateTime(date('Y-m-d', strtotime($model->encounter_date)));
                 $date2 = new DateTime($end_date);
 
@@ -278,7 +301,7 @@ class PatEncounter extends RActiveRecord {
                 $this->casesheet_no = $this->patient->patActiveCasesheetno->casesheet_no;
             } else if (isset($this->add_casesheet_no) && !empty($this->add_casesheet_no)) {
                 $model = new PatPatientCasesheet();
-               
+
                 $model->attributes = [
                     'casesheet_no' => $this->add_casesheet_no,
                     'patient_id' => $this->patient_id,
@@ -288,23 +311,23 @@ class PatEncounter extends RActiveRecord {
                 $this->casesheet_no = $model->casesheet_no;
             }
         } else {
-            if($this->encounter_type == 'IP' && $this->finalize != 0 && $this->bill_no == NULL)
+            if ($this->encounter_type == 'IP' && $this->finalize != 0 && $this->bill_no == NULL)
                 $this->bill_no = CoInternalCode::generateInternalCode('B', 'common\models\PatEncounter', 'bill_no');
         }
-        
+
 //        if($this->encounter_type == 'IP')
 //            $this->status = $this->discharge == 0 ? '1' : '0';
-        
+
         return parent::beforeSave($insert);
     }
-    
+
     public function afterSave($insert, $changedAttributes) {
-        if($insert){
-            if($this->encounter_type == 'IP')
+        if ($insert) {
+            if ($this->encounter_type == 'IP')
                 CoInternalCode::increaseInternalCode("B");
         }
-        
-        if($this->discharge != 0){
+
+        if ($this->discharge != 0) {
             $model = new PatAdmission;
             $model->attributes = [
                 'encounter_id' => $this->encounter_id,
@@ -314,7 +337,7 @@ class PatEncounter extends RActiveRecord {
             ];
             $model->save(false);
         }
-        
+
         return parent::afterSave($insert, $changedAttributes);
     }
 

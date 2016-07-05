@@ -185,7 +185,7 @@ class EncounterController extends ActiveController {
         if (!empty($post)) {
             $model = PatEncounter::find()->where(['encounter_id' => $post['PatEncounter']['encounter_id']])->one();
             $admission_model = PatAdmission::find()->where(['admn_id' => $post['PatAdmission']['admn_id']])->one();
-            
+
             $admission_model->attributes = $post['PatAdmission'];
             if (isset($post['PatEncounter']['encounter_date']))
                 $model->encounter_date = $admission_model->status_date = $post['PatEncounter']['encounter_date'];
@@ -213,21 +213,21 @@ class EncounterController extends ActiveController {
             $condition = [
                 'patient_guid' => $get['id'],
             ];
-            
+
             if (isset($get['date'])) {
                 $condition = [
                     'patient_guid' => $get['id'],
                     'DATE(date)' => $get['date'],
                 ];
             }
-            
+
             $data = VEncounter::find()
                     ->where($condition)
                     ->groupBy('encounter_id')
                     ->orderBy(['encounter_id' => SORT_DESC])
                     ->asArray()
                     ->all();
-            
+
             foreach ($data as $key => $value) {
                 $details = VEncounter::find()
                         ->where(['encounter_id' => $value['encounter_id']])
@@ -235,7 +235,7 @@ class EncounterController extends ActiveController {
                         ->orderBy(['id' => SORT_ASC])
                         ->asArray()
                         ->all();
-                
+
                 $data[$key]['all'] = $details;
             }
 
@@ -544,6 +544,23 @@ class EncounterController extends ActiveController {
                     ])->one();
         }
         return $data;
+    }
+
+    public function actionSavebillnote() {
+        $post = Yii::$app->getRequest()->post();
+
+        if (!empty($post) && $post['bill_notes'] != '') {
+            $model = PatEncounter::find()->where(['encounter_id' => $post['encounter_id']])->one();
+            if (!empty($model)) {
+                $model->bill_notes = $post['bill_notes'];
+                $model->save(false);
+                return ['success' => true];
+            } else {
+                return ['success' => false, 'message' => 'Wrong entry'];
+            }
+        } else {
+            return ['success' => false, 'message' => 'Please enter notes'];
+        }
     }
 
 }
