@@ -154,6 +154,9 @@ class AdmissionController extends ActiveController {
                     $model = $ret['model'];
                     $patient_admission_model = $ret['patient_admission_model'];
                     break;
+                case 'CD':
+                    $model = $this->canCancelClinicalDischarge($post['admn_id']);
+                    break;
             }
 
             if ($model == false)
@@ -246,6 +249,15 @@ class AdmissionController extends ActiveController {
         $room = CoRoom::find()->where(['room_id' => $room_id])->one();
         $room->occupied_status = $occ_sts;
         $room->save(false);
+    }
+    
+    private function canCancelClinicalDischarge($admn_id) {
+        $model = PatAdmission::find()->where(['admn_id' => $admn_id])->one();
+
+        if (empty($model))
+            return false;
+
+        return $model;
     }
 
 }
