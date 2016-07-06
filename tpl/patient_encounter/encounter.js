@@ -302,19 +302,28 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                         var notes = '';
                         var headerText = '';
                         var bodyText = '';
+                        var succ_msg = '';
 
                         if (row_sts == 'TR') {
                             notes = 'Transfer (Room) Cancelled';
                             headerText = 'Cancel Room Transfer?';
                             bodyText = 'Are you sure you want to cancel this Room Transfer?';
+                            succ_msg = 'Room Transfer cancelled successfully';
                         } else if (row_sts == 'TD') {
                             notes = 'Transfer (Doctor) Cancelled';
                             headerText = 'Cancel Doctor Transfer?';
                             bodyText = 'Are you sure you want to cancel this Doctor Transfer?';
+                            succ_msg = 'Doctor Transfer cancelled successfully';
                         } else if (row_sts == 'SW') {
                             notes = 'Room Swapping Cancelled';
                             headerText = 'Cancel Room Swapping?';
                             bodyText = 'Are you sure you want to cancel this Room Swapping?';
+                            succ_msg = 'Room Swapping cancelled successfully';
+                        } else if (row_sts == 'CD') {
+                            notes = 'Clinical Discharge Cancelled';
+                            headerText = 'Cancel Clinical Discharge?';
+                            bodyText = 'Are you sure you want to cancel this Clinical Discharge?';
+                            succ_msg = 'Clinical Discharge cancelled successfully';
                         }
 
                         var modalOptions = {
@@ -327,7 +336,7 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                             $scope.loadbar('show');
                             post_url = $rootScope.IRISOrgServiceUrl + '/admission/canceladmission';
                             method = 'POST';
-                            succ_msg = 'Room Transfer cancelled successfully';
+                            succ_msg = succ_msg;
 
                             var PatAdmission = {
                                 admn_id: id,

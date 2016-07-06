@@ -342,7 +342,7 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
             $scope.printBillData.date = date;
             $scope.printBillData.patient_bill_type = $scope.bill_type_taken;
             $scope.printBillData.patient_cat_name = $scope.cat_name_taken;
-            
+
             $timeout(function () {
                 var innerContents = document.getElementById("Getprintval").innerHTML;
                 var popupWinindow = window.open('', '_blank', 'width=600,height=700,scrollbars=no,menubar=no,toolbar=no,location=no,status=no,titlebar=no');
@@ -409,9 +409,19 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
 
         $scope.beforeRender = function ($view, $dates, $leftDate, $upDate, $rightDate) {
             if (!$scope.checkAccess('patient.backdateappointment')) {
-                var today_date = new Date().valueOf();
+                var d = new Date();
+                var n = d.getDate();
+                var m = d.getMonth();
+                var y = d.getFullYear();
+                var today_date = (new Date(y, m, n)).valueOf();
+
                 angular.forEach($dates, function (date, key) {
-                    if (today_date > date.localDateValue()) {
+                    var calender = new Date(date.localDateValue());
+                    var calender_n = calender.getDate();
+                    var calender_m = calender.getMonth();
+                    var calender_y = calender.getFullYear();
+                    var calender_date = (new Date(calender_y, calender_m, calender_n)).valueOf();
+                    if (today_date > calender_date) {
                         $dates[key].selectable = false;
                     }
                 });

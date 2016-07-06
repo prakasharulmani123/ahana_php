@@ -197,9 +197,13 @@
                             </td>
                             <td> {{item.doctor}} </td>
                             <td>
-                                <button tooltip="Print Bill"  class="btn btn-primary" ng-show="(item.type == 'Seen')" ng-click="printOPBill(item)">
+                                <button tooltip="Print Bill"  class="label bg-primary dk" ng-show="(item.type == 'Seen')" ng-click="printOPBill(item)">
                                     <i class="fa fa-print"></i>
                                 </button>
+                                
+                                <a check-access-custom3 tooltip="Cancel Clinical Discharge" class="label bg-danger dk" ng-show="(item.row_sts == 'CD')"  ng-click="cancelAdmission(item.encounter_id, item.id, item.row_sts)" data-url='patient.cancelLastEncounter'>
+                                    <i class="fa fa-remove"></i>
+                                </a>
                             </td>
                         </tr>
                     </tbody>

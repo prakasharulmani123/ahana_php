@@ -10,23 +10,7 @@
         {% include 'tpl/blocks/alert.html' %}
     </div>
     <div class="panel panel-default"> 
-        <!--<div class="panel-heading">
-      Responsive Table
-    </div>-->
         <div class="row wrapper">
-            <!--            <div class="col-sm-1 m-b-xs">
-                            <button class="btn btn-sm btn-grey" ng-click="loadPatConsultantsList(enc.selected.encounter_id)"> 
-                                &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
-                            </button>
-                        </div>
-                        <div class="col-sm-3 m-b-xs">
-                            <ui-select ng-model="enc.selected" theme="bootstrap">
-                                <ui-select-match placeholder="Select Encounter Id">{{$select.selected.encounter_id}}</ui-select-match>
-                                <ui-select-choices repeat="item in encounters | filter: $select.search | orderBy: 'encounter_id' : true">
-                                    <div ng-bind-html="item.encounter_id | highlight: $select.search"></div>
-                                </ui-select-choices>
-                            </ui-select>
-                        </div>-->
             <div class="col-sm-4">
                 <button ng-show="enc.selected.status == '1'" ng-click="$state.go('patient.consultantCreate', {id: $state.params.id, enc_id: enc.selected.encounter_id})" class="btn btn-sm btn-info">
                     <i class="fa fa-plus"></i> &nbsp; Add consultant visit
@@ -89,7 +73,7 @@
                         <td> {{patConsultant.consultant_name}} </td>
                         <td valign="middle"> {{patConsultant.short_notes}} </td>
                         <td>
-                            <div ng-if="patConsultant.tenant_id != null">
+                            <div ng-if="patConsultant.tenant_id != null && enc.selected.status == '1' && enc.selected.encounter_id == value.data.encounter_id">
                                 <a title="Edit" check-access  ui-sref="patient.consultantUpdate({id: $state.params.id, cons_id: patConsultant.pat_consult_id})" class="label bg-info dk">
                                     <i class="fa fa-pencil"></i>
                                 </a>&nbsp;&nbsp;&nbsp;

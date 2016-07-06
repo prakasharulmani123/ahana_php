@@ -255,33 +255,62 @@ app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', 
         };
 
         $scope.beforeRender = function ($view, $dates, $leftDate, $upDate, $rightDate) {
-            $http.post($rootScope.IRISOrgServiceUrl + '/user/getuser')
-                    .success(function (response) {
-                        if (response.return.tenant_id != 0) {
-                            var d = new Date();
-                            var n = d.getDate();
-                            var m = d.getMonth();
-                            var y = d.getFullYear();
-                            var current = (new Date(y, m, n)).valueOf();
+            var d = new Date();
+            var n = d.getDate();
+            var m = d.getMonth();
+            var y = d.getFullYear();
+            var today_date = (new Date(y, m, n)).valueOf();
 
-                            var today_date = new Date();
-                            var upto_date = (today_date.setDate(today_date.getDate() + 3)).valueOf();
+            var upto_date = (d.setDate(d.getDate() - 3)).valueOf();
 
-                            angular.forEach($dates, function (date, key) {
-                                if (current > date.localDateValue() || upto_date < date.localDateValue()) {
-                                    $dates[key].selectable = false;
-                                }
-                            });
-                        }
-                    }, function (x) {
-                        $scope.errorData = 'Error while authorize the user';
-                    });
+            if ($scope.checkAccess('patient.backdateconsultant')) {
+                angular.forEach($dates, function (date, key) {
+                    var calender = new Date(date.localDateValue());
+                    var calender_n = calender.getDate();
+                    var calender_m = calender.getMonth();
+                    var calender_y = calender.getFullYear();
+                    var calender_date = (new Date(calender_y, calender_m, calender_n)).valueOf();
+
+                    //Hide - Future Dates OR More than 3 days before
+                    if (today_date < calender_date || upto_date > calender_date) {
+                        $dates[key].selectable = false;
+                    }
+                });
+            } else {
+                angular.forEach($dates, function (date, key) {
+                    var calender = new Date(date.localDateValue());
+                    var calender_n = calender.getDate();
+                    var calender_m = calender.getMonth();
+                    var calender_y = calender.getFullYear();
+                    var calender_date = (new Date(calender_y, calender_m, calender_n)).valueOf();
+
+                    //Hide - Future and Past Dates
+                    if (today_date != calender_date) {
+                        $dates[key].selectable = false;
+                    }
+                });
+            }
+
+            //            $http.post($rootScope.IRISOrgServiceUrl + '/user/getuser')
+//                    .success(function (response) {
+//                        if (response.return.tenant_id != 0) {
+//                            var d = new Date();
+//                            var n = d.getDate();
+//                            var m = d.getMonth();
+//                            var y = d.getFullYear();
+//                            var current = (new Date(y, m, n)).valueOf();
+//
+//                            var today_date = new Date();
+//                            var upto_date = (today_date.setDate(today_date.getDate() + 3)).valueOf();
+//
+//                            angular.forEach($dates, function (date, key) {
+//                                if (current > date.localDateValue() || upto_date < date.localDateValue()) {
+//                                    $dates[key].selectable = false;
+//                                }
+//                            });
+//                        }
+//                    }, function (x) {
+//                        $scope.errorData = 'Error while authorize the user';
+//                    });
         }
     }]);
-
-
-//app.filter('moment', function () {
-//    return function (dateString, format) {
-//        return moment(dateString).format(format);
-//    };
-//});
