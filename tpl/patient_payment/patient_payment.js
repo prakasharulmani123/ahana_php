@@ -21,10 +21,20 @@ app.controller('BillingPaymentController', ['$rootScope', '$scope', '$timeout', 
                     alert("Sorry, you can't add payment");
                     $state.go("patient.billing", {id: $state.params.id});
                 } else {
+                    $rootScope.commonService.GetPaymentModes(function (response) {
+                        $scope.paymentModes = response;
+                    });
+
+                    $rootScope.commonService.GetCardTypes(function (response) {
+                        $scope.cardTypes = response;
+                    });
+
                     $scope.encounter = response.model;
                     $scope.data = {};
                     $scope.data.payment_date = moment().format('YYYY-MM-DD HH:mm:ss');
                     $scope.data.formtype = 'add';
+                    $scope.data.payment_mode = 'CA';
+                    $scope.data.bank_date = moment().format('YYYY-MM-DD HH:mm:ss');
                 }
             });
         }
@@ -32,7 +42,21 @@ app.controller('BillingPaymentController', ['$rootScope', '$scope', '$timeout', 
         //Save Both Add & Update Data
         $scope.saveForm = function (mode) {
             _that = this;
-
+            
+            _that.data.payment_date = moment(_that.data.payment_date).format('YYYY-MM-DD HH:mm:ss');
+            _that.data.bank_date = moment(_that.data.bank_date).format('YYYY-MM-DD HH:mm:ss');
+            
+            if(_that.data.payment_mode != 'CD'){
+                _that.data.card_type = '';
+                _that.data.card_number = '';
+            }
+            
+            if(_that.data.payment_mode != 'CH'){
+                _that.data.bank_name = '';
+                _that.data.bank_number = '';
+                _that.data.bank_date = '';
+            }
+            
             $scope.errorData = "";
             $scope.successMessage = "";
 
@@ -77,6 +101,14 @@ app.controller('BillingPaymentController', ['$rootScope', '$scope', '$timeout', 
 
         //Get Data for update Form
         $scope.loadForm = function () {
+            $rootScope.commonService.GetPaymentModes(function (response) {
+                $scope.paymentModes = response;
+            });
+
+            $rootScope.commonService.GetCardTypes(function (response) {
+                $scope.cardTypes = response;
+            });
+            
             $scope.loadbar('show');
             _that = this;
             $scope.errorData = "";
@@ -87,6 +119,9 @@ app.controller('BillingPaymentController', ['$rootScope', '$scope', '$timeout', 
                     function (response) {
                         $scope.loadbar('hide');
                         $scope.data = response;
+                        if(response.bank_date == null){
+                            $scope.data.bank_date = moment().format('YYYY-MM-DD HH:mm:ss');
+                        }
                         $scope.encounter = {encounter_id: response.encounter_id};
                     }
             ).error(function (data, status) {

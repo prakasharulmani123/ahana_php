@@ -60,6 +60,8 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
     service.GetProductUnitsList = GetProductUnitsList;
     service.GetProductDescriptionList = GetProductDescriptionList;
     service.GetVatList = GetVatList;
+    service.GetPaymentModes = GetPaymentModes;
+    service.GetCardTypes = GetCardTypes;
 
     return service;
 
@@ -620,5 +622,26 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
                     response = {success: false, message: 'Server Error'};
                     callback(response);
                 });
+    }
+    
+    function GetPaymentModes(callback) {
+        var response = [
+            {value: 'CA', label: 'Cash'},
+            {value: 'CD', label: 'Card'},
+            {value: 'ON', label: 'Online'},
+            {value: 'CH', label: 'Cheque'},
+        ];
+        callback(response);
+    }
+    
+    function GetCardTypes(callback) {
+        var response = [
+            {value: 'Visa', label: 'Visa'},
+            {value: 'MasterCard', label: 'MasterCard'},
+            {value: 'Maestro', label: 'Maestro'},
+            {value: 'Visa Debit', label: 'Visa Debit'},
+            {value: 'MasterCard Debit', label: 'MasterCard Debit'},
+        ];
+        callback(response);
     }
 }
