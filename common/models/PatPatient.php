@@ -500,6 +500,12 @@ class PatPatient extends RActiveRecord {
                     return true;
                 else
                     return $model->patPatientAddress->isIncompleteProfile();
+            },
+            'name_with_casesheet' => function($model){
+                $name = ucfirst($model->patient_firstname);
+                if (isset($model->patActiveCasesheetno))
+                    $name .= ' ('.$model->patActiveCasesheetno->casesheet_no.')';
+                return $name;
             }
         ];
         $fields = array_merge(parent::fields(), $extend);

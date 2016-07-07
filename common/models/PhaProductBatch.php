@@ -105,7 +105,7 @@ class PhaProductBatch extends RActiveRecord {
     public function fields() {
         $extend = [
             'batch_details' => function ($model) {
-                return $model->batch_no . ' (' . date('M Y', strtotime($model->expiry_date)) . ')';
+                return $model->batch_no . ' (' . date('M Y', strtotime($model->expiry_date)) . ')'. ' / '.$model->available_qty;
             },
             'mrp' => function ($model) {
                 return isset($model->phaProductBatchRate) ? $model->phaProductBatchRate->mrp : 0;

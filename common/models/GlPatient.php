@@ -77,8 +77,8 @@ class GlPatient extends ActiveRecord {
             [['patient_ref_hospital'], 'string', 'max' => 255],
             ['patient_mobile', 'match', 'pattern' => '/^[0-9]{10}$/', 'message' => 'Mobile must be 10 digits only'],
 //            ['patient_image', 'file', 'extensions'=> 'jpg, gif, png'],
-            [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'casesheetno'], 'message' => 'The combination of Casesheetno has already been taken.', 'on' => 'casesheetunique'],
-            [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'patient_int_code'], 'message' => 'The combination of Patient Internal Code has already been taken.'],
+            [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'casesheetno', 'deleted_at'], 'message' => 'The combination of Casesheetno has already been taken.', 'on' => 'casesheetunique'],
+            [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'patient_int_code', 'deleted_at'], 'message' => 'The combination of Patient Internal Code has already been taken.'],
         ];
     }
 

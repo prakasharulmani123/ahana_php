@@ -5,6 +5,7 @@ namespace IRISORG\modules\v1\controllers;
 use common\models\PhaDrugClass;
 use common\models\PhaDrugGeneric;
 use common\models\PhaGeneric;
+use common\models\PhaProduct;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -59,7 +60,8 @@ class PharmacydruggenericController extends ActiveController {
 
         $drug_class_id = !isset($post['drug_class_id']) ? '' : $post['drug_class_id'];
         $generic_ids = !empty($post['generic_ids']) ? $post['generic_ids'] : [0 => ''];
-
+        $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+        
         //validate
         foreach ($generic_ids as $generic_id) {
             $v_model = new PhaDrugGeneric();
@@ -73,6 +75,7 @@ class PharmacydruggenericController extends ActiveController {
         //
 
         $this->_link($drug_class_id, $generic_ids);
+        PhaProduct::updateAll(['drug_class_id' => $drug_class_id], ['tenant_id' => $tenant_id,'generic_id' => $generic_ids, 'drug_class_id' => null]);
         return ['success' => true];
     }
 

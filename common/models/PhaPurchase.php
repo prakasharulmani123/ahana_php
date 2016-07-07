@@ -124,6 +124,7 @@ class PhaPurchase extends RActiveRecord
     public function beforeSave($insert) {
         if($insert){
             $this->purchase_code = CoInternalCode::generateInternalCode('PU', 'common\models\PhaPurchase', 'purchase_code');
+            $this->gr_num = CoInternalCode::generateInternalCode('PG', 'common\models\PhaPurchase', 'gr_num');
         }
         return parent::beforeSave($insert);
     }

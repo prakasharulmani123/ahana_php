@@ -44,7 +44,7 @@ class CoInternalCode extends RActiveRecord {
             [['code_type'], 'string'],
             [['created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['code_prefix', 'code_suffix'], 'string', 'max' => 10],
-            [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'code_type'], 'message' => 'The combination of Code Type has already been taken.'],
+            [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'code_type', 'deleted_at'], 'message' => 'The combination of Code Type has already been taken.'],
             ['code_padding', 'number', 'min' => 1, 'max' => 9],
         ];
     }
@@ -81,6 +81,23 @@ class CoInternalCode extends RActiveRecord {
         return new CoInternalCodeQuery(get_called_class());
     }
 
+    public function fields() {
+        $extend = [
+            'fullcode' => function ($model) {
+                return $model->fullcode;
+            },
+            'next_fullcode' => function ($model) {
+                $prefix = $model->code_prefix;
+                $int_code = str_pad(($model->code + 1), $model->code_padding, '0', STR_PAD_LEFT);
+        //        $role_suffix = $this->Gen_Suffix;
+                return "{$prefix}{$int_code}";
+            },
+        ];
+        $fields = array_merge(parent::fields(), $extend);
+        return $fields;
+    }
+
+    
     public static function getInternalCode($tenant = null, $status = '1', $deleted = false, $code_type = 'B') {
         if (!$deleted)
             $list = self::find()->tenant($tenant)->status($status)->active()->codeType($code_type)->one();
@@ -91,8 +108,8 @@ class CoInternalCode extends RActiveRecord {
     }
 
     public static function getCodeTypes() {
-        //B-Bill, P-Patient, PU-Purchase, PR-PurchaseReturn , CS-CaseSheet, SA-Sale, SR-SaleReturn
-        return array('B', 'P', 'PU', 'PR', 'CS', 'SA', 'SR');
+        //B-Bill, P-Patient, PU-Purchase, PR-PurchaseReturn , CS-CaseSheet, SA-Sale, SR-SaleReturn, PG - Purchase GR No.
+        return array('B', 'P', 'PU', 'PR', 'CS', 'SA', 'SR', 'PG');
     }
 
     public function getFullcode() {

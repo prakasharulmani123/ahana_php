@@ -37,26 +37,19 @@ class PharmacyreportController extends ActiveController {
         $post = Yii::$app->getRequest()->post();
         $tenant_id = Yii::$app->user->identity->logged_tenant_id;
 
+        $purchases = PhaPurchaseItem::find()
+                ->joinWith('purchase')
+                ->joinWith('product')
+                ->andWhere(['pha_product.tenant_id' => $tenant_id]);
 
         if (isset($post['from']) && isset($post['to'])) {
-            $purchases = PhaPurchaseItem::find()
-                    ->joinWith('purchase')
-                    ->joinWith('product')
-                    ->andWhere(['pha_product.tenant_id' => $tenant_id])
-                    ->andWhere("pha_purchase.invoice_date between '{$post['from']}' AND '{$post['to']}'")
-                    ->addSelect(["CONCAT(pha_product.product_name, ' | ', pha_product.product_unit_count, ' | ', pha_product.product_unit) as product_name", 'SUM(total_amount) as total_purhcase_amount'])
-                    ->groupBy(['pha_product.product_id'])
-                    ->all();
-        }else{
-            $purchases = PhaPurchaseItem::find()
-                    ->joinWith('purchase')
-                    ->joinWith('product')
-                    ->andWhere(['pha_product.tenant_id' => $tenant_id])
-                    ->addSelect(["CONCAT(pha_product.product_name, ' | ', pha_product.product_unit_count, ' | ', pha_product.product_unit) as product_name", 'SUM(total_amount) as total_purhcase_amount'])
-                    ->groupBy(['pha_product.product_id'])
-                    ->all();
+            $purchases->andWhere("pha_purchase.invoice_date between '{$post['from']}' AND '{$post['to']}'");
         }
 
+        $purchases = $purchases->addSelect(["CONCAT(pha_product.product_name, ' | ', pha_product.product_unit_count, ' | ', pha_product.product_unit) as product_name", 'SUM(total_amount) as total_purhcase_amount'])
+                ->groupBy(['pha_product.product_id'])
+                ->all();
+            
         $reports = [];
 
         foreach ($purchases as $key => $purchase) {
@@ -72,31 +65,25 @@ class PharmacyreportController extends ActiveController {
         $post = Yii::$app->getRequest()->post();
         $tenant_id = Yii::$app->user->identity->logged_tenant_id;
 
-
+        $sales = PhaSaleItem::find()
+                ->joinWith('sale')
+                ->joinWith('product')
+                ->andWhere(['pha_product.tenant_id' => $tenant_id]);
+                
         if (isset($post['from']) && isset($post['to'])) {
-            $sales = PhaSaleItem::find()
-                    ->joinWith('sale')
-                    ->joinWith('product')
-                    ->andWhere(['pha_product.tenant_id' => $tenant_id])
-                    ->andWhere("pha_sale.sale_date between '{$post['from']}' AND '{$post['to']}'")
-                    ->addSelect(["CONCAT(pha_product.product_name, ' | ', pha_product.product_unit_count, ' | ', pha_product.product_unit) as product_name", 'SUM(item_amount) as total_sale_item_amount'])
-                    ->groupBy(['pha_product.product_id'])
-                    ->all();
-        }else{
-            $sales = PhaSaleItem::find()
-                    ->joinWith('sale')
-                    ->joinWith('product')
-                    ->andWhere(['pha_product.tenant_id' => $tenant_id])
-                    ->addSelect(["CONCAT(pha_product.product_name, ' | ', pha_product.product_unit_count, ' | ', pha_product.product_unit) as product_name", 'SUM(item_amount) as total_sale_item_amount'])
-                    ->groupBy(['pha_product.product_id'])
-                    ->all();
+            $sales->andWhere("pha_sale.sale_date between '{$post['from']}' AND '{$post['to']}'");
         }
+        
+        $sales = $sales->addSelect(["CONCAT(pha_product.product_name, ' | ', pha_product.product_unit_count, ' | ', pha_product.product_unit) as product_name", 'SUM(item_amount) as total_sale_item_amount'])
+                ->groupBy(['pha_product.product_id'])
+                ->all();
 
         $reports = [];
 
         foreach ($sales as $key => $sale) {
             $reports[$key]['product_name'] = $sale['product_name'];
             $reports[$key]['total_amount'] = $sale['total_sale_item_amount'];
+            $reports[$key]['consultant_name'] = $sale['total_sale_item_amount'];
         }
 
         return ['report' => $reports];
