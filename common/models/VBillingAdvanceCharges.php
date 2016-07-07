@@ -39,7 +39,8 @@ class VBillingAdvanceCharges extends \common\models\RActiveRecord {
             [['total_charge'], 'number'],
             [['category'], 'string', 'max' => 14],
             [['headers'], 'string', 'max' => 20],
-            [['trans_mode'], 'string', 'max' => 1]
+            [['trans_mode'], 'string', 'max' => 1],
+            [['payment_date', 'card_type', 'card_number', 'bank_name', 'bank_number', 'bank_date'], 'safe']
         ];
     }
 
