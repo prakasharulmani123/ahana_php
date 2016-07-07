@@ -221,19 +221,24 @@ app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http
                 $scope.data.purchase_vat_id = $scope.data.sales_vat_id;
             }
         }
-        
+
         $scope.packing_unit = 0;
         $scope.setPackageUnit = function () {
             purchasePackage = $filter('filter')($scope.packingUnits, {package_id: $scope.data.purchase_package_id});
-            $scope.packing_unit = purchasePackage[0].package_unit;
+            if(purchasePackage.length > 0){
+                $scope.packing_unit = purchasePackage[0].package_unit;
+            }else{
+                $scope.packing_unit = 0;
+                $scope.data.sales_package_id = '';
+            }
         }
     }]);
 
 app.filter('packingunitFilter', function () {
-    return function (items, validateunit) {
+    return function (items, validate_package_unit) {
         var filtered = [];
         angular.forEach(items, function (item) {
-            if (item.package_unit <= validateunit) {
+            if (item.package_unit <= validate_package_unit) {
                 filtered.push(item);
             }
         });

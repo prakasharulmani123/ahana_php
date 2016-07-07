@@ -1,4 +1,4 @@
-app.controller('AlertsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$filter', '$anchorScroll', 'modalService', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $filter, $anchorScroll, modalService) {
+app.controller('PatientAlertsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$filter', '$anchorScroll', 'modalService', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $filter, $anchorScroll, modalService) {
 
         $scope.app.settings.patientTopBar = true;
         $scope.app.settings.patientSideMenu = true;
@@ -19,15 +19,15 @@ app.controller('AlertsController', ['$rootScope', '$scope', '$timeout', '$http',
         };
 
         $scope.showStatus = function (row) {
-            var selected = [];
+            selected = [];
             if (row && row.alert_type) {
                 selected = $filter('filter')($scope.alerts, {alert_name: row.alert_type});
             }
-            return selected.length ? selected[0].alert_name : 'Not set';
+            return selected.length > 0 ? selected[0].alert_name : 'Not set';
         };
 
         //Index Page
-        $scope.loadAlertsList = function () {
+        $scope.loadPatientAlertsList = function () {
             $scope.isLoading = true;
             // pagination set up
             $scope.rowCollection = [];  // base collection
@@ -113,7 +113,7 @@ app.controller('AlertsController', ['$rootScope', '$scope', '$timeout', '$http',
                         $scope.data.formtype = 'add';
                         $scope.$emit('patient_alert', {hasalert: true, alert: response.alert_description});
                         $timeout(function () {
-                            $scope.loadAlertsList();
+                            $scope.loadPatientAlertsList();
                             $anchorScroll();
 //                            $state.go('patient.alert', {id: $state.params.id});
                         }, 1000)
@@ -169,7 +169,7 @@ app.controller('AlertsController', ['$rootScope', '$scope', '$timeout', '$http',
                         function (response) {
                             $scope.loadbar('hide');
                             if (response.data.success === true) {
-                                $scope.loadAlertsList();
+                                $scope.loadPatientAlertsList();
                                 $scope.successMessage = 'Alert deleted successfully';
                             }
                             else {

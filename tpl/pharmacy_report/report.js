@@ -34,6 +34,7 @@ app.controller('reportController', ['$rootScope', '$scope', '$timeout', '$http',
         $scope.initReport = function () {
             $scope.mode = $state.params.mode;
             $scope.show_search = true;
+            $scope.show_search_consultant = false;
             $scope.data.from = '';
             $scope.data.to = '';
             
@@ -42,8 +43,13 @@ app.controller('reportController', ['$rootScope', '$scope', '$timeout', '$http',
                 $scope.report_title = 'Purchase Report';
                 $scope.url = '/pharmacyreport/purchasereport';
             } else if ($scope.mode == 'sale') {
+                $scope.show_search_consultant = true;
                 $scope.report_title = 'Sale Report';
                 $scope.url = '/pharmacyreport/salereport';
+                
+                $rootScope.commonService.GetDoctorList('', '1', false, '1', function (response) {
+                    $scope.doctors = response.doctorsList;
+                });
             } else if ($scope.mode == 'stock') {
                 $scope.show_search = false;
                 $scope.report_title = 'Stock Report';
@@ -67,6 +73,9 @@ app.controller('reportController', ['$rootScope', '$scope', '$timeout', '$http',
 
             if (typeof $scope.data.to !== 'undefined' && $scope.data.to != '')
                 angular.extend(data, {to: moment($scope.data.to).format('YYYY-MM-DD')});
+
+            if (typeof $scope.data.consultant_id !== 'undefined' && $scope.data.consultant_id != '')
+                angular.extend(data, {consultant_id: $scope.data.consultant_id});
 
             // Get data's from service
             $http.post($rootScope.IRISOrgServiceUrl + $scope.url, data)

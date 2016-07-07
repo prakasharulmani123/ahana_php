@@ -2,7 +2,7 @@
     <h1 class="m-n font-thin h3">Alerts</h1>
 </div>
 
-<div class="wrapper-md" ng-controller="AlertsController" ng-init="loadAlertsList()">
+<div class="wrapper-md" ng-controller="PatientAlertsController" ng-init="loadPatientAlertsList()">
 
     <div ng-include="'tpl/blocks/alert.html'">
         {% include 'tpl/blocks/alert.html' %}
@@ -10,7 +10,7 @@
 
     <div class="panel panel-default">
         <div class="panel-body">
-            <button class="btn btn-sm btn-grey" ng-click="loadAlertsList()"> 
+            <button class="btn btn-sm btn-grey" ng-click="loadPatientAlertsList()"> 
                 &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
             </button>
             <button check-access-button ng-click="$state.go('patient.alertCreate', {id: $state.params.id})" class="btn btn-sm btn-info pull-right">

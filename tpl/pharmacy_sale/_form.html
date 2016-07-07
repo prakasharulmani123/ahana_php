@@ -19,7 +19,7 @@
                                                type="text"
                                                class="form-control"
                                                ng-model="data.patient_name"
-                                               typeahead="patient.Patient as patient.Patient.patient_firstname for patient in patients | filter:$viewValue"
+                                               typeahead="patient.Patient as patient.Patient.name_with_casesheet for patient in patients | filter:$viewValue"
                                                typeahead-on-select="formatPatient($item, $model, $label)"
                                                />
                                     </div>
@@ -151,6 +151,7 @@
                                             {{ saleitem.batch_details || 'empty' }}
                                         </span>-->
                                     </div>
+                                    <div class="text-danger-dk" style="" ng-show="saleitem.exp_warning"> {{saleitem.exp_warning}}</div>
                                     <span id="t_batch_details_{{key}}" class="hide">
                                         {{ saleitem.batch_details || 'empty' }}
                                     </span>

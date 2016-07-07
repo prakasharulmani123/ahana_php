@@ -37,19 +37,30 @@ app.controller('InternalCodeController', ['$scope', '$http', '$filter', '$state'
             });
         }
 
+        $scope.purchaseGRPrefix = function () {
+            //Get Purchase GR code details
+            $rootScope.commonService.GetInternalCodeList('', 'PG', '1', false, function (response) {
+                $scope.data5 = response.code;
+                if (response.code == null)
+                    $scope.data5 = {formtype: 'add'};
+            });
+        }
+
 
         //Save Both Add & Update Data
         $scope.saveForm = function (mode, data) {
             var _that = {};
 
             if (data == 1) {
-                _that.data = this.data
+                _that.data = this.data;
             } else if (data == 2) {
-                _that.data = this.data2
+                _that.data = this.data2;
             } else if (data == 3) {
-                _that.data = this.data3
+                _that.data = this.data3;
             } else if (data == 4) {
-                _that.data = this.data4
+                _that.data = this.data4;
+            } else if (data == 5) {
+                _that.data = this.data5;
             }
 
             $scope.errorData = "";

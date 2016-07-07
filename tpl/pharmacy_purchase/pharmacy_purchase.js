@@ -68,6 +68,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                         if ($scope.data.formtype == 'update') {
                             $scope.loadForm();
                         } else {
+                            $scope.setFutureInternalCode('PG', 'gr_num');
                             $scope.data.invoice_date = moment().format('YYYY-MM-DD');
                             $scope.addRow();
                         }
@@ -428,6 +429,8 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                                 $scope.data.formtype = 'add';
                                 $scope.data.payment_type = 'CA';
                                 $scope.purchaseitems = [];
+                                $scope.setFutureInternalCode('PG', 'gr_num');
+//                                $scope.addRow();
                             } else {
                                 $scope.successMessage = 'Purchase updated successfully';
                             }
@@ -541,6 +544,13 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
 
         $scope.select = function (data) {
             console.log(data);
+        }
+
+        $scope.setFutureInternalCode = function (code, col) {
+            $rootScope.commonService.GetInternalCodeList('', code, '1', false, function (response) {
+                if(col == 'gr_num')
+                    $scope.data.gr_num = response.code.next_fullcode;
+            });
         }
 
     }]);

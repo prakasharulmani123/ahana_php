@@ -84,6 +84,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             if ($scope.data.formtype == 'update') {
                 $scope.loadForm();
             } else {
+                $scope.setFutureInternalCode('SA', 'bill_no');
                 $scope.data.sale_date = moment().format('YYYY-MM-DD');
                 $scope.addRow();
             }
@@ -315,9 +316,29 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             $scope.saleItems[key].mrp = item.mrp;
 
             $scope.setFocus('quantity', key);
+            $scope.checkExpDate(item.expiry_date, key);
 //            $scope.addRowWhenFocus(key);
         }
 
+        $scope.checkExpDate = function (data, key) {
+            var choosen_date = new Date(data);
+            var choosen_date_month = choosen_date.getMonth();
+            var choosen_date_year = choosen_date.getYear();
+
+            var today_date = new Date();
+            var today_date_month = today_date.getMonth();
+            var today_date_year = today_date.getYear();
+
+            var show_warning_count = '3';
+            var show_warning = parseFloat(choosen_date_month) - parseFloat(today_date_month);
+
+            if (show_warning < show_warning_count && today_date_year == choosen_date_year) {
+                $scope.saleItems[key].exp_warning = 'short expiry drug';
+            } else {
+                $scope.saleItems[key].exp_warning = '';
+            }
+        };
+        
         $scope.showOrHideProductBatch = function (mode, key) {
             if (mode == 'hide') {
                 i_addclass = t_removeclass = 'hide';
@@ -459,6 +480,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                 $scope.data.formtype = 'add';
                                 $scope.data.payment_type = 'CA';
                                 $scope.getPaytypeDetail(_that.data.payment_type);
+                                $scope.setFutureInternalCode('SA', 'bill_no');
                                 $scope.saleItems = [];
                                 $scope.addRow();
                                 $scope.tableform.$show();
@@ -673,5 +695,12 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading list!";
                     });
+        }
+        
+        $scope.setFutureInternalCode = function (code, col) {
+            $rootScope.commonService.GetInternalCodeList('', code, '1', false, function (response) {
+                if(col == 'bill_no')
+                    $scope.data.bill_no = response.code.next_fullcode;
+            });
         }
     }]);

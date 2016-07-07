@@ -225,7 +225,7 @@
             <div class="panel-heading font-bold">Packing Details:</div>
             <div class="panel-body">
                 <div class="form-group">
-                    <label class="col-sm-5 control-label">Purchase Unit * </label>
+                    <label class="col-sm-5 control-label">Purchase Unit </label>
                     <div class="col-sm-6">
                         <select class="form-control" ng-model="data.purchase_package_id" ng-options="purchase_unit.package_id as purchase_unit.package_name for purchase_unit in packingUnits | orderBy: package_name" ng-change="setPackageUnit()">
                             <option value="">Select Purchase Unit</option>
@@ -242,7 +242,7 @@
                 </div>
                 <div class="line line-dashed b-b line-lg "></div>
                 <div class="form-group">
-                    <label class="col-sm-5 control-label">Sale Unit * </label>
+                    <label class="col-sm-5 control-label">Sale Unit </label>
                     <div class="col-sm-6">
                         <select class="form-control" ng-model="data.sales_package_id" ng-options="sale_unit.package_id as sale_unit.package_name for sale_unit in packingUnits | orderBy: package_name | packingunitFilter:packing_unit">
                             <option value="">Select Sale Unit</option>
