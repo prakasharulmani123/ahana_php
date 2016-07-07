@@ -1,6 +1,13 @@
 <div ng-controller="BillingController">
-    <div class="bg-light lter b-b wrapper-md">
-        <h1 class="m-n h3">Billing</h1>
+    <div class="bg-light lter b-b wrapper-md" style="width: 100%; float: left">
+        <div class="col-sm-9">
+            <h1 class="m-n h3">Billing</h1>
+        </div>
+        <div class="col-sm-3">
+            <button class="btn btn-sm btn-primary pull-right"  ng-click="openPrintBill('lg')"> 
+                <i class="fa fa-print"></i> Print Bill
+            </button>
+        </div>
     </div>
     <div class="wrapper-md p-b" ng-if="charge_alerts.length > 0 && enc.selected.finalize == '0'">
         <div class="alert ng-isolate-scope alert-danger alert-dismissable">
@@ -18,9 +25,7 @@
                 {% include 'tpl/blocks/alert.html' %}
             </div>
 
-            <button class="btn btn-default"  ng-click="openPrintBill('lg')"> 
-                <i class="fa fa-print"></i> Print Bill
-            </button>
+
 
             <div class="panel panel-default m-b billing-panel">
                 <div class="panel-heading font-bold"> <i class="fa fa-medkit"></i> Billing Details</div>
@@ -38,7 +43,7 @@
                                                     <div ng-bind-html="item.encounter_id | highlight: $select.search"></div>
                                                 </ui-select-choices>
                                             </ui-select>
-                                           
+
                                         </div>
                                     </div>
                                 </div>
@@ -313,6 +318,7 @@
                                 <th>Category</th>
                                 <th>Headers</th>
                                 <th>Mode</th>
+                                <th>Details</th>
                                 <th>Print Bill</th>
                                 <th align="right" style="text-align:right;">Paid Amount</th>
                             </tr>
@@ -329,17 +335,31 @@
                                 <td>{{row.category}} </td>
                                 <td> {{row.headers}} </td>
                                 <td> {{row.trans_mode}} </td>
+                                <td>
+                                    <div ng-show="row.trans_mode == 'Card'">
+                                        <p> <b> Card Type : </b>{{row.card_type}}</p>
+                                        <p> <b> Card Number : </b>{{row.card_number}}</p>
+                                    </div>
+                                    <div ng-show="row.trans_mode == 'Cheque'">
+                                        <p> <b> Bank Name : </b>{{row.bank_name}}</p>
+                                        <p> <b> Acc Number : </b>{{row.bank_number}}</p>
+                                        <p> <b> Date : </b>{{row.bank_date}}</p>
+                                    </div>
+                                    <div ng-show="row.trans_mode == 'Cash' || row.trans_mode == 'Online'"> - </div> 
+                                </td>
                                 <td>                             
-                                    <button class="btn btn-primary" ng-click="setVoucher(row, 'voucherPrint')"><i class="fa fa-print"></i> Print</button>
-                                    <!--<button class="btn btn-primary" ng-print print-element-id="voucherPrint"><i class="fa fa-print"></i> Print</button>-->
+                                    <button class="btn btn-sm btn-primary" ng-click="setVoucher(row, 'voucherPrint')">
+                                        <i class="fa fa-print"></i>
+                                    </button>
                                 </td>
                                 <td align="right" ng-init="row_total = parseFloat(row.total_charge);
                                                     billing.total.advance_charge = billing.total.advance_charge + row_total;
-                                    "> {{row_total| number:2}} </td>
+                                    "> {{row_total| number:2}} 
+                                </td>
                             </tr>
                             <tr>
                                 <td align="center" valign="middle"></td>
-                                <td colspan="5">&nbsp;</td>
+                                <td colspan="6">&nbsp;</td>
                                 <td align="right"><strong>{{billing.total.advance_charge| number:2}}</strong></td>
                             </tr>
                         </tbody>
