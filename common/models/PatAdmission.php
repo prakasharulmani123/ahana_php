@@ -218,7 +218,13 @@ class PatAdmission extends RActiveRecord {
         //Change Old room status to vacant if Room Transfer
         if (!is_null($this->vacantOldRoomId)) {
             $room = CoRoom::find()->where(['room_id' => $this->vacantOldRoomId])->one();
-            $room->occupied_status = 0;
+
+            if ($this->admission_status == 'D') {
+                $room->occupied_status = 2; // Maintanance Mode
+                $room->notes = 'Room under maintanance'; // Maintanance Mode
+            } else {
+                $room->occupied_status = 0; // Vacant Mode
+            }
             $room->save(false);
             $this->vacantOldRoomId = null;
         }
@@ -239,7 +245,7 @@ class PatAdmission extends RActiveRecord {
                 Yii::$app->hepler->cancelRecurring($this);
                 break;
         }
-        
+
         return parent::afterSave($insert, $changedAttributes);
     }
 
