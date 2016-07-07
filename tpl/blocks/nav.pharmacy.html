@@ -1,3 +1,6 @@
+<a href class="btn no-shadow navbar-btn" ng-click="app.settings.asideFolded = !app.settings.asideFolded">
+    <i class="fa {{app.settings.asideFolded ? 'fa-indent' : 'fa-dedent'}} fa-fw"></i>
+</a> 
 <ul class="nav ng-scope">
     <li class="ng-scope"> 
         <a class="auto" href=""> 
@@ -12,9 +15,9 @@
             <li ui-sref-active="active"> 
                 <a check-access ui-sref="pharmacy.purchaseCreate"> <span>Purchase</span> </a> 
             </li>
-<!--            <li ui-sref-active="active"> 
-                <a check-access ui-sref="pharmacy.purchase"> <span>Purchase List</span> </a> 
-            </li>-->
+            <!--            <li ui-sref-active="active"> 
+                            <a check-access ui-sref="pharmacy.purchase"> <span>Purchase List</span> </a> 
+                        </li>-->
             <li ui-sref-active="active"> 
                 <a check-access ui-sref="pharmacy.purchaseReturnCreate"> <span>Purchase Return</span> </a> 
             </li>
@@ -36,9 +39,9 @@
             <li ui-sref-active="active"> 
                 <a check-access ui-sref="pharmacy.saleCreate"> <span>Sale</span> </a> 
             </li>
-<!--            <li ui-sref-active="active"> 
-                <a check-access ui-sref="pharmacy.sales"> <span>Sale List</span> </a> 
-            </li>-->
+            <!--            <li ui-sref-active="active"> 
+                            <a check-access ui-sref="pharmacy.sales"> <span>Sale List</span> </a> 
+                        </li>-->
             <li ui-sref-active="active"> 
                 <a check-access ui-sref="pharmacy.saleReturnCreate"> <span>Sale Return</span> </a> 
             </li>
@@ -86,9 +89,9 @@
             </li>
         </ul>
     </li>
-<!--    <li ui-sref-active="active"> 
-        <a check-access ui-sref="pharmacy.purchase"> <span>Accounts</span> </a> 
-    </li>-->
+    <!--    <li ui-sref-active="active"> 
+            <a check-access ui-sref="pharmacy.purchase"> <span>Accounts</span> </a> 
+        </li>-->
     <li class="ng-scope"> 
         <a class="auto" href=""> 
             <span class="pull-right text-muted"> 
