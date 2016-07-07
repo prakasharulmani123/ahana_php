@@ -68,13 +68,20 @@ class PharmacyreportController extends ActiveController {
         $sales = PhaSaleItem::find()
                 ->joinWith('sale')
                 ->joinWith('product')
+                ->joinWith("sale.consultant")
                 ->andWhere(['pha_product.tenant_id' => $tenant_id]);
                 
         if (isset($post['from']) && isset($post['to'])) {
             $sales->andWhere("pha_sale.sale_date between '{$post['from']}' AND '{$post['to']}'");
+        }elseif (isset($post['consultant_id'])) {
+            $sales->andWhere("pha_sale.consultant_id = {$post['consultant_id']}");
         }
         
-        $sales = $sales->addSelect(["CONCAT(pha_product.product_name, ' | ', pha_product.product_unit_count, ' | ', pha_product.product_unit) as product_name", 'SUM(item_amount) as total_sale_item_amount'])
+        $sales = $sales->addSelect([
+            "CONCAT(pha_product.product_name, ' | ', pha_product.product_unit_count, ' | ', pha_product.product_unit) as product_name", 
+            'SUM(item_amount) as total_sale_item_amount',
+            "CONCAT(co_user.title_code, '.', co_user.name) as consultant_name",
+            ])
                 ->groupBy(['pha_product.product_id'])
                 ->all();
 
@@ -83,7 +90,7 @@ class PharmacyreportController extends ActiveController {
         foreach ($sales as $key => $sale) {
             $reports[$key]['product_name'] = $sale['product_name'];
             $reports[$key]['total_amount'] = $sale['total_sale_item_amount'];
-            $reports[$key]['consultant_name'] = $sale['total_sale_item_amount'];
+            $reports[$key]['consultant_name'] = $sale['consultant_name'];
         }
 
         return ['report' => $reports];

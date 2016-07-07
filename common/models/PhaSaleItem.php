@@ -37,6 +37,7 @@ class PhaSaleItem extends RActiveRecord {
     public $batch_no;
     public $product_name;
     public $total_sale_item_amount;
+    public $consultant_name;
 
     /**
      * @inheritdoc
