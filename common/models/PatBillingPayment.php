@@ -14,6 +14,12 @@ use yii\db\ActiveQuery;
  * @property integer $patient_id
  * @property string $payment_date
  * @property string $payment_amount
+ * @property string $payment_mode
+ * @property string $card_type
+ * @property integer $card_number
+ * @property string $bank_name
+ * @property string $bank_number
+ * @property string $bank_date
  * @property string $status
  * @property integer $created_by
  * @property string $created_at
@@ -38,11 +44,17 @@ class PatBillingPayment extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['payment_date', 'payment_amount'], 'required'],
+            [['payment_date', 'payment_amount', 'payment_mode'], 'required'],
             [['tenant_id', 'encounter_id', 'patient_id', 'created_by', 'modified_by'], 'integer'],
-            [['payment_date', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
+            [['payment_date', 'created_at', 'modified_at', 'deleted_at', 'card_type', 'card_number', 'bank_name', 'bank_number', 'bank_date'], 'safe'],
             [['payment_amount'], 'number'],
-            [['status'], 'string']
+            [['payment_mode', 'status'], 'string'],
+            [['card_type', 'card_number'], 'required', 'when' => function($model) {
+                    return $model->payment_mode == 'CD';
+                }],
+            [['bank_name', 'bank_number', 'bank_date'], 'required', 'when' => function($model) {
+                    return $model->payment_mode == 'CH';
+                }],
         ];
     }
 
@@ -79,7 +91,7 @@ class PatBillingPayment extends RActiveRecord {
     public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
-    
+
     public static function find() {
         return new PatBillingPaymentQuery(get_called_class());
     }
