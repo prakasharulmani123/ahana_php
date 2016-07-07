@@ -11,11 +11,29 @@ app.controller('InternalCodeController', ['$scope', '$http', '$filter', '$state'
         }
 
         $scope.casesheetPrefix = function () {
-            //Get Billing code details
+            //Get CaseSheet code details
             $rootScope.commonService.GetInternalCodeList('', 'CS', '1', false, function (response) {
                 $scope.data2 = response.code;
                 if (response.code == null)
                     $scope.data2 = {formtype: 'add'};
+            });
+        }
+
+        $scope.purchasePrefix = function () {
+            //Get PUrchase code details
+            $rootScope.commonService.GetInternalCodeList('', 'PU', '1', false, function (response) {
+                $scope.data3 = response.code;
+                if (response.code == null)
+                    $scope.data3 = {formtype: 'add'};
+            });
+        }
+
+        $scope.salePrefix = function () {
+            //Get SAle code details
+            $rootScope.commonService.GetInternalCodeList('', 'SA', '1', false, function (response) {
+                $scope.data4 = response.code;
+                if (response.code == null)
+                    $scope.data4 = {formtype: 'add'};
             });
         }
 
@@ -26,8 +44,12 @@ app.controller('InternalCodeController', ['$scope', '$http', '$filter', '$state'
 
             if (data == 1) {
                 _that.data = this.data
-            } else {
+            } else if (data == 2) {
                 _that.data = this.data2
+            } else if (data == 3) {
+                _that.data = this.data3
+            } else if (data == 4) {
+                _that.data = this.data4
             }
 
             $scope.errorData = "";
