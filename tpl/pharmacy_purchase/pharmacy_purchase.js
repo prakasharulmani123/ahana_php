@@ -74,6 +74,14 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                         $scope.products = [];
                         $scope.batches = [];
                         $scope.packings = response.packingList;
+
+                        $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct')
+                                .success(function (products) {
+                                    $scope.products = products;
+                                })
+                                .error(function () {
+                                    $scope.errorData = "An Error has occured while loading brand!";
+                                });
                         $scope.loadbar('hide');
                     });
 
@@ -209,7 +217,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             $scope.purchaseitems[key].temp_expiry_date = item.expiry_date;
             $scope.purchaseitems[key].temp_mrp = item.mrp;
             $scope.purchaseitems[key].temp_package_name = item.product.purchasePackageName;
-           // $scope.purchaseitems[key].temp_free_quantity_unit = model.free_quantity_unit;
+            // $scope.purchaseitems[key].temp_free_quantity_unit = model.free_quantity_unit;
 
             $scope.showOrHideRowEdit('hide', key);
         }
@@ -372,7 +380,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                     $scope.purchaseitems[key].package_name = purchaseitem.temp_package_name;
                     $scope.purchaseitems[key].free_quantity_unit = purchaseitem.free_quantity_unit;
                 } else {
-                    exp_date = purchaseitem.expiry_date;                    
+                    exp_date = purchaseitem.expiry_date;
                 }
 
                 $scope.purchaseitems[key].expiry_date = moment(exp_date).format('YYYY-MM-DD');
@@ -415,7 +423,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                             $scope.loadbar('hide');
                             if (mode == 'add') {
                                 $scope.data = {};
-                                $scope.successMessage = 'Purchase Saved successfully';
+                                $scope.successMessage = 'New Purchase bill generated  ' + response.model.invoice_no;
                                 $scope.data.invoice_date = moment().format('YYYY-MM-DD');
                                 $scope.data.formtype = 'add';
                                 $scope.data.payment_type = 'CA';
@@ -423,7 +431,9 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                             } else {
                                 $scope.successMessage = 'Purchase updated successfully';
                             }
-                            save_success();
+                            $timeout(function () {
+                                save_success();
+                            }, 1000);
                         } else {
                             $scope.loadbar('hide');
                             $scope.errorData = response.message;
@@ -449,10 +459,10 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                     popupWinindow.document.write('<html><head><link href="css/print.css" rel="stylesheet" type="text/css" /></head><body onload="window.print()">' + innerContents + '</html>');
                     popupWinindow.document.close();
                 } else {
-                    $scope.data = {};
-                    $timeout(function () {
-                        $state.go('pharmacy.purchase');
-                    }, 1000)
+//                    $scope.data = {};
+//                    $timeout(function () {
+//                        $state.go('pharmacy.purchase');
+//                    }, 1000)
                 }
             }
         };
