@@ -1,5 +1,5 @@
-app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$modal', '$log', function ($rootScope, $scope, $timeout, $http, $state, $modal, $log) {
-        
+app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$modal', '$log', '$filter', function ($rootScope, $scope, $timeout, $http, $state, $modal, $log, $filter) {
+
         //Index Page
         $scope.loadProductsList = function () {
             $scope.isLoading = true;
@@ -61,11 +61,11 @@ app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http
             $rootScope.commonService.GetPackageUnitList('', '1', false, function (response) {
                 $scope.packingUnits = response.packingList;
             });
-            
+
             $rootScope.commonService.GetSupplierList('', '1', false, function (response) {
-                    $scope.suppliers = response.supplierList;
-            });  
-            
+                $scope.suppliers = response.supplierList;
+            });
+
             if ($scope.data.formtype == 'add') {
                 $scope.data.product_reorder_min = 0;
                 $scope.data.product_reorder_max = 50;
@@ -125,6 +125,7 @@ app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http
                     function (response) {
                         $scope.loadbar('hide');
                         $scope.data = response;
+                        $scope.setPackageUnit();
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');
@@ -213,4 +214,29 @@ app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http
             });
         };
 
+        $scope.setVat = function (mode) {
+            if (mode == 'sale') {
+                $scope.data.sales_vat_id = $scope.data.purchase_vat_id;
+            } else if (mode == 'purchase') {
+                $scope.data.purchase_vat_id = $scope.data.sales_vat_id;
+            }
+        }
+        
+        $scope.packing_unit = 0;
+        $scope.setPackageUnit = function () {
+            purchasePackage = $filter('filter')($scope.packingUnits, {package_id: $scope.data.purchase_package_id});
+            $scope.packing_unit = purchasePackage[0].package_unit;
+        }
     }]);
+
+app.filter('packingunitFilter', function () {
+    return function (items, validateunit) {
+        var filtered = [];
+        angular.forEach(items, function (item) {
+            if (item.package_unit <= validateunit) {
+                filtered.push(item);
+            }
+        });
+        return filtered;
+    }
+});

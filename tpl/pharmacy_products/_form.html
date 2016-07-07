@@ -188,7 +188,7 @@
                 <div class="form-group">
                     <label class="col-sm-5 control-label">Purchase Vat * </label>
                     <div class="col-sm-6">
-                        <select class="form-control" ng-model="data.purchase_vat_id" ng-options="purchase_vat.vat_id as purchase_vat.vat for purchase_vat in vats | orderBy: vat"">
+                        <select class="form-control" ng-model="data.purchase_vat_id" ng-options="purchase_vat.vat_id as purchase_vat.vat for purchase_vat in vats | orderBy: vat" ng-change="setVat('sale')">
                             <option value="">Select Purchase Vat</option>
                         </select>
                     </div>
@@ -206,7 +206,7 @@
                 <div class="form-group">
                     <label class="col-sm-5 control-label">Sale Vat * </label>
                     <div class="col-sm-6">
-                        <select class="form-control" ng-model="data.sales_vat_id" ng-options="sale_vat.vat_id as sale_vat.vat for sale_vat in vats | orderBy: vat"">
+                        <select class="form-control" ng-model="data.sales_vat_id" ng-options="sale_vat.vat_id as sale_vat.vat for sale_vat in vats | orderBy: vat" ng-change="setVat('purchase')">
                             <option value="">Select Sale Vat</option>
                         </select>
                     </div>
@@ -227,7 +227,7 @@
                 <div class="form-group">
                     <label class="col-sm-5 control-label">Purchase Unit * </label>
                     <div class="col-sm-6">
-                        <select class="form-control" ng-model="data.purchase_package_id" ng-options="purchase_unit.package_id as purchase_unit.package_name for purchase_unit in packingUnits | orderBy: package_name"">
+                        <select class="form-control" ng-model="data.purchase_package_id" ng-options="purchase_unit.package_id as purchase_unit.package_name for purchase_unit in packingUnits | orderBy: package_name" ng-change="setPackageUnit()">
                             <option value="">Select Purchase Unit</option>
                         </select>
                     </div>
@@ -244,7 +244,7 @@
                 <div class="form-group">
                     <label class="col-sm-5 control-label">Sale Unit * </label>
                     <div class="col-sm-6">
-                        <select class="form-control" ng-model="data.sales_package_id" ng-options="sale_unit.package_id as sale_unit.package_name for sale_unit in packingUnits | orderBy: package_name"">
+                        <select class="form-control" ng-model="data.sales_package_id" ng-options="sale_unit.package_id as sale_unit.package_name for sale_unit in packingUnits | orderBy: package_name | packingunitFilter:packing_unit">
                             <option value="">Select Sale Unit</option>
                         </select>
                     </div>
