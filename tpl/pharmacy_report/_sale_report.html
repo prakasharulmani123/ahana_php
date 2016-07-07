@@ -4,12 +4,14 @@
             <tr>
                 <th id="work-base-grid_c0">Product</th>
                 <th id="work-base-grid_c1">Amount</th>
+                <th id="work-base-grid_c1">Consultant</th>
             </tr>
         </thead>
         <tbody>
             <tr ng-repeat="(key, record) in records">
                 <td>{{record.product_name}}</td>
                 <td>{{record.total_amount}}</td>
+                <td>{{record.consultant_name}}</td>
             </tr>
         </tbody>
     </table>
