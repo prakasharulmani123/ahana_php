@@ -9,6 +9,9 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             $scope.$broadcast('onExpandAll', {expanded: expanded});
         };
 
+        //Create page height
+        $scope.css = {'style': ''};
+
         //Index Page
         $scope.loadPurchaseItemList = function (payment_type) {
             $scope.errorData = $scope.successMessage = '';
@@ -146,6 +149,12 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                     $scope.setFocus('full_name', $scope.purchaseitems.length - 1);
                 });
             }
+
+            if ($scope.purchaseitems.length > 6) {
+                $scope.css = {
+                    'style': 'height:360px; overflow-y: auto; overflow-x: hidden;',
+                };
+            }
         };
 
         $scope.setFocus = function (id, index) {
@@ -163,6 +172,12 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             $timeout(function () {
                 $scope.setFocus('full_name', $scope.purchaseitems.length - 1);
             });
+
+            if ($scope.purchaseitems.length <= 6) {
+                $scope.css = {
+                    'style': '',
+                };
+            }
         };
 
         $scope.checkInput = function (data) {
@@ -548,7 +563,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
 
         $scope.setFutureInternalCode = function (code, col) {
             $rootScope.commonService.GetInternalCodeList('', code, '1', false, function (response) {
-                if(col == 'gr_num')
+                if (col == 'gr_num')
                     $scope.data.gr_num = response.code.next_fullcode;
             });
         }
