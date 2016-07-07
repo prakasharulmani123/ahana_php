@@ -127,7 +127,7 @@ class PharmacypurchaseController extends ActiveController {
                     }
                 }
                 
-                return ['success' => true];
+                return ['success' => true, 'model' => $model];
             } else {
                 return ['success' => false, 'message' => Html::errorSummary([$model, $item_model])];
             }
