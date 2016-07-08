@@ -37,7 +37,7 @@ class PhaReorderHistoryItem extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['tenant_id', 'reorder_id', 'product_id', 'quantity', 'created_by'], 'required'],
+            [['product_id', 'quantity'], 'required'],
             [['tenant_id', 'reorder_id', 'product_id', 'quantity', 'created_by', 'modified_by'], 'integer'],
             [['status'], 'string'],
             [['created_at', 'modified_at', 'deleted_at'], 'safe']

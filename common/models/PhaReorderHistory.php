@@ -38,7 +38,7 @@ class PhaReorderHistory extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['tenant_id', 'supplier_id', 'user_id', 'created_by'], 'required'],
+            [['supplier_id', 'user_id'], 'required'],
             [['tenant_id', 'supplier_id', 'user_id', 'created_by', 'modified_by'], 'integer'],
             [['reorder_date', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['status'], 'string']
@@ -52,8 +52,8 @@ class PhaReorderHistory extends RActiveRecord {
         return [
             'reorder_id' => 'Reorder ID',
             'tenant_id' => 'Tenant ID',
-            'supplier_id' => 'Supplier ID',
-            'user_id' => 'User ID',
+            'supplier_id' => 'Supplier',
+            'user_id' => 'User',
             'reorder_date' => 'Reorder Date',
             'status' => 'Status',
             'created_by' => 'Created By',
