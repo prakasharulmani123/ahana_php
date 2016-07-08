@@ -1,16 +1,16 @@
 <div ng-controller="ReordersController">
     <div class="bg-light lter b-b wrapper-md">
-        <h1 class="m-n h3">Reorder</h1>
+        <h1 class="m-n h3">Reorder History Update</h1>
     </div>
     <div class="wrapper-md">
         <div ng-include="'tpl/blocks/alert.html'">
             {% include 'tpl/blocks/alert.html' %}
         </div>
         <div class="row">
-            <div class="col-sm-6" ng-init="data = {}; data.formtype = 'add'; loadForm(); data.status = '1'">
-                <form name="alertForm" class="form-horizontal form-validation" novalidate="">
-                    <div ng-include="'tpl/pharmacy_Reorder/_form.html'">
-                        {% include 'tpl/pharmacy_Reorder/_form.html' %}
+            <div class="col-sm-12" ng-init="initForm();">
+                <form name="reorderForm" class="form-horizontal form-validation" novalidate="">
+                    <div ng-include="'tpl/pharmacy_reorder/_form.html'">
+                        {% include 'tpl/pharmacy_reorder/_form.html' %}
                     </div>
                 </form>
             </div>
