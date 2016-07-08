@@ -23,21 +23,19 @@ use yii\db\ActiveQuery;
  * @property PhaReorderHistory $reorder
  * @property CoTenant $tenant
  */
-class PhaReorderHistoryItem extends RActiveRecord
-{
+class PhaReorderHistoryItem extends RActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'pha_reorder_history_item';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['tenant_id', 'reorder_id', 'product_id', 'quantity', 'created_by'], 'required'],
             [['tenant_id', 'reorder_id', 'product_id', 'quantity', 'created_by', 'modified_by'], 'integer'],
@@ -49,8 +47,7 @@ class PhaReorderHistoryItem extends RActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'reorder_item_id' => 'Reorder Item ID',
             'tenant_id' => 'Tenant ID',
@@ -69,24 +66,32 @@ class PhaReorderHistoryItem extends RActiveRecord
     /**
      * @return ActiveQuery
      */
-    public function getProduct()
-    {
+    public function getProduct() {
         return $this->hasOne(PhaProduct::className(), ['product_id' => 'product_id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getReorder()
-    {
+    public function getReorder() {
         return $this->hasOne(PhaReorderHistory::className(), ['reorder_id' => 'reorder_id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getTenant()
-    {
+    public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
+
+    public function fields() {
+        $extend = [
+            'product' => function ($model) {
+                return (isset($model->product) ? $model->product : '-');
+            },
+        ];
+        $fields = array_merge(parent::fields(), $extend);
+        return $fields;
+    }
+
 }
