@@ -22,13 +22,6 @@ app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http
                     });
         };
 
-        //For Form
-        $scope.initForm = function () {
-//            $rootScope.commonService.GetReorderList('', '1', false, function (response) {
-//                $scope.alerts = response.alertList;
-//            });
-        }
-
         //Save Both Add & Update Data
         $scope.saveForm = function (mode) {
             _that = this;
@@ -76,12 +69,36 @@ app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http
             _that = this;
             $scope.errorData = "";
             $http({
-                url: $rootScope.IRISOrgServiceUrl + "/pharmacyReorders/" + $state.params.id,
+                url: $rootScope.IRISOrgServiceUrl + "/pharmacyreorderhistories/" + $state.params.id,
                 method: "GET"
             }).success(
                     function (response) {
                         $scope.loadbar('hide');
+                        console.log(response);
+                        return ;
+
                         $scope.data = response;
+                        if ($scope.data.supplier_id != null)
+                            $scope.getSupplierDetail($scope.data.supplier_id);
+
+                        if ($scope.data.payment_type != null)
+                            $scope.getPaytypeDetail($scope.data.payment_type);
+
+                        $scope.products = [];
+
+                        $scope.purchaseitems = response.items;
+                        angular.forEach($scope.purchaseitems, function (item, key) {
+                            angular.extend($scope.purchaseitems[key], {is_temp: '0', full_name: item.product.full_name, batch_no: item.batch.batch_no, batch_details: item.batch.batch_details, temp_expiry_date: item.batch.expiry_date, temp_mrp: item.batch.mrp, temp_package_name: item.package_name, temp_free_quantity_unit: item.free_quantity_unit});
+                            $timeout(function () {
+                                $scope.showOrHideRowEdit('hide', key);
+                                $scope.showOrHideProductBatch('hide', key);
+                            });
+                        });
+
+                        $timeout(function () {
+                            delete $scope.data.supplier;
+                            delete $scope.data.items;
+                        }, 3000);
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');

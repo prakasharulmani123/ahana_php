@@ -2370,6 +2370,22 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
+            
+            //PHARMACY ReOrder History Update
+            .state('pharmacy.reorderHistoryUpdate', {
+                url: '/reorderHistoryUpdate/{id}',
+                templateUrl: 'tpl/pharmacy_reorder/create.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('xeditable').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/pharmacy_reorder/pharmacy_reorder.js');
+                                    }
+                            );
+                        }]
+                }
+            })
 
     $httpProvider.interceptors.push('APIInterceptor');
 
