@@ -96,6 +96,7 @@ return [
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/patientprescriptionfavourite'], 'extraPatterns' => ['GET getpatientprescriptionfavourite' => 'getpatientprescriptionfavourite', 'POST togglefavourite' => 'togglefavourite']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/appconfiguration'], 'extraPatterns' => ['POST remove' => 'remove']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/patientdocuments'], 'extraPatterns' => ['GET getpatientdocuments' => 'getpatientdocuments', 'GET getdocumenttype' => 'getdocumenttype', 'GET getdocument' => 'getdocument', 'POST savedocument' => 'savedocument', 'POST remove' => 'remove']],
+                ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/pharmacyreorderhistory'], 'extraPatterns' => ['POST remove' => 'remove', 'POST savepurchase' => 'savepurchase', 'GET reportlist' => 'reportlist', 'GET getpurchases' => 'getpurchases']],
             ],
         ],
         'log' => [

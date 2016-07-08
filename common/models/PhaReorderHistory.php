@@ -24,21 +24,19 @@ use yii\db\ActiveQuery;
  * @property CoTenant $tenant
  * @property PhaReorderHistoryItem[] $phaReorderHistoryItems
  */
-class PhaReorderHistory extends RActiveRecord
-{
+class PhaReorderHistory extends RActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'pha_reorder_history';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['tenant_id', 'supplier_id', 'user_id', 'created_by'], 'required'],
             [['tenant_id', 'supplier_id', 'user_id', 'created_by', 'modified_by'], 'integer'],
@@ -50,8 +48,7 @@ class PhaReorderHistory extends RActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'reorder_id' => 'Reorder ID',
             'tenant_id' => 'Tenant ID',
@@ -70,32 +67,42 @@ class PhaReorderHistory extends RActiveRecord
     /**
      * @return ActiveQuery
      */
-    public function getUser()
-    {
+    public function getUser() {
         return $this->hasOne(CoUser::className(), ['user_id' => 'user_id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getSupplier()
-    {
+    public function getSupplier() {
         return $this->hasOne(PhaSupplier::className(), ['supplier_id' => 'supplier_id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getTenant()
-    {
+    public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getPhaReorderHistoryItems()
-    {
+    public function getPhaReorderHistoryItems() {
         return $this->hasMany(PhaReorderHistoryItem::className(), ['reorder_id' => 'reorder_id']);
     }
+
+    public function fields() {
+        $extend = [
+            'supplier' => function ($model) {
+                return (isset($model->supplier) ? $model->supplier : '-');
+            },
+            'items' => function ($model) {
+                return (isset($model->phaReorderHistoryItems) ? $model->phaReorderHistoryItems : '-');
+            },
+        ];
+        $fields = array_merge(parent::fields(), $extend);
+        return $fields;
+    }
+
 }
