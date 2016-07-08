@@ -26,12 +26,13 @@
                 <button class="btn btn-sm btn-grey" ng-click="loadPurchaseItemList(purchase_payment_type)"> 
                     &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
                 </button>
-                <input id="filter" type="text" class="form-control input-sm w-sm inline m-r" placeholder="Search" ng-model="form_filter"/>
+                <input id="filter" type="text" class="form-control input-sm w-sm inline m-r filter_text" placeholder="Search" ng-model="form_filter"/>
+                <input id="filter1" type="text" class="form-control input-sm w-sm inline m-r filter_text" placeholder="Search" ng-model="form_filter1"/>
                 <button check-access-button ng-click="$state.go('pharmacy.purchaseCreate')" class="btn btn-sm btn-info pull-right">
                     <i class="fa fa-plus"></i> &nbsp; Add new Purchase
                 </button>
             </div>
-            <table data-filter="#filter" data-filtering="true" ui-jq="footable" class="table m-b-none footable-loaded footable default">
+            <table data-filter=".filter_text" data-filtering="true" ui-jq="footable" class="table m-b-none footable-loaded footable default">
                 <thead>
                     <tr>
                         <th style="width: 5%">

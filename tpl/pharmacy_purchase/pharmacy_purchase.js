@@ -46,14 +46,27 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
         };
 
         $scope.$watch('form_filter', function (newValue, oldValue) {
+            var footableFilter = $('table').data('footable-filter');
             if (typeof newValue != 'undefined' && newValue != '' && newValue != null) {
-                var footableFilter = $('table').data('footable-filter');
                 footableFilter.clearFilter();
                 footableFilter.filter(newValue);
             }
 
             if (newValue == '') {
-                $scope.loadPurchaseItemList($scope.purchase_payment_type);
+                footableFilter.clearFilter();
+//                $scope.loadPurchaseItemList($scope.purchase_payment_type);
+            }
+        }, true);
+        $scope.$watch('form_filter1', function (newValue, oldValue) {
+            var footableFilter = $('table').data('footable-filter');
+            if (typeof newValue != 'undefined' && newValue != '' && newValue != null) {
+                footableFilter.clearFilter();
+                footableFilter.filter(newValue);
+            }
+
+            if (newValue == '') {
+                footableFilter.clearFilter();
+//                $scope.loadPurchaseItemList($scope.purchase_payment_type);
             }
         }, true);
 
