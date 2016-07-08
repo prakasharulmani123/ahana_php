@@ -23,16 +23,31 @@
         </div>
         <div class="panel panel-default">
             <div class="panel-body">
-                <button class="btn btn-sm btn-grey" ng-click="loadPurchaseItemList(purchase_payment_type)"> 
-                    &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
-                </button>
-                <input id="filter" type="text" class="form-control input-sm w-sm inline m-r filter_text" placeholder="Search" ng-model="form_filter"/>
-                <input id="filter1" type="text" class="form-control input-sm w-sm inline m-r filter_text" placeholder="Search" ng-model="form_filter1"/>
-                <button check-access-button ng-click="$state.go('pharmacy.purchaseCreate')" class="btn btn-sm btn-info pull-right">
-                    <i class="fa fa-plus"></i> &nbsp; Add new Purchase
-                </button>
+                <div class="row"> 
+                    <div class="col-sm-3">
+                        <button class="btn btn-sm btn-grey" ng-click="loadPurchaseItemList(purchase_payment_type)"> 
+                            &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
+                        </button>
+                    </div>
+                    <div class="col-sm-3">
+                        <input id="filter" type="text" class="form-control input-sm w-sm inline m-r filter_text" placeholder="Search" ng-model="form_filter"/>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="input-group">
+                            <input id="filter1" placeholder="Filter by date" prevent-enter type="text" class="form-control filter_text" datepicker-popup="yyyy-MM-dd" ng-model="form_filter1" is-open="opened1" datepicker-options="dateOptions" close-text="Close"/>
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="open($event, 'opened1')"><i class="glyphicon glyphicon-calendar"></i></button>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <button check-access-button ng-click="$state.go('pharmacy.purchaseCreate')" class="btn btn-sm btn-info pull-right">
+                            <i class="fa fa-plus"></i> &nbsp; Add new Purchase
+                        </button>
+                    </div>
+                </div>
             </div>
-            <table data-filter=".filter_text" data-filtering="true" ui-jq="footable" class="table m-b-none footable-loaded footable default">
+            <table id="purchase" data-filter=".filter_text" data-filtering="true" ui-jq="footable" class="table m-b-none footable-loaded footable default">
                 <thead>
                     <tr>
                         <th style="width: 5%">

@@ -46,20 +46,20 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         };
 
         $scope.$watch('form_filter', function (newValue, oldValue) {
-            var footableFilter = $('table').data('footable-filter');
-            if (typeof newValue != 'undefined' && newValue != '' && newValue != null) {
-                footableFilter.clearFilter();
-                footableFilter.filter(newValue);
-            }
-
-            if (newValue == '') {
-                footableFilter.clearFilter();
-//                $scope.loadSaleItemList($scope.sale_payment_type);
-            }
+            if (newValue != '')
+                $scope.filterTable(newValue, oldValue);
         }, true);
-        
+
         $scope.$watch('form_filter1', function (newValue, oldValue) {
-            var footableFilter = $('table').data('footable-filter');
+            if (newValue != '') {
+                newValue = moment(newValue).format('YYYY-MM-DD');
+                $scope.filterTable(newValue, oldValue);
+            }
+
+        }, true);
+
+        $scope.filterTable = function (newValue, oldValue) {
+            var footableFilter = $('#sale').data('footable-filter');
             if (typeof newValue != 'undefined' && newValue != '' && newValue != null) {
                 footableFilter.clearFilter();
                 footableFilter.filter(newValue);
@@ -67,9 +67,9 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
             if (newValue == '') {
                 footableFilter.clearFilter();
-//                $scope.loadSaleItemList($scope.sale_payment_type);
+//                $scope.loadPurchaseItemList($scope.purchase_payment_type);
             }
-        }, true);
+        }
 
         //For Form
         $scope.initForm = function () {
@@ -315,7 +315,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 $scope.saleItems[key].mrp = 0;
                 $scope.saleItems[key].quantity = 0;
             });
-            
+
             if (item.availableQuantity <= item.product_reorder_min) {
                 $scope.saleItems[key].min_reorder_msg = 'reached min order level (' + item.product_reorder_min + ')';
             } else {
