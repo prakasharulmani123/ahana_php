@@ -2358,6 +2358,18 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
+            
+            //Pharmacy Reorder
+            .state('pharmacy.reorder', {
+                url: '/reorder',
+                templateUrl: 'tpl/pharmacy_reorder/index.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/pharmacy_reorder/pharmacy_reorder.js']);
+                        }]
+                }
+            })
 
     $httpProvider.interceptors.push('APIInterceptor');
 
