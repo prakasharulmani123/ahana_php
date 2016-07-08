@@ -49,7 +49,7 @@ class PharmacyreportController extends ActiveController {
         $purchases = $purchases->addSelect(["CONCAT(pha_product.product_name, ' | ', pha_product.product_unit_count, ' | ', pha_product.product_unit) as product_name", 'SUM(total_amount) as total_purhcase_amount'])
                 ->groupBy(['pha_product.product_id'])
                 ->all();
-            
+
         $reports = [];
 
         foreach ($purchases as $key => $purchase) {
@@ -59,7 +59,7 @@ class PharmacyreportController extends ActiveController {
 
         return ['report' => $reports];
     }
-    
+
     //Sales Report
     public function actionSalereport() {
         $post = Yii::$app->getRequest()->post();
@@ -70,20 +70,21 @@ class PharmacyreportController extends ActiveController {
                 ->joinWith('product')
                 ->joinWith("sale.consultant")
                 ->andWhere(['pha_product.tenant_id' => $tenant_id]);
-                
+
+        $sales->addSelect([
+            "CONCAT(pha_product.product_name, ' | ', pha_product.product_unit_count, ' | ', pha_product.product_unit) as product_name",
+            'SUM(item_amount) as total_sale_item_amount'
+        ]);
+        $sales->addSelect(["CONCAT(co_user.title_code, '.', co_user.name) as consultant_name"]);
+
         if (isset($post['from']) && isset($post['to'])) {
             $sales->andWhere("pha_sale.sale_date between '{$post['from']}' AND '{$post['to']}'");
-        }elseif (isset($post['consultant_id'])) {
+        } elseif (isset($post['consultant_id'])) {
             $sales->andWhere("pha_sale.consultant_id = {$post['consultant_id']}");
         }
-        
-        $sales = $sales->addSelect([
-            "CONCAT(pha_product.product_name, ' | ', pha_product.product_unit_count, ' | ', pha_product.product_unit) as product_name", 
-            'SUM(item_amount) as total_sale_item_amount',
-            "CONCAT(co_user.title_code, '.', co_user.name) as consultant_name",
-            ])
-                ->groupBy(['pha_product.product_id'])
-                ->all();
+
+        $sales->groupBy(['pha_product.product_id', 'pha_sale.consultant_id']);
+        $sales = $sales->all();
 
         $reports = [];
 
@@ -96,14 +97,19 @@ class PharmacyreportController extends ActiveController {
         return ['report' => $reports];
     }
 
-	public function actionStockreport() {
+    public function actionStockreport() {
         $post = Yii::$app->getRequest()->post();
         $tenant_id = Yii::$app->user->identity->logged_tenant_id;
 
         $stocks = PhaProductBatch::find()
                 ->joinWith('product')
+                ->joinWith('phaProductBatchRate')
                 ->andWhere(['pha_product.tenant_id' => $tenant_id])
-                ->addSelect(["CONCAT(pha_product.product_name, ' | ', pha_product.product_unit_count, ' | ', pha_product.product_unit) as product_name", 'SUM(available_qty) as available_qty', 'pha_product.product_code as product_code'])
+                ->addSelect([
+                    "CONCAT(pha_product.product_name, ' | ', pha_product.product_unit_count, ' | ', pha_product.product_unit) as product_name",
+                    'SUM(available_qty) as available_qty',
+                    'pha_product.product_code as product_code',
+                    'pha_product_batch_rate.mrp as mrp'])
                 ->groupBy(['pha_product.product_id'])
                 ->all();
 
@@ -112,7 +118,9 @@ class PharmacyreportController extends ActiveController {
         foreach ($stocks as $key => $purchase) {
             $reports[$key]['product_name'] = $purchase['product_name'];
             $reports[$key]['product_code'] = $purchase['product_code'];
+            $reports[$key]['mrp'] = $purchase['mrp'];
             $reports[$key]['available_qty'] = $purchase['available_qty'];
+            $reports[$key]['stock_value'] = $purchase['mrp'] * $purchase['available_qty'];
         }
 
         return ['report' => $reports];

@@ -30,6 +30,7 @@ class PhaProductBatch extends RActiveRecord {
     
     public $product_name;
     public $product_code;
+    public $mrp;
 
     /**
      * @inheritdoc
