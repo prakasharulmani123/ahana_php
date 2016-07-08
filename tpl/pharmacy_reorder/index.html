@@ -1,0 +1,41 @@
+<div class="bg-light lter b-b wrapper-md">
+    <h1 class="m-n font-thin h3">Reorders</h1>
+</div>
+
+<div class="wrapper-md" ng-controller="ReordersController" ng-init="loadReordersList()">
+
+    <div ng-include="'tpl/blocks/alert.html'">
+        {% include 'tpl/blocks/alert.html' %}
+    </div>
+
+    <div class="row">
+        <div class="col-sm-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <b> Reorder Management </b>
+                </div>
+                <div class="panel-body b-b b-light">                   
+                    <input id="filter" type="text" class="form-control input-sm w-sm inline m-r" placeholder="Search"/>                   
+                </div>
+                <div>
+                    <table class="export-table print-table table table-striped" width='100%'>
+                        <thead>
+                            <tr>
+                                <th id="work-base-grid_c0">Product Code</th>
+                                <th id="work-base-grid_c0">Product Name</th>
+                                <th id="work-base-grid_c1">Current Stock</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="(key, record) in records">
+                                <td>{{record.product_code}}</td>
+                                <td>{{record.product_name}}</td>
+                                <td>{{record.available_qty}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
