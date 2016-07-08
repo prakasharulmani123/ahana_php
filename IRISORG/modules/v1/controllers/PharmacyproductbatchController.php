@@ -63,6 +63,6 @@ class PharmacyproductbatchController extends ActiveController {
         $get = Yii::$app->getRequest()->get();
         $product_id = explode(',', $get['product_id']);
 
-        return ['batchList' => PhaProductBatch::find()->tenant()->andWhere(['product_id' => $product_id])->orderBy(['expiry_date' => SORT_ASC])->all()];
+        return ['batchList' => PhaProductBatch::find()->tenant()->andWhere(['product_id' => $product_id])->andWhere('available_qty > 0')->orderBy(['expiry_date' => SORT_ASC])->all()];
     }
 }

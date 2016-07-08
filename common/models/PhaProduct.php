@@ -215,6 +215,10 @@ class PhaProduct extends RActiveRecord {
         return $this->hasMany(PhaProductBatch::className(), ['product_id' => 'product_id']);
     }
 
+    public function getPhaProductBatchesAvailableQty() {
+        return $this->hasMany(PhaProductBatch::className(), ['product_id' => 'product_id'])->sum('available_qty');
+    }
+
     /**
      * @return ActiveQuery
      */
@@ -277,6 +281,9 @@ class PhaProduct extends RActiveRecord {
             },
             'salesPackageName' => function ($model) {
                 return (isset($model->salesPackage) ? $model->salesPackage->package_name : '-');
+            },
+            'availableQuantity' => function ($model) {
+                return (isset($model->phaProductBatchesAvailableQty) ? $model->phaProductBatchesAvailableQty : 0);
             },
         ];
         $fields = array_merge(parent::fields(), $extend);

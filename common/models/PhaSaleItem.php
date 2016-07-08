@@ -56,10 +56,20 @@ class PhaSaleItem extends RActiveRecord {
             [['tenant_id', 'sale_id', 'product_id', 'batch_id', 'quantity', 'created_by', 'modified_by'], 'integer'],
             [['mrp', 'item_amount', 'vat_amount', 'vat_percent'], 'number'],
             [['status'], 'string'],
-            [['created_at', 'modified_at', 'deleted_at', 'package_name', 'expiry_date', 'batch_no'], 'safe']
+            [['created_at', 'modified_at', 'deleted_at', 'package_name', 'expiry_date', 'batch_no'], 'safe'],
+            [['product_id'], 'validateStock'],
         ];
     }
 
+    public function validateStock($attribute, $params) {
+        $batch = PhaProductBatch::find()->tenant()->andWhere(['product_id' => $this->product_id, 'batch_no' => $this->batch_no, 'DATE(expiry_date)' => $this->expiry_date])->one();
+        if (!empty($batch)) {
+            $this->batch_id = $batch->batch_id;
+            if($this->quantity > $this->batch->available_qty)
+                $this->addError($attribute, "{$this->product->getFullName()} quantity is greater than Stock quantity ({$this->batch->available_qty})");
+        }
+    }
+    
     /**
      * @inheritdoc
      */
