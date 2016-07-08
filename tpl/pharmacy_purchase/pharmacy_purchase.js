@@ -445,7 +445,8 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                                 $scope.data.payment_type = 'CA';
                                 $scope.purchaseitems = [];
                                 $scope.setFutureInternalCode('PG', 'gr_num');
-//                                $scope.addRow();
+                                $scope.addRow();
+                                $scope.tableform.$show();
                             } else {
                                 $scope.successMessage = 'Purchase updated successfully';
                             }

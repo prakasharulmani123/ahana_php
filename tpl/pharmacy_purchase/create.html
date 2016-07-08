@@ -7,7 +7,7 @@
             {% include 'tpl/blocks/alert.html' %}
         </div>
         <div class="row">
-            <div class="col-sm-12" ng-init="data = {}; data.formtype = 'add';initForm();
+            <div class="col-sm-12" ng-init="data = {}; data.formtype = 'add'; data.payment_type = 'CA'; initForm();
                             data.status = '1';">
                             <form editable-form name="tableform" name="PurchaseForm" class="form-horizontal form-validation" onaftersave="saveForm('add'); tableform.$show();" novalidate="" oncancel="cancel()" shown="true">
                     <div ng-include="'tpl/pharmacy_purchase/_form.html'">

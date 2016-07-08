@@ -295,3 +295,7 @@ out-patient-table .table > thead > tr > th label.i-checks{
 {
     margin-bottom: 10px;
 }
+
+.custom-warning{
+    color: #cc8324 !important;
+}

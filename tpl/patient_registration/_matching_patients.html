@@ -5,8 +5,8 @@
         <div class="search-patientcont" ng-repeat="(key, patient) in matchings">
             <div class="row"> 
                 <div class="col-xs-12 col-sm-2 col-md-2"> 
-                    <img ng-if="$even" alt="" width="49" height="49" src="{{patient.Patient.patient_image ? patient.Patient.patient_image : 'img/man-icon.png'}}" class="patient-image">
-                    <img ng-if="$odd" alt="" width="49" height="49" src="{{patient.Patient.patient_image ? patient.Patient.patient_image : 'img/man-icon2.png'}}" class="patient-image">
+                    <img ng-if="$even" alt="" width="49" height="49" ng-src="{{patient.Patient.patient_image ? patient.Patient.patient_image : 'img/man-icon.png'}}" class="patient-image">
+                    <img ng-if="$odd" alt="" width="49" height="49" ng-src="{{patient.Patient.patient_image ? patient.Patient.patient_image : 'img/man-icon2.png'}}" class="patient-image">
                 </div>
                 <div class="col-xs-12 col-sm-5 col-md-5"> 
                     <div class="row"> 

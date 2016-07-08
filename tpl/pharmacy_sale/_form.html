@@ -71,7 +71,7 @@
                                 <div class="form-group" ng-if="data.bill_no">
                                     <label class="col-lg-4 control-label">Bill No</label>
                                     <div class="col-lg-8">
-                                        {{data.bill_no}}
+                                        <label class="label bg-danger">{{data.bill_no}}</label>
                                     </div>
                                 </div>
                                 <div class="line line-dashed b-b line-lg"  ng-if="data.bill_no"></div>
@@ -141,6 +141,7 @@
                                     <span id="t_full_name_{{key}}" class="hide">
                                         {{ saleitem.full_name || 'empty' }}
                                     </span>
+                                    <div class="custom-warning" style="" ng-show="saleitem.min_reorder_msg"> {{saleitem.min_reorder_msg}}</div>
                                 </td>
                                 <td>
                                     <div id="i_batch_details_{{key}}">
@@ -151,7 +152,7 @@
                                             {{ saleitem.batch_details || 'empty' }}
                                         </span>-->
                                     </div>
-                                    <div class="text-danger-dk" style="" ng-show="saleitem.exp_warning"> {{saleitem.exp_warning}}</div>
+                                    <div class="custom-warning" style="" ng-show="saleitem.exp_warning"> {{saleitem.exp_warning}}</div>
                                     <span id="t_batch_details_{{key}}" class="hide">
                                         {{ saleitem.batch_details || 'empty' }}
                                     </span>

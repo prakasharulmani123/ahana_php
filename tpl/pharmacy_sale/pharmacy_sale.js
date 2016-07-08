@@ -281,8 +281,18 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                     selected = $filter('filter')($scope.batches, {batch_no: item.batch_no});
                     if (selected.length == 0) {
                         $scope.batches.push(item);
+                    } else {
+                        selected[0].available_qty = item.available_qty;
+                        selected[0].batch_details = item.batch_details;
                     }
                 });
+
+                for (var i = 0; i < $scope.batches.length; i++) {
+                    var obj = $scope.batches[i];
+                    if (obj.available_qty <= 0) {
+                        $scope.batches.splice(i, 1);
+                    }
+                }
 
 //                $scope.saleItems[key].batch_details = response.batchList[0].batch_details;
 //                $scope.saleItems[key].batch_no = response.batchList[0].batch_no;
@@ -291,9 +301,15 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 $scope.saleItems[key].mrp = 0;
                 $scope.saleItems[key].quantity = 0;
             });
+            
+            if (item.availableQuantity <= item.product_reorder_min) {
+                $scope.saleItems[key].min_reorder_msg = 'reached min order level (' + item.product_reorder_min + ')';
+            } else {
+                $scope.saleItems[key].min_reorder_msg = '';
+            }
         }
-        
-        $scope.updateDisplayCollection = function(enc_id, resp){
+
+        $scope.updateDisplayCollection = function (enc_id, resp) {
             selected = $filter('filter')($scope.displayedCollection, {encounter_id: enc_id});
             var index = $scope.displayedCollection.indexOf(selected[0]);
             $scope.displayedCollection.splice(index, 1);
@@ -338,7 +354,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 $scope.saleItems[key].exp_warning = '';
             }
         };
-        
+
         $scope.showOrHideProductBatch = function (mode, key) {
             if (mode == 'hide') {
                 i_addclass = t_removeclass = 'hide';
@@ -696,10 +712,10 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                         $scope.errorData = "An Error has occured while loading list!";
                     });
         }
-        
+
         $scope.setFutureInternalCode = function (code, col) {
             $rootScope.commonService.GetInternalCodeList('', code, '1', false, function (response) {
-                if(col == 'bill_no')
+                if (col == 'bill_no')
                     $scope.data.bill_no = response.code.next_fullcode;
             });
         }
