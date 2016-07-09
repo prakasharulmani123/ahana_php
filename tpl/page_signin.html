@@ -15,7 +15,7 @@
                         <input type="password" placeholder="Password" class="form-control no-border" ng-model="user.password" required>
                     </div>
                     <div class="list-group-item">
-                        <select class="form-control" name="Country" ng-model="user.tenant_id" ng-options="tenant.value as tenant.label for tenant in tenants | orderBy: label" required>
+                        <select class="form-control" name="Country" ng-model="user.tenant_id" ng-options="key as value for (key , value) in tenants | orderBy: label" required>
                         </select>
                     </div>
 

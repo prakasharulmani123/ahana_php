@@ -4,35 +4,39 @@
 // signin controller
 app.controller('SigninFormController', SignInForm);
 
-SignInForm.$inject = ['$scope', '$state', 'AuthenticationService', '$http', '$rootScope', '$location', '$timeout','$localStorage'];
+SignInForm.$inject = ['$scope', '$state', 'AuthenticationService', '$http', '$rootScope', '$location', '$timeout', '$localStorage'];
 function SignInForm($scope, $state, AuthenticationService, $http, $rootScope, $location, $timeout, $localStorage) {
     $scope.user = {};
     $scope.authError = null;
     $scope.forgotpasswordButtonClass = 'primary';
-    
+
     $scope.showForm = false;
     $scope.showFormError = false;
     $scope.FormErrorMessage = '';
-    
+
     $rootScope.commonService.GetTenantList(function (response) {
-        $scope.tenants = response.tenantList;
-        
-        if(response.org_sts == '1' && $scope.tenants.length > 0){
-            $scope.showForm = true;
+        if (response.success == true) {
+            $scope.tenants = response.tenantList;
             
-            if(!$localStorage.system_tenant)
-                $localStorage.system_tenant = $scope.tenants[0].value;
+            if (response.org_sts == '1' && Object.keys($scope.tenants).length > 0) {
+                $scope.showForm = true;
+
+                if (!$localStorage.system_tenant)
+                    $localStorage.system_tenant = $scope.tenants[0].value;
 
                 $scope.user.tenant_id = $localStorage.system_tenant;
-        }else{
+            } else {
+                $scope.showFormError = true;
+
+                if (response.org_sts == '0') {
+                    $scope.FormErrorMessage = 'This Organization is in-active. Contact Administrator.';
+                }else if (Object.keys($scope.tenants).length == '0') {
+                    $scope.FormErrorMessage = 'This Organization has no Branch. Contact Administrator.';
+                }
+            }
+        } else {
             $scope.showFormError = true;
-            
-            if(response.org_sts == '0'){
-                $scope.FormErrorMessage = 'This Organization is in-active. Contact Administrator.';
-            }
-            if($scope.tenants.length == '0'){
-                $scope.FormErrorMessage = 'This Organization has no Branch. Contact Administrator.';
-            }
+            $scope.FormErrorMessage = response.message;
         }
     });
     $scope.login = function () {
