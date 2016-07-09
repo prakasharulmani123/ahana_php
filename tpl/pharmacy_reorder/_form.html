@@ -90,7 +90,7 @@
                                     </td>
                                     <td>
                                         <div id="i_batch_details_{{key}}">
-                                            <span editable-text="purchaseitem.batch_details" e-form="tableform" onbeforesave="checkInput($data)" e-typeahead="batch as batch.batch_details for batch in batches | filter:$viewValue | limitTo:8" e-autocomplete="off" e-typeahead-on-select="updateBatchRow($item, $model, $label, key)" e-ng-change="showOrHideRowEdit('show', key)">
+                                            <span editable-text="purchaseitem.batch_details" e-form="tableform" onbeforesave="checkInput($data)" e-typeahead="batch as batch.batch_details for batch in batches | filter:$viewValue | limitTo:8 | filter:{product_id: purchaseitem.product_id}" e-autocomplete="off" e-typeahead-on-select="updateBatchRow($item, $model, $label, key)" e-ng-change="showOrHideRowEdit('show', key)">
                                                 {{ purchaseitem.batch_details || 'empty' }}
                                             </span>
                                         </div>
@@ -110,7 +110,9 @@
                                         </span>
                                     </td>
                                     <td>
-                                        <span editable-text="purchaseitem.quantity" e-number-mask="" e-form="tableform" onbeforesave="checkInput($data); checkAmount($data)" e-ng-keydown="updateColumn($data, key, 'quantity')"  e-ng-keyup="updateColumn($data, key, 'quantity')" e-autocomplete="off" e-limit-to="7">{{purchaseitem.quantity|| 0}}</span>
+                                        <span editable-text="purchaseitem.quantity" e-number-mask="" e-form="tableform" onbeforesave="checkInput($data); checkAmount($data)" e-ng-keydown="updateColumn($data, key, 'quantity')"  e-ng-keyup="updateColumn($data, key, 'quantity')" e-autocomplete="off" e-limit-to="7">
+                                            {{purchaseitem.quantity|| 0}}
+                                        </span>
                                     </td>
                                     <td>
                                         <span editable-text="purchaseitem.free_quantity"  e-number-mask="" e-form="tableform" e-autocomplete="off" e-limit-to="7">{{purchaseitem.free_quantity|| 0}}</span>
@@ -244,7 +246,7 @@
 
 <div class="row">
     <footer class="panel-footer text-right bg-light lter">
-        <button class="btn m-b-xs  btn-primary save-print" ng-click="getBtnId('print')"> <i class="fa fa-print"></i> Save and Print Bill</button>
+        <!--<button class="btn m-b-xs  btn-primary save-print" ng-click="getBtnId('print')"> <i class="fa fa-print"></i> Save and Print Bill</button>-->
         &nbsp;
         <button class="btn m-b-xs  btn-success save-btn" ng-click="getBtnId('save')">Save</button>
         &nbsp;

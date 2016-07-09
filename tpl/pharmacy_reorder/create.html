@@ -8,8 +8,7 @@
         </div>
         <div class="row">
             <div class="col-sm-12" ng-init="initForm();">
-                <!--<form editable-form name="tableform" name="reorderForm" class="form-horizontal form-validation" onaftersave="saveForm('add'); tableform.$show();" novalidate="" oncancel="cancel()" shown="true">-->
-                <form editable-form name="tableform" name="reorderForm" class="form-horizontal form-validation">
+                <form editable-form name="tableform" name="reorderForm" class="form-horizontal form-validation" onaftersave="saveForm('add'); tableform.$show();" novalidate="" oncancel="cancel()" shown="true">
                     <div ng-include="'tpl/pharmacy_reorder/_form.html'">
                         {% include 'tpl/pharmacy_reorder/_form.html' %}
                     </div>
