@@ -35,6 +35,7 @@ class PhaProductBatch extends RActiveRecord {
     public $supplier_id_1;
     public $supplier_id_2;
     public $supplier_id_3;
+    public $product_reorder_min;
 
     /**
      * @inheritdoc

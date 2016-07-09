@@ -146,7 +146,6 @@ class PharmacyreorderhistoryController extends ActiveController {
                 ->joinWith('product')
                 ->joinWith('phaProductBatchRate')
                 ->andWhere(['pha_product.tenant_id' => $tenant_id])
-                ->andWhere('available_qty <= pha_product.product_reorder_min')
                 ->addSelect([
                     "CONCAT(pha_product.product_name, ' | ', pha_product.product_unit_count, ' | ', pha_product.product_unit) as product_name",
                     'SUM(available_qty) as available_qty',
@@ -156,9 +155,11 @@ class PharmacyreorderhistoryController extends ActiveController {
                     'pha_product.supplier_id_2 as supplier_id_2',
                     'pha_product.supplier_id_3 as supplier_id_3',
                     'pha_product.product_code as product_code',
+                    'pha_product.product_reorder_min as product_reorder_min',
                     'pha_product_batch_rate.mrp as mrp'
                 ])
                 ->groupBy(['pha_product.product_id'])
+                ->having('available_qty <= product_reorder_min')
                 ->all();
 
         $reorder_products = ArrayHelper::map(PhaReorderHistoryItem::find()->tenant()->status()->all(), 'product_id', 'product_id');
@@ -170,6 +171,7 @@ class PharmacyreorderhistoryController extends ActiveController {
                 $reports[$key]['product_name'] = $purchase['product_name'];
                 $reports[$key]['product_code'] = $purchase['product_code'];
                 $reports[$key]['mrp'] = $purchase['mrp'];
+                $reports[$key]['product_reorder_min'] = $purchase['product_reorder_min'];
                 $reports[$key]['available_qty'] = $purchase['available_qty'];
                 $reports[$key]['stock_value'] = $purchase['mrp'] * $purchase['available_qty'];
 
