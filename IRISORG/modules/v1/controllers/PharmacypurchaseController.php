@@ -4,6 +4,8 @@ namespace IRISORG\modules\v1\controllers;
 
 use common\models\PhaPurchase;
 use common\models\PhaPurchaseItem;
+use common\models\PhaReorderHistory;
+use common\models\PhaReorderHistoryItem;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -125,6 +127,12 @@ class PharmacypurchaseController extends ActiveController {
                         $item = PhaPurchaseItem::find()->tenant()->andWhere(['purchase_item_id' => $delete_id])->one();
                         $item->delete();
                     }
+                }
+                
+                //Update Reorder
+                if(isset($post['reorder_id'])){
+                    PhaReorderHistory::updateAll(['status' => '0'], ['reorder_id' => $post['reorder_id']]);
+                    PhaReorderHistoryItem::updateAll(['status' => '0'], ['reorder_id' => $post['reorder_id']]);
                 }
                 
                 return ['success' => true, 'model' => $model];
