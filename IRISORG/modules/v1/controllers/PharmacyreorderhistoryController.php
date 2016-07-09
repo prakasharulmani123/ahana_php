@@ -185,7 +185,7 @@ class PharmacyreorderhistoryController extends ActiveController {
     public function actionAddreorderhistory() {
         $post = Yii::$app->getRequest()->post();
 
-        if (isset($post['records']) && isset($post['user_id'])) {
+        if (isset($post['records']) && isset($post['user_id']) && !empty($post['records'])) {
             $reorder_history = [];
             foreach ($post['records'] as $key => $record) {
                 $reorder_history[$record['supplier_id']]['user_id'] = $post['user_id'];
@@ -211,7 +211,7 @@ class PharmacyreorderhistoryController extends ActiveController {
                         break;
                 }
             }
-
+            
             if ($valid) {
                 foreach ($reorder_history as $history) {
                     $model = new PhaReorderHistory;
