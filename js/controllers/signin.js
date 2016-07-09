@@ -9,13 +9,31 @@ function SignInForm($scope, $state, AuthenticationService, $http, $rootScope, $l
     $scope.user = {};
     $scope.authError = null;
     $scope.forgotpasswordButtonClass = 'primary';
-
+    
+    $scope.showForm = false;
+    $scope.showFormError = false;
+    $scope.FormErrorMessage = '';
+    
     $rootScope.commonService.GetTenantList(function (response) {
         $scope.tenants = response.tenantList;
-        if(!$localStorage.system_tenant)
-            $localStorage.system_tenant = $scope.tenants[0].value;
+        
+        if(response.org_sts == '1' && $scope.tenants.length > 0){
+            $scope.showForm = true;
+            
+            if(!$localStorage.system_tenant)
+                $localStorage.system_tenant = $scope.tenants[0].value;
 
-            $scope.user.tenant_id = $localStorage.system_tenant;
+                $scope.user.tenant_id = $localStorage.system_tenant;
+        }else{
+            $scope.showFormError = true;
+            
+            if(response.org_sts == '0'){
+                $scope.FormErrorMessage = 'This Organization is in-active. Contact Administrator.';
+            }
+            if($scope.tenants.length == '0'){
+                $scope.FormErrorMessage = 'This Organization has no Branch. Contact Administrator.';
+            }
+        }
     });
     $scope.login = function () {
         $scope.authError = null;
