@@ -1,5 +1,9 @@
-app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http', '$state', function ($rootScope, $scope, $timeout, $http, $state) {
+app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$anchorScroll', '$filter', '$timeout', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $anchorScroll, $filter, $timeout) {
 
+        editableThemes.bs3.inputClass = 'input-sm';
+        editableThemes.bs3.buttonsClass = 'btn-sm';
+        editableOptions.theme = 'bs3';
+        
         //Expand table in Index page
         $scope.ctrl = {};
         $scope.ctrl.expandAll = function (expanded) {
@@ -31,7 +35,7 @@ app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http
 
             $scope.errorData = "";
             $scope.successMessage = "";
-            
+
             $scope.activeMenu = mode;
 
             if (mode == 'RE') {
@@ -94,7 +98,7 @@ app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http
                 if (record.selected == '1') {
                     records.push(record);
                 }
-            });
+            })
 
             $scope.loadbar('show');
             $http({
@@ -127,35 +131,7 @@ app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http
             });
         };
 
-        $scope.$watch('form_filter', function (newValue, oldValue) {
-            if (newValue != '')
-                $scope.filterTable(newValue, oldValue);
-        }, true);
-
-        $scope.$watch('form_filter1', function (newValue, oldValue) {
-            if (newValue != '') {
-                newValue = moment(newValue).format('YYYY-MM-DD');
-                $scope.filterTable(newValue, oldValue);
-            }
-
-        }, true);
-
-        $scope.filterTable = function (newValue, oldValue) {
-            if ($scope.activeMenu == 'RH') {
-                var footableFilter = $('#reorderhistory').data('footable-filter');
-                if (typeof newValue != 'undefined' && newValue != '' && newValue != null) {
-                    footableFilter.clearFilter();
-                    footableFilter.filter(newValue);
-                }
-
-                if (newValue == '') {
-                    footableFilter.clearFilter();
-//                $scope.loadPurchaseItemList($scope.purchase_payment_type);
-                }
-            }
-        }
-
-        //For Form
+        //For Form - Nad
         $scope.initForm = function () {
             $scope.loadbar('show');
             $rootScope.commonService.GetPaymentType(function (response) {
@@ -182,6 +158,7 @@ app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http
                         $scope.loadbar('hide');
                         $scope.data = response;
                         $scope.data.invoice_date = moment().format('YYYY-MM-DD');
+                        $scope.data.payment_type = 'CA';
                         if ($scope.data.payment_type != null)
                             $scope.getPaytypeDetail($scope.data.payment_type);
 
@@ -196,25 +173,22 @@ app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http
 //                                batch_details: item.batch.batch_details,
 //                                temp_expiry_date: item.batch.expiry_date,
 //                                temp_mrp: item.batch.mrp,
-                                temp_package_name: item.package_name,
-                                temp_free_quantity_unit: item.free_quantity_unit
+//                                temp_package_name: item.package_name,
+//                                temp_free_quantity_unit: item.free_quantity_unit
                             });
 
                             $scope.updateProductRow(item, key);
 
                             $timeout(function () {
-                                $scope.showOrHideRowEdit('hide', key);
+                                $scope.showOrHideRowEdit('show', key);
                                 $scope.showOrHideProductBatch('hide', key);
                             });
                         });
 
-                        console.log($scope.purchaseitems);
-                        return;
-
-                        $timeout(function () {
-                            delete $scope.data.supplier;
-                            delete $scope.data.items;
-                        }, 3000);
+//                        $timeout(function () {
+//                            delete $scope.data.supplier;
+//                            delete $scope.data.items;
+//                        }, 3000);
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');
@@ -227,44 +201,32 @@ app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http
 
         $scope.updateProductRow = function (item, key) {
             $scope.purchaseitems[key].product_id = item.product_id;
-            $scope.purchaseitems[key].vat_percent = item.purchaseVat.vat;
+            $scope.purchaseitems[key].vat_percent = item.product.purchaseVat.vat;
 
             $scope.loadbar('show');
 //            $scope.updateRow(key);
 
-            $scope.purchaseitems[key].batch_no = '';
-            $scope.purchaseitems[key].expiry_date = '';
-            $scope.purchaseitems[key].temp_expiry_date = '';
-            $scope.purchaseitems[key].mrp = 0;
-            $scope.purchaseitems[key].temp_mrp = 0;
-            $scope.purchaseitems[key].package_name = '';
-            $scope.purchaseitems[key].temp_package_name = '';
-            $scope.purchaseitems[key].quantity = 0;
-            $scope.purchaseitems[key].free_quantity = 0;
-            $scope.purchaseitems[key].free_quantity_unit = "";
-            $scope.purchaseitems[key].temp_free_quantity_unit = "";
-            $scope.purchaseitems[key].purchase_rate = 0;
-            $scope.purchaseitems[key].discount_percent = 0;
+            $rootScope.commonService.GetBatchListByProduct(item.product_id, function (response) {
+                $scope.loadbar('hide');
+                
+                supplier_details = $filter('filter')($scope.batches, {supplier_id: supplier_id});
+                $scope.batches.push(response.batchList);
 
-//            $rootScope.commonService.GetBatchListByProduct(item.product_id, function (response) {
-//                $scope.loadbar('hide');
-//                $scope.batches = response.batchList;
-//
-//                $scope.purchaseitems[key].batch_no = '';
-//                $scope.purchaseitems[key].expiry_date = '';
-//                $scope.purchaseitems[key].temp_expiry_date = '';
-//                $scope.purchaseitems[key].mrp = 0;
-//                $scope.purchaseitems[key].temp_mrp = 0;
-//                $scope.purchaseitems[key].package_name = '';
-//                $scope.purchaseitems[key].temp_package_name = '';
-//                $scope.purchaseitems[key].quantity = 0;
-//                $scope.purchaseitems[key].free_quantity = 0;
-//                $scope.purchaseitems[key].free_quantity_unit = "";
-//                $scope.purchaseitems[key].temp_free_quantity_unit = "";
-//                $scope.purchaseitems[key].purchase_rate = 0;
-//                $scope.purchaseitems[key].discount_percent = 0;
-//
-//            });
+                $scope.purchaseitems[key].batch_no = '';
+                $scope.purchaseitems[key].expiry_date = '';
+                $scope.purchaseitems[key].temp_expiry_date = '';
+                $scope.purchaseitems[key].mrp = 0;
+                $scope.purchaseitems[key].temp_mrp = 0;
+                $scope.purchaseitems[key].package_name = '';
+                $scope.purchaseitems[key].temp_package_name = '';
+                $scope.purchaseitems[key].quantity = 0;
+                $scope.purchaseitems[key].free_quantity = 0;
+                $scope.purchaseitems[key].free_quantity_unit = "";
+                $scope.purchaseitems[key].temp_free_quantity_unit = "";
+                $scope.purchaseitems[key].purchase_rate = 0;
+                $scope.purchaseitems[key].discount_percent = 0;
+
+            });
         }
 
         $scope.getPaytypeDetail = function (payment_type) {
@@ -290,11 +252,14 @@ app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http
             $('#i_mrp_' + key).addClass(i_addclass).removeClass(i_removeclass);
             $('#i_package_name_' + key).addClass(i_addclass).removeClass(i_removeclass);
             $('#i_free_quantity_unit_' + key).addClass(i_addclass).removeClass(i_removeclass);
+            $('#i_batch_details_' + key).addClass(i_addclass).removeClass(i_removeclass);
+
 
             $('#t_expiry_date_' + key).addClass(t_addclass).removeClass(t_removeclass);
             $('#t_mrp_' + key).addClass(t_addclass).removeClass(t_removeclass);
             $('#t_package_name_' + key).addClass(t_addclass).removeClass(t_removeclass);
             $('#t_free_quantity_unit_' + key).addClass(t_addclass).removeClass(t_removeclass);
+            $('#t_batch_details_' + key).addClass(t_addclass).removeClass(t_removeclass);
         }
 
         $scope.showOrHideProductBatch = function (mode, key) {
@@ -306,10 +271,7 @@ app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http
                 i_removeclass = t_addclass = 'hide';
             }
             $('#i_full_name_' + key).addClass(i_addclass).removeClass(i_removeclass);
-            $('#i_batch_details_' + key).addClass(i_addclass).removeClass(i_removeclass);
-
             $('#t_full_name_' + key).addClass(t_addclass).removeClass(t_removeclass);
-            $('#t_batch_details_' + key).addClass(t_addclass).removeClass(t_removeclass);
         }
 
         $scope.open = function ($event, mode) {
