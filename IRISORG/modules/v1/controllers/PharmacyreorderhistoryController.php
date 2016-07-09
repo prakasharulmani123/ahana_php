@@ -208,7 +208,6 @@ class PharmacyreorderhistoryController extends ActiveController {
 
                 foreach ($history['items'] as $history_item) {
                     $item_model = new PhaReorderHistoryItem();
-//                    $item_model->scenario = 'saveform';
                     $item_model->attributes = $history_item;
                     $valid = $item_model->validate() && $valid;
                     if (!$valid)
@@ -234,13 +233,9 @@ class PharmacyreorderhistoryController extends ActiveController {
             } else {
                 return ['success' => false, 'message' => Html::errorSummary([$model, $item_model])];
             }
-            echo '<pre>';
-            print_r($reorder_history);
-            exit;
         } else {
             return ['success' => false, 'message' => 'Fill the Form'];
         }
-        exit;
     }
 
 }

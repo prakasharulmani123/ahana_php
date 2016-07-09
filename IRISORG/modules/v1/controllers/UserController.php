@@ -144,6 +144,7 @@ class UserController extends ActiveController {
             'org_city' => (isset($tenant->coMasterCity) ? $tenant->coMasterCity->city_name : '-'),
             'org_mobile' => $tenant->tenant_mobile,
             'username' => Yii::$app->user->identity->user->name,
+            'user_id' => Yii::$app->user->identity->user->user_id,
         ];
         return $credentials;
     }
