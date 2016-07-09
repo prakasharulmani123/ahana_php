@@ -134,6 +134,7 @@ app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http
         //For Form - Nad
         $scope.initForm = function () {
             $scope.loadbar('show');
+            $scope.showform = false;
             $rootScope.commonService.GetPaymentType(function (response) {
                 $scope.paymentTypes = response;
                 $rootScope.commonService.GetPackageUnitList('', '1', false, function (response) {
@@ -156,42 +157,47 @@ app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http
             }).success(
                     function (response) {
                         $scope.loadbar('hide');
-                        $scope.data = response;
-                        $scope.data.invoice_date = moment().format('YYYY-MM-DD');
-                        $scope.data.payment_type = 'CA';
-                        if ($scope.data.payment_type != null)
-                            $scope.getPaytypeDetail($scope.data.payment_type);
+                        if (response.status == '1') {
+                            $scope.showform = true;
+                            $scope.data = response;
+                            $scope.data.invoice_date = moment().format('YYYY-MM-DD');
+                            $scope.data.payment_type = 'CA';
+                            if ($scope.data.payment_type != null)
+                                $scope.getPaytypeDetail($scope.data.payment_type);
 
-                        $scope.products = [];
-                        $scope.batches = [];
+                            $scope.products = [];
+                            $scope.batches = [];
 
-                        $scope.purchaseitems = response.items;
-                        angular.forEach($scope.purchaseitems, function (item, key) {
-                            angular.extend($scope.purchaseitems[key], {
-                                is_temp: '0',
-                                full_name: item.product.full_name,
+                            $scope.purchaseitems = response.items;
+                            angular.forEach($scope.purchaseitems, function (item, key) {
+                                angular.extend($scope.purchaseitems[key], {
+                                    is_temp: '0',
+                                    full_name: item.product.full_name,
 //                                batch_no: item.batch.batch_no,
 //                                batch_details: item.batch.batch_details,
 //                                temp_expiry_date: item.batch.expiry_date,
 //                                temp_mrp: item.batch.mrp,
 //                                temp_package_name: item.package_name,
 //                                temp_free_quantity_unit: item.free_quantity_unit
+                                });
+
+                                $scope.updateProductRow(item, key);
+
+                                $timeout(function () {
+                                    $scope.showOrHideRowEdit('show', key);
+                                    $scope.showOrHideProductBatch('hide', key);
+                                });
                             });
 
-                            $scope.updateProductRow(item, key);
+                            $scope.tableform.$show();
 
                             $timeout(function () {
-                                $scope.showOrHideRowEdit('show', key);
-                                $scope.showOrHideProductBatch('hide', key);
-                            });
-                        });
-
-                        $scope.tableform.$show();
-
-                        $timeout(function () {
 //                            delete $scope.data.supplier;
 //                            delete $scope.data.items;
-                        }, 3000);
+                            }, 3000);
+                        } else {
+                            $state.go('pharmacy.reorder');
+                        }
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');
@@ -386,7 +392,7 @@ app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http
         };
 
         $scope.minDate = $scope.minDate ? null : new Date();
-        
+
         //Save Both Add & Update Data
         $scope.saveForm = function (mode) {
             _that = this;
@@ -451,13 +457,9 @@ app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http
                             if (mode == 'add') {
                                 $scope.data = {};
                                 $scope.successMessage = 'New Purchase bill generated  ' + response.model.invoice_no;
-                                $scope.data.invoice_date = moment().format('YYYY-MM-DD');
-                                $scope.data.formtype = 'add';
-                                $scope.data.payment_type = 'CA';
-                                $scope.purchaseitems = [];
-                                $scope.setFutureInternalCode('PG', 'gr_num');
-                                $scope.addRow();
-                                $scope.tableform.$show();
+                                $timeout(function () {
+                                    $state.go('pharmacy.reorder');
+                                }, 1000);
                             } else {
                                 $scope.successMessage = 'Purchase updated successfully';
                             }
