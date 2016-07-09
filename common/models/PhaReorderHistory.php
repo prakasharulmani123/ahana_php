@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\models\query\PhaReorderHistoryQuery;
 use yii\db\ActiveQuery;
 
 /**
@@ -100,9 +101,15 @@ class PhaReorderHistory extends RActiveRecord {
             'items' => function ($model) {
                 return (isset($model->phaReorderHistoryItems) ? $model->phaReorderHistoryItems : '-');
             },
+            'user' => function ($model) {
+                return (isset($model->user) ? $model->user : '-');
+            },
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
     }
 
+    public static function find() {
+        return new PhaReorderHistoryQuery(get_called_class());
+    }
 }

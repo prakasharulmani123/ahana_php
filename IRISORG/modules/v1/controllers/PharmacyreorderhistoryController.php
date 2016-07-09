@@ -10,6 +10,7 @@ use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
 use yii\filters\auth\QueryParamAuth;
 use yii\filters\ContentNegotiator;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\rest\ActiveController;
 use yii\web\Response;
@@ -160,23 +161,26 @@ class PharmacyreorderhistoryController extends ActiveController {
                 ->groupBy(['pha_product.product_id'])
                 ->all();
 
+        $reorder_products = ArrayHelper::map(PhaReorderHistoryItem::find()->tenant()->status()->all(), 'product_id', 'product_id');
         $reports = [];
 
         foreach ($stocks as $key => $purchase) {
-            $reports[$key]['product_id'] = $purchase['product_id'];
-            $reports[$key]['product_name'] = $purchase['product_name'];
-            $reports[$key]['product_code'] = $purchase['product_code'];
-            $reports[$key]['mrp'] = $purchase['mrp'];
-            $reports[$key]['available_qty'] = $purchase['available_qty'];
-            $reports[$key]['stock_value'] = $purchase['mrp'] * $purchase['available_qty'];
+            if (!in_array($purchase['product_id'], $reorder_products)) {
+                $reports[$key]['product_id'] = $purchase['product_id'];
+                $reports[$key]['product_name'] = $purchase['product_name'];
+                $reports[$key]['product_code'] = $purchase['product_code'];
+                $reports[$key]['mrp'] = $purchase['mrp'];
+                $reports[$key]['available_qty'] = $purchase['available_qty'];
+                $reports[$key]['stock_value'] = $purchase['mrp'] * $purchase['available_qty'];
 
-            $supplier_id = $purchase['supplier_id_1'];
-            if (empty($supplier_id))
-                $supplier_id = $purchase['supplier_id_2'];
-            if (empty($supplier_id))
-                $supplier_id = $purchase['supplier_id_3'];
+                $supplier_id = $purchase['supplier_id_1'];
+                if (empty($supplier_id))
+                    $supplier_id = $purchase['supplier_id_2'];
+                if (empty($supplier_id))
+                    $supplier_id = $purchase['supplier_id_3'];
 
-            $reports[$key]['supplier_id'] = intval($supplier_id);
+                $reports[$key]['supplier_id'] = intval($supplier_id);
+            }
         }
 
         return ['report' => $reports];
@@ -211,7 +215,7 @@ class PharmacyreorderhistoryController extends ActiveController {
                         break;
                 }
             }
-            
+
             if ($valid) {
                 foreach ($reorder_history as $history) {
                     $model = new PhaReorderHistory;
