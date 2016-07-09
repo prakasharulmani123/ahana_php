@@ -1,88 +1,108 @@
-<div class="bg-light lter b-b wrapper-md">
-    <h1 class="m-n font-thin h3">Reorders</h1>
-</div>
-
-<div class="wrapper-md" ng-controller="ReordersController" ng-init="loadReordersList()">
-
-    <div ng-include="'tpl/blocks/alert.html'">
-        {% include 'tpl/blocks/alert.html' %}
+<div ng-controller="ReordersController" ng-init="loadReordersList()">
+    <div class="bg-light lter b-b wrapper-md">
+        <h1 class="m-n font-thin h3">Reorders</h1>
     </div>
-
-    <form name="reoderForm" class="form-horizontal form-validation" novalidate="">
+    <div class="wrapper-md tab-btn">
         <div class="row">
-            <div class="col-sm-8">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <b> Reorder Management </b>
-                    </div>
-                    <div class="panel-body b-b b-light">                   
-                        <input id="filter" type="text" class="form-control input-sm w-sm inline m-r" placeholder="Search"/>                   
-                    </div>
-                    <div>
-                        <table class="table m-b-none" ui-jq="footable" data-filter="#filter" data-page-size="10">
-                            <thead>
-                                <tr>                              
-                                    <th>&nbsp</th>
-                                    <th>Product Code</th>
-                                    <th>Product Name</th>
-                                    <th>Current Stock</th>
-                                    <th>Reorder Qty</th>
-                                    <th>Supplier</th>
-                                </tr>
-                            </thead>  
-                            <tbody ng-if="isLoading == true">
-                                <tr>
-                                    <td colspan="6" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
-                                </tr>
-                            </tbody>  
-                            <tbody ng-if="isLoading == false">
-                                <tr ng-repeat="(key, record) in records">
-                                    <td>
-                                        <label class="i-checks"> 
-                                            <input ng-model="record.selected" ng-checked="record.selected == '1'" ng-true-value="'1'" ng-false-value="'0'" type="checkbox" name="status" ng-click="moreOptions(key, record)" class="reordercheckbox reordercheckbox_{{key}}" id="reorder_{{key}}"> 
-                                            <i></i> 
-                                        </label>
-                                    </td>
-                                    <td>{{record.product_code}}</td>
-                                    <td>{{record.product_name}}</td>
-                                    <td>{{record.available_qty}}</td>
-                                    <td>
-                                        <input type="text" ng-model="record.quantity" maxlength="50" class="form-control" number-mask="" >
-                                    </td>
-                                    <td>
-                                        <select class="form-control" ng-model="record.supplier_id" ng-options="supplier.supplier_id as supplier.supplier_name for supplier in suppliers | orderBy: supplier_name">
-                                            <option value="">Select Supplier</option>
-                                        </select>
-                                    </td>
-                                </tr>
-                            </tbody>
-                            <tfoot class="hide-if-no-paging">
-                                <tr>
-                                    <td colspan="6" class="text-right">
-                                        <ul class="pagination"></ul>
-                                    </td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                        <footer class="panel-footer text-right bg-light lter">
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <label>Reorder User: </label>
-                                </div>
-                                <div class="col-sm-4">
-                                    <select class="form-control" ng-model="user_id" ng-options="user.user_id as user.name for user in users | orderBy: name">
-                                        <option value="">Select User</option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-2 text-left">
-                                    <button class="btn m-b-xs  btn-success save-btn" ng-click="addReorderHistory()">Save</button>
-                                </div>
-                            </div>
-                            &nbsp;
-                        </footer>
-                    </div>
+            <div class="col-sm-4"> 
+                <div class="btn-group btn-group-justified">
+                    <a class="btn btn-info" ng-class="{active : activeMenu === 'CA'}" ng-click="loadSaleItemList('CA')">
+                        <i class="fa fa-money"></i>  Cash
+                    </a>
+                    <a class="btn btn-info" ng-class="{active : activeMenu === 'CR'}" ng-click="loadSaleItemList('CR')">  
+                        <i class="fa fa-list-alt"></i>
+                        Credit
+                    </a>
+                    <a class="btn btn-info" ng-class="{active : activeMenu === 'COD'}" ng-click="loadSaleItemList('COD')">  
+                        <i class="fa fa-cab"></i>
+                        COD
+                    </a>
                 </div>
             </div>
         </div>
-    </form>
+    </div>
+    <div class="wrapper-md">
+
+        <div ng-include="'tpl/blocks/alert.html'">
+            {% include 'tpl/blocks/alert.html' %}
+        </div>
+
+        <form name="reoderForm" class="form-horizontal form-validation" novalidate="">
+            <div class="row">
+                <div class="col-sm-8">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <b> Reorder Management </b>
+                        </div>
+                        <div class="panel-body b-b b-light">                   
+                            <input id="filter" type="text" class="form-control input-sm w-sm inline m-r" placeholder="Search"/>                   
+                        </div>
+                        <div>
+                            <table class="table m-b-none" ui-jq="footable" data-filter="#filter" data-page-size="10">
+                                <thead>
+                                    <tr>                              
+                                        <th data-sort-ignore="true">&nbsp</th>
+                                        <th>Product Code</th>
+                                        <th>Product Name</th>
+                                        <th>Current Stock</th>
+                                        <th data-sort-ignore="true">Reorder Qty</th>
+                                        <th data-sort-ignore="true">Supplier</th>
+                                    </tr>
+                                </thead>  
+                                <tbody ng-if="isLoading == true">
+                                    <tr>
+                                        <td colspan="6" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
+                                    </tr>
+                                </tbody>  
+                                <tbody ng-if="isLoading == false">
+                                    <tr ng-repeat="(key, record) in records">
+                                        <td>
+                                            <label class="i-checks"> 
+                                                <input ng-model="record.selected" ng-checked="record.selected == '1'" ng-true-value="'1'" ng-false-value="'0'" type="checkbox" name="status" ng-click="moreOptions(key, record)" class="reordercheckbox reordercheckbox_{{key}}" id="reorder_{{key}}"> 
+                                                <i></i> 
+                                            </label>
+                                        </td>
+                                        <td>{{record.product_code}}</td>
+                                        <td>{{record.product_name}}</td>
+                                        <td>{{record.available_qty}}</td>
+                                        <td>
+                                            <input ng-show="record.selected == '1'"  type="text" ng-model="record.quantity" maxlength="50" class="form-control" number-mask="" >
+                                        </td>
+                                        <td>
+                                            <select ng-show="record.selected == '1'" class="form-control" ng-model="record.supplier_id" ng-options="supplier.supplier_id as supplier.supplier_name for supplier in suppliers | orderBy: supplier_name">
+                                                <option value="">Select Supplier</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tfoot class="hide-if-no-paging">
+                                    <tr>
+                                        <td colspan="6" class="text-right">
+                                            <ul class="pagination"></ul>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                            <footer class="panel-footer text-right bg-light lter">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <label>Reorder User: </label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <select class="form-control" ng-model="user_id" ng-options="user.user_id as user.name for user in users | orderBy: name">
+                                            <option value="">Select User</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-2 text-left">
+                                        <button class="btn m-b-xs  btn-success save-btn" ng-click="addReorderHistory()">Save</button>
+                                    </div>
+                                </div>
+                                &nbsp;
+                            </footer>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
