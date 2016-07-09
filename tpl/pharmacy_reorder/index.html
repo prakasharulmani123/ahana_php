@@ -1,21 +1,17 @@
-<div ng-controller="ReordersController" ng-init="loadReordersList()">
+<div ng-controller="ReordersController" ng-init="loadReordersList('RE')">
     <div class="bg-light lter b-b wrapper-md">
-        <h1 class="m-n font-thin h3">Reorders</h1>
+        <h1 class="m-n font-thin h3">{{reorder_page_heading}}</h1>
     </div>
     <div class="wrapper-md tab-btn">
         <div class="row">
             <div class="col-sm-4"> 
                 <div class="btn-group btn-group-justified">
-                    <a class="btn btn-info" ng-class="{active : activeMenu === 'CA'}" ng-click="loadSaleItemList('CA')">
-                        <i class="fa fa-money"></i>  Cash
+                    <a class="btn btn-info" ng-class="{active : activeMenu === 'RE'}" ng-click="loadReordersList('RE')">
+                        <i class="fa fa-money"></i>  Reorders
                     </a>
-                    <a class="btn btn-info" ng-class="{active : activeMenu === 'CR'}" ng-click="loadSaleItemList('CR')">  
+                    <a class="btn btn-info" ng-class="{active : activeMenu === 'RH'}" ng-click="loadReordersList('RH')">  
                         <i class="fa fa-list-alt"></i>
-                        Credit
-                    </a>
-                    <a class="btn btn-info" ng-class="{active : activeMenu === 'COD'}" ng-click="loadSaleItemList('COD')">  
-                        <i class="fa fa-cab"></i>
-                        COD
+                        Reorders History
                     </a>
                 </div>
             </div>

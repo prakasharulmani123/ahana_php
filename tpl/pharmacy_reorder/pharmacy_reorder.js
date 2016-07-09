@@ -1,39 +1,47 @@
 app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http', '$state', function ($rootScope, $scope, $timeout, $http, $state) {
 
         //Index Page
-        $scope.loadReordersList = function () {
+        $scope.loadReordersList = function (mode) {
             $scope.loadbar('show');
             $scope.isLoading = true;
 
             $scope.errorData = "";
             $scope.successMessage = "";
+            
+            $scope.activeMenu = mode;
 
-            $rootScope.commonService.GetSupplierList('', '1', false, function (response) {
-                $scope.suppliers = response.supplierList;
-                $scope.user_id = '';
+            if(mode == 'RE'){
+                $scope.reorder_page_heading = 'Reorders';
+                
+                $rootScope.commonService.GetSupplierList('', '1', false, function (response) {
+                    $scope.suppliers = response.supplierList;
+                    $scope.user_id = '';
 
-                $http({
-                    url: $rootScope.IRISOrgServiceUrl + '/user/getuserslistbyuser',
-                    method: "GET"
-                }).then(
-                        function (response) {
-                            $scope.users = response.data.userList;
+                    $http({
+                        url: $rootScope.IRISOrgServiceUrl + '/user/getuserslistbyuser',
+                        method: "GET"
+                    }).then(
+                            function (response) {
+                                $scope.users = response.data.userList;
 
-                            // Get data's from service
-                            $http.post($rootScope.IRISOrgServiceUrl + '/pharmacyreorderhistory/reorder')
-                                    .success(function (response) {
-                                        $scope.loadbar('hide');
-                                        $scope.isLoading = false;
-                                        $scope.records = response.report;
-                                        $scope.date = moment().format('YYYY-MM-DD HH:MM:ss');
+                                // Get data's from service
+                                $http.post($rootScope.IRISOrgServiceUrl + '/pharmacyreorderhistory/reorder')
+                                        .success(function (response) {
+                                            $scope.loadbar('hide');
+                                            $scope.isLoading = false;
+                                            $scope.records = response.report;
+                                            $scope.date = moment().format('YYYY-MM-DD HH:MM:ss');
 
-                                    })
-                                    .error(function () {
-                                        $scope.errorData = "An Error has occured while loading products!";
-                                    });
-                        }
-                );
-            });
+                                        })
+                                        .error(function () {
+                                            $scope.errorData = "An Error has occured while loading products!";
+                                        });
+                            }
+                    );
+                });
+            }else if(mode == 'RH'){
+                
+            }
         };
         
         $scope.moreOptions = function(key, row){
