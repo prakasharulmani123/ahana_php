@@ -82,16 +82,14 @@ class DefaultController extends Controller {
     }
 
     public function actionGetTenantList() {
-        $list = [];
-        
         $org = CoOrganization::findOne(['org_domain' => DOMAIN_PATH]);
-        $tenants = $org->coActiveTenants;
-        $data = ArrayHelper::toArray($tenants);
         
-        foreach ($data as $label) {
-            $list[] = array('value' => $label['tenant_id'], 'label' => $label['tenant_name']);
-        }
-        return ['tenantList' => $list, 'org_sts' => $org->status];
+        if(empty($org))
+            return ['success' => false, 'message' => 'There is no organization assigned for this domain.'];
+        
+        $list = ArrayHelper::map($org->coActiveTenants, 'tenant_id', 'tenant_name');
+        
+        return ['tenantList' => $list, 'org_sts' => $org->status, 'success' => true];
     }
 
     public function actionError() {
