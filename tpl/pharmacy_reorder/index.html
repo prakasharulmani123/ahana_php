@@ -23,9 +23,12 @@
     <div class="wrapper-md">
         <form name="reoderForm" class="form-horizontal form-validation" novalidate="">
             <div class="row" ng-show="activeMenu == 'RE'">
-                <div class="col-sm-8">
+                <div class="col-sm-10">
                     <div class="panel panel-default">
-                        <div class="panel-body b-b b-light">                   
+                        <div class="panel-body b-b b-light"> 
+                            <button class="btn btn-sm btn-grey" ng-click="loadReordersList('RE')"> 
+                                &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
+                            </button>
                             <input id="filter" type="text" class="form-control input-sm w-sm inline m-r" placeholder="Search"/>                   
                         </div>
                         <div>
@@ -35,6 +38,7 @@
                                         <th data-sort-ignore="true">&nbsp</th>
                                         <th>Product Code</th>
                                         <th>Product Name</th>
+                                        <th>Min. Reorder Qty</th>
                                         <th>Current Stock</th>
                                         <th data-sort-ignore="true">Reorder Qty</th>
                                         <th data-sort-ignore="true">Supplier</th>
@@ -42,7 +46,7 @@
                                 </thead>  
                                 <tbody ng-if="isLoading == true">
                                     <tr>
-                                        <td colspan="6" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
+                                        <td colspan="7" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
                                     </tr>
                                 </tbody>  
                                 <tbody ng-if="isLoading == false">
@@ -55,6 +59,7 @@
                                         </td>
                                         <td>{{record.product_code}}</td>
                                         <td>{{record.product_name}}</td>
+                                        <td>{{record.product_reorder_min}}</td>
                                         <td>{{record.available_qty}}</td>
                                         <td>
                                             <input ng-show="record.selected == '1'"  type="text" ng-model="record.quantity" maxlength="50" class="form-control" number-mask="" >
@@ -68,7 +73,7 @@
                                 </tbody>
                                 <tfoot class="hide-if-no-paging">
                                     <tr>
-                                        <td colspan="6" class="text-right">
+                                        <td colspan="7" class="text-right">
                                             <ul class="pagination"></ul>
                                         </td>
                                     </tr>
@@ -132,6 +137,7 @@
                         <th>Supplier Name</th>
                         <th>Reorder Date</th>
                         <th>Reorder Created By</th>
+                        <th>Status</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -146,11 +152,14 @@
                         <td>{{row.supplier.supplier_name}}</td>
                         <td>{{row.reorder_date}}</td>
                         <td>{{row.user.fullname}}</td>
-                        <td></td>
+                        <td><label class="label label-{{row.status == '1' ? 'danger' : 'success'}}">{{row.status == '1' ? 'Not Reordered' : 'Reordered'}}</label></td>
+                        <td>
+                            <a ng-if="row.status == '1'" class="btn btn-primary" ui-sref="pharmacy.reorderHistoryUpdate({id: row.reorder_id})">Add Stock</a>
+                        </td>
                     </tr>
                     <tr ng-repeat-end ng-show="expanded" data-value="{{row.supplier.supplier_name}} {{row.reorder_date}} {{row.user.fullname}}">
                         <td data-value="{{row.supplier.supplier_name}} {{row.reorder_date}} {{row.user.fullname}}"></td>
-                        <td colspan="5" data-value="{{row.supplier.supplier_name}} {{row.reorder_date}} {{row.user.fullname}}">
+                        <td colspan="6" data-value="{{row.supplier.supplier_name}} {{row.reorder_date}} {{row.user.fullname}}">
                             <table class="table table-condensed table-bordered">
                                 <thead>
                                     <tr>
@@ -170,7 +179,7 @@
                 </tbody>
                 <tbody ng-if="isLoading == true">
                     <tr>
-                        <td colspan="5" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
+                        <td colspan="6" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
                     </tr>
                 </tbody>
             </table>
