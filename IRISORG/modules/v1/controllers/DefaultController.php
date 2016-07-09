@@ -82,13 +82,16 @@ class DefaultController extends Controller {
     }
 
     public function actionGetTenantList() {
-        $list = array();
-        $data = ArrayHelper::toArray(CoOrganization::findOne(['org_domain' => DOMAIN_PATH])->coTenants); //, 'tenant_id', 'tenant_name');
-//        $data = CoTenant::getTenantlist(['org_id' => $org]);
+        $list = [];
+        
+        $org = CoOrganization::findOne(['org_domain' => DOMAIN_PATH]);
+        $tenants = $org->coActiveTenants;
+        $data = ArrayHelper::toArray($tenants);
+        
         foreach ($data as $label) {
             $list[] = array('value' => $label['tenant_id'], 'label' => $label['tenant_name']);
         }
-        return ['tenantList' => $list];
+        return ['tenantList' => $list, 'org_sts' => $org->status];
     }
 
     public function actionError() {

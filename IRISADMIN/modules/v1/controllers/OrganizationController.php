@@ -116,6 +116,7 @@ class OrganizationController extends ActiveController {
         if (!empty($post)) {
             $model = new CoOrganization();
             $model->attributes = Yii::$app->request->post('Organization');
+            $model->is_decoded = true;
 
             $login_form_model = new CoLoginForm();
             $login_form_model->scenario = 'create';

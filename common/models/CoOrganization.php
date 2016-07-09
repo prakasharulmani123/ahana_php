@@ -30,6 +30,8 @@ use yii\db\Connection;
  */
 class CoOrganization extends GActiveRecord {
 
+    public $is_decoded = false;
+
     /**
      * @inheritdoc
      */
@@ -46,7 +48,7 @@ class CoOrganization extends GActiveRecord {
             [['org_domain'], 'url'],
             [['org_description', 'status'], 'string'],
             [['created_by', 'modified_by'], 'integer'],
-            [['created_at', 'modified_at', 'deleted_at'], 'safe'],
+            [['created_at', 'modified_at', 'deleted_at', 'status'], 'safe'],
             [['org_name'], 'string', 'max' => 100],
             [['org_db_host', 'org_db_username', 'org_db_password', 'org_database', 'org_domain'], 'string', 'max' => 255],
             [['org_name', 'org_database'], 'unique'],
@@ -91,6 +93,10 @@ class CoOrganization extends GActiveRecord {
         return $this->hasMany(CoTenant::className(), ['org_id' => 'org_id'])->orderBy(['created_at' => SORT_ASC]);
     }
 
+    public function getCoActiveTenants() {
+        return $this->hasMany(CoTenant::className(), ['org_id' => 'org_id'])->andWhere(['status' => '1'])->orderBy(['created_at' => SORT_ASC]);
+    }
+
     public function fields() {
         $extend = [
             'tenants' => function ($model) {
@@ -114,19 +120,20 @@ class CoOrganization extends GActiveRecord {
             $this->addError($attribute, $ex->getMessage());
         }
     }
-    
+
     public function beforeValidate() {
-        $this->org_domain = rtrim($this->org_domain,"/");
+        $this->org_domain = rtrim($this->org_domain, "/");
         return parent::beforeValidate();
     }
 
     public function beforeSave($insert) {
-        if ($insert) {
+        if ($this->is_decoded) {
             $this->org_db_host = base64_encode($this->org_db_host);
             $this->org_db_username = base64_encode($this->org_db_username);
             $this->org_db_password = base64_encode($this->org_db_password);
             $this->org_database = base64_encode($this->org_database);
         }
+        
         return parent::beforeSave($insert);
     }
 
@@ -136,23 +143,28 @@ class CoOrganization extends GActiveRecord {
         $this->org_db_password = base64_decode($this->org_db_password);
         $this->org_database = base64_decode($this->org_database);
 
+        $this->is_decoded = true;
         return parent::afterFind();
     }
 
     public function afterSave($insert, $changedAttributes) {
-        if ($insert) {
-            $model = self::find()->where(['org_id' => $this->org_id])->one();
-            $connection = new Connection([
-                'dsn' => "mysql:host={$model->org_db_host};dbname={$model->org_database}",
-                'username' => $model->org_db_username,
-                'password' => $model->org_db_password,
-            ]);
-            $connection->open();
+        $model = self::find()->where(['org_id' => $this->org_id])->one();
+        $connection = new Connection([
+            'dsn' => "mysql:host={$model->org_db_host};dbname={$model->org_database}",
+            'username' => $model->org_db_username,
+            'password' => $model->org_db_password,
+        ]);
+        $connection->open();
 
-            $command = $connection->createCommand("INSERT INTO co_organization VALUES({$model->org_id},'{$model->org_name}','{$model->org_description}','{$model->org_db_host}','{$model->org_db_username}','{$model->org_db_password}','{$model->org_database}','{$model->org_domain}','{$model->status}',{$model->created_by},'{$model->created_at}',{$model->modified_by},'{$model->modified_at}','{$model->deleted_at}')");
-            $command->execute();
-            $connection->close();
+        if ($insert) {
+            $sql = "INSERT INTO co_organization VALUES({$this->org_id},'{$this->org_name}','{$this->org_description}','{$this->org_db_host}','{$this->org_db_username}','{$this->org_db_password}','{$this->org_database}','{$this->org_domain}','{$this->status}',{$this->created_by},'{$this->created_at}',{$this->modified_by},'{$this->modified_at}','{$this->deleted_at}')";
+        } else {
+            $sql = "UPDATE co_organization SET org_name = '{$this->org_name}', org_description = '{$this->org_description}', org_db_host = '{$this->org_db_host}', org_db_username = '{$this->org_db_username}', org_db_password = '{$this->org_db_password}', org_database = '{$this->org_database}', org_domain = '{$this->org_domain}', status = '{$this->status}', modified_by = '{$this->modified_by}', modified_at = '{$this->modified_at}', deleted_at = '{$this->deleted_at}' WHERE org_id={$this->org_id}";
         }
+        $command = $connection->createCommand($sql);
+        $command->execute();
+        $connection->close();
+        
         return parent::afterSave($insert, $changedAttributes);
     }
 

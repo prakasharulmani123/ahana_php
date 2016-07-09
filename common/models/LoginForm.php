@@ -51,22 +51,35 @@ class LoginForm extends Model {
 
     public function validateTenant($attribute, $params) {
         if (!$this->hasErrors()) {
-            $tenant = CoLogin::findByUsernameAndTenant($this->username, $this->tenant_id);
-            if (empty($tenant)) {
+            $login = CoLogin::findByUsernameAndTenant($this->username, $this->tenant_id);
+            if (empty($login)) {
                 $this->addError($attribute, 'Organization mismatch.');
             }
 
-            if (!empty($tenant) && $tenant->user->tenant_id != 0) {
+            if (!empty($login) && $login->user->tenant_id != 0) {
                 //Account Not Activated
-                if (empty($tenant->activation_date) || $tenant->activation_date == '0000-00-00')
+                if (empty($login->activation_date) || $login->activation_date == '0000-00-00')
                     $this->addError($attribute, 'Your Account is not activated. Contact Admin');
+                
                 //Account Will be Activated
-                else if (strtotime($tenant->activation_date) > strtotime(date('Y-m-d')))
-                    $this->addError($attribute, 'Your Account will be activated on ' . $tenant->activation_date);
+                else if (strtotime($login->activation_date) > strtotime(date('Y-m-d')))
+                    $this->addError($attribute, 'Your Account will be activated on ' . $login->activation_date);
 
                 //Account In-activated
-                if (!empty($tenant->Inactivation_date) && $tenant->Inactivation_date != '0000-00-00' && strtotime($tenant->Inactivation_date) < strtotime(date('Y-m-d')))
-                    $this->addError($attribute, 'Your Account is inactivated on ' . $tenant->Inactivation_date);
+                if (!empty($login->Inactivation_date) && $login->Inactivation_date != '0000-00-00' && strtotime($login->Inactivation_date) < strtotime(date('Y-m-d')))
+                    $this->addError($attribute, 'Your Account is inactivated on ' . $login->Inactivation_date);
+            }
+            
+            $tenant = CoTenant::findOne($this->tenant_id);
+
+            if(!empty($tenant)){
+                //Tenant In-activated
+                if ($tenant->status == '0')
+                    $this->addError($attribute, "This Branch ({$tenant->tenant_name}) is inactive");
+
+                //Org In-activated
+                if ($tenant->coOrganization->status == '0')
+                    $this->addError($attribute, "This Organization ({$tenant->coOrganization->org_name}) is inactive");
             }
         }
     }
