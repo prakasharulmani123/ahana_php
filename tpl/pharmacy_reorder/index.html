@@ -1,8 +1,11 @@
-<div ng-controller="ReordersController" ng-init="loadReordersList('RE')">
+<div ng-controller="ReordersController" ng-init="initReordersList();">
     <div class="bg-light lter b-b wrapper-md">
         <h1 class="m-n font-thin h3">{{reorder_page_heading}}</h1>
     </div>
     <div class="wrapper-md tab-btn">
+        <div ng-include="'tpl/blocks/alert.html'">
+            {% include 'tpl/blocks/alert.html' %}
+        </div>
         <div class="row">
             <div class="col-sm-4"> 
                 <div class="btn-group btn-group-justified">
@@ -18,18 +21,10 @@
         </div>
     </div>
     <div class="wrapper-md">
-
-        <div ng-include="'tpl/blocks/alert.html'">
-            {% include 'tpl/blocks/alert.html' %}
-        </div>
-
         <form name="reoderForm" class="form-horizontal form-validation" novalidate="">
-            <div class="row">
+            <div class="row" ng-show="activeMenu == 'RE'">
                 <div class="col-sm-8">
                     <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <b> Reorder Management </b>
-                        </div>
                         <div class="panel-body b-b b-light">                   
                             <input id="filter" type="text" class="form-control input-sm w-sm inline m-r" placeholder="Search"/>                   
                         </div>
@@ -100,5 +95,85 @@
                 </div>
             </div>
         </form>
+
+        <div class="panel panel-default" ng-show="activeMenu == 'RH'">
+            <div class="panel-body">
+                <div class="row"> 
+                    <div class="col-sm-3">
+                        <button class="btn btn-sm btn-grey" ng-click="loadReordersList('RH')"> 
+                            &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
+                        </button>
+                    </div>
+                    <div class="col-sm-3">
+                        <input id="filter" type="text" class="form-control input-sm w-sm inline m-r filter_text" placeholder="Search" ng-model="form_filter"/>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="input-group">
+                            <input id="filter1" placeholder="Filter by date" prevent-enter type="text" class="form-control filter_text" datepicker-popup="yyyy-MM-dd" ng-model="form_filter1" is-open="opened1" datepicker-options="dateOptions" close-text="Close"/>
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="open($event, 'opened1')"><i class="glyphicon glyphicon-calendar"></i></button>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                    </div>
+                </div>
+            </div>
+
+            <table id="reorderhistory" data-filter=".filter_text" data-filtering="true" ui-jq="footable" class="table m-b-none footable-loaded footable default">
+                <thead>
+                    <tr>
+                        <th style="width: 5%">
+                            <button class="btn btn-sm btn-default hms-plus" type="button" ng-click="ctrl.expandAll(allExpanded = !allExpanded)">
+                                <i ng-if="!allExpanded" class="fa fa-plus text"></i>
+                                <i ng-if="allExpanded" class="fa fa-minus text"></i>
+                            </button>
+                        </th>
+                        <th>Supplier Name</th>
+                        <th>Reorder Date</th>
+                        <th>Reorder Created By</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody ng-if="isLoading == false">
+                    <tr ng-repeat-start="(key, row) in displayedCollection | orderBy: '-reorder_id'">
+                        <td style="width: 5%">
+                            <button ng-click="expanded = !expanded" expand class="btn btn-sm btn-default hms-plus">
+                                <i ng-if="!expanded" class="fa fa-plus text"></i>
+                                <i ng-if="expanded" class="fa fa-minus text"></i>
+                            </button>
+                        </td>
+                        <td>{{row.supplier.supplier_name}}</td>
+                        <td>{{row.reorder_date}}</td>
+                        <td>{{row.user.fullname}}</td>
+                        <td></td>
+                    </tr>
+                    <tr ng-repeat-end ng-show="expanded" data-value="{{row.supplier.supplier_name}} {{row.reorder_date}} {{row.user.fullname}}">
+                        <td data-value="{{row.supplier.supplier_name}} {{row.reorder_date}} {{row.user.fullname}}"></td>
+                        <td colspan="5" data-value="{{row.supplier.supplier_name}} {{row.reorder_date}} {{row.user.fullname}}">
+                            <table class="table table-condensed table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Quantity</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="(gKey, reorderitem) in row.items | orderBy: reorder_item_id">
+                                        <td>{{reorderitem.product.full_name}}</td>
+                                        <td>{{reorderitem.quantity}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>                            
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody ng-if="isLoading == true">
+                    <tr>
+                        <td colspan="5" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>

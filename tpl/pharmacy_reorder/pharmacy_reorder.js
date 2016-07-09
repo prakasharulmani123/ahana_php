@@ -1,6 +1,30 @@
 app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http', '$state', function ($rootScope, $scope, $timeout, $http, $state) {
 
+        //Expand table in Index page
+        $scope.ctrl = {};
+        $scope.ctrl.expandAll = function (expanded) {
+            $scope.$broadcast('onExpandAll', {expanded: expanded});
+        };
+
         //Index Page
+        $scope.initReordersList = function () {
+            $scope.user_id = '';
+            
+            $rootScope.commonService.GetSupplierList('', '1', false, function (response) {
+                $scope.suppliers = response.supplierList;
+
+                $http({
+                    url: $rootScope.IRISOrgServiceUrl + '/user/getuserslistbyuser',
+                    method: "GET"
+                }).then(
+                        function (response) {
+                            $scope.users = response.data.userList;
+                            $scope.loadReordersList('RE');
+                        }
+                );
+            });
+        }
+
         $scope.loadReordersList = function (mode) {
             $scope.loadbar('show');
             $scope.isLoading = true;
@@ -10,41 +34,45 @@ app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http
             
             $scope.activeMenu = mode;
 
-            if(mode == 'RE'){
+            if (mode == 'RE') {
                 $scope.reorder_page_heading = 'Reorders';
+
+                // Get data's from service
+                $http.post($rootScope.IRISOrgServiceUrl + '/pharmacyreorderhistory/reorder')
+                        .success(function (response) {
+                            $scope.loadbar('hide');
+                            $scope.isLoading = false;
+                            $scope.records = response.report;
+                            $scope.date = moment().format('YYYY-MM-DD HH:MM:ss');
+
+                        })
+                        .error(function () {
+                            $scope.errorData = "An Error has occured while loading products!";
+                        });
+            } else if (mode == 'RH') {
+                $scope.reorder_page_heading = 'Reorders History';
                 
-                $rootScope.commonService.GetSupplierList('', '1', false, function (response) {
-                    $scope.suppliers = response.supplierList;
-                    $scope.user_id = '';
+                // pagination set up
+                $scope.rowCollection = [];  // base collection
+                $scope.itemsByPage = 10; // No.of records per page
+                $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
 
-                    $http({
-                        url: $rootScope.IRISOrgServiceUrl + '/user/getuserslistbyuser',
-                        method: "GET"
-                    }).then(
-                            function (response) {
-                                $scope.users = response.data.userList;
-
-                                // Get data's from service
-                                $http.post($rootScope.IRISOrgServiceUrl + '/pharmacyreorderhistory/reorder')
-                                        .success(function (response) {
-                                            $scope.loadbar('hide');
-                                            $scope.isLoading = false;
-                                            $scope.records = response.report;
-                                            $scope.date = moment().format('YYYY-MM-DD HH:MM:ss');
-
-                                        })
-                                        .error(function () {
-                                            $scope.errorData = "An Error has occured while loading products!";
-                                        });
-                            }
-                    );
-                });
-            }else if(mode == 'RH'){
-                
+                // Get data's from service
+                $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyreorderhistory')
+                        .success(function (response) {
+                            $scope.isLoading = false;
+                            $scope.loadbar('hide');
+                            $scope.rowCollection = response;
+                            $scope.displayedCollection = [].concat($scope.rowCollection);
+                            $scope.form_filter = null;
+                        })
+                        .error(function () {
+                            $scope.errorData = "An Error has occured while loading saleList!";
+                        });
             }
         };
-        
-        $scope.moreOptions = function(key, row){
+
+        $scope.moreOptions = function (key, row) {
             if ($("#reorder_" + key).is(':checked')) {
                 $("#reorder_" + key).closest("tr").addClass("selected_row");
             } else {
@@ -60,13 +88,13 @@ app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http
             post_url = $rootScope.IRISOrgServiceUrl + '/pharmacyreorderhistory/addreorderhistory';
             method = 'POST';
             succ_msg = 'Reorder saved successfully';
-            
+
             records = [];
-            angular.forEach($scope.records, function(record){
-                if(record.selected == '1'){
+            angular.forEach($scope.records, function (record) {
+                if (record.selected == '1') {
                     records.push(record);
                 }
-            })
+            });
 
             $scope.loadbar('show');
             $http({
@@ -78,6 +106,14 @@ app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http
                         $scope.loadbar('hide');
                         if (response.success == true) {
                             $scope.successMessage = succ_msg;
+                            $scope.user_id = '';
+                            
+                            for (var i = 0; i < $scope.records.length; i++) {
+                                var obj = $scope.records[i];
+                                if (obj.selected == '1') {
+                                    $scope.records.splice(i, 1);
+                                }
+                            }
                         } else {
                             $scope.errorData = response.message;
                         }
@@ -90,7 +126,35 @@ app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http
                     $scope.errorData = data.message;
             });
         };
-        
+
+        $scope.$watch('form_filter', function (newValue, oldValue) {
+            if (newValue != '')
+                $scope.filterTable(newValue, oldValue);
+        }, true);
+
+        $scope.$watch('form_filter1', function (newValue, oldValue) {
+            if (newValue != '') {
+                newValue = moment(newValue).format('YYYY-MM-DD');
+                $scope.filterTable(newValue, oldValue);
+            }
+
+        }, true);
+
+        $scope.filterTable = function (newValue, oldValue) {
+            if ($scope.activeMenu == 'RH') {
+                var footableFilter = $('#reorderhistory').data('footable-filter');
+                if (typeof newValue != 'undefined' && newValue != '' && newValue != null) {
+                    footableFilter.clearFilter();
+                    footableFilter.filter(newValue);
+                }
+
+                if (newValue == '') {
+                    footableFilter.clearFilter();
+//                $scope.loadPurchaseItemList($scope.purchase_payment_type);
+                }
+            }
+        }
+
         //For Form
         $scope.initForm = function () {
             $scope.loadbar('show');
@@ -181,7 +245,7 @@ app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http
             $scope.purchaseitems[key].temp_free_quantity_unit = "";
             $scope.purchaseitems[key].purchase_rate = 0;
             $scope.purchaseitems[key].discount_percent = 0;
-            
+
 //            $rootScope.commonService.GetBatchListByProduct(item.product_id, function (response) {
 //                $scope.loadbar('hide');
 //                $scope.batches = response.batchList;
