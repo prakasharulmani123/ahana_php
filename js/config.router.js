@@ -2364,9 +2364,13 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 url: '/reorder',
                 templateUrl: 'tpl/pharmacy_reorder/index.html',
                 resolve: {
-                    deps: ['uiLoad',
-                        function (uiLoad) {
-                            return uiLoad.load(['tpl/pharmacy_reorder/pharmacy_reorder.js']);
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('xeditable').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/pharmacy_reorder/pharmacy_reorder.js');
+                                    }
+                            );
                         }]
                 }
             })
@@ -2415,6 +2419,7 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
 
     $rootScope.IRISOrgServiceUrl = serviceUrl;
     $rootScope.commonService = CommonService;
+    $rootScope.authenticationService = AuthenticationService;
     $rootScope.IRISOrgUrl = orgUrl;
     $rootScope.clientUrl = clientURL;
 

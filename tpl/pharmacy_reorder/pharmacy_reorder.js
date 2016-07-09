@@ -12,8 +12,6 @@ app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http
 
         //Index Page
         $scope.initReordersList = function () {
-            $scope.user_id = '';
-            
             $rootScope.commonService.GetSupplierList('', '1', false, function (response) {
                 $scope.suppliers = response.supplierList;
 
@@ -23,6 +21,8 @@ app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http
                 }).then(
                         function (response) {
                             $scope.users = response.data.userList;
+                            var currentUser = $rootScope.authenticationService.getCurrentUser();
+                            $scope.user_id = currentUser.credentials.user_id;
                             $scope.loadReordersList('RE');
                         }
                 );
