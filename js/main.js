@@ -76,9 +76,9 @@ angular.module('app')
                 };
 
                 //Change Status
-                $scope.updateStatus = function (modelName, primaryKey) {
+                $scope.updateStatus = function (modelName, primaryKey, clientUrl) {
                     $scope.service = CommonService;
-                    $scope.service.ChangeStatus(modelName, primaryKey, function (response) {
+                    $scope.service.ChangeStatus(modelName, primaryKey, clientUrl, function (response) {
                         $scope.successMessage = 'Status changed successfully !!!';
                     });
                 }

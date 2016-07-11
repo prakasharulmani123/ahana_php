@@ -14,9 +14,11 @@ function CommonService($http, $rootScope, $window, $q) {
 
     return service;
 
-    function ChangeStatus(modelName, primaryKey, callback) {
+    function ChangeStatus(modelName, primaryKey, clientUrl, callback) {
         var response;
         $('.butterbar').removeClass('hide').addClass('active');
+        $http.defaults.headers.common['x-domain-path'] = clientUrl;
+        
         $http.post($rootScope.IRISAdminServiceUrl + '/default/change-status', {model: modelName, id: primaryKey})
                 .success(function (response) {
                     $('.butterbar').removeClass('active').addClass('hide');

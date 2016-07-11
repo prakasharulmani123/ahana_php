@@ -52,7 +52,7 @@
                     <td>{{row.org_name}}</td>
                     <td>
                         <label class="i-checks "> 
-                            <input type="checkbox" checked="" ng-true-value="'1'" ng-false-value="'0'" name="status" ng-model="row.status" ng-change='updateStatus("CoOrganization", row.org_id)'> 
+                            <input type="checkbox" checked="" ng-true-value="'1'" ng-false-value="'0'" name="status" ng-model="row.status" ng-change='updateStatus("CoOrganization", row.org_id, row.org_domain)'> 
                             <i></i>
                         </label>
                     </td>
@@ -89,7 +89,7 @@
                                     </td>
                                     <td>
                                         <label class="i-checks "> 
-                                            <input type="checkbox" checked="" ng-true-value="'1'" ng-false-value="'0'" name="status" ng-model="tenant.status" ng-change='updateStatus("CoTenant", tenant.tenant_id)'> 
+                                            <input type="checkbox" checked="" ng-true-value="'1'" ng-false-value="'0'" name="status" ng-model="tenant.status" ng-change='updateStatus("CoTenant", tenant.tenant_id, row.org_domain)'> 
                                             <i></i>
                                         </label>
                                     </td>
