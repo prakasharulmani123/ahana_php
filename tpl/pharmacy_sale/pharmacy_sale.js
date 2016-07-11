@@ -272,20 +272,21 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
         //Get the products
         var changeTimer = false;
+        
         $scope.getProduct = function (saleitem) {
-            var name = saleitem.full_name.$viewValue;
-            if (changeTimer !== false)
-                clearTimeout(changeTimer);
-
-            changeTimer = setTimeout(function () {
-                $scope.loadbar('show');
-                $rootScope.commonService.GetProductListByName(name, function (response) {
-                    if (response.productList.length > 0)
-                        $scope.products = response.productList;
-                    $scope.loadbar('hide');
-                });
-                changeTimer = false;
-            }, 300);
+//            var name = saleitem.full_name.$viewValue;
+//            if (changeTimer !== false)
+//                clearTimeout(changeTimer);
+//
+//            changeTimer = setTimeout(function () {
+//                $scope.loadbar('show');
+//                $rootScope.commonService.GetProductListByName(name, function (response) {
+//                    if (response.productList.length > 0)
+//                        $scope.products = response.productList;
+//                    $scope.loadbar('hide');
+//                });
+//                changeTimer = false;
+//            }, 300);
         }
 
         //After product choosed, then some values in the row.

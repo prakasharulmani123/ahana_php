@@ -7,7 +7,7 @@ app.controller('ConsultantVisitController', ['scope', '$scope', '$modalInstance'
                 $scope.doctors = response.doctorsList;
             });
             $scope.patientdata = $modalInstance.data;
-            
+
             $scope.data = {};
             $scope.data.consult_date = moment().format('YYYY-MM-DD HH:mm:ss');
         }
@@ -60,5 +60,43 @@ app.controller('ConsultantVisitController', ['scope', '$scope', '$modalInstance'
         $scope.cancel = function () {
             $modalInstance.dismiss('cancel');
         };
+
+        $scope.beforeRender = function ($view, $dates, $leftDate, $upDate, $rightDate) {
+            var d = new Date();
+            var n = d.getDate();
+            var m = d.getMonth();
+            var y = d.getFullYear();
+            var today_date = (new Date(y, m, n)).valueOf();
+
+            var upto_date = (d.setDate(d.getDate() - 3)).valueOf();
+
+            if (scope.checkAccess('patient.backdateconsultant')) {
+                angular.forEach($dates, function (date, key) {
+                    var calender = new Date(date.localDateValue());
+                    var calender_n = calender.getDate();
+                    var calender_m = calender.getMonth();
+                    var calender_y = calender.getFullYear();
+                    var calender_date = (new Date(calender_y, calender_m, calender_n)).valueOf();
+
+                    //Hide - Future Dates OR More than 3 days before
+                    if (today_date < calender_date || upto_date > calender_date) {
+                        $dates[key].selectable = false;
+                    }
+                });
+            } else {
+                angular.forEach($dates, function (date, key) {
+                    var calender = new Date(date.localDateValue());
+                    var calender_n = calender.getDate();
+                    var calender_m = calender.getMonth();
+                    var calender_y = calender.getFullYear();
+                    var calender_date = (new Date(calender_y, calender_m, calender_n)).valueOf();
+
+                    //Hide - Future and Past Dates
+                    if (today_date != calender_date) {
+                        $dates[key].selectable = false;
+                    }
+                });
+            }
+        }
     }]);
   

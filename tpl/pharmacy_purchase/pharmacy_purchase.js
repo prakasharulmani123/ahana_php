@@ -111,19 +111,19 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
         var changeTimer = false;
 
         $scope.getProduct = function (purchaseitem) {
-            var name = purchaseitem.full_name.$viewValue;
-            if (changeTimer !== false)
-                clearTimeout(changeTimer);
-
-            changeTimer = setTimeout(function () {
-                $scope.loadbar('show');
-                $rootScope.commonService.GetProductListByName(name, function (response) {
-                    if (response.productList.length > 0)
-                        $scope.products = response.productList;
-                    $scope.loadbar('hide');
-                });
-                changeTimer = false;
-            }, 300);
+//            var name = purchaseitem.full_name.$viewValue;
+//            if (changeTimer !== false)
+//                clearTimeout(changeTimer);
+//
+//            changeTimer = setTimeout(function () {
+//                $scope.loadbar('show');
+//                $rootScope.commonService.GetProductListByName(name, function (response) {
+//                    if (response.productList.length > 0)
+//                        $scope.products = response.productList;
+//                    $scope.loadbar('hide');
+//                });
+//                changeTimer = false;
+//            }, 300);
         }
 
         // editable table

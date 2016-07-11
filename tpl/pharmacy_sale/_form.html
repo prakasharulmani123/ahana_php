@@ -19,8 +19,9 @@
                                                type="text"
                                                class="form-control"
                                                ng-model="data.patient_name"
-                                               typeahead="patient.Patient as patient.Patient.name_with_casesheet for patient in patients | filter:$viewValue"
+                                               typeahead="patient.Patient as patient.Patient.name_with_casesheet for patient in patients | filter:$viewValue | limitTo: 10"
                                                typeahead-on-select="formatPatient($item, $model, $label)"
+                                               typeahead-wait-ms="400"
                                                />
                                     </div>
                                     <!--                                    <div class="col-lg-0">
