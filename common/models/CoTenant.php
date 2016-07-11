@@ -144,10 +144,14 @@ class CoTenant extends GActiveRecord {
     }
 
     public function afterSave($insert, $changedAttributes) {
+        $conn_dsn = "mysql:host={$this->coOrganization->org_db_host};dbname={$this->coOrganization->org_database}";
+        $conn_username = $this->coOrganization->org_db_username;
+        $conn_password = $this->coOrganization->org_db_password;
+        
         $connection = new Connection([
-            'dsn' => "mysql:host={$this->coOrganization->org_db_host};dbname={$this->coOrganization->org_database}",
-            'username' => $this->coOrganization->org_db_username,
-            'password' => $this->coOrganization->org_db_password,
+            'dsn' => $conn_dsn,
+            'username' => $conn_username,
+            'password' => $conn_password,
         ]);
         $connection->open();
         if ($insert) {
@@ -159,9 +163,9 @@ class CoTenant extends GActiveRecord {
         $command->execute();
         $connection->close();
 
-        Yii::$app->client->dsn = "mysql:host={$this->coOrganization->org_db_host};dbname={$this->coOrganization->org_database}";
-        Yii::$app->client->username = $this->coOrganization->org_db_username;
-        Yii::$app->client->password = $this->coOrganization->org_db_password;
+        Yii::$app->client->dsn = $conn_dsn;
+        Yii::$app->client->username = $conn_username;
+        Yii::$app->client->password = $conn_password;
 
         if ($insert) {
             //Internal code.
