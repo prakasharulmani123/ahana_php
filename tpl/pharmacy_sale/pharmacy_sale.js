@@ -9,6 +9,9 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         $scope.ctrl.expandAll = function (expanded) {
             $scope.$broadcast('onExpandAll', {expanded: expanded});
         };
+        
+        //Create page height
+        $scope.css = {'style': ''};
 
         //Index Page
         $scope.loadSaleItemList = function (payment_type) {
@@ -200,6 +203,12 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                     });
                 }
             }
+            
+            if ($scope.saleItems.length > 6) {
+                $scope.css = {
+                    'style': 'height:360px; overflow-y: auto; overflow-x: hidden;',
+                };
+            }
         };
 
         //Hide by Nad.
@@ -221,6 +230,12 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             $timeout(function () {
                 $scope.setFocus('full_name', $scope.saleItems.length - 1);
             });
+            
+            if ($scope.saleItems.length <= 6) {
+                $scope.css = {
+                    'style': '',
+                };
+            }
         };
 
         //Set cursor to first input box
