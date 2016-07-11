@@ -46,16 +46,16 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
         };
 
         $scope.$watch('form_filter', function (newValue, oldValue) {
-            if (newValue != '')
+            if (typeof newValue != 'undefined' && newValue != '' && newValue != null) {
                 $scope.filterTable(newValue, oldValue);
+            }
         }, true);
 
         $scope.$watch('form_filter1', function (newValue, oldValue) {
-            if (newValue != '') {
+            if (typeof newValue != 'undefined' && newValue != '' && newValue != null) {
                 newValue = moment(newValue).format('YYYY-MM-DD');
                 $scope.filterTable(newValue, oldValue);
             }
-
         }, true);
 
         $scope.filterTable = function (newValue, oldValue) {
