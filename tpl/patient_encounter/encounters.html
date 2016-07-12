@@ -201,7 +201,7 @@
                                     <i class="fa fa-print"></i>
                                 </button>
                                 
-                                <a check-access-custom3 tooltip="Cancel Clinical Discharge" class="label bg-danger dk" ng-show="(item.row_sts == 'CD')"  ng-click="cancelAdmission(item.encounter_id, item.id, item.row_sts)" data-url='patient.cancelLastEncounter'>
+                                <a check-access-custom3 tooltip="Cancel Clinical Discharge" class="label bg-danger dk" ng-show="(item.status == 1 && item.row_sts == 'CD')"  ng-click="cancelAdmission(item.encounter_id, item.id, item.row_sts)" data-url='patient.cancelLastEncounter'>
                                     <i class="fa fa-remove"></i>
                                 </a>
                             </td>

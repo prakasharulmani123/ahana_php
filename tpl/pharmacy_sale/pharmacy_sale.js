@@ -40,6 +40,14 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                     .success(function (saleList) {
                         $scope.isLoading = false;
                         $scope.rowCollection = saleList.sales;
+                        
+                        angular.forEach($scope.rowCollection, function (row) {
+                            row.all_dates = '';
+                            angular.forEach(row.items, function (saleitem) {
+                                row.all_dates += saleitem.sale_date + " ";
+                            });
+                        });
+                        
                         $scope.displayedCollection = [].concat($scope.rowCollection);
                         $scope.form_filter = null;
                     })
