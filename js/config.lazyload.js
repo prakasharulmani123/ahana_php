@@ -38,6 +38,7 @@ angular.module('app')
                           'bower_components/bower-jvectormap/jquery-jvectormap-us-aea-en.js',
                           'bower_components/bower-jvectormap/jquery-jvectormap-1.2.2.css'],
       footable:       [   'bower_components/footable/dist/footable.all.min.js',
+                          'js/footable-filter.js',
                           'bower_components/footable/css/footable.core.css'],
       fullcalendar:   [   'bower_components/moment/moment.js',
                           'bower_components/fullcalendar/dist/fullcalendar.min.js',

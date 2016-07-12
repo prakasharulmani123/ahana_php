@@ -24,21 +24,16 @@
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="row"> 
-                    <div class="col-sm-3">
+                    <div class="col-sm-9">
                         <button class="btn btn-sm btn-grey" ng-click="loadPurchaseItemList(purchase_payment_type)"> 
                             &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
                         </button>
-                    </div>
-                    <div class="col-sm-3">
-                        <input id="filter" type="text" class="form-control input-sm w-sm inline m-r filter_text" placeholder="Search" ng-model="form_filter"/>
-                    </div>
-                    <div class="col-sm-3">
-                        <div class="input-group">
-                            <input id="filter1" placeholder="Filter by date" prevent-enter type="text" class="form-control filter_text" datepicker-popup="yyyy-MM-dd" ng-model="form_filter1" is-open="opened1" datepicker-options="dateOptions" close-text="Close"/>
-                            <span class="input-group-btn">
-                                <button type="button" class="btn btn-default" ng-click="open($event, 'opened1')"><i class="glyphicon glyphicon-calendar"></i></button>
-                            </span>
-                        </div>
+                        <input id="filter" type="text" placeholder="Search" class="form-control input-sm w-sm inline m-r" ng-model="form_filter"/>
+                        <input prevent-enter id="filter1" type="text" placeholder="Filter by date" class="form-control input-sm w-sm inline filter-date" ng-model="form_filter1" datepicker-popup="yyyy-MM-dd" is-open="opened1" datepicker-options="dateOptions" close-text="Close"/>
+                        <button type="button" class="btn btn-sm btn-default" ng-click="open($event, 'opened1')">
+                            <i class="glyphicon glyphicon-calendar"></i>
+                        </button>
+                        <a href="javascript:void(0)" class="clear-filter" title="clear filter">[clear]</a>
                     </div>
                     <div class="col-sm-3">
                         <button check-access-button ng-click="$state.go('pharmacy.purchaseCreate')" class="btn btn-sm btn-info pull-right">
@@ -47,7 +42,7 @@
                     </div>
                 </div>
             </div>
-            <table id="purchase" data-filter=".filter_text" data-filtering="true" ui-jq="footable" class="table m-b-none footable-loaded footable default">
+            <table ui-jq="footable" data-filter="#filter" data-filter-minimum="1" class="table m-b-none footable default footablefilter">
                 <thead>
                     <tr>
                         <th style="width: 5%">
@@ -150,4 +145,6 @@
             </table>
         </div>
     </div>
+
+
 </div>

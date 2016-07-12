@@ -45,32 +45,6 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                     });
         };
 
-        $scope.$watch('form_filter', function (newValue, oldValue) {
-            if (typeof newValue != 'undefined' && newValue != '' && newValue != null) {
-                $scope.filterTable(newValue, oldValue);
-            }
-        }, true);
-
-        $scope.$watch('form_filter1', function (newValue, oldValue) {
-            if (typeof newValue != 'undefined' && newValue != '' && newValue != null) {
-                newValue = moment(newValue).format('YYYY-MM-DD');
-                $scope.filterTable(newValue, oldValue);
-            }
-        }, true);
-
-        $scope.filterTable = function (newValue, oldValue) {
-            var footableFilter = $('#purchase').data('footable-filter');
-            if (typeof newValue != 'undefined' && newValue != '' && newValue != null) {
-                footableFilter.clearFilter();
-                footableFilter.filter(newValue);
-            }
-
-            if (newValue == '') {
-                footableFilter.clearFilter();
-//                $scope.loadPurchaseItemList($scope.purchase_payment_type);
-            }
-        }
-
         //For Form
         $scope.initForm = function () {
             $scope.loadbar('show');

@@ -9,7 +9,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         $scope.ctrl.expandAll = function (expanded) {
             $scope.$broadcast('onExpandAll', {expanded: expanded});
         };
-        
+
         //Create page height
         $scope.css = {'style': ''};
 
@@ -47,32 +47,6 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                         $scope.errorData = "An Error has occured while loading saleList!";
                     });
         };
-
-        $scope.$watch('form_filter', function (newValue, oldValue) {
-            if (newValue != '')
-                $scope.filterTable(newValue, oldValue);
-        }, true);
-
-        $scope.$watch('form_filter1', function (newValue, oldValue) {
-            if (newValue != '') {
-                newValue = moment(newValue).format('YYYY-MM-DD');
-                $scope.filterTable(newValue, oldValue);
-            }
-
-        }, true);
-
-        $scope.filterTable = function (newValue, oldValue) {
-            var footableFilter = $('#sale').data('footable-filter');
-            if (typeof newValue != 'undefined' && newValue != '' && newValue != null) {
-                footableFilter.clearFilter();
-                footableFilter.filter(newValue);
-            }
-
-            if (newValue == '') {
-                footableFilter.clearFilter();
-//                $scope.loadPurchaseItemList($scope.purchase_payment_type);
-            }
-        }
 
         //For Form
         $scope.initForm = function () {
@@ -203,7 +177,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                     });
                 }
             }
-            
+
             if ($scope.saleItems.length > 6) {
                 $scope.css = {
                     'style': 'height:360px; overflow-y: auto; overflow-x: hidden;',
@@ -230,7 +204,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             $timeout(function () {
                 $scope.setFocus('full_name', $scope.saleItems.length - 1);
             });
-            
+
             if ($scope.saleItems.length <= 6) {
                 $scope.css = {
                     'style': '',
@@ -272,7 +246,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
         //Get the products
         var changeTimer = false;
-        
+
         $scope.getProduct = function (saleitem) {
 //            var name = saleitem.full_name.$viewValue;
 //            if (changeTimer !== false)
