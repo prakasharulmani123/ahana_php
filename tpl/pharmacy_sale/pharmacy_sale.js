@@ -62,7 +62,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             $rootScope.commonService.GetPatientList('', '1', false, function (response) {
                 $scope.patients = [];
                 angular.forEach(response.patientlist, function (list) {
-                    $scope.patients.push({'Patient': list});
+                    $scope.patients.push(list);
                 });
             });
 //            $scope.data.patient_name = undefined;
@@ -107,11 +107,11 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         };
 
         $scope.formatPatient = function ($item, $model, $label) {
-            id = $item.Patient.patient_id;
+            id = $item.patient_id;
             $scope.data.patient_id = id;
-            $scope.data.patient_guid = $item.Patient.patient_guid;
-            $scope.data.patient_name = $item.Patient.patient_firstname;
-            $scope.data.consultant_id = $item.Patient.last_consultant_id;
+            $scope.data.patient_guid = $item.patient_guid;
+            $scope.data.patient_name = $item.patient_firstname;
+            $scope.data.consultant_id = $item.last_consultant_id;
 
             $scope.getEncounter(id, 'add', '');
             //Hided the below one 

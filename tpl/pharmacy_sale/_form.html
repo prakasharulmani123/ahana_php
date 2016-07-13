@@ -19,7 +19,7 @@
                                                type="text"
                                                class="form-control"
                                                ng-model="data.patient_name"
-                                               typeahead="patient.Patient as patient.Patient.name_with_casesheet for patient in patients | filter:$viewValue | limitTo: 10"
+                                               typeahead="patient as patient.name_with_casesheet for patient in patients | filter:{name_with_casesheet:$viewValue} | limitTo: 10"
                                                typeahead-on-select="formatPatient($item, $model, $label)"
                                                typeahead-wait-ms="400"
                                                />
@@ -135,7 +135,7 @@
                                             <!--                                        <span editable-select="saleitem.full_name" e-form="tableform" onbeforesave="checkInput($data, key, $index)" e-ng-options="product as product.full_name for product in products | filter:$viewValue | limitTo:8" e-ng-change="updateProductRow($data, $model, $label, key)" data-e-id="full_name" e-name='full_name'>
                                                                                         {{ showBatch(saleitem) }}
                                                                                     </span>-->
-                                            <span editable-text="saleitem.full_name" e-class="fullname" e-name="full_name" e-form="tableform" onbeforesave="checkInput($data, key, $index)" e-typeahead="product as product.full_name for product in products | filter:$viewValue | limitTo:8" e-typeahead-editable="false" e-typeahead-on-select="updateProductRow($item, $model, $label, key)" e-ng-keyup="getProduct(tableform)" e-ng-keydown="getProduct(tableform)" e-autocomplete="off" data-e-id="full_name" e-name='full_name'>
+                                            <span editable-text="saleitem.full_name" e-class="fullname" e-name="full_name" e-form="tableform" onbeforesave="checkInput($data, key, $index)" e-typeahead="product as product.full_name for product in products | filter:{full_name:$viewValue} | limitTo:8" e-typeahead-editable="false" e-typeahead-on-select="updateProductRow($item, $model, $label, key)" e-ng-keyup="getProduct(tableform)" e-ng-keydown="getProduct(tableform)" e-autocomplete="off" data-e-id="full_name" e-name='full_name'>
                                                 {{ saleitem.full_name || 'empty' }}
                                             </span>
                                         </div>

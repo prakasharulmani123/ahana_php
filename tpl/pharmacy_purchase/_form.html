@@ -92,7 +92,7 @@
                                 <tr ng-repeat="(key, purchaseitem) in purchaseitems">
                                     <td>
                                         <div id="i_full_name_{{key}}">
-                                            <span editable-text="purchaseitem.full_name" e-class="fullname" e-form="tableform" onbeforesave="checkInput($data)" e-typeahead="product as product.full_name for product in products | filter:$viewValue | limitTo:8" e-typeahead-editable="false" e-typeahead-on-select="updateProductRow($item, $model, $label, key)" e-ng-keyup="getProduct(tableform)" e-ng-keydown="getProduct(tableform)" e-autocomplete="off" data-e-id="full_name" e-name='full_name'>
+                                            <span editable-text="purchaseitem.full_name" e-class="fullname" e-form="tableform" onbeforesave="checkInput($data)" e-typeahead="product as product.full_name for product in products | filter:{full_name: $viewValue} | limitTo:8" e-typeahead-editable="false" e-typeahead-on-select="updateProductRow($item, $model, $label, key)" e-ng-keyup="getProduct(tableform)" e-ng-keydown="getProduct(tableform)" e-autocomplete="off" data-e-id="full_name" e-name='full_name'>
                                                 {{ purchaseitem.full_name || 'empty' }}
                                             </span>
                                         </div>
