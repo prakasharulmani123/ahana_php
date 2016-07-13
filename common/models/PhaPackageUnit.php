@@ -43,7 +43,7 @@ class PhaPackageUnit extends RActiveRecord
             [['created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['package_name'], 'string', 'max' => 255],
             [['package_unit'], 'string', 'max' => 100],
-            [['tenant_id', 'package_name', 'package_unit', 'deleted_at'], 'unique', 'targetAttribute' => ['tenant_id', 'package_name', 'package_unit', 'deleted_at'], 'message' => 'The combination of Tenant ID, Package Name, Package Unit and Deleted At has already been taken.']
+            [['package_name'], 'unique', 'targetAttribute' => ['tenant_id', 'package_name', 'package_unit', 'deleted_at'], 'message' => 'The combination has already been taken.']
         ];
     }
 

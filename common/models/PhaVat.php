@@ -39,7 +39,7 @@ class PhaVat extends RActiveRecord {
             [['vat'], 'number'],
             [['status'], 'string'],
             [['created_at', 'modified_at', 'deleted_at'], 'safe'],
-            [['tenant_id', 'vat', 'deleted_at'], 'unique', 'targetAttribute' => ['tenant_id', 'vat', 'deleted_at'], 'message' => 'The combination of Tenant ID, Vat and Deleted At has already been taken.']
+            [['vat'], 'unique', 'targetAttribute' => ['tenant_id', 'vat', 'deleted_at'], 'message' => 'The combination has already been taken.']
         ];
     }
 
