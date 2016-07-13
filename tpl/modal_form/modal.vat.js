@@ -21,12 +21,16 @@ app.controller('VatModalInstanceCtrl', ['scope', '$scope', '$modalInstance', '$r
                         $scope.data = {};
                         $timeout(function () {
                             scope.vats.push(response);
-                            
-                            if(column == 'purchase')
+
+                            if (column == 'purchase')
                                 scope.data.purchase_vat_id = response.vat_id;
-                            else if(column == 'sale')
+                            else if (column == 'sale')
                                 scope.data.sales_vat_id = response.vat_id;
-                            
+                            else if (column == 'both') {
+                                scope.data.purchase_vat_id = response.vat_id;
+                                scope.data.sales_vat_id = response.vat_id;
+                            }
+
                             $modalInstance.dismiss('cancel');
                         }, 1000)
 

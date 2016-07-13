@@ -109,13 +109,13 @@
                             </div>
                         </div>
 
-<!--                        <div class="form-group">
-                            <label class="col-sm-5 control-label">Purchase Price * </label>
-                            <div class="col-sm-7">
-                                <input type="text" ng-model="data.product_price" maxlength="50" class="form-control" number-mask="" >
-                            </div>
-                        </div>
-                        <div class="line line-dashed b-b line-lg "></div>-->
+                        <!--                        <div class="form-group">
+                                                    <label class="col-sm-5 control-label">Purchase Price * </label>
+                                                    <div class="col-sm-7">
+                                                        <input type="text" ng-model="data.product_price" maxlength="50" class="form-control" number-mask="" >
+                                                    </div>
+                                                </div>
+                                                <div class="line line-dashed b-b line-lg "></div>-->
                     </div>
                     <div class="col-sm-6">
 
@@ -133,14 +133,14 @@
                             </div>
                         </div>
                         <div class="line line-dashed b-b line-lg "></div>
-                        
-                         <div class="form-group">
+
+                        <div class="form-group">
                             <label class="col-sm-5 control-label">Re-Order Level (Max) * </label>
                             <div class="col-sm-7">
                                 <input type="text" name="product_reorder_max" ng-model="data.product_reorder_max" maxlength="50" class="form-control" number-mask="" >
                             </div>
                         </div>
-                        
+
                         <div class="line line-dashed b-b line-lg "></div>   
                         <div class="form-group">
                             <label class="col-lg-5 control-label">Supplier Name1 </label>
@@ -151,7 +151,7 @@
                             </div>
                         </div>                         
                         <div class="line line-dashed b-b line-lg "></div>
-                        
+
                         <div class="form-group">
                             <label class="col-lg-5 control-label">Supplier Name2 </label>
                             <div class="col-lg-6">
@@ -161,7 +161,7 @@
                             </div>
                         </div>                         
                         <div class="line line-dashed b-b line-lg "></div>
-                        
+
                         <div class="form-group">
                             <label class="col-lg-5 control-label">Supplier Name3 </label>
                             <div class="col-lg-6">
@@ -172,7 +172,7 @@
                         </div>                         
                         <div class="line line-dashed b-b line-lg "></div>
 
-                     
+
                     </div>
                 </div>
             </div>
@@ -183,7 +183,15 @@
 <div class="row">
     <div class="col-sm-6">
         <div class="panel panel-default">
-            <div class="panel-heading font-bold">Vat Details:</div>
+            <div class="panel-heading font-bold">
+                Vat Details:
+                <script type="text/ng-template" id="VatModalContent.html">
+                    <div ng-include="'tpl/modal_form/modal.vat.html'"></div>
+                </script>
+                <button tooltip="Add Vat Details" type="button" class="btn btn-sm btn-primary" ng-click="open('md', 'VatModalInstanceCtrl', 'VatModalContent.html', 'both')">
+                    <i class="fa fa-plus text ng-scope"></i>
+                </button>
+            </div>
             <div class="panel-body">
                 <div class="form-group">
                     <label class="col-sm-5 control-label">Purchase Vat * </label>
@@ -192,17 +200,9 @@
                             <option value="">Select Purchase Vat</option>
                         </select>
                     </div>
-                    <div class="col-sm-0">
-                        <script type="text/ng-template" id="VatModalContent.html">
-                            <div ng-include="'tpl/modal_form/modal.vat.html'"></div>
-                        </script>
-                        <button type="button" class="btn btn-primary" ng-click="open('lg', 'VatModalInstanceCtrl', 'VatModalContent.html', 'purchase')">
-                            <i class="fa fa-plus text ng-scope"></i>
-                        </button>
-                    </div>
                 </div>
-
                 <div class="line line-dashed b-b line-lg "></div>
+                
                 <div class="form-group">
                     <label class="col-sm-5 control-label">Sale Vat * </label>
                     <div class="col-sm-6">
@@ -210,19 +210,22 @@
                             <option value="">Select Sale Vat</option>
                         </select>
                     </div>
-                    <div class="col-sm-0">
-                        <button type="button" class="btn btn-primary" ng-click="open('lg', 'VatModalInstanceCtrl', 'VatModalContent.html', 'sale')">
-                            <i class="fa fa-plus text ng-scope"></i>
-                        </button>
-                    </div>
                 </div>
-                <div class="line line-dashed b-b line-lg "></div>
             </div>
         </div>
     </div>
+
     <div class="col-sm-6">
         <div class="panel panel-default">
-            <div class="panel-heading font-bold">Packing Details:</div>
+            <div class="panel-heading font-bold">
+                Packing Details:
+                <script type="text/ng-template" id="PackageModalContent.html">
+                    <div ng-include="'tpl/modal_form/modal.package.html'"></div>
+                </script>
+                <button tooltip="Add Packing Details" type="button" class="btn btn-sm btn-primary" ng-click="open('md', 'PackageModalInstanceCtrl', 'PackageModalContent.html', 'purchase')">
+                    <i class="fa fa-plus text ng-scope"></i>
+                </button>
+            </div>
             <div class="panel-body">
                 <div class="form-group">
                     <label class="col-sm-5 control-label">Purchase Unit </label>
@@ -230,14 +233,6 @@
                         <select class="form-control" ng-model="data.purchase_package_id" ng-options="purchase_unit.package_id as purchase_unit.package_name for purchase_unit in packingUnits | orderBy: package_name" ng-change="setPackageUnit()">
                             <option value="">Select Purchase Unit</option>
                         </select>
-                    </div>
-                    <div class="col-sm-0">
-                        <script type="text/ng-template" id="PackageModalContent.html">
-                            <div ng-include="'tpl/modal_form/modal.package.html'"></div>
-                        </script>
-                        <button type="button" class="btn btn-primary" ng-click="open('lg', 'PackageModalInstanceCtrl', 'PackageModalContent.html', 'purchase')">
-                            <i class="fa fa-plus text ng-scope"></i>
-                        </button>
                     </div>
                 </div>
                 <div class="line line-dashed b-b line-lg "></div>
@@ -248,13 +243,7 @@
                             <option value="">Select Sale Unit</option>
                         </select>
                     </div>
-                    <div class="col-sm-0">
-                        <button type="button" class="btn btn-primary" ng-click="open('lg', 'PackageModalInstanceCtrl', 'PackageModalContent.html', 'sale')">
-                            <i class="fa fa-plus text ng-scope"></i>
-                        </button>
-                    </div>
                 </div>
-                <div class="line line-dashed b-b line-lg "></div>
             </div>
         </div>
     </div>
