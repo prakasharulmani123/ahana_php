@@ -25,6 +25,7 @@
                             <i ng-if="allExpanded" class="fa fa-minus text"></i>
                         </button>
                     </th>
+                    <th>&nbsp;</th>
                     <th>Prescription Date</th>
                     <th>Consultant Name</th>
                     <th>Next Visit</th>
@@ -32,17 +33,23 @@
                 </tr>
             </thead>
             <tbody ng-hide="isLoading">
-                <tr ng-repeat-start="(key, row) in displayedCollection">
+                <tr ng-repeat-start="(pres_key, value) in displayedCollection">
                     <td style="width: 5%">
                         <button ng-click="expanded = !expanded" expand class="btn btn-sm btn-default">
                             <i ng-if="!expanded" class="fa fa-plus text"></i>
                             <i ng-if="expanded" class="fa fa-minus text"></i>
                         </button>
                     </td>
-                    <td>{{row.pres_date}}</td>
-                    <td>{{row.consultant_name}}</td>
-                    <td>{{row.next_visit}}</td>
-                    <td>{{row.number_of_days}}</td>
+                    <td>
+                        <label class="i-checks"> 
+                            <input ng-model="row.selected" ng-true-value="'1'" ng-false-value="'0'" ng-checked="value.selected == '1'"  type="checkbox" name="checkall" class="prevprescheckbox prevprescheckbox_{{pres_key}}" ng-click="updateCheckbox(row, pres_key)"> 
+                            <i></i> 
+                        </label>&nbsp; &nbsp;
+                    </td>
+                    <td>{{value.pres_date}}</td>
+                    <td>{{value.consultant_name}}</td>
+                    <td>{{value.next_visit}}</td>
+                    <td>{{value.number_of_days}}</td>
                 </tr>
                 <tr ng-repeat-end ng-show="expanded">
                     <td></td>
@@ -50,6 +57,7 @@
                         <table class="table table-condensed table-bordered">
                             <thead>
                                 <tr>
+                                    <th>&nbsp;</th>
                                     <th>Product Name</th>
                                     <th>Generic Name</th>
                                     <th>Drug Name</th>
@@ -59,13 +67,19 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr ng-repeat="(gKey, prescriptionitem) in row.items | orderBy: prescriptionitem">
-                                    <td>{{ prescriptionitem.product_name}}</td>
-                                    <td>{{ prescriptionitem.generic_name}}</td>
-                                    <td>{{ prescriptionitem.drug_name}}</td>
-                                    <td>{{ prescriptionitem.route_name}}</td>
-                                    <td>{{ prescriptionitem.frequency_name}}</td>
-                                    <td>{{ prescriptionitem.number_of_days}}</td>
+                                <tr ng-repeat="(gKey, row) in value.items | orderBy: prescriptionitem" class="tr_prevprescheckbox tr_prevprescheckbox_{{pres_key}}">
+                                    <td>
+                                        <label class="i-checks"> 
+                                            <input ng-model="row.selected" ng-true-value="'1'" ng-false-value="'0'" ng-checked="row.selected == '1'" class="prevprescheckbox prevprescheckbox_{{pres_key}}" id="prevpres_{{pres_key}}_{{gKey}}" type="checkbox" name="status" ng-click="moreOptions(pres_key, gKey, row)"> 
+                                            <i></i> 
+                                        </label>
+                                    </td>
+                                    <td>{{ row.product_name}}</td>
+                                    <td>{{ row.generic_name}}</td>
+                                    <td>{{ row.drug_name}}</td>
+                                    <td>{{ row.route_name}}</td>
+                                    <td>{{ row.frequency_name}}</td>
+                                    <td>{{ row.number_of_days}}</td>
                                 </tr>
                             </tbody>
                         </table>                            

@@ -461,8 +461,10 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.pres_status = 'current';
         $scope.prescriptionStauts = function (status) {
             $scope.pres_status = status;
-            if (status == 'prev')
-                $scope.loadPrevPrescriptionsList($scope.enc.selected.encounter_id);
+            if (status == 'prev'){
+                if(typeof $scope.enc.selected != 'undefined')
+                    $scope.loadPrevPrescriptionsList($scope.enc.selected.encounter_id);
+            }
         }
 
         $scope.loadPrevPrescriptionsList = function (encounter_id) {
@@ -477,6 +479,13 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     .success(function (prescriptionList) {
                         $scope.isLoading = false;
                         $scope.rowCollection = prescriptionList.prescriptions;
+
+                        angular.forEach($scope.rowCollection, function (row) {
+                            angular.forEach(row.items, function (item) {
+                                item.selected = '0';
+                            });
+                            row.selected = '0';
+                        });
                         $scope.displayedCollection = [].concat($scope.rowCollection);
                     })
                     .error(function () {
@@ -553,5 +562,79 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             fontSize: 18,
             height: 70,
             width: 1.2,
+        }
+
+        $scope.presSelected = {items: []};
+
+        $scope.updateCheckbox = function (parent, parent_key) {
+            angular.forEach($scope.displayedCollection, function (value, pres_key) {
+                value.selected = '0';
+
+                if (parent_key == pres_key)
+                    value.selected = parent.selected;
+
+                angular.forEach(value.items, function (row, key) {
+                    row.selected = '0';
+
+                    if (parent_key == pres_key) 
+                        row.selected = parent.selected;
+                });
+            });
+            
+            $timeout(function () {
+                angular.forEach($scope.displayedCollection, function (value, pres_key) {
+                    angular.forEach(value.items, function (row, key) {
+                        $scope.prepareMoreOptions(pres_key, key, row);
+                    });
+                });
+            }, 800);
+        }
+        
+        $scope.moreOptions = function (pres_key, key, row) {
+            angular.forEach($scope.displayedCollection, function (value, parent_key) {
+                tot_selected = 0;
+                
+                if (parent_key != pres_key)
+                    value.selected = '0';
+                
+                if (parent_key == pres_key)
+                    value.selected = '1';
+
+                angular.forEach(value.items, function (row, key) {
+                    if (parent_key != pres_key) 
+                        row.selected = '0';
+                    
+                    if(row.selected == '1')
+                        tot_selected++;
+                });
+                
+                if(tot_selected == 0)
+                    value.selected = '0';
+            });
+            $scope.prepareMoreOptions(pres_key, key, row);
+        }
+        
+        $scope.prepareMoreOptions = function (pres_key, key, row) {
+            product_exists = $filter('filter')($scope.presSelected.items, {product_id: row.product_id});
+            if ($('#prevpres_' + pres_key + '_' + key).is(':checked')) {
+                $('#prevpres_' + pres_key + '_' + key).closest('tr').addClass('selected_row');
+
+                $('.tr_prevprescheckbox').not('.tr_prevprescheckbox_' + pres_key).each(function () {
+                    $(this).removeClass('selected_row');
+                });
+
+                if (product_exists.length == 0) {
+                    $scope.presSelected.items.push({
+                        product_id: row.product_id,
+                        product_details: row
+                    });
+                }
+            } else {
+                $('#prevpres_' + pres_key + '_' + key).closest('tr').removeClass('selected_row');
+                if (product_exists.length > 0) {
+                    $scope.presSelected.items.splice($scope.presSelected.items.indexOf(product_exists[0]), 1);
+                }
+            }
+            console.log($scope.presSelected);
         }
     }]);
