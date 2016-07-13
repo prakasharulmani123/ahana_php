@@ -44,14 +44,16 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                             $scope.rowCollection = response.encounters;
                             
                             angular.forEach($scope.rowCollection, function (row) {
+                                row.last_row_sts = '';
                                 angular.forEach(row.all, function (all) {
                                     var today_date = moment().format('YYYY-MM-DD');
                                     var encounter_date = moment(all.date).format('YYYY-MM-DD');
                                     var result = (moment(encounter_date).isAfter(today_date));
                                     all.is_future = result;
+                                    row.last_row_sts = all.row_sts;
                                 });
                             });
-                            
+
                             if(response.active_encounter){
                                 $scope.class1 = 'col-sm-9';
                                 $scope.class2 = '';

@@ -106,7 +106,7 @@
                         </tr>
                         <tr ng-repeat-end ng-show="expanded" ng-repeat="(key, item) in encounter.all">
                             <td>
-                                <label ng-show="(item.status == 1 || item.type == 'Seen') && encounter.row_sts != 'CD'" class="i-checks m-b-none"><input id="enc_{{item.encounter_id}}{{key}}" class="enc_chk enc_chk_{{item.encounter_id}}" type="checkbox" name="b[]" ng-click="moreOptions(key, item.encounter_id, item.encounter_type, item.row_sts, item.id, item.status, item.is_swap)"><i></i></label>
+                                <label ng-show="(item.status == 1 || item.type == 'Seen') && encounter.last_row_sts != 'CD'" class="i-checks m-b-none"><input id="enc_{{item.encounter_id}}{{key}}" class="enc_chk enc_chk_{{item.encounter_id}}" type="checkbox" name="b[]" ng-click="moreOptions(key, item.encounter_id, item.encounter_type, item.row_sts, item.id, item.status, item.is_swap)"><i></i></label>
                             </td>
                             <td> {{item.encounter_id}} </td>
                             <td> 
