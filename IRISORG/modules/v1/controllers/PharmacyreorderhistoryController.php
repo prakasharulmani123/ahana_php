@@ -147,7 +147,11 @@ class PharmacyreorderhistoryController extends ActiveController {
                 ->joinWith('phaProductBatchRate')
                 ->andWhere(['pha_product.tenant_id' => $tenant_id])
                 ->addSelect([
-                    "CONCAT(pha_product.product_name, ' | ', pha_product.product_unit_count, ' | ', pha_product.product_unit) as product_name",
+                    "CONCAT(
+                        IF(pha_product.product_name IS NULL OR pha_product.product_name = '', ' ', pha_product.product_name),
+                        IF(pha_product.product_unit_count IS NULL OR pha_product.product_unit_count = '', ' ', CONCAT(' | ', pha_product.product_unit_count)),
+                        IF(pha_product.product_unit IS NULL OR pha_product.product_unit = '', ' ', CONCAT(' | ', pha_product.product_unit))
+                    ) as product_name",
                     'SUM(available_qty) as available_qty',
                     'pha_product.product_id as product_id',
                     'pha_product.product_code as product_code',

@@ -63,7 +63,7 @@ class PhaProduct extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['product_name', 'product_unit', 'product_unit_count', 'product_description_id', 'product_reorder_min', 'product_reorder_max', 'brand_id', 'division_id', 'generic_id', 'purchase_vat_id', 'sales_vat_id'], 'required'],
+            [['product_name', 'product_description_id', 'product_reorder_min', 'product_reorder_max', 'brand_id', 'division_id', 'generic_id', 'purchase_vat_id', 'sales_vat_id'], 'required'],
             [['tenant_id', 'product_description_id', 'product_reorder_min', 'product_reorder_max', 'brand_id', 'division_id', 'generic_id', 'drug_class_id', 'purchase_vat_id', 'purchase_package_id', 'sales_vat_id', 'sales_package_id', 'created_by', 'modified_by'], 'integer'],
             [['product_price'], 'number'],
             [['status'], 'string'],
@@ -227,7 +227,16 @@ class PhaProduct extends RActiveRecord {
     }
 
     public function getFullName() {
-        return $this->product_name . ' | ' . $this->product_unit_count . ' | ' . $this->product_unit;
+        $fullname = '';
+
+        if ($this->product_name)
+            $fullname .= $this->product_name;
+        if ($this->product_unit_count)
+            $fullname .= ' | ' . $this->product_unit_count;
+        if ($this->product_unit)
+            $fullname .= ' | ' . $this->product_unit;
+
+        return $fullname;
     }
 
     public static function find() {
@@ -247,7 +256,16 @@ class PhaProduct extends RActiveRecord {
     public function fields() {
         $extend = [
             'full_name' => function ($model) {
-                return $model->product_name . ' | ' . $model->product_unit_count . ' | ' . $model->product_unit;
+                $fullname = '';
+
+                if ($model->product_name)
+                    $fullname .= $model->product_name;
+                if ($model->product_unit_count)
+                    $fullname .= ' | ' . $model->product_unit_count;
+                if ($model->product_unit)
+                    $fullname .= ' | ' . $model->product_unit;
+
+                return $fullname;
             },
             'purchaseVat' => function ($model) {
                 return (isset($model->purchaseVat) ? $model->purchaseVat : '-');

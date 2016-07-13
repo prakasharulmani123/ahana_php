@@ -94,7 +94,7 @@ class PharmacyproductController extends ActiveController {
     public function actionGetgenericlistbydrugclass() {
         $get = Yii::$app->getRequest()->get();
         $id = $get['drug_class_id'];
-        
+
         $generics = PhaDrugGeneric::find()->tenant()->andWhere(['drug_class_id' => $id])->active()->all();
         $products = PhaProduct::find()->tenant()->andWhere(['drug_class_id' => $id])->active()->all();
 
@@ -145,7 +145,11 @@ class PharmacyproductController extends ActiveController {
             }
 
             if ($post['search_by'] == 'pha_product.product_name') {
-                $having_column = "CONCAT(pha_product.product_name, ' | ', pha_product.product_unit_count, ' | ', pha_product.product_unit) AS search_column";
+                $having_column = "CONCAT(
+                    IF(pha_product.product_name IS NULL OR pha_product.product_name = '', ' ', pha_product.product_name),
+                    IF(pha_product.product_unit IS NULL OR pha_product.product_unit = '', ' ', CONCAT(' | ', pha_product.product_unit)),
+                    IF(pha_product.product_unit_count IS NULL OR pha_product.product_unit_count = '', ' ', CONCAT(' | ', pha_product.product_unit_count))
+                ) AS search_column";
             } else {
                 $having_column = $post['search_by'] . ' AS search_column';
             }
@@ -226,7 +230,7 @@ class PharmacyproductController extends ActiveController {
             $limit = 10;
 
             $text_search = str_replace(' ', '* ', $text);
-            
+
             //Get Products
             $command = $connection->createCommand("
                 SELECT a.product_id, a.product_name, b.generic_id, b.generic_name, c.drug_class_id, c.drug_name, 
@@ -245,7 +249,7 @@ class PharmacyproductController extends ActiveController {
                 LIMIT 0,:limit", [':search_text' => $text_search . '*', ':limit' => $limit, ':tenant_id' => $tenant_id]
             );
             $products = $command->queryAll();
-            
+
             //Get Routes
             $command = $connection->createCommand("
                 SELECT route_id, route_name as route
@@ -262,7 +266,7 @@ class PharmacyproductController extends ActiveController {
             }
 
             $strings = $this->_getFrquenceyMatchStrings($text);
-            
+
             if (!empty($strings)) {
                 //Get Frequencies
                 $query = "SELECT freq_id, freq_name as frequency 

@@ -46,7 +46,11 @@ class PharmacyreportController extends ActiveController {
             $purchases->andWhere("pha_purchase.invoice_date between '{$post['from']}' AND '{$post['to']}'");
         }
 
-        $purchases = $purchases->addSelect(["CONCAT(pha_product.product_name, ' | ', pha_product.product_unit_count, ' | ', pha_product.product_unit) as product_name", 'SUM(total_amount) as total_purhcase_amount'])
+        $purchases = $purchases->addSelect(["CONCAT(
+            IF(pha_product.product_name IS NULL OR pha_product.product_name = '', ' ', pha_product.product_name),
+            IF(pha_product.product_unit_count IS NULL OR pha_product.product_unit_count = '', ' ', CONCAT(' | ', pha_product.product_unit_count)),
+            IF(pha_product.product_unit IS NULL OR pha_product.product_unit = '', ' ', CONCAT(' | ', pha_product.product_unit))
+        ) as product_name", 'SUM(total_amount) as total_purhcase_amount'])
                 ->groupBy(['pha_product.product_id'])
                 ->all();
 
@@ -72,7 +76,11 @@ class PharmacyreportController extends ActiveController {
                 ->andWhere(['pha_product.tenant_id' => $tenant_id]);
 
         $sales->addSelect([
-            "CONCAT(pha_product.product_name, ' | ', pha_product.product_unit_count, ' | ', pha_product.product_unit) as product_name",
+            "CONCAT(
+                IF(pha_product.product_name IS NULL OR pha_product.product_name = '', ' ', pha_product.product_name),
+                IF(pha_product.product_unit_count IS NULL OR pha_product.product_unit_count = '', ' ', CONCAT(' | ', pha_product.product_unit_count)),
+                IF(pha_product.product_unit IS NULL OR pha_product.product_unit = '', ' ', CONCAT(' | ', pha_product.product_unit))
+            ) as product_name",
             'SUM(item_amount) as total_sale_item_amount'
         ]);
         $sales->addSelect(["CONCAT(co_user.title_code, '.', co_user.name) as consultant_name"]);
@@ -106,7 +114,11 @@ class PharmacyreportController extends ActiveController {
                 ->joinWith('phaProductBatchRate')
                 ->andWhere(['pha_product.tenant_id' => $tenant_id])
                 ->addSelect([
-                    "CONCAT(pha_product.product_name, ' | ', pha_product.product_unit_count, ' | ', pha_product.product_unit) as product_name",
+                    "CONCAT(
+                        IF(pha_product.product_name IS NULL OR pha_product.product_name = '', ' ', pha_product.product_name),
+                        IF(pha_product.product_unit_count IS NULL OR pha_product.product_unit_count = '', ' ', CONCAT(' | ', pha_product.product_unit_count)),
+                        IF(pha_product.product_unit IS NULL OR pha_product.product_unit = '', ' ', CONCAT(' | ', pha_product.product_unit))
+                    ) as product_name",
                     'SUM(available_qty) as available_qty',
                     'pha_product.product_code as product_code',
                     'pha_product_batch_rate.mrp as mrp'])
@@ -125,4 +137,5 @@ class PharmacyreportController extends ActiveController {
 
         return ['report' => $reports];
     }
+
 }
