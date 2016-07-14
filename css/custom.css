@@ -299,3 +299,17 @@ out-patient-table .table > thead > tr > th label.i-checks{
 .custom-warning{
     color: #cc8324 !important;
 }
+
+.form-horizontal .form-inline .form-group {
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+}
+
+.form-horizontal .form-inline .form-group {
+  float: none;
+  width: auto;
+}
+
+.form-horizontal .form-group .col-sm-9 {
+  padding-right: 8px;
+}

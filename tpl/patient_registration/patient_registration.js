@@ -62,6 +62,10 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
             $rootScope.commonService.GetTitleCodes(function (response) {
                 $scope.titleCodes = response;
             });
+            
+            $rootScope.commonService.GetMaritalStatus(function (response) {
+                $scope.maritalStatus = response;
+            });
 
             $rootScope.commonService.GetBloodList(function (response) {
                 $scope.bloods = response;
@@ -105,6 +109,53 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
                     $scope.availableCities2.push(obj);
                 }
             });
+        }
+        
+        $scope.updateState = function () {
+            $scope.availableStates = [];
+            $scope.availableCities = [];
+
+            _that = this;
+            angular.forEach($scope.states, function (value) {
+                if (_that.data.PatPatientAddress != null) {
+                    if (value.countryId == _that.data.PatPatientAddress.addr_perm_country_id) {
+                        var obj = {
+                            value: value.value,
+                            label: value.label
+                        };
+                        $scope.availableStates.push(obj);
+                    }
+                }
+            });
+        }
+
+        $scope.updateCity = function () {
+            $scope.availableCities = [];
+
+            _that = this;
+            angular.forEach($scope.cities, function (value) {
+                if (_that.data.PatPatientAddress != null) {
+                    if (value.stateId == _that.data.PatPatientAddress.addr_perm_state_id) {
+                        var obj = {
+                            value: value.value,
+                            label: value.label
+                        };
+                        $scope.availableCities.push(obj);
+                    }
+                }
+            });
+        }
+        
+        $scope.CopyAddress = function () {
+            if ($scope.data.is_permanent) {
+                $scope.data.PatPatientAddress.addr_perm_address = $scope.data.PatPatientAddress.addr_current_address;
+                $scope.data.PatPatientAddress.addr_perm_country_id = $scope.data.PatPatientAddress.addr_country_id;
+                $scope.data.PatPatientAddress.addr_perm_state_id = $scope.data.PatPatientAddress.addr_state_id;
+                $scope.data.PatPatientAddress.addr_perm_city_id = $scope.data.PatPatientAddress.addr_city_id;
+                $scope.data.PatPatientAddress.addr_perm_zip = $scope.data.PatPatientAddress.addr_zip;
+                $scope.updateState();
+                $scope.updateCity();
+            }
         }
 
         $scope.open = function ($event) {
