@@ -203,6 +203,41 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             }
         }
 
+        $scope.addToCurrentPrescription = function () {
+            if ($scope.previousPresSelected > 0) {
+                angular.forEach($scope.previousPresSelectedItems, function (value, key) {
+                    var result = $filter('filter')($scope.data.prescriptionItems, {product_id: value.product_id});
+
+                    if (result.length == 0) {
+                        items = {
+                            'product_id': value.product_id,
+                            'product_name': value.product.full_name,
+                            'generic_id': value.generic_id,
+                            'generic_name': value.generic_name,
+                            'drug_class_id': value.drug_class_id,
+                            'drug_name': value.drug_name,
+                            'route': value.route_name,
+                            'frequency': value.frequency_name,
+                            'number_of_days': value.number_of_days,
+                            'is_favourite': 0,
+                        };
+                        var fav = $filter('filter')($scope.child.favourites, {product_id: value.product_id});
+
+                        if (fav.length > 0) {
+                            angular.extend(items, {is_favourite: 1});
+                        }
+
+                        $scope.data.prescriptionItems.push(items);
+                    }
+                });
+                
+                $scope.prescriptionStauts('current');
+                $("#current_prescription").focus();
+                toaster.clear();
+                toaster.pop('success', '', 'Medicine has been added to the current prescription');
+            }
+        }
+
         $scope.addGlobalSearch = function (prescription) {
             var result = $filter('filter')($scope.data.prescriptionItems, {product_id: prescription.product_id});
 
@@ -461,11 +496,16 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.pres_status = 'current';
         $scope.prescriptionStauts = function (status) {
             $scope.pres_status = status;
-            if (status == 'prev'){
-                if(typeof $scope.enc.selected != 'undefined')
+            if (status == 'prev') {
+                if (typeof $scope.enc.selected != 'undefined')
                     $scope.loadPrevPrescriptionsList($scope.enc.selected.encounter_id);
             }
         }
+
+        //Checkbox initialize
+        $scope.checkboxes = {'checked': false, items: []};
+        $scope.previousPresSelectedItems = [];
+        $scope.previousPresSelected = 0;
 
         $scope.loadPrevPrescriptionsList = function (encounter_id) {
             $scope.isLoading = true;
@@ -487,6 +527,11 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                             row.selected = '0';
                         });
                         $scope.displayedCollection = [].concat($scope.rowCollection);
+
+                        //Checkbox initialize
+                        $scope.checkboxes = {'checked': false, items: []};
+                        $scope.previousPresSelectedItems = [];
+                        $scope.previousPresSelected = 0;
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading list!";
@@ -576,46 +621,23 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 angular.forEach(value.items, function (row, key) {
                     row.selected = '0';
 
-                    if (parent_key == pres_key) 
+                    if (parent_key == pres_key)
                         row.selected = parent.selected;
                 });
             });
-            
+
             $timeout(function () {
                 angular.forEach($scope.displayedCollection, function (value, pres_key) {
                     angular.forEach(value.items, function (row, key) {
-                        $scope.prepareMoreOptions(pres_key, key, row);
+                        $scope.moreOptions(pres_key, key, row);
                     });
                 });
-            }, 800);
+            }, 1000);
         }
-        
-        $scope.moreOptions = function (pres_key, key, row) {
-            angular.forEach($scope.displayedCollection, function (value, parent_key) {
-                tot_selected = 0;
-                
-                if (parent_key != pres_key)
-                    value.selected = '0';
-                
-                if (parent_key == pres_key)
-                    value.selected = '1';
 
-                angular.forEach(value.items, function (row, key) {
-                    if (parent_key != pres_key) 
-                        row.selected = '0';
-                    
-                    if(row.selected == '1')
-                        tot_selected++;
-                });
-                
-                if(tot_selected == 0)
-                    value.selected = '0';
-            });
-            $scope.prepareMoreOptions(pres_key, key, row);
-        }
-        
-        $scope.prepareMoreOptions = function (pres_key, key, row) {
-            product_exists = $filter('filter')($scope.presSelected.items, {product_id: row.product_id});
+        $scope.moreOptions = function (pres_key, key, row) {
+            product_exists = $filter('filter')($scope.checkboxes.items, {product_id: row.product_id});
+            pres_exists = $filter('filter')($scope.checkboxes.items, {pres_id: row.pres_id});
             if ($('#prevpres_' + pres_key + '_' + key).is(':checked')) {
                 $('#prevpres_' + pres_key + '_' + key).closest('tr').addClass('selected_row');
 
@@ -624,17 +646,84 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 });
 
                 if (product_exists.length == 0) {
-                    $scope.presSelected.items.push({
-                        product_id: row.product_id,
-                        product_details: row
-                    });
+                    if (pres_exists.length == 0) {
+                        $('.prevprescheckbox').not('.prevprescheckbox_' + pres_key).attr('checked', false);
+                        $scope.checkboxes.items = [];
+                        $scope.checkboxes.items.push({
+                            pres_id: row.pres_id,
+                            product_id: row.product_id,
+                            row: row
+                        });
+                    } else {
+                        $scope.checkboxes.items.push({
+                            pres_id: row.pres_id,
+                            product_id: row.product_id,
+                            row: row
+                        });
+                    }
                 }
             } else {
                 $('#prevpres_' + pres_key + '_' + key).closest('tr').removeClass('selected_row');
-                if (product_exists.length > 0) {
-                    $scope.presSelected.items.splice($scope.presSelected.items.indexOf(product_exists[0]), 1);
+                if (product_exists.length > 0 && pres_exists.length > 0) {
+                    $scope.checkboxes.items.splice($scope.checkboxes.items.indexOf(product_exists[0]), 1);
                 }
             }
-            console.log($scope.presSelected);
+            $scope.prepareMoreOptions();
         }
+
+        $scope.prepareMoreOptions = function () {
+            $scope.previousPresSelectedItems = [];
+            angular.forEach($scope.checkboxes.items, function (item) {
+                $scope.previousPresSelectedItems.push(item.row);
+            });
+
+            $scope.previousPresSelected = $scope.previousPresSelectedItems.length;
+
+//            product_exists = $filter('filter')($scope.presSelected.items, {product_id: row.product_id});
+//            if ($('#prevpres_' + pres_key + '_' + key).is(':checked')) {
+//                $('#prevpres_' + pres_key + '_' + key).closest('tr').addClass('selected_row');
+//
+//                $('.tr_prevprescheckbox').not('.tr_prevprescheckbox_' + pres_key).each(function () {
+//                    $(this).removeClass('selected_row');
+//                });
+//
+//                if (product_exists.length == 0) {
+//                    $scope.presSelected.items.push({
+//                        product_id: row.product_id,
+//                        product_details: row
+//                    });
+//                }
+//            } else {
+//                $('#prevpres_' + pres_key + '_' + key).closest('tr').removeClass('selected_row');
+//                if (product_exists.length > 0) {
+//                    $scope.presSelected.items.splice($scope.presSelected.items.indexOf(product_exists[0]), 1);
+//                }
+//            }
+        }
+
+//        $scope.moreOptions = function (pres_key, key, row) {
+//            angular.forEach($scope.displayedCollection, function (value, parent_key) {
+//                tot_selected = 0;
+//
+//                if (parent_key != pres_key)
+//                    value.selected = '0';
+//
+//                if (parent_key == pres_key)
+//                    value.selected = '1';
+//
+//                angular.forEach(value.items, function (row, key) {
+//                    if (parent_key != pres_key)
+//                        row.selected = '0';
+//
+//                    if (row.selected == '1')
+//                        tot_selected++;
+//                });
+//
+//                if (tot_selected == 0)
+//                    value.selected = '0';
+//            });
+//            $scope.prepareMoreOptions(pres_key, key, row);
+//        }
+
+
     }]);

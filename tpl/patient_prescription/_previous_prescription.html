@@ -12,8 +12,14 @@
                             <div ng-bind-html="item.encounter_id | highlight: $select.search"></div>
                         </ui-select-choices>
                     </ui-select>
-                    <br />
                 </div>
+            </div>
+            <div class="col-sm-8">
+                <span ng-show="previousPresSelected > 0">
+                    <button ng-click="addToCurrentPrescription()" class="btn btn-sm btn-primary">
+                        <i class="fa fa-retweet"></i> Add to current prescription
+                    </button>
+                </span>
             </div>
         </div>
         <table st-table="displayedCollection"  st-safe-src="rowCollection" class="table table-bordered table-striped">
