@@ -230,7 +230,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         $scope.data.prescriptionItems.push(items);
                     }
                 });
-                
+
                 $scope.prescriptionStauts('current');
                 $("#current_prescription").focus();
                 toaster.clear();
@@ -645,16 +645,16 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     $(this).removeClass('selected_row');
                 });
 
-                if (product_exists.length == 0) {
-                    if (pres_exists.length == 0) {
-                        $('.prevprescheckbox').not('.prevprescheckbox_' + pres_key).attr('checked', false);
-                        $scope.checkboxes.items = [];
-                        $scope.checkboxes.items.push({
-                            pres_id: row.pres_id,
-                            product_id: row.product_id,
-                            row: row
-                        });
-                    } else {
+                if (pres_exists.length == 0) {
+                    $('.prevprescheckbox').not('.prevprescheckbox_' + pres_key).attr('checked', false);
+                    $scope.checkboxes.items = [];
+                    $scope.checkboxes.items.push({
+                        pres_id: row.pres_id,
+                        product_id: row.product_id,
+                        row: row
+                    });
+                } else {
+                    if (product_exists.length == 0) {
                         $scope.checkboxes.items.push({
                             pres_id: row.pres_id,
                             product_id: row.product_id,
