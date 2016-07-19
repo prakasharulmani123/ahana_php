@@ -83,7 +83,7 @@
                             </td>
                             <td valign="middle"> {{patProcedure.doctors}} </td>
                             <td>
-                                <div ng-if="patProcedure.tenant_id != null" ng-show="enc.selected.status == '1'">
+                                <div ng-if="patProcedure.tenant_id != null" ng-show="enc.selected.status == '1'  && enc.selected.encounter_id == value.data.encounter_id">
                                     <a title="Edit" check-access  ui-sref="patient.edit_procedure({id: $state.params.id, proc_id : patProcedure.proc_id})" class="label bg-info dk">
                                         <i class="fa fa-pencil"></i>
                                     </a>&nbsp;&nbsp;&nbsp;
