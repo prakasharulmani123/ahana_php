@@ -163,14 +163,25 @@ class DoctorscheduleController extends ActiveController {
         $interval_mins = $interval * 60;
 
         while ($start_time <= $end_time) {
+            $disabled = false;
+
+            if (strtotime(date('H:i:s')) > $start_time) {
+                $disabled = true;
+            }
+
             $slot = date("H:i:s", $start_time);
+
             $isAvailable = PatAppointment::checkAvailableSlot($doctor_id, $schedule_date, $slot);
-            if ($isAvailable)
-                $color = 'black';
-            else
+            if ($isAvailable) {
+                if ($disabled)
+                    $color = 'Silver';
+                else
+                    $color = 'black';
+            } else {
                 $color = 'red';
-            
-            $array_of_time[] = array("time" => $slot, 'color' => $color);
+            }
+
+            $array_of_time[] = array("time" => $slot, 'color' => $color, 'disabled' => $disabled);
             $start_time += $interval_mins;
         }
 
