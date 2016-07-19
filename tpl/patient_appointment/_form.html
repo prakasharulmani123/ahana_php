@@ -46,7 +46,7 @@
             <div class="col-sm-3">
                 <select ng-model="data.status_time" class="form-control">
                     <option value="" selected="">Select Time</option>
-                    <option style="color: {{timeslot.color}}" ng-repeat="timeslot in timeslots" value="{{timeslot.time}}">
+                    <option style="color: {{timeslot.color}}" ng-repeat="timeslot in timeslots" value="{{timeslot.time}}" ng-disabled="{{timeslot.disable}}">
                         {{timeslot.time}}
                     </option>
                 </select>

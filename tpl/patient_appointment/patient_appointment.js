@@ -190,7 +190,11 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
         };
 
         $scope.toggleMin = function () {
-            $scope.minDate = $scope.minDate ? null : new Date();
+            if ($scope.checkAccess('patient.backdateappointment')) {
+                $scope.minDate = null;
+            } else {
+                $scope.minDate = new Date();
+            }
         };
         $scope.toggleMin();
 
@@ -215,10 +219,20 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
                     .success(function (response) {
                         $scope.timeslots = [];
                         angular.forEach(response.timerange, function (value) {
-                            $scope.timeslots.push({
-                                time: value.time,
-                                color: value.color,
-                            });
+                            if ($scope.checkAccess('patient.backdateappointment')) {
+                                $scope.timeslots.push({
+                                    time: value.time,
+                                    color: 'black',
+                                    disable: false,
+                                });
+                            } else {
+                                $scope.timeslots.push({
+                                    time: value.time,
+                                    color: value.color,
+                                    disable: value.disabled,
+                                });
+                            }
+
                         });
                     }, function (x) {
                         response = {success: false, message: 'Server Error'};
