@@ -81,19 +81,34 @@ class PatientvitalsController extends ActiveController {
                 ];
             }
             
-            $model = PatVitals::find()
+            $result = [];
+            $data = PatVitals::find()
                     ->tenant()
                     ->active()
+                    ->status()
                     ->andWhere($condition)
-                    ->orderBy(['created_at' => SORT_DESC])
+                    ->groupBy('encounter_id')
+                    ->orderBy(['encounter_id' => SORT_DESC])
                     ->all();
+
+            foreach ($data as $key => $value) {
+                $details = PatVitals::find()
+                        ->tenant()
+                        ->active()
+                        ->status()
+                        ->andWhere($condition)
+                        ->andWhere(['encounter_id' => $value->encounter_id])
+                        ->orderBy(['vital_id' => SORT_DESC])
+                        ->all();
+                $result[$key] = ['data' => $value, 'all' => $details];
+            }
             
             $uservitals = PatVitalsUsers::find()
                     ->tenant()
                     ->andWhere(['user_id' => $user_id, 'seen' => '0', 'patient_id' => $patient->patient_id])
                     ->all();
             
-            return ['success' => true, 'result' => $model, 'uservitals' => $uservitals];
+            return ['success' => true, 'result' => $result, 'uservitals' => $uservitals];
         }
     }
     
