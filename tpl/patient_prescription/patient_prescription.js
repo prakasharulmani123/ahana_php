@@ -36,6 +36,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             if (newValue != '' && typeof newValue != 'undefined') {
                 $scope.loadSideMenu();
                 $scope.$emit('encounter_id', newValue);
+                $scope.loadPrevPrescriptionsList($scope.enc.selected.encounter_id);
             }
         }, true);
 
@@ -165,6 +166,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 //                    });
         }
 
+        $scope.pres_status = 'current';
         $scope.data = {};
         $scope.data.prescriptionItems = [];
         $scope.addForm = function () {
@@ -231,7 +233,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     }
                 });
 
-                $scope.prescriptionStauts('current');
+                $scope.pres_status = 'current';
                 $("#current_prescription").focus();
                 toaster.clear();
                 toaster.pop('success', '', 'Medicine has been added to the current prescription');
@@ -493,15 +495,6 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             }
         }, true);
 
-        $scope.pres_status = 'current';
-        $scope.prescriptionStauts = function (status) {
-            $scope.pres_status = status;
-            if (status == 'prev') {
-                if (typeof $scope.enc.selected != 'undefined')
-                    $scope.loadPrevPrescriptionsList($scope.enc.selected.encounter_id);
-            }
-        }
-
         //Checkbox initialize
         $scope.checkboxes = {'checked': false, items: []};
         $scope.previousPresSelectedItems = [];
@@ -520,12 +513,38 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         $scope.isLoading = false;
                         $scope.rowCollection = prescriptionList.prescriptions;
 
-                        angular.forEach($scope.rowCollection, function (row) {
-                            angular.forEach(row.items, function (item) {
-                                item.selected = '0';
+                        if ($scope.rowCollection.length > 0) {
+                            angular.forEach($scope.rowCollection, function (row) {
+                                angular.forEach(row.items, function (item) {
+                                    item.selected = '0';
+                                });
+                                row.selected = '0';
                             });
-                            row.selected = '0';
-                        });
+
+                            angular.forEach($scope.rowCollection[0].items, function (item) {
+                                items = {
+                                    'product_id': item.product_id,
+                                    'product_name': item.product.full_name,
+                                    'generic_id': item.generic_id,
+                                    'generic_name': item.generic_name,
+                                    'drug_class_id': item.drug_class_id,
+                                    'drug_name': item.drug_name,
+                                    'route': item.route_name,
+                                    'frequency': item.frequency_name,
+                                    'number_of_days': item.number_of_days,
+                                    'is_favourite': 0,
+                                };
+                                var fav = $filter('filter')($scope.child.favourites, {product_id: item.product_id});
+
+                                if (fav.length > 0) {
+                                    angular.extend(items, {is_favourite: 1});
+                                }
+
+                                $scope.data.prescriptionItems.push(items);
+                            });
+                        }
+
+
                         $scope.displayedCollection = [].concat($scope.rowCollection);
 
                         //Checkbox initialize
