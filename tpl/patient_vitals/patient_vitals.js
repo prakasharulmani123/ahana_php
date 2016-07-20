@@ -1,4 +1,4 @@
-app.controller('VitalsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$filter', function ($rootScope, $scope, $timeout, $http, $state, $filter) {
+app.controller('VitalsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$filter', 'modalService', function ($rootScope, $scope, $timeout, $http, $state, $filter, modalService) {
 
         $scope.app.settings.patientTopBar = true;
         $scope.app.settings.patientSideMenu = true;
@@ -37,6 +37,27 @@ app.controller('VitalsController', ['$rootScope', '$scope', '$timeout', '$http',
             });
         }
 
+        $scope.enc = {};
+        $scope.$watch('patientObj.patient_id', function (newValue, oldValue) {
+            if (newValue != '') {
+                $rootScope.commonService.GetEncounterListByPatient('', '0,1', false, $scope.patientObj.patient_id, function (response) {
+                    angular.forEach(response, function (resp) {
+                        resp.encounter_id = resp.encounter_id.toString();
+                    });
+                    $scope.encounters = response;
+                    if (response != null) {
+                        $scope.enc.selected = $scope.encounters[0];
+                    }
+                });
+            }
+        }, true);
+
+        $scope.$watch('enc.selected.encounter_id', function (newValue, oldValue) {
+            if (newValue != '' && typeof newValue != 'undefined') {
+                $scope.loadPatVitalsList();
+            }
+        }, true);
+
         //Index Page
         $scope.enabled_dates = [];
         $scope.loadPatVitalsList = function (date) {
@@ -61,9 +82,11 @@ app.controller('VitalsController', ['$rootScope', '$scope', '$timeout', '$http',
                         $scope.displayedCollection = [].concat($scope.rowCollection);
 
                         angular.forEach($scope.rowCollection, function (row) {
-                            var result = $filter('filter')($scope.enabled_dates, moment(row.vital_time).format('YYYY-MM-DD'));
-                            if (result.length == 0)
-                                $scope.enabled_dates.push(moment(row.vital_time).format('YYYY-MM-DD'));
+                            angular.forEach(row.all, function (all) {
+                                var result = $filter('filter')($scope.enabled_dates, moment(all.vital_time).format('YYYY-MM-DD'));
+                                if (result.length == 0)
+                                    $scope.enabled_dates.push(moment(all.vital_time).format('YYYY-MM-DD'));
+                            });
                         });
                         $scope.$broadcast('refreshDatepickers');
                     })
@@ -152,4 +175,35 @@ app.controller('VitalsController', ['$rootScope', '$scope', '$timeout', '$http',
                     $scope.errorData = data.message;
             });
         };
+        
+        //Delete
+        $scope.removeRow = function (row) {
+            var modalOptions = {
+                closeButtonText: 'No',
+                actionButtonText: 'Yes',
+                headerText: 'Delete Vital?',
+                bodyText: 'Are you sure you want to delete this vital?'
+            };
+
+            modalService.showModal({}, modalOptions).then(function (result) {
+                $scope.loadbar('show');
+                $http({
+                    method: 'POST',
+                    url: $rootScope.IRISOrgServiceUrl + "/patientvitals/remove",
+                    data: {id: row.vital_id},
+                }).then(
+                        function (response) {
+                            $scope.loadbar('hide');
+                            if (response.data.success === true) {
+                                $scope.loadPatVitalsList();
+                                $scope.successMessage = 'Patient Vital Deleted Successfully';
+                            }
+                            else {
+                                $scope.errorData = response.data.message;
+                            }
+                        }
+                );
+            });
+        };
+
     }]);
