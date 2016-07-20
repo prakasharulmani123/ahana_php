@@ -17,4 +17,8 @@ class CoUserQuery extends CommonQuery {
         return $this->andWhere(['created_by' => $created_by]);
     }
     
+    public function exceptSuperUser() {
+        return $this->andWhere('created_by > 0');
+    }
+    
 }

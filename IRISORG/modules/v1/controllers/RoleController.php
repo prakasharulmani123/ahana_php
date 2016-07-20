@@ -48,7 +48,7 @@ class RoleController extends ActiveController {
         $modelClass = $this->modelClass;
 
         return new ActiveDataProvider([
-            'query' => $modelClass::find()->tenant()->active()->myRoles()->orderBy(['created_at' => SORT_DESC]),
+            'query' => $modelClass::find()->tenant()->active()->exceptSuperRole()->orderBy(['created_at' => SORT_DESC]),
             'pagination' => false,
         ]);
     }
@@ -104,7 +104,7 @@ class RoleController extends ActiveController {
 
     //role_rights.js, user_roles.js
     public function actionGetactiverolesbyuser() {
-        $roles = CoRole::find()->tenant()->active()->status()->myRoles()->all();
+        $roles = CoRole::find()->tenant()->active()->status()->exceptSuperRole()->all();
         return ['success' => true, 'roles' => $roles];
     }
 

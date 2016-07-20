@@ -96,7 +96,7 @@ class UserController extends ActiveController {
     }
 
     public function actionGetuserdata() {
-        $model = CoUser::find()->tenant()->active()->myUsers()->orderBy(['created_at' => SORT_DESC])->all();
+        $model = CoUser::find()->tenant()->active()->exceptSuperUser()->orderBy(['created_at' => SORT_DESC])->all();
         $data = [];
         foreach ($model as $key => $user) {
             $data[$key] = $user->attributes;
@@ -375,7 +375,7 @@ class UserController extends ActiveController {
     }
 
     public function actionGetuserslistbyuser() {
-        $list = CoUser::find()->tenant()->status()->active()->myUsers()->all();
+        $list = CoUser::find()->tenant()->status()->active()->exceptSuperUser()->all();
         return ['userList' => $list];
     }
 
