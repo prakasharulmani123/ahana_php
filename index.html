@@ -84,10 +84,10 @@
                             <div class="cell">
                                 <div class="cell-inner padder">
                                     <!-- notes list -->
-                                    <div ng-repeat="note in child.notes| orderBy: 'pat_note_id'" class="bg-grey-only r r-2x m-b-xs wrapper-sm b-l b-2x b-{{note.seen_by == 0 ? 'danger' : 'info'}}">
-                                        <p><b>Encounter: {{note.encounter_id}}</b></p>
+                                    <div ng-repeat="note in child.notes| orderBy: 'pat_note_id'" class="bg-grey-only r r-2x m-b-xs wrapper-xs b-l b-2x b-{{note.seen_by == 0 ? 'danger' : 'info'}}">
+<!--                                        <p><b>Encounter: {{note.encounter_id}}</b></p>-->
                                         {{note.notes}}
-                                        <div class="text-xs text-muted ng-binding">{{note.created_at| moment:'MMM DD - YYYY'}}</div>
+                                        <div class="text-xs text-muted ng-binding">{{note.created_at| moment:'DD/MM/YYYY hh:mm A'}}</div>
                                         <p class="notes_writer">-{{note.created_by_name}}</p>
                                     </div>
                                     <!-- / notes list -->
@@ -130,8 +130,12 @@
                                                     <td>{{vital.pulse_rate}}</td>
                                                 </tr>
                                                 <tr>
-                                                    <th>Blood pressure</th>
-                                                    <td>{{vital.blood_pressure}}</td>
+                                                    <th>Blood pressure Systolic</th>
+                                                    <td>{{vital.blood_pressure_systolic}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Blood pressure Diastolic</th>
+                                                    <td>{{vital.blood_pressure_diastolic}}</td>
                                                 </tr>
                                                 <tr>
                                                     <th>Temperature</th>

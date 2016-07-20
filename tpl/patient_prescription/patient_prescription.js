@@ -76,7 +76,13 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             //Get Vitals
             $http.get($rootScope.IRISOrgServiceUrl + '/patientvitals/getpatientvitals?patient_id=' + $state.params.id)
                     .success(function (vitals) {
-                        $scope.child.vitals = vitals.result;
+                        $scope.child.vitals = [];
+                        angular.forEach(vitals.result, function (result) {
+                            angular.forEach(result.all, function (vital) {
+                                $scope.child.vitals.push(vital);
+                            });
+                        });
+                        
                         $scope.unseen_vitals = vitals.uservitals;
                         $scope.unseen_vitals_count = vitals.uservitals.length;
 
