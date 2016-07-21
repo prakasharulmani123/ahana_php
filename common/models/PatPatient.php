@@ -437,22 +437,22 @@ class PatPatient extends RActiveRecord {
             'fullcurrentaddress' => function ($model) {
                 if (isset($model->patPatientAddress)) {
                     $result = '';
-                    if($model->patPatientAddress->addr_current_address != ''){
+                    if ($model->patPatientAddress->addr_current_address != '') {
                         $result .= $model->patPatientAddress->addr_current_address;
                     }
-                    
-                    if($model->patPatientAddress->addr_city_id != ''){
+
+                    if ($model->patPatientAddress->addr_city_id != '') {
                         $result .= ' ' . $model->patPatientAddress->addrCity->city_name;
                     }
-                    
-                    if($model->patPatientAddress->addr_state_id != ''){
+
+                    if ($model->patPatientAddress->addr_state_id != '') {
                         $result .= ' ' . $model->patPatientAddress->addrState->state_name;
                     }
-                    
-                    if($model->patPatientAddress->addr_country_id != ''){
+
+                    if ($model->patPatientAddress->addr_country_id != '') {
                         $result .= ' ' . $model->patPatientAddress->addrCountry->country_name;
                     }
-                    
+
                     return $result;
                 }
             },
@@ -497,17 +497,26 @@ class PatPatient extends RActiveRecord {
             'encounter_type' => function($model) {
                 return (isset($model->patHaveEncounter)) ? $model->patHaveEncounter->encounter_type : '';
             },
-            'incomplete_profile' => function($model){
+            'incomplete_profile' => function($model) {
                 if (!isset($model->patPatientAddress))
                     return true;
                 else
                     return $model->patPatientAddress->isIncompleteProfile();
             },
-            'name_with_casesheet' => function($model){
+            'name_with_casesheet' => function($model) {
                 $name = ucfirst($model->patient_firstname);
                 if (isset($model->patActiveCasesheetno))
-                    $name .= ' ('.$model->patActiveCasesheetno->casesheet_no.')';
+                    $name .= ' (' . $model->patActiveCasesheetno->casesheet_no . ')';
                 return $name;
+            },
+            'active_op_current_status' => function($model) {
+                if (isset($model->patActiveOp->patLiveAppointmentArrival)) {
+                    return 'Arrived';
+                } elseif (isset($model->patActiveOp->patLiveAppointmentBooking)) {
+                    return 'Booked';
+                } else {
+                    return '-';
+                }
             }
         ];
         $fields = array_merge(parent::fields(), $extend);
