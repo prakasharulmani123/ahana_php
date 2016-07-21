@@ -1,6 +1,6 @@
 <div>
     <div class="bg-light lter b-b wrapper-md">
-        <h1 class="m-n h3">Future Appointments</h1>
+        <h1 class="m-n h3">Scheduled Appointments</h1>
     </div>
 
     <div class="wrapper-md tab-btn" ng-controller="FutureAppointmentCalenderController">
@@ -8,11 +8,11 @@
             <div class="col-sm-4"> 
                 <div class="btn-group btn-group-justified">
                     <a class="btn btn-info"  ui-sref="patient.outPatients">
-                        <i class="fa fa-money"></i>  Current Out-Patients
+                        <i class="fa fa-user-md"></i>  Today's Appointments
                     </a>
-                    <a class="btn btn-success" ng-click="loadOutPatientsList('Future')">  
-                        <i class="fa fa-list-alt"></i>
-                        Future Appointments
+                    <a class="btn btn-info active" ng-click="loadOutPatientsList('Future')">  
+                        <i class="fa fa-hospital-o"></i>
+                        Scheduled Appointments
                     </a>
                 </div>
             </div>

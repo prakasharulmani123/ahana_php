@@ -3,16 +3,16 @@
     <i class="fa {{app.settings.asideFolded ? 'fa-indent' : 'fa-dedent'}} fa-fw"></i>
 </a> 
 <ul class="nav pat_nav">
-    <li ui-sref-active="active"> <a check-access ui-sref="patient.encounter({id: $state.params.id})">  <img src="img/icon4.png"  alt="" /> <br/> Encounters </a>  </li>
-    <li ui-sref-active="active"> <a check-access ui-sref="patient.prescription({id: $state.params.id})" class="{{patientObj.have_atleast_encounter ? '' : 'linkDisabled'}}">  <img src="img/icon8.png"  alt="" /> <br/> prescriptions </a>  </li>
-    <li ui-sref-active="active"> <a check-access ui-sref="patient.vitals({id: $state.params.id})" class="{{patientObj.have_atleast_encounter ? '' : 'linkDisabled'}}">  <img src="img/vitals.png"  alt="" /> <br/> Vitals  </a>   </li>
-    <li ui-sref-active="active"> <a check-access ui-sref="patient.procedure({id: $state.params.id})" class="{{patientObj.have_atleast_encounter ? '' : 'linkDisabled'}}">  <img src="img/icon7.png"  alt="" /> <br/> Procedures </a>  </li>
-    <li ui-sref-active="active"> <a check-access ui-sref="patient.consultant({id: $state.params.id})"  class="{{patientObj.have_atleast_encounter ? '' : 'linkDisabled'}}">  <img src="img/icon6.png"  alt="" /> <br/> Consultation </a>  </li>
-    <li ui-sref-active="active"> <a check-access ui-sref="patient.notes({id: $state.params.id})"  class="{{patientObj.have_atleast_encounter ? '' : 'linkDisabled'}}">  <img src="img/icon5.png"  alt="" /> <br/> Nurse's Notes </a>  </li>
-    <li ui-sref-active="active"> <a check-access ui-sref="patient.billing({id: $state.params.id})"  class="{{patientObj.have_atleast_encounter ? '' : 'linkDisabled'}}">  <img src="img/icon11.png"  alt="" /> <br/> Billing </a>  </li>
-    <li ui-sref-active="active"> <a check-access ui-sref="patient.view({id: $state.params.id})">  <img src="img/icon1.png"  alt="" /> <br/> Details </a>  </li>
     <li ui-sref-active="active"> <a check-access ui-sref="patient.timeLine({id: $state.params.id})">  <img src="img/icon2.png"  alt="" /> <br/> Timeline </a>  </li>
+    <li ui-sref-active="active"> <a check-access ui-sref="patient.vitals({id: $state.params.id})" class="{{patientObj.have_atleast_encounter ? '' : 'linkDisabled'}}">  <img src="img/vitals.png"  alt="" /> <br/> Vitals  </a>   </li>
+    <li ui-sref-active="active"> <a check-access ui-sref="patient.prescription({id: $state.params.id})" class="{{patientObj.have_atleast_encounter ? '' : 'linkDisabled'}}">  <img src="img/icon8.png"  alt="" /> <br/> prescriptions </a>  </li>
     <li ui-sref-active="active"> <a check-access ui-sref="patient.document({id: $state.params.id})"  class="{{patientObj.have_atleast_encounter ? '' : 'linkDisabled'}}">  <img src="img/icon3.png"  alt="" /> <br/> Documents </a>  </li>
+    <li ui-sref-active="active"> <a check-access ui-sref="patient.consultant({id: $state.params.id})"  class="{{patientObj.have_atleast_encounter ? '' : 'linkDisabled'}}">  <img src="img/icon6.png"  alt="" /> <br/> Consultation </a>  </li>
+    <li ui-sref-active="active"> <a check-access ui-sref="patient.procedure({id: $state.params.id})" class="{{patientObj.have_atleast_encounter ? '' : 'linkDisabled'}}">  <img src="img/icon7.png"  alt="" /> <br/> Procedures </a>  </li>
+    <li ui-sref-active="active"> <a check-access ui-sref="patient.encounter({id: $state.params.id})">  <img src="img/icon4.png"  alt="" /> <br/> Encounters </a>  </li>
+    <li ui-sref-active="active"> <a check-access ui-sref="patient.notes({id: $state.params.id})"  class="{{patientObj.have_atleast_encounter ? '' : 'linkDisabled'}}">  <img src="img/icon5.png"  alt="" /> <br/> Nurse's Notes </a>  </li>
+    <li ui-sref-active="active"> <a check-access ui-sref="patient.view({id: $state.params.id})">  <img src="img/icon1.png"  alt="" /> <br/> Details </a>  </li>
+    <li ui-sref-active="active"> <a check-access ui-sref="patient.billing({id: $state.params.id})"  class="{{patientObj.have_atleast_encounter ? '' : 'linkDisabled'}}">  <img src="img/icon11.png"  alt="" /> <br/> Billing </a>  </li>
     <li ui-sref-active="active"> <a check-access ui-sref="patient.alert({id: $state.params.id})" class="{{patientObj.have_atleast_encounter ? '' : 'linkDisabled'}}">  <img src="img/icon9.png"  alt="" /> <br/> alerts  </a>   </li>
     <li ui-sref-active="active"> <a check-access ui-sref="patient.assignShare({id: $state.params.id})" class="{{patientObj.have_atleast_encounter ? '' : 'linkDisabled'}}">  <img src="img/icon2.png"  alt="" /> <br/> Share </a>   </li>
 </ul>

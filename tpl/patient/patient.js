@@ -275,7 +275,7 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
                                 $scope.mode = 'view';
                                 $scope.successMessage = succ_msg;
 //                                $state.go('patient.view', {id: response.patient.patient_guid});
-                            }, 3000)
+                            }, 2000)
                         } else {
                             $scope.errorData = response.message;
                         }

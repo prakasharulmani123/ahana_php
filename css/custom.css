@@ -317,3 +317,7 @@ out-patient-table .table > thead > tr > th label.i-checks{
 #notes .text-xs{
     font-size: 11px;
 }
+
+.patient-name{
+    font-size: 20px;
+}

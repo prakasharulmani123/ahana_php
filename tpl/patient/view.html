@@ -7,13 +7,13 @@
             <div ng-include="'tpl/blocks/alert.html'">
                 {% include 'tpl/blocks/alert.html' %}
             </div>
-            <div class="row form-group">
-                <div class="col-sm-4"> 
+            <div class="row">
+                <div class="col-sm-2 pull-right"> 
                     <div class="btn-group btn-group-justified">
                         <a class="btn btn-info" ng-click="changeMode('update')"><i class="fa fa-pencil"></i>  Update Patient</a>
-                        <a ng-click="$state.go('patient.modifyCaseSheetNo', {id: $state.params.id})" class="btn btn-danger">
+<!--                        <a ng-click="$state.go('patient.modifyCaseSheetNo', {id: $state.params.id})" class="btn btn-danger">
                             Modify Case Sheet No
-                        </a>
+                        </a>-->
                         <!--<a class="btn btn-info" ui-sref="patient.update({id: $state.params.id})"><i class="fa fa-pencil"></i>  Update Patient</a>-->
                     </div>
                 </div>
@@ -213,15 +213,15 @@
                 {% include 'tpl/blocks/alert.html' %}
             </div>
             <div class="row">
-                <div class="col-sm-4"> 
+<!--                <div class="col-sm-4"> 
                     <div class="btn-group btn-group-justified">
                         <a class="btn btn-primary" ng-click="changeMode('view')"><i class="fa fa-eye"></i>  View Patient</a>
                         <a ng-click="$state.go('patient.modifyCaseSheetNo', {id: $state.params.id})" class="btn btn-danger">
                             Modify Case Sheet No
                         </a>
-                        <!--<a class="btn btn-info" ui-sref="patient.update({id: $state.params.id})"><i class="fa fa-pencil"></i>  Update Patient</a>-->
+                        <a class="btn btn-info" ui-sref="patient.update({id: $state.params.id})"><i class="fa fa-pencil"></i>  Update Patient</a>
                     </div>
-                </div>
+                </div>-->
             </div>
             <br />
             <div class="row">
@@ -417,5 +417,4 @@
 
         </div>
     </div>
-
 </div>

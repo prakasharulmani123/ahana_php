@@ -12,10 +12,8 @@
             <div class="col-md-11 paitent-details2"> 
                 <div class="header-new"> 
                     <i aria-hidden="true" class="fa fa-user"></i> 
-                    <b> {{patientObj.fullname}}  </b>
-                    <span ng-if="patientObj.activeCasesheetno">
-                        ({{patientObj.activeCasesheetno}})
-                    </span>     
+                    <b class="patient-name">{{patientObj.fullname}}</b>
+                    ({{patientObj.patient_int_code}})
                     <span ng-show="patientObj.patActiveIp">
                         <i class="fa fa-calendar"></i>  
                         {{patientObj.doa}}
@@ -30,13 +28,16 @@
                     <div class="pati-cate" ng-show="patientObj.have_encounter">{{patientObj.encounter_type}}</div>
                 </div>   
                 <div class="headerbg2">  
-                    <div class="patient-details-part patinet-id"> 
-                        <b> Patient Id : </b> {{patientObj.patient_int_code}} 
+                    <div class="patient-details-part patinet-id" ng-if="patientObj.activeCasesheetno"> 
+                        <b> Casesheet No : </b> {{patientObj.activeCasesheetno}}
                     </div>
-                    <div class="patient-details-part">  
+                    <div class="patient-details-part" ng-if="patientObj.current_room != '-'">  
                         <i class="fa fa-wheelchair"></i> <b> Ward : </b>{{patientObj.current_room}} 
                     </div>
-                    <div class="patient-details-part">  
+                    <div class="patient-details-part" ng-if="patientObj.active_op_current_status != '-'">  
+                        <i class="fa fa-wheelchair"></i> <b> Status : </b> {{patientObj.active_op_current_status}} 
+                    </div>
+                    <div class="patient-details-part" ng-if="patientObj.consultant_name != '-'">  
                         <i class="fa fa-user-md"></i> {{patientObj.consultant_name}}
                     </div>
                     <div class="patient-details-part">  
