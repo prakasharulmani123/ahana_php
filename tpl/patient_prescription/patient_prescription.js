@@ -130,9 +130,9 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $rootScope.commonService.GetDoctorList('', '1', false, '1', function (response) {
                 $scope.doctors = response.doctorsList;
             });
-            $rootScope.commonService.GetPatientRoute('', '1', false, function (response) {
-                $scope.routes = response.routelist;
-            });
+//            $rootScope.commonService.GetPatientRoute('', '1', false, function (response) {
+//                $scope.routes = response.routelist;
+//            });
             $rootScope.commonService.GetPatientFrequency('', '1', false, function (response) {
                 $scope.frequencies = response.frequencylist;
             });
@@ -171,6 +171,14 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 //                        $scope.errorData = "An Error has occured while loading generic!";
 //                    });
         }
+        
+        
+        $scope.getRoutes = function ($item, $model, $label) {
+            if (!$item)
+                $item = $scope.addData.product;
+            
+            $scope.routes = $item.description_routes;
+        }
 
         $scope.pres_status = 'current';
         $scope.data = {};
@@ -189,7 +197,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         'generic_name': $scope.addData.generic.generic_name,
                         'drug_class_id': $scope.addData.drug_class.drug_class_id,
                         'drug_name': $scope.addData.drug_class.drug_name,
-                        'route': $scope.addData.route,
+                        'route_id': $scope.addData.route.route_id,
+                        'route': $scope.addData.route.route_name,
                         'frequency': $scope.addData.frequency,
                         'number_of_days': $scope.addData.number_of_days,
                         'is_favourite': 0,

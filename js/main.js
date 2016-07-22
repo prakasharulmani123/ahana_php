@@ -5,7 +5,7 @@ angular.module('app')
         .controller('AppCtrl', ['$scope', '$localStorage', '$window', '$rootScope', '$state', '$cookieStore', '$http', 'CommonService', '$timeout', 'AuthenticationService', 'toaster', 'hotkeys', '$modal',
             function ($scope, $localStorage, $window, $rootScope, $state, $cookieStore, $http, CommonService, $timeout, AuthenticationService, toaster, hotkeys, $modal) {
 //                socket.forward('someEvent', $scope);
-                
+
                 $scope.$on('socket:someEvent', function (ev, data) {
                     console.log($scope.theData);
                 });
@@ -179,6 +179,9 @@ angular.module('app')
                                     $scope.errorData = "An Error has occured while loading patient!";
                                 });
                     }
+
+                    var alert_link = '#/patient/alert/'+$scope.patientObj.patient_guid;
+                    $scope.patient_alert_html = '<div>' + $scope.patientObj.alert + '<br><a ui-sref="patient.alert({id: $scope.patientObj.patient_guid})" href="'+alert_link+'">ReadMore</a><div>';
                 };
 
                 $scope.loadUserCredentials = function () {
@@ -334,20 +337,20 @@ angular.module('app')
                     toaster.pop('error', 'Session Expired', 'Kindly Login Again');
                     $scope.logout();
                 });
-                
+
                 $scope.$on('encounter_id', function (event, data) {
                     $scope.encounter_id = data;
                 });
-                
+
                 $scope.$on('patient_obj', function (event, data) {
                     $scope.patientObj = data;
                 });
-                
+
                 $scope.$on('patient_alert', function (event, data) {
                     $scope.patientObj.hasalert = data.hasalert;
                     $scope.patientObj.alert = data.alert;
                 });
-                
+
                 $scope.assignNotifications = function () {
                     //Assign Notes
                     $http({
@@ -382,10 +385,10 @@ angular.module('app')
 
                 $scope.importPatient = function (patient, key) {
                     var conf = confirm('Are you sure to import basic data ?')
-                    
-                    if(!conf)
+
+                    if (!conf)
                         return;
-                    
+
                     $scope.errorData = "";
                     $scope.successMessage = "";
 
@@ -420,6 +423,25 @@ angular.module('app')
                     });
                 }
             }]);
+
+angular.module('app').filter('unsafe', ['$sce', function ($sce) {
+        return function (val) {
+            return $sce.trustAsHtml(val);
+        };
+    }]);
+
+angular.module("template/popover/popover.html", []).run(["$templateCache", function ($templateCache) {
+        $templateCache.put("template/popover/popover.html",
+                "<div class=\"popover {{placement}}\" ng-class=\"{ in: isOpen(), fade: animation() }\">\n" +
+                "  <div class=\"arrow\"></div>\n" +
+                "\n" +
+                "  <div class=\"popover-inner\">\n" +
+                "      <h3 class=\"popover-title\" ng-bind-html=\"title | unsafe\" ng-show=\"title\"></h3>\n" +
+                "      <div class=\"popover-content\"ng-bind-html=\"content | unsafe\"></div>\n" +
+                "  </div>\n" +
+                "</div>\n" +
+                "");
+    }]);
 
 //Moment Filter
 angular.module('app').filter('moment', function () {
@@ -507,10 +529,10 @@ angular.module('app').controller('PatientImageController', ['scope', '$scope', '
             }).success(
                     function (response) {
                         if (response.success) {
-                            if(block == 'topbar')
+                            if (block == 'topbar')
                                 scope.patientObj.patient_image = response.patient.patient_image;
-                            
-                            if(block == 'register'){
+
+                            if (block == 'register') {
                                 scope.$broadcast('register_patient_image', response.file);
                             }
                             $scope.cancel();
