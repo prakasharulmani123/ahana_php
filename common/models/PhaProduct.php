@@ -303,6 +303,9 @@ class PhaProduct extends RActiveRecord {
             'availableQuantity' => function ($model) {
                 return (isset($model->phaProductBatchesAvailableQty) ? $model->phaProductBatchesAvailableQty : 0);
             },
+            'description_routes' => function ($model) {
+                return (isset($model->productDescription) ? $model->productDescription->routes : '-');
+            },
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
