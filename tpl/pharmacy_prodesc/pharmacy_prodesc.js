@@ -1,3 +1,14 @@
+Array.prototype.indexOfObjectWithProperty = function (propertyName, propertyValue) {
+    for (var i = 0, len = this.length; i < len; i++) {
+        if (this[i][propertyName] === propertyValue)
+            return i;
+    }
+    return -1;
+};
+Array.prototype.containsObjectWithProperty = function (propertyName, propertyValue) {
+    return this.indexOfObjectWithProperty(propertyName, propertyValue) != -1;
+};
+
 app.controller('ProDescController', ['$rootScope', '$scope', '$timeout', '$http', '$state', function ($rootScope, $scope, $timeout, $http, $state) {
 
         //Index Page
@@ -22,25 +33,68 @@ app.controller('ProDescController', ['$rootScope', '$scope', '$timeout', '$http'
 
         //For Form
         $scope.initForm = function () {
-//            $rootScope.commonService.GetBrandList('', '1', false, function (response) {
-//                $scope.alerts = response.alertList;
-//            });
+            //Get Active Routes
+            $http({
+                url: $rootScope.IRISOrgServiceUrl + '/patientprescription/getactiveroutes',
+                method: "GET"
+            }).then(
+                    function (response) {
+                        $scope.routes = {};
+                        $scope.routes = response.data.routes;
+                    }
+            );
+        }
+
+        $scope.selectedRoutes = [];
+        $scope.toggleSelection = function (route) {
+            var index = $scope.selectedRoutes.indexOfObjectWithProperty('route_id', route.route_id);
+            if (index > -1) {
+                // Is currently selected, so remove it
+                $scope.selectedRoutes.splice(index, 1);
+            }
+            else {
+                // Is currently unselected, so add it
+                $scope.selectedRoutes.push(route);
+            }
+        };
+
+        $scope.getDescriptionRoutes = function () {
+            $scope.errorData = "";
+            $scope.successMessage = "";
+            $http({
+                url: $rootScope.IRISOrgServiceUrl + '/patientprescription/getdescriptionroutes?id=' + $state.params.id,
+                method: "GET",
+                data: {id: $state.params.id}
+            }).then(
+                    function (response) {
+                        $scope.selectedRoutes = response.data.routes;
+                    }
+            );
         }
 
         //Save Both Add & Update Data
         $scope.saveForm = function (mode) {
+            $scope.routeList = [];
+
+            angular.forEach($scope.selectedRoutes, function (parent) {
+                $scope.routeList.push(parent.route_id);
+            });
+            if (typeof this.data != "undefined") {
+                this.data.route_ids = [];
+                this.data.route_ids = $scope.routeList;
+            }
+
             _that = this;
 
             $scope.errorData = "";
             $scope.successMessage = "";
+            
+            post_url = $rootScope.IRISOrgServiceUrl + '/pharmacyprodesc/adddescriptionroutes';
+            method = 'POST';
 
             if (mode == 'add') {
-                post_url = $rootScope.IRISOrgServiceUrl + '/pharmacyprodescs';
-                method = 'POST';
                 succ_msg = 'Product Description saved successfully';
             } else {
-                post_url = $rootScope.IRISOrgServiceUrl + '/pharmacyprodescs/' + _that.data.description_id;
-                method = 'PUT';
                 succ_msg = 'Product Description updated successfully';
             }
 
@@ -52,12 +106,16 @@ app.controller('ProDescController', ['$rootScope', '$scope', '$timeout', '$http'
             }).success(
                     function (response) {
                         $scope.loadbar('hide');
-                        $scope.successMessage = succ_msg;
-                        $scope.data = {};
-                        $timeout(function () {
-                            $state.go('pharmacy.prodesc');
-                        }, 1000)
-
+                        if (response.success === true) {
+                            $scope.successMessage = succ_msg;
+                            $scope.data = {};
+                            $timeout(function () {
+                                $state.go('pharmacy.prodesc');
+                            }, 1000)
+                        }
+                        else {
+                            $scope.errorData = response.message;
+                        }
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');
@@ -71,6 +129,8 @@ app.controller('ProDescController', ['$rootScope', '$scope', '$timeout', '$http'
         //Get Data for update Form
         $scope.loadForm = function () {
             $scope.loadbar('show');
+            $scope.getDescriptionRoutes();
+
             _that = this;
             $scope.errorData = "";
             $http({

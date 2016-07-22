@@ -7,6 +7,21 @@
             </div>
         </div>
         <div class="line line-dashed b-b line-lg "></div>
+
+        <div class="form-group">
+            <label class="col-sm-4 control-label">Routes *</label>
+            <div class="col-sm-8">
+                <div ng-repeat="route in routes track by route.route_id">
+                    <label class="i-checks ">
+                        <input type="checkbox" ng-checked="selectedRoutes.containsObjectWithProperty('route_id', route.route_id)" name="routes" ng-click="toggleSelection(route)" /> 
+                        <i></i> 
+                    </label> 
+                    {{route.route_name}}
+                </div>
+            </div>
+        </div>
+        <div class="line line-dashed b-b line-lg "></div>
+
         <div class="form-group">
             <label class="col-sm-4 control-label">Status</label>
             <div class="col-sm-8">
