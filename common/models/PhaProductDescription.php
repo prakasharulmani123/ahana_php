@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\models\query\PhaProductDescriptionQuery;
+use cornernote\linkall\LinkAllBehavior;
 use yii\db\ActiveQuery;
 
 /**
@@ -78,6 +79,29 @@ class PhaProductDescription extends RActiveRecord {
             $list = self::find()->tenant($tenant)->deleted()->all();
 
         return $list;
+    }
+
+    public function behaviors() {
+        $extend = [
+            LinkAllBehavior::className(),
+        ];
+
+        $behaviour = array_merge(parent::behaviors(), $extend);
+        return $behaviour;
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getDescriptionsRoutes() {
+        return $this->hasMany(PhaDescriptionsRoutes::className(), ['description_id' => 'description_id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getRoutes() {
+        return $this->hasMany(PatPrescriptionRoute::className(), ['route_id' => 'route_id'])->via('descriptionsRoutes');
     }
 
 }

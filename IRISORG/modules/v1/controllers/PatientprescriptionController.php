@@ -5,7 +5,8 @@ namespace IRISORG\modules\v1\controllers;
 use common\models\PatPatient;
 use common\models\PatPrescription;
 use common\models\PatPrescriptionItems;
-use common\models\PatVitals;
+use common\models\PatPrescriptionRoute;
+use common\models\PhaDescriptionsRoutes;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -118,6 +119,22 @@ class PatientprescriptionController extends ActiveController {
                 $data = PatPrescription::find()->tenant()->active()->andWhere(['patient_id' => $patient->patient_id, 'encounter_id' => $encounter_id])->orderBy(['created_at' => SORT_DESC])->all();
                 return ['success' => true, 'prescriptions' => $data];
             }
+        } else {
+            return ['success' => false, 'message' => 'Invalid Access'];
+        }
+    }
+    
+    /*pharmacy_prodesc.js*/
+    public function actionGetactiveroutes() {
+        $routes = PatPrescriptionRoute::find()->tenant()->active()->status()->all();
+        return ['success' => true, 'routes' => $routes];
+    }
+    
+    public function actionGetdescriptionroutes() {
+        $id = Yii::$app->request->get('id');
+        if (!empty($id)) {
+            $routes = PhaDescriptionsRoutes::find()->tenant()->andWhere(['description_id' => $id])->all();
+            return ['success' => true, 'routes' => $routes];
         } else {
             return ['success' => false, 'message' => 'Invalid Access'];
         }
