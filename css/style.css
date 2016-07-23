@@ -735,13 +735,13 @@ button.label {
 .vitals-cont {
     width:100%;
     float:left;
-    margin-bottom:15px;
+    margin-bottom:10px;
 }
 .vitals-cont-date {
     width:100%;
     float:left;
     text-align:center;
-    margin-top:25px;
+    margin-top:10px;
 }
 .vitals-table {
     width:100%;

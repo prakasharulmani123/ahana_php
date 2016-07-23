@@ -72,6 +72,7 @@
                     </p>
                 </div>
             </div>
+
             <!-- Prescription Notes -->
             <div id="notes"  class="sb-slidebar-content">
                 <div id="note-max" class="app-aside-right pos-fix no-padder w-auto-xs bg-white b-l animated fadeInRight hide ng-scope show note-full">
@@ -85,7 +86,7 @@
                                 <div class="cell-inner padder">
                                     <!-- notes list -->
                                     <div ng-repeat="note in child.notes| orderBy: 'pat_note_id'" class="bg-grey-only r r-2x m-b-xs wrapper-xs b-l b-2x b-{{note.seen_by == 0 ? 'danger' : 'info'}}">
-<!--                                        <p><b>Encounter: {{note.encounter_id}}</b></p>-->
+                                        <!--                                        <p><b>Encounter: {{note.encounter_id}}</b></p>-->
                                         {{note.notes}}
                                         <div class="text-xs text-muted ng-binding">{{note.created_at| moment:'DD/MM/YYYY hh:mm A'}}</div>
                                         <p class="notes_writer">-{{note.created_by_name}}</p>
@@ -109,6 +110,7 @@
                     </div>
                 </div>
             </div>
+
             <!-- Prescription Vitals -->
             <div id="vitals"  class="sb-slidebar-content">
                 <div class="app-aside-right pos-fix no-padder w-auto-xs bg-white b-l animated fadeInRight hide ng-scope show note-full">
@@ -122,26 +124,30 @@
                                 <div class="cell-inner padder">
                                     <!-- vitals list -->
                                     <div ng-repeat="vital in child.vitals" class="vitals-cont">
-                                        <div class="vitals-cont-date"> <span class="label bg-{{vital.seen_by == 0 ? 'danger' : 'info'}} ng-binding ng-scope"> {{vital.vital_time| moment:'DD/MM/YYYY hh:mm A'}}</span></div>
+                                        <div class="vitals-cont-date"> 
+                                            <span class="label bg-{{vital.seen_by == 0 ? 'danger' : 'info'}} ng-binding ng-scope"> 
+                                                {{vital.vital_time| moment:'DD/MM/YYYY hh:mm A'}}
+                                            </span>
+                                        </div>
                                         <div class="vitals-table">
                                             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table table-bordered" >
-                                                <tr>
+                                                <tr ng-if="vital.pulse_rate">
                                                     <th>Pulse</th>
                                                     <td>{{vital.pulse_rate}}</td>
                                                 </tr>
-                                                <tr>
-                                                    <th>Blood pressure Systolic</th>
+                                                <tr ng-if="vital.blood_pressure_systolic">
+                                                    <th>BP Systolic</th>
                                                     <td>{{vital.blood_pressure_systolic}}</td>
                                                 </tr>
-                                                <tr>
-                                                    <th>Blood pressure Diastolic</th>
+                                                <tr ng-if="vital.blood_pressure_diastolic">
+                                                    <th>BP Diastolic</th>
                                                     <td>{{vital.blood_pressure_diastolic}}</td>
                                                 </tr>
-                                                <tr>
+                                                <tr ng-if="vital.temperature">
                                                     <th>Temperature</th>
                                                     <td>{{vital.temperature}} °C</td>
                                                 </tr>
-                                                <tr>
+                                                <tr ng-if="vital.weight">
                                                     <th>Weight</th>
                                                     <td>{{vital.weight}} Kg </td>
                                                 </tr>
@@ -151,6 +157,47 @@
                                     <!-- / vitals list -->
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="wrapper m-t b-t b-light">
+                            <form class="m-b-none ng-pristine ng-valid ng-submitted" ng-submit="addVital()" ng-init="vitaldata = {};
+                                            vital_error = false;">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <input type="text" maxlength="3" placeholder="Temperature" class="form-control" ng-model="vitaldata.temperature">
+                                            <span class="text-danger" ng-show="vital_error">Required</span>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <input type="text" maxlength="3" placeholder="Pulse" class="form-control" ng-model="vitaldata.pulse_rate">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <input type="text" maxlength="3" placeholder="BP Systolic" class="form-control" ng-model="vitaldata.blood_pressure_systolic">
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <input type="text" maxlength="3" placeholder="BP Diastolic" class="form-control" ng-model="vitaldata.blood_pressure_diastolic">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <input type="text" maxlength="3" placeholder="Weight" class="form-control" ng-model="vitaldata.weight">
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <span class="input-group-btn">
+                                                <button type="button" class="btn btn-default save-btn" ng-click="addVital()">Add</button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -219,8 +266,8 @@
         <script src="bower_components/ngImgCrop/compile/minified/ng-img-crop.js"></script>
         <script src="bower_components/angular-xslt/src/ng-xslt.js"></script>
         <script src="bower_components/angular-io-barcode-master/build/angular-io-barcode.min.js"></script>
-<!--        <script src="bower_components/angular-socket-io-master/socket.js"></script>
-        <script src="bower_components/angular-socket-io-master/socket.io-client-master/socket.io.js"></script>-->
+        <!--        <script src="bower_components/angular-socket-io-master/socket.js"></script>
+                <script src="bower_components/angular-socket-io-master/socket.io-client-master/socket.io.js"></script>-->
 
         <!--        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
                 <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/restangular/1.3.1/restangular.min.js"></script>-->

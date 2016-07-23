@@ -156,6 +156,7 @@ angular.module('app')
                 }
 
                 $scope.patientObj = {};
+                $scope.patient_alert_html = '';
 
                 $scope.loadPatientDetail = function () {
                     // Get data's from service
@@ -168,6 +169,10 @@ angular.module('app')
                                         $state.go('configuration.organization');
                                     } else {
                                         $scope.patientObj = patient;
+
+                                        var alert_link = '#/patient/alert/' + $scope.patientObj.patient_guid;
+                                        $scope.patient_alert_html = '<div>' + $scope.patientObj.alert + '<br><a class="text-info" ui-sref="patient.alert({id: $scope.patientObj.patient_guid})" href="' + alert_link + '">ReadMore</a><div>';
+
                                         $rootScope.commonService.GetLabelFromValue(patient.patient_gender, 'GetGenderList', function (response) {
                                             $scope.app.patientDetail.patientSex = response;
                                         });
@@ -179,9 +184,6 @@ angular.module('app')
                                     $scope.errorData = "An Error has occured while loading patient!";
                                 });
                     }
-
-                    var alert_link = '#/patient/alert/'+$scope.patientObj.patient_guid;
-                    $scope.patient_alert_html = '<div>' + $scope.patientObj.alert + '<br><a ui-sref="patient.alert({id: $scope.patientObj.patient_guid})" href="'+alert_link+'">ReadMore</a><div>';
                 };
 
                 $scope.loadUserCredentials = function () {
@@ -248,6 +250,44 @@ angular.module('app')
 
                                 $(".vbox .row-row .cell:visible").animate({scrollTop: $('.vbox .row-row .cell:visible').prop("scrollHeight")}, 1000);
 //                                $scope.successMessage = 'Note saved successfully';
+                            })
+                            .error(function (data, status) {
+                                $scope.loadbar('hide');
+                                if (status == 422)
+                                    $scope.errorData = $scope.errorSummary(data);
+                                else
+                                    $scope.errorData = data.message;
+                            });
+                }
+                
+                $scope.addVital = function () {
+                    if (jQuery.isEmptyObject($scope.vitaldata)) {
+                        $scope.vital_error = true;
+                        return;
+                    }
+                    
+                    $scope.vital_error = false;
+
+                    $scope.errorData = "";
+                    $scope.successMessage = "";
+
+                    angular.extend($scope.vitaldata, {
+                        patient_id: $scope.patientObj.patient_id,
+                        encounter_id: $scope.encounter_id,
+                        vital_time: moment().format('YYYY-MM-DD HH:mm:ss')
+                    });
+
+                    $scope.loadbar('show');
+
+                    $http.post($rootScope.IRISOrgServiceUrl + '/patientvitals', $scope.vitaldata)
+                            .success(function (response) {
+                                $scope.vitaldata = {};
+                                $scope.child.vitals.push(response);
+                                $scope.loadbar('hide');
+
+                                $(".vbox .row-row .cell:visible").animate({
+                                    scrollTop: $('.vbox .row-row .cell:visible').prop("scrollHeight")
+                                }, 1000);
                             })
                             .error(function (data, status) {
                                 $scope.loadbar('hide');
