@@ -188,7 +188,17 @@
                                                             </a>
                                                         </td>
                                                         <td>
-                                                            <span editable-text="item.product_name"
+                                                            <span editable-select="item.product_name" 
+                                                                  e-class="form-control"
+                                                                  e-name="product_name" 
+                                                                  e-form="tableform" 
+                                                                  onbeforesave="checkInput($data)" 
+                                                                  e-ng-change="setProductId($data, key)" 
+                                                                  e-ng-options="product.full_name as product.full_name for product in all_products | filter:$viewValue | limitTo:8| filter:{generic_id : item.generic_id}" 
+                                                                  e-required>
+                                                                {{ showProduct(item)}}
+                                                            </span>
+<!--                                                            <span editable-text="item.product_name"
                                                                   e-class="form-control"
                                                                   e-name="product_name" 
                                                                   e-form="tableform" 
@@ -199,21 +209,31 @@
                                                                   e-placeholder="Product"
                                                                   e-required>
                                                                 {{ item.product_name || 'empty' }}
-                                                            </span>
+                                                            </span>-->
                                                         </td>
                                                         <td>
-                                                            <span editable-text="item.route"
+                                                            <span editable-select="item.route" 
+                                                                  e-class="form-control m-b"
+                                                                  e-name="route" 
+                                                                  e-form="tableform" 
+                                                                  e-ng-change="setRouteId($data, key)" 
+                                                                  onbeforesave="checkInput($data)" 
+                                                                  e-ng-options="route.route_name as route.route_name for route in item.description_routes | filter:$viewValue" 
+                                                                  e-required>
+                                                                {{ showRoute(item)}}
+                                                            </span>
+<!--                                                            <span editable-text="item.route"
                                                                   e-class="form-control m-b"
                                                                   e-name="route" 
                                                                   e-form="tableform" 
                                                                   onbeforesave="checkInput($data)"
-                                                                  e-typeahead="route.route_name for route in routes | filter:$viewValue"
+                                                                  e-typeahead="route.route_name for route in item.description_routes | filter:$viewValue"
                                                                   e-autocomplete="off"
                                                                   e-placeholder="Route"
                                                                   e-id="route"
                                                                   e-required>
                                                                 {{ item.route || 'empty' }}
-                                                            </span>
+                                                            </span>-->
                                                         </td>
                                                         <td>
                                                             <span editable-text="item.frequency"
@@ -303,19 +323,6 @@
                 <ul class="nav nav-pills nav-stacked nav-sm">
                     <!--                    class="active4"-->
                     <li><a id="current_prescription" href="javascript:void(0)" ng-click="pres_status = 'current'"><i class="fa fa-medkit"></i> <br/>Prescription</a></li>
-                    <li><a href="javascript:void(0)" ng-click="pres_status = 'prev'"><i class="fa fa-history"></i> <br/>Prev-Prescr</a></li>
-                    <li><a href="javascript:void(0)"><i class="fa fa-file-text"></i> <br/>Results </a></li>
-                    <li><a href="javascript:void(0)" class="sb-open-right" data-target="#fav"><i class="fa fa-heart"></i> <br/> Favorites</a></li>
-                    <li>
-                        <a href="javascript:void(0)" class="sb-open-right" data-target="#notes" ng-click="seen_notes()">
-                            <i class="fa fa-pencil"></i>
-                            <span class="badge badge-sm up bg-danger pull-right-xs" ng-show="unseen_notes_count > 0">
-                                {{unseen_notes_count}}
-                            </span> 
-                            <br>
-                            Notes
-                        </a>
-                    </li>
                     <li>
                         <a href="javascript:void(0)" class="sb-open-right" data-target="#vitals" ng-click="seen_vitals()"> 
                             <i class="fa fa-heartbeat"></i>  
@@ -326,6 +333,19 @@
                             Vitals
                         </a>
                     </li>
+                    <li><a href="javascript:void(0)"><i class="fa fa-file-text"></i> <br/>Results </a></li>
+                    <li>
+                        <a href="javascript:void(0)" class="sb-open-right" data-target="#notes" ng-click="seen_notes()">
+                            <i class="fa fa-pencil"></i>
+                            <span class="badge badge-sm up bg-danger pull-right-xs" ng-show="unseen_notes_count > 0">
+                                {{unseen_notes_count}}
+                            </span> 
+                            <br>
+                            Notes
+                        </a>
+                    </li>
+                    <li><a href="javascript:void(0)" class="sb-open-right" data-target="#fav"><i class="fa fa-heart"></i> <br/> Favorites</a></li>
+                    <li><a href="javascript:void(0)" ng-click="pres_status = 'prev'"><i class="fa fa-history"></i> <br/>Prev-Prescr</a></li>
                 </ul>
             </div>
         </div>

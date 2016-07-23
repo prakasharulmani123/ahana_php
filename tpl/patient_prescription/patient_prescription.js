@@ -34,9 +34,9 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
         $scope.$watch('enc.selected.encounter_id', function (newValue, oldValue) {
             if (newValue != '' && typeof newValue != 'undefined') {
+                $scope.loadPrevPrescriptionsList($scope.enc.selected.encounter_id);
                 $scope.loadSideMenu();
                 $scope.$emit('encounter_id', newValue);
-                $scope.loadPrevPrescriptionsList($scope.enc.selected.encounter_id);
             }
         }, true);
 
@@ -82,7 +82,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                 $scope.child.vitals.push(vital);
                             });
                         });
-                        
+
                         $scope.unseen_vitals = vitals.uservitals;
                         $scope.unseen_vitals_count = vitals.uservitals.length;
 
@@ -156,6 +156,38 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 $scope.addData.generic = result[0];
         }
 
+        $scope.setProductId = function ($data, key) {
+            result = $filter('filter')($scope.all_products, {full_name: $data});
+            if (result.length > 0){
+                $scope.data.prescriptionItems[key].product_id = result[0].product_id;
+                $scope.data.prescriptionItems[key].description_routes = [];
+                $scope.data.prescriptionItems[key].description_routes = result[0].description_routes;
+            }
+        }
+
+        $scope.setRouteId = function ($data, key) {
+            result = $filter('filter')($scope.data.prescriptionItems[key].description_routes, {route_name: $data});
+            if (result.length > 0){
+                $scope.data.prescriptionItems[key].route_id = result[0].route_id;
+            }
+        }
+
+        $scope.showProduct = function (item) {
+            var selected = [];
+            if (item.product_id) {
+                selected = $filter('filter')($scope.all_products, {product_id: item.product_id});
+            }
+            return selected.length ? selected[0].full_name : 'Not set';
+        }
+
+        $scope.showRoute = function (item) {
+            var selected = [];
+            if (item.route_id) {
+                selected = $filter('filter')($scope.all_products, {product_id: item.product_id});
+            }
+            return selected.length ? selected[0].full_name : 'Not set';
+        }
+
         $scope.getProduct = function ($item, $model, $label) {
             if (!$item)
                 $item = $scope.addData.generic;
@@ -171,12 +203,11 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 //                        $scope.errorData = "An Error has occured while loading generic!";
 //                    });
         }
-        
-        
+
         $scope.getRoutes = function ($item, $model, $label) {
             if (!$item)
                 $item = $scope.addData.product;
-            
+
             $scope.routes = $item.description_routes;
         }
 
@@ -202,6 +233,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         'frequency': $scope.addData.frequency,
                         'number_of_days': $scope.addData.number_of_days,
                         'is_favourite': 0,
+                        'description_routes': $scope.addData.product.description_routes,
                     };
                     var fav = $filter('filter')($scope.child.favourites, {product_id: $scope.addData.product.product_id});
 
@@ -223,7 +255,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.addToCurrentPrescription = function () {
             if ($scope.previousPresSelected > 0) {
                 angular.forEach($scope.previousPresSelectedItems, function (value, key) {
-                    var result = $filter('filter')($scope.data.prescriptionItems, {product_id: value.product_id});
+                    var result = $filter('filter')($scope.data.prescriptionItems, {product_id: value.product_id, route_id: value.route_id});
 
                     if (result.length == 0) {
                         items = {
@@ -237,6 +269,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                             'frequency': value.frequency_name,
                             'number_of_days': value.number_of_days,
                             'is_favourite': 0,
+                            'route_id': value.route_id,
+                            'description_routes': value.product.description_routes,
                         };
                         var fav = $filter('filter')($scope.child.favourites, {product_id: value.product_id});
 
@@ -522,53 +556,63 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $scope.itemsByPage = 10; // No.of records per page
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
 
-            // Get data's from service
-            $http.get($rootScope.IRISOrgServiceUrl + '/patientprescription/getpreviousprescription?patient_id=' + $state.params.id + '&encounter_id=' + encounter_id)
-                    .success(function (prescriptionList) {
-                        $scope.isLoading = false;
-                        $scope.rowCollection = prescriptionList.prescriptions;
+            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct')
+                    .success(function (products) {
+                        $scope.all_products = products;
+                
+                        // Get data's from service
+                        $http.get($rootScope.IRISOrgServiceUrl + '/patientprescription/getpreviousprescription?patient_id=' + $state.params.id + '&encounter_id=' + encounter_id)
+                                .success(function (prescriptionList) {
+                                    $scope.isLoading = false;
+                                    $scope.rowCollection = prescriptionList.prescriptions;
 
-                        if ($scope.rowCollection.length > 0) {
-                            angular.forEach($scope.rowCollection, function (row) {
-                                angular.forEach(row.items, function (item) {
-                                    item.selected = '0';
+                                    if ($scope.rowCollection.length > 0) {
+                                        angular.forEach($scope.rowCollection, function (row) {
+                                            angular.forEach(row.items, function (item) {
+                                                item.selected = '0';
+                                            });
+                                            row.selected = '0';
+                                        });
+
+                                        angular.forEach($scope.rowCollection[0].items, function (item) {
+                                            items = {
+                                                'product_id': item.product_id,
+                                                'product_name': item.product.full_name,
+                                                'generic_id': item.generic_id,
+                                                'generic_name': item.generic_name,
+                                                'drug_class_id': item.drug_class_id,
+                                                'drug_name': item.drug_name,
+                                                'route': item.route_name,
+                                                'frequency': item.frequency_name,
+                                                'number_of_days': item.number_of_days,
+                                                'is_favourite': 0,
+                                                'route_id': item.route_id,
+                                                'description_routes': item.product.description_routes,
+                                            };
+                                            var fav = $filter('filter')($scope.child.favourites, {product_id: item.product_id});
+
+                                            if (fav.length > 0) {
+                                                angular.extend(items, {is_favourite: 1});
+                                            }
+
+                                            $scope.data.prescriptionItems.push(items);
+                                        });
+                                    }
+
+
+                                    $scope.displayedCollection = [].concat($scope.rowCollection);
+
+                                    //Checkbox initialize
+                                    $scope.checkboxes = {'checked': false, items: []};
+                                    $scope.previousPresSelectedItems = [];
+                                    $scope.previousPresSelected = 0;
+                                })
+                                .error(function () {
+                                    $scope.errorData = "An Error has occured while loading list!";
                                 });
-                                row.selected = '0';
-                            });
-
-                            angular.forEach($scope.rowCollection[0].items, function (item) {
-                                items = {
-                                    'product_id': item.product_id,
-                                    'product_name': item.product.full_name,
-                                    'generic_id': item.generic_id,
-                                    'generic_name': item.generic_name,
-                                    'drug_class_id': item.drug_class_id,
-                                    'drug_name': item.drug_name,
-                                    'route': item.route_name,
-                                    'frequency': item.frequency_name,
-                                    'number_of_days': item.number_of_days,
-                                    'is_favourite': 0,
-                                };
-                                var fav = $filter('filter')($scope.child.favourites, {product_id: item.product_id});
-
-                                if (fav.length > 0) {
-                                    angular.extend(items, {is_favourite: 1});
-                                }
-
-                                $scope.data.prescriptionItems.push(items);
-                            });
-                        }
-
-
-                        $scope.displayedCollection = [].concat($scope.rowCollection);
-
-                        //Checkbox initialize
-                        $scope.checkboxes = {'checked': false, items: []};
-                        $scope.previousPresSelectedItems = [];
-                        $scope.previousPresSelected = 0;
                     })
                     .error(function () {
-                        $scope.errorData = "An Error has occured while loading list!";
+                        $scope.errorData = "An Error has occured while loading brand!";
                     });
         };
 
@@ -670,7 +714,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         }
 
         $scope.moreOptions = function (pres_key, key, row) {
-            product_exists = $filter('filter')($scope.checkboxes.items, {product_id: row.product_id});
+            product_exists = $filter('filter')($scope.checkboxes.items, {product_id: row.product_id, route_id: row.route_id});
             pres_exists = $filter('filter')($scope.checkboxes.items, {pres_id: row.pres_id});
             if ($('#prevpres_' + pres_key + '_' + key).is(':checked')) {
                 $('#prevpres_' + pres_key + '_' + key).closest('tr').addClass('selected_row');
