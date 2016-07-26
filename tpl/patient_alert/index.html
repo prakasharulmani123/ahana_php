@@ -60,6 +60,7 @@
                         <tr>
                             <th>Alert Type</th>
                             <th>Alert </th>
+                            <th>Created At</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -74,6 +75,10 @@
                                 <span editable-text="row.alert_description" e-name="alert_description" e-form="rowform" onbeforesave="checkName($data)" e-required>
                                     {{ row.alert_description || 'empty' }}
                                 </span>
+                            </td>
+                            <td class="v-middle">
+                                {{row.created_at| moment:'DD/MM/YYYY'}} &nbsp;
+                                <span class="label bg-light dk">{{row.created_at| moment:'hh:mm A'}}</span>
                             </td>
                             <td style="white-space: nowrap">
                                 <!-- form -->

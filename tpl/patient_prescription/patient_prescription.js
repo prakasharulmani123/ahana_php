@@ -234,6 +234,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         'number_of_days': $scope.addData.number_of_days,
                         'is_favourite': 0,
                         'description_routes': $scope.addData.product.description_routes,
+                        'price': 0,
                     };
                     var fav = $filter('filter')($scope.child.favourites, {product_id: $scope.addData.product.product_id});
 
@@ -271,6 +272,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                             'is_favourite': 0,
                             'route_id': value.route_id,
                             'description_routes': value.product.description_routes,
+                            'price': 0,
                         };
                         var fav = $filter('filter')($scope.child.favourites, {product_id: value.product_id});
 
@@ -588,6 +590,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                                 'is_favourite': 0,
                                                 'route_id': item.route_id,
                                                 'description_routes': item.product.description_routes,
+                                                'price': 0,
                                             };
                                             var fav = $filter('filter')($scope.child.favourites, {product_id: item.product_id});
 

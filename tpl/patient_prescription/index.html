@@ -159,7 +159,7 @@
                                 </div>
                                 <div class="col-sm-1"> 
                                     <button class="btn m-b-xs  btn-dark" ng-click="prescription = '';
-                                                data.consultant_id = ''">  
+                                                data.consultant_id = ''; data.prescriptionItems = {}">  
                                         <i class="fa fa-times"></i> Clear 
                                     </button>
                                 </div>
@@ -176,6 +176,7 @@
                                                         <th width="45" align="left">Route </th>
                                                         <th width="43" align="left">Freq</th>
                                                         <th width="70" align="center">No.of Days </th>
+                                                        <th width="70" align="center">Price </th>
                                                         <th width="70" align="center">Actions</th>
                                                     </tr>
                                                 </thead>
@@ -268,6 +269,9 @@
                                                                   e-required>
                                                                 {{ item.number_of_days || 'empty' }}
                                                             </span>
+                                                        </td>
+                                                        <td>
+                                                            {{ item.price }}
                                                         </td>
                                                         <td align="left">
                                                             <!--<button class="label bg-dark" ng-click="tableform.$show()"><i class="fa fa-pencil"></i></button>-->
