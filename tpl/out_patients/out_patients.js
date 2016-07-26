@@ -32,10 +32,10 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
             $scope.rowCollection = []; // base collection
             $scope.itemsByPage = 10; // No.of records per page
             $scope.displayedCollection = [].concat($scope.rowCollection); // displayed collection
-            
-            var all = false;
-            if (!$scope.checkAccess('patient.viewAllDoctorsAppointments')) {
-                all = true;
+
+            var all = 0;
+            if ($scope.checkAccess('patient.viewAllDoctorsAppointments')) {
+                all = 1;
             }
 
             // Get data's from service
