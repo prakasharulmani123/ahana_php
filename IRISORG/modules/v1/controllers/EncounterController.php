@@ -264,6 +264,8 @@ class EncounterController extends ActiveController {
         $get = Yii::$app->getRequest()->get();
 
         $date = date('Y-m-d');
+        $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+
 
         //Default Current OP
         $query = "DATE(encounter_date) = '{$date}'";
@@ -274,15 +276,26 @@ class EncounterController extends ActiveController {
                 $query = "DATE(encounter_date) > '{$date}'";
         }
 
-        $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+        if (isset($get['all'])) {
+            if ($get['all']) {
+                $condition = [
+                    'pat_encounter.status' => '1',
+                    'pat_encounter.tenant_id' => $tenant_id
+                ];
+            } else {
+                $condition = [
+                    'pat_encounter.status' => '1',
+                    'pat_encounter.tenant_id' => $tenant_id,
+                    'pat_appointment.consultant_id' => Yii::$app->user->identity->user->user_id,
+                ];
+            }
+        }
+
         $result = [];
 
         $data = PatEncounter::find()
                 ->joinWith('patAppointments')
-                ->where([
-                    'pat_encounter.status' => '1',
-                    'pat_encounter.tenant_id' => $tenant_id
-                ])
+                ->where($condition)
                 ->encounterType("OP")
                 ->andWhere($query)
                 ->groupBy('pat_appointment.consultant_id')
@@ -294,11 +307,7 @@ class EncounterController extends ActiveController {
         foreach ($data as $key => $value) {
             $details = PatEncounter::find()
                     ->joinWith('patAppointments')
-                    ->where([
-                        'pat_encounter.status' => '1',
-                        'pat_encounter.tenant_id' => $tenant_id,
-                        'pat_appointment.consultant_id' => $value->patAppointments[0]->consultant_id,
-                    ])
+                    ->where($condition)
                     ->encounterType("OP")
                     ->andWhere($query)
                     ->orderBy([
