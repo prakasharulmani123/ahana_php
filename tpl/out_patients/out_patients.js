@@ -32,9 +32,14 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
             $scope.rowCollection = []; // base collection
             $scope.itemsByPage = 10; // No.of records per page
             $scope.displayedCollection = [].concat($scope.rowCollection); // displayed collection
+            
+            var all = false;
+            if (!$scope.checkAccess('patient.viewAllDoctorsAppointments')) {
+                all = true;
+            }
 
             // Get data's from service
-            $http.get($rootScope.IRISOrgServiceUrl + '/encounter/outpatients?type=' + type)
+            $http.get($rootScope.IRISOrgServiceUrl + '/encounter/outpatients?type=' + type + '&all=' + all)
                     .success(function (OutPatients) {
                         $scope.rowCollection = OutPatients.result;
 
