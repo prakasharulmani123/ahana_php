@@ -276,17 +276,18 @@ class EncounterController extends ActiveController {
                 $query = "DATE(encounter_date) > '{$date}'";
         }
 
+        $condition = [
+            'pat_encounter.status' => '1',
+            'pat_encounter.tenant_id' => $tenant_id,
+            'pat_appointment.consultant_id' => Yii::$app->user->identity->user->user_id,
+        ];
+        
+        //Check "View all doctors appointments".
         if (isset($get['all'])) {
             if ($get['all']) {
                 $condition = [
                     'pat_encounter.status' => '1',
                     'pat_encounter.tenant_id' => $tenant_id
-                ];
-            } else {
-                $condition = [
-                    'pat_encounter.status' => '1',
-                    'pat_encounter.tenant_id' => $tenant_id,
-                    'pat_appointment.consultant_id' => Yii::$app->user->identity->user->user_id,
                 ];
             }
         }
