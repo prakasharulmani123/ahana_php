@@ -1,5 +1,4 @@
 <div class="patient-panel" ng-init="loadPatientDetail()">
-
     <div class="patient-row1"> 
         <div class="patient-panel">
             <div class="col-md-1 pati-thumb"> 
@@ -18,11 +17,8 @@
                         <i class="fa fa-calendar"></i>  
                         {{patientObj.doa}}
                     </span>
-                    
                     <i class="fa fa-venus-mars"></i> {{app.patientDetail.patientSex}} ({{patientObj.patient_age}}y)                       	
-                    <i class="fa fa-phone"></i>  9443444567      
-<!--                    <i ng-show="patientObj.hasalert" aria-hidden="true" class="fa fa-exclamation-triangle"></i>  
-                    <span> {{patientObj.alert}} </span>   -->
+                    <i class="fa fa-phone"></i>  {{patientObj.patient_mobile}}      
                     <i aria-hidden="true" class="fa fa-ban" ng-show="false"></i> 
                     <b ng-show="false"> Allergies : </b>  
                     <div class="pati-cate" ng-show="patientObj.have_encounter">{{patientObj.encounter_type}}</div>
@@ -45,7 +41,7 @@
                     </div>
                     <div class="patient-details-part b-n">  
                         <div ng-if="patientObj.patient_category" style="background-color: {{patientObj.patient_category_color}}" class="category_badge header-badge" tooltip="{{patientObj.patient_category_fullname}}" tooltip-trigger tooltip-animation="false" tooltip-placement="top"> 
-                           {{patientObj.patient_category | uppercase}} 
+                            {{patientObj.patient_category| uppercase}} 
                         </div> 
                     </div>
                     <div class="patient-details-part b-n" ng-show="patientObj.hasalert">  

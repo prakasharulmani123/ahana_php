@@ -75,13 +75,43 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                             $state.go("patient.document", {id: $state.params.id});
                         } else {
                             $scope.xslt = doc_type_response.result.document_xslt;
-                            $scope.xml = doc_type_response.result.document_xml;
+                            $scope.autoSaveDocument(function (auto_save_document) {
+                                $scope.xml = auto_save_document.data.xml;
+                            });
                             $scope.isLoading = false;
                         }
                     });
                 }
             });
         }
+
+        $scope.autoSaveDocument = function (callback) {
+            _data = $.param({
+                'name': $scope.patientObj.fullname,
+                'age': $scope.patientObj.patient_age,
+                'gender': $scope.app.patientDetail.patientSex,
+                'martial_status': $scope.app.patientDetail.patientMaritalStatus,
+                'encounter_id': $scope.encounter.encounter_id,
+                'patient_id': $state.params.id,
+                'novalidate': true,
+                'status': '1',
+            });
+
+            $scope.loadbar('show');
+            $http({
+                url: $rootScope.IRISOrgServiceUrl + "/patientdocuments/savedocument",
+                method: "POST",
+                transformRequest: transformRequestAsFormPost,
+                data: _data,
+            }).then(
+                    function (response) {
+                        $scope.loadbar('hide');
+                        if (response.data.success == true) {
+                            callback(response);
+                        }
+                    }
+            );
+        };
 
         // Initialize Update Form
         $scope.initFormUpdate = function () {
@@ -155,6 +185,14 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                 'novalidate': false,
                 'status': '1',
             });
+
+            if ($scope.panel_bars.length > 0) {
+                var more_datas = {};
+                angular.forEach($scope.panel_bars, function (panel_bars) {
+                    more_datas[panel_bars.div] = panel_bars.opened;
+                });
+                _data = _data + '&' + $.param(more_datas);
+            }
 
             $scope.loadbar('show');
             $http({

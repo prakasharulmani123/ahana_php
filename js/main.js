@@ -55,7 +55,8 @@ angular.module('app')
                         patientFooterClass: 'app-footer app-footer2',
                     },
                     patientDetail: {
-                        patientSex: ''
+                        patientSex: '',
+                        patientMaritalStatus: '',
                     }
                 }
 
@@ -176,6 +177,10 @@ angular.module('app')
                                         $rootScope.commonService.GetLabelFromValue(patient.patient_gender, 'GetGenderList', function (response) {
                                             $scope.app.patientDetail.patientSex = response;
                                         });
+                                        
+                                        $rootScope.commonService.GetLabelFromValue(patient.patient_marital_status, 'GetMaritalStatus', function (response) {
+                                            $scope.app.patientDetail.patientMaritalStatus = response;
+                                        });
 
                                     }
 
@@ -245,6 +250,9 @@ angular.module('app')
                     $http.post($rootScope.IRISOrgServiceUrl + '/patientnotes', $scope.data)
                             .success(function (response) {
                                 $scope.data = {};
+                                angular.extend(response, {
+                                    created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
+                                });
                                 $scope.child.notes.push(response);
                                 $scope.loadbar('hide');
 
@@ -259,13 +267,13 @@ angular.module('app')
                                     $scope.errorData = data.message;
                             });
                 }
-                
+
                 $scope.addVital = function () {
                     if (jQuery.isEmptyObject($scope.vitaldata)) {
                         $scope.vital_error = true;
                         return;
                     }
-                    
+
                     $scope.vital_error = false;
 
                     $scope.errorData = "";

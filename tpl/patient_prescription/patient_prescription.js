@@ -103,6 +103,10 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     });
 
             //Get Fav
+            $scope.getFav();
+        }
+
+        $scope.getFav = function () {
             $http.get($rootScope.IRISOrgServiceUrl + '/patientprescriptionfavourite/getpatientprescriptionfavourite?patient_id=' + $state.params.id)
                     .success(function (favourites) {
                         $scope.child.favourites = favourites.result;
@@ -158,7 +162,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
         $scope.setProductId = function ($data, key) {
             result = $filter('filter')($scope.all_products, {full_name: $data});
-            if (result.length > 0){
+            if (result.length > 0) {
                 $scope.data.prescriptionItems[key].product_id = result[0].product_id;
                 $scope.data.prescriptionItems[key].description_routes = [];
                 $scope.data.prescriptionItems[key].description_routes = result[0].description_routes;
@@ -167,7 +171,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
         $scope.setRouteId = function ($data, key) {
             result = $filter('filter')($scope.data.prescriptionItems[key].description_routes, {route_name: $data});
-            if (result.length > 0){
+            if (result.length > 0) {
                 $scope.data.prescriptionItems[key].route_id = result[0].route_id;
             }
         }
@@ -412,6 +416,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                             $scope.consultant_name = response.model.consultant_name;
 
                             $timeout(function () {
+                                $scope.getFav();
                                 save_success();
 //                                $state.go('patient.prescription', {id: $state.params.id});
                             }, 1000)
@@ -561,7 +566,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct')
                     .success(function (products) {
                         $scope.all_products = products;
-                
+
                         // Get data's from service
                         $http.get($rootScope.IRISOrgServiceUrl + '/patientprescription/getpreviousprescription?patient_id=' + $state.params.id + '&encounter_id=' + encounter_id)
                                 .success(function (prescriptionList) {

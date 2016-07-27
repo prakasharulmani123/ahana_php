@@ -132,7 +132,14 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
     }
 
     function GetMaritalStatus(callback) {
-        var response = [{value: 'S', label: 'Single'}, {value: 'M', label: 'Married'}, {value: 'D', label: 'Divorced'}, {value: 'W', label: 'Widowed'}];
+        var response = [
+            {value: 'C', label: 'Children'},
+            {value: 'U', label: 'Un married'},
+            {value: 'M', label: 'Married'},
+            {value: 'S', label: 'Separated'},
+            {value: 'D', label: 'Divorced'},
+            {value: 'W', label: 'Widow'}
+        ];
         callback(response);
     }
 
@@ -489,7 +496,7 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
                     callback(response);
                 });
     }
-    
+
 
     function GetPatientRoute(tenant, sts, del_sts, callback) {
         var response;
@@ -611,7 +618,7 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
                     callback(response);
                 });
     }
-    
+
     function GetVatList(tenant, sts, del_sts, callback) {
         var response;
 
@@ -623,7 +630,7 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
                     callback(response);
                 });
     }
-    
+
     function GetPaymentModes(callback) {
         var response = [
             {value: 'CA', label: 'Cash'},
@@ -633,7 +640,7 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
         ];
         callback(response);
     }
-    
+
     function GetCardTypes(callback) {
         var response = [
             {value: 'Visa', label: 'Visa'},
