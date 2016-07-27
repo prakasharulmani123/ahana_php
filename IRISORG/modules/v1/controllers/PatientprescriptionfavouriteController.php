@@ -64,7 +64,13 @@ class PatientprescriptionfavouriteController extends ActiveController {
         $get = Yii::$app->getRequest()->get();
         if(!empty($get)){
             $patient = PatPatient::getPatientByGuid($get['patient_id']);
-            $model = PatPrescriptionFavourite::find()->tenant()->active()->andWhere(['patient_id' => $patient->patient_id])->orderBy(['created_at' => SORT_DESC])->all();
+            $model = PatPrescriptionFavourite::find()
+                    ->tenant()
+                    ->status()
+                    ->active()
+                    ->andWhere(['patient_id' => $patient->patient_id])
+                    ->orderBy(['created_at' => SORT_DESC])
+                    ->all();
             return ['success' => true, 'result' => $model];
         }
     }

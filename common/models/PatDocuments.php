@@ -41,6 +41,11 @@ class PatDocuments extends RActiveRecord {
     public $mode_of_onset;
     public $course_type;
     public $nature;
+    public $treatment_history = false;
+    public $family_history = false;
+    public $personal_history = false;
+    public $mental_status_examination = false;
+    public $rb_pb_treatmenthistory;
 
     /**
      * @inheritdoc
@@ -59,7 +64,10 @@ class PatDocuments extends RActiveRecord {
             [['information', 'total_duration', 'mode_of_onset', 'course_type', 'nature'], 'required', 'on' => 'CH'],
             [['tenant_id', 'patient_id', 'doc_type_id', 'encounter_id', 'created_by', 'modified_by'], 'integer'],
             [['document_xml', 'status'], 'string'],
-            [['created_at', 'modified_at', 'deleted_at'], 'safe'],
+            [['rb_pb_treatmenthistory'], 'required', 'when' => function($model) {
+            return $model->treatment_history == 'true';
+        }],
+            [['created_at', 'modified_at', 'deleted_at', 'treatment_history', 'family_history', 'personal_history', 'mental_status_examination', 'rb_pb_treatmenthistory'], 'safe'],
         ];
     }
 
@@ -80,6 +88,7 @@ class PatDocuments extends RActiveRecord {
             'modified_by' => 'Modified By',
             'modified_at' => 'Modified At',
             'deleted_at' => 'Deleted At',
+            'rb_pb_treatmenthistory' => 'Medication Compliance',
         ];
     }
 

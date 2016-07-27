@@ -92,7 +92,7 @@ class PatNotes extends RActiveRecord {
     public function getCreatedUser() {
         return $this->hasOne(CoUser::className(), ['user_id' => 'created_by']);
     }
-    
+
     /**
      * @return ActiveQuery
      */
@@ -106,7 +106,7 @@ class PatNotes extends RActiveRecord {
     public function getUsers() {
         return $this->hasMany(CoUser::className(), ['user_id' => 'user_id'])->via('notesUsers');
     }
-    
+
     public function fields() {
         $extend = [
             'short_notes' => function ($model) {
@@ -124,6 +124,18 @@ class PatNotes extends RActiveRecord {
             'created_by_name' => function ($model) {
                 return (isset($model->createdUser) ? $model->createdUser->name : '-');
             },
+            'created_by_short_name' => function ($model) {
+                if (isset($model->createdUser)) {
+                    if (strlen($model->createdUser->name) > 12) {
+                        $short_name = substr($model->createdUser->name, 0, 12) . '...';
+                    } else {
+                        $short_name = $model->createdUser->name;
+                    }
+                    return $short_name;
+                } else {
+                    return '-';
+                }
+            },
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
@@ -132,15 +144,16 @@ class PatNotes extends RActiveRecord {
     public static function find() {
         return new PatNotesQuery(get_called_class());
     }
-    
+
     public function afterSave($insert, $changedAttributes) {
         if ($insert) {
             $message = $this->notes;
-        }else{
+        } else {
             $message = "Updated: {$this->notes}";
         }
         PatTimeline::insertTimeLine($this->patient_id, $this->created_at, 'Notes', '', $message, 'NOTES', $this->encounter_id);
 
         return parent::afterSave($insert, $changedAttributes);
     }
+
 }
