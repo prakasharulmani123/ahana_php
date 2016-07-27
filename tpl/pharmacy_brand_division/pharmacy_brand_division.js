@@ -32,7 +32,7 @@ app.controller('BrandDivisionsController', ['$rootScope', '$scope', '$timeout', 
             _that = this;
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             if (mode == 'add') {
                 post_url = $rootScope.IRISOrgServiceUrl + '/pharmacybranddivisions';
@@ -52,7 +52,7 @@ app.controller('BrandDivisionsController', ['$rootScope', '$scope', '$timeout', 
             }).success(
                     function (response) {
                         $scope.loadbar('hide');
-                        $scope.successMessage = succ_msg;
+                        $scope.msg.successMessage = succ_msg;
                         $scope.data = {};
                         $timeout(function () {
                             $state.go('pharmacy.brandDivision');
@@ -107,7 +107,7 @@ app.controller('BrandDivisionsController', ['$rootScope', '$scope', '$timeout', 
                                 if (response.data.success === true) {
                                     $scope.displayedCollection.splice(index, 1);
                                     $scope.loadBrandDivisionsList();
-                                    $scope.successMessage = 'Brand Division Deleted Successfully';
+                                    $scope.msg.successMessage = 'Brand Division Deleted Successfully';
                                 }
                                 else {
                                     $scope.errorData = response.data.message;

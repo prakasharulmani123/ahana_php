@@ -80,7 +80,7 @@ app.controller('SaleMakePaymentController', ['scope', '$scope', '$modalInstance'
             _that = this;
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             post_url = $rootScope.IRISOrgServiceUrl + '/pharmacysalebilling/makepayment';
             method = 'POST';
@@ -102,7 +102,7 @@ app.controller('SaleMakePaymentController', ['scope', '$scope', '$modalInstance'
                                 $scope.errorData = response.message;
                         } else {
                             scope.loadbar('hide');
-                            $scope.successMessage = succ_msg;
+                            $scope.msg.successMessage = succ_msg;
                             $scope.data = {};
                             $timeout(function () {
                                 scope.updateDisplayCollection($scope.encounter_id, response.sales[0]);

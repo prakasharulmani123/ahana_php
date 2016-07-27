@@ -243,7 +243,7 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
             _that = this;
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             post_url = $rootScope.IRISOrgServiceUrl + '/patient/registration';
             method = 'POST';
@@ -261,7 +261,7 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
                         $anchorScroll();
                         $scope.loadbar('hide');
                         if (response.success == true) {
-                            $scope.successMessage = succ_msg;
+                            $scope.msg.successMessage = succ_msg;
                             $scope.$emit('patient_obj', response.patient);
                             $scope.orgData = response;
                             $rootScope.commonService.GetLabelFromValue(response.patient.patient_gender, 'GetGenderList', function (resp) {
@@ -273,7 +273,7 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
 
                             $timeout(function () {
                                 $scope.mode = 'view';
-                                $scope.successMessage = succ_msg;
+                                $scope.msg.successMessage = succ_msg;
 //                                $state.go('patient.view', {id: response.patient.patient_guid});
                             }, 2000)
                         } else {

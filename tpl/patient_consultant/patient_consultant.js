@@ -165,7 +165,7 @@ app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', 
             _that = this;
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             if (mode == 'add') {
                 post_url = $rootScope.IRISOrgServiceUrl + '/patientconsultants';
@@ -188,7 +188,7 @@ app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', 
             }).success(
                     function (response) {
                         $scope.loadbar('hide');
-                        $scope.successMessage = succ_msg;
+                        $scope.msg.successMessage = succ_msg;
                         $scope.data = {};
                         $timeout(function () {
                             $state.go('patient.consultant', {id: $state.params.id});
@@ -243,7 +243,7 @@ app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', 
                                 if (response.data.success === true) {
                                     $scope.displayedCollection.splice(index, 1);
                                     $scope.loadPatConsultantsList();
-                                    $scope.successMessage = 'Patient Consultant Deleted Successfully';
+                                    $scope.msg.successMessage = 'Patient Consultant Deleted Successfully';
                                 }
                                 else {
                                     $scope.errorData = response.data.message;

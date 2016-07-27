@@ -278,7 +278,7 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
             _that = this;
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             if (typeof (_that.data) != "undefined") {
                 if (_that.data.hasOwnProperty('PatAdmission')) {
@@ -315,7 +315,7 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
                     function (response) {
                         $scope.loadbar('hide');
                         if (response.success == true) {
-                            $scope.successMessage = succ_msg;
+                            $scope.msg.successMessage = succ_msg;
                             $scope.data = {};
                             $state.go("patient.encounter", {id: $state.params.id});
                         } else {
@@ -336,7 +336,7 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
             _that = this;
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             if (typeof (_that.data) != "undefined") {
                 if (_that.data.hasOwnProperty('PatAdmission')) {
@@ -377,7 +377,7 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
                         if (response.success == false) {
                             $scope.errorData = response.message;
                         } else {
-                            $scope.successMessage = succ_msg;
+                            $scope.msg.successMessage = succ_msg;
                             $scope.data = {};
                             $state.go("patient.encounter", {id: $state.params.id});
                         }

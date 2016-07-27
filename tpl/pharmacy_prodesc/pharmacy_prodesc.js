@@ -60,7 +60,7 @@ app.controller('ProDescController', ['$rootScope', '$scope', '$timeout', '$http'
 
         $scope.getDescriptionRoutes = function () {
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
             $http({
                 url: $rootScope.IRISOrgServiceUrl + '/patientprescription/getdescriptionroutes?id=' + $state.params.id,
                 method: "GET",
@@ -87,7 +87,7 @@ app.controller('ProDescController', ['$rootScope', '$scope', '$timeout', '$http'
             _that = this;
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
             
             post_url = $rootScope.IRISOrgServiceUrl + '/pharmacyprodesc/adddescriptionroutes';
             method = 'POST';
@@ -107,7 +107,7 @@ app.controller('ProDescController', ['$rootScope', '$scope', '$timeout', '$http'
                     function (response) {
                         $scope.loadbar('hide');
                         if (response.success === true) {
-                            $scope.successMessage = succ_msg;
+                            $scope.msg.successMessage = succ_msg;
                             $scope.data = {};
                             $timeout(function () {
                                 $state.go('pharmacy.prodesc');
@@ -167,7 +167,7 @@ app.controller('ProDescController', ['$rootScope', '$scope', '$timeout', '$http'
                                 if (response.data.success === true) {
                                     $scope.displayedCollection.splice(index, 1);
                                     $scope.loadProDescList();
-                                    $scope.successMessage = 'Product Description Deleted Successfully';
+                                    $scope.msg.successMessage = 'Product Description Deleted Successfully';
                                 }
                                 else {
                                     $scope.errorData = response.data.message;

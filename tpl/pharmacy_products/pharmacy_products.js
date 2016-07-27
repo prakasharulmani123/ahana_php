@@ -77,7 +77,7 @@ app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http
             _that = this;
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             if (mode == 'add') {
                 post_url = $rootScope.IRISOrgServiceUrl + '/pharmacyproducts';
@@ -97,7 +97,7 @@ app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http
             }).success(
                     function (response) {
                         $scope.loadbar('hide');
-                        $scope.successMessage = succ_msg;
+                        $scope.msg.successMessage = succ_msg;
                         $scope.data = {};
                         $timeout(function () {
                             $state.go('pharmacy.products');
@@ -139,7 +139,7 @@ app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http
         $scope.showDrugDropdown = false;
         $scope.getDrugByGeneric = function () {
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
             if ($scope.data.generic_id) {
                 $http({
                     url: $rootScope.IRISOrgServiceUrl + '/pharmacydrugclass/getdrugbygeneric?generic_id=' + $scope.data.generic_id,
@@ -181,7 +181,7 @@ app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http
 //                                if (response.data.success === true) {
 //                                    $scope.displayedCollection.splice(index, 1);
 //                                    $scope.loadBrandsList();
-//                                    $scope.successMessage = 'Brand Rep Deleted Successfully';
+//                                    $scope.msg.successMessage = 'Brand Rep Deleted Successfully';
 //                                }
 //                                else {
 //                                    $scope.errorData = response.data.message;

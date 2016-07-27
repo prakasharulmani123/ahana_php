@@ -112,7 +112,7 @@ app.controller('VitalsController', ['$rootScope', '$scope', '$timeout', '$http',
             _that = this;
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             if (mode == 'add') {
                 post_url = $rootScope.IRISOrgServiceUrl + '/patientvitals';
@@ -137,7 +137,7 @@ app.controller('VitalsController', ['$rootScope', '$scope', '$timeout', '$http',
             }).success(
                     function (response) {
                         $scope.loadbar('hide');
-                        $scope.successMessage = succ_msg;
+                        $scope.msg.successMessage = succ_msg;
                         $scope.data = {};
                         $timeout(function () {
                             $state.go('patient.vitals', {id: $state.params.id});
@@ -196,7 +196,7 @@ app.controller('VitalsController', ['$rootScope', '$scope', '$timeout', '$http',
                             $scope.loadbar('hide');
                             if (response.data.success === true) {
                                 $scope.loadPatVitalsList();
-                                $scope.successMessage = 'Patient Vital Deleted Successfully';
+                                $scope.msg.successMessage = 'Patient Vital Deleted Successfully';
                             }
                             else {
                                 $scope.errorData = response.data.message;

@@ -6,7 +6,7 @@ app.controller('drugGenericController', ['$rootScope', '$scope', '$timeout', '$h
 
         //Index Page
         $scope.loaddrugGenericList = function () {
-            $scope.errorData = $scope.successMessage = '';
+            $scope.errorData = $scope.msg.successMessage = '';
             $scope.isLoading = true;
             // pagination set up
             $scope.rowCollection = [];  // base collection
@@ -81,7 +81,7 @@ app.controller('drugGenericController', ['$rootScope', '$scope', '$timeout', '$h
         };
 
         $scope.updateName = function (data, drug_class_id, key, gKey) {
-            $scope.errorData = $scope.successMessage = '';
+            $scope.errorData = $scope.msg.successMessage = '';
             if (typeof data.generic_id != 'undefined') {
 
                 angular.extend(data, {drug_class_id: drug_class_id, mode: 'update'});
@@ -94,7 +94,7 @@ app.controller('drugGenericController', ['$rootScope', '$scope', '$timeout', '$h
                             $scope.loadbar('hide');
                             $anchorScroll();
                             if (response.success == true) {
-                                $scope.successMessage = 'Drug class assigned successfully';
+                                $scope.msg.successMessage = 'Drug class assigned successfully';
                                 delete $scope.displayedCollection[key].genericnames[gKey].temp_drug_class_id;
                             } else {
                                 $scope.errorData = response.message;
@@ -112,7 +112,7 @@ app.controller('drugGenericController', ['$rootScope', '$scope', '$timeout', '$h
         };
 
         $scope.deleteSubRow = function (drug_class_id, generic_id, temp_drug_class_id) {
-            $scope.errorData = $scope.successMessage = '';
+            $scope.errorData = $scope.msg.successMessage = '';
             //Remove Temp Row from Table
             if (typeof temp_drug_class_id != 'undefined') {
                 angular.forEach($scope.displayedCollection, function (parent) {
@@ -155,7 +155,7 @@ app.controller('drugGenericController', ['$rootScope', '$scope', '$timeout', '$h
                                                     if (parent.genericnames.length == 0) {
                                                         $scope.displayedCollection.splice(key, 1);
                                                     }
-                                                    $scope.successMessage = sub.generic_name + ' deleted successfully !!!';
+                                                    $scope.msg.successMessage = sub.generic_name + ' deleted successfully !!!';
                                                 }
                                         ).error(function (data, status) {
                                             $scope.loadbar('hide');
@@ -184,7 +184,7 @@ app.controller('drugGenericController', ['$rootScope', '$scope', '$timeout', '$h
             _that = this;
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             var generics = [];
 
@@ -202,7 +202,7 @@ app.controller('drugGenericController', ['$rootScope', '$scope', '$timeout', '$h
                         $anchorScroll();
                         if (response.success == true) {
                             $scope.loadbar('hide');
-                            $scope.successMessage = 'Drug class assigned successfully';
+                            $scope.msg.successMessage = 'Drug class assigned successfully';
                             $scope.data = {};
                             $timeout(function () {
                                 $state.go('pharmacy.drugGeneric');
@@ -279,7 +279,7 @@ app.controller('drugGenericController', ['$rootScope', '$scope', '$timeout', '$h
                             function (response) {
                                 $scope.loadbar('hide');
                                 if (response.data.success === true) {
-                                    $scope.successMessage = row.charge_cat_name + ' deleted successfully !!!';
+                                    $scope.msg.successMessage = row.charge_cat_name + ' deleted successfully !!!';
                                     $scope.displayedCollection.splice(index, 1);
                                 }
                                 else {

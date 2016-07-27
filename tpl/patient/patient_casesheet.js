@@ -21,7 +21,7 @@ app.controller('PatientCaseSheetController', ['$rootScope', '$scope', '$timeout'
             _that = this;
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             post_url = $rootScope.IRISOrgServiceUrl + '/patientcasesheet/createcasesheet';
             method = 'POST';
@@ -38,7 +38,7 @@ app.controller('PatientCaseSheetController', ['$rootScope', '$scope', '$timeout'
                     function (response) {
                         $scope.loadbar('hide');
                         if(response.success == true){
-                            $scope.successMessage = succ_msg;
+                            $scope.msg.successMessage = succ_msg;
                             $scope.patientObj.activeCasesheetno = _that.data.casesheet_no;
                         } else {
                             $scope.errorData = response.message;

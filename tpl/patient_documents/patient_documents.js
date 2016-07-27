@@ -168,7 +168,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                             $scope.loadbar('hide');
                             if (response.data.success === true) {
                                 $scope.loadPatDocumentsList();
-                                $scope.successMessage = 'Document Deleted Successfully';
+                                $scope.msg.successMessage = 'Document Deleted Successfully';
                             }
                             else {
                                 $scope.errorData = response.data.message;
@@ -204,7 +204,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     function (response) {
                         $scope.loadbar('hide');
                         if (response.data.success == true) {
-                            $scope.successMessage = 'Document Saved Successfully';
+                            $scope.msg.successMessage = 'Document Saved Successfully';
                             $state.go('patient.document', {id: $state.params.id});
                         } else {
                             $scope.errorData = response.data.message;

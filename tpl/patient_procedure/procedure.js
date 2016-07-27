@@ -172,7 +172,7 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
             _that = this;
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             docIds = [];
             angular.forEach($scope.data.consultant_ids, function (list) {
@@ -200,7 +200,7 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
             }).success(
                     function (response) {
                         $scope.loadbar('hide');
-                        $scope.successMessage = succ_msg;
+                        $scope.msg.successMessage = succ_msg;
                         $scope.data = {};
                         $timeout(function () {
                             $state.go('patient.procedure', {id: $scope.patientObj.patient_guid});
@@ -268,7 +268,7 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
                             $scope.loadbar('hide');
                             if (response.data.success === true) {
                                 $scope.loadProceduresList();
-                                $scope.successMessage = 'Procedure deleted successfully';
+                                $scope.msg.successMessage = 'Procedure deleted successfully';
                             }
                             else {
                                 $scope.errorData = response.data.message;

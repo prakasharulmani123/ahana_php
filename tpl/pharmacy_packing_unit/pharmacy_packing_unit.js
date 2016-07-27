@@ -32,7 +32,7 @@ app.controller('PackingsController', ['$rootScope', '$scope', '$timeout', '$http
             _that = this;
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             if (mode == 'add') {
                 post_url = $rootScope.IRISOrgServiceUrl + '/pharmacypackings';
@@ -52,7 +52,7 @@ app.controller('PackingsController', ['$rootScope', '$scope', '$timeout', '$http
             }).success(
                     function (response) {
                         $scope.loadbar('hide');
-                        $scope.successMessage = succ_msg;
+                        $scope.msg.successMessage = succ_msg;
                         $scope.data = {};
                         $timeout(function () {
                             $state.go('pharmacy.packingUnit');
@@ -107,7 +107,7 @@ app.controller('PackingsController', ['$rootScope', '$scope', '$timeout', '$http
                                 if (response.data.success === true) {
                                     $scope.displayedCollection.splice(index, 1);
                                     $scope.loadPackingsList();
-                                    $scope.successMessage = 'Packing Deleted Successfully';
+                                    $scope.msg.successMessage = 'Packing Deleted Successfully';
                                 }
                                 else {
                                     $scope.errorData = response.data.message;

@@ -15,7 +15,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
         //Index Page
         $scope.loadSaleItemList = function (payment_type) {
-            $scope.errorData = $scope.successMessage = '';
+            $scope.errorData = $scope.msg.successMessage = '';
             $scope.isLoading = true;
             if (payment_type == 'CA') {
                 $scope.sale_payment_type_name = 'Cash';
@@ -461,7 +461,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             _that = this;
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             $scope.data.sale_date = moment($scope.data.sale_date).format('YYYY-MM-DD');
 
@@ -516,7 +516,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                             } else {
                                 msg = 'Bill updated successfully';
                             }
-                            $scope.successMessage = msg;
+                            $scope.msg.successMessage = msg;
                             $timeout(function () {
                                 //                                $state.go('pharmacy.sales');
                                 save_success();

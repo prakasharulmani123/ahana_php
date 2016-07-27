@@ -11,7 +11,7 @@ app.controller('PurchaseReturnController', ['$rootScope', '$scope', '$timeout', 
 
         //Index Page
         $scope.loadPurchaseReturnItemList = function () {
-            $scope.errorData = $scope.successMessage = '';
+            $scope.errorData = $scope.msg.successMessage = '';
             $scope.isLoading = true;
             // pagination set up
             $scope.rowCollection = [];  // base collection
@@ -324,7 +324,7 @@ app.controller('PurchaseReturnController', ['$rootScope', '$scope', '$timeout', 
             _that = this;
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             $scope.data.invoice_date = moment($scope.data.invoice_date).format('YYYY-MM-DD');
 
@@ -356,7 +356,7 @@ app.controller('PurchaseReturnController', ['$rootScope', '$scope', '$timeout', 
                         $anchorScroll();
                         if (response.success == true) {
                             $scope.loadbar('hide');
-                            $scope.successMessage = 'PurchaseReturn Saved successfully';
+                            $scope.msg.successMessage = 'PurchaseReturn Saved successfully';
                             $scope.data = {};
                             $timeout(function () {
                                 $state.go('pharmacy.purchaseReturn');

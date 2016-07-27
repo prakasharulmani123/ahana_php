@@ -75,7 +75,7 @@ app.controller('VitalsController', ['$rootScope', '$scope', '$timeout', '$http',
             _that = this;
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
             
             angular.extend(_that.data, {
                 patient_id: $state.params.id,
@@ -90,7 +90,7 @@ app.controller('VitalsController', ['$rootScope', '$scope', '$timeout', '$http',
             }).success(
                     function (response) {
                         $scope.loadbar('hide');
-                        $scope.successMessage = 'Patient share saved successfully';
+                        $scope.msg.successMessage = 'Patient share saved successfully';
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');
@@ -141,7 +141,7 @@ app.controller('VitalsController', ['$rootScope', '$scope', '$timeout', '$http',
                                 if (response.data.success === true) {
                                     $scope.displayedCollection.splice(index, 1);
                                     $scope.loadPatVitalsList();
-                                    $scope.successMessage = 'Patient Note Deleted Successfully';
+                                    $scope.msg.successMessage = 'Patient Note Deleted Successfully';
                                 }
                                 else {
                                     $scope.errorData = response.data.message;

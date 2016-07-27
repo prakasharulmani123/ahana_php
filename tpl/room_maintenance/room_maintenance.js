@@ -25,7 +25,7 @@ app.controller('RoomMaintenanceController', ['$rootScope', '$scope', '$timeout',
             _that = this;
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             if (mode == 'add') {
                 post_url = $rootScope.IRISOrgServiceUrl + '/roommaintenances';
@@ -45,7 +45,7 @@ app.controller('RoomMaintenanceController', ['$rootScope', '$scope', '$timeout',
             }).success(
                     function (response) {
                         $scope.loadbar('hide');
-                        $scope.successMessage = succ_msg;
+                        $scope.msg.successMessage = succ_msg;
                         $scope.data = {};
                         $timeout(function () {
                             $state.go('configuration.roomMaintenance');

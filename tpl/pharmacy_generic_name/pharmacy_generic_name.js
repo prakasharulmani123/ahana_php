@@ -25,7 +25,7 @@ app.controller('GenericNameController', ['$rootScope', '$scope', '$timeout', '$h
             _that = this;
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             if (mode == 'add') {
                 post_url = $rootScope.IRISOrgServiceUrl + '/genericnames';
@@ -47,7 +47,7 @@ app.controller('GenericNameController', ['$rootScope', '$scope', '$timeout', '$h
             }).success(
                     function (response) {
                         $scope.loadbar('hide');
-                        $scope.successMessage = succ_msg;
+                        $scope.msg.successMessage = succ_msg;
                         $scope.data = {};
                         $timeout(function () {
                             $state.go('pharmacy.genericName');
@@ -102,7 +102,7 @@ app.controller('GenericNameController', ['$rootScope', '$scope', '$timeout', '$h
                                 if (response.data.success === true) {
                                     $scope.displayedCollection.splice(index, 1);
                                     $scope.loadGenericNamesList();
-                                    $scope.successMessage = 'GenericName Deleted Successfully';
+                                    $scope.msg.successMessage = 'GenericName Deleted Successfully';
                                 }
                                 else {
                                     $scope.errorData = response.data.message;

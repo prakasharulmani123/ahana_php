@@ -90,7 +90,7 @@ app.controller('NotesController', ['$rootScope', '$scope', '$timeout', '$http', 
             _that = this;
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             if (mode == 'add') {
                 post_url = $rootScope.IRISOrgServiceUrl + '/patientnotes';
@@ -115,7 +115,7 @@ app.controller('NotesController', ['$rootScope', '$scope', '$timeout', '$http', 
             }).success(
                     function (response) {
                         $scope.loadbar('hide');
-                        $scope.successMessage = succ_msg;
+                        $scope.msg.successMessage = succ_msg;
                         $scope.data = {};
                         $timeout(function () {
                             $state.go('patient.notes', {id: $state.params.id});
@@ -174,7 +174,7 @@ app.controller('NotesController', ['$rootScope', '$scope', '$timeout', '$http', 
                             $scope.loadbar('hide');
                             if (response.data.success === true) {
                                 $scope.loadPatNotesList();
-                                $scope.successMessage = 'Patient Note Deleted Successfully';
+                                $scope.msg.successMessage = 'Patient Note Deleted Successfully';
                             }
                             else {
                                 $scope.errorData = response.data.message;

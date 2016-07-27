@@ -85,7 +85,7 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
             _that = this;
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             if (mode == 'add') {
                 post_url = $rootScope.IRISOrgServiceUrl + '/users/createuser';
@@ -104,13 +104,13 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
                         if (response.data.success === true) {
 
                             if (mode !== 'add') {
-                                $scope.successMessage = " User updated successfully";
+                                $scope.msg.successMessage = " User updated successfully";
                                 $timeout(function () {
                                     $state.go('configuration.registration');
                                 }, 1000)
                             }
                             else {
-                                $scope.successMessage = "User saved successfully";
+                                $scope.msg.successMessage = "User saved successfully";
                                 $scope.data = {};
                                 $timeout(function () {
                                     $state.go('configuration.registration');
@@ -185,7 +185,7 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
 //            _that.data.Inactivation_date = moment(_that.data.Inactivation_date).format('YYYY-MM-DD');
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             $scope.loadbar('show');
             $http({
@@ -196,7 +196,7 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
                     function (response) {
                         $scope.loadbar('hide');
                         if (response.data.success === true) {
-                            $scope.successMessage = "Login saved successfully";
+                            $scope.msg.successMessage = "Login saved successfully";
 //                            $scope.data = {};
                             $timeout(function () {
                                 $state.go('configuration.registration');

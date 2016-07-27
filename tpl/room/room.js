@@ -36,7 +36,7 @@ app.controller('RoomController', ['$rootScope', '$scope', '$timeout', '$http', '
             _that = this;
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             if (mode == 'add') {
                 post_url = $rootScope.IRISOrgServiceUrl + '/rooms';
@@ -56,7 +56,7 @@ app.controller('RoomController', ['$rootScope', '$scope', '$timeout', '$http', '
             }).success(
                     function (response) {
                         $scope.loadbar('hide');
-                        $scope.successMessage = succ_msg;
+                        $scope.msg.successMessage = succ_msg;
                         $scope.data = {};
                         $timeout(function () {
                             $state.go('configuration.room');

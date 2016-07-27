@@ -219,7 +219,7 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
             angular.extend(_that.data, {total_amount: total});
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             post_url = $rootScope.IRISOrgServiceUrl + '/encounters/' + _that.data.encounter_id;
             method = 'PUT';
@@ -233,7 +233,7 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
             }).success(
                     function (response) {
                         $scope.loadbar('hide');
-                        $scope.successMessage = succ_msg;
+                        $scope.msg.successMessage = succ_msg;
                         $scope.data = {};
                         $timeout(function () {
                             $state.go('patient.billing', {id: $state.params.id});
@@ -403,7 +403,7 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
                                     }
                                 }, true);
                                 $scope.more_advance_li = {};
-                                $scope.successMessage = 'Advance Payment Deleted Successfully';
+                                $scope.msg.successMessage = 'Advance Payment Deleted Successfully';
                             }
                             else {
                                 $scope.errorData = response.data.message;
@@ -454,7 +454,7 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
                                 if (response.data.success === true) {
                                     $scope.displayedCollection.splice(index, 1);
                                     $scope.loadPatConsultantsList();
-                                    $scope.successMessage = 'Patient Consultant Deleted Successfully';
+                                    $scope.msg.successMessage = 'Patient Consultant Deleted Successfully';
                                 }
                                 else {
                                     $scope.errorData = response.data.message;

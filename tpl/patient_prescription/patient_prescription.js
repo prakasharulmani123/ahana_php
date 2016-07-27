@@ -372,7 +372,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             _that = this;
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             post_url = $rootScope.IRISOrgServiceUrl + '/patientprescription/saveprescription';
             method = 'POST';
@@ -410,7 +410,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
                         if (response.success) {
                             $scope.current_time = response.date;
-                            $scope.successMessage = succ_msg;
+                            $scope.msg.successMessage = succ_msg;
                             $scope.data = {prescriptionItems: []};
 
                             $scope.consultant_name = response.model.consultant_name;

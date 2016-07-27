@@ -54,7 +54,7 @@ app.controller('UserRolesController', ['$scope', '$http', '$filter', '$state', '
         $scope.saveForm = function () {
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             $scope.roleList = [];
 
@@ -76,7 +76,7 @@ app.controller('UserRolesController', ['$scope', '$http', '$filter', '$state', '
                     function (response) {
                         $scope.loadbar('hide');
                         if (response.data.success === true) {
-                            $scope.successMessage = "Roles assigned successfully";
+                            $scope.msg.successMessage = "Roles assigned successfully";
                         }
                         else {
                             $scope.errorData = response.data.message;
@@ -101,7 +101,7 @@ app.controller('UserRolesController', ['$scope', '$http', '$filter', '$state', '
 
         $scope.getSavedRoles = function () {
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
             $http({
                 url: $rootScope.IRISOrgServiceUrl + '/role/getmyroles?id=' + $scope.data.user_id,
                 method: "GET",

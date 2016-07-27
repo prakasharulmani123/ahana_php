@@ -61,7 +61,7 @@ app.controller('RoomChargeCategoriesController', ['$rootScope', '$scope', '$time
         };
 
         $scope.updateName = function (data, id, charge_cat_id, temp_charge_cat_id) {
-            $scope.errorData = $scope.successMessage = '';
+            $scope.errorData = $scope.msg.successMessage = '';
             if (typeof data.charge_subcat_name != 'undefined') {
                 if (typeof id != 'undefined') {
                     post_method = 'PUT';
@@ -80,7 +80,7 @@ app.controller('RoomChargeCategoriesController', ['$rootScope', '$scope', '$time
                 }).success(
                         function (response) {
                             $scope.loadbar('hide');
-                            $scope.successMessage = succ_msg;
+                            $scope.msg.successMessage = succ_msg;
 
                             //Update Subcategory
                             angular.forEach($scope.rowCollection, function (parent) {
@@ -141,7 +141,7 @@ app.controller('RoomChargeCategoriesController', ['$rootScope', '$scope', '$time
                                                     $scope.loadbar('hide');
                                                     if (response.data.success === true) {
                                                         parent.subcategories.splice(index, 1);
-                                                        $scope.successMessage = sub.charge_subcat_name + ' deleted successfully !!!';
+                                                        $scope.msg.successMessage = sub.charge_subcat_name + ' deleted successfully !!!';
                                                     }
                                                     else {
                                                         $scope.errorData = response.data.message;
@@ -169,7 +169,7 @@ app.controller('RoomChargeCategoriesController', ['$rootScope', '$scope', '$time
             _that = this;
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             if (mode == 'add') {
                 post_url = $rootScope.IRISOrgServiceUrl + '/roomchargecategories';
@@ -208,7 +208,7 @@ app.controller('RoomChargeCategoriesController', ['$rootScope', '$scope', '$time
                                                     $anchorScroll();
                                                     if (response.success == true) {
                                                         $scope.loadbar('hide');
-                                                        $scope.successMessage = succ_msg;
+                                                        $scope.msg.successMessage = succ_msg;
                                                         $scope.data = {};
                                                         $timeout(function () {
                                                             $state.go('configuration.roomChargeCategory');
@@ -310,7 +310,7 @@ app.controller('RoomChargeCategoriesController', ['$rootScope', '$scope', '$time
                             function (response) {
                                 $scope.loadbar('hide');
                                 if (response.data.success === true) {
-                                    $scope.successMessage = row.charge_cat_name + ' deleted successfully !!!';
+                                    $scope.msg.successMessage = row.charge_cat_name + ' deleted successfully !!!';
                                     $scope.rowCollection.splice(index, 1);
                                 }
                                 else {

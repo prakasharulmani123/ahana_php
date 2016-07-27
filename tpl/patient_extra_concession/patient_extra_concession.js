@@ -43,7 +43,7 @@ app.controller('ExtraConcessionController', ['$rootScope', '$scope', '$timeout',
             _that = this;
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             if (mode == 'add') {
                 angular.extend(_that.data, {
@@ -73,7 +73,7 @@ app.controller('ExtraConcessionController', ['$rootScope', '$scope', '$timeout',
                         $scope.loadbar('hide');
 
                         if (response.success != false) {
-                            $scope.successMessage = succ_msg;
+                            $scope.msg.successMessage = succ_msg;
 //                            $scope.data = {};
                             $timeout(function () {
                                 $state.go('patient.billing', {id: $state.params.id});
@@ -173,7 +173,7 @@ app.controller('ExtraConcessionController', ['$rootScope', '$scope', '$timeout',
                                 if (response.data.success === true) {
                                     $scope.displayedCollection.splice(index, 1);
                                     $scope.loadPatNotesList();
-                                    $scope.successMessage = 'Patient Note Deleted Successfully';
+                                    $scope.msg.successMessage = 'Patient Note Deleted Successfully';
                                 }
                                 else {
                                     $scope.errorData = response.data.message;

@@ -36,7 +36,7 @@ app.controller('CustomRoomChargeCategoriesController', ['$rootScope', '$scope', 
             _that = this;
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             if (mode == 'add') {
                 post_url = $rootScope.IRISOrgServiceUrl + '/roomchargesubcategories';
@@ -58,7 +58,7 @@ app.controller('CustomRoomChargeCategoriesController', ['$rootScope', '$scope', 
             }).success(
                     function (response) {
                         $scope.loadbar('hide');
-                        $scope.successMessage = succ_msg;
+                        $scope.msg.successMessage = succ_msg;
                         $scope.data = {};
                         $timeout(function () {
                             if($scope.category.charge_cat_code == 'ALC')
@@ -116,7 +116,7 @@ app.controller('CustomRoomChargeCategoriesController', ['$rootScope', '$scope', 
                                 if (response.data.success === true) {
                                     $scope.displayedCollection.splice(index, 1);
                                     $scope.loadCustomRoomChargeCategoriesList();
-                                    $scope.successMessage = 'Charge Deleted successfully';
+                                    $scope.msg.successMessage = 'Charge Deleted successfully';
                                 }
                                 else {
                                     $scope.errorData = response.data.message;

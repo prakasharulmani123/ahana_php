@@ -35,7 +35,7 @@ app.controller('RoomChargesController', ['$rootScope', '$scope', '$timeout', '$h
             _that = this;
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             if (mode == 'add') {
                 post_url = $rootScope.IRISOrgServiceUrl + '/roomcharges';
@@ -55,7 +55,7 @@ app.controller('RoomChargesController', ['$rootScope', '$scope', '$timeout', '$h
             }).success(
                     function (response) {
                         $scope.loadbar('hide');
-                        $scope.successMessage = succ_msg;
+                        $scope.msg.successMessage = succ_msg;
                         $scope.data = {};
                         $timeout(function () {
                             $state.go('configuration.roomCharge');

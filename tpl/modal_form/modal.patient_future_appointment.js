@@ -50,7 +50,7 @@ app.controller('ModalPatientFutureAppointmentController', ['scope', '$scope', '$
             _that = this;
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             post_url = $rootScope.IRISOrgServiceUrl + '/encounter/createappointment';
             method = 'POST';
@@ -65,7 +65,7 @@ app.controller('ModalPatientFutureAppointmentController', ['scope', '$scope', '$
                     function (response) {
                         scope.loadbar('hide');
                         if (response.success == true) {
-                            $scope.successMessage = succ_msg;
+                            $scope.msg.successMessage = succ_msg;
                             $scope.data = {};
                             $timeout(function () {
                                 $modalInstance.dismiss('cancel');

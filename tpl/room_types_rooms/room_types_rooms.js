@@ -52,7 +52,7 @@ app.controller('RoomTypesRoomsController', ['$scope', '$http', '$filter', '$stat
 
         $scope.getRoomandRoomTypes = function () {
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             $rootScope.commonService.GetRoomTypeList('', '1', false, function (response) {
                 $scope.roomtypes = response.roomtypeList;
@@ -73,7 +73,7 @@ app.controller('RoomTypesRoomsController', ['$scope', '$http', '$filter', '$stat
         //Save Data
         $scope.saveForm = function () {
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             $scope.roomTypeList = [];
 
@@ -96,7 +96,7 @@ app.controller('RoomTypesRoomsController', ['$scope', '$http', '$filter', '$stat
                     function (response) {
                         $scope.loadbar('hide');
                         if (response.data.success === true) {
-                            $scope.successMessage = "Bed Types assigned successfully";
+                            $scope.msg.successMessage = "Bed Types assigned successfully";
                             $timeout(function () {
                                 $state.go("configuration.roomTypeRoom");
                             }, 1000);

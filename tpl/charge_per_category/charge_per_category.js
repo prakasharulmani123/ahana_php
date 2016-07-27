@@ -133,7 +133,7 @@ app.controller('ChargePerCategoriesController', ['$rootScope', '$scope', '$timeo
                 _that = this;
 
                 $scope.errorData = "";
-                $scope.successMessage = "";
+                $scope.msg.successMessage = "";
 
                 if (mode == 'add') {
                     post_url = $rootScope.IRISOrgServiceUrl + '/chargepercategories';
@@ -191,7 +191,7 @@ app.controller('ChargePerCategoriesController', ['$rootScope', '$scope', '$timeo
                                         $anchorScroll();
                                         if (response.success == true) {
                                             $scope.loadbar('hide');
-                                            $scope.successMessage = succ_msg;
+                                            $scope.msg.successMessage = succ_msg;
                                             $scope.data = {};
                                             $timeout(function () {
                                                 $state.go('configuration.chargePerCategory');
@@ -238,7 +238,7 @@ app.controller('ChargePerCategoriesController', ['$rootScope', '$scope', '$timeo
         };
 
         $scope.updateAmount = function (data, id, charge_id, charge_type, charge_link_id) {
-            $scope.errorData = $scope.successMessage = '';
+            $scope.errorData = $scope.msg.successMessage = '';
             if (typeof data.charge_amount != 'undefined') {
                 if (typeof id != 'undefined') {
                     post_method = 'PUT';
@@ -257,7 +257,7 @@ app.controller('ChargePerCategoriesController', ['$rootScope', '$scope', '$timeo
                 }).success(
                         function (response) {
                             $scope.loadbar('hide');
-                            $scope.successMessage = succ_msg;
+                            $scope.msg.successMessage = succ_msg;
                         }
                 ).error(function (data, status) {
                     $scope.loadbar('hide');
@@ -270,7 +270,7 @@ app.controller('ChargePerCategoriesController', ['$rootScope', '$scope', '$timeo
         };
 
         $scope.updateDefaultAmount = function (data, id) {
-            $scope.errorData = $scope.successMessage = '';
+            $scope.errorData = $scope.msg.successMessage = '';
             if (typeof data.charge_default != 'undefined') {
                 $http({
                     method: 'PUT',
@@ -279,7 +279,7 @@ app.controller('ChargePerCategoriesController', ['$rootScope', '$scope', '$timeo
                 }).success(
                         function (response) {
                             $scope.loadbar('hide');
-                            $scope.successMessage = 'Default Charge Updated successfully';
+                            $scope.msg.successMessage = 'Default Charge Updated successfully';
                         }
                 ).error(function (data, status) {
                     $scope.loadbar('hide');

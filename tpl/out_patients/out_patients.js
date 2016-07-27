@@ -159,7 +159,7 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                     data: $scope.currentAppointmentSelectedItems,
                 }).success(
                         function (response) {
-                            $scope.successMessage = succ_msg;
+                            $scope.msg.successMessage = succ_msg;
                             $scope.loadbar('hide');
                             $scope.loadOutPatientsList($scope.op_type);
                         }
@@ -197,7 +197,7 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
             }).success(
                     function (response) {
                         $scope.loadbar('hide');
-                        $scope.successMessage = 'Patient updated successfully';
+                        $scope.msg.successMessage = 'Patient updated successfully';
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');
@@ -226,7 +226,7 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
 
         $scope.changeAppointmentStatus = function (_data, op_key, key) {
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             $scope.loadbar('show');
             $http({
@@ -236,7 +236,7 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
             }).success(
                     function (response) {
                         $scope.loadbar('hide');
-                        $scope.successMessage = 'Status changed successfully';
+                        $scope.msg.successMessage = 'Status changed successfully';
                         $scope.rowCollection[op_key]['all'][key].liveAppointmentArrival = response;
                         $scope.displayedCollection[op_key]['all'][key].liveAppointmentArrival = response;
 

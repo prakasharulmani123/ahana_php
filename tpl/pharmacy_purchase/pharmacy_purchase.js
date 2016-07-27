@@ -14,7 +14,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
 
         //Index Page
         $scope.loadPurchaseItemList = function (payment_type) {
-            $scope.errorData = $scope.successMessage = '';
+            $scope.errorData = $scope.msg.successMessage = '';
             if (payment_type == 'CA') {
                 $scope.purchase_payment_type_name = 'Cash';
             }
@@ -372,7 +372,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             _that = this;
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             $scope.data.invoice_date = moment($scope.data.invoice_date).format('YYYY-MM-DD');
 
@@ -427,7 +427,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                             $scope.loadbar('hide');
                             if (mode == 'add') {
                                 $scope.data = {};
-                                $scope.successMessage = 'New Purchase bill generated  ' + response.model.invoice_no;
+                                $scope.msg.successMessage = 'New Purchase bill generated  ' + response.model.invoice_no;
                                 $scope.data.invoice_date = moment().format('YYYY-MM-DD');
                                 $scope.data.formtype = 'add';
                                 $scope.data.payment_type = 'CA';
@@ -436,7 +436,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                                 $scope.addRow();
                                 $scope.tableform.$show();
                             } else {
-                                $scope.successMessage = 'Purchase updated successfully';
+                                $scope.msg.successMessage = 'Purchase updated successfully';
                             }
                             $timeout(function () {
                                 save_success();

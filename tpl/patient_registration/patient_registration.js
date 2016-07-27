@@ -29,7 +29,7 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
 
         $scope.initForm = function () {
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             $rootScope.commonService.GetFloorList('', '1', false, function (response) {
                 $scope.floors = response.floorList;
@@ -248,7 +248,7 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
             reg_mode = _that.data.PatPatient.patient_reg_mode;
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             post_url = $rootScope.IRISOrgServiceUrl + '/patient/registration';
             method = 'POST';
@@ -266,7 +266,7 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
                         $anchorScroll();
                         $scope.loadbar('hide');
                         if (response.success == true) {
-                            $scope.successMessage = succ_msg;
+                            $scope.msg.successMessage = succ_msg;
                             var patient_guid = response.patient_guid;
                             $timeout(function () {
                                 if (reg_mode == "IP") {

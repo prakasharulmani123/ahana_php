@@ -126,7 +126,7 @@ app.controller('DoctorSchedulesController', ['$rootScope', '$scope', '$timeout',
             _that = this;
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             if (mode == 'add') {
                 post_url = $rootScope.IRISOrgServiceUrl + '/doctorschedule/createschedule';
@@ -153,7 +153,7 @@ app.controller('DoctorSchedulesController', ['$rootScope', '$scope', '$timeout',
                         if (response.success == false) {
                             $scope.errorData = response.message;
                         } else {
-                            $scope.successMessage = succ_msg;
+                            $scope.msg.successMessage = succ_msg;
                             $scope.data = {};
                             $timeout(function () {
                                 $state.go('configuration.docSchedule');
@@ -195,7 +195,7 @@ app.controller('DoctorSchedulesController', ['$rootScope', '$scope', '$timeout',
         };
 
         $scope.updateTimings = function (data, id) {
-            $scope.errorData = $scope.successMessage = '';
+            $scope.errorData = $scope.msg.successMessage = '';
             post_method = 'PUT';
             post_url = $rootScope.IRISOrgServiceUrl + '/doctorschedules/' + id;
             succ_msg = 'Doctorschedule Updated successfully';
@@ -207,7 +207,7 @@ app.controller('DoctorSchedulesController', ['$rootScope', '$scope', '$timeout',
             }).success(
                     function (response) {
                         $scope.loadbar('hide');
-                        $scope.successMessage = succ_msg;
+                        $scope.msg.successMessage = succ_msg;
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');
@@ -240,7 +240,7 @@ app.controller('DoctorSchedulesController', ['$rootScope', '$scope', '$timeout',
                                                         $scope.loadbar('hide');
                                                         if (response.data.success === true) {
                                                             delete $scope.displayedCollection[index1]['days'][index2]['timing'][index3];
-                                                            $scope.successMessage = 'Timing deleted successfully !!!';
+                                                            $scope.msg.successMessage = 'Timing deleted successfully !!!';
                                                         }
                                                         else {
                                                             $scope.errorData = response.data.message;
@@ -275,7 +275,7 @@ app.controller('DoctorSchedulesController', ['$rootScope', '$scope', '$timeout',
                                         $scope.loadbar('hide');
                                         if (response.data.success === true) {
                                             delete $scope.displayedCollection[index];
-                                            $scope.successMessage = 'Doctor Schedule deleted successfully !!!';
+                                            $scope.msg.successMessage = 'Doctor Schedule deleted successfully !!!';
                                         }
                                         else {
                                             $scope.errorData = response.data.message;

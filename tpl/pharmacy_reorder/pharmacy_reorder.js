@@ -34,7 +34,7 @@ app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http
             $scope.isLoading = true;
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             $scope.activeMenu = mode;
 
@@ -87,7 +87,7 @@ app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http
         //Save Both Add & Update Data
         $scope.addReorderHistory = function () {
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             post_url = $rootScope.IRISOrgServiceUrl + '/pharmacyreorderhistory/addreorderhistory';
             method = 'POST';
@@ -109,7 +109,7 @@ app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http
                     function (response) {
                         $scope.loadbar('hide');
                         if (response.success == true) {
-                            $scope.successMessage = succ_msg;
+                            $scope.msg.successMessage = succ_msg;
                             $scope.user_id = '';
 
                             for (var i = 0; i < $scope.records.length; i++) {
@@ -398,7 +398,7 @@ app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http
             _that = this;
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             $scope.data.invoice_date = moment($scope.data.invoice_date).format('YYYY-MM-DD');
 
@@ -456,12 +456,12 @@ app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http
                             $scope.loadbar('hide');
                             if (mode == 'add') {
                                 $scope.data = {};
-                                $scope.successMessage = 'New Purchase bill generated  ' + response.model.invoice_no;
+                                $scope.msg.successMessage = 'New Purchase bill generated  ' + response.model.invoice_no;
                                 $timeout(function () {
                                     $state.go('pharmacy.reorder');
                                 }, 1000);
                             } else {
-                                $scope.successMessage = 'Purchase updated successfully';
+                                $scope.msg.successMessage = 'Purchase updated successfully';
                             }
                             $timeout(function () {
                                 save_success();

@@ -32,7 +32,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
             _that = this;
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             post_url = $rootScope.IRISOrgServiceUrl + '/user/changepassword';
             method = 'POST';
@@ -47,7 +47,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                     function (response) {
                         $scope.loadbar('hide');
                         if (response.success == true) {
-                            $scope.successMessage = succ_msg;
+                            $scope.msg.successMessage = succ_msg;
                             $scope.data = {};
                         } else {
                             $scope.errorData = response.message;
@@ -104,7 +104,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
 
         $scope.updateSetting = function ($data, config_id) {
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             $scope.loadbar('show');
             $http({
@@ -114,7 +114,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
             }).success(
                     function (response) {
                         $scope.loadbar('hide');
-                        $scope.successMessage = 'Updated successfully';
+                        $scope.msg.successMessage = 'Updated successfully';
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');
@@ -127,7 +127,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
 
         $scope.updateShareSetting = function () {
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             _data = $('#shareform').serialize();
 //            _data = $('#shareform').serialize() + '&' + $.param({
@@ -144,7 +144,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
             }).success(
                     function (response) {
                         $scope.loadbar('hide');
-                        $scope.successMessage = 'Share Settings Updated successfully';
+                        $scope.msg.successMessage = 'Share Settings Updated successfully';
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');

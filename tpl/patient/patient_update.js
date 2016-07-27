@@ -185,7 +185,7 @@
 //            _that = this;
 //
 //            $scope.errorData = "";
-//            $scope.successMessage = "";
+//            $scope.msg.successMessage = "";
 //
 //            post_url = $rootScope.IRISOrgServiceUrl + '/patient/registration';
 //            method = 'POST';
@@ -203,7 +203,7 @@
 //                        $anchorScroll();
 //                        $scope.loadbar('hide');
 //                        if (response.success == true) {
-//                            $scope.successMessage = succ_msg;
+//                            $scope.msg.successMessage = succ_msg;
 //                            
 //                            $scope.patientObj.patient_id = '';
 //                            

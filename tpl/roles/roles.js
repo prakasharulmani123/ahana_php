@@ -36,7 +36,7 @@ app.controller('RolesController', ['$rootScope', '$scope', '$timeout', '$http', 
             _that = this;
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             if (mode == 'add') {
                 post_url = $rootScope.IRISOrgServiceUrl + '/roles/createrole';
@@ -55,13 +55,13 @@ app.controller('RolesController', ['$rootScope', '$scope', '$timeout', '$http', 
                         if (response.data.success === true) {
 
                             if (mode !== 'add') {
-                                $scope.successMessage = " Role updated successfully";
+                                $scope.msg.successMessage = " Role updated successfully";
                                 $timeout(function () {
                                     $state.go('configuration.roles');
                                 }, 1000)
                             }
                             else {
-                                $scope.successMessage = "Role saved successfully";
+                                $scope.msg.successMessage = "Role saved successfully";
                                 $timeout(function () {
                                     $scope.data = {};
                                     $state.go('configuration.roles');
@@ -109,7 +109,7 @@ app.controller('RolesController', ['$rootScope', '$scope', '$timeout', '$http', 
                             function (response) {
                                 $scope.loadbar('hide');
                                 if (response.data.success === true) {
-                                    $scope.successMessage = row.description + " deleted successfully";
+                                    $scope.msg.successMessage = row.description + " deleted successfully";
                                     $scope.rowCollection.splice(index, 1);
                                     $scope.loadRolesList();
                                 }

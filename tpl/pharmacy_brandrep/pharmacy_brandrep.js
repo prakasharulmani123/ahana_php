@@ -39,7 +39,7 @@ app.controller('BrandRepsController', ['$rootScope', '$scope', '$timeout', '$htt
             _that = this;
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             if (mode == 'add') {
                 post_url = $rootScope.IRISOrgServiceUrl + '/pharmacybrandreps';               
@@ -59,7 +59,7 @@ app.controller('BrandRepsController', ['$rootScope', '$scope', '$timeout', '$htt
             }).success(
                     function (response) {
                         $scope.loadbar('hide');
-                        $scope.successMessage = succ_msg;
+                        $scope.msg.successMessage = succ_msg;
                         $scope.data = {};
                         $timeout(function () {
                             $state.go('pharmacy.brandrep');
@@ -114,7 +114,7 @@ app.controller('BrandRepsController', ['$rootScope', '$scope', '$timeout', '$htt
                                 if (response.data.success === true) {
                                     $scope.displayedCollection.splice(index, 1);
                                     $scope.loadBrandsList();
-                                    $scope.successMessage = 'Brand Rep Deleted Successfully';
+                                    $scope.msg.successMessage = 'Brand Rep Deleted Successfully';
                                 }
                                 else {
                                     $scope.errorData = response.data.message;

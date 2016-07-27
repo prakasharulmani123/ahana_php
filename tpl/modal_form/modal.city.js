@@ -29,7 +29,7 @@ app.controller('CityModalInstanceCtrl', ['scope', '$scope', '$modalInstance', '$
             _that = this;
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             post_url = $rootScope.IRISOrgServiceUrl + '/cities';
             method = 'POST';
@@ -43,7 +43,7 @@ app.controller('CityModalInstanceCtrl', ['scope', '$scope', '$modalInstance', '$
             }).success(
                     function (response) {
                         scope.loadbar('hide');
-                        $scope.successMessage = succ_msg;
+                        $scope.msg.successMessage = succ_msg;
                         $scope.data = {};
                         $timeout(function () {
                             new_city = {

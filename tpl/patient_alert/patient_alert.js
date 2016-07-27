@@ -59,7 +59,7 @@ app.controller('PatientAlertsController', ['$rootScope', '$scope', '$timeout', '
 
         $scope.updateAlert = function ($data, pat_alert_id) {
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
             
             $scope.loadbar('show');
             $http({
@@ -69,7 +69,7 @@ app.controller('PatientAlertsController', ['$rootScope', '$scope', '$timeout', '
             }).success(
                     function (response) {
                         $scope.loadbar('hide');
-                        $scope.successMessage = response.alert_description + ' (Alert) updated successfully';
+                        $scope.msg.successMessage = response.alert_description + ' (Alert) updated successfully';
                         $anchorScroll();
                     }
             ).error(function (data, status) {
@@ -86,7 +86,7 @@ app.controller('PatientAlertsController', ['$rootScope', '$scope', '$timeout', '
             _that = this;
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             if (mode == 'add') {
                 post_url = $rootScope.IRISOrgServiceUrl + '/patientalerts';
@@ -108,7 +108,7 @@ app.controller('PatientAlertsController', ['$rootScope', '$scope', '$timeout', '
             }).success(
                     function (response) {
                         $scope.loadbar('hide');
-                        $scope.successMessage = succ_msg;
+                        $scope.msg.successMessage = succ_msg;
                         $scope.data = {};
                         $scope.data.formtype = 'add';
                         $scope.$emit('patient_alert', {hasalert: true, alert: response.alert_description});
@@ -170,7 +170,7 @@ app.controller('PatientAlertsController', ['$rootScope', '$scope', '$timeout', '
                             $scope.loadbar('hide');
                             if (response.data.success === true) {
                                 $scope.loadPatientAlertsList();
-                                $scope.successMessage = 'Alert deleted successfully';
+                                $scope.msg.successMessage = 'Alert deleted successfully';
                             }
                             else {
                                 $scope.errorData = response.data.message;

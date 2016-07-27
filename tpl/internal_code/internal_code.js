@@ -64,7 +64,7 @@ app.controller('InternalCodeController', ['$scope', '$http', '$filter', '$state'
             }
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             if (mode == 'add') {
                 post_url = $rootScope.IRISOrgServiceUrl + '/internalcodes';
@@ -84,7 +84,7 @@ app.controller('InternalCodeController', ['$scope', '$http', '$filter', '$state'
             }).success(
                     function (response) {
                         $scope.loadbar('hide');
-                        $scope.successMessage = succ_msg;
+                        $scope.msg.successMessage = succ_msg;
                         $timeout(function () {
                             $state.go('configuration.internalCode');
                         }, 1000)

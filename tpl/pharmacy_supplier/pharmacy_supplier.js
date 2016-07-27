@@ -76,7 +76,7 @@ app.controller('SuppliersController', ['$rootScope', '$scope', '$timeout', '$htt
             _that = this;
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             if (mode == 'add') {
                 post_url = $rootScope.IRISOrgServiceUrl + '/pharmacysuppliers';
@@ -96,7 +96,7 @@ app.controller('SuppliersController', ['$rootScope', '$scope', '$timeout', '$htt
             }).success(
                     function (response) {
                         $scope.loadbar('hide');
-                        $scope.successMessage = succ_msg;
+                        $scope.msg.successMessage = succ_msg;
                         $scope.data = {};
                         $timeout(function () {
                             $state.go('pharmacy.supplier');
@@ -153,7 +153,7 @@ app.controller('SuppliersController', ['$rootScope', '$scope', '$timeout', '$htt
                                 if (response.data.success === true) {
                                     $scope.displayedCollection.splice(index, 1);
                                     $scope.loadSuppliersList();
-                                    $scope.successMessage = 'Supplier Deleted Successfully';
+                                    $scope.msg.successMessage = 'Supplier Deleted Successfully';
                                 }
                                 else {
                                     $scope.errorData = response.data.message;

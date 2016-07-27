@@ -50,7 +50,7 @@ app.controller('RolesRightsController', ['$rootScope', '$scope', '$timeout', '$h
         //Get Rolewise rights
         $scope.getSavedRights = function () {
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
             $scope.loadbar('show');
             $http({
                 method: "POST",
@@ -72,7 +72,7 @@ app.controller('RolesRightsController', ['$rootScope', '$scope', '$timeout', '$h
         // Assign Role rights 
         $scope.saveRoleRights = function () {
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
             $scope.moduleList = [];
 
             angular.forEach($scope.modules, function (parent) {
@@ -115,7 +115,7 @@ app.controller('RolesRightsController', ['$rootScope', '$scope', '$timeout', '$h
                         $scope.loadbar('hide');
                         $anchorScroll();
                         if (response.data.success === true) {
-                            $scope.successMessage = "Role rights saved successfully";
+                            $scope.msg.successMessage = "Role rights saved successfully";
 //                            $scope.data = {};
 //                            $scope.modules = {};
                             $timeout(function () {

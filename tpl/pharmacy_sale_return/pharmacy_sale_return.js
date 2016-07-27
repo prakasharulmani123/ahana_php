@@ -12,7 +12,7 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
 
         //Index Page
         $scope.loadSaleReturnItemList = function () {
-            $scope.errorData = $scope.successMessage = '';
+            $scope.errorData = $scope.msg.successMessage = '';
             $scope.isLoading = true;
 
             // pagination set up
@@ -308,7 +308,7 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
             _that = this;
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             $scope.data.sale_date = moment($scope.data.sale_date).format('YYYY-MM-DD');
 
@@ -341,7 +341,7 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
                         $anchorScroll();
                         if (response.success == true) {
                             $scope.loadbar('hide');
-                            $scope.successMessage = 'Sale added successfully';
+                            $scope.msg.successMessage = 'Sale added successfully';
                             $scope.data = {};
                             $timeout(function () {
                                 $state.go('pharmacy.saleReturn');

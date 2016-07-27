@@ -58,7 +58,7 @@ app.controller('BillingPaymentController', ['$rootScope', '$scope', '$timeout', 
             }
             
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             if (mode == 'add') {
                 post_url = $rootScope.IRISOrgServiceUrl + '/patientbillingpayments';
@@ -83,7 +83,7 @@ app.controller('BillingPaymentController', ['$rootScope', '$scope', '$timeout', 
             }).success(
                     function (response) {
                         $scope.loadbar('hide');
-                        $scope.successMessage = succ_msg;
+                        $scope.msg.successMessage = succ_msg;
                         $scope.data = {};
                         $timeout(function () {
                             $state.go('patient.billing', {id: $state.params.id});
@@ -150,7 +150,7 @@ app.controller('BillingPaymentController', ['$rootScope', '$scope', '$timeout', 
                                 if (response.data.success === true) {
                                     $scope.displayedCollection.splice(index, 1);
                                     $scope.loadPatNotesList();
-                                    $scope.successMessage = 'Patient Note Deleted Successfully';
+                                    $scope.msg.successMessage = 'Patient Note Deleted Successfully';
                                 }
                                 else {
                                     $scope.errorData = response.data.message;

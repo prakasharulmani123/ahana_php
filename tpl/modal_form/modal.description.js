@@ -3,7 +3,7 @@ app.controller('DescriptionModalInstanceCtrl', ['scope', '$scope', '$modalInstan
             _that = this;
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             post_url = $rootScope.IRISOrgServiceUrl + '/pharmacyprodescs';
             method = 'POST';
@@ -17,7 +17,7 @@ app.controller('DescriptionModalInstanceCtrl', ['scope', '$scope', '$modalInstan
             }).success(
                     function (response) {
                         scope.loadbar('hide');
-                        $scope.successMessage = succ_msg;
+                        $scope.msg.successMessage = succ_msg;
                         $scope.data = {};
                         $timeout(function () {
                             scope.productDescriptions.push(response);

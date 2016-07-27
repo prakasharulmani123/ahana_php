@@ -245,7 +245,7 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
             _that = this;
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             post_url = $rootScope.IRISOrgServiceUrl + '/encounter/createappointment';
             method = 'POST';
@@ -262,7 +262,7 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
                     function (response) {
                         $scope.loadbar('hide');
                         if (response.success == true) {
-                            $scope.successMessage = succ_msg;
+                            $scope.msg.successMessage = succ_msg;
                             $scope.data = {};
                             $timeout(function () {
                                 $state.go("patient.encounter", {id: $state.params.id});
@@ -285,7 +285,7 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
             _that = this;
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             if (typeof (_that.data) != "undefined") {
                 if (_that.data.hasOwnProperty('PatAppointment')) {
@@ -324,7 +324,7 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
                     function (response) {
                         $scope.loadbar('hide');
                         if (response.success == true || mode == 'arrived') {
-                            $scope.successMessage = succ_msg;
+                            $scope.msg.successMessage = succ_msg;
                             if (mode == 'seen_future') {
                                 $scope.add_appointment();
                             } else if (mode == 'seen_print') {
@@ -401,7 +401,7 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
                             }).success(
                                     function (response) {
                                         $scope.loadbar('hide');
-                                        $scope.successMessage = succ_msg;
+                                        $scope.msg.successMessage = succ_msg;
                                         $scope.data = {};
                                         $timeout(function () {
                                             $state.go("patient.encounter", {id: $state.params.id});

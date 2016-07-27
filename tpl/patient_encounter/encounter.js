@@ -274,7 +274,7 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                                         if (response.success == false) {
                                             $scope.errorData = response.message;
                                         } else {
-                                            $scope.successMessage = succ_msg;
+                                            $scope.msg.successMessage = succ_msg;
                                             $scope.loadPatientEncounters('Current');
                                             $scope.loadView();
                                         }
@@ -358,7 +358,7 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                                     function (response) {
                                         $scope.loadbar('hide');
                                         if (response.success) {
-                                            $scope.successMessage = succ_msg;
+                                            $scope.msg.successMessage = succ_msg;
                                             $scope.loadPatientEncounters('Current');
                                             $scope.loadView();
                                         } else {
@@ -411,7 +411,7 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                                 data: PatAppointment,
                             }).success(
                                     function (response) {
-                                        $scope.successMessage = succ_msg;
+                                        $scope.msg.successMessage = succ_msg;
                                         $scope.loadbar('hide');
                                         $scope.loadPatientEncounters('Current');
                                         $scope.loadView();
@@ -431,7 +431,7 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
 
         $scope.changeAppointmentStatus = function (_data, key) {
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             angular.extend(_data, {
                 status_date: moment().format('YYYY-MM-DD'),
@@ -446,7 +446,7 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
             }).success(
                     function (response) {
                         $scope.loadbar('hide');
-                        $scope.successMessage = 'Status changed successfully';
+                        $scope.msg.successMessage = 'Status changed successfully';
                         $scope.loadPatientEncounters('Current');
                         $scope.loadView();
                     }

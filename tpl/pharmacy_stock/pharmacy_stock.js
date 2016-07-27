@@ -20,7 +20,7 @@ app.controller('stockController', ['$rootScope', '$scope', '$timeout', '$http', 
             $scope.isLoading = true;
             
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
             
             // pagination set up
             $scope.rowCollection = [];  // base collection
@@ -48,7 +48,7 @@ app.controller('stockController', ['$rootScope', '$scope', '$timeout', '$http', 
             $scope.isLoading = true;
             
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
             
             // pagination set up
             $scope.rowCollection = [];  // base collection
@@ -73,12 +73,12 @@ app.controller('stockController', ['$rootScope', '$scope', '$timeout', '$http', 
         $scope.adjustStock = function ($data, batch_id, key) {
             $scope.loadbar('show');
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
             $http.post($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/adjuststock', {'batch_id': batch_id, 'adjust_qty': $data})
                     .success(function (response) {
                         $scope.loadbar('hide');
                         if (response.success === true) {
-                            $scope.successMessage = 'Stock Adjusted successfully';
+                            $scope.msg.successMessage = 'Stock Adjusted successfully';
                             $scope.displayedCollection[key].available_qty = response.batch.available_qty;
                             $scope.displayedCollection[key].add_stock = 0;
                         } else {
@@ -93,13 +93,13 @@ app.controller('stockController', ['$rootScope', '$scope', '$timeout', '$http', 
         $scope.updateBatch = function ($data, batch_id, key) {
             $scope.loadbar('show');
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
             angular.extend($data, {'batch_id': batch_id});
             $http.post($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/updatebatch', $data)
                     .success(function (response) {
                         $scope.loadbar('hide');
                         if (response.success === true) {
-                            $scope.successMessage = 'Batch Details saved successfully';
+                            $scope.msg.successMessage = 'Batch Details saved successfully';
                             $scope.rowCollection[key].available_qty = response.batch.available_qty;
                             $scope.rowCollection[key].add_stock = 0;
                         } else {

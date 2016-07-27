@@ -65,7 +65,7 @@ app.controller('reportController', ['$rootScope', '$scope', '$timeout', '$http',
             $scope.showTable = true;
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             var data = {};
             if (typeof $scope.data.from !== 'undefined' && $scope.data.from != '')

@@ -25,7 +25,7 @@ app.controller('VatController', ['$rootScope', '$scope', '$timeout', '$http', '$
             _that = this;
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             if (mode == 'add') {
                 post_url = $rootScope.IRISOrgServiceUrl + '/pharmacyvats';
@@ -45,7 +45,7 @@ app.controller('VatController', ['$rootScope', '$scope', '$timeout', '$http', '$
             }).success(
                     function (response) {
                         $scope.loadbar('hide');
-                        $scope.successMessage = succ_msg;
+                        $scope.msg.successMessage = succ_msg;
                         $scope.data = {};
                         $timeout(function () {
                             $state.go('pharmacy.vat');
@@ -100,7 +100,7 @@ app.controller('VatController', ['$rootScope', '$scope', '$timeout', '$http', '$
                                 if (response.data.success === true) {
                                     $scope.displayedCollection.splice(index, 1);
                                     $scope.loadVatsList();
-                                    $scope.successMessage = 'Vat Deleted Successfully';
+                                    $scope.msg.successMessage = 'Vat Deleted Successfully';
                                 }
                                 else {
                                     $scope.errorData = response.data.message;

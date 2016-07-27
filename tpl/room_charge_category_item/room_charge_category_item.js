@@ -31,7 +31,7 @@ app.controller('RoomChargeCategoryItemsController', ['$rootScope', '$scope', '$t
             _that = this;
 
             $scope.errorData = "";
-            $scope.successMessage = "";
+            $scope.msg.successMessage = "";
 
             if (mode == 'add') {
                 post_url = $rootScope.IRISOrgServiceUrl + '/roomchargeitems';
@@ -51,7 +51,7 @@ app.controller('RoomChargeCategoryItemsController', ['$rootScope', '$scope', '$t
             }).success(
                     function (response) {
                         $scope.loadbar('hide');
-                        $scope.successMessage = succ_msg;
+                        $scope.msg.successMessage = succ_msg;
                         $scope.data = {};
                         $timeout(function () {
                             $state.go('configuration.roomChargeCategoryItem');

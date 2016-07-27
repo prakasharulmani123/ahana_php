@@ -105,7 +105,7 @@ angular.module('app')
                 $scope.updateStatus = function (modelName, primaryKey) {
                     $scope.service = CommonService;
                     $scope.service.ChangeStatus(modelName, primaryKey, function (response) {
-                        $scope.successMessage = 'Status changed successfully !!!';
+                        $scope.msg.successMessage = 'Status changed successfully !!!';
                     });
                 }
 
@@ -124,14 +124,15 @@ angular.module('app')
                 $scope.loadbar = function (mode) {
                     if (mode == 'show') {
                         $('.butterbar').removeClass('hide').addClass('active');
-                        $('.save-btn,.get-report,.search-btn,.save-print,.save-future,.save-btn-1').attr('disabled', true).html("<i class='fa fa-spin fa-spinner'></i> Please Wait...");
+                        $('.save-btn,.get-report,.search-btn,.save-print,.save-future,.save-btn-1,.save-print-bill').attr('disabled', true).html("<i class='fa fa-spin fa-spinner'></i> Please Wait...");
                     } else if (mode == 'hide') {
                         $('.butterbar').removeClass('active').addClass('hide');
                         $('.save-btn').attr('disabled', false).html("Save");
                         $('.get-report').attr('disabled', false).html("Get Report");
                         $('.search-btn').attr('disabled', false).html("Search");
                         $('.save-btn-1').attr('disabled', false).html("<i class='fa fa-check'></i> Save");
-                        $('.save-print').attr('disabled', false).html("<i class='fa fa-print'></i> Save and Print Bill");
+                        $('.save-print').attr('disabled', false).html("<i class='fa fa-print'></i> Save and Print");
+                        $('.save-print-bill').attr('disabled', false).html("<i class='fa fa-print'></i> Save and Print Bill");
                         $('.save-future').attr('disabled', false).html("Save & Future Appointment");
                     }
                 }
@@ -211,12 +212,15 @@ angular.module('app')
                     });
                     return ret;
                 }
-
-                $scope.$watch('successMessage', function (newValue, oldValue) {
-                    if ($scope.successMessage) {
+                
+                $scope.msg = {};
+                $scope.msg.successMessage = "";
+                
+                $scope.$watch('msg', function (newValue, oldValue) {
+                    if (newValue) {
                         $timeout(function () {
-                            $scope.successMessage = false;
-                        }, 3000);
+                            $scope.msg.successMessage = false;
+                        }, 5000);
                     }
                 }, true);
 
@@ -238,7 +242,7 @@ angular.module('app')
                     $scope.notes_error = false;
 
                     $scope.errorData = "";
-                    $scope.successMessage = "";
+                    $scope.msg.successMessage = "";
 
                     angular.extend($scope.data, {
                         patient_id: $scope.patientObj.patient_id,
@@ -257,7 +261,7 @@ angular.module('app')
                                 $scope.loadbar('hide');
 
                                 $(".vbox .row-row .cell:visible").animate({scrollTop: $('.vbox .row-row .cell:visible').prop("scrollHeight")}, 1000);
-//                                $scope.successMessage = 'Note saved successfully';
+//                                $scope.msg.successMessage = 'Note saved successfully';
                             })
                             .error(function (data, status) {
                                 $scope.loadbar('hide');
@@ -277,7 +281,7 @@ angular.module('app')
                     $scope.vital_error = false;
 
                     $scope.errorData = "";
-                    $scope.successMessage = "";
+                    $scope.msg.successMessage = "";
 
                     angular.extend($scope.vitaldata, {
                         patient_id: $scope.patientObj.patient_id,
@@ -438,7 +442,7 @@ angular.module('app')
                         return;
 
                     $scope.errorData = "";
-                    $scope.successMessage = "";
+                    $scope.msg.successMessage = "";
 
                     $scope.loadbar('show');
                     $('#import_' + key).attr('disabled', true).html("<i class='fa fa-spin fa-spinner'></i> Please Wait...");
@@ -451,7 +455,7 @@ angular.module('app')
                             function (response) {
                                 $scope.loadbar('hide');
                                 if (response.success == true) {
-                                    $scope.successMessage = 'Patient imported successfully';
+                                    $scope.msg.successMessage = 'Patient imported successfully';
                                     var patient_guid = response.patient.patient_guid;
                                     $('#import_' + key).html('Completed').toggleClass('btn-success').removeAttr('ng-click');
                                     $timeout(function () {

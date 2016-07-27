@@ -105,7 +105,7 @@ app.controller('FutureAppointmentController', ['$rootScope', '$scope', '$timeout
                     data: $scope.futureappointmentSelectedItems,
                 }).success(
                         function (response) {
-                            $scope.successMessage = succ_msg;
+                            $scope.msg.successMessage = succ_msg;
                             $scope.loadbar('hide');
                             $scope.encounterIDs = [];
                             $scope.selectedIDs = [];
