@@ -321,3 +321,7 @@ out-patient-table .table > thead > tr > th label.i-checks{
 .patient-name{
     font-size: 20px;
 }
+
+#xmlform .required{
+    color: red;
+}
