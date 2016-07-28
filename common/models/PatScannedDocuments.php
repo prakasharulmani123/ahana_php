@@ -39,7 +39,7 @@ class PatScannedDocuments extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['tenant_id', 'patient_id', 'encounter_id', 'file_name', 'file_path', 'created_by'], 'required'],
+            [['patient_id', 'encounter_id', 'file_name', 'file_path'], 'required'],
             [['tenant_id', 'patient_id', 'encounter_id', 'created_by', 'modified_by'], 'integer'],
             [['status'], 'string'],
             [['created_at', 'modified_at', 'deleted_at'], 'safe'],
