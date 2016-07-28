@@ -2299,6 +2299,38 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 }
             })
             
+            //Patient Scanned document - Index
+            .state('patient.scanneddocument', {
+                url: '/scanneddocument/{id}',
+                templateUrl: 'tpl/patient_scanned_documents/index.html',
+               resolve: {
+                      deps: ['$ocLazyLoad',
+                        function( $ocLazyLoad){
+                          return $ocLazyLoad.load('angularFileUpload').then(
+                              function(){
+                                 return $ocLazyLoad.load('tpl/patient_scanned_documents/patient_scanned_documents.js');
+                              }
+                          );
+                      }]
+                  }    
+            })
+            
+            //Patient Scanned Document - Create
+            .state('patient.addScannedDocument', {
+                url: '/addScannedDocument/{id}',
+                templateUrl: 'tpl/patient_scanned_documents/create.html',
+                resolve: {
+                      deps: ['$ocLazyLoad',
+                        function( $ocLazyLoad){
+                          return $ocLazyLoad.load('angularFileUpload').then(
+                              function(){
+                                 return $ocLazyLoad.load('tpl/patient_scanned_documents/patient_scanned_documents.js');
+                              }
+                          );
+                      }]
+                  }               
+            })
+            
             //Patient document - Index
             .state('patient.document', {
                 url: '/document/{id}',

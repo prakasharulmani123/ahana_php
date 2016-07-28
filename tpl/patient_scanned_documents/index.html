@@ -2,10 +2,10 @@
     <div class="row">
         <div class="col-sm-4"> 
             <div class="btn-group btn-group-justified">
-                <a class="btn btn-info active" ng-click="loadPatDocumentsList('current')">
+                <a class="btn btn-info" ng-click="$state.go('patient.document', {id: $state.params.id})">
                     <i class="fa fa-history"></i>  Case History
                 </a>
-                <a class="btn btn-info" ng-click="$state.go('patient.scanneddocument', {id: $state.params.id})">  
+                <a class="btn btn-info active" ng-click="loadPatientScannedDocumentsList('current')">  
                     <i class="fa fa-file-text"></i>
                     Scanned Documents
                 </a>
@@ -16,15 +16,15 @@
 
 
 
-<div class="wrapper-md" ng-controller="DocumentsController" ng-init="loadPatDocumentsList('current');">
+<div class="wrapper-md" ng-controller="ScannedDocumentsController" ng-init="loadPatientScannedDocumentsList('current');">
     <div class="bg-light lter b-b wrapper-md">
-        <h1 class="m-n h3">Documents</h1>
+        <h1 class="m-n h3"> Scanned Documents</h1>
     </div>
     <div class="panel panel-default">
         <div class="row wrapper">
             <div class="col-sm-4">
-                <button class="btn btn-info" ng-click="$state.go('patient.addDocument', {id: $state.params.id})">
-                    <i class="fa fa-plus"></i> Create Document 
+                <button class="btn btn-info" ng-click="$state.go('patient.addScannedDocument', {id: $state.params.id})">
+                    <i class="fa fa-plus"></i> Upload Document 
                 </button>
             </div>
         </div>
@@ -37,9 +37,9 @@
                                 <i ng-if="!allExpanded" class="fa fa-plus text"></i>
                                 <i ng-if="allExpanded" class="fa fa-minus text"></i>
                             </button>
-                        </th>
-                        <th>Document Date</th>
-                        <th>Document Name</th>
+                        </th>                       
+                        <th>File Name</th>
+                        <th>Created Date</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -65,17 +65,14 @@
                         </td>
                     </tr>
                     <tr ng-repeat-end ng-show="expanded" ng-repeat="(doc_key, doc) in value.all">
-                        <td align="center" valign="middle"></td>
+                        <td align="center" valign="middle"></td>                       
+                        <td valign="middle"> {{doc.file_name}} </td>
                         <td valign="middle"> {{doc.created_at| moment:'DD/MM/YYYY - hh:mm A'}} </td>
-                        <td valign="middle"> {{doc.document_name}} </td>
                         <td valign="middle">
-                            <a class="label bg-dark" title="View" check-access  ui-sref="patient.viewDocument({id: '{{$state.params.id}}', doc_id: '{{doc.doc_id}}'})">
+                            <a class="label bg-dark" title="View" check-access  ui-sref="patient.viewDocument({id: '{{$state.params.id}}', doc_id: '{{doc.scanned_doc_id}}'})">
                                 <i class="fa fa-eye"></i>
-                            </a>&nbsp;&nbsp;&nbsp;
-                            <a class="label bg-dark" title="Edit" check-access  ui-sref="patient.editDocument({id: '{{$state.params.id}}', doc_id: '{{doc.doc_id}}'})">
-                                <i class="fa fa-pencil"></i>
-                            </a>&nbsp;&nbsp;&nbsp;
-                            <button type="button" title="Delete"  ng-click="deleteDocument(doc.doc_id)" class="label bg-dark">
+                            </a>&nbsp;&nbsp;&nbsp;                        
+                            <button type="button" title="Delete"  ng-click="deleteDocument(doc.scanned_doc_id)" class="label bg-dark">
                                 <i class="fa fa-trash"></i>
                             </button>
                         </td>
