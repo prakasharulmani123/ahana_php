@@ -12,7 +12,7 @@ config.$inject = ['$stateProvider', '$urlRouterProvider', '$httpProvider', 'ivhT
 function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOptionsProvider, JQ_CONFIG, hotkeysProvider, $compileProvider) {
 
     hotkeysProvider.template = '<div class="my-own-cheatsheet">Hai</div>';
-    
+
     $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension):/);
 
     ivhTreeviewOptionsProvider.set({
@@ -1068,9 +1068,9 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                             return $ocLazyLoad.load(['smart-table', 'ui.select']).then(
                                     function () {
                                         return $ocLazyLoad.load([
-                                         'tpl/in_patients/in_patients.js',   
-                                         'tpl/modal_form/modal.patient_consultant_visit.js',
-                                         'tpl/modal_form/modal.patient_procedures.js'
+                                            'tpl/in_patients/in_patients.js',
+                                            'tpl/modal_form/modal.patient_consultant_visit.js',
+                                            'tpl/modal_form/modal.patient_procedures.js'
                                         ]);
                                     }
                             );
@@ -2210,7 +2210,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
-            
+
             //Patient Vital Update
             .state('patient.vitalUpdate', {
                 url: '/vitalUpdate/{id}/{vital_id}',
@@ -2298,39 +2298,39 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
-            
+
             //Patient Scanned document - Index
-            .state('patient.scanneddocument', {
-                url: '/scanneddocument/{id}',
+            .state('patient.scannedDocuments', {
+                url: '/scannedDocuments/{id}',
                 templateUrl: 'tpl/patient_scanned_documents/index.html',
-               resolve: {
-                      deps: ['$ocLazyLoad',
-                        function( $ocLazyLoad){
-                          return $ocLazyLoad.load('angularFileUpload').then(
-                              function(){
-                                 return $ocLazyLoad.load('tpl/patient_scanned_documents/patient_scanned_documents.js');
-                              }
-                          );
-                      }]
-                  }    
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('angularFileUpload').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/patient_scanned_documents/patient_scanned_documents.js');
+                                    }
+                            );
+                        }]
+                }
             })
-            
+
             //Patient Scanned Document - Create
             .state('patient.addScannedDocument', {
                 url: '/addScannedDocument/{id}',
                 templateUrl: 'tpl/patient_scanned_documents/create.html',
                 resolve: {
-                      deps: ['$ocLazyLoad',
-                        function( $ocLazyLoad){
-                          return $ocLazyLoad.load('angularFileUpload').then(
-                              function(){
-                                 return $ocLazyLoad.load('tpl/patient_scanned_documents/patient_scanned_documents.js');
-                              }
-                          );
-                      }]
-                  }               
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('angularFileUpload').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/patient_scanned_documents/patient_scanned_documents.js');
+                                    }
+                            );
+                        }]
+                }
             })
-            
+
             //Patient document - Index
             .state('patient.document', {
                 url: '/document/{id}',
@@ -2342,7 +2342,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
-            
+
             //Patient Document - Create
             .state('patient.addDocument', {
                 url: '/addDocument/{id}',
@@ -2354,7 +2354,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
-            
+
             //Patient document - Update
             .state('patient.editDocument', {
                 url: '/editDocument/{id}/{doc_id}',
@@ -2366,7 +2366,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
-            
+
             //Patient document - View
             .state('patient.viewDocument', {
                 url: '/viewDocument/{id}/{doc_id}',
@@ -2378,7 +2378,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
-            
+
             //Assisgn Patient Sharing
             .state('patient.assignShare', {
                 url: '/assignShare/{id}',
@@ -2390,7 +2390,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
-            
+
             //Pharmacy Reorder
             .state('pharmacy.reorder', {
                 url: '/reorder',
@@ -2406,7 +2406,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
-            
+
             //PHARMACY ReOrder History Update
             .state('pharmacy.reorderHistoryUpdate', {
                 url: '/reorderHistoryUpdate/{id}',
@@ -2485,7 +2485,7 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
         var restrictedPage = $.inArray($location.path(), ['/configuration/changePassword']) === -1;
         var currentUser = AuthenticationService.getCurrentUser();
         var loggedIn = Boolean(currentUser);
-        
+
         if (loggedIn) {
             var stateName = toState.name;
             if (stateName) {

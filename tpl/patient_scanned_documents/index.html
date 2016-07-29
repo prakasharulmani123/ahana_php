@@ -1,3 +1,6 @@
+<div class="bg-light lter b-b wrapper-md">
+    <h1 class="m-n h3"> Scanned Documents </h1>
+</div>
 <div class="wrapper-md tab-btn"> 
     <div class="row">
         <div class="col-sm-4"> 
@@ -5,7 +8,7 @@
                 <a class="btn btn-info" ng-click="$state.go('patient.document', {id: $state.params.id})">
                     <i class="fa fa-history"></i>  Case History
                 </a>
-                <a class="btn btn-info active" ng-click="loadPatientScannedDocumentsList('current')">  
+                <a class="btn btn-info active" ng-click="loadPatientScannedDocumentsList()">  
                     <i class="fa fa-file-text"></i>
                     Scanned Documents
                 </a>
@@ -13,18 +16,12 @@
         </div>
     </div>
 </div>
-
-
-
-<div class="wrapper-md" ng-controller="ScannedDocumentsController" ng-init="loadPatientScannedDocumentsList('current');">
-    <div class="bg-light lter b-b wrapper-md">
-        <h1 class="m-n h3"> Scanned Documents</h1>
-    </div>
+<div class="wrapper-md" ng-controller="ScannedDocumentsController" ng-init="loadPatientScannedDocumentsList();">
     <div class="panel panel-default">
         <div class="row wrapper">
             <div class="col-sm-4">
                 <button class="btn btn-info" ng-click="$state.go('patient.addScannedDocument', {id: $state.params.id})">
-                    <i class="fa fa-plus"></i> Upload Document 
+                    <i class="fa fa-plus"></i> Upload Documents
                 </button>
             </div>
         </div>
@@ -43,13 +40,13 @@
                         <th>Actions</th>
                     </tr>
                 </thead>
-                
+
                 <tbody ng-show="isLoading">
                     <tr>
                         <td colspan="4" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
                     </tr>
                 </tbody>
-                
+
                 <tbody ng-hide="isLoading">
                     <tr ng-repeat-start="(key, value) in rowCollection" ng-init="expanded = (key == 0) ? true : false;">
                         <td>
@@ -66,12 +63,16 @@
                     </tr>
                     <tr ng-repeat-end ng-show="expanded" ng-repeat="(doc_key, doc) in value.all">
                         <td align="center" valign="middle"></td>                       
-                        <td valign="middle"> {{doc.file_name}} </td>
-                        <td valign="middle"> {{doc.created_at| moment:'DD/MM/YYYY - hh:mm A'}} </td>
+                        <td valign="middle"> {{doc.file_org_name}} </td>
+                        <td valign="middle"> 
+                            {{doc.created_at| moment:'DD/MM/YYYY'}} &nbsp;
+                            <span class="label bg-light dk">{{doc.created_at| moment:'hh:mm A'}}</span>
+                        </td>
                         <td valign="middle">
-                            <a class="label bg-dark" title="View" check-access  ui-sref="patient.viewDocument({id: '{{$state.params.id}}', doc_id: '{{doc.scanned_doc_id}}'})">
-                                <i class="fa fa-eye"></i>
-                            </a>&nbsp;&nbsp;&nbsp;                        
+                            <button type="button" title="Download"  ng-click="downloadDocument(doc.scanned_doc_id)" class="label bg-dark">
+                                <i class="fa fa-download"></i>
+                            </button>
+                            &nbsp;&nbsp;&nbsp;                        
                             <button type="button" title="Delete"  ng-click="deleteDocument(doc.scanned_doc_id)" class="label bg-dark">
                                 <i class="fa fa-trash"></i>
                             </button>

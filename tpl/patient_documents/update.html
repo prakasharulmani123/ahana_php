@@ -1,6 +1,15 @@
 <div ng-controller="DocumentsController">
     <div class="bg-light lter b-b wrapper-md">
-        <h1 class="m-n h3">Update Document</h1>
+        <div class="row">
+            <div class="col-sm-6">
+                <h1 class="m-n h3">Update Document</h1>
+            </div>
+            <div class="col-sm-6">
+                <button class="btn btn-sm btn-dark pull-right" ng-click="$state.go('patient.document', {id: $state.params.id})">
+                    <i class="fa fa-repeat"></i> Back
+                </button>
+            </div>
+        </div>
     </div>
     <div class="wrapper-md" ng-init="initFormUpdate();">
         <div ng-include="'tpl/blocks/alert.html'">
