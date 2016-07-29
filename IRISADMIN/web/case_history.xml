@@ -2177,13 +2177,9 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="RBaffect" type="RadioButtonList" label="Affect" required="true">
-                    <PROPERTIES>
-                        <PROPERTY name="name">RBaffect</PROPERTY>
-                    </PROPERTIES>
-                </FIELD>
+                <FIELD type="Header2" label="Affect"></FIELD>
                 
-                <FIELD id="txtSubjectively" type="TextBox" label="Subjectively">
+                <FIELD id="txtSubjectively" type="TextBox" label="Subjectively" required="true">
                     <PROPERTIES>
                         <PROPERTY name="id">txtSubjectively</PROPERTY>
                         <PROPERTY name="name">txtSubjectively</PROPERTY>
@@ -2191,7 +2187,7 @@
                     </PROPERTIES>
                 </FIELD>
                 
-                <FIELD id="txtObjectively" type="TextBox" label="Objectively">
+                <FIELD id="txtObjectively" type="TextBox" label="Objectively" required="true">
                     <PROPERTIES>
                         <PROPERTY name="id">txtObjectively</PROPERTY>
                         <PROPERTY name="name">txtObjectively</PROPERTY>
@@ -2309,11 +2305,7 @@
                     </FIELD>
                 </FIELD>
                 
-                <FIELD id="RBMemory" type="RadioButtonList" label="Memory" required="true">
-                    <PROPERTIES>
-                        <PROPERTY name="name">RBMemory</PROPERTY>
-                    </PROPERTIES>
-                </FIELD>
+                <FIELD type="Header2" label="Memory"></FIELD>
                 
                 <FIELD id="RBImmediate" type="RadioButtonList" label="Immediate" required="true">
                     <PROPERTIES>
@@ -2366,11 +2358,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="RBJudgement" type="RadioButtonList" label="Judgement" required="true">
-                    <PROPERTIES>
-                        <PROPERTY name="name">RBJudgement</PROPERTY>
-                    </PROPERTIES>
-                </FIELD>
+                <FIELD type="Header2" label="Judgement"></FIELD>
                 
                 <FIELD id="RBPersonal" type="RadioButtonList" label="Personal" required="true">
                     <PROPERTIES>

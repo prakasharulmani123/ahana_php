@@ -12,8 +12,9 @@ use yii\db\ActiveQuery;
  * @property integer $tenant_id
  * @property integer $patient_id
  * @property integer $encounter_id
+ * @property string $file_org_name
  * @property string $file_name
- * @property string $file_path
+ * @property string $file_type
  * @property string $status
  * @property integer $created_by
  * @property string $created_at
@@ -39,12 +40,12 @@ class PatScannedDocuments extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['patient_id', 'encounter_id', 'file_name', 'file_path'], 'required'],
+            [['patient_id', 'encounter_id', 'file_org_name', 'file_name', 'file_type'], 'required'],
             [['tenant_id', 'patient_id', 'encounter_id', 'created_by', 'modified_by'], 'integer'],
             [['status'], 'string'],
             [['created_at', 'modified_at', 'deleted_at'], 'safe'],
-            [['file_name'], 'string', 'max' => 100],
-            [['file_path'], 'string', 'max' => 255]
+            [['file_org_name', 'file_name'], 'string', 'max' => 100],
+            [['file_type'], 'string', 'max' => 255]
         ];
     }
 
@@ -58,7 +59,6 @@ class PatScannedDocuments extends RActiveRecord {
             'patient_id' => 'Patient ID',
             'encounter_id' => 'Encounter ID',
             'file_name' => 'File Name',
-            'file_path' => 'File Path',
             'status' => 'Status',
             'created_by' => 'Created By',
             'created_at' => 'Created At',

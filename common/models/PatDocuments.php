@@ -83,7 +83,8 @@ class PatDocuments extends RActiveRecord {
     public $CBstreamform;
     public $RBQuality;
     public $RBrangeandreactivity;
-    public $affect;
+    public $txtSubjectively;
+    public $txtObjectively;
     public $RBAttension;
     public $RBConcentration;
     public $RBOrientation;
@@ -127,10 +128,10 @@ class PatDocuments extends RActiveRecord {
             [['RBpbprenatal', 'RBpbperinatal', 'RBpbperinatal2', 'RBpbdevelopmentmilestone', 'RBpbparentallack', 'RBpbbreakstudy', 'RBpbfrechangeschool', 'RBpbacademicperfor', 'RBpbteacherrelation', 'RBpbstudentrelation', 'RBpbworkrecord', 'RBfreqchangeofjob', 'txtDurationofMarriage', 'txtAgeofMarriage', 'RBmaritalsexualsatisfac', 'RBknowledgeofspouse', 'CBattitudetoself'], 'required', 'when' => function($model) {
             return $model->personal_history == 'true';
         }],
-            [['RBAppearance', 'RBlevelofgrooming', 'RBlevelofcleanliness', 'RBeyetoeyecontact', 'RBrapport', 'CBPsychomotorActivity', 'RBReactiontime', 'RBtempo', 'RBvolume', 'RBtone', 'CBstreamform', 'RBQuality', 'RBrangeandreactivity', 'RBAttension', 'RBConcentration', 'RBOrientation', 'RBImmediate', 'RBRecent', 'RBRemote', 'RBIntelligence', 'RBAbstraction', 'RBPersonal', 'RBSocial', 'RBTest', 'DDLInsight', 'RBKnowledgeaboutmentalillness', 'RBAttitudeillness'], 'required', 'when' => function($model) {
+            [['RBAppearance', 'RBlevelofgrooming', 'RBlevelofcleanliness', 'RBeyetoeyecontact', 'RBrapport', 'CBPsychomotorActivity', 'RBReactiontime', 'RBtempo', 'RBvolume', 'RBtone', 'CBstreamform', 'RBQuality', 'RBrangeandreactivity', 'txtSubjectively', 'txtObjectively', 'RBAttension', 'RBConcentration', 'RBOrientation', 'RBImmediate', 'RBRecent', 'RBRemote', 'RBIntelligence', 'RBAbstraction', 'RBPersonal', 'RBSocial', 'RBTest', 'DDLInsight', 'RBKnowledgeaboutmentalillness', 'RBAttitudeillness'], 'required', 'when' => function($model) {
             return $model->mental_status_examination == 'true';
         }],
-            [['created_at', 'modified_at', 'deleted_at', 'treatment_history', 'family_history', 'personal_history', 'mental_status_examination', 'rb_pb_treatmenthistory', 'RBtypeoffamily', 'RBtypeofmarriage', 'RBpbprenatal', 'RBpbperinatal', 'RBpbperinatal2', 'RBpbdevelopmentmilestone', 'RBpbparentallack', 'RBpbbreakstudy', 'RBpbfrechangeschool', 'RBpbacademicperfor', 'RBpbteacherrelation', 'RBpbstudentrelation', 'RBpbworkrecord', 'RBfreqchangeofjob', 'txtDurationofMarriage', 'txtAgeofMarriage', 'RBmaritalsexualsatisfac', 'RBknowledgeofspouse', 'CBattitudetoself', 'RBAppearance', 'RBlevelofgrooming', 'RBlevelofcleanliness', 'RBeyetoeyecontact', 'RBrapport', 'CBPsychomotorActivity', 'RBReactiontime', 'RBtempo', 'RBvolume', 'RBtone', 'CBstreamform', 'RBQuality', 'RBrangeandreactivity', 'affect', 'RBAttension', 'RBConcentration', 'RBOrientation', 'memory', 'RBImmediate', 'RBRecent', 'RBRemote', 'RBIntelligence', 'RBAbstraction', 'judgement', 'RBPersonal', 'RBSocial', 'RBTest', 'DDLInsight', 'RBKnowledgeaboutmentalillness', 'RBAttitudeillness'], 'safe'],
+            [['created_at', 'modified_at', 'deleted_at', 'treatment_history', 'family_history', 'personal_history', 'mental_status_examination', 'rb_pb_treatmenthistory', 'RBtypeoffamily', 'RBtypeofmarriage', 'RBpbprenatal', 'RBpbperinatal', 'RBpbperinatal2', 'RBpbdevelopmentmilestone', 'RBpbparentallack', 'RBpbbreakstudy', 'RBpbfrechangeschool', 'RBpbacademicperfor', 'RBpbteacherrelation', 'RBpbstudentrelation', 'RBpbworkrecord', 'RBfreqchangeofjob', 'txtDurationofMarriage', 'txtAgeofMarriage', 'RBmaritalsexualsatisfac', 'RBknowledgeofspouse', 'CBattitudetoself', 'RBAppearance', 'RBlevelofgrooming', 'RBlevelofcleanliness', 'RBeyetoeyecontact', 'RBrapport', 'CBPsychomotorActivity', 'RBReactiontime', 'RBtempo', 'RBvolume', 'RBtone', 'CBstreamform', 'RBQuality', 'RBrangeandreactivity', 'txtSubjectively', 'txtObjectively', 'RBAttension', 'RBConcentration', 'RBOrientation', 'memory', 'RBImmediate', 'RBRecent', 'RBRemote', 'RBIntelligence', 'RBAbstraction', 'judgement', 'RBPersonal', 'RBSocial', 'RBTest', 'DDLInsight', 'RBKnowledgeaboutmentalillness', 'RBAttitudeillness'], 'safe'],
         ];
     }
 
@@ -184,6 +185,8 @@ class PatDocuments extends RActiveRecord {
             'CBstreamform' => 'Stream & Form',
             'RBQuality' => 'Quality',
             'RBrangeandreactivity' => 'Range and reactivity',
+            'txtSubjectively' => 'Subjectively',
+            'txtObjectively' => 'Objectively',
             'RBAttension' => 'Attension',
             'RBConcentration' => 'Concentration',
             'RBOrientation' => 'Orientation',

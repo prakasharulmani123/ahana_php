@@ -124,6 +124,10 @@ class HelperComponent extends Component {
 
         return ucwords($string);
     }
+    
+    public static function getRandomNumber() {
+        return rand(0, 1000);
+    }
 
     public function updateRecurring($admission) {
         if (empty($admission))
