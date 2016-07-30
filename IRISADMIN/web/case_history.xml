@@ -169,9 +169,9 @@
                 </LISTITEMS>
             </FIELD>
             
-            <FIELD type="Header2" label="Informant"></FIELD>
+            <FIELD type="Header2" label="Informant" class="Informant"></FIELD>
             
-            <FIELD id="relationship" type="RadioButtonList" label="Relationship" required="true" Backcontrols="hide" Backdivid="relationshipother_div">
+            <FIELD id="relationship" header2Class="Informant" type="RadioButtonList" label="Relationship" required="true" Backcontrols="hide" Backdivid="relationshipother_div">
                 <PROPERTIES>
                     <PROPERTY name="name">relationship</PROPERTY>
                 </PROPERTIES>
@@ -195,7 +195,7 @@
                 </FIELD>
             </FIELD>
             
-            <FIELD id="primary_care_giver" type="RadioButtonList" label="Primary Care giver" required="true">
+            <FIELD id="primary_care_giver" header2Class="Informant" type="RadioButtonList" label="Primary Care giver" required="true">
                 <PROPERTIES>
                     <PROPERTY name="name">primary_care_giver</PROPERTY>
                 </PROPERTIES>
@@ -205,7 +205,7 @@
                 </LISTITEMS>
             </FIELD>
             
-            <FIELD id="duration_of_relationship" type="TextBoxDDL" label="Duration of Relationship">
+            <FIELD id="duration_of_relationship" header2Class="Informant" type="TextBoxDDL" label="Duration of Relationship">
                 <PROPERTIES>
                     <PROPERTY name="id">txtrelduration</PROPERTY>
                     <PROPERTY name="name">duration_of_relationship</PROPERTY>
@@ -227,7 +227,7 @@
                 </FIELD>
             </FIELD>
             
-            <FIELD id="information" type="RadioButtonList" label="Information" required="true">
+            <FIELD id="information" header2Class="Informant" type="RadioButtonList" label="Information" required="true">
                 <PROPERTIES>
                     <PROPERTY name="name">information</PROPERTY>
                 </PROPERTIES>
@@ -388,9 +388,9 @@
                 </PROPERTIES>
             </FIELD>
             
-            <FIELD type="Header2" label="Associated Disturbances"></FIELD>
+            <FIELD type="Header2" label="Associated Disturbances" class="associated_disturbances"></FIELD>
             
-            <FIELD id="sleep" type="RadioButtonList" label="Sleep">
+            <FIELD id="sleep" header2Class="associated_disturbances" type="RadioButtonList" label="Sleep">
                 <PROPERTIES>
                     <PROPERTY name="name">sleep</PROPERTY>
                 </PROPERTIES>
@@ -401,7 +401,7 @@
                 </LISTITEMS>
             </FIELD>
             
-            <FIELD id="appetite" type="RadioButtonList" label="Appetite">
+            <FIELD id="appetite" header2Class="associated_disturbances" type="RadioButtonList" label="Appetite">
                 <PROPERTIES>
                     <PROPERTY name="name">appetite</PROPERTY>
                 </PROPERTIES>
@@ -412,7 +412,7 @@
                 </LISTITEMS>
             </FIELD>
             
-            <FIELD id="weight" type="RadioButtonList" label="Weight">
+            <FIELD id="weight" header2Class="associated_disturbances" type="RadioButtonList" label="Weight">
                 <PROPERTIES>
                     <PROPERTY name="name">weight</PROPERTY>
                 </PROPERTIES>
@@ -423,7 +423,7 @@
                 </LISTITEMS>
             </FIELD>
             
-            <FIELD id="sexual_functioning" type="RadioButtonList" label="Sexual Functioning">
+            <FIELD id="sexual_functioning" header2Class="associated_disturbances" type="RadioButtonList" label="Sexual Functioning">
                 <PROPERTIES>
                     <PROPERTY name="name">sexual_functioning</PROPERTY>
                 </PROPERTIES>
@@ -434,7 +434,7 @@
                 </LISTITEMS>
             </FIELD>
             
-            <FIELD id="social_functioning" type="RadioButtonList" label="Social Functioning" Backcontrols="hide" Backdivid="social_functioning_radio_div">
+            <FIELD id="social_functioning" header2Class="associated_disturbances" type="RadioButtonList" label="Social Functioning" Backcontrols="hide" Backdivid="social_functioning_radio_div">
                 <PROPERTIES>
                     <PROPERTY name="name">social_functioning</PROPERTY>
                 </PROPERTIES>
@@ -454,7 +454,7 @@
                 </FIELD>
             </FIELD>
             
-            <FIELD id="occupational_functioning" type="RadioButtonList" label="Occupational Functioning" Backcontrols="hide" Backdivid="occupational_functioning_radio_div">
+            <FIELD id="occupational_functioning" header2Class="associated_disturbances" type="RadioButtonList" label="Occupational Functioning" Backcontrols="hide" Backdivid="occupational_functioning_radio_div">
                 <PROPERTIES>
                     <PROPERTY name="name">occupational_functioning</PROPERTY>
                 </PROPERTIES>
@@ -485,9 +485,9 @@
             <VALUE>Past History</VALUE>
         </PANELHEADER>
         <PANELBODY>
-            <FIELD type="Header2" label="Past Psychiatric History"></FIELD>
+            <FIELD type="Header2" label="Past Psychiatric History" class="past_psychiatric_history"></FIELD>
             
-            <FIELD id="similar_episodes" type="RadioButtonList" label="Similar Episodes" Backcontrols="hide" Backdivid="similar_episodes_ddl_div">
+            <FIELD id="similar_episodes" header2Class="past_psychiatric_history" type="RadioButtonList" label="Similar Episodes" Backcontrols="hide" Backdivid="similar_episodes_ddl_div">
                 <PROPERTIES>
                     <PROPERTY name="name">similar_episodes</PROPERTY>
                 </PROPERTIES>
@@ -527,7 +527,7 @@
                 </FIELD>
             </FIELD>
             
-            <FIELD id="past_psychiatric_history" type="textareaFull" label="Notes">
+            <FIELD id="past_psychiatric_history" header2Class="past_psychiatric_history" type="textareaFull" label="Notes">
                 <PROPERTIES>
                     <PROPERTY name="id">past_psychiatric_history</PROPERTY>
                     <PROPERTY name="name">past_psychiatric_history</PROPERTY>
@@ -536,7 +536,7 @@
                 </PROPERTIES>
             </FIELD>
             
-            <FIELD type="Header2" label="Past Medical History"></FIELD>
+            <FIELD type="Header2" label="Past Medical History" class="past_medical_history"></FIELD>
             
             <FIELD type="RadGrid" ADDButton="True" ADDButtonID="RGMedHisadd" AddButtonTableId="RGMedicalHistory">
                 <PROPERTIES>
@@ -615,7 +615,7 @@
                 </COLUMNS>
             </FIELD>
             
-            <FIELD id="past_medical_history_notes" type="textareaFull" label="Notes">
+            <FIELD id="past_medical_history_notes" header2Class="past_psychiatric_history" type="textareaFull" label="Notes">
                 <PROPERTIES>
                     <PROPERTY name="id">past_medical_history_notes</PROPERTY>
                     <PROPERTY name="name">past_medical_history_notes</PROPERTY>
