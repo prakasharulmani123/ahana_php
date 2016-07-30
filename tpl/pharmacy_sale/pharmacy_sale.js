@@ -543,7 +543,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             if ($scope.btnid == "print")
             {
                 var innerContents = document.getElementById("Getprintval").innerHTML;
-                var popupWinindow = window.open('', '_blank', 'width=600,height=700,scrollbars=no,menubar=no,toolbar=no,location=no,status=no,titlebar=no');
+                var popupWinindow = window.open('', '_blank', 'width=600,height=700,scrollbars=yes,menubar=no,toolbar=no,location=no,status=no,titlebar=no');
                 popupWinindow.document.open();
                 popupWinindow.document.write('<html><head><link href="css/print.css" rel="stylesheet" type="text/css" /></head><body onload="window.print()">' + innerContents + '</html>');
                 popupWinindow.document.close();
