@@ -148,6 +148,38 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     $scope.getDocument(doc_id, function (pat_doc_response) {
                         $scope.created_at = pat_doc_response.result.created_at;
                         $scope.xml = pat_doc_response.result.document_xml;
+
+                        $timeout(function () {
+                            $(".document-content .panel-default").each(function () {
+                                //RadGrid
+                                var RadGrid_div = $(this).find(".panel-body .RadGrid");
+                                var RadGrid_div_attr = $(RadGrid_div).data("radgrid");
+                                $('table#' + RadGrid_div_attr + ' tbody tr').each(function () {
+                                    if ($('td:not(:empty)', this).length == 0)
+                                        $(this).remove();
+                                });
+
+                                $('table#' + RadGrid_div_attr).each(function () {
+                                    if ($(this).find("tbody").html().trim().length === 0) {
+                                        $(RadGrid_div).remove();
+                                    }
+                                });
+
+                                //Panel Body
+                                var form_group = $(this).find(".panel-body .form-group");
+                                if (form_group.length == 0) {
+                                    $(this).addClass('hide');
+                                }
+
+                                //Header2
+                                var header2_div = $(this).find(".panel-body .header2");
+                                var header2_div_attr = $(header2_div).data("header2");
+                                var header2_has_div = $("div").hasClass(header2_div_attr);
+                                if (!header2_has_div) {
+                                    $(header2_div).addClass('hide');
+                                }
+                            });
+                        }, 1000);
                     });
                     $scope.isLoading = false;
                 }
