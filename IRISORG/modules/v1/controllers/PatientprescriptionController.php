@@ -112,24 +112,34 @@ class PatientprescriptionController extends ActiveController {
     public function actionGetpreviousprescription() {
         $get = Yii::$app->getRequest()->get();
 
-        if (isset($get['patient_id']) && isset($get['encounter_id'])) {
+        if (isset($get['patient_id'])) {
             $patient = PatPatient::getPatientByGuid($get['patient_id']);
-            $encounter_id = $get['encounter_id'];
-            if ($encounter_id) {
+
+            if (isset($get['encounter_id'])) {
+                $encounter_id = $get['encounter_id'];
                 $data = PatPrescription::find()->tenant()->active()->andWhere(['patient_id' => $patient->patient_id, 'encounter_id' => $encounter_id])->orderBy(['created_at' => SORT_DESC])->all();
-                return ['success' => true, 'prescriptions' => $data];
+            } else {
+                
+                if (isset($get['date']) && $get['date']!="") {
+                    $pres_date = $get['date'];
+                    $data = PatPrescription::find()->tenant()->active()->andWhere(['patient_id' => $patient->patient_id,'DATE(pres_date)'=>$pres_date])->orderBy(['created_at' => SORT_DESC])->all();
+                }else{
+                    $data = PatPrescription::find()->tenant()->active()->andWhere(['patient_id' => $patient->patient_id])->orderBy(['created_at' => SORT_DESC])->all();
+                }
             }
+            return ['success' => true, 'prescriptions' => $data];
         } else {
             return ['success' => false, 'message' => 'Invalid Access'];
         }
     }
-    
-    /*pharmacy_prodesc.js*/
+
+    /* pharmacy_prodesc.js */
+
     public function actionGetactiveroutes() {
         $routes = PatPrescriptionRoute::find()->tenant()->active()->status()->all();
         return ['success' => true, 'routes' => $routes];
     }
-    
+
     public function actionGetdescriptionroutes() {
         $id = Yii::$app->request->get('id');
         if (!empty($id)) {
