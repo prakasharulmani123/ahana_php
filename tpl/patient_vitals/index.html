@@ -5,32 +5,31 @@
 <div class="wrapper-md" ng-controller="VitalsController">
     <div class="panel panel-default">
         <div class="row wrapper">
-            <div class="col-sm-3">
+            <div class="col-sm-9">
                 <button class="btn btn-info" ng-show="enc.selected.status == '1'" ng-click="$state.go('patient.vitalCreate', {id: $state.params.id})">
                     <i class="fa fa-plus"></i> Create Vital 
                 </button>
             </div>
-            <div class="col-sm-2 pull-right">
-                <button ng-click="filterdate = '';
-                            loadPatVitalsList()" class="btn m-b-xs  btn-dark">  
-                    <i class="fa fa-times"></i> Clear 
-                </button>
-            </div>
-            <div class="col-sm-4 pull-right">
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">Filter:</label>
+            <div class="col-sm-3">
+                <div class="row">   
                     <div class="col-sm-9">
                         <div class="input-group">
-                            <input prevent-enter type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="filterdate" is-open="opened" datepicker-options="dateOptions" close-text="Close" max-date="maxDate" date-disabled="disabled(date, mode)" ng-change="loadPatVitalsList(filterdate);"/>
+                            <input placeholder="Filter by date" prevent-enter type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="filterdate" is-open="opened" datepicker-options="dateOptions" close-text="Close" max-date="maxDate" date-disabled="disabled(date, mode)" ng-change="loadPatVitalsList(filterdate);"/>
                             <span class="input-group-btn">
                                 <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                             </span>
                         </div>
                     </div>
+                    <div class="col-sm-3">
+                        <button ng-click="filterdate = '';
+                                    loadPatVitalsList()" class="btn m-b-xs  btn-dark">  
+                            <i class="fa fa-times"></i> 
+                        </button>
+                    </div>
                 </div>
             </div>
-
         </div>
+
         <div class="table-responsive in-patient-table">
             <table st-table="displayedCollection"  st-safe-src="rowCollection"  class="table table-striped b-t b-light">
                 <thead>

@@ -17,28 +17,29 @@
                         &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
                     </button>
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-8">
                     <button ng-show="enc.selected.status == '1'" class="btn btn-info" ng-click="$state.go('patient.add_procedure', {id: $state.params.id, enc_id: enc.selected.encounter_id})"><i class="fa fa-plus"></i> Add Procedure </button>
                 </div>
-                <div class="col-sm-2 pull-right">
-                    <button ng-click="filterdate = '';
-                            loadProceduresList()" class="btn m-b-xs  btn-dark">  
-                        <i class="fa fa-times"></i> Clear 
-                    </button>
-                </div>
-                <div class="col-sm-4 pull-right">
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">Filter:</label>
+
+                <div class="col-sm-3">
+                    <div class="row">  
                         <div class="col-sm-9">
                             <div class="input-group">
-                                <input prevent-enter type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="filterdate" is-open="opened_date" datepicker-options="dateOptions" close-text="Close" max-date="maxDate" date-disabled="disabled(date, mode)" ng-change="loadProceduresList(filterdate);"/>
+                                <input placeholder="Filter by date" prevent-enter type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="filterdate" is-open="opened_date" datepicker-options="dateOptions" close-text="Close" max-date="maxDate" date-disabled="disabled(date, mode)" ng-change="loadProceduresList(filterdate);"/>
                                 <span class="input-group-btn">
                                     <button type="button" class="btn btn-default" ng-click="open_date($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                                 </span>
                             </div>
                         </div>
+                        <div class="col-sm-3">
+                            <button ng-click="filterdate = '';
+                                        loadProceduresList()" class="btn m-b-xs  btn-dark">  
+                                <i class="fa fa-times"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
+
             </div>
             <div class="table-responsive in-patient-table">
                 <table st-table="displayedCollection"  st-safe-src="rowCollection"  class="table table-striped b-t b-light">
@@ -83,7 +84,7 @@
                             </td>
                             <td valign="middle"> {{patProcedure.doctors}} </td>
                             <td>
-                                <div ng-if="patProcedure.tenant_id != null" ng-show="enc.selected.status == '1'  && enc.selected.encounter_id == value.data.encounter_id">
+                                <div ng-if="patProcedure.tenant_id != null" ng-show="enc.selected.status == '1' && enc.selected.encounter_id == value.data.encounter_id">
                                     <a title="Edit" check-access  ui-sref="patient.edit_procedure({id: $state.params.id, proc_id : patProcedure.proc_id})" class="label bg-info dk">
                                         <i class="fa fa-pencil"></i>
                                     </a>&nbsp;&nbsp;&nbsp;

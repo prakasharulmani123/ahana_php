@@ -96,7 +96,8 @@
                                                                 </div>
                                                                 <div class="col-sm-3">
                                                                     <label> Product</label>
-                                                                    <select class="form-control" name="Generic" ng-model="addData.product" ng-options="product as product.full_name for product in products | filter:$viewValue" data-ng-change="setGeneric(); getRoutes(false, null, null)">
+                                                                    <select class="form-control" name="Generic" ng-model="addData.product" ng-options="product as product.full_name for product in products | filter:$viewValue" data-ng-change="setGeneric();
+                                                                                    getRoutes(false, null, null)">
                                                                         <option value="">Select Product</option>
                                                                     </select>
                                                                     <!--                                                                    <input autocomplete="off"
@@ -126,12 +127,12 @@
                                                                     <select class="form-control" name="Route" ng-model="addData.route" ng-options="route as route.route_name for route in routes | filter:$viewValue">
                                                                         <option value="">Select Route</option>
                                                                     </select>
-<!--                                                                    <input autocomplete="off" 
-                                                                           type="text" 
-                                                                           ng-model="addData.route" 
-                                                                           class="form-control m-b" 
-                                                                           typeahead="route.route_name for route in routes | filter:$viewValue"
-                                                                           required>-->
+                                                                    <!--                                                                    <input autocomplete="off" 
+                                                                                                                                               type="text" 
+                                                                                                                                               ng-model="addData.route" 
+                                                                                                                                               class="form-control m-b" 
+                                                                                                                                               typeahead="route.route_name for route in routes | filter:$viewValue"
+                                                                                                                                               required>-->
                                                                 </div>
                                                                 <div class="col-sm-3">
                                                                     <label>No.of.Days </label>
@@ -159,7 +160,8 @@
                                 </div>
                                 <div class="col-sm-1"> 
                                     <button class="btn m-b-xs  btn-dark" ng-click="prescription = '';
-                                                data.consultant_id = ''; data.prescriptionItems = {}">  
+                                                data.consultant_id = '';
+                                                data.prescriptionItems = {}">  
                                         <i class="fa fa-times"></i> Clear 
                                     </button>
                                 </div>
@@ -199,18 +201,18 @@
                                                                   e-required>
                                                                 {{ showProduct(item)}}
                                                             </span>
-<!--                                                            <span editable-text="item.product_name"
-                                                                  e-class="form-control"
-                                                                  e-name="product_name" 
-                                                                  e-form="tableform" 
-                                                                  onbeforesave="checkInput($data)"
-                                                                  e-typeahead-editable="false"
-                                                                  e-typeahead="product as product.full_name for product in products | filter:$viewValue"
-                                                                  e-autocomplete="off"
-                                                                  e-placeholder="Product"
-                                                                  e-required>
-                                                                {{ item.product_name || 'empty' }}
-                                                            </span>-->
+                                                            <!--                                                            <span editable-text="item.product_name"
+                                                                                                                              e-class="form-control"
+                                                                                                                              e-name="product_name" 
+                                                                                                                              e-form="tableform" 
+                                                                                                                              onbeforesave="checkInput($data)"
+                                                                                                                              e-typeahead-editable="false"
+                                                                                                                              e-typeahead="product as product.full_name for product in products | filter:$viewValue"
+                                                                                                                              e-autocomplete="off"
+                                                                                                                              e-placeholder="Product"
+                                                                                                                              e-required>
+                                                                                                                            {{ item.product_name || 'empty' }}
+                                                                                                                        </span>-->
                                                         </td>
                                                         <td>
                                                             <span editable-select="item.route" 
@@ -223,28 +225,28 @@
                                                                   e-required>
                                                                 {{ showRoute(item)}}
                                                             </span>
-<!--                                                            <span editable-text="item.route"
-                                                                  e-class="form-control m-b"
-                                                                  e-name="route" 
-                                                                  e-form="tableform" 
-                                                                  onbeforesave="checkInput($data)"
-                                                                  e-typeahead="route.route_name for route in item.description_routes | filter:$viewValue"
-                                                                  e-autocomplete="off"
-                                                                  e-placeholder="Route"
-                                                                  e-id="route"
-                                                                  e-required>
-                                                                {{ item.route || 'empty' }}
-                                                            </span>-->
+                                                            <!--                                                            <span editable-text="item.route"
+                                                                                                                              e-class="form-control m-b"
+                                                                                                                              e-name="route" 
+                                                                                                                              e-form="tableform" 
+                                                                                                                              onbeforesave="checkInput($data)"
+                                                                                                                              e-typeahead="route.route_name for route in item.description_routes | filter:$viewValue"
+                                                                                                                              e-autocomplete="off"
+                                                                                                                              e-placeholder="Route"
+                                                                                                                              e-id="route"
+                                                                                                                              e-required>
+                                                                                                                            {{ item.route || 'empty' }}
+                                                                                                                        </span>-->
                                                         </td>
                                                         <td>
-<!--                                                            <span editable-select="item.frequency"
-                                                                  e-class="form-control m-b"
-                                                                  e-name="masked" 
-                                                                  e-form="tableform" 
-                                                                  e-ng-options="frequency as frequency.freq_name for frequency in frequencies | filter:$viewValue"
-                                                                  e-required>
-                                                                {{ item.frequency || 'empty' }}
-                                                            </span>-->
+                                                            <!--                                                            <span editable-select="item.frequency"
+                                                                                                                              e-class="form-control m-b"
+                                                                                                                              e-name="masked" 
+                                                                                                                              e-form="tableform" 
+                                                                                                                              e-ng-options="frequency as frequency.freq_name for frequency in frequencies | filter:$viewValue"
+                                                                                                                              e-required>
+                                                                                                                            {{ item.frequency || 'empty' }}
+                                                                                                                        </span>-->
                                                             <span editable-text="item.frequency"
                                                                   e-class="form-control m-b"
                                                                   e-name="masked" 
@@ -271,7 +273,7 @@
                                                             </span>
                                                         </td>
                                                         <td>
-                                                            {{ item.price }}
+                                                            {{ item.price}}
                                                         </td>
                                                         <td align="left">
                                                             <!--<button class="label bg-dark" ng-click="tableform.$show()"><i class="fa fa-pencil"></i></button>-->
@@ -322,15 +324,49 @@
                 </div>
             </div>
         </div>
-        
+
         <!--<div class="col" ng-if="app.settings.patientSideMenu == true">-->
         <!-- Prev presc -->
         <div class="col" ng-show="pres_status == 'prev'">
-            <div ng-include="'tpl/patient_prescription/_previous_prescription.html'">
-                {% include 'tpl/patient_prescription/_previous_prescription.html' %}
+            <div class="bg-light lter b-b wrapper-md">
+                <h1 class="m-n h3">Previous Prescription</h1>
+            </div>
+            <div class="wrapper-md p-b">
+                <div class="panel panel-default">
+                    <div class="row wrapper pb-sm">
+                         <div class="col-sm-9">
+                            <span ng-show="previousPresSelected > 0">
+                                <button ng-click="addToCurrentPrescription()" class="btn btn-sm btn-primary">
+                                    <i class="fa fa-retweet"></i> Add to current prescription
+                                </button>
+                            </span>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="row">   
+                                <div class="col-sm-9">
+                                    <div class="input-group">
+                                        <input placeholder="Filter by date" prevent-enter type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="filterdate" is-open="opened" datepicker-options="dateOptions" close-text="Close" max-date="maxDate" date-disabled="disabled(date, 'day')" ng-change="loadPrevPrescriptionsList(filterdate);"/>
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <button ng-click="filterdate = '';
+                                                loadPrevPrescriptionsList()" class="btn m-b-xs  btn-dark">  
+                                        <i class="fa fa-times"></i> 
+                                    </button>
+                                </div> 
+                            </div>
+                        </div>    
+                    </div>
+                    <div ng-include="'tpl/patient_prescription/_previous_prescription.html'">
+                        {% include 'tpl/patient_prescription/_previous_prescription.html' %}
+                    </div>
+                </div>
             </div>
         </div>
-        
+
         <!-- Side Nav -->
         <div class="col w-sm pres-div bg-light dk b-r bg-auto" style="width:110px;">
             <div class="wrapper pres-right hidden-sm hidden-xs" id="email-menu">
@@ -378,14 +414,14 @@
                 <table cellspacing="0" cellpadding="0" border="0" width="100%">
                     <tr>
                         <td colspan="1" align="left"><span style="font-size: 30px;font-weight: bold; padding: 24px;">+</span></td>
-                        <td colspan="2" align="right"><io-barcode code="{{patientObj.patient_int_code}}" type="{{ type }}" options="barcodeOptions"></io-barcode></td>
+                        <td colspan="2" align="right"><io-barcode code="{{patientObj.patient_int_code}}" type="{{ type}}" options="barcodeOptions"></io-barcode></td>
                     </tr>
                     <tr>
                         <td colspan="3">
                             <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                 <tr>
                                     <td><h2> {{patientObj.fullname}} <span>({{patientObj.patient_age}}yrs)</span></h2> </td>
-                                    <td align="right"><b>Date :</b>{{ prescriptionItems2[0].presc_date }}</td>
+                                    <td align="right"><b>Date :</b>{{ prescriptionItems2[0].presc_date}}</td>
                                 </tr>
                             </table>
                         </td>
@@ -426,7 +462,7 @@
                 </table>
             </main>
         </div>
-        
+
     </div>     
 </div>
 <script>
@@ -450,7 +486,7 @@
                 $('#sb-site').css('transform', 'translate(' + div_width + ')');
             }, 100);
         });
-        
+
         $(".multimonthdatepicker").datepicker({
             numberOfMonths: 2,
             showButtonPanel: true,

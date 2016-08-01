@@ -12,6 +12,12 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.drugs = {};
         $scope.routes = {};
         $scope.frequencies = {};
+        
+        $scope.open = function ($event) {
+            $event.preventDefault();
+            $event.stopPropagation();
+            $scope.opened = true;
+        };
 
         $scope.$watch('patientObj.patient_id', function (newValue, oldValue) {
             if (typeof newValue !== 'undefined' && newValue != '') {
@@ -34,7 +40,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
         $scope.$watch('enc.selected.encounter_id', function (newValue, oldValue) {
             if (newValue != '' && typeof newValue != 'undefined') {
-                $scope.loadPrevPrescriptionsList($scope.enc.selected.encounter_id);
+                $scope.loadPrevPrescriptionsList();
                 $scope.loadSideMenu();
                 $scope.$emit('encounter_id', newValue);
             }
@@ -238,7 +244,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         'number_of_days': $scope.addData.number_of_days,
                         'is_favourite': 0,
                         'description_routes': $scope.addData.product.description_routes,
-                        'presc_date' : moment().format('YYYY-MM-DD HH:mm:ss'),
+                        'presc_date': moment().format('YYYY-MM-DD HH:mm:ss'),
                         'price': 0,
                     };
                     var fav = $filter('filter')($scope.child.favourites, {product_id: $scope.addData.product.product_id});
@@ -277,7 +283,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                             'is_favourite': 0,
                             'route_id': value.route_id,
                             'description_routes': value.product.description_routes,
-                            'presc_date' : moment().format('YYYY-MM-DD HH:mm:ss'),
+                            'presc_date': moment().format('YYYY-MM-DD HH:mm:ss'),
                             'price': 0,
                         };
                         var fav = $filter('filter')($scope.child.favourites, {product_id: value.product_id});
@@ -362,12 +368,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 }
             });
         }
-
-        $scope.open = function ($event) {
-            $event.preventDefault();
-            $event.stopPropagation();
-            $scope.opened = true;
-        };
+        
         $scope.minDate = $scope.minDate ? null : new Date();
 
         $scope.saveForm = function () {
@@ -419,7 +420,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
                             $timeout(function () {
                                 $scope.getFav();
-                                save_success();                               
+                                save_success();
 //                                $state.go('patient.prescription', {id: $state.params.id});
                             }, 1000)
                         } else {
@@ -448,20 +449,20 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 popupWinindow.document.open();
                 popupWinindow.document.write('<html><head><link href="css/print.css" rel="stylesheet" type="text/css" /></head><body onload="window.print()">' + innerContents + '</html>');
                 popupWinindow.document.close();
-            }else{
-                 $scope.pres_status = 'prev';
-                 $("#prev_prescription").focus();
+            } else {
+                $scope.pres_status = 'prev';
+                $("#prev_prescription").focus();
             }
         }
 
         $scope.getFrequencyExists = function (freq, key) {
-            var result = freq.split('-');           
-            if(result[key]=="0")
+            var result = freq.split('-');
+            if (result[key] == "0")
             {
-              return "-";
-            }else{
-              return result[key];
-            }    
+                return "-";
+            } else {
+                return result[key];
+            }
         }
 
         $scope.removeItem = function (item) {
@@ -560,15 +561,23 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 $scope.prescription_lists = {};
             }
         }, true);
+        
+        
+        $scope.disabled = function (date, mode) {
+            date = moment(date).format('YYYY-MM-DD');
+            return $.inArray(date, $scope.enabled_dates) === -1;
+        };
 
         //Checkbox initialize
         $scope.checkboxes = {'checked': false, items: []};
         $scope.previousPresSelectedItems = [];
         $scope.previousPresSelected = 0;
 
-        $scope.loadPrevPrescriptionsList = function (encounter_id) {         
+        $scope.enabled_dates = [];
+        $scope.loadPrevPrescriptionsList = function (date) {
             $scope.isLoading = true;
             // pagination set up
+           
             $scope.rowCollection = [];  // base collection
             $scope.itemsByPage = 10; // No.of records per page
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
@@ -576,20 +585,35 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct')
                     .success(function (products) {
                         $scope.all_products = products;
+                       
+                        if (typeof date == 'undefined') {
+                            url = $rootScope.IRISOrgServiceUrl + '/patientprescription/getpreviousprescription?patient_id=' + $state.params.id;
+                        } else {
+                            date = moment(date).format('YYYY-MM-DD');
+                            url = $rootScope.IRISOrgServiceUrl + '/patientprescription/getpreviousprescription?patient_id=' + $state.params.id + '&date=' + date;
+                        }
 
                         // Get data's from service
-                        $http.get($rootScope.IRISOrgServiceUrl + '/patientprescription/getpreviousprescription?patient_id=' + $state.params.id + '&encounter_id=' + encounter_id)
+                        $http.get(url)
                                 .success(function (prescriptionList) {
                                     $scope.isLoading = false;
                                     $scope.rowCollection = prescriptionList.prescriptions;
-
+                                    
                                     if ($scope.rowCollection.length > 0) {
                                         angular.forEach($scope.rowCollection, function (row) {
+                                            
+                                            /* Visible only existing presc dates in datepicker */                                           
+                                            var result = $filter('filter')($scope.enabled_dates, moment(row.pres_date).format('YYYY-MM-DD'));
+                                            if (result.length == 0)
+                                                $scope.enabled_dates.push(moment(row.pres_date).format('YYYY-MM-DD'));
+                                                
                                             angular.forEach(row.items, function (item) {
                                                 item.selected = '0';
                                             });
                                             row.selected = '0';
                                         });
+                                        
+                                       
 
                                         angular.forEach($scope.rowCollection[0].items, function (item) {
                                             items = {
@@ -605,7 +629,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                                 'is_favourite': 0,
                                                 'route_id': item.route_id,
                                                 'description_routes': item.product.description_routes,
-                                                'presc_date' : moment().format('YYYY-MM-DD HH:mm:ss'),
+                                                'presc_date': moment().format('YYYY-MM-DD HH:mm:ss'),
                                                 'price': 0,
                                             };
                                             var fav = $filter('filter')($scope.child.favourites, {product_id: item.product_id});
@@ -617,22 +641,24 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                             $scope.data.prescriptionItems.push(items);
                                         });
                                     }
-
-
+                                    
                                     $scope.displayedCollection = [].concat($scope.rowCollection);
 
                                     //Checkbox initialize
                                     $scope.checkboxes = {'checked': false, items: []};
                                     $scope.previousPresSelectedItems = [];
                                     $scope.previousPresSelected = 0;
+                                    
                                 })
                                 .error(function () {
                                     $scope.errorData = "An Error has occured while loading list!";
-                                });
+                                });                           
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading brand!";
                     });
+                    
+                     $scope.$broadcast('refreshDatepickers');     
         };
 
         $scope.seen_notes = function () {
