@@ -419,7 +419,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
                             $timeout(function () {
                                 $scope.getFav();
-                                save_success();
+                                save_success();                               
 //                                $state.go('patient.prescription', {id: $state.params.id});
                             }, 1000)
                         } else {
@@ -448,6 +448,9 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 popupWinindow.document.open();
                 popupWinindow.document.write('<html><head><link href="css/print.css" rel="stylesheet" type="text/css" /></head><body onload="window.print()">' + innerContents + '</html>');
                 popupWinindow.document.close();
+            }else{
+                 $scope.pres_status = 'prev';
+                 $("#prev_prescription").focus();
             }
         }
 
@@ -563,7 +566,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.previousPresSelectedItems = [];
         $scope.previousPresSelected = 0;
 
-        $scope.loadPrevPrescriptionsList = function (encounter_id) {
+        $scope.loadPrevPrescriptionsList = function (encounter_id) {         
             $scope.isLoading = true;
             // pagination set up
             $scope.rowCollection = [];  // base collection

@@ -180,7 +180,7 @@
                                                         <th width="70" align="center">Actions</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody>
+                                                <tbody ng-hide="isLoading">
                                                     <tr ng-repeat="(key, item) in data.prescriptionItems">
                                                         <td>
                                                             <a href ui-toggle-class class="{{item.is_favourite ? 'active' : ''}}">
@@ -279,6 +279,11 @@
                                                         </td>
                                                     </tr>
                                                 </tbody>
+                                                <tbody ng-show="isLoading">
+                                                    <tr>
+                                                        <td colspan="7" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
+                                                    </tr>
+                                                </tbody>
                                             </table>
                                         </div>
                                     </div>
@@ -317,12 +322,16 @@
                 </div>
             </div>
         </div>
+        
         <!--<div class="col" ng-if="app.settings.patientSideMenu == true">-->
+        <!-- Prev presc -->
         <div class="col" ng-show="pres_status == 'prev'">
             <div ng-include="'tpl/patient_prescription/_previous_prescription.html'">
                 {% include 'tpl/patient_prescription/_previous_prescription.html' %}
             </div>
         </div>
+        
+        <!-- Side Nav -->
         <div class="col w-sm pres-div bg-light dk b-r bg-auto" style="width:110px;">
             <div class="wrapper pres-right hidden-sm hidden-xs" id="email-menu">
                 <ul class="nav nav-pills nav-stacked nav-sm">
@@ -357,7 +366,7 @@
                         </a>
                     </li>
                     <li><a href="javascript:void(0)" class="sb-open-right" data-target="#fav"><i class="fa fa-heart"></i> <br/> Favorites</a></li>
-                    <li><a href="javascript:void(0)" ng-click="pres_status = 'prev'"><i class="fa fa-history"></i> <br/>Prev-Prescr</a></li>
+                    <li><a id="prev_prescription" href="javascript:void(0)" ng-click="pres_status = 'prev'"><i class="fa fa-history"></i> <br/>Prev-Prescr</a></li>
                 </ul>
             </div>
         </div>
