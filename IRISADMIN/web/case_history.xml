@@ -538,7 +538,7 @@
             
             <FIELD type="Header2" label="Past Medical History" class="past_medical_history"></FIELD>
             
-            <FIELD type="RadGrid" ADDButton="True" ADDButtonID="RGMedHisadd" AddButtonTableId="RGMedicalHistory">
+            <FIELD type="RadGrid" header2Class="past_medical_history" ADDButton="True" ADDButtonID="RGMedHisadd" AddButtonTableId="RGMedicalHistory">
                 <PROPERTIES>
                     <PROPERTY name="id">RGMedicalHistory</PROPERTY>
                     <PROPERTY name="class">table table-bordered</PROPERTY>
@@ -615,7 +615,7 @@
                 </COLUMNS>
             </FIELD>
             
-            <FIELD id="past_medical_history_notes" header2Class="past_psychiatric_history" type="textareaFull" label="Notes">
+            <FIELD id="past_medical_history_notes" header2Class="past_medical_history" type="textareaFull" label="Notes">
                 <PROPERTIES>
                     <PROPERTY name="id">past_medical_history_notes</PROPERTY>
                     <PROPERTY name="name">past_medical_history_notes</PROPERTY>
@@ -625,9 +625,9 @@
             </FIELD>
             
             <FIELD type="PanelBar" label="Treatment History" target_div="treatment_history">
-                <FIELD type="Header2" label="Phamacotherapy"></FIELD>
+                <FIELD type="Header2" label="Phamacotherapy" class="Phamacotherapy"></FIELD>
                 
-                <FIELD type="RadGrid" ADDButton="True" ADDButtonID="RGPhamacoadd" AddButtonTableId="RGPhamaco">
+                <FIELD type="RadGrid" header2Class="Phamacotherapy" ADDButton="True" ADDButtonID="RGPhamacoadd" AddButtonTableId="RGPhamaco">
                     <PROPERTIES>
                         <PROPERTY name="id">RGPhamaco</PROPERTY>
                         <PROPERTY name="class">table table-bordered</PROPERTY>
@@ -690,7 +690,7 @@
                     </COLUMNS>
                 </FIELD>
                 
-                <FIELD id="rb_pb_treatmenthistory" type="RadioButtonList" label="Medication Compliance" required="true">
+                <FIELD id="rb_pb_treatmenthistory" header2Class="Phamacotherapy" type="RadioButtonList" label="Medication Compliance" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">rb_pb_treatmenthistory</PROPERTY>
                         <PROPERTY name="ToolTip">
@@ -708,9 +708,9 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD type="Header2" label="Electro Convulsive therapy"></FIELD>
+                <FIELD type="Header2" label="Electro Convulsive therapy" class="Electro_Convulsive_therapy"></FIELD>
                 
-                <FIELD id="previous_ects" type="RadioButtonList" label="Previous ECT's" Backcontrols="hide" Backdivid="previous_ects_radio_div">
+                <FIELD id="previous_ects" header2Class="Electro_Convulsive_therapy" type="RadioButtonList" label="Previous ECT's" Backcontrols="hide" Backdivid="previous_ects_radio_div">
                     <PROPERTIES>
                         <PROPERTY name="name">previous_ects</PROPERTY>
                     </PROPERTIES>
@@ -786,9 +786,9 @@
                     </FIELD>
                 </FIELD>
                 
-                <FIELD type="Header2" label="Counselling/Psychotherapy"></FIELD>
+                <FIELD type="Header2" label="Counselling/Psychotherapy" class="Counselling_Psychotherapy"></FIELD>
                 
-                <FIELD id="rb_pb_mostrecentepisode" type="RadioButtonList" label="Most recent episode">
+                <FIELD id="rb_pb_mostrecentepisode" header2Class="Counselling_Psychotherapy" type="RadioButtonList" label="Most recent episode">
                     <PROPERTIES>
                         <PROPERTY name="name">rb_pb_mostrecentepisode</PROPERTY>
                     </PROPERTIES>
@@ -798,7 +798,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="txt_pb_no_of_sessions" type="TextBox" label="No. of sessions">
+                <FIELD id="txt_pb_no_of_sessions" header2Class="Counselling_Psychotherapy" type="TextBox" label="No. of sessions">
                     <PROPERTIES>
                         <PROPERTY name="id">txt_pb_no_of_sessions</PROPERTY>
                         <PROPERTY name="name">txt_pb_no_of_sessions</PROPERTY>
@@ -806,7 +806,7 @@
                     </PROPERTIES>
                 </FIELD>
                 
-                <FIELD id="rb_pb_Response" type="RadioButtonList" label="Response">
+                <FIELD id="rb_pb_Response" header2Class="Counselling_Psychotherapy" type="RadioButtonList" label="Response">
                     <PROPERTIES>
                         <PROPERTY name="name">rb_pb_Response</PROPERTY>
                     </PROPERTIES>
@@ -817,7 +817,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="rb_pb_Response1" type="RadioButtonList" label="Response1" Backcontrols="hide" Backdivid="rb_pb_Response1_Div">
+                <FIELD id="rb_pb_Response1" header2Class="Counselling_Psychotherapy" type="RadioButtonList" label="Response1" Backcontrols="hide" Backdivid="rb_pb_Response1_Div">
                     <PROPERTIES>
                         <PROPERTY name="name">rb_pb_Response1</PROPERTY>
                     </PROPERTIES>
@@ -834,9 +834,9 @@
                     </FIELD>
                 </FIELD>
                 
-                <FIELD type="Header2" label="Alternative Therapies"></FIELD>
+                <FIELD type="Header2" label="Alternative Therapies" class="Alternative_Therapies"></FIELD>
                 
-                <FIELD type="RadGrid" ADDButton="True" ADDButtonID="RGaltadd" AddButtonTableId="RGalt">
+                <FIELD type="RadGrid" header2Class="Alternative_Therapies" ADDButton="True" ADDButtonID="RGaltadd" AddButtonTableId="RGalt">
                     <PROPERTIES>
                         <PROPERTY name="id">RGalt</PROPERTY>
                         <PROPERTY name="class">table table-bordered</PROPERTY>
@@ -884,9 +884,9 @@
                     </COLUMNS>
                 </FIELD>
                 
-                <FIELD type="Header2" label="Treatment History Notes"></FIELD>
+                <FIELD type="Header2" label="Treatment History Notes" class="treatment_history_notes"></FIELD>
                 
-                <FIELD id="treatment_history_notes" type="textareaFull" label="Notes">
+                <FIELD id="treatment_history_notes" header2Class="treatment_history_notes "type="textareaFull" label="Notes">
                     <PROPERTIES>
                         <PROPERTY name="id">treatment_history_notes</PROPERTY>
                         <PROPERTY name="name">treatment_history_notes</PROPERTY>
@@ -1007,9 +1007,9 @@
             </FIELD>
             
             <FIELD type="PanelBar" label="Personal History" target_div="personal_history">
-                <FIELD type="Header2" label="Birth and Development"></FIELD>
+                <FIELD type="Header2" label="Birth and Development" class="Birth_and_Development"></FIELD>
                 
-                <FIELD id="RBpbprenatal" type="RadioButtonList" label="Prenatal" Backcontrols="hide" Backdivid="PrenatalDiv" required="true">
+                <FIELD id="RBpbprenatal" header2Class="Birth_and_Development" type="RadioButtonList" label="Prenatal" Backcontrols="hide" Backdivid="PrenatalDiv" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">RBpbprenatal</PROPERTY>
                     </PROPERTIES>
@@ -1026,7 +1026,7 @@
                     </FIELD>
                 </FIELD>
                 
-                <FIELD id="RBpbperinatal" type="RadioButtonList" label="Perinatal" required="true">
+                <FIELD id="RBpbperinatal" header2Class="Birth_and_Development" type="RadioButtonList" label="Perinatal" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">RBpbperinatal</PROPERTY>
                     </PROPERTIES>
@@ -1038,7 +1038,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="RBpbperinatal2" type="RadioButtonList" label="Perinatal2" Backcontrols="hide" Backdivid="perinatal2div" required="true">
+                <FIELD id="RBpbperinatal2" header2Class="Birth_and_Development" type="RadioButtonList" label="Perinatal2" Backcontrols="hide" Backdivid="perinatal2div" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">RBpbperinatal2</PROPERTY>
                     </PROPERTIES>
@@ -1055,7 +1055,7 @@
                     </FIELD>
                 </FIELD>
                 
-                <FIELD id="RBpbmajorillness" type="RadioButtonList" label="Major illness during infancy" Backcontrols="hide" Backdivid="RBpbmajorillnessDiv">
+                <FIELD id="RBpbmajorillness" header2Class="Birth_and_Development" type="RadioButtonList" label="Major illness during infancy" Backcontrols="hide" Backdivid="RBpbmajorillnessDiv">
                     <PROPERTIES>
                         <PROPERTY name="name">RBpbmajorillness</PROPERTY>
                     </PROPERTIES>
@@ -1072,7 +1072,7 @@
                     </FIELD>
                 </FIELD>
                 
-                <FIELD id="RBpbimmunizationschedule" type="RadioButtonList" label="Immunization schedule">
+                <FIELD id="RBpbimmunizationschedule" header2Class="Birth_and_Development" type="RadioButtonList" label="Immunization schedule">
                     <PROPERTIES>
                         <PROPERTY name="name">RBpbimmunizationschedule</PROPERTY>
                     </PROPERTIES>
@@ -1082,7 +1082,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="RBpbdevelopmentmilestone" type="RadioButtonList" label="Developmental milestones" Backcontrols="hide" Backdivid="developmentmilestoneDiv" required="true">
+                <FIELD id="RBpbdevelopmentmilestone" header2Class="Birth_and_Development" type="RadioButtonList" label="Developmental milestones" Backcontrols="hide" Backdivid="developmentmilestoneDiv" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">RBpbdevelopmentmilestone</PROPERTY>
                     </PROPERTIES>
@@ -1103,7 +1103,7 @@
                     </FIELD>
                 </FIELD>
                 
-                <FIELD id="RBpbmajorillnessduringchild" type="RadioButtonList" label="Major physical illness during childhood" Backcontrols="hide" Backdivid="pbmajorillnessduringchildDiv">
+                <FIELD id="RBpbmajorillnessduringchild" header2Class="Birth_and_Development" type="RadioButtonList" label="Major physical illness during childhood" Backcontrols="hide" Backdivid="pbmajorillnessduringchildDiv">
                     <PROPERTIES>
                         <PROPERTY name="name">RBpbmajorillnessduringchild</PROPERTY>
                     </PROPERTIES>
@@ -1120,7 +1120,7 @@
                     </FIELD>
                 </FIELD>
                 
-                <FIELD id="CBpbemotionalbehaviour" type="CheckBoxList" label="Emotional and behavioural problems during childhood" Backcontrols="hide" Backdivid="TxtpbemotionalbehaviouDiv">
+                <FIELD id="CBpbemotionalbehaviour" header2Class="Birth_and_Development" type="CheckBoxList" label="Emotional and behavioural problems during childhood" Backcontrols="hide" Backdivid="TxtpbemotionalbehaviouDiv">
                     <PROPERTIES>
                         <PROPERTY name="name">CBpbemotionalbehaviour[]</PROPERTY>
                     </PROPERTIES>
@@ -1148,7 +1148,7 @@
                     </FIELD>
                 </FIELD>
                 
-                <FIELD id="RBpbhomeatmosphere" type="RadioButtonList" label="Home atmosphere during childhood" Backcontrols="hide" Backdivid="pbhomeatmosphereDiv">
+                <FIELD id="RBpbhomeatmosphere" header2Class="Birth_and_Development" type="RadioButtonList" label="Home atmosphere during childhood" Backcontrols="hide" Backdivid="pbhomeatmosphereDiv">
                     <PROPERTIES>
                         <PROPERTY name="name">RBpbhomeatmosphere</PROPERTY>
                     </PROPERTIES>
@@ -1165,7 +1165,7 @@
                     </FIELD>
                 </FIELD>
                 
-                <FIELD id="CBpbemotionalbehaviouradole" type="CheckBoxList" label="Emotional and behavioural problems during adolescence" Backcontrols="hide" Backdivid="TxtpbemotionalbehaviouradoleDiv">
+                <FIELD id="CBpbemotionalbehaviouradole" header2Class="Birth_and_Development" type="CheckBoxList" label="Emotional and behavioural problems during adolescence" Backcontrols="hide" Backdivid="TxtpbemotionalbehaviouradoleDiv">
                     <PROPERTIES>
                         <PROPERTY name="name">CBpbemotionalbehaviouradole[]</PROPERTY>
                     </PROPERTIES>
@@ -1187,7 +1187,7 @@
                     </FIELD>
                 </FIELD>
                 
-                <FIELD id="RBpbhomeatmosphereadole" type="RadioButtonList" label="Home atmosphere during adolescent" Backcontrols="hide" Backdivid="pbhomeatmosphereadoleDiv">
+                <FIELD id="RBpbhomeatmosphereadole" header2Class="Birth_and_Development" type="RadioButtonList" label="Home atmosphere during adolescent" Backcontrols="hide" Backdivid="pbhomeatmosphereadoleDiv">
                     <PROPERTIES>
                         <PROPERTY name="name">RBpbhomeatmosphereadole</PROPERTY>
                     </PROPERTIES>
@@ -1204,7 +1204,7 @@
                     </FIELD>
                 </FIELD>
                 
-                <FIELD id="RBpbparentallack" type="RadioButtonList" label="Parental Lack" Backcontrols="hide" Backdivid="parentallackDiv" required="true">
+                <FIELD id="RBpbparentallack" header2Class="Birth_and_Development" type="RadioButtonList" label="Parental Lack" Backcontrols="hide" Backdivid="parentallackDiv" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">RBpbparentallack</PROPERTY>
                     </PROPERTIES>
@@ -1223,7 +1223,7 @@
                     </FIELD>
                 </FIELD>
                 
-                <FIELD id="birthdevelopmentnotes" type="textareaFull" label="Notes">
+                <FIELD id="birthdevelopmentnotes" header2Class="Birth_and_Development" type="textareaFull" label="Notes">
                     <PROPERTIES>
                         <PROPERTY name="id">birthdevelopmentnotes</PROPERTY>
                         <PROPERTY name="name">birthdevelopmentnotes</PROPERTY>
@@ -1232,9 +1232,9 @@
                     </PROPERTIES>
                 </FIELD>
                 
-                <FIELD type="Header2" label="Education History"></FIELD>
+                <FIELD type="Header2" label="Education History" class="Education_History"></FIELD>
                 
-                <FIELD id="RBpbbreakstudy" type="RadioButtonList" label="Break in Studies" Backcontrols="hide" Backdivid="breakstudyDiv" required="true">
+                <FIELD id="RBpbbreakstudy" header2Class="Education_History" type="RadioButtonList" label="Break in Studies" Backcontrols="hide" Backdivid="breakstudyDiv" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">RBpbbreakstudy</PROPERTY>
                     </PROPERTIES>
@@ -1252,7 +1252,7 @@
                     </FIELD>
                 </FIELD>
                 
-                <FIELD id="RBpbfrechangeschool" type="RadioButtonList" label="Frequent change of school" Backcontrols="hide" Backdivid="frechangeschoolDiv" required="true">
+                <FIELD id="RBpbfrechangeschool" header2Class="Education_History" type="RadioButtonList" label="Frequent change of school" Backcontrols="hide" Backdivid="frechangeschoolDiv" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">RBpbfrechangeschool</PROPERTY>
                     </PROPERTIES>
@@ -1270,7 +1270,7 @@
                     </FIELD>
                 </FIELD>
                 
-                <FIELD id="RBpbtypeofschool" type="RadioButtonList" label="Type of school/college">
+                <FIELD id="RBpbtypeofschool" header2Class="Education_History" type="RadioButtonList" label="Type of school/college">
                     <PROPERTIES>
                         <PROPERTY name="name">RBpbtypeofschool</PROPERTY>
                     </PROPERTIES>
@@ -1282,7 +1282,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="RBpbmedium" type="RadioButtonList" label="Medium" Backcontrols="hide" Backdivid="mediumDiv">
+                <FIELD id="RBpbmedium" header2Class="Education_History" type="RadioButtonList" label="Medium" Backcontrols="hide" Backdivid="mediumDiv">
                     <PROPERTIES>
                         <PROPERTY name="name">RBpbmedium</PROPERTY>
                     </PROPERTIES>
@@ -1300,7 +1300,7 @@
                     </FIELD>
                 </FIELD>
                 
-                <FIELD id="RBpbacademicperfor" type="RadioButtonList" label="Academic performance" required="true">
+                <FIELD id="RBpbacademicperfor" header2Class="Education_History" type="RadioButtonList" label="Academic performance" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">RBpbacademicperfor</PROPERTY>
                     </PROPERTIES>
@@ -1312,7 +1312,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="RBpbteacherrelation" type="RadioButtonList" label="Relationship with teachers" Backcontrols="hide" Backdivid="teacherrelationDiv" required="true">
+                <FIELD id="RBpbteacherrelation" header2Class="Education_History" type="RadioButtonList" label="Relationship with teachers" Backcontrols="hide" Backdivid="teacherrelationDiv" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">RBpbteacherrelation</PROPERTY>
                     </PROPERTIES>
@@ -1329,7 +1329,7 @@
                     </FIELD>
                 </FIELD>
                 
-                <FIELD id="RBpbstudentrelation" type="RadioButtonList" label="Relationship with students" Backcontrols="hide" Backdivid="studentrelationDiv" required="true">
+                <FIELD id="RBpbstudentrelation" header2Class="Education_History" type="RadioButtonList" label="Relationship with students" Backcontrols="hide" Backdivid="studentrelationDiv" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">RBpbstudentrelation</PROPERTY>
                     </PROPERTIES>
@@ -1346,7 +1346,7 @@
                     </FIELD>
                 </FIELD>
                 
-                <FIELD id="educational_history_notes" type="textareaFull" label="Notes">
+                <FIELD id="educational_history_notes" header2Class="Education_History" type="textareaFull" label="Notes">
                     <PROPERTIES>
                         <PROPERTY name="id">educational_history_notes</PROPERTY>
                         <PROPERTY name="name">educational_history_notes</PROPERTY>
@@ -1355,9 +1355,9 @@
                     </PROPERTIES>
                 </FIELD>
                 
-                <FIELD type="Header2" label="Occupational History "></FIELD>
+                <FIELD type="Header2" label="Occupational History" class="Occupational_History"></FIELD>
                 
-                <FIELD id="DDLstartedworking" type="DropDownList" label="Started working at" Backtext=" Years">
+                <FIELD id="DDLstartedworking" header2Class="Occupational_History" type="DropDownList" label="Started working at" Backtext=" Years">
                     <PROPERTIES>
                         <PROPERTY name="id">DDLstartedworking</PROPERTY>
                         <PROPERTY name="name">DDLstartedworking</PROPERTY>
@@ -1399,7 +1399,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="RBpbworkrecord" type="RadioButtonList" label="Work Record" Backcontrols="hide" Backdivid="workrecordDiv" required="true">
+                <FIELD id="RBpbworkrecord" header2Class="Occupational_History" type="RadioButtonList" label="Work Record" Backcontrols="hide" Backdivid="workrecordDiv" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">RBpbworkrecord</PROPERTY>
                     </PROPERTIES>
@@ -1416,7 +1416,7 @@
                     </FIELD>
                 </FIELD>
                 
-                <FIELD id="RBfreqchangeofjob" type="RadioButtonList" label="Frequent change of jobs" Backcontrols="hide" Backdivid="freqchangeofjobDiv" required="true">
+                <FIELD id="RBfreqchangeofjob" header2Class="Occupational_History" type="RadioButtonList" label="Frequent change of jobs" Backcontrols="hide" Backdivid="freqchangeofjobDiv" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">RBfreqchangeofjob</PROPERTY>
                     </PROPERTIES>
@@ -1447,7 +1447,7 @@
                     </FIELD>
                 </FIELD>
                 
-                <FIELD id="occupational_history_notes" type="textareaFull" label="Notes">
+                <FIELD id="occupational_history_notes" header2Class="Occupational_History" type="textareaFull" label="Notes">
                     <PROPERTIES>
                         <PROPERTY name="id">occupational_history_notes</PROPERTY>
                         <PROPERTY name="name">occupational_history_notes</PROPERTY>
@@ -1456,9 +1456,9 @@
                     </PROPERTIES>
                 </FIELD>
                 
-                <FIELD type="Header2" label="Menstrual History"></FIELD>
+                <FIELD type="Header2" label="Menstrual History" class="Menstrual_History"></FIELD>
                 
-                <FIELD id="txtMenarche" type="TextBox" label="Menarche" Backtext="Years">
+                <FIELD id="txtMenarche" header2Class="Menstrual_History" type="TextBox" label="Menarche" Backtext="Years">
                     <PROPERTIES>
                         <PROPERTY name="id">txtMenarche</PROPERTY>
                         <PROPERTY name="name">txtMenarche</PROPERTY>
@@ -1466,7 +1466,7 @@
                     </PROPERTIES>
                 </FIELD>
                 
-                <FIELD id="RBRegularity" type="RadioButtonList" label="Regularity" Backcontrols="hide" Backdivid="RegularityDiv">
+                <FIELD id="RBRegularity" header2Class="Menstrual_History" type="RadioButtonList" label="Regularity" Backcontrols="hide" Backdivid="RegularityDiv">
                     <PROPERTIES>
                         <PROPERTY name="name">RBRegularity</PROPERTY>
                     </PROPERTIES>
@@ -1485,7 +1485,7 @@
                     </FIELD>
                 </FIELD>
                 
-                <FIELD id="txtLMP" type="TextBox" label="LMP">
+                <FIELD id="txtLMP" header2Class="Menstrual_History" type="TextBox" label="LMP">
                     <PROPERTIES>
                         <PROPERTY name="id">txtLMP</PROPERTY>
                         <PROPERTY name="name">txtLMP</PROPERTY>
@@ -1496,7 +1496,7 @@
                     </PROPERTIES>
                 </FIELD>
                 
-                <FIELD id="txtMenopause" type="TextBox" label="Menopause" Backtext="Years">
+                <FIELD id="txtMenopause" header2Class="Menstrual_History" type="TextBox" label="Menopause" Backtext="Years">
                     <PROPERTIES>
                         <PROPERTY name="id">txtMenopause</PROPERTY>
                         <PROPERTY name="name">txtMenopause</PROPERTY>
@@ -1507,9 +1507,9 @@
                     </PROPERTIES>
                 </FIELD>
                 
-                <FIELD type="Header2" label="Marital History"></FIELD>
+                <FIELD type="Header2" label="Marital History" class="Marital_History"></FIELD>
                 
-                <FIELD id="txtDurationofMarriage" type="TextBoxDDL" label="Duration of Marriage" required="true">
+                <FIELD id="txtDurationofMarriage" header2Class="Marital_History" type="TextBoxDDL" label="Duration of Marriage" required="true">
                     <PROPERTIES>
                         <PROPERTY name="id">txtDurationofMarriage</PROPERTY>
                         <PROPERTY name="name">txtDurationofMarriage</PROPERTY>
@@ -1531,7 +1531,7 @@
                     </FIELD>
                 </FIELD>
                 
-                <FIELD id="txtAgeofMarriage" type="TextBoxDDL" label="Age of Marriage" required="true">
+                <FIELD id="txtAgeofMarriage" header2Class="Marital_History" type="TextBoxDDL" label="Age of Marriage" required="true">
                     <PROPERTIES>
                         <PROPERTY name="id">txtAgeofMarriage</PROPERTY>
                         <PROPERTY name="name">txtAgeofMarriage</PROPERTY>
@@ -1553,7 +1553,7 @@
                     </FIELD>
                 </FIELD>
                 
-                <FIELD id="RBtype" type="RadioButtonList" label="Type">
+                <FIELD id="RBtype" header2Class="Marital_History" type="RadioButtonList" label="Type">
                     <PROPERTIES>
                         <PROPERTY name="name">RBtype</PROPERTY>
                     </PROPERTIES>
@@ -1563,7 +1563,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="RBmaritalsexualsatisfac" type="RadioButtonList" label="Marital and Sexual satisfaction" required="true">
+                <FIELD id="RBmaritalsexualsatisfac" header2Class="Marital_History" type="RadioButtonList" label="Marital and Sexual satisfaction" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">RBmaritalsexualsatisfac</PROPERTY>
                     </PROPERTIES>
@@ -1574,7 +1574,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="RBhistoryof" type="RadioButtonList" label="History of">
+                <FIELD id="RBhistoryof" header2Class="Marital_History" type="RadioButtonList" label="History of">
                     <PROPERTIES>
                         <PROPERTY name="name">RBhistoryof</PROPERTY>
                     </PROPERTIES>
@@ -1584,7 +1584,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="RBknowledgeofspouse" type="RadioButtonList" label="Knowledge of spouse about patient's illness prior to marriage" required="true">
+                <FIELD id="RBknowledgeofspouse" header2Class="Marital_History" type="RadioButtonList" label="Knowledge of spouse about patient's illness prior to marriage" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">RBknowledgeofspouse</PROPERTY>
                     </PROPERTIES>
@@ -1594,7 +1594,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="martial_history" type="textareaFull" label="Notes">
+                <FIELD id="martial_history" header2Class="Marital_History" type="textareaFull" label="Notes">
                     <PROPERTIES>
                         <PROPERTY name="id">martial_history</PROPERTY>
                         <PROPERTY name="name">martial_history</PROPERTY>
@@ -1603,9 +1603,9 @@
                     </PROPERTIES>
                 </FIELD>
                 
-                <FIELD type="Header2" label="Sexual History"></FIELD>
+                <FIELD type="Header2" label="Sexual History" class="Sexual_History"></FIELD>
                 
-                <FIELD id="RBorientationSexual" type="RadioButtonList" label="Orientation">
+                <FIELD id="RBorientationSexual" header2Class="Sexual_History" type="RadioButtonList" label="Orientation">
                     <PROPERTIES>
                         <PROPERTY name="name">RBorientationSexual</PROPERTY>
                     </PROPERTIES>
@@ -1615,7 +1615,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="CBsexualfunctioning" type="CheckBoxList" label="Sexual Functioning">
+                <FIELD id="CBsexualfunctioning" header2Class="Sexual_History" type="CheckBoxList" label="Sexual Functioning">
                     <PROPERTIES>
                         <PROPERTY name="name">CBsexualfunctioning[]</PROPERTY>
                     </PROPERTIES>
@@ -1634,7 +1634,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="CBparaphilias" type="CheckBoxList" label="Paraphilias">
+                <FIELD id="CBparaphilias" header2Class="Sexual_History" type="CheckBoxList" label="Paraphilias">
                     <PROPERTIES>
                         <PROPERTY name="name">CBparaphilias[]</PROPERTY>
                     </PROPERTIES>
@@ -1653,7 +1653,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="sexual_history_notes" type="textareaFull" label="Notes">
+                <FIELD id="sexual_history_notes" header2Class="Sexual_History" type="textareaFull" label="Notes">
                     <PROPERTIES>
                         <PROPERTY name="id">sexual_history_notes</PROPERTY>
                         <PROPERTY name="name">sexual_history_notes</PROPERTY>
@@ -1662,9 +1662,9 @@
                     </PROPERTIES>
                 </FIELD>
                 
-                <FIELD type="Header2" label="Substance History"></FIELD>
+                <FIELD type="Header2" label="Substance History" class="Substance_History"></FIELD>
                 
-                <FIELD type="RadGrid" ADDButton="True" ADDButtonID="RGSubsadd" AddButtonTableId="RGSubs">
+                <FIELD type="RadGrid" header2Class="Substance_History" ADDButton="True" ADDButtonID="RGSubsadd" AddButtonTableId="RGSubs">
                     <PROPERTIES>
                         <PROPERTY name="id">RGSubs</PROPERTY>
                         <PROPERTY name="class">table table-bordered</PROPERTY>
@@ -1726,7 +1726,7 @@
                     </COLUMNS>
                 </FIELD>
                 
-                <FIELD id="substance_history_notes" type="textareaFull" label="Notes">
+                <FIELD id="substance_history_notes" header2Class="Substance_History" type="textareaFull" label="Notes">
                     <PROPERTIES>
                         <PROPERTY name="id">substance_history_notes</PROPERTY>
                         <PROPERTY name="name">substance_history_notes</PROPERTY>
@@ -1735,9 +1735,9 @@
                     </PROPERTIES>
                 </FIELD>
                 
-                <FIELD type="Header2" label="Premorbid Personality"></FIELD>
+                <FIELD type="Header2" label="Premorbid Personality" class="Premorbid_Personality"></FIELD>
                 
-                <FIELD id="CBattitudetoself" type="CheckBoxList" label="Attitude to self" required="true">
+                <FIELD id="CBattitudetoself" header2Class="Premorbid_Personality" type="CheckBoxList" label="Attitude to self" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">CBattitudetoself[]</PROPERTY>
                     </PROPERTIES>
@@ -1752,7 +1752,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="CBmoralreligiousattitude" type="CheckBoxList" label="Moral and Religious attitude">
+                <FIELD id="CBmoralreligiousattitude" header2Class="Premorbid_Personality" type="CheckBoxList" label="Moral and Religious attitude">
                     <PROPERTIES>
                         <PROPERTY name="name">CBmoralreligiousattitude[]</PROPERTY>
                     </PROPERTIES>
@@ -1765,7 +1765,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="CBsocialrelationships" type="CheckBoxList" label="Social relationships">
+                <FIELD id="CBsocialrelationships" header2Class="Premorbid_Personality" type="CheckBoxList" label="Social relationships">
                     <PROPERTIES>
                         <PROPERTY name="name">CBsocialrelationships[]</PROPERTY>
                     </PROPERTIES>
@@ -1781,7 +1781,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="CBmood"  type="CheckBoxList" label="Mood">
+                <FIELD id="CBmood"  header2Class="Premorbid_Personality" type="CheckBoxList" label="Mood">
                     <PROPERTIES>
                         <PROPERTY name="name">CBmood[]</PROPERTY>
                     </PROPERTIES>
@@ -1796,7 +1796,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="CBleisuretimespent" type="CheckBoxList" label="Leisure time spent">
+                <FIELD id="CBleisuretimespent" header2Class="Premorbid_Personality" type="CheckBoxList" label="Leisure time spent">
                     <PROPERTIES>
                         <PROPERTY name="name">CBleisuretimespent[]</PROPERTY>
                     </PROPERTIES>
@@ -1807,7 +1807,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="premorbid_personality_notes" type="textareaFull">
+                <FIELD id="premorbid_personality_notes" header2Class="Premorbid_Personality" type="textareaFull">
                     <PROPERTIES>
                         <PROPERTY name="id">premorbid_personality_notes</PROPERTY>
                         <PROPERTY name="name">premorbid_personality_notes</PROPERTY>
@@ -1818,9 +1818,9 @@
             </FIELD>
             
             <FIELD type="PanelBar" label="Mental Status Examination" target_div="mental_status_examination">
-                <FIELD type="Header2" label="General Appearance &amp; Behaviour"></FIELD>
+                <FIELD type="Header2" label="General Appearance &amp; Behaviour" class="General_Appearance_Behaviour"></FIELD>
                 
-                <FIELD id="RBAppearance" type="RadioButtonList" label="Appearance" required="true">
+                <FIELD id="RBAppearance" header2Class="General_Appearance_Behaviour" type="RadioButtonList" label="Appearance" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">RBAppearance</PROPERTY>
                     </PROPERTIES>
@@ -1831,7 +1831,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="RBlevelofgrooming" type="RadioButtonList" label="Level of grooming" required="true">
+                <FIELD id="RBlevelofgrooming" header2Class="General_Appearance_Behaviour" type="RadioButtonList" label="Level of grooming" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">RBlevelofgrooming</PROPERTY>
                     </PROPERTIES>
@@ -1843,7 +1843,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="RBlevelofcleanliness" type="RadioButtonList" label="Level of Cleanliness" required="true">
+                <FIELD id="RBlevelofcleanliness" header2Class="General_Appearance_Behaviour" type="RadioButtonList" label="Level of Cleanliness" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">RBlevelofcleanliness</PROPERTY>
                     </PROPERTIES>
@@ -1854,7 +1854,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="RBmodeofentry" type="RadioButtonList" label="Mode of entry">
+                <FIELD id="RBmodeofentry" header2Class="General_Appearance_Behaviour" type="RadioButtonList" label="Mode of entry">
                     <PROPERTIES>
                         <PROPERTY name="name">RBmodeofentry</PROPERTY>
                     </PROPERTIES>
@@ -1864,7 +1864,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="RBCooperativeness" type="RadioButtonList" label="Cooperativeness">
+                <FIELD id="RBCooperativeness" header2Class="General_Appearance_Behaviour" type="RadioButtonList" label="Cooperativeness">
                     <PROPERTIES>
                         <PROPERTY name="name">RBCooperativeness</PROPERTY>
                     </PROPERTIES>
@@ -1874,7 +1874,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="RBeyetoeyecontact" type="RadioButtonList" label="Eye to Eye contacat" required="true">
+                <FIELD id="RBeyetoeyecontact" header2Class="General_Appearance_Behaviour" type="RadioButtonList" label="Eye to Eye contacat" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">RBeyetoeyecontact</PROPERTY>
                     </PROPERTIES>
@@ -1885,7 +1885,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="RBHallucinatorybehaviour" type="RadioButtonList" label="Hallucinatory behaviour">
+                <FIELD id="RBHallucinatorybehaviour" header2Class="General_Appearance_Behaviour" type="RadioButtonList" label="Hallucinatory behaviour">
                     <PROPERTIES>
                         <PROPERTY name="name">RBHallucinatorybehaviour</PROPERTY>
                     </PROPERTIES>
@@ -1895,7 +1895,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="RBrapport" type="RadioButtonList" label="Rapport" required="true">
+                <FIELD id="RBrapport" header2Class="General_Appearance_Behaviour" type="RadioButtonList" label="Rapport" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">RBrapport</PROPERTY>
                     </PROPERTIES>
@@ -1905,7 +1905,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="CBGesturingposturing" type="CheckBoxList" label="Gesturing and posturing" Backcontrols="hide" Backdivid="txtGesturingposturingDiv">
+                <FIELD id="CBGesturingposturing" header2Class="General_Appearance_Behaviour" type="CheckBoxList" label="Gesturing and posturing" Backcontrols="hide" Backdivid="txtGesturingposturingDiv">
                     <PROPERTIES>
                         <PROPERTY name="name">CBGesturingposturing[]</PROPERTY>
                     </PROPERTIES>
@@ -1929,7 +1929,7 @@
                     </FIELD>
                 </FIELD>
                 
-                <FIELD id="RBgaitdisurbances" type="RadioButtonList" label="Gait Disurbances">
+                <FIELD id="RBgaitdisurbances" header2Class="General_Appearance_Behaviour" type="RadioButtonList" label="Gait Disurbances">
                     <PROPERTIES>
                         <PROPERTY name="name">RBgaitdisurbances</PROPERTY>
                     </PROPERTIES>
@@ -1942,9 +1942,9 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD type="Header2" label="Catatonic phenomena"></FIELD>
+                <FIELD type="Header2" label="Catatonic phenomena" class="Catatonic_phenomena"></FIELD>
                 
-                <FIELD id="CBPsychomotorActivity" type="CheckBoxList" label="Psychomotor Activity" required="true">
+                <FIELD id="CBPsychomotorActivity" header2Class="Catatonic_phenomena" type="CheckBoxList" label="Psychomotor Activity" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">CBPsychomotorActivity[]</PROPERTY>
                     </PROPERTIES>
@@ -1958,9 +1958,9 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD type="Header2" label="Speech"></FIELD>
+                <FIELD type="Header2" label="Speech" class="Speech"></FIELD>
                 
-                <FIELD id="RBReactiontime" type="RadioButtonList" label="Reaction time" required="true">
+                <FIELD id="RBReactiontime" header2Class="Speech" type="RadioButtonList" label="Reaction time" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">RBReactiontime</PROPERTY>
                     </PROPERTIES>
@@ -1971,7 +1971,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="RBtempo" type="RadioButtonList" label="Tempo" required="true">
+                <FIELD id="RBtempo" header2Class="Speech" type="RadioButtonList" label="Tempo" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">RBtempo</PROPERTY>
                     </PROPERTIES>
@@ -1982,7 +1982,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="RBvolume" type="RadioButtonList" label="Volume" required="true">
+                <FIELD id="RBvolume" header2Class="Speech" type="RadioButtonList" label="Volume" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">RBvolume</PROPERTY>
                     </PROPERTIES>
@@ -1993,7 +1993,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="RBtone" type="RadioButtonList" label="Tone" required="true">
+                <FIELD id="RBtone" header2Class="Speech" type="RadioButtonList" label="Tone" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">RBtone</PROPERTY>
                     </PROPERTIES>
@@ -2004,7 +2004,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="RBCoherence" type="RadioButtonList" label="Coherence">
+                <FIELD id="RBCoherence" header2Class="Speech" type="RadioButtonList" label="Coherence">
                     <PROPERTIES>
                         <PROPERTY name="name">RBCoherence</PROPERTY>
                     </PROPERTIES>
@@ -2014,7 +2014,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="RBRelevance" type="RadioButtonList" label="Relevance">
+                <FIELD id="RBRelevance" header2Class="Speech" type="RadioButtonList" label="Relevance">
                     <PROPERTIES>
                         <PROPERTY name="name">RBRelevance</PROPERTY>
                     </PROPERTIES>
@@ -2024,7 +2024,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="txtspeechsample" type="TextBox" label="Speech Sample">
+                <FIELD id="txtspeechsample" header2Class="Speech" type="TextBox" label="Speech Sample">
                     <PROPERTIES>
                         <PROPERTY name="id">txtspeechsample</PROPERTY>
                         <PROPERTY name="name">txtspeechsample</PROPERTY>
@@ -2032,9 +2032,9 @@
                     </PROPERTIES>
                 </FIELD>
                 
-                <FIELD type="Header2" label="Thought"></FIELD>
+                <FIELD type="Header2" label="Thought" class="Thought"></FIELD>
                 
-                <FIELD id="CBstreamform" type="CheckBoxList" label="Stream &amp; Form" required="true">
+                <FIELD id="CBstreamform" header2Class="Thought" type="CheckBoxList" label="Stream &amp; Form" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">CBstreamform[]</PROPERTY>
                     </PROPERTIES>
@@ -2053,9 +2053,9 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD type="Header2" label="Possession of thought"></FIELD>
+                <FIELD type="Header2" label="Possession of thought" class="Possession_of_thought"></FIELD>
                 
-                <FIELD id="RBObsession" type="RadioButtonList" label="Obsession" Backcontrols="hide" Backdivid="ObsessionDiv">
+                <FIELD id="RBObsession" header2Class="Possession_of_thought" type="RadioButtonList" label="Obsession" Backcontrols="hide" Backdivid="ObsessionDiv">
                     <PROPERTIES>
                         <PROPERTY name="name">RBObsession</PROPERTY>
                     </PROPERTIES>
@@ -2075,7 +2075,7 @@
                     </FIELD>
                 </FIELD>
                 
-                <FIELD id="CBnatureofcompulsion" type="CheckBoxList" label="Nature of Compulsion">
+                <FIELD id="CBnatureofcompulsion" header2Class="Possession_of_thought" type="CheckBoxList" label="Nature of Compulsion">
                     <PROPERTIES>
                         <PROPERTY name="name">CBnatureofcompulsion[]</PROPERTY>
                     </PROPERTIES>
@@ -2085,7 +2085,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="possession_of_thought_notes" type="textareaFull" label="Notes">
+                <FIELD id="possession_of_thought_notes" header2Class="Possession_of_thought" type="textareaFull" label="Notes">
                     <PROPERTIES>
                         <PROPERTY name="id">possession_of_thought_notes</PROPERTY>
                         <PROPERTY name="name">possession_of_thought_notes</PROPERTY>
@@ -2094,9 +2094,9 @@
                     </PROPERTIES>
                 </FIELD>
                 
-                <FIELD type="Header2" label="Thought Content"></FIELD>
+                <FIELD type="Header2" label="Thought Content" class="Thought_Content"></FIELD>
                 
-                <FIELD id="CBIdeas" type="CheckBoxList" label="Ideas">
+                <FIELD id="CBIdeas" header2Class="Thought_Content" type="CheckBoxList" label="Ideas">
                     <PROPERTIES>
                         <PROPERTY name="name">CBIdeas[]</PROPERTY>
                     </PROPERTIES>
@@ -2111,7 +2111,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="CBDelusions" type="CheckBoxList" label="Delusions" Backcontrols="hide" Backdivid="divDelu">
+                <FIELD id="CBDelusions" header2Class="Thought_Content" type="CheckBoxList" label="Delusions" Backcontrols="hide" Backdivid="divDelu">
                     <PROPERTIES>
                         <PROPERTY name="name">CBDelusions[]</PROPERTY>
                     </PROPERTIES>
@@ -2138,7 +2138,7 @@
                     </FIELD>
                 </FIELD>
                 
-                <FIELD id="txtcontentofthought" type="TextBox" label="Content of Thought">
+                <FIELD id="txtcontentofthought" header2Class="Thought_Content" type="TextBox" label="Content of Thought">
                     <PROPERTIES>
                         <PROPERTY name="id">txtcontentofthought</PROPERTY>
                         <PROPERTY name="name">txtcontentofthought</PROPERTY>
@@ -2146,9 +2146,9 @@
                     </PROPERTIES>
                 </FIELD>
                 
-                <FIELD type="Header2" label="Mood"></FIELD>
+                <FIELD type="Header2" label="Mood" class="Mood"></FIELD>
                 
-                <FIELD id="RBQuality" type="RadioButtonList" label="Quality" required="true">
+                <FIELD id="RBQuality" header2Class="Mood" type="RadioButtonList" label="Quality" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">RBQuality</PROPERTY>
                     </PROPERTIES>
@@ -2163,7 +2163,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="RBrangeandreactivity" type="RadioButtonList" label="Range and reactivity" required="true">
+                <FIELD id="RBrangeandreactivity" header2Class="Mood" type="RadioButtonList" label="Range and reactivity" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">RBrangeandreactivity</PROPERTY>
                     </PROPERTIES>
@@ -2177,9 +2177,9 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD type="Header2" label="Affect"></FIELD>
+                <FIELD type="Header2" label="Affect" class="Affect"></FIELD>
                 
-                <FIELD id="txtSubjectively" type="TextBox" label="Subjectively" required="true">
+                <FIELD id="txtSubjectively" header2Class="Affect" type="TextBox" label="Subjectively" required="true">
                     <PROPERTIES>
                         <PROPERTY name="id">txtSubjectively</PROPERTY>
                         <PROPERTY name="name">txtSubjectively</PROPERTY>
@@ -2187,7 +2187,7 @@
                     </PROPERTIES>
                 </FIELD>
                 
-                <FIELD id="txtObjectively" type="TextBox" label="Objectively" required="true">
+                <FIELD id="txtObjectively" header2Class="Affect" type="TextBox" label="Objectively" required="true">
                     <PROPERTIES>
                         <PROPERTY name="id">txtObjectively</PROPERTY>
                         <PROPERTY name="name">txtObjectively</PROPERTY>
@@ -2195,7 +2195,7 @@
                     </PROPERTIES>
                 </FIELD>
                 
-                <FIELD id="mood_notes" type="textareaFull" label="Notes: ">
+                <FIELD id="mood_notes" header2Class="Affect" type="textareaFull" label="Notes: ">
                     <PROPERTIES>
                         <PROPERTY name="id">mood_notes</PROPERTY>
                         <PROPERTY name="name">mood_notes</PROPERTY>
@@ -2204,9 +2204,9 @@
                     </PROPERTIES>
                 </FIELD>
                 
-                <FIELD type="Header2" label="Perception"></FIELD>
+                <FIELD type="Header2" label="Perception" class="Perception"></FIELD>
                 
-                <FIELD id="CBAuditoryhallucination" type="CheckBoxList" label="Auditory hallucination">
+                <FIELD id="CBAuditoryhallucination" header2Class="Perception" type="CheckBoxList" label="Auditory hallucination">
                     <PROPERTIES>
                         <PROPERTY name="name">CBAuditoryhallucination[]</PROPERTY>
                     </PROPERTIES>
@@ -2219,7 +2219,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="CBtype" type="CheckBoxList" label="Type">
+                <FIELD id="CBtype" header2Class="Perception" type="CheckBoxList" label="Type">
                     <PROPERTIES>
                         <PROPERTY name="name">CBtype[]</PROPERTY>
                     </PROPERTIES>
@@ -2229,7 +2229,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="CBOtherHallucinations" type="CheckBoxList" label="Other Hallucinations">
+                <FIELD id="CBOtherHallucinations" header2Class="Perception" type="CheckBoxList" label="Other Hallucinations">
                     <PROPERTIES>
                         <PROPERTY name="name">CBOtherHallucinations[]</PROPERTY>
                     </PROPERTIES>
@@ -2243,7 +2243,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="CBIllusion" type="CheckBoxList" label="Illusion">
+                <FIELD id="CBIllusion" header2Class="Perception" type="CheckBoxList" label="Illusion">
                     <PROPERTIES>
                         <PROPERTY name="name">CBIllusion[]</PROPERTY>
                     </PROPERTIES>
@@ -2253,7 +2253,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="Perception_notes" type="textareaFull" label="Notes">
+                <FIELD id="Perception_notes" header2Class="Perception" type="textareaFull" label="Notes">
                     <PROPERTIES>
                         <PROPERTY name="id">Perception_notes</PROPERTY>
                         <PROPERTY name="name">Perception_notes</PROPERTY>
@@ -2262,9 +2262,9 @@
                     </PROPERTIES>
                 </FIELD>
                 
-                <FIELD type="Header2" label="Higher Mental Functions"></FIELD>
+                <FIELD type="Header2" label="Higher Mental Functions" class="Higher_Mental_Functions"></FIELD>
                 
-                <FIELD id="RBAttension" type="RadioButtonList" label="Attension" required="true">
+                <FIELD id="RBAttension" header2Class="Higher_Mental_Functions" type="RadioButtonList" label="Attension" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">RBAttension</PROPERTY>
                     </PROPERTIES>
@@ -2274,7 +2274,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="RBConcentration" type="RadioButtonList" label="Concentration" required="true">
+                <FIELD id="RBConcentration" header2Class="Higher_Mental_Functions" type="RadioButtonList" label="Concentration" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">RBConcentration</PROPERTY>
                     </PROPERTIES>
@@ -2285,7 +2285,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="RBOrientation" type="RadioButtonList" label="Orientation" Backcontrols="hide" Backdivid="divOrien" required="true">
+                <FIELD id="RBOrientation" header2Class="Higher_Mental_Functions" type="RadioButtonList" label="Orientation" Backcontrols="hide" Backdivid="divOrien" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">RBOrientation</PROPERTY>
                     </PROPERTIES>
@@ -2305,9 +2305,9 @@
                     </FIELD>
                 </FIELD>
                 
-                <FIELD type="Header2" label="Memory"></FIELD>
+                <FIELD type="Header2" label="Memory" class="Memory"></FIELD>
                 
-                <FIELD id="RBImmediate" type="RadioButtonList" label="Immediate" required="true">
+                <FIELD id="RBImmediate" header2Class="Memory" type="RadioButtonList" label="Immediate" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">RBImmediate</PROPERTY>
                     </PROPERTIES>
@@ -2317,7 +2317,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="RBRecent" type="RadioButtonList" label="Recent" required="true">
+                <FIELD id="RBRecent" header2Class="Memory" type="RadioButtonList" label="Recent" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">RBRecent</PROPERTY>
                     </PROPERTIES>
@@ -2327,7 +2327,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="RBRemote" type="RadioButtonList" label="Remote" required="true">
+                <FIELD id="RBRemote" header2Class="Memory" type="RadioButtonList" label="Remote" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">RBRemote</PROPERTY>
                     </PROPERTIES>
@@ -2337,7 +2337,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="RBIntelligence" type="RadioButtonList" label="Intelligence" required="true">
+                <FIELD id="RBIntelligence" header2Class="Memory" type="RadioButtonList" label="Intelligence" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">RBIntelligence</PROPERTY>
                     </PROPERTIES>
@@ -2348,7 +2348,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="RBAbstraction" type="RadioButtonList" label="Abstraction" required="true">
+                <FIELD id="RBAbstraction" header2Class="Memory" type="RadioButtonList" label="Abstraction" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">RBAbstraction</PROPERTY>
                     </PROPERTIES>
@@ -2358,9 +2358,9 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD type="Header2" label="Judgement"></FIELD>
+                <FIELD type="Header2" label="Judgement" class="Judgement"></FIELD>
                 
-                <FIELD id="RBPersonal" type="RadioButtonList" label="Personal" required="true">
+                <FIELD id="RBPersonal" header2Class="Judgement" type="RadioButtonList" label="Personal" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">RBPersonal</PROPERTY>
                     </PROPERTIES>
@@ -2370,7 +2370,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="RBSocial" type="RadioButtonList" label="Social" required="true">
+                <FIELD id="RBSocial" header2Class="Judgement" type="RadioButtonList" label="Social" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">RBSocial</PROPERTY>
                     </PROPERTIES>
@@ -2380,7 +2380,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="RBTest" type="RadioButtonList" label="Test" required="true">
+                <FIELD id="RBTest" header2Class="Judgement" type="RadioButtonList" label="Test" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">RBTest</PROPERTY>
                     </PROPERTIES>
@@ -2390,7 +2390,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="DDLInsight" type="DropDownList" label="Insight" required="true">
+                <FIELD id="DDLInsight" header2Class="Judgement" type="DropDownList" label="Insight" required="true">
                     <PROPERTIES>
                         <PROPERTY name="id">DDLInsight</PROPERTY>
                         <PROPERTY name="name">DDLInsight</PROPERTY>
@@ -2407,7 +2407,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="RBKnowledgeaboutmentalillness" type="RadioButtonList" label="Knowledge about mental illness" required="true">
+                <FIELD id="RBKnowledgeaboutmentalillness" header2Class="Judgement" type="RadioButtonList" label="Knowledge about mental illness" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">RBKnowledgeaboutmentalillness</PROPERTY>
                     </PROPERTIES>
@@ -2418,7 +2418,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="RBAttitudeillness" type="RadioButtonList" label="Attitude towards illness  &amp; treatment" required="true">
+                <FIELD id="RBAttitudeillness" header2Class="Judgement" type="RadioButtonList" label="Attitude towards illness  &amp; treatment" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">RBAttitudeillness</PROPERTY>
                     </PROPERTIES>
@@ -2429,7 +2429,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="higher_mental_notes" type="textareaFull" label="Notes">
+                <FIELD id="higher_mental_notes" header2Class="Judgement" type="textareaFull" label="Notes">
                     <PROPERTIES>
                         <PROPERTY name="id">higher_mental_notes</PROPERTY>
                         <PROPERTY name="name">higher_mental_notes</PROPERTY>
@@ -2457,37 +2457,37 @@
                 </PROPERTIES>
             </FIELD>
             
-            <FIELD type="Header2" label="DSM -IV TR"></FIELD>
+            <FIELD type="Header2" label="DSM -IV TR" class="DSM_IV_TR"></FIELD>
             
-            <FIELD id="txtAxis1" type="TextBox" label="Axis 1">
+            <FIELD id="txtAxis1" header2Class="DSM_IV_TR" type="TextBox" label="Axis 1">
                 <PROPERTIES>
                     <PROPERTY name="id">txtAxis1</PROPERTY>
                     <PROPERTY name="name">txtAxis1</PROPERTY>
                     <PROPERTY name="class">form-control</PROPERTY>
                 </PROPERTIES>
             </FIELD>
-            <FIELD id="txtAxis2" type="TextBox" label="Axis 2">
+            <FIELD id="txtAxis2" header2Class="DSM_IV_TR" type="TextBox" label="Axis 2">
                 <PROPERTIES>
                     <PROPERTY name="id">txtAxis2</PROPERTY>
                     <PROPERTY name="name">txtAxis2</PROPERTY>
                     <PROPERTY name="class">form-control</PROPERTY>
                 </PROPERTIES>
             </FIELD>
-            <FIELD id="txtAxis3" type="TextBox" label="Axis 3">
+            <FIELD id="txtAxis3" header2Class="DSM_IV_TR" type="TextBox" label="Axis 3">
                 <PROPERTIES>
                     <PROPERTY name="id">txtAxis3</PROPERTY>
                     <PROPERTY name="name">txtAxis3</PROPERTY>
                     <PROPERTY name="class">form-control</PROPERTY>
                 </PROPERTIES>
             </FIELD>
-            <FIELD id="txtAxis4" type="TextBox" label="Axis 4">
+            <FIELD id="txtAxis4" header2Class="DSM_IV_TR" type="TextBox" label="Axis 4">
                 <PROPERTIES>
                     <PROPERTY name="id">txtAxis4</PROPERTY>
                     <PROPERTY name="name">txtAxis4</PROPERTY>
                     <PROPERTY name="class">form-control</PROPERTY>
                 </PROPERTIES>
             </FIELD>
-            <FIELD id="txtAxis5" type="TextBox" label="Axis 5">
+            <FIELD id="txtAxis5" header2Class="DSM_IV_TR" type="TextBox" label="Axis 5">
                 <PROPERTIES>
                     <PROPERTY name="id">txtAxis5</PROPERTY>
                     <PROPERTY name="name">txtAxis5</PROPERTY>
