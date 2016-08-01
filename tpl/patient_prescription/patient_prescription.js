@@ -452,8 +452,13 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         }
 
         $scope.getFrequencyExists = function (freq, key) {
-            var result = freq.split('-');
-            return result[key];
+            var result = freq.split('-');           
+            if(result[key]=="0")
+            {
+              return "-";
+            }else{
+              return result[key];
+            }    
         }
 
         $scope.removeItem = function (item) {
