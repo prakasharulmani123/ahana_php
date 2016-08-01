@@ -476,7 +476,6 @@
         </PANELBODY>
     </GROUP>
     
-    <!-- 2016/06/14--> 
     <GROUP>
         <PANELHEADER>
             <PROPERTIES>
@@ -502,7 +501,7 @@
                         <PROPERTY name="class">form-control</PROPERTY>
                     </PROPERTIES>
                     <LISTITEMS>
-                        <LISTITEM value="--Select--" Selected="False">--Select--</LISTITEM>
+                        <LISTITEM value="" Selected="False">--Select--</LISTITEM>
                         <LISTITEM value="1" Selected="False">1</LISTITEM>
                         <LISTITEM value="2" Selected="False">2</LISTITEM>
                         <LISTITEM value="3" Selected="False">3</LISTITEM>
@@ -556,7 +555,7 @@
                             <PROPERTY name="class">form-control</PROPERTY>
                         </PROPERTIES>
                         <LISTITEMS>
-                            <LISTITEM value="--Select--" Selected="False">--Select--</LISTITEM>
+                            <LISTITEM value="" Selected="False">--Select--</LISTITEM>
                             <LISTITEM value="Diabetes" Selected="False">Diabetes</LISTITEM>
                             <LISTITEM value="Hypertension" Selected="False">Hypertension</LISTITEM>
                             <LISTITEM value="Tuberculosis" Selected="False">Tuberculosis</LISTITEM>
@@ -725,7 +724,7 @@
                             <PROPERTY name="class">form-control</PROPERTY>
                         </PROPERTIES>
                         <LISTITEMS>
-                            <LISTITEM value="--Select--" Selected="False">--Select--</LISTITEM>
+                            <LISTITEM value="" Selected="False">--Select--</LISTITEM>
                             <LISTITEM value="1" Selected="False">1</LISTITEM>
                             <LISTITEM value="2" Selected="False">2</LISTITEM>
                             <LISTITEM value="3" Selected="False">3</LISTITEM>
@@ -756,7 +755,7 @@
                             <PROPERTY name="class">form-control</PROPERTY>
                         </PROPERTIES>
                         <LISTITEMS>
-                            <LISTITEM value="--Select--" Selected="False">--Select--</LISTITEM>
+                            <LISTITEM value="" Selected="False">--Select--</LISTITEM>
                             <LISTITEM value="1" Selected="False">1</LISTITEM>
                             <LISTITEM value="2" Selected="False">2</LISTITEM>
                             <LISTITEM value="3" Selected="False">3</LISTITEM>
@@ -777,7 +776,7 @@
                             <PROPERTY name="class">form-control</PROPERTY>
                         </PROPERTIES>
                         <LISTITEMS>
-                            <LISTITEM value="--Select--" Selected="False">--Select--</LISTITEM>
+                            <LISTITEM value="" Selected="False">--Select--</LISTITEM>
                             <LISTITEM value="25" Selected="False">25</LISTITEM>
                             <LISTITEM value="50" Selected="False">50</LISTITEM>
                             <LISTITEM value="75" Selected="False">75</LISTITEM>
@@ -854,7 +853,7 @@
                                 <PROPERTY name="class">form-control</PROPERTY>
                             </PROPERTIES>
                             <LISTITEMS>
-                                <LISTITEM value="--Select--" Selected="False">--Select--</LISTITEM>
+                                <LISTITEM value="" Selected="False">--Select--</LISTITEM>
                                 <LISTITEM value="Magico Religious" Selected="False">Magico Religious</LISTITEM>
                                 <LISTITEM value="Homeopathy" Selected="False">Homeopathy</LISTITEM>
                                 <LISTITEM value="Ayurveda" Selected="False">Ayurveda</LISTITEM>
@@ -886,7 +885,7 @@
                 
                 <FIELD type="Header2" label="Treatment History Notes" class="treatment_history_notes"></FIELD>
                 
-                <FIELD id="treatment_history_notes" header2Class="treatment_history_notes "type="textareaFull" label="Notes">
+                <FIELD id="treatment_history_notes" header2Class="treatment_history_notes" type="textareaFull" label="Notes">
                     <PROPERTIES>
                         <PROPERTY name="id">treatment_history_notes</PROPERTY>
                         <PROPERTY name="name">treatment_history_notes</PROPERTY>
@@ -944,7 +943,7 @@
                                 <PROPERTY name="class">form-control</PROPERTY>
                             </PROPERTIES>
                             <LISTITEMS>
-                                <LISTITEM value="--Select--" Selected="False">--Select--</LISTITEM>
+                                <LISTITEM value="" Selected="False">--Select--</LISTITEM>
                                 <LISTITEM value="GrandParents" Selected="False">GrandParents</LISTITEM>
                                 <LISTITEM value="Parents" Selected="False">Parents</LISTITEM>
                                 <LISTITEM value="Siblings" Selected="False">Siblings</LISTITEM>
@@ -1364,7 +1363,7 @@
                         <PROPERTY name="class">form-control</PROPERTY>
                     </PROPERTIES>
                     <LISTITEMS>
-                        <LISTITEM value="--Select--" Selected="False">--Select--</LISTITEM>
+                        <LISTITEM value="" Selected="False">--Select--</LISTITEM>
                         <LISTITEM value="10" Selected="False">10</LISTITEM>
                         <LISTITEM value="11" Selected="False">11</LISTITEM>
                         <LISTITEM value="12" Selected="False">12</LISTITEM>
@@ -1682,7 +1681,7 @@
                                 <PROPERTY name="class">form-control</PROPERTY>
                             </PROPERTIES>
                             <LISTITEMS>
-                                <LISTITEM value="--Select--" Selected="False">--Select--</LISTITEM>
+                                <LISTITEM value="" Selected="False">--Select--</LISTITEM>
                                 <LISTITEM value="Smoking" Selected="False">Smoking</LISTITEM>
                                 <LISTITEM value="Alcohol" Selected="False">Alcohol</LISTITEM>
                                 <LISTITEM value="Cannabis" Selected="False">Cannabis</LISTITEM>
@@ -2397,7 +2396,7 @@
                         <PROPERTY name="class">form-control</PROPERTY>
                     </PROPERTIES>
                     <LISTITEMS>
-                        <LISTITEM id="DDLInsight1" value="--Select--" Selected="False">--Select--</LISTITEM>
+                        <LISTITEM id="DDLInsight1" value="" Selected="False">--Select--</LISTITEM>
                         <LISTITEM id="DDLInsight2" value="Grade I - Complete denial" Selected="False">Grade I - Complete denial</LISTITEM>
                         <LISTITEM id="DDLInsight3" value="Grade II - Slight awareness" Selected="False">Grade II - Slight awareness</LISTITEM>
                         <LISTITEM id="DDLInsight4" value="Grade III - Awareness attributing to external factors" Selected="False">Grade III - Awareness attributing to external factors</LISTITEM>

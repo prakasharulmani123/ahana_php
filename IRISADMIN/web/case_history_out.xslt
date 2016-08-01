@@ -74,20 +74,6 @@
                                                     </xsl:if>
                                                     <xsl:value-of select="@Backtext"></xsl:value-of>
                                                 </xsl:for-each>
-                                                <xsl:if test="FIELD">
-                                                    <xsl:for-each select="FIELD">
-                                                        <xsl:choose>
-                                                            <xsl:when test="@type='DropDownList'">
-                                                                <xsl:for-each select="LISTITEMS/LISTITEM">
-                                                                    <xsl:if test="@Selected = 'true'">
-                                                                        &#160;
-                                                                        <xsl:value-of select="@value"></xsl:value-of>
-                                                                    </xsl:if>
-                                                                </xsl:for-each>
-                                                            </xsl:when>
-                                                        </xsl:choose>
-                                                    </xsl:for-each>
-                                                </xsl:if>
                                             </div>
                                         </div>
                                         <div class="line line-dashed b-b line-lg "></div>
@@ -260,20 +246,6 @@
                                                                                         <xsl:value-of select="current()"></xsl:value-of>
                                                                                     </xsl:if>
                                                                                 </xsl:for-each>
-                                                                                <xsl:if test="FIELD">
-                                                                                    <xsl:for-each select="FIELD">
-                                                                                        <xsl:choose>
-                                                                                            <xsl:when test="@type='DropDownList'">
-                                                                                                <xsl:for-each select="LISTITEMS/LISTITEM">
-                                                                                                    <xsl:if test="@Selected = 'true'">
-                                                                                                        &#160;
-                                                                                                        <xsl:value-of select="@value"></xsl:value-of>
-                                                                                                    </xsl:if>
-                                                                                                </xsl:for-each>
-                                                                                            </xsl:when>
-                                                                                        </xsl:choose>
-                                                                                    </xsl:for-each>
-                                                                                </xsl:if>
                                                                             </xsl:if>
                                                                         </xsl:when>
                                                                         
@@ -411,20 +383,6 @@
                                                                                                             <xsl:value-of select="current()"></xsl:value-of>
                                                                                                         </xsl:if>
                                                                                                     </xsl:for-each>
-                                                                                                    <xsl:if test="FIELD">
-                                                                                                        <xsl:for-each select="FIELD">
-                                                                                                            <xsl:choose>
-                                                                                                                <xsl:when test="@type='DropDownList'">
-                                                                                                                    <xsl:for-each select="LISTITEMS/LISTITEM">
-                                                                                                                        <xsl:if test="@Selected = 'true'">
-                                                                                                                            &#160;
-                                                                                                                            <xsl:value-of select="@value"></xsl:value-of>
-                                                                                                                        </xsl:if>
-                                                                                                                    </xsl:for-each>
-                                                                                                                </xsl:when>
-                                                                                                            </xsl:choose>
-                                                                                                        </xsl:for-each>
-                                                                                                    </xsl:if>
                                                                                                 </xsl:if>
                                                                                             </xsl:when>
                                                                                             
@@ -626,20 +584,6 @@
                                                                             <xsl:value-of select="current()"></xsl:value-of>
                                                                         </xsl:if>
                                                                     </xsl:for-each>
-                                                                    <xsl:if test="FIELD">
-                                                                        <xsl:for-each select="FIELD">
-                                                                            <xsl:choose>
-                                                                                <xsl:when test="@type='DropDownList'">
-                                                                                    <xsl:for-each select="LISTITEMS/LISTITEM">
-                                                                                        <xsl:if test="@Selected = 'true'">
-                                                                                            &#160;
-                                                                                            <xsl:value-of select="@value"></xsl:value-of>
-                                                                                        </xsl:if>
-                                                                                    </xsl:for-each>
-                                                                                </xsl:when>
-                                                                            </xsl:choose>
-                                                                        </xsl:for-each>
-                                                                    </xsl:if>
                                                                 </div>
                                                             </div>
                                                             <div class="line line-dashed b-b line-lg "></div>
