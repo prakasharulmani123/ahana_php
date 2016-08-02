@@ -132,6 +132,16 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                 }
             });
         }
+        
+        $scope.printDocument = function () {
+            $timeout(function () {
+                var innerContents = document.getElementById("printThisElement").innerHTML;
+                var popupWinindow = window.open('', '_blank', 'width=600,height=700,scrollbars=yes,menubar=no,toolbar=no,location=no,status=no,titlebar=no');
+                popupWinindow.document.open();
+                popupWinindow.document.write('<html><head><link href="css/print.css" rel="stylesheet" type="text/css" /></head><body onload="window.print()">' + innerContents + '</html>');
+                popupWinindow.document.close();
+            }, 1000)
+        }
 
         //View Document
         $scope.viewDocument = function () {
@@ -143,7 +153,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     $state.go("patient.document", {id: $state.params.id});
                 } else {
                     $scope.xslt = doc_type_response.result.document_out_xslt;
-//                    $scope.printxslt = doc_type_response.result.document_out_print_xslt;
+                    $scope.printxslt = doc_type_response.result.document_out_print_xslt;
                     var doc_id = $state.params.doc_id;
                     $scope.getDocument(doc_id, function (pat_doc_response) {
                         $scope.created_at = pat_doc_response.result.created_at;

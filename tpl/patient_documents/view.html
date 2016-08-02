@@ -1,11 +1,16 @@
 <div ng-controller="DocumentsController">
     <div class="bg-light lter b-b wrapper-md">
         <div class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-9">
                 <h1 class="m-n h3">View Document</h1>
             </div>
-            <div class="col-sm-6">
-                <button class="btn btn-info pull-right" ng-print print-element-id="printThisElement"><i class="fa fa-print"></i> Print</button>
+            <div class="col-sm-3 text-right">
+                <button class="btn btn-sm btn-info" ng-click="printDocument()">
+                    <i class="fa fa-print"></i> Print
+                </button>
+                <button ng-click="$state.go('patient.document', {id: $state.params.id})" class="btn btn-sm btn-dark">
+                    <i class="fa fa-repeat"></i> Back
+                </button>
             </div>
         </div>
     </div>
@@ -16,45 +21,45 @@
         <div ng-show="isLoading">
             <i class="fa fa-spin fa-refresh"></i>
         </div>
-        
-<!--        <table ng-hide="isLoading" id='printThisElement' style="width:100%">
-            <thead>
-                <tr>
-                    <th>
-                        <img width="60" height="60" alt="AHANA HOSPITALS" src="css/images/ah-logo.png" />
-                    </th>
-                    <th>
-                        {{app.org_name}} 
-                    </th>
-                    <th>
-                        <b>Date:</b> {{created_at| moment:'DD/MM/YYYY - hh:mm A'}}
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td colspan="3" ng-bind-html="xml | xslt:printxslt | sanitize">
 
-                    </td>
-                </tr>
-            </tbody>
-        </table>-->
-        
-        <div ng-hide="isLoading" id='printThisElement'>
-            <div class="panel panel-default divHeader">
-                <div class="panel-body">
-                    <div class="col-sm-2">
-                        <img width="60" height="60" alt="AHANA HOSPITALS" src="css/images/ah-logo.png">
-                    </div>
-                    <div class="col-sm-6">
-                        <h3> {{app.org_name}} </h3>
-                    </div>
-                    <div class="col-sm-4 text-right m-t-md">
-                        <b>Date:</b> {{created_at| moment:'DD/MM/YYYY - hh:mm A'}}
-                    </div>
+        <div ng-hide="true" id='printThisElement'>
+            <table ng-hide="isLoading" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>
+                            <img width="60" height="60" alt="AHANA HOSPITALS" src="css/images/ah-logo.png" />
+                        </th>
+                        <th>
+                            {{app.org_name}} 
+                        </th>
+                        <th>
+                            <b>Date:</b> {{created_at| moment:'DD/MM/YYYY - hh:mm A'}}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="3" ng-bind-html="xml | xslt:printxslt | sanitize">
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="panel panel-default divHeader">
+            <div class="panel-body">
+                <div class="col-sm-2">
+                    <img width="60" height="60" alt="AHANA HOSPITALS" src="css/images/ah-logo.png">
+                </div>
+                <div class="col-sm-6">
+                    <h3> {{app.org_name}} </h3>
+                </div>
+                <div class="col-sm-4 text-right m-t-md">
+                    <b>Date:</b> {{created_at| moment:'DD/MM/YYYY - hh:mm A'}}
                 </div>
             </div>
-            <div ng-bind-html="xml | xslt:xslt | sanitize" class="document-content"></div>
         </div>
+        <div ng-bind-html="xml | xslt:xslt | sanitize" class="document-content"></div>
     </div>
 </div>
