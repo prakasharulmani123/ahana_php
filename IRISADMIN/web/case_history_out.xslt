@@ -45,7 +45,6 @@
                                                     <xsl:if test="@name='value'">
                                                         <xsl:value-of select="current()"></xsl:value-of>
                                                     </xsl:if>
-                                                    <xsl:value-of select="@Backtext"></xsl:value-of>
                                                 </xsl:for-each>
                                              &#160;
                                                 <xsl:for-each select="FIELD/LISTITEMS/LISTITEM">
@@ -71,8 +70,8 @@
                                                 <xsl:for-each select="PROPERTIES/PROPERTY">
                                                     <xsl:if test="@name='value'">
                                                         <xsl:value-of select="current()"></xsl:value-of>
+                                                        <xsl:value-of select="../../@Backtext"></xsl:value-of>
                                                     </xsl:if>
-                                                    <xsl:value-of select="@Backtext"></xsl:value-of>
                                                 </xsl:for-each>
                                             </div>
                                         </div>

@@ -3,9 +3,7 @@
     <xsl:output method="html"/>
     <xsl:template match="/">
         <script type="text/javascript" src="js/xmlvalidation.js">&#160;</script> 
-        
         <form method="post" id="xmlform">
-            
             <xsl:for-each select="FIELDS/GROUP">
                 <div class="panel panel-default">
                     <xsl:for-each select="PANELHEADER">

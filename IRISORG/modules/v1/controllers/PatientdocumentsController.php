@@ -724,7 +724,7 @@ class PatientdocumentsController extends ActiveController {
                     $listitems = $field1->addChild('LISTITEMS');
 
                     $listitem1 = $listitems->addChild('LISTITEM', '--Select--');
-                    $listitem1->addAttribute('value', '--Select--');
+                    $listitem1->addAttribute('value', '');
                     $listitem1->addAttribute('Selected', 'False');
 
                     $listitem2 = $listitems->addChild('LISTITEM', 'Diabetes');
@@ -1054,7 +1054,7 @@ class PatientdocumentsController extends ActiveController {
                             $listitems = $field1->addChild('LISTITEMS');
 
                             $listitem1 = $listitems->addChild('LISTITEM', '--Select--');
-                            $listitem1->addAttribute('value', '--Select--');
+                            $listitem1->addAttribute('value', '');
                             $listitem1->addAttribute('Selected', 'False');
 
                             $listitem2 = $listitems->addChild('LISTITEM', 'Magico Religious');
@@ -1162,7 +1162,7 @@ class PatientdocumentsController extends ActiveController {
                             $listitems = $field1->addChild('LISTITEMS');
 
                             $listitem1 = $listitems->addChild('LISTITEM', '--Select--');
-                            $listitem1->addAttribute('value', '--Select--');
+                            $listitem1->addAttribute('value', '');
                             $listitem1->addAttribute('Selected', 'False');
 
                             $listitem2 = $listitems->addChild('LISTITEM', 'GrandParents');
@@ -1300,7 +1300,7 @@ class PatientdocumentsController extends ActiveController {
                             $listitems = $field1->addChild('LISTITEMS');
 
                             $listitem1 = $listitems->addChild('LISTITEM', '--Select--');
-                            $listitem1->addAttribute('value', '--Select--');
+                            $listitem1->addAttribute('value', '');
                             $listitem1->addAttribute('Selected', 'False');
 
                             $listitem2 = $listitems->addChild('LISTITEM', 'Smoking');

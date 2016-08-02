@@ -3,7 +3,7 @@
     <xsl:output method="html"/>
     <xsl:template match="/">
         <xsl:for-each select="FIELDS/GROUP">
-            <table style="page-break-inside : avoid">
+            <table>
                 <xsl:for-each select="PANELHEADER">
                     <tr>
                         <td colspan="2">
