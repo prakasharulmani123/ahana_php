@@ -132,7 +132,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                 }
             });
         }
-        
+
         $scope.printDocument = function () {
             $timeout(function () {
                 var innerContents = document.getElementById("printThisElement").innerHTML;
@@ -160,6 +160,73 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                         $scope.xml = pat_doc_response.result.document_xml;
 
                         $timeout(function () {
+                            $("#printThisElement table").each(function () {
+                                //RadGrid
+                                var RadGrid_tr = $(this).find("tr.RadGrid");
+                                $.each(RadGrid_tr, function (n, e)
+                                {
+                                    $this = $(this);
+                                    var RadGrid_tr_attr = $this.data("radgrid");
+                                    $('table#' + RadGrid_tr_attr + ' tbody tr').each(function () {
+                                        if ($('td:not(:empty)', this).length == 0)
+                                            $(this).remove();
+                                    });
+
+                                    $('table#' + RadGrid_tr_attr).each(function () {
+                                        if ($(this).find("tbody").html().trim().length === 0) {
+                                            $this.remove();
+                                        }
+                                    });
+                                });
+
+                                //Header2
+                                var header2_tr = $(this).find("tr.header2");
+                                $.each(header2_tr, function (n, e)
+                                {
+                                    var header2_tr_attr = $(this).data("header2");
+                                    var header2_has_tr = $("tr").hasClass(header2_tr_attr);
+                                    if (!header2_has_tr) {
+                                        $(this).remove();
+                                    }
+                                });
+
+                                var tr = $(this).find("tr");
+                                $.each(tr, function () {
+                                    $this = $(this);
+                                    if ($(this).find("td").length > 0) {
+                                        if ($(this).find("td").text().trim().length === 0) {
+                                            $this.remove();
+                                        }
+                                    }
+
+                                });
+
+                                var rowCount = $(this).find("tr").length;
+                                if (rowCount < 2) {
+                                    $(this).remove();
+                                }
+
+                            });
+
+                            $("#printThisElement table").each(function () {
+                                var PanelBar_tr = $(this).find("table tr.PanelBar");
+                                if (PanelBar_tr.length > 0) {
+                                    $.each(PanelBar_tr, function () {
+                                        $this = $(this);
+                                        if ($(this).find("td").length > 0) {
+                                            if ($(this).find("td").text().trim().length === 0) {
+                                                $this.remove();
+                                            }
+                                        }
+                                    });
+                                }
+
+                                var rowCount = $(this).find("tr").length;
+                                if (rowCount < 2) {
+                                    $(this).remove();
+                                }
+                            });
+
                             $(".document-content .panel-default").each(function () {
                                 //RadGrid
                                 var RadGrid_div = $(this).find(".panel-body .RadGrid");

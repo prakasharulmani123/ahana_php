@@ -8,7 +8,19 @@
         margin:0px auto;
     }
 
-    body > table:last-of-type{page-break-after:auto}
+    table {
+        width:100%;
+    }
+
+    .RadGrid table, .RadGrid table th, .RadGrid table td {
+        border-collapse:collapse;
+        border: 1px solid black;
+    }
+
+    body > table:nth-last-of-type(1){
+        page-break-after:auto
+    }
+
 }
 
 .voucher-table

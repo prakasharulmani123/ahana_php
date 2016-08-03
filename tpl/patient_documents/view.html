@@ -22,8 +22,24 @@
             <i class="fa fa-spin fa-refresh"></i>
         </div>
 
+        <div class="panel panel-default divHeader">
+            <div class="panel-body">
+                <div class="col-sm-2">
+                    <img width="60" height="60" alt="AHANA HOSPITALS" src="css/images/ah-logo.png">
+                </div>
+                <div class="col-sm-6">
+                    <h3> {{app.org_name}} </h3>
+                </div>
+                <div class="col-sm-4 text-right m-t-md">
+                    <b>Date:</b> {{created_at| moment:'DD/MM/YYYY - hh:mm A'}}
+                </div>
+            </div>
+        </div>
+        <div ng-bind-html="xml | xslt:xslt | sanitize" class="document-content"></div>
+
+        <!-- Document Print Content-->
         <div ng-hide="true" id='printThisElement'>
-            <table ng-hide="isLoading" style="width:100%">
+            <table style="width:100%">
                 <thead>
                     <tr>
                         <th>
@@ -46,20 +62,5 @@
                 </tbody>
             </table>
         </div>
-
-        <div class="panel panel-default divHeader">
-            <div class="panel-body">
-                <div class="col-sm-2">
-                    <img width="60" height="60" alt="AHANA HOSPITALS" src="css/images/ah-logo.png">
-                </div>
-                <div class="col-sm-6">
-                    <h3> {{app.org_name}} </h3>
-                </div>
-                <div class="col-sm-4 text-right m-t-md">
-                    <b>Date:</b> {{created_at| moment:'DD/MM/YYYY - hh:mm A'}}
-                </div>
-            </div>
-        </div>
-        <div ng-bind-html="xml | xslt:xslt | sanitize" class="document-content"></div>
     </div>
 </div>
