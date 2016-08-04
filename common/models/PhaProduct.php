@@ -215,6 +215,10 @@ class PhaProduct extends RActiveRecord {
         return $this->hasMany(PhaProductBatch::className(), ['product_id' => 'product_id']);
     }
 
+    public function getPhaLatestBatch() {
+        return $this->hasOne(PhaProductBatch::className(), ['product_id' => 'product_id'])->orderBy(['expiry_date' => SORT_ASC]);
+    }
+
     public function getPhaProductBatchesAvailableQty() {
         return $this->hasMany(PhaProductBatch::className(), ['product_id' => 'product_id'])->sum('available_qty');
     }
@@ -305,6 +309,9 @@ class PhaProduct extends RActiveRecord {
             },
             'description_routes' => function ($model) {
                 return (isset($model->productDescription) ? $model->productDescription->routes : '-');
+            },
+            'latest_price' => function ($model) {
+                return (isset($model->phaLatestBatch) ? $model->phaLatestBatch->phaProductBatchRate->mrp : 0);
             },
         ];
         $fields = array_merge(parent::fields(), $extend);
