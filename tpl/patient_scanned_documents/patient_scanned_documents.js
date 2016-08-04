@@ -126,9 +126,12 @@ app.controller('ScannedDocumentsController', ['$rootScope', '$scope', '$timeout'
             }
         };
 
+        $scope.displayspin = '';
         $scope.downloadDocument = function (scanned_doc_id) {
+            $scope.displayspin = scanned_doc_id;
             $http.get($rootScope.IRISOrgServiceUrl + "/patientscanneddocuments/getscanneddocument?id=" + scanned_doc_id)
                     .success(function (response) {
+                        $scope.displayspin = '';
                         if (response.success === true) {
                             var link = document.createElement('a');
                             link.href = 'data:' + response.result.file_type + ';base64,' + response.file;
@@ -144,5 +147,6 @@ app.controller('ScannedDocumentsController', ['$rootScope', '$scope', '$timeout'
                     }).
                     error(function (data, status) {
                     });
+            
         };
     }]);

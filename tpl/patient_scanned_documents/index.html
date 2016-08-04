@@ -69,6 +69,7 @@
                             <span class="label bg-light dk">{{doc.created_at| moment:'hh:mm A'}}</span>
                         </td>
                         <td valign="middle">
+                            <i class="fa fa-spin fa-repeat" ng-if="displayspin == doc.scanned_doc_id"></i>
                             <button type="button" title="Download"  ng-click="downloadDocument(doc.scanned_doc_id)" class="label bg-dark">
                                 <i class="fa fa-download"></i>
                             </button>
