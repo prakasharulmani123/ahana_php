@@ -68,10 +68,10 @@
                             <span class="label bg-light dk">{{vital.vital_time| moment:'hh:mm A'}}</span> 
                         </td>
                         <td> {{vital.temperature}} </td>
-                        <td> {{vital.blood_pressure_systolic}} </td>
-                        <td> {{vital.blood_pressure_diastolic}} </td>
-                        <td> {{vital.pulse_rate}} </td>
-                        <td> {{vital.weight}} </td>
+                        <td> {{vital.blood_pressure_systolic || '-'}} </td>
+                        <td> {{vital.blood_pressure_diastolic || '-'}} </td>
+                        <td> {{vital.pulse_rate || '-'}} </td>
+                        <td> {{vital.weight || '-'}} </td>
                         <td>
                             <div ng-if="vital.tenant_id != null && enc.selected.status == '1' && enc.selected.encounter_id == vital.encounter_id">
                                 <a class="label bg-info dk" title="Edit" check-access  ui-sref="patient.vitalUpdate({id: '{{$state.params.id}}', vital_id: '{{vital.vital_id}}'})">
