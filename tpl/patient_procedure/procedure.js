@@ -49,9 +49,6 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
             return $.inArray(date, $scope.enabled_dates) === -1;
         };
 
-        //Notifications
-        $scope.assignNotifications();
-
         $scope.ctrl = {};
         $scope.allExpanded = true;
         $scope.expanded = true;

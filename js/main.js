@@ -57,6 +57,8 @@ angular.module('app')
                     patientDetail: {
                         patientSex: '',
                         patientMaritalStatus: '',
+                        patientUnseenNotesCount: '0',
+                        patientUnseenVitalsCount: '0',
                     }
                 }
 
@@ -178,7 +180,7 @@ angular.module('app')
                                         $rootScope.commonService.GetLabelFromValue(patient.patient_gender, 'GetGenderList', function (response) {
                                             $scope.app.patientDetail.patientSex = response;
                                         });
-                                        
+
                                         $rootScope.commonService.GetLabelFromValue(patient.patient_marital_status, 'GetMaritalStatus', function (response) {
                                             $scope.app.patientDetail.patientMaritalStatus = response;
                                         });
@@ -212,10 +214,10 @@ angular.module('app')
                     });
                     return ret;
                 }
-                
+
                 $scope.msg = {};
                 $scope.msg.successMessage = "";
-                
+
                 $scope.$watch('msg', function (newValue, oldValue) {
                     if (newValue) {
                         $timeout(function () {
@@ -403,22 +405,6 @@ angular.module('app')
                     $scope.patientObj.alert = data.alert;
                 });
 
-                $scope.assignNotifications = function () {
-                    //Assign Notes
-                    $http({
-                        method: 'POST',
-                        url: $rootScope.IRISOrgServiceUrl + '/patientnotes/assignnotes',
-                        data: {'patient_guid': $state.params.id},
-                    });
-
-                    //Assign Vitals
-                    $http({
-                        method: 'POST',
-                        url: $rootScope.IRISOrgServiceUrl + '/patientvitals/assignvitals',
-                        data: {'patient_guid': $state.params.id},
-                    });
-                }
-
                 $scope.openUploadForm = function (block) {
                     var modalInstance = $modal.open({
                         templateUrl: 'tpl/modal_form/modal.patient_image.html',
@@ -517,6 +503,139 @@ angular.module('app').factory('fileUpload', ['$http', function ($http) {
                         })
                         .error(function (data, status) {
                         });
+            }
+        }
+    }]);
+
+angular.module('app').controller('PatientLeftSideNotificationCtrl', ['$rootScope', '$scope', '$http', '$state', '$filter', '$timeout', function ($rootScope, $scope, $http, $state, $filter, $timeout) {
+
+        $scope.notes = [];
+        $scope.vitals = [];
+        $scope.assignNotifications = function () {
+            //Assign Notes
+            $http({
+                method: 'POST',
+                url: $rootScope.IRISOrgServiceUrl + '/patientnotes/assignnotes',
+                data: {'patient_guid': $state.params.id},
+            }).success(
+                    function (response) {
+                        if (response.success) {
+                            //Get Notes
+                            $http.get($rootScope.IRISOrgServiceUrl + '/patientnotes/getpatientnotes?patient_id=' + $state.params.id)
+                                    .success(function (notes) {
+                                        angular.forEach(notes.result, function (result) {
+                                            angular.forEach(result.all, function (note) {
+                                                $scope.notes.push(note);
+                                            });
+                                        });
+                                        $scope.unseen_notes = notes.usernotes;
+                                        $scope.app.patientDetail.patientUnseenNotesCount = notes.usernotes.length;
+
+                                        angular.forEach($scope.notes, function (note) {
+                                            note.seen_by = 1;
+                                        });
+
+                                        angular.forEach(notes.usernotes, function (note) {
+                                            var seen_filter_note = $filter('filter')($scope.notes, {pat_note_id: note.note_id});
+
+                                            if (seen_filter_note.length > 0) {
+                                                seen_filter_note[0].seen_by = 0;
+                                            }
+                                        });
+                                    })
+                                    .error(function () {
+                                        $scope.errorData = "An Error has occured while loading patientnote!";
+                                    });
+                        }
+                    }
+            );
+
+            //Assign Vitals
+            $http({
+                method: 'POST',
+                url: $rootScope.IRISOrgServiceUrl + '/patientvitals/assignvitals',
+                data: {'patient_guid': $state.params.id},
+            }).success(
+                    function (response) {
+                        if (response.success) {
+                            // Get Vitals
+                            $http.get($rootScope.IRISOrgServiceUrl + '/patientvitals/getpatientvitals?patient_id=' + $state.params.id)
+                                    .success(function (vitals) {
+                                        angular.forEach(vitals.result, function (result) {
+                                            angular.forEach(result.all, function (vital) {
+                                                $scope.vitals.push(vital);
+                                            });
+                                        });
+                                        $scope.unseen_vitals = vitals.uservitals;
+                                        $scope.app.patientDetail.patientUnseenVitalsCount = vitals.uservitals.length;
+
+                                        angular.forEach($scope.vitals, function (vital) {
+                                            vital.seen_by = 1;
+                                        });
+
+                                        angular.forEach(vitals.uservitals, function (vital) {
+                                            var seen_filter_vital = $filter('filter')($scope.vitals, {vital_id: vital.vital_id});
+                                            if (seen_filter_vital.length > 0) {
+                                                seen_filter_vital[0].seen_by = 0;
+                                            }
+                                        });
+                                    })
+                                    .error(function () {
+                                        $scope.errorData = "An Error has occured while loading patientvitals!";
+                                    });
+                        }
+                    }
+            );
+        };
+        $scope.assignNotifications();
+
+        $scope.seen_notes_left_notification = function () {
+            if ($scope.app.patientDetail.patientUnseenNotesCount > 0) {
+                var unseen_filter_note = $filter('filter')($scope.notes, {seen_by: 0});
+                var note_ids = [];
+                angular.forEach(unseen_filter_note, function (unseen, key) {
+                    note_ids.push(unseen.pat_note_id);
+                });
+
+                $http({
+                    method: 'POST',
+                    url: $rootScope.IRISOrgServiceUrl + '/patientnotes/seennotes',
+                    data: {'ids': note_ids, 'patient_guid': $state.params.id},
+                }).success(
+                        function (response) {
+                            $timeout(function () {
+                                angular.forEach($scope.notes, function (note, key) {
+                                    note.seen_by = 1;
+                                });
+                                $scope.app.patientDetail.patientUnseenNotesCount = 0;
+                            }, 5000);
+                        }
+                );
+            }
+        }
+
+        $scope.seen_vitals_left_notification = function () {
+            if ($scope.app.patientDetail.patientUnseenVitalsCount > 0) {
+                var unseen_filter_vital = $filter('filter')($scope.vitals, {seen_by: 0});
+                var vital_ids = [];
+                angular.forEach(unseen_filter_vital, function (unseen, key) {
+                    vital_ids.push(unseen.vital_id);
+                });
+
+                $http({
+                    method: 'POST',
+                    url: $rootScope.IRISOrgServiceUrl + '/patientvitals/seenvitals',
+                    data: {'ids': vital_ids, 'patient_guid': $state.params.id},
+                }).success(
+                        function (response) {
+                            $timeout(function () {
+                                angular.forEach($scope.vitals, function (vital, key) {
+                                    vital.seen_by = 1;
+                                });
+                                $scope.app.patientDetail.patientUnseenVitalsCount = 0;
+                            }, 5000);
+                        }
+                );
             }
         }
     }]);

@@ -933,6 +933,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             .state('patient.view', {
                 url: '/view/{id}',
                 templateUrl: 'tpl/patient/view.html',
+                controller: 'PatientLeftSideNotificationCtrl',
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
@@ -967,6 +968,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             .state('patient.encounter', {
                 url: '/encounter/{id}',
                 templateUrl: 'tpl/patient_encounter/encounters.html',
+                controller: 'PatientLeftSideNotificationCtrl',
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
@@ -1112,6 +1114,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             .state('patient.procedure', {
                 url: '/procedure/{id}',
                 templateUrl: 'tpl/patient_procedure/procedures.html',
+                controller: 'PatientLeftSideNotificationCtrl',
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
@@ -1193,6 +1196,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             .state('patient.alert', {
                 url: '/alert/{id}',
                 templateUrl: 'tpl/patient_alert/index.html',
+                controller: 'PatientLeftSideNotificationCtrl',
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
@@ -1233,6 +1237,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             .state('patient.notes', {
                 url: '/notes/{id}',
                 templateUrl: 'tpl/patient_notes/index.html',
+                controller: 'PatientLeftSideNotificationCtrl',
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
@@ -1285,6 +1290,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             .state('patient.consultant', {
                 url: '/consultant/{id}',
                 templateUrl: 'tpl/patient_consultant/index.html',
+                controller: 'PatientLeftSideNotificationCtrl',
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
@@ -2020,6 +2026,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             .state('patient.billing', {
                 url: '/billing/{id}',
                 templateUrl: 'tpl/patient_billing/index.html',
+                controller: 'PatientLeftSideNotificationCtrl',
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
@@ -2169,6 +2176,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             .state('patient.prescription', {
                 url: '/prescription/{id}',
                 templateUrl: 'tpl/patient_prescription/index.html',
+                controller: 'PatientLeftSideNotificationCtrl',
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
@@ -2187,6 +2195,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             .state('patient.vitals', {
                 url: '/vitals/{id}',
                 templateUrl: 'tpl/patient_vitals/index.html',
+                controller: 'PatientLeftSideNotificationCtrl',
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {

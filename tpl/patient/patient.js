@@ -5,9 +5,6 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
         $scope.app.settings.patientContentClass = 'app-content patient_content ';
         $scope.app.settings.patientFooterClass = 'app-footer';
 
-        //Notifications
-        $scope.assignNotifications();
-
         $scope.orgData = {};
 
         $scope.changeMode = function (mode) {

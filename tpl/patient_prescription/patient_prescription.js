@@ -5,9 +5,6 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.app.settings.patientContentClass = 'app-content patient_content ';
         $scope.app.settings.patientFooterClass = 'app-footer';
 
-        //Notifications
-        $scope.assignNotifications();
-
         $scope.enc = {};
         $scope.drugs = {};
         $scope.routes = {};

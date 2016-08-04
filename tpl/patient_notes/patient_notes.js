@@ -16,9 +16,6 @@ app.controller('NotesController', ['$rootScope', '$scope', '$timeout', '$http', 
             return $.inArray(date, $scope.enabled_dates) === -1;
         };
 
-        //Notifications
-        $scope.assignNotifications();
-
         $scope.isPatientHaveActiveEncounter = function (callback) {
             $http.post($rootScope.IRISOrgServiceUrl + '/encounter/patienthaveactiveencounter', {patient_id: $state.params.id})
                     .success(function (response) {

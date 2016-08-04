@@ -18,8 +18,6 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
 
         $scope.more_max = 3;
 
-        //Notifications
-        $scope.assignNotifications();
         //Encounter Page
         $scope.enabled_dates = [];
         $scope.loadPatientEncounters = function (type, date) {
