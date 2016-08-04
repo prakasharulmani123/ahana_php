@@ -12,7 +12,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.drugs = {};
         $scope.routes = {};
         $scope.frequencies = {};
-        
+
         $scope.open = function ($event) {
             $event.preventDefault();
             $event.stopPropagation();
@@ -45,6 +45,29 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 $scope.$emit('encounter_id', newValue);
             }
         }, true);
+
+        $scope.priceTotal = function () {
+            total = 0;
+            angular.forEach($scope.data.prescriptionItems, function(item){
+                total = total + parseFloat(item.total);
+            });
+            return total;
+        }
+        
+        $scope.freqChange = function (freq, item, key) {
+            if (typeof freq != 'undefined') {
+                org_freq = chunk(freq, 1).join('-');
+                $scope.data.prescriptionItems[key].frequency = org_freq;
+                $scope.data.prescriptionItems[key].total = $scope.calculate_price(org_freq, item.number_of_days, item.price);
+            }
+        };
+
+        $scope.numberDaysChange = function (days, item, key) {
+            if (typeof days != 'undefined') {
+                $scope.data.prescriptionItems[key].number_of_days = days;
+                $scope.data.prescriptionItems[key].total = $scope.calculate_price(item.frequency, days, item.price);
+            }
+        };
 
         $scope.loadSideMenu = function () {
             //Get Notes
@@ -368,7 +391,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 }
             });
         }
-        
+
         $scope.minDate = $scope.minDate ? null : new Date();
 
         $scope.saveForm = function () {
@@ -561,8 +584,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 $scope.prescription_lists = {};
             }
         }, true);
-        
-        
+
+
         $scope.disabled = function (date, mode) {
             date = moment(date).format('YYYY-MM-DD');
             return $.inArray(date, $scope.enabled_dates) === -1;
@@ -577,7 +600,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.loadPrevPrescriptionsList = function (date) {
             $scope.isLoading = true;
             // pagination set up
-           
+
             $scope.rowCollection = [];  // base collection
             $scope.itemsByPage = 10; // No.of records per page
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
@@ -585,7 +608,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct')
                     .success(function (products) {
                         $scope.all_products = products;
-                       
+
                         if (typeof date == 'undefined') {
                             url = $rootScope.IRISOrgServiceUrl + '/patientprescription/getpreviousprescription?patient_id=' + $state.params.id;
                         } else {
@@ -598,22 +621,22 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                 .success(function (prescriptionList) {
                                     $scope.isLoading = false;
                                     $scope.rowCollection = prescriptionList.prescriptions;
-                                    
+
                                     if ($scope.rowCollection.length > 0) {
                                         angular.forEach($scope.rowCollection, function (row) {
-                                            
-                                            /* Visible only existing presc dates in datepicker */                                           
+
+                                            /* Visible only existing presc dates in datepicker */
                                             var result = $filter('filter')($scope.enabled_dates, moment(row.pres_date).format('YYYY-MM-DD'));
                                             if (result.length == 0)
                                                 $scope.enabled_dates.push(moment(row.pres_date).format('YYYY-MM-DD'));
-                                                
+
                                             angular.forEach(row.items, function (item) {
                                                 item.selected = '0';
                                             });
                                             row.selected = '0';
                                         });
-                                        
-                                       
+
+
 
                                         angular.forEach($scope.rowCollection[0].items, function (item) {
                                             items = {
@@ -642,32 +665,34 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                             $scope.data.prescriptionItems.push(items);
                                         });
                                     }
-                                    
+
                                     $scope.displayedCollection = [].concat($scope.rowCollection);
 
                                     //Checkbox initialize
                                     $scope.checkboxes = {'checked': false, items: []};
                                     $scope.previousPresSelectedItems = [];
                                     $scope.previousPresSelected = 0;
-                                    
+
                                 })
                                 .error(function () {
                                     $scope.errorData = "An Error has occured while loading list!";
-                                });                           
+                                });
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading brand!";
                     });
-                    
-                     $scope.$broadcast('refreshDatepickers');     
+
+            $scope.$broadcast('refreshDatepickers');
         };
-        
-        $scope.calculate_price = function(freq, days, price){
+
+        $scope.calculate_price = function (freq, days, price) {
             var freq_count = 0;
-            $.each(freq.split('-'), function(key, item){
-                if(item == '1')
+            $.each(freq.split('-'), function (key, item) {
+                if (item == '1')
                     freq_count++;
-            })
+            });
+            console.log('freq_count');
+            console.log(freq_count);
             return (parseFloat(days) * parseFloat(price) * parseFloat(freq_count));
         }
 

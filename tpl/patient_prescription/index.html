@@ -257,6 +257,7 @@
                                                                   e-typeahead="frequency as frequency.freq_name for frequency in frequencies | filter:$viewValue"
                                                                   e-autocomplete="off"
                                                                   e-id="frequency"
+                                                                  e-ng-change="freqChange($data, item, key)"
                                                                   e-required>
                                                                 {{ item.frequency || 'empty' }}
                                                             </span>
@@ -269,6 +270,8 @@
                                                                   onbeforesave="checkInput($data)"
                                                                   e-autocomplete="off"
                                                                   e-id="number_of_days"
+                                                                  e-ng-change="numberDaysChange($data, item, key)"
+                                                                  e-number-mask=""
                                                                   e-required>
                                                                 {{ item.number_of_days || 'empty' }}
                                                             </span>
@@ -277,7 +280,7 @@
                                                             {{ item.price}}
                                                         </td>
                                                         <td>
-                                                            {{ item.total}}
+                                                            {{ item.total | number:2}}
                                                         </td>
                                                         <td align="left">
                                                             <!--<button class="label bg-dark" ng-click="tableform.$show()"><i class="fa fa-pencil"></i></button>-->
@@ -296,11 +299,8 @@
                                 </div>
                                 <footer class="panel-footer">
                                     <div class="row">
-                                        <div class="col-sm-2 "> <i class="fa fa-calendar"></i> <b> Next Vist </b> </div>
-                                        <div class="col-sm-1 ">
-                                            <label> Date </label>
-                                        </div>
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-1"> <i class="fa fa-calendar"></i> <b> Next Vist </b> </div>
+                                        <div class="col-sm-2">
                                             <div class="row">
                                                 <input type="text" class="form-control multimonthdatepicker" ng-model="data.next_visit" ng-click="open($event)" prevent-enter="true" ng-change="setDayEmpty();
                                                                 getDays();"/>
@@ -308,12 +308,18 @@
                                                                                                                 getDays();"/>-->
                                             </div>
                                         </div>
-                                        <div class="col-sm-1 ">
-                                            <label> No.of.Days </label>
+                                        <div class="col-sm-2 text-right">
+                                            <i class="fa fa-calendar-o"></i> <b> No.of.Days </b>
                                         </div>
-                                        <div class="col-sm-2 ">
+                                        <div class="col-sm-1 ">
                                             <input autocomplete="off" type="text" ng-model="data.number_of_days" class="form-control m-b" number-mask="" ng-change="setDateEmpty();
                                                             getVisit();" required>
+                                        </div>
+                                        <div class="col-sm-2 text-right">
+                                            <i class="fa fa-rupee"></i> <b> Total Price</b>
+                                        </div>
+                                        <div class="col-sm-1 ">
+                                            <input type="text" class="form-control m-b" number-mask="" disabled="true" value="{{ priceTotal() | number:2}} "/>
                                         </div>
                                         <div class="col-sm-3">
                                             <button class="btn m-b-xs  btn-success save-btn-1" ng-click="getBtnId('save')"> <i class="fa fa-check"></i> Save </button>
