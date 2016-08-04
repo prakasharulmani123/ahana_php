@@ -245,7 +245,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         'is_favourite': 0,
                         'description_routes': $scope.addData.product.description_routes,
                         'presc_date': moment().format('YYYY-MM-DD HH:mm:ss'),
-                        'price': 0,
+                        'price': $scope.addData.product.latest_price,
                     };
                     var fav = $filter('filter')($scope.child.favourites, {product_id: $scope.addData.product.product_id});
 
@@ -284,7 +284,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                             'route_id': value.route_id,
                             'description_routes': value.product.description_routes,
                             'presc_date': moment().format('YYYY-MM-DD HH:mm:ss'),
-                            'price': 0,
+                            'price': value.product.latest_price,
                         };
                         var fav = $filter('filter')($scope.child.favourites, {product_id: value.product_id});
 
@@ -630,7 +630,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                                 'route_id': item.route_id,
                                                 'description_routes': item.product.description_routes,
                                                 'presc_date': moment().format('YYYY-MM-DD HH:mm:ss'),
-                                                'price': 0,
+                                                'price': item.product.latest_price,
+                                                'total': $scope.calculate_price(item.frequency_name, item.number_of_days, item.product.latest_price),
                                             };
                                             var fav = $filter('filter')($scope.child.favourites, {product_id: item.product_id});
 
@@ -660,6 +661,15 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     
                      $scope.$broadcast('refreshDatepickers');     
         };
+        
+        $scope.calculate_price = function(freq, days, price){
+            var freq_count = 0;
+            $.each(freq.split('-'), function(key, item){
+                if(item == '1')
+                    freq_count++;
+            })
+            return (parseFloat(days) * parseFloat(price) * parseFloat(freq_count));
+        }
 
         $scope.seen_notes = function () {
             $scope.scrollBottom();
