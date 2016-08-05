@@ -160,6 +160,8 @@ angular.module('app')
                 }
 
                 $scope.patientObj = {};
+                $scope.leftNotificationNotes = [];
+                $scope.leftNotificationVitals = [];
                 $scope.patient_alert_html = '';
 
                 $scope.loadPatientDetail = function () {
@@ -509,8 +511,6 @@ angular.module('app').factory('fileUpload', ['$http', function ($http) {
 
 angular.module('app').controller('PatientLeftSideNotificationCtrl', ['$rootScope', '$scope', '$http', '$state', '$filter', '$timeout', function ($rootScope, $scope, $http, $state, $filter, $timeout) {
 
-        $scope.notes = [];
-        $scope.vitals = [];
         $scope.assignNotifications = function () {
             //Assign Notes
             $http({
@@ -525,18 +525,18 @@ angular.module('app').controller('PatientLeftSideNotificationCtrl', ['$rootScope
                                     .success(function (notes) {
                                         angular.forEach(notes.result, function (result) {
                                             angular.forEach(result.all, function (note) {
-                                                $scope.notes.push(note);
+                                                $scope.leftNotificationNotes.push(note);
                                             });
                                         });
                                         $scope.unseen_notes = notes.usernotes;
                                         $scope.app.patientDetail.patientUnseenNotesCount = notes.usernotes.length;
 
-                                        angular.forEach($scope.notes, function (note) {
+                                        angular.forEach($scope.leftNotificationNotes, function (note) {
                                             note.seen_by = 1;
                                         });
 
                                         angular.forEach(notes.usernotes, function (note) {
-                                            var seen_filter_note = $filter('filter')($scope.notes, {pat_note_id: note.note_id});
+                                            var seen_filter_note = $filter('filter')($scope.leftNotificationNotes, {pat_note_id: note.note_id});
 
                                             if (seen_filter_note.length > 0) {
                                                 seen_filter_note[0].seen_by = 0;
@@ -563,18 +563,18 @@ angular.module('app').controller('PatientLeftSideNotificationCtrl', ['$rootScope
                                     .success(function (vitals) {
                                         angular.forEach(vitals.result, function (result) {
                                             angular.forEach(result.all, function (vital) {
-                                                $scope.vitals.push(vital);
+                                                $scope.leftNotificationVitals.push(vital);
                                             });
                                         });
                                         $scope.unseen_vitals = vitals.uservitals;
                                         $scope.app.patientDetail.patientUnseenVitalsCount = vitals.uservitals.length;
 
-                                        angular.forEach($scope.vitals, function (vital) {
+                                        angular.forEach($scope.leftNotificationVitals, function (vital) {
                                             vital.seen_by = 1;
                                         });
 
                                         angular.forEach(vitals.uservitals, function (vital) {
-                                            var seen_filter_vital = $filter('filter')($scope.vitals, {vital_id: vital.vital_id});
+                                            var seen_filter_vital = $filter('filter')($scope.leftNotificationVitals, {vital_id: vital.vital_id});
                                             if (seen_filter_vital.length > 0) {
                                                 seen_filter_vital[0].seen_by = 0;
                                             }
@@ -591,7 +591,7 @@ angular.module('app').controller('PatientLeftSideNotificationCtrl', ['$rootScope
 
         $scope.seen_notes_left_notification = function () {
             if ($scope.app.patientDetail.patientUnseenNotesCount > 0) {
-                var unseen_filter_note = $filter('filter')($scope.notes, {seen_by: 0});
+                var unseen_filter_note = $filter('filter')($scope.leftNotificationNotes, {seen_by: 0});
                 var note_ids = [];
                 angular.forEach(unseen_filter_note, function (unseen, key) {
                     note_ids.push(unseen.pat_note_id);
@@ -604,7 +604,7 @@ angular.module('app').controller('PatientLeftSideNotificationCtrl', ['$rootScope
                 }).success(
                         function (response) {
                             $timeout(function () {
-                                angular.forEach($scope.notes, function (note, key) {
+                                angular.forEach($scope.leftNotificationNotes, function (note, key) {
                                     note.seen_by = 1;
                                 });
                                 $scope.app.patientDetail.patientUnseenNotesCount = 0;
@@ -616,7 +616,7 @@ angular.module('app').controller('PatientLeftSideNotificationCtrl', ['$rootScope
 
         $scope.seen_vitals_left_notification = function () {
             if ($scope.app.patientDetail.patientUnseenVitalsCount > 0) {
-                var unseen_filter_vital = $filter('filter')($scope.vitals, {seen_by: 0});
+                var unseen_filter_vital = $filter('filter')($scope.leftNotificationVitals, {seen_by: 0});
                 var vital_ids = [];
                 angular.forEach(unseen_filter_vital, function (unseen, key) {
                     vital_ids.push(unseen.vital_id);
@@ -629,7 +629,7 @@ angular.module('app').controller('PatientLeftSideNotificationCtrl', ['$rootScope
                 }).success(
                         function (response) {
                             $timeout(function () {
-                                angular.forEach($scope.vitals, function (vital, key) {
+                                angular.forEach($scope.leftNotificationVitals, function (vital, key) {
                                     vital.seen_by = 1;
                                 });
                                 $scope.app.patientDetail.patientUnseenVitalsCount = 0;

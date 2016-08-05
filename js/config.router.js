@@ -2164,6 +2164,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             .state('patient.timeLine', {
                 url: '/timeLine/{id}',
                 templateUrl: 'tpl/patient/timeline.html',
+                controller: 'PatientLeftSideNotificationCtrl',
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
@@ -2344,6 +2345,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             .state('patient.document', {
                 url: '/document/{id}',
                 templateUrl: 'tpl/patient_documents/index.html',
+                controller: 'PatientLeftSideNotificationCtrl',
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
@@ -2392,6 +2394,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             .state('patient.assignShare', {
                 url: '/assignShare/{id}',
                 templateUrl: 'tpl/patient_share/assign.html',
+                controller: 'PatientLeftSideNotificationCtrl',
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
