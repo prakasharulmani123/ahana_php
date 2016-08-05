@@ -20,6 +20,7 @@ use yii\db\ActiveQuery;
  * @property integer $route_id
  * @property integer $freq_id
  * @property integer $number_of_days
+ * @property string $remarks
  * @property string $status
  * @property integer $created_by
  * @property string $created_at
@@ -57,7 +58,7 @@ class PatPrescriptionItems extends RActiveRecord {
             [['route', 'frequency'], 'required', 'on' => 'saveform'],
             [['tenant_id', 'pres_id', 'product_id', 'generic_id', 'drug_class_id', 'route_id', 'freq_id', 'number_of_days', 'created_by', 'modified_by'], 'integer'],
             [['status'], 'string'],
-            [['created_at', 'modified_at', 'deleted_at', 'route', 'frequency', 'is_favourite'], 'safe'],
+            [['created_at', 'modified_at', 'deleted_at', 'route', 'frequency', 'is_favourite', 'remarks'], 'safe'],
             [['product_name', 'generic_name', 'drug_name'], 'string', 'max' => 255]
         ];
     }
