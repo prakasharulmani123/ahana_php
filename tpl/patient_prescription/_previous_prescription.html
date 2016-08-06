@@ -46,6 +46,7 @@
                             <th>Route</th>
                             <th>Frequency</th>
                             <th>No of days</th>
+                            <th>Remarks</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -62,6 +63,7 @@
                             <td>{{ row.route_name}}</td>
                             <td>{{ row.frequency_name}}</td>
                             <td>{{ row.number_of_days}}</td>
+                            <td>{{ row.remarks || '-'}}</td>
                         </tr>
                     </tbody>
                 </table>                            
