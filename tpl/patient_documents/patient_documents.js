@@ -77,8 +77,8 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                             $scope.xslt = doc_type_response.result.document_xslt;
                             $scope.autoSaveDocument(function (auto_save_document) {
                                 $scope.xml = auto_save_document.data.xml;
+                                $scope.isLoading = false;
                             });
-                            $scope.isLoading = false;
                         }
                     });
                 }
@@ -127,8 +127,8 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     $scope.getDocument(doc_id, function (pat_doc_response) {
                         $scope.xml = pat_doc_response.result.document_xml;
                         $scope.encounter = {encounter_id: pat_doc_response.result.encounter_id};
+                        $scope.isLoading = false;
                     });
-                    $scope.isLoading = false;
                 }
             });
         }
@@ -158,7 +158,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     $scope.getDocument(doc_id, function (pat_doc_response) {
                         $scope.created_at = pat_doc_response.result.created_at;
                         $scope.xml = pat_doc_response.result.document_xml;
-
+                        $scope.isLoading = false;
                         $timeout(function () {
                             $("#printThisElement table").each(function () {
                                 //RadGrid
@@ -266,7 +266,6 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                             });
                         }, 100);
                     });
-                    $scope.isLoading = false;
                 }
             });
         }

@@ -15,10 +15,9 @@
         <div ng-include="'tpl/blocks/alert.html'">
             {% include 'tpl/blocks/alert.html' %}
         </div>
-        <div ng-show="isLoading">
+        <div ng-show="isLoading" class="text-center">
             <i class="fa fa-spin fa-refresh"></i>
         </div>
-
         <div ng-hide="isLoading">
             <div ng-bind-html="xml | xslt:xslt | sanitize"></div>
             <footer class="panel-footer text-right bg-light lter">
