@@ -1,4 +1,4 @@
-app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$filter', '$modal', '$log', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $filter, $modal, $log) {
+app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$filter', '$modal', '$log', 'modalService', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $filter, $modal, $log, modalService) {
 
         $scope.app.settings.patientTopBar = false;
         $scope.app.settings.patientSideMenu = false;
@@ -147,8 +147,14 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
         };
 
         $scope.cancelAppointments = function () {
-            var conf = confirm('Are you sure to cancel these appointments ?');
-            if (conf) {
+            var modalOptions = {
+                closeButtonText: 'No',
+                actionButtonText: 'Yes',
+                headerText: 'Cancel Appointments?',
+                bodyText: 'Are you sure to cancel these appointments ?'
+            };
+            
+            modalService.showModal({}, modalOptions).then(function (result) {
                 $scope.loadbar('show');
                 post_url = $rootScope.IRISOrgServiceUrl + '/appointment/bulkcancel';
                 method = 'POST';
@@ -156,7 +162,7 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                 $http({
                     method: method,
                     url: post_url,
-                    data: $scope.currentAppointmentSelectedItems,
+                    data: $scope.currentAppointmentSelectedItems
                 }).success(
                         function (response) {
                             $scope.msg.successMessage = succ_msg;
@@ -165,15 +171,13 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                         }
                 ).error(function (data, status) {
                     $scope.loadbar('hide');
-                    if (status == 422)
+                    if (status === 422)
                         $scope.errorData = $scope.errorSummary(data);
                     else
                         $scope.errorData = data.message;
                 });
-            } else {
-                $scope.loadOutPatientsList($scope.op_type);
-            }
-        }
+            });
+        };
 
         $scope.statuses = [
             {value: 'A', text: 'Arrived'},
