@@ -26,7 +26,7 @@ app.controller('PasswordAuthController', ['scope', '$scope', '$modalInstance', '
             });
 
             $scope.errorData = "";
-            $scope.msg.successMessage = "";
+            scope.msg.successMessage = "";
 
             post_url = $rootScope.IRISOrgServiceUrl + '/user/passwordauth';
             method = 'POST';
@@ -47,7 +47,7 @@ app.controller('PasswordAuthController', ['scope', '$scope', '$modalInstance', '
                                 $scope.errorData = response.message;
                         } else {
                             scope.loadbar('hide');
-                            $scope.msg.successMessage = succ_msg;
+                            scope.msg.successMessage = succ_msg;
                             $scope.data = {};
                             $timeout(function () {
                                 $modalInstance.dismiss('cancel');

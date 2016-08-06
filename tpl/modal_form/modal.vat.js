@@ -3,7 +3,7 @@ app.controller('VatModalInstanceCtrl', ['scope', '$scope', '$modalInstance', '$r
             _that = this;
 
             $scope.errorData = "";
-            $scope.msg.successMessage = "";
+            scope.msg.successMessage = "";
 
             post_url = $rootScope.IRISOrgServiceUrl + '/pharmacyvats';
             method = 'POST';
@@ -17,7 +17,7 @@ app.controller('VatModalInstanceCtrl', ['scope', '$scope', '$modalInstance', '$r
             }).success(
                     function (response) {
                         scope.loadbar('hide');
-                        $scope.msg.successMessage = succ_msg;
+                        scope.msg.successMessage = succ_msg;
                         $scope.data = {};
                         $timeout(function () {
                             scope.vats.push(response);

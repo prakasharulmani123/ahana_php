@@ -1859,6 +1859,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                                 'tpl/modal_form/modal.generic.js',
                                 'tpl/modal_form/modal.vat.js',
                                 'tpl/modal_form/modal.package.js',
+                                'tpl/modal_form/modal.supplier.js',
                             ]);
                         }]
                 }

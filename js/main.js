@@ -177,7 +177,7 @@ angular.module('app')
                                         $scope.patientObj = patient;
 
                                         var alert_link = '#/patient/alert/' + $scope.patientObj.patient_guid;
-                                        $scope.patient_alert_html = '<div>' + $scope.patientObj.alert + '<br><a class="text-info" ui-sref="patient.alert({id: $scope.patientObj.patient_guid})" href="' + alert_link + '">ReadMore</a><div>';
+                                        $scope.patient_alert_html = '<div>' + $scope.patientObj.alert + '<br><a class="text-info alert-read-more" ui-sref="patient.alert({id: $scope.patientObj.patient_guid})" href="' + alert_link + '">ReadMore</a><div>';
 
                                         $rootScope.commonService.GetLabelFromValue(patient.patient_gender, 'GetGenderList', function (response) {
                                             $scope.app.patientDetail.patientSex = response;

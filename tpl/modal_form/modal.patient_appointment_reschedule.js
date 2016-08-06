@@ -55,7 +55,7 @@ app.controller('AppointmentRescheduleController', ['scope', '$scope', '$modalIns
                 _that = this;
 
                 $scope.errorData = "";
-                $scope.msg.successMessage = "";
+                scope.msg.successMessage = "";
 
                 post_url = $rootScope.IRISOrgServiceUrl + '/appointment/bulkreschedule';
                 method = 'POST';
@@ -78,7 +78,7 @@ app.controller('AppointmentRescheduleController', ['scope', '$scope', '$modalIns
                                     $scope.errorData = response.message;
                             } else {
                                 scope.loadbar('hide');
-                                $scope.msg.successMessage = succ_msg;
+                                scope.msg.successMessage = succ_msg;
                                 $scope.data = {};
                                 $scope.rescheduledata = [];
                                 $timeout(function () {

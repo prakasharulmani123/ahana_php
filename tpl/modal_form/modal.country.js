@@ -3,7 +3,7 @@ app.controller('CountryModalInstanceCtrl', ['scope', '$scope', '$modalInstance',
             _that = this;
 
             $scope.errorData = "";
-            $scope.msg.successMessage = "";
+            scope.msg.successMessage = "";
 
             post_url = $rootScope.IRISOrgServiceUrl + '/countries';
             method = 'POST';
@@ -17,7 +17,7 @@ app.controller('CountryModalInstanceCtrl', ['scope', '$scope', '$modalInstance',
             }).success(
                     function (response) {
                         scope.loadbar('hide');
-                        $scope.msg.successMessage = succ_msg;
+                        scope.msg.successMessage = succ_msg;
                         $scope.data = {};
                         $timeout(function () {
                             new_country = {

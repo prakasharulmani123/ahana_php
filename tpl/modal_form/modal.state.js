@@ -8,7 +8,7 @@ app.controller('StateModalInstanceCtrl', ['scope', '$scope', '$modalInstance', '
             _that = this;
 
             $scope.errorData = "";
-            $scope.msg.successMessage = "";
+            scope.msg.successMessage = "";
 
             post_url = $rootScope.IRISOrgServiceUrl + '/states';
             method = 'POST';
@@ -22,7 +22,7 @@ app.controller('StateModalInstanceCtrl', ['scope', '$scope', '$modalInstance', '
             }).success(
                     function (response) {
                         scope.loadbar('hide');
-                        $scope.msg.successMessage = succ_msg;
+                        scope.msg.successMessage = succ_msg;
                         $scope.data = {};
                         $timeout(function () {
                             new_state = {

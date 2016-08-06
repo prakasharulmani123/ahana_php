@@ -30,7 +30,7 @@
                                 <script type="text/ng-template" id="DescriptionModalContent.html">
                                     <div ng-include="'tpl/modal_form/modal.description.html'"></div>
                                 </script>
-                                <button type="button" class="btn btn-primary" ng-click="open('lg', 'DescriptionModalInstanceCtrl', 'DescriptionModalContent.html', '')">
+                                <button type="button" class="btn btn-primary" ng-click="open('md', 'DescriptionModalInstanceCtrl', 'DescriptionModalContent.html', '')">
                                     <i class="fa fa-plus text ng-scope"></i>
                                 </button>
                             </div>
@@ -149,6 +149,14 @@
                                     <option value="">Select Supplier1</option>
                                 </select>
                             </div>
+                            <div class="col-sm-0">
+                                <script type="text/ng-template" id="SupplierModalContent.html">
+                                    <div ng-include="'tpl/modal_form/modal.supplier.html'"></div>
+                                </script>
+                                <button type="button" class="btn btn-primary" ng-click="open('lg', 'SupplierModalInstanceCtrl', 'SupplierModalContent.html', '')">
+                                    <i class="fa fa-plus text ng-scope"></i>
+                                </button>
+                            </div>
                         </div>                         
                         <div class="line line-dashed b-b line-lg "></div>
 
@@ -202,7 +210,7 @@
                     </div>
                 </div>
                 <div class="line line-dashed b-b line-lg "></div>
-                
+
                 <div class="form-group">
                     <label class="col-sm-5 control-label">Sale Vat * </label>
                     <div class="col-sm-6">

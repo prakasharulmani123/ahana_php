@@ -3,7 +3,7 @@ app.controller('PackageModalInstanceCtrl', ['scope', '$scope', '$modalInstance',
             _that = this;
 
             $scope.errorData = "";
-            $scope.msg.successMessage = "";
+            scope.msg.successMessage = "";
 
             post_url = $rootScope.IRISOrgServiceUrl + '/pharmacypackings';
             method = 'POST';
@@ -17,7 +17,7 @@ app.controller('PackageModalInstanceCtrl', ['scope', '$scope', '$modalInstance',
             }).success(
                     function (response) {
                         scope.loadbar('hide');
-                        $scope.msg.successMessage = succ_msg;
+                        scope.msg.successMessage = succ_msg;
                         $scope.data = {};
                         $timeout(function () {
                             scope.packingUnits.push(response);

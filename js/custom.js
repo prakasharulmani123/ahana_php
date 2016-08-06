@@ -26,6 +26,17 @@ $(document).mouseup(function (e) {
     }
 });
 
+$(document).bind('click', function (e) {
+    var $clicked = $(e.target);
+    if ($clicked.closest('.patient-details-part').find('.trigger-close').length == 0) {
+        if($('.patient-details-part .trigger-close').next('.popover').is(':visible'))
+            $('.trigger-close').trigger('click');
+    }
+    if ($clicked.hasClass('alert-read-more')) {
+        $('.trigger-close').trigger('click');
+    }
+});
+
 function chunk(str, n) {
     var ret = [];
     var i;
