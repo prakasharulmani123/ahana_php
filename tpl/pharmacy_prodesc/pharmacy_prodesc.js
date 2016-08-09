@@ -93,9 +93,9 @@ app.controller('ProDescController', ['$rootScope', '$scope', '$timeout', '$http'
             method = 'POST';
 
             if (mode == 'add') {
-                succ_msg = 'Product Description saved successfully';
+                succ_msg = 'Product Type saved successfully';
             } else {
-                succ_msg = 'Product Description updated successfully';
+                succ_msg = 'Product Type updated successfully';
             }
 
             $scope.loadbar('show');
@@ -167,7 +167,7 @@ app.controller('ProDescController', ['$rootScope', '$scope', '$timeout', '$http'
                                 if (response.data.success === true) {
                                     $scope.displayedCollection.splice(index, 1);
                                     $scope.loadProDescList();
-                                    $scope.msg.successMessage = 'Product Description Deleted Successfully';
+                                    $scope.msg.successMessage = 'Product Type Deleted Successfully';
                                 }
                                 else {
                                     $scope.errorData = response.data.message;

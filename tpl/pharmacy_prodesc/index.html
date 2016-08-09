@@ -1,5 +1,5 @@
 <div class="bg-light lter b-b wrapper-md">
-    <h1 class="m-n font-thin h3">Product Description</h1>
+    <h1 class="m-n font-thin h3">Product Type</h1>
 </div>
 
 <div class="wrapper-md" ng-controller="ProDescController" ng-init="loadProDescList()">
@@ -12,19 +12,19 @@
         <div class="col-sm-6">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <b> Product Description Management </b>
+                    <b> Product Type Management </b>
                 </div>
                 <div class="panel-body b-b b-light">                   
                     <input id="filter" type="text" class="form-control input-sm w-sm inline m-r" placeholder="Search"/>                   
                     <button check-access-button ng-click="$state.go('pharmacy.prodescCreate')" class="btn btn-sm btn-info pull-right">
-                        <i class="fa fa-plus"></i> &nbsp; Add new Product Description
+                        <i class="fa fa-plus"></i> &nbsp; Add new Product Type
                     </button>
                 </div>
                 <div>
                     <table class="table m-b-none" ui-jq="footable" data-filter="#filter" data-page-size="10">
                         <thead>
                             <tr>                              
-                                <th>Product Description</th>
+                                <th>Product Type</th>
                                 <th data-sort-ignore="true">Status</th>
                                 <th data-sort-ignore="true">Action</th>
                             </tr>
