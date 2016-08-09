@@ -37,7 +37,7 @@ app.controller('reportController', ['$rootScope', '$scope', '$timeout', '$http',
             $scope.show_search_consultant = false;
             $scope.data.from = '';
             $scope.data.to = '';
-            
+
 
             if ($scope.mode == 'purchase') {
                 $scope.report_title = 'Purchase Report';
@@ -46,7 +46,7 @@ app.controller('reportController', ['$rootScope', '$scope', '$timeout', '$http',
                 $scope.show_search_consultant = true;
                 $scope.report_title = 'Sale Report';
                 $scope.url = '/pharmacyreport/salereport';
-                
+
                 $rootScope.commonService.GetDoctorList('', '1', false, '1', function (response) {
                     $scope.doctors = response.doctorsList;
                 });
@@ -106,10 +106,12 @@ app.controller('reportController', ['$rootScope', '$scope', '$timeout', '$http',
                     break;
             }
         };
-    }]);
 
-//app.filter('moment', function () {
-//    return function (dateString, format) {
-//        return moment(dateString).format(format);
-//    };
-//});
+        $scope.printReport = function () {
+            var innerContents = document.getElementById("printThisElement").innerHTML;
+            var popupWinindow = window.open('', '_blank', 'width=830,height=700,scrollbars=yes,menubar=no,toolbar=no,location=no,status=no,titlebar=no');
+            popupWinindow.document.open();
+            popupWinindow.document.write('<html><head><link href="css/print.css" rel="stylesheet" type="text/css" /></head><body onload="window.print()">' + innerContents + '</html>');
+            popupWinindow.document.close();
+        }
+    }]);

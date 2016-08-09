@@ -12,6 +12,11 @@
         width:100%;
     }
 
+    .reports table, .reports table th, .reports table td  {
+        border-collapse:collapse;
+        border: 1px solid black;
+    }
+
     .RadGrid table, .RadGrid table th, .RadGrid table td {
         border-collapse:collapse;
         border: 1px solid black;

@@ -513,10 +513,9 @@
         $('.expand-notes').click(function (e) {
             $('#makeit-full').toggleClass('fullscreen');
             $('.note-full').toggleClass('fullscreen');
-            setTimeout(function () {
-                var div_width = '-' + $('#makeit-full').css('width');
-                $('#sb-site').css('transform', 'translate(' + div_width + ')');
-            }, 100);
+            var div_width = '-' + $('#makeit-full').css('width');
+            $('#sb-site').css('transform', 'translate(' + div_width + ')');
+            $('#sb-site').css('transition', 'none');
         });
 
         $(".multimonthdatepicker").datepicker({

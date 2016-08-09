@@ -1,4 +1,4 @@
-app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'transformRequestAsFormPost', '$anchorScroll', '$filter', function ($rootScope, $scope, $timeout, $http, $state, transformRequestAsFormPost, $anchorScroll, $filter) {
+app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'transformRequestAsFormPost', '$anchorScroll', '$filter', '$interval', function ($rootScope, $scope, $timeout, $http, $state, transformRequestAsFormPost, $anchorScroll, $filter, $interval) {
 
         $scope.app.settings.patientTopBar = true;
         $scope.app.settings.patientSideMenu = true;
@@ -75,9 +75,11 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                             $state.go("patient.document", {id: $state.params.id});
                         } else {
                             $scope.xslt = doc_type_response.result.document_xslt;
-                            $scope.autoSaveDocument(function (auto_save_document) {
+                            $scope.initSaveDocument(function (auto_save_document) {
                                 $scope.xml = auto_save_document.data.xml;
                                 $scope.isLoading = false;
+
+                                $scope.startAutoSave();
                             });
                         }
                     });
@@ -85,7 +87,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
             });
         }
 
-        $scope.autoSaveDocument = function (callback) {
+        $scope.initSaveDocument = function (callback) {
             _data = $.param({
                 'name': $scope.patientObj.fullname,
                 'age': $scope.patientObj.patient_age,
@@ -113,6 +115,40 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
             );
         };
 
+        var stop;
+        $scope.startAutoSave = function () {
+            // Don't start a new fight if we are already fighting
+            if (angular.isDefined(stop))
+                return;
+
+            stop = $interval(function () {
+                _data = $('#xmlform').serialize() + '&' + $.param({
+                    'encounter_id': $scope.encounter.encounter_id,
+                    'patient_id': $state.params.id,
+                    'novalidate': true
+                });
+
+                $http({
+                    url: $rootScope.IRISOrgServiceUrl + "/patientdocuments/savedocument",
+                    method: "POST",
+                    transformRequest: transformRequestAsFormPost,
+                    data: _data
+                });
+            }, 60000);
+        };
+
+        $scope.stopAutoSave = function () {
+            if (angular.isDefined(stop)) {
+                $interval.cancel(stop);
+                stop = undefined;
+            }
+        };
+
+        $scope.$on('$destroy', function () {
+            // Make sure that the interval is destroyed too
+            $scope.stopAutoSave();
+        });
+
         // Initialize Update Form
         $scope.initFormUpdate = function () {
             $scope.isLoading = true;
@@ -128,6 +164,8 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                         $scope.xml = pat_doc_response.result.document_xml;
                         $scope.encounter = {encounter_id: pat_doc_response.result.encounter_id};
                         $scope.isLoading = false;
+                        
+                        $scope.startAutoSave();
                     });
                 }
             });
