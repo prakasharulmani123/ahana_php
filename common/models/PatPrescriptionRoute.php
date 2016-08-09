@@ -21,23 +21,21 @@ use yii\db\ActiveQuery;
  * @property PatPrescriptionItems[] $patPrescriptionItems
  * @property CoTenant $tenant
  */
-class PatPrescriptionRoute extends RActiveRecord
-{
+class PatPrescriptionRoute extends RActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'pat_prescription_route';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            [['tenant_id', 'route_name', 'created_by'], 'required'],
+            [['route_name'], 'required'],
             [['tenant_id', 'created_by', 'modified_by'], 'integer'],
             [['status'], 'string'],
             [['created_at', 'modified_at', 'deleted_at'], 'safe'],
@@ -48,8 +46,7 @@ class PatPrescriptionRoute extends RActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'route_id' => 'Route ID',
             'tenant_id' => 'Tenant ID',
@@ -66,23 +63,21 @@ class PatPrescriptionRoute extends RActiveRecord
     /**
      * @return ActiveQuery
      */
-    public function getPatPrescriptionItems()
-    {
+    public function getPatPrescriptionItems() {
         return $this->hasMany(PatPrescriptionItems::className(), ['route_id' => 'route_id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getTenant()
-    {
+    public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
-    
+
     public static function find() {
         return new PatPrescriptionRouteQuery(get_called_class());
     }
-    
+
     public static function getRoutelist($tenant = null, $status = '1', $deleted = false) {
         if (!$deleted)
             $list = self::find()->tenant($tenant)->status($status)->active()->all();
@@ -91,4 +86,5 @@ class PatPrescriptionRoute extends RActiveRecord
 
         return $list;
     }
+
 }
