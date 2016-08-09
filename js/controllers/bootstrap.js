@@ -331,6 +331,49 @@ app.controller('PatientSearchController', ['$scope', '$http', '$rootScope', '$st
             }
         }, true);
 
+        $("#patient-search").keydown(function (e) {
+            if (e.keyCode == 13) { // enter
+                if ($(".patient-search-result").is(":visible")) {
+                    $scope.selectOption();
+                }
+            }
+
+            if (e.keyCode == 38) { // up
+                var selected = $(".selected");
+                $(".patient-search-result li").removeClass("selected");
+                if (selected.prev().length == 0) {
+                    selected.siblings().last().addClass("selected");
+                } else {
+                    selected.prev().addClass("selected");
+                }
+            }
+
+            if (e.keyCode == 40) { // down
+                var selected = $(".selected");
+                $(".patient-search-result li").removeClass("selected");
+                if (selected.next().length == 0) {
+                    selected.siblings().first().addClass("selected");
+                } else {
+                    selected.next().addClass("selected");
+                }
+            }
+        });
+
+        $("body").on("mouseover", ".patient-search-result li", function () {
+            $(".patient-search-result li").removeClass("selected");
+            $(this).addClass("selected");
+        });
+
+        $scope.selectOption = function () {
+            var link_tag = $(".selected").find("a");
+            if (link_tag.length > 0) {
+                $(link_tag).trigger("click");
+            } else {
+                $(".selected button").trigger("click");
+            }
+            return false;
+        }
+
         $scope.goToPatient = function (id) {
             $scope.patientselected = '';
             $state.go('patient.view', {'id': id});

@@ -325,3 +325,7 @@ out-patient-table .table > thead > tr > th label.i-checks{
 #xmlform .required{
     color: red;
 }
+
+.patient-search-result li.selected {
+    background-color: lightgray;   
+}

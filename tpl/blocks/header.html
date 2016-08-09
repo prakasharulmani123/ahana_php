@@ -21,53 +21,55 @@
         <form class="navbar-form navbar-form-sm navbar-left shift" ui-shift="prependTo" data-target=".navbar-collapse" role="search" ng-controller="PatientSearchController">
             <div class="form-group">
                 <div class="input-group">
-                    <!--<input type="text" ng-model="patientselected" typeahead="patient_list.Patient.patient_firstname for patient_list in patient_lists | filter:$viewValue | limitTo:8" class="form-control input-sm bg-light no-border rounded padder" placeholder="Search....">-->
-                    <input type="text" ng-model="patientselected" class="form-control input-sm bg-light no-border rounded padder header_search_input" placeholder="Search....">
-                    <ul class="search-patientcont-header" ng-if="patientselected != '' && patient_lists" id='patientcont-header'>
-                        <li ng-repeat="(key, patient) in patient_lists| filter:patientselected">
-                            <div class="row"> 
-                                <div class="col-xs-12 col-sm-2 col-md-2"> 
-                                    <img ng-if="$even" alt="" ng-src="{{patient.Patient.patient_image ? patient.Patient.patient_image : 'img/man-icon.png'}}" class="patient-image">
-                                    <img ng-if="$odd" alt="" ng-src="{{patient.Patient.patient_image ? patient.Patient.patient_image : 'img/man-icon2.png'}}" class="patient-image">
-                                </div>
-                                <div class="col-xs-12 col-sm-5 col-md-6"> 
-                                    <div class="row ng-binding"> 
-                                        <a ng-bind-html="patient.Patient.fullname | highlight:patientselected" href="javascript:void(0)" ng-click="goToPatient(patient.Patient.patient_guid)" class="ng-binding">
-                                        </a>
-                                        <b>({{patient.Patient.patient_age}}y) </b>
-                                        <br>
-                                        <span class="pull-left"  ng-bind-html="patient.Patient.patient_int_code | highlight:patientselected"></span> 
-                                        &nbsp; &nbsp;<span ng-bind-html="patient.Patient.patient_mobile | highlight:patientselected"> </span> 
+                    <input id="patient-search" type="text" ng-model="patientselected" class="form-control input-sm bg-light no-border rounded padder header_search_input" placeholder="Search...." autocomplete="off">
+                    <div class="patient-search-result" ng-if="patientselected != '' && patient_lists" >
+                        <ul class="search-patientcont-header" id='patientcont-header'>
+                            <li ng-repeat="(key, patient) in patient_lists| filter:patientselected" class="{{key == 0 ? 'selected' : ''}}">
+                                <div class="row"> 
+                                    <div class="col-xs-12 col-sm-2 col-md-2"> 
+                                        <img ng-if="$even" alt="" ng-src="{{patient.Patient.patient_image ? patient.Patient.patient_image : 'img/man-icon.png'}}" class="patient-image">
+                                        <img ng-if="$odd" alt="" ng-src="{{patient.Patient.patient_image ? patient.Patient.patient_image : 'img/man-icon2.png'}}" class="patient-image">
+                                    </div>
+                                    <div class="col-xs-12 col-sm-5 col-md-6"> 
+                                        <div class="row ng-binding"> 
+                                            <a ng-bind-html="patient.Patient.fullname | highlight:patientselected" href="javascript:void(0)" ng-click="goToPatient(patient.Patient.patient_guid)" class="ng-binding">
+                                            </a>
+                                            <b>({{patient.Patient.patient_age}}y) </b>
+                                            <br>
+                                            <span class="pull-left"  ng-bind-html="patient.Patient.patient_int_code | highlight:patientselected"></span> 
+                                            &nbsp; &nbsp;<span ng-bind-html="patient.Patient.patient_mobile | highlight:patientselected"> </span> 
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-5 col-md-4 pull-right right" ng-if="patient.same_branch">
+                                        <button class="btn m-b-xs w-xs btn-info" ng-show="patient.PatientActiveEncounter.hasOwnProperty('encounter_id') != true" ng-click="goToAppointment(patient.Patient.patient_guid)">
+                                            BOOK
+                                        </button>
+                                        <span class="label label-primary admission_details" ng-show="patient.PatientActiveEncounter.liveAdmission.hasOwnProperty('admn_id') == true">
+                                            {{patient.PatientActiveEncounter.floor_name}} > {{patient.PatientActiveEncounter.room_name}} > {{patient.PatientActiveEncounter.room_type_name}}
+                                        </span>
+                                        <span class="label label-primary admission_details" ng-show="patient.PatientActiveEncounter.liveAppointmentBooking.hasOwnProperty('appt_id') == true">
+                                            Booked
+                                        </span>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-5 col-md-4 pull-right right" ng-if="patient.same_branch == false"> 
+                                        <p class=""> 
+                                            <button class="btn btn-primary" id="import_{{key}}" ng-click="importPatient(patient.Patient, key)">
+                                                IMPORT DATA
+                                            </button>
+                                        </p>
                                     </div>
                                 </div>
-                                <div class="col-xs-12 col-sm-5 col-md-4 pull-right right" ng-if="patient.same_branch">
-                                    <button class="btn m-b-xs w-xs btn-info" ng-show="patient.PatientActiveEncounter.hasOwnProperty('encounter_id') != true" ng-click="goToAppointment(patient.Patient.patient_guid)">
-                                        BOOK
-                                    </button>
-                                    <span class="label label-primary admission_details" ng-show="patient.PatientActiveEncounter.liveAdmission.hasOwnProperty('admn_id') == true">
-                                        {{patient.PatientActiveEncounter.floor_name}} > {{patient.PatientActiveEncounter.room_name}} > {{patient.PatientActiveEncounter.room_type_name}}
-                                    </span>
-                                    <span class="label label-primary admission_details" ng-show="patient.PatientActiveEncounter.liveAppointmentBooking.hasOwnProperty('appt_id') == true">
-                                        Booked
-                                    </span>
+                            </li>
+                            <li>
+                                <div class="row"> 
+                                    <div class="col-xs-12 col-sm-12 col-md-12 pull-right right">  
+                                        <button class="btn m-b-xs w-xs btn-success fullwidth" ng-click="goToRegistration()">Register</button>
+                                    </div>
                                 </div>
-                                <div class="col-xs-12 col-sm-5 col-md-4 pull-right right" ng-if="patient.same_branch == false"> 
-                                    <p class=""> 
-                                        <button class="btn btn-primary" id="import_{{key}}" ng-click="importPatient(patient.Patient, key)">
-                                            IMPORT DATA
-                                        </button>
-                                    </p>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="row"> 
-                                <div class="col-xs-12 col-sm-12 col-md-12 pull-right right">  
-                                    <button class="btn m-b-xs w-xs btn-success fullwidth" ng-click="goToRegistration()">Register</button>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
+                            </li>
+                        </ul>
+                    </div>
+
                     <span class="input-group-btn">
                         <button type="submit" class="btn btn-sm bg-light rounded"><i class="fa fa-search"></i></button>
                     </span> 
