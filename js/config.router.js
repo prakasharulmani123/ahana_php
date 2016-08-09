@@ -1529,6 +1529,44 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 }
             })
 
+            //PHARMACY Routes
+            .state('pharmacy.routes', {
+                url: '/routes',
+                templateUrl: 'tpl/pharmacy_routes/index.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/pharmacy_routes/pharmacy_routes.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            //PHARMACY Routes CREATE
+            .state('pharmacy.routesCreate', {
+                url: '/routesCreate',
+                templateUrl: 'tpl/pharmacy_routes/create.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/pharmacy_routes/pharmacy_routes.js']);
+                        }]
+                }
+            })
+            //PHARMACY Routes UPDATE
+            .state('pharmacy.routesUpdate', {
+                url: '/routesUpdate/{id}',
+                templateUrl: 'tpl/pharmacy_routes/update.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/pharmacy_routes/pharmacy_routes.js']);
+                        }]
+                }
+            })
+
             //PHARMACY Product Description
             .state('pharmacy.prodesc', {
                 url: '/prodesc',
