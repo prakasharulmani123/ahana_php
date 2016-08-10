@@ -51,7 +51,7 @@ class PhaProductDescription extends RActiveRecord {
         return [
             'description_id' => 'Description ID',
             'tenant_id' => 'Tenant ID',
-            'description_name' => 'Description Name',
+            'description_name' => 'Product Type',
             'status' => 'Status',
             'created_by' => 'Created By',
             'created_at' => 'Created At',
@@ -102,6 +102,16 @@ class PhaProductDescription extends RActiveRecord {
      */
     public function getRoutes() {
         return $this->hasMany(PatPrescriptionRoute::className(), ['route_id' => 'route_id'])->via('descriptionsRoutes');
+    }
+    
+    public function fields() {
+        $extend = [
+            'routes' => function ($model) {
+                return (isset($model->routes) ? $model->routes : '-');
+            },
+        ];
+        $fields = array_merge(parent::fields(), $extend);
+        return $fields;
     }
 
 }
