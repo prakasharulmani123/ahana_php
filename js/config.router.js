@@ -166,7 +166,9 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
     $rootScope.$stateParams = $stateParams;
 
     var serviceUrl = '';
-    if($location.host() == 'demo.arkinfotec.in'){
+    if($location.host() == 'arkinfotecdemo.in'){
+        serviceUrl = 'http://arkinfotecdemo.in/api/IRISADMIN/web/v1';
+    }else if($location.host() == 'demo.arkinfotec.in'){
         serviceUrl = 'http://demo.arkinfotec.in/ahana/demo/api/IRISADMIN/web/v1';
     }else if($location.host() == 'hms.ark'){
         serviceUrl = 'http://hms.ark/api/IRISADMIN/web/v1';
