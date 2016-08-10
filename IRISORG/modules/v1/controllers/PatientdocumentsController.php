@@ -386,6 +386,224 @@ class PatientdocumentsController extends ActiveController {
                                 }
                             }
                         }
+
+                        //Sub Panel Bar
+                        if ($pb->attributes()->type == 'PanelBar') {
+                            foreach ($pb->FIELD as $pbsub) {
+                                if ($pbsub->attributes()->type == 'RadGrid') {
+                                    foreach ($pbsub->COLUMNS as $columns) {
+                                        foreach ($columns->FIELD as $field) {
+                                            //Child FIELD
+                                            if (isset($field->FIELD)) {
+                                                foreach ($field->FIELD as $y) {
+                                                    foreach ($post as $key => $value) {
+                                                        if ($key == $y->attributes()) {
+                                                            $type = $y->attributes()->type;
+
+                                                            if ($type == 'CheckBoxList') {
+                                                                $post_referral_details = $value; // Array
+                                                                $list_referral_details = $y->LISTITEMS->LISTITEM;
+                                                                foreach ($list_referral_details as $list_value) {
+                                                                    if (in_array($list_value, $post_referral_details)) {
+                                                                        $list_value->attributes()['Selected'] = 'true';
+                                                                    } else {
+                                                                        $list_value->attributes()['Selected'] = 'false';
+                                                                    }
+                                                                }
+                                                            } elseif ($type == 'DropDownList' || $type == 'RadioButtonList') {
+                                                                $post_referral_details = $value; // String
+                                                                $list_referral_details = $y->LISTITEMS->LISTITEM;
+                                                                foreach ($list_referral_details as $list_value) {
+                                                                    if ($list_value == $post_referral_details) {
+                                                                        $list_value->attributes()['Selected'] = 'true';
+                                                                    } else {
+                                                                        $list_value->attributes()['Selected'] = 'false';
+                                                                    }
+                                                                }
+                                                            } elseif ($type == 'textareaFull') {
+                                                                if (isset($y->VALUE)) {
+                                                                    unset($y->VALUE);
+                                                                }
+                                                                $y->addChild('VALUE', $value);
+                                                            } else {
+                                                                foreach ($y->PROPERTIES->PROPERTY as $text_pro) {
+                                                                    if ($text_pro['name'] == 'value') {
+                                                                        $dom = dom_import_simplexml($text_pro);
+                                                                        $dom->parentNode->removeChild($dom);
+                                                                    }
+                                                                }
+                                                                $text_box_value = $y->PROPERTIES->addChild('PROPERTY', $value);
+                                                                $text_box_value->addAttribute('name', 'value');
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+
+                                            //Main FIELD
+                                            foreach ($post as $key => $value) {
+                                                if ($key == $field->attributes()) {
+                                                    $type = $field->attributes()->type;
+                                                    //Checkbox
+                                                    if ($type == 'CheckBoxList') {
+                                                        $post_referral_details = $value;
+                                                        $list_referral_details = $field->LISTITEMS->LISTITEM;
+                                                        foreach ($list_referral_details as $list_value) {
+                                                            if (in_array($list_value, $post_referral_details)) {
+                                                                $list_value->attributes()['Selected'] = 'true';
+                                                            } else {
+                                                                $list_value->attributes()['Selected'] = 'false';
+                                                            }
+                                                        }
+                                                    } elseif ($type == 'DropDownList' || $type == 'RadioButtonList') {
+                                                        $field->attributes()['Backcontrols'] = 'hide';
+//                                                $radio_field_id = ['radio_pb_illnesstype'];
+                                                        $list_values_array = ['Other Illness'];
+
+                                                        $post_referral_details = $value;
+                                                        $list_referral_details = $field->LISTITEMS->LISTITEM;
+
+                                                        foreach ($list_referral_details as $list_value) {
+                                                            if ($list_value == $post_referral_details) {
+//                                                        if (in_array($key, $radio_field_id)) {
+                                                                if (in_array($list_value, $list_values_array)) {
+                                                                    $field->attributes()['Backcontrols'] = 'show';
+                                                                }
+//                                                        }
+                                                                $list_value->attributes()['Selected'] = 'true';
+                                                            } else {
+                                                                $list_value->attributes()['Selected'] = 'false';
+                                                            }
+                                                        }
+                                                    } elseif ($type == 'textareaFull') {
+                                                        if (isset($field->VALUE)) {
+                                                            unset($field->VALUE);
+                                                        }
+                                                        $field->addChild('VALUE', $value);
+                                                    } else {
+                                                        foreach ($field->PROPERTIES->PROPERTY as $text_pro) {
+                                                            if ($text_pro['name'] == 'value') {
+                                                                $dom = dom_import_simplexml($text_pro);
+                                                                $dom->parentNode->removeChild($dom);
+                                                            }
+                                                        }
+                                                        $text_box_value = $field->PROPERTIES->addChild('PROPERTY', $value);
+                                                        $text_box_value->addAttribute('name', 'value');
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                //Main FIELD Inside Panel Bar- Normal Checkbox, Radio, Input, etc...
+                                foreach ($post as $key => $value) {
+                                    if ($key == $pbsub->attributes()) {
+                                        $type = $pbsub->attributes()->type;
+                                        //Checkbox
+                                        if ($type == 'CheckBoxList') {
+                                            $post_referral_details = $value;
+                                            $list_referral_details = $pbsub->LISTITEMS->LISTITEM;
+                                            $pbsub->attributes()['Backcontrols'] = 'hide';
+                                            foreach ($list_referral_details as $list_value) {
+                                                if (in_array($list_value, $post_referral_details)) {
+                                                    $list_value->attributes()['Selected'] = 'true';
+                                                    if ($list_value == 'Others' || $key == 'CBDelusions') {
+                                                        $pbsub->attributes()['Backcontrols'] = 'show';
+                                                    }
+                                                } else {
+                                                    $list_value->attributes()['Selected'] = 'false';
+                                                }
+                                            }
+                                        } elseif ($type == 'DropDownList' || $type == 'RadioButtonList') {
+                                            $pbsub->attributes()['Backcontrols'] = 'hide';
+                                            $radio_field_id = ['previous_ects', 'rb_pb_Response1', 'RBtypeofmarriage', 'RBpbprenatal', 'RBpbperinatal2', 'RBpbmajorillness', 'RBpbdevelopmentmilestone', 'RBpbmajorillnessduringchild', 'RBpbhomeatmosphere', 'RBpbhomeatmosphereadole', 'RBpbbreakstudy', 'RBpbfrechangeschool', 'RBpbmedium', 'RBpbteacherrelation', 'RBpbstudentrelation', 'RBpbworkrecord', 'RBRegularity', 'RBObsession', 'RBOrientation'];
+                                            $list_values_array = ['Yes', 'Discontinued', 'Consanguineous', 'Eventful', 'Delayed', 'Unsatisfactory', 'Others', 'Irregular', 'Present', 'Oriented'];
+
+                                            $post_referral_details = $value;
+                                            $list_referral_details = $pbsub->LISTITEMS->LISTITEM;
+
+                                            foreach ($list_referral_details as $list_value) {
+                                                if ($list_value == $post_referral_details) {
+                                                    if (in_array($key, $radio_field_id)) {
+                                                        if (in_array($list_value, $list_values_array)) {
+                                                            $pbsub->attributes()['Backcontrols'] = 'show';
+                                                        }
+                                                    } else {
+                                                        $pbsub->attributes()['Backcontrols'] = 'show';
+                                                    }
+                                                    $list_value->attributes()['Selected'] = 'true';
+                                                } else {
+                                                    $list_value->attributes()['Selected'] = 'false';
+                                                }
+                                            }
+                                        } elseif ($type == 'textareaFull') {
+                                            if (isset($pbsub->VALUE)) {
+                                                unset($pbsub->VALUE);
+                                            }
+                                            $pbsub->addChild('VALUE', $value);
+                                        } else {
+                                            foreach ($pbsub->PROPERTIES->PROPERTY as $text_pro) {
+                                                if ($text_pro['name'] == 'value') {
+                                                    $dom = dom_import_simplexml($text_pro);
+                                                    $dom->parentNode->removeChild($dom);
+                                                }
+                                            }
+                                            $text_box_value = $pbsub->PROPERTIES->addChild('PROPERTY', $value);
+                                            $text_box_value->addAttribute('name', 'value');
+                                        }
+                                    }
+                                }
+
+                                //Child FIELD Inside Panel Bar- Normal Checkbox, Radio, Input, etc...
+                                if (isset($pbsub->FIELD)) {
+                                    foreach ($pbsub->FIELD as $pbsubchild) {
+                                        foreach ($post as $key => $value) {
+                                            if ($key == $pbsubchild->attributes()) {
+                                                $type = $pbsubchild->attributes()->type;
+
+                                                if ($type == 'CheckBoxList') {
+                                                    $post_referral_details = $value; // Array
+                                                    $list_referral_details = $pbsubchild->LISTITEMS->LISTITEM;
+                                                    foreach ($list_referral_details as $list_value) {
+                                                        if (in_array($list_value, $post_referral_details)) {
+                                                            $list_value->attributes()['Selected'] = 'true';
+                                                        } else {
+                                                            $list_value->attributes()['Selected'] = 'false';
+                                                        }
+                                                    }
+                                                } elseif ($type == 'DropDownList' || $type == 'RadioButtonList') {
+                                                    $post_referral_details = $value; // String
+                                                    $list_referral_details = $pbsubchild->LISTITEMS->LISTITEM;
+                                                    foreach ($list_referral_details as $list_value) {
+                                                        if ($list_value == $post_referral_details) {
+                                                            $list_value->attributes()['Selected'] = 'true';
+                                                        } else {
+                                                            $list_value->attributes()['Selected'] = 'false';
+                                                        }
+                                                    }
+                                                } elseif ($type == 'textareaFull') {
+                                                    if (isset($pbsubchild->VALUE)) {
+                                                        unset($pbsubchild->VALUE);
+                                                    }
+                                                    $pbsubchild->addChild('VALUE', $value);
+                                                } else {
+                                                    foreach ($pbsubchild->PROPERTIES->PROPERTY as $text_pro) {
+                                                        if ($text_pro['name'] == 'value') {
+                                                            $dom = dom_import_simplexml($text_pro);
+                                                            $dom->parentNode->removeChild($dom);
+                                                        }
+                                                    }
+                                                    $text_box_value = $pbsubchild->PROPERTIES->addChild('PROPERTY', $value);
+                                                    $text_box_value->addAttribute('name', 'value');
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        //End Sub Panel Bar
                     }
                 }
 
@@ -1008,7 +1226,7 @@ class PatientdocumentsController extends ActiveController {
 
                             $property2 = $properties1->addChild('PROPERTY', $text_box3);
                             $property2->addAttribute('name', 'name');
-                            
+
                             $property222 = $properties1->addChild('PROPERTY', 'form-control');
                             $property222->addAttribute('name', 'class');
                         }
@@ -1020,7 +1238,7 @@ class PatientdocumentsController extends ActiveController {
         $xml = $xmlLoad->asXML();
         return $xml;
     }
-    
+
     protected function prepareAlternativeTherapiesXml($xml, $table_id, $rowCount) {
         $xmlLoad = simplexml_load_string($xml);
         foreach ($xmlLoad->children() as $group) {
@@ -1047,7 +1265,7 @@ class PatientdocumentsController extends ActiveController {
 
                             $property2 = $properties1->addChild('PROPERTY', $dropdown);
                             $property2->addAttribute('name', 'name');
-                            
+
                             $property22 = $properties1->addChild('PROPERTY', 'form-control');
                             $property22->addAttribute('name', 'class');
 
@@ -1126,7 +1344,7 @@ class PatientdocumentsController extends ActiveController {
         $xml = $xmlLoad->asXML();
         return $xml;
     }
-    
+
     protected function prepareFamilyHistoryXml($xml, $table_id, $rowCount) {
         $xmlLoad = simplexml_load_string($xml);
         foreach ($xmlLoad->children() as $group) {
@@ -1155,7 +1373,7 @@ class PatientdocumentsController extends ActiveController {
 
                             $property2 = $properties1->addChild('PROPERTY', $dropdown);
                             $property2->addAttribute('name', 'name');
-                            
+
                             $property22 = $properties1->addChild('PROPERTY', 'form-control');
                             $property22->addAttribute('name', 'class');
 
@@ -1265,142 +1483,145 @@ class PatientdocumentsController extends ActiveController {
         return $xml;
     }
 
-    // Substance History
     protected function prepareSubstanceHistoryXml($xml, $table_id, $rowCount) {
         $xmlLoad = simplexml_load_string($xml);
         foreach ($xmlLoad->children() as $group) {
             foreach ($group->PANELBODY->FIELD as $y) {
                 if ($y->attributes()->type == 'PanelBar') {
-                    foreach ($y->FIELD as $x) {
-                        if ($x->attributes()->type == 'RadGrid' && $x->attributes()->AddButtonTableId == $table_id) {
+                    foreach ($y->FIELD as $xx) {
+                        if ($xx->attributes()->type == 'PanelBar') {
+                            foreach ($xx->FIELD as $x) {
+                                if ($x->attributes()->type == 'RadGrid' && $x->attributes()->AddButtonTableId == $table_id) {
 
-                            $text_box = 'txtPBDuration' . $rowCount; //Textbox1 Name
-                            $dropdown = 'ddl_pb_substance' . $rowCount; //DDL Name
-                            $dropdown2 = 'DDLPBDuration' . $rowCount; //DDL Name
-                            $checkbox = 'CBPBpattern' . $rowCount; //DDL Name
+                                    $text_box = 'txtPBDuration' . $rowCount; //Textbox1 Name
+                                    $dropdown = 'ddl_pb_substance' . $rowCount; //DDL Name
+                                    $dropdown2 = 'DDLPBDuration' . $rowCount; //DDL Name
+                                    $checkbox = 'CBPBpattern' . $rowCount; //DDL Name
 
-                            $columns = $x->addChild('COLUMNS');
+                                    $columns = $x->addChild('COLUMNS');
 
-                            //FIELD 1
-                            $field1 = $columns->addChild('FIELD');
-                            $field1->addAttribute('id', $dropdown);
-                            $field1->addAttribute('type', 'DropDownList');
+                                    //FIELD 1
+                                    $field1 = $columns->addChild('FIELD');
+                                    $field1->addAttribute('id', $dropdown);
+                                    $field1->addAttribute('type', 'DropDownList');
 
-                            $properties1 = $field1->addChild('PROPERTIES');
+                                    $properties1 = $field1->addChild('PROPERTIES');
 
-                            $property1 = $properties1->addChild('PROPERTY', $dropdown);
-                            $property1->addAttribute('name', 'id');
+                                    $property1 = $properties1->addChild('PROPERTY', $dropdown);
+                                    $property1->addAttribute('name', 'id');
 
-                            $property2 = $properties1->addChild('PROPERTY', $dropdown);
-                            $property2->addAttribute('name', 'name');
-                            
-                            $property22 = $properties1->addChild('PROPERTY', 'form-control');
-                            $property22->addAttribute('name', 'class');
+                                    $property2 = $properties1->addChild('PROPERTY', $dropdown);
+                                    $property2->addAttribute('name', 'name');
 
-                            $listitems = $field1->addChild('LISTITEMS');
+                                    $property22 = $properties1->addChild('PROPERTY', 'form-control');
+                                    $property22->addAttribute('name', 'class');
 
-                            $listitem1 = $listitems->addChild('LISTITEM', '--Select--');
-                            $listitem1->addAttribute('value', '');
-                            $listitem1->addAttribute('Selected', 'False');
+                                    $listitems = $field1->addChild('LISTITEMS');
 
-                            $listitem2 = $listitems->addChild('LISTITEM', 'Smoking');
-                            $listitem2->addAttribute('value', 'Smoking');
-                            $listitem2->addAttribute('Selected', 'False');
+                                    $listitem1 = $listitems->addChild('LISTITEM', '--Select--');
+                                    $listitem1->addAttribute('value', '');
+                                    $listitem1->addAttribute('Selected', 'False');
 
-                            $listitem3 = $listitems->addChild('LISTITEM', 'Alcohol');
-                            $listitem3->addAttribute('value', 'Alcohol');
-                            $listitem3->addAttribute('Selected', 'False');
+                                    $listitem2 = $listitems->addChild('LISTITEM', 'Smoking');
+                                    $listitem2->addAttribute('value', 'Smoking');
+                                    $listitem2->addAttribute('Selected', 'False');
 
-                            $listitem4 = $listitems->addChild('LISTITEM', 'Cannabis');
-                            $listitem4->addAttribute('value', 'Cannabis');
-                            $listitem4->addAttribute('Selected', 'False');
+                                    $listitem3 = $listitems->addChild('LISTITEM', 'Alcohol');
+                                    $listitem3->addAttribute('value', 'Alcohol');
+                                    $listitem3->addAttribute('Selected', 'False');
 
-                            $listitem5 = $listitems->addChild('LISTITEM', 'Solvents/Inhalants');
-                            $listitem5->addAttribute('value', 'Solvents/Inhalants');
-                            $listitem5->addAttribute('Selected', 'False');
+                                    $listitem4 = $listitems->addChild('LISTITEM', 'Cannabis');
+                                    $listitem4->addAttribute('value', 'Cannabis');
+                                    $listitem4->addAttribute('Selected', 'False');
 
-                            $listitem6 = $listitems->addChild('LISTITEM', 'Others');
-                            $listitem6->addAttribute('value', 'Others');
-                            $listitem6->addAttribute('Selected', 'False');
+                                    $listitem5 = $listitems->addChild('LISTITEM', 'Solvents/Inhalants');
+                                    $listitem5->addAttribute('value', 'Solvents/Inhalants');
+                                    $listitem5->addAttribute('Selected', 'False');
 
-                            //FIELD 2
-                            $field2 = $columns->addChild('FIELD');
-                            $field2->addAttribute('id', $text_box);
-                            $field2->addAttribute('type', 'TextBoxDDL');
+                                    $listitem6 = $listitems->addChild('LISTITEM', 'Others');
+                                    $listitem6->addAttribute('value', 'Others');
+                                    $listitem6->addAttribute('Selected', 'False');
 
-                            $properties2 = $field2->addChild('PROPERTIES');
+                                    //FIELD 2
+                                    $field2 = $columns->addChild('FIELD');
+                                    $field2->addAttribute('id', $text_box);
+                                    $field2->addAttribute('type', 'TextBoxDDL');
 
-                            $property3 = $properties2->addChild('PROPERTY', $text_box);
-                            $property3->addAttribute('name', 'id');
+                                    $properties2 = $field2->addChild('PROPERTIES');
 
-                            $property4 = $properties2->addChild('PROPERTY', 'return isNumericKeyStroke(event)');
-                            $property4->addAttribute('name', 'onkeydown');
+                                    $property3 = $properties2->addChild('PROPERTY', $text_box);
+                                    $property3->addAttribute('name', 'id');
 
-                            $property5 = $properties2->addChild('PROPERTY', $text_box);
-                            $property5->addAttribute('name', 'name');
-                            
-                            $property55 = $properties2->addChild('PROPERTY', 'form-control');
-                            $property55->addAttribute('name', 'class');
+                                    $property4 = $properties2->addChild('PROPERTY', 'return isNumericKeyStroke(event)');
+                                    $property4->addAttribute('name', 'onkeydown');
 
-                            $subfield1 = $field2->addChild('FIELD');
-                            $subfield1->addAttribute('id', $dropdown2);
-                            $subfield1->addAttribute('type', 'DropDownList');
+                                    $property5 = $properties2->addChild('PROPERTY', $text_box);
+                                    $property5->addAttribute('name', 'name');
 
-                            $properties3 = $subfield1->addChild('PROPERTIES');
+                                    $property55 = $properties2->addChild('PROPERTY', 'form-control');
+                                    $property55->addAttribute('name', 'class');
 
-                            $property6 = $properties3->addChild('PROPERTY', $dropdown2);
-                            $property6->addAttribute('name', 'id');
+                                    $subfield1 = $field2->addChild('FIELD');
+                                    $subfield1->addAttribute('id', $dropdown2);
+                                    $subfield1->addAttribute('type', 'DropDownList');
 
-                            $property7 = $properties3->addChild('PROPERTY', $dropdown2);
-                            $property7->addAttribute('name', 'name');
-                            
-                            $property77 = $properties3->addChild('PROPERTY', 'form-control');
-                            $property77->addAttribute('name', 'class');
+                                    $properties3 = $subfield1->addChild('PROPERTIES');
 
-                            $listitems = $subfield1->addChild('LISTITEMS');
+                                    $property6 = $properties3->addChild('PROPERTY', $dropdown2);
+                                    $property6->addAttribute('name', 'id');
 
-                            $listitem1 = $listitems->addChild('LISTITEM', 'Yrs');
-                            $listitem1->addAttribute('value', 'Yrs');
-                            $listitem1->addAttribute('Selected', 'False');
+                                    $property7 = $properties3->addChild('PROPERTY', $dropdown2);
+                                    $property7->addAttribute('name', 'name');
 
-                            $listitem2 = $listitems->addChild('LISTITEM', 'Months');
-                            $listitem2->addAttribute('value', 'Months');
-                            $listitem2->addAttribute('Selected', 'False');
+                                    $property77 = $properties3->addChild('PROPERTY', 'form-control');
+                                    $property77->addAttribute('name', 'class');
 
-                            $listitem3 = $listitems->addChild('LISTITEM', 'Weeks');
-                            $listitem3->addAttribute('value', 'Weeks');
-                            $listitem3->addAttribute('Selected', 'False');
+                                    $listitems = $subfield1->addChild('LISTITEMS');
 
-                            $listitem4 = $listitems->addChild('LISTITEM', 'Days');
-                            $listitem4->addAttribute('value', 'Days');
-                            $listitem4->addAttribute('Selected', 'False');
+                                    $listitem1 = $listitems->addChild('LISTITEM', 'Yrs');
+                                    $listitem1->addAttribute('value', 'Yrs');
+                                    $listitem1->addAttribute('Selected', 'False');
 
-                            //FIELD 3
-                            $field3 = $columns->addChild('FIELD');
-                            $field3->addAttribute('id', $checkbox);
-                            $field3->addAttribute('type', 'CheckBoxList');
+                                    $listitem2 = $listitems->addChild('LISTITEM', 'Months');
+                                    $listitem2->addAttribute('value', 'Months');
+                                    $listitem2->addAttribute('Selected', 'False');
 
-                            $properties1 = $field3->addChild('PROPERTIES');
+                                    $listitem3 = $listitems->addChild('LISTITEM', 'Weeks');
+                                    $listitem3->addAttribute('value', 'Weeks');
+                                    $listitem3->addAttribute('Selected', 'False');
 
-                            $property2 = $properties1->addChild('PROPERTY', "CBPBpattern{$rowCount}[]");
-                            $property2->addAttribute('name', 'name');
+                                    $listitem4 = $listitems->addChild('LISTITEM', 'Days');
+                                    $listitem4->addAttribute('value', 'Days');
+                                    $listitem4->addAttribute('Selected', 'False');
 
-                            $listitems = $field3->addChild('LISTITEMS');
+                                    //FIELD 3
+                                    $field3 = $columns->addChild('FIELD');
+                                    $field3->addAttribute('id', $checkbox);
+                                    $field3->addAttribute('type', 'CheckBoxList');
 
-                            $listitem1 = $listitems->addChild('LISTITEM', 'Use');
-                            $listitem1->addAttribute('value', 'Use');
-                            $listitem1->addAttribute('id', 'CBPBpattern1' . $rowCount);
-                            $listitem1->addAttribute('Selected', 'False');
+                                    $properties1 = $field3->addChild('PROPERTIES');
 
-                            $listitem2 = $listitems->addChild('LISTITEM', 'Abuse');
-                            $listitem2->addAttribute('value', 'Abuse');
-                            $listitem2->addAttribute('id', 'CBPBpattern2' . $rowCount);
-                            $listitem2->addAttribute('Selected', 'False');
+                                    $property2 = $properties1->addChild('PROPERTY', "CBPBpattern{$rowCount}[]");
+                                    $property2->addAttribute('name', 'name');
 
-                            $listitem3 = $listitems->addChild('LISTITEM', 'Dependence');
-                            $listitem3->addAttribute('value', 'Dependence');
-                            $listitem3->addAttribute('id', 'CBPBpattern3' . $rowCount);
-                            $listitem3->addAttribute('Selected', 'False');
+                                    $listitems = $field3->addChild('LISTITEMS');
+
+                                    $listitem1 = $listitems->addChild('LISTITEM', 'Use');
+                                    $listitem1->addAttribute('value', 'Use');
+                                    $listitem1->addAttribute('id', 'CBPBpattern1' . $rowCount);
+                                    $listitem1->addAttribute('Selected', 'False');
+
+                                    $listitem2 = $listitems->addChild('LISTITEM', 'Abuse');
+                                    $listitem2->addAttribute('value', 'Abuse');
+                                    $listitem2->addAttribute('id', 'CBPBpattern2' . $rowCount);
+                                    $listitem2->addAttribute('Selected', 'False');
+
+                                    $listitem3 = $listitems->addChild('LISTITEM', 'Dependence');
+                                    $listitem3->addAttribute('value', 'Dependence');
+                                    $listitem3->addAttribute('id', 'CBPBpattern3' . $rowCount);
+                                    $listitem3->addAttribute('Selected', 'False');
+                                }
+                            }
                         }
                     }
                 }
@@ -1410,7 +1631,5 @@ class PatientdocumentsController extends ActiveController {
         $xml = $xmlLoad->asXML();
         return $xml;
     }
-
-    
 
 }

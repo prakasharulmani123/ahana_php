@@ -1006,813 +1006,829 @@
             </FIELD>
             
             <FIELD type="PanelBar" label="Personal History" target_div="personal_history">
-                <FIELD type="Header2" label="Birth and Development" class="Birth_and_Development"></FIELD>
+                <FIELD type="PanelBar" label="Birth and Development" target_div="birth_and_development">
+                    <FIELD type="Header2" label="Birth and Development" class="Birth_and_Development"></FIELD>
                 
-                <FIELD id="RBpbprenatal" header2Class="Birth_and_Development" type="RadioButtonList" label="Prenatal" Backcontrols="hide" Backdivid="PrenatalDiv" required="true">
-                    <PROPERTIES>
-                        <PROPERTY name="name">RBpbprenatal</PROPERTY>
-                    </PROPERTIES>
-                    <LISTITEMS>
-                        <LISTITEM value="Uneventful" id="RBpbprenatal1" Selected="False" onclick="OThersvisible(this.id,'PrenatalDiv','none');">Uneventful</LISTITEM>
-                        <LISTITEM value="Eventful" id="RBpbprenatal2" Selected="False" onclick="OThersvisible(this.id,'PrenatalDiv','block');">Eventful</LISTITEM>
-                    </LISTITEMS>
-                    <FIELD id="prenatalSpecify" type="TextBox" label="Specify: ">
+                    <FIELD id="RBpbprenatal" header2Class="Birth_and_Development" type="RadioButtonList" label="Prenatal" Backcontrols="hide" Backdivid="PrenatalDiv" required="true">
                         <PROPERTIES>
-                            <PROPERTY name="name">prenatalSpecify</PROPERTY>
-                            <PROPERTY name="id">prenatalSpecify</PROPERTY>
-                            <PROPERTY name="class">form-control</PROPERTY> 
-                        </PROPERTIES>
-                    </FIELD>
-                </FIELD>
-                
-                <FIELD id="RBpbperinatal" header2Class="Birth_and_Development" type="RadioButtonList" label="Perinatal" required="true">
-                    <PROPERTIES>
-                        <PROPERTY name="name">RBpbperinatal</PROPERTY>
-                    </PROPERTIES>
-                    <LISTITEMS>
-                        <LISTITEM value="Full Term" id="RBpbperinatal1" Selected="False">Full Term</LISTITEM>
-                        <LISTITEM value="Premature" id="RBpbperinatal2" Selected="False">Premature</LISTITEM>
-                        <LISTITEM value="Post mature" id="RBpbperinatal3" Selected="False">Post mature</LISTITEM>
-                        <LISTITEM value="Delayed" id="RBpbperinatal4" Selected="False">Delayed</LISTITEM>
-                    </LISTITEMS>
-                </FIELD>
-                
-                <FIELD id="RBpbperinatal2" header2Class="Birth_and_Development" type="RadioButtonList" label="Perinatal2" Backcontrols="hide" Backdivid="perinatal2div" required="true">
-                    <PROPERTIES>
-                        <PROPERTY name="name">RBpbperinatal2</PROPERTY>
-                    </PROPERTIES>
-                    <LISTITEMS>
-                        <LISTITEM value="Uneventful" id="RBpbperinatal21" Selected="False" onclick="OThersvisible(this.id,'perinatal2div','none');">Uneventful</LISTITEM>
-                        <LISTITEM value="Eventful" id="RBpbperinatal22" Selected="False" onclick="OThersvisible(this.id,'perinatal2div','block');">Eventful</LISTITEM>
-                    </LISTITEMS>
-                    <FIELD id="txtPerinatal2" type="TextBox" label="Specify: ">
-                        <PROPERTIES>
-                            <PROPERTY name="name">txtPerinatal2</PROPERTY>
-                            <PROPERTY name="id">txtPerinatal2</PROPERTY>
-                            <PROPERTY name="class">form-control</PROPERTY>
-                        </PROPERTIES>
-                    </FIELD>
-                </FIELD>
-                
-                <FIELD id="RBpbmajorillness" header2Class="Birth_and_Development" type="RadioButtonList" label="Major illness during infancy" Backcontrols="hide" Backdivid="RBpbmajorillnessDiv">
-                    <PROPERTIES>
-                        <PROPERTY name="name">RBpbmajorillness</PROPERTY>
-                    </PROPERTIES>
-                    <LISTITEMS>
-                        <LISTITEM value="No" id="RBpbmajorillness1" Selected="False" onclick="OThersvisible(this.id,'RBpbmajorillnessDiv','none');">No</LISTITEM>
-                        <LISTITEM value="Yes" id="RBpbmajorillness2" Selected="False" onclick="OThersvisible(this.id,'RBpbmajorillnessDiv','block');">Yes</LISTITEM>
-                    </LISTITEMS>
-                    <FIELD id="txtRBpbmajorillness" type="TextBox" label="Specify: ">
-                        <PROPERTIES>
-                            <PROPERTY name="id">txtRBpbmajorillness</PROPERTY>
-                            <PROPERTY name="name">txtRBpbmajorillness</PROPERTY>
-                            <PROPERTY name="class">form-control</PROPERTY>
-                        </PROPERTIES>
-                    </FIELD>
-                </FIELD>
-                
-                <FIELD id="RBpbimmunizationschedule" header2Class="Birth_and_Development" type="RadioButtonList" label="Immunization schedule">
-                    <PROPERTIES>
-                        <PROPERTY name="name">RBpbimmunizationschedule</PROPERTY>
-                    </PROPERTIES>
-                    <LISTITEMS>
-                        <LISTITEM value="Completed" id="RBpbimmunizationschedule1" Selected="False">Completed</LISTITEM>
-                        <LISTITEM value="Not Completed" id="RBpbimmunizationschedule2" Selected="False">Not Completed</LISTITEM>
-                    </LISTITEMS>
-                </FIELD>
-                
-                <FIELD id="RBpbdevelopmentmilestone" header2Class="Birth_and_Development" type="RadioButtonList" label="Developmental milestones" Backcontrols="hide" Backdivid="developmentmilestoneDiv" required="true">
-                    <PROPERTIES>
-                        <PROPERTY name="name">RBpbdevelopmentmilestone</PROPERTY>
-                    </PROPERTIES>
-                    <LISTITEMS>
-                        <LISTITEM value="Normal" id="RBpbdevelopmentmilestone1" Selected="False" onclick="OThersvisible(this.id,'developmentmilestoneDiv','none');">Normal</LISTITEM>
-                        <LISTITEM value="Delayed" id="RBpbdevelopmentmilestone2" Selected="False" onclick="OThersvisible(this.id,'developmentmilestoneDiv','block');">Delayed</LISTITEM>
-                    </LISTITEMS>
-                    <FIELD id="RBdevlopmentmilestonesub" type="RadioButtonList" label="Specify: " >
-                        <PROPERTIES>
-                            <PROPERTY name="name">RBdevlopmentmilestonesub</PROPERTY>
+                            <PROPERTY name="name">RBpbprenatal</PROPERTY>
                         </PROPERTIES>
                         <LISTITEMS>
-                            <LISTITEM value="Motor" id="RBdevlopmentmilestonesub1" Selected="False">Motor</LISTITEM>
-                            <LISTITEM value="Adaptive" id="RBdevlopmentmilestonesub2" Selected="False">Adaptive</LISTITEM>
-                            <LISTITEM value="Speech" id="RBdevlopmentmilestonesub3" Selected="False">Speech</LISTITEM>
-                            <LISTITEM value="Social" id="RBdevlopmentmilestonesub4" Selected="False">Social</LISTITEM>
+                            <LISTITEM value="Uneventful" id="RBpbprenatal1" Selected="False" onclick="OThersvisible(this.id,'PrenatalDiv','none');">Uneventful</LISTITEM>
+                            <LISTITEM value="Eventful" id="RBpbprenatal2" Selected="False" onclick="OThersvisible(this.id,'PrenatalDiv','block');">Eventful</LISTITEM>
                         </LISTITEMS>
-                    </FIELD>
-                </FIELD>
-                
-                <FIELD id="RBpbmajorillnessduringchild" header2Class="Birth_and_Development" type="RadioButtonList" label="Major physical illness during childhood" Backcontrols="hide" Backdivid="pbmajorillnessduringchildDiv">
-                    <PROPERTIES>
-                        <PROPERTY name="name">RBpbmajorillnessduringchild</PROPERTY>
-                    </PROPERTIES>
-                    <LISTITEMS>
-                        <LISTITEM value="No" id="RBpbmajorillnessduringchild1" Selected="False" onclick="OThersvisible(this.id,'pbmajorillnessduringchildDiv','none');">No</LISTITEM>
-                        <LISTITEM value="Yes" id="RBpbmajorillnessduringchild2" Selected="False" onclick="OThersvisible(this.id,'pbmajorillnessduringchildDiv','block');">Yes</LISTITEM>
-                    </LISTITEMS>
-                    <FIELD id="txtpbmajorillnesschild" type="TextBox" label="Specify: ">
-                        <PROPERTIES>
-                            <PROPERTY name="id">txtpbmajorillnesschild</PROPERTY>
-                            <PROPERTY name="name">txtpbmajorillnesschild</PROPERTY>
-                            <PROPERTY name="class">form-control</PROPERTY>
-                        </PROPERTIES>
-                    </FIELD>
-                </FIELD>
-                
-                <FIELD id="CBpbemotionalbehaviour" header2Class="Birth_and_Development" type="CheckBoxList" label="Emotional and behavioural problems during childhood" Backcontrols="hide" Backdivid="TxtpbemotionalbehaviouDiv">
-                    <PROPERTIES>
-                        <PROPERTY name="name">CBpbemotionalbehaviour[]</PROPERTY>
-                    </PROPERTIES>
-                    <LISTITEMS>
-                        <LISTITEM value="Sleep Walking" id="CBpbemotionalbehaviour1" Selected="False">Sleep Walking</LISTITEM>
-                        <LISTITEM value="Temper Tantrums" id="CBpbemotionalbehaviour2" Selected="False">Temper Tantrums</LISTITEM>
-                        <LISTITEM value="Stammering" id="CBpbemotionalbehaviour3" Selected="False">Stammering</LISTITEM>
-                        <LISTITEM value="Nail biting" id="CBpbemotionalbehaviour4" Selected="False">Nail biting</LISTITEM>
-                        <LISTITEM value="Enuresis" id="CBpbemotionalbehaviour5" Selected="False">Enuresis</LISTITEM>
-                        <LISTITEM value="Encopresis" id="CBpbemotionalbehaviour6" Selected="False">Encopresis</LISTITEM>
-                        <LISTITEM value="Thumb sucking" id="CBpbemotionalbehaviour7" Selected="False">Thumb sucking</LISTITEM>
-                        <LISTITEM value="Head banging" id="CBpbemotionalbehaviour8" Selected="False">Head banging</LISTITEM>
-                        <LISTITEM value="Nightmares" id="CBpbemotionalbehaviour9" Selected="False">Nightmares</LISTITEM>
-                        <LISTITEM value="Seperation anxiety" id="CBpbemotionalbehaviour10" Selected="False">Seperation anxiety</LISTITEM>
-                        <LISTITEM value="Conduct problems" id="CBpbemotionalbehaviour11" Selected="False">Conduct problems</LISTITEM>
-                        <LISTITEM value="Others" id="CBpbemotionalbehaviour12" Selected="False" onclick="OThersvisible(this.id,'TxtpbemotionalbehaviouDiv');">Others</LISTITEM>
-                    </LISTITEMS>
-                    <FIELD id="Txtpbemotionalbehaviou" type="TextBox" label="Notes: ">
-                        <PROPERTIES>
-                            <PROPERTY name="id">Txtpbemotionalbehaviou</PROPERTY>
-                            <PROPERTY name="class">form-control</PROPERTY>
-                            <PROPERTY name="name">Txtpbemotionalbehaviou</PROPERTY>
-                            <PROPERTY name="placeholder">Other</PROPERTY>
-                        </PROPERTIES>
-                    </FIELD>
-                </FIELD>
-                
-                <FIELD id="RBpbhomeatmosphere" header2Class="Birth_and_Development" type="RadioButtonList" label="Home atmosphere during childhood" Backcontrols="hide" Backdivid="pbhomeatmosphereDiv">
-                    <PROPERTIES>
-                        <PROPERTY name="name">RBpbhomeatmosphere</PROPERTY>
-                    </PROPERTIES>
-                    <LISTITEMS>
-                        <LISTITEM value="Satisfactory" id="RBpbhomeatmosphere1" Selected="False" onclick="OThersvisible(this.id,'pbhomeatmosphereDiv','none');">Satisfactory</LISTITEM>
-                        <LISTITEM value="Unsatisfactory" id="RBpbhomeatmosphere2" Selected="False" onclick="OThersvisible(this.id,'pbhomeatmosphereDiv','block');">Unsatisfactory</LISTITEM>
-                    </LISTITEMS>
-                    <FIELD id="txtpbhomeatmosphereSpcify" type="TextBox" label="Specify: ">
-                        <PROPERTIES>
-                            <PROPERTY name="id">txtpbhomeatmosphereSpcify</PROPERTY>
-                            <PROPERTY name="class">form-control</PROPERTY>
-                            <PROPERTY name="name">txtpbhomeatmosphereSpcify</PROPERTY>
-                        </PROPERTIES>
-                    </FIELD>
-                </FIELD>
-                
-                <FIELD id="CBpbemotionalbehaviouradole" header2Class="Birth_and_Development" type="CheckBoxList" label="Emotional and behavioural problems during adolescence" Backcontrols="hide" Backdivid="TxtpbemotionalbehaviouradoleDiv">
-                    <PROPERTIES>
-                        <PROPERTY name="name">CBpbemotionalbehaviouradole[]</PROPERTY>
-                    </PROPERTIES>
-                    <LISTITEMS>
-                        <LISTITEM value="Mood disturbances" id="CBpbemotionalbehaviouradole1" Selected="False">Mood disturbances</LISTITEM>
-                        <LISTITEM value="Substance use" id="CBpbemotionalbehaviouradole2" Selected="False">Substance use</LISTITEM>
-                        <LISTITEM value="Argumentative" id="CBpbemotionalbehaviouradole3" Selected="False">Argumentative</LISTITEM>
-                        <LISTITEM value="Inferiority" id="CBpbemotionalbehaviouradole4" Selected="False">Inferiority</LISTITEM>
-                        <LISTITEM value="Conduct problems" id="CBpbemotionalbehaviouradole5" Selected="False">Conduct problems</LISTITEM>
-                        <LISTITEM value="Others" id="CBpbemotionalbehaviouradole6" Selected="False" onclick="OThersvisible(this.id,'TxtpbemotionalbehaviouradoleDiv');">Others</LISTITEM>
-                    </LISTITEMS>
-                    <FIELD id="Txtpbemotionalbehaviouradole" type="TextBox" label="Notes: ">
-                        <PROPERTIES>
-                            <PROPERTY name="id">Txtpbemotionalbehaviouradole</PROPERTY>
-                            <PROPERTY name="class">form-control</PROPERTY>
-                            <PROPERTY name="name">Txtpbemotionalbehaviouradole</PROPERTY>
-                            <PROPERTY name="placeholder">Other</PROPERTY>
-                        </PROPERTIES>
-                    </FIELD>
-                </FIELD>
-                
-                <FIELD id="RBpbhomeatmosphereadole" header2Class="Birth_and_Development" type="RadioButtonList" label="Home atmosphere during adolescent" Backcontrols="hide" Backdivid="pbhomeatmosphereadoleDiv">
-                    <PROPERTIES>
-                        <PROPERTY name="name">RBpbhomeatmosphereadole</PROPERTY>
-                    </PROPERTIES>
-                    <LISTITEMS>
-                        <LISTITEM value="Satisfactory" id="RBpbhomeatmosphereadole1" Selected="False" onclick="OThersvisible(this.id,'pbhomeatmosphereadoleDiv','none');">Satisfactory</LISTITEM>
-                        <LISTITEM value="Unsatisfactory" id="RBpbhomeatmosphereadole2" Selected="False" onclick="OThersvisible(this.id,'pbhomeatmosphereadoleDiv','block');">Unsatisfactory</LISTITEM>
-                    </LISTITEMS>
-                    <FIELD id="txthomeatmosphereadoleSpecify" type="TextBox" label="Specify: ">
-                        <PROPERTIES>
-                            <PROPERTY name="id">txthomeatmosphereadoleSpecify</PROPERTY>
-                            <PROPERTY name="class">form-control</PROPERTY>
-                            <PROPERTY name="name">txthomeatmosphereadoleSpecify</PROPERTY>
-                        </PROPERTIES>
-                    </FIELD>
-                </FIELD>
-                
-                <FIELD id="RBpbparentallack" header2Class="Birth_and_Development" type="RadioButtonList" label="Parental Lack" Backcontrols="hide" Backdivid="parentallackDiv" required="true">
-                    <PROPERTIES>
-                        <PROPERTY name="name">RBpbparentallack</PROPERTY>
-                    </PROPERTIES>
-                    <LISTITEMS>
-                        <LISTITEM value="Mother" id="RBpbparentallack1" Selected="False" onclick="OThersvisible(this.id,'parentallackDiv','block');">Mother</LISTITEM>
-                        <LISTITEM value="Father" id="RBpbparentallack2" Selected="False" onclick="OThersvisible(this.id,'parentallackDiv','block');">Father</LISTITEM>
-                    </LISTITEMS>
-                    <FIELD id="RBparentallackreason" type="RadioButtonList" label="Reason: ">
-                        <PROPERTIES>
-                            <PROPERTY name="name">RBparentallackreason</PROPERTY>
-                        </PROPERTIES>
-                        <LISTITEMS>
-                            <LISTITEM value="Dead" id="RBparentallackreason1" Selected="False">Dead</LISTITEM>
-                            <LISTITEM value="Seperate" id="RBparentallackreason2" Selected="False">Seperate</LISTITEM>
-                        </LISTITEMS>
-                    </FIELD>
-                </FIELD>
-                
-                <FIELD id="birthdevelopmentnotes" header2Class="Birth_and_Development" type="textareaFull" label="Notes">
-                    <PROPERTIES>
-                        <PROPERTY name="id">birthdevelopmentnotes</PROPERTY>
-                        <PROPERTY name="name">birthdevelopmentnotes</PROPERTY>
-                        <PROPERTY name="class">form-control</PROPERTY>
-                        <PROPERTY name="rows">6</PROPERTY>
-                    </PROPERTIES>
-                </FIELD>
-                
-                <FIELD type="Header2" label="Education History" class="Education_History"></FIELD>
-                
-                <FIELD id="RBpbbreakstudy" header2Class="Education_History" type="RadioButtonList" label="Break in Studies" Backcontrols="hide" Backdivid="breakstudyDiv" required="true">
-                    <PROPERTIES>
-                        <PROPERTY name="name">RBpbbreakstudy</PROPERTY>
-                    </PROPERTIES>
-                    <LISTITEMS>
-                        <LISTITEM value="No" id="RBpbbreakstudy1" Selected="False" onclick="OThersvisible(this.id,'breakstudyDiv','none');">No</LISTITEM>
-                        <LISTITEM value="Yes" id="RBpbbreakstudy2" Selected="False" onclick="OThersvisible(this.id,'breakstudyDiv','block');">Yes</LISTITEM>
-                    </LISTITEMS>
-                    <FIELD id="txtbreakstudyreason" type="TextBox" label="Reason: ">
-                        <PROPERTIES>
-                            <PROPERTY name="id">txtbreakstudyreason</PROPERTY>
-                            <PROPERTY name="class">form-control</PROPERTY>
-                            <PROPERTY name="name">txtbreakstudyreason</PROPERTY>
-                            <PROPERTY name="placeholder">Reason</PROPERTY>
-                        </PROPERTIES>
-                    </FIELD>
-                </FIELD>
-                
-                <FIELD id="RBpbfrechangeschool" header2Class="Education_History" type="RadioButtonList" label="Frequent change of school" Backcontrols="hide" Backdivid="frechangeschoolDiv" required="true">
-                    <PROPERTIES>
-                        <PROPERTY name="name">RBpbfrechangeschool</PROPERTY>
-                    </PROPERTIES>
-                    <LISTITEMS>
-                        <LISTITEM value="No" id="RBpbfrechangeschool1" Selected="False" onclick="OThersvisible(this.id,'frechangeschoolDiv','none');">No</LISTITEM>
-                        <LISTITEM value="Yes" id="RBpbfrechangeschool2" Selected="False" onclick="OThersvisible(this.id,'frechangeschoolDiv','block');">Yes</LISTITEM>
-                    </LISTITEMS>
-                    <FIELD id="txtfrechangeschool" type="TextBox" label="Reason: ">
-                        <PROPERTIES>
-                            <PROPERTY name="id">txtfrechangeschool</PROPERTY>
-                            <PROPERTY name="name">txtfrechangeschool</PROPERTY>
-                            <PROPERTY name="class">form-control</PROPERTY>
-                            <PROPERTY name="placeholder">Reason</PROPERTY>
-                        </PROPERTIES>
-                    </FIELD>
-                </FIELD>
-                
-                <FIELD id="RBpbtypeofschool" header2Class="Education_History" type="RadioButtonList" label="Type of school/college">
-                    <PROPERTIES>
-                        <PROPERTY name="name">RBpbtypeofschool</PROPERTY>
-                    </PROPERTIES>
-                    <LISTITEMS>
-                        <LISTITEM value="Urban" id="RBpbtypeofschool1" Selected="False">Urban</LISTITEM>
-                        <LISTITEM value="Rural" id="RBpbtypeofschool2" Selected="False">Rural</LISTITEM>
-                        <LISTITEM value="Residental" id="RBpbtypeofschool3" Selected="False">Residential</LISTITEM>
-                        <LISTITEM value="Day scholar" id="RBpbtypeofschool4" Selected="False">Day scholar</LISTITEM>
-                    </LISTITEMS>
-                </FIELD>
-                
-                <FIELD id="RBpbmedium" header2Class="Education_History" type="RadioButtonList" label="Medium" Backcontrols="hide" Backdivid="mediumDiv">
-                    <PROPERTIES>
-                        <PROPERTY name="name">RBpbmedium</PROPERTY>
-                    </PROPERTIES>
-                    <LISTITEMS>
-                        <LISTITEM value="Tamil" id="RBpbmedium1" Selected="False" onclick="OThersvisible(this.id,'mediumDiv','none');">Tamil</LISTITEM>
-                        <LISTITEM value="English" id="RBpbmedium2" Selected="False" onclick="OThersvisible(this.id,'mediumDiv','none');">English</LISTITEM>
-                        <LISTITEM value="Others" id="RBpbmedium3" Selected="False" onclick="OThersvisible(this.id,'mediumDiv','block');">Others</LISTITEM>
-                    </LISTITEMS>
-                    <FIELD id="txtMedium" type="TextBox" label="Specify: ">
-                        <PROPERTIES>
-                            <PROPERTY name="id">txtMedium</PROPERTY>
-                            <PROPERTY name="name">txtMedium</PROPERTY>
-                            <PROPERTY name="class">form-control</PROPERTY>
-                        </PROPERTIES>
-                    </FIELD>
-                </FIELD>
-                
-                <FIELD id="RBpbacademicperfor" header2Class="Education_History" type="RadioButtonList" label="Academic performance" required="true">
-                    <PROPERTIES>
-                        <PROPERTY name="name">RBpbacademicperfor</PROPERTY>
-                    </PROPERTIES>
-                    <LISTITEMS>
-                        <LISTITEM value="Good" id="RBpbacademicperfor1" Selected="False">Good</LISTITEM>
-                        <LISTITEM value="Average" id="RBpbacademicperfor2" Selected="False">Average</LISTITEM>
-                        <LISTITEM value="Below average" id="RBpbacademicperfor3" Selected="False">Below average</LISTITEM>
-                        <LISTITEM value="Poor" id="RBpbacademicperfor4" Selected="False">Poor</LISTITEM>
-                    </LISTITEMS>
-                </FIELD>
-                
-                <FIELD id="RBpbteacherrelation" header2Class="Education_History" type="RadioButtonList" label="Relationship with teachers" Backcontrols="hide" Backdivid="teacherrelationDiv" required="true">
-                    <PROPERTIES>
-                        <PROPERTY name="name">RBpbteacherrelation</PROPERTY>
-                    </PROPERTIES>
-                    <LISTITEMS>
-                        <LISTITEM value="Satisfactory" id="RBpbteacherrelation1" Selected="False" onclick="OThersvisible(this.id,'teacherrelationDiv','none');">Satisfactory</LISTITEM>
-                        <LISTITEM value="Unsatisfactory" id="RBpbteacherrelation2" Selected="False" onclick="OThersvisible(this.id,'teacherrelationDiv','block');">Unsatisfactory</LISTITEM>
-                    </LISTITEMS>
-                    <FIELD id="txtteacherrelationspecify" type="TextBox" label="Specify: ">
-                        <PROPERTIES>
-                            <PROPERTY name="id">txtteacherrelationspecify</PROPERTY>
-                            <PROPERTY name="name">txtteacherrelationspecify</PROPERTY>
-                            <PROPERTY name="class">form-control</PROPERTY>
-                        </PROPERTIES>
-                    </FIELD>
-                </FIELD>
-                
-                <FIELD id="RBpbstudentrelation" header2Class="Education_History" type="RadioButtonList" label="Relationship with students" Backcontrols="hide" Backdivid="studentrelationDiv" required="true">
-                    <PROPERTIES>
-                        <PROPERTY name="name">RBpbstudentrelation</PROPERTY>
-                    </PROPERTIES>
-                    <LISTITEMS>
-                        <LISTITEM value="Satisfactory" id="RBpbstudentrelation1" Selected="False" onclick="OThersvisible(this.id,'studentrelationDiv','none');">Satisfactory</LISTITEM>
-                        <LISTITEM value="Unsatisfactory" id="RBpbstudentrelation2" Selected="False" onclick="OThersvisible(this.id,'studentrelationDiv','block');">Unsatisfactory</LISTITEM>
-                    </LISTITEMS>
-                    <FIELD id="txtstudentrelationspecify" type="TextBox" label="Specify: ">
-                        <PROPERTIES>
-                            <PROPERTY name="id">txtstudentrelationspecify</PROPERTY>
-                            <PROPERTY name="name">txtstudentrelationspecify</PROPERTY>
-                            <PROPERTY name="class">form-control</PROPERTY>
-                        </PROPERTIES>
-                    </FIELD>
-                </FIELD>
-                
-                <FIELD id="educational_history_notes" header2Class="Education_History" type="textareaFull" label="Notes">
-                    <PROPERTIES>
-                        <PROPERTY name="id">educational_history_notes</PROPERTY>
-                        <PROPERTY name="name">educational_history_notes</PROPERTY>
-                        <PROPERTY name="class">form-control</PROPERTY>
-                        <PROPERTY name="rows">6</PROPERTY>
-                    </PROPERTIES>
-                </FIELD>
-                
-                <FIELD type="Header2" label="Occupational History" class="Occupational_History"></FIELD>
-                
-                <FIELD id="DDLstartedworking" header2Class="Occupational_History" type="DropDownList" label="Started working at" Backtext=" Years">
-                    <PROPERTIES>
-                        <PROPERTY name="id">DDLstartedworking</PROPERTY>
-                        <PROPERTY name="name">DDLstartedworking</PROPERTY>
-                        <PROPERTY name="class">form-control</PROPERTY>
-                    </PROPERTIES>
-                    <LISTITEMS>
-                        <LISTITEM value="" Selected="False">--Select--</LISTITEM>
-                        <LISTITEM value="10" Selected="False">10</LISTITEM>
-                        <LISTITEM value="11" Selected="False">11</LISTITEM>
-                        <LISTITEM value="12" Selected="False">12</LISTITEM>
-                        <LISTITEM value="13" Selected="False">13</LISTITEM>
-                        <LISTITEM value="14" Selected="False">14</LISTITEM>
-                        <LISTITEM value="15" Selected="False">15</LISTITEM>
-                        <LISTITEM value="16" Selected="False">16</LISTITEM>
-                        <LISTITEM value="17" Selected="False">17</LISTITEM>
-                        <LISTITEM value="18" Selected="False">18</LISTITEM>
-                        <LISTITEM value="19" Selected="False">19</LISTITEM>
-                        <LISTITEM value="20" Selected="False">20</LISTITEM>
-                        <LISTITEM value="21" Selected="False">21</LISTITEM>
-                        <LISTITEM value="22" Selected="False">22</LISTITEM>
-                        <LISTITEM value="23" Selected="False">23</LISTITEM>
-                        <LISTITEM value="24" Selected="False">24</LISTITEM>
-                        <LISTITEM value="25" Selected="False">25</LISTITEM>
-                        <LISTITEM value="26" Selected="False">26</LISTITEM>
-                        <LISTITEM value="27" Selected="False">27</LISTITEM>
-                        <LISTITEM value="28" Selected="False">28</LISTITEM>
-                        <LISTITEM value="29" Selected="False">29</LISTITEM>
-                        <LISTITEM value="30" Selected="False">30</LISTITEM>
-                        <LISTITEM value="31" Selected="False">31</LISTITEM>
-                        <LISTITEM value="32" Selected="False">32</LISTITEM>
-                        <LISTITEM value="33" Selected="False">33</LISTITEM>
-                        <LISTITEM value="34" Selected="False">34</LISTITEM>
-                        <LISTITEM value="35" Selected="False">35</LISTITEM>
-                        <LISTITEM value="36" Selected="False">36</LISTITEM>
-                        <LISTITEM value="37" Selected="False">37</LISTITEM>
-                        <LISTITEM value="38" Selected="False">38</LISTITEM>
-                        <LISTITEM value="39" Selected="False">39</LISTITEM>
-                        <LISTITEM value="40" Selected="False">40</LISTITEM>
-                    </LISTITEMS>
-                </FIELD>
-                
-                <FIELD id="RBpbworkrecord" header2Class="Occupational_History" type="RadioButtonList" label="Work Record" Backcontrols="hide" Backdivid="workrecordDiv" required="true">
-                    <PROPERTIES>
-                        <PROPERTY name="name">RBpbworkrecord</PROPERTY>
-                    </PROPERTIES>
-                    <LISTITEMS>
-                        <LISTITEM value="Satisfactory" id="RBpbworkrecord1" Selected="False" onclick="OThersvisible(this.id,'workrecordDiv','none');">Satisfactory</LISTITEM>
-                        <LISTITEM value="Unsatisfactory" id="RBpbworkrecord2" Selected="False" onclick="OThersvisible(this.id,'workrecordDiv','block');">Unsatisfactory</LISTITEM>
-                    </LISTITEMS>
-                    <FIELD id="txtworkrecordspecify" type="TextBox" label="Specify: ">
-                        <PROPERTIES>
-                            <PROPERTY name="id">txtworkrecordspecify</PROPERTY>
-                            <PROPERTY name="name">txtworkrecordspecify</PROPERTY>
-                            <PROPERTY name="class">form-control</PROPERTY>
-                        </PROPERTIES>
-                    </FIELD>
-                </FIELD>
-                
-                <FIELD id="RBfreqchangeofjob" header2Class="Occupational_History" type="RadioButtonList" label="Frequent change of jobs" Backcontrols="hide" Backdivid="freqchangeofjobDiv" required="true">
-                    <PROPERTIES>
-                        <PROPERTY name="name">RBfreqchangeofjob</PROPERTY>
-                    </PROPERTIES>
-                    <LISTITEMS>
-                        <LISTITEM value="No" id="RBfreqchangeofjob1" Selected="False" onclick="OThersvisible(this.id,'freqchangeofjobDiv','none');">No</LISTITEM>
-                        <LISTITEM value="Yes" id="RBfreqchangeofjob2" Selected="False" onclick="OThersvisible(this.id,'freqchangeofjobDiv','block');">Yes</LISTITEM>
-                    </LISTITEMS>
-                    <FIELD id="CBreasonforchange" type="CheckBoxList" label="Reason for change: ">
-                        <PROPERTIES>
-                            <PROPERTY name="name">CBreasonforchange[]</PROPERTY>
-                        </PROPERTIES>
-                        <LISTITEMS>
-                            <LISTITEM value="Better" id="CBreasonforchange1" Selected="False">Better</LISTITEM>
-                            <LISTITEM value="Opportunity" id="CBreasonforchange2" Selected="False">Opportunity</LISTITEM>
-                            <LISTITEM value="Better Income" id="CBreasonforchange3" Selected="False">Better Income</LISTITEM>
-                            <LISTITEM value="Termination" id="CBreasonforchange4" Selected="False">Termination</LISTITEM>
-                            <LISTITEM value="Illness" id="CBreasonforchange5" Selected="False">Illness</LISTITEM>
-                            <LISTITEM value="Others" id="CBreasonforchange6" Selected="False" onclick="OThersvisible(this.id,'txtreasonforchangeother');">Others</LISTITEM>
-                        </LISTITEMS>
-                        <FIELD id="txtreasonforchangeother" type="TextBox">
+                        <FIELD id="prenatalSpecify" type="TextBox" label="Specify: ">
                             <PROPERTIES>
-                                <PROPERTY name="id">txtreasonforchangeother</PROPERTY>
-                                <PROPERTY name="class">form-control hide</PROPERTY>
-                                <PROPERTY name="name">txtreasonforchangeother</PROPERTY>
-                                <PROPERTY name="placeholder">Others</PROPERTY>
+                                <PROPERTY name="name">prenatalSpecify</PROPERTY>
+                                <PROPERTY name="id">prenatalSpecify</PROPERTY>
+                                <PROPERTY name="class">form-control</PROPERTY> 
                             </PROPERTIES>
                         </FIELD>
                     </FIELD>
-                </FIELD>
                 
-                <FIELD id="occupational_history_notes" header2Class="Occupational_History" type="textareaFull" label="Notes">
-                    <PROPERTIES>
-                        <PROPERTY name="id">occupational_history_notes</PROPERTY>
-                        <PROPERTY name="name">occupational_history_notes</PROPERTY>
-                        <PROPERTY name="class">form-control</PROPERTY>
-                        <PROPERTY name="rows">6</PROPERTY>
-                    </PROPERTIES>
-                </FIELD>
-                
-                <FIELD type="Header2" label="Menstrual History" class="Menstrual_History"></FIELD>
-                
-                <FIELD id="txtMenarche" header2Class="Menstrual_History" type="TextBox" label="Menarche" Backtext="Years">
-                    <PROPERTIES>
-                        <PROPERTY name="id">txtMenarche</PROPERTY>
-                        <PROPERTY name="name">txtMenarche</PROPERTY>
-                        <PROPERTY name="class">form-control</PROPERTY>
-                    </PROPERTIES>
-                </FIELD>
-                
-                <FIELD id="RBRegularity" header2Class="Menstrual_History" type="RadioButtonList" label="Regularity" Backcontrols="hide" Backdivid="RegularityDiv">
-                    <PROPERTIES>
-                        <PROPERTY name="name">RBRegularity</PROPERTY>
-                    </PROPERTIES>
-                    <LISTITEMS>
-                        <LISTITEM value="Regular" id="RBRegularity1" Selected="False" onclick="OThersvisible(this.id,'RegularityDiv','none');">Regular</LISTITEM>
-                        <LISTITEM value="Irregular" id="RBRegularity2" Selected="False" onclick="OThersvisible(this.id,'RegularityDiv','block');">Irregular</LISTITEM>
-                    </LISTITEMS>
-                    <FIELD id="RBRegularity1" type="RadioButtonList" label="Reason: ">
+                    <FIELD id="RBpbperinatal" header2Class="Birth_and_Development" type="RadioButtonList" label="Perinatal" required="true">
                         <PROPERTIES>
-                            <PROPERTY name="name">RBRegularity1</PROPERTY>
+                            <PROPERTY name="name">RBpbperinatal</PROPERTY>
                         </PROPERTIES>
                         <LISTITEMS>
-                            <LISTITEM value="Premenstrual Dysphoria" id="RBRegularity11" Selected="False">Premenstrual Dysphoria</LISTITEM>
-                            <LISTITEM value="Post menopausal Dysphoria" id="RBRegularity12" Selected="False">Post menopausal Dysphoria</LISTITEM>
+                            <LISTITEM value="Full Term" id="RBpbperinatal1" Selected="False">Full Term</LISTITEM>
+                            <LISTITEM value="Premature" id="RBpbperinatal2" Selected="False">Premature</LISTITEM>
+                            <LISTITEM value="Post mature" id="RBpbperinatal3" Selected="False">Post mature</LISTITEM>
+                            <LISTITEM value="Delayed" id="RBpbperinatal4" Selected="False">Delayed</LISTITEM>
                         </LISTITEMS>
                     </FIELD>
-                </FIELD>
                 
-                <FIELD id="txtLMP" header2Class="Menstrual_History" type="TextBox" label="LMP">
-                    <PROPERTIES>
-                        <PROPERTY name="id">txtLMP</PROPERTY>
-                        <PROPERTY name="name">txtLMP</PROPERTY>
-                        <PROPERTY name="class">form-control</PROPERTY>
-                        <PROPERTY name="onkeydown">return isNumericKeyStroke(event)</PROPERTY>
-                        <PROPERTY name="maxlength">3</PROPERTY>
-                        <PROPERTY name="title">Type only numbers</PROPERTY>
-                    </PROPERTIES>
-                </FIELD>
-                
-                <FIELD id="txtMenopause" header2Class="Menstrual_History" type="TextBox" label="Menopause" Backtext="Years">
-                    <PROPERTIES>
-                        <PROPERTY name="id">txtMenopause</PROPERTY>
-                        <PROPERTY name="name">txtMenopause</PROPERTY>
-                        <PROPERTY name="class">form-control</PROPERTY>
-                        <PROPERTY name="onkeydown">return isNumericKeyStroke(event)</PROPERTY>
-                        <PROPERTY name="maxlength">3</PROPERTY>
-                        <PROPERTY name="title">Type only numbers</PROPERTY>
-                    </PROPERTIES>
-                </FIELD>
-                
-                <FIELD type="Header2" label="Marital History" class="Marital_History"></FIELD>
-                
-                <FIELD id="txtDurationofMarriage" header2Class="Marital_History" type="TextBoxDDL" label="Duration of Marriage" required="true">
-                    <PROPERTIES>
-                        <PROPERTY name="id">txtDurationofMarriage</PROPERTY>
-                        <PROPERTY name="name">txtDurationofMarriage</PROPERTY>
-                        <PROPERTY name="class">form-control</PROPERTY>
-                        <PROPERTY name="onkeydown">return isNumericKeyStroke(event)</PROPERTY>
-                    </PROPERTIES>
-                    <FIELD id="DDLDurationofMarriage" type="DropDownList">
+                    <FIELD id="RBpbperinatal2" header2Class="Birth_and_Development" type="RadioButtonList" label="Perinatal2" Backcontrols="hide" Backdivid="perinatal2div" required="true">
                         <PROPERTIES>
-                            <PROPERTY name="id">DDLDurationofMarriage</PROPERTY>
-                            <PROPERTY name="name">DDLDurationofMarriage</PROPERTY>
-                            <PROPERTY name="class">form-control</PROPERTY>
+                            <PROPERTY name="name">RBpbperinatal2</PROPERTY>
                         </PROPERTIES>
                         <LISTITEMS>
-                            <LISTITEM value="Yrs" Selected="True">Yrs</LISTITEM>
-                            <LISTITEM value="Months" Selected="False">Months</LISTITEM>
-                            <LISTITEM value="Weeks" Selected="False">Weeks</LISTITEM>
-                            <LISTITEM value="Days" Selected="False">Days</LISTITEM>
+                            <LISTITEM value="Uneventful" id="RBpbperinatal21" Selected="False" onclick="OThersvisible(this.id,'perinatal2div','none');">Uneventful</LISTITEM>
+                            <LISTITEM value="Eventful" id="RBpbperinatal22" Selected="False" onclick="OThersvisible(this.id,'perinatal2div','block');">Eventful</LISTITEM>
                         </LISTITEMS>
-                    </FIELD>
-                </FIELD>
-                
-                <FIELD id="txtAgeofMarriage" header2Class="Marital_History" type="TextBoxDDL" label="Age of Marriage" required="true">
-                    <PROPERTIES>
-                        <PROPERTY name="id">txtAgeofMarriage</PROPERTY>
-                        <PROPERTY name="name">txtAgeofMarriage</PROPERTY>
-                        <PROPERTY name="class">form-control</PROPERTY>
-                        <PROPERTY name="onkeydown">return isNumericKeyStroke(event)</PROPERTY>
-                    </PROPERTIES>
-                    <FIELD id="DDLAgeofMarriage" type="DropDownList">
-                        <PROPERTIES>
-                            <PROPERTY name="id">DDLAgeofMarriage</PROPERTY>
-                            <PROPERTY name="name">DDLAgeofMarriage</PROPERTY>
-                            <PROPERTY name="class">form-control</PROPERTY>
-                        </PROPERTIES>
-                        <LISTITEMS>
-                            <LISTITEM value="Yrs" Selected="True">Yrs</LISTITEM>
-                            <LISTITEM value="Months" Selected="False">Months</LISTITEM>
-                            <LISTITEM value="Weeks" Selected="False">Weeks</LISTITEM>
-                            <LISTITEM value="Days" Selected="False">Days</LISTITEM>
-                        </LISTITEMS>
-                    </FIELD>
-                </FIELD>
-                
-                <FIELD id="RBtype" header2Class="Marital_History" type="RadioButtonList" label="Type">
-                    <PROPERTIES>
-                        <PROPERTY name="name">RBtype</PROPERTY>
-                    </PROPERTIES>
-                    <LISTITEMS>
-                        <LISTITEM value="Arrange" id="RBtype1" Selected="False">Arranged</LISTITEM>
-                        <LISTITEM value="By choice" id="RBtype2" Selected="False">By choice</LISTITEM>
-                    </LISTITEMS>
-                </FIELD>
-                
-                <FIELD id="RBmaritalsexualsatisfac" header2Class="Marital_History" type="RadioButtonList" label="Marital and Sexual satisfaction" required="true">
-                    <PROPERTIES>
-                        <PROPERTY name="name">RBmaritalsexualsatisfac</PROPERTY>
-                    </PROPERTIES>
-                    <LISTITEMS>
-                        <LISTITEM value="Statisfactory" id="RBmaritalsexualsatisfac1" Selected="False">Statisfactory</LISTITEM>
-                        <LISTITEM value="Unsatisfactory" id="RBmaritalsexualsatisfac2" Selected="False">Unsatisfactory</LISTITEM>
-                        <LISTITEM value="Neutral" id="RBmaritalsexualsatisfac3" Selected="False">Neutral</LISTITEM>
-                    </LISTITEMS>
-                </FIELD>
-                
-                <FIELD id="RBhistoryof" header2Class="Marital_History" type="RadioButtonList" label="History of">
-                    <PROPERTIES>
-                        <PROPERTY name="name">RBhistoryof</PROPERTY>
-                    </PROPERTIES>
-                    <LISTITEMS>
-                        <LISTITEM value="Seperation" id="RBhistoryof1" Selected="False">Separation</LISTITEM>
-                        <LISTITEM value="Divorce" id="RBhistoryof2" Selected="False">Divorce</LISTITEM>
-                    </LISTITEMS>
-                </FIELD>
-                
-                <FIELD id="RBknowledgeofspouse" header2Class="Marital_History" type="RadioButtonList" label="Knowledge of spouse about patient's illness prior to marriage" required="true">
-                    <PROPERTIES>
-                        <PROPERTY name="name">RBknowledgeofspouse</PROPERTY>
-                    </PROPERTIES>
-                    <LISTITEMS>
-                        <LISTITEM value="Yes" id="RBknowledgeofspouse1" Selected="False">Yes</LISTITEM>
-                        <LISTITEM value="No" id="RBknowledgeofspouse2" Selected="False">No</LISTITEM>
-                    </LISTITEMS>
-                </FIELD>
-                
-                <FIELD id="martial_history" header2Class="Marital_History" type="textareaFull" label="Notes">
-                    <PROPERTIES>
-                        <PROPERTY name="id">martial_history</PROPERTY>
-                        <PROPERTY name="name">martial_history</PROPERTY>
-                        <PROPERTY name="class">form-control</PROPERTY>
-                        <PROPERTY name="rows">6</PROPERTY>
-                    </PROPERTIES>
-                </FIELD>
-                
-                <FIELD type="Header2" label="Sexual History" class="Sexual_History"></FIELD>
-                
-                <FIELD id="RBorientationSexual" header2Class="Sexual_History" type="RadioButtonList" label="Orientation">
-                    <PROPERTIES>
-                        <PROPERTY name="name">RBorientationSexual</PROPERTY>
-                    </PROPERTIES>
-                    <LISTITEMS>
-                        <LISTITEM value="Same Sex" id="RBorientationSexual1" Selected="False">Same Sex</LISTITEM>
-                        <LISTITEM value="Opposite Sex" id="RBorientationSexual2" Selected="False">Opposite Sex</LISTITEM>
-                    </LISTITEMS>
-                </FIELD>
-                
-                <FIELD id="CBsexualfunctioning" header2Class="Sexual_History" type="CheckBoxList" label="Sexual Functioning">
-                    <PROPERTIES>
-                        <PROPERTY name="name">CBsexualfunctioning[]</PROPERTY>
-                    </PROPERTIES>
-                    <LISTITEMS>
-                        <LISTITEM value="Premarital relationships" id="CBsexualfunctioning1" Selected="False">Premarital relationships</LISTITEM>
-                        <LISTITEM value="Extra marital relationships" id="CBsexualfunctioning2" Selected="False">Extra marital relationships</LISTITEM>
-                        <LISTITEM value="Hyper sexulaity" id="CBsexualfunctioning3" Selected="False">Hyper sexuality</LISTITEM>
-                        <LISTITEM value="Hypo sexuality" id="CBsexualfunctioning4" Selected="False">Hypo sexuality</LISTITEM>
-                        <LISTITEM value="Sexual Aversion" id="CBsexualfunctioning5" Selected="False">Sexual Aversion</LISTITEM>
-                        <LISTITEM value="Loss of libido" id="CBsexualfunctioning6" Selected="False">Loss of libido</LISTITEM>
-                        <LISTITEM value="Erectile dysfunction" id="CBsexualfunctioning7" Selected="False">Erectile dysfunction</LISTITEM>
-                        <LISTITEM value="Masturbation guilt" id="CBsexualfunctioning8" Selected="False">Masturbation guilt</LISTITEM>
-                        <LISTITEM value="Premature ejaculation" id="CBsexualfunctioning9" Selected="False">Premature ejaculation</LISTITEM>
-                        <LISTITEM value="Dyspareunia" id="CBsexualfunctioning10" Selected="False">Dyspareunia</LISTITEM>
-                        <LISTITEM value="Vaginismus" id="CBsexualfunctioning11" Selected="False">Vaginismus</LISTITEM>
-                    </LISTITEMS>
-                </FIELD>
-                
-                <FIELD id="CBparaphilias" header2Class="Sexual_History" type="CheckBoxList" label="Paraphilias">
-                    <PROPERTIES>
-                        <PROPERTY name="name">CBparaphilias[]</PROPERTY>
-                    </PROPERTIES>
-                    <LISTITEMS>
-                        <LISTITEM value="Exhibitionism" id="CBparaphilias1" Selected="False">Exhibitionism</LISTITEM>
-                        <LISTITEM value="Fetishism" id="CBparaphilias2" Selected="False">Fetishism</LISTITEM>
-                        <LISTITEM value="Frotteruism" id="CBparaphilias3" Selected="False">Frotteruism</LISTITEM>
-                        <LISTITEM value="Pedophillia" id="CBparaphilias4" Selected="False">Pedophillia</LISTITEM>
-                        <LISTITEM value="Sexual Sadism" id="CBparaphilias5" Selected="False">Sexual Sadism</LISTITEM>
-                        <LISTITEM value="Sexual Machoism" id="CBparaphilias6" Selected="False">Sexual Machoism</LISTITEM>
-                        <LISTITEM value="Voyerism" id="CBparaphilias7" Selected="False">Voyerism</LISTITEM>
-                        <LISTITEM value="Transvestism" id="CBparaphilias8" Selected="False">Transvestism</LISTITEM>
-                        <LISTITEM value="GID" id="CBparaphilias9" Selected="False">GID</LISTITEM>
-                        <LISTITEM value="Bestiality" id="CBparaphilias10" Selected="False">Bestiality</LISTITEM>
-                        <LISTITEM value="Masochism" id="CBparaphilias11" Selected="False">Masochism</LISTITEM>
-                    </LISTITEMS>
-                </FIELD>
-                
-                <FIELD id="sexual_history_notes" header2Class="Sexual_History" type="textareaFull" label="Notes">
-                    <PROPERTIES>
-                        <PROPERTY name="id">sexual_history_notes</PROPERTY>
-                        <PROPERTY name="name">sexual_history_notes</PROPERTY>
-                        <PROPERTY name="class">form-control</PROPERTY>
-                        <PROPERTY name="rows">6</PROPERTY>
-                    </PROPERTIES>
-                </FIELD>
-                
-                <FIELD type="Header2" label="Substance History" class="Substance_History"></FIELD>
-                
-                <FIELD type="RadGrid" header2Class="Substance_History" ADDButton="True" ADDButtonID="RGSubsadd" AddButtonTableId="RGSubs">
-                    <PROPERTIES>
-                        <PROPERTY name="id">RGSubs</PROPERTY>
-                        <PROPERTY name="class">table table-bordered</PROPERTY>
-                    </PROPERTIES>
-                    <HEADER>
-                        <TH>Substance</TH>
-                        <TH>Duration</TH>
-                        <TH>Pattern</TH>
-                    </HEADER>
-                    <COLUMNS>
-                        <FIELD id="ddl_pb_substance" type="DropDownList">
+                        <FIELD id="txtPerinatal2" type="TextBox" label="Specify: ">
                             <PROPERTIES>
-                                <PROPERTY name="id">ddl_pb_substance</PROPERTY>
-                                <PROPERTY name="name">ddl_pb_substance</PROPERTY>
+                                <PROPERTY name="name">txtPerinatal2</PROPERTY>
+                                <PROPERTY name="id">txtPerinatal2</PROPERTY>
+                                <PROPERTY name="class">form-control</PROPERTY>
+                            </PROPERTIES>
+                        </FIELD>
+                    </FIELD>
+                
+                    <FIELD id="RBpbmajorillness" header2Class="Birth_and_Development" type="RadioButtonList" label="Major illness during infancy" Backcontrols="hide" Backdivid="RBpbmajorillnessDiv">
+                        <PROPERTIES>
+                            <PROPERTY name="name">RBpbmajorillness</PROPERTY>
+                        </PROPERTIES>
+                        <LISTITEMS>
+                            <LISTITEM value="No" id="RBpbmajorillness1" Selected="False" onclick="OThersvisible(this.id,'RBpbmajorillnessDiv','none');">No</LISTITEM>
+                            <LISTITEM value="Yes" id="RBpbmajorillness2" Selected="False" onclick="OThersvisible(this.id,'RBpbmajorillnessDiv','block');">Yes</LISTITEM>
+                        </LISTITEMS>
+                        <FIELD id="txtRBpbmajorillness" type="TextBox" label="Specify: ">
+                            <PROPERTIES>
+                                <PROPERTY name="id">txtRBpbmajorillness</PROPERTY>
+                                <PROPERTY name="name">txtRBpbmajorillness</PROPERTY>
+                                <PROPERTY name="class">form-control</PROPERTY>
+                            </PROPERTIES>
+                        </FIELD>
+                    </FIELD>
+                
+                    <FIELD id="RBpbimmunizationschedule" header2Class="Birth_and_Development" type="RadioButtonList" label="Immunization schedule">
+                        <PROPERTIES>
+                            <PROPERTY name="name">RBpbimmunizationschedule</PROPERTY>
+                        </PROPERTIES>
+                        <LISTITEMS>
+                            <LISTITEM value="Completed" id="RBpbimmunizationschedule1" Selected="False">Completed</LISTITEM>
+                            <LISTITEM value="Not Completed" id="RBpbimmunizationschedule2" Selected="False">Not Completed</LISTITEM>
+                        </LISTITEMS>
+                    </FIELD>
+                
+                    <FIELD id="RBpbdevelopmentmilestone" header2Class="Birth_and_Development" type="RadioButtonList" label="Developmental milestones" Backcontrols="hide" Backdivid="developmentmilestoneDiv" required="true">
+                        <PROPERTIES>
+                            <PROPERTY name="name">RBpbdevelopmentmilestone</PROPERTY>
+                        </PROPERTIES>
+                        <LISTITEMS>
+                            <LISTITEM value="Normal" id="RBpbdevelopmentmilestone1" Selected="False" onclick="OThersvisible(this.id,'developmentmilestoneDiv','none');">Normal</LISTITEM>
+                            <LISTITEM value="Delayed" id="RBpbdevelopmentmilestone2" Selected="False" onclick="OThersvisible(this.id,'developmentmilestoneDiv','block');">Delayed</LISTITEM>
+                        </LISTITEMS>
+                        <FIELD id="RBdevlopmentmilestonesub" type="RadioButtonList" label="Specify: " >
+                            <PROPERTIES>
+                                <PROPERTY name="name">RBdevlopmentmilestonesub</PROPERTY>
+                            </PROPERTIES>
+                            <LISTITEMS>
+                                <LISTITEM value="Motor" id="RBdevlopmentmilestonesub1" Selected="False">Motor</LISTITEM>
+                                <LISTITEM value="Adaptive" id="RBdevlopmentmilestonesub2" Selected="False">Adaptive</LISTITEM>
+                                <LISTITEM value="Speech" id="RBdevlopmentmilestonesub3" Selected="False">Speech</LISTITEM>
+                                <LISTITEM value="Social" id="RBdevlopmentmilestonesub4" Selected="False">Social</LISTITEM>
+                            </LISTITEMS>
+                        </FIELD>
+                    </FIELD>
+                
+                    <FIELD id="RBpbmajorillnessduringchild" header2Class="Birth_and_Development" type="RadioButtonList" label="Major physical illness during childhood" Backcontrols="hide" Backdivid="pbmajorillnessduringchildDiv">
+                        <PROPERTIES>
+                            <PROPERTY name="name">RBpbmajorillnessduringchild</PROPERTY>
+                        </PROPERTIES>
+                        <LISTITEMS>
+                            <LISTITEM value="No" id="RBpbmajorillnessduringchild1" Selected="False" onclick="OThersvisible(this.id,'pbmajorillnessduringchildDiv','none');">No</LISTITEM>
+                            <LISTITEM value="Yes" id="RBpbmajorillnessduringchild2" Selected="False" onclick="OThersvisible(this.id,'pbmajorillnessduringchildDiv','block');">Yes</LISTITEM>
+                        </LISTITEMS>
+                        <FIELD id="txtpbmajorillnesschild" type="TextBox" label="Specify: ">
+                            <PROPERTIES>
+                                <PROPERTY name="id">txtpbmajorillnesschild</PROPERTY>
+                                <PROPERTY name="name">txtpbmajorillnesschild</PROPERTY>
+                                <PROPERTY name="class">form-control</PROPERTY>
+                            </PROPERTIES>
+                        </FIELD>
+                    </FIELD>
+                
+                    <FIELD id="CBpbemotionalbehaviour" header2Class="Birth_and_Development" type="CheckBoxList" label="Emotional and behavioural problems during childhood" Backcontrols="hide" Backdivid="TxtpbemotionalbehaviouDiv">
+                        <PROPERTIES>
+                            <PROPERTY name="name">CBpbemotionalbehaviour[]</PROPERTY>
+                        </PROPERTIES>
+                        <LISTITEMS>
+                            <LISTITEM value="Sleep Walking" id="CBpbemotionalbehaviour1" Selected="False">Sleep Walking</LISTITEM>
+                            <LISTITEM value="Temper Tantrums" id="CBpbemotionalbehaviour2" Selected="False">Temper Tantrums</LISTITEM>
+                            <LISTITEM value="Stammering" id="CBpbemotionalbehaviour3" Selected="False">Stammering</LISTITEM>
+                            <LISTITEM value="Nail biting" id="CBpbemotionalbehaviour4" Selected="False">Nail biting</LISTITEM>
+                            <LISTITEM value="Enuresis" id="CBpbemotionalbehaviour5" Selected="False">Enuresis</LISTITEM>
+                            <LISTITEM value="Encopresis" id="CBpbemotionalbehaviour6" Selected="False">Encopresis</LISTITEM>
+                            <LISTITEM value="Thumb sucking" id="CBpbemotionalbehaviour7" Selected="False">Thumb sucking</LISTITEM>
+                            <LISTITEM value="Head banging" id="CBpbemotionalbehaviour8" Selected="False">Head banging</LISTITEM>
+                            <LISTITEM value="Nightmares" id="CBpbemotionalbehaviour9" Selected="False">Nightmares</LISTITEM>
+                            <LISTITEM value="Seperation anxiety" id="CBpbemotionalbehaviour10" Selected="False">Seperation anxiety</LISTITEM>
+                            <LISTITEM value="Conduct problems" id="CBpbemotionalbehaviour11" Selected="False">Conduct problems</LISTITEM>
+                            <LISTITEM value="Others" id="CBpbemotionalbehaviour12" Selected="False" onclick="OThersvisible(this.id,'TxtpbemotionalbehaviouDiv');">Others</LISTITEM>
+                        </LISTITEMS>
+                        <FIELD id="Txtpbemotionalbehaviou" type="TextBox" label="Notes: ">
+                            <PROPERTIES>
+                                <PROPERTY name="id">Txtpbemotionalbehaviou</PROPERTY>
+                                <PROPERTY name="class">form-control</PROPERTY>
+                                <PROPERTY name="name">Txtpbemotionalbehaviou</PROPERTY>
+                                <PROPERTY name="placeholder">Other</PROPERTY>
+                            </PROPERTIES>
+                        </FIELD>
+                    </FIELD>
+                
+                    <FIELD id="RBpbhomeatmosphere" header2Class="Birth_and_Development" type="RadioButtonList" label="Home atmosphere during childhood" Backcontrols="hide" Backdivid="pbhomeatmosphereDiv">
+                        <PROPERTIES>
+                            <PROPERTY name="name">RBpbhomeatmosphere</PROPERTY>
+                        </PROPERTIES>
+                        <LISTITEMS>
+                            <LISTITEM value="Satisfactory" id="RBpbhomeatmosphere1" Selected="False" onclick="OThersvisible(this.id,'pbhomeatmosphereDiv','none');">Satisfactory</LISTITEM>
+                            <LISTITEM value="Unsatisfactory" id="RBpbhomeatmosphere2" Selected="False" onclick="OThersvisible(this.id,'pbhomeatmosphereDiv','block');">Unsatisfactory</LISTITEM>
+                        </LISTITEMS>
+                        <FIELD id="txtpbhomeatmosphereSpcify" type="TextBox" label="Specify: ">
+                            <PROPERTIES>
+                                <PROPERTY name="id">txtpbhomeatmosphereSpcify</PROPERTY>
+                                <PROPERTY name="class">form-control</PROPERTY>
+                                <PROPERTY name="name">txtpbhomeatmosphereSpcify</PROPERTY>
+                            </PROPERTIES>
+                        </FIELD>
+                    </FIELD>
+                
+                    <FIELD id="CBpbemotionalbehaviouradole" header2Class="Birth_and_Development" type="CheckBoxList" label="Emotional and behavioural problems during adolescence" Backcontrols="hide" Backdivid="TxtpbemotionalbehaviouradoleDiv">
+                        <PROPERTIES>
+                            <PROPERTY name="name">CBpbemotionalbehaviouradole[]</PROPERTY>
+                        </PROPERTIES>
+                        <LISTITEMS>
+                            <LISTITEM value="Mood disturbances" id="CBpbemotionalbehaviouradole1" Selected="False">Mood disturbances</LISTITEM>
+                            <LISTITEM value="Substance use" id="CBpbemotionalbehaviouradole2" Selected="False">Substance use</LISTITEM>
+                            <LISTITEM value="Argumentative" id="CBpbemotionalbehaviouradole3" Selected="False">Argumentative</LISTITEM>
+                            <LISTITEM value="Inferiority" id="CBpbemotionalbehaviouradole4" Selected="False">Inferiority</LISTITEM>
+                            <LISTITEM value="Conduct problems" id="CBpbemotionalbehaviouradole5" Selected="False">Conduct problems</LISTITEM>
+                            <LISTITEM value="Others" id="CBpbemotionalbehaviouradole6" Selected="False" onclick="OThersvisible(this.id,'TxtpbemotionalbehaviouradoleDiv');">Others</LISTITEM>
+                        </LISTITEMS>
+                        <FIELD id="Txtpbemotionalbehaviouradole" type="TextBox" label="Notes: ">
+                            <PROPERTIES>
+                                <PROPERTY name="id">Txtpbemotionalbehaviouradole</PROPERTY>
+                                <PROPERTY name="class">form-control</PROPERTY>
+                                <PROPERTY name="name">Txtpbemotionalbehaviouradole</PROPERTY>
+                                <PROPERTY name="placeholder">Other</PROPERTY>
+                            </PROPERTIES>
+                        </FIELD>
+                    </FIELD>
+                
+                    <FIELD id="RBpbhomeatmosphereadole" header2Class="Birth_and_Development" type="RadioButtonList" label="Home atmosphere during adolescent" Backcontrols="hide" Backdivid="pbhomeatmosphereadoleDiv">
+                        <PROPERTIES>
+                            <PROPERTY name="name">RBpbhomeatmosphereadole</PROPERTY>
+                        </PROPERTIES>
+                        <LISTITEMS>
+                            <LISTITEM value="Satisfactory" id="RBpbhomeatmosphereadole1" Selected="False" onclick="OThersvisible(this.id,'pbhomeatmosphereadoleDiv','none');">Satisfactory</LISTITEM>
+                            <LISTITEM value="Unsatisfactory" id="RBpbhomeatmosphereadole2" Selected="False" onclick="OThersvisible(this.id,'pbhomeatmosphereadoleDiv','block');">Unsatisfactory</LISTITEM>
+                        </LISTITEMS>
+                        <FIELD id="txthomeatmosphereadoleSpecify" type="TextBox" label="Specify: ">
+                            <PROPERTIES>
+                                <PROPERTY name="id">txthomeatmosphereadoleSpecify</PROPERTY>
+                                <PROPERTY name="class">form-control</PROPERTY>
+                                <PROPERTY name="name">txthomeatmosphereadoleSpecify</PROPERTY>
+                            </PROPERTIES>
+                        </FIELD>
+                    </FIELD>
+                
+                    <FIELD id="RBpbparentallack" header2Class="Birth_and_Development" type="RadioButtonList" label="Parental Lack" Backcontrols="hide" Backdivid="parentallackDiv" required="true">
+                        <PROPERTIES>
+                            <PROPERTY name="name">RBpbparentallack</PROPERTY>
+                        </PROPERTIES>
+                        <LISTITEMS>
+                            <LISTITEM value="Mother" id="RBpbparentallack1" Selected="False" onclick="OThersvisible(this.id,'parentallackDiv','block');">Mother</LISTITEM>
+                            <LISTITEM value="Father" id="RBpbparentallack2" Selected="False" onclick="OThersvisible(this.id,'parentallackDiv','block');">Father</LISTITEM>
+                        </LISTITEMS>
+                        <FIELD id="RBparentallackreason" type="RadioButtonList" label="Reason: ">
+                            <PROPERTIES>
+                                <PROPERTY name="name">RBparentallackreason</PROPERTY>
+                            </PROPERTIES>
+                            <LISTITEMS>
+                                <LISTITEM value="Dead" id="RBparentallackreason1" Selected="False">Dead</LISTITEM>
+                                <LISTITEM value="Seperate" id="RBparentallackreason2" Selected="False">Seperate</LISTITEM>
+                            </LISTITEMS>
+                        </FIELD>
+                    </FIELD>
+                
+                    <FIELD id="birthdevelopmentnotes" header2Class="Birth_and_Development" type="textareaFull" label="Notes">
+                        <PROPERTIES>
+                            <PROPERTY name="id">birthdevelopmentnotes</PROPERTY>
+                            <PROPERTY name="name">birthdevelopmentnotes</PROPERTY>
+                            <PROPERTY name="class">form-control</PROPERTY>
+                            <PROPERTY name="rows">6</PROPERTY>
+                        </PROPERTIES>
+                    </FIELD>
+                </FIELD>
+                
+                <FIELD type="PanelBar" label="Education History" target_div="education_history">
+                    <FIELD type="Header2" label="Education History" class="Education_History"></FIELD>
+                
+                    <FIELD id="RBpbbreakstudy" header2Class="Education_History" type="RadioButtonList" label="Break in Studies" Backcontrols="hide" Backdivid="breakstudyDiv" required="true">
+                        <PROPERTIES>
+                            <PROPERTY name="name">RBpbbreakstudy</PROPERTY>
+                        </PROPERTIES>
+                        <LISTITEMS>
+                            <LISTITEM value="No" id="RBpbbreakstudy1" Selected="False" onclick="OThersvisible(this.id,'breakstudyDiv','none');">No</LISTITEM>
+                            <LISTITEM value="Yes" id="RBpbbreakstudy2" Selected="False" onclick="OThersvisible(this.id,'breakstudyDiv','block');">Yes</LISTITEM>
+                        </LISTITEMS>
+                        <FIELD id="txtbreakstudyreason" type="TextBox" label="Reason: ">
+                            <PROPERTIES>
+                                <PROPERTY name="id">txtbreakstudyreason</PROPERTY>
+                                <PROPERTY name="class">form-control</PROPERTY>
+                                <PROPERTY name="name">txtbreakstudyreason</PROPERTY>
+                                <PROPERTY name="placeholder">Reason</PROPERTY>
+                            </PROPERTIES>
+                        </FIELD>
+                    </FIELD>
+                
+                    <FIELD id="RBpbfrechangeschool" header2Class="Education_History" type="RadioButtonList" label="Frequent change of school" Backcontrols="hide" Backdivid="frechangeschoolDiv" required="true">
+                        <PROPERTIES>
+                            <PROPERTY name="name">RBpbfrechangeschool</PROPERTY>
+                        </PROPERTIES>
+                        <LISTITEMS>
+                            <LISTITEM value="No" id="RBpbfrechangeschool1" Selected="False" onclick="OThersvisible(this.id,'frechangeschoolDiv','none');">No</LISTITEM>
+                            <LISTITEM value="Yes" id="RBpbfrechangeschool2" Selected="False" onclick="OThersvisible(this.id,'frechangeschoolDiv','block');">Yes</LISTITEM>
+                        </LISTITEMS>
+                        <FIELD id="txtfrechangeschool" type="TextBox" label="Reason: ">
+                            <PROPERTIES>
+                                <PROPERTY name="id">txtfrechangeschool</PROPERTY>
+                                <PROPERTY name="name">txtfrechangeschool</PROPERTY>
+                                <PROPERTY name="class">form-control</PROPERTY>
+                                <PROPERTY name="placeholder">Reason</PROPERTY>
+                            </PROPERTIES>
+                        </FIELD>
+                    </FIELD>
+                
+                    <FIELD id="RBpbtypeofschool" header2Class="Education_History" type="RadioButtonList" label="Type of school/college">
+                        <PROPERTIES>
+                            <PROPERTY name="name">RBpbtypeofschool</PROPERTY>
+                        </PROPERTIES>
+                        <LISTITEMS>
+                            <LISTITEM value="Urban" id="RBpbtypeofschool1" Selected="False">Urban</LISTITEM>
+                            <LISTITEM value="Rural" id="RBpbtypeofschool2" Selected="False">Rural</LISTITEM>
+                            <LISTITEM value="Residental" id="RBpbtypeofschool3" Selected="False">Residential</LISTITEM>
+                            <LISTITEM value="Day scholar" id="RBpbtypeofschool4" Selected="False">Day scholar</LISTITEM>
+                        </LISTITEMS>
+                    </FIELD>
+                
+                    <FIELD id="RBpbmedium" header2Class="Education_History" type="RadioButtonList" label="Medium" Backcontrols="hide" Backdivid="mediumDiv">
+                        <PROPERTIES>
+                            <PROPERTY name="name">RBpbmedium</PROPERTY>
+                        </PROPERTIES>
+                        <LISTITEMS>
+                            <LISTITEM value="Tamil" id="RBpbmedium1" Selected="False" onclick="OThersvisible(this.id,'mediumDiv','none');">Tamil</LISTITEM>
+                            <LISTITEM value="English" id="RBpbmedium2" Selected="False" onclick="OThersvisible(this.id,'mediumDiv','none');">English</LISTITEM>
+                            <LISTITEM value="Others" id="RBpbmedium3" Selected="False" onclick="OThersvisible(this.id,'mediumDiv','block');">Others</LISTITEM>
+                        </LISTITEMS>
+                        <FIELD id="txtMedium" type="TextBox" label="Specify: ">
+                            <PROPERTIES>
+                                <PROPERTY name="id">txtMedium</PROPERTY>
+                                <PROPERTY name="name">txtMedium</PROPERTY>
+                                <PROPERTY name="class">form-control</PROPERTY>
+                            </PROPERTIES>
+                        </FIELD>
+                    </FIELD>
+                
+                    <FIELD id="RBpbacademicperfor" header2Class="Education_History" type="RadioButtonList" label="Academic performance" required="true">
+                        <PROPERTIES>
+                            <PROPERTY name="name">RBpbacademicperfor</PROPERTY>
+                        </PROPERTIES>
+                        <LISTITEMS>
+                            <LISTITEM value="Good" id="RBpbacademicperfor1" Selected="False">Good</LISTITEM>
+                            <LISTITEM value="Average" id="RBpbacademicperfor2" Selected="False">Average</LISTITEM>
+                            <LISTITEM value="Below average" id="RBpbacademicperfor3" Selected="False">Below average</LISTITEM>
+                            <LISTITEM value="Poor" id="RBpbacademicperfor4" Selected="False">Poor</LISTITEM>
+                        </LISTITEMS>
+                    </FIELD>
+                
+                    <FIELD id="RBpbteacherrelation" header2Class="Education_History" type="RadioButtonList" label="Relationship with teachers" Backcontrols="hide" Backdivid="teacherrelationDiv" required="true">
+                        <PROPERTIES>
+                            <PROPERTY name="name">RBpbteacherrelation</PROPERTY>
+                        </PROPERTIES>
+                        <LISTITEMS>
+                            <LISTITEM value="Satisfactory" id="RBpbteacherrelation1" Selected="False" onclick="OThersvisible(this.id,'teacherrelationDiv','none');">Satisfactory</LISTITEM>
+                            <LISTITEM value="Unsatisfactory" id="RBpbteacherrelation2" Selected="False" onclick="OThersvisible(this.id,'teacherrelationDiv','block');">Unsatisfactory</LISTITEM>
+                        </LISTITEMS>
+                        <FIELD id="txtteacherrelationspecify" type="TextBox" label="Specify: ">
+                            <PROPERTIES>
+                                <PROPERTY name="id">txtteacherrelationspecify</PROPERTY>
+                                <PROPERTY name="name">txtteacherrelationspecify</PROPERTY>
+                                <PROPERTY name="class">form-control</PROPERTY>
+                            </PROPERTIES>
+                        </FIELD>
+                    </FIELD>
+                
+                    <FIELD id="RBpbstudentrelation" header2Class="Education_History" type="RadioButtonList" label="Relationship with students" Backcontrols="hide" Backdivid="studentrelationDiv" required="true">
+                        <PROPERTIES>
+                            <PROPERTY name="name">RBpbstudentrelation</PROPERTY>
+                        </PROPERTIES>
+                        <LISTITEMS>
+                            <LISTITEM value="Satisfactory" id="RBpbstudentrelation1" Selected="False" onclick="OThersvisible(this.id,'studentrelationDiv','none');">Satisfactory</LISTITEM>
+                            <LISTITEM value="Unsatisfactory" id="RBpbstudentrelation2" Selected="False" onclick="OThersvisible(this.id,'studentrelationDiv','block');">Unsatisfactory</LISTITEM>
+                        </LISTITEMS>
+                        <FIELD id="txtstudentrelationspecify" type="TextBox" label="Specify: ">
+                            <PROPERTIES>
+                                <PROPERTY name="id">txtstudentrelationspecify</PROPERTY>
+                                <PROPERTY name="name">txtstudentrelationspecify</PROPERTY>
+                                <PROPERTY name="class">form-control</PROPERTY>
+                            </PROPERTIES>
+                        </FIELD>
+                    </FIELD>
+                
+                    <FIELD id="educational_history_notes" header2Class="Education_History" type="textareaFull" label="Notes">
+                        <PROPERTIES>
+                            <PROPERTY name="id">educational_history_notes</PROPERTY>
+                            <PROPERTY name="name">educational_history_notes</PROPERTY>
+                            <PROPERTY name="class">form-control</PROPERTY>
+                            <PROPERTY name="rows">6</PROPERTY>
+                        </PROPERTIES>
+                    </FIELD>
+                </FIELD>
+                
+                <FIELD type="PanelBar" label="Occupational History" target_div="occupational_history">
+                    <FIELD type="Header2" label="Occupational History" class="Occupational_History"></FIELD>
+                
+                    <FIELD id="DDLstartedworking" header2Class="Occupational_History" type="DropDownList" label="Started working at" Backtext=" Years">
+                        <PROPERTIES>
+                            <PROPERTY name="id">DDLstartedworking</PROPERTY>
+                            <PROPERTY name="name">DDLstartedworking</PROPERTY>
+                            <PROPERTY name="class">form-control</PROPERTY>
+                        </PROPERTIES>
+                        <LISTITEMS>
+                            <LISTITEM value="" Selected="False">--Select--</LISTITEM>
+                            <LISTITEM value="10" Selected="False">10</LISTITEM>
+                            <LISTITEM value="11" Selected="False">11</LISTITEM>
+                            <LISTITEM value="12" Selected="False">12</LISTITEM>
+                            <LISTITEM value="13" Selected="False">13</LISTITEM>
+                            <LISTITEM value="14" Selected="False">14</LISTITEM>
+                            <LISTITEM value="15" Selected="False">15</LISTITEM>
+                            <LISTITEM value="16" Selected="False">16</LISTITEM>
+                            <LISTITEM value="17" Selected="False">17</LISTITEM>
+                            <LISTITEM value="18" Selected="False">18</LISTITEM>
+                            <LISTITEM value="19" Selected="False">19</LISTITEM>
+                            <LISTITEM value="20" Selected="False">20</LISTITEM>
+                            <LISTITEM value="21" Selected="False">21</LISTITEM>
+                            <LISTITEM value="22" Selected="False">22</LISTITEM>
+                            <LISTITEM value="23" Selected="False">23</LISTITEM>
+                            <LISTITEM value="24" Selected="False">24</LISTITEM>
+                            <LISTITEM value="25" Selected="False">25</LISTITEM>
+                            <LISTITEM value="26" Selected="False">26</LISTITEM>
+                            <LISTITEM value="27" Selected="False">27</LISTITEM>
+                            <LISTITEM value="28" Selected="False">28</LISTITEM>
+                            <LISTITEM value="29" Selected="False">29</LISTITEM>
+                            <LISTITEM value="30" Selected="False">30</LISTITEM>
+                            <LISTITEM value="31" Selected="False">31</LISTITEM>
+                            <LISTITEM value="32" Selected="False">32</LISTITEM>
+                            <LISTITEM value="33" Selected="False">33</LISTITEM>
+                            <LISTITEM value="34" Selected="False">34</LISTITEM>
+                            <LISTITEM value="35" Selected="False">35</LISTITEM>
+                            <LISTITEM value="36" Selected="False">36</LISTITEM>
+                            <LISTITEM value="37" Selected="False">37</LISTITEM>
+                            <LISTITEM value="38" Selected="False">38</LISTITEM>
+                            <LISTITEM value="39" Selected="False">39</LISTITEM>
+                            <LISTITEM value="40" Selected="False">40</LISTITEM>
+                        </LISTITEMS>
+                    </FIELD>
+                
+                    <FIELD id="RBpbworkrecord" header2Class="Occupational_History" type="RadioButtonList" label="Work Record" Backcontrols="hide" Backdivid="workrecordDiv" required="true">
+                        <PROPERTIES>
+                            <PROPERTY name="name">RBpbworkrecord</PROPERTY>
+                        </PROPERTIES>
+                        <LISTITEMS>
+                            <LISTITEM value="Satisfactory" id="RBpbworkrecord1" Selected="False" onclick="OThersvisible(this.id,'workrecordDiv','none');">Satisfactory</LISTITEM>
+                            <LISTITEM value="Unsatisfactory" id="RBpbworkrecord2" Selected="False" onclick="OThersvisible(this.id,'workrecordDiv','block');">Unsatisfactory</LISTITEM>
+                        </LISTITEMS>
+                        <FIELD id="txtworkrecordspecify" type="TextBox" label="Specify: ">
+                            <PROPERTIES>
+                                <PROPERTY name="id">txtworkrecordspecify</PROPERTY>
+                                <PROPERTY name="name">txtworkrecordspecify</PROPERTY>
+                                <PROPERTY name="class">form-control</PROPERTY>
+                            </PROPERTIES>
+                        </FIELD>
+                    </FIELD>
+                
+                    <FIELD id="RBfreqchangeofjob" header2Class="Occupational_History" type="RadioButtonList" label="Frequent change of jobs" Backcontrols="hide" Backdivid="freqchangeofjobDiv" required="true">
+                        <PROPERTIES>
+                            <PROPERTY name="name">RBfreqchangeofjob</PROPERTY>
+                        </PROPERTIES>
+                        <LISTITEMS>
+                            <LISTITEM value="No" id="RBfreqchangeofjob1" Selected="False" onclick="OThersvisible(this.id,'freqchangeofjobDiv','none');">No</LISTITEM>
+                            <LISTITEM value="Yes" id="RBfreqchangeofjob2" Selected="False" onclick="OThersvisible(this.id,'freqchangeofjobDiv','block');">Yes</LISTITEM>
+                        </LISTITEMS>
+                        <FIELD id="CBreasonforchange" type="CheckBoxList" label="Reason for change: ">
+                            <PROPERTIES>
+                                <PROPERTY name="name">CBreasonforchange[]</PROPERTY>
+                            </PROPERTIES>
+                            <LISTITEMS>
+                                <LISTITEM value="Better" id="CBreasonforchange1" Selected="False">Better</LISTITEM>
+                                <LISTITEM value="Opportunity" id="CBreasonforchange2" Selected="False">Opportunity</LISTITEM>
+                                <LISTITEM value="Better Income" id="CBreasonforchange3" Selected="False">Better Income</LISTITEM>
+                                <LISTITEM value="Termination" id="CBreasonforchange4" Selected="False">Termination</LISTITEM>
+                                <LISTITEM value="Illness" id="CBreasonforchange5" Selected="False">Illness</LISTITEM>
+                                <LISTITEM value="Others" id="CBreasonforchange6" Selected="False" onclick="OThersvisible(this.id,'txtreasonforchangeother');">Others</LISTITEM>
+                            </LISTITEMS>
+                            <FIELD id="txtreasonforchangeother" type="TextBox">
+                                <PROPERTIES>
+                                    <PROPERTY name="id">txtreasonforchangeother</PROPERTY>
+                                    <PROPERTY name="class">form-control hide</PROPERTY>
+                                    <PROPERTY name="name">txtreasonforchangeother</PROPERTY>
+                                    <PROPERTY name="placeholder">Others</PROPERTY>
+                                </PROPERTIES>
+                            </FIELD>
+                        </FIELD>
+                    </FIELD>
+                
+                    <FIELD id="occupational_history_notes" header2Class="Occupational_History" type="textareaFull" label="Notes">
+                        <PROPERTIES>
+                            <PROPERTY name="id">occupational_history_notes</PROPERTY>
+                            <PROPERTY name="name">occupational_history_notes</PROPERTY>
+                            <PROPERTY name="class">form-control</PROPERTY>
+                            <PROPERTY name="rows">6</PROPERTY>
+                        </PROPERTIES>
+                    </FIELD>
+                </FIELD>
+                
+                <FIELD type="PanelBar" label="Menstrual History" target_div="menstrual_history">
+                    <FIELD type="Header2" label="Menstrual History" class="Menstrual_History"></FIELD>
+                
+                    <FIELD id="txtMenarche" header2Class="Menstrual_History" type="TextBox" label="Menarche" Backtext="Years">
+                        <PROPERTIES>
+                            <PROPERTY name="id">txtMenarche</PROPERTY>
+                            <PROPERTY name="name">txtMenarche</PROPERTY>
+                            <PROPERTY name="class">form-control</PROPERTY>
+                        </PROPERTIES>
+                    </FIELD>
+                
+                    <FIELD id="RBRegularity" header2Class="Menstrual_History" type="RadioButtonList" label="Regularity" Backcontrols="hide" Backdivid="RegularityDiv">
+                        <PROPERTIES>
+                            <PROPERTY name="name">RBRegularity</PROPERTY>
+                        </PROPERTIES>
+                        <LISTITEMS>
+                            <LISTITEM value="Regular" id="RBRegularity1" Selected="False" onclick="OThersvisible(this.id,'RegularityDiv','none');">Regular</LISTITEM>
+                            <LISTITEM value="Irregular" id="RBRegularity2" Selected="False" onclick="OThersvisible(this.id,'RegularityDiv','block');">Irregular</LISTITEM>
+                        </LISTITEMS>
+                        <FIELD id="RBRegularity1" type="RadioButtonList" label="Reason: ">
+                            <PROPERTIES>
+                                <PROPERTY name="name">RBRegularity1</PROPERTY>
+                            </PROPERTIES>
+                            <LISTITEMS>
+                                <LISTITEM value="Premenstrual Dysphoria" id="RBRegularity11" Selected="False">Premenstrual Dysphoria</LISTITEM>
+                                <LISTITEM value="Post menopausal Dysphoria" id="RBRegularity12" Selected="False">Post menopausal Dysphoria</LISTITEM>
+                            </LISTITEMS>
+                        </FIELD>
+                    </FIELD>
+                
+                    <FIELD id="txtLMP" header2Class="Menstrual_History" type="TextBox" label="LMP">
+                        <PROPERTIES>
+                            <PROPERTY name="id">txtLMP</PROPERTY>
+                            <PROPERTY name="name">txtLMP</PROPERTY>
+                            <PROPERTY name="class">form-control</PROPERTY>
+                            <PROPERTY name="onkeydown">return isNumericKeyStroke(event)</PROPERTY>
+                            <PROPERTY name="maxlength">3</PROPERTY>
+                            <PROPERTY name="title">Type only numbers</PROPERTY>
+                        </PROPERTIES>
+                    </FIELD>
+                
+                    <FIELD id="txtMenopause" header2Class="Menstrual_History" type="TextBox" label="Menopause" Backtext="Years">
+                        <PROPERTIES>
+                            <PROPERTY name="id">txtMenopause</PROPERTY>
+                            <PROPERTY name="name">txtMenopause</PROPERTY>
+                            <PROPERTY name="class">form-control</PROPERTY>
+                            <PROPERTY name="onkeydown">return isNumericKeyStroke(event)</PROPERTY>
+                            <PROPERTY name="maxlength">3</PROPERTY>
+                            <PROPERTY name="title">Type only numbers</PROPERTY>
+                        </PROPERTIES>
+                    </FIELD>
+                </FIELD>
+                
+                <FIELD type="PanelBar" label="Marital History" target_div="marital_history">
+                    <FIELD type="Header2" label="Marital History" class="Marital_History"></FIELD>
+                
+                    <FIELD id="txtDurationofMarriage" header2Class="Marital_History" type="TextBoxDDL" label="Duration of Marriage" required="true">
+                        <PROPERTIES>
+                            <PROPERTY name="id">txtDurationofMarriage</PROPERTY>
+                            <PROPERTY name="name">txtDurationofMarriage</PROPERTY>
+                            <PROPERTY name="class">form-control</PROPERTY>
+                            <PROPERTY name="onkeydown">return isNumericKeyStroke(event)</PROPERTY>
+                        </PROPERTIES>
+                        <FIELD id="DDLDurationofMarriage" type="DropDownList">
+                            <PROPERTIES>
+                                <PROPERTY name="id">DDLDurationofMarriage</PROPERTY>
+                                <PROPERTY name="name">DDLDurationofMarriage</PROPERTY>
                                 <PROPERTY name="class">form-control</PROPERTY>
                             </PROPERTIES>
                             <LISTITEMS>
-                                <LISTITEM value="" Selected="False">--Select--</LISTITEM>
-                                <LISTITEM value="Smoking" Selected="False">Smoking</LISTITEM>
-                                <LISTITEM value="Alcohol" Selected="False">Alcohol</LISTITEM>
-                                <LISTITEM value="Cannabis" Selected="False">Cannabis</LISTITEM>
-                                <LISTITEM value="Solvents/Inhalants" Selected="False">Solvents/Inhalants</LISTITEM>
-                                <LISTITEM value="Others" Selected="False">Others</LISTITEM>
+                                <LISTITEM value="Yrs" Selected="True">Yrs</LISTITEM>
+                                <LISTITEM value="Months" Selected="False">Months</LISTITEM>
+                                <LISTITEM value="Weeks" Selected="False">Weeks</LISTITEM>
+                                <LISTITEM value="Days" Selected="False">Days</LISTITEM>
                             </LISTITEMS>
                         </FIELD>
-                        
-                        <FIELD id="txtPBDuration" type="TextBoxDDL">
+                    </FIELD>
+                
+                    <FIELD id="txtAgeofMarriage" header2Class="Marital_History" type="TextBoxDDL" label="Age of Marriage" required="true">
+                        <PROPERTIES>
+                            <PROPERTY name="id">txtAgeofMarriage</PROPERTY>
+                            <PROPERTY name="name">txtAgeofMarriage</PROPERTY>
+                            <PROPERTY name="class">form-control</PROPERTY>
+                            <PROPERTY name="onkeydown">return isNumericKeyStroke(event)</PROPERTY>
+                        </PROPERTIES>
+                        <FIELD id="DDLAgeofMarriage" type="DropDownList">
                             <PROPERTIES>
-                                <PROPERTY name="id">txtPBDuration</PROPERTY>
-                                <PROPERTY name="onkeydown">return isNumericKeyStroke(event)</PROPERTY>
-                                <PROPERTY name="name">txtPBDuration</PROPERTY>
+                                <PROPERTY name="id">DDLAgeofMarriage</PROPERTY>
+                                <PROPERTY name="name">DDLAgeofMarriage</PROPERTY>
                                 <PROPERTY name="class">form-control</PROPERTY>
                             </PROPERTIES>
-                            <FIELD id="DDLPBDuration" type="DropDownList">
+                            <LISTITEMS>
+                                <LISTITEM value="Yrs" Selected="True">Yrs</LISTITEM>
+                                <LISTITEM value="Months" Selected="False">Months</LISTITEM>
+                                <LISTITEM value="Weeks" Selected="False">Weeks</LISTITEM>
+                                <LISTITEM value="Days" Selected="False">Days</LISTITEM>
+                            </LISTITEMS>
+                        </FIELD>
+                    </FIELD>
+                
+                    <FIELD id="RBtype" header2Class="Marital_History" type="RadioButtonList" label="Type">
+                        <PROPERTIES>
+                            <PROPERTY name="name">RBtype</PROPERTY>
+                        </PROPERTIES>
+                        <LISTITEMS>
+                            <LISTITEM value="Arrange" id="RBtype1" Selected="False">Arranged</LISTITEM>
+                            <LISTITEM value="By choice" id="RBtype2" Selected="False">By choice</LISTITEM>
+                        </LISTITEMS>
+                    </FIELD>
+                
+                    <FIELD id="RBmaritalsexualsatisfac" header2Class="Marital_History" type="RadioButtonList" label="Marital and Sexual satisfaction" required="true">
+                        <PROPERTIES>
+                            <PROPERTY name="name">RBmaritalsexualsatisfac</PROPERTY>
+                        </PROPERTIES>
+                        <LISTITEMS>
+                            <LISTITEM value="Statisfactory" id="RBmaritalsexualsatisfac1" Selected="False">Statisfactory</LISTITEM>
+                            <LISTITEM value="Unsatisfactory" id="RBmaritalsexualsatisfac2" Selected="False">Unsatisfactory</LISTITEM>
+                            <LISTITEM value="Neutral" id="RBmaritalsexualsatisfac3" Selected="False">Neutral</LISTITEM>
+                        </LISTITEMS>
+                    </FIELD>
+                
+                    <FIELD id="RBhistoryof" header2Class="Marital_History" type="RadioButtonList" label="History of">
+                        <PROPERTIES>
+                            <PROPERTY name="name">RBhistoryof</PROPERTY>
+                        </PROPERTIES>
+                        <LISTITEMS>
+                            <LISTITEM value="Seperation" id="RBhistoryof1" Selected="False">Separation</LISTITEM>
+                            <LISTITEM value="Divorce" id="RBhistoryof2" Selected="False">Divorce</LISTITEM>
+                        </LISTITEMS>
+                    </FIELD>
+                
+                    <FIELD id="RBknowledgeofspouse" header2Class="Marital_History" type="RadioButtonList" label="Knowledge of spouse about patient's illness prior to marriage" required="true">
+                        <PROPERTIES>
+                            <PROPERTY name="name">RBknowledgeofspouse</PROPERTY>
+                        </PROPERTIES>
+                        <LISTITEMS>
+                            <LISTITEM value="Yes" id="RBknowledgeofspouse1" Selected="False">Yes</LISTITEM>
+                            <LISTITEM value="No" id="RBknowledgeofspouse2" Selected="False">No</LISTITEM>
+                        </LISTITEMS>
+                    </FIELD>
+                
+                    <FIELD id="martial_history" header2Class="Marital_History" type="textareaFull" label="Notes">
+                        <PROPERTIES>
+                            <PROPERTY name="id">martial_history</PROPERTY>
+                            <PROPERTY name="name">martial_history</PROPERTY>
+                            <PROPERTY name="class">form-control</PROPERTY>
+                            <PROPERTY name="rows">6</PROPERTY>
+                        </PROPERTIES>
+                    </FIELD>
+                </FIELD>
+                
+                <FIELD type="PanelBar" label="Sexual History" target_div="sexual_history">
+                    <FIELD type="Header2" label="Sexual History" class="Sexual_History"></FIELD>
+                
+                    <FIELD id="RBorientationSexual" header2Class="Sexual_History" type="RadioButtonList" label="Orientation">
+                        <PROPERTIES>
+                            <PROPERTY name="name">RBorientationSexual</PROPERTY>
+                        </PROPERTIES>
+                        <LISTITEMS>
+                            <LISTITEM value="Same Sex" id="RBorientationSexual1" Selected="False">Same Sex</LISTITEM>
+                            <LISTITEM value="Opposite Sex" id="RBorientationSexual2" Selected="False">Opposite Sex</LISTITEM>
+                        </LISTITEMS>
+                    </FIELD>
+                
+                    <FIELD id="CBsexualfunctioning" header2Class="Sexual_History" type="CheckBoxList" label="Sexual Functioning">
+                        <PROPERTIES>
+                            <PROPERTY name="name">CBsexualfunctioning[]</PROPERTY>
+                        </PROPERTIES>
+                        <LISTITEMS>
+                            <LISTITEM value="Premarital relationships" id="CBsexualfunctioning1" Selected="False">Premarital relationships</LISTITEM>
+                            <LISTITEM value="Extra marital relationships" id="CBsexualfunctioning2" Selected="False">Extra marital relationships</LISTITEM>
+                            <LISTITEM value="Hyper sexulaity" id="CBsexualfunctioning3" Selected="False">Hyper sexuality</LISTITEM>
+                            <LISTITEM value="Hypo sexuality" id="CBsexualfunctioning4" Selected="False">Hypo sexuality</LISTITEM>
+                            <LISTITEM value="Sexual Aversion" id="CBsexualfunctioning5" Selected="False">Sexual Aversion</LISTITEM>
+                            <LISTITEM value="Loss of libido" id="CBsexualfunctioning6" Selected="False">Loss of libido</LISTITEM>
+                            <LISTITEM value="Erectile dysfunction" id="CBsexualfunctioning7" Selected="False">Erectile dysfunction</LISTITEM>
+                            <LISTITEM value="Masturbation guilt" id="CBsexualfunctioning8" Selected="False">Masturbation guilt</LISTITEM>
+                            <LISTITEM value="Premature ejaculation" id="CBsexualfunctioning9" Selected="False">Premature ejaculation</LISTITEM>
+                            <LISTITEM value="Dyspareunia" id="CBsexualfunctioning10" Selected="False">Dyspareunia</LISTITEM>
+                            <LISTITEM value="Vaginismus" id="CBsexualfunctioning11" Selected="False">Vaginismus</LISTITEM>
+                        </LISTITEMS>
+                    </FIELD>
+                
+                    <FIELD id="CBparaphilias" header2Class="Sexual_History" type="CheckBoxList" label="Paraphilias">
+                        <PROPERTIES>
+                            <PROPERTY name="name">CBparaphilias[]</PROPERTY>
+                        </PROPERTIES>
+                        <LISTITEMS>
+                            <LISTITEM value="Exhibitionism" id="CBparaphilias1" Selected="False">Exhibitionism</LISTITEM>
+                            <LISTITEM value="Fetishism" id="CBparaphilias2" Selected="False">Fetishism</LISTITEM>
+                            <LISTITEM value="Frotteruism" id="CBparaphilias3" Selected="False">Frotteruism</LISTITEM>
+                            <LISTITEM value="Pedophillia" id="CBparaphilias4" Selected="False">Pedophillia</LISTITEM>
+                            <LISTITEM value="Sexual Sadism" id="CBparaphilias5" Selected="False">Sexual Sadism</LISTITEM>
+                            <LISTITEM value="Sexual Machoism" id="CBparaphilias6" Selected="False">Sexual Machoism</LISTITEM>
+                            <LISTITEM value="Voyerism" id="CBparaphilias7" Selected="False">Voyerism</LISTITEM>
+                            <LISTITEM value="Transvestism" id="CBparaphilias8" Selected="False">Transvestism</LISTITEM>
+                            <LISTITEM value="GID" id="CBparaphilias9" Selected="False">GID</LISTITEM>
+                            <LISTITEM value="Bestiality" id="CBparaphilias10" Selected="False">Bestiality</LISTITEM>
+                            <LISTITEM value="Masochism" id="CBparaphilias11" Selected="False">Masochism</LISTITEM>
+                        </LISTITEMS>
+                    </FIELD>
+                
+                    <FIELD id="sexual_history_notes" header2Class="Sexual_History" type="textareaFull" label="Notes">
+                        <PROPERTIES>
+                            <PROPERTY name="id">sexual_history_notes</PROPERTY>
+                            <PROPERTY name="name">sexual_history_notes</PROPERTY>
+                            <PROPERTY name="class">form-control</PROPERTY>
+                            <PROPERTY name="rows">6</PROPERTY>
+                        </PROPERTIES>
+                    </FIELD>
+                </FIELD>
+                
+                <FIELD type="PanelBar" label="Substance History" target_div="substance_history">
+                    <FIELD type="Header2" label="Substance History" class="Substance_History"></FIELD>
+                
+                    <FIELD type="RadGrid" header2Class="Substance_History" ADDButton="True" ADDButtonID="RGSubsadd" AddButtonTableId="RGSubs">
+                        <PROPERTIES>
+                            <PROPERTY name="id">RGSubs</PROPERTY>
+                            <PROPERTY name="class">table table-bordered</PROPERTY>
+                        </PROPERTIES>
+                        <HEADER>
+                            <TH>Substance</TH>
+                            <TH>Duration</TH>
+                            <TH>Pattern</TH>
+                        </HEADER>
+                        <COLUMNS>
+                            <FIELD id="ddl_pb_substance" type="DropDownList">
                                 <PROPERTIES>
-                                    <PROPERTY name="id">DDLPBDuration</PROPERTY>
-                                    <PROPERTY name="name">DDLPBDuration</PROPERTY>
+                                    <PROPERTY name="id">ddl_pb_substance</PROPERTY>
+                                    <PROPERTY name="name">ddl_pb_substance</PROPERTY>
                                     <PROPERTY name="class">form-control</PROPERTY>
                                 </PROPERTIES>
                                 <LISTITEMS>
-                                    <LISTITEM value="Yrs" Selected="False">Yrs</LISTITEM>
-                                    <LISTITEM value="Months" Selected="False">Months</LISTITEM>
-                                    <LISTITEM value="Weeks" Selected="False">Weeks</LISTITEM>
-                                    <LISTITEM value="Days" Selected="False">Days</LISTITEM>
+                                    <LISTITEM value="" Selected="False">--Select--</LISTITEM>
+                                    <LISTITEM value="Smoking" Selected="False">Smoking</LISTITEM>
+                                    <LISTITEM value="Alcohol" Selected="False">Alcohol</LISTITEM>
+                                    <LISTITEM value="Cannabis" Selected="False">Cannabis</LISTITEM>
+                                    <LISTITEM value="Solvents/Inhalants" Selected="False">Solvents/Inhalants</LISTITEM>
+                                    <LISTITEM value="Others" Selected="False">Others</LISTITEM>
                                 </LISTITEMS>
                             </FIELD>
-                        </FIELD>
                         
-                        <FIELD id="CBPBpattern" type="CheckBoxList">
-                            <PROPERTIES>
-                                <PROPERTY name="name">CBPBpattern[]</PROPERTY>
-                            </PROPERTIES>
-                            <LISTITEMS>
-                                <LISTITEM value="Use" id="CBPBpattern1" Selected="False">Use</LISTITEM>
-                                <LISTITEM value="Abuse" id="CBPBpattern2" Selected="False">Abuse</LISTITEM>
-                                <LISTITEM value="Dependence" id="CBPBpattern3" Selected="False">Dependence</LISTITEM>
-                            </LISTITEMS>
-                        </FIELD>
-                    </COLUMNS>
+                            <FIELD id="txtPBDuration" type="TextBoxDDL">
+                                <PROPERTIES>
+                                    <PROPERTY name="id">txtPBDuration</PROPERTY>
+                                    <PROPERTY name="onkeydown">return isNumericKeyStroke(event)</PROPERTY>
+                                    <PROPERTY name="name">txtPBDuration</PROPERTY>
+                                    <PROPERTY name="class">form-control</PROPERTY>
+                                </PROPERTIES>
+                                <FIELD id="DDLPBDuration" type="DropDownList">
+                                    <PROPERTIES>
+                                        <PROPERTY name="id">DDLPBDuration</PROPERTY>
+                                        <PROPERTY name="name">DDLPBDuration</PROPERTY>
+                                        <PROPERTY name="class">form-control</PROPERTY>
+                                    </PROPERTIES>
+                                    <LISTITEMS>
+                                        <LISTITEM value="Yrs" Selected="False">Yrs</LISTITEM>
+                                        <LISTITEM value="Months" Selected="False">Months</LISTITEM>
+                                        <LISTITEM value="Weeks" Selected="False">Weeks</LISTITEM>
+                                        <LISTITEM value="Days" Selected="False">Days</LISTITEM>
+                                    </LISTITEMS>
+                                </FIELD>
+                            </FIELD>
+                        
+                            <FIELD id="CBPBpattern" type="CheckBoxList">
+                                <PROPERTIES>
+                                    <PROPERTY name="name">CBPBpattern[]</PROPERTY>
+                                </PROPERTIES>
+                                <LISTITEMS>
+                                    <LISTITEM value="Use" id="CBPBpattern1" Selected="False">Use</LISTITEM>
+                                    <LISTITEM value="Abuse" id="CBPBpattern2" Selected="False">Abuse</LISTITEM>
+                                    <LISTITEM value="Dependence" id="CBPBpattern3" Selected="False">Dependence</LISTITEM>
+                                </LISTITEMS>
+                            </FIELD>
+                        </COLUMNS>
+                    </FIELD>
+                
+                    <FIELD id="substance_history_notes" header2Class="Substance_History" type="textareaFull" label="Notes">
+                        <PROPERTIES>
+                            <PROPERTY name="id">substance_history_notes</PROPERTY>
+                            <PROPERTY name="name">substance_history_notes</PROPERTY>
+                            <PROPERTY name="class">form-control</PROPERTY>
+                            <PROPERTY name="rows">6</PROPERTY>
+                        </PROPERTIES>
+                    </FIELD>
                 </FIELD>
                 
-                <FIELD id="substance_history_notes" header2Class="Substance_History" type="textareaFull" label="Notes">
-                    <PROPERTIES>
-                        <PROPERTY name="id">substance_history_notes</PROPERTY>
-                        <PROPERTY name="name">substance_history_notes</PROPERTY>
-                        <PROPERTY name="class">form-control</PROPERTY>
-                        <PROPERTY name="rows">6</PROPERTY>
-                    </PROPERTIES>
-                </FIELD>
+                <FIELD type="PanelBar" label="Premorbid Personality" target_div="premorbid_personality">
+                    <FIELD type="Header2" label="Premorbid Personality" class="Premorbid_Personality"></FIELD>
                 
-                <FIELD type="Header2" label="Premorbid Personality" class="Premorbid_Personality"></FIELD>
+                    <FIELD id="CBattitudetoself" header2Class="Premorbid_Personality" type="CheckBoxList" label="Attitude to self" required="true">
+                        <PROPERTIES>
+                            <PROPERTY name="name">CBattitudetoself[]</PROPERTY>
+                        </PROPERTIES>
+                        <LISTITEMS>
+                            <LISTITEM value="Ego centric" id="CBattitudetoself1" Selected="False">Ego centric</LISTITEM>
+                            <LISTITEM value="Selfish" id="CBattitudetoself2" Selected="False">Selfish</LISTITEM>
+                            <LISTITEM value="Dramatizing" id="CBattitudetoself3" Selected="False">Dramatizing</LISTITEM>
+                            <LISTITEM value="Critical" id="CBattitudetoself4" Selected="False">Critical</LISTITEM>
+                            <LISTITEM value="Self-consicious" id="CBattitudetoself5" Selected="False">Self-conscious</LISTITEM>
+                            <LISTITEM value="Satisfied" id="CBattitudetoself6" Selected="False">Satisfied</LISTITEM>
+                            <LISTITEM value="Over concerned" id="CBattitudetoself7" Selected="False">Over concerned</LISTITEM>
+                        </LISTITEMS>
+                    </FIELD>
                 
-                <FIELD id="CBattitudetoself" header2Class="Premorbid_Personality" type="CheckBoxList" label="Attitude to self" required="true">
-                    <PROPERTIES>
-                        <PROPERTY name="name">CBattitudetoself[]</PROPERTY>
-                    </PROPERTIES>
-                    <LISTITEMS>
-                        <LISTITEM value="Ego centric" id="CBattitudetoself1" Selected="False">Ego centric</LISTITEM>
-                        <LISTITEM value="Selfish" id="CBattitudetoself2" Selected="False">Selfish</LISTITEM>
-                        <LISTITEM value="Dramatizing" id="CBattitudetoself3" Selected="False">Dramatizing</LISTITEM>
-                        <LISTITEM value="Critical" id="CBattitudetoself4" Selected="False">Critical</LISTITEM>
-                        <LISTITEM value="Self-consicious" id="CBattitudetoself5" Selected="False">Self-conscious</LISTITEM>
-                        <LISTITEM value="Satisfied" id="CBattitudetoself6" Selected="False">Satisfied</LISTITEM>
-                        <LISTITEM value="Over concerned" id="CBattitudetoself7" Selected="False">Over concerned</LISTITEM>
-                    </LISTITEMS>
-                </FIELD>
+                    <FIELD id="CBmoralreligiousattitude" header2Class="Premorbid_Personality" type="CheckBoxList" label="Moral and Religious attitude">
+                        <PROPERTIES>
+                            <PROPERTY name="name">CBmoralreligiousattitude[]</PROPERTY>
+                        </PROPERTIES>
+                        <LISTITEMS>
+                            <LISTITEM value="Evidence of rigidity" id="CBmoralreligiousattitude1" Selected="False">Evidence of rigidity</LISTITEM>
+                            <LISTITEM value="Compliance" id="CBmoralreligiousattitude2" Selected="False">Compliance</LISTITEM>
+                            <LISTITEM value="Permissiveness" id="CBmoralreligiousattitude3" Selected="False">Permissiveness</LISTITEM>
+                            <LISTITEM value="Over conscientiousness" id="CBmoralreligiousattitude4" Selected="False">Over conscientiousness</LISTITEM>
+                            <LISTITEM value="Rebellious" id="CBmoralreligiousattitude5" Selected="False">Rebellious</LISTITEM>
+                        </LISTITEMS>
+                    </FIELD>
                 
-                <FIELD id="CBmoralreligiousattitude" header2Class="Premorbid_Personality" type="CheckBoxList" label="Moral and Religious attitude">
-                    <PROPERTIES>
-                        <PROPERTY name="name">CBmoralreligiousattitude[]</PROPERTY>
-                    </PROPERTIES>
-                    <LISTITEMS>
-                        <LISTITEM value="Evidence of rigidity" id="CBmoralreligiousattitude1" Selected="False">Evidence of rigidity</LISTITEM>
-                        <LISTITEM value="Compliance" id="CBmoralreligiousattitude2" Selected="False">Compliance</LISTITEM>
-                        <LISTITEM value="Permissiveness" id="CBmoralreligiousattitude3" Selected="False">Permissiveness</LISTITEM>
-                        <LISTITEM value="Over conscientiousness" id="CBmoralreligiousattitude4" Selected="False">Over conscientiousness</LISTITEM>
-                        <LISTITEM value="Rebellious" id="CBmoralreligiousattitude5" Selected="False">Rebellious</LISTITEM>
-                    </LISTITEMS>
-                </FIELD>
+                    <FIELD id="CBsocialrelationships" header2Class="Premorbid_Personality" type="CheckBoxList" label="Social relationships">
+                        <PROPERTIES>
+                            <PROPERTY name="name">CBsocialrelationships[]</PROPERTY>
+                        </PROPERTIES>
+                        <LISTITEMS>
+                            <LISTITEM value="Leader" id="CBsocialrelationships1" Selected="False">Leader</LISTITEM>
+                            <LISTITEM value="Follower" id="CBsocialrelationships2" Selected="False">Follower</LISTITEM>
+                            <LISTITEM value="Organiser" id="CBsocialrelationships3" Selected="False">Organiser</LISTITEM>
+                            <LISTITEM value="Aggressive" id="CBsocialrelationships4" Selected="False">Aggressive</LISTITEM>
+                            <LISTITEM value="Submissive" id="CBsocialrelationships5" Selected="False">Submissive</LISTITEM>
+                            <LISTITEM value="Ambitious" id="CBsocialrelationships6" Selected="False">Ambitious</LISTITEM>
+                            <LISTITEM value="Adjustable" id="CBsocialrelationships7" Selected="False">Adjustable</LISTITEM>
+                            <LISTITEM value="Independent" id="CBsocialrelationships8" Selected="False">Independent</LISTITEM>
+                        </LISTITEMS>
+                    </FIELD>
                 
-                <FIELD id="CBsocialrelationships" header2Class="Premorbid_Personality" type="CheckBoxList" label="Social relationships">
-                    <PROPERTIES>
-                        <PROPERTY name="name">CBsocialrelationships[]</PROPERTY>
-                    </PROPERTIES>
-                    <LISTITEMS>
-                        <LISTITEM value="Leader" id="CBsocialrelationships1" Selected="False">Leader</LISTITEM>
-                        <LISTITEM value="Follower" id="CBsocialrelationships2" Selected="False">Follower</LISTITEM>
-                        <LISTITEM value="Organiser" id="CBsocialrelationships3" Selected="False">Organiser</LISTITEM>
-                        <LISTITEM value="Aggressive" id="CBsocialrelationships4" Selected="False">Aggressive</LISTITEM>
-                        <LISTITEM value="Submissive" id="CBsocialrelationships5" Selected="False">Submissive</LISTITEM>
-                        <LISTITEM value="Ambitious" id="CBsocialrelationships6" Selected="False">Ambitious</LISTITEM>
-                        <LISTITEM value="Adjustable" id="CBsocialrelationships7" Selected="False">Adjustable</LISTITEM>
-                        <LISTITEM value="Independent" id="CBsocialrelationships8" Selected="False">Independent</LISTITEM>
-                    </LISTITEMS>
-                </FIELD>
+                    <FIELD id="CBmood"  header2Class="Premorbid_Personality" type="CheckBoxList" label="Mood">
+                        <PROPERTIES>
+                            <PROPERTY name="name">CBmood[]</PROPERTY>
+                        </PROPERTIES>
+                        <LISTITEMS>
+                            <LISTITEM value="Stable" id="CBmood1" Selected="False">Stable</LISTITEM>
+                            <LISTITEM value="Mood swings" id="CBmood2" Selected="False">Mood swings</LISTITEM>
+                            <LISTITEM value="Anxious" id="CBmood3" Selected="False">Anxious</LISTITEM>
+                            <LISTITEM value="Irritable" id="CBmood4" Selected="False">Irritable</LISTITEM>
+                            <LISTITEM value="Submissive" id="CBmood5" Selected="False">Worrying</LISTITEM>
+                            <LISTITEM value="Cheerful" id="CBmood6" Selected="False">Cheerful</LISTITEM>
+                            <LISTITEM value="Glomy" id="CBmood7" Selected="False">Glomy</LISTITEM>
+                        </LISTITEMS>
+                    </FIELD>
                 
-                <FIELD id="CBmood"  header2Class="Premorbid_Personality" type="CheckBoxList" label="Mood">
-                    <PROPERTIES>
-                        <PROPERTY name="name">CBmood[]</PROPERTY>
-                    </PROPERTIES>
-                    <LISTITEMS>
-                        <LISTITEM value="Stable" id="CBmood1" Selected="False">Stable</LISTITEM>
-                        <LISTITEM value="Mood swings" id="CBmood2" Selected="False">Mood swings</LISTITEM>
-                        <LISTITEM value="Anxious" id="CBmood3" Selected="False">Anxious</LISTITEM>
-                        <LISTITEM value="Irritable" id="CBmood4" Selected="False">Irritable</LISTITEM>
-                        <LISTITEM value="Submissive" id="CBmood5" Selected="False">Worrying</LISTITEM>
-                        <LISTITEM value="Cheerful" id="CBmood6" Selected="False">Cheerful</LISTITEM>
-                        <LISTITEM value="Glomy" id="CBmood7" Selected="False">Glomy</LISTITEM>
-                    </LISTITEMS>
-                </FIELD>
+                    <FIELD id="CBleisuretimespent" header2Class="Premorbid_Personality" type="CheckBoxList" label="Leisure time spent">
+                        <PROPERTIES>
+                            <PROPERTY name="name">CBleisuretimespent[]</PROPERTY>
+                        </PROPERTIES>
+                        <LISTITEMS>
+                            <LISTITEM value="Alone" id="CBleisuretimespent1" Selected="False">Alone</LISTITEM>
+                            <LISTITEM value="With friends" id="CBleisuretimespent2" Selected="False">With friends</LISTITEM>
+                            <LISTITEM value="With family" id="CBleisuretimespent3" Selected="False">With family</LISTITEM>
+                        </LISTITEMS>
+                    </FIELD>
                 
-                <FIELD id="CBleisuretimespent" header2Class="Premorbid_Personality" type="CheckBoxList" label="Leisure time spent">
-                    <PROPERTIES>
-                        <PROPERTY name="name">CBleisuretimespent[]</PROPERTY>
-                    </PROPERTIES>
-                    <LISTITEMS>
-                        <LISTITEM value="Alone" id="CBleisuretimespent1" Selected="False">Alone</LISTITEM>
-                        <LISTITEM value="With friends" id="CBleisuretimespent2" Selected="False">With friends</LISTITEM>
-                        <LISTITEM value="With family" id="CBleisuretimespent3" Selected="False">With family</LISTITEM>
-                    </LISTITEMS>
-                </FIELD>
-                
-                <FIELD id="premorbid_personality_notes" header2Class="Premorbid_Personality" type="textareaFull">
-                    <PROPERTIES>
-                        <PROPERTY name="id">premorbid_personality_notes</PROPERTY>
-                        <PROPERTY name="name">premorbid_personality_notes</PROPERTY>
-                        <PROPERTY name="class">form-control</PROPERTY>
-                        <PROPERTY name="rows">6</PROPERTY>
-                    </PROPERTIES>
+                    <FIELD id="premorbid_personality_notes" header2Class="Premorbid_Personality" type="textareaFull">
+                        <PROPERTIES>
+                            <PROPERTY name="id">premorbid_personality_notes</PROPERTY>
+                            <PROPERTY name="name">premorbid_personality_notes</PROPERTY>
+                            <PROPERTY name="class">form-control</PROPERTY>
+                            <PROPERTY name="rows">6</PROPERTY>
+                        </PROPERTIES>
+                    </FIELD>
                 </FIELD>
             </FIELD>
             

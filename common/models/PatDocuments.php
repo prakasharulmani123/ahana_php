@@ -45,6 +45,14 @@ class PatDocuments extends RActiveRecord {
     public $treatment_history = false;
     public $family_history = false;
     public $personal_history = false;
+    public $birth_and_development = false;
+    public $education_history = false;
+    public $occupational_history = false;
+    public $menstrual_history = false;
+    public $marital_history = false;
+    public $sexual_history = false;
+    public $substance_history = false;
+    public $premorbid_personality = false;
     public $mental_status_examination = false;
     //Treatment History Mandatory Fields
     public $rb_pb_treatmenthistory;
@@ -125,13 +133,25 @@ class PatDocuments extends RActiveRecord {
             [['RBtypeoffamily', 'RBtypeofmarriage'], 'required', 'when' => function($model) {
             return $model->family_history == 'true';
         }],
-            [['RBpbprenatal', 'RBpbperinatal', 'RBpbperinatal2', 'RBpbdevelopmentmilestone', 'RBpbparentallack', 'RBpbbreakstudy', 'RBpbfrechangeschool', 'RBpbacademicperfor', 'RBpbteacherrelation', 'RBpbstudentrelation', 'RBpbworkrecord', 'RBfreqchangeofjob', 'txtDurationofMarriage', 'txtAgeofMarriage', 'RBmaritalsexualsatisfac', 'RBknowledgeofspouse', 'CBattitudetoself'], 'required', 'when' => function($model) {
-            return $model->personal_history == 'true';
+            [['RBpbprenatal', 'RBpbperinatal', 'RBpbperinatal2', 'RBpbdevelopmentmilestone', 'RBpbparentallack'], 'required', 'when' => function($model) {
+            return $model->birth_and_development == 'true';
+        }],
+            [['RBpbbreakstudy', 'RBpbfrechangeschool', 'RBpbacademicperfor', 'RBpbteacherrelation', 'RBpbstudentrelation'], 'required', 'when' => function($model) {
+            return $model->education_history == 'true';
+        }],
+            [['RBpbworkrecord', 'RBfreqchangeofjob'], 'required', 'when' => function($model) {
+            return $model->occupational_history == 'true';
+        }],
+            [['txtDurationofMarriage', 'txtAgeofMarriage', 'RBmaritalsexualsatisfac', 'RBknowledgeofspouse'], 'required', 'when' => function($model) {
+            return $model->marital_history == 'true';
+        }],
+            [['CBattitudetoself'], 'required', 'when' => function($model) {
+            return $model->premorbid_personality == 'true';
         }],
             [['RBAppearance', 'RBlevelofgrooming', 'RBlevelofcleanliness', 'RBeyetoeyecontact', 'RBrapport', 'CBPsychomotorActivity', 'RBReactiontime', 'RBtempo', 'RBvolume', 'RBtone', 'CBstreamform', 'RBQuality', 'RBrangeandreactivity', 'txtSubjectively', 'txtObjectively', 'RBAttension', 'RBConcentration', 'RBOrientation', 'RBImmediate', 'RBRecent', 'RBRemote', 'RBIntelligence', 'RBAbstraction', 'RBPersonal', 'RBSocial', 'RBTest', 'DDLInsight', 'RBKnowledgeaboutmentalillness', 'RBAttitudeillness'], 'required', 'when' => function($model) {
             return $model->mental_status_examination == 'true';
         }],
-            [['created_at', 'modified_at', 'deleted_at', 'treatment_history', 'family_history', 'personal_history', 'mental_status_examination', 'rb_pb_treatmenthistory', 'RBtypeoffamily', 'RBtypeofmarriage', 'RBpbprenatal', 'RBpbperinatal', 'RBpbperinatal2', 'RBpbdevelopmentmilestone', 'RBpbparentallack', 'RBpbbreakstudy', 'RBpbfrechangeschool', 'RBpbacademicperfor', 'RBpbteacherrelation', 'RBpbstudentrelation', 'RBpbworkrecord', 'RBfreqchangeofjob', 'txtDurationofMarriage', 'txtAgeofMarriage', 'RBmaritalsexualsatisfac', 'RBknowledgeofspouse', 'CBattitudetoself', 'RBAppearance', 'RBlevelofgrooming', 'RBlevelofcleanliness', 'RBeyetoeyecontact', 'RBrapport', 'CBPsychomotorActivity', 'RBReactiontime', 'RBtempo', 'RBvolume', 'RBtone', 'CBstreamform', 'RBQuality', 'RBrangeandreactivity', 'txtSubjectively', 'txtObjectively', 'RBAttension', 'RBConcentration', 'RBOrientation', 'memory', 'RBImmediate', 'RBRecent', 'RBRemote', 'RBIntelligence', 'RBAbstraction', 'judgement', 'RBPersonal', 'RBSocial', 'RBTest', 'DDLInsight', 'RBKnowledgeaboutmentalillness', 'RBAttitudeillness'], 'safe'],
+            [['created_at', 'modified_at', 'deleted_at', 'treatment_history', 'family_history', 'personal_history', 'birth_and_development', 'education_history', 'occupational_history', 'menstrual_history', 'marital_history', 'sexual_history', 'substance_history', 'premorbid_personality', 'mental_status_examination', 'rb_pb_treatmenthistory', 'RBtypeoffamily', 'RBtypeofmarriage', 'RBpbprenatal', 'RBpbperinatal', 'RBpbperinatal2', 'RBpbdevelopmentmilestone', 'RBpbparentallack', 'RBpbbreakstudy', 'RBpbfrechangeschool', 'RBpbacademicperfor', 'RBpbteacherrelation', 'RBpbstudentrelation', 'RBpbworkrecord', 'RBfreqchangeofjob', 'txtDurationofMarriage', 'txtAgeofMarriage', 'RBmaritalsexualsatisfac', 'RBknowledgeofspouse', 'CBattitudetoself', 'RBAppearance', 'RBlevelofgrooming', 'RBlevelofcleanliness', 'RBeyetoeyecontact', 'RBrapport', 'CBPsychomotorActivity', 'RBReactiontime', 'RBtempo', 'RBvolume', 'RBtone', 'CBstreamform', 'RBQuality', 'RBrangeandreactivity', 'txtSubjectively', 'txtObjectively', 'RBAttension', 'RBConcentration', 'RBOrientation', 'memory', 'RBImmediate', 'RBRecent', 'RBRemote', 'RBIntelligence', 'RBAbstraction', 'judgement', 'RBPersonal', 'RBSocial', 'RBTest', 'DDLInsight', 'RBKnowledgeaboutmentalillness', 'RBAttitudeillness'], 'safe'],
         ];
     }
 
