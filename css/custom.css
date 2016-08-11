@@ -255,12 +255,12 @@ video {
 }
 
 .wrapper {
-  padding: 5px;
+    padding: 5px;
 }
 
 .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
-  padding: 6px 8px;
-  line-height: 15px;
+    padding: 6px 8px;
+    line-height: 15px;
 }
 
 .in-patient-table label.i-checks{
@@ -280,15 +280,15 @@ out-patient-table .table > thead > tr > th label.i-checks{
 }
 
 .panel-heading {
-  padding: 4px 15px;
+    padding: 4px 15px;
 }
 
 .panel {
-  margin-bottom: 10px;
+    margin-bottom: 10px;
 }
 
 .panel-body {
-  padding: 7px;
+    padding: 7px;
 }
 
 .billing-panel .form-group
@@ -301,17 +301,17 @@ out-patient-table .table > thead > tr > th label.i-checks{
 }
 
 .form-horizontal .form-inline .form-group {
-  margin-left: 0px !important;
-  margin-right: 0px !important;
+    margin-left: 0px !important;
+    margin-right: 0px !important;
 }
 
 .form-horizontal .form-inline .form-group {
-  float: none;
-  width: auto;
+    float: none;
+    width: auto;
 }
 
 .form-horizontal .form-group .col-sm-9 {
-  padding-right: 8px;
+    padding-right: 8px;
 }
 
 #notes .text-xs{
@@ -328,4 +328,34 @@ out-patient-table .table > thead > tr > th label.i-checks{
 
 .patient-search-result li.selected {
     background-color: lightgray;   
+}
+
+.modalload
+{
+    position: fixed;
+    z-index: 999;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    background-color: Black;
+    filter: alpha(opacity=60);
+    opacity: 0.6;
+    -moz-opacity: 0.8;
+}
+.center
+{
+    z-index: 1000;
+    margin: 300px auto;
+    padding: 10px;
+    width: 60px;
+    background-color: White;
+    border-radius: 10px;
+    filter: alpha(opacity=100);
+    opacity: 1;
+    -moz-opacity: 1;
+}
+.center img
+{
+    height: 40px;
+    width: 40px;
 }

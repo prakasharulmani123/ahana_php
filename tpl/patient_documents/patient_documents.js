@@ -164,7 +164,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                         $scope.xml = pat_doc_response.result.document_xml;
                         $scope.encounter = {encounter_id: pat_doc_response.result.encounter_id};
                         $scope.isLoading = false;
-                        
+
                         $scope.startAutoSave();
                     });
                 }
@@ -380,15 +380,27 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                 $scope.panel_bars.splice(index, 1);
             }
 
-            $scope.panel_bars.push({div: next_div.attr('id'), opened: !next_div.is(":visible")});
+            var is_opened = !next_div.is(":visible");
+
+            $scope.panel_bars.push({div: next_div.attr('id'), opened: is_opened});
+
+            if (is_opened) {
+                var i_tag = $(this).find('i');
+                $(i_tag).removeClass("fa-angle-right").addClass("fa-angle-down");
+            } else {
+                var i_tag = $(this).find('i');
+                $(i_tag).removeClass("fa-angle-down").addClass("fa-angle-right");
+            }
         });
 
         $("body").on("click", ".addMore", function () {
+            $scope.spinnerbar('show');
             var button_id = $(this).attr('id');
             var table_id = $(this).data('table-id');
             var rowCount = $('#' + table_id + ' tbody  tr').length;
 
-            $scope.page_offest = $(this).offset();
+            var firstMsg = $('#' + table_id).find("tr:last");
+            var curOffset = firstMsg.offset().top - $(document).scrollTop();
 
             _data = $('#xmlform').serialize() + '&' + $.param({
                 'encounter_id': $scope.encounter.encounter_id,
@@ -413,14 +425,28 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                             $timeout(function () {
                                 angular.forEach($scope.panel_bars, function (bar) {
                                     if (bar.opened) {
-                                        $('#' + bar.div).toggleClass('collapse in').attr('aria-expanded', true).removeAttr("style");
+                                        $('#' + bar.div)
+                                                .siblings('.panel-heading')
+                                                .find('i')
+                                                .removeClass("fa-angle-right")
+                                                .addClass("fa-angle-down");
+
+                                        $('#' + bar.div)
+                                                .toggleClass('collapse in')
+                                                .attr('aria-expanded', true)
+                                                .removeAttr("style");
                                     } else {
-                                        $('#' + bar.div).toggleClass('collapse').attr('aria-expanded', false);
+                                        $('#' + bar.div)
+                                                .toggleClass('collapse')
+                                                .attr('aria-expanded', false);
                                     }
                                 });
-                                $('html').scrollTop($scope.page_offest.top);
+                                var firstMsg = $('#' + table_id).find("tr:last");
+                                $(document).scrollTop(firstMsg.offset().top - curOffset);
+                                $scope.spinnerbar('hide');
                             }, 500);
                         } else {
+                            $scope.spinnerbar('hide');
                             $scope.errorData = response.data.message;
                             $anchorScroll();
                         }

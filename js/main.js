@@ -138,6 +138,14 @@ angular.module('app')
                         $('.save-future').attr('disabled', false).html("Save & Future Appointment");
                     }
                 }
+                
+                $scope.spinnerbar = function(mode){
+                    if (mode == 'show') {
+                        $('.modalload').removeClass("hide").addClass("show");
+                    } else if (mode == 'hide') {
+                        $('.modalload').removeClass("show").addClass("hide");
+                    }
+                }
 
 
                 function isSmartDevice($window)
