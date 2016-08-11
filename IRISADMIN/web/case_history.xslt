@@ -529,6 +529,7 @@
                                                         <span>
                                                             <xsl:value-of select="@label"></xsl:value-of>
                                                         </span>
+                                                        <i class="pull-right fa fa-angle-right font-bold"></i>
                                                     </a>
                                                 </h4>
                                             </div>
@@ -543,6 +544,7 @@
                                                                             <span>
                                                                                 <xsl:value-of select="@label"></xsl:value-of>
                                                                             </span>
+                                                                            <i class="pull-right fa fa-angle-right font-bold"></i>
                                                                         </a>
                                                                     </h4>
                                                                 </div>
