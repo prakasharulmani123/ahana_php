@@ -1,4 +1,4 @@
-app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll', '$http', '$state', '$filter', '$modal', '$log', '$timeout', 'IO_BARCODE_TYPES', 'toaster', function ($rootScope, $scope, $anchorScroll, $http, $state, $filter, $modal, $log, $timeout, IO_BARCODE_TYPES, toaster) {
+app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll', '$http', '$state', '$filter', '$modal', '$log', '$timeout', 'IO_BARCODE_TYPES', 'toaster', 'PrescriptionService', function ($rootScope, $scope, $anchorScroll, $http, $state, $filter, $modal, $log, $timeout, IO_BARCODE_TYPES, toaster, PrescriptionService) {
 
         $scope.app.settings.patientTopBar = true;
         $scope.app.settings.patientSideMenu = true;
@@ -37,6 +37,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
         $scope.$watch('enc.selected.encounter_id', function (newValue, oldValue) {
             if (newValue != '' && typeof newValue != 'undefined') {
+                PrescriptionService.setPatientId($scope.patientObj.patient_id);
                 $scope.loadPrevPrescriptionsList();
                 $scope.loadSideMenu();
                 $scope.$emit('encounter_id', newValue);
@@ -280,7 +281,9 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         angular.extend(items, {is_favourite: 1});
                     }
 
-                    $scope.data.prescriptionItems.push(items);
+                    PrescriptionService.addPrescriptionItem(items);
+                    $scope.data.prescriptionItems = PrescriptionService.getPrescriptionItems();
+
                     $scope.addData = {};
 
                     $timeout(function () {
@@ -320,7 +323,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                             angular.extend(items, {is_favourite: 1});
                         }
 
-                        $scope.data.prescriptionItems.push(items);
+                        PrescriptionService.addPrescriptionItem(items);
+                        $scope.data.prescriptionItems = PrescriptionService.getPrescriptionItems();
                     }
                 });
 
@@ -494,8 +498,10 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         }
 
         $scope.removeItem = function (item) {
-            var index = $scope.data.prescriptionItems.indexOf(item);
-            $scope.data.prescriptionItems.splice(index, 1);
+            PrescriptionService.deletePrescriptionItem(item);
+            $scope.data.prescriptionItems = PrescriptionService.getPrescriptionItems();
+//            var index = $scope.data.prescriptionItems.indexOf(item);
+//            $scope.data.prescriptionItems.splice(index, 1);
         }
 
         $scope.loadRecurringPrescription = function (enc_id) {
@@ -642,32 +648,39 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                         });
 
                                         if (typeof date == 'undefined') {
-                                            angular.forEach($scope.rowCollection[0].items, function (item) {
-                                                items = {
-                                                    'product_id': item.product_id,
-                                                    'product_name': item.product.full_name,
-                                                    'generic_id': item.generic_id,
-                                                    'generic_name': item.generic_name,
-                                                    'drug_class_id': item.drug_class_id,
-                                                    'drug_name': item.drug_name,
-                                                    'route': item.route_name,
-                                                    'frequency': item.frequency_name,
-                                                    'number_of_days': item.number_of_days,
-                                                    'is_favourite': 0,
-                                                    'route_id': item.route_id,
-                                                    'description_routes': item.product.description_routes,
-                                                    'presc_date': moment().format('YYYY-MM-DD HH:mm:ss'),
-                                                    'price': item.product.latest_price,
-                                                    'total': $scope.calculate_price(item.frequency_name, item.number_of_days, item.product.latest_price),
-                                                };
-                                                var fav = $filter('filter')($scope.child.favourites, {product_id: item.product_id});
+                                            var typed_prescription = PrescriptionService.getPrescriptionItems();
+                                            if (typed_prescription.length > 0) {
+                                                $scope.data.prescriptionItems = typed_prescription;
+                                            } else {
+                                                angular.forEach($scope.rowCollection[0].items, function (item) {
+                                                    items = {
+                                                        'product_id': item.product_id,
+                                                        'product_name': item.product.full_name,
+                                                        'generic_id': item.generic_id,
+                                                        'generic_name': item.generic_name,
+                                                        'drug_class_id': item.drug_class_id,
+                                                        'drug_name': item.drug_name,
+                                                        'route': item.route_name,
+                                                        'frequency': item.frequency_name,
+                                                        'number_of_days': item.number_of_days,
+                                                        'is_favourite': 0,
+                                                        'route_id': item.route_id,
+                                                        'description_routes': item.product.description_routes,
+                                                        'presc_date': moment().format('YYYY-MM-DD HH:mm:ss'),
+                                                        'price': item.product.latest_price,
+                                                        'total': $scope.calculate_price(item.frequency_name, item.number_of_days, item.product.latest_price),
+                                                    };
+                                                    var fav = $filter('filter')($scope.child.favourites, {product_id: item.product_id});
 
-                                                if (fav.length > 0) {
-                                                    angular.extend(items, {is_favourite: 1});
-                                                }
+                                                    if (fav.length > 0) {
+                                                        angular.extend(items, {is_favourite: 1});
+                                                    }
 
-                                                $scope.data.prescriptionItems.push(items);
-                                            });
+                                                    PrescriptionService.addPrescriptionItem(items);
+                                                });
+                                                $scope.data.prescriptionItems = PrescriptionService.getPrescriptionItems();
+                                            }
+
                                         }
                                     }
 
@@ -677,7 +690,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                     $scope.checkboxes = {'checked': false, items: []};
                                     $scope.previousPresSelectedItems = [];
                                     $scope.previousPresSelected = 0;
-                                    
+
                                     $scope.$broadcast('refreshDatepickers');
 
                                 })
@@ -839,54 +852,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             angular.forEach($scope.checkboxes.items, function (item) {
                 $scope.previousPresSelectedItems.push(item.row);
             });
-
             $scope.previousPresSelected = $scope.previousPresSelectedItems.length;
-
-//            product_exists = $filter('filter')($scope.presSelected.items, {product_id: row.product_id});
-//            if ($('#prevpres_' + pres_key + '_' + key).is(':checked')) {
-//                $('#prevpres_' + pres_key + '_' + key).closest('tr').addClass('selected_row');
-//
-//                $('.tr_prevprescheckbox').not('.tr_prevprescheckbox_' + pres_key).each(function () {
-//                    $(this).removeClass('selected_row');
-//                });
-//
-//                if (product_exists.length == 0) {
-//                    $scope.presSelected.items.push({
-//                        product_id: row.product_id,
-//                        product_details: row
-//                    });
-//                }
-//            } else {
-//                $('#prevpres_' + pres_key + '_' + key).closest('tr').removeClass('selected_row');
-//                if (product_exists.length > 0) {
-//                    $scope.presSelected.items.splice($scope.presSelected.items.indexOf(product_exists[0]), 1);
-//                }
-//            }
         }
-
-//        $scope.moreOptions = function (pres_key, key, row) {
-//            angular.forEach($scope.displayedCollection, function (value, parent_key) {
-//                tot_selected = 0;
-//
-//                if (parent_key != pres_key)
-//                    value.selected = '0';
-//
-//                if (parent_key == pres_key)
-//                    value.selected = '1';
-//
-//                angular.forEach(value.items, function (row, key) {
-//                    if (parent_key != pres_key)
-//                        row.selected = '0';
-//
-//                    if (row.selected == '1')
-//                        tot_selected++;
-//                });
-//
-//                if (tot_selected == 0)
-//                    value.selected = '0';
-//            });
-//            $scope.prepareMoreOptions(pres_key, key, row);
-//        }
-
 
     }]);
