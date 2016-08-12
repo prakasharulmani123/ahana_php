@@ -12,10 +12,10 @@ function PrescriptionService($http, $cookieStore, $rootScope, $window, $localSto
             if(prescription_patient_id){
                 if(prescription_patient_id != id){
                     items.length = 0;
-                    prescription_patient_id = id
+                    prescription_patient_id = id;
                 }
             } else {
-                prescription_patient_id = id
+                prescription_patient_id = id;
             }
         },
         getPrescriptionItems: function () {
