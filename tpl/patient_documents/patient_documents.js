@@ -4,17 +4,14 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
         $scope.app.settings.patientSideMenu = true;
         $scope.app.settings.patientContentClass = 'app-content patient_content ';
         $scope.app.settings.patientFooterClass = 'app-footer';
-
         $scope.xml = '';
         $scope.xslt = '';
         $scope.data = {};
         $scope.encounter = {};
-
         //Documents Index Page
         $scope.loadPatDocumentsList = function () {
             $scope.isLoading = true;
             $scope.rowCollection = [];
-
             $http.get($rootScope.IRISOrgServiceUrl + '/patientdocuments/getpatientdocuments?patient_id=' + $state.params.id)
                     .success(function (documents) {
                         $scope.isLoading = false;
@@ -24,7 +21,6 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                         $scope.errorData = "An Error has occured while loading patient document!";
                     });
         };
-
         // Check patient have active encounter
         $scope.isPatientHaveActiveEncounter = function (callback) {
             $http.post($rootScope.IRISOrgServiceUrl + '/encounter/patienthaveactiveencounter', {patient_id: $state.params.id})
@@ -36,7 +32,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     });
         }
 
-        // Get Case History Document Template - Create
+// Get Case History Document Template - Create
         $scope.getDocumentType = function (callback) {
             $http.get($rootScope.IRISOrgServiceUrl + '/patientdocuments/getdocumenttype?doc_type=CH')
                     .success(function (response) {
@@ -47,7 +43,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     });
         }
 
-        // Get Patient Document Template - Update
+// Get Patient Document Template - Update
         $scope.getDocument = function (doc_id, callback) {
             $http.get($rootScope.IRISOrgServiceUrl + '/patientdocuments/getdocument?doc_id=' + doc_id)
                     .success(function (response) {
@@ -58,7 +54,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     });
         }
 
-        // Initialize Create Form
+// Initialize Create Form
         $scope.initForm = function () {
             $scope.isLoading = true;
             $scope.isPatientHaveActiveEncounter(function (response) {
@@ -68,7 +64,6 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     $state.go("patient.document", {id: $state.params.id});
                 } else {
                     $scope.encounter = response.model;
-
                     $scope.getDocumentType(function (doc_type_response) {
                         if (doc_type_response.success == false) {
                             alert("Sorry, you can't create a document");
@@ -78,7 +73,20 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                             $scope.initSaveDocument(function (auto_save_document) {
                                 $scope.xml = auto_save_document.data.xml;
                                 $scope.isLoading = false;
-
+                                
+                                $timeout(function () {
+                                    $rootScope.commonService.GetDiagnosisList(function (response) {
+                                        var availableTags = [];
+                                        angular.forEach(response.diagnosisList, function (diagnosis) {
+                                            availableTags.push(diagnosis.label)
+                                        });
+                                        $("#txtDiagnosis").autocomplete({
+                                            source: availableTags,
+                                            minLength: 2,
+                                        });
+                                    });
+                                }, 2000);
+                                
                                 $scope.startAutoSave();
                             });
                         }
@@ -98,7 +106,6 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                 'novalidate': true,
                 'status': '1',
             });
-
             $scope.loadbar('show');
             $http({
                 url: $rootScope.IRISOrgServiceUrl + "/patientdocuments/savedocument",
@@ -114,20 +121,17 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     }
             );
         };
-
         var stop;
         $scope.startAutoSave = function () {
             // Don't start a new fight if we are already fighting
             if (angular.isDefined(stop))
                 return;
-
             stop = $interval(function () {
                 _data = $('#xmlform').serialize() + '&' + $.param({
                     'encounter_id': $scope.encounter.encounter_id,
                     'patient_id': $state.params.id,
                     'novalidate': true
                 });
-
                 $http({
                     url: $rootScope.IRISOrgServiceUrl + "/patientdocuments/savedocument",
                     method: "POST",
@@ -136,19 +140,16 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                 });
             }, 60000);
         };
-
         $scope.stopAutoSave = function () {
             if (angular.isDefined(stop)) {
                 $interval.cancel(stop);
                 stop = undefined;
             }
         };
-
         $scope.$on('$destroy', function () {
             // Make sure that the interval is destroyed too
             $scope.stopAutoSave();
         });
-
         // Initialize Update Form
         $scope.initFormUpdate = function () {
             $scope.isLoading = true;
@@ -164,7 +165,6 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                         $scope.xml = pat_doc_response.result.document_xml;
                         $scope.encounter = {encounter_id: pat_doc_response.result.encounter_id};
                         $scope.isLoading = false;
-
                         $scope.startAutoSave();
                     });
                 }
@@ -209,14 +209,12 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                                         if ($('td:not(:empty)', this).length == 0)
                                             $(this).remove();
                                     });
-
                                     $('table#' + RadGrid_tr_attr).each(function () {
                                         if ($(this).find("tbody").html().trim().length === 0) {
                                             $this.remove();
                                         }
                                     });
                                 });
-
                                 //Header2
                                 var header2_tr = $(this).find("tr.header2");
                                 $.each(header2_tr, function (n, e)
@@ -227,7 +225,6 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                                         $(this).remove();
                                     }
                                 });
-
                                 var tr = $(this).find("tr");
                                 $.each(tr, function () {
                                     $this = $(this);
@@ -238,14 +235,12 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                                     }
 
                                 });
-
                                 var rowCount = $(this).find("tr").length;
                                 if (rowCount < 2) {
                                     $(this).remove();
                                 }
 
                             });
-
                             $("#printThisElement table").each(function () {
                                 var PanelBar_tr = $(this).find("table tr.PanelBar");
                                 if (PanelBar_tr.length > 0) {
@@ -264,7 +259,6 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                                     $(this).remove();
                                 }
                             });
-
                             $(".document-content .panel-default").each(function () {
                                 //RadGrid
                                 var RadGrid_div = $(this).find(".panel-body .RadGrid");
@@ -276,14 +270,12 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                                         if ($('td:not(:empty)', this).length == 0)
                                             $(this).remove();
                                     });
-
                                     $('table#' + RadGrid_div_attr).each(function () {
                                         if ($(this).find("tbody").html().trim().length === 0) {
                                             $this.remove();
                                         }
                                     });
                                 });
-
                                 //Header2
                                 var header2_div = $(this).find(".panel-body .header2");
                                 $.each(header2_div, function (n, e)
@@ -294,8 +286,6 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                                         $(this).remove();
                                     }
                                 });
-
-
                                 //Panel Body
                                 var form_group = $(this).find(".panel-body .form-group");
                                 if (form_group.length == 0) {
@@ -331,7 +321,6 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                 )
             }
         };
-
         $scope.submitXsl = function () {
             _data = $('#xmlform').serialize() + '&' + $.param({
                 'encounter_id': $scope.encounter.encounter_id,
@@ -339,7 +328,6 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                 'novalidate': false,
                 'status': '1',
             });
-
             if ($scope.panel_bars.length > 0) {
                 var more_datas = {};
                 angular.forEach($scope.panel_bars, function (panel_bars) {
@@ -370,10 +358,8 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
 
         $scope.panel_bars = [];
         $scope.page_offest = '';
-
         $("body").on("click", ".panel-heading", function () {
             next_div = $(this).next('div');
-
             result = $filter('filter')($scope.panel_bars, {div: next_div.attr('id')});
             if (result.length > 0) {
                 var index = $scope.panel_bars.indexOf(result[0]);
@@ -381,9 +367,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
             }
 
             var is_opened = !next_div.is(":visible");
-
             $scope.panel_bars.push({div: next_div.attr('id'), opened: is_opened});
-
             if (is_opened) {
                 var i_tag = $(this).find('i');
                 $(i_tag).removeClass("fa-angle-right").addClass("fa-angle-down");
@@ -392,16 +376,13 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                 $(i_tag).removeClass("fa-angle-down").addClass("fa-angle-right");
             }
         });
-
         $("body").on("click", ".addMore", function () {
             $scope.spinnerbar('show');
             var button_id = $(this).attr('id');
             var table_id = $(this).data('table-id');
             var rowCount = $('#' + table_id + ' tbody  tr').length;
-
             var firstMsg = $('#' + table_id).find("tr:last");
             var curOffset = firstMsg.offset().top - $(document).scrollTop();
-
             _data = $('#xmlform').serialize() + '&' + $.param({
                 'encounter_id': $scope.encounter.encounter_id,
                 'patient_id': $state.params.id,
@@ -410,7 +391,6 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                 'rowCount': rowCount,
                 'novalidate': true,
             });
-
             $http({
                 url: $rootScope.IRISOrgServiceUrl + "/patientdocuments/savedocument",
                 method: "POST",
@@ -421,7 +401,6 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                         $scope.loadbar('hide');
                         if (response.data.success == true) {
                             $scope.xml = response.data.xml;
-
                             $timeout(function () {
                                 angular.forEach($scope.panel_bars, function (bar) {
                                     if (bar.opened) {
@@ -430,7 +409,6 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                                                 .find('i')
                                                 .removeClass("fa-angle-right")
                                                 .addClass("fa-angle-down");
-
                                         $('#' + bar.div)
                                                 .toggleClass('collapse in')
                                                 .attr('aria-expanded', true)
@@ -453,19 +431,13 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     }
             );
         });
-
-
-
-
     }]);
-
 // Filter HTML Code
 app.filter("sanitize", ['$sce', function ($sce) {
         return function (htmlCode) {
             return $sce.trustAsHtml(htmlCode);
         }
     }]);
-
 // I provide a request-transformation method that is used to prepare the outgoing
 // request as a FORM post instead of a JSON packet.
 app.factory(

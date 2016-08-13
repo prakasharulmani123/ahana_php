@@ -63,6 +63,8 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
     service.GetPaymentModes = GetPaymentModes;
     service.GetCardTypes = GetCardTypes;
 
+    service.GetDiagnosisList = GetDiagnosisList;
+
     return service;
 
     function ChangeStatus(modelName, primaryKey, callback) {
@@ -71,6 +73,18 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
         $http.post($rootScope.IRISOrgServiceUrl + '/default/change-status', {model: modelName, id: primaryKey})
                 .success(function (response) {
                     $('.butterbar').removeClass('active').addClass('hide');
+                    callback(response);
+                }, function (x) {
+                    response = {success: false, message: 'Server Error'};
+                    callback(response);
+                });
+    }
+
+    function GetDiagnosisList(callback) {
+        var response;
+
+        $http.get($rootScope.IRISOrgServiceUrl + '/default/get-diagnosis-list')
+                .success(function (response) {
                     callback(response);
                 }, function (x) {
                     response = {success: false, message: 'Server Error'};
