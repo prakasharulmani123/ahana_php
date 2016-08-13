@@ -11,6 +11,7 @@ use common\models\CoOrganization;
 use common\models\CoRolesResources;
 use common\models\CoUsersRoles;
 use common\models\PatAppointment;
+use common\models\PatDiagnosis;
 use common\models\PatEncounter;
 use Yii;
 use yii\filters\auth\QueryParamAuth;
@@ -201,5 +202,13 @@ class DefaultController extends Controller {
             }
         }
     }
-
+    
+    public function actionGetDiagnosisList() {
+        $list = array();
+        $data = PatDiagnosis::find()->all();
+        foreach ($data as $key => $value) {
+            $list[] = array('label' => $value->diag_name . '-' . $value->diag_description);
+        }
+        return ['diagnosisList' => $list];
+    }
 }
