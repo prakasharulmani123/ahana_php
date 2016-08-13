@@ -37,6 +37,7 @@ class PhaVat extends RActiveRecord {
             [['vat'], 'required'],
             [['tenant_id', 'created_by', 'modified_by'], 'integer'],
             [['vat'], 'number'],
+            ['vat', 'compare', 'compareValue' => 99, 'operator' => '<='],
             [['status'], 'string'],
             [['created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['vat'], 'unique', 'targetAttribute' => ['tenant_id', 'vat', 'deleted_at'], 'message' => 'The combination has already been taken.']
