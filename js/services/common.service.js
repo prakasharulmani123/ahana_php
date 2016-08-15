@@ -64,6 +64,7 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
     service.GetCardTypes = GetCardTypes;
 
     service.GetDiagnosisList = GetDiagnosisList;
+    service.GetDsmivList = GetDsmivList;
 
     return service;
 
@@ -84,6 +85,18 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
         var response;
 
         $http.get($rootScope.IRISOrgServiceUrl + '/default/get-diagnosis-list')
+                .success(function (response) {
+                    callback(response);
+                }, function (x) {
+                    response = {success: false, message: 'Server Error'};
+                    callback(response);
+                });
+    }
+
+    function GetDsmivList(axis, callback) {
+        var response;
+
+        $http.get($rootScope.IRISOrgServiceUrl + '/default/get-dsmiv?axis=' + axis)
                 .success(function (response) {
                     callback(response);
                 }, function (x) {

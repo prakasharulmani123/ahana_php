@@ -73,20 +73,43 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                             $scope.initSaveDocument(function (auto_save_document) {
                                 $scope.xml = auto_save_document.data.xml;
                                 $scope.isLoading = false;
-                                
+
                                 $timeout(function () {
+                                    //Diagnosis
                                     $rootScope.commonService.GetDiagnosisList(function (response) {
                                         var availableTags = [];
                                         angular.forEach(response.diagnosisList, function (diagnosis) {
-                                            availableTags.push(diagnosis.label)
+                                            availableTags.push(diagnosis.label);
                                         });
                                         $("#txtDiagnosis").autocomplete({
                                             source: availableTags,
-                                            minLength: 2,
+//                                            minLength: 2,
+                                        });
+                                    });
+
+                                    //Axis1
+                                    $rootScope.commonService.GetDsmivList("1", function (response) {
+                                        var axis1 = [];
+                                        angular.forEach(response.dsmivList, function (dsmiv) {
+                                            axis1.push(dsmiv.label);
+                                        });
+                                        $("#txtAxis1").autocomplete({
+                                            source: axis1,
+                                        });
+                                    });
+
+                                    //Axis2
+                                    $rootScope.commonService.GetDsmivList("2", function (response) {
+                                        var axis2 = [];
+                                        angular.forEach(response.dsmivList, function (dsmiv) {
+                                            axis2.push(dsmiv.label);
+                                        });
+                                        $("#txtAxis2").autocomplete({
+                                            source: axis2,
                                         });
                                     });
                                 }, 2000);
-                                
+
                                 $scope.startAutoSave();
                             });
                         }
@@ -368,14 +391,37 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
 
             var is_opened = !next_div.is(":visible");
             $scope.panel_bars.push({div: next_div.attr('id'), opened: is_opened});
+
+            var checkbox_tag = $(this).find('input[type=checkbox]');
+            var i_tag = $(this).find('i');
+
             if (is_opened) {
-                var i_tag = $(this).find('i');
+                checkbox_tag.prop("checked", true);
                 $(i_tag).removeClass("fa-angle-right").addClass("fa-angle-down");
             } else {
-                var i_tag = $(this).find('i');
+                checkbox_tag.prop("checked", false);
                 $(i_tag).removeClass("fa-angle-down").addClass("fa-angle-right");
             }
         });
+
+        $("body").on("click", ".panelbar_clear", function () {
+            var clear_div_id = $(this).data("divid");
+            $("#" + clear_div_id).find(':input').each(function () {
+                switch (this.type) {
+                    case 'text':
+                        this.value = "";
+                    case 'textarea':
+                        this.value = "";
+                    case 'checkbox':
+                        this.checked = false;
+                    case 'radio':
+                        this.checked = false;
+                    case 'select-one':
+                        $(this).val($(this).find("option:first").val());
+                }
+            });
+        });
+
         $("body").on("click", ".addMore", function () {
             $scope.spinnerbar('show');
             var button_id = $(this).attr('id');
