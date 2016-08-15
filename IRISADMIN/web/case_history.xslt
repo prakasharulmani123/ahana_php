@@ -534,6 +534,11 @@
                                                 </h4>
                                             </div>
                                             <div id="{@target_div}" class="collapse panel-body">
+                                                <xsl:if test="@target_div != 'personal_history'">
+                                                    <div>
+                                                        <a class="panelbar_clear pull-right" data-divid="{@target_div}">Clear</a>
+                                                    </div>
+                                                </xsl:if>
                                                 <xsl:for-each select="FIELD">
                                                     <xsl:choose>
                                                         <xsl:when test="@type='PanelBar'">
@@ -541,6 +546,7 @@
                                                                 <div class="panel-heading">
                                                                     <h4 class="panel-title">
                                                                         <a class="accordion-toggle" data-toggle="collapse" data-target="#{@target_div}" href="javascript:void(0)">
+                                                                            <input type="checkbox"></input>
                                                                             <span>
                                                                                 <xsl:value-of select="@label"></xsl:value-of>
                                                                             </span>
@@ -549,6 +555,9 @@
                                                                     </h4>
                                                                 </div>
                                                                 <div id="{@target_div}" class="collapse panel-body">
+                                                                    <div>
+                                                                        <a class="panelbar_clear pull-right" data-divid="{@target_div}">Clear</a>
+                                                                    </div>
                                                                     <xsl:for-each select="FIELD">
                                                                         <xsl:choose>
                                                                             <xsl:when test="@type='Header2'">

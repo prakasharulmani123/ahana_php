@@ -47,7 +47,7 @@ class PatDiagnosis extends ActiveRecord {
             'level' => 'Level',
         ];
     }
-    
+
     public static function getDb() {
         return Yii::$app->client;
     }

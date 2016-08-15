@@ -12,6 +12,7 @@ use common\models\CoRolesResources;
 use common\models\CoUsersRoles;
 use common\models\PatAppointment;
 use common\models\PatDiagnosis;
+use common\models\PatDsmiv;
 use common\models\PatEncounter;
 use Yii;
 use yii\filters\auth\QueryParamAuth;
@@ -86,12 +87,12 @@ class DefaultController extends Controller {
 
     public function actionGetTenantList() {
         $org = CoOrganization::findOne(['org_domain' => DOMAIN_PATH]);
-        
-        if(empty($org))
+
+        if (empty($org))
             return ['success' => false, 'message' => 'There is no organization assigned for this domain.'];
-        
+
         $list = ArrayHelper::map($org->coActiveTenants, 'tenant_id', 'tenant_name');
-        
+
         return ['tenantList' => $list, 'org_sts' => $org->status, 'success' => true];
     }
 
@@ -143,7 +144,7 @@ class DefaultController extends Controller {
 
     public function actionDailycron() {
         $organizations = CoOrganization::find()->andWhere(['status' => '1'])->all();
-        
+
         foreach ($organizations as $key => $organization) {
             foreach ($organization->coTenants as $key => $tenant) {
 
@@ -169,11 +170,11 @@ class DefaultController extends Controller {
         $post = Yii::$app->request->post();
         if (!empty($post)) {
             $active_encounters = PatEncounter::find()->tenant($post['tenant_id'])->status()->active()->all();
-            
+
             foreach ($active_encounters as $key => $active_encounter) {
                 Yii::$app->hepler->updateRecurring($active_encounter->patCurrentAdmissionExecptClinicalDischarge);
             }
-            
+
             //Cancel Old Active Appointments
             $today = date("Y-m-d");
             $op_encounters = PatEncounter::find()
@@ -202,7 +203,7 @@ class DefaultController extends Controller {
             }
         }
     }
-    
+
     public function actionGetDiagnosisList() {
         $list = array();
         $data = PatDiagnosis::find()->all();
@@ -211,4 +212,14 @@ class DefaultController extends Controller {
         }
         return ['diagnosisList' => $list];
     }
+
+    public function actionGetDsmiv($axis) {
+        $list = array();
+        $data = PatDsmiv::find()->andWhere(['axis' => $axis])->all();
+        foreach ($data as $key => $value) {
+            $list[] = array('label' => $value->code . '-' . $value->main . '-' . $value->sub);
+        }
+        return ['dsmivList' => $list];
+    }
+
 }
