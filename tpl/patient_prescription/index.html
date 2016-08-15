@@ -40,27 +40,30 @@
                             <div class="row wrapper pb-sm pb-0">
                                 <div class="col-sm-8" style="width:680px;" > 
                                     <div class="input-group">
-                                        <input type="text" 
+                                        <input type="text"
+                                               id="prescription_global_search"
                                                class="form-control prescription_search_input" 
                                                placeholder="Enter Your Prescription" 
                                                ng-model='prescription'
                                                />
-                                        <ul class="search-patientcont-header" id='prescriptioncont-header' ng-show="prescription_lists.length > 0">
-                                            <li ng-repeat="prescription_list in prescription_lists">
-                                                <div class="row"> 
-                                                    <div class="col-xs-12 col-sm-2 col-md-1"> 
-                                                        <div class="row ng-binding">
-                                                            &nbsp;
+                                        <div class="patient-search-result" ng-if="prescription != '' && prescription_lists" >
+                                            <ul class="search-patientcont-header" id='prescriptioncont-header' ng-show="prescription_lists.length > 0">
+                                                <li ng-repeat="(key, prescription_list) in prescription_lists" class="{{prescription_list.selected}}">
+                                                    <div class="row"> 
+                                                        <div class="col-xs-12 col-sm-2 col-md-1"> 
+                                                            <div class="row ng-binding">
+                                                                &nbsp;
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-10 col-md-11"> 
+                                                            <div class="row ng-binding">
+                                                                <a data-key="{{key}}" ng-bind-html="prescription_list.prescription | highlight:prescription" href="javascript:void(0)" class="ng-binding" ng-click="addGlobalSearch(prescription_list)"></a>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-xs-12 col-sm-10 col-md-11"> 
-                                                        <div class="row ng-binding">
-                                                            <a ng-bind-html="prescription_list.prescription | highlight:prescription" href="javascript:void(0)" class="ng-binding" ng-click="addGlobalSearch(prescription_list)"></a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        </ul>
+                                                </li>
+                                            </ul>
+                                        </div>
                                         <div class="input-group-btn dropdown" id="search-form-div">
                                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></button>
                                             <div class="dropdown-menu pull-right prescrip-dropdown {{search_form}}" ng-init="initForm()" id="search-form">
@@ -220,7 +223,8 @@
                                                                   e-name="route" 
                                                                   e-form="tableform" 
                                                                   e-ng-change="setRouteId($data, key)" 
-                                                                  onbeforesave="checkInput($data)" 
+                                                                  onbeforesave="checkInput($data)"
+                                                                  e-id="route"
                                                                   e-ng-options="route.route_name as route.route_name for route in item.description_routes | filter:$viewValue" 
                                                                   e-required>
                                                                 {{ showRoute(item)}}

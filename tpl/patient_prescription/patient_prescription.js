@@ -347,7 +347,29 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     angular.extend(prescription, {is_favourite: 1});
                 }
 
-                $scope.data.prescriptionItems.push(prescription);
+                var fiter = $filter('filter')($scope.all_products, {product_id: prescription.product_id});
+                var product = fiter[0];
+                
+                items = {
+                    'product_id': prescription.product_id,
+                    'product_name': product.full_name,
+                    'generic_id': prescription.generic_id,
+                    'generic_name': prescription.generic_name,
+                    'drug_class_id': prescription.drug_class_id,
+                    'drug_name': prescription.drug_name,
+                    'route': prescription.route,
+                    'frequency': prescription.frequency,
+                    'number_of_days': 0,
+                    'is_favourite': prescription.is_favourite,
+                    'route_id': prescription.route_id,
+                    'description_routes': product.description_routes,
+                    'presc_date': moment().format('YYYY-MM-DD HH:mm:ss'),
+                    'price': product.latest_price,
+                    'total': $scope.calculate_price(prescription.frequency, 0, product.latest_price),
+                };
+
+                PrescriptionService.addPrescriptionItem(items);
+                $scope.data.prescriptionItems = PrescriptionService.getPrescriptionItems();
 
                 $timeout(function () {
                     $("#prescriptioncont-header.search-patientcont-header").hide();
@@ -580,13 +602,26 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     clearTimeout(changeTimer);
 
                 changeTimer = setTimeout(function () {
+                    _data = {};
+                    _data['search'] = newValue;
+
+                    if ($scope.lastSelected) {
+                        _data['product_id'] = $scope.lastSelected.product_id;
+                    }
+
                     $http({
                         method: 'POST',
                         url: $rootScope.IRISOrgServiceUrl + '/pharmacyproduct/getprescription',
-                        data: {'search': newValue},
+                        data: _data,
                     }).success(
                             function (response) {
                                 $scope.prescription_lists = response.prescription;
+
+                                if ($scope.lastSelected) {
+                                    var result = $filter('filter')($scope.prescription_lists, {prescription: $scope.lastSelected.prescription});
+                                    if (result.length > 0)
+                                        result[0].selected = 'selected';
+                                }
                             }
                     );
                     changeTimer = false;
@@ -706,12 +741,14 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         };
 
         $scope.calculate_price = function (freq, days, price) {
-            var freq_count = 0;
-            $.each(freq.split('-'), function (key, item) {
-                if (item == '1')
-                    freq_count++;
-            });
-            return (parseFloat(days) * parseFloat(price) * parseFloat(freq_count));
+            if(typeof freq != 'undefined'){
+                var freq_count = 0;
+                $.each(freq.split('-'), function (key, item) {
+                    freq_count = freq_count + parseInt(item);
+                });
+                return (parseFloat(days) * parseFloat(price) * parseFloat(freq_count));
+            }
+            return 0;
         }
 
         $scope.seen_notes = function () {
@@ -853,6 +890,74 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 $scope.previousPresSelectedItems.push(item.row);
             });
             $scope.previousPresSelected = $scope.previousPresSelectedItems.length;
+        }
+
+        $scope.lastSelected = {};
+
+        $("body").on('keydown', '#prescription_global_search', function (e) {
+            if (e.keyCode == 13) { // enter
+                if ($("#prescriptioncont-header").is(":visible")) {
+                    $scope.selectOption();
+                }
+            }
+
+            var selected = $("#prescriptioncont-header .selected");
+            if (e.keyCode == 40 || e.keyCode == 38) {
+                if (selected.length == 0) {
+                    $("#prescriptioncont-header li:last").addClass('selected');
+                    var selected = $("#prescriptioncont-header .selected");
+                }
+            }
+
+            if (e.keyCode == 38) { // up
+                $("#prescriptioncont-header li").removeClass("selected");
+                if (selected.prev().length == 0) {
+                    selected.siblings().last().addClass("selected");
+                } else {
+                    selected.prev().addClass("selected");
+                }
+            }
+
+            if (e.keyCode == 40) { // down
+                $("#prescriptioncont-header li").removeClass("selected");
+                if (selected.next().length == 0) {
+                    selected.siblings().first().addClass("selected");
+                } else {
+                    selected.next().addClass("selected");
+                }
+            }
+
+            if (e.keyCode == 40 || e.keyCode == 38) {
+                var a = $("#prescriptioncont-header .selected a");
+                if (a.length > 0) {
+                    $scope.lastSelected = $scope.prescription_lists[a.data('key')];
+                    $(this).val($scope.lastSelected.prescription);
+                }
+            }
+
+            //While Backspace
+            if (e.keyCode == 8) {
+                $scope.lastSelected = {};
+            }
+
+            if ($(this).val() == '') {
+                $scope.lastSelected = {};
+            }
+        });
+
+        $("body").on("mouseover", "#prescriptioncont-header li", function () {
+            $("#prescriptioncont-header li").removeClass("selected");
+            $(this).addClass("selected");
+        });
+
+        $scope.selectOption = function () {
+            var link_tag = $("#prescriptioncont-header .selected").find("a");
+            if (link_tag.length > 0) {
+                $(link_tag).trigger("click");
+            } else {
+                $(".selected button").trigger("click");
+            }
+            return false;
         }
 
     }]);
