@@ -129,6 +129,8 @@ class PatientscanneddocumentsController extends ActiveController {
             $attr = [
                 'patient_id' => $patient->patient_id,
                 'encounter_id' => $post['encounter_id'],
+                'scanned_doc_name' => $post['scanned_doc_name'],
+                'scanned_doc_creation_date' => $post['scanned_doc_creation_date'],
                 'file_org_name' => $_FILES['file']['name'],
                 'file_name' => $filename,
                 'file_type' => $_FILES['file']['type'],

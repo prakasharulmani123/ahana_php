@@ -2,21 +2,17 @@
 
 namespace common\models;
 
-use common\models\query\PatScannedDocumentsQuery;
 use yii\db\ActiveQuery;
 
 /**
- * This is the model class for table "pat_scanned_documents".
+ * This is the model class for table "pat_other_documents".
  *
- * @property integer $scanned_doc_id
+ * @property integer $other_doc_id
  * @property integer $tenant_id
  * @property integer $patient_id
  * @property integer $encounter_id
- * @property string $scanned_doc_name
- * @property string $scanned_doc_creation_date
- * @property string $file_org_name
- * @property string $file_name
- * @property string $file_type
+ * @property string $other_doc_name
+ * @property string $other_doc_content
  * @property string $status
  * @property integer $created_by
  * @property string $created_at
@@ -28,13 +24,13 @@ use yii\db\ActiveQuery;
  * @property PatPatient $patient
  * @property CoTenant $tenant
  */
-class PatScannedDocuments extends RActiveRecord {
+class PatOtherDocuments extends RActiveRecord {
 
     /**
      * @inheritdoc
      */
     public static function tableName() {
-        return 'pat_scanned_documents';
+        return 'pat_other_documents';
     }
 
     /**
@@ -42,12 +38,11 @@ class PatScannedDocuments extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['file_org_name', 'file_name', 'file_type', 'scanned_doc_name', 'scanned_doc_creation_date'], 'required'],
+            [['other_doc_name', 'other_doc_content'], 'required'],
             [['tenant_id', 'patient_id', 'encounter_id', 'created_by', 'modified_by'], 'integer'],
-            [['status'], 'string'],
+            [['other_doc_content', 'status'], 'string'],
             [['created_at', 'modified_at', 'deleted_at'], 'safe'],
-            [['file_org_name', 'file_name'], 'string', 'max' => 100],
-            [['file_type'], 'string', 'max' => 255]
+            [['other_doc_name'], 'string', 'max' => 100]
         ];
     }
 
@@ -56,11 +51,12 @@ class PatScannedDocuments extends RActiveRecord {
      */
     public function attributeLabels() {
         return [
-            'scanned_doc_id' => 'Scanned Doc ID',
+            'other_doc_id' => 'Other Doc ID',
             'tenant_id' => 'Tenant ID',
             'patient_id' => 'Patient ID',
             'encounter_id' => 'Encounter ID',
-            'file_name' => 'File Name',
+            'other_doc_name' => 'Document Name',
+            'other_doc_content' => 'Description',
             'status' => 'Status',
             'created_by' => 'Created By',
             'created_at' => 'Created At',
@@ -89,10 +85,6 @@ class PatScannedDocuments extends RActiveRecord {
      */
     public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
-    }
-
-    public static function find() {
-        return new PatScannedDocumentsQuery(get_called_class());
     }
 
 }

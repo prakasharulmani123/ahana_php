@@ -5,6 +5,7 @@ namespace IRISORG\modules\v1\controllers;
 use common\models\PatDocuments;
 use common\models\PatDocumentTypes;
 use common\models\PatPatient;
+use common\models\VDocuments;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -91,18 +92,51 @@ class PatientdocumentsController extends ActiveController {
     }
 
     //Index Function
+//    public function actionGetpatientdocuments() {
+//        $get = Yii::$app->getRequest()->get();
+//
+//        if (!empty($get)) {
+//            $patient = PatPatient::getPatientByGuid($get['patient_id']);
+//            $result = [];
+//            $data = PatDocuments::find()->tenant()->andWhere(['patient_id' => $patient->patient_id])->groupBy('encounter_id')->orderBy(['encounter_id' => SORT_DESC])->all();
+//            foreach ($data as $key => $value) {
+//                $details = PatDocuments::find()->tenant()->andWhere(['patient_id' => $patient->patient_id, 'encounter_id' => $value->encounter_id])->orderBy(['doc_id' => SORT_DESC])->all();
+//                $result[$key] = ['data' => $value, 'all' => $details];
+//            }
+//            return ['success' => true, 'result' => $result];
+//        }
+//    }
+
     public function actionGetpatientdocuments() {
         $get = Yii::$app->getRequest()->get();
 
-        if (!empty($get)) {
+        if (isset($get['patient_id'])) {
             $patient = PatPatient::getPatientByGuid($get['patient_id']);
-            $result = [];
-            $data = PatDocuments::find()->tenant()->andWhere(['patient_id' => $patient->patient_id])->groupBy('encounter_id')->orderBy(['encounter_id' => SORT_DESC])->all();
+            $condition = [
+                'patient_id' => $patient->patient_id,
+            ];
+
+            $data = VDocuments::find()
+                    ->where($condition)
+                    ->groupBy('encounter_id')
+                    ->orderBy(['encounter_id' => SORT_DESC])
+                    ->asArray()
+                    ->all();
+
             foreach ($data as $key => $value) {
-                $details = PatDocuments::find()->tenant()->andWhere(['patient_id' => $patient->patient_id, 'encounter_id' => $value->encounter_id])->orderBy(['doc_id' => SORT_DESC])->all();
-                $result[$key] = ['data' => $value, 'all' => $details];
+                $details = VDocuments::find()
+                        ->where(['encounter_id' => $value['encounter_id']])
+                        ->andWhere($condition)
+                        ->orderBy(['date_time' => SORT_DESC])
+                        ->asArray()
+                        ->all();
+
+                $data[$key]['all'] = $details;
             }
-            return ['success' => true, 'result' => $result];
+
+            return ['success' => true, 'result' => $data];
+        } else {
+            return ['success' => false, 'message' => 'Invalid Access'];
         }
     }
 

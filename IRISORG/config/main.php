@@ -99,6 +99,7 @@ return [
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/pharmacyreorderhistory'], 'extraPatterns' => ['POST remove' => 'remove', 'POST savepurchase' => 'savepurchase', 'GET reportlist' => 'reportlist', 'GET getpurchases' => 'getpurchases', 'POST reorder' => 'reorder', 'POST addreorderhistory' => 'addreorderhistory']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/patientscanneddocuments'], 'extraPatterns' => ['GET getscanneddocuments' => 'getscanneddocuments', 'POST savedocument' => 'savedocument', 'POST remove' => 'remove', 'GET getscanneddocument' => 'getscanneddocument']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/pharmacyroute'], 'extraPatterns' => ['POST remove' => 'remove']],
+                ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/patientotherdocuments'], 'extraPatterns' => ['POST remove' => 'remove']],
             ],
         ],
         'log' => [
