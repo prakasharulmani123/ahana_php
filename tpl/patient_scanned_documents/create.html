@@ -1,14 +1,38 @@
-<div class="hbox hbox-auto-xs hbox-auto-sm" ng-controller="ScannedDocumentsController"  nv-file-drop="" uploader="uploader" filters="queueLimit, customFilter">
+<div class="hbox hbox-auto-xs hbox-auto-sm" ng-controller="ScannedDocumentsController" ng-init="initForm();"  nv-file-drop="" uploader="uploader" filters="queueLimit, customFilter">
     <div class="col w-lg bg-light b-r bg-auto">
         <div class="wrapper-md dker b-b">
-            <h3 class="m-n font-thin">Select Scanned Documents</h3>
+            <h3 class="m-n font-thin">Scanned Documents Details</h3>
         </div>
         <div class="wrapper-md">  
             <!-- Example: nv-file-select="" uploader="{Object}" options="{Object}" filters="{String}" -->
-            <input type="file" nv-file-select="" uploader="uploader" multiple  />
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <input type="text" ng-model="data.document_name" class="form-control" placeholder="Document Name *">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group s-md">
+                        <a class="dropdown-toggle" id="dropdown2" role="button" data-toggle="dropdown" data-target="#" href="javascript:void(0)">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Creation Date *" data-ng-model="data.date_of_creation" data-date-time-input="YYYY-MM-DD" prevent-enter="true" />
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                            </div>
+                        </a>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                            <datetimepicker data-ng-model="data.date_of_creation" data-datetimepicker-config="{ dropdownSelector: '#dropdown2', startView:'day', minView:'day' }" data-before-render="beforeRender($view, $dates, $leftDate, $upDate, $rightDate)"/>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <input type="file" nv-file-select="" uploader="uploader" multiple  />
+                </div>
+            </div>
         </div>
     </div>
-    <div class="col" ng-init="initForm();">
+    <div class="col">
         <div class="wrapper-md bg-light dk b-b">
             <span class="pull-right m-t-xs">
                 Encounter Id: {{encounter.encounter_id}} &nbsp;&nbsp;
@@ -17,6 +41,9 @@
             <h3 class="m-n font-thin">Upload Scanned Documents</h3>
         </div>
         <div class="wrapper-md">
+            <div ng-include="'tpl/blocks/alert.html'">
+                {% include 'tpl/blocks/alert.html' %}
+            </div>
             <table class="table bg-white-only b-a">
                 <thead>
                     <tr>
@@ -38,11 +65,11 @@
                         </td>
                         <td class="text-center">
                             <span ng-show="item.isSuccess" class="text-success"><i class="glyphicon glyphicon-ok"></i></span>
-                            <span ng-show="item.isCancel" class="text-warning"><i class="glyphicon glyphicon-ban-circle"></i></span>
+                            <span ng-show="item.isCancel" class="text-primary"><i class="glyphicon glyphicon-ban-circle"></i></span>
                             <span ng-show="item.isError" class="text-danger"><i class="glyphicon glyphicon-remove"></i></span>
                         </td>
                         <td nowrap>
-                            <button type="button" class="btn btn-default btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+                            <button type="button" class="btn btn-default btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess || data.document_name == '' || data.date_of_creation == ''">
                                 Upload
                             </button>
                             <button type="button" class="btn btn-default btn-xs" ng-click="item.cancel()" ng-disabled="!item.isUploading">
@@ -62,16 +89,16 @@
                         <div class="progress-bar progress-bar-striped bg-info" role="progressbar" ng-style="{ 'width': uploader.progress + '%' }"></div>
                     </div>
                 </div>
-                <button type="button" class="btn btn-addon btn-success" ng-click="uploader.uploadAll()" ng-disabled="!uploader.getNotUploadedItems().length">
+                <button type="button" class="btn btn-success" ng-click="uploader.uploadAll()" ng-disabled="!uploader.getNotUploadedItems().length || data.document_name == '' || data.date_of_creation == ''">
                     <i class="fa fa-arrow-circle-o-up"></i> Upload all
                 </button>
-                <button type="button" class="btn btn-addon btn-warning" ng-click="uploader.cancelAll()" ng-disabled="!uploader.isUploading">
+                <button type="button" class="btn btn-primary" ng-click="uploader.cancelAll()" ng-disabled="!uploader.isUploading">
                     <i class="fa fa-ban"></i> Cancel all
                 </button>
-                <button type="button" class="btn btn-addon btn-danger" ng-click="uploader.clearQueue()" ng-disabled="!uploader.queue.length">
+                <button type="button" class="btn btn-danger" ng-click="uploader.clearQueue()" ng-disabled="!uploader.queue.length">
                     <i class="fa fa-trash-o"></i> Remove all
                 </button>
-                <button class="btn btn-addon btn-dark" ng-click="$state.go('patient.scannedDocuments', {id: $state.params.id})">
+                <button class="btn btn-dark" ng-click="$state.go('patient.scannedDocuments', {id: $state.params.id})">
                     <i class="fa fa-times"></i> Back
                 </button>
             </div>

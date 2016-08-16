@@ -1,4 +1,4 @@
-app.controller('ScannedDocumentsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'toaster', '$localStorage', 'FileUploader', function ($rootScope, $scope, $timeout, $http, $state, toaster, $localStorage, FileUploader) {
+app.controller('OtherDocumentsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'toaster', '$localStorage', function ($rootScope, $scope, $timeout, $http, $state, toaster, $localStorage) {
 
         $scope.app.settings.patientTopBar = true;
         $scope.app.settings.patientSideMenu = true;
@@ -7,65 +7,6 @@ app.controller('ScannedDocumentsController', ['$rootScope', '$scope', '$timeout'
 
         $scope.data = {};
         $scope.encounter = {};
-
-        var uploader = $scope.uploader = new FileUploader({
-            url: $rootScope.IRISOrgServiceUrl + "/patientscanneddocuments/savedocument?access-token=" + $localStorage.user.access_token,
-        });
-
-        // FILTERS
-        uploader.filters.push({
-            name: 'customFilter',
-            fn: function (item /*{File|FileLikeObject}*/, options) {
-                return this.queue.length < 10;
-            }
-        });
-
-        // CALLBACKS
-//        uploader.onWhenAddingFileFailed = function (item /*{File|FileLikeObject}*/, filter, options) {
-//            console.info('onWhenAddingFileFailed', item, filter, options);
-//        };
-//        uploader.onAfterAddingFile = function (fileItem) {
-//            console.info('onAfterAddingFile', fileItem);
-//        };
-//        uploader.onAfterAddingAll = function (addedFileItems) {
-//            console.info('onAfterAddingAll', addedFileItems);
-//        };
-        uploader.onBeforeUploadItem = function (item) {
-            item.headers = {
-                'x-domain-path': $rootScope.clientUrl
-            };
-            item.formData.push({
-                'encounter_id': $scope.encounter.encounter_id, 
-                'patient_id': $state.params.id,
-                'scanned_doc_name': $scope.data.document_name,
-                'scanned_doc_creation_date': $scope.data.date_of_creation,
-            });
-//            console.log($scope.data.document_name);
-        };
-//        uploader.onProgressItem = function (fileItem, progress) {
-//            console.info('onProgressItem', fileItem, progress);
-//        };
-//        uploader.onProgressAll = function (progress) {
-//            console.info('onProgressAll', progress);
-//        };
-//        uploader.onSuccessItem = function (fileItem, response, status, headers) {
-//            console.info('onSuccessItem', fileItem, response, status, headers);
-//        };
-//        uploader.onErrorItem = function (fileItem, response, status, headers) {
-//            console.info('onErrorItem', fileItem, response, status, headers);
-//        };
-//        uploader.onCancelItem = function (fileItem, response, status, headers) {
-//            console.info('onCancelItem', fileItem, response, status, headers);
-//        };
-//        uploader.onCompleteItem = function (fileItem, response, status, headers) {
-//            console.info('onCompleteItem', fileItem, response, status, headers);
-//        };
-        uploader.onCompleteAll = function () {
-            $scope.msg.successMessage = 'Scanned Document Uploaded Successfully';
-            $timeout(function () {
-                $state.go("patient.scannedDocuments", {id: $state.params.id});
-            }, 3000)
-        };
 
         //Index Page
         $scope.loadPatientScannedDocumentsList = function () {
@@ -96,9 +37,6 @@ app.controller('ScannedDocumentsController', ['$rootScope', '$scope', '$timeout'
 
         // Initialize Create Form
         $scope.initForm = function () {
-            $scope.data = {};
-            $scope.data.document_name = '';
-            $scope.data.date_of_creation = moment().format('YYYY-MM-DD');
             $scope.isLoading = true;
             $scope.isPatientHaveActiveEncounter(function (response) {
                 if (response.success == false) {
@@ -106,10 +44,84 @@ app.controller('ScannedDocumentsController', ['$rootScope', '$scope', '$timeout'
                     alert("Sorry, you can't upload a scanned document");
                     $state.go("patient.scannedDocuments", {id: $state.params.id});
                 } else {
+                    $scope.data = {};
+                    $scope.data.formtype = 'add';
+                    $scope.data.status = '1';
                     $scope.encounter = response.model;
                 }
             });
         }
+
+        //Get Data for update Form
+        $scope.loadForm = function () {
+            $scope.data = {};
+            $scope.loadbar('show');
+            _that = this;
+            $scope.errorData = "";
+            $http({
+                url: $rootScope.IRISOrgServiceUrl + "/patientotherdocuments/" + $state.params.other_doc_id,
+                method: "GET"
+            }).success(
+                    function (response) {
+                        $scope.loadbar('hide');
+                        $scope.data = response;
+                        $scope.encounter = {encounter_id: response.encounter_id};
+                    }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+            $scope.data.formtype = 'update';
+        };
+
+        //Save Both Add & Update Data
+        $scope.saveForm = function (mode) {
+            _that = this;
+
+            $scope.errorData = "";
+            $scope.msg.successMessage = "";
+
+            if (mode == 'add') {
+                post_url = $rootScope.IRISOrgServiceUrl + '/patientotherdocuments';
+                method = 'POST';
+                succ_msg = 'Added successfully';
+
+                angular.extend(_that.data, {
+                    patient_id: $scope.patientObj.patient_id,
+                    encounter_id: $scope.encounter.encounter_id
+                });
+            } else {
+                post_url = $rootScope.IRISOrgServiceUrl + '/patientotherdocuments/' + $state.params.other_doc_id;
+                method = 'PUT';
+                succ_msg = 'Updated successfully';
+            }
+
+            $scope.loadbar('show');
+            $http({
+                method: method,
+                url: post_url,
+                data: _that.data,
+            }).success(
+                    function (response) {
+                        $scope.loadbar('hide');
+                        $scope.msg.successMessage = succ_msg;
+                        $scope.data = {};
+                        $timeout(function () {
+                            $state.go('patient.document', {id: $state.params.id});
+                        }, 1000)
+
+                    }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        };
 
         //Delete
         $scope.deleteDocument = function (scanned_doc_id) {
@@ -147,7 +159,7 @@ app.controller('ScannedDocumentsController', ['$rootScope', '$scope', '$timeout'
                             link.download = response.result.file_org_name;
                             document.body.appendChild(link);
                             link.click();
-                            $timeout(function(){
+                            $timeout(function () {
                                 document.body.removeChild(link);
                             }, 1000);
                         } else {
@@ -156,6 +168,6 @@ app.controller('ScannedDocumentsController', ['$rootScope', '$scope', '$timeout'
                     }).
                     error(function (data, status) {
                     });
-            
+
         };
     }]);

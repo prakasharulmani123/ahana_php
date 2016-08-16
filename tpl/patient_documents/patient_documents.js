@@ -20,7 +20,25 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading patient document!";
                     });
+
+            $scope.documents = [];
+            $scope.documents.push({label: 'Case History', value: 'CH'}, {label: 'Scanned Documents', value: 'SD'}, {label: 'Other Documents', value: 'OD'});
         };
+
+        //
+        $scope.switchAddDocument = function () {
+            if ($scope.add_document) {
+                if ($scope.add_document == 'CH') {
+                    $state.go('patient.addDocument', {id: $state.params.id});
+                } else if ($scope.add_document == 'SD') {
+                    $state.go('patient.addScannedDocument', {id: $state.params.id});
+                } else if ($scope.add_document == 'OD') {
+                    $state.go('patient.addOtherDocument', {id: $state.params.id});
+                }
+            }
+        }
+
+
         // Check patient have active encounter
         $scope.isPatientHaveActiveEncounter = function (callback) {
             $http.post($rootScope.IRISOrgServiceUrl + '/encounter/patienthaveactiveencounter', {patient_id: $state.params.id})

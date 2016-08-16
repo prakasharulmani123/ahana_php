@@ -2,29 +2,13 @@
     <h1 class="m-n h3">Documents</h1>
 </div>
 
-<div class="wrapper-md tab-btn"> 
-    <div class="row">
-        <div class="col-sm-4"> 
-            <div class="btn-group btn-group-justified">
-                <a class="btn btn-info active" ng-click="loadPatDocumentsList('current')">
-                    <i class="fa fa-history"></i>  Case History
-                </a>
-                <a class="btn btn-info" ng-click="$state.go('patient.scannedDocuments', {id: $state.params.id})">  
-                    <i class="fa fa-file-text"></i>
-                    Scanned Documents
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-
 <div class="wrapper-md" ng-controller="DocumentsController" ng-init="loadPatDocumentsList('current');">
     <div class="panel panel-default">
         <div class="row wrapper">
-            <div class="col-sm-4">
-                <button class="btn btn-info" ng-click="$state.go('patient.addDocument', {id: $state.params.id})">
-                    <i class="fa fa-plus"></i> Create Document 
-                </button>
+            <div class="col-sm-5 pull-right right">
+                <b> Create Document : </b> 
+                <select class="form-control" name="add_document" ng-model="add_document" ng-options="document.value as document.label for document in documents" data-ng-change="switchAddDocument()">
+                </select>
             </div>
         </div>
         <div class="table-responsive in-patient-table">
@@ -38,6 +22,7 @@
                             </button>
                         </th>
                         <th>Document Date</th>
+                        <th>Document Type</th>
                         <th>Document Name</th>
                         <th>Actions</th>
                     </tr>
@@ -59,14 +44,15 @@
                         </td>
                         <td colspan="3">
                             <b> 
-                                <span class="badge bg-primary">Encounter: {{value.data.encounter_id}}</span>&nbsp; &nbsp; 
+                                <span class="badge bg-primary">Encounter: {{value.encounter_id}}</span>&nbsp; &nbsp; 
                             </b>
                         </td>
                     </tr>
                     <tr ng-repeat-end ng-show="expanded" ng-repeat="(doc_key, doc) in value.all">
                         <td align="center" valign="middle"></td>
-                        <td valign="middle"> {{doc.created_at| moment:'DD/MM/YYYY - hh:mm A'}} </td>
-                        <td valign="middle"> {{doc.document_name}} </td>
+                        <td valign="middle"> {{doc.date_time| moment:'DD/MM/YYYY - hh:mm A'}} </td>
+                        <td valign="middle"> {{doc.doc_type}} </td>
+                        <td valign="middle"> {{doc.doc_name}} </td>
                         <td valign="middle">
                             <a class="label bg-dark" title="View" check-access  ui-sref="patient.viewDocument({id: '{{$state.params.id}}', doc_id: '{{doc.doc_id}}'})">
                                 <i class="fa fa-eye"></i>

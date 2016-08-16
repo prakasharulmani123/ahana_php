@@ -2380,6 +2380,38 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 }
             })
 
+            //Patient Other Document - Create
+            .state('patient.addOtherDocument', {
+                url: '/addOtherDocument/{id}',
+                templateUrl: 'tpl/patient_other_documents/create.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('textAngular').then(
+                                    function () {
+                                        return $ocLazyLoad.load(['tpl/patient_other_documents/patient_other_documents.js']);
+                                    }
+                            );
+                        }]
+                }
+            })
+
+            //Patient Other Document - Update
+            .state('patient.editOtherDocument', {
+                url: '/editOtherDocument/{id}/{other_doc_id}',
+                templateUrl: 'tpl/patient_other_documents/update.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('textAngular').then(
+                                    function () {
+                                        return $ocLazyLoad.load(['tpl/patient_other_documents/patient_other_documents.js']);
+                                    }
+                            );
+                        }]
+                }
+            })
+
             //Patient document - Index
             .state('patient.document', {
                 url: '/document/{id}',
