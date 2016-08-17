@@ -262,27 +262,27 @@ class PharmacyproductController extends ActiveController {
                     ORDER BY  a.product_name
                     LIMIT 0,:limit", [':search_text' => $text_search . '*', ':limit' => $limit, ':tenant_id' => $tenant_id]
                 );
-                $products = $command->queryAll();
-                
-                if(empty($products)){
-                    $command = $connection->createCommand("
-                        SELECT a.product_id, a.product_name, b.generic_id, b.generic_name, c.drug_class_id, c.drug_name, 
-                        CONCAT(b.generic_name, ' // ', a.product_name, ' | ', a.product_unit_count, ' | ', a.product_unit) AS prescription, '' as selected
-                        FROM pha_product a
-                        JOIN pha_generic b
-                        ON b.generic_id = a.generic_id
-                        LEFT OUTER JOIN pha_drug_class c
-                        ON c.drug_class_id = a.drug_class_id
-                        WHERE a.tenant_id = :tenant_id
-                        AND MATCH(a.product_name) AGAINST(:search_text IN BOOLEAN MODE)
-                        OR MATCH(b.generic_name) AGAINST(:search_text IN BOOLEAN MODE)
-                        OR MATCH(c.drug_name) AGAINST(:search_text IN BOOLEAN MODE)
-                        ORDER BY  a.product_name
-                        LIMIT 0,:limit", [':search_text' => $text_search . '*', ':limit' => $limit, ':tenant_id' => $tenant_id]
-                    );
-                }
             }
             $products = $command->queryAll();
+            
+            if(!isset($post['product_id']) && empty($products)){
+                $command = $connection->createCommand("
+                    SELECT a.product_id, a.product_name, b.generic_id, b.generic_name, c.drug_class_id, c.drug_name, 
+                    CONCAT(b.generic_name, ' // ', a.product_name, ' | ', a.product_unit_count, ' | ', a.product_unit) AS prescription, '' as selected
+                    FROM pha_product a
+                    JOIN pha_generic b
+                    ON b.generic_id = a.generic_id
+                    LEFT OUTER JOIN pha_drug_class c
+                    ON c.drug_class_id = a.drug_class_id
+                    WHERE a.tenant_id = :tenant_id
+                    AND MATCH(a.product_name) AGAINST(:search_text IN BOOLEAN MODE)
+                    OR MATCH(b.generic_name) AGAINST(:search_text IN BOOLEAN MODE)
+                    OR MATCH(c.drug_name) AGAINST(:search_text IN BOOLEAN MODE)
+                    ORDER BY  a.product_name
+                    LIMIT 0,:limit", [':search_text' => $text_search . '*', ':limit' => $limit, ':tenant_id' => $tenant_id]
+                );
+                $products = $command->queryAll();
+            }
 
             //Get Routes
             $command = $connection->createCommand("
