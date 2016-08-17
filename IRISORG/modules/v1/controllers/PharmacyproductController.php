@@ -218,24 +218,51 @@ class PharmacyproductController extends ActiveController {
         }
     }
 
+    private $_connection;
+
     public function actionGetprescription() {
         $post = Yii::$app->getRequest()->post();
 
         $products = [];
         if (isset($post['search']) && !empty($post['search']) && strlen($post['search']) > 1) {
-            $text = $post['search'];
+            $text = rtrim($post['search'], '-');
             $tenant_id = Yii::$app->user->identity->logged_tenant_id;
 
-            $connection = Yii::$app->client;
+            $this->_connection = Yii::$app->client;
             $limit = 10;
 
             $text_search = str_replace(' ', '* ', $text);
 
             //Get Products
-            if(isset($post['product_id'])){
-                $command = $connection->createCommand("
+            $products = $this->_getProducts($text_search, $tenant_id, $limit);
+            
+            //Get Routes
+            $routes = $this->_getRoutes($products, $text_search, $tenant_id, $limit);
+
+            if (!empty($routes)) {
+                $products = $this->_mergeArrayWithProducts($products, $routes, 'route');
+            }
+
+            //Get Frequencies
+            $frequencies = $this->_getFrequencies($text, $tenant_id, $limit);
+
+            if (!empty($frequencies)) {
+                $products = $this->_mergeArrayWithProducts($products, $frequencies, 'frequency');
+            }
+        }
+
+        return ['prescription' => $products];
+    }
+
+    private function _getProducts($text_search, $tenant_id, $limit) {
+        $post = Yii::$app->getRequest()->post();
+        $products = [];
+
+        if (isset($post['product_id'])) {
+            //Retrieve One product
+            $command = $this->_connection->createCommand("
                     SELECT a.product_id, a.product_name, b.generic_id, b.generic_name, c.drug_class_id, c.drug_name, 
-                    CONCAT(b.generic_name, ' // ', a.product_name, ' | ', a.product_unit_count, ' | ', a.product_unit) AS prescription, '' as selected
+                    CONCAT(b.generic_name, ' // ', a.product_name, ' | ', a.product_unit_count, ' | ', a.product_unit) AS prescription, '' as selected, a.product_description_id
                     FROM pha_product a
                     JOIN pha_generic b
                     ON b.generic_id = a.generic_id
@@ -243,13 +270,14 @@ class PharmacyproductController extends ActiveController {
                     ON c.drug_class_id = a.drug_class_id
                     WHERE a.tenant_id = :tenant_id
                     AND a.product_id = :product_id
-                    ORDER BY  a.product_name
+                    ORDER BY a.product_name
                     LIMIT 0,:limit", [':limit' => $limit, ':tenant_id' => $tenant_id, ':product_id' => $post['product_id']]
-                );
-            }else{
-                $command = $connection->createCommand("
+            );
+        } else {
+            //Retrieve (product && generic || drug)
+            $command = $this->_connection->createCommand("
                     SELECT a.product_id, a.product_name, b.generic_id, b.generic_name, c.drug_class_id, c.drug_name, 
-                    CONCAT(b.generic_name, ' // ', a.product_name, ' | ', a.product_unit_count, ' | ', a.product_unit) AS prescription, '' as selected
+                    CONCAT(b.generic_name, ' // ', a.product_name, ' | ', a.product_unit_count, ' | ', a.product_unit) AS prescription, '' as selected, a.product_description_id
                     FROM pha_product a
                     JOIN pha_generic b
                     ON b.generic_id = a.generic_id
@@ -259,16 +287,17 @@ class PharmacyproductController extends ActiveController {
                     AND MATCH(a.product_name) AGAINST(:search_text IN BOOLEAN MODE)
                     AND (MATCH(b.generic_name) AGAINST(:search_text IN BOOLEAN MODE)
                     OR MATCH(c.drug_name) AGAINST(:search_text IN BOOLEAN MODE))
-                    ORDER BY  a.product_name
+                    ORDER BY a.product_name
                     LIMIT 0,:limit", [':search_text' => $text_search . '*', ':limit' => $limit, ':tenant_id' => $tenant_id]
-                );
-            }
-            $products = $command->queryAll();
-            
-            if(!isset($post['product_id']) && empty($products)){
-                $command = $connection->createCommand("
+            );
+        }
+        $products = $command->queryAll();
+
+        if (empty($products) && !isset($post['product_id'])) {
+            //Retrieve (product || generic || drug)
+            $command = $this->_connection->createCommand("
                     SELECT a.product_id, a.product_name, b.generic_id, b.generic_name, c.drug_class_id, c.drug_name, 
-                    CONCAT(b.generic_name, ' // ', a.product_name, ' | ', a.product_unit_count, ' | ', a.product_unit) AS prescription, '' as selected
+                    CONCAT(b.generic_name, ' // ', a.product_name, ' | ', a.product_unit_count, ' | ', a.product_unit) AS prescription, '' as selected, a.product_description_id
                     FROM pha_product a
                     JOIN pha_generic b
                     ON b.generic_id = a.generic_id
@@ -278,52 +307,104 @@ class PharmacyproductController extends ActiveController {
                     AND MATCH(a.product_name) AGAINST(:search_text IN BOOLEAN MODE)
                     OR MATCH(b.generic_name) AGAINST(:search_text IN BOOLEAN MODE)
                     OR MATCH(c.drug_name) AGAINST(:search_text IN BOOLEAN MODE)
-                    ORDER BY  a.product_name
+                    ORDER BY a.product_name
                     LIMIT 0,:limit", [':search_text' => $text_search . '*', ':limit' => $limit, ':tenant_id' => $tenant_id]
-                );
-                $products = $command->queryAll();
-            }
+            );
+            $products = $command->queryAll();
+        }
+        return $products;
+    }
 
-            //Get Routes
-            $command = $connection->createCommand("
-                SELECT route_id, route_name as route
-                FROM pat_prescription_route
-                WHERE MATCH(route_name) AGAINST(:search_text IN BOOLEAN MODE)
-                AND tenant_id = :tenant_id
-                ORDER BY  route_name
-                LIMIT 0,:limit", [':search_text' => $text_search . '*', ':limit' => $limit, ':tenant_id' => $tenant_id]
+    private function _getRoutes($products, $text_search, $tenant_id, $limit) {
+        $post = Yii::$app->getRequest()->post();
+        $routes = [];
+
+        //If product has been selected
+        if (isset($post['product_id']) && !empty($products)) {
+            $description_id = $products[0]['product_description_id'];
+
+            if (isset($post['route_id'])) {
+                //Retrieve One route
+                $command = $this->_connection->createCommand("
+                        SELECT a.route_id, a.route_name AS route
+                        FROM pat_prescription_route a
+                        WHERE a.route_id= :route_id
+                        AND a.tenant_id = :tenant_id
+                        ORDER BY a.route_name
+                        LIMIT 0,:limit", [':limit' => $limit, ':tenant_id' => $tenant_id, ':route_id' => $post['route_id']]
+                );
+            } else {
+                //Retrieve routes based on description
+                $command = $this->_connection->createCommand("
+                        SELECT a.route_id, a.route_name AS route
+                        FROM pat_prescription_route a
+                        JOIN pha_descriptions_routes b
+                        ON a.route_id = b.route_id
+                        WHERE b.description_id = :desc_id
+                        AND a.tenant_id = :tenant_id
+                        ORDER BY a.route_name
+                        LIMIT 0,:limit", [':limit' => $limit, ':tenant_id' => $tenant_id, ':desc_id' => $description_id]
+                );
+            }
+            $routes = $command->queryAll();
+        }
+
+        //If product has not been selected
+        if (!isset($post['product_id']) && !empty($products)) {
+            //Retrieve related routes
+            $command = $this->_connection->createCommand("
+                    SELECT a.route_id, a.route_name as route,
+                    (
+                        SELECT GROUP_CONCAT(c.description_id) 
+                        FROM  pha_descriptions_routes c
+                        WHERE c.route_id = a.route_id
+                        AND c.tenant_id = a.tenant_id
+                    ) AS description_ids
+                    FROM pat_prescription_route a
+                    JOIN pha_descriptions_routes b
+                    ON a.route_id = b.route_id
+                    WHERE MATCH(a.route_name) AGAINST(:search_text IN BOOLEAN MODE)
+                    AND a.tenant_id = :tenant_id
+                    GROUP BY a.route_name
+                    ORDER BY a.route_name
+                    LIMIT 0,:limit", [':search_text' => $text_search . '*', ':limit' => $limit, ':tenant_id' => $tenant_id]
             );
             $routes = $command->queryAll();
+        }
+        return $routes;
+    }
 
-            if (!empty($routes)) {
-                $products = $this->_mergeArrayWithProducts($products, $routes, 'route');
-            }
+    private function _getFrequencies($text, $tenant_id, $limit) {
+        $post = Yii::$app->getRequest()->post();
+        $frequencies = [];
 
-            $strings = $this->_getFrquenceyMatchStrings($text);
-
-            if (!empty($strings)) {
-                //Get Frequencies
-                $query = "SELECT freq_id, freq_name as frequency 
+        $strings = $this->_getFrquenceyMatchStrings($text);
+        
+        if (!empty($strings)) {
+            $query = "SELECT freq_id, freq_name as frequency 
                     FROM pat_prescription_frequency 
                     WHERE";
-                foreach ($strings as $key => $string) {
-                    $query .= " freq_name like '%$string%' OR";
-                }
-                $query = rtrim($query, ' OR');
-                $query .= "AND tenant_id = :tenant_id
+            foreach ($strings as $key => $string) {
+                $query .= " freq_name like '%$string%' OR";
+            }
+            $query = rtrim($query, ' OR');
+            $query .= "AND tenant_id = :tenant_id
                     ORDER BY  freq_name
                     LIMIT 0,:limit";
 
-                $command = $connection->createCommand($query, [':limit' => $limit, ':tenant_id' => $tenant_id]);
-                $frequencies = $command->queryAll();
-
-                if (!empty($frequencies)) {
-                    $products = $this->_mergeArrayWithProducts($products, $frequencies, 'frequency');
-                }
-            }
+            $command = $this->_connection->createCommand($query, [':limit' => $limit, ':tenant_id' => $tenant_id]);
+            $frequencies = $command->queryAll();
+        } else if (isset($post['route_id'])) {
+            $command = $this->_connection->createCommand("
+                    SELECT freq_id, freq_name as frequency 
+                    FROM pat_prescription_frequency
+                    WHERE tenant_id = :tenant_id
+                    ORDER BY  freq_name
+                    LIMIT 0,:limit", [':limit' => $limit, ':tenant_id' => $tenant_id]
+            );
+            $frequencies = $command->queryAll();
         }
-
-        return ['prescription' => $products];
+        return $frequencies;
     }
 
     private function _getFrquenceyMatchStrings($string) {
@@ -341,6 +422,15 @@ class PharmacyproductController extends ActiveController {
         $new_result = [];
         foreach ($array as $rkey => $val) {
             foreach ($products as $pkey => $product) {
+                //Validation for Route with description
+                if ($pres_string == 'route' && isset($val['description_ids'])) {
+                    $ids = explode(',', $val['description_ids']);
+                    if (!in_array($product['product_description_id'], $ids)) {
+                        continue;
+                    }
+                }
+                //End
+
                 $prescription = ['prescription' => $product['prescription'] . ' // ' . $val[$pres_string]];
                 $new_result[] = array_merge($product, $val, $prescription);
             }
