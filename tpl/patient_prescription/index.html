@@ -240,19 +240,56 @@
                                                                                                                               e-required>
                                                                                                                             {{ item.frequency || 'empty' }}
                                                                                                                         </span>-->
+                                                            
+                                                            <div id="freq_{{key}}_3" class="freq_div_{{key}} hide">
                                                             <span editable-text="item.frequency"
-                                                                  e-class="form-control m-b"
+                                                                  e-class="form-control m-b frequency_{{key}}"
                                                                   e-name="masked" 
-                                                                  e-ui-mask="9-9-9-9"
+                                                                      e-ui-mask="9-9-9"
                                                                   e-model-view-value="true"
                                                                   e-form="tableform" 
                                                                   e-typeahead="frequency as frequency.freq_name for frequency in frequencies | filter:$viewValue"
                                                                   e-autocomplete="off"
-                                                                  e-id="frequency"
+                                                                  e-id="frequency_{{key}}_3"
                                                                   e-ng-change="freqChange($data, item, key)"
-                                                                  e-required>
+                                                                  >
                                                                 {{ item.frequency || 'empty' }}
                                                             </span>
+                                                            </div>
+                                                            <div id="freq_{{key}}_4" class="freq_div_{{key}}">
+                                                                <span editable-text="item.frequency"
+                                                                      e-class="form-control m-b frequency_{{key}}"
+                                                                      e-name="masked" 
+                                                                      e-ui-mask="9-9-9-9"
+                                                                      e-model-view-value="true"
+                                                                      e-form="tableform" 
+                                                                      e-typeahead="frequency as frequency.freq_name for frequency in frequencies | filter:$viewValue"
+                                                                      e-autocomplete="off"
+                                                                      e-id="frequency_{{key}}_4"
+                                                                      e-ng-change="freqChange($data, item, key)"
+                                                                      >
+                                                                    {{ item.frequency || 'empty' }}
+                                                                </span>
+                                                            </div>
+                                                            <div id="freq_{{key}}_5" class="freq_div_{{key}} hide">
+                                                                <span editable-text="item.frequency"
+                                                                      e-class="form-control m-b frequency_{{key}}"
+                                                                      e-name="masked" 
+                                                                      e-ui-mask="9-9-9-9-9"
+                                                                      e-model-view-value="true"
+                                                                      e-form="tableform" 
+                                                                      e-typeahead="frequency as frequency.freq_name for frequency in frequencies | filter:$viewValue"
+                                                                      e-autocomplete="off"
+                                                                      e-id="frequency_{{key}}_5"
+                                                                      e-ng-change="freqChange($data, item, key)"
+                                                                      >
+                                                                    {{ item.frequency || 'empty' }}
+                                                                </span>
+                                                            </div>
+                                                            
+                                                            <a href="javascript:void(0)" ng-click="changeFreqMask(key, 3)">3</a>
+                                                            <a href="javascript:void(0)" ng-click="changeFreqMask(key, 4)">4</a>
+                                                            <a href="javascript:void(0)" ng-click="changeFreqMask(key, 5)">5</a>
                                                         </td>
                                                         <td align="center">
                                                             <span editable-text="item.number_of_days"

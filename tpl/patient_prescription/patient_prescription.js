@@ -274,6 +274,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         'presc_date': moment().format('YYYY-MM-DD HH:mm:ss'),
                         'price': $scope.addData.product.latest_price,
                         'total': $scope.calculate_price($scope.addData.frequency, $scope.addData.number_of_days, $scope.addData.product.latest_price),
+                        'freqMask': '9-9-9-9',
+                        'freqMaskCount': 4
                     };
                     var fav = $filter('filter')($scope.child.favourites, {product_id: $scope.addData.product.product_id});
 
@@ -316,6 +318,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                             'presc_date': moment().format('YYYY-MM-DD HH:mm:ss'),
                             'price': value.product.latest_price,
                             'total': $scope.calculate_price(value.frequency_name, value.number_of_days, value.product.latest_price),
+                            'freqMask': '9-9-9-9',
+                            'freqMaskCount': 4
                         };
                         var fav = $filter('filter')($scope.child.favourites, {product_id: value.product_id});
 
@@ -366,6 +370,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     'presc_date': moment().format('YYYY-MM-DD HH:mm:ss'),
                     'price': product.latest_price,
                     'total': $scope.calculate_price(prescription.frequency, 0, product.latest_price),
+                    'freqMask': '9-9-9-9',
+                    'freqMaskCount': 4
                 };
 
                 PrescriptionService.addPrescriptionItem(items);
@@ -451,8 +457,9 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 } else if (typeof prescriptionItem.product_name == 'undefined') {
                     _that.data.prescriptionItems[key].product_name = '';
                 }
+                _that.data.prescriptionItems[key].frequency = $('.frequency_' + key +':visible').val();
             });
-
+            
             /* For print bill */
             $scope.data2 = _that.data;
             $scope.prescriptionItems2 = $scope.data.prescriptionItems;
@@ -709,6 +716,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                                         'presc_date': moment().format('YYYY-MM-DD HH:mm:ss'),
                                                         'price': item.product.latest_price,
                                                         'total': $scope.calculate_price(item.frequency_name, item.number_of_days, item.product.latest_price),
+                                                        'freqMask': '9-9-9-9',
+                                                        'freqMaskCount': 4
                                                     };
                                                     var fav = $filter('filter')($scope.child.favourites, {product_id: item.product_id});
 
@@ -975,4 +984,21 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             return false;
         }
 
+        $scope.changeFreqMask = function(key, freq){
+            $('.freq_div_'+key).addClass('hide');
+            $('#freq_'+key+'_'+freq).removeClass('hide');
+            
+//            switch (freq){
+//                case 3:
+//                    mask = '9-9-9';
+//                    break;
+//                case 4:
+//                    mask = '9-9-9-9';
+//                    break;
+//                case 5:
+//                    mask = '9-9-9-9-9';
+//                    break;
+//            }
+            $scope.data.prescriptionItems[key].freqMaskCount = freq;
+        }
     }]);
