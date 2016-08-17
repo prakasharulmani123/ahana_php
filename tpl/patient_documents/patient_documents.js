@@ -201,7 +201,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                 'encounter_id': $scope.encounter.encounter_id,
                 'patient_id': $state.params.id,
                 'novalidate': true,
-                'status': '1',
+                'status': '0',
             });
             $scope.loadbar('show');
             $http({
