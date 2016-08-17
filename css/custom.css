@@ -327,8 +327,26 @@ out-patient-table .table > thead > tr > th label.i-checks{
 }
 
 .patient-search-result li.selected {
-    background-color: lightgray;   
+    background-color: lightgray none repeat scroll 0 0;   
 }
+
+#prescriptioncont-header li.selected {
+    background: #eee none repeat scroll 0 0;
+}
+
+#prescriptioncont-header {
+  width: 618px;
+  z-index: 9;
+}
+
+#prescriptioncont-header a{
+    text-transform: none;
+}
+
+#prescriptioncont-header li{
+    padding: 5px !important;
+}
+
 
 .modalload
 {

@@ -382,6 +382,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     }
                     $scope.prescription = '';
                 });
+                $scope.prescription_lists = {};
+                $scope.lastSelected = {};
             }
         }
 
@@ -597,7 +599,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.prescription_lists = {};
 
         $scope.$watch('prescription', function (newValue, oldValue) {
-            if (newValue != '') {
+            if (newValue != '' && newValue.length > 1) {
                 if (changeTimer !== false)
                     clearTimeout(changeTimer);
 
@@ -607,6 +609,9 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
                     if ($scope.lastSelected) {
                         _data['product_id'] = $scope.lastSelected.product_id;
+                        
+                        if(typeof $scope.lastSelected.route_id != 'undefined')
+                            _data['route_id'] = $scope.lastSelected.route_id;
                     }
 
                     $http({
@@ -902,15 +907,21 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             }
 
             var selected = $("#prescriptioncont-header .selected");
+            var li_count = $("#prescriptioncont-header li").length;
+            
             if (e.keyCode == 40 || e.keyCode == 38) {
+                $("#prescriptioncont-header li").removeClass("selected");
                 if (selected.length == 0) {
-                    $("#prescriptioncont-header li:last").addClass('selected');
-                    var selected = $("#prescriptioncont-header .selected");
+                    var selected = $("#prescriptioncont-header li:last");
+                }
+                
+                if(li_count == 1){
+                    var selected = $("#prescriptioncont-header li:first");
+                    selected.addClass('selected');
                 }
             }
 
             if (e.keyCode == 38) { // up
-                $("#prescriptioncont-header li").removeClass("selected");
                 if (selected.prev().length == 0) {
                     selected.siblings().last().addClass("selected");
                 } else {
@@ -919,7 +930,6 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             }
 
             if (e.keyCode == 40) { // down
-                $("#prescriptioncont-header li").removeClass("selected");
                 if (selected.next().length == 0) {
                     selected.siblings().first().addClass("selected");
                 } else {
@@ -936,7 +946,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             }
 
             //While Backspace
-            if (e.keyCode == 8) {
+            if (e.keyCode == 8 || e.keyCode == 46) {
                 $scope.lastSelected = {};
             }
 
@@ -948,10 +958,15 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $("body").on("mouseover", "#prescriptioncont-header li", function () {
             $("#prescriptioncont-header li").removeClass("selected");
             $(this).addClass("selected");
+            var Selected = $scope.prescription_lists[$(this).find("a").data('key')];
+            $('#prescription_global_search').val(Selected.prescription);
         });
 
         $scope.selectOption = function () {
             var link_tag = $("#prescriptioncont-header .selected").find("a");
+            
+            var Selected = $scope.prescription_lists[link_tag.data('key')];
+            $('#prescription_global_search').val(Selected.prescription);
             if (link_tag.length > 0) {
                 $(link_tag).trigger("click");
             } else {
