@@ -1,7 +1,7 @@
 <div class="hbox hbox-auto-xs hbox-auto-sm" ng-controller="ScannedDocumentsController" ng-init="initForm();"  nv-file-drop="" uploader="uploader" filters="queueLimit, customFilter">
     <div class="col w-lg bg-light b-r bg-auto">
         <div class="wrapper-md dker b-b">
-            <h3 class="m-n font-thin">Scanned Documents Details</h3>
+            <h3 class="m-n font-thin">Document Details</h3>
         </div>
         <div class="wrapper-md">  
             <!-- Example: nv-file-select="" uploader="{Object}" options="{Object}" filters="{String}" -->
@@ -98,8 +98,8 @@
                 <button type="button" class="btn btn-danger" ng-click="uploader.clearQueue()" ng-disabled="!uploader.queue.length">
                     <i class="fa fa-trash-o"></i> Remove all
                 </button>
-                <button class="btn btn-dark" ng-click="$state.go('patient.scannedDocuments', {id: $state.params.id})">
-                    <i class="fa fa-times"></i> Back
+                <button class="btn btn-dark" ng-click="$state.go('patient.document', {id: $state.params.id})">
+                    <i class="fa fa-repeat"></i> Back
                 </button>
             </div>
         </div>

@@ -8,8 +8,12 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
         $scope.xslt = '';
         $scope.data = {};
         $scope.encounter = {};
+
         //Documents Index Page
         $scope.loadPatDocumentsList = function () {
+            $scope.documents = [];
+            $scope.documents.push({label: 'Case History', value: 'CH'}, {label: 'Scanned Documents', value: 'SD'}, {label: 'Other Documents', value: 'OD'});
+
             $scope.isLoading = true;
             $scope.rowCollection = [];
             $http.get($rootScope.IRISOrgServiceUrl + '/patientdocuments/getpatientdocuments?patient_id=' + $state.params.id)
@@ -18,14 +22,11 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                         $scope.rowCollection = documents.result;
                     })
                     .error(function () {
-                        $scope.errorData = "An Error has occured while loading patient document!";
+                        $scope.errorData = "An Error has occured while loading patient documents!";
                     });
-
-            $scope.documents = [];
-            $scope.documents.push({label: 'Case History', value: 'CH'}, {label: 'Scanned Documents', value: 'SD'}, {label: 'Other Documents', value: 'OD'});
         };
 
-        //
+        //Create Document
         $scope.switchAddDocument = function () {
             if ($scope.add_document) {
                 if ($scope.add_document == 'CH') {
@@ -38,6 +39,61 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
             }
         }
 
+        //Delete
+        $scope.deleteDocument = function (doc_id, doc_type) {
+            if (doc_type == 'CH') {
+                URL = $rootScope.IRISOrgServiceUrl + "/patientdocuments/remove";
+            } else if (doc_type == 'OD') {
+                URL = $rootScope.IRISOrgServiceUrl + "/patientotherdocuments/remove";
+            } else if (doc_type == 'SD') {
+                URL = $rootScope.IRISOrgServiceUrl + "/patientscanneddocuments/remove";
+            }
+            var conf = confirm('Are you sure to delete ?');
+            if (conf) {
+                $scope.loadbar('show');
+                $http({
+                    url: URL,
+                    method: "POST",
+                    data: {doc_id: doc_id}
+                }).then(
+                        function (response) {
+                            $scope.loadbar('hide');
+                            if (response.data.success === true) {
+                                $scope.msg.successMessage = 'Document Deleted Successfully';
+                                $scope.loadPatDocumentsList();
+                            }
+                            else {
+                                $scope.errorData = response.data.message;
+                            }
+                        }
+                )
+            }
+        };
+
+        //Download
+        $scope.displayspin = '';
+        $scope.downloadDocument = function (scanned_doc_id) {
+            $scope.displayspin = scanned_doc_id;
+            $http.get($rootScope.IRISOrgServiceUrl + "/patientscanneddocuments/getscanneddocument?id=" + scanned_doc_id)
+                    .success(function (response) {
+                        $scope.displayspin = '';
+                        if (response.success === true) {
+                            var link = document.createElement('a');
+                            link.href = 'data:' + response.result.file_type + ';base64,' + response.file;
+                            link.download = response.result.file_org_name;
+                            document.body.appendChild(link);
+                            link.click();
+                            $timeout(function () {
+                                document.body.removeChild(link);
+                            }, 1000);
+                        } else {
+                            $scope.errorData = response.message;
+                        }
+                    }).
+                    error(function (data, status) {
+                    });
+
+        };
 
         // Check patient have active encounter
         $scope.isPatientHaveActiveEncounter = function (callback) {
@@ -339,29 +395,6 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
             });
         }
 
-        //Delete
-        $scope.deleteDocument = function (doc_id) {
-            var conf = confirm('Are you sure to delete ?');
-            if (conf) {
-                $scope.loadbar('show');
-                $http({
-                    url: $rootScope.IRISOrgServiceUrl + "/patientdocuments/remove",
-                    method: "POST",
-                    data: {doc_id: doc_id}
-                }).then(
-                        function (response) {
-                            $scope.loadbar('hide');
-                            if (response.data.success === true) {
-                                $scope.loadPatDocumentsList();
-                                $scope.msg.successMessage = 'Document Deleted Successfully';
-                            }
-                            else {
-                                $scope.errorData = response.data.message;
-                            }
-                        }
-                )
-            }
-        };
         $scope.submitXsl = function () {
             _data = $('#xmlform').serialize() + '&' + $.param({
                 'encounter_id': $scope.encounter.encounter_id,

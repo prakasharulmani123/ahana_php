@@ -2347,19 +2347,49 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
-
-            //Patient Scanned document - Index
-            .state('patient.scannedDocuments', {
-                url: '/scannedDocuments/{id}',
-                templateUrl: 'tpl/patient_scanned_documents/index.html',
+            
+            //Patient Document - Index
+            .state('patient.document', {
+                url: '/document/{id}',
+                templateUrl: 'tpl/patient_documents/index.html',
+                controller: 'PatientLeftSideNotificationCtrl',
                 resolve: {
-                    deps: ['$ocLazyLoad',
-                        function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('angularFileUpload').then(
-                                    function () {
-                                        return $ocLazyLoad.load('tpl/patient_scanned_documents/patient_scanned_documents.js');
-                                    }
-                            );
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/patient_documents/patient_documents.js']);
+                        }]
+                }
+            })
+            //Patient Document - Create
+            .state('patient.addDocument', {
+                url: '/addDocument/{id}',
+                templateUrl: 'tpl/patient_documents/create.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/patient_documents/patient_documents.js']);
+                        }]
+                }
+            })
+            //Patient Document - Update
+            .state('patient.editDocument', {
+                url: '/editDocument/{id}/{doc_id}',
+                templateUrl: 'tpl/patient_documents/update.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/patient_documents/patient_documents.js']);
+                        }]
+                }
+            })
+            //Patient Document - View
+            .state('patient.viewDocument', {
+                url: '/viewDocument/{id}/{doc_id}',
+                templateUrl: 'tpl/patient_documents/view.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/patient_documents/patient_documents.js']);
                         }]
                 }
             })
@@ -2395,7 +2425,6 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
-
             //Patient Other Document - Update
             .state('patient.editOtherDocument', {
                 url: '/editOtherDocument/{id}/{other_doc_id}',
@@ -2411,52 +2440,14 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
-
-            //Patient document - Index
-            .state('patient.document', {
-                url: '/document/{id}',
-                templateUrl: 'tpl/patient_documents/index.html',
-                controller: 'PatientLeftSideNotificationCtrl',
+            //Patient Other Document - View
+            .state('patient.viewOtherDocument', {
+                url: '/viewOtherDocument/{id}/{other_doc_id}',
+                templateUrl: 'tpl/patient_other_documents/view.html',
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/patient_documents/patient_documents.js']);
-                        }]
-                }
-            })
-
-            //Patient Document - Create
-            .state('patient.addDocument', {
-                url: '/addDocument/{id}',
-                templateUrl: 'tpl/patient_documents/create.html',
-                resolve: {
-                    deps: ['uiLoad',
-                        function (uiLoad) {
-                            return uiLoad.load(['tpl/patient_documents/patient_documents.js']);
-                        }]
-                }
-            })
-
-            //Patient document - Update
-            .state('patient.editDocument', {
-                url: '/editDocument/{id}/{doc_id}',
-                templateUrl: 'tpl/patient_documents/update.html',
-                resolve: {
-                    deps: ['uiLoad',
-                        function (uiLoad) {
-                            return uiLoad.load(['tpl/patient_documents/patient_documents.js']);
-                        }]
-                }
-            })
-
-            //Patient document - View
-            .state('patient.viewDocument', {
-                url: '/viewDocument/{id}/{doc_id}',
-                templateUrl: 'tpl/patient_documents/view.html',
-                resolve: {
-                    deps: ['uiLoad',
-                        function (uiLoad) {
-                            return uiLoad.load(['tpl/patient_documents/patient_documents.js']);
+                            return uiLoad.load(['tpl/patient_other_documents/patient_other_documents.js']);
                         }]
                 }
             })
