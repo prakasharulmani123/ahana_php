@@ -55,7 +55,7 @@ class PatientscanneddocumentsController extends ActiveController {
 
     //Delete Function
     public function actionRemove() {
-        $id = Yii::$app->getRequest()->post('scanned_doc_id');
+        $id = Yii::$app->getRequest()->post('doc_id');
         if ($id) {
             $model = PatScannedDocuments::find()->where(['scanned_doc_id' => $id])->one();
             $model->remove();

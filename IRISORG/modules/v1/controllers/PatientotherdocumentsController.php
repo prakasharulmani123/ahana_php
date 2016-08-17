@@ -52,7 +52,7 @@ class PatientotherdocumentsController extends ActiveController {
 
     //Delete Function
     public function actionRemove() {
-        $id = Yii::$app->getRequest()->post('other_doc_id');
+        $id = Yii::$app->getRequest()->post('doc_id');
         if ($id) {
             $model = PatOtherDocuments::find()->where(['other_doc_id' => $id])->one();
             $model->remove();

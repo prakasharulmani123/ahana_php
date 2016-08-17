@@ -54,17 +54,6 @@ class PatientdocumentsController extends ActiveController {
         ]);
     }
 
-    //Hide by Nad.
-//    public function actionUpdatedocumenttype() {
-//        $post = Yii::$app->getRequest()->post();
-//        $model = PatDocumentTypes::find()->where(['doc_type_id' => 1])->one();
-//        $model->attributes = array(
-//            'document_xml' => $post['xml'],
-//            'document_xslt' => $post['xslt'],
-//        );
-//        $model->save(false);
-//    }
-
     public function actionGetdocumenttype() {
         $get = Yii::$app->getRequest()->get();
         if (!empty($get)) {
@@ -92,21 +81,6 @@ class PatientdocumentsController extends ActiveController {
     }
 
     //Index Function
-//    public function actionGetpatientdocuments() {
-//        $get = Yii::$app->getRequest()->get();
-//
-//        if (!empty($get)) {
-//            $patient = PatPatient::getPatientByGuid($get['patient_id']);
-//            $result = [];
-//            $data = PatDocuments::find()->tenant()->andWhere(['patient_id' => $patient->patient_id])->groupBy('encounter_id')->orderBy(['encounter_id' => SORT_DESC])->all();
-//            foreach ($data as $key => $value) {
-//                $details = PatDocuments::find()->tenant()->andWhere(['patient_id' => $patient->patient_id, 'encounter_id' => $value->encounter_id])->orderBy(['doc_id' => SORT_DESC])->all();
-//                $result[$key] = ['data' => $value, 'all' => $details];
-//            }
-//            return ['success' => true, 'result' => $result];
-//        }
-//    }
-
     public function actionGetpatientdocuments() {
         $get = Yii::$app->getRequest()->get();
 
@@ -115,7 +89,6 @@ class PatientdocumentsController extends ActiveController {
             $condition = [
                 'patient_id' => $patient->patient_id,
             ];
-
             $data = VDocuments::find()
                     ->where($condition)
                     ->groupBy('encounter_id')
@@ -133,7 +106,6 @@ class PatientdocumentsController extends ActiveController {
 
                 $data[$key]['all'] = $details;
             }
-
             return ['success' => true, 'result' => $data];
         } else {
             return ['success' => false, 'message' => 'Invalid Access'];
