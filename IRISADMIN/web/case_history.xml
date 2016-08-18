@@ -383,7 +383,7 @@
                 <PROPERTIES>
                     <PROPERTY name="id">history_presenting_illness</PROPERTY>
                     <PROPERTY name="name">history_presenting_illness</PROPERTY>
-                    <PROPERTY name="class">form-control</PROPERTY>
+                    <PROPERTY name="class">form-control classy-edit</PROPERTY>
                     <PROPERTY name="rows">6</PROPERTY>
                 </PROPERTIES>
             </FIELD>
@@ -530,7 +530,7 @@
                 <PROPERTIES>
                     <PROPERTY name="id">past_psychiatric_history</PROPERTY>
                     <PROPERTY name="name">past_psychiatric_history</PROPERTY>
-                    <PROPERTY name="class">form-control</PROPERTY>
+                    <PROPERTY name="class">form-control classy-edit</PROPERTY>
                     <PROPERTY name="rows">6</PROPERTY>
                 </PROPERTIES>
             </FIELD>
@@ -618,7 +618,7 @@
                 <PROPERTIES>
                     <PROPERTY name="id">past_medical_history_notes</PROPERTY>
                     <PROPERTY name="name">past_medical_history_notes</PROPERTY>
-                    <PROPERTY name="class">form-control</PROPERTY>
+                    <PROPERTY name="class">form-control classy-edit</PROPERTY>
                     <PROPERTY name="rows">6</PROPERTY>
                 </PROPERTIES>
             </FIELD>
@@ -889,7 +889,7 @@
                     <PROPERTIES>
                         <PROPERTY name="id">treatment_history_notes</PROPERTY>
                         <PROPERTY name="name">treatment_history_notes</PROPERTY>
-                        <PROPERTY name="class">form-control</PROPERTY>
+                        <PROPERTY name="class">form-control classy-edit</PROPERTY>
                         <PROPERTY name="rows">6</PROPERTY>
                     </PROPERTIES>
                 </FIELD>
@@ -999,7 +999,7 @@
                     <PROPERTIES>
                         <PROPERTY name="id">history_family</PROPERTY>
                         <PROPERTY name="name">history_family</PROPERTY>
-                        <PROPERTY name="class">form-control</PROPERTY>
+                        <PROPERTY name="class">form-control classy-edit</PROPERTY>
                         <PROPERTY name="rows">6</PROPERTY>
                     </PROPERTIES>
                 </FIELD>
@@ -1227,7 +1227,7 @@
                         <PROPERTIES>
                             <PROPERTY name="id">birthdevelopmentnotes</PROPERTY>
                             <PROPERTY name="name">birthdevelopmentnotes</PROPERTY>
-                            <PROPERTY name="class">form-control</PROPERTY>
+                            <PROPERTY name="class">form-control classy-edit</PROPERTY>
                             <PROPERTY name="rows">6</PROPERTY>
                         </PROPERTIES>
                     </FIELD>
@@ -1352,7 +1352,7 @@
                         <PROPERTIES>
                             <PROPERTY name="id">educational_history_notes</PROPERTY>
                             <PROPERTY name="name">educational_history_notes</PROPERTY>
-                            <PROPERTY name="class">form-control</PROPERTY>
+                            <PROPERTY name="class">form-control classy-edit</PROPERTY>
                             <PROPERTY name="rows">6</PROPERTY>
                         </PROPERTIES>
                     </FIELD>
@@ -1455,7 +1455,7 @@
                         <PROPERTIES>
                             <PROPERTY name="id">occupational_history_notes</PROPERTY>
                             <PROPERTY name="name">occupational_history_notes</PROPERTY>
-                            <PROPERTY name="class">form-control</PROPERTY>
+                            <PROPERTY name="class">form-control classy-edit</PROPERTY>
                             <PROPERTY name="rows">6</PROPERTY>
                         </PROPERTIES>
                     </FIELD>
@@ -1606,7 +1606,7 @@
                         <PROPERTIES>
                             <PROPERTY name="id">martial_history</PROPERTY>
                             <PROPERTY name="name">martial_history</PROPERTY>
-                            <PROPERTY name="class">form-control</PROPERTY>
+                            <PROPERTY name="class">form-control classy-edit</PROPERTY>
                             <PROPERTY name="rows">6</PROPERTY>
                         </PROPERTIES>
                     </FIELD>
@@ -1667,7 +1667,7 @@
                         <PROPERTIES>
                             <PROPERTY name="id">sexual_history_notes</PROPERTY>
                             <PROPERTY name="name">sexual_history_notes</PROPERTY>
-                            <PROPERTY name="class">form-control</PROPERTY>
+                            <PROPERTY name="class">form-control classy-edit</PROPERTY>
                             <PROPERTY name="rows">6</PROPERTY>
                         </PROPERTIES>
                     </FIELD>
@@ -1742,7 +1742,7 @@
                         <PROPERTIES>
                             <PROPERTY name="id">substance_history_notes</PROPERTY>
                             <PROPERTY name="name">substance_history_notes</PROPERTY>
-                            <PROPERTY name="class">form-control</PROPERTY>
+                            <PROPERTY name="class">form-control classy-edit</PROPERTY>
                             <PROPERTY name="rows">6</PROPERTY>
                         </PROPERTIES>
                     </FIELD>
@@ -1825,7 +1825,7 @@
                         <PROPERTIES>
                             <PROPERTY name="id">premorbid_personality_notes</PROPERTY>
                             <PROPERTY name="name">premorbid_personality_notes</PROPERTY>
-                            <PROPERTY name="class">form-control</PROPERTY>
+                            <PROPERTY name="class">form-control classy-edit</PROPERTY>
                             <PROPERTY name="rows">6</PROPERTY>
                         </PROPERTIES>
                     </FIELD>
@@ -2104,7 +2104,7 @@
                     <PROPERTIES>
                         <PROPERTY name="id">possession_of_thought_notes</PROPERTY>
                         <PROPERTY name="name">possession_of_thought_notes</PROPERTY>
-                        <PROPERTY name="class">form-control</PROPERTY>
+                        <PROPERTY name="class">form-control classy-edit</PROPERTY>
                         <PROPERTY name="rows">6</PROPERTY>
                     </PROPERTIES>
                 </FIELD>
@@ -2214,7 +2214,7 @@
                     <PROPERTIES>
                         <PROPERTY name="id">mood_notes</PROPERTY>
                         <PROPERTY name="name">mood_notes</PROPERTY>
-                        <PROPERTY name="class">form-control</PROPERTY>
+                        <PROPERTY name="class">form-control classy-edit</PROPERTY>
                         <PROPERTY name="rows">6</PROPERTY>
                     </PROPERTIES>
                 </FIELD>
@@ -2272,7 +2272,7 @@
                     <PROPERTIES>
                         <PROPERTY name="id">Perception_notes</PROPERTY>
                         <PROPERTY name="name">Perception_notes</PROPERTY>
-                        <PROPERTY name="class">form-control</PROPERTY>
+                        <PROPERTY name="class">form-control classy-edit</PROPERTY>
                         <PROPERTY name="rows">6</PROPERTY>
                     </PROPERTIES>
                 </FIELD>
@@ -2448,7 +2448,7 @@
                     <PROPERTIES>
                         <PROPERTY name="id">higher_mental_notes</PROPERTY>
                         <PROPERTY name="name">higher_mental_notes</PROPERTY>
-                        <PROPERTY name="class">form-control</PROPERTY>
+                        <PROPERTY name="class">form-control classy-edit</PROPERTY>
                         <PROPERTY name="rows">6</PROPERTY>
                     </PROPERTIES>
                 </FIELD>

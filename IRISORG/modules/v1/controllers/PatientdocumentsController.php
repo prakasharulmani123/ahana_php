@@ -88,7 +88,6 @@ class PatientdocumentsController extends ActiveController {
             $patient = PatPatient::getPatientByGuid($get['patient_id']);
             $condition = [
                 'patient_id' => $patient->patient_id,
-                'status' => 1,
                 'deleted_at' => '0000-00-00 00:00:00',
             ];
             $data = VDocuments::find()
