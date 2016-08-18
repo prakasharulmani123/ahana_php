@@ -34,7 +34,7 @@
                                         <div class="row ng-binding"> 
                                             <a ng-bind-html="patient.Patient.fullname | highlight:patientselected" href="javascript:void(0)" ng-click="goToPatient(patient.Patient.patient_guid)" class="ng-binding">
                                             </a>
-                                            <b>({{patient.Patient.patient_age}}y) </b>
+                                            <b ng-if="patient.Patient.patient_age">({{patient.Patient.patient_age}}y) </b>
                                             <br>
                                             <span class="pull-left"  ng-bind-html="patient.Patient.patient_int_code | highlight:patientselected"></span> 
                                             &nbsp; &nbsp;<span ng-bind-html="patient.Patient.patient_mobile | highlight:patientselected"> </span> 

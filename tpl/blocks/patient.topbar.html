@@ -17,7 +17,7 @@
                         <i class="fa fa-calendar"></i>  
                         {{patientObj.doa}}
                     </span>
-                    <i class="fa fa-venus-mars"></i> {{app.patientDetail.patientSex}} ({{patientObj.patient_age}}y)                       	
+                    <i class="fa fa-venus-mars"></i> {{app.patientDetail.patientSex}} <span ng-if="patientObj.patient_age">({{patientObj.patient_age}}y)</span>                       	
                     <i class="fa fa-phone"></i>  {{patientObj.patient_mobile}}      
                     <i aria-hidden="true" class="fa fa-ban" ng-show="false"></i> 
                     <b ng-show="false"> Allergies : </b>  
