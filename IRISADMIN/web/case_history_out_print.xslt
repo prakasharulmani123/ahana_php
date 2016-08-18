@@ -91,11 +91,22 @@
                             <xsl:when test="@type='textareaFull'">
                                 <xsl:if test="VALUE and VALUE!=''">
                                     <tr class="{@header2Class}">
-                                        <td>
+                                        <th colspan="2">
                                             <xsl:value-of select="@label" />
-                                        </td>
-                                        <td>
-                                            <xsl:value-of select="VALUE"></xsl:value-of>
+                                        </th>
+                                    </tr>
+                                    <tr class="{@header2Class}">
+                                        <td colspan="2">
+                                            <span id="{@id}">
+                                                <xsl:attribute name="class">
+                                                    <xsl:for-each select="PROPERTIES/PROPERTY">
+                                                        <xsl:if test="@name='class'">
+                                                            <xsl:value-of select="current()"></xsl:value-of>
+                                                        </xsl:if>
+                                                    </xsl:for-each>
+                                                </xsl:attribute>
+                                                <xsl:value-of select="VALUE" disable-output-escaping="yes"></xsl:value-of>
+                                            </span>
                                         </td>
                                     </tr>
                                 </xsl:if>
@@ -577,11 +588,22 @@
                                                     <xsl:when test="@type='textareaFull'">
                                                         <xsl:if test="VALUE and VALUE!=''">
                                                             <tr class="{@header2Class}">
-                                                                <td>
+                                                                <td colspan="2">
                                                                     <xsl:value-of select="@label" />
                                                                 </td>
-                                                                <td>
-                                                                    <xsl:value-of select="VALUE"></xsl:value-of>
+                                                            </tr>
+                                                            <tr class="{@header2Class}">
+                                                                <td colspan="2">
+                                                                    <span id="{@id}">
+                                                                        <xsl:attribute name="class">
+                                                                            <xsl:for-each select="PROPERTIES/PROPERTY">
+                                                                                <xsl:if test="@name='class'">
+                                                                                    <xsl:value-of select="current()"></xsl:value-of>
+                                                                                </xsl:if>
+                                                                            </xsl:for-each>
+                                                                        </xsl:attribute>
+                                                                        <xsl:value-of select="VALUE" disable-output-escaping="yes"></xsl:value-of>
+                                                                    </span>
                                                                 </td>
                                                             </tr>
                                                         </xsl:if>

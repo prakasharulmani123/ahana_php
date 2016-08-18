@@ -102,7 +102,16 @@
                                                 <label>
                                                     <xsl:value-of select="@label" />
                                                 </label>&#160;
-                                                <xsl:value-of select="VALUE"></xsl:value-of>
+                                                <div id="{@id}">
+                                                    <xsl:attribute name="class">
+                                                        <xsl:for-each select="PROPERTIES/PROPERTY">
+                                                            <xsl:if test="@name='class'">
+                                                                <xsl:value-of select="current()"></xsl:value-of>
+                                                            </xsl:if>
+                                                        </xsl:for-each>
+                                                    </xsl:attribute>
+                                                    <xsl:value-of select="VALUE" disable-output-escaping="yes"></xsl:value-of>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="line line-dashed b-b line-lg "></div>
@@ -596,7 +605,16 @@
                                                                     <label>
                                                                         <xsl:value-of select="@label" />
                                                                     </label>&#160;
-                                                                    <xsl:value-of select="VALUE"></xsl:value-of>
+                                                                    <div id="{@id}">
+                                                                        <xsl:attribute name="class">
+                                                                            <xsl:for-each select="PROPERTIES/PROPERTY">
+                                                                                <xsl:if test="@name='class'">
+                                                                                    <xsl:value-of select="current()"></xsl:value-of>
+                                                                                </xsl:if>
+                                                                            </xsl:for-each>
+                                                                        </xsl:attribute>
+                                                                        <xsl:value-of select="VALUE" disable-output-escaping="yes"></xsl:value-of>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                             <div class="line line-dashed b-b line-lg "></div>
