@@ -184,6 +184,9 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                                     });
                                 }, 2000);
 
+                                $timeout(function () {
+                                    $scope.ckeditorReplace();
+                                }, 500);
                                 $scope.startAutoSave();
                             });
                         }
@@ -224,6 +227,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
             if (angular.isDefined(stop))
                 return;
             stop = $interval(function () {
+                $scope.ckeditorupdate();
                 _data = $('#xmlform').serialize() + '&' + $.param({
                     'encounter_id': $scope.encounter.encounter_id,
                     'patient_id': $state.params.id,
@@ -262,6 +266,9 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                         $scope.xml = pat_doc_response.result.document_xml;
                         $scope.encounter = {encounter_id: pat_doc_response.result.encounter_id};
                         $scope.isLoading = false;
+                        $timeout(function () {
+                            $scope.ckeditorReplace();
+                        }, 500);
                         $scope.startAutoSave();
                     });
                 }
@@ -396,6 +403,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
         }
 
         $scope.submitXsl = function () {
+            $scope.ckeditorupdate();
             _data = $('#xmlform').serialize() + '&' + $.param({
                 'encounter_id': $scope.encounter.encounter_id,
                 'patient_id': $state.params.id,
@@ -428,7 +436,16 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                         }
                     }
             );
-        }
+        };
+
+        $scope.ckeditorupdate = function () {
+            for (instance in CKEDITOR.instances)
+                CKEDITOR.instances[instance].updateElement();
+        };
+
+        $scope.ckeditorReplace = function () {
+            CKEDITOR.replaceAll('classy-edit');
+        };
 
         $scope.panel_bars = [];
         $scope.page_offest = '';
@@ -480,6 +497,8 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
             var rowCount = $('#' + table_id + ' tbody  tr').length;
             var firstMsg = $('#' + table_id).find("tr:last");
             var curOffset = firstMsg.offset().top - $(document).scrollTop();
+
+            $scope.ckeditorupdate();
             _data = $('#xmlform').serialize() + '&' + $.param({
                 'encounter_id': $scope.encounter.encounter_id,
                 'patient_id': $state.params.id,
@@ -519,6 +538,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                                 var firstMsg = $('#' + table_id).find("tr:last");
                                 $(document).scrollTop(firstMsg.offset().top - curOffset);
                                 $scope.spinnerbar('hide');
+                                $scope.ckeditorReplace();
                             }, 500);
                         } else {
                             $scope.spinnerbar('hide');

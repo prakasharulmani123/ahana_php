@@ -45,7 +45,7 @@
                 <img ng-src="img/loader.gif"  alt=""/>
             </div>
         </div>
-        
+
         <div id="sb-site">
             <div class="app" id="app" ng-class="{'app-header-fixed':app.settings.headerFixed,  'app-aside-folded':app.settings.asideFolded, 'app-aside-dock':app.settings.asideDock, 'container':app.settings.container}" ui-view></div>
         </div>
@@ -107,8 +107,8 @@
                             </div>
                         </div>
                         <div class="wrapper m-t b-t b-light">
-                            <form ng-submit="addNotes()" class="m-b-none ng-pristine ng-valid ng-submitted" ng-init="data = {};
-                                                            notes_error = false;">
+                                            <form ng-submit="addNotes()" class="m-b-none ng-pristine ng-valid ng-submitted" ng-init="data = {};
+                                        notes_error = false;">
                                 <div class="input-group">
                                     <input type="text" placeholder="Say something" class="form-control" ng-model="data.notes">
                                     <span class="input-group-btn">
@@ -171,8 +171,8 @@
                         </div>
 
                         <div class="wrapper m-t b-t b-light">
-                                            <form class="m-b-none ng-pristine ng-valid ng-submitted" ng-submit="addVital()" ng-init="vitaldata = {};
-                                        vital_error = false;">
+                            <form class="m-b-none ng-pristine ng-valid ng-submitted" ng-submit="addVital()" ng-init="vitaldata = {};
+                                                            vital_error = false;">
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-sm-6">
@@ -344,6 +344,6 @@
         <!-- Lazy loading -->
         <script type="text/javascript" src="js/classie.js"></script>
         <script type="text/javascript" src="js/classie_script.js"></script>
-
+        <script src="ckeditor/ckeditor.js"></script>
     </body>
 </html>

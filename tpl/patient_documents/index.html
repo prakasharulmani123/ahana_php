@@ -53,7 +53,12 @@
                     <tr ng-repeat-end ng-show="expanded" ng-repeat="(doc_key, doc) in value.all">
                         <td align="center" valign="middle"></td>
                         <td valign="middle"> {{doc.date_time| moment:'DD/MM/YYYY - hh:mm A'}} </td>
-                        <td valign="middle"> {{doc.doc_type_name}} </td>
+                        <td valign="middle"> 
+                            <span ng-if="doc.doc_type == 'CH' && doc.status == '0'">
+                                <img ng-src="img/incomplete.gif" title="InComplete"  alt="InComplete" width="" height="" />
+                            </span>
+                            {{doc.doc_type_name}} 
+                        </td>
                         <td valign="middle"> {{doc.doc_name}} </td>
                         <td valign="middle">
                             <span ng-if="doc.doc_type == 'CH'">
