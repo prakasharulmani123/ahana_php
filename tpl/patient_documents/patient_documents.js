@@ -302,6 +302,12 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                         $scope.xml = pat_doc_response.result.document_xml;
                         $scope.isLoading = false;
                         $timeout(function () {
+                            
+                            $(".classy-edit").each(function(){
+                                $(this).removeClass("form-control");
+                                $(this).html($(this).text());
+                            });
+                            
                             $("#printThisElement table").each(function () {
                                 //RadGrid
                                 var RadGrid_tr = $(this).find("tr.RadGrid");
