@@ -1,8 +1,32 @@
-app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$anchorScroll', '$filter', '$timeout', '$modal', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $anchorScroll, $filter, $timeout, $modal) {
+app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$anchorScroll', '$filter', '$timeout', '$modal', '$location', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $anchorScroll, $filter, $timeout, $modal, $location) {
 
         editableThemes.bs3.inputClass = 'input-sm';
         editableThemes.bs3.buttonsClass = 'btn-sm';
         editableOptions.theme = 'bs3';
+
+        $scope.$on('HK_CREATE', function (e) {
+            if ($location.path() == '/pharmacy/sales') {
+                $state.go('pharmacy.saleCreate');
+            }
+        });
+
+        $scope.$on('HK_SAVE', function (e) {
+            var location_url = $location.path().split('/');
+            var url = location_url[1] + '/' + location_url[2];
+            var allowedPages = $.inArray(url, ['pharmacy/saleCreate', 'pharmacy/saleUpdate']) > -1;
+            if (allowedPages) {
+                $scope.saveForm($scope.data.formtype);
+            }
+            e.preventDefault();
+        });
+        
+        $scope.$on('HK_LIST', function (e) {
+            $state.go('pharmacy.sales');
+        });
+        
+        $scope.$on('HK_SEARCH', function (e) {
+            $('#filter').focus();
+        });
 
         //Expand table in Index page
         $scope.ctrl = {};
@@ -40,14 +64,14 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                     .success(function (saleList) {
                         $scope.isLoading = false;
                         $scope.rowCollection = saleList.sales;
-                        
+
                         angular.forEach($scope.rowCollection, function (row) {
                             row.all_dates = '';
                             angular.forEach(row.items, function (saleitem) {
                                 row.all_dates += saleitem.sale_date + " ";
                             });
                         });
-                        
+
                         $scope.displayedCollection = [].concat($scope.rowCollection);
                         $scope.form_filter = null;
                     })

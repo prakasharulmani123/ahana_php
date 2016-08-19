@@ -11,7 +11,7 @@ angular.module('app')
 config.$inject = ['$stateProvider', '$urlRouterProvider', '$httpProvider', 'ivhTreeviewOptionsProvider', 'JQ_CONFIG', 'hotkeysProvider', '$compileProvider'];
 function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOptionsProvider, JQ_CONFIG, hotkeysProvider, $compileProvider) {
 
-    hotkeysProvider.template = '<div class="my-own-cheatsheet">Hai</div>';
+//    hotkeysProvider.template = '<div class="my-own-cheatsheet">Hai</div>';
 
     $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension):/);
 

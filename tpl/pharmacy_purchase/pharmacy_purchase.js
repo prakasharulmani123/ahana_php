@@ -1,8 +1,46 @@
-app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$anchorScroll', '$filter', '$timeout', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $anchorScroll, $filter, $timeout) {
+app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$anchorScroll', '$filter', '$timeout', '$location', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $anchorScroll, $filter, $timeout, $location) {
 
         editableThemes.bs3.inputClass = 'input-sm';
         editableThemes.bs3.buttonsClass = 'btn-sm';
         editableOptions.theme = 'bs3';
+
+        $scope.$on('HK_CREATE', function (e) {
+            if ($location.path() == '/pharmacy/purchase') {
+                $state.go('pharmacy.purchaseCreate');
+            }
+        });
+
+        $scope.$on('HK_SAVE', function (e) {
+            var location_url = $location.path().split('/');
+            var url = location_url[1] + '/' + location_url[2];
+            var allowedPages = $.inArray(url, ['pharmacy/purchaseCreate', 'pharmacy/purchaseUpdate']) > -1;
+            if (allowedPages) {
+                $timeout(function () {
+                    angular.element("#save").trigger('click');
+                }, 100);
+            }
+            e.preventDefault();
+        });
+        
+        $scope.$on('HK_PRINT', function (e) {
+            var location_url = $location.path().split('/');
+            var url = location_url[1] + '/' + location_url[2];
+            var allowedPages = $.inArray(url, ['pharmacy/purchaseCreate', 'pharmacy/purchaseUpdate']) > -1;
+            if (allowedPages) {
+                $timeout(function () {
+                    angular.element("#save_print").trigger('click');
+                }, 100);
+            }
+            e.preventDefault();
+        });
+
+        $scope.$on('HK_LIST', function (e) {
+            $state.go('pharmacy.purchase');
+        });
+
+        $scope.$on('HK_SEARCH', function (e) {
+            $('#filter').focus();
+        });
 
         $scope.ctrl = {};
         $scope.ctrl.expandAll = function (expanded) {

@@ -138,8 +138,8 @@ angular.module('app')
                         $('.save-future').attr('disabled', false).html("Save & Future Appointment");
                     }
                 }
-                
-                $scope.spinnerbar = function(mode){
+
+                $scope.spinnerbar = function (mode) {
                     if (mode == 'show') {
                         $('.modalload').removeClass("hide").addClass("show");
                     } else if (mode == 'hide') {
@@ -342,8 +342,9 @@ angular.module('app')
 
                 //Hot Keys
                 hotkeys.add({
-                    combo: 'ctrl+n',
+                    combo: 'f5',
                     description: 'Create',
+                    allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
                     callback: function (event) {
                         $scope.$broadcast('HK_CREATE');
                         event.preventDefault();
@@ -351,7 +352,7 @@ angular.module('app')
                 });
 
                 hotkeys.add({
-                    combo: 'ctrl+s',
+                    combo: 'f6',
                     description: 'Save',
                     allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
                     callback: function (event) {
@@ -359,6 +360,61 @@ angular.module('app')
                         event.preventDefault();
                     }
                 });
+
+//                hotkeys.add({
+//                    combo: 'f7',
+//                    description: 'Delete',
+//                    callback: function (event) {
+//                        $scope.$broadcast('HK_DELETE');
+//                        event.preventDefault();
+//                    }
+//                });
+
+//                hotkeys.add({
+//                    combo: 'f8',
+//                    description: 'Cancel',
+//                    callback: function (event) {
+//                        $scope.$broadcast('HK_CANCEL');
+//                        event.preventDefault();
+//                    }
+//                });
+
+                hotkeys.add({
+                    combo: 'f9',
+                    description: 'List',
+                    allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
+                    callback: function (event) {
+                        $scope.$broadcast('HK_LIST');
+                        event.preventDefault();
+                    }
+                });
+                
+                hotkeys.add({
+                    combo: 'f10',
+                    description: 'Print',
+                    callback: function (event) {
+                        $scope.$broadcast('HK_PRINT');
+                        event.preventDefault();
+                    }
+                });
+                
+                hotkeys.add({
+                    combo: 'f11',
+                    description: 'View',
+                    callback: function (event) {
+                        $scope.$broadcast('HK_VIEW');
+                        event.preventDefault();
+                    }
+                });
+                
+//                hotkeys.add({
+//                    combo: 'f12',
+//                    description: 'Close',
+//                    callback: function (event) {
+//                        $scope.$broadcast('HK_CLOSE');
+//                        event.preventDefault();
+//                    }
+//                });
 
                 hotkeys.add({
                     combo: 's',
@@ -368,32 +424,21 @@ angular.module('app')
                         event.preventDefault();
                     }
                 });
-
-                hotkeys.add({
-                    combo: 'ctrl+left',
-                    description: 'Back',
-                    callback: function () {
-                        $window.history.back();
-                    }
-                });
-
-                hotkeys.add({
-                    combo: 'ctrl+right',
-                    description: 'Forward',
-                    callback: function () {
-                        $window.history.forward();
-                    }
-                });
-
-//                $scope.$on('HK_CREATE', function (e) {
-//                    alert('create');
-//                    angular.element(document.querySelectorAll("[hot-key-create]")).trigger('click');
+//
+//                hotkeys.add({
+//                    combo: 'ctrl+left',
+//                    description: 'Back',
+//                    callback: function () {
+//                        $window.history.back();
+//                    }
 //                });
-//                $scope.$on('HK_SAVE', function (e) {
-//                    alert('create');
-//                });
-//                $scope.$on('HK_SEARCH', function (e) {
-//                    alert('create');
+//
+//                hotkeys.add({
+//                    combo: 'ctrl+right',
+//                    description: 'Forward',
+//                    callback: function () {
+//                        $window.history.forward();
+//                    }
 //                });
 
                 $rootScope.$on('unauthorized', function () {

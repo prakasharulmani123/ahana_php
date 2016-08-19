@@ -1,4 +1,28 @@
-app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$modal', '$log', '$filter', function ($rootScope, $scope, $timeout, $http, $state, $modal, $log, $filter) {
+app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$modal', '$log', '$filter', '$location', function ($rootScope, $scope, $timeout, $http, $state, $modal, $log, $filter, $location) {
+
+        $scope.$on('HK_CREATE', function (e) {
+            if ($location.path() == '/pharmacy/products') {
+                $state.go('pharmacy.productAdd');
+            }
+        });
+        
+        $scope.$on('HK_SAVE', function (e) {
+            var location_url = $location.path().split('/');
+            var url = location_url[1] + '/' + location_url[2];
+            var allowedPages = $.inArray(url, ['pharmacy/productAdd', 'pharmacy/productEdit']) > -1;
+            if (allowedPages) {
+                $scope.saveForm($scope.data.formtype);
+            }
+            e.preventDefault();
+        });
+        
+        $scope.$on('HK_LIST', function (e) {
+            $state.go('pharmacy.products');
+        });
+        
+        $scope.$on('HK_SEARCH', function (e) {
+            $('#filter').focus();
+        });
 
         //Index Page
         $scope.loadProductsList = function () {
@@ -225,9 +249,9 @@ app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http
         $scope.packing_unit = 0;
         $scope.setPackageUnit = function () {
             purchasePackage = $filter('filter')($scope.packingUnits, {package_id: $scope.data.purchase_package_id});
-            if(purchasePackage.length > 0){
+            if (purchasePackage.length > 0) {
                 $scope.packing_unit = purchasePackage[0].package_unit;
-            }else{
+            } else {
                 $scope.packing_unit = 0;
                 $scope.data.sales_package_id = '';
             }
