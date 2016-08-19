@@ -13,15 +13,20 @@
                     <i aria-hidden="true" class="fa fa-user"></i> 
                     <b class="patient-name">{{patientObj.fullname}}</b>
                     ({{patientObj.patient_int_code}})
+                    <span ng-if="patientObj.patient_category" style="background-color: {{patientObj.patient_category_color}}" class="category_badge header-badge category_icon" tooltip="{{patientObj.patient_category_fullname}}" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom"> 
+                        {{patientObj.patient_category| uppercase}} 
+                    </span>
                     <span ng-show="patientObj.patActiveIp">
                         <i class="fa fa-calendar"></i>  
                         {{patientObj.doa}}
                     </span>
-                    <i class="fa fa-venus-mars"></i> {{app.patientDetail.patientSex}} <span ng-if="patientObj.patient_age">({{patientObj.patient_age}}y)</span>                       	
+                    <i class="fa fa-venus-mars"></i> 
+                    {{app.patientDetail.patientSex}} 
+                    <span ng-if="patientObj.patient_age">({{patientObj.patient_age}}y)</span>                       	
                     <i class="fa fa-phone"></i>  {{patientObj.patient_mobile}}      
                     <i aria-hidden="true" class="fa fa-ban" ng-show="false"></i> 
                     <b ng-show="false"> Allergies : </b>  
-                    <div class="pati-cate" ng-show="patientObj.have_encounter">{{patientObj.encounter_type}}</div>
+                    <!--                    <div class="pati-cate" ng-show="patientObj.have_encounter">{{patientObj.encounter_type}}</div>-->
                 </div>   
                 <div class="headerbg2">  
                     <div class="patient-details-part patinet-id" ng-if="patientObj.activeCasesheetno"> 
@@ -39,11 +44,11 @@
                     <div class="patient-details-part">  
                         <i class="fa fa-hospital-o"></i> <b> Org :  </b> {{patientObj.org_name}} 
                     </div>
-                    <div class="patient-details-part b-n">  
+<!--                    <div class="patient-details-part b-n">  
                         <div ng-if="patientObj.patient_category" style="background-color: {{patientObj.patient_category_color}}" class="category_badge header-badge" tooltip="{{patientObj.patient_category_fullname}}" tooltip-trigger tooltip-animation="false" tooltip-placement="top"> 
                             {{patientObj.patient_category| uppercase}} 
                         </div> 
-                    </div>
+                    </div>-->
                     <div class="patient-details-part b-n" ng-show="patientObj.hasalert">  
                         <div style="cursor: pointer" class="alert_badge header-badge trigger-close" popover="{{patient_alert_html}}" popover-trigger="click" popover-placement="bottom">
                             <i class="fa fa-warning"></i>

@@ -1,4 +1,5 @@
-<div ng-controller="PatientController" ng-init="mode = 'view'; loadPatientDetail()">
+<div ng-controller="PatientController" ng-init="mode = 'view';
+                loadPatientDetail()">
     <div ng-show="mode == 'view'">
         <div class="bg-light lter b-b wrapper-md" ng-init="loadView()">
             <h1 class="m-n h3">View Details</h1>
@@ -11,9 +12,9 @@
                 <div class="col-sm-2 pull-right"> 
                     <div class="btn-group btn-group-justified">
                         <a class="btn btn-info" ng-click="changeMode('update')"><i class="fa fa-pencil"></i>  Update Patient</a>
-<!--                        <a ng-click="$state.go('patient.modifyCaseSheetNo', {id: $state.params.id})" class="btn btn-danger">
-                            Modify Case Sheet No
-                        </a>-->
+                        <!--                        <a ng-click="$state.go('patient.modifyCaseSheetNo', {id: $state.params.id})" class="btn btn-danger">
+                                                    Modify Case Sheet No
+                                                </a>-->
                         <!--<a class="btn btn-info" ui-sref="patient.update({id: $state.params.id})"><i class="fa fa-pencil"></i>  Update Patient</a>-->
                     </div>
                 </div>
@@ -200,6 +201,12 @@
                         </div>
                     </form>
                 </div>
+
+                <div class="col-sm-12">
+                    <h3 class="text-center" ng-if="view_data.casesheetno">
+                        *** Old Casesheet No : 12456 ***
+                    </h3>
+                </div>
             </div>
         </div>
     </div>
@@ -213,15 +220,15 @@
                 {% include 'tpl/blocks/alert.html' %}
             </div>
             <div class="row">
-<!--                <div class="col-sm-4"> 
-                    <div class="btn-group btn-group-justified">
-                        <a class="btn btn-primary" ng-click="changeMode('view')"><i class="fa fa-eye"></i>  View Patient</a>
-                        <a ng-click="$state.go('patient.modifyCaseSheetNo', {id: $state.params.id})" class="btn btn-danger">
-                            Modify Case Sheet No
-                        </a>
-                        <a class="btn btn-info" ui-sref="patient.update({id: $state.params.id})"><i class="fa fa-pencil"></i>  Update Patient</a>
-                    </div>
-                </div>-->
+                <!--                <div class="col-sm-4"> 
+                                    <div class="btn-group btn-group-justified">
+                                        <a class="btn btn-primary" ng-click="changeMode('view')"><i class="fa fa-eye"></i>  View Patient</a>
+                                        <a ng-click="$state.go('patient.modifyCaseSheetNo', {id: $state.params.id})" class="btn btn-danger">
+                                            Modify Case Sheet No
+                                        </a>
+                                        <a class="btn btn-info" ui-sref="patient.update({id: $state.params.id})"><i class="fa fa-pencil"></i>  Update Patient</a>
+                                    </div>
+                                </div>-->
             </div>
             <br />
             <div class="row">
@@ -262,7 +269,7 @@
                                     <label class="col-sm-3 control-label"> Age </label>
                                     <div class="col-sm-9">
                                         <input type="text" ng-model="patdata.PatPatient.patient_age" class="form-control" placeholder="" ng-change="setDateEmpty();
-                                                            getDOB();">
+                                                        getDOB();">
                                     </div>
                                 </div>
                                 <div class="line line-dashed b-b line-lg "></div>
@@ -271,7 +278,7 @@
                                     <div class="col-sm-9">
                                         <div class="input-group">
                                             <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="patdata.PatPatient.patient_dob" is-open="opened" datepicker-options="dateOptions" close-text="Close" max-date="maxDate" date-disabled="disabled(date, mode)" ng-change="setAgeEmpty();
-                                                                getAge();"/>
+                                                            getAge();"/>
                                             <span class="input-group-btn">
                                                 <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                                             </span>
@@ -334,14 +341,14 @@
                                     <label class="col-sm-3 control-label">Place  </label>
                                     <div class="col-sm-3">
                                         <select class="form-control" ng-model="patdata.PatPatientAddress.addr_country_id" ng-options="country.value as country.label for country in countries | orderBy: label" ng-change="updateState2();
-                                                            patdata.PatPatientAddress.addr_state_id = '';
-                                                            patdata.PatPatientAddress.addr_city_id = '';">
+                                                        patdata.PatPatientAddress.addr_state_id = '';
+                                                        patdata.PatPatientAddress.addr_city_id = '';">
                                             <option value="">Select Country</option>
                                         </select>
                                     </div>
                                     <div class="col-sm-3">
                                         <select class="form-control" name="State" ng-model="patdata.PatPatientAddress.addr_state_id" ng-options="state.value as state.label for state in availableStates2 | orderBy: label" ng-change="updateCity2();
-                                                            patdata.PatPatientAddress.addr_city_id = '';">
+                                                        patdata.PatPatientAddress.addr_city_id = '';">
                                             <option value="">Select State</option>
                                         </select>
                                     </div>
@@ -379,14 +386,14 @@
                                     <label class="col-sm-3 control-label">Country  </label>
                                     <div class="col-sm-3">
                                         <select class="form-control" ng-model="patdata.PatPatientAddress.addr_perm_country_id" ng-options="country.value as country.label for country in countries | orderBy: label" ng-change="updateState();
-                                                            patdata.PatPatientAddress.addr_perm_state_id = '';
-                                                            patdata.PatPatientAddress.addr_perm_city_id = '';">
+                                                        patdata.PatPatientAddress.addr_perm_state_id = '';
+                                                        patdata.PatPatientAddress.addr_perm_city_id = '';">
                                             <option value="">Select Country</option>
                                         </select>
                                     </div>
                                     <div class="col-sm-3">
                                         <select class="form-control" name="State" ng-model="patdata.PatPatientAddress.addr_perm_state_id" ng-options="state.value as state.label for state in availableStates | orderBy: label" ng-change="updateCity();
-                                                            patdata.PatPatientAddress.addr_perm_city_id = '';">
+                                                        patdata.PatPatientAddress.addr_perm_city_id = '';">
                                             <option value="">Select State</option>
                                         </select>
                                     </div>
