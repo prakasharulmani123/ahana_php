@@ -45,7 +45,8 @@ app.controller('PatientTimelineController', ['$rootScope', '$scope', '$timeout',
             }
         }
         
-        $scope.encounter_colors = ["b-info", "b-success", "b-primary", "b-black", "b-danger", "b-warning", "b-white"];
+//        $scope.encounter_colors = ["b-info", "b-success", "b-primary", "b-black", "b-danger", "b-warning", "b-white"];
+        $scope.encounter_colors = ["b-primary", "b-dark"];
 
         $scope.getTimeline = function (url, data, domain_path) {
             $scope.loadbar('hide');
@@ -79,6 +80,12 @@ app.controller('PatientTimelineController', ['$rootScope', '$scope', '$timeout',
                             
                             if(colorKey > ($scope.encounter_colors.length - 1))
                                 colorKey = 0;
+                            
+                            if(timeline.adminstrative_info){
+                                timelines[timeline_key].box_class = "administrative_heading";
+                            } else if(timeline.clinical_info){
+                                timelines[timeline_key].box_class = "clinical_heading";
+                            }
                             
                             timelines[timeline_key].encounter_ends = encounter_ends;
                             timelines[timeline_key].encounter_color = $scope.encounter_colors[colorKey];

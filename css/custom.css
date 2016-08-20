@@ -335,8 +335,8 @@ out-patient-table .table > thead > tr > th label.i-checks{
 }
 
 #prescriptioncont-header {
-  width: 618px;
-  z-index: 9;
+    width: 618px;
+    z-index: 9;
 }
 
 #prescriptioncont-header a{
@@ -381,4 +381,12 @@ out-patient-table .table > thead > tr > th label.i-checks{
 .category_icon {
     display: inline-block;
     font-weight: 600;
+}
+
+.clinical_heading b {
+    color: #19A9D5 !important;
+}
+
+.administrative_heading b {
+    color: #27C24C !important;
 }
