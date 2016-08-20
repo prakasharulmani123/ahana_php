@@ -107,7 +107,7 @@ class PatTimeline extends RActiveRecord {
     public static function find() {
         return new PatTimelineQuery(get_called_class());
     }
-    
+
     public function fields() {
         $extend = [
             'tenant_name' => function ($model) {
@@ -119,8 +119,15 @@ class PatTimeline extends RActiveRecord {
             'modified_user' => function ($model) {
                 return isset($model->modifiedUser->name) ? $model->modifiedUser->name : '-';
             },
+            'clinical_info' => function ($model) {
+                return ($model->resource != 'BILLING');
+            },
+            'adminstrative_info' => function ($model) {
+                return ($model->resource == 'BILLING');
+            },
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
     }
+
 }
