@@ -285,6 +285,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
                     PrescriptionService.addPrescriptionItem(items);
                     $scope.data.prescriptionItems = PrescriptionService.getPrescriptionItems();
+                    $scope.showOrhideFrequency(items.frequency.length);
 
                     $scope.addData = {};
 
@@ -329,6 +330,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
                         PrescriptionService.addPrescriptionItem(items);
                         $scope.data.prescriptionItems = PrescriptionService.getPrescriptionItems();
+                        $scope.showOrhideFrequency(items.frequency.length);
+
                     }
                 });
 
@@ -353,7 +356,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
                 var fiter = $filter('filter')($scope.all_products, {product_id: prescription.product_id});
                 var product = fiter[0];
-                
+
                 items = {
                     'product_id': prescription.product_id,
                     'product_name': product.full_name,
@@ -373,7 +376,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     'freqMask': '9-9-9-9',
                     'freqMaskCount': 4
                 };
-                
+
                 PrescriptionService.addPrescriptionItem(items);
                 $scope.data.prescriptionItems = PrescriptionService.getPrescriptionItems();
 
@@ -387,22 +390,26 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         $scope.setFocus('number_of_days', $scope.data.prescriptionItems.length - 1);
                     }
                     $scope.prescription = '';
-                    
-                    switch (prescription.frequency.length){
-                        case 5:
-                            $('#change_mask_'+ ($scope.data.prescriptionItems.length - 1) +'_3').trigger('click');
-                            break;
-                        case 7:
-                            $('#change_mask_'+ ($scope.data.prescriptionItems.length - 1) +'_4').trigger('click');
-                            break;
-                        case 9:
-                            $('#change_mask_'+ ($scope.data.prescriptionItems.length - 1) +'_5').trigger('click');
-                            break;
-                    }
+                    $scope.showOrhideFrequency(prescription.frequency.length);
                 });
                 $scope.prescription_lists = {};
                 $scope.lastSelected = {};
             }
+        }
+
+        $scope.showOrhideFrequency = function (len) {
+            switch (len) {
+                case 5:
+                    $('#change_mask_' + ($scope.data.prescriptionItems.length - 1) + '_3').trigger('click');
+                    break;
+                case 7:
+                    $('#change_mask_' + ($scope.data.prescriptionItems.length - 1) + '_4').trigger('click');
+                    break;
+                case 9:
+                    $('#change_mask_' + ($scope.data.prescriptionItems.length - 1) + '_5').trigger('click');
+                    break;
+            }
+
         }
 
         //Get the value from main.js
@@ -469,9 +476,9 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 } else if (typeof prescriptionItem.product_name == 'undefined') {
                     _that.data.prescriptionItems[key].product_name = '';
                 }
-                _that.data.prescriptionItems[key].frequency = $('.frequency_' + key +':visible').val();
+                _that.data.prescriptionItems[key].frequency = $('.frequency_' + key + ':visible').val();
             });
-            
+
             /* For print bill */
             $scope.data2 = _that.data;
             $scope.prescriptionItems2 = $scope.data.prescriptionItems;
@@ -628,8 +635,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
                     if ($scope.lastSelected) {
                         _data['product_id'] = $scope.lastSelected.product_id;
-                        
-                        if(typeof $scope.lastSelected.route_id != 'undefined')
+
+                        if (typeof $scope.lastSelected.route_id != 'undefined')
                             _data['route_id'] = $scope.lastSelected.route_id;
                     }
 
@@ -738,6 +745,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                                     }
 
                                                     PrescriptionService.addPrescriptionItem(items);
+                                                    $scope.showOrhideFrequency(items.frequency.length);
                                                 });
                                                 $scope.data.prescriptionItems = PrescriptionService.getPrescriptionItems();
                                             }
@@ -767,7 +775,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         };
 
         $scope.calculate_price = function (freq, days, price) {
-            if(typeof freq != 'undefined'){
+            if (typeof freq != 'undefined') {
                 var freq_count = 0;
                 $.each(freq.split('-'), function (key, item) {
                     freq_count = freq_count + parseInt(item);
@@ -929,14 +937,14 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
             var selected = $("#prescriptioncont-header .selected");
             var li_count = $("#prescriptioncont-header li").length;
-            
+
             if (e.keyCode == 40 || e.keyCode == 38) {
                 $("#prescriptioncont-header li").removeClass("selected");
                 if (selected.length == 0) {
                     var selected = $("#prescriptioncont-header li:last");
                 }
-                
-                if(li_count == 1){
+
+                if (li_count == 1) {
                     var selected = $("#prescriptioncont-header li:first");
                     selected.addClass('selected');
                 }
@@ -985,7 +993,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
         $scope.selectOption = function () {
             var link_tag = $("#prescriptioncont-header .selected").find("a");
-            
+
             var Selected = $scope.prescription_lists[link_tag.data('key')];
             $('#prescription_global_search').val(Selected.prescription);
             if (link_tag.length > 0) {
@@ -996,9 +1004,11 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             return false;
         }
 
-        $scope.changeFreqMask = function(key, freq){
-            $('.freq_div_'+key).addClass('hide');
-            $('#freq_'+key+'_'+freq).removeClass('hide');
+        $scope.changeFreqMask = function (key, freq) {
+            $('.freq_div_' + key).addClass('hide');
+            $('.change_mask_' + key).addClass('hide');
+            $('#freq_' + key + '_' + freq).removeClass('hide');
+            $('.change_mask_' + key + ':not("#change_mask_' + key + '_' + freq + '")').removeClass('hide');
             $scope.data.prescriptionItems[key].freqMaskCount = freq;
         }
     }]);
