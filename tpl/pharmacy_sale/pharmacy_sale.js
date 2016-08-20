@@ -15,7 +15,21 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             var url = location_url[1] + '/' + location_url[2];
             var allowedPages = $.inArray(url, ['pharmacy/saleCreate', 'pharmacy/saleUpdate']) > -1;
             if (allowedPages) {
-                $scope.saveForm($scope.data.formtype);
+                $timeout(function () {
+                    angular.element("#save").trigger('click');
+                }, 100);
+            }
+            e.preventDefault();
+        });
+        
+        $scope.$on('HK_PRINT', function (e) {
+            var location_url = $location.path().split('/');
+            var url = location_url[1] + '/' + location_url[2];
+            var allowedPages = $.inArray(url, ['pharmacy/saleCreate', 'pharmacy/saleUpdate']) > -1;
+            if (allowedPages) {
+                $timeout(function () {
+                    angular.element("#save_print").trigger('click');
+                }, 100);
             }
             e.preventDefault();
         });

@@ -11,7 +11,9 @@ app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http
             var url = location_url[1] + '/' + location_url[2];
             var allowedPages = $.inArray(url, ['pharmacy/productAdd', 'pharmacy/productEdit']) > -1;
             if (allowedPages) {
-                $scope.saveForm($scope.data.formtype);
+                $timeout(function () {
+                    angular.element("#save").trigger('click');
+                }, 100);
             }
             e.preventDefault();
         });

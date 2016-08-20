@@ -392,6 +392,7 @@ angular.module('app')
                 hotkeys.add({
                     combo: 'f10',
                     description: 'Print',
+                    allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
                     callback: function (event) {
                         $scope.$broadcast('HK_PRINT');
                         event.preventDefault();
@@ -401,6 +402,7 @@ angular.module('app')
                 hotkeys.add({
                     combo: 'f11',
                     description: 'View',
+                    allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
                     callback: function (event) {
                         $scope.$broadcast('HK_VIEW');
                         event.preventDefault();
