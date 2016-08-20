@@ -157,7 +157,7 @@
                                     </td>
                                     <td><span>{{purchaseitem.purchase_amount}}</span></td>
                                     <td>
-                                        <span editable-text="purchaseitem.discount_percent" e-number-mask="" e-form="tableform" onbeforesave="checkInput($data)" e-ng-keydown="updateColumn($data, key, 'discount_percent')"  e-ng-keyup="updateColumn($data, key, 'discount_percent')" e-autocomplete="off" e-limit-to="2">{{purchaseitem.discount_percent|| 0}}</span>
+                                        <span editable-text="purchaseitem.discount_percent" e-number-mask="" e-form="tableform" onbeforesave="checkInput($data)" e-ng-keydown="updateColumn($data, key, 'discount_percent')"  e-ng-keyup="updateColumn($data, key, 'discount_percent')" e-autocomplete="off" e-limit-to="2" e-maxlength="5" e-number-mask="">{{purchaseitem.discount_percent|| 0}}</span>
                                     </td>
                                     <td><span>{{purchaseitem.discount_amount}}</span></td>
                                     <td><span>{{purchaseitem.vat_percent}}</span></td>
@@ -218,7 +218,7 @@
                 <div class="form-group">
                     <label class="col-lg-3 control-label">Disc %</label>
                     <div class="col-lg-2">
-                        <input type="text" class="form-control text-right" ng-model="data.discount_percent" ng-change="updatePurchaseRate()" limit-to="2">
+                        <input type="text" class="form-control text-right" ng-model="data.discount_percent" ng-change="updatePurchaseRate()" limit-to="2" maxlength="5" number-mask="">
                     </div>
                     <div class="col-lg-7">
                         <input type="text" class="form-control text-right" ng-value="data.discount_amount" readonly="">
