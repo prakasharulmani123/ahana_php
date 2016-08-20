@@ -183,7 +183,8 @@
                                                             </a>
                                                         </td>
                                                         <td>
-                                                            <span editable-select="item.product_name" 
+                                                            <span editable-select="item.product_name"
+                                                                  e-tabindex="{{key}}1"
                                                                   e-class="form-control"
                                                                   e-name="product_name" 
                                                                   e-form="tableform" 
@@ -208,6 +209,7 @@
                                                         </td>
                                                         <td>
                                                             <span editable-select="item.route" 
+                                                                  e-tabindex="{{key}}2"
                                                                   e-class="form-control m-b"
                                                                   e-name="route" 
                                                                   e-form="tableform" 
@@ -243,7 +245,8 @@
                                                             
                                                             <div id="freq_{{key}}_3" class="freq_div_{{key}} hide">
                                                             <span editable-text="item.frequency"
-                                                                  e-class="form-control m-b frequency_{{key}}"
+                                                                  e-tabindex="{{key}}3"
+                                                                  e-class="form-control m-b frequency_{{key}} freq_editable"
                                                                   e-name="masked" 
                                                                       e-ui-mask="9-9-9"
                                                                   e-model-view-value="true"
@@ -258,7 +261,8 @@
                                                             </div>
                                                             <div id="freq_{{key}}_4" class="freq_div_{{key}}">
                                                                 <span editable-text="item.frequency"
-                                                                      e-class="form-control m-b frequency_{{key}}"
+                                                                      e-tabindex="{{key}}3"
+                                                                      e-class="form-control m-b frequency_{{key}} freq_editable"
                                                                       e-name="masked" 
                                                                       e-ui-mask="9-9-9-9"
                                                                       e-model-view-value="true"
@@ -273,7 +277,8 @@
                                                             </div>
                                                             <div id="freq_{{key}}_5" class="freq_div_{{key}} hide">
                                                                 <span editable-text="item.frequency"
-                                                                      e-class="form-control m-b frequency_{{key}}"
+                                                                      e-tabindex="{{key}}3"
+                                                                      e-class="form-control m-b frequency_{{key}} freq_editable"
                                                                       e-name="masked" 
                                                                       e-ui-mask="9-9-9-9-9"
                                                                       e-model-view-value="true"
@@ -287,12 +292,13 @@
                                                                 </span>
                                                             </div>
                                                             
-                                                            <a href="javascript:void(0)" ng-click="changeFreqMask(key, 3)">3</a>
-                                                            <a href="javascript:void(0)" ng-click="changeFreqMask(key, 4)">4</a>
-                                                            <a href="javascript:void(0)" ng-click="changeFreqMask(key, 5)">5</a>
+                                                            <a href="javascript:void(0)" id="change_mask_{{key}}_3" ng-click="changeFreqMask(key, 3)">3</a>
+                                                            <a href="javascript:void(0)" id="change_mask_{{key}}_4" ng-click="changeFreqMask(key, 4)">4</a>
+                                                            <a href="javascript:void(0)" id="change_mask_{{key}}_5" ng-click="changeFreqMask(key, 5)">5</a>
                                                         </td>
                                                         <td align="center">
                                                             <span editable-text="item.number_of_days"
+                                                                    e-tabindex="{{key}}4"
                                                                   e-class="form-control"
                                                                   e-name="number_of_days" 
                                                                   e-form="tableform" 
@@ -310,6 +316,7 @@
                                                         </td>
                                                         <td align="center">
                                                             <span editable-text="item.remarks"
+                                                                    e-tabindex="{{key}}5"
                                                                   e-class="form-control"
                                                                   e-name="remarks" 
                                                                   e-form="tableform" 

@@ -373,7 +373,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     'freqMask': '9-9-9-9',
                     'freqMaskCount': 4
                 };
-
+                
                 PrescriptionService.addPrescriptionItem(items);
                 $scope.data.prescriptionItems = PrescriptionService.getPrescriptionItems();
 
@@ -387,6 +387,18 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         $scope.setFocus('number_of_days', $scope.data.prescriptionItems.length - 1);
                     }
                     $scope.prescription = '';
+                    
+                    switch (prescription.frequency.length){
+                        case 5:
+                            $('#change_mask_'+ ($scope.data.prescriptionItems.length - 1) +'_3').trigger('click');
+                            break;
+                        case 7:
+                            $('#change_mask_'+ ($scope.data.prescriptionItems.length - 1) +'_4').trigger('click');
+                            break;
+                        case 9:
+                            $('#change_mask_'+ ($scope.data.prescriptionItems.length - 1) +'_5').trigger('click');
+                            break;
+                    }
                 });
                 $scope.prescription_lists = {};
                 $scope.lastSelected = {};
@@ -987,18 +999,6 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.changeFreqMask = function(key, freq){
             $('.freq_div_'+key).addClass('hide');
             $('#freq_'+key+'_'+freq).removeClass('hide');
-            
-//            switch (freq){
-//                case 3:
-//                    mask = '9-9-9';
-//                    break;
-//                case 4:
-//                    mask = '9-9-9-9';
-//                    break;
-//                case 5:
-//                    mask = '9-9-9-9-9';
-//                    break;
-//            }
             $scope.data.prescriptionItems[key].freqMaskCount = freq;
         }
     }]);
