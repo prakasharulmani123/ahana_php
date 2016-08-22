@@ -390,3 +390,10 @@ out-patient-table .table > thead > tr > th label.i-checks{
 .administrative_heading b {
     color: #27C24C !important;
 }
+
+.badge.freq {
+  padding: 1px 5px;
+  margin-bottom: 1px;
+  border-radius: 0px;
+  width: 100%;
+}
