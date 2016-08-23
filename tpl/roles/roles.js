@@ -11,6 +11,13 @@ app.controller('RolesController', ['$rootScope', '$scope', '$timeout', '$http', 
         $scope.$on('HK_SEARCH', function (e) {
             $('#filter').focus();
         });
+        
+        //For Form
+        $scope.initForm = function () {
+            $scope.data = {};
+            $scope.data.status = '1';
+            $scope.data.formrole = 'add';
+        }
 
         //Index Page
         $scope.loadRolesList = function () {
