@@ -22,7 +22,8 @@ function SignInForm($scope, $state, AuthenticationService, $http, $rootScope, $l
                 $scope.showForm = true;
 
                 if (!$localStorage.system_tenant)
-                    $localStorage.system_tenant = $scope.tenants[0].value;
+                    $localStorage.system_tenant = $scope.tenants[Object.keys($scope.tenants)[0]];
+//                    $localStorage.system_tenant = $scope.tenants[0].value;
 
                 $scope.user.tenant_id = $localStorage.system_tenant;
             } else {
