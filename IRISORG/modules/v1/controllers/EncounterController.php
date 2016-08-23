@@ -266,7 +266,6 @@ class EncounterController extends ActiveController {
         $date = date('Y-m-d');
         $tenant_id = Yii::$app->user->identity->logged_tenant_id;
 
-
         //Default Current OP
         $query = "DATE(encounter_date) = '{$date}'";
         if (isset($get['type'])) {
@@ -281,13 +280,26 @@ class EncounterController extends ActiveController {
             'pat_encounter.tenant_id' => $tenant_id,
             'pat_appointment.consultant_id' => Yii::$app->user->identity->user->user_id,
         ];
-        
+
+        $seen_condition = [
+            'pat_encounter.status' => '0',
+            'pat_encounter.tenant_id' => $tenant_id,
+            'pat_appointment.consultant_id' => Yii::$app->user->identity->user->user_id,
+            'pat_appointment.appt_status' => 'S',
+        ];
+
         //Check "View all doctors appointments".
         if (isset($get['all'])) {
             if ($get['all']) {
                 $condition = [
                     'pat_encounter.status' => '1',
                     'pat_encounter.tenant_id' => $tenant_id
+                ];
+
+                $seen_condition = [
+                    'pat_encounter.status' => '0',
+                    'pat_encounter.tenant_id' => $tenant_id,
+                    'pat_appointment.appt_status' => 'S',
                 ];
             }
         }
@@ -311,12 +323,24 @@ class EncounterController extends ActiveController {
                     ->where($condition)
                     ->encounterType("OP")
                     ->andWhere($query)
+                    ->andWhere(['pat_appointment.consultant_id' => $value['patAppointments'][0]['consultant_id']])
                     ->orderBy([
                         'encounter_date' => SORT_DESC,
                     ])
                     ->all();
+            
+            $seen_encounters = PatEncounter::find()
+                    ->joinWith('patAppointments')
+                    ->where($seen_condition)
+                    ->encounterType("OP")
+                    ->andWhere($query)
+                    ->andWhere(['pat_appointment.consultant_id' => $value['patAppointments'][0]['consultant_id']])
+                    ->orderBy([
+                        'encounter_date' => SORT_DESC,
+                    ])
+                    ->count();
 
-            $result[$key] = ['data' => $value, 'all' => $details];
+            $result[$key] = ['data' => $value, 'all' => $details, 'seen_count' => $seen_encounters];
         }
         return ['success' => true, 'result' => $result];
     }
