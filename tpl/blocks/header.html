@@ -15,7 +15,7 @@
     <!-- / navbar header --> 
 
     <!-- navbar collapse -->
-    <div class="collapse pos-rlt navbar-collapse box-shadow {{app.settings.navbarCollapseColor}}"> 
+    <div class="collapse pos-rlt navbar-collapse box-shadow {{app.settings.navbarCollapseColor}}" ng-init="initSwitchedBranch()"> 
 
         <!-- search form -->
         <form class="navbar-form navbar-form-sm navbar-left shift" ui-shift="prependTo" data-target=".navbar-collapse" role="search" ng-controller="PatientSearchController">
