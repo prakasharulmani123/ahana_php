@@ -52,6 +52,7 @@ app.controller('UserBranchesController', ['$scope', '$http', '$filter', '$state'
         }
 
         $scope.selectedBranches = [];
+        $scope.default_branch = '';
         $scope.toggleSelection = function (branch) {
             var index = $scope.selectedBranches.indexOfObjectWithProperty('tenant_id', branch.tenant_id);
             if (index > -1) {
@@ -67,22 +68,35 @@ app.controller('UserBranchesController', ['$scope', '$http', '$filter', '$state'
         $scope.getSavedBranches = function () {
             $scope.errorData = "";
             $scope.msg.successMessage = "";
-            $http({
-                url: $rootScope.IRISOrgServiceUrl + '/user/getmybranches?id=' + $scope.data.user_id,
-                method: "GET",
-            }).then(
-                    function (response) {
-                        $scope.selectedBranches = [];
-                        if (response.data.branches.length > 0) {
-                            angular.forEach(response.data.branches, function (branch) {
+            if ($scope.data.user_id === null) {
+                $scope.reset();
+            } else {
+                $http({
+                    url: $rootScope.IRISOrgServiceUrl + '/user/getmybranches?id=' + $scope.data.user_id,
+                    method: "GET",
+                }).then(
+                        function (response) {
+                            $scope.selectedBranches = [];
+                            $scope.default_branch = '';
+                            if (response.data.branches.length > 0) {
+                                angular.forEach(response.data.branches, function (branch) {
+                                    items = {
+                                        'tenant_id': branch.branch_id,
+                                    };
+                                    $scope.selectedBranches.push(items);
+                                })
+                            }
+
+                            if (response.data.default_branch) {
+                                $scope.default_branch = response.data.default_branch;
                                 items = {
-                                    'tenant_id': branch.branch_id,
+                                    'tenant_id': response.data.default_branch,
                                 };
                                 $scope.selectedBranches.push(items);
-                            })
+                            }
                         }
-                    }
-            );
+                );
+            }
         }
 
         //Save Data
@@ -120,6 +134,7 @@ app.controller('UserBranchesController', ['$scope', '$http', '$filter', '$state'
         };
 
         $scope.reset = function () {
+            $scope.default_branch = '';
             $scope.errorData = "";
             $scope.selectedBranches = [];
             $scope.data = {};

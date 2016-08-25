@@ -105,13 +105,12 @@
             <li ui-sref-active="active">
                 <a ui-sref="configuration.organization" check-access>Configuration</a>
             </li>
-            <li>
-                <select class="form-control" ng-model="branch_switch.branch_id" ng-change="switchBranch()">
-                    <option value="1">Gandhi Nagar</option>
-                    <option value="2">KK Nagar</option>
-                </select>
-            </li>
         </ul>
+
+        <div class="navbar-header-branchswitch" ng-if="switched_branches_list.length > 0">
+            <select class="form-control" ng-model="branch_switch.branch_id" ng-options="branch.branch_id as branch.branch_name for branch in switched_branches_list | orderBy: branch_name" ng-change="switchBranch()">
+            </select>
+        </div>
         <!-- / link and dropdown --> 
 
         <!-- nabar right -->

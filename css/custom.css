@@ -397,3 +397,8 @@ out-patient-table .table > thead > tr > th label.i-checks{
   border-radius: 0px;
   width: 100%;
 }
+
+.navbar-header-branchswitch {
+  float: left;
+  padding-top: 9px;
+}

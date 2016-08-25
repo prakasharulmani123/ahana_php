@@ -518,7 +518,20 @@ angular.module('app')
                     });
                 }
 
+                $scope.switched_branches_list = [];
                 $scope.branch_switch = {};
+                $http({
+                    url: $rootScope.IRISOrgServiceUrl + '/user/getswitchedbrancheslist',
+                    method: "GET",
+                }).then(
+                        function (response) {
+                            if (response.data.success) {
+                                $scope.switched_branches_list = response.data.branches;
+                                $scope.branch_switch.branch_id = response.data.default_branch;
+                            }
+                        }
+                );
+
                 $scope.switchBranch = function () {
                     $http({
                         method: 'POST',
@@ -527,7 +540,13 @@ angular.module('app')
                     }).success(
                             function (response) {
                                 if (response.success) {
+                                    //Branch wise resource assign.
+//                                    var currentUser = AuthenticationService.getCurrentUser();
+//                                    delete currentUser.resources['configuration.roles'];
+//                                    console.log(currentUser);
+//                                    AuthenticationService.setCurrentUser(currentUser);
                                     $state.go($state.current, {}, {reload: true});
+                                    
                                 }
                             }
                     );
