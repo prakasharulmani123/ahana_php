@@ -105,6 +105,12 @@
             <li ui-sref-active="active">
                 <a ui-sref="configuration.organization" check-access>Configuration</a>
             </li>
+            <li>
+                <select class="form-control" ng-model="branch_switch.branch_id" ng-change="switchBranch()">
+                    <option value="1">Gandhi Nagar</option>
+                    <option value="2">KK Nagar</option>
+                </select>
+            </li>
         </ul>
         <!-- / link and dropdown --> 
 

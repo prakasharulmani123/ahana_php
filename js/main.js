@@ -388,7 +388,7 @@ angular.module('app')
                         event.preventDefault();
                     }
                 });
-                
+
                 hotkeys.add({
                     combo: 'f10',
                     description: 'Print',
@@ -398,7 +398,7 @@ angular.module('app')
                         event.preventDefault();
                     }
                 });
-                
+
                 hotkeys.add({
                     combo: 'f11',
                     description: 'View',
@@ -408,7 +408,7 @@ angular.module('app')
                         event.preventDefault();
                     }
                 });
-                
+
 //                hotkeys.add({
 //                    combo: 'f12',
 //                    description: 'Close',
@@ -516,6 +516,21 @@ angular.module('app')
                         else
                             $scope.errorData = data.message;
                     });
+                }
+
+                $scope.branch_switch = {};
+                $scope.switchBranch = function () {
+                    $http({
+                        method: 'POST',
+                        url: $rootScope.IRISOrgServiceUrl + '/default/switchbranch',
+                        data: {'branch_id': $scope.branch_switch.branch_id},
+                    }).success(
+                            function (response) {
+                                if (response.success) {
+                                    $state.go($state.current, {}, {reload: true});
+                                }
+                            }
+                    );
                 }
             }]);
 

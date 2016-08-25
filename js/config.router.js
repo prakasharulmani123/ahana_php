@@ -231,6 +231,17 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
+            //CONFIGURATION USER BRANCHES ASSIGN
+            .state('configuration.userBranches', {
+                url: '/userBranches',
+                templateUrl: 'tpl/user_branches/index.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/user_branches/user_branches.js']);
+                        }]
+                }
+            })
             //CONFIGURATION FLOOR
             .state('configuration.floors', {
                 url: '/floors',
