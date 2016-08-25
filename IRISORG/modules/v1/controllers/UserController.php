@@ -58,7 +58,7 @@ class UserController extends ActiveController {
         $behaviors = parent::behaviors();
         $behaviors['authenticator'] = [
             'class' => QueryParamAuth::className(),
-            'only' => ['dashboard', 'createuser', 'updateuser', 'getuser', 'getlogin', 'updatelogin', 'getuserdata', 'getuserslistbyuser', 'assignroles', 'assignbranches', 'getmybranches', 'getdoctorslist', 'checkstateaccess', 'getusercredentialsbytoken', 'passwordauth', 'changepassword'],
+            'only' => ['dashboard', 'createuser', 'updateuser', 'getuser', 'getlogin', 'updatelogin', 'getuserdata', 'getuserslistbyuser', 'assignroles', 'assignbranches', 'getmybranches', 'getswitchedbrancheslist', 'getdoctorslist', 'checkstateaccess', 'getusercredentialsbytoken', 'passwordauth', 'changepassword'],
         ];
         $behaviors['contentNegotiator'] = [
             'class' => ContentNegotiator::className(),
@@ -117,7 +117,7 @@ class UserController extends ActiveController {
         $resource_ids = ArrayHelper::map(CoRolesResources::find()->where(['IN', 'role_id', $role_ids])->andWhere(['tenant_id' => $tenant_id])->all(), 'resource_id', 'resource_id');
         $resources = ArrayHelper::map(CoResources::find()->where(['IN', 'resource_id', $resource_ids])->all(), 'resource_url', 'resource_url');
 
-        if(Yii::$app->user->identity->user->tenant_id == 0){
+        if (Yii::$app->user->identity->user->tenant_id == 0) {
             $resources['configuration.settings'] = 'configuration.settings';
         }
         return $resources;
@@ -125,7 +125,7 @@ class UserController extends ActiveController {
 
     public static function GetuserCredentials($tenant_id) {
         $tenant = CoTenant::findOne(['tenant_id' => $tenant_id]);
-        
+
         $credentials = [
             'org' => $tenant->tenant_name,
             'org_address' => $tenant->tenant_address,
@@ -342,18 +342,18 @@ class UserController extends ActiveController {
                 $model = new CoLogin;
                 $model->scenario = 'create';
             }
-            
-            if(empty($post['password']))
-                unset ($post['password']);
-            
+
+            if (empty($post['password']))
+                unset($post['password']);
+
             $model->attributes = $post;
 
             $valid = $model->validate();
 
             if ($valid) {
-                if(isset($post['password']))
+                if (isset($post['password']))
                     $model->setPassword($model->password);
-                
+
                 $model->save(false);
                 return ['success' => true];
             } else {
@@ -398,7 +398,7 @@ class UserController extends ActiveController {
             return ['success' => false, 'message' => 'Please Fill the Form'];
         }
     }
-    
+
     public function actionAssignbranches() {
         $post = Yii::$app->request->post();
         $tenant_id = Yii::$app->user->identity->logged_tenant_id;
@@ -428,14 +428,30 @@ class UserController extends ActiveController {
             return ['success' => false, 'message' => 'Please Fill the Form'];
         }
     }
-    
+
     public function actionGetmybranches() {
         $id = Yii::$app->request->get('id');
         if (!empty($id)) {
             $branches = CoUsersBranches::find()->tenant()->andWhere(['user_id' => $id])->all();
-            return ['success' => true, 'branches' => $branches];
+            $user_detail = CoUser::find()->where(['user_id' => $id])->one();
+            return ['success' => true, 'branches' => $branches, 'default_branch' => $user_detail->tenant_id];
         } else {
             return ['success' => false, 'message' => 'Invalid Access'];
+        }
+    }
+
+    public function actionGetswitchedbrancheslist() {
+        $tenant_id = Yii::$app->user->identity->user->tenant_id;
+        if ($tenant_id == 0) {
+            $branches = CoTenant::find()
+                    ->active()
+                    ->status()
+                    ->all();
+            return ['success' => true, 'branches' => $branches, 'default_branch' => Yii::$app->user->identity->logged_tenant_id];
+        } else {
+            $user_id = Yii::$app->user->identity->user->user_id;
+            $branches = CoUsersBranches::find()->andWhere(['user_id' => $user_id])->all();
+            return ['success' => true, 'branches' => $branches, 'default_branch' => Yii::$app->user->identity->logged_tenant_id];
         }
     }
 
@@ -527,15 +543,15 @@ class UserController extends ActiveController {
             $column = $post['column'];
             $value = $post['value'];
 
-            if ($value || $column == 'discharge'){
+            if ($value || $column == 'discharge') {
                 $encounter->$column = Yii::$app->user->identity->user_id;
-                
+
                 if ($column == 'discharge')
                     $encounter->status = 0;
-            }else{
+            }else {
                 $encounter->$column = 0;
             }
-            
+
             $encounter->save(false);
 
             $this->_insertTimeline($encounter, $column, $value);

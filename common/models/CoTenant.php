@@ -129,6 +129,12 @@ class CoTenant extends GActiveRecord {
             },
             'tenant_country_name' => function ($model) {
                 return (isset($model->coMasterCountry) ? $model->coMasterCountry->country_name : '-');
+            },
+            'branch_id' => function ($model) {
+                return $model->tenant_id;
+            },
+            'branch_name' => function ($model) {
+                return $model->tenant_name;
             }
         ];
         $fields = array_merge(parent::fields(), $extend);
@@ -147,7 +153,7 @@ class CoTenant extends GActiveRecord {
         $conn_dsn = "mysql:host={$this->coOrganization->org_db_host};dbname={$this->coOrganization->org_database}";
         $conn_username = $this->coOrganization->org_db_username;
         $conn_password = $this->coOrganization->org_db_password;
-        
+
         $connection = new Connection([
             'dsn' => $conn_dsn,
             'username' => $conn_username,
@@ -192,7 +198,7 @@ class CoTenant extends GActiveRecord {
                 $configuration->notes = $app_configuration['notes'];
                 $configuration->save(false);
             }
-            
+
             //Tenant Documents
             $tenant_doc_types = PatDocumentTypes::getTenantDocumentTypes();
             foreach ($tenant_doc_types as $key => $tenant_doc_type) {
@@ -209,4 +215,5 @@ class CoTenant extends GActiveRecord {
 
         return parent::afterSave($insert, $changedAttributes);
     }
+
 }

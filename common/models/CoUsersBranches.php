@@ -85,4 +85,14 @@ class CoUsersBranches extends RActiveRecord {
         return new CoUsersBranchesQuery(get_called_class());
     }
 
+    public function fields() {
+        $extend = [
+            'branch_name' => function ($model) {
+                return (isset($model->branch) ? $model->branch->tenant_name : '-');
+            },
+        ];
+        $fields = array_merge(parent::fields(), $extend);
+        return $fields;
+    }
+
 }
