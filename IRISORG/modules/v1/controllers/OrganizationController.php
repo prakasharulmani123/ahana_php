@@ -52,14 +52,14 @@ class OrganizationController extends ActiveController {
     public function actionGetorg() {
         $tenant_id = Yii::$app->user->identity->logged_tenant_id;
 //        $access_tenant_id = Yii::$app->user->identity->access_tenant_id;
-        
+
         $user = Yii::$app->user->identity->user;
         //Super Admin
-        if($user->tenant_id == 0){
+        if ($user->tenant_id == 0) {
             $access_tenant_id = $user->first_tenant_id;
             $tenant_super_role = CoRole::getTenantSuperRole($access_tenant_id);
             $tenant_super_role_id = $tenant_super_role->role_id;
-        }else{
+        } else {
             $access_tenant_id = $user->tenant_id;
             $user_roles = CoUsersRoles::find()->where(['user_id' => $user->user_id, 'tenant_id' => $access_tenant_id])->all();
             $tenant_super_role_id = \yii\helpers\ArrayHelper::map($user_roles, 'role_id', 'role_id');
@@ -79,25 +79,24 @@ class OrganizationController extends ActiveController {
         $tenant_id = Yii::$app->user->identity->logged_tenant_id;
 //        $tenant_super_role = CoRole::getTenantSuperRole($tenant_id);
 //        $tenant_super_role_id = $tenant_super_role->role_id;
-        
         //Super Admin
         $user = Yii::$app->user->identity->user;
-        if($user->tenant_id == 0){
+        if ($user->tenant_id == 0) {
             $access_tenant_id = $user->first_tenant_id;
             $tenant_super_role = CoRole::getTenantSuperRole($access_tenant_id);
             $tenant_super_role_id = $tenant_super_role->role_id;
-        }else{
+        } else {
             $access_tenant_id = $user->tenant_id;
             $user_roles = CoUsersRoles::find()->where(['user_id' => $user->user_id, 'tenant_id' => $access_tenant_id])->all();
             $tenant_super_role_id = \yii\helpers\ArrayHelper::map($user_roles, 'role_id', 'role_id');
         }
-        
+
         $post = Yii::$app->request->post();
-        
+
         if (!empty($post)) {
             $role_id = Yii::$app->request->post('role_id');
             $modules = CoRolesResources::getOrgModuletreeByRole($access_tenant_id, $tenant_super_role_id, $role_id, $tenant_id);
-            
+
             return ['success' => true, 'modules' => $modules];
         }
     }
@@ -190,7 +189,7 @@ class OrganizationController extends ActiveController {
             $share_resources = $post['share'];
             $tenant_id = Yii::$app->user->identity->logged_tenant_id;
             $org_id = Yii::$app->user->identity->user->org_id;
-            
+
             $patient = PatPatient::find()->where(['patient_guid' => $post['patient_id']])->one();
             $pat_share_attr = [
                 'tenant_id' => $tenant_id,
@@ -217,9 +216,17 @@ class OrganizationController extends ActiveController {
             $tenant_id = Yii::$app->user->identity->logged_tenant_id;
             $patient = PatPatient::find()->where(['patient_guid' => $get['patient_id']])->one();
             $tenants = GlPatientTenant::find()->where(['patient_global_guid' => $patient->patient_global_guid])->all();
-            
+
             return ['success' => true, 'tenants' => $tenants, 'tenant_id' => $tenant_id];
         }
+    }
+
+    public function actionGetorgbranches() {
+        $branches = CoTenant::find()
+                ->active()
+                ->status()
+                ->all();
+        return ['success' => true, 'branches' => $branches];
     }
 
 }

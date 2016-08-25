@@ -8,6 +8,7 @@ use common\models\CoRole;
 use common\models\CoRolesResources;
 use common\models\CoTenant;
 use common\models\CoUser;
+use common\models\CoUsersBranches;
 use common\models\CoUsersRoles;
 use common\models\LoginForm;
 use common\models\PasswordResetRequestForm;
@@ -57,7 +58,7 @@ class UserController extends ActiveController {
         $behaviors = parent::behaviors();
         $behaviors['authenticator'] = [
             'class' => QueryParamAuth::className(),
-            'only' => ['dashboard', 'createuser', 'updateuser', 'getuser', 'getlogin', 'updatelogin', 'getuserdata', 'getuserslistbyuser', 'assignroles', 'getdoctorslist', 'checkstateaccess', 'getusercredentialsbytoken', 'passwordauth', 'changepassword'],
+            'only' => ['dashboard', 'createuser', 'updateuser', 'getuser', 'getlogin', 'updatelogin', 'getuserdata', 'getuserslistbyuser', 'assignroles', 'assignbranches', 'getmybranches', 'getdoctorslist', 'checkstateaccess', 'getusercredentialsbytoken', 'passwordauth', 'changepassword'],
         ];
         $behaviors['contentNegotiator'] = [
             'class' => ContentNegotiator::className(),
@@ -65,17 +66,6 @@ class UserController extends ActiveController {
                 'application/json' => Response::FORMAT_JSON,
             ],
         ];
-//        $behaviors['access'] = [
-//            'class' => AccessControl::className(),
-//            'only' => ['dashboard'],
-//            'rules' => [
-//                [
-//                    'actions' => ['dashboard'],
-//                    'allow' => true,
-//                    'roles' => ['@'],
-//                ],
-//            ],
-//        ];
         return $behaviors;
     }
 
@@ -406,6 +396,46 @@ class UserController extends ActiveController {
             }
         } else {
             return ['success' => false, 'message' => 'Please Fill the Form'];
+        }
+    }
+    
+    public function actionAssignbranches() {
+        $post = Yii::$app->request->post();
+        $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+
+        if (!empty($post) && !empty($tenant_id)) {
+            $model = new CoUsersBranches;
+            $model->tenant_id = $tenant_id;
+            $model->scenario = 'branchassign';
+            $model->attributes = $post;
+
+            if ($model->validate()) {
+                $user = CoUser::find()->where(['user_id' => $post['user_id']])->one();
+
+                foreach ($post['branch_ids'] as $branch_id) {
+                    $branches[] = CoTenant::find()->where(['tenant_id' => $branch_id])->one();
+                }
+
+                $extraColumns = ['tenant_id' => $tenant_id, 'created_by' => Yii::$app->user->identity->user_id, 'modified_by' => Yii::$app->user->identity->user_id, 'modified_at' => new Expression('NOW()')]; // extra columns to be saved to the many to many table
+                $unlink = true; // unlink tags not in the list
+                $delete = true; // delete unlinked tags
+                $user->linkAll('branches', $branches, $extraColumns, $unlink, $delete);
+                return ['success' => true];
+            } else {
+                return ['success' => false, 'message' => Html::errorSummary([$model])];
+            }
+        } else {
+            return ['success' => false, 'message' => 'Please Fill the Form'];
+        }
+    }
+    
+    public function actionGetmybranches() {
+        $id = Yii::$app->request->get('id');
+        if (!empty($id)) {
+            $branches = CoUsersBranches::find()->tenant()->andWhere(['user_id' => $id])->all();
+            return ['success' => true, 'branches' => $branches];
+        } else {
+            return ['success' => false, 'message' => 'Invalid Access'];
         }
     }
 

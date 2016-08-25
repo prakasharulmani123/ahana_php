@@ -144,6 +144,20 @@ class CoUser extends RActiveRecord {
     /**
      * @return ActiveQuery
      */
+    public function getUsersBranches() {
+        return $this->hasMany(CoUsersBranches::className(), ['user_id' => 'user_id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getBranches() {
+        return $this->hasMany(CoTenant::className(), ['tenant_id' => 'branch_id'])->via('usersBranches');
+    }
+
+    /**
+     * @return ActiveQuery
+     */
     public function getUsersVitals() {
         return $this->hasMany(PatVitalsUsers::className(), ['user_id' => 'user_id']);
     }
@@ -154,7 +168,7 @@ class CoUser extends RActiveRecord {
     public function getVitals() {
         return $this->hasMany(PatVitals::className(), ['vital_id' => 'vital_id'])->via('usersVitals');
     }
-    
+
     /**
      * @return ActiveQuery
      */
@@ -168,7 +182,7 @@ class CoUser extends RActiveRecord {
     public function getNotes() {
         return $this->hasMany(PatNotes::className(), ['pat_note_id' => 'note_id'])->via('usersNotes');
     }
-    
+
     /**
      * @return ActiveQuery
      */

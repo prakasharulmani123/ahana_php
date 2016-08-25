@@ -27,7 +27,7 @@ class DefaultController extends Controller {
         $behaviors = parent::behaviors();
         $behaviors['authenticator'] = [
             'class' => QueryParamAuth::className(),
-            'only' => ['getnavigation', 'getconsultantcharges'],
+            'only' => ['getnavigation', 'getconsultantcharges', 'switchbranch'],
         ];
         $behaviors['contentNegotiator'] = [
             'class' => ContentNegotiator::className(),
@@ -220,6 +220,16 @@ class DefaultController extends Controller {
             $list[] = array('label' => $value->code . '-' . $value->main . '-' . $value->sub);
         }
         return ['dsmivList' => $list];
+    }
+
+    public function actionSwitchbranch() {
+        $post = Yii::$app->request->post();
+        if (!empty($post)) {
+            $login_details = CoLogin::findOne(['login_id' => Yii::$app->user->identity->login_id]);
+            $login_details->logged_tenant_id = $post['branch_id'];
+            $login_details->save(false);
+            return ['success' => true];
+        }
     }
 
 }
