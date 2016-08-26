@@ -543,15 +543,16 @@ angular.module('app')
                         data: {'branch_id': $scope.branch_switch.branch_id},
                     }).success(
                             function (response) {
-                                if (response.success) {
+                                if (response.success && !response.admin && !jQuery.isEmptyObject(response.resources)) {
                                     //Branch wise resource assign.
-//                                    var currentUser = AuthenticationService.getCurrentUser();
-//                                    delete currentUser.resources['configuration.roles'];
-//                                    console.log(currentUser);
-//                                    AuthenticationService.setCurrentUser(currentUser);
-                                    $state.go($state.current, {}, {reload: true});
-
+                                    var currentUser = AuthenticationService.getCurrentUser();
+                                    delete currentUser.resources;
+                                    currentUser.resources = response.resources;
+                                    AuthenticationService.setCurrentUser(currentUser);
+                                } else if (!response.admin) {
+                                    alert("Branch setup has not been done, Please contact admin");
                                 }
+                                $state.go($state.current, {}, {reload: true});
                             }
                     );
                 }
