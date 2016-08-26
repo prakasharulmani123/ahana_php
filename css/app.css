@@ -1093,7 +1093,7 @@ body {
 }
 
 html {
-  background: url('../img/bg.jpg');
+  /*background: url('../img/bg.jpg');*/
   background-attachment: fixed;
   background-size: cover;
 }
