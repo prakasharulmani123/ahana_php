@@ -38,22 +38,6 @@ class UserController extends ActiveController {
     /**
      * @inheritdoc
      */
-//    public function behaviors() {
-//        $behaviors = parent::behaviors();
-//        $behaviors['authenticator'] = [
-//            'class' => QueryParamAuth::className()
-//        ];
-//        $behaviors['contentNegotiator'] = [
-//            'class' => ContentNegotiator::className(),
-//            'formats' => [
-//                'application/json' => Response::FORMAT_JSON,
-//            ],
-//        ];
-//
-//        return $behaviors;
-//    }
-
-
     public function behaviors() {
         $behaviors = parent::behaviors();
         $behaviors['authenticator'] = [
@@ -86,7 +70,7 @@ class UserController extends ActiveController {
     }
 
     public function actionGetuserdata() {
-        $model = CoUser::find()->tenant()->active()->exceptSuperUser()->orderBy(['created_at' => SORT_DESC])->all();
+        $model = CoUser::find()->active()->exceptSuperUser()->orderBy(['created_at' => SORT_DESC])->all();
         $data = [];
         foreach ($model as $key => $user) {
             $data[$key] = $user->attributes;
@@ -113,7 +97,7 @@ class UserController extends ActiveController {
         $user_id = Yii::$app->user->identity->user->user_id;
         $tenant_id = Yii::$app->user->identity->access_tenant_id;
 
-        $role_ids = ArrayHelper::map(CoUsersRoles::find()->where(['user_id' => $user_id])->all(), 'role_id', 'role_id');
+        $role_ids = ArrayHelper::map(CoUsersRoles::find()->where(['user_id' => $user_id])->andWhere(['tenant_id' => $tenant_id])->all(), 'role_id', 'role_id');
         $resource_ids = ArrayHelper::map(CoRolesResources::find()->where(['IN', 'role_id', $role_ids])->andWhere(['tenant_id' => $tenant_id])->all(), 'resource_id', 'resource_id');
         $resources = ArrayHelper::map(CoResources::find()->where(['IN', 'resource_id', $resource_ids])->all(), 'resource_url', 'resource_url');
 
@@ -365,7 +349,7 @@ class UserController extends ActiveController {
     }
 
     public function actionGetuserslistbyuser() {
-        $list = CoUser::find()->tenant()->status()->active()->exceptSuperUser()->all();
+        $list = CoUser::find()->status()->active()->exceptSuperUser()->all();
         return ['userList' => $list];
     }
 

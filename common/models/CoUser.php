@@ -4,6 +4,7 @@ namespace common\models;
 
 use common\models\query\CoUserQuery;
 use cornernote\linkall\LinkAllBehavior;
+use Yii;
 use yii\db\ActiveQuery;
 use yii\helpers\ArrayHelper;
 
@@ -131,7 +132,7 @@ class CoUser extends RActiveRecord {
      * @return ActiveQuery
      */
     public function getUsersRoles() {
-        return $this->hasMany(CoUsersRoles::className(), ['user_id' => 'user_id']);
+        return $this->hasMany(CoUsersRoles::className(), ['user_id' => 'user_id'])->andWhere(['tenant_id' => Yii::$app->user->identity->logged_tenant_id]);
     }
 
     /**

@@ -8,7 +8,9 @@ use common\models\CoMasterCity;
 use common\models\CoMasterCountry;
 use common\models\CoMasterState;
 use common\models\CoOrganization;
+use common\models\CoResources;
 use common\models\CoRolesResources;
+use common\models\CoUsersBranches;
 use common\models\CoUsersRoles;
 use common\models\PatAppointment;
 use common\models\PatDiagnosis;
@@ -225,10 +227,29 @@ class DefaultController extends Controller {
     public function actionSwitchbranch() {
         $post = Yii::$app->request->post();
         if (!empty($post)) {
-            $login_details = CoLogin::findOne(['login_id' => Yii::$app->user->identity->login_id]);
-            $login_details->logged_tenant_id = $post['branch_id'];
-            $login_details->save(false);
-            return ['success' => true];
+            if (Yii::$app->user->identity->user->tenant_id == 0) {
+                $login_details = CoLogin::findOne(['login_id' => Yii::$app->user->identity->login_id]);
+                $login_details->logged_tenant_id = $post['branch_id'];
+                $login_details->save(false);
+                return ['success' => true, 'admin' => true];
+            } else {
+                $resources = [];
+                $user_id = Yii::$app->user->identity->user->user_id;
+                $tenant_id = $post['branch_id'];
+
+                $branch_exists = CoUsersBranches::find()->where(['user_id' => $user_id, 'branch_id' => $tenant_id])->one();
+                if (!empty($branch_exists)) {
+                    $role_ids = ArrayHelper::map(CoUsersRoles::find()->where(['user_id' => $user_id])->tenant($tenant_id)->all(), 'role_id', 'role_id');
+                    $resource_ids = ArrayHelper::map(CoRolesResources::find()->where(['IN', 'role_id', $role_ids])->tenant($tenant_id)->all(), 'resource_id', 'resource_id');
+                    $resources = ArrayHelper::map(CoResources::find()->where(['IN', 'resource_id', $resource_ids])->all(), 'resource_url', 'resource_url');
+                }
+                if (!empty($resources)) {
+                    $login_details = CoLogin::findOne(['login_id' => Yii::$app->user->identity->login_id]);
+                    $login_details->logged_tenant_id = $post['branch_id'];
+                    $login_details->save(false);
+                }
+                return ['success' => true, 'resources' => $resources, 'admin' => false];
+            }
         }
     }
 
