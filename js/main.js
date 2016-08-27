@@ -448,6 +448,12 @@ angular.module('app')
                     toaster.pop('error', 'Session Expired', 'Kindly Login Again');
                     $scope.logout();
                 });
+                
+                $rootScope.$on('internalerror', function () {
+                    toaster.clear();
+                    toaster.pop('error', 'Internal Error', 'NetworkError: 500 Internal Server Error');
+                    $scope.loadbar('hide');
+                });
 
                 $scope.$on('encounter_id', function (event, data) {
                     $scope.encounter_id = data;
