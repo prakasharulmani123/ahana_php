@@ -15,6 +15,7 @@ app.controller('PatientAlertsController', ['$rootScope', '$scope', '$timeout', '
             }
         };
 
+        selected = [];
         $scope.showStatus = function (row) {
             selected = [];
             if (row && row.alert_type) {
