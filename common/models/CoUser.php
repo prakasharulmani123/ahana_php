@@ -132,7 +132,13 @@ class CoUser extends RActiveRecord {
      * @return ActiveQuery
      */
     public function getUsersRoles() {
-        return $this->hasMany(CoUsersRoles::className(), ['user_id' => 'user_id'])->andWhere(['tenant_id' => Yii::$app->user->identity->logged_tenant_id]);
+        
+        if(isset(Yii::$app->user->identity->logged_tenant_id))
+        {    
+            return $this->hasMany(CoUsersRoles::className(), ['user_id' => 'user_id'])->andWhere(['tenant_id' => Yii::$app->user->identity->logged_tenant_id]);
+        }else{
+            return $this->hasMany(CoUsersRoles::className(), ['user_id' => 'user_id']);
+        }    
     }
 
     /**
