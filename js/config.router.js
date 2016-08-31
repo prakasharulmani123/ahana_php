@@ -45,9 +45,9 @@ function config($stateProvider, $urlRouterProvider, JQ_CONFIG) {
                 templateUrl: 'tpl/app.html',
                 resolve: {
                     deps: ['$ocLazyLoad',
-                        function( $ocLazyLoad){
-                          return $ocLazyLoad.load('toaster');
-                      }]
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('toaster');
+                        }]
                 }
             })
             .state('app.org_list', {
@@ -166,13 +166,15 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
     $rootScope.$stateParams = $stateParams;
 
     var serviceUrl = '';
-    if($location.host() == 'arkinfotecdemo.in'){
+    var productOwner = true;
+    if ($location.host() == 'arkinfotecdemo.in') {
         serviceUrl = 'http://arkinfotecdemo.in/api/IRISADMIN/web/v1';
-    }else if($location.host() == 'demo.arkinfotec.in'){
+    } else if ($location.host() == 'demo.arkinfotec.in') {
         serviceUrl = 'http://demo.arkinfotec.in/ahana/demo/api/IRISADMIN/web/v1';
-    }else if($location.host() == 'hms.ark'){
+    } else if ($location.host() == 'hms.ark') {
         serviceUrl = 'http://hms.ark/api/IRISADMIN/web/v1';
     } else {
+        productOwner = false; // Organizations
         serviceUrl = 'http://hms.ark/api/IRISADMIN/web/v1';
     }
     $rootScope.IRISAdminServiceUrl = serviceUrl;
@@ -184,6 +186,11 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
     }
 
     $rootScope.$on('$locationChangeStart', function (event, next, current) {
+        if (!productOwner) {
+            var url = "http://" + $location.host();
+            $window.location.href = url;
+        }
+        
         var restrictedPage = $.inArray($location.path(), ['/access/signin']) === -1;
         var loggedIn = Boolean($rootScope.globals.currentUser);
 
