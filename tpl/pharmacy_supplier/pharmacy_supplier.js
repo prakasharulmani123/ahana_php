@@ -14,6 +14,9 @@ app.controller('SuppliersController', ['$rootScope', '$scope', '$timeout', '$htt
                         $scope.isLoading = false;
                         $scope.rowCollection = alerts;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
+
+                        //Avoid pagination problem, when come from other pages.
+                        $scope.footable_redraw();
                     })
                     .error(function () {
                         $scope.error = "An Error has occured while loading supplier!";
@@ -23,23 +26,23 @@ app.controller('SuppliersController', ['$rootScope', '$scope', '$timeout', '$htt
         //For Form
         $scope.initForm = function () {
             $rootScope.commonService.GetCountryList(function (response) {
-                    $scope.countries = response.countryList;
+                $scope.countries = response.countryList;
 
-                    $rootScope.commonService.GetStateList(function (response) {
-                        $scope.states = response.stateList;
+                $rootScope.commonService.GetStateList(function (response) {
+                    $scope.states = response.stateList;
 
-                        $rootScope.commonService.GetCityList(function (response) {
-                            $scope.cities = response.cityList;
+                    $rootScope.commonService.GetCityList(function (response) {
+                        $scope.cities = response.cityList;
 
-                            $scope.loadbar('hide');
-                            if($scope.data.formtype == 'update'){
-                                $scope.loadForm();
-                            }
-                        });
+                        $scope.loadbar('hide');
+                        if ($scope.data.formtype == 'update') {
+                            $scope.loadForm();
+                        }
                     });
                 });
+            });
         }
-        
+
         $scope.updateState2 = function () {
             $scope.availableStates2 = [];
             $scope.availableCities2 = [];
