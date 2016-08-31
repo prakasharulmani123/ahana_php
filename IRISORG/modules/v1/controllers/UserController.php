@@ -426,10 +426,12 @@ class UserController extends ActiveController {
 
     public function actionGetswitchedbrancheslist() {
         $tenant_id = Yii::$app->user->identity->user->tenant_id;
+        $org_id = Yii::$app->user->identity->user->org_id;
         if ($tenant_id == 0) {
             $branches = CoTenant::find()
                     ->active()
                     ->status()
+                    ->andWhere(['org_id' => $org_id])
                     ->all();
             return ['success' => true, 'branches' => $branches, 'default_branch' => Yii::$app->user->identity->logged_tenant_id];
         } else {
