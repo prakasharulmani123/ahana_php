@@ -14,6 +14,9 @@ app.controller('GenericNameController', ['$rootScope', '$scope', '$timeout', '$h
                         $scope.isLoading = false;
                         $scope.rowCollection = genericnames;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
+                        
+                        //Avoid pagination problem, when come from other pages.
+                        $scope.footable_redraw();
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading genericname!";

@@ -14,6 +14,9 @@ app.controller('VatController', ['$rootScope', '$scope', '$timeout', '$http', '$
                         $scope.isLoading = false;
                         $scope.rowCollection = vats;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
+                        
+                        //Avoid pagination problem, when come from other pages.
+                        $scope.footable_redraw();
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading vat!";
