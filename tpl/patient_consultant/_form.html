@@ -27,7 +27,7 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">Consultant * </label>
             <div class="col-sm-9">
-                <select class="form-control" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors | orderBy: name">
+                <select class="form-control" ng-model="data.consultant_id" ng-options="doctor.user_id  as doctor.consult_speciality_name for doctor in doctors | orderBy: name">
                     <option value="">Select Consultant</option>
                 </select>
             </div>
