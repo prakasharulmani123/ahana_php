@@ -132,7 +132,8 @@ class PatConsultant extends RActiveRecord {
                 }
             },
             'consultant_name' => function ($model) {
-                return (isset($model->consultant->name)) ? $model->consultant->title_code.$model->consultant->name : '-';
+                $specname = isset($model->consultant->speciality)? " ( ".$model->consultant->speciality->speciality_name ." )":"";
+                return (isset($model->consultant->name)) ? $model->consultant->title_code.$model->consultant->name.$specname: '-';
             },
         ];
         $fields = array_merge(parent::fields(), $extend);

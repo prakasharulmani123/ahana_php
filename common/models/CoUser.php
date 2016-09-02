@@ -209,6 +209,10 @@ class CoUser extends RActiveRecord {
             'fullname' => function ($model) {
                 return $model->title_code . ucfirst($model->name);
             },
+            'consult_speciality_name' => function ($model) {
+                $speciality_name = isset($model->speciality) ? " ( ".$model->speciality->speciality_name." )" : "";
+                return $model->title_code . ucfirst($model->name).$speciality_name;
+            },
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
@@ -223,6 +227,9 @@ class CoUser extends RActiveRecord {
             $list = self::find()->tenant($tenant)->status($status)->active()->careprovider($care_provider)->all();
         else
             $list = self::find()->tenant($tenant)->deleted()->careprovider($care_provider)->all();
+//        
+//        echo "<pre>";
+//        print_r($list);exit;
 
         return $list;
     }
