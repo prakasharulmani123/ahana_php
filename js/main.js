@@ -2,8 +2,8 @@
 
 /* Controllers */
 angular.module('app')
-        .controller('AppCtrl', ['$scope', '$localStorage', '$window', '$rootScope', '$state', '$cookieStore', '$http', 'CommonService', '$timeout', 'AuthenticationService', 'toaster', 'hotkeys', '$modal',
-            function ($scope, $localStorage, $window, $rootScope, $state, $cookieStore, $http, CommonService, $timeout, AuthenticationService, toaster, hotkeys, $modal) {
+        .controller('AppCtrl', ['$scope', '$localStorage', '$window', '$rootScope', '$state', '$cookieStore', '$http', 'CommonService', '$timeout', 'AuthenticationService', 'toaster', 'hotkeys', '$modal', '$filter',
+            function ($scope, $localStorage, $window, $rootScope, $state, $cookieStore, $http, CommonService, $timeout, AuthenticationService, toaster, hotkeys, $modal,$filter) {
 //                socket.forward('someEvent', $scope);
 
                 $scope.$on('socket:someEvent', function (ev, data) {
@@ -246,9 +246,31 @@ angular.module('app')
 
                 $scope.child = {}
 
+                $scope.GetNote = function (id, note_id) {
+
+                    $scope.errorData = "";
+                    $http({
+                        url: $rootScope.IRISOrgServiceUrl + "/patientnotes/" + note_id,
+                        method: "GET"
+                    }).success(
+                            function (response) {
+                                $scope.loadbar('hide');
+                                $scope.data = response;
+                                $scope.encounter = {encounter_id: response.encounter_id};
+                            }
+                    ).error(function (data, status) {
+                        $scope.loadbar('hide');
+                        if (status == 422)
+                            $scope.errorData = $scope.errorSummary(data);
+                        else
+                            $scope.errorData = data.message;
+                    });
+                }
+
                 $scope.addNotes = function () {
+
                     if (jQuery.isEmptyObject($scope.data)) {
-                        $scope.notes_error = true;
+                        $scope.xrror = true;
                         return;
                     }
                     $scope.notes_error = false;
@@ -263,18 +285,43 @@ angular.module('app')
 
                     $scope.loadbar('show');
 
-                    $http.post($rootScope.IRISOrgServiceUrl + '/patientnotes', $scope.data)
-                            .success(function (response) {
-                                $scope.data = {};
-                                angular.extend(response, {
-                                    created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
-                                });
-                                $scope.child.notes.push(response);
-                                $scope.loadbar('hide');
+                    if ($scope.data.pat_note_id == null) {
+                        var posturl = $rootScope.IRISOrgServiceUrl + '/patientnotes';
+                        var method = 'POST';
+                        var mode = 'add';
+                    } else {
+                        var posturl = $rootScope.IRISOrgServiceUrl + '/patientnotes/' + $scope.data.pat_note_id;
+                        var method = 'PUT';
+                        var mode = 'update';
+                    }
 
-                                $(".vbox .row-row .cell:visible").animate({scrollTop: $('.vbox .row-row .cell:visible').prop("scrollHeight")}, 1000);
+                    $http({
+                        method: method,
+                        url: posturl,
+                        data: $scope.data,
+                    }).success(function (response) {
+                        $scope.data = {};
+                        
+                        angular.extend(response, {
+                               created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
+                           });
+                            
+                        if (mode != "add")
+                        {
+                            var notes_exists='';
+                            notes_exists = $filter('filter')($scope.child.notes, {pat_note_id: response.pat_note_id});
+                            if (notes_exists.length > 0) {
+                                $scope.child.notes.splice($scope.child.notes.indexOf(notes_exists[0]), 1);
+                            }
+                        }
+
+                        $scope.child.notes.push(response);
+
+                        $scope.loadbar('hide');
+
+                        $(".vbox .row-row .cell:visible").animate({scrollTop: $('.vbox .row-row .cell:visible').prop("scrollHeight")}, 1000);
 //                                $scope.msg.successMessage = 'Note saved successfully';
-                            })
+                    })
                             .error(function (data, status) {
                                 $scope.loadbar('hide');
                                 if (status == 422)
@@ -448,7 +495,7 @@ angular.module('app')
                     toaster.pop('error', 'Session Expired', 'Kindly Login Again');
                     $scope.logout();
                 });
-                
+
                 $rootScope.$on('internalerror', function () {
                     toaster.clear();
                     toaster.pop('error', 'Internal Error', 'NetworkError: 500 Internal Server Error');
