@@ -223,10 +223,11 @@ class CoUser extends RActiveRecord {
     }
 
     public static function getDoctorsList($tenant = null, $care_provider = '1', $status = '1', $deleted = false) {
+        //->tenant($tenant) //This condition is deleted, because global doctors for all the branch
         if (!$deleted)
-            $list = self::find()->tenant($tenant)->status($status)->active()->careprovider($care_provider)->all();
+            $list = self::find()->status($status)->active()->careprovider($care_provider)->all();
         else
-            $list = self::find()->tenant($tenant)->deleted()->careprovider($care_provider)->all();
+            $list = self::find()->deleted()->careprovider($care_provider)->all();
 //        
 //        echo "<pre>";
 //        print_r($list);exit;
