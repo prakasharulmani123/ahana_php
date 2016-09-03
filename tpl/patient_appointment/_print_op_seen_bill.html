@@ -1,22 +1,22 @@
 <div id="Getprintval" ng-hide="1">
-    <div class="invoice-details1">
+    <div class="invoice-details3">
         <table width="100%" border="0" align="right" cellpadding="0" cellspacing="0" class="purchase-list-tab purchase-list-tab2 ">
             <tr>
                 <th align="left">Patent Name :  </th>
                 <td align="left"> {{patientObj.fullname}} ({{patientObj.activeCasesheetno}})</td>
-            </tr>
+            </tr>          
             <tr>
-                <th align="left">Patent Id :  </th>
-                <td align="left">{{patientObj.patient_int_code}}</td>
-            </tr>
-            <tr>
-                <th align="left">Sex:  </th>
-                <td align="left">{{app.patientDetail.patientSex}}</td>
+                <th align="left">Age / Sex :   </th>
+                <td align="left">{{patientObj.patient_age}} years / {{app.patientDetail.patientSex}} </td>
             </tr>
         </table>
     </div>
     <div class="invoice-details1 invoice-details2">
-        <table width="100%" border="0" align="right" cellpadding="0" cellspacing="0" class="purchase-list-tab purchase-list-tab2 ">         
+        <table width="100%" border="0" align="right" cellpadding="0" cellspacing="0" class="purchase-list-tab purchase-list-tab2 ">  
+            <tr>
+                <th align="left">Patent Id :  </th>
+                <td align="left">{{patientObj.patient_int_code}}</td>
+            </tr>
             <tr>
                 <th align="left">Consultant Name  :  </th>
                 <td align="left">{{printBillData.doctor}}</td>
@@ -24,13 +24,8 @@
             <tr>
                 <th align="left">Organization  :  </th>
                 <td align="left">{{patientObj.org_name}} </td>
-            </tr>
-            <tr>
-                <th align="left">Age  :  </th>
-                <td align="left">
-                    {{patientObj.patient_age}}y
-                </td>
-            </tr>
+            </tr>    
+
         </table>
     </div>
     <div class="clearfix"></div>
@@ -47,7 +42,32 @@
             <td>{{printBillData.date}}</td>
             <td>{{printBillData.patient_bill_type}}</td>
             <td>{{printBillData.patient_cat_name}}</td>
-            <td>{{printBillData.op_amount}}</td>
+            <td>{{ (printBillData.op_amount>0) ? printBillData.op_amount : "-"}}</td>
         </tr>      
     </table>
+
+    <p></p>
+
+    <div class="invoice-details3">
+        <table width="100%" border="0" align="right" cellpadding="0" cellspacing="0" class="purchase-list-tab purchase-list-tab2 ">
+            <tr>
+                <td>
+                    <p ng-if="printBillData.op_amount > 0">Pay Mode &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Cash <strong> ( {{printBillData.op_amount}} )</strong> </p>     
+                    <p ng-if="printBillData.op_amount > 0"><strong> {{printBillData.op_amount_inwords}}.</strong></p>  
+                    <p>Bill prepared on {{printBillData.date}}</p>
+                </td>
+            </tr>   
+        </table>
+    </div>
+    <div class="invoice-details1 invoice-details2">
+        <table width="100%" border="0" align="right" cellpadding="0" cellspacing="0" class="purchase-list-tab purchase-list-tab2 ">  
+            <tr>
+                <td>
+                    <p style="text-align: center;">For {{patientObj.org_name}}</p>
+                    <p>&nbsp;</p>
+                    <p style="text-align: center;">Authorised signatory</p>
+                </td>
+            </tr> 
+        </table>
+    </div>
 </div>

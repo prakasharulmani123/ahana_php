@@ -121,6 +121,7 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
             }
         }
 
+        
         $scope.updateFreeCharge = function () {
             _that = this;
             if (_that.data.PatAppointment.patient_bill_type == "F") {
@@ -246,7 +247,7 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
 
             $scope.errorData = "";
             $scope.msg.successMessage = "";
-
+            
             post_url = $rootScope.IRISOrgServiceUrl + '/encounter/createappointment';
             method = 'POST';
             succ_msg = 'Appointment saved successfully';
@@ -292,6 +293,8 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
                     angular.extend(_that.data.PatAppointment, {patient_id: $scope.patientObj.patient_id, encounter_id: $state.params.enc_id});
                 }
             }
+            
+            $scope.getBillName(_that.data.PatAppointment.patient_bill_type);
 
             method = 'POST';
             succ_msg = 'Status changed successfully';
@@ -314,7 +317,7 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
                 }
                 _that.data.PatAppointment.appt_status = "S";
             }
-
+            
             $scope.loadbar('show');
             $http({
                 method: method,
@@ -328,7 +331,7 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
                             if (mode == 'seen_future') {
                                 $scope.add_appointment();
                             } else if (mode == 'seen_print') {
-                                $scope.save_success(_that.data.PatAppointment.status_date, _that.data.PatAppointment.amount);
+                                $scope.save_success(_that.data.PatAppointment.status_date, _that.data.PatAppointment.amount,response.amount_in_words);
                             } else {
                                 $scope.data = {};
                                 $timeout(function () {
@@ -350,9 +353,11 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
         };
 
         $scope.printBillData = {};
-        $scope.save_success = function (date, amount) {
+        $scope.save_success = function (date, amount,amount_in_words) {
             $scope.printBillData.doctor = $scope.patientObj.consultant_name;
             $scope.printBillData.op_amount = amount;
+            $scope.printBillData.op_amount_inwords = amount_in_words;
+
             $scope.printBillData.date = date;
             $scope.printBillData.patient_bill_type = $scope.bill_type_taken;
             $scope.printBillData.patient_cat_name = $scope.cat_name_taken;

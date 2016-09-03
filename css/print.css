@@ -371,7 +371,7 @@
 
 .invoice-details1
 {
-    width:250px;
+    width:270px;
     float:left;
     font-size:14px !important;
 }
@@ -383,7 +383,14 @@
 
 }
 
-.invoice-details1 th, .invoice-details1 td
+.invoice-details3
+{
+    width:330px;
+    float:left;
+    font-size:14px !important;
+}
+
+.invoice-details1 th, .invoice-details1 td , .invoice-details3 th, .invoice-details3 td
 {
     font-size:15px;
 }
