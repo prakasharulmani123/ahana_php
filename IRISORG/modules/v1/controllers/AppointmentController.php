@@ -60,8 +60,11 @@ class AppointmentController extends ActiveController {
             $valid = $appt_model->validate();
 
             if ($valid) {
+                $amount = $appt_model->amount;
+                $amount_words = Yii::$app->hepler->convert_number_to_words( (int) ($amount)).' Rupees Only';
+                    
                 $appt_model->save(false);
-                return ['success' => true];
+                return ['success' => true , 'amount_in_words' => $amount_words];
             } else {
                 return ['success' => false, 'message' => Html::errorSummary($appt_model)];
             }

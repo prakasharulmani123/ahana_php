@@ -4,6 +4,7 @@ namespace common\models;
 
 use common\models\query\PatEncounterQuery;
 use DateTime;
+use Yii;
 use yii\db\ActiveQuery;
 
 /**
@@ -244,6 +245,9 @@ class PatEncounter extends RActiveRecord {
             },
             'appointmentSeen' => function ($model) {
                 return (isset($model->patAppointmentSeen) ? $model->patAppointmentSeen : '-');
+            },
+            'appointmentSeen_amt_inwords' => function ($model) {
+                return (isset($model->patAppointmentSeen) ? Yii::$app->hepler->convert_number_to_words( (int) ($model->patAppointmentSeen->amount)).' Rupees Only' : '-');
             },
             'room_name' => function ($model) {
                 return (isset($model->patLiveAdmission->room->bed_name) ? $model->patLiveAdmission->room->bed_name : '-');
