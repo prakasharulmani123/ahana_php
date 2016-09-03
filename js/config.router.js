@@ -2358,7 +2358,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
-            
+
             //Patient Document - Index
             .state('patient.document', {
                 url: '/document/{id}',
@@ -2502,6 +2502,28 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                             return $ocLazyLoad.load('xeditable').then(
                                     function () {
                                         return $ocLazyLoad.load('tpl/pharmacy_reorder/pharmacy_reorder.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+
+            //Myworks
+            .state('myworks', {
+                abstract: true,
+                url: '/myworks',
+                templateUrl: 'tpl/myworks.html'
+            })
+            //Myworks OPDoctorPay
+            .state('myworks.opDoctorPay', {
+                url: '/opDoctorPay',
+                templateUrl: 'tpl/myworks_report/opdoctorpay.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/myworks_report/opdoctorpay.js');
                                     }
                             );
                         }]
