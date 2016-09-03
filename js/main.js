@@ -3,7 +3,7 @@
 /* Controllers */
 angular.module('app')
         .controller('AppCtrl', ['$scope', '$localStorage', '$window', '$rootScope', '$state', '$cookieStore', '$http', 'CommonService', '$timeout', 'AuthenticationService', 'toaster', 'hotkeys', '$modal', '$filter',
-            function ($scope, $localStorage, $window, $rootScope, $state, $cookieStore, $http, CommonService, $timeout, AuthenticationService, toaster, hotkeys, $modal,$filter) {
+            function ($scope, $localStorage, $window, $rootScope, $state, $cookieStore, $http, CommonService, $timeout, AuthenticationService, toaster, hotkeys, $modal, $filter) {
 //                socket.forward('someEvent', $scope);
 
                 $scope.$on('socket:someEvent', function (ev, data) {
@@ -301,14 +301,14 @@ angular.module('app')
                         data: $scope.data,
                     }).success(function (response) {
                         $scope.data = {};
-                        
+
                         angular.extend(response, {
-                               created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
-                           });
-                            
-                        if (mode != "add")
+                            created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
+                        });
+
+                        if (mode == "update")
                         {
-                            var notes_exists='';
+                            var notes_exists = '';
                             notes_exists = $filter('filter')($scope.child.notes, {pat_note_id: response.pat_note_id});
                             if (notes_exists.length > 0) {
                                 $scope.child.notes.splice($scope.child.notes.indexOf(notes_exists[0]), 1);
@@ -331,6 +331,27 @@ angular.module('app')
                             });
                 }
 
+                $scope.GetVital = function (id, vital_id) {
+
+                    $scope.errorData = "";
+                    $http({
+                        url: $rootScope.IRISOrgServiceUrl + "/patientvitals/" + vital_id,
+                        method: "GET"
+                    }).success(
+                            function (response) {
+                                $scope.loadbar('hide');
+                                $scope.vitaldata = response;
+                                $scope.encounter = {encounter_id: response.encounter_id};
+                            }
+                    ).error(function (data, status) {
+                        $scope.loadbar('hide');
+                        if (status == 422)
+                            $scope.errorData = $scope.errorSummary(data);
+                        else
+                            $scope.errorData = data.message;
+                    });
+                }
+
                 $scope.addVital = function () {
                     if (jQuery.isEmptyObject($scope.vitaldata)) {
                         $scope.vital_error = true;
@@ -347,13 +368,37 @@ angular.module('app')
                         encounter_id: $scope.encounter_id,
                         vital_time: moment().format('YYYY-MM-DD HH:mm:ss')
                     });
+                    
+                    if ($scope.vitaldata.vital_id == null) {
+                        var posturl = $rootScope.IRISOrgServiceUrl + '/patientvitals';
+                        var method = 'POST';
+                        var mode = 'add';
+                    } else {
+                        var posturl = $rootScope.IRISOrgServiceUrl + '/patientvitals/' + $scope.vitaldata.vital_id;
+                        var method = 'PUT';
+                        var mode = 'update';
+                    }
 
                     $scope.loadbar('show');
-
-                    $http.post($rootScope.IRISOrgServiceUrl + '/patientvitals', $scope.vitaldata)
-                            .success(function (response) {
+                    
+                     $http({
+                        method: method,
+                        url: posturl,
+                        data: $scope.vitaldata,
+                    }).success(function (response) {
                                 $scope.vitaldata = {};
+
+                                if (mode == "update")
+                                {
+                                    var vital_exists = '';
+                                    vital_exists = $filter('filter')($scope.child.vitals, {vital_id: response.vital_id});
+                                    if (vital_exists.length > 0) {
+                                        $scope.child.vitals.splice($scope.child.vitals.indexOf(vital_exists[0]), 1);
+                                    }
+                                }
+
                                 $scope.child.vitals.push(response);
+
                                 $scope.loadbar('hide');
 
                                 $(".vbox .row-row .cell:visible").animate({

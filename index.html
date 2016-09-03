@@ -97,7 +97,7 @@
                                         <a check-access-custom3 class="label bg-dark" title="Edit" data-url='patient.noteUpdate' ng-click="GetNote('{{$state.params.id}}','{{note.pat_note_id}}')">
                                             <i class="fa fa-pencil"></i>
                                         </a> &nbsp;&nbsp;
-                                        <span id="note_{{note.pat_note_id}}">{{note.notes}}</span>
+                                       {{note.notes}}
                                         <div class="text-xs text-muted ng-binding">
                                             {{note.created_at| moment:'DD/MM/YYYY hh:mm A'}}
                                             <span class="notes_writer pull-right">
@@ -110,12 +110,12 @@
                             </div>
                         </div>
                         <div class="wrapper m-t b-t b-light">
-                            <form ng-submit="addNotes()" class="m-b-none ng-pristine ng-valid ng-submitted" ng-init="data = {};
-                                                            notes_error = false;">
+                                                <form ng-submit="addNotes()" class="m-b-none ng-pristine ng-valid ng-submitted" ng-init="data = {};
+                                        notes_error = false;">
                                 <div class="input-group">
                                     <input type="text" placeholder="Say something" class="form-control" ng-model="data.notes">
                                     <span class="input-group-btn">
-                                        <button type="button" class="btn btn-default save-btn" ng-click="addNotes()">{{ (data.pat_note_id==NULL)?"Add":"Save" }}</button>
+                                        <button type="button" class="btn btn-default save-btn" ng-click="addNotes()">{{ (data.pat_note_id == NULL)?"Add":"Save"}}</button>
                                     </span>
                                 </div>
                                 <span class="text-danger" ng-show="notes_error">Enter Text !!! </span>
@@ -140,6 +140,9 @@
                                     <!-- vitals list -->
                                     <div ng-repeat="vital in child.vitals" class="vitals-cont">
                                         <div class="vitals-cont-date"> 
+                                            <a check-access-custom3 class="label bg-dark" title="Edit" data-url='patient.vitalUpdate' ng-click="GetVital('{{$state.params.id}}','{{vital.vital_id}}')">
+                                                <i class="fa fa-pencil"></i>
+                                            </a> &nbsp;&nbsp;
                                             <span class="label bg-{{vital.seen_by == 0 ? 'danger' : 'info'}} ng-binding ng-scope"> 
                                                 {{vital.vital_time| moment:'DD/MM/YYYY hh:mm A'}}
                                             </span>
@@ -175,8 +178,8 @@
                         </div>
 
                         <div class="wrapper m-t b-t b-light">
-                            <form class="m-b-none ng-pristine ng-valid ng-submitted" ng-submit="addVital()" ng-init="vitaldata = {};
-                                                            vital_error = false;">
+                                                <form class="m-b-none ng-pristine ng-valid ng-submitted" ng-submit="addVital()" ng-init="vitaldata = {};
+                                        vital_error = false;">
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-sm-6">
@@ -209,6 +212,7 @@
                                             <span class="input-group-btn">
                                                 <button type="button" class="btn btn-default save-btn" ng-click="addVital()">Add</button>
                                             </span>
+                                            <input type="hidden" ng-model="data.vital_id">
                                         </div>
                                     </div>
                                 </div>
