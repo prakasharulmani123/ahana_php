@@ -279,11 +279,11 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                     var arrived = 0;
 
                     angular.forEach(row.all, function (appt) {
-                        if (appt.liveAppointmentArrival == '-') {
+                        if (appt.liveAppointmentArrival == '-' && appt.appointmentSeen == '-') {
                             appt.sts = 'B';
                             booked++;
                         }
-                        if (appt.liveAppointmentArrival != '-') {
+                        if (appt.liveAppointmentArrival != '-' && appt.appointmentSeen == '-') {
                             appt.sts = 'A';
                             arrived++;
                         }

@@ -162,7 +162,7 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
 
         $scope.printBillData = {};
         $scope.printOPBill = function (item) {
-            $scope.printBillData.date = item.date;
+            $scope.printBillData.date = moment(item.date).format('DD/MM/YYYY hh:mm A');
             $scope.printBillData.doctor = item.doctor;
 
             //Patient Billing Types List
@@ -176,6 +176,7 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                         //appointment seen amount
                         $scope.printBillData.op_amount = response.model.appointmentSeen.amount;
                         $scope.printBillData.op_amount_inwords = response.model.appointmentSeen_amt_inwords;
+                        $scope.printBillData.bill_no = response.model.bill_no;
 
                         //Get Patient Bill Type
                         if (response.model.appointmentSeen.patient_bill_type) {
@@ -205,7 +206,7 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
 
             $timeout(function () {
                 var innerContents = document.getElementById('Getprintval').innerHTML;
-                var popupWinindow = window.open('', '_blank', 'width=700,height=700,scrollbars=yes,menubar=no,toolbar=no,location=no,status=no,titlebar=no');
+                var popupWinindow = window.open('', '_blank', 'width=800,height=800,scrollbars=yes,menubar=no,toolbar=no,location=no,status=no,titlebar=no');
                 popupWinindow.document.open();
                 popupWinindow.document.write('<html><head><link href="css/print.css" rel="stylesheet" type="text/css" /></head><body onload="window.print()">' + innerContents + '</html>');
                 popupWinindow.document.close();

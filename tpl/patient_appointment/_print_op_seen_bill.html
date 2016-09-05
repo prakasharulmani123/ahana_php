@@ -1,12 +1,17 @@
 <div id="Getprintval" ng-hide="1">
+    <div style="text-align: center"><b>CASH BILL</b></div>
     <div class="invoice-details3">
         <table width="100%" border="0" align="right" cellpadding="0" cellspacing="0" class="purchase-list-tab purchase-list-tab2 ">
             <tr>
-                <th align="left">Patent Name :  </th>
+                <th align="left">Patent Name :</th>
                 <td align="left"> {{patientObj.fullname}} ({{patientObj.activeCasesheetno}})</td>
-            </tr>          
+            </tr>
             <tr>
-                <th align="left">Age / Sex :   </th>
+                <th align="left">Reg No :</th>
+                <td align="left">{{patientObj.patient_int_code}}</td>
+            </tr>
+            <tr>
+                <th align="left">Age / Sex :</th>
                 <td align="left">{{patientObj.patient_age}} years / {{app.patientDetail.patientSex}} </td>
             </tr>
         </table>
@@ -14,36 +19,46 @@
     <div class="invoice-details1 invoice-details2">
         <table width="100%" border="0" align="right" cellpadding="0" cellspacing="0" class="purchase-list-tab purchase-list-tab2 ">  
             <tr>
-                <th align="left">Patent Id :  </th>
-                <td align="left">{{patientObj.patient_int_code}}</td>
-            </tr>
+                <th align="left">Bill No :</th>
+                <td align="left"> {{printBillData.bill_no}}</td>
+            </tr>   
             <tr>
-                <th align="left">Consultant Name  :  </th>
-                <td align="left">{{printBillData.doctor}}</td>
+                <th align="left">Bill Date :</th>
+                <td align="left"> {{printBillData.date}}</td>
             </tr>
-            <tr>
-                <th align="left">Organization  :  </th>
-                <td align="left">{{patientObj.org_name}} </td>
-            </tr>    
-
+            <!--            <tr>
+                            <th align="left">Organization  :  </th>
+                            <td align="left">{{patientObj.org_name}} </td>
+                        </tr>    -->
         </table>
     </div>
     <div class="clearfix"></div>
     <table width="100%" border="0" cellspacing="0" cellpadding="0" class="purchase-list-tab">
         <tr>
-            <th>Status</th>
-            <th>Timing</th>
-            <th>Billing</th>
-            <th>Patient Category</th>
-            <th>OP Amount</th>         
+            <th>S.No</th>
+            <th>Consultant Name</th>
+            <!--<th>Billing</th>-->
+            <!--<th>Patient Category</th>-->
+            <th>Amount</th>         
         </tr>
         <tr>
-            <td>Seen</td>
-            <td>{{printBillData.date}}</td>
-            <td>{{printBillData.patient_bill_type}}</td>
-            <td>{{printBillData.patient_cat_name}}</td>
-            <td>{{ (printBillData.op_amount>0) ? printBillData.op_amount : "-"}}</td>
-        </tr>      
+            <td>1</td>
+            <!--<td>Seen</td>-->
+            <td>{{printBillData.doctor}}</td>
+            <!--<td>{{printBillData.patient_bill_type}}</td>-->
+            <!--<td>{{printBillData.patient_cat_name}}</td>-->
+            <td align="right">{{ (printBillData.op_amount > 0) ? printBillData.op_amount : "-"}}</td>
+        </tr> 
+        <tr>
+            <td colspan="3" align="right">
+                <b>Bill Total:</b> {{ (printBillData.op_amount > 0) ? printBillData.op_amount : "-"}}
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3" align="right">
+                Amount paid: {{ (printBillData.op_amount > 0) ? printBillData.op_amount : "-"}}
+            </td>
+        </tr>
     </table>
 
     <p></p>
@@ -65,7 +80,7 @@
                 <td>
                     <p style="text-align: center;">For {{patientObj.org_name}}</p>
                     <p>&nbsp;</p>
-                    <p style="text-align: center;">Authorised signatory</p>
+                    <p style="text-align: center;">Authorized signatory</p>
                 </td>
             </tr> 
         </table>

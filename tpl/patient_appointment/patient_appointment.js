@@ -223,7 +223,7 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
                             if ($scope.checkAccess('patient.backdateappointment')) {
                                 $scope.timeslots.push({
                                     time: value.time,
-                                    color: 'black',
+                                    color: (value.available ? 'black' : 'red'),
                                     disable: false,
                                 });
                             } else {
@@ -331,7 +331,7 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
                             if (mode == 'seen_future') {
                                 $scope.add_appointment();
                             } else if (mode == 'seen_print') {
-                                $scope.save_success(_that.data.PatAppointment.status_date, _that.data.PatAppointment.amount,response.amount_in_words);
+                                $scope.save_success(_that.data.PatAppointment.status_date, _that.data.PatAppointment.amount,response.amount_in_words, response.bill_no);
                             } else {
                                 $scope.data = {};
                                 $timeout(function () {
@@ -353,18 +353,19 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
         };
 
         $scope.printBillData = {};
-        $scope.save_success = function (date, amount,amount_in_words) {
+        $scope.save_success = function (date, amount,amount_in_words, bill_no) {
             $scope.printBillData.doctor = $scope.patientObj.consultant_name;
             $scope.printBillData.op_amount = amount;
             $scope.printBillData.op_amount_inwords = amount_in_words;
 
-            $scope.printBillData.date = date;
+            $scope.printBillData.date = moment(date).format('DD/MM/YYYY hh:mm A');
             $scope.printBillData.patient_bill_type = $scope.bill_type_taken;
             $scope.printBillData.patient_cat_name = $scope.cat_name_taken;
+            $scope.printBillData.bill_no = bill_no;
 
             $timeout(function () {
                 var innerContents = document.getElementById("Getprintval").innerHTML;
-                var popupWinindow = window.open('', '_blank', 'width=600,height=700,scrollbars=yes,menubar=no,toolbar=no,location=no,status=no,titlebar=no');
+                var popupWinindow = window.open('', '_blank', 'width=800,height=800,scrollbars=yes,menubar=no,toolbar=no,location=no,status=no,titlebar=no');
                 popupWinindow.document.open();
                 popupWinindow.document.write('<html><head><link href="css/print.css" rel="stylesheet" type="text/css" /></head><body onload="window.print()">' + innerContents + '</html>');
                 popupWinindow.document.close();
