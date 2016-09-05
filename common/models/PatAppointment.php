@@ -135,7 +135,14 @@ class PatAppointment extends RActiveRecord {
             //Close Encounter
             if ($this->appt_status == 'S' || $this->appt_status == 'C') {
                 $this->encounter->status = '0';
+                if($this->appt_status == 'S'){
+                    $this->encounter->bill_no = CoInternalCode::generateInternalCode('B', 'common\models\PatEncounter', 'bill_no');
+                }
                 $this->encounter->save(false);
+                
+                if($this->appt_status == 'C'){
+                    PatAppointment::updateAll(['status' => '0'], 'encounter_id = ' . $this->encounter->encounter_id . ' AND status = "1"');
+                }
             }
         }
 

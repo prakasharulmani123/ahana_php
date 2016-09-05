@@ -276,9 +276,10 @@ class EncounterController extends ActiveController {
         }
 
         $condition = [
-            'pat_encounter.status' => '1',
+//            'pat_encounter.status' => '1',
             'pat_encounter.tenant_id' => $tenant_id,
             'pat_appointment.consultant_id' => Yii::$app->user->identity->user->user_id,
+            'pat_appointment.status' => '1',
         ];
 
         $seen_condition = [
@@ -292,8 +293,9 @@ class EncounterController extends ActiveController {
         if (isset($get['all'])) {
             if ($get['all']) {
                 $condition = [
-                    'pat_encounter.status' => '1',
-                    'pat_encounter.tenant_id' => $tenant_id
+//                    'pat_encounter.status' => '1',
+                    'pat_encounter.tenant_id' => $tenant_id,
+                    'pat_appointment.status' => '1',
                 ];
 
                 $seen_condition = [

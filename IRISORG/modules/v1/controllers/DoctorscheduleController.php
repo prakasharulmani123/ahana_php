@@ -181,7 +181,7 @@ class DoctorscheduleController extends ActiveController {
                 $color = 'red';
             }
 
-            $array_of_time[] = array("time" => $slot, 'color' => $color, 'disabled' => $disabled);
+            $array_of_time[] = array("time" => $slot, 'color' => $color, 'disabled' => $disabled, 'available' => $isAvailable);
             $start_time += $interval_mins;
         }
 
