@@ -225,6 +225,7 @@ class OrganizationController extends ActiveController {
         $branches = CoTenant::find()
                 ->active()
                 ->status()
+                ->andWhere(['org_id' => Yii::$app->user->identity->user->org_id])
                 ->all();
         return ['success' => true, 'branches' => $branches];
     }
