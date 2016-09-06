@@ -214,8 +214,10 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
                 }
             }
         }
-
+        
+        $scope.timeslotloader = false;
         $scope.getTimeSlots = function (doctor_id, date) {
+            $scope.timeslotloader = true;
             $http.post($rootScope.IRISOrgServiceUrl + '/doctorschedule/getdoctortimeschedule', {doctor_id: doctor_id, schedule_date: date})
                     .success(function (response) {
                         $scope.timeslots = [];
@@ -223,19 +225,22 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
                             if ($scope.checkAccess('patient.backdateappointment')) {
                                 $scope.timeslots.push({
                                     time: value.time,
+                                    slot_12hour: value.slot_12hour,
                                     color: (value.available ? 'black' : 'red'),
                                     disable: false,
                                 });
                             } else {
                                 $scope.timeslots.push({
                                     time: value.time,
+                                    slot_12hour: value.slot_12hour,
                                     color: value.color,
                                     disable: value.disabled,
                                 });
                             }
-
                         });
+                        $scope.timeslotloader = false;
                     }, function (x) {
+                        $scope.timeslotloader = false;
                         response = {success: false, message: 'Server Error'};
                     });
         }

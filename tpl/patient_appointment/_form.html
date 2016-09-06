@@ -4,7 +4,8 @@
             <label class="col-sm-3 control-label">Mode</label>
             <div class="col-sm-9">
                 <label class="i-checks"><input type="radio" name="z" value="OP" checked="" disabled=""><i></i>OP&nbsp; &nbsp;</label>
-                <label class="i-checks"><input type="radio" name="z" value="IP" ng-click="loadbar('show'); $state.go('patient.admission', {id: $state.params.id})"><i></i>IP&nbsp; &nbsp;</label>
+                <label class="i-checks"><input type="radio" name="z" value="IP" ng-click="loadbar('show');
+                        $state.go('patient.admission', {id: $state.params.id})"><i></i>IP&nbsp; &nbsp;</label>
             </div>
         </div>
         <div class="line line-dashed b-b line-lg "></div>
@@ -44,12 +45,19 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">Time of Appointment * </label>
             <div class="col-sm-3">
-                <select ng-model="data.status_time" class="form-control">
-                    <option value="" selected="">Select Time</option>
-                    <option style="color: {{timeslot.color}}" ng-repeat="timeslot in timeslots" value="{{timeslot.time}}" ng-disabled="{{timeslot.disable}}">
-                        {{timeslot.time}}
-                    </option>
-                </select>
+                <div class="row">
+                    <div class="col-sm-10">
+                        <select ng-model="data.status_time" class="form-control" ng-disabled="timeslotloader">
+                            <option value="" selected="">Select Time</option>
+                            <option style="color: {{timeslot.color}}" ng-repeat="timeslot in timeslots" value="{{timeslot.time}}" ng-disabled="{{timeslot.disable}}">
+                                {{timeslot.slot_12hour}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-sm-2" ng-if="timeslotloader">
+                        <i class="fa fa-spin fa-spinner"></i>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="line line-dashed b-b line-lg "></div>

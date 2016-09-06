@@ -300,7 +300,7 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                     row.booking_count = booked;
                     row.arrived_count = arrived;
                     row.selected = '0';
-                    row.all = $filter('orderBy')(row.all, 'sts');
+                    row.all = $filter('orderBy')(row.all, ['sts', 'liveAppointmentArrival.status_datetime', 'liveAppointmentBooking.status_datetime', 'appointmentSeen.status_datetime']);
                 });
                 $scope.displayedCollection = [].concat($scope.rowCollection);
                 $scope.isLoading = false;
