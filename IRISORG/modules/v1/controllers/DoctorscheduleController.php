@@ -170,6 +170,7 @@ class DoctorscheduleController extends ActiveController {
             }
 
             $slot = date("H:i:s", $start_time);
+            $slot_12hour = date("h:i A", $start_time);
 
             $isAvailable = PatAppointment::checkAvailableSlot($doctor_id, $schedule_date, $slot);
             if ($isAvailable) {
@@ -181,7 +182,13 @@ class DoctorscheduleController extends ActiveController {
                 $color = 'red';
             }
 
-            $array_of_time[] = array("time" => $slot, 'color' => $color, 'disabled' => $disabled, 'available' => $isAvailable);
+            $array_of_time[] = array(
+                "time" => $slot,
+                "slot_12hour" => $slot_12hour,
+                'color' => $color,
+                'disabled' => $disabled,
+                'available' => $isAvailable
+            );
             $start_time += $interval_mins;
         }
 

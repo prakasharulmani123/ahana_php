@@ -517,7 +517,12 @@ class PatPatient extends RActiveRecord {
                 } else {
                     return '-';
                 }
-            }
+            },
+            'new_user' => function($model) {
+                $today = date("Y-m-d");
+                $reg_date = date('Y-m-d', strtotime($model->patient_reg_date));
+                return $reg_date == $today;
+            },
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
