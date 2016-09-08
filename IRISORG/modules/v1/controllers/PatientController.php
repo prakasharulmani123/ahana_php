@@ -2,12 +2,14 @@
 
 namespace IRISORG\modules\v1\controllers;
 
+use common\models\CoInternalCode;
 use common\models\CoPatient;
 use common\models\GlPatient;
 use common\models\GlPatientShareResources;
 use common\models\GlPatientTenant;
 use common\models\PatPatient;
 use common\models\PatPatientAddress;
+use common\models\PatPatientCasesheet;
 use common\models\PatPrescriptionFrequency;
 use common\models\PatPrescriptionRoute;
 use common\models\PatTimeline;
@@ -238,7 +240,20 @@ class PatientController extends ActiveController {
 
     public function actionGetpatientbyguid() {
         $guid = Yii::$app->getRequest()->post('guid');
-        return PatPatient::find()->tenant()->andWhere(['patient_guid' => $guid])->one();
+        $patient = PatPatient::find()->tenant()->andWhere(['patient_guid' => $guid])->one();
+        if (isset($patient->patActiveCasesheetno)) {
+            return $patient;
+        } else {
+            $model = new PatPatientCasesheet();
+            $model->attributes = [
+                'casesheet_no' => CoInternalCode::generateInternalCode('CS', 'common\models\PatPatientCasesheet', 'casesheet_no'),
+                'patient_id' => $patient->patient_id,
+                'start_date' => date("Y-m-d"),
+            ];
+            $model->save(false);
+            CoInternalCode::increaseInternalCode("CS");
+            return PatPatient::find()->tenant()->andWhere(['patient_guid' => $guid])->one();
+        }
     }
 
     public function actionGetpatienttimeline() {
@@ -256,7 +271,7 @@ class PatientController extends ActiveController {
 
             if ($post['tenant_id'] == 'all') {
                 $patient_tenants = GlPatientTenant::find()->where(['patient_global_guid' => $guid])->all();
-                
+
                 $timelines = [];
                 foreach ($patient_tenants as $key => $patient_tenant) {
                     $connection = new Connection([
@@ -269,10 +284,10 @@ class PatientController extends ActiveController {
                     $command = $connection->createCommand("SELECT * FROM pat_patient WHERE patient_global_guid = :guid");
                     $command->bindValue(':guid', $guid);
                     $patient = $command->queryAll();
-                    
+
                     $resource_lists = $this->_getPatientResourceList($patient_tenant->org_id, $patient_tenant->tenant_id, $patient_tenant->patient_global_guid);
-                    $in_cond = "'".implode("','", $resource_lists)."'";
-                    
+                    $in_cond = "'" . implode("','", $resource_lists) . "'";
+
                     $command = $connection->createCommand("SELECT a.*, concat(b.tenant_name, ' - ', c.org_name) as branch "
                             . "FROM pat_timeline a "
                             . "JOIN co_tenant b "
@@ -285,9 +300,9 @@ class PatientController extends ActiveController {
                             . "");
                     $command->bindValues([':id' => $patient[0]['patient_id'], ':tenant_id' => $patient_tenant->tenant_id]);
                     $timeline = $command->queryAll();
-                    
+
                     $connection->close();
-                    
+
                     $timelines = array_merge($timelines, $timeline);
                 }
             } else {
@@ -301,7 +316,7 @@ class PatientController extends ActiveController {
             return ['timeline' => $timelines];
         }
     }
-    
+
     protected function _getPatientResourceList($org_id, $tenant_id, $guid) {
         $patient_resources = GlPatientShareResources::find()->where([
                     'org_id' => $org_id,
@@ -355,8 +370,8 @@ class PatientController extends ActiveController {
         if (isset($post['file_data'])) {
             $file = $post['file_data'];
         }
-        
-        if($post['block'] == 'register')
+
+        if ($post['block'] == 'register')
             return ['success' => true, 'file' => $file];
 
         if ($file) {
