@@ -118,4 +118,6 @@ app.controller('UserRolesController', ['$scope', '$http', '$filter', '$state', '
             $scope.selectedRoles = [];
             $scope.data = {};
         }
+        
+        $scope.reset();
     }]);

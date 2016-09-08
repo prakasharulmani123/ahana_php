@@ -49,6 +49,8 @@ app.controller('UserBranchesController', ['$scope', '$http', '$filter', '$state'
                         $scope.branches = response.data.branches;
                     }
             );
+    
+            $scope.reset();
         }
 
         $scope.selectedBranches = [];

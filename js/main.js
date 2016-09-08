@@ -236,6 +236,16 @@ angular.module('app')
                     }
                 }, true);
 
+                $scope.errorData1 = false;
+                $scope.$watch('errorData', function (newValue, oldValue) {
+                    if (newValue != "" && newValue !== 'undefined') {
+                        $scope.errorData1 = true;
+                        $timeout(function () {
+                            $scope.errorData1 = false;
+                        }, 5000);
+                    }
+                }, true);
+
                 //Avoid pagination problem, when come from other pages.
                 //Used in all the controller index function.
                 $scope.footable_redraw = function () {
@@ -368,7 +378,7 @@ angular.module('app')
                         encounter_id: $scope.encounter_id,
                         vital_time: moment().format('YYYY-MM-DD HH:mm:ss')
                     });
-                    
+
                     if ($scope.vitaldata.vital_id == null) {
                         var posturl = $rootScope.IRISOrgServiceUrl + '/patientvitals';
                         var method = 'POST';
@@ -380,31 +390,31 @@ angular.module('app')
                     }
 
                     $scope.loadbar('show');
-                    
-                     $http({
+
+                    $http({
                         method: method,
                         url: posturl,
                         data: $scope.vitaldata,
                     }).success(function (response) {
-                                $scope.vitaldata = {};
+                        $scope.vitaldata = {};
 
-                                if (mode == "update")
-                                {
-                                    var vital_exists = '';
-                                    vital_exists = $filter('filter')($scope.child.vitals, {vital_id: response.vital_id});
-                                    if (vital_exists.length > 0) {
-                                        $scope.child.vitals.splice($scope.child.vitals.indexOf(vital_exists[0]), 1);
-                                    }
-                                }
+                        if (mode == "update")
+                        {
+                            var vital_exists = '';
+                            vital_exists = $filter('filter')($scope.child.vitals, {vital_id: response.vital_id});
+                            if (vital_exists.length > 0) {
+                                $scope.child.vitals.splice($scope.child.vitals.indexOf(vital_exists[0]), 1);
+                            }
+                        }
 
-                                $scope.child.vitals.push(response);
+                        $scope.child.vitals.push(response);
 
-                                $scope.loadbar('hide');
+                        $scope.loadbar('hide');
 
-                                $(".vbox .row-row .cell:visible").animate({
-                                    scrollTop: $('.vbox .row-row .cell:visible').prop("scrollHeight")
-                                }, 1000);
-                            })
+                        $(".vbox .row-row .cell:visible").animate({
+                            scrollTop: $('.vbox .row-row .cell:visible').prop("scrollHeight")
+                        }, 1000);
+                    })
                             .error(function (data, status) {
                                 $scope.loadbar('hide');
                                 if (status == 422)
@@ -650,7 +660,15 @@ angular.module('app')
                                 } else if (!response.admin) {
                                     alert("Branch setup has not been done, Please contact admin");
                                 }
-                                $state.go($state.current, {}, {reload: true});
+                                if (Object.keys($state.params).length > 0 && Object.keys($scope.patientObj).length > 0 && $state.params.id == $scope.patientObj.patient_guid) {
+                                    $state.go('configuration.organization');
+                                    $timeout(function () {
+                                        toaster.clear();
+                                        toaster.pop('error', 'Internal Error', 'Do not switch between branches when loading screens with patient details');
+                                    }, 5000);
+                                } else {
+                                    $state.go($state.current, {}, {reload: true});
+                                }
                             }
                     );
                 }
