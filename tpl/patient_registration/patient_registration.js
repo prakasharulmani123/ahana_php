@@ -74,6 +74,10 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
             $rootScope.commonService.GetPatientCateogryList('', '1', false, function (response) {
                 $scope.categories = response.patientcategoryList;
             });
+            
+            $rootScope.commonService.GetCareTaker(function (response) {
+                $scope.careTakers = response;
+            });
         }
         
         $scope.back = function(){

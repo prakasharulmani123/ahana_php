@@ -144,6 +144,23 @@
                 <div class="line line-dashed b-b line-lg "></div>
 
                 <div class="form-group">
+                    <label class="col-sm-3 control-label">Care Taker</label>
+                    <div class="col-sm-9">
+                        <select class="form-control" ng-model="data.PatPatient.patient_care_taker" ng-options="careTaker.value as careTaker.label for careTaker in careTakers | orderBy: label">
+                        </select>
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg "></div>
+                
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Care Taker Name</label>
+                    <div class="col-sm-9">
+                        <input type="text" ng-model="data.PatPatient.patient_care_taker_name"  name="patient_care_taker_name" class="form-control" placeholder="Care taker name">
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg "></div>
+                
+                <div class="form-group">
                     <label class="col-sm-3 control-label">Marital Status</label>
                     <div class="col-sm-9">
                         <select class="form-control" ng-model="data.PatPatient.patient_marital_status" ng-options="marital.value as marital.label for marital in maritalStatus | orderBy: label">
@@ -172,6 +189,14 @@
                     <label class="col-sm-3 control-label">Referral Hospital</label>
                     <div class="col-sm-9">
                         <input type="text" ng-model="data.PatPatient.patient_ref_hospital"  name="patient_ref_hospital" class="form-control" placeholder="Referral Hospital">
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg "></div>
+                
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Referral Doctor</label>
+                    <div class="col-sm-9">
+                        <input type="text" ng-model="data.PatPatient.patient_ref_doctor"  name="patient_ref_doctor" class="form-control" placeholder="Referral Doctor">
                     </div>
                 </div>
                 <div class="line line-dashed b-b line-lg "></div>

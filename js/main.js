@@ -238,7 +238,7 @@ angular.module('app')
 
                 $scope.errorData1 = false;
                 $scope.$watch('errorData', function (newValue, oldValue) {
-                    if (newValue != "" && newValue !== 'undefined') {
+                    if (newValue != "" && typeof newValue !== 'undefined') {
                         $scope.errorData1 = true;
                         $timeout(function () {
                             $scope.errorData1 = false;
