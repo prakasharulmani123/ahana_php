@@ -32,8 +32,10 @@ use yii\db\ActiveRecord;
  * @property string $patient_reg_mode
  * @property string $patient_type
  * @property string $patient_ref_hospital
+ * @property string $patient_ref_doctor
  * @property string $patient_ref_id
  * @property string $patient_mobile
+ * @property string $patient_secondary_contact
  * @property string $patient_bill_type
  * @property string $status
  * @property integer $created_by
@@ -68,14 +70,15 @@ class GlPatient extends ActiveRecord {
         return [
             [['patient_title_code', 'patient_firstname', 'patient_gender', 'patient_reg_mode', 'patient_mobile', 'patient_dob'], 'required'],
             [['casesheetno', 'tenant_id', 'patient_care_taker', 'patient_category_id', 'created_by', 'modified_by'], 'integer'],
-            [['patient_reg_date', 'patient_dob', 'created_at', 'modified_at', 'deleted_at', 'patient_mobile', 'patient_bill_type', 'patient_guid', 'patient_image', 'patient_global_guid', 'patient_int_code'], 'safe'],
+            [['patient_reg_date', 'patient_dob', 'created_at', 'modified_at', 'deleted_at', 'patient_mobile', 'patient_bill_type', 'patient_guid', 'patient_image', 'patient_global_guid', 'patient_int_code', 'patient_secondary_contact'], 'safe'],
             [['status'], 'string'],
             [['patient_title_code'], 'string', 'max' => 10],
             [['patient_firstname', 'patient_lastname', 'patient_relation_name', 'patient_care_taker_name', 'patient_occupation', 'patient_email', 'patient_ref_id'], 'string', 'max' => 50],
             [['patient_relation_code', 'patient_gender', 'patient_marital_status', 'patient_reg_mode', 'patient_type'], 'string', 'max' => 2],
             [['patient_blood_group'], 'string', 'max' => 5],
-            [['patient_ref_hospital'], 'string', 'max' => 255],
+            [['patient_ref_hospital', 'patient_ref_doctor'], 'string', 'max' => 255],
             ['patient_mobile', 'match', 'pattern' => '/^[0-9]{10}$/', 'message' => 'Mobile must be 10 digits only'],
+            ['patient_secondary_contact', 'match', 'pattern' => '/^[0-9]{10}$/', 'message' => 'Secondary contact must be 10 digits only'],
 //            ['patient_image', 'file', 'extensions'=> 'jpg, gif, png'],
             [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'casesheetno', 'deleted_at'], 'message' => 'The combination of Casesheetno has already been taken.', 'on' => 'casesheetunique'],
             [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'patient_int_code', 'deleted_at'], 'message' => 'The combination of Patient Internal Code has already been taken.'],
@@ -107,6 +110,7 @@ class GlPatient extends ActiveRecord {
             'patient_reg_mode' => 'Reg Mode',
             'patient_type' => 'Type',
             'patient_ref_hospital' => 'Ref Hospital',
+            'patient_ref_doctor' => 'Ref Doctor',
             'patient_ref_id' => 'Ref ID',
             'patient_mobile' => 'Mobile',
             'status' => 'Status',

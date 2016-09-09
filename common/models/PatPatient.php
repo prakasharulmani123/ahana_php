@@ -35,6 +35,7 @@ use yii\helpers\ArrayHelper;
  * @property string $patient_reg_mode
  * @property string $patient_type
  * @property string $patient_ref_hospital
+ * @property string $patient_ref_doctor
  * @property string $patient_ref_id
  * @property string $patient_mobile
  * @property string $patient_secondary_contact
@@ -78,7 +79,7 @@ class PatPatient extends RActiveRecord {
             [['patient_firstname', 'patient_lastname', 'patient_relation_name', 'patient_care_taker_name', 'patient_occupation', 'patient_email', 'patient_ref_id'], 'string', 'max' => 50],
             [['patient_relation_code', 'patient_gender', 'patient_marital_status', 'patient_reg_mode', 'patient_type'], 'string', 'max' => 2],
             [['patient_blood_group'], 'string', 'max' => 5],
-            [['patient_ref_hospital'], 'string', 'max' => 255],
+            [['patient_ref_hospital', 'patient_ref_doctor'], 'string', 'max' => 255],
             ['patient_mobile', 'match', 'pattern' => '/^[0-9]{10}$/', 'message' => 'Mobile must be 10 digits only'],
             ['patient_secondary_contact', 'match', 'pattern' => '/^[0-9]{10}$/', 'message' => 'Secondary contact must be 10 digits only'],
 //            ['patient_image', 'file', 'extensions'=> 'jpg, gif, png'],
@@ -112,6 +113,7 @@ class PatPatient extends RActiveRecord {
             'patient_reg_mode' => 'Reg Mode',
             'patient_type' => 'Type',
             'patient_ref_hospital' => 'Ref Hospital',
+            'patient_ref_doctor' => 'Ref Doctor',
             'patient_ref_id' => 'Ref ID',
             'patient_mobile' => 'Mobile',
             'status' => 'Status',
