@@ -113,7 +113,7 @@ app.controller('OtherDocumentsController', ['$rootScope', '$scope', '$timeout', 
                         $scope.other_document = other_document;
                     })
                     .error(function () {
-                        $scope.errorData = "An Error has occured while loading patient!";
+                        $scope.errorData = "An Error has occured while loading patient other documents!";
                     });
         }
     }]);
