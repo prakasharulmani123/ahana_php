@@ -10,6 +10,7 @@ use common\models\CoMasterState;
 use common\models\CoOrganization;
 use common\models\CoResources;
 use common\models\CoRolesResources;
+use common\models\CoTenant;
 use common\models\CoUsersBranches;
 use common\models\CoUsersRoles;
 use common\models\PatAppointment;
@@ -227,15 +228,17 @@ class DefaultController extends Controller {
     public function actionSwitchbranch() {
         $post = Yii::$app->request->post();
         if (!empty($post)) {
+            $tenant_id = $post['branch_id'];
+            $tenant = CoTenant::findOne(['tenant_id' => $tenant_id]);
+            
             if (Yii::$app->user->identity->user->tenant_id == 0) {
                 $login_details = CoLogin::findOne(['login_id' => Yii::$app->user->identity->login_id]);
-                $login_details->logged_tenant_id = $post['branch_id'];
+                $login_details->logged_tenant_id = $tenant_id;
                 $login_details->save(false);
-                return ['success' => true, 'admin' => true];
+                return ['success' => true, 'admin' => true, 'tenant' => $tenant];
             } else {
                 $resources = [];
                 $user_id = Yii::$app->user->identity->user->user_id;
-                $tenant_id = $post['branch_id'];
 
                 $branch_exists = CoUsersBranches::find()->where(['user_id' => $user_id, 'branch_id' => $tenant_id])->one();
                 if (!empty($branch_exists)) {
@@ -245,10 +248,10 @@ class DefaultController extends Controller {
                 }
                 if (!empty($resources)) {
                     $login_details = CoLogin::findOne(['login_id' => Yii::$app->user->identity->login_id]);
-                    $login_details->logged_tenant_id = $post['branch_id'];
+                    $login_details->logged_tenant_id = $tenant_id;
                     $login_details->save(false);
                 }
-                return ['success' => true, 'resources' => $resources, 'admin' => false];
+                return ['success' => true, 'resources' => $resources, 'admin' => false, 'tenant' => $tenant];
             }
         }
     }
