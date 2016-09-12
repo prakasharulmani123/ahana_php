@@ -470,7 +470,7 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                             });
                         })
                         .error(function () {
-                            $scope.errorData = "An Error has occured while loading patient!";
+                            $scope.msg.errorMessage = "An Error has occured while loading patient!";
                         });
             }, 3000)
         }

@@ -199,7 +199,7 @@ angular.module('app')
 
                                 })
                                 .error(function () {
-                                    $scope.errorData = "An Error has occured while loading patient!";
+                                    $scope.msg.errorMessage = "An Error has occured while loading patient!";
                                 });
                     }
                 };
@@ -227,11 +227,13 @@ angular.module('app')
 
                 $scope.msg = {};
                 $scope.msg.successMessage = "";
+                $scope.msg.errorMessage = "";
 
                 $scope.$watch('msg', function (newValue, oldValue) {
                     if (newValue) {
                         $timeout(function () {
                             $scope.msg.successMessage = false;
+                            $scope.msg.errorMessage = false;
                         }, 5000);
                     }
                 }, true);

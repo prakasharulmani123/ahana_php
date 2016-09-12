@@ -27,7 +27,7 @@ app.controller('PatientTimelineController', ['$rootScope', '$scope', '$timeout',
                         }
                     })
                     .error(function () {
-                        $scope.errorData = "An Error has occured while loading patient!";
+                        $scope.msg.errorMessage = "An Error has occured while loading patient!";
                     });
         }
 
@@ -98,7 +98,7 @@ app.controller('PatientTimelineController', ['$rootScope', '$scope', '$timeout',
                     })
                     .error(function () {
                         $scope.loadbar('hide');
-                        $scope.errorData = "An Error has occured while loading patient!";
+                        $scope.msg.errorMessage = "An Error has occured while loading patient!";
                     });
         }
 
