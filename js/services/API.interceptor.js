@@ -8,6 +8,8 @@ angular.module('app').factory('APIInterceptor', function ($localStorage, $rootSc
                 if(typeof config.headers['x-domain-path'] == 'undefined' || config.headers['x-domain-path'] == '')
                     config.headers['x-domain-path'] = $rootScope.clientUrl;
             }
+            config.headers['config-route'] = $rootScope.$state.current.name;
+            config.headers['request-time'] = moment().format('YYYY-MM-DD hh:mm:ss');
 
             if (typeof $localStorage.user != 'undefined') {
                 var token = $localStorage.user.access_token;

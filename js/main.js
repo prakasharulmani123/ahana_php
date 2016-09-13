@@ -28,6 +28,7 @@ angular.module('app')
                     org_full_address: '',
                     version: '',
                     username: '',
+                    logged_tenant_id: '',
                     // for chart colors
                     color: {
                         primary: '#7266ba',
@@ -177,10 +178,9 @@ angular.module('app')
                     if (typeof $state.params.id != 'undefined') {
                         $http.post($rootScope.IRISOrgServiceUrl + '/patient/getpatientbyguid', {guid: $state.params.id})
                                 .success(function (patient) {
-                                    $scope.errorData = "";
-                                    if (patient == null || patient == '') {
-                                        $scope.errorData = "Invalid Access !";
+                                    if (patient.success == false) {
                                         $state.go('configuration.organization');
+                                        $scope.msg.errorMessage = "An Error has occured while loading patient!";
                                     } else {
                                         $scope.patientObj = patient;
 
@@ -194,9 +194,7 @@ angular.module('app')
                                         $rootScope.commonService.GetLabelFromValue(patient.patient_marital_status, 'GetMaritalStatus', function (response) {
                                             $scope.app.patientDetail.patientMaritalStatus = response;
                                         });
-
                                     }
-
                                 })
                                 .error(function () {
                                     $scope.msg.errorMessage = "An Error has occured while loading patient!";
@@ -206,6 +204,7 @@ angular.module('app')
 
                 $scope.loadUserCredentials = function () {
                     var user = AuthenticationService.getCurrentUser();
+                    $scope.app.logged_tenant_id = user.credentials.logged_tenant_id;
                     $scope.app.org_name = user.credentials.org;
                     $scope.app.org_address = user.credentials.org_address;
                     $scope.app.org_country = user.credentials.org_country;
@@ -230,20 +229,10 @@ angular.module('app')
                 $scope.msg.errorMessage = "";
 
                 $scope.$watch('msg', function (newValue, oldValue) {
-                    if (newValue) {
+                    if (newValue != oldValue) {
                         $timeout(function () {
                             $scope.msg.successMessage = false;
                             $scope.msg.errorMessage = false;
-                        }, 5000);
-                    }
-                }, true);
-
-                $scope.errorData1 = false;
-                $scope.$watch('errorData', function (newValue, oldValue) {
-                    if (newValue != "" && typeof newValue !== 'undefined') {
-                        $scope.errorData1 = true;
-                        $timeout(function () {
-                            $scope.errorData1 = false;
                         }, 5000);
                     }
                 }, true);
@@ -654,6 +643,7 @@ angular.module('app')
                     }).success(
                             function (response) {
                                 if (response.tenant) {
+                                    $localStorage.user.credentials.logged_tenant_id = response.tenant.tenant_id;
                                     $localStorage.user.credentials.org = response.tenant.tenant_name;
                                     $localStorage.user.credentials.org_address = response.tenant.tenant_address;
                                     $localStorage.user.credentials.org_country = response.tenant.tenant_country_name;
@@ -683,6 +673,14 @@ angular.module('app')
                             }
                     );
                 }
+
+                $scope.$watch('app.logged_tenant_id', function (newValue, oldValue) {
+                    if (newValue != "") {
+                        var pusher = new Pusher('970ef0444315ec3a0845');
+                        var my_channel = "my-channel-" + $scope.app.logged_tenant_id;
+                        $scope.channel = pusher.subscribe(my_channel);
+                    }
+                }, true);
 
             }]);
 
@@ -742,32 +740,35 @@ angular.module('app').controller('PatientLeftSideNotificationCtrl', ['$rootScope
             }).success(
                     function (response) {
                         if (response.success) {
-                            //Get Notes
-                            $http.get($rootScope.IRISOrgServiceUrl + '/patientnotes/getpatientnotes?patient_id=' + $state.params.id)
-                                    .success(function (notes) {
-                                        angular.forEach(notes.result, function (result) {
-                                            angular.forEach(result.all, function (note) {
-                                                $scope.leftNotificationNotes.push(note);
+                            if (typeof $state.params.id != 'undefined') {
+                                //Get Notes
+                                $http.get($rootScope.IRISOrgServiceUrl + '/patientnotes/getpatientnotes?patient_id=' + $state.params.id)
+                                        .success(function (notes) {
+                                            angular.forEach(notes.result, function (result) {
+                                                angular.forEach(result.all, function (note) {
+                                                    $scope.leftNotificationNotes.push(note);
+                                                });
                                             });
-                                        });
-                                        $scope.unseen_notes = notes.usernotes;
-                                        $scope.app.patientDetail.patientUnseenNotesCount = notes.usernotes.length;
+                                            $scope.unseen_notes = notes.usernotes;
+                                            $scope.app.patientDetail.patientUnseenNotesCount = notes.usernotes.length;
 
-                                        angular.forEach($scope.leftNotificationNotes, function (note) {
-                                            note.seen_by = 1;
-                                        });
+                                            angular.forEach($scope.leftNotificationNotes, function (note) {
+                                                note.seen_by = 1;
+                                            });
 
-                                        angular.forEach(notes.usernotes, function (note) {
-                                            var seen_filter_note = $filter('filter')($scope.leftNotificationNotes, {pat_note_id: note.note_id});
+                                            angular.forEach(notes.usernotes, function (note) {
+                                                var seen_filter_note = $filter('filter')($scope.leftNotificationNotes, {pat_note_id: note.note_id});
 
-                                            if (seen_filter_note.length > 0) {
-                                                seen_filter_note[0].seen_by = 0;
-                                            }
+                                                if (seen_filter_note.length > 0) {
+                                                    seen_filter_note[0].seen_by = 0;
+                                                }
+                                            });
+                                        })
+                                        .error(function () {
+                                            $scope.errorData = "An Error has occured while loading patientnote!";
                                         });
-                                    })
-                                    .error(function () {
-                                        $scope.errorData = "An Error has occured while loading patientnote!";
-                                    });
+                            }
+
                         }
                     }
             );
@@ -780,31 +781,33 @@ angular.module('app').controller('PatientLeftSideNotificationCtrl', ['$rootScope
             }).success(
                     function (response) {
                         if (response.success) {
-                            // Get Vitals
-                            $http.get($rootScope.IRISOrgServiceUrl + '/patientvitals/getpatientvitals?patient_id=' + $state.params.id)
-                                    .success(function (vitals) {
-                                        angular.forEach(vitals.result, function (result) {
-                                            angular.forEach(result.all, function (vital) {
-                                                $scope.leftNotificationVitals.push(vital);
+                            if (typeof $state.params.id != 'undefined') {
+                                // Get Vitals
+                                $http.get($rootScope.IRISOrgServiceUrl + '/patientvitals/getpatientvitals?patient_id=' + $state.params.id)
+                                        .success(function (vitals) {
+                                            angular.forEach(vitals.result, function (result) {
+                                                angular.forEach(result.all, function (vital) {
+                                                    $scope.leftNotificationVitals.push(vital);
+                                                });
                                             });
-                                        });
-                                        $scope.unseen_vitals = vitals.uservitals;
-                                        $scope.app.patientDetail.patientUnseenVitalsCount = vitals.uservitals.length;
+                                            $scope.unseen_vitals = vitals.uservitals;
+                                            $scope.app.patientDetail.patientUnseenVitalsCount = vitals.uservitals.length;
 
-                                        angular.forEach($scope.leftNotificationVitals, function (vital) {
-                                            vital.seen_by = 1;
-                                        });
+                                            angular.forEach($scope.leftNotificationVitals, function (vital) {
+                                                vital.seen_by = 1;
+                                            });
 
-                                        angular.forEach(vitals.uservitals, function (vital) {
-                                            var seen_filter_vital = $filter('filter')($scope.leftNotificationVitals, {vital_id: vital.vital_id});
-                                            if (seen_filter_vital.length > 0) {
-                                                seen_filter_vital[0].seen_by = 0;
-                                            }
+                                            angular.forEach(vitals.uservitals, function (vital) {
+                                                var seen_filter_vital = $filter('filter')($scope.leftNotificationVitals, {vital_id: vital.vital_id});
+                                                if (seen_filter_vital.length > 0) {
+                                                    seen_filter_vital[0].seen_by = 0;
+                                                }
+                                            });
+                                        })
+                                        .error(function () {
+                                            $scope.errorData = "An Error has occured while loading patientvitals!";
                                         });
-                                    })
-                                    .error(function () {
-                                        $scope.errorData = "An Error has occured while loading patientvitals!";
-                                    });
+                            }
                         }
                     }
             );

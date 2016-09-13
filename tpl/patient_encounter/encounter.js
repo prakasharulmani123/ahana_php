@@ -40,7 +40,7 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                         if (response.success == true) {
                             $scope.isLoading = false;
                             $scope.rowCollection = response.encounters;
-                            
+
                             angular.forEach($scope.rowCollection, function (row) {
                                 row.last_row_sts = '';
                                 angular.forEach(row.all, function (all) {
@@ -52,7 +52,7 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                                 });
                             });
 
-                            if(response.active_encounter){
+                            if (response.active_encounter) {
                                 $scope.class1 = 'col-sm-9';
                                 $scope.class2 = '';
                                 $scope.class3 = 'col-sm-3';
@@ -61,7 +61,7 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                                 $scope.class2 = 'col-sm-6';
                                 $scope.class3 = 'col-sm-3';
                             }
-                            
+
                             $scope.activeEncounter = response.active_encounter;
                             $scope.displayedCollection = [].concat($scope.rowCollection);
                             $scope.more_li = {};
@@ -464,10 +464,15 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                 $scope.mode = 'view';
                 $http.post($rootScope.IRISOrgServiceUrl + '/patient/getpatientbyguid', {guid: $state.params.id})
                         .success(function (patient) {
-                            $scope.patientObj = patient;
-                            $rootScope.commonService.GetLabelFromValue(patient.patient_gender, 'GetGenderList', function (response) {
-                                $scope.app.patientDetail.patientSex = response;
-                            });
+                            if (patient.success == false) {
+                                $state.go('configuration.organization');
+                                $scope.msg.errorMessage = "An Error has occured while loading patient!";
+                            } else {
+                                $scope.patientObj = patient;
+                                $rootScope.commonService.GetLabelFromValue(patient.patient_gender, 'GetGenderList', function (response) {
+                                    $scope.app.patientDetail.patientSex = response;
+                                });
+                            }
                         })
                         .error(function () {
                             $scope.msg.errorMessage = "An Error has occured while loading patient!";

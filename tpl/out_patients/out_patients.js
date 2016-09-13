@@ -23,6 +23,14 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
 
         //Index page height
         $scope.css = {'style': ''};
+        
+        $scope.$watch('app.logged_tenant_id', function (newValue, oldValue) {
+            if (newValue != "") {
+                $scope.channel.bind('patient.outPatients', function (data) {
+                    $scope.loadOutPatientsList();
+                });
+            }
+        }, true);
 
         //Index Page
         $scope.loadOutPatientsList = function (type) {

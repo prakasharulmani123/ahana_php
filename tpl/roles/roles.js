@@ -5,13 +5,14 @@ app.controller('RolesController', ['$rootScope', '$scope', '$timeout', '$http', 
             $state.go('configuration.role_create');
         });
         $scope.$on('HK_SAVE', function (e) {
-            submitted = true; $scope.saveForm($scope.data.formrole);
+            submitted = true;
+            $scope.saveForm($scope.data.formrole);
             e.preventDefault();
         });
         $scope.$on('HK_SEARCH', function (e) {
             $('#filter').focus();
         });
-        
+
         //For Form
         $scope.initForm = function () {
             $scope.data = {};
@@ -19,23 +20,31 @@ app.controller('RolesController', ['$rootScope', '$scope', '$timeout', '$http', 
             $scope.data.formrole = 'add';
         }
 
+        $scope.$watch('app.logged_tenant_id', function (newValue, oldValue) {
+            if (newValue != "") {
+                $scope.channel.bind('configuration.roles', function (data) {
+                    $scope.loadRolesList();
+                });
+            }
+        }, true);
+
         //Index Page
         $scope.loadRolesList = function () {
-            $scope.isLoading = true;
-            $scope.rowCollection = [];
+        $scope.isLoading = true;
+        $scope.rowCollection = [];
 
-            // Get data's from service
-            $http.get($rootScope.IRISOrgServiceUrl + '/role')
-                    .success(function (roles) {
-                        $scope.isLoading = false;
-                        $scope.rowCollection = roles;
+        // Get data's from service
+        $http.get($rootScope.IRISOrgServiceUrl + '/role')
+                .success(function (roles) {
+                    $scope.isLoading = false;
+                    $scope.rowCollection = roles;
 
-                        //Avoid pagination problem, when come from other pages.
-                        $scope.footable_redraw();
-                    })
-                    .error(function () {
-                        $scope.errorData = "An Error has occured while loading roles!";
-                    });
+                    //Avoid pagination problem, when come from other pages.
+                    $scope.footable_redraw();
+                })
+                .error(function () {
+                    $scope.errorData = "An Error has occured while loading roles!";
+                });
         };
 
         //Save Both Add & Update Data
@@ -127,5 +136,6 @@ app.controller('RolesController', ['$rootScope', '$scope', '$timeout', '$http', 
                     )
                 }
             }
-        };
+        }
+        ;
     }]);
