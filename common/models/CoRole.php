@@ -92,5 +92,9 @@ class CoRole extends RActiveRecord {
         $tenant_super_role = self::find()->tenant($tenant_id)->superRole()->one();
         return $tenant_super_role;
     }
+    
+    public function afterSave($insert, $changedAttributes) {
+        return parent::afterSave($insert, $changedAttributes);
+    }
 
 }

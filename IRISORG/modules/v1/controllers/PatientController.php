@@ -241,18 +241,22 @@ class PatientController extends ActiveController {
     public function actionGetpatientbyguid() {
         $guid = Yii::$app->getRequest()->post('guid');
         $patient = PatPatient::find()->tenant()->andWhere(['patient_guid' => $guid])->one();
-        if (isset($patient->patActiveCasesheetno)) {
-            return $patient;
+        if (!empty($patient)) {
+            if (isset($patient->patActiveCasesheetno)) {
+                return $patient;
+            } else {
+                $model = new PatPatientCasesheet();
+                $model->attributes = [
+                    'casesheet_no' => CoInternalCode::generateInternalCode('CS', 'common\models\PatPatientCasesheet', 'casesheet_no'),
+                    'patient_id' => $patient->patient_id,
+                    'start_date' => date("Y-m-d"),
+                ];
+                $model->save(false);
+                CoInternalCode::increaseInternalCode("CS");
+                return PatPatient::find()->tenant()->andWhere(['patient_guid' => $guid])->one();
+            }
         } else {
-            $model = new PatPatientCasesheet();
-            $model->attributes = [
-                'casesheet_no' => CoInternalCode::generateInternalCode('CS', 'common\models\PatPatientCasesheet', 'casesheet_no'),
-                'patient_id' => $patient->patient_id,
-                'start_date' => date("Y-m-d"),
-            ];
-            $model->save(false);
-            CoInternalCode::increaseInternalCode("CS");
-            return PatPatient::find()->tenant()->andWhere(['patient_guid' => $guid])->one();
+            return ['success' => false];
         }
     }
 

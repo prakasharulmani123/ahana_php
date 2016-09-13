@@ -230,7 +230,7 @@ class DefaultController extends Controller {
         if (!empty($post)) {
             $tenant_id = $post['branch_id'];
             $tenant = CoTenant::findOne(['tenant_id' => $tenant_id]);
-            
+
             if (Yii::$app->user->identity->user->tenant_id == 0) {
                 $login_details = CoLogin::findOne(['login_id' => Yii::$app->user->identity->login_id]);
                 $login_details->logged_tenant_id = $tenant_id;

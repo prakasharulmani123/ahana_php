@@ -49,15 +49,15 @@ class RActiveRecord extends ActiveRecord {
     }
 
     public function setTenant() {
-        if (isset(Yii::$app->user->identity) && Yii::$app->user->identity->user_id > 0 ) {
-            if($this->hasAttribute('tenant_id'))
+        if (isset(Yii::$app->user->identity) && Yii::$app->user->identity->user_id > 0) {
+            if ($this->hasAttribute('tenant_id'))
                 $this->tenant_id = Yii::$app->user->identity->logged_tenant_id;
-            
-            if($this->hasAttribute('org_id'))
+
+            if ($this->hasAttribute('org_id'))
                 $this->org_id = Yii::$app->user->identity->user->org_id;
         }
     }
-    
+
     public function beforeValidate() {
         $this->setTenant();
         return parent::beforeValidate();
@@ -75,7 +75,7 @@ class RActiveRecord extends ActiveRecord {
     public function getModifiedUser() {
         return (isset($this->modified_by)) ? $this->hasOne(CoUser::className(), ['user_id' => 'modified_by']) : '-';
     }
-    
+
     public static function timeAgo($time_ago, $cur_time = NULL) {
         if (is_null($cur_time))
             $cur_time = time();
@@ -148,6 +148,37 @@ class RActiveRecord extends ActiveRecord {
 
     public static function getDb() {
         return Yii::$app->client;
+    }
+
+    public function afterSave($insert, $changedAttributes) {
+        if (isset($_SERVER['HTTP_CONFIG_ROUTE']) && isset($_SERVER['HTTP_REQUEST_TIME'])) {
+            if (isset(Yii::$app->session['current_time']) && Yii::$app->session['current_time'] == strtotime($_SERVER['HTTP_REQUEST_TIME'])) {
+                //
+            } else {
+                Yii::$app->session['current_time'] = strtotime($_SERVER['HTTP_REQUEST_TIME']);
+                $my_events = $this->getEventFromRoute($_SERVER['HTTP_CONFIG_ROUTE']);
+                if ($my_events) {
+                    $pusher = new \Pusher("970ef0444315ec3a0845", "3c1590af49028efb1b97", "247412");
+                    $my_channel = "my-channel-" . Yii::$app->user->identity->logged_tenant_id;
+                    foreach ($my_events as $my_event) {
+                        $pusher->trigger($my_channel, $my_event, array('message' => 'Event Trigger'));
+                    }
+                }
+            }
+        }
+
+        return parent::afterSave($insert, $changedAttributes);
+    }
+
+    private function getEventFromRoute($config_route) {
+        $roles_events = ['configuration.role_create', 'configuration.role_update', 'configuration.roles'];
+        $op_events = ['patient.encounter', 'patient.appointment', 'patient.changeStatus', 'patient.outPatients'];
+        if (in_array($config_route, $roles_events)) {
+            return ['configuration.roles'];
+        } elseif (in_array($config_route, $op_events)) {
+            return ['patient.outPatients'];
+        }
+        return false;
     }
 
 }

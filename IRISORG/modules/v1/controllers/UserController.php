@@ -111,6 +111,7 @@ class UserController extends ActiveController {
         $tenant = CoTenant::findOne(['tenant_id' => $tenant_id]);
 
         $credentials = [
+            'logged_tenant_id' => Yii::$app->user->identity->logged_tenant_id,
             'org' => $tenant->tenant_name,
             'org_address' => $tenant->tenant_address,
             'org_country' => (isset($tenant->coMasterCountry) ? $tenant->coMasterCountry->country_name : '-'),
