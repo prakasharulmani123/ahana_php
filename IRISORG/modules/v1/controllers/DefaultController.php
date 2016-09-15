@@ -3,6 +3,7 @@
 namespace IRISORG\modules\v1\controllers;
 
 use common\models\CoChargePerCategory;
+use common\models\CoLog;
 use common\models\CoLogin;
 use common\models\CoMasterCity;
 use common\models\CoMasterCountry;
@@ -30,7 +31,7 @@ class DefaultController extends Controller {
         $behaviors = parent::behaviors();
         $behaviors['authenticator'] = [
             'class' => QueryParamAuth::className(),
-            'only' => ['getnavigation', 'getconsultantcharges', 'switchbranch'],
+            'only' => ['getnavigation', 'getconsultantcharges', 'switchbranch', 'getlog'],
         ];
         $behaviors['contentNegotiator'] = [
             'class' => ContentNegotiator::className(),
@@ -254,6 +255,21 @@ class DefaultController extends Controller {
                 return ['success' => true, 'resources' => $resources, 'admin' => false, 'tenant' => $tenant];
             }
         }
+    }
+
+    public function actionGetlog() {
+        $log = CoLog::find()
+                ->andWhere([
+                    'tenant_id' => Yii::$app->user->identity->logged_tenant_id,
+                    'event_trigger' => $_SERVER['HTTP_CONFIG_ROUTE']
+                ])
+                ->andWhere("event_occured != '{$_SERVER['HTTP_CONFIG_ROUTE']}'")
+                ->orderBy(['log_id' => SORT_DESC])
+                ->one();
+        if ($log)
+            return ['success' => true, 'last_log_id' => $log->log_id];
+        else
+            return ['success' => true, 'last_log_id' => 0];
     }
 
 }

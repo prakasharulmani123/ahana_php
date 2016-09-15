@@ -158,10 +158,11 @@ class RActiveRecord extends ActiveRecord {
                 Yii::$app->session['current_time'] = strtotime($_SERVER['HTTP_REQUEST_TIME']);
                 $my_events = $this->getEventFromRoute($_SERVER['HTTP_CONFIG_ROUTE']);
                 if ($my_events) {
-                    $pusher = new \Pusher("970ef0444315ec3a0845", "3c1590af49028efb1b97", "247412");
-                    $my_channel = "my-channel-" . Yii::$app->user->identity->logged_tenant_id;
                     foreach ($my_events as $my_event) {
-                        $pusher->trigger($my_channel, $my_event, array('message' => 'Event Trigger'));
+                        $auto_refresh = new CoLog;
+                        $auto_refresh->event_occured = $_SERVER['HTTP_CONFIG_ROUTE'];
+                        $auto_refresh->event_trigger = $my_event;
+                        $auto_refresh->save(false);
                     }
                 }
             }
