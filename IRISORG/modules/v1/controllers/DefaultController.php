@@ -258,12 +258,13 @@ class DefaultController extends Controller {
     }
 
     public function actionGetlog() {
+        $user_id = Yii::$app->user->identity->user->user_id;
         $log = CoLog::find()
                 ->andWhere([
                     'tenant_id' => Yii::$app->user->identity->logged_tenant_id,
                     'event_trigger' => $_SERVER['HTTP_CONFIG_ROUTE']
                 ])
-                ->andWhere("event_occured != '{$_SERVER['HTTP_CONFIG_ROUTE']}'")
+                ->andWhere("created_by != '{$user_id}'")
                 ->orderBy(['log_id' => SORT_DESC])
                 ->one();
         if ($log)
