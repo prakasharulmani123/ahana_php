@@ -1,4 +1,4 @@
-app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$filter', '$modal', '$log', 'modalService', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $filter, $modal, $log, modalService) {
+app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$filter', '$modal', '$log', 'modalService', '$interval', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $filter, $modal, $log, modalService, $interval) {
 
         $scope.app.settings.patientTopBar = false;
         $scope.app.settings.patientSideMenu = false;
@@ -23,23 +23,18 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
 
         //Index page height
         $scope.css = {'style': ''};
-        
-        $scope.$watch('app.logged_tenant_id', function (newValue, oldValue) {
-            if (newValue != "") {
-                $scope.channel.bind('patient.outPatients', function (data) {
-                    $scope.loadOutPatientsList();
-                });
-            }
-        }, true);
 
         //Index Page
-        $scope.loadOutPatientsList = function (type) {
+        $scope.loadOutPatientsList = function (type, clearObj) {
             $scope.op_type = type;
-            $scope.isLoading = true;
+            
             // pagination set up
-            $scope.rowCollection = []; // base collection
-            $scope.itemsByPage = 10; // No.of records per page
-            $scope.displayedCollection = [].concat($scope.rowCollection); // displayed collection
+            if (typeof clearObj == 'undefined') {
+                $scope.isLoading = true;
+                $scope.rowCollection = []; // base collection
+                $scope.itemsByPage = 10; // No.of records per page
+                $scope.displayedCollection = [].concat($scope.rowCollection); // displayed collection
+            }
 
             var all = 0;
             if ($scope.checkAccess('patient.viewAllDoctorsAppointments')) {
@@ -62,6 +57,46 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                         $scope.errorData = "An Error has occured while loading patients!";
                     });
         };
+
+        $timeout(function () {
+            $scope.startAutoRefresh();
+        }, 5000);
+        var stop;
+        $scope.last_log_id = "";
+        $scope.startAutoRefresh = function () {
+            // Don't start a new fight if we are already fighting
+            if (angular.isDefined(stop))
+                return;
+            stop = $interval(function () {
+                // Get data's from service
+                $http.get($rootScope.IRISOrgServiceUrl + '/default/getlog')
+                        .success(function (log) {
+                            setTimeout(function () {
+                                if ($scope.last_log_id === "") {
+                                    $scope.last_log_id = log.last_log_id;
+                                } else {
+                                    if ($scope.last_log_id != log.last_log_id) {
+                                        $scope.loadOutPatientsList('current', true);
+                                        $scope.last_log_id = log.last_log_id;
+                                    }
+                                }
+                            }, 100);
+                        })
+                        .error(function () {
+                            $scope.errorData = "An Error has occured";
+                        });
+            }, 5000);
+        };
+        $scope.stopAutoRefresh = function () {
+            if (angular.isDefined(stop)) {
+                $interval.cancel(stop);
+                stop = undefined;
+            }
+        };
+        $scope.$on('$destroy', function () {
+            // Make sure that the interval is destroyed too
+            $scope.stopAutoRefresh();
+        });
 
         $scope.updateCheckbox = function (parent, parent_key) {
             angular.forEach($scope.displayedCollection, function (value, op_key) {
@@ -161,7 +196,7 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                 headerText: 'Cancel Appointments?',
                 bodyText: 'Are you sure to cancel these appointments ?'
             };
-            
+
             modalService.showModal({}, modalOptions).then(function (result) {
                 $scope.loadbar('show');
                 post_url = $rootScope.IRISOrgServiceUrl + '/appointment/bulkcancel';

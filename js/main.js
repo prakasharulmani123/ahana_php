@@ -673,15 +673,6 @@ angular.module('app')
                             }
                     );
                 }
-
-                $scope.$watch('app.logged_tenant_id', function (newValue, oldValue) {
-                    if (newValue != "") {
-                        var pusher = new Pusher('970ef0444315ec3a0845');
-                        var my_channel = "my-channel-" + $scope.app.logged_tenant_id;
-                        $scope.channel = pusher.subscribe(my_channel);
-                    }
-                }, true);
-
             }]);
 
 angular.module('app').filter('unsafe', ['$sce', function ($sce) {

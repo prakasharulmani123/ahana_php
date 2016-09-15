@@ -20,14 +20,6 @@ app.controller('RolesController', ['$rootScope', '$scope', '$timeout', '$http', 
             $scope.data.formrole = 'add';
         }
 
-        $scope.$watch('app.logged_tenant_id', function (newValue, oldValue) {
-            if (newValue != "") {
-                $scope.channel.bind('configuration.roles', function (data) {
-                    $scope.loadRolesList();
-                });
-            }
-        }, true);
-
         //Index Page
         $scope.loadRolesList = function () {
         $scope.isLoading = true;
