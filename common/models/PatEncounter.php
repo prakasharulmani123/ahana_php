@@ -41,6 +41,10 @@ class PatEncounter extends RActiveRecord {
     public $sts_status = 'A';
     public $add_casesheet_no = 'A';
     public $total_amount = '';
+    
+    public $op_doctor_payment_patient_name;
+    public $op_doctor_payment_amount;
+    public $op_doctor_payment_consultant_name;
 
     /**
      * @inheritdoc
@@ -172,7 +176,7 @@ class PatEncounter extends RActiveRecord {
      * @return ActiveQuery
      */
     public function getPatAppointmentSeen() {
-        return $this->hasOne(PatAppointment::className(), ['encounter_id' => 'encounter_id'])->andWhere('appt_status = "S"')->orderBy(['created_at' => SORT_DESC]);
+        return $this->hasOne(PatAppointment::className(), ['encounter_id' => 'encounter_id'])->andWhere('appt_status = "S"')->orderBy(['pat_appointment.created_at' => SORT_DESC]);
     }
 
     /**
