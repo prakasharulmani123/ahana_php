@@ -1,13 +1,13 @@
-<div ng-controller="reportController" ng-init="initReport();">
+<div ng-controller="opdoctorpayController" ng-init="initReport();">
     <div class="bg-light lter b-b wrapper-md">
-        <h1 class="m-n h3">{{report_title}}</h1>
+        <h1 class="m-n h3">OP Doctor Payment</h1>
     </div>
     <div class="wrapper-md">
         <div ng-include="'tpl/blocks/alert.html'">
             {% include 'tpl/blocks/alert.html' %}
         </div>
         <div class="row">
-            <div class="col-sm-12" ng-show='show_search'>
+            <div class="col-sm-12">
                 <div class="panel panel-default">
                     <div class="panel-body p-b form-horizontal">
                         <form role="form" class="form-inline" name="searchForm">
@@ -31,17 +31,14 @@
                                 </div>
                             </div>
 
-                            <div class="form-group" ng-if='show_search_consultant'>
-                                <select class="form-control selectpicker" data-live-search="true" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors | orderBy: fullname" data-ng-change="changeGetConsultant()">
+                            <div class="form-group">
+                                <select class="form-control selectpicker" data-live-search="true" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors | orderBy: fullname" data-ng-change="changeGetConsultant()" required>
                                     <option value="">Select Consultant</option>
                                 </select>
                             </div>
-
-                            <button class="btn btn-success get-report" ng-click="loadReport()">Get Report</button>
-                            <button class="btn btn-dark" ng-click="data.from = '';
-                                        data.to = '';
-                                        showTable = false;">Cancel
-                            </button>
+                            
+                            <button class="btn btn-success get-report" ng-disabled="searchForm.$invalid" ng-click="loadReport()">Get Report</button>
+                            <button class="btn btn-dark" ng-click="clearReport()">Clear</button>
                         </form>
                     </div>    
                 </div>
@@ -49,16 +46,32 @@
 
             <div class="col-sm-12" ng-show='showTable'>
                 <div class="panel panel-default">
-                    <div class="panel-heading font-bold">{{app.name}} ({{app.org_name}}) - {{report_title}} </div>
+                    <div class="panel-heading font-bold">{{app.name}} ({{app.org_name}}) - OP Doctor Payment</div>
                     <div class="row wrapper">
-                        <div class="col-sm-4 m-b-xs"> <b> Report Generated On : </b> {{ date}} </div>
-                        <div class="col-sm-2 m-b-xs" ng-show="data.from != ''"> <b> From Date  : </b>{{ data.from | date:'dd-MM-yyyy'}}</div>
-                        <div class="col-sm-2 m-b-xs" ng-show="data.to != ''"> <b> To Date  : </b> {{ data.to | date:'dd-MM-yyyy'}} </div>
+                        <div class="col-sm-4 m-b-xs">
+                            <span ng-show="consultant_fullname != ''">
+                                <b>Doctor Name :</b> {{consultant_fullname}} <br>
+                            </span>
+                            <span ng-show="date != ''">
+                                <b>Report Generated On : </b> {{date}} 
+                            </span>
+                        </div>
+                        <div class="col-sm-4 m-b-xs"> 
+                            <span ng-show="data.from != ''">
+                                <b> From Date  : </b>{{ data.from | date:'dd-MM-yyyy'}} <br>
+                            </span>
+                            <span ng-show="data.to != ''">
+                                <b> To Date  : </b> {{ data.to | date:'dd-MM-yyyy'}} 
+                            </span>
+                        </div>
                         <div class="col-sm-4 pull-right right"> 
                             <!-- modal -->
                             <div class="text-right">
                                 <div class="btn-group dropdown" dropdown>
-                                    <button class="btn btn-danger" dropdown-toggle> <i class="fa fa-download"></i> Export <span class="caret"></span></button>
+                                    <button class="btn btn-danger" dropdown-toggle> 
+                                        <i class="fa fa-download"></i> Export 
+                                        <span class="caret"></span>
+                                    </button>
                                     <ul class="dropdown-menu">
                                         <li><a ng-click="exportAction('excel')">EXCEL</a></li>
                                         <!--<li><a ng-click="exportAction('pdf')">PDF</a></li>-->
@@ -80,14 +93,21 @@
                             <table class="export-table print-table table table-striped">
                                 <thead>
                                     <tr>
-                                        <th id="work-base-grid_c0">Product</th>
+                                        <th id="work-base-grid_c0">S.No</th>
+                                        <th id="work-base-grid_c0">Patient Name</th>
                                         <th id="work-base-grid_c1">Amount</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr ng-repeat="(key, record) in records">
-                                        <td>{{record.product_name}}</td>
-                                        <td>{{record.total_amount}}</td>
+                                        <td>{{$index + 1}}</td>
+                                        <td>{{record.patient_name}}</td>
+                                        <td>{{record.payment_amount}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td><b>Total - {{total}}</b></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -102,14 +122,25 @@
                                     <th id="work-base-grid_c1" ng-show="data.to != ''">To: {{ data.to | date:'dd-MM-yyyy'}}</th>
                                 </tr>
                                 <tr>
-                                    <th id="work-base-grid_c0">Product</th>
+                                    <th id="work-base-grid_c0" ng-show="consultant_fullname != ''">Doctor Name :{{consultant_fullname}}</th>
+                                    <th id="work-base-grid_c1" ng-show="date != ''">Report Generated On :{{date}}</th>
+                                </tr>
+                                <tr>
+                                    <th id="work-base-grid_c0">S.No</th>
+                                    <th id="work-base-grid_c0">Patient Name</th>
                                     <th id="work-base-grid_c1">Amount</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr ng-repeat="(key, record) in records">
-                                    <td>{{record.product_name}}</td>
-                                    <td>{{record.total_amount}}</td>
+                                    <td>{{$index + 1}}</td>
+                                    <td>{{record.patient_name}}</td>
+                                    <td>{{record.payment_amount}}</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td><b>Total - {{total}}</b></td>
                                 </tr>
                             </tbody>
                         </table>

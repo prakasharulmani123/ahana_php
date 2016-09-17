@@ -92,7 +92,9 @@
 
         <!-- link and dropdown -->
         <ul class="nav navbar-nav hidden-sm">
-            <li><a href="#"> My Works </a></li>
+            <li ui-sref-active="active">
+                <a ui-sref="myworks.opDoctorPay" check-access> My Works </a>
+            </li>
             <li ui-sref-active="active">
                 <a ui-sref="patient.inPatients" check-access> In-Patient </a>
             </li>
