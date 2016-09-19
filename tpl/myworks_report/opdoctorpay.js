@@ -17,6 +17,7 @@ app.controller('opdoctorpayController', ['$rootScope', '$scope', '$timeout', '$h
             $scope.data = {};
             $scope.data.from = moment().format('YYYY-MM-DD');
             $scope.data.to = moment().format('YYYY-MM-DD');
+            $scope.data.consultant_id = '';
         }
 
         $scope.changeGetConsultant = function () {

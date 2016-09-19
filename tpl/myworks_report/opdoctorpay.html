@@ -10,7 +10,7 @@
             <div class="col-sm-12">
                 <div class="panel panel-default">
                     <div class="panel-body p-b form-horizontal">
-                        <form role="form" class="form-inline" name="searchForm">
+                        <form role="form" class="form-inline" name="searchForm" novalidate>
                             <div class="form-group">
                                 <label>From  :</label>
                                 <div class="input-group ">
@@ -36,7 +36,7 @@
                                     <option value="">Select Consultant</option>
                                 </select>
                             </div>
-                            
+
                             <button class="btn btn-success get-report" ng-disabled="searchForm.$invalid" ng-click="loadReport()">Get Report</button>
                             <button class="btn btn-dark" ng-click="clearReport()">Clear</button>
                         </form>
@@ -67,19 +67,19 @@
                         <div class="col-sm-4 pull-right right"> 
                             <!-- modal -->
                             <div class="text-right">
-                                <div class="btn-group dropdown" dropdown>
-                                    <button class="btn btn-danger" dropdown-toggle> 
-                                        <i class="fa fa-download"></i> Export 
-                                        <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li><a ng-click="exportAction('excel')">EXCEL</a></li>
-                                        <!--<li><a ng-click="exportAction('pdf')">PDF</a></li>-->
-                                        <li><a ng-click="exportAction('doc')">DOC</a></li>
-                                        <!--<li><a ng-click="exportAction('png')">PNG</a></li>-->
-                                        <li><a ng-click="exportAction('powerpoint')">POWER POINT</a></li>
-                                    </ul>
-                                </div>
+                                <!--                                <div class="btn-group dropdown" dropdown>
+                                                                    <button class="btn btn-danger" dropdown-toggle> 
+                                                                        <i class="fa fa-download"></i> Export 
+                                                                        <span class="caret"></span>
+                                                                    </button>
+                                                                    <ul class="dropdown-menu">
+                                                                        <li><a ng-click="exportAction('excel')">EXCEL</a></li>
+                                                                        <li><a ng-click="exportAction('pdf')">PDF</a></li>
+                                                                        <li><a ng-click="exportAction('doc')">DOC</a></li>
+                                                                        <li><a ng-click="exportAction('png')">PNG</a></li>
+                                                                        <li><a ng-click="exportAction('powerpoint')">POWER POINT</a></li>
+                                                                    </ul>
+                                                                </div>-->
                                 &nbsp;
                                 <button class="btn btn-primary" ng-click="printReport()">
                                     <i class="fa fa-print"></i> Print
@@ -115,35 +115,38 @@
                     </div>
 
                     <div id="printThisElement" ng-hide="true">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th id="work-base-grid_c0" ng-show="data.from != ''">From: {{ data.from | date:'dd-MM-yyyy'}}</th>
-                                    <th id="work-base-grid_c1" ng-show="data.to != ''">To: {{ data.to | date:'dd-MM-yyyy'}}</th>
-                                </tr>
-                                <tr>
-                                    <th id="work-base-grid_c0" ng-show="consultant_fullname != ''">Doctor Name :{{consultant_fullname}}</th>
-                                    <th id="work-base-grid_c1" ng-show="date != ''">Report Generated On :{{date}}</th>
-                                </tr>
-                                <tr>
-                                    <th id="work-base-grid_c0">S.No</th>
-                                    <th id="work-base-grid_c0">Patient Name</th>
-                                    <th id="work-base-grid_c1">Amount</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr ng-repeat="(key, record) in records">
-                                    <td>{{$index + 1}}</td>
-                                    <td>{{record.patient_name}}</td>
-                                    <td>{{record.payment_amount}}</td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td><b>Total - {{total}}</b></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="reports">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th id="work-base-grid_c0" ng-show="consultant_fullname != ''">Doctor Name :{{consultant_fullname}}</th>
+                                        <th id="work-base-grid_c1" colspan="2" ng-show="date != ''">Report Generated On :{{date}}</th>
+                                    </tr>
+                                    <tr>
+                                        <th id="work-base-grid_c0" ng-show="data.from != ''">From: {{ data.from | date:'dd-MM-yyyy'}}</th>
+                                        <th id="work-base-grid_c1" colspan="2" ng-show="data.to != ''">To: {{ data.to | date:'dd-MM-yyyy'}}</th>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <th id="work-base-grid_c0">S.No</th>
+                                        <th id="work-base-grid_c0">Patient Name</th>
+                                        <th id="work-base-grid_c1">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="(key, record) in records">
+                                        <td>{{$index + 1}}</td>
+                                        <td>{{record.patient_name}}</td>
+                                        <td align="right">{{record.payment_amount}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td align="right"><b>Total:</b></td>
+                                        <td align="right"><b>{{total}}</b></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
