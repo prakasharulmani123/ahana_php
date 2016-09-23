@@ -1,11 +1,11 @@
-app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$modal', '$log', '$filter', '$location', function ($rootScope, $scope, $timeout, $http, $state, $modal, $log, $filter, $location) {
+app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$modal', '$log', '$filter', '$location', '$localStorage', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', function ($rootScope, $scope, $timeout, $http, $state, $modal, $log, $filter, $location, $localStorage, DTOptionsBuilder, DTColumnBuilder, $compile) {
 
         $scope.$on('HK_CREATE', function (e) {
             if ($location.path() == '/pharmacy/products') {
                 $state.go('pharmacy.productAdd');
             }
         });
-        
+
         $scope.$on('HK_SAVE', function (e) {
             var location_url = $location.path().split('/');
             var url = location_url[1] + '/' + location_url[2];
@@ -17,34 +17,78 @@ app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http
             }
             e.preventDefault();
         });
-        
+
         $scope.$on('HK_LIST', function (e) {
             $state.go('pharmacy.products');
         });
-        
+
         $scope.$on('HK_SEARCH', function (e) {
             $('#filter').focus();
         });
 
-        //Index Page
-        $scope.loadProductsList = function () {
-            $scope.isLoading = true;
-            // pagination set up
-            $scope.rowCollection = [];  // base collection
-            $scope.itemsByPage = 10; // No.of records per page
-            $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
+        var vm = this;
+        vm.persons = {};
+        var token = $localStorage.user.access_token;
+        vm.dtOptions = DTOptionsBuilder.newOptions()
+                .withOption('ajax', {
+                    // Either you specify the AjaxDataProp here
+                    // dataSrc: 'data',
+                    url: $rootScope.IRISOrgServiceUrl + '/pharmacyproduct/getproducts?access-token=' + token,
+                    type: 'POST',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("x-domain-path", $rootScope.clientUrl);
+                    }
+                })
+                // or here
+                .withDataProp('data')
+                .withOption('processing', true)
+                .withOption('serverSide', true)
+                .withOption('bLengthChange', false)
+                .withPaginationType('full_numbers')
+                .withOption('createdRow', createdRow);
+        vm.dtColumns = [
+            DTColumnBuilder.newColumn('product_id').withTitle('Product ID').notVisible(),
+            DTColumnBuilder.newColumn('product_name').withTitle('Product Name'),
+            DTColumnBuilder.newColumn('product_code').withTitle('Product Code'),
+            DTColumnBuilder.newColumn('product_type').withTitle('Product Type'),
+            DTColumnBuilder.newColumn('product_brand').withTitle('Product Brand'),
+            DTColumnBuilder.newColumn(null).withTitle('Actions').notSortable().renderWith(actionsHtml)
+        ];
 
-            // Get data's from service
-            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct')
-                    .success(function (products) {
-                        $scope.isLoading = false;
-                        $scope.rowCollection = products;
-                        $scope.displayedCollection = [].concat($scope.rowCollection);
-                    })
-                    .error(function () {
-                        $scope.errorData = "An Error has occured while loading brand!";
-                    });
-        };
+        function createdRow(row, data, dataIndex) {
+            // Recompiling so we can bind Angular directive to the DT
+            $compile(angular.element(row).contents())($scope);
+        }
+
+        function actionsHtml(data, type, full, meta) {
+            vm.persons[data.product_id] = data;
+            return '<a class="label bg-dark" title="Edit" check-access  ui-sref="pharmacy.productEdit({id: ' + data.product_id + '})">' +
+                    '   <i class="fa fa-pencil"></i>' +
+                    '</a>&nbsp;&nbsp;&nbsp;' +
+                    '<a class="hide" title="Delete" ng-click="removeRow(row)">' +
+                    '   <i class="fa fa-trash"></i>' +
+                    '</a>';
+        }
+
+        //Index Page
+//        $scope.loadProductsList = function () {
+//            $scope.isLoading = true;
+//            // pagination set up
+//            $scope.rowCollection = [];  // base collection
+//            $scope.itemsByPage = 10; // No.of records per page
+//            $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
+//
+//            // Get data's from service
+//            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct')
+//                    .success(function (products) {
+//                        $scope.isLoading = false;
+//                        $scope.rowCollection = products;
+//                        $scope.displayedCollection = [].concat($scope.rowCollection);
+//                    })
+//                    .error(function () {
+//                        $scope.errorData = "An Error has occured while loading brand!";
+//                    });
+//        };
 
         //For Form
         $scope.initForm = function () {

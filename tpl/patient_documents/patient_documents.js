@@ -128,6 +128,41 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     });
         }
 
+        $scope.diagnosisDsmiv = function () {
+            //Diagnosis
+            $rootScope.commonService.GetDiagnosisList(function (response) {
+                var availableTags = [];
+                angular.forEach(response.diagnosisList, function (diagnosis) {
+                    availableTags.push(diagnosis.label);
+                });
+                $("#txtDiagnosis").autocomplete({
+                    source: availableTags,
+                });
+            });
+
+            //Axis1
+            $rootScope.commonService.GetDsmivList("1", function (response) {
+                var axis1 = [];
+                angular.forEach(response.dsmivList, function (dsmiv) {
+                    axis1.push(dsmiv.label);
+                });
+                $("#txtAxis1").autocomplete({
+                    source: axis1,
+                });
+            });
+
+            //Axis2
+            $rootScope.commonService.GetDsmivList("2", function (response) {
+                var axis2 = [];
+                angular.forEach(response.dsmivList, function (dsmiv) {
+                    axis2.push(dsmiv.label);
+                });
+                $("#txtAxis2").autocomplete({
+                    source: axis2,
+                });
+            });
+        }
+
 // Initialize Create Form
         $scope.initForm = function () {
             $scope.isLoading = true;
@@ -149,39 +184,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                                 $scope.isLoading = false;
 
                                 $timeout(function () {
-                                    //Diagnosis
-                                    $rootScope.commonService.GetDiagnosisList(function (response) {
-                                        var availableTags = [];
-                                        angular.forEach(response.diagnosisList, function (diagnosis) {
-                                            availableTags.push(diagnosis.label);
-                                        });
-                                        $("#txtDiagnosis").autocomplete({
-                                            source: availableTags,
-//                                            minLength: 2,
-                                        });
-                                    });
-
-                                    //Axis1
-                                    $rootScope.commonService.GetDsmivList("1", function (response) {
-                                        var axis1 = [];
-                                        angular.forEach(response.dsmivList, function (dsmiv) {
-                                            axis1.push(dsmiv.label);
-                                        });
-                                        $("#txtAxis1").autocomplete({
-                                            source: axis1,
-                                        });
-                                    });
-
-                                    //Axis2
-                                    $rootScope.commonService.GetDsmivList("2", function (response) {
-                                        var axis2 = [];
-                                        angular.forEach(response.dsmivList, function (dsmiv) {
-                                            axis2.push(dsmiv.label);
-                                        });
-                                        $("#txtAxis2").autocomplete({
-                                            source: axis2,
-                                        });
-                                    });
+                                    $scope.diagnosisDsmiv();
                                 }, 2000);
 
                                 $timeout(function () {
@@ -196,21 +199,38 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
         }
 
         $scope.initSaveDocument = function (callback) {
-            _data = $.param({
-                'name': $scope.patientObj.fullname,
-                'age': $scope.patientObj.patient_age,
-                'gender': $scope.app.patientDetail.patientSex,
-                'martial_status': $scope.app.patientDetail.patientMaritalStatus,
-                'encounter_id': $scope.encounter.encounter_id,
-                'patient_id': $state.params.id,
-                'novalidate': true,
-                'status': '0',
+            var _data = [];
+            _data.push({
+                name: 'name',
+                value: $scope.patientObj.fullname,
+            }, {
+                name: 'age',
+                value: $scope.patientObj.patient_age,
+            }, {
+                name: 'gender',
+                value: $scope.app.patientDetail.patientSex,
+            }, {
+                name: 'martial_status',
+                value: $scope.app.patientDetail.patientMaritalStatus,
+            }, {
+                name: 'encounter_id',
+                value: $scope.encounter.encounter_id,
+            }, {
+                name: 'patient_id',
+                value: $state.params.id,
+            }, {
+                name: 'novalidate',
+                value: true,
+            }, {
+                name: 'status',
+                value: '0',
             });
+
             $scope.loadbar('show');
             $http({
                 url: $rootScope.IRISOrgServiceUrl + "/patientdocuments/savedocument",
                 method: "POST",
-                transformRequest: transformRequestAsFormPost,
+//                transformRequest: transformRequestAsFormPost,
                 data: _data,
             }).then(
                     function (response) {
@@ -228,15 +248,22 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                 return;
             stop = $interval(function () {
                 $scope.ckeditorupdate();
-                _data = $('#xmlform').serialize() + '&' + $.param({
-                    'encounter_id': $scope.encounter.encounter_id,
-                    'patient_id': $state.params.id,
-                    'novalidate': true
+                _data = $('#xmlform').serializeArray();
+                _data.push({
+                    name: 'encounter_id',
+                    value: $scope.encounter.encounter_id,
+                }, {
+                    name: 'patient_id',
+                    value: $state.params.id,
+                }, {
+                    name: 'novalidate',
+                    value: true,
                 });
+
                 $http({
                     url: $rootScope.IRISOrgServiceUrl + "/patientdocuments/savedocument",
                     method: "POST",
-                    transformRequest: transformRequestAsFormPost,
+//                    transformRequest: transformRequestAsFormPost,
                     data: _data
                 });
             }, 60000);
@@ -266,6 +293,11 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                         $scope.xml = pat_doc_response.result.document_xml;
                         $scope.encounter = {encounter_id: pat_doc_response.result.encounter_id};
                         $scope.isLoading = false;
+
+                        $timeout(function () {
+                            $scope.diagnosisDsmiv();
+                        }, 2000);
+
                         $timeout(function () {
                             $scope.ckeditorReplace();
                         }, 500);
@@ -302,12 +334,12 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                         $scope.xml = pat_doc_response.result.document_xml;
                         $scope.isLoading = false;
                         $timeout(function () {
-                            
-                            $(".classy-edit").each(function(){
+
+                            $(".classy-edit").each(function () {
                                 $(this).removeClass("form-control");
                                 $(this).html($(this).text());
                             });
-                            
+
                             $("#printThisElement table").each(function () {
                                 //RadGrid
                                 var RadGrid_tr = $(this).find("tr.RadGrid");
@@ -410,25 +442,36 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
 
         $scope.submitXsl = function () {
             $scope.ckeditorupdate();
-            _data = $('#xmlform').serialize() + '&' + $.param({
-                'encounter_id': $scope.encounter.encounter_id,
-                'patient_id': $state.params.id,
-                'novalidate': false,
-                'status': '1',
+
+            _data = $('#xmlform').serializeArray();
+            _data.push({
+                name: 'encounter_id',
+                value: $scope.encounter.encounter_id,
+            }, {
+                name: 'patient_id',
+                value: $state.params.id,
+            }, {
+                name: 'novalidate',
+                value: false,
+            }, {
+                name: 'status',
+                value: '1',
             });
+
             if ($scope.panel_bars.length > 0) {
-                var more_datas = {};
                 angular.forEach($scope.panel_bars, function (panel_bars) {
-                    more_datas[panel_bars.div] = panel_bars.opened;
+                    _data.push({
+                        name: panel_bars.div,
+                        value: panel_bars.opened,
+                    });
                 });
-                _data = _data + '&' + $.param(more_datas);
             }
 
             $scope.loadbar('show');
             $http({
                 url: $rootScope.IRISOrgServiceUrl + "/patientdocuments/savedocument",
                 method: "POST",
-                transformRequest: transformRequestAsFormPost,
+//                transformRequest: transformRequestAsFormPost,
                 data: _data,
             }).then(
                     function (response) {
@@ -497,62 +540,78 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
         });
 
         $("body").on("click", ".addMore", function () {
-            $scope.spinnerbar('show');
-            var button_id = $(this).attr('id');
-            var table_id = $(this).data('table-id');
-            var rowCount = $('#' + table_id + ' tbody  tr').length;
-            var firstMsg = $('#' + table_id).find("tr:last");
-            var curOffset = firstMsg.offset().top - $(document).scrollTop();
+            if (!jQuery.isEmptyObject($scope.encounter)) {
+                $scope.spinnerbar('show');
+                var button_id = $(this).attr('id');
+                var table_id = $(this).data('table-id');
+                var rowCount = $('#' + table_id + ' tbody  tr').length;
+                var firstMsg = $('#' + table_id).find("tr:last");
+                var curOffset = firstMsg.offset().top - $(document).scrollTop();
 
-            $scope.ckeditorupdate();
-            _data = $('#xmlform').serialize() + '&' + $.param({
-                'encounter_id': $scope.encounter.encounter_id,
-                'patient_id': $state.params.id,
-                'button_id': button_id,
-                'table_id': table_id,
-                'rowCount': rowCount,
-                'novalidate': true,
-            });
-            $http({
-                url: $rootScope.IRISOrgServiceUrl + "/patientdocuments/savedocument",
-                method: "POST",
-                transformRequest: transformRequestAsFormPost,
-                data: _data,
-            }).then(
-                    function (response) {
-                        $scope.loadbar('hide');
-                        if (response.data.success == true) {
-                            $scope.xml = response.data.xml;
-                            $timeout(function () {
-                                angular.forEach($scope.panel_bars, function (bar) {
-                                    if (bar.opened) {
-                                        $('#' + bar.div)
-                                                .siblings('.panel-heading')
-                                                .find('i')
-                                                .removeClass("fa-angle-right")
-                                                .addClass("fa-angle-down");
-                                        $('#' + bar.div)
-                                                .toggleClass('collapse in')
-                                                .attr('aria-expanded', true)
-                                                .removeAttr("style");
-                                    } else {
-                                        $('#' + bar.div)
-                                                .toggleClass('collapse')
-                                                .attr('aria-expanded', false);
-                                    }
-                                });
-                                var firstMsg = $('#' + table_id).find("tr:last");
-                                $(document).scrollTop(firstMsg.offset().top - curOffset);
+                $scope.ckeditorupdate();
+                _data = $('#xmlform').serializeArray();
+                _data.push({
+                    name: 'encounter_id',
+                    value: $scope.encounter.encounter_id,
+                }, {
+                    name: 'patient_id',
+                    value: $state.params.id,
+                }, {
+                    name: 'button_id',
+                    value: button_id,
+                }, {
+                    name: 'table_id',
+                    value: table_id,
+                }, {
+                    name: 'rowCount',
+                    value: rowCount,
+                }, {
+                    name: 'novalidate',
+                    value: true,
+                });
+
+                $http({
+                    url: $rootScope.IRISOrgServiceUrl + "/patientdocuments/savedocument",
+                    method: "POST",
+//                transformRequest: transformRequestAsFormPost,
+                    data: _data,
+                }).then(
+                        function (response) {
+                            $scope.loadbar('hide');
+                            if (response.data.success == true) {
+                                $scope.xml = response.data.xml;
+                                $timeout(function () {
+                                    angular.forEach($scope.panel_bars, function (bar) {
+                                        if (bar.opened) {
+                                            $('#' + bar.div)
+                                                    .siblings('.panel-heading')
+                                                    .find('i')
+                                                    .removeClass("fa-angle-right")
+                                                    .addClass("fa-angle-down");
+                                            $('#' + bar.div)
+                                                    .toggleClass('collapse in')
+                                                    .attr('aria-expanded', true)
+                                                    .removeAttr("style");
+                                        } else {
+                                            $('#' + bar.div)
+                                                    .toggleClass('collapse')
+                                                    .attr('aria-expanded', false);
+                                        }
+                                    });
+                                    var firstMsg = $('#' + table_id).find("tr:last");
+                                    $(document).scrollTop(firstMsg.offset().top - curOffset);
+                                    $scope.spinnerbar('hide');
+                                    $scope.ckeditorReplace();
+                                }, 500);
+                            } else {
                                 $scope.spinnerbar('hide');
-                                $scope.ckeditorReplace();
-                            }, 500);
-                        } else {
-                            $scope.spinnerbar('hide');
-                            $scope.errorData = response.data.message;
-                            $anchorScroll();
+                                $scope.errorData = response.data.message;
+                                $anchorScroll();
+                            }
                         }
-                    }
-            );
+                );
+            }
+
         });
     }]);
 // Filter HTML Code

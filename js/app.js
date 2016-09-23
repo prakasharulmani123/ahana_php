@@ -28,6 +28,7 @@ angular.module('app', [
     'ngXslt',
     'io-barcode',
     'ng-auto-save',
+    'datatables'
 //    'restangular'
 //    'LocalStorageModule',
 ]);

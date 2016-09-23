@@ -29,6 +29,7 @@
         <link rel="stylesheet" type="text/css" href="bower_components/ngImgCrop/compile/minified/ng-img-crop.css">
         <!-- jQuery -->
         <script src="bower_components/jquery/dist/jquery.min.js"></script>
+        <script src="bower_components/angular-datatables/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
         <script type="text/javascript" src="js/jquery-ui.js"></script>
         <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
         <script src="js/jquery.timepicker.min.js"></script>
@@ -37,6 +38,11 @@
         <link rel="stylesheet" href="css/print.css" type="text/css" />
         <!--<link rel="stylesheet" href="css/jquery-ui.css">-->
         <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+        
+        <!-- Data Table CSS-->
+        <link rel="stylesheet" href="bower_components/angular-datatables/vendor/datatables/media/css/jquery.dataTables.min.css">
+        <link rel="stylesheet" href="bower_components/angular-datatables/dist/css/angular-datatables.css">
+        <link href="bower_components/angular-datatables/dist/plugins/bootstrap/datatables.bootstrap.min.css" rel="stylesheet">
     </head>
     <body prevent-right-click>
         <!-- Spinnerbar -->
@@ -97,7 +103,7 @@
                                         <a check-access-custom3 class="label bg-dark" title="Edit" data-url='patient.noteUpdate' ng-click="GetNote('{{$state.params.id}}','{{note.pat_note_id}}')">
                                             <i class="fa fa-pencil"></i>
                                         </a> &nbsp;&nbsp;
-                                       {{note.notes}}
+                                        {{note.notes}}
                                         <div class="text-xs text-muted ng-binding">
                                             {{note.created_at| moment:'DD/MM/YYYY hh:mm A'}}
                                             <span class="notes_writer pull-right">
@@ -110,8 +116,8 @@
                             </div>
                         </div>
                         <div class="wrapper m-t b-t b-light">
-                                                <form ng-submit="addNotes()" class="m-b-none ng-pristine ng-valid ng-submitted" ng-init="data = {};
-                                        notes_error = false;">
+                            <form ng-submit="addNotes()" class="m-b-none ng-pristine ng-valid ng-submitted" ng-init="data = {};
+                                                notes_error = false;">
                                 <div class="input-group">
                                     <input type="text" placeholder="Say something" class="form-control" ng-model="data.notes">
                                     <span class="input-group-btn">
@@ -178,8 +184,8 @@
                         </div>
 
                         <div class="wrapper m-t b-t b-light">
-                                                <form class="m-b-none ng-pristine ng-valid ng-submitted" ng-submit="addVital()" ng-init="vitaldata = {};
-                                        vital_error = false;">
+                            <form class="m-b-none ng-pristine ng-valid ng-submitted" ng-submit="addVital()" ng-init="vitaldata = {};
+                                                vital_error = false;">
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-sm-6">
@@ -259,6 +265,7 @@
         <script type="text/javascript" src="node_modules/moment/moment.js"></script>
         <!-- Angular -->
         <script src="bower_components/angular/angular.js"></script>
+        <script src="bower_components/angular-datatables/dist/angular-datatables.min.js"></script>
         <script src="bower_components/angular-animate/angular-animate.js"></script>
         <script src="bower_components/angular-cookies/angular-cookies.js"></script>
         <script src="bower_components/angular-resource/angular-resource.js"></script>

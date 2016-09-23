@@ -2,7 +2,7 @@
     <h1 class="m-n font-thin h3">Products</h1>
 </div>
 
-<div class="wrapper-md" ng-controller="ProductsController" ng-init="loadProductsList()">
+<div class="wrapper-md" ng-controller="ProductsController as showCase" ng-init="loadProductsList()">
 
     <div ng-include="'tpl/blocks/alert.html'">
         {% include 'tpl/blocks/alert.html' %}
@@ -15,13 +15,14 @@
                     <b> Product Management </b>
                 </div>
                 <div class="panel-body b-b b-light">                   
-                    <input id="filter" type="text" class="form-control input-sm w-sm inline m-r" placeholder="Search"/>                   
+                    <!--<input id="filter" type="text" class="form-control input-sm w-sm inline m-r" placeholder="Search"/>-->                   
                     <button check-access-button ng-click="$state.go('pharmacy.productAdd')" class="btn btn-sm btn-info pull-right">
                         <i class="fa fa-plus"></i> &nbsp; Add Product
                     </button>
                 </div>
                 <div>
-                    <table class="table m-b-none" ui-jq="footable" data-filter="#filter" data-page-size="10">
+                    <table datatable="" dt-options="showCase.dtOptions" dt-columns="showCase.dtColumns" class="row-border hover"></table>
+<!--                    <table class="table m-b-none" ui-jq="footable" data-filter="#filter" data-page-size="10">
                         <thead>
                             <tr>                              
                                 <th>Product name</th>
@@ -81,7 +82,7 @@
                                 </td>
                             </tr>
                         </tfoot>
-                    </table>
+                    </table>-->
                 </div>
             </div>
         </div>
