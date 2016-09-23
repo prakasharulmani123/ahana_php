@@ -235,7 +235,7 @@ class PharmacyproductController extends ActiveController {
 
             //Get Products
             $products = $this->_getProducts($text_search, $tenant_id, $limit);
-            
+
             //Get Routes
             $routes = $this->_getRoutes($products, $text_search, $tenant_id, $limit);
 
@@ -379,7 +379,7 @@ class PharmacyproductController extends ActiveController {
         $frequencies = [];
 
         $strings = $this->_getFrquenceyMatchStrings($text);
-        
+
         if (!empty($strings)) {
             $query = "SELECT freq_id, freq_name as frequency 
                     FROM pat_prescription_frequency 
@@ -436,6 +436,77 @@ class PharmacyproductController extends ActiveController {
             }
         }
         return $new_result;
+    }
+
+    //Pharmacy Products Index
+    public function actionGetproducts() {
+        $requestData = $_REQUEST;
+
+        $modelClass = $this->modelClass;
+        $totalData = $modelClass::find()->tenant()->active()->count();
+        $totalFiltered = $totalData;
+
+        if (!empty($requestData['search']['value'])) {
+            $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+            $totalFiltered = $modelClass::find()
+                    ->joinWith(['productDescription', 'brand'])
+                    ->andWhere([
+                        'pha_product.tenant_id' => $tenant_id,
+                        'pha_product.status' => '1',
+                    ])
+                    ->andFilterWhere([
+                        'OR',
+                        ['like', 'pha_product.product_name', $requestData['search']['value']],
+                        ['like', 'pha_product_description.description_name', $requestData['search']['value']],
+                        ['like', 'pha_brand.brand_name', $requestData['search']['value']],
+                    ])
+                    ->count();
+
+            $products = $modelClass::find()
+                    ->joinWith(['productDescription', 'brand'])
+                    ->andWhere([
+                        'pha_product.tenant_id' => $tenant_id,
+                        'pha_product.status' => '1',
+                    ])
+                    ->andFilterWhere([
+                        'OR',
+                        ['like', 'pha_product.product_name', $requestData['search']['value']],
+                        ['like', 'pha_product_description.description_name', $requestData['search']['value']],
+                        ['like', 'pha_brand.brand_name', $requestData['search']['value']],
+                    ])
+                    ->limit($requestData['length'])
+                    ->offset($requestData['start'])
+                    ->orderBy(['created_at' => SORT_DESC])
+                    ->all();
+        } else {
+            $products = $modelClass::find()
+                    ->tenant()
+                    ->active()
+                    ->limit($requestData['length'])
+                    ->offset($requestData['start'])
+                    ->orderBy(['created_at' => SORT_DESC])
+                    ->all();
+        }
+
+        $data = array();
+        foreach ($products as $product) {
+            $nestedData = array();
+            $nestedData['product_id'] = $product->product_id;
+            $nestedData['product_name'] = $product->product_name;
+            $nestedData['product_code'] = $product->product_code;
+            $nestedData['product_type'] = $product->productDescription->description_name;
+            $nestedData['product_brand'] = $product->brand->brand_name;
+            $data[] = $nestedData;
+        }
+
+        $json_data = array(
+            "draw" => intval($requestData['draw']),
+            "recordsTotal" => intval($totalData),
+            "recordsFiltered" => intval($totalFiltered),
+            "data" => $data   // total data array
+        );
+
+        echo json_encode($json_data);
     }
 
 }

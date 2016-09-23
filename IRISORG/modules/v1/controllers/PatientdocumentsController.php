@@ -115,7 +115,11 @@ class PatientdocumentsController extends ActiveController {
 
     //Save Create / Update
     public function actionSavedocument() {
-        $post = Yii::$app->getRequest()->post();
+        $form = Yii::$app->getRequest()->post();
+        $post = [];
+        foreach ($form as $key => $value) {
+            $post[$value['name']] = str_replace("&nbsp;", "&#160;", $value['value']);
+        }
         $patient = PatPatient::getPatientByGuid($post['patient_id']);
         $type = 'CH';
         $case_history_xml = PatDocumentTypes::getDocumentType($type);
@@ -143,7 +147,7 @@ class PatientdocumentsController extends ActiveController {
         $attr = array_merge($post, $attr);
         $patient_document->attributes = $attr;
 
-        if ($patient_document->validate() || $post['novalidate'] == 'true') {
+        if ($patient_document->validate() || $post['novalidate'] == 'true' || $post['novalidate'] == '1') {
             $result = $this->prepareXml($xml, $post);
 
             if (isset($post['button_id'])) {

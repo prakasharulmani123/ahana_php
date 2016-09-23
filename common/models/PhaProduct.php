@@ -63,7 +63,7 @@ class PhaProduct extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['product_name', 'product_description_id', 'product_reorder_min', 'product_reorder_max', 'brand_id', 'division_id', 'generic_id', 'purchase_vat_id', 'sales_vat_id'], 'required'],
+            [['product_name', 'product_description_id', 'product_reorder_min', 'product_reorder_max', 'brand_id', 'purchase_vat_id', 'sales_vat_id'], 'required'],
             [['tenant_id', 'product_description_id', 'product_reorder_min', 'product_reorder_max', 'brand_id', 'division_id', 'generic_id', 'drug_class_id', 'purchase_vat_id', 'purchase_package_id', 'sales_vat_id', 'sales_package_id', 'created_by', 'modified_by'], 'integer'],
             [['product_price'], 'number'],
             [['status'], 'string'],
@@ -74,7 +74,7 @@ class PhaProduct extends RActiveRecord {
             [['product_code'], 'string', 'max' => 50],
             [['product_name', 'product_location'], 'string', 'max' => 255],
             [['product_unit', 'product_unit_count'], 'string', 'max' => 25],
-            [['tenant_id', 'product_name'], 'unique', 'targetAttribute' => ['tenant_id', 'product_name'], 'message' => 'The combination of Tenant ID and Product Name has already been taken.']
+            [['tenant_id', 'product_name', 'brand_id'], 'unique', 'targetAttribute' => ['tenant_id', 'product_name', 'brand_id'], 'message' => 'The combination of Tenant ID and Product Name and Brand Name has already been taken.']
         ];
     }
 
@@ -284,7 +284,7 @@ class PhaProduct extends RActiveRecord {
                 return (isset($model->brand) ? $model->brand->brand_name : '-');
             },
             'division_name' => function ($model) {
-                return (isset($model->brand) ? $model->division->division_name : '-');
+                return (isset($model->division) ? $model->division->division_name : '-');
             },
             'generic_name' => function ($model) {
                 return (isset($model->generic) ? $model->generic->generic_name : '-');
