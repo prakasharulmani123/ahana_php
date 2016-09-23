@@ -771,12 +771,15 @@ class PatientdocumentsController extends ActiveController {
                             }
                             $x->addChild('VALUE', $value);
                         } else {
-                            foreach ($x->PROPERTIES->PROPERTY as $text_pro) {
-                                if ($text_pro['name'] == 'value') {
-                                    $dom = dom_import_simplexml($text_pro);
-                                    $dom->parentNode->removeChild($dom);
+                            if (isset($x->PROPERTIES->PROPERTY)) {
+                                foreach ($x->PROPERTIES->PROPERTY as $text_pro) {
+                                    if ($text_pro['name'] == 'value') {
+                                        $dom = dom_import_simplexml($text_pro);
+                                        $dom->parentNode->removeChild($dom);
+                                    }
                                 }
                             }
+
                             $text_box_value = $x->PROPERTIES->addChild('PROPERTY', $value);
                             $text_box_value->addAttribute('name', 'value');
                         }
