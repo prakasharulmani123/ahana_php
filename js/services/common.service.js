@@ -65,7 +65,7 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
 
     service.GetDiagnosisList = GetDiagnosisList;
     service.GetDsmivList = GetDsmivList;
-    
+
     service.GetCareTaker = GetCareTaker;
 
     return service;
@@ -171,17 +171,17 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
         ];
         callback(response);
     }
-    
+
     function GetCareTaker(callback) {
         var response = [
-            {value: '1', label: 'Father'},
-            {value: '2', label: 'Mother'},
-            {value: '3', label: 'Husband'},
-            {value: '4', label: 'Wife'},
-            {value: '5', label: 'Son'},
-            {value: '6', label: 'Daughter'},
-            {value: '7', label: 'Friend'},
-            {value: '8', label: 'Other'},
+            {value: 1, label: 'Father'},
+            {value: 2, label: 'Mother'},
+            {value: 3, label: 'Husband'},
+            {value: 4, label: 'Wife'},
+            {value: 5, label: 'Son'},
+            {value: 6, label: 'Daughter'},
+            {value: 7, label: 'Friend'},
+            {value: 8, label: 'Other'},
         ];
         callback(response);
     }
@@ -589,6 +589,20 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
         }
         if (func == 'GetMaritalStatus') {
             $rootScope.commonService.GetMaritalStatus(function (response) {
+                $rootScope.commonService.FoundVlaue(val, response, function (response2) {
+                    callback(response2);
+                });
+            });
+        }
+        if (func == 'GetBloodList') {
+            $rootScope.commonService.GetBloodList(function (response) {
+                $rootScope.commonService.FoundVlaue(val, response, function (response2) {
+                    callback(response2);
+                });
+            });
+        }
+        if (func == 'GetCareTaker') {
+            $rootScope.commonService.GetCareTaker(function (response) {
                 $rootScope.commonService.FoundVlaue(val, response, function (response2) {
                     callback(response2);
                 });

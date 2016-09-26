@@ -50,6 +50,14 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
             $rootScope.commonService.GetLabelFromValue(patient.patient_marital_status, 'GetMaritalStatus', function (response) {
                 $scope.view_data.marital_status = response;
             });
+
+            $rootScope.commonService.GetLabelFromValue(patient.patient_blood_group, 'GetBloodList', function (response) {
+                $scope.view_data.blood_group = response;
+            });
+
+            $rootScope.commonService.GetLabelFromValue(patient.patient_care_taker, 'GetCareTaker', function (response) {
+                $scope.view_data.care_taker = response;
+            });
         }
 
         $scope.setFormData = function (patient) {
@@ -108,6 +116,14 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
 
             $rootScope.commonService.GetPatientCateogryList('', '1', false, function (response) {
                 $scope.categories = response.patientcategoryList;
+            });
+
+            $rootScope.commonService.GetBloodList(function (response) {
+                $scope.bloods = response;
+            });
+
+            $rootScope.commonService.GetCareTaker(function (response) {
+                $scope.careTakers = response;
             });
         }
 
@@ -191,15 +207,15 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
 
 
         $scope.setDateEmpty = function () {
-            $scope.data.PatPatient.patient_dob = '';
+            $scope.patdata.PatPatient.patient_dob = '';
         }
 
         $scope.setAgeEmpty = function () {
-            $scope.data.PatPatient.patient_age = '';
+            $scope.patdata.PatPatient.patient_age = '';
         }
 
         $scope.getDOB = function () {
-            var newValue = this.data.PatPatient.patient_age;
+            var newValue = this.patdata.PatPatient.patient_age;
             if (parseInt(newValue) && !isNaN(newValue)) {
                 $http({
                     method: 'POST',
@@ -207,14 +223,14 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
                     data: {'age': newValue},
                 }).success(
                         function (response) {
-                            $scope.data.PatPatient.patient_dob = response.dob;
+                            $scope.patdata.PatPatient.patient_dob = response.dob;
                         }
                 );
             }
         }
 
         $scope.getAge = function () {
-            var newValue = this.data.PatPatient.patient_dob;
+            var newValue = this.patdata.PatPatient.patient_dob;
             if (newValue != '') {
                 $http({
                     method: 'POST',
@@ -222,19 +238,27 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
                     data: {'date': newValue},
                 }).success(
                         function (response) {
-                            $scope.data.PatPatient.patient_age = response.age;
+                            $scope.patdata.PatPatient.patient_age = response.age;
                         }
                 );
             }
         }
 
         $scope.CopyAddress = function () {
-            if ($scope.data.is_permanent) {
-                $scope.data.PatPatientAddress.addr_perm_address = $scope.data.PatPatientAddress.addr_current_address;
-                $scope.data.PatPatientAddress.addr_perm_country_id = $scope.data.PatPatientAddress.addr_country_id;
-                $scope.data.PatPatientAddress.addr_perm_state_id = $scope.data.PatPatientAddress.addr_state_id;
-                $scope.data.PatPatientAddress.addr_perm_city_id = $scope.data.PatPatientAddress.addr_city_id;
-                $scope.data.PatPatientAddress.addr_perm_zip = $scope.data.PatPatientAddress.addr_zip;
+            if ($scope.patdata.is_permanent) {
+                $scope.patdata.PatPatientAddress.addr_perm_address = $scope.patdata.PatPatientAddress.addr_current_address;
+                $scope.patdata.PatPatientAddress.addr_perm_country_id = $scope.patdata.PatPatientAddress.addr_country_id;
+                $scope.patdata.PatPatientAddress.addr_perm_state_id = $scope.patdata.PatPatientAddress.addr_state_id;
+                $scope.patdata.PatPatientAddress.addr_perm_city_id = $scope.patdata.PatPatientAddress.addr_city_id;
+                $scope.patdata.PatPatientAddress.addr_perm_zip = $scope.patdata.PatPatientAddress.addr_zip;
+                $scope.updateState();
+                $scope.updateCity();
+            } else {
+                $scope.patdata.PatPatientAddress.addr_perm_address = '';
+                $scope.patdata.PatPatientAddress.addr_perm_country_id = '';
+                $scope.patdata.PatPatientAddress.addr_perm_state_id = '';
+                $scope.patdata.PatPatientAddress.addr_perm_city_id = '';
+                $scope.patdata.PatPatientAddress.addr_perm_zip = '';
                 $scope.updateState();
                 $scope.updateCity();
             }
