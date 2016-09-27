@@ -42,7 +42,7 @@ class UserController extends ActiveController {
         $behaviors = parent::behaviors();
         $behaviors['authenticator'] = [
             'class' => QueryParamAuth::className(),
-            'only' => ['dashboard', 'createuser', 'updateuser', 'getuser', 'getlogin', 'updatelogin', 'getuserdata', 'getuserslistbyuser', 'assignroles', 'assignbranches', 'getmybranches', 'getswitchedbrancheslist', 'getdoctorslist', 'checkstateaccess', 'getusercredentialsbytoken', 'passwordauth', 'changepassword'],
+            'only' => ['welcome', 'dashboard', 'createuser', 'updateuser', 'getuser', 'getlogin', 'updatelogin', 'getuserdata', 'getuserslistbyuser', 'assignroles', 'assignbranches', 'getmybranches', 'getswitchedbrancheslist', 'getdoctorslist', 'checkstateaccess', 'getusercredentialsbytoken', 'passwordauth', 'changepassword'],
         ];
         $behaviors['contentNegotiator'] = [
             'class' => ContentNegotiator::className(),
@@ -67,6 +67,10 @@ class UserController extends ActiveController {
             'query' => $modelClass::find()->tenant()->active()->orderBy(['created_at' => SORT_DESC]),
             'pagination' => false,
         ]);
+    }
+    
+    public function actionWelcome(){
+        return ['Welcome to HMS.'];
     }
 
     public function actionGetuserdata() {
