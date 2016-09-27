@@ -2583,6 +2583,10 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
                 $location.path('/access/signin');
             } else if (!restrictedPage && loggedIn) {
                 $location.path('/configuration/organization');
+            } else if (restrictedPage && loggedIn) {
+//                $http.post($rootScope.IRISOrgServiceUrl + '/user/welcome').success(function(){
+//                    event.preventDefault();
+//                });
             }
         }
     });
