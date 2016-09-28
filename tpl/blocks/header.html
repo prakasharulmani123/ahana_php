@@ -40,7 +40,7 @@
                                             &nbsp; &nbsp;<span ng-bind-html="patient.Patient.patient_mobile | highlight:patientselected"> </span> 
                                         </div>
                                     </div>
-                                    <div class="col-xs-12 col-sm-5 col-md-4 pull-right right" ng-if="patient.same_branch">
+                                    <div class="col-xs-12 col-sm-5 col-md-4 pull-right right" ng-if="patient.same_branch == true && patient.same_org == true">
                                         <button class="btn m-b-xs w-xs btn-info" ng-show="patient.PatientActiveEncounter.hasOwnProperty('encounter_id') != true" ng-click="goToAppointment(patient.Patient.patient_guid)">
                                             BOOK
                                         </button>
@@ -51,7 +51,12 @@
                                             Booked
                                         </span>
                                     </div>
-                                    <div class="col-xs-12 col-sm-5 col-md-4 pull-right right" ng-if="patient.same_branch == false"> 
+                                    <div class="col-xs-12 col-sm-5 col-md-4 pull-right right" ng-if="patient.same_branch == false && patient.same_org == true">
+                                        <button class="btn m-b-xs w-xs btn-info" id="import_book_{{key}}"  ng-click="importBookPatient(patient.Patient, key)">
+                                            BOOK
+                                        </button>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-5 col-md-4 pull-right right" ng-if="patient.same_branch == false && patient.same_org == false"> 
                                         <p class=""> 
                                             <button class="btn btn-primary" id="import_{{key}}" ng-click="importPatient(patient.Patient, key)">
                                                 IMPORT DATA

@@ -577,6 +577,7 @@ angular.module('app')
                     });
                 }
 
+                //Different ORG
                 $scope.importPatient = function (patient, key) {
                     var conf = confirm('Are you sure to import basic data ?')
 
@@ -607,6 +608,40 @@ angular.module('app')
                                     $scope.errorData = response.message;
                                 }
 
+                            }
+                    ).error(function (data, status) {
+                        $scope.loadbar('hide');
+                        if (status == 422)
+                            $scope.errorData = $scope.errorSummary(data);
+                        else
+                            $scope.errorData = data.message;
+                    });
+                }
+                
+                //Same ORG But different branch so Import and book
+                $scope.importBookPatient = function (patient, key) {
+                    $scope.errorData = "";
+                    $scope.msg.successMessage = "";
+
+                    $scope.loadbar('show');
+                    $('#import_book_' + key).attr('disabled', true).html("<i class='fa fa-spin fa-spinner'></i> Please Wait...");
+
+                    $http({
+                        method: 'POST',
+                        url: $rootScope.IRISOrgServiceUrl + '/patient/importpatient',
+                        data: patient,
+                    }).success(
+                            function (response) {
+                                $scope.loadbar('hide');
+                                if (response.success == true) {
+                                    var patient_guid = response.patient.patient_guid;
+                                    $('#import_book_' + key).html('Completed').toggleClass('btn-success').removeAttr('ng-click');
+                                    $timeout(function () {
+                                        $state.go('patient.appointment', {id: patient_guid});
+                                    }, 1000);
+                                } else {
+                                    $scope.errorData = response.message;
+                                }
                             }
                     ).error(function (data, status) {
                         $scope.loadbar('hide');
