@@ -193,7 +193,9 @@ class PatPatient extends RActiveRecord {
 
         if ($insert) {
             $this->patient_guid = UuidHelpers::uuid();
-            $this->patient_reg_date = date('Y-m-d H:i:s');
+            
+            if(empty($this->patient_reg_date))
+                $this->patient_reg_date = date('Y-m-d H:i:s');
 
             $this->patient_int_code = CoInternalCode::generateInternalCode('P', 'common\models\PatPatient', 'patient_int_code');
 

@@ -152,13 +152,13 @@ class PatientController extends ActiveController {
                 $patients[$key]['PatientAddress'] = $patient->patPatientAddress;
                 $patients[$key]['PatientActiveEncounter'] = $patient->patActiveEncounter;
                 $patients[$key]['same_branch'] = true;
+                $patients[$key]['same_org'] = true;
             }
 
-            //Search from HMS Database
+            //Search from same ORG but different branch
             if (empty($patients)) {
                 $tenant_id = Yii::$app->user->identity->logged_tenant_id;
-
-                $lists = GlPatient::find()
+                $lists = PatPatient::find()
                         ->andWhere("status = '1' AND tenant_id != $tenant_id")
                         ->orOnCondition("patient_firstname like :search")
                         ->orOnCondition("patient_lastname like :search")
@@ -172,6 +172,29 @@ class PatientController extends ActiveController {
                 foreach ($lists as $key => $patient) {
                     $patients[$key]['Patient'] = $patient;
                     $patients[$key]['same_branch'] = false;
+                    $patients[$key]['same_org'] = true;
+                }
+
+                //Search from HMS Database
+                if (empty($patients)) {
+                    $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+
+                    $lists = GlPatient::find()
+                            ->andWhere("status = '1' AND tenant_id != $tenant_id")
+                            ->orOnCondition("patient_firstname like :search")
+                            ->orOnCondition("patient_lastname like :search")
+                            ->orOnCondition("patient_mobile like :search")
+                            ->orOnCondition("patient_int_code like :search")
+                            ->orOnCondition("casesheetno like :search")
+                            ->addParams([':search' => "%{$text}%"])
+                            ->limit($limit)
+                            ->all();
+
+                    foreach ($lists as $key => $patient) {
+                        $patients[$key]['Patient'] = $patient;
+                        $patients[$key]['same_branch'] = false;
+                        $patients[$key]['same_org'] = false;
+                    }
                 }
             }
         }
