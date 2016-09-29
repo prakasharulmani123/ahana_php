@@ -317,7 +317,11 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
                         if (response.success == true) {
                             $scope.msg.successMessage = succ_msg;
                             $scope.data = {};
-                            $state.go("patient.encounter", {id: $state.params.id});
+                            if ($scope.checkAccess('patient.inPatients') && mode == 'create') {
+                                $state.go("patient.inPatients");
+                            } else {
+                                $state.go("patient.encounter", {id: $state.params.id});
+                            }
                         } else {
                             $scope.errorData = response.message;
                         }

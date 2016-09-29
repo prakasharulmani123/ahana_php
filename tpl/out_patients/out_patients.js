@@ -1,4 +1,4 @@
-app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$filter', '$modal', '$log', 'modalService', '$interval', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $filter, $modal, $log, modalService, $interval) {
+app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$filter', '$modal', '$log', 'modalService', '$interval', '$cookieStore', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $filter, $modal, $log, modalService, $interval, $cookieStore) {
 
         $scope.app.settings.patientTopBar = false;
         $scope.app.settings.patientSideMenu = false;
@@ -7,13 +7,16 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
 
         editableThemes.bs3.inputClass = 'input-sm';
         editableThemes.bs3.buttonsClass = 'btn-sm';
+        //index.html - To Avoid the status column design broken, used the below controlsTpl
+        editableThemes.bs3.controlsTpl = '<div class="editable-controls" ng-class="{\'has-error\': $error}"></div>';
         editableOptions.theme = 'bs3';
 
         $scope.ctrl = {};
         $scope.allExpanded = true;
-        $scope.expanded = true;
+//        $scope.expanded = true;
         $scope.ctrl.expandAll = function (expanded) {
-            $scope.$broadcast('onExpandAll', {expanded: expanded});
+            $scope.expandAllRow(expanded);
+//            $scope.$broadcast('onExpandAll', {expanded: expanded});
         };
 
         //Checkbox initialize
@@ -27,7 +30,7 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
         //Index Page
         $scope.loadOutPatientsList = function (type, clearObj) {
             $scope.op_type = type;
-            
+
             // pagination set up
             if (typeof clearObj == 'undefined') {
                 $scope.isLoading = true;
@@ -85,7 +88,7 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                         .error(function () {
                             $scope.errorData = "An Error has occured";
                         });
-            }, 5000);
+            }, 20000);
         };
         $scope.stopAutoRefresh = function () {
             if (angular.isDefined(stop)) {
@@ -343,10 +346,49 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                     row.booking_count = booked;
                     row.arrived_count = arrived;
                     row.selected = '0';
+                    row.seenExpanded = false;
+                    row.expanded = $scope.getRowExpand(row.data.liveAppointmentConsultant.user_id);
                     row.all = $filter('orderBy')(row.all, ['sts', 'liveAppointmentArrival.status_datetime', 'liveAppointmentBooking.status_datetime', 'appointmentSeen.status_datetime']);
                 });
                 $scope.displayedCollection = [].concat($scope.rowCollection);
                 $scope.isLoading = false;
             }, 200);
         }
+
+        $scope.setRowExpanded = function (consultant_id, rowopen) {
+            var opRowExpand = [];
+            if (typeof $cookieStore.get('op_list') !== 'undefined') {
+                opRowExpand = $cookieStore.get('op_list');
+            }
+            exists = $filter('filter')(opRowExpand, {consultant_id: consultant_id});
+            if (exists.length == 0) {
+                opRowExpand.push({
+                    'consultant_id': consultant_id,
+                    'rowopen': rowopen,
+                });
+            } else {
+                exists[0].rowopen = rowopen;
+            }
+            $cookieStore.put('op_list', opRowExpand);
+        }
+
+        $scope.getRowExpand = function (consultant_id) {
+            if (typeof $cookieStore.get('op_list') !== 'undefined') {
+                var opRowExpand = $cookieStore.get('op_list');
+                exists = $filter('filter')(opRowExpand, {consultant_id: consultant_id});
+                if (exists.length == 0) {
+                    return true;
+                } else {
+                    return exists[0].rowopen;
+                }
+            }
+            return true;
+        };
+        
+        $scope.expandAllRow = function(expanded) {
+            angular.forEach($scope.rowCollection, function (row) {
+                row.expanded = expanded;
+                $scope.setRowExpanded(row.data.liveAppointmentConsultant.user_id, expanded);
+            });
+        };
     }]);
