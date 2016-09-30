@@ -9,12 +9,14 @@
     function AuthenticationService($http, $cookieStore, $rootScope, $window, $localStorage) {
         var service = {};
         var currentUser = null;
+        var current = null;
 
         service.Login = Login;
 //        service.SetCredentials = SetCredentials;
         service.ClearCredentials = ClearCredentials;
         service.setCurrentUser = setCurrentUser;
         service.getCurrentUser = getCurrentUser;
+        service.getCurrent = getCurrent;
 
         return service;
 
@@ -44,7 +46,8 @@
 
         function ClearCredentials() {
             $localStorage.$reset({
-                system_tenant : $localStorage.system_tenant
+                system_tenant : $localStorage.system_tenant,
+                system_username : $localStorage.system_username
             });
             return true;
 
@@ -53,9 +56,14 @@
 //            $http.defaults.headers.common.Authorization = 'Basic';
         }
 
-        function setCurrentUser(user) {
+        function setCurrentUser(user, stay_logged_in) {
             currentUser = user;
-            $localStorage.$default({'user':user});
+            if(stay_logged_in){
+                var stay_date = moment().add('days', 365);
+            } else {
+                var stay_date = moment().add('days', 1);
+            }
+            $localStorage.$default({'user':user, 'stay': stay_date.format("YYYY-MM-DD")});
             return currentUser;
         };
 
@@ -64,6 +72,13 @@
                 currentUser = $localStorage.user;
             }
             return currentUser;
+        };
+        
+        function getCurrent() {
+            if (!current) {
+                current = $localStorage.stay;
+            }
+            return current;
         };
     }
 

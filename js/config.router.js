@@ -2579,11 +2579,20 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
             var restrictedPage = $.inArray($location.path(), ['/access/signin', '/access/forgotpwd', '/access/resetpwd']) === -1;
             var currentUser = AuthenticationService.getCurrentUser();
             var loggedIn = Boolean(currentUser);
+            var stay_date = AuthenticationService.getCurrent();
+            var today_date = moment().format("YYYY-MM-DD");
+            
             if (restrictedPage && !loggedIn) {
                 $location.path('/access/signin');
             } else if (!restrictedPage && loggedIn) {
                 $location.path('/configuration/organization');
             } else if (restrictedPage && loggedIn) {
+                if (today_date > stay_date) {
+                    $http.post($rootScope.IRISOrgServiceUrl + '/user/logout').success(function (response) {
+                        $location.path('/access/signin');
+                    });
+                }
+                
                 $http.post($rootScope.IRISOrgServiceUrl + '/user/welcome', {user_id: currentUser.credentials.user_id}).success(function (success) {
                     event.preventDefault();
                     if (!success) {

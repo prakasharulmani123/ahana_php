@@ -23,7 +23,9 @@ function SignInForm($scope, $state, AuthenticationService, $http, $rootScope, $l
 
                 if (!$localStorage.system_tenant)
                     $localStorage.system_tenant = $scope.tenants[Object.keys($scope.tenants)[0]];
-//                    $localStorage.system_tenant = $scope.tenants[0].value;
+                
+                if ($localStorage.system_username)
+                    $scope.user.username = $localStorage.system_username;
 
                 $scope.user.tenant_id = $localStorage.system_tenant;
             } else {
@@ -46,8 +48,9 @@ function SignInForm($scope, $state, AuthenticationService, $http, $rootScope, $l
         // Try to login
         AuthenticationService.Login($scope.user.username, $scope.user.password, $scope.user.tenant_id, function (response) {
             if (response.success) {
-                AuthenticationService.setCurrentUser(response);
+                AuthenticationService.setCurrentUser(response, $scope.user.stay_logged_in);
                 $localStorage.system_tenant = $scope.user.tenant_id;
+                $localStorage.system_username = $scope.user.username;
                 $state.go('configuration.roles');
             } else {
                 $('#login_btn').button('reset');
