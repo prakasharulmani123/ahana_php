@@ -2584,9 +2584,14 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
             } else if (!restrictedPage && loggedIn) {
                 $location.path('/configuration/organization');
             } else if (restrictedPage && loggedIn) {
-//                $http.post($rootScope.IRISOrgServiceUrl + '/user/welcome').success(function(){
-//                    event.preventDefault();
-//                });
+                $http.post($rootScope.IRISOrgServiceUrl + '/user/welcome', {user_id: currentUser.credentials.user_id}).success(function (success) {
+                    event.preventDefault();
+                    if (!success) {
+                        $http.post($rootScope.IRISOrgServiceUrl + '/user/logout').success(function (response) {
+                            $location.path('/access/signin');
+                        });
+                    }
+                });
             }
         }
     });
