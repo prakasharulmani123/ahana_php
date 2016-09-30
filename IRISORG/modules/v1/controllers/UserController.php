@@ -42,7 +42,7 @@ class UserController extends ActiveController {
         $behaviors = parent::behaviors();
         $behaviors['authenticator'] = [
             'class' => QueryParamAuth::className(),
-            'only' => ['welcome', 'dashboard', 'createuser', 'updateuser', 'getuser', 'getlogin', 'updatelogin', 'getuserdata', 'getuserslistbyuser', 'assignroles', 'assignbranches', 'getmybranches', 'getswitchedbrancheslist', 'getdoctorslist', 'checkstateaccess', 'getusercredentialsbytoken', 'passwordauth', 'changepassword'],
+            'only' => ['dashboard', 'createuser', 'updateuser', 'getuser', 'getlogin', 'updatelogin', 'getuserdata', 'getuserslistbyuser', 'assignroles', 'assignbranches', 'getmybranches', 'getswitchedbrancheslist', 'getdoctorslist', 'checkstateaccess', 'getusercredentialsbytoken', 'passwordauth', 'changepassword'],
         ];
         $behaviors['contentNegotiator'] = [
             'class' => ContentNegotiator::className(),
@@ -70,7 +70,9 @@ class UserController extends ActiveController {
     }
     
     public function actionWelcome(){
-        return ['Welcome to HMS.'];
+        $post = Yii::$app->request->post();
+        $login = CoLogin::find()->where(['user_id' => $post['user_id']])->one();
+        return md5($login->authtoken) == $_GET['access-token'];
     }
 
     public function actionGetuserdata() {
