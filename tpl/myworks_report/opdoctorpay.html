@@ -95,6 +95,7 @@
                                     <tr>
                                         <th id="work-base-grid_c0">S.No</th>
                                         <th id="work-base-grid_c0">Patient Name</th>
+                                        <th id="work-base-grid_c0">Seen Status</th>
                                         <th id="work-base-grid_c1">Amount</th>
                                     </tr>
                                 </thead>
@@ -102,9 +103,11 @@
                                     <tr ng-repeat="(key, record) in records">
                                         <td>{{$index + 1}}</td>
                                         <td>{{record.patient_name}}</td>
+                                        <td>{{record.op_seen_date_time| moment:'YYYY-MM-DD hh:mm A'}}</td>
                                         <td>{{record.payment_amount}}</td>
                                     </tr>
                                     <tr>
+                                        <td></td>
                                         <td></td>
                                         <td></td>
                                         <td><b>Total - {{total}}</b></td>
@@ -119,17 +122,23 @@
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th id="work-base-grid_c0" ng-show="consultant_fullname != ''">Doctor Name :{{consultant_fullname}}</th>
+                                        <th colspan="4">
+                                            {{app.name}} ({{app.org_name}}) - OP Doctor Payment
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th id="work-base-grid_c0" colspan="2" ng-show="consultant_fullname != ''">Doctor Name :{{consultant_fullname}}</th>
                                         <th id="work-base-grid_c1" colspan="2" ng-show="date != ''">Report Generated On :{{date}}</th>
                                     </tr>
                                     <tr>
-                                        <th id="work-base-grid_c0" ng-show="data.from != ''">From: {{ data.from | date:'dd-MM-yyyy'}}</th>
+                                        <th id="work-base-grid_c0" colspan="2" ng-show="data.from != ''">From: {{ data.from | date:'dd-MM-yyyy'}}</th>
                                         <th id="work-base-grid_c1" colspan="2" ng-show="data.to != ''">To: {{ data.to | date:'dd-MM-yyyy'}}</th>
                                     </tr>
                                     
                                     <tr>
                                         <th id="work-base-grid_c0">S.No</th>
                                         <th id="work-base-grid_c0">Patient Name</th>
+                                        <th id="work-base-grid_c0">Seen Status</th>
                                         <th id="work-base-grid_c1">Amount</th>
                                     </tr>
                                 </thead>
@@ -137,9 +146,11 @@
                                     <tr ng-repeat="(key, record) in records">
                                         <td>{{$index + 1}}</td>
                                         <td>{{record.patient_name}}</td>
+                                        <td>{{record.op_seen_date_time | moment:'YYYY-MM-DD hh:mm A'}}</td>
                                         <td align="right">{{record.payment_amount}}</td>
                                     </tr>
                                     <tr>
+                                        <td></td>
                                         <td></td>
                                         <td align="right"><b>Total:</b></td>
                                         <td align="right"><b>{{total}}</b></td>

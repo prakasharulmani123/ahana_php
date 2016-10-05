@@ -49,7 +49,7 @@ app.controller('opdoctorpayController', ['$rootScope', '$scope', '$timeout', '$h
                         $scope.loadbar('hide');
                         $scope.records = response.report;
                         $scope.total = response.total;
-                        $scope.date = moment().format('YYYY-MM-DD HH:MM:ss');
+                        $scope.date = moment().format('YYYY-MM-DD hh:mm A');
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured";

@@ -617,7 +617,7 @@ angular.module('app')
                             $scope.errorData = data.message;
                     });
                 }
-                
+
                 //Same ORG But different branch so Import and book
                 $scope.importBookPatient = function (patient, key) {
                     $scope.errorData = "";
@@ -687,24 +687,31 @@ angular.module('app')
                                     $localStorage.user.credentials.org_mobile = response.tenant.tenant_mobile;
                                 }
 
-                                if (response.success && !response.admin && !jQuery.isEmptyObject(response.resources)) {
-                                    //Branch wise resource assign.
-                                    var currentUser = AuthenticationService.getCurrentUser();
-                                    delete currentUser.resources;
-                                    currentUser.resources = response.resources;
-                                    AuthenticationService.setCurrentUser(currentUser);
-                                } else if (!response.admin) {
-                                    alert("Branch setup has not been done, Please contact admin");
-                                }
-                                if (Object.keys($state.params).length > 0 && Object.keys($scope.patientObj).length > 0 && $state.params.id == $scope.patientObj.patient_guid) {
-                                    $state.go('configuration.organization');
-                                    $timeout(function () {
-                                        toaster.clear();
-                                        toaster.pop('error', 'Internal Error', 'Do not switch between branches when loading screens with patient details');
-                                    }, 5000);
+                                if (response.admin) {
+                                    $state.go('configuration.organization', {}, {reload: true});
                                 } else {
-                                    $state.go($state.current, {}, {reload: true});
+                                    if (response.success && !jQuery.isEmptyObject(response.resources)) {
+                                        //Branch wise resource assign.
+                                        var currentUser = AuthenticationService.getCurrentUser();
+                                        delete currentUser.resources;
+                                        currentUser.resources = response.resources;
+                                        AuthenticationService.setCurrentUser(currentUser);
+                                        $state.go('configuration.organization', {}, {reload: true});
+                                    } else {
+                                        alert("Branch setup has not been done, Please contact admin");
+                                        $state.go($state.current, {}, {reload: true});
+                                    }
                                 }
+                                
+//                                if (Object.keys($state.params).length > 0 && Object.keys($scope.patientObj).length > 0 && $state.params.id == $scope.patientObj.patient_guid) {
+//                                    $state.go('configuration.organization');
+//                                    $timeout(function () {
+//                                        toaster.clear();
+//                                        toaster.pop('error', 'Internal Error', 'Do not switch between branches when loading screens with patient details');
+//                                    }, 5000);
+//                                } else {
+//                                    $state.go($state.current, {}, {reload: true});
+//                                }
                             }
                     );
                 }
