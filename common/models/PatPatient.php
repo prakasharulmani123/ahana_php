@@ -158,6 +158,13 @@ class PatPatient extends RActiveRecord {
     public function getPatLastAppointment() {
         return $this->hasOne(PatAppointment::className(), ['patient_id' => 'patient_id'])->status()->orderBy(['created_at' => SORT_DESC]);
     }
+    
+    public function getPatLastSeenAppointment() {
+        return $this->hasOne(PatAppointment::className(), ['patient_id' => 'patient_id'])
+                ->status()
+                ->andWhere(['appt_status' => 'S'])
+                ->orderBy(['created_at' => SORT_DESC]);
+    }
 
     public function getPatActiveIp() {
         return $this->hasOne(PatEncounter::className(), ['patient_id' => 'patient_id'])->status()->encounterType()->orderBy(['encounter_date' => SORT_DESC]);
@@ -481,6 +488,9 @@ class PatPatient extends RActiveRecord {
             },
             'last_consultant_id' => function ($model) {
                 return isset($model->patLastAppointment) ? $model->patLastAppointment->consultant_id : '';
+            },
+            'last_patient_cat_id' => function ($model) {
+                return isset($model->patLastSeenAppointment) ? $model->patLastSeenAppointment->patient_cat_id : '';
             },
             'consultant_name' => function ($model) {
                 if (isset($model->patActiveIp)) {

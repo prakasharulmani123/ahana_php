@@ -68,11 +68,23 @@ class UserController extends ActiveController {
             'pagination' => false,
         ]);
     }
-    
-    public function actionWelcome(){
+
+    public function actionWelcome() {
         $post = Yii::$app->request->post();
         $login = CoLogin::find()->where(['user_id' => $post['user_id']])->one();
-        return md5($login->authtoken) == $_GET['access-token'];
+        if ($post['today_date'] > $post['stay_date']) {
+            $login->attributes = ['authtoken' => '', 'logged_tenant_id' => ''];
+            $login->save(false);
+            return false;
+        } else {
+            if (md5($login->authtoken) == $_GET['access-token']) {
+                return true;
+            } else {
+                $login->attributes = ['authtoken' => '', 'logged_tenant_id' => ''];
+                $login->save(false);
+                return false;
+            }
+        }
     }
 
     public function actionGetuserdata() {
