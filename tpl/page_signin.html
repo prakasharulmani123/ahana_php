@@ -18,10 +18,13 @@
                         <select class="form-control" name="tenant" ng-model="user.tenant_id" ng-options="key as value for (key , value) in tenants | orderBy: label" required>
                         </select>
                     </div>
-                </div>
-                <div class="text-center m-t m-b">
-                    <input id="stay_logged_in" type="checkbox" name="stay_logged_in" ng-model="user.stay_logged_in"> 
-                    <label for="stay_logged_in">Stay signed in</label>
+                    <div class="list-group-item">
+                        <label class="i-checks ">
+                            <input type="checkbox" id="stay_logged_in" ng-model="user.stay_logged_in" name="stay_logged_in" /> 
+                            <i></i> 
+                        </label> 
+                        <label for="stay_logged_in">Stay signed in</label>
+                    </div>
                 </div>
                 <button type="submit" class="btn btn-lg btn-primary btn-block" id="login_btn" ng-click="login()" data-loading-text="<i class='fa fa-spin fa-spinner'></i> Logging in...Please Wait ...." >Log in</button>
                 <div class="text-center m-t m-b"><a ui-sref="access.forgotpwd" href="#/access/forgotpwd">Forgot password?</a></div>

@@ -538,7 +538,7 @@ angular.module('app')
 
                 $rootScope.$on('unauthorized', function () {
                     toaster.clear();
-                    toaster.pop('error', 'Session Expired', 'Kindly Login Again');
+//                    toaster.pop('error', 'Session Expired', 'Kindly Login Again');
                     $scope.logout();
                 });
 

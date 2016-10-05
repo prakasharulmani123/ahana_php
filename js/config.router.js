@@ -2533,8 +2533,8 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
     $httpProvider.interceptors.push('APIInterceptor');
 
 }
-run.$inject = ['$rootScope', '$state', '$stateParams', '$location', '$cookieStore', '$http', '$window', 'CommonService', 'AuthenticationService'];
-function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $window, CommonService, AuthenticationService) {
+run.$inject = ['$rootScope', '$state', '$stateParams', '$location', '$cookieStore', '$http', '$window', 'CommonService', 'AuthenticationService', '$timeout'];
+function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $window, CommonService, AuthenticationService, $timeout) {
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
 
@@ -2581,26 +2581,28 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
             var loggedIn = Boolean(currentUser);
             var stay_date = AuthenticationService.getCurrent();
             var today_date = moment().format("YYYY-MM-DD");
-            
+
             if (restrictedPage && !loggedIn) {
                 $location.path('/access/signin');
             } else if (!restrictedPage && loggedIn) {
                 $location.path('/configuration/organization');
             } else if (restrictedPage && loggedIn) {
-                if (today_date > stay_date) {
-                    $http.post($rootScope.IRISOrgServiceUrl + '/user/logout').success(function (response) {
-                        $location.path('/access/signin');
-                    });
-                }
-                
-                $http.post($rootScope.IRISOrgServiceUrl + '/user/welcome', {user_id: currentUser.credentials.user_id}).success(function (success) {
-                    event.preventDefault();
-                    if (!success) {
-                        $http.post($rootScope.IRISOrgServiceUrl + '/user/logout').success(function (response) {
-                            $location.path('/access/signin');
+                $http.post($rootScope.IRISOrgServiceUrl + '/user/welcome',
+                        {
+                            user_id: currentUser.credentials.user_id,
+                            today_date: today_date,
+                            stay_date: stay_date,
+                        })
+                        .success(function (response) {
+                            event.preventDefault();
+                            if (!response) {
+                                if (AuthenticationService.ClearCredentials()) {
+                                    $timeout(function () {
+                                        $window.location.reload();
+                                    }, 1000);
+                                }
+                            }
                         });
-                    }
-                });
             }
         }
     });

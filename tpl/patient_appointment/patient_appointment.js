@@ -47,7 +47,11 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
                                     .success(function (response) {
                                         $scope.chargesList = response.chargesList;
                                         $scope.data.PatAppointment.patient_bill_type = $scope.patient_det.patient_bill_type;
-                                        $scope.data.PatAppointment.patient_cat_id = $scope.patient_det.patient_category_id;
+                                        if ($scope.patientObj.last_patient_cat_id) {
+                                            $scope.data.PatAppointment.patient_cat_id = $scope.patientObj.last_patient_cat_id;
+                                        } else {
+                                            $scope.data.PatAppointment.patient_cat_id = $scope.patient_det.patient_category_id;
+                                        }
                                         $scope.updateCharge();
                                     }, function (x) {
                                         response = {success: false, message: 'Server Error'};
