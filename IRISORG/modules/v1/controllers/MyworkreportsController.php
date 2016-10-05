@@ -49,6 +49,8 @@ class MyworkreportsController extends ActiveController {
         $encounters->addSelect(["CONCAT(co_user.title_code, '', co_user.name) as op_doctor_payment_consultant_name"]);
         $encounters->addSelect(["CONCAT(pat_patient.patient_title_code, '', pat_patient.patient_firstname) as op_doctor_payment_patient_name"]);
         $encounters->addSelect(["pat_appointment.amount as op_doctor_payment_amount"]);
+        $encounters->addSelect(["pat_appointment.status_date as op_doctor_payment_seen_date"]);
+        $encounters->addSelect(["pat_appointment.status_time as op_doctor_payment_seen_time"]);
         
         $encounters = $encounters->all();
 
@@ -59,6 +61,7 @@ class MyworkreportsController extends ActiveController {
             $reports[$key]['consultant_name'] = $encounter['op_doctor_payment_consultant_name'];
             $reports[$key]['patient_name'] = $encounter['op_doctor_payment_patient_name'];
             $reports[$key]['payment_amount'] = $encounter['op_doctor_payment_amount'];
+            $reports[$key]['op_seen_date_time'] = $encounter['op_doctor_payment_seen_date'] . " " . $encounter['op_doctor_payment_seen_time'];
             $total += $encounter['op_doctor_payment_amount'];
         }
 

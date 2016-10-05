@@ -2461,10 +2461,10 @@
             <PROPERTIES>
                 <PROPERTY name="class">panel-heading bg-default</PROPERTY>
             </PROPERTIES>
-            <VALUE>Diagnosis</VALUE>
+            <VALUE>ICD-10</VALUE>
         </PANELHEADER>
         <PANELBODY>
-            <FIELD id="txtDiagnosis" type="TextBox" label="Diagnosis">
+            <FIELD id="txtDiagnosis" type="TextBox" label="ICD-10">
                 <PROPERTIES>
                     <PROPERTY name="id">txtDiagnosis</PROPERTY>
                     <PROPERTY name="name">txtDiagnosis</PROPERTY>

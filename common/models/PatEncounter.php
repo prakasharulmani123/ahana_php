@@ -45,6 +45,8 @@ class PatEncounter extends RActiveRecord {
     public $op_doctor_payment_patient_name;
     public $op_doctor_payment_amount;
     public $op_doctor_payment_consultant_name;
+    public $op_doctor_payment_seen_date;
+    public $op_doctor_payment_seen_time;
 
     /**
      * @inheritdoc
