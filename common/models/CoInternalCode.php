@@ -149,7 +149,7 @@ class CoInternalCode extends RActiveRecord {
         $code = $internal_code->Fullcode;
         
         do {
-            $exists = $model::find()->tenant()->where([$column => $code])->one();
+            $exists = $model::find()->tenant()->andWhere([$column => $code])->one();
 
             if (!empty($exists)) {
                 $old_code = $code;

@@ -78,7 +78,7 @@ class PatAppointment extends RActiveRecord {
             'modified_by' => 'Modified By',
             'modified_at' => 'Modified At',
             'deleted_at' => 'Deleted At',
-            'patient_cat_id' => 'Charge category',
+            'patient_cat_id' => 'Patient category',
             'amount' => 'Amount',
         ];
     }

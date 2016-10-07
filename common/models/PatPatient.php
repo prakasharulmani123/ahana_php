@@ -72,6 +72,7 @@ class PatPatient extends RActiveRecord {
     public function rules() {
         return [
             [['patient_title_code', 'patient_firstname', 'patient_gender', 'patient_reg_mode', 'patient_mobile', 'patient_dob'], 'required'],
+            [['patient_firstname'], 'string', 'min' => '3'],
             [['casesheetno', 'tenant_id', 'patient_care_taker', 'patient_category_id', 'created_by', 'modified_by'], 'integer'],
             [['patient_reg_date', 'patient_dob', 'created_at', 'modified_at', 'deleted_at', 'patient_mobile', 'patient_bill_type', 'patient_guid', 'patient_image', 'patient_global_guid', 'patient_int_code', 'patient_secondary_contact'], 'safe'],
             [['status'], 'string'],
@@ -399,7 +400,7 @@ class PatPatient extends RActiveRecord {
             },
             'patient_age' => function ($model) {
                 $age = '';
-                if ($model->patient_dob != '')
+                if ($model->patient_dob != '' && $model->patient_dob != "0000-00-00")
                     $age = self::getPatientAge($model->patient_dob);
                 return $age;
             },
@@ -465,6 +466,27 @@ class PatPatient extends RActiveRecord {
                         $result .= ' ' . $model->patPatientAddress->addrCountry->country_name;
                     }
 
+                    return $result;
+                }
+            },
+            'fullpermanentaddress' => function ($model) {
+                if (isset($model->patPatientAddress)) {
+                    $result = '';
+                    if ($model->patPatientAddress->addr_perm_address != '') {
+                        $result .= $model->patPatientAddress->addr_perm_address;
+                    }
+
+                    if ($model->patPatientAddress->addr_perm_city_id != '') {
+                        $result .= ' ' . $model->patPatientAddress->addrPermCity->city_name;
+                    }
+
+                    if ($model->patPatientAddress->addr_perm_state_id != '') {
+                        $result .= ' ' . $model->patPatientAddress->addrPermState->state_name;
+                    }
+
+                    if ($model->patPatientAddress->addr_perm_country_id != '') {
+                        $result .= ' ' . $model->patPatientAddress->addrPermCountry->country_name;
+                    }
                     return $result;
                 }
             },

@@ -117,8 +117,10 @@ class PatientController extends ActiveController {
                     $addr_model->patient_id = $model->patient_id;
                     $addr_model->save(false);
                 }
+                
+                $updated_patient = PatPatient::find()->where(['patient_id' => $model->patient_id])->one();
 
-                return ['success' => true, 'patient_id' => $model->patient_id, 'patient_guid' => $model->patient_guid, 'patient' => $model];
+                return ['success' => true, 'patient_id' => $model->patient_id, 'patient_guid' => $model->patient_guid, 'patient' => $updated_patient];
             } else {
                 return ['success' => false, 'message' => Html::errorSummary([$model, $addr_model])];
             }
