@@ -122,6 +122,7 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
                 $scope.cat_name_taken = charge[0].op_dept;
             } else {
                 $scope.chargeAmount = $scope.data.PatAppointment.amount = 0;
+                $scope.data.PatAppointment.patient_cat_id = '';
             }
         }
 
@@ -137,8 +138,11 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
         }
 
         $scope.getBillName = function (bill_type) {
-            var billinfo = $filter('filter')($scope.bill_types, {value: bill_type});
-            $scope.bill_type_taken = billinfo[0].label;
+            $scope.bill_type_taken = '';
+            if (bill_type) {
+                var billinfo = $filter('filter')($scope.bill_types, {value: bill_type});
+                $scope.bill_type_taken = billinfo[0].label;
+            }
         }
 
         $scope.initForm = function () {
@@ -348,7 +352,11 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
                             } else {
                                 $scope.data = {};
                                 $timeout(function () {
-                                    $state.go("patient.encounter", {id: $state.params.id});
+                                    if ($scope.checkAccess('patient.outPatients')) {
+                                        $state.go("patient.outPatients");
+                                    } else {
+                                        $state.go("patient.encounter", {id: $state.params.id});
+                                    }
                                 }, 1000)
                             }
 

@@ -2514,6 +2514,21 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 url: '/myworks',
                 templateUrl: 'tpl/myworks.html'
             })
+            //Myworks Dashboard
+            .state('myworks.dashboard', {
+                url: '/dashboard',
+                templateUrl: 'tpl/myworks/dashboard.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['xeditable', 'smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/myworks/myworks.js');
+                                    }
+                            );
+                        }]
+                }
+            })
             //Myworks OPDoctorPay
             .state('myworks.opDoctorPay', {
                 url: '/opDoctorPay',

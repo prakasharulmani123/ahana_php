@@ -44,10 +44,13 @@
 //            $http.defaults.headers.common['Authorization'] = 'Bearer ' + secToken; // jshint ignore:line
 //        }
 
-        function ClearCredentials() {
+        function ClearCredentials(state_name, state_params) {
             $localStorage.$reset({
                 system_tenant : $localStorage.system_tenant,
-                system_username : $localStorage.system_username
+                system_username : $localStorage.system_username,
+                system_stay_logged_in : $localStorage.system_stay_logged_in,
+                system_state_name : state_name,
+                system_state_params : state_params
             });
             return true;
 

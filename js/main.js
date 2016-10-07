@@ -87,10 +87,13 @@ angular.module('app')
 
 //
                 $scope.logout = function () {
+                    var state_name = $state.current.name;
+                    var state_params = $state.params;
+                    
                     $http.post($rootScope.IRISOrgServiceUrl + '/user/logout')
                             .success(function (response) {
                                 if (response.success) {
-                                    if (AuthenticationService.ClearCredentials()) {
+                                    if (AuthenticationService.ClearCredentials(state_name, state_params)) {
                                         $timeout(function () {
                                             $window.location.reload();
                                         }, 1000);
@@ -688,7 +691,7 @@ angular.module('app')
                                 }
 
                                 if (response.admin) {
-                                    $state.go('configuration.organization', {}, {reload: true});
+                                    $state.go('myworks.dashboard', {}, {reload: true});
                                 } else {
                                     if (response.success && !jQuery.isEmptyObject(response.resources)) {
                                         //Branch wise resource assign.
@@ -696,7 +699,7 @@ angular.module('app')
                                         delete currentUser.resources;
                                         currentUser.resources = response.resources;
                                         AuthenticationService.setCurrentUser(currentUser);
-                                        $state.go('configuration.organization', {}, {reload: true});
+                                        $state.go('myworks.dashboard', {}, {reload: true});
                                     } else {
                                         alert("Branch setup has not been done, Please contact admin");
                                         $state.go($state.current, {}, {reload: true});

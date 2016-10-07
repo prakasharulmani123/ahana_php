@@ -17,23 +17,27 @@ function SignInForm($scope, $state, AuthenticationService, $http, $rootScope, $l
     $rootScope.commonService.GetTenantList(function (response) {
         if (response.success == true) {
             $scope.tenants = response.tenantList;
-            
+
             if (response.org_sts == '1' && Object.keys($scope.tenants).length > 0) {
                 $scope.showForm = true;
 
                 if (!$localStorage.system_tenant)
                     $localStorage.system_tenant = $scope.tenants[Object.keys($scope.tenants)[0]];
-                
+
                 if ($localStorage.system_username)
                     $scope.user.username = $localStorage.system_username;
 
                 $scope.user.tenant_id = $localStorage.system_tenant;
+
+                if ($localStorage.system_stay_logged_in) {
+                    $scope.user.stay_logged_in = $localStorage.system_stay_logged_in;
+                }
             } else {
                 $scope.showFormError = true;
 
                 if (response.org_sts == '0') {
                     $scope.FormErrorMessage = 'This Organization is in-active. Contact Administrator.';
-                }else if (Object.keys($scope.tenants).length == '0') {
+                } else if (Object.keys($scope.tenants).length == '0') {
                     $scope.FormErrorMessage = 'This Organization has no Branch. Contact Administrator.';
                 }
             }
@@ -51,7 +55,15 @@ function SignInForm($scope, $state, AuthenticationService, $http, $rootScope, $l
                 AuthenticationService.setCurrentUser(response, $scope.user.stay_logged_in);
                 $localStorage.system_tenant = $scope.user.tenant_id;
                 $localStorage.system_username = $scope.user.username;
-                $state.go('configuration.roles');
+                $localStorage.system_stay_logged_in = $scope.user.stay_logged_in;
+
+                if (typeof $localStorage.system_state_params != 'undefined' && Object.keys($localStorage.system_state_params).length > 0) {
+                    $state.go($localStorage.system_state_name, $localStorage.system_state_params);
+                } else if(typeof $localStorage.system_state_name != 'undefined') {
+                    $state.go($localStorage.system_state_name);
+                } else {
+                    $state.go('configuration.roles');
+                }
             } else {
                 $('#login_btn').button('reset');
                 $scope.authError = response.message;

@@ -32,7 +32,7 @@
                                     </div>
                                     <div class="col-xs-12 col-sm-5 col-md-6"> 
                                         <div class="row ng-binding"> 
-                                            <a ng-bind-html="patient.Patient.fullname | highlight:patientselected" href="javascript:void(0)" ng-click="goToPatient(patient.Patient.patient_guid)" class="ng-binding">
+                                            <a tooltip="{{patient.Patient.fullcurrentaddress || patient.Patient.fullpermanentaddress}}" ng-bind-html="patient.Patient.fullname | highlight:patientselected" href="javascript:void(0)" ng-click="goToPatient(patient.Patient.patient_guid)" class="ng-binding">
                                             </a>
                                             <b ng-if="patient.Patient.patient_age">({{patient.Patient.patient_age}}y) </b>
                                             <br>
@@ -98,7 +98,7 @@
         <!-- link and dropdown -->
         <ul class="nav navbar-nav hidden-sm">
             <li ui-sref-active="active">
-                <a ui-sref="myworks.opDoctorPay" check-access> My Works </a>
+                <a ui-sref="myworks.dashboard" check-access> My Works </a>
             </li>
             <li ui-sref-active="active">
                 <a ui-sref="patient.inPatients" check-access> In-Patient </a>
