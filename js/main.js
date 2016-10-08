@@ -701,7 +701,7 @@ angular.module('app')
                                         AuthenticationService.setCurrentUser(currentUser);
                                         $state.go('myworks.dashboard', {}, {reload: true});
                                     } else {
-                                        alert("Branch setup has not been done, Please contact admin");
+                                        alert("Branch not set up");
                                         $state.go($state.current, {}, {reload: true});
                                     }
                                 }
