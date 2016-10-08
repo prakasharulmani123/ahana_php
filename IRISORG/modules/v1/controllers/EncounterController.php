@@ -89,7 +89,8 @@ class EncounterController extends ActiveController {
                 'patient_id' => (isset($post['patient_id']) ? $post['patient_id'] : ''),
                 'encounter_type' => 'OP',
                 'encounter_date' => $post['status_date'],
-                'add_casesheet_no' => (isset($post['PatEncounter']['add_casesheet_no']) ? $post['PatEncounter']['add_casesheet_no'] : '')
+                'add_casesheet_no' => (isset($post['PatEncounter']['add_casesheet_no']) ? $post['PatEncounter']['add_casesheet_no'] : ''),
+                'consultant_id' => $post['consultant_id']
             ];
             $model->attributes = $model_attr;
 

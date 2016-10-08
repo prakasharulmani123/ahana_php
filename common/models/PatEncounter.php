@@ -41,12 +41,12 @@ class PatEncounter extends RActiveRecord {
     public $sts_status = 'A';
     public $add_casesheet_no = 'A';
     public $total_amount = '';
-    
     public $op_doctor_payment_patient_name;
     public $op_doctor_payment_amount;
     public $op_doctor_payment_consultant_name;
     public $op_doctor_payment_seen_date;
     public $op_doctor_payment_seen_time;
+    public $consultant_id;
 
     /**
      * @inheritdoc
@@ -62,12 +62,13 @@ class PatEncounter extends RActiveRecord {
         return [
             [['encounter_date'], 'required'],
             [['tenant_id', 'patient_id', 'finalize', 'authorize', 'created_by', 'modified_by', 'discharge'], 'integer'],
-            [['encounter_date', 'inactive_date', 'created_at', 'modified_at', 'deleted_at', 'casesheet_no', 'discharge', 'total_amount', 'bill_no', 'bill_notes'], 'safe'],
+            [['encounter_date', 'inactive_date', 'created_at', 'modified_at', 'deleted_at', 'casesheet_no', 'discharge', 'total_amount', 'bill_no', 'bill_notes', 'consultant_id'], 'safe'],
             [['status', 'casesheet_no', 'add_casesheet_no'], 'string'],
             [['concession_amount'], 'number'],
             [['encounter_type'], 'string', 'max' => 5],
             ['concession_amount', 'validateConcessionAmount'],
             ['encounter_date', 'validateAdmissionDate'],
+            ['encounter_date', 'validateAppointment'],
         ];
     }
 
@@ -92,9 +93,31 @@ class PatEncounter extends RActiveRecord {
                     ->andWhere("DATE(pat_encounter.encounter_date) <= '{$date}'")
                     ->andWhere("DATE(pat_admission.status_date) >= '{$date}'")
                     ->one();
-            
-            if(!empty($result))
+
+            if (!empty($result))
                 $this->addError($attribute, "Admission already taken in this date. Kindly choose another date");
+        }
+    }
+
+    //Check new appointment - Same Tenant, Same Patient, Same Doctor, Active Encounter
+    public function validateAppointment($attribute, $params) {
+        if ($this->encounter_type == 'OP') {
+            $date = date("Y-m-d", strtotime($this->encounter_date));
+            $result = PatEncounter::find()
+                    ->joinWith('patAppointments')
+                    ->where([
+                        'pat_encounter.tenant_id' => $this->tenant_id,
+                        'pat_encounter.patient_id' => $this->patient_id,
+                        'DATE(pat_encounter.encounter_date)' => $date,
+                        'pat_encounter.status' => '1',
+                        'pat_appointment.consultant_id' => $this->consultant_id,
+                    ])
+                    ->encounterType('OP')
+                    ->one();
+            
+            if(!empty($result)){
+                $this->addError($attribute, 'Booking activity in progress for this patient!');
+            }
         }
     }
 
@@ -253,7 +276,7 @@ class PatEncounter extends RActiveRecord {
                 return (isset($model->patAppointmentSeen) ? $model->patAppointmentSeen : '-');
             },
             'appointmentSeen_amt_inwords' => function ($model) {
-                return (isset($model->patAppointmentSeen) ? Yii::$app->hepler->convert_number_to_words( (int) ($model->patAppointmentSeen->amount)).' Rupees Only' : '-');
+                return (isset($model->patAppointmentSeen) ? Yii::$app->hepler->convert_number_to_words((int) ($model->patAppointmentSeen->amount)) . ' Rupees Only' : '-');
             },
             'room_name' => function ($model) {
                 return (isset($model->patLiveAdmission->room->bed_name) ? $model->patLiveAdmission->room->bed_name : '-');
