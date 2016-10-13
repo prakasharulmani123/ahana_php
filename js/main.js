@@ -89,7 +89,7 @@ angular.module('app')
                 $scope.logout = function () {
                     var state_name = $state.current.name;
                     var state_params = $state.params;
-                    
+
                     $http.post($rootScope.IRISOrgServiceUrl + '/user/logout')
                             .success(function (response) {
                                 if (response.success) {
@@ -701,11 +701,14 @@ angular.module('app')
                                         AuthenticationService.setCurrentUser(currentUser);
                                         $state.go('myworks.dashboard', {}, {reload: true});
                                     } else {
-                                        alert("Branch not set up");
                                         $state.go($state.current, {}, {reload: true});
+                                        $timeout(function () {
+                                            toaster.clear();
+                                            toaster.pop('info', '', 'Branch not set up');
+                                        }, 1000);
                                     }
                                 }
-                                
+
 //                                if (Object.keys($state.params).length > 0 && Object.keys($scope.patientObj).length > 0 && $state.params.id == $scope.patientObj.patient_guid) {
 //                                    $state.go('configuration.organization');
 //                                    $timeout(function () {
