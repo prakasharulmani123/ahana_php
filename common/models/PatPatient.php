@@ -560,6 +560,16 @@ class PatPatient extends RActiveRecord {
                 $reg_date = date('Y-m-d', strtotime($model->patient_reg_date));
                 return $reg_date == $today;
             },
+            'name_with_int_code' => function($model) {
+                $name = ucfirst($model->patient_firstname);
+                
+                if ($model->patient_lastname != '')
+                    $name .= ' ' . $model->patient_lastname . ' ';
+                
+                if ($model->patient_int_code != '')
+                    $name .= ' (' . $model->patient_int_code . ')';
+                return $name;
+            },
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;

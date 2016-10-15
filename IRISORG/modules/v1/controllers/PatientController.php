@@ -446,5 +446,32 @@ class PatientController extends ActiveController {
             }
         }
     }
+    
+    public function actionGetpatient() {
+        $post = Yii::$app->getRequest()->post();
+        $patients = [];
+        $limit = 10;
+
+        if (isset($post['search']) && !empty($post['search']) && strlen($post['search']) >= 2) {
+            $text = $post['search'];
+
+            $lists = PatPatient::find()
+                    ->tenant()
+                    ->active()
+                    ->orOnCondition("patient_firstname like :search")
+                    ->orOnCondition("patient_lastname like :search")
+                    ->orOnCondition("patient_int_code like :search")
+                    ->addParams([':search' => "%{$text}%"])
+                    ->limit($limit)
+                    ->all();
+
+            foreach ($lists as $key => $patient) {
+                $patients[$key]['Patient'] = $patient;
+                $patients[$key]['PatientAddress'] = $patient->patPatientAddress;
+                $patients[$key]['PatientActiveEncounter'] = $patient->patActiveEncounter;
+            }
+        }
+        return ['patients' => $patients];
+    }
 
 }
