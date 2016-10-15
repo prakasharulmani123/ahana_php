@@ -133,7 +133,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                         $scope.products = products;
                     })
                     .error(function () {
-                        $scope.errorData = "An Error has occured while loading brand!";
+                        $scope.errorData = "An Error has occured while loading products!";
                     });
             $scope.batches = [];
         }
@@ -690,32 +690,49 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             };
         }
 
-        // Get Patient Name 
-        var changeTimer = false;
-        $scope.$watch('data.patient_name', function (newValue, oldValue) {
-            if (newValue != '') {
-                if (changeTimer !== false)
-                    clearTimeout(changeTimer);
+        $scope.getPatients = function (patientName) {
+            return $http({
+                method: 'POST',
+                url: $rootScope.IRISOrgServiceUrl + '/patient/getpatient',
+                data: {'search': patientName},
+            }).then(
+                    function (response) {
+                        $scope.patients = [];
+                        angular.forEach(response.data.patients, function (list) {
+                            $scope.patients.push(list.Patient);
+                        });
+                        return $scope.patients;
+                        $scope.loadbar('hide');
+                    }
+            );
+        };
 
-                $scope.loadbar('show');
-                changeTimer = setTimeout(function () {
-                    $http({
-                        method: 'POST',
-                        url: $rootScope.IRISOrgServiceUrl + '/patient/search',
-                        data: {'search': newValue},
-                    }).success(
-                            function (response) {
-                                $scope.patients = [];
-                                angular.forEach(response.patients, function (list) {
-                                    $scope.patients.push(list.Patient);
-                                });
-                                $scope.loadbar('hide');
-                            }
-                    );
-                    changeTimer = false;
-                }, 300);
-            }
-        }, true);
+//        // Get Patient Name 
+//        var changeTimer = false;
+//        $scope.$watch('data.patient_name', function (newValue, oldValue) {
+//            if (newValue != '') {
+//                if (changeTimer !== false)
+//                    clearTimeout(changeTimer);
+//
+//                $scope.loadbar('show');
+//                changeTimer = setTimeout(function () {
+//                    $http({
+//                        method: 'POST',
+//                        url: $rootScope.IRISOrgServiceUrl + '/patient/search',
+//                        data: {'search': newValue},
+//                    }).success(
+//                            function (response) {
+//                                $scope.patients = [];
+//                                angular.forEach(response.patients, function (list) {
+//                                    $scope.patients.push(list.Patient);
+//                                });
+//                                $scope.loadbar('hide');
+//                            }
+//                    );
+//                    changeTimer = false;
+//                }, 300);
+//            }
+//        }, true);
 
         $scope.getPrescription = function () {
             $scope.loadbar('show');

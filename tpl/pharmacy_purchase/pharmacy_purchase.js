@@ -110,7 +110,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                                     $scope.products = products;
                                 })
                                 .error(function () {
-                                    $scope.errorData = "An Error has occured while loading brand!";
+                                    $scope.errorData = "An Error has occured while loading products!";
                                 });
                         $scope.loadbar('hide');
                     });
