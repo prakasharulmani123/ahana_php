@@ -21,7 +21,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             }
             e.preventDefault();
         });
-        
+
         $scope.$on('HK_PRINT', function (e) {
             var location_url = $location.path().split('/');
             var url = location_url[1] + '/' + location_url[2];
@@ -33,11 +33,11 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             }
             e.preventDefault();
         });
-        
+
         $scope.$on('HK_LIST', function (e) {
             $state.go('pharmacy.sales');
         });
-        
+
         $scope.$on('HK_SEARCH', function (e) {
             $('#filter').focus();
         });
@@ -97,14 +97,16 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         //For Form
         $scope.initForm = function () {
             //Patients List
-            $rootScope.commonService.GetPatientList('', '1', false, function (response) {
-                $scope.patients = [];
-                angular.forEach(response.patientlist, function (list) {
-                    $scope.patients.push(list);
-                });
-            });
+//            $rootScope.commonService.GetPatientList('', '1', false, function (response) {
+//                $scope.patients = [];
+//                angular.forEach(response.patientlist, function (list) {
+//                    $scope.patients.push(list);
+//                });
+//            });
 //            $scope.data.patient_name = undefined;
-//            $scope.patients = [];
+//            Above code hide for slow response.
+
+            $scope.patients = [];
             $scope.encounters = [];
 
             //Consultant List
@@ -126,7 +128,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 $scope.addRow();
             }
 
-            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct')
+            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct?fields=product_id,product_name,product_reorder_min,full_name,salesVat,salesPackageName,availableQuantity')
                     .success(function (products) {
                         $scope.products = products;
                     })
@@ -163,7 +165,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 });
                 $scope.encounters = response;
 
-                if (response != null && mode == 'add') {
+                if (response.length > 0 && response != null && mode == 'add') {
                     $scope.data.encounter_id = response[0].encounter_id;
                     $scope.getPrescription();
                 } else if (mode == 'edit') {
@@ -688,30 +690,32 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             };
         }
 
-//        var changeTimer = false;
-//
-//        $scope.$watch('data.patient_name', function (newValue, oldValue) {
-//            if (newValue != '') {
-//
-//                if (changeTimer !== false)
-//                    clearTimeout(changeTimer);
-//
-//                $scope.loadbar('show');
-//                changeTimer = setTimeout(function () {
-//                    $http({
-//                        method: 'POST',
-//                        url: $rootScope.IRISOrgServiceUrl + '/patient/search',
-//                        data: {'search': newValue},
-//                    }).success(
-//                            function (response) {
-//                                $scope.patients = response.patients;
-//                                $scope.loadbar('hide');
-//                            }
-//                    );
-//                    changeTimer = false;
-//                }, 300);
-//            }
-//        }, true);
+        // Get Patient Name 
+        var changeTimer = false;
+        $scope.$watch('data.patient_name', function (newValue, oldValue) {
+            if (newValue != '') {
+                if (changeTimer !== false)
+                    clearTimeout(changeTimer);
+
+                $scope.loadbar('show');
+                changeTimer = setTimeout(function () {
+                    $http({
+                        method: 'POST',
+                        url: $rootScope.IRISOrgServiceUrl + '/patient/search',
+                        data: {'search': newValue},
+                    }).success(
+                            function (response) {
+                                $scope.patients = [];
+                                angular.forEach(response.patients, function (list) {
+                                    $scope.patients.push(list.Patient);
+                                });
+                                $scope.loadbar('hide');
+                            }
+                    );
+                    changeTimer = false;
+                }, 300);
+            }
+        }, true);
 
         $scope.getPrescription = function () {
             $scope.loadbar('show');

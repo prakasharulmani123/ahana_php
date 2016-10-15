@@ -21,7 +21,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             }
             e.preventDefault();
         });
-        
+
         $scope.$on('HK_PRINT', function (e) {
             var location_url = $location.path().split('/');
             var url = location_url[1] + '/' + location_url[2];
@@ -105,7 +105,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                         $scope.batches = [];
                         $scope.packings = response.packingList;
 
-                        $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct')
+                        $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct?fields=product_id,product_name,full_name,purchaseVat')
                                 .success(function (products) {
                                     $scope.products = products;
                                 })
