@@ -21,21 +21,19 @@ use yii\db\ActiveQuery;
  *
  * @property CoTenant $tenant
  */
-class PhaBrand extends RActiveRecord
-{
+class PhaBrand extends RActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'pha_brand';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['brand_name', 'brand_code'], 'required'],
             [['tenant_id', 'created_by', 'modified_by'], 'integer'],
@@ -43,15 +41,15 @@ class PhaBrand extends RActiveRecord
             [['created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['brand_name'], 'string', 'max' => 255],
             [['brand_code'], 'string', 'max' => 50],
-            [['brand_name'], 'unique', 'targetAttribute' => ['tenant_id', 'brand_name', 'brand_code', 'deleted_at'], 'message' => 'The combination of Brand Name & Brand Code has already been taken.']
+            [['brand_name'], 'unique', 'targetAttribute' => ['tenant_id', 'brand_name', 'deleted_at'], 'comboNotUnique' => 'The combination of Brand Name has already been taken.'],
+            [['brand_code'], 'unique', 'targetAttribute' => ['tenant_id', 'brand_code', 'deleted_at'], 'comboNotUnique' => 'The combination of Brand Code has already been taken.']
         ];
     }
 
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'brand_id' => 'Brand ID',
             'tenant_id' => 'Tenant ID',
@@ -69,12 +67,12 @@ class PhaBrand extends RActiveRecord
     /**
      * @return ActiveQuery
      */
-    public function getTenant()
-    {
+    public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
-    
+
     public static function find() {
         return new PhaBrandQuery(get_called_class());
     }
+
 }
