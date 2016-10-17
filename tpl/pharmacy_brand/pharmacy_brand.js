@@ -1,33 +1,66 @@
-app.controller('BrandsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', function ($rootScope, $scope, $timeout, $http, $state) {
+app.controller('BrandsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$localStorage', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', function ($rootScope, $scope, $timeout, $http, $state, $localStorage, DTOptionsBuilder, DTColumnBuilder, $compile) {
 
         //Index Page
-        $scope.loadBrandsList = function () {
-            $scope.isLoading = true;
-            // pagination set up
-            $scope.rowCollection = [];  // base collection
-            $scope.itemsByPage = 10; // No.of records per page
-            $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
+        var pb = this;
+        var token = $localStorage.user.access_token;
+        pb.dtOptions = DTOptionsBuilder.newOptions()
+                .withOption('ajax', {
+                    url: $rootScope.IRISOrgServiceUrl + '/pharmacybrand/getbrands?access-token=' + token,
+                    type: 'POST',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("x-domain-path", $rootScope.clientUrl);
+                    }
+                })
+                .withDataProp('data')
+                .withOption('processing', true)
+                .withOption('serverSide', true)
+                .withOption('bLengthChange', true)
+                .withOption('order', [3, 'desc'])
+                .withPaginationType('full_numbers')
+                .withOption('createdRow', createdRow);
+        pb.dtColumns = [
+            DTColumnBuilder.newColumn('brand_name').withTitle('Brand Name'),
+            DTColumnBuilder.newColumn('brand_code').withTitle('Brand Code'),
+            DTColumnBuilder.newColumn('status').withTitle('Status').notSortable().renderWith(statusHtml),
+            DTColumnBuilder.newColumn('brand_id').withTitle('Brand ID').notVisible(),
+            DTColumnBuilder.newColumn(null).withTitle('Actions').notSortable().renderWith(actionsHtml)
+        ];
 
-            // Get data's from service
-            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacybrand')
-                    .success(function (alerts) {
-                        $scope.isLoading = false;
-                        $scope.rowCollection = alerts;
-                        $scope.displayedCollection = [].concat($scope.rowCollection);
-                        
-                        //Avoid pagination problem, when come from other pages.
-                        $scope.footable_redraw();
-                    })
-                    .error(function () {
-                        $scope.errorData = "An Error has occured while loading brand!";
-                    });
-        };
+        function createdRow(row, data, dataIndex) {
+            // Recompiling so we can bind Angular directive to the DT
+            $compile(angular.element(row).contents())($scope);
+        }
+
+        pb.selected = {};
+        function statusHtml(data, type, full, meta) {
+            if (full.status === '1') {
+                pb.selected[full.brand_id] = true;
+            } else {
+                pb.selected[full.brand_id] = false;
+            }
+            var model_name = "'" + "PhaBrand" + "'";
+            return '<label class="i-checks ">' +
+                    '<input type="checkbox" ng-model="phaBrands.selected[' + full.brand_id + ']" ng-change="updateStatus(' + model_name + ', ' + full.brand_id + ')">' +
+                    '<i></i>' +
+                    '</label>';
+        }
+
+        pb.brands = {};
+        function actionsHtml(data, type, full, meta) {
+            pb.brands[data.brand_id] = data;
+            return '<a class="label bg-dark" title="Edit" check-access  ui-sref="pharmacy.brandUpdate({id: ' + data.brand_id + '})">' +
+                    '   <i class="fa fa-pencil"></i>' +
+                    '</a>&nbsp;&nbsp;&nbsp;' +
+                    '<a class="hide" title="Delete" ng-click="removeRow(row)">' +
+                    '   <i class="fa fa-trash"></i>' +
+                    '</a>';
+        }
 
         //For Form
         $scope.initForm = function () {
-//            $rootScope.commonService.GetBrandList('', '1', false, function (response) {
-//                $scope.alerts = response.alertList;
-//            });
+            $scope.data = {};
+            $scope.data.formtype = 'add';
+            $scope.data.status = '1';
         }
 
         //Save Both Add & Update Data
@@ -60,7 +93,6 @@ app.controller('BrandsController', ['$rootScope', '$scope', '$timeout', '$http',
                         $timeout(function () {
                             $state.go('pharmacy.brand');
                         }, 1000)
-
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');
@@ -73,8 +105,8 @@ app.controller('BrandsController', ['$rootScope', '$scope', '$timeout', '$http',
 
         //Get Data for update Form
         $scope.loadForm = function () {
+            $scope.data = {};
             $scope.loadbar('show');
-            _that = this;
             $scope.errorData = "";
             $http({
                 url: $rootScope.IRISOrgServiceUrl + "/pharmacybrands/" + $state.params.id,
@@ -83,6 +115,7 @@ app.controller('BrandsController', ['$rootScope', '$scope', '$timeout', '$http',
                     function (response) {
                         $scope.loadbar('hide');
                         $scope.data = response;
+                        $scope.data.formtype = 'update';
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');
