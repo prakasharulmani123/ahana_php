@@ -19,21 +19,23 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
         }
 
         $scope.loadView = function () {
-            $scope.mode = 'view';
-            $http.post($rootScope.IRISOrgServiceUrl + '/patient/getpatientbyguid', {guid: $state.params.id})
-                    .success(function (patient) {
-                        if (patient.success == false) {
-                            $state.go('configuration.organization');
+            $timeout(function () {
+                $scope.mode = 'view';
+                $http.post($rootScope.IRISOrgServiceUrl + '/patient/getpatientbyguid', {guid: $state.params.id})
+                        .success(function (patient) {
+                            if (patient.success == false) {
+                                $state.go('configuration.organization');
+                                $scope.msg.errorMessage = "An Error has occured while loading patient!";
+                            } else {
+                                $scope.orgData = patient;
+                                $scope.setViewData(patient);
+                                $scope.setFormData(patient);
+                            }
+                        })
+                        .error(function () {
                             $scope.msg.errorMessage = "An Error has occured while loading patient!";
-                        } else {
-                            $scope.orgData = patient;
-                            $scope.setViewData(patient);
-                            $scope.setFormData(patient);
-                        }
-                    })
-                    .error(function () {
-                        $scope.msg.errorMessage = "An Error has occured while loading patient!";
-                    });
+                        });
+            }, 3000);
         }
 
         $scope.setViewData = function (patient) {

@@ -620,7 +620,6 @@ angular.module('app')
                             $scope.errorData = data.message;
                     });
                 }
-
                 //Same ORG But different branch so Import and book
                 $scope.importBookPatient = function (patient, key) {
                     $scope.errorData = "";
@@ -641,6 +640,37 @@ angular.module('app')
                                     $('#import_book_' + key).html('Completed').toggleClass('btn-success').removeAttr('ng-click');
                                     $timeout(function () {
                                         $state.go('patient.appointment', {id: patient_guid});
+                                    }, 1000);
+                                } else {
+                                    $scope.errorData = response.message;
+                                }
+                            }
+                    ).error(function (data, status) {
+                        $scope.loadbar('hide');
+                        if (status == 422)
+                            $scope.errorData = $scope.errorSummary(data);
+                        else
+                            $scope.errorData = data.message;
+                    });
+                }
+                //Same ORG But different branch so Import and View
+                $scope.importViewPatient = function (patient, key) {
+                    $scope.errorData = "";
+                    $scope.msg.successMessage = "";
+
+                    $scope.loadbar('show');
+
+                    $http({
+                        method: 'POST',
+                        url: $rootScope.IRISOrgServiceUrl + '/patient/importpatient',
+                        data: patient,
+                    }).success(
+                            function (response) {
+                                $scope.loadbar('hide');
+                                if (response.success == true) {
+                                    var patient_guid = response.patient.patient_guid;
+                                    $timeout(function () {
+                                        $state.go('patient.view', {id: patient_guid});
                                     }, 1000);
                                 } else {
                                     $scope.errorData = response.message;
