@@ -20,36 +20,33 @@ use yii\db\ActiveQuery;
  *
  * @property CoTenant $tenant
  */
-class PhaBrandDivision extends RActiveRecord
-{
+class PhaBrandDivision extends RActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'pha_brand_division';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['division_name'], 'required'],
             [['tenant_id', 'created_by', 'modified_by'], 'integer'],
             [['status'], 'string'],
             [['created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['division_name'], 'string', 'max' => 255],
-            [['tenant_id', 'division_name', 'deleted_at'], 'unique', 'targetAttribute' => ['tenant_id', 'division_name', 'deleted_at'], 'message' => 'The combination of Tenant ID, Division Name and Deleted At has already been taken.']
+            [['division_name'], 'unique', 'targetAttribute' => ['tenant_id', 'division_name', 'deleted_at'], 'comboNotUnique' => 'The combination of Division Name has already been taken.']
         ];
     }
 
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'division_id' => 'Division ID',
             'tenant_id' => 'Tenant ID',
@@ -66,12 +63,12 @@ class PhaBrandDivision extends RActiveRecord
     /**
      * @return ActiveQuery
      */
-    public function getTenant()
-    {
+    public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
-    
+
     public static function find() {
         return new PhaBrandDivisionQuery(get_called_class());
     }
+
 }

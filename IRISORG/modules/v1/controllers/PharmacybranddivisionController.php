@@ -49,14 +49,14 @@ class PharmacybranddivisionController extends ActiveController {
             'pagination' => false,
         ]);
     }
-    
+
     public function actionRemove() {
         $id = Yii::$app->getRequest()->post('id');
-        if($id){
+        if ($id) {
             $model = PhaBrandDivision::find()->where(['division_id' => $id])->one();
             $model->remove();
             return ['success' => true];
         }
     }
-    
+
 }
