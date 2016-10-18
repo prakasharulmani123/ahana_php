@@ -1,9 +1,7 @@
 <div class="bg-light lter b-b wrapper-md">
     <h1 class="m-n font-thin h3">Brand Divisions</h1>
 </div>
-
 <div class="wrapper-md" ng-controller="BrandDivisionsController" ng-init="loadBrandDivisionsList()">
-
     <div ng-include="'tpl/blocks/alert.html'">
         {% include 'tpl/blocks/alert.html' %}
     </div>
@@ -20,7 +18,7 @@
                     </button>
                 </div>
                 <div>
-                    <table class="table m-b-none" ui-jq="footable" data-filter="#filter" data-page-size="10">
+                    <table class="table m-b-none" ui-jq="footable" data-filter="#filter" data-page-size="{{itemsByPage}}">
                         <thead>
                             <tr>                              
                                 <th >Brand Division name</th>
@@ -34,14 +32,14 @@
                             </tr>
                         </tbody>  
                         <tbody ng-if="isLoading == false">
-                            <tr ng-repeat="row in displayedCollection| orderBy: product_name">
+                            <tr ng-repeat="row in displayedCollection">
                                 <td>
                                     {{row.division_name}}
                                 </td>
                                 <td>
                                     <div ng-if="row.tenant_id != null">
                                         <label class="i-checks "> 
-                                            <input type="checkbox" checked="" ng-true-value="'1'" ng-false-value="'0'" name="status" ng-model="row.status" ng-change='updateStatus("PhaBrandDivision", row.brand_id)'> 
+                                            <input type="checkbox" checked="" ng-true-value="'1'" ng-false-value="'0'" name="status" ng-model="row.status" ng-change='updateStatus("PhaBrandDivision", row.division_id)'> 
                                             <i></i>
                                         </label>
                                     </div>

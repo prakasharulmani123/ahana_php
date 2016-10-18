@@ -10,21 +10,21 @@ app.controller('BrandDivisionsController', ['$rootScope', '$scope', '$timeout', 
 
             // Get data's from service
             $http.get($rootScope.IRISOrgServiceUrl + '/pharmacybranddivision')
-                    .success(function (alerts) {
+                    .success(function (branddivisions) {
                         $scope.isLoading = false;
-                        $scope.rowCollection = alerts;
+                        $scope.rowCollection = branddivisions;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
                     })
                     .error(function () {
-                        $scope.errorData = "An Error has occured while loading brand!";
+                        $scope.errorData = "An Error has occured while loading Brand Divisions!";
                     });
         };
 
         //For Form
         $scope.initForm = function () {
-//            $rootScope.commonService.GetBrandList('', '1', false, function (response) {
-//                $scope.alerts = response.alertList;
-//            });
+            $scope.data = {};
+            $scope.data.formtype = 'add';
+            $scope.data.status = '1';
         }
 
         //Save Both Add & Update Data
@@ -57,7 +57,6 @@ app.controller('BrandDivisionsController', ['$rootScope', '$scope', '$timeout', 
                         $timeout(function () {
                             $state.go('pharmacy.brandDivision');
                         }, 1000)
-
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');
@@ -70,9 +69,10 @@ app.controller('BrandDivisionsController', ['$rootScope', '$scope', '$timeout', 
 
         //Get Data for update Form
         $scope.loadForm = function () {
+            $scope.data = {};
             $scope.loadbar('show');
-            _that = this;
             $scope.errorData = "";
+            
             $http({
                 url: $rootScope.IRISOrgServiceUrl + "/pharmacybranddivisions/" + $state.params.id,
                 method: "GET"
@@ -80,6 +80,7 @@ app.controller('BrandDivisionsController', ['$rootScope', '$scope', '$timeout', 
                     function (response) {
                         $scope.loadbar('hide');
                         $scope.data = response;
+                        $scope.data.formtype = 'update';
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');
