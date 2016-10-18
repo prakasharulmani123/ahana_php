@@ -68,7 +68,8 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
             $scope.patdata.PatPatientAddress = patient.address;
             $scope.patdata.is_permanent = false;
 
-            if ((patient.address.addr_current_address == patient.address.addr_perm_address) &&
+            if ((patient.address != null) &&
+                    (patient.address.addr_current_address == patient.address.addr_perm_address) &&
                     (patient.address.addr_country_id == patient.address.addr_perm_country_id) &&
                     (patient.address.addr_state_id == patient.address.addr_perm_state_id) &&
                     (patient.address.addr_city_id == patient.address.addr_perm_city_id) &&
