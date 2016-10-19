@@ -710,20 +710,28 @@ angular.module('app')
                         data: {'branch_id': $scope.branch_switch.branch_id},
                     }).success(
                             function (response) {
-                                if (response.tenant) {
-                                    $localStorage.user.credentials.logged_tenant_id = response.tenant.tenant_id;
-                                    $localStorage.user.credentials.org = response.tenant.tenant_name;
-                                    $localStorage.user.credentials.org_address = response.tenant.tenant_address;
-                                    $localStorage.user.credentials.org_country = response.tenant.tenant_country_name;
-                                    $localStorage.user.credentials.org_state = response.tenant.tenant_state_name;
-                                    $localStorage.user.credentials.org_city = response.tenant.tenant_city_name;
-                                    $localStorage.user.credentials.org_mobile = response.tenant.tenant_mobile;
-                                }
-
                                 if (response.admin) {
+                                    if (response.tenant) {
+                                        $localStorage.user.credentials.logged_tenant_id = response.tenant.tenant_id;
+                                        $localStorage.user.credentials.org = response.tenant.tenant_name;
+                                        $localStorage.user.credentials.org_address = response.tenant.tenant_address;
+                                        $localStorage.user.credentials.org_country = response.tenant.tenant_country_name;
+                                        $localStorage.user.credentials.org_state = response.tenant.tenant_state_name;
+                                        $localStorage.user.credentials.org_city = response.tenant.tenant_city_name;
+                                        $localStorage.user.credentials.org_mobile = response.tenant.tenant_mobile;
+                                    }
                                     $state.go('myworks.dashboard', {}, {reload: true});
                                 } else {
                                     if (response.success && !jQuery.isEmptyObject(response.resources)) {
+                                        if (response.tenant) {
+                                            $localStorage.user.credentials.logged_tenant_id = response.tenant.tenant_id;
+                                            $localStorage.user.credentials.org = response.tenant.tenant_name;
+                                            $localStorage.user.credentials.org_address = response.tenant.tenant_address;
+                                            $localStorage.user.credentials.org_country = response.tenant.tenant_country_name;
+                                            $localStorage.user.credentials.org_state = response.tenant.tenant_state_name;
+                                            $localStorage.user.credentials.org_city = response.tenant.tenant_city_name;
+                                            $localStorage.user.credentials.org_mobile = response.tenant.tenant_mobile;
+                                        }
                                         //Branch wise resource assign.
                                         var currentUser = AuthenticationService.getCurrentUser();
                                         delete currentUser.resources;

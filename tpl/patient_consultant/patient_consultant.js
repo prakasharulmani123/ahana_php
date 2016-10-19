@@ -31,7 +31,7 @@ app.filter('propsFilter', function () {
         return out;
     };
 })
-app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$filter', function ($rootScope, $scope, $timeout, $http, $state, $filter) {
+app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$filter', 'modalService', function ($rootScope, $scope, $timeout, $http, $state, $filter, modalService) {
 
         $scope.app.settings.patientTopBar = true;
         $scope.app.settings.patientSideMenu = true;
@@ -225,30 +225,32 @@ app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', 
 
         //Delete
         $scope.removeRow = function (row) {
-            var conf = confirm('Are you sure to delete ?');
-            if (conf) {
+            var modalOptions = {
+                closeButtonText: 'No',
+                actionButtonText: 'Yes',
+                headerText: 'Delete Consultation Visit?',
+                bodyText: 'Are you sure you want to delete this consultation visit?'
+            };
+
+            modalService.showModal({}, modalOptions).then(function (result) {
                 $scope.loadbar('show');
-                var index = $scope.displayedCollection.indexOf(row);
-                if (index !== -1) {
-                    $http({
-                        url: $rootScope.IRISOrgServiceUrl + "/patientconsultants/remove",
-                        method: "POST",
-                        data: {id: row.pat_consult_id}
-                    }).then(
-                            function (response) {
-                                $scope.loadbar('hide');
-                                if (response.data.success === true) {
-                                    $scope.displayedCollection.splice(index, 1);
-                                    $scope.loadPatConsultantsList();
-                                    $scope.msg.successMessage = 'Patient Consultant Deleted Successfully';
-                                }
-                                else {
-                                    $scope.errorData = response.data.message;
-                                }
+                $http({
+                    method: 'POST',
+                    url: $rootScope.IRISOrgServiceUrl + "/patientconsultants/remove",
+                    data: {id: row.pat_consult_id},
+                }).then(
+                        function (response) {
+                            $scope.loadbar('hide');
+                            if (response.data.success === true) {
+                                $scope.loadPatConsultantsList();
+                                $scope.msg.successMessage = 'Patient Consultation Visit Deleted Successfully';
                             }
-                    )
-                }
-            }
+                            else {
+                                $scope.errorData = response.data.message;
+                            }
+                        }
+                );
+            });
         };
 
         $scope.beforeRender = function ($view, $dates, $leftDate, $upDate, $rightDate) {
@@ -256,9 +258,9 @@ app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', 
             var n = d.getDate();
             var m = d.getMonth();
             var y = d.getFullYear();
-            var today_date = (new Date(y, m, n)).valueOf();
+            var today_date = (new Date(y, m, n)).valueOf(); //19
 
-            var upto_date = (d.setDate(d.getDate() - 3)).valueOf();
+            var upto_date = (d.setDate(d.getDate() - 3)).valueOf(); // 17
 
             if ($scope.checkAccess('patient.backdateconsultant')) {
                 angular.forEach($dates, function (date, key) {
@@ -269,7 +271,10 @@ app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', 
                     var calender_date = (new Date(calender_y, calender_m, calender_n)).valueOf();
 
                     //Hide - Future Dates OR More than 3 days before
-                    if (today_date < calender_date || upto_date > calender_date) {
+//                    if (today_date < calender_date || upto_date > calender_date) {
+//                        $dates[key].selectable = false;
+//                    }
+                    if (today_date < calender_date) {
                         $dates[key].selectable = false;
                     }
                 });

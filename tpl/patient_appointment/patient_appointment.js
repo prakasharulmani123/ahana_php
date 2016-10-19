@@ -167,6 +167,7 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
         }
 
         $scope.$watch('patientObj.activeCasesheetno', function (newValue, oldValue) {
+            $scope.toggleMin();
             $scope.data.validate_casesheet = ($scope.patientObj.activeCasesheetno == null || $scope.patientObj.activeCasesheetno == '');
         }, true);
 
@@ -200,7 +201,8 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
 
         $scope.toggleMin = function () {
             if ($scope.checkAccess('patient.backdateappointment')) {
-                $scope.minDate = null;
+                var patient_reg_date = moment($scope.patientObj.patient_reg_date).format('MM/DD/YYYY');
+                $scope.minDate = new Date(patient_reg_date);
             } else {
                 $scope.minDate = new Date();
             }
