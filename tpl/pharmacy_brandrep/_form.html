@@ -5,7 +5,7 @@
                 <div class="form-group">
                     <label class="col-sm-5 control-label">Brand Name * </label>
                     <div class="col-sm-7">
-                        <select class="form-control" ng-model="data.brand_id" ng-options="brand.brand_id as brand.brand_name for brand in brands | orderBy: brand_name"">
+                        <select class="form-control" ng-model="data.brand_id" ng-options="brand.brand_id as brand.brand_name for brand in brands | orderBy: brand_name">
                             <option value="">Select Brand Name</option>
                         </select>
                     </div>
@@ -15,7 +15,7 @@
                 <div class="form-group">
                     <label class="col-sm-5 control-label">Brand Division * </label>
                     <div class="col-sm-7">
-                        <select class="form-control" ng-model="data.division_id" ng-options="division.division_id as division.division_name for division in divisions | orderBy: division_name"">
+                        <select class="form-control" ng-model="data.division_id" ng-options="division.division_id as division.division_name for division in divisions | orderBy: division_name">
                             <option value="">Select Division Name</option>
                         </select>
                     </div>
@@ -78,14 +78,19 @@
                 <div class="form-group">
                     <label class="col-sm-5 control-label">Status</label>
                     <div class="col-sm-7">
-                        <label class="i-checks "> <input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" name="status" ng-model="data.status" ng-checked="data.status == '1'"> <i></i> </label> &nbsp; &nbsp;
+                        <label class="i-checks "> 
+                            <input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" name="status" ng-model="data.status" ng-checked="data.status == '1'"> 
+                            <i></i> 
+                        </label> &nbsp; &nbsp;
                     </div>
                 </div>
             </div>
             <footer class="panel-footer text-right bg-light lter">
                 <button class="btn m-b-xs  btn-success save-btn" ng-click="saveForm(data.formtype)">Save</button>
                 &nbsp;
-                <button class="btn m-b-xs  btn-dark" ng-click="$state.go('pharmacy.brandrep')"><i class="fa fa-times"></i> Cancel</button>
+                <button class="btn m-b-xs  btn-dark" ng-click="$state.go('pharmacy.brandrep')">
+                    <i class="fa fa-times"></i> Cancel
+                </button>
                 &nbsp;
             </footer>
         </div>

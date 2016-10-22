@@ -10,19 +10,21 @@ app.controller('BrandRepsController', ['$rootScope', '$scope', '$timeout', '$htt
 
             // Get data's from service
             $http.get($rootScope.IRISOrgServiceUrl + '/pharmacybrandrep')
-                    .success(function (alerts) {
+                    .success(function (brandrep) {
                         $scope.isLoading = false;
-                        $scope.rowCollection = alerts;
+                        $scope.rowCollection = brandrep;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
                     })
                     .error(function () {
-                        $scope.errorData = "An Error has occured while loading brand!";
+                        $scope.errorData = "An Error has occured while loading Brand Representatives!";
                     });
         };
 
         //For Form
         $scope.initForm = function () {
-            
+            $scope.data = {};
+            $scope.data.formtype = 'add';
+            $scope.data.status = '1';
             // Brand list
             $rootScope.commonService.GetBrandsList('', '1', false, function (response) {
                 $scope.brands = response.brandList;
@@ -63,8 +65,7 @@ app.controller('BrandRepsController', ['$rootScope', '$scope', '$timeout', '$htt
                         $scope.data = {};
                         $timeout(function () {
                             $state.go('pharmacy.brandrep');
-                        }, 1000)
-
+                        }, 1000);
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');
@@ -77,8 +78,9 @@ app.controller('BrandRepsController', ['$rootScope', '$scope', '$timeout', '$htt
 
         //Get Data for update Form
         $scope.loadForm = function () {
+            $scope.initForm();
             $scope.loadbar('show');
-            _that = this;
+            
             $scope.errorData = "";
             $http({
                 url: $rootScope.IRISOrgServiceUrl + "/pharmacybrandreps/" + $state.params.id,
@@ -87,6 +89,7 @@ app.controller('BrandRepsController', ['$rootScope', '$scope', '$timeout', '$htt
                     function (response) {
                         $scope.loadbar('hide');
                         $scope.data = response;
+                        $scope.data.formtype = 'update';
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');

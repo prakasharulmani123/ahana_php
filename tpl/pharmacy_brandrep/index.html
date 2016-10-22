@@ -1,9 +1,7 @@
 <div class="bg-light lter b-b wrapper-md">
     <h1 class="m-n font-thin h3">Brand Representatives</h1>
 </div>
-
 <div class="wrapper-md" ng-controller="BrandRepsController" ng-init="loadBrandRepsList()">
-
     <div ng-include="'tpl/blocks/alert.html'">
         {% include 'tpl/blocks/alert.html' %}
     </div>
@@ -28,19 +26,18 @@
                                 <th>Division name</th>
                                 <th>Rep name1</th>
                                 <th>Rep contact1</th>
-                                <th>Rep name2</th>
-                                <th>Rep contact2</th>
+                                <th>Rep designation1</th>
                                 <th data-sort-ignore="true">Status</th>
                                 <th data-sort-ignore="true">Action</th>
                             </tr>
                         </thead>  
                         <tbody ng-if="isLoading == true">
                             <tr>
-                                <td colspan="5" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
+                                <td colspan="8" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
                             </tr>
                         </tbody>  
                         <tbody ng-if="isLoading == false">
-                            <tr ng-repeat="row in displayedCollection| orderBy: brand_name">
+                            <tr ng-repeat="row in displayedCollection">
                                 <td>
                                     {{row.brand_name}}
                                 </td>
@@ -57,10 +54,7 @@
                                     {{row.rep_1_contact}}
                                 </td>
                                 <td>
-                                    {{row.rep_2_name}}
-                                </td>
-                                <td>
-                                    {{row.rep_2_contact}}
+                                    {{row.rep_1_designation}}
                                 </td>
                                 <td>
                                     <div ng-if="row.tenant_id != null">
@@ -84,7 +78,7 @@
                         </tbody>
                         <tfoot class="hide-if-no-paging">
                             <tr>
-                                <td colspan="9" class="text-right">
+                                <td colspan="8" class="text-right">
                                     <ul class="pagination"></ul>
                                 </td>
                             </tr>
