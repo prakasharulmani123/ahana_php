@@ -43,12 +43,13 @@ class PhaBrandRepresentative extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['tenant_id', 'brand_id', 'division_id', 'rep_1_name', 'rep_1_contact', 'rep_1_designation'], 'required'],
+            [['brand_id', 'division_id', 'rep_1_name', 'rep_1_contact', 'rep_1_designation'], 'required'],
             [['tenant_id', 'brand_id', 'division_id', 'created_by', 'modified_by'], 'integer'],
             [['status'], 'string'],
             [['created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['rep_1_name', 'rep_2_name'], 'string', 'max' => 50],
-            [['rep_1_contact', 'rep_1_designation', 'rep_2_contact', 'rep_2_designation'], 'string', 'max' => 100]
+            [['rep_1_contact', 'rep_1_designation', 'rep_2_contact', 'rep_2_designation'], 'string', 'max' => 100],
+            [['brand_id'], 'unique', 'targetAttribute' => ['tenant_id', 'brand_id', 'division_id', 'deleted_at'], 'comboNotUnique' => 'The combination of Brand Name and Brand Division has already been taken.']
         ];
     }
 

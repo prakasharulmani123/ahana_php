@@ -2,7 +2,6 @@
 
 namespace IRISORG\modules\v1\controllers;
 
-use common\models\PhaBrandRepresentative;
 use common\models\PhaBrand;
 use common\models\PhaBrandDivision;
 use Yii;
@@ -23,7 +22,7 @@ class PharmacybrandrepController extends ActiveController {
     public function behaviors() {
         $behaviors = parent::behaviors();
         $behaviors['authenticator'] = [
-            'class' => QueryParamAuth::className(),            
+            'class' => QueryParamAuth::className(),
         ];
         $behaviors['contentNegotiator'] = [
             'class' => ContentNegotiator::className(),
@@ -32,7 +31,7 @@ class PharmacybrandrepController extends ActiveController {
             ],
         ];
 
-        return $behaviors;      
+        return $behaviors;
     }
 
     public function actions() {
@@ -51,24 +50,24 @@ class PharmacybrandrepController extends ActiveController {
             'pagination' => false,
         ]);
     }
-    
+
     public function actionRemove() {
         $id = Yii::$app->getRequest()->post('id');
-        if($id){
-            $model = PhaBrand::find()->where(['rep_id' => $id])->one();
+        if ($id) {
+            $model = $modelClass::find()->where(['rep_id' => $id])->one();
             $model->remove();
             return ['success' => true];
         }
     }
-    
-    public function actionGetallbrands() {        
-        $list = PhaBrand::find()->tenant()->status()->active()->all();         
+
+    public function actionGetallbrands() {
+        $list = PhaBrand::find()->tenant()->status()->active()->all();
         return ['brandList' => $list];
     }
-    
-    public function actionGetalldivisions() {        
-        $list = PhaBrandDivision::find()->tenant()->status()->active()->all();         
+
+    public function actionGetalldivisions() {
+        $list = PhaBrandDivision::find()->tenant()->status()->active()->all();
         return ['divisionList' => $list];
     }
-    
+
 }
