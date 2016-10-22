@@ -129,11 +129,13 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
                     });
         }
 
+        $scope.active_encounter_date = '';
         $scope.initCanSaveAdmission = function () {
             $scope.showForm = false;
             $scope.isPatientHaveActiveEncounter(function (response) {
                 is_success = true;
                 if (response.success == true) {
+                    $scope.active_encounter_date = response.model.encounter_date;
                     if (response.model.encounter_id != $state.params.enc_id) {
                         is_success = false;
                     }
@@ -289,5 +291,40 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
                     break;
             }
         };
+
+        //For Datetimepicker
+        $scope.beforeRender = function ($view, $dates, $leftDate, $upDate, $rightDate) {
+            var today_date = new Date().valueOf();
+            
+            angular.forEach($dates, function (date, key) {
+                if (today_date < date.localDateValue()) {
+                    $dates[key].selectable = false;
+                }
+            });
+            
+            $scope.$watch('active_encounter_date', function (newValue, oldValue) {
+                if (newValue != '' && typeof newValue != 'undefined') {
+                    var admission_date_format = moment($scope.active_encounter_date).format('MM/DD/YYYY');
+                    var admission_date = new Date(admission_date_format);
+                    var admission_date_value = admission_date.valueOf();
+                    var admission_date_m = admission_date.getMonth();
+                    var admission_date_y = admission_date.getFullYear();
+                    var admission_month_year = (new Date(admission_date_y, admission_date_m, '1')).valueOf();
+                    var admission_year = (new Date(admission_date_y, '0', '1')).valueOf();
+
+                    angular.forEach($dates, function (date, key) {
+                        if (admission_date_value > date.localDateValue()) {
+                            $dates[key].selectable = false;
+                        }
+                        if($view == 'month' && admission_month_year == date.localDateValue()){
+                            $dates[key].selectable = true;
+                        }
+                        if($view == 'year' && admission_year == date.localDateValue()){
+                            $dates[key].selectable = true;
+                        }
+                    });
+                }
+            }, true);
+        }
 
     }]);

@@ -18,7 +18,7 @@
                     </button>
                 </div>
                 <div class="col-sm-8">
-                    <button ng-show="enc.selected.status == '1'" class="btn btn-info" ng-click="$state.go('patient.add_procedure', {id: $state.params.id, enc_id: enc.selected.encounter_id})"><i class="fa fa-plus"></i> Add Procedure </button>
+                    <button ng-show="enc.selected.status == '1' && enc.selected.encounter_type == 'IP'" class="btn btn-info" ng-click="$state.go('patient.add_procedure', {id: $state.params.id, enc_id: enc.selected.encounter_id})"><i class="fa fa-plus"></i> Add Procedure </button>
                 </div>
 
                 <div class="col-sm-3">
