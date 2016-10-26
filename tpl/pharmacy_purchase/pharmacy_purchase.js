@@ -151,7 +151,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                 quantity: '0',
                 free_quantity: '0',
                 free_quantity_unit: '',
-                temp_free_quantity_unit: '',
+//                temp_free_quantity_unit: '',
                 mrp: '0',
                 temp_mrp: '0',
                 purchase_rate: '0',
@@ -207,7 +207,9 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
         };
 
         $scope.checkInput = function (data) {
-            if (!data) {
+            if (typeof data == 'undefined') {
+                return "Invalid data";
+            } else if (!data) {
                 return "Not empty.";
             }
         };
@@ -236,6 +238,45 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                 $scope.purchaseitems[key].exp_warning = '';
             }
         };
+        
+        $scope.checkFreeQuantityUnit = function (data, tableform, key) {
+            var errorExists = false;
+            var errorMsg = '';
+            if (data) {
+                angular.forEach(tableform.$editables, function (editableValue, editableKey) {
+                    if (!errorExists && editableValue.scope.$index == key && editableValue.attrs.eName == 'free_quantity') {
+                        if (editableValue.scope.$data == "0") {
+                            errorExists = true;
+                            errorMsg = "Free Not be 0.";
+                        } else if (editableValue.scope.$data == "") {
+                            errorExists = true;
+                            errorMsg = "Free Not be empty.";
+                        }
+                    }
+                });
+            }
+
+            if (errorExists) {
+                return errorMsg;
+            }
+        }
+
+        $scope.checkFreeQuantity = function (data, tableform, key) {
+            var errorExists = false;
+            if (data > 0) {
+                angular.forEach(tableform.$editables, function (editableValue, editableKey) {
+                    if (!errorExists && editableValue.scope.$index == key && editableValue.attrs.eName == 'free_quantity_unit') {
+                        if (editableValue.scope.$data == "") {
+                            errorExists = true;
+                        }
+                    }
+                });
+            }
+
+            if (errorExists) {
+                return "Choose FreeUnit";
+            }
+        }
 
         $scope.open = function ($event, mode) {
             $event.preventDefault();
@@ -258,7 +299,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             $scope.purchaseitems[key].batch_no = item.batch_no;
             $scope.purchaseitems[key].temp_expiry_date = item.expiry_date;
             $scope.purchaseitems[key].temp_mrp = item.mrp;
-            $scope.purchaseitems[key].temp_package_name = item.product.purchasePackageName;
+            $scope.purchaseitems[key].temp_package_name = item.package_name;
             // $scope.purchaseitems[key].temp_free_quantity_unit = model.free_quantity_unit;
 
             $scope.showOrHideRowEdit('hide', key);
@@ -284,12 +325,52 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                 $scope.purchaseitems[key].quantity = 0;
                 $scope.purchaseitems[key].free_quantity = 0;
                 $scope.purchaseitems[key].free_quantity_unit = "";
-                $scope.purchaseitems[key].temp_free_quantity_unit = "";
+//                $scope.purchaseitems[key].temp_free_quantity_unit = "";
                 $scope.purchaseitems[key].purchase_rate = 0;
                 $scope.purchaseitems[key].discount_percent = 0;
 
             });
         }
+
+        $scope.clearProductRow = function (data, key) {
+            if (!data) {
+                $scope.purchaseitems[key].product_id = '';
+                $scope.purchaseitems[key].vat_percent = '0';
+                $scope.batches = [];
+                $scope.purchaseitems[key].batch_details = '';
+                $scope.purchaseitems[key].batch_no = '';
+                $scope.purchaseitems[key].expiry_date = '';
+                $scope.purchaseitems[key].temp_expiry_date = '';
+                $scope.purchaseitems[key].mrp = 0;
+                $scope.purchaseitems[key].temp_mrp = 0;
+                $scope.purchaseitems[key].package_name = '';
+                $scope.purchaseitems[key].temp_package_name = '';
+                $scope.purchaseitems[key].quantity = 0;
+                $scope.purchaseitems[key].free_quantity = 0;
+                $scope.purchaseitems[key].free_quantity_unit = "";
+                $scope.purchaseitems[key].purchase_rate = 0;
+                $scope.purchaseitems[key].discount_percent = 0;
+                $scope.showOrHideRowEdit('show', key);
+                $scope.clearFormEditables(this.$form, key);
+            }
+        }
+
+        $scope.clearFormEditables = function (form, key) {
+            angular.forEach(form.$editables, function (editableValue, editableKey) {
+                if (editableValue.scope.$index == key && editableValue.attrs.eName != 'full_name') {
+                    if (editableValue.attrs.eName == 'quantity' ||
+                            editableValue.attrs.eName == 'free_quantity' ||
+                            editableValue.attrs.eName == 'mrp' ||
+                            editableValue.attrs.eName == 'purchase_rate' ||
+                            editableValue.attrs.eName == 'discount_percent') {
+                        editableValue.scope.$data = "0";
+                    } else {
+                        editableValue.scope.$data = "";
+                    }
+                }
+            });
+            $scope.updateRow(key);
+        }        
 
         $scope.showOrHideRowEdit = function (mode, key) {
             if (mode == 'hide') {
@@ -304,12 +385,12 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             $('#i_expiry_date_' + key).addClass(i_addclass).removeClass(i_removeclass);
             $('#i_mrp_' + key).addClass(i_addclass).removeClass(i_removeclass);
             $('#i_package_name_' + key).addClass(i_addclass).removeClass(i_removeclass);
-            $('#i_free_quantity_unit_' + key).addClass(i_addclass).removeClass(i_removeclass);
+//            $('#i_free_quantity_unit_' + key).addClass(i_addclass).removeClass(i_removeclass);
 
             $('#t_expiry_date_' + key).addClass(t_addclass).removeClass(t_removeclass);
             $('#t_mrp_' + key).addClass(t_addclass).removeClass(t_removeclass);
             $('#t_package_name_' + key).addClass(t_addclass).removeClass(t_removeclass);
-            $('#t_free_quantity_unit_' + key).addClass(t_addclass).removeClass(t_removeclass);
+//            $('#t_free_quantity_unit_' + key).addClass(t_addclass).removeClass(t_removeclass);
         }
 
         $scope.showOrHideProductBatch = function (mode, key) {
@@ -352,7 +433,8 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             var disc_amount = disc_perc > 0 ? (purchase_amount * (disc_perc / 100)).toFixed(2) : 0;
 
             var total_amount = (purchase_amount - disc_amount).toFixed(2);
-            var vat_amount = (purchase_amount * (vat_perc / 100)).toFixed(2);
+            var vat_amount = (total_amount * (vat_perc / 100)).toFixed(2); // Excluding vat
+//            var vat_amount = ((total_amount * vat_perc) / (100 + vat_perc)).toFixed(2); // Including vat
 
             $scope.purchaseitems[key].purchase_amount = purchase_amount;
             $scope.purchaseitems[key].discount_amount = disc_amount;
@@ -379,7 +461,8 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             $scope.data.total_item_vat_amount = total_vat_amount.toFixed(2);
 
             //Get Before Discount Amount (Total Purchase Amount + Total VAT)
-            before_disc_amount = (total_purchase_amount + total_vat_amount).toFixed(2);
+            before_disc_amount = (total_purchase_amount + total_vat_amount).toFixed(2); // Excluding vat
+//            before_disc_amount = (total_purchase_amount).toFixed(2); // Including vat
             $scope.data.before_disc_amount = before_disc_amount;
 
             //Get Discount Amount
@@ -420,9 +503,17 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                     exp_date = purchaseitem.temp_expiry_date;
                     $scope.purchaseitems[key].mrp = purchaseitem.temp_mrp;
                     $scope.purchaseitems[key].package_name = purchaseitem.temp_package_name;
-                    $scope.purchaseitems[key].free_quantity_unit = purchaseitem.free_quantity_unit;
+//                    $scope.purchaseitems[key].free_quantity_unit = purchaseitem.free_quantity_unit;
                 } else {
                     exp_date = purchaseitem.expiry_date;
+                }
+
+                packing_details = $filter('filter')($scope.packings, {package_name: $scope.purchaseitems[key].package_name}, true);
+                $scope.purchaseitems[key].package_unit = packing_details[0].package_unit;
+
+                if (purchaseitem.free_quantity > 0 && purchaseitem.free_quantity_unit != '') {
+                    free_packing_details = $filter('filter')($scope.packings, {package_name: purchaseitem.free_quantity_unit}, true);
+                    $scope.purchaseitems[key].free_quantity_package_unit = free_packing_details[0].package_unit;
                 }
 
                 $scope.purchaseitems[key].expiry_date = moment(exp_date).format('YYYY-MM-DD');
@@ -563,7 +654,16 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
 
                         $scope.purchaseitems = response.items;
                         angular.forEach($scope.purchaseitems, function (item, key) {
-                            angular.extend($scope.purchaseitems[key], {is_temp: '0', full_name: item.product.full_name, batch_no: item.batch.batch_no, batch_details: item.batch.batch_details, temp_expiry_date: item.batch.expiry_date, temp_mrp: item.batch.mrp, temp_package_name: item.package_name, temp_free_quantity_unit: item.free_quantity_unit});
+                            angular.extend($scope.purchaseitems[key], {
+                                is_temp: '0',
+                                full_name: item.product.full_name,
+                                batch_no: item.batch.batch_no,
+                                batch_details: item.batch.batch_details,
+                                temp_expiry_date: item.batch.expiry_date,
+                                temp_mrp: item.batch.mrp,
+                                temp_package_name: item.package_name,
+//                                temp_free_quantity_unit: item.free_quantity_unit
+                            });
                             $timeout(function () {
                                 $scope.showOrHideRowEdit('hide', key);
                                 $scope.showOrHideProductBatch('hide', key);
@@ -584,10 +684,6 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             });
         };
 
-        $scope.select = function (data) {
-            console.log(data);
-        }
-
         $scope.setFutureInternalCode = function (code, col) {
             $rootScope.commonService.GetInternalCodeList('', code, '1', false, function (response) {
                 if (col == 'gr_num')
@@ -596,9 +692,3 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
         }
 
     }]);
-
-//app.filter('moment', function () {
-//    return function (dateString, format) {
-//        return moment(dateString).format(format);
-//    };
-//});

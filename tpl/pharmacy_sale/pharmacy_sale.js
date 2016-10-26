@@ -202,19 +202,23 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         $scope.saleItems = [];
         // Add first row in sale item table.
         $scope.addRow = function (focus) {
+            console.log(focus);
             $scope.inserted = {
-                full_name: '',
-                batch_details: '',
                 product_id: '',
                 product_name: '',
-                package_name: '',
-                vat_percent: '0',
+                full_name: '',
                 batch_no: '',
+                batch_details: '',
                 expiry_date: '',
-                mrp: '0',
                 quantity: '0',
-                vat_amount: '0',
+                package_name: '',
+                mrp: '0',
                 item_amount: '0',
+                discount_percentage: '0',
+                discount_amount: '0',
+                vat_percent: '0',
+                vat_amount: '0',
+                total_amount: '0'
             };
             $scope.saleItems.push($scope.inserted);
 
@@ -311,6 +315,38 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 //            }, 300);
         }
 
+        $scope.clearProductRow = function (data, key) {
+            if (!data) {
+                $scope.saleItems[key].product_id = '';
+                $scope.saleItems[key].product_name = '';
+                $scope.saleItems[key].vat_percent = '0';
+                $scope.saleItems[key].package_name = '';
+//                $scope.batches = [];
+                $scope.saleItems[key].batch_details = '';
+                $scope.saleItems[key].batch_no = '';
+                $scope.saleItems[key].expiry_date = '';
+                $scope.saleItems[key].mrp = 0;
+                $scope.saleItems[key].quantity = 0;
+                $scope.saleItems[key].discount_percentage = 0;
+                $scope.clearFormEditables(this.$form, key);
+            }
+        }
+
+        $scope.clearFormEditables = function (form, key) {
+            angular.forEach(form.$editables, function (editableValue, editableKey) {
+                if (editableValue.scope.$index == key && editableValue.attrs.eName != 'full_name') {
+                    if (editableValue.attrs.eName == 'quantity' ||
+                            editableValue.attrs.eName == 'mrp' ||
+                            editableValue.attrs.eName == 'discount_percentage') {
+                        editableValue.scope.$data = "0";
+                    } else {
+                        editableValue.scope.$data = "";
+                    }
+                }
+            });
+            $scope.updateRow(key);
+        }
+
         //After product choosed, then some values in the row.
         $scope.updateProductRow = function (item, model, label, key) {
             $scope.saleItems[key].product_id = item.product_id;
@@ -381,7 +417,8 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             $scope.saleItems[key].batch_details = item.batch_details;
             $scope.saleItems[key].batch_no = item.batch_no;
             $scope.saleItems[key].expiry_date = item.expiry_date;
-            $scope.saleItems[key].mrp = item.mrp;
+//            $scope.saleItems[key].mrp = item.mrp;
+            $scope.saleItems[key].mrp = item.per_unit_price;
 
             $scope.setFocus('quantity', key);
             $scope.checkExpDate(item.expiry_date, key);
@@ -432,16 +469,24 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             //Get Data
             var qty = parseFloat($scope.saleItems[key].quantity);
             var mrp = parseFloat($scope.saleItems[key].mrp);
+            var disc_perc = parseFloat($scope.saleItems[key].discount_percentage);
             var vat_perc = parseFloat($scope.saleItems[key].vat_percent);
 
             //Validate isNumer
             qty = !isNaN(qty) ? qty : 0;
+            disc_perc = !isNaN(disc_perc) ? disc_perc : 0;
             vat_perc = !isNaN(vat_perc) ? vat_perc : 0;
 
             var item_amount = (qty * mrp).toFixed(2);
-            var vat_amount = (item_amount * (vat_perc / 100)).toFixed(2);
+            var disc_amount = disc_perc > 0 ? (item_amount * (disc_perc / 100)).toFixed(2) : 0;
+            var total_amount = (item_amount - disc_amount).toFixed(2);
+
+//            var vat_amount = (item_amount * (vat_perc / 100)).toFixed(2); // Exculding vat
+            var vat_amount = ((total_amount * vat_perc) / (100 + vat_perc)).toFixed(2); // Including vat
 
             $scope.saleItems[key].item_amount = item_amount;
+            $scope.saleItems[key].discount_amount = disc_amount;
+            $scope.saleItems[key].total_amount = total_amount;
             $scope.saleItems[key].vat_amount = vat_amount;
             $scope.updateSaleRate();
         }
@@ -454,14 +499,15 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             var total_item_vat_amount = total_item_sale_amount = 0;
             angular.forEach($scope.saleItems, function (item) {
                 total_item_vat_amount = total_item_vat_amount + parseFloat(item.vat_amount);
-                total_item_sale_amount = total_item_sale_amount + parseFloat(item.item_amount);
+                total_item_sale_amount = total_item_sale_amount + parseFloat(item.total_amount);
             });
 
             $scope.data.total_item_sale_amount = total_item_sale_amount.toFixed(2);
             $scope.data.total_item_vat_amount = total_item_vat_amount.toFixed(2);
 
             //Get Before Discount Amount (Total Sale Amount + Total VAT)
-            var before_discount_total = (total_item_sale_amount + total_item_vat_amount).toFixed(2);
+//            var before_discount_total = (total_item_sale_amount + total_item_vat_amount).toFixed(2); // Exculding vat
+            var before_discount_total = (total_item_sale_amount).toFixed(2); // Inculding vat
 
             //Get Discount Amount
             var disc_perc = parseFloat($scope.data.total_item_discount_percent);
@@ -647,7 +693,8 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                 full_name: item.product.full_name,
                                 batch_no: item.batch.batch_no,
                                 batch_details: item.batch.batch_details,
-                                expiry_date: item.batch.expiry_date
+                                expiry_date: item.batch.expiry_date,
+                                oldAttributeQuantity: item.quantity,
                             });
                             $timeout(function () {
                                 $scope.showOrHideProductBatch('hide', key);
