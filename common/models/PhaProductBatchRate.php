@@ -12,6 +12,7 @@ use yii\db\ActiveQuery;
  * @property integer $tenant_id
  * @property integer $batch_id
  * @property string $mrp
+ * @property string $per_unit_price
  * @property string $status
  * @property integer $created_by
  * @property string $created_at
@@ -22,25 +23,23 @@ use yii\db\ActiveQuery;
  * @property PhaProductBatch $batch
  * @property CoTenant $tenant
  */
-class PhaProductBatchRate extends RActiveRecord
-{
+class PhaProductBatchRate extends RActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'pha_product_batch_rate';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['tenant_id', 'batch_id', 'mrp', 'created_by'], 'required'],
             [['tenant_id', 'batch_id', 'created_by', 'modified_by'], 'integer'],
-            [['mrp'], 'number'],
+            [['mrp', 'per_unit_price'], 'number'],
             [['status'], 'string'],
             [['created_at', 'modified_at', 'deleted_at'], 'safe']
         ];
@@ -49,13 +48,13 @@ class PhaProductBatchRate extends RActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'batch_rate_id' => 'Batch Rate ID',
             'tenant_id' => 'Tenant ID',
             'batch_id' => 'Batch ID',
             'mrp' => 'Mrp',
+            'per_unit_price' => 'Per Unit Price',
             'status' => 'Status',
             'created_by' => 'Created By',
             'created_at' => 'Created At',
@@ -68,20 +67,19 @@ class PhaProductBatchRate extends RActiveRecord
     /**
      * @return ActiveQuery
      */
-    public function getBatch()
-    {
+    public function getBatch() {
         return $this->hasOne(PhaProductBatch::className(), ['batch_id' => 'batch_id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getTenant()
-    {
+    public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
-    
+
     public static function find() {
         return new PhaProductBatchRateQuery(get_called_class());
     }
+
 }

@@ -13,6 +13,8 @@ use yii\db\ActiveQuery;
  * @property integer $product_id
  * @property string $batch_no
  * @property string $expiry_date
+ * @property integer $package_unit
+ * @property string $package_name
  * @property integer $total_qty
  * @property integer $available_qty
  * @property string $status
@@ -27,7 +29,7 @@ use yii\db\ActiveQuery;
  * @property PhaProductBatchRate[] $phaProductBatchRates
  */
 class PhaProductBatch extends RActiveRecord {
-    
+
     public $product_name;
     public $product_code;
     public $mrp;
@@ -51,7 +53,7 @@ class PhaProductBatch extends RActiveRecord {
         return [
             [['tenant_id', 'product_id', 'batch_no', 'expiry_date', 'total_qty', 'available_qty', 'created_by'], 'required'],
             [['tenant_id', 'product_id', 'total_qty', 'available_qty', 'created_by', 'modified_by'], 'integer'],
-            [['expiry_date', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
+            [['expiry_date', 'created_at', 'modified_at', 'deleted_at', 'package_unit', 'package_name'], 'safe'],
             [['status'], 'string'],
             [['batch_no'], 'string', 'max' => 255],
             [['batch_no'], 'unique', 'targetAttribute' => ['tenant_id', 'product_id', 'batch_no', 'expiry_date', 'deleted_at'], 'message' => 'The combination of Batch NO. & Expiry Date has already been taken.']
@@ -111,10 +113,13 @@ class PhaProductBatch extends RActiveRecord {
     public function fields() {
         $extend = [
             'batch_details' => function ($model) {
-                return $model->batch_no . ' (' . date('M Y', strtotime($model->expiry_date)) . ')'. ' / '.$model->available_qty;
+                return $model->batch_no . ' (' . date('M Y', strtotime($model->expiry_date)) . ')' . ' / ' . $model->available_qty;
             },
             'mrp' => function ($model) {
                 return isset($model->phaProductBatchRate) ? $model->phaProductBatchRate->mrp : 0;
+            },
+            'per_unit_price' => function ($model) {
+                return isset($model->phaProductBatchRate) ? $model->phaProductBatchRate->per_unit_price : 0;
             },
             'product' => function ($model) {
                 return isset($model->product) ? $model->product : '';
@@ -125,7 +130,8 @@ class PhaProductBatch extends RActiveRecord {
     }
 
     public function beforeSave($insert) {
-        $this->expiry_date = date('Y-m', strtotime($this->expiry_date)).'-01';
+        $this->expiry_date = date('Y-m', strtotime($this->expiry_date)) . '-01';
         return parent::beforeSave($insert);
     }
+
 }

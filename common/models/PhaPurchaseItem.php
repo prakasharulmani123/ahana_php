@@ -15,13 +15,15 @@ use yii\db\ActiveQuery;
  * @property integer $batch_id
  * @property integer $quantity
  * @property integer $free_quantity
- * @property integer $free_quantity_unit
+ * @property integer $free_quantity_package_unit
+ * @property string $free_quantity_unit
  * @property string $mrp
  * @property string $purchase_rate
  * @property string $purchase_amount
  * @property string $discount_percent
  * @property string $discount_amount
  * @property string $total_amount
+ * @property integer $package_unit
  * @property string $package_name
  * @property string $vat_amount
  * @property string $vat_percent
@@ -60,11 +62,30 @@ class PhaPurchaseItem extends RActiveRecord {
             [['tenant_id', 'purchase_id', 'product_id', 'quantity', 'free_quantity', 'created_by', 'modified_by'], 'integer'],
             [['mrp', 'purchase_rate', 'purchase_amount', 'discount_percent', 'discount_amount', 'total_amount', 'vat_amount', 'vat_percent'], 'number'],
             [['status'], 'string'],
-            [['created_at', 'modified_at', 'deleted_at', 'vat_percent', 'batch_id', 'expiry_date', 'free_quantity_unit', 'batch_no'], 'safe'],
+            [['created_at', 'modified_at', 'deleted_at', 'vat_percent', 'batch_id', 'expiry_date', 'free_quantity_unit', 'batch_no', 'package_unit', 'free_quantity_package_unit'], 'safe'],
             [['package_name'], 'string', 'max' => 255],
             ['purchase_rate', 'validateProductRate'],
             [['quantity', 'mrp', 'purchase_rate', 'purchase_amount', 'total_amount'], 'validateAmount'],
+            [['package_name'], 'validateBatch'],
         ];
+    }
+
+    public function validateBatch($attribute, $params) {
+        $batch = PhaProductBatch::find()
+                ->tenant()
+                ->andWhere([
+                    'product_id' => $this->product_id,
+                    'batch_no' => $this->batch_no,
+                    'expiry_date' => $this->expiry_date,
+                ])
+                ->one();
+
+        if (!empty($batch)) {
+            if ($batch->package_unit != $this->package_unit) {
+                $expiry_date = date("M Y", strtotime($this->expiry_date));
+                $this->addError($attribute, "Already PurchaseUnit ({$batch->package_name}) assigned to this Product ({$batch->product->getFullName()}) and Batch ({$this->batch_no}) and Exp ({$expiry_date}), So you can not choose different PurchaseUnit");
+            }
+        }
     }
 
     public function validateProductRate($attribute, $params) {
@@ -149,7 +170,7 @@ class PhaPurchaseItem extends RActiveRecord {
 
     public function beforeSave($insert) {
         $batch = $insert ? $this->_insertBatch() : $this->_updateBatch();
-        $batch_rate = $this->_updateBatchRate($batch->batch_id, $this->mrp);
+        $batch_rate = $this->_updateBatchRate($batch->batch_id, $this->mrp, $this->package_unit);
 
         $this->batch_id = $batch->batch_id;
         $this->free_quantity = (!empty($this->free_quantity)) ? $this->free_quantity : 0;
@@ -159,15 +180,24 @@ class PhaPurchaseItem extends RActiveRecord {
     }
 
     private function _getBatchData() {
-        return PhaProductBatch::find()->tenant()->andWhere(['product_id' => $this->product_id, 'batch_no' => $this->batch_no, 'expiry_date' => $this->expiry_date])->one();
+        return PhaProductBatch::find()
+                        ->tenant()
+                        ->andWhere([
+                            'product_id' => $this->product_id,
+                            'batch_no' => $this->batch_no,
+                            'expiry_date' => $this->expiry_date,
+                            'package_unit' => $this->package_unit,
+                            'package_name' => $this->package_name
+                        ])
+                        ->one();
     }
 
     //Insert Batch
     private function _insertBatch() {
         $batch = $this->_getBatchData();
-        
-        $tot_qty = ($this->quantity + $this->free_quantity);
-        
+
+        $tot_qty = (($this->quantity * $this->package_unit) + ($this->free_quantity * $this->free_quantity_package_unit));
+
         if (empty($batch)) {
             $batch = new PhaProductBatch;
             $batch->total_qty = $batch->available_qty = $tot_qty;
@@ -175,11 +205,13 @@ class PhaPurchaseItem extends RActiveRecord {
             $batch->total_qty = $batch->total_qty + $tot_qty;
             $batch->available_qty = $batch->available_qty + $tot_qty;
         }
-        
+
         $batch->attributes = [
             'product_id' => $this->product_id,
             'batch_no' => $this->batch_no,
             'expiry_date' => $this->expiry_date,
+            'package_unit' => $this->package_unit,
+            'package_name' => $this->package_name
         ];
         $batch->save(false);
         return $batch;
@@ -190,10 +222,10 @@ class PhaPurchaseItem extends RActiveRecord {
         $batch = $this->_getBatchData();
         if (empty($batch)) {
             $batch = new PhaProductBatch;
-            $batch->total_qty = $batch->available_qty = ($this->quantity + $this->free_quantity);
+            $batch->total_qty = $batch->available_qty = (($this->quantity * $this->package_unit) + ($this->free_quantity * $this->free_quantity_package_unit));
         } else {
-            $old_qty = ($this->getOldAttribute('quantity') + $this->getOldAttribute('free_quantity'));
-            $new_qty = ($this->quantity + $this->free_quantity);
+            $old_qty = (($this->getOldAttribute('quantity') * $this->getOldAttribute('package_unit')) + ($this->getOldAttribute('free_quantity') * $this->getOldAttribute('free_quantity_package_unit')));
+            $new_qty = (($this->quantity * $this->package_unit) + ($this->free_quantity * $this->free_quantity_package_unit));
 
             //Add New Quantity
             if ($old_qty < $new_qty) {
@@ -210,6 +242,8 @@ class PhaPurchaseItem extends RActiveRecord {
             'product_id' => $this->product_id,
             'batch_no' => $this->batch_no,
             'expiry_date' => $this->expiry_date,
+            'package_unit' => $this->package_unit,
+            'package_name' => $this->package_name
         ];
         $batch->save(false);
         return $batch;
@@ -227,14 +261,17 @@ class PhaPurchaseItem extends RActiveRecord {
     }
 
     //Update Batch Rate
-    private function _updateBatchRate($batch_id, $mrp) {
-        $batch_rate_exists = PhaProductBatchRate::find()->tenant()->andWhere(['batch_id' => $batch_id, 'mrp' => $mrp])->one();
+    private function _updateBatchRate($batch_id, $mrp, $package_unit) {
+        $batch_rate_exists = PhaProductBatchRate::find()->tenant()->andWhere(['batch_id' => $batch_id])->one(); //, 'mrp' => $mrp
         if (empty($batch_rate_exists)) {
             $batch_rate = new PhaProductBatchRate();
             $batch_rate->mrp = $this->mrp;
         } else {
             $batch_rate = $batch_rate_exists;
         }
+        //Per Unit Price
+        $per_unit_price = $mrp / $package_unit;
+        $batch_rate->per_unit_price = $per_unit_price;
         $batch_rate->batch_id = $batch_id;
         $batch_rate->save(false);
         return $batch_rate;

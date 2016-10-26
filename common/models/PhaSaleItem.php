@@ -17,6 +17,9 @@ use yii\db\ActiveQuery;
  * @property string $package_name
  * @property string $mrp
  * @property string $item_amount
+ * @property string $discount_percentage
+ * @property string $discount_amount
+ * @property string $total_amount
  * @property string $vat_amount
  * @property string $vat_percent
  * @property string $status
@@ -38,6 +41,7 @@ class PhaSaleItem extends RActiveRecord {
     public $product_name;
     public $total_sale_item_amount;
     public $consultant_name;
+    public $oldAttributeQuantity;
 
     /**
      * @inheritdoc
@@ -54,9 +58,9 @@ class PhaSaleItem extends RActiveRecord {
             [['product_id', 'quantity', 'mrp'], 'required'],
             [['batch_no'], 'required', 'on' => 'saveform'],
             [['tenant_id', 'sale_id', 'product_id', 'batch_id', 'quantity', 'created_by', 'modified_by'], 'integer'],
-            [['mrp', 'item_amount', 'vat_amount', 'vat_percent'], 'number'],
+            [['mrp', 'item_amount', 'discount_percentage', 'discount_amount', 'total_amount', 'vat_amount', 'vat_percent'], 'number'],
             [['status'], 'string'],
-            [['created_at', 'modified_at', 'deleted_at', 'package_name', 'expiry_date', 'batch_no'], 'safe'],
+            [['created_at', 'modified_at', 'deleted_at', 'package_name', 'expiry_date', 'batch_no', 'oldAttributeQuantity'], 'safe'],
             [['product_id'], 'validateStock'],
         ];
     }
@@ -65,11 +69,27 @@ class PhaSaleItem extends RActiveRecord {
         $batch = PhaProductBatch::find()->tenant()->andWhere(['product_id' => $this->product_id, 'batch_no' => $this->batch_no, 'DATE(expiry_date)' => $this->expiry_date])->one();
         if (!empty($batch)) {
             $this->batch_id = $batch->batch_id;
-            if($this->quantity > $this->batch->available_qty)
+            if ($this->oldAttributeQuantity) {
+                $old_qty = $this->oldAttributeQuantity;
+                $new_qty = $this->quantity;
+
+                if ($old_qty < $new_qty) {
+                    $check_quantity = $new_qty - $old_qty;
+                    $valid = true;
+                } else {
+                    $check_quantity = $this->quantity;
+                    $valid = false;
+                }
+            } else {
+                $check_quantity = $this->quantity;
+                $valid = true;
+            }
+
+            if ($valid && $check_quantity > $this->batch->available_qty)
                 $this->addError($attribute, "{$this->product->getFullName()} quantity is greater than Stock quantity ({$this->batch->available_qty})");
         }
     }
-    
+
     /**
      * @inheritdoc
      */
@@ -84,6 +104,9 @@ class PhaSaleItem extends RActiveRecord {
             'package_name' => 'Package Name',
             'mrp' => 'Mrp',
             'item_amount' => 'Item Amount',
+            'discount_percentage' => 'Discount Percentage',
+            'discount_amount' => 'Discount Amount',
+            'total_amount' => 'Total Amount',
             'vat_amount' => 'Vat Amount',
             'vat_percent' => 'Vat Percent',
             'status' => 'Status',
@@ -175,7 +198,7 @@ class PhaSaleItem extends RActiveRecord {
         }
         return $batch;
     }
-    
+
     private function _deleteBatch() {
         $batch = PhaProductBatch::find()->tenant()->andWhere(['batch_id' => $this->batch_id])->one();
         if (!empty($batch)) {
