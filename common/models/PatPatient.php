@@ -159,12 +159,12 @@ class PatPatient extends RActiveRecord {
     public function getPatLastAppointment() {
         return $this->hasOne(PatAppointment::className(), ['patient_id' => 'patient_id'])->status()->orderBy(['created_at' => SORT_DESC]);
     }
-    
+
     public function getPatLastSeenAppointment() {
         return $this->hasOne(PatAppointment::className(), ['patient_id' => 'patient_id'])
-                ->status()
-                ->andWhere(['appt_status' => 'S'])
-                ->orderBy(['created_at' => SORT_DESC]);
+                        ->status()
+                        ->andWhere(['appt_status' => 'S'])
+                        ->orderBy(['created_at' => SORT_DESC]);
     }
 
     public function getPatActiveIp() {
@@ -201,8 +201,8 @@ class PatPatient extends RActiveRecord {
 
         if ($insert) {
             $this->patient_guid = UuidHelpers::uuid();
-            
-            if(empty($this->patient_reg_date))
+
+            if (empty($this->patient_reg_date))
                 $this->patient_reg_date = date('Y-m-d H:i:s');
 
             $this->patient_int_code = CoInternalCode::generateInternalCode('P', 'common\models\PatPatient', 'patient_int_code');
@@ -558,14 +558,23 @@ class PatPatient extends RActiveRecord {
             'new_user' => function($model) {
                 $today = date("Y-m-d");
                 $reg_date = date('Y-m-d', strtotime($model->patient_reg_date));
-                return $reg_date == $today;
+                $active_encounter = $model->patActiveEncounter;
+                if (isset($active_encounter)) {
+                    $encounter_date = date('Y-m-d', strtotime($active_encounter->encounter_date));
+                    if ($encounter_date == $reg_date) {
+                        return true;
+                    }
+                } 
+                elseif ($reg_date == $today) {
+                    return true;
+                }
             },
             'name_with_int_code' => function($model) {
                 $name = ucfirst($model->patient_firstname);
-                
+
                 if ($model->patient_lastname != '')
                     $name .= ' ' . $model->patient_lastname . ' ';
-                
+
                 if ($model->patient_int_code != '')
                     $name .= ' (' . $model->patient_int_code . ')';
                 return $name;
