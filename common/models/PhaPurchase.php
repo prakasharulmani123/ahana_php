@@ -26,6 +26,7 @@ use yii\helpers\ArrayHelper;
  * @property string $before_disc_amount
  * @property string $after_disc_amount
  * @property string $net_amount
+ * @property string $payment_status
  * @property string $status
  * @property integer $created_by
  * @property string $created_at
@@ -37,28 +38,26 @@ use yii\helpers\ArrayHelper;
  * @property CoTenant $tenant
  * @property PhaPurchaseItem[] $phaPurchaseItems
  */
-class PhaPurchase extends RActiveRecord
-{
+class PhaPurchase extends RActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'pha_purchase';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            [['invoice_date', 'invoice_no', 'supplier_id'], 'required'],           
+            [['invoice_date', 'invoice_no', 'supplier_id'], 'required'],
             [['tenant_id', 'supplier_id', 'created_by', 'modified_by'], 'integer'],
-            [['invoice_date', 'created_at', 'modified_at', 'deleted_at','gr_num'], 'safe'],
-            [['payment_type', 'status'], 'string'],
+            [['invoice_date', 'created_at', 'modified_at', 'deleted_at', 'gr_num'], 'safe'],
+            [['payment_type', 'payment_status', 'status'], 'string'],
             [['total_item_purchase_amount', 'total_item_vat_amount', 'total_item_discount_amount', 'discount_percent', 'discount_amount', 'roundoff_amount', 'net_amount', 'before_disc_amount', 'after_disc_amount'], 'number'],
-            [['purchase_code', 'invoice_no'], 'string', 'max' => 50],            
+            [['purchase_code', 'invoice_no'], 'string', 'max' => 50],
             [['invoice_no'], 'unique', 'targetAttribute' => ['invoice_no'], 'message' => 'Invoice Number has already been taken.']
         ];
     }
@@ -66,8 +65,7 @@ class PhaPurchase extends RActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'purchase_id' => 'Purchase ID',
             'tenant_id' => 'Tenant ID',
@@ -89,46 +87,58 @@ class PhaPurchase extends RActiveRecord
             'modified_by' => 'Modified By',
             'modified_at' => 'Modified At',
             'deleted_at' => 'Deleted At',
-            'gr_num'    => 'Goods Received Number'
+            'gr_num' => 'Goods Received Number'
         ];
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getSupplier()
-    {
+    public function getSupplier() {
         return $this->hasOne(PhaSupplier::className(), ['supplier_id' => 'supplier_id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getTenant()
-    {
+    public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getPhaPurchaseItems()
-    {
+    public function getPhaPurchaseItems() {
         return $this->hasMany(PhaPurchaseItem::className(), ['purchase_id' => 'purchase_id']);
     }
-    
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getPhaPurchaseBillings() {
+        return $this->hasMany(PhaPurchaseBilling::className(), ['purchase_id' => 'purchase_id']);
+    }
+
+    public function getPhaPurchaseBillingsTotalPaidAmount() {
+        return $this->hasMany(PhaPurchaseBilling::className(), ['purchase_id' => 'purchase_id'])->sum('paid_amount');
+    }
+
     public static function find() {
         return new PhaPurchaseQuery(get_called_class());
     }
-    
+
     public function beforeSave($insert) {
-        if($insert){
+        if ($insert) {
             $this->purchase_code = CoInternalCode::generateInternalCode('PU', 'common\models\PhaPurchase', 'purchase_code');
             $this->gr_num = CoInternalCode::generateInternalCode('PG', 'common\models\PhaPurchase', 'gr_num');
+            //Payment Type - Credit - Then payment status is pending.
+            if ($this->payment_type == 'CR') {
+                $this->payment_status = 'P';
+            }
         }
         return parent::beforeSave($insert);
     }
-    
+
     public function fields() {
         $extend = [
             'supplier' => function ($model) {
@@ -137,18 +147,30 @@ class PhaPurchase extends RActiveRecord
             'items' => function ($model) {
                 return (isset($model->phaPurchaseItems) ? $model->phaPurchaseItems : '-');
             },
+            'billings_total_paid_amount' => function ($model) {
+                return (isset($model->phaPurchaseBillingsTotalPaidAmount) ? $model->phaPurchaseBillingsTotalPaidAmount : '0');
+            },
+            'billings_total_balance_amount' => function ($model) {
+                $paid_amount = 0;
+                if (isset($model->phaPurchaseBillingsTotalPaidAmount)) {
+                    $paid_amount = $model->phaPurchaseBillingsTotalPaidAmount;
+                }
+
+                $balance = $model->net_amount - $paid_amount;
+                return number_format($balance, '2');
+            },
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
     }
-    
+
     public function afterSave($insert, $changedAttributes) {
         if ($insert) {
             CoInternalCode::increaseInternalCode("PU");
         }
         return parent::afterSave($insert, $changedAttributes);
     }
-    
+
     public function getProductItemIds() {
         return ArrayHelper::map($this->phaPurchaseItems, 'purchase_item_id', 'purchase_item_id');
     }

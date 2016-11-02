@@ -77,52 +77,60 @@ class PharmacypurchasereturnController extends ActiveController {
             $valid = $model->validate();
 
             foreach ($post['product_items'] as $key => $product_item) {
-                if($product_item['quantity'] > 0){
+                if ($product_item['quantity'] > 0) {
                     $item_model = new PhaPurchaseReturnItem();
                     $item_model->scenario = 'saveform';
                     $item_model->attributes = $product_item;
                     $valid = $item_model->validate() && $valid;
                     if (!$valid)
                         break;
-                }else{
+                }else {
                     unset($post['product_items'][$key]);
                 }
             }
             //End
 
             if ($valid) {
-                $model->save(false);
-                
-                $item_ids = [];
-                foreach ($post['product_items'] as $key => $product_item) {
-                    $item_model = new PhaPurchaseReturnItem();
-                    
-                    //Edit Mode
-                    if (isset($product_item['purchase_ret_item_id'])) {
-                        $item = PhaPurchaseReturnItem::find()->tenant()->andWhere(['purchase_ret_item_id' => $product_item['purchase_ret_item_id']])->one();
-                        if (!empty($item))
-                            $item_model = $item;
+                if (!empty($post['product_items'])) {
+                    $model->save(false);
+
+                    $item_ids = [];
+                    foreach ($post['product_items'] as $key => $product_item) {
+                        $item_model = new PhaPurchaseReturnItem();
+
+                        //Edit Mode
+                        if (isset($product_item['purchase_ret_item_id'])) {
+                            $item = PhaPurchaseReturnItem::find()->tenant()->andWhere(['purchase_ret_item_id' => $product_item['purchase_ret_item_id']])->one();
+                            if (!empty($item))
+                                $item_model = $item;
+                        }
+
+                        $item_model->attributes = $product_item;
+                        $item_model->purchase_ret_id = $model->purchase_ret_id;
+                        $item_model->save(false);
+                        $item_ids[$item_model->purchase_ret_item_id] = $item_model->purchase_ret_item_id;
                     }
 
-                    $item_model->attributes = $product_item;
-                    $item_model->purchase_ret_id = $model->purchase_ret_id;
-                    $item_model->save(false);
-                    $item_ids[$item_model->purchase_ret_item_id] = $item_model->purchase_ret_item_id;
-                }
-                
-                //Delete Product Items
-                if(!empty($item_ids)){
-                    $delete_ids = array_diff($model->getProductItemIds(), $item_ids);
-                    
-                    foreach ($delete_ids as $delete_id) {
-                        $item = PhaPurchaseReturnItem::find()->tenant()->andWhere(['purchase_ret_item_id' => $delete_id])->one();
-                        $item->delete();
+                    //Delete Product Items
+                    if (!empty($item_ids)) {
+                        $delete_ids = array_diff($model->getProductItemIds(), $item_ids);
+
+                        foreach ($delete_ids as $delete_id) {
+                            $item = PhaPurchaseReturnItem::find()->tenant()->andWhere(['purchase_ret_item_id' => $delete_id])->one();
+                            $item->delete();
+                        }
                     }
+
+                    return ['success' => true];
+                } else {
+                    return ['success' => false, 'message' => 'No Items to return'];
                 }
-                
-                return ['success' => true];
             } else {
-                return ['success' => false, 'message' => Html::errorSummary([$model, $item_model])];
+                if (isset($item_model)) {
+                    return ['success' => false, 'message' => Html::errorSummary([$model, $item_model])];
+                } else {
+                    return ['success' => false, 'message' => Html::errorSummary([$model])];
+                }
             }
         } else {
             return ['success' => false, 'message' => 'Fill the Form'];

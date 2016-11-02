@@ -74,6 +74,22 @@ class PharmacypurchaseController extends ActiveController {
         }
     }
 
+    public function actionGetpurchase() {
+        $get = Yii::$app->getRequest()->get();
+
+        if (isset($get['purchase_id'])) {
+            $data = PhaPurchase::find()
+                    ->tenant()
+                    ->active()
+                    ->andWhere(['purchase_id' => $get['purchase_id']])
+                    ->orderBy(['created_at' => SORT_DESC])
+                    ->one();
+            return ['success' => true, 'purchase' => $data];
+        } else {
+            return ['success' => false, 'message' => 'Invalid Access'];
+        }
+    }
+
     public function actionSavepurchase() {
         $post = Yii::$app->getRequest()->post();
 
@@ -101,11 +117,11 @@ class PharmacypurchaseController extends ActiveController {
 
             if ($valid) {
                 $model->save(false);
-                
+
                 $item_ids = [];
                 foreach ($post['product_items'] as $key => $product_item) {
                     $item_model = new PhaPurchaseItem();
-                    
+
                     //Edit Mode
                     if (isset($product_item['purchase_item_id'])) {
                         $item = PhaPurchaseItem::find()->tenant()->andWhere(['purchase_item_id' => $product_item['purchase_item_id']])->one();
@@ -118,23 +134,23 @@ class PharmacypurchaseController extends ActiveController {
                     $item_model->save(false);
                     $item_ids[$item_model->purchase_item_id] = $item_model->purchase_item_id;
                 }
-                
+
                 //Delete Product Items
-                if(!empty($item_ids)){
+                if (!empty($item_ids)) {
                     $delete_ids = array_diff($model->getProductItemIds(), $item_ids);
-                    
+
                     foreach ($delete_ids as $delete_id) {
                         $item = PhaPurchaseItem::find()->tenant()->andWhere(['purchase_item_id' => $delete_id])->one();
                         $item->delete();
                     }
                 }
-                
+
                 //Update Reorder
-                if(isset($post['reorder_id'])){
+                if (isset($post['reorder_id'])) {
                     PhaReorderHistory::updateAll(['status' => '0'], ['reorder_id' => $post['reorder_id']]);
                     PhaReorderHistoryItem::updateAll(['status' => '0'], ['reorder_id' => $post['reorder_id']]);
                 }
-                
+
                 return ['success' => true, 'model' => $model];
             } else {
                 return ['success' => false, 'message' => Html::errorSummary([$model, $item_model])];

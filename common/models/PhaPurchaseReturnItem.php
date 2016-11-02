@@ -23,6 +23,7 @@ use yii\db\ActiveQuery;
  * @property string $discount_percent
  * @property string $discount_amount
  * @property string $total_amount
+ * @property integer $package_unit
  * @property string $package_name
  * @property string $vat_amount
  * @property string $vat_percent
@@ -61,7 +62,7 @@ class PhaPurchaseReturnItem extends RActiveRecord
             [['tenant_id', 'purchase_ret_id', 'product_id', 'batch_id', 'quantity', 'free_quantity', 'created_by', 'modified_by'], 'integer'],
             [['mrp', 'purchase_ret_rate', 'purchase_ret_amount', 'discount_percent', 'discount_amount', 'total_amount', 'vat_amount', 'vat_percent'], 'number'],
             [['status'], 'string'],
-            [['created_at', 'modified_at', 'deleted_at', 'expiry_date', 'batch_no','free_quantity_unit', 'purchase_item_id'], 'safe'],
+            [['created_at', 'modified_at', 'deleted_at', 'expiry_date', 'batch_no','package_unit' ,'free_quantity_unit', 'purchase_item_id'], 'safe'],
             [['package_name'], 'string', 'max' => 255],
             ['purchase_ret_rate', 'validateProductRate'],
             [['quantity', 'mrp', 'purchase_ret_rate', 'purchase_ret_amount', 'total_amount'], 'validateAmount'],
@@ -196,6 +197,7 @@ class PhaPurchaseReturnItem extends RActiveRecord
         $batch = PhaProductBatch::find()->tenant()->andWhere(['product_id' => $this->product_id, 'batch_no' => $this->batch_no, 'DATE(expiry_date)' => $this->expiry_date])->one();
         if (!empty($batch)) {
             $this->batch_id = $batch->batch_id;
+            $quantity = ($quantity * $this->package_unit);
             if ($sep == '-') {
                 $batch->available_qty = $batch->available_qty - $quantity;
                 $batch->total_qty = $batch->total_qty - $quantity;
