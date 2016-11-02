@@ -59,12 +59,11 @@
                         <th>Supplier Name</th>
                         <th>Total Purchase Amount</th>
                         <th>Total Vat Amount</th>
-                        <th>Total Product Disc. Amount</th>
                         <th>Disc. %</th>
                         <th>Disc Amount</th>
                         <th>Roundoff Amount</th>
                         <th>net Amount</th>
-                        <th>Action</th>
+                        <th data-sort-ignore="true">Action</th>
                     </tr>
                 </thead>
                 <tbody ng-if="isLoading == false">
@@ -81,7 +80,6 @@
                         <td>{{row.supplier.supplier_name}}</td>
                         <td><span class="badge bg-info ng-binding">{{row.total_item_purchase_amount}}</span></td>
                         <td>{{row.total_item_vat_amount}}</td>
-                        <td>{{row.total_item_discount_amount}}</td>
                         <td>{{row.discount_percent}}</td>
                         <td>{{row.discount_amount}}</td>
                         <td>{{row.roundoff_amount}}</td>
@@ -90,6 +88,11 @@
                             <a class="label bg-dark" title="Edit" check-access  ui-sref="pharmacy.purchaseUpdate({id: '{{row.purchase_id}}'})">
                                 <i class="fa fa-pencil"></i>
                             </a>
+                            <span ng-if="row.payment_type == 'CR' && row.payment_status != 'C'">
+                                <a class="label bg-dark" title="Make Payment" ng-click="make_payment(row.purchase_id)" data-button="pharmacy.makePayment" check-access-custom>
+                                    <i class="fa fa-money"></i>
+                                </a>
+                            </span>
                         </td>
                     </tr>
                     <tr ng-repeat-end ng-show="expanded" 

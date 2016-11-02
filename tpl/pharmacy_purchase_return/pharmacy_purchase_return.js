@@ -33,155 +33,89 @@ app.controller('PurchaseReturnController', ['$rootScope', '$scope', '$timeout', 
         };
 
         //For Form
-        $scope.initForm = function () {
+        $scope.initForm = function (formtype) {
+            $scope.data = {};
+            if (formtype == 'add') {
+                $scope.data.formtype = 'add';
+                $scope.data.status = '1';
+                $scope.data.invoice_date = moment().format('YYYY-MM-DD');
+            } else {
+                $scope.data.formtype = 'update';
+                $scope.loadForm();
+            }
+
             $scope.loadbar('show');
-            $rootScope.commonService.GetSupplierList('', '1', false, function (response) {
-                $scope.suppliers = response.supplierList;
+            $scope.products = [];
+            $scope.batches = [];
 
-                if ($scope.data.formtype == 'update') {
-                    $scope.loadForm();
-                } else {
-                    $scope.data.invoice_date = moment().format('YYYY-MM-DD');
-//                    $scope.addRow();
-                }
-                $scope.products = [];
-                $scope.batches = [];
-                $scope.packings = response.packingList;
-                $scope.loadbar('hide');
-
-            });
-            
-            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacypurchase')
+            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacypurchase?fields=purchase_id,invoice_no')
                     .success(function (purchaseList) {
-                        $scope.purchases = purchaseList;
-                            $timeout(function () {
-                                $('.selectpicker').selectpicker('refresh');
-                            }, 1000);
+                        $scope.purchaseinvoice = purchaseList;
+                        $timeout(function () {
+                            $('.selectpicker').selectpicker('refresh');
+                        }, 1000);
                     })
                     .error(function () {
-                        $scope.errorData = "An Error has occured while loading purchaseList!";
+                        $scope.errorData = "An Error has occured while loading Purchase Invoice List!";
+                    });
+
+            $scope.loadbar('hide');
+        }
+
+        $scope.getPurchaseReturnItems = function () {
+            $scope.purchasereturnitems = [];
+            var purchase_id = $scope.data.purchase_id;
+            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacypurchase/getpurchase?purchase_id=' + purchase_id)
+                    .success(function (result) {
+                        var purchase = result.purchase;
+                        $scope.data.supplier_id = purchase.supplier_id;
+                        $scope.data.supplier_name = purchase.supplier.supplier_name;
+                        $scope.data.purchase_date = purchase.invoice_date;
+                        $scope.data.purchase_id = purchase.purchase_id;
+
+                        angular.forEach(purchase.items, function (item, key) {
+                            $scope.inserted = {
+                                product_id: item.product_id,
+                                full_name: item.product.full_name,
+                                batch_details: item.batch.batch_details,
+                                batch_no: item.batch.batch_no,
+                                batch_id: item.batch.batch_id,
+                                available_qty: item.batch.available_qty,
+                                expiry_date: item.batch.expiry_date,
+                                purchase_quantity: item.quantity,
+                                quantity: 0,
+                                free_quantity: item.free_quantity,
+                                free_quantity_unit: item.free_quantity_unit,
+                                purchase_ret_rate: item.purchase_rate,
+                                discount_percent: item.discount_percent,
+                                discount_amount: item.discount_amount,
+                                vat_percent: item.vat_percent,
+                                vat_amount: item.vat_amount,
+                                total_amount: item.total_amount,
+                                purchase_ret_amount: item.purchase_amount,
+                                mrp: item.mrp,
+                                purchase_item_id: item.purchase_item_id,
+                                package_name: item.package_name,
+                                package_unit: item.package_unit,
+                            };
+                            $scope.purchasereturnitems.push($scope.inserted);
+                            $scope.updateRow(key);
+                        });
+                    })
+                    .error(function () {
+                        $scope.errorData = "An Error has occured while loading Purchase!";
                     });
         }
-        
-        $scope.getPurchaseReturnItems = function(){
-            $scope.purchasereturnitems = [];
-            result = $filter('filter')($scope.purchases, {purchase_id: $scope.data.purchase_id});
-            if(result.length > 0){
-                $scope.data.supplier_id = result[0].supplier_id;
-                $scope.data.supplier_name = result[0].supplier.supplier_name;
-                $scope.data.purchase_date = result[0].invoice_date;
-                $scope.data.purchase_id = result[0].purchase_id;
-                
-                angular.forEach(result[0].items, function(item, key){
-                    $scope.inserted = {
-                        full_name: item.product.full_name,
-                        batch_details: item.batch.batch_details,
-                        purchase_quantity: item.quantity,
-                        quantity: 0,
-                        free_quantity: item.free_quantity,
-                        free_quantity_unit: item.free_quantity_unit,
-                        purchase_ret_rate: item.purchase_rate,
-                        discount_percent: item.discount_percent,
-                        discount_amount: item.discount_amount,
-                        vat_percent: item.vat_percent,
-                        vat_amount: item.vat_amount,
-                        total_amount: item.total_amount,
-                        product_id: item.product_id,
-                        purchase_ret_amount: item.purchase_amount,
-                        batch_no: item.batch.batch_no,
-                        batch_id: item.batch.batch_id,
-                        mrp: item.mrp,
-                        purchase_item_id: item.purchase_item_id,
-                        package_name: item.package_name,
-                    };
-                    $scope.purchasereturnitems.push($scope.inserted);
-                    
-                    $scope.updateRow(key);
-                });
-//                $scope.updatePurchaseReturnRate();
-            }
-        }
 
-        var changeTimer = false;
-
-        $scope.getProduct = function (purchasereturnitem) {
-            var name = purchasereturnitem.full_name.$viewValue;
-            if (changeTimer !== false)
-                clearTimeout(changeTimer);
-
-            changeTimer = setTimeout(function () {
-                $scope.loadbar('show');
-                $rootScope.commonService.GetProductListByName(name, function (response) {
-                    if (response.productList.length > 0)
-                        $scope.products = response.productList;
-                    $scope.loadbar('hide');
-                });
-                changeTimer = false;
-            }, 300);
-        }
-
-        // editable table
-        $scope.purchasereturnitems = [];
-
-        // add Row
-        $scope.addRow = function () {
-            $scope.inserted = {
-                full_name: '',
-                batch_details: '',
-                quantity: '0',
-                free_quantity: '0',
-                free_quantity_unit: '0',
-                purchase_ret_rate: '0',
-                discount_percent: '0',
-                discount_amount: '0',
-                vat_percent: '0',
-                vat_amount: '0',
-                total_amount: '0',
-                product_id: '',
-                purchase_ret_amount: '0',
-                batch_no: '0',
-            };
-            $scope.purchasereturnitems.push($scope.inserted);
-
-            if ($scope.purchasereturnitems.length > 1) {
-                $timeout(function () {
-                    $scope.setFocus('full_name', $scope.purchasereturnitems.length - 1);
-                });
-            }
-        };
-
-        $scope.setFocus = function (id, index) {
-            angular.element(document.querySelectorAll("#" + id))[index].focus();
-        };
-
-        // remove Row
-        $scope.removeSubcat = function (index) {
-            if ($scope.purchasereturnitems.length == 1) {
-                alert('Can\'t Delete. PurchaseReturn Item must be atleast one.');
-                return false;
-            }
-            $scope.purchasereturnitems.splice(index, 1);
-            $scope.updatePurchaseReturnRate();
-            $timeout(function () {
-                $scope.setFocus('full_name', $scope.purchasereturnitems.length - 1);
-            });
-        };
-
-        $scope.checkInput = function (data) {
-            if (!data) {
-                return "Not empty";
-            }
-        };
-
-        $scope.checkAmount = function (data) {
-            if (data <= 0) {
-                return "Not be 0";
-            }
-        };
-
-        $scope.checkMaxValue = function (data, max) {
-            if (max < data) {
-                return "Not greater than " + max;
+        $scope.checkReturnQuantity = function (quantity, key) {
+            total_quantity = quantity * $scope.purchasereturnitems[key].package_unit;
+            available_qty = $scope.purchasereturnitems[key].available_qty;
+            
+            purchase_quantity = $scope.purchasereturnitems[key].purchase_quantity;
+            if (purchase_quantity < quantity) {
+                return "Not greater than " + purchase_quantity;
+            } else if(available_qty < total_quantity){
+                return "No Stock";
             }
         };
 
@@ -258,32 +192,29 @@ app.controller('PurchaseReturnController', ['$rootScope', '$scope', '$timeout', 
             var rate = parseFloat($scope.purchasereturnitems[key].purchase_ret_rate);
             var disc_perc = parseFloat($scope.purchasereturnitems[key].discount_percent);
             var vat_perc = parseFloat($scope.purchasereturnitems[key].vat_percent);
-            var free_qty = parseFloat($scope.purchasereturnitems[key].free_quantity);
 
             //Validate isNumer
             qty = !isNaN(qty) ? qty : 0;
             rate = !isNaN(rate) ? rate : 0;
             disc_perc = !isNaN(disc_perc) ? disc_perc : 0;
             vat_perc = !isNaN(vat_perc) ? vat_perc : 0;
-            free_qty = !isNaN(free_qty) ? free_qty : 0;
 
             var purchase_ret_amount = (qty * rate).toFixed(2);
             var disc_amount = disc_perc > 0 ? (purchase_ret_amount * (disc_perc / 100)).toFixed(2) : 0;
-
             var total_amount = (purchase_ret_amount - disc_amount).toFixed(2);
-            var vat_amount = (purchase_ret_amount * (vat_perc / 100)).toFixed(2);
+            var vat_amount = (total_amount * (vat_perc / 100)).toFixed(2); // Excluding vat
+//            var vat_amount = ((total_amount * vat_perc) / (100 + vat_perc)).toFixed(2); // Including vat
 
             $scope.purchasereturnitems[key].purchase_ret_amount = purchase_ret_amount;
             $scope.purchasereturnitems[key].discount_amount = disc_amount;
             $scope.purchasereturnitems[key].total_amount = total_amount;
             $scope.purchasereturnitems[key].vat_amount = vat_amount;
-            $scope.purchasereturnitems[key].free_quantity_unit = free_qty;
 
             $scope.updatePurchaseReturnRate();
         }
 
         $scope.updatePurchaseReturnRate = function () {
-            var total_purchase_ret_amount = total_discount_amount = total_vat_amount = total_amount = 0;
+            var total_purchase_ret_amount = total_discount_amount = total_vat_amount = 0;
             var before_disc_amount = after_disc_amount = roundoff_amount = net_amount = 0;
 
             //Get Total PurchaseReturn, VAT, Discount Amount
@@ -314,7 +245,6 @@ app.controller('PurchaseReturnController', ['$rootScope', '$scope', '$timeout', 
             // Net Amount = (Total Amount - Discount Amount) +- RoundOff
             net_amount = Math.round(parseFloat(after_disc_amount));
             roundoff_amount = Math.abs(net_amount - after_disc_amount);
-
             $scope.data.roundoff_amount = roundoff_amount.toFixed(2);
             $scope.data.net_amount = net_amount.toFixed(2);
         }
@@ -327,23 +257,6 @@ app.controller('PurchaseReturnController', ['$rootScope', '$scope', '$timeout', 
             $scope.msg.successMessage = "";
 
             $scope.data.invoice_date = moment($scope.data.invoice_date).format('YYYY-MM-DD');
-
-            angular.forEach($scope.purchasereturnitems, function (purchasereturnitem, key) {
-
-                if (angular.isObject(purchasereturnitem.full_name)) {
-                    $scope.purchasereturnitems[key].full_name = purchasereturnitem.full_name.full_name;
-                } else if (typeof purchasereturnitem.full_name == 'undefined') {
-                    $scope.purchasereturnitems[key].product_id = '';
-                }
-
-                if (angular.isObject(purchasereturnitem.batch_details)) {
-                    $scope.purchasereturnitems[key].batch_details = purchasereturnitem.batch_details.batch_details;
-                } else if (typeof purchasereturnitem.batch_details == 'undefined') {
-                    $scope.purchasereturnitems[key].batch_no = '';
-                } else if ((purchasereturnitem.batch_no == '0' || purchasereturnitem.batch_no == '') && typeof purchasereturnitem.batch_details !== 'undefined') {
-                    $scope.purchasereturnitems[key].batch_no = purchasereturnitem.batch_details;
-                }
-            });
 
             angular.extend(_that.data, {product_items: $scope.purchasereturnitems});
             $scope.loadbar('show');
@@ -404,7 +317,7 @@ app.controller('PurchaseReturnController', ['$rootScope', '$scope', '$timeout', 
                             });
 
                             $scope.data.supplier_name = $scope.data.supplier.supplier_name;
-                        
+
                             $timeout(function () {
                                 delete $scope.data.supplier;
                                 delete $scope.data.items;
