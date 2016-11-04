@@ -158,7 +158,7 @@
                                             e-name="quantity"
                                             e-number-mask="" 
                                             e-form="tableform" 
-                                            onbeforesave="checkInput($data); checkAmount($data)" 
+                                            onbeforesave="checkInput($data); checkAmount($data); checkQuantity($data, key)" 
                                             e-ng-keydown="updateColumn($data, key, 'quantity')"  
                                             e-ng-keyup="updateColumn($data, key, 'quantity')" 
                                             e-autocomplete="off" 
@@ -456,4 +456,4 @@
             <td>{{data2.net_amount}}</td>
         </tr>
     </table>
-</div>    
+</div>

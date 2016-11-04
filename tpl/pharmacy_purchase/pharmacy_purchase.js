@@ -99,7 +99,18 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
         $scope.minDate = $scope.minDate ? null : new Date();
 
         //For Form
-        $scope.initForm = function () {
+        $scope.formtype = '';
+        $scope.initForm = function (formtype) {
+            $scope.data = {};
+            if(formtype == 'add'){
+                $scope.data.formtype = 'add';
+                $scope.data.payment_type = 'CA';
+                $scope.formtype = 'add';
+            } else {
+                $scope.data.formtype = 'update';
+                $scope.formtype = 'update';
+            }
+            
             $scope.loadbar('show');
             $rootScope.commonService.GetPaymentType(function (response) {
                 $scope.paymentTypes = response;
@@ -293,6 +304,24 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                     return "Not empty.";
                 } else if (data <= 0) {
                     return "Not be 0.";
+                }
+            }
+        }
+        
+        $scope.checkQuantity = function(data, key) {
+            if($scope.formtype == 'update'){
+                old = $scope.purchaseitems[key].old_quantity;
+                if(old > data){
+                    package_unit = $scope.purchaseitems[key].package_unit;
+                    current_qty = (old - data) * package_unit;
+                    stock = $scope.purchaseitems[key].available_qty; //Stock
+                    total_returned_quantity = $scope.purchaseitems[key].total_returned_quantity; // Prior returned quantities
+                    
+                    if(current_qty > stock){
+                        return 'No stock';
+                    } else if(total_returned_quantity > data){
+                        return 'Qty Mismatch';
+                    }
                 }
             }
         }
@@ -688,6 +717,8 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                                 temp_expiry_date: item.batch.expiry_date,
                                 temp_mrp: item.batch.mrp,
                                 temp_package_name: item.package_name,
+                                old_quantity: item.quantity,
+                                available_qty: item.batch.available_qty,
                             });
                             $timeout(function () {
                                 $scope.showOrHideRowEdit('hide', key);

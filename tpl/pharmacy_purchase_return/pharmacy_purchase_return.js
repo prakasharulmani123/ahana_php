@@ -33,13 +33,16 @@ app.controller('PurchaseReturnController', ['$rootScope', '$scope', '$timeout', 
         };
 
         //For Form
+        $scope.formtype = '';
         $scope.initForm = function (formtype) {
             $scope.data = {};
             if (formtype == 'add') {
                 $scope.data.formtype = 'add';
                 $scope.data.status = '1';
                 $scope.data.invoice_date = moment().format('YYYY-MM-DD');
+                $scope.formtype = 'add';
             } else {
+                $scope.formtype = 'update';
                 $scope.data.formtype = 'update';
                 $scope.loadForm();
             }
@@ -97,6 +100,7 @@ app.controller('PurchaseReturnController', ['$rootScope', '$scope', '$timeout', 
                                 purchase_item_id: item.purchase_item_id,
                                 package_name: item.package_name,
                                 package_unit: item.package_unit,
+                                total_returned_quantity: item.total_returned_quantity
                             };
                             $scope.purchasereturnitems.push($scope.inserted);
                             $scope.updateRow(key);
@@ -108,14 +112,35 @@ app.controller('PurchaseReturnController', ['$rootScope', '$scope', '$timeout', 
         }
 
         $scope.checkReturnQuantity = function (quantity, key) {
-            total_quantity = quantity * $scope.purchasereturnitems[key].package_unit;
-            available_qty = $scope.purchasereturnitems[key].available_qty;
-            
-            purchase_quantity = $scope.purchasereturnitems[key].purchase_quantity;
-            if (purchase_quantity < quantity) {
-                return "Not greater than " + purchase_quantity;
-            } else if(available_qty < total_quantity){
-                return "No Stock";
+            if ($scope.formtype == 'update') {
+                old = $scope.purchasereturnitems[key].old_quantity;
+                if (old < quantity) {
+                    purchase_quantity = $scope.purchasereturnitems[key].purchase_quantity; // Purchased quantities
+                    total_returned_quantity = $scope.purchasereturnitems[key].total_returned_quantity; // Prior returned quantities
+                    total = parseFloat(quantity) + parseFloat(total_returned_quantity);
+                    
+                    stock = $scope.purchasereturnitems[key].available_qty; //Stock
+                    package_unit = $scope.purchasereturnitems[key].package_unit;
+                    current_qty = (quantity - old) * package_unit;
+
+                    if (total > purchase_quantity) {
+                        return 'Qty Mismatch';
+                    } else if (current_qty > stock) {
+                        return 'No stock';
+                    }
+                }
+            } else {
+                total_quantity = quantity * $scope.purchasereturnitems[key].package_unit; //Return quantity
+                stock = $scope.purchasereturnitems[key].available_qty; //Stock
+                purchase_quantity = $scope.purchasereturnitems[key].purchase_quantity; // Purchased quantities
+                total_returned_quantity = $scope.purchasereturnitems[key].total_returned_quantity; // Prior returned quantities
+
+                total = parseFloat(quantity) + parseFloat(total_returned_quantity);
+                if (total > purchase_quantity) {
+                    return 'Qty Exceed';
+                } else if (total_quantity > stock) {
+                    return "No Stock";
+                }
             }
         };
 
@@ -133,56 +158,8 @@ app.controller('PurchaseReturnController', ['$rootScope', '$scope', '$timeout', 
             }
         };
 
-        $scope.updateBatchRow = function (item, model, label, key) {
-            $scope.purchasereturnitems[key].batch_no = item.batch_no;
-            $scope.purchasereturnitems[key].expiry_date = item.expiry_date;
-            $scope.purchasereturnitems[key].mrp = item.mrp;
-            $scope.purchasereturnitems[key].package_name = item.product.purchasePackageName;
-
-        }
-
-        $scope.updateProductRow = function (item, model, label, key) {
-            $scope.purchasereturnitems[key].product_id = item.product_id;
-            $scope.purchasereturnitems[key].vat_percent = item.purchaseVat.vat;
-            $scope.purchasereturnitems[key].package_name = item.purchasePackageName;
-            $scope.purchasereturnitems[key].purchase_ret_rate = item.product_price;
-
-            $scope.loadbar('show');
-            $scope.updateRow(key);
-            $rootScope.commonService.GetBatchListByProduct(item.product_id, function (response) {
-                $scope.loadbar('hide');
-                $scope.batches = response.batchList;
-
-                $scope.purchasereturnitems[key].batch_no = '';
-                $scope.purchasereturnitems[key].expiry_date = '';
-                $scope.purchasereturnitems[key].mrp = 0;
-                $scope.purchasereturnitems[key].quantity = 0;
-                $scope.purchasereturnitems[key].free_quantity = 0;
-                $scope.purchasereturnitems[key].free_quantity_unit = 0;
-                $scope.purchasereturnitems[key].purchase_ret_rate = 0;
-                $scope.purchasereturnitems[key].discount_percent = 0;
-
-            });
-        }
-
-        $scope.showOrHideProductBatch = function (mode, key) {
-            if (mode == 'hide') {
-                i_addclass = t_removeclass = 'hide';
-                i_removeclass = t_addclass = '';
-            } else {
-                i_addclass = t_removeclass = '';
-                i_removeclass = t_addclass = 'hide';
-            }
-            $('#i_full_name_' + key).addClass(i_addclass).removeClass(i_removeclass);
-            $('#i_batch_details_' + key).addClass(i_addclass).removeClass(i_removeclass);
-
-            $('#t_full_name_' + key).addClass(t_addclass).removeClass(t_removeclass);
-            $('#t_batch_details_' + key).addClass(t_addclass).removeClass(t_removeclass);
-        }
-
         $scope.updateColumn = function ($data, key, column) {
             $scope.purchasereturnitems[key][column] = $data;
-
             $scope.updateRow(key);
         }
 
@@ -259,6 +236,7 @@ app.controller('PurchaseReturnController', ['$rootScope', '$scope', '$timeout', 
             $scope.data.invoice_date = moment($scope.data.invoice_date).format('YYYY-MM-DD');
 
             angular.extend(_that.data, {product_items: $scope.purchasereturnitems});
+            
             $scope.loadbar('show');
             $http({
                 method: 'POST',
@@ -293,6 +271,7 @@ app.controller('PurchaseReturnController', ['$rootScope', '$scope', '$timeout', 
 
         //Get Data for update Form
         $scope.loadForm = function () {
+            $scope.purchasereturnitems = [];
             $scope.loadbar('show');
             _that = this;
             $scope.errorData = "";
@@ -301,28 +280,51 @@ app.controller('PurchaseReturnController', ['$rootScope', '$scope', '$timeout', 
                 method: "GET"
             }).success(
                     function (response) {
+                        $scope.loadbar('hide');
+                        $scope.data = response;
 
-                        $rootScope.commonService.GetProductList('', '1', false, function (response2) {
-                            $scope.loadbar('hide');
+                        var purchasereturn = response;
+                        $scope.data.supplier_id = purchasereturn.supplier_id;
+                        $scope.data.supplier_name = purchasereturn.supplier.supplier_name;
+                        $scope.data.purchase_date = purchasereturn.invoice_date;
+//                        $scope.data.purchase_id = purchasereturn.purchase_ret_id;
 
-                            $scope.data = response;
-                            $scope.products = response2.productList;
-
-                            $scope.purchasereturnitems = response.items;
-                            angular.forEach($scope.purchasereturnitems, function (item, key) {
-                                angular.extend($scope.purchasereturnitems[key], {full_name: item.product.full_name, batch_no: item.batch.batch_no, batch_details: item.batch.batch_details, expiry_date: item.batch.expiry_date, purchase_quantity: item.purchase_quantity});
-                                $timeout(function () {
-                                    $scope.showOrHideProductBatch('hide', key);
-                                });
-                            });
-
-                            $scope.data.supplier_name = $scope.data.supplier.supplier_name;
-
-                            $timeout(function () {
-                                delete $scope.data.supplier;
-                                delete $scope.data.items;
-                            }, 3000);
+                        angular.forEach(purchasereturn.items, function (item, key) {
+                            $scope.inserted = {
+                                product_id: item.product_id,
+                                full_name: item.product.full_name,
+                                batch_details: item.batch.batch_details,
+                                batch_no: item.batch.batch_no,
+                                batch_id: item.batch.batch_id,
+                                available_qty: item.batch.available_qty,
+                                expiry_date: item.batch.expiry_date,
+                                purchase_quantity: item.purchase_quantity,
+                                old_quantity: item.quantity,
+                                quantity: item.quantity,
+                                free_quantity: item.free_quantity,
+                                free_quantity_unit: item.free_quantity_unit,
+                                purchase_ret_rate: item.purchase_ret_rate,
+                                discount_percent: item.discount_percent,
+                                discount_amount: item.discount_amount,
+                                vat_percent: item.vat_percent,
+                                vat_amount: item.vat_amount,
+                                total_amount: item.total_amount,
+                                purchase_ret_amount: item.purchase_ret_amount,
+                                mrp: item.mrp,
+                                purchase_item_id: item.purchase_item_id,
+                                purchase_ret_item_id: item.purchase_ret_item_id,
+                                package_name: item.package_name,
+                                package_unit: item.package_unit,
+                                total_returned_quantity: item.total_returned_quantity
+                            };
+                            $scope.purchasereturnitems.push($scope.inserted);
+                            $scope.updateRow(key);
                         });
+
+                        $timeout(function () {
+                            delete $scope.data.supplier;
+                            delete $scope.data.items;
+                        }, 3000);
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');
@@ -334,9 +336,3 @@ app.controller('PurchaseReturnController', ['$rootScope', '$scope', '$timeout', 
         };
 
     }]);
-
-//app.filter('moment', function () {
-//    return function (dateString, format) {
-//        return moment(dateString).format(format);
-//    };
-//});
