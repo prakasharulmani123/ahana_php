@@ -150,6 +150,17 @@ class PhaPurchaseItem extends RActiveRecord {
     public function getBatch() {
         return $this->hasOne(PhaProductBatch::className(), ['batch_id' => 'batch_id']);
     }
+    
+    /**
+     * @return ActiveQuery
+     */
+    public function getPhaPurchaseReturnItems() {
+        return $this->hasMany(PhaPurchaseReturnItem::className(), ['purchase_item_id' => 'purchase_item_id']);
+    }
+    
+    public function getPhaPurchaseReturnItemsTotal() {
+        return $this->hasMany(PhaPurchaseReturnItem::className(), ['purchase_item_id' => 'purchase_item_id'])->sum('quantity');
+    }
 
     public static function find() {
         return new PhaPurchaseItemQuery(get_called_class());
@@ -163,6 +174,9 @@ class PhaPurchaseItem extends RActiveRecord {
             'batch' => function ($model) {
                 return (isset($model->batch) ? $model->batch : '-');
             },
+            'total_returned_quantity' => function($model) {
+                return (isset($model->phaPurchaseReturnItemsTotal) ? $model->phaPurchaseReturnItemsTotal : '0');
+            }
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;

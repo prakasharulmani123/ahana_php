@@ -89,6 +89,7 @@ class PhaPurchaseBilling extends RActiveRecord {
         } elseif ($billings_total > 0) {
             $purchase_model->payment_status = 'PC';
         }
+        $purchase_model->after_save = false;
         $purchase_model->save(false);
 
         return parent::afterSave($insert, $changedAttributes);

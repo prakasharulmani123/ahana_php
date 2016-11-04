@@ -39,30 +39,29 @@ use yii\db\ActiveQuery;
  * @property PhaPurchaseReturn $purchaseRet
  * @property CoTenant $tenant
  */
-class PhaPurchaseReturnItem extends RActiveRecord
-{
+class PhaPurchaseReturnItem extends RActiveRecord {
+
     public $expiry_date;
     public $batch_no;
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'pha_purchase_return_item';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['product_id', 'quantity', 'mrp', 'purchase_ret_rate', 'purchase_ret_amount', 'package_name', 'vat_amount'], 'required'],
             [['batch_no'], 'required', 'on' => 'saveform'],
             [['tenant_id', 'purchase_ret_id', 'product_id', 'batch_id', 'quantity', 'free_quantity', 'created_by', 'modified_by'], 'integer'],
             [['mrp', 'purchase_ret_rate', 'purchase_ret_amount', 'discount_percent', 'discount_amount', 'total_amount', 'vat_amount', 'vat_percent'], 'number'],
             [['status'], 'string'],
-            [['created_at', 'modified_at', 'deleted_at', 'expiry_date', 'batch_no','package_unit' ,'free_quantity_unit', 'purchase_item_id'], 'safe'],
+            [['created_at', 'modified_at', 'deleted_at', 'expiry_date', 'batch_no', 'package_unit', 'free_quantity_unit', 'purchase_item_id'], 'safe'],
             [['package_name'], 'string', 'max' => 255],
             ['purchase_ret_rate', 'validateProductRate'],
             [['quantity', 'mrp', 'purchase_ret_rate', 'purchase_ret_amount', 'total_amount'], 'validateAmount'],
@@ -78,12 +77,11 @@ class PhaPurchaseReturnItem extends RActiveRecord
         if ($this->$attribute <= 0)
             $this->addError($attribute, "{$this->getAttributeLabel($attribute)} must be greater than 0 for {$this->product->fullname}");
     }
-    
+
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'purchase_ret_item_id' => 'Purchase Ret Item ID',
             'tenant_id' => 'Tenant ID',
@@ -114,47 +112,50 @@ class PhaPurchaseReturnItem extends RActiveRecord
     /**
      * @return ActiveQuery
      */
-    public function getBatch()
-    {
+    public function getBatch() {
         return $this->hasOne(PhaProductBatch::className(), ['batch_id' => 'batch_id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getProduct()
-    {
+    public function getProduct() {
         return $this->hasOne(PhaProduct::className(), ['product_id' => 'product_id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getPurchaseRet()
-    {
+    public function getPurchaseRet() {
         return $this->hasOne(PhaPurchaseReturn::className(), ['purchase_ret_id' => 'purchase_ret_id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getPurchaseItem()
-    {
+    public function getPurchaseItem() {
         return $this->hasOne(PhaPurchaseItem::className(), ['purchase_item_id' => 'purchase_item_id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getTenant()
-    {
+    public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
-    
+
     public static function find() {
         return new PhaPurchaseReturnItemQuery(get_called_class());
     }
-    
+
+    public function getTotalReturnedQuantity() {
+        return PhaPurchaseReturnItem::find()
+                        ->tenant()
+                        ->andWhere(['purchase_item_id' => $this->purchase_item_id])
+                        ->andWhere("purchase_ret_item_id != " . $this->purchase_ret_item_id)
+                        ->sum("quantity");
+    }
+
     public function fields() {
         $extend = [
             'product' => function ($model) {
@@ -166,11 +167,14 @@ class PhaPurchaseReturnItem extends RActiveRecord
             'batch' => function ($model) {
                 return (isset($model->batch) ? $model->batch : '-');
             },
+            'total_returned_quantity' => function($model) {
+                return $this->getTotalReturnedQuantity();
+            }
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
     }
-    
+
     public function beforeSave($insert) {
         //Update Batch
         if ($insert) {
@@ -178,7 +182,7 @@ class PhaPurchaseReturnItem extends RActiveRecord
         } else {
             $old_qty = $this->getOldAttribute('quantity');
             $new_qty = $this->quantity;
-            
+
             //Subtract New Quantity
             if ($old_qty < $new_qty) {
                 $batch = $this->_updateBatch(($new_qty - $old_qty), '-');
@@ -209,7 +213,7 @@ class PhaPurchaseReturnItem extends RActiveRecord
         }
         return $batch;
     }
-    
+
     private function _deleteBatch() {
         $batch = PhaProductBatch::find()->tenant()->andWhere(['batch_id' => $this->batch_id])->one();
         if (!empty($batch)) {
@@ -223,4 +227,5 @@ class PhaPurchaseReturnItem extends RActiveRecord
         $this->_deleteBatch();
         return parent::afterDelete();
     }
+
 }

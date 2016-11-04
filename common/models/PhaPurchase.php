@@ -39,6 +39,8 @@ use yii\helpers\ArrayHelper;
  * @property PhaPurchaseItem[] $phaPurchaseItems
  */
 class PhaPurchase extends RActiveRecord {
+    
+    public $after_save = true;
 
     /**
      * @inheritdoc
@@ -167,6 +169,24 @@ class PhaPurchase extends RActiveRecord {
     public function afterSave($insert, $changedAttributes) {
         if ($insert) {
             CoInternalCode::increaseInternalCode("PU");
+        }
+
+        if ($this->after_save) {
+            //Sale Billing - Payment Type - CASH
+            if ($this->payment_type == 'CA') {
+                if ($insert) {
+                    $purchase_billing_model = new PhaPurchaseBilling();
+                } else {
+                    $purchase_billing_model = PhaPurchaseBilling::find()->where(['purchase_id' => $this->purchase_id])->one();
+                    if (empty($purchase_billing_model))
+                        $purchase_billing_model = new PhaPurchaseBilling();
+                }
+
+                $purchase_billing_model->purchase_id = $this->purchase_id;
+                $purchase_billing_model->paid_date = $this->invoice_date;
+                $purchase_billing_model->paid_amount = $this->net_amount;
+                $purchase_billing_model->save(false);
+            }
         }
         return parent::afterSave($insert, $changedAttributes);
     }
