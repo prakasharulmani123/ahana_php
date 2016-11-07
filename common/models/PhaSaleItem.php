@@ -146,6 +146,14 @@ class PhaSaleItem extends RActiveRecord {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
 
+    public function getPhaSaleReturnItems() {
+        return $this->hasMany(PhaSaleReturnItem::className(), ['sale_item_id' => 'sale_item_id']);
+    }
+
+    public function getPhaSaleReturnItemsTotal() {
+        return $this->hasMany(PhaSaleReturnItem::className(), ['sale_item_id' => 'sale_item_id'])->sum('quantity');
+    }
+
     public static function find() {
         return new PhaSaleItemQuery(get_called_class());
     }
@@ -158,6 +166,9 @@ class PhaSaleItem extends RActiveRecord {
             'batch' => function ($model) {
                 return (isset($model->batch) ? $model->batch : '-');
             },
+            'total_returned_quantity' => function($model) {
+                return (isset($model->phaSaleReturnItemsTotal) ? $model->phaSaleReturnItemsTotal : '0');
+            }
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;

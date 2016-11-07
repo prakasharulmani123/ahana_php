@@ -118,6 +118,14 @@ class PhaSaleReturnItem extends RActiveRecord {
     public static function find() {
         return new PhaSaleReturnItemQuery(get_called_class());
     }
+    
+    public function getTotalReturnedQuantity() {
+        return PhaSaleReturnItem::find()
+                        ->tenant()
+                        ->andWhere(['sale_item_id' => $this->sale_item_id])
+                        ->andWhere("sale_ret_item_id != " . $this->sale_ret_item_id)
+                        ->sum("quantity");
+    }
 
     public function fields() {
         $extend = [
@@ -130,6 +138,9 @@ class PhaSaleReturnItem extends RActiveRecord {
             'batch' => function ($model) {
                 return (isset($model->batch) ? $model->batch : '-');
             },
+            'total_returned_quantity' => function($model) {
+                return $this->getTotalReturnedQuantity();
+            }
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
