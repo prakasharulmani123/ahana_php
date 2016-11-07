@@ -11,9 +11,9 @@
                                     <label class="col-lg-4 control-label">Sale Date</label>
                                     <div class="col-lg-8">
                                         {{data.sale_date}}
-<!--                                        <select class="form-control" ng-model="data.patient_id" ng-options="patient.patient_id as patient.fullname for patient in patients | orderBy: fullname" ng-change="getPatientMobileNo(data.patient_id)">
-                                            <option value="">Select Patient</option>
-                                        </select>-->
+                                        <!--                                        <select class="form-control" ng-model="data.patient_id" ng-options="patient.patient_id as patient.fullname for patient in patients | orderBy: fullname" ng-change="getPatientMobileNo(data.patient_id)">
+                                                                                    <option value="">Select Patient</option>
+                                                                                </select>-->
                                     </div>
                                 </div>
                                 <div class="line line-dashed b-b line-lg "></div>
@@ -21,9 +21,9 @@
                                     <label class="col-lg-4 control-label">Patient Name </label>
                                     <div class="col-lg-8">
                                         {{data.patient_name}}
-<!--                                        <select class="form-control" ng-model="data.patient_id" ng-options="patient.patient_id as patient.fullname for patient in patients | orderBy: fullname" ng-change="getPatientMobileNo(data.patient_id)">
-                                            <option value="">Select Patient</option>
-                                        </select>-->
+                                        <!--                                        <select class="form-control" ng-model="data.patient_id" ng-options="patient.patient_id as patient.fullname for patient in patients | orderBy: fullname" ng-change="getPatientMobileNo(data.patient_id)">
+                                                                                    <option value="">Select Patient</option>
+                                                                                </select>-->
                                     </div>
                                 </div>
                                 <div class="line line-dashed b-b line-lg "></div>
@@ -31,9 +31,9 @@
                                 <div class="form-group">
                                     <label class="col-lg-4 control-label">Mobile No </label>
                                     {{data.patient_mobile}}
-<!--                                    <div class="col-lg-8">
-                                        <input type="text" class="form-control" ng-model="data.mobile_no"/>
-                                    </div>-->
+                                    <!--                                    <div class="col-lg-8">
+                                                                            <input type="text" class="form-control" ng-model="data.mobile_no"/>
+                                                                        </div>-->
                                 </div>
                                 <!--<div class="line line-dashed b-b line-lg "></div>-->
                             </div>
@@ -96,39 +96,29 @@
                             </tr>
                             <tr ng-repeat="(key, saleitem) in saleItems">
                                 <td>
-<!--                                    <div id="i_full_name_{{key}}">
-                                        <span editable-text="saleitem.full_name" e-class="fullname" e-name="full_name" e-form="tableform" onbeforesave="checkInput($data)" e-typeahead="product as product.full_name for product in products | filter:$viewValue | limitTo:8" e-typeahead-editable="false" e-typeahead-on-select="updateProductRow($item, $model, $label, key)" e-ng-keyup="getProduct(tableform)" e-ng-keydown="getProduct(tableform)" e-autocomplete="off" data-e-id="full_name" e-name='full_name'>
-                                            {{ saleitem.full_name || 'empty' }}
-                                        </span>
-                                    </div>
-                                    <span id="t_full_name_{{key}}" class="hide">
-                                        {{ saleitem.full_name || 'empty' }}
-                                    </span>-->
                                     {{ saleitem.full_name || 'empty' }}
                                 </td>
                                 <td>
-<!--                                    <div id="i_batch_details_{{key}}">
-                                        <span editable-text="saleitem.batch_details" e-name="batch_details" e-form="tableform" onbeforesave="checkInput($data)" e-typeahead="batch as batch.batch_details for batch in batches | filter:$viewValue | limitTo:8" e-typeahead-editable="false" e-autocomplete="off" e-typeahead-on-select="updateBatchRow($item, $model, $label, key)">
-                                            {{ saleitem.batch_details || 'empty' }}
-                                        </span>
-                                    </div>
-                                    <span id="t_batch_details_{{key}}" class="hide">
-                                        {{ saleitem.batch_details || 'empty' }}
-                                    </span>-->
                                     {{ saleitem.batch_details || 'empty' }}
                                 </td>
                                 <td>
-                                    <span>
-                                        {{ saleitem.expiry_date | moment:'MMM YYYY' || 'empty' }}
-                                    </span>
+                                    {{ saleitem.expiry_date | moment:'MMM YYYY' || 'empty' }}
                                 </td>
                                 <td>
-                                    <span>
-                                        {{saleitem.sale_quantity|| 0}}
-                                    </span>
+                                    {{saleitem.sale_quantity|| 0}}
                                 </td>
                                 <td>
-                                    <span editable-text="saleitem.quantity" e-number-mask="" e-name="quantity" e-number-mask="" e-form="tableform" onbeforesave="checkInput($data); checkAmount($data); checkMaxValue($data, saleitem.sale_quantity)" e-ng-keydown="updateColumn($data, key, 'quantity')"  e-ng-keyup="updateColumn($data, key, 'quantity')" e-autocomplete="off" e-limit-to="7">
+                                    <span 
+                                        editable-text="saleitem.quantity" 
+                                        e-number-mask="" 
+                                        e-name="quantity" 
+                                        e-number-mask="" 
+                                        e-form="tableform" 
+                                        onbeforesave="checkReturnQuantity($data, key);" 
+                                        e-ng-keydown="updateColumn($data, key, 'quantity')"  
+                                        e-ng-keyup="updateColumn($data, key, 'quantity')" 
+                                        e-autocomplete="off" 
+                                        e-limit-to="7">
                                         {{saleitem.quantity|| 0}}
                                     </span>
                                 </td>
@@ -138,15 +128,15 @@
                                     </span>
                                 </td>
                                 <td><span>{{saleitem.item_amount}}</span></td>
-<!--                                <td>
-                                    <button type="button" ng-click="removeSaleItem($index)" class="btn btn-sm btn-danger pull-right">Delete</button>
-                                </td>-->
+                                <!--                                <td>
+                                                                    <button type="button" ng-click="removeSaleItem($index)" class="btn btn-sm btn-danger pull-right">Delete</button>
+                                                                </td>-->
                             </tr>
                         </table>
                         <div class="btn-form">
                             <br>
-<!--                            <button type="button" ng-click="tableform.$show();
-                                addRow()" class="btn btn-default pull-left btn-primary">Add Product</button>-->
+                            <!--                            <button type="button" ng-click="tableform.$show();
+                                                            addRow()" class="btn btn-default pull-left btn-primary">Add Product</button>-->
                             <button type="button" ng-show="!tableform.$visible;" ng-click="tableform.$show();" class="btn btn-default pull-left btn-info">Edit Products</button>
                         </div>
                     </div>

@@ -18,7 +18,7 @@
                                     <div class="form-group">
                                         <label class="col-lg-2 control-label">Sale Bill No.</label>
                                         <div class="col-lg-4">
-                                            <select class="form-control selectpicker" data-live-search="true" ng-model="data.sale_id" ng-options="sale.sale_id as sale.bill_no for sale in sales | orderBy: invoice_no"  data-ng-change="getSaleReturnItems()">
+                                            <select class="form-control selectpicker" data-live-search="true" ng-model="data.sale_id" ng-options="sale.sale_id as sale.bill_no for sale in saleinvoice | orderBy: invoice_no"  data-ng-change="getSaleReturnItems()">
                                             <option value="">Select Bill No.</option>
                                         </select>
                                         </div>

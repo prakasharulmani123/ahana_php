@@ -172,7 +172,7 @@
                                             e-name="quantity" 
                                             e-number-mask="" 
                                             e-form="tableform" 
-                                            onbeforesave="checkInput($data, key, $index); checkAmount($data, key, $index)" 
+                                            onbeforesave="checkInput($data, key, $index); checkAmount($data, key, $index); checkQuantity($data, key)" 
                                             e-ng-keydown="updateColumn($data, key, 'quantity')"  
                                             e-ng-keyup="updateColumn($data, key, 'quantity')" 
                                             e-autocomplete="off" 

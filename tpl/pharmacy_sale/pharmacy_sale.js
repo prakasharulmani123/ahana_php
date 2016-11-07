@@ -95,6 +95,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         };
 
         //For Form
+        $scope.formtype = '';
         $scope.initForm = function () {
             //Patients List
 //            $rootScope.commonService.GetPatientList('', '1', false, function (response) {
@@ -121,8 +122,10 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             });
 
             if ($scope.data.formtype == 'update') {
+                $scope.formtype = 'update';
                 $scope.loadForm();
             } else {
+                $scope.formtype = 'add';
                 $scope.setFutureInternalCode('SA', 'bill_no');
                 $scope.data.sale_date = moment().format('YYYY-MM-DD');
                 $scope.addRow();
@@ -159,19 +162,22 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         }
 
         $scope.getEncounter = function (patient_id, mode, encounter_id) {
-            $rootScope.commonService.GetEncounterListByPatient('', '0,1', false, patient_id, function (response) {
-                angular.forEach(response, function (resp) {
-                    resp.encounter_id = resp.encounter_id.toString();
-                });
-                $scope.encounters = response;
+            if (patient_id) {
+                $rootScope.commonService.GetEncounterListByPatient('', '0,1', false, patient_id, function (response) {
+                    angular.forEach(response, function (resp) {
+                        resp.encounter_id = resp.encounter_id.toString();
+                    });
+                    $scope.encounters = response;
 
-                if (response.length > 0 && response != null && mode == 'add') {
-                    $scope.data.encounter_id = response[0].encounter_id;
-                    $scope.getPrescription();
-                } else if (mode == 'edit') {
-                    $scope.data.encounter_id = encounter_id.toString();
-                }
-            });
+                    if (response.length > 0 && response != null && mode == 'add') {
+                        $scope.data.encounter_id = response[0].encounter_id;
+                        $scope.getPrescription();
+                    } else if (mode == 'edit') {
+                        $scope.data.encounter_id = encounter_id.toString();
+                    }
+                });
+            }
+
         }
 
         //Get selected patient mobile no.
@@ -295,6 +301,34 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 }
             }
         };
+
+        $scope.checkQuantity = function (data, key) {
+            if ($scope.formtype == 'update') {
+                var old = $scope.saleItems[key].old_quantity;
+                var package_unit = $scope.saleItems[key].package_unit;
+                var stock = $scope.saleItems[key].available_qty; //Stock
+                var total_returned_quantity = $scope.saleItems[key].total_returned_quantity; // Prior returned quantities
+
+                var error_exists = false;
+                var error_msg = '';
+                if (old > data) {
+                    if (parseFloat(total_returned_quantity) > parseFloat(data)) {
+                        error_exists = true;
+                        error_msg = 'Qty Mismatch';
+                    }
+                } else {
+                    var current_qty = (data - old) * package_unit;
+                    if (current_qty > stock) {
+                        error_exists = true;
+                        error_msg = 'No stock';
+                    }
+                }
+
+                if (error_exists && error_msg != '') {
+                    return error_msg;
+                }
+            }
+        }
 
         //Get the products
         var changeTimer = false;
@@ -642,8 +676,11 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         }
 
         $scope.getConsultantDetail = function (consultant_id) {
-            consultant_details = $filter('filter')($scope.doctors, {user_id: consultant_id});
-            $scope.consultant_name_taken = consultant_details.length > 0 ? consultant_details[0].name : '';
+            if (consultant_id) {
+                consultant_details = $filter('filter')($scope.doctors, {user_id: consultant_id});
+                $scope.consultant_name_taken = consultant_details.length > 0 ? consultant_details[0].name : '';
+            }
+
         }
 
         $scope.changeGetPayType = function () {
@@ -695,6 +732,8 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                 batch_details: item.batch.batch_details,
                                 expiry_date: item.batch.expiry_date,
                                 oldAttributeQuantity: item.quantity,
+                                old_quantity: item.quantity,
+                                available_qty: item.batch.available_qty,
                             });
                             $timeout(function () {
                                 $scope.showOrHideProductBatch('hide', key);
