@@ -1,4 +1,4 @@
-app.controller('PatientTimelineController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$filter', function ($rootScope, $scope, $timeout, $http, $state, $filter) {
+app.controller('PatientTimelineController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$filter', '$localStorage', function ($rootScope, $scope, $timeout, $http, $state, $filter, $localStorage) {
 
         $scope.app.settings.patientTopBar = true;
         $scope.app.settings.patientSideMenu = true;
@@ -40,7 +40,7 @@ app.controller('PatientTimelineController', ['$rootScope', '$scope', '$timeout',
                 if ($scope.data.pat_tenant_id == $scope.data.tenant_id) {
                     $scope.getTimeline($rootScope.IRISOrgServiceUrl + '/patient/getpatienttimeline', {guid: $state.params.id}, '');
                 } else {
-                    $scope.getTimeline($rootScope.IRISOrgServiceUrl + '/patient/getpatienttimeline2', {guid: result[0].patient_global_guid, tenant_id: result[0].tenant_id}, result[0].org_domain);
+                    $scope.getTimeline($rootScope.IRISOrgServiceUrl + '/patient/getpatienttimeline2', {guid: result[0].patient_global_guid, tenant_id: result[0].tenant_id, org_tenant_id: $localStorage.user.credentials.logged_tenant_id}, result[0].org_domain);
                 }
             }
         }

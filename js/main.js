@@ -186,9 +186,8 @@ angular.module('app')
                                         $scope.msg.errorMessage = "An Error has occured while loading patient!";
                                     } else {
                                         $scope.patientObj = patient;
-
-                                        var alert_link = '#/patient/alert/' + $scope.patientObj.patient_guid;
-                                        $scope.patient_alert_html = '<div>' + $scope.patientObj.alert + '<br><a class="text-info alert-read-more" ui-sref="patient.alert({id: $scope.patientObj.patient_guid})" href="' + alert_link + '">ReadMore</a><div>';
+                                        
+                                        $scope.setPatientAleratHtml(patient);
 
                                         $rootScope.commonService.GetLabelFromValue(patient.patient_gender, 'GetGenderList', function (response) {
                                             $scope.app.patientDetail.patientSex = response;
@@ -204,6 +203,13 @@ angular.module('app')
                                 });
                     }
                 };
+                
+                $scope.setPatientAleratHtml = function(patient){
+                    if(patient.alert){
+                        var alert_link = '#/patient/alert/' + patient.patient_guid;
+                        $scope.patient_alert_html = '<div>' + patient.alert + '<br><a class="text-info alert-read-more" ui-sref="patient.alert({id: $scope.patientObj.patient_guid})" href="' + alert_link + '">ReadMore</a><div>';
+                    }
+                }
 
                 $scope.loadUserCredentials = function () {
                     var user = AuthenticationService.getCurrentUser();
@@ -562,6 +568,7 @@ angular.module('app')
                 $scope.$on('patient_alert', function (event, data) {
                     $scope.patientObj.hasalert = data.hasalert;
                     $scope.patientObj.alert = data.alert;
+                    $scope.setPatientAleratHtml($scope.patientObj);
                 });
 
                 $scope.openUploadForm = function (block) {
