@@ -43,6 +43,8 @@
                 <label class="col-sm-3 control-label">DOB *</label>
                 <div class="col-sm-5">
                     <div class="input-group">
+<!--                        <input type="text" name="dob" class="form-control" ng-model="data.PatPatient.patient_dob" my-date required/>
+                        <span ng-if="patientForm.data.PatPatient.patient_dob.$touched && $patientForm.data.PatPatient.patient_dob.$error.mask">Date Invalid!</span>-->
                         <input type="text" name="dob" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="data.PatPatient.patient_dob" is-open="$parent.opened" datepicker-options="dateOptions" close-text="Close" max-date="maxDate" ng-change="setAgeEmpty();
                                 getAge();" ng-click="open($event)" prevent-enter="true" required/>
                         <span class="input-group-btn">

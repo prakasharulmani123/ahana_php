@@ -2547,6 +2547,21 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
+            //Myworks AdvanceDetails
+            .state('myworks.advanceDetails', {
+                url: '/advanceDetails',
+                templateUrl: 'tpl/myworks_report/advancedetails.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/myworks_report/advancedetails.js');
+                                    }
+                            );
+                        }]
+                }
+            })
 
     $httpProvider.interceptors.push('APIInterceptor');
 
