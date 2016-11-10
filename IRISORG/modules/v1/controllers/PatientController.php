@@ -169,6 +169,7 @@ class PatientController extends ActiveController {
                         ->orOnCondition("casesheetno like :search")
                         ->addParams([':search' => "%{$text}%"])
                         ->limit($limit)
+                        ->groupBy('patient_global_guid')
                         ->all();
 
                 foreach ($lists as $key => $patient) {
