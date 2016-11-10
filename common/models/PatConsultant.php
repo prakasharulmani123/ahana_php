@@ -32,6 +32,10 @@ use yii\db\ActiveQuery;
  */
 class PatConsultant extends RActiveRecord {
 
+    public $report_consultant_name;
+    public $report_patient_name;
+    public $report_total_visit;
+    public $report_total_charge_amount;
     /**
      * @inheritdoc
      */
