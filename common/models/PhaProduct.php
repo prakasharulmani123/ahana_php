@@ -268,6 +268,8 @@ class PhaProduct extends RActiveRecord {
                     $fullname .= ' | ' . $model->product_unit_count;
                 if ($model->product_unit)
                     $fullname .= ' | ' . $model->product_unit;
+//                if ($model->product_location)
+//                    $fullname .= '('.$model->product_location.')';
 
                 return $fullname;
             },

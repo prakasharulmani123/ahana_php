@@ -83,6 +83,7 @@ class PatientController extends ActiveController {
         $post = Yii::$app->getRequest()->post();
         if (!empty($post['PatPatient']) || !empty($post['PatPatientAddress'])) {
             $model = new PatPatient();
+//            $model->setScenario('registration');
             $addr_model = new PatPatientAddress();
 
             if (isset($post['PatPatient']['patient_id'])) {
@@ -117,7 +118,7 @@ class PatientController extends ActiveController {
                     $addr_model->patient_id = $model->patient_id;
                     $addr_model->save(false);
                 }
-                
+
                 $updated_patient = PatPatient::find()->where(['patient_id' => $model->patient_id])->one();
 
                 return ['success' => true, 'patient_id' => $model->patient_id, 'patient_guid' => $model->patient_guid, 'patient' => $updated_patient];
@@ -304,34 +305,39 @@ class PatientController extends ActiveController {
 
                 $timelines = [];
                 foreach ($patient_tenants as $key => $patient_tenant) {
-                    $connection = new Connection([
-                        'dsn' => "mysql:host={$patient_tenant->org->org_db_host};dbname={$patient_tenant->org->org_database}",
-                        'username' => $patient_tenant->org->org_db_username,
-                        'password' => $patient_tenant->org->org_db_password,
-                    ]);
-                    $connection->open();
+                    if (isset($post['org_tenant_id']) && $post['org_tenant_id'] == $patient_tenant->tenant_id) {
+                        $patient = PatPatient::find()->where(['patient_guid' => $patient_tenant->patient_guid])->one();
+                        $timeline = PatTimeline::find()->andWhere(['patient_id' => $patient->patient_id, 'tenant_id' => $patient_tenant->tenant_id])->orderBy(['created_at' => SORT_DESC])->all();
+                    } else {
+                        $connection = new Connection([
+                            'dsn' => "mysql:host={$patient_tenant->org->org_db_host};dbname={$patient_tenant->org->org_database}",
+                            'username' => $patient_tenant->org->org_db_username,
+                            'password' => $patient_tenant->org->org_db_password,
+                        ]);
+                        $connection->open();
 
-                    $command = $connection->createCommand("SELECT * FROM pat_patient WHERE patient_global_guid = :guid");
-                    $command->bindValue(':guid', $guid);
-                    $patient = $command->queryAll();
+                        $command = $connection->createCommand("SELECT * FROM pat_patient WHERE patient_global_guid = :guid");
+                        $command->bindValue(':guid', $guid);
+                        $patient = $command->queryAll();
 
-                    $resource_lists = $this->_getPatientResourceList($patient_tenant->org_id, $patient_tenant->tenant_id, $patient_tenant->patient_global_guid);
-                    $in_cond = "'" . implode("','", $resource_lists) . "'";
+                        $resource_lists = $this->_getPatientResourceList($patient_tenant->org_id, $patient_tenant->tenant_id, $patient_tenant->patient_global_guid);
+                        $in_cond = "'" . implode("','", $resource_lists) . "'";
 
-                    $command = $connection->createCommand("SELECT a.*, concat(b.tenant_name, ' - ', c.org_name) as branch "
-                            . "FROM pat_timeline a "
-                            . "JOIN co_tenant b "
-                            . "ON b.tenant_id = a.tenant_id "
-                            . "JOIN co_organization c "
-                            . "ON c.org_id = b.org_id "
-                            . "WHERE a.patient_id = :id "
-                            . "AND a.tenant_id = :tenant_id "
-                            . "AND a.resource IN ($in_cond) "
-                            . "");
-                    $command->bindValues([':id' => $patient[0]['patient_id'], ':tenant_id' => $patient_tenant->tenant_id]);
-                    $timeline = $command->queryAll();
+                        $command = $connection->createCommand("SELECT a.*, concat(b.tenant_name, ' - ', c.org_name) as branch "
+                                . "FROM pat_timeline a "
+                                . "JOIN co_tenant b "
+                                . "ON b.tenant_id = a.tenant_id "
+                                . "JOIN co_organization c "
+                                . "ON c.org_id = b.org_id "
+                                . "WHERE a.patient_id = :id "
+                                . "AND a.tenant_id = :tenant_id "
+                                . "AND a.resource IN ($in_cond) "
+                                . "");
+                        $command->bindValues([':id' => $patient[0]['patient_id'], ':tenant_id' => $patient_tenant->tenant_id]);
+                        $timeline = $command->queryAll();
 
-                    $connection->close();
+                        $connection->close();
+                    }
 
                     $timelines = array_merge($timelines, $timeline);
                 }
@@ -447,7 +453,7 @@ class PatientController extends ActiveController {
             }
         }
     }
-    
+
     public function actionGetpatient() {
         $post = Yii::$app->getRequest()->post();
         $patients = [];
