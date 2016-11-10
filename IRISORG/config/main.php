@@ -100,7 +100,7 @@ return [
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/patientscanneddocuments'], 'extraPatterns' => ['GET getscanneddocuments' => 'getscanneddocuments', 'POST savedocument' => 'savedocument', 'POST remove' => 'remove', 'GET getscanneddocument' => 'getscanneddocument']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/pharmacyroute'], 'extraPatterns' => ['POST remove' => 'remove']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/patientotherdocuments'], 'extraPatterns' => ['POST remove' => 'remove']],
-                ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/myworkreports'], 'extraPatterns' => ['POST opdoctorpaymentreport' => 'opdoctorpaymentreport', 'POST docmonthlypayreport' => 'docmonthlypayreport']],
+                ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/myworkreports'], 'extraPatterns' => ['POST opdoctorpaymentreport' => 'opdoctorpaymentreport', 'GET advancedetails' => 'advancedetails', 'POST docmonthlypayreport' => 'docmonthlypayreport']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/pharmacypurchasebilling'], 'extraPatterns' => ['POST makepayment' => 'makepayment']],
             ],
         ],

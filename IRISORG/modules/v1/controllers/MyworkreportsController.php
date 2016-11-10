@@ -35,24 +35,25 @@ class MyworkreportsController extends ActiveController {
     public function actionOpdoctorpaymentreport() {
         $post = Yii::$app->getRequest()->post();
         $tenant_id = Yii::$app->user->identity->logged_tenant_id;
-        
+
         $encounters = PatEncounter::find()
                 ->joinWith('patAppointmentSeen')
                 ->joinWith("patAppointmentSeen.consultant")
                 ->joinWith("patient")
-                ->andWhere(['pat_encounter.tenant_id' => $tenant_id]);
+                ->andWhere(['pat_encounter.tenant_id' => $tenant_id])
+                ->andWhere('pat_consultant.deleted_at = "0000-00-00 00:00:00"');
 
         if (isset($post['from']) && isset($post['to']) && isset($post['consultant_id'])) {
             $encounters->andWhere("date(pat_encounter.encounter_date) between '{$post['from']}' AND '{$post['to']}'");
             $encounters->andWhere("pat_appointment.consultant_id = {$post['consultant_id']}");
         }
-        
+
         $encounters->addSelect(["CONCAT(co_user.title_code, '', co_user.name) as op_doctor_payment_consultant_name"]);
         $encounters->addSelect(["CONCAT(pat_patient.patient_title_code, '', pat_patient.patient_firstname) as op_doctor_payment_patient_name"]);
         $encounters->addSelect(["pat_appointment.amount as op_doctor_payment_amount"]);
         $encounters->addSelect(["pat_appointment.status_date as op_doctor_payment_seen_date"]);
         $encounters->addSelect(["pat_appointment.status_time as op_doctor_payment_seen_time"]);
-        
+
         $encounters = $encounters->all();
 
         $reports = [];
@@ -72,7 +73,7 @@ class MyworkreportsController extends ActiveController {
     public function actionDocmonthlypayreport() {
         $post = Yii::$app->getRequest()->post();
         $tenant_id = Yii::$app->user->identity->logged_tenant_id;
-        
+
         $consultants = PatConsultant::find()
                 ->joinWith("patient")
                 ->joinWith("consultant")
@@ -84,14 +85,14 @@ class MyworkreportsController extends ActiveController {
             $consultants->andWhere("date(pat_consultant.consult_date) between '{$post['from']}' AND '{$post['to']}'");
             $consultants->andWhere("pat_consultant.consultant_id = {$post['consultant_id']}");
         }
-        
+
         $consultants->addSelect(["CONCAT(co_user.title_code, '', co_user.name) as report_consultant_name"]);
         $consultants->addSelect(["CONCAT(pat_patient.patient_title_code, '', pat_patient.patient_firstname) as report_patient_name"]);
         $consultants->addSelect(["COUNT(pat_consultant.charge_amount) as report_total_visit"]);
         $consultants->addSelect(["SUM(pat_consultant.charge_amount) as report_total_charge_amount"]);
         $consultants->groupBy(["pat_consultant.consultant_id", "pat_consultant.patient_id"]);
         $consultants->orderBy(["pat_patient.patient_firstname" => SORT_ASC]);
-        
+
         $consultants = $consultants->all();
 
         $reports = [];
@@ -108,6 +109,17 @@ class MyworkreportsController extends ActiveController {
         return ['report' => $reports, 'total' => $total];
     }
 
-    
+    public function actionAdvancedetails() {
+        $model = PatEncounter::find()
+                ->tenant()
+                ->status()
+                ->encounterType("IP")
+                ->orderBy([
+                    'encounter_date' => SORT_DESC,
+                ])
+                ->all();
+
+        return $model;
+    }
 
 }

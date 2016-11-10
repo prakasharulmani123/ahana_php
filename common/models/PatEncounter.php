@@ -315,19 +315,21 @@ class PatEncounter extends RActiveRecord {
                 return $date2->diff($date1)->format("%a") + 1;
             },
             'paid' => function ($model) {
-                if ($model->encounter_type == 'IP' && $model->status == '1') {
+                if ($model->encounter_type == 'IP') {
                     return $this->getAdvanceDetails();
                 }
             },
             'total_charge' => function ($model) {
-                if ($model->encounter_type == 'IP' && $model->status == '1') {
+                if ($model->encounter_type == 'IP') {
                     return $this->getTotalCharge();
                 }
             },
             'balance' => function ($model) {
-                $total = $this->getTotalCharge();
-                $paid = $this->getAdvanceDetails();
-                return ($total - $paid);
+                if ($model->encounter_type == 'IP') {
+                    $total = $this->getTotalCharge();
+                    $paid = $this->getAdvanceDetails();
+                    return ($total - $paid);
+                }
             }
         ];
         $fields = array_merge(parent::fields(), $extend);
@@ -336,66 +338,46 @@ class PatEncounter extends RActiveRecord {
 
     public function getTotalCharge() {
         $total_charge = 0;
-        
-        $recurring = VBillingRecurring::find()
-                ->where([
-                    'encounter_id' => $this->encounter_id,
-                    'tenant_id' => $this->tenant_id
-                ])
-                ->orderBy(['from_date' => SORT_ASC, 'charge_item' => SORT_ASC])
-                ->all();
-        
-        foreach ($recurring as $key => $value) {
-            $total_charge += $value->charge_amount;
-        }
 
-        $procedure = VBillingProcedures::find()
+        $total_charge += VBillingRecurring::find()
                 ->where([
                     'encounter_id' => $this->encounter_id,
                     'tenant_id' => $this->tenant_id
                 ])
-                ->all();
-        
-        foreach ($procedure as $key => $value) {
-            $total_charge += $value->total_charge;
-        }
+                ->sum('charge_amount');
 
-        $consults = VBillingProfessionals::find()
+        $total_charge += VBillingProcedures::find()
                 ->where([
                     'encounter_id' => $this->encounter_id,
                     'tenant_id' => $this->tenant_id
                 ])
-                ->all();
-        
-        foreach ($consults as $key => $value) {
-            $total_charge += $value->total_charge;
-        }
+                ->sum('total_charge');
 
-        $otherCharge = VBillingOtherCharges::find()
+        $total_charge += VBillingProfessionals::find()
                 ->where([
                     'encounter_id' => $this->encounter_id,
                     'tenant_id' => $this->tenant_id
                 ])
-                ->all();
-        
-        foreach ($otherCharge as $key => $value) {
-            $total_charge += $value->total_charge;
-        }
+                ->sum('total_charge');
+
+        $total_charge += VBillingOtherCharges::find()
+                ->where([
+                    'encounter_id' => $this->encounter_id,
+                    'tenant_id' => $this->tenant_id
+                ])
+                ->sum('total_charge');
 
         return $total_charge;
     }
 
     public function getAdvanceDetails() {
-        $advance = VBillingAdvanceCharges::find()
+        $amount = VBillingAdvanceCharges::find()
                 ->where([
                     'encounter_id' => $this->encounter_id,
                     'tenant_id' => $this->tenant_id
                 ])
-                ->all();
-        $amount = 0;
-        foreach ($advance as $key => $value) {
-            $amount += $value->total_charge;
-        }
+                ->sum('total_charge');
+
         return $amount;
     }
 
