@@ -14,11 +14,14 @@
             </div>
         </div>
         <div class="line line-dashed b-b line-lg "></div>
-        
+
         <div class="form-group">
             <label class="col-sm-3 control-label">Temperature * </label>
             <div class="col-sm-5">
-                <input type="text" maxlength="3" class="form-control" placeholder="" ng-model="data.temperature" number-mask="">
+                <input type="text" name="temperature" class="form-control" placeholder="" ng-model="data.temperature" ng-pattern="/^[0-9]+(\.[0-9]{1,1})?$/" number-mask="">
+                <span class="help-block" ng-show="!vitalForm.temperature.$valid">
+                    Invalid!
+                </span>
             </div>
             <div class="col-sm-4">
                 <div class="row"> °C </div>
@@ -36,7 +39,7 @@
             </div>
         </div>
         <div class="line line-dashed b-b line-lg "></div>
-        
+
         <div class="form-group">
             <label class="col-sm-3 control-label">Blood Pressure Diastolic</label>
             <div class="col-sm-5">
@@ -58,13 +61,16 @@
             </div>
         </div>
         <div class="line line-dashed b-b line-lg "></div>
-        
-        
-        
+
+
+
         <div class="form-group">
             <label class="col-sm-3 control-label">Weight </label>
             <div class="col-sm-5">
-                <input type="text" maxlength="3" class="form-control" placeholder="" ng-model="data.weight" number-mask="">
+                <input type="text" name="weight" class="form-control" placeholder="" ng-model="data.weight" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" number-mask="">
+                <span class="help-block" ng-show="!vitalForm.weight.$valid">
+                    Invalid!
+                </span>
             </div>
             <div class="col-sm-4">
                 <div class="row"> Kg </div>
@@ -72,7 +78,7 @@
         </div>
     </div>
     <footer class="panel-footer text-right bg-light lter">
-        <button class="btn m-b-xs  btn-success save-btn" ng-click="saveForm(data.formtype)">Save</button>
+        <button class="btn m-b-xs  btn-success save-btn" ng-disabled="vitalForm.$invalid" ng-click="saveForm(data.formtype)">Save</button>
         &nbsp;
         <button class="btn m-b-xs  btn-dark" ng-click="$state.go('patient.vitals', {id: $state.params.id})">
             <i class="fa fa-times"></i> Cancel
