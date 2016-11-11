@@ -41,7 +41,7 @@ class MyworkreportsController extends ActiveController {
                 ->joinWith("patAppointmentSeen.consultant")
                 ->joinWith("patient")
                 ->andWhere(['pat_encounter.tenant_id' => $tenant_id])
-                ->andWhere('pat_consultant.deleted_at = "0000-00-00 00:00:00"');
+                ->andWhere('pat_encounter.deleted_at = "0000-00-00 00:00:00"');
 
         if (isset($post['from']) && isset($post['to']) && isset($post['consultant_id'])) {
             $encounters->andWhere("date(pat_encounter.encounter_date) between '{$post['from']}' AND '{$post['to']}'");
