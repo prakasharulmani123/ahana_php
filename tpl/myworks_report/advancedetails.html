@@ -38,7 +38,7 @@
                             Advance
                         </th>
                         <th data-sort-ignore="true">
-                            Recollect
+                            Due/Pending
                         </th>
                     </tr>
                 </thead>
@@ -68,8 +68,8 @@
                             {{row.paid}} 
                         </td>
                         <td> 
-                            <span class="label bg-danger" ng-if="row.balance > 0">{{row.balance}}</span>
-                            <span ng-if="row.balance < 0">{{row.balance}}</span>
+                            <span class="label bg-success" ng-if="row.balance > 0">{{row.balance}}</span>
+                            <span class="label bg-danger" ng-if="row.balance < 0">{{row.balance}}</span>
                         </td>
                     </tr>
                 </tbody>
