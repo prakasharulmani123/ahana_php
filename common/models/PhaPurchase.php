@@ -159,7 +159,7 @@ class PhaPurchase extends RActiveRecord {
                 }
 
                 $balance = $model->net_amount - $paid_amount;
-                return number_format($balance, '2');
+                return $balance;
             },
         ];
         $fields = array_merge(parent::fields(), $extend);
