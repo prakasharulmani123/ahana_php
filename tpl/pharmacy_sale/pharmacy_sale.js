@@ -131,7 +131,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 $scope.addRow();
             }
 
-            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct?fields=product_id,product_name,product_reorder_min,full_name,salesVat,salesPackageName,availableQuantity')
+            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct?fields=product_id,product_name,product_location,product_reorder_min,full_name,salesVat,salesPackageName,availableQuantity')
                     .success(function (products) {
                         $scope.products = products;
                     })
@@ -212,6 +212,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             $scope.inserted = {
                 product_id: '',
                 product_name: '',
+                product_location: '',
                 full_name: '',
                 batch_no: '',
                 batch_details: '',
@@ -353,6 +354,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             if (!data) {
                 $scope.saleItems[key].product_id = '';
                 $scope.saleItems[key].product_name = '';
+                $scope.saleItems[key].product_location = '';
                 $scope.saleItems[key].vat_percent = '0';
                 $scope.saleItems[key].package_name = '';
 //                $scope.batches = [];
@@ -385,6 +387,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         $scope.updateProductRow = function (item, model, label, key) {
             $scope.saleItems[key].product_id = item.product_id;
             $scope.saleItems[key].product_name = item.product_name;
+            $scope.saleItems[key].product_location = item.product_location;
             $scope.saleItems[key].vat_percent = item.salesVat.vat;
             $scope.saleItems[key].package_name = item.salesPackageName;
 

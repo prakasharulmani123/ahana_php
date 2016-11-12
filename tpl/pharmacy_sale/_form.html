@@ -141,6 +141,9 @@
                                         <span id="t_full_name_{{key}}" class="hide">
                                             {{ saleitem.full_name || 'empty' }}
                                         </span>
+                                        <span ng-if="saleitem.product_location">
+                                            <b>Location:</b> {{saleitem.product_location}}
+                                        </span>
                                         <div class="custom-warning" style="" ng-show="saleitem.min_reorder_msg"> {{saleitem.min_reorder_msg}}</div>
                                     </td>
                                     <td>
