@@ -116,7 +116,7 @@
                                 <a ui-sref="patient.view({id: row.patient.patient_guid})" tooltip="{{row.patient.fullcurrentaddress}}">
                                     {{row.patient.fullname}} 
                                 </a>({{row.patient.patient_age}}y) <br/> 
-                                {{row.patient.patient_int_code}}
+                                {{row.patient.patient_global_int_code}}
                             </td>
                             <td valign="middle">
                                 <div ng-if="row.patient.patient_category" class="category_badge" tooltip="{{row.patient.patient_category_fullname}}" tooltip-trigger tooltip-animation="false" tooltip-placement="top" style="background-color: {{row.patient.patient_category_color}}">

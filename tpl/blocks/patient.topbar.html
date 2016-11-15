@@ -12,7 +12,7 @@
                 <div class="header-new"> 
                     <i aria-hidden="true" class="fa fa-user"></i> 
                     <b class="patient-name">{{patientObj.fullname}}</b>
-                    ({{patientObj.patient_int_code}})
+                    ({{patientObj.patient_global_int_code}})
                     <span ng-if="patientObj.patient_category" style="background-color: {{patientObj.patient_category_color}}" class="category_badge header-badge category_icon" tooltip="{{patientObj.patient_category_fullname}}" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom"> 
                         {{patientObj.patient_category| uppercase}} 
                     </span>

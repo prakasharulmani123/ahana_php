@@ -38,7 +38,7 @@
                                             </a>
                                             <b ng-if="patient.Patient.patient_age">({{patient.Patient.patient_age}}y) </b>
                                             <br>
-                                            <span class="pull-left" ng-bind-html="patient.Patient.patient_int_code | highlight:patientselected"></span> &nbsp; &nbsp;
+                                            <span class="pull-left" ng-bind-html="patient.Patient.patient_global_int_code | highlight:patientselected"></span> &nbsp; &nbsp;
                                             <span ng-bind-html="patient.Patient.patient_mobile | highlight:patientselected"> </span> 
                                         </div>
                                     </div>
