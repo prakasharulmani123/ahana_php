@@ -157,6 +157,16 @@ class CoOrganization extends GActiveRecord {
         $connection->open();
 
         if ($insert) {
+             //Global Internal code.
+            $internal_code = new GlInternalCode;
+            $internal_code->org_id = $this->org_id;
+            $internal_code->code_type = 'PG';
+            $string = str_replace(' ', '-', $this->org_name);
+            $string = preg_replace('/[^A-Za-z0-9\-]/', '', $string);
+            $internal_code->code_prefix = strtoupper(substr($string, 0, 2));
+            $internal_code->code = '1';
+            $internal_code->save(false);
+            
             $sql = "INSERT INTO co_organization VALUES({$this->org_id},'{$this->org_name}','{$this->org_description}','{$this->org_db_host}','{$this->org_db_username}','{$this->org_db_password}','{$this->org_database}','{$this->org_domain}','{$this->status}',{$this->created_by},'{$this->created_at}',{$this->modified_by},'{$this->modified_at}','{$this->deleted_at}')";
         } else {
             $sql = "UPDATE co_organization SET org_name = '{$this->org_name}', org_description = '{$this->org_description}', org_db_host = '{$this->org_db_host}', org_db_username = '{$this->org_db_username}', org_db_password = '{$this->org_db_password}', org_database = '{$this->org_database}', org_domain = '{$this->org_domain}', status = '{$this->status}', modified_by = '{$this->modified_by}', modified_at = '{$this->modified_at}', deleted_at = '{$this->deleted_at}' WHERE org_id={$this->org_id}";

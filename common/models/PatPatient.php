@@ -4,6 +4,7 @@ namespace common\models;
 
 use common\models\query\PatPatientQuery;
 use p2made\helpers\Uuid\UuidHelpers;
+use Yii;
 use yii\db\ActiveQuery;
 use yii\db\Connection;
 use yii\helpers\ArrayHelper;
@@ -15,6 +16,7 @@ use yii\helpers\ArrayHelper;
  * @property string $patient_global_guid
  * @property string $patient_guid
  * @property integer $casesheetno
+ * @property string $patient_global_int_code
  * @property string $patient_int_code
  * @property integer $tenant_id
  * @property string $patient_reg_date
@@ -74,7 +76,7 @@ class PatPatient extends RActiveRecord {
             [['patient_title_code', 'patient_firstname', 'patient_gender', 'patient_reg_mode', 'patient_mobile', 'patient_dob'], 'required'],
             [['patient_firstname'], 'string', 'min' => '2'],
             [['casesheetno', 'tenant_id', 'patient_care_taker', 'patient_category_id', 'created_by', 'modified_by'], 'integer'],
-            [['patient_reg_date', 'patient_dob', 'created_at', 'modified_at', 'deleted_at', 'patient_mobile', 'patient_bill_type', 'patient_guid', 'patient_image', 'patient_global_guid', 'patient_int_code', 'patient_secondary_contact'], 'safe'],
+            [['patient_reg_date', 'patient_dob', 'created_at', 'modified_at', 'deleted_at', 'patient_mobile', 'patient_bill_type', 'patient_guid', 'patient_image', 'patient_global_guid', 'patient_global_int_code', 'patient_int_code', 'patient_secondary_contact'], 'safe'],
             [['status'], 'string'],
             [['patient_title_code'], 'string', 'max' => 10],
             [['patient_firstname', 'patient_lastname', 'patient_relation_name', 'patient_care_taker_name', 'patient_occupation', 'patient_email', 'patient_ref_id'], 'string', 'max' => 50],
@@ -210,6 +212,11 @@ class PatPatient extends RActiveRecord {
             //If Global ID empty means we will generate otherwise it could be imported data
             if (empty($this->patient_global_guid))
                 $this->patient_global_guid = self::guid();
+
+            if (empty($this->patient_global_int_code)) {
+                $org_id = Yii::$app->user->identity->user->org_id;
+                $this->patient_global_int_code = GlInternalCode::generateInternalCode($org_id, 'PG', 'common\models\GlPatient', 'patient_global_int_code');
+            }
         }
 
         return parent::beforeSave($insert);
@@ -292,11 +299,13 @@ class PatPatient extends RActiveRecord {
                 if (empty($patient)) {
                     $model = new GlPatient;
                     $save = true;
+                    $gl_patient_insert = true;
                 }
             } else {
                 if (!empty($patient)) {
                     $model = $patient;
                     $save = true;
+                    $gl_patient_insert = false;
                     $this->updateAllPatient($patient);
                 }
             }
@@ -305,6 +314,10 @@ class PatPatient extends RActiveRecord {
                 $attr = array_diff_key($this->attributes, $unset_cols);
                 $model->attributes = $attr;
                 $model->save(false);
+                if ($gl_patient_insert) {
+                    $org_id = Yii::$app->user->identity->user->org_id;
+                    GlInternalCode::increaseInternalCode($org_id, "PG");
+                }
             }
 
             // Link Patient and Tenant
@@ -564,8 +577,7 @@ class PatPatient extends RActiveRecord {
                     if ($encounter_date == $reg_date) {
                         return true;
                     }
-                } 
-                elseif ($reg_date == $today) {
+                } elseif ($reg_date == $today) {
                     return true;
                 }
             },
@@ -575,8 +587,8 @@ class PatPatient extends RActiveRecord {
                 if ($model->patient_lastname != '')
                     $name .= ' ' . $model->patient_lastname . ' ';
 
-                if ($model->patient_int_code != '')
-                    $name .= ' (' . $model->patient_int_code . ')';
+                if ($model->patient_global_int_code != '')
+                    $name .= ' (' . $model->patient_global_int_code . ')';
                 return $name;
             },
         ];
