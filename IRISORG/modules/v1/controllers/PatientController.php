@@ -137,19 +137,20 @@ class PatientController extends ActiveController {
 
         if (isset($post['search']) && !empty($post['search']) && strlen($post['search']) >= 2) {
             $text = $post['search'];
+            $tenant_id = Yii::$app->user->identity->logged_tenant_id;
 
             $lists = PatPatient::find()
-                    ->tenant()
-                    ->active()
-                    ->orOnCondition("patient_firstname like :search")
-                    ->orOnCondition("patient_lastname like :search")
-                    ->orOnCondition("patient_mobile like :search")
-                    ->orOnCondition("patient_global_int_code like :search")
-                    ->orOnCondition("casesheetno like :search")
+                    ->andWhere(['pat_patient.tenant_id' => $tenant_id,  'pat_patient.deleted_at' => '0000-00-00 00:00:00'])
+                    ->joinWith('patGlobalPatient')
+                    ->orOnCondition("pat_global_patient.patient_firstname like :search")
+                    ->orOnCondition("pat_global_patient.patient_lastname like :search")
+                    ->orOnCondition("pat_global_patient.patient_mobile like :search")
+                    ->orOnCondition("pat_global_patient.patient_global_int_code like :search")
+                    ->orOnCondition("pat_global_patient.casesheetno like :search")
                     ->addParams([':search' => "%{$text}%"])
                     ->limit($limit)
                     ->all();
-
+                    
             foreach ($lists as $key => $patient) {
                 $patients[$key]['Patient'] = $patient;
                 $patients[$key]['PatientAddress'] = $patient->patPatientAddress;
@@ -157,20 +158,20 @@ class PatientController extends ActiveController {
                 $patients[$key]['same_branch'] = true;
                 $patients[$key]['same_org'] = true;
             }
-
+            
             //Search from same ORG but different branch
             if (empty($patients)) {
-                $tenant_id = Yii::$app->user->identity->logged_tenant_id;
                 $lists = PatPatient::find()
-                        ->andWhere("status = '1' AND tenant_id != $tenant_id")
-                        ->orOnCondition("patient_firstname like :search")
-                        ->orOnCondition("patient_lastname like :search")
-                        ->orOnCondition("patient_mobile like :search")
-                        ->orOnCondition("patient_global_int_code like :search")
-                        ->orOnCondition("casesheetno like :search")
+                        ->joinWith('patGlobalPatient')
+                        ->andWhere("pat_patient.status = '1' AND pat_patient.tenant_id != $tenant_id")
+                        ->orOnCondition("pat_global_patient.patient_firstname like :search")
+                        ->orOnCondition("pat_global_patient.patient_lastname like :search")
+                        ->orOnCondition("pat_global_patient.patient_mobile like :search")
+                        ->orOnCondition("pat_global_patient.patient_global_int_code like :search")
+                        ->orOnCondition("pat_global_patient.casesheetno like :search")
                         ->addParams([':search' => "%{$text}%"])
                         ->limit($limit)
-                        ->groupBy('patient_global_guid')
+                        ->groupBy('pat_patient.patient_global_guid')
                         ->all();
 
                 foreach ($lists as $key => $patient) {
@@ -181,14 +182,13 @@ class PatientController extends ActiveController {
 
                 //Search from HMS Database
                 if (empty($patients)) {
-                    $tenant_id = Yii::$app->user->identity->logged_tenant_id;
 
                     $lists = GlPatient::find()
                             ->andWhere("status = '1' AND tenant_id != $tenant_id")
                             ->orOnCondition("patient_firstname like :search")
                             ->orOnCondition("patient_lastname like :search")
                             ->orOnCondition("patient_mobile like :search")
-                            ->orOnCondition("patient_global_int_code like :search")
+//                            ->orOnCondition("patient_global_int_code like :search")
                             ->orOnCondition("casesheetno like :search")
                             ->addParams([':search' => "%{$text}%"])
                             ->limit($limit)

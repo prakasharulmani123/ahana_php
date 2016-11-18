@@ -54,6 +54,34 @@ use yii\helpers\ArrayHelper;
  */
 class PatPatient extends RActiveRecord {
 
+    public $casesheetno;
+    public $patient_global_int_code;
+    public $patient_reg_date;
+    public $patient_title_code;
+    public $patient_firstname;
+    public $patient_lastname;
+    public $patient_relation_code;
+    public $patient_relation_name;
+    public $patient_care_taker;
+    public $patient_care_taker_name;
+    public $patient_dob;
+    public $patient_gender;
+    public $patient_marital_status;
+    public $patient_occupation;
+    public $patient_blood_group;
+    public $patient_email;
+    public $patient_reg_mode;
+    public $patient_type;
+    public $patient_ref_hospital;
+    public $patient_ref_doctor;
+    public $patient_ref_id;
+    public $patient_mobile;
+    public $patient_secondary_contact;
+    public $patient_bill_type;
+    public $patient_image;
+    
+    public $_global_fields;
+    
     /**
      * @inheritdoc
      */
@@ -61,6 +89,13 @@ class PatPatient extends RActiveRecord {
         return 'pat_patient';
     }
 
+    public function init() {
+        $global_fields = PatGlobalPatient::getTableSchema()->getColumnNames();
+        $unset_fields = ['status', 'created_by', 'created_at', 'modified_by', 'modified_at', 'deleted_at', 'parent_id', 'global_patient_id'];
+        $this->_global_fields = array_diff($global_fields, $unset_fields);
+        return parent::init();
+    }
+    
 //    public function init() {
 //        parent::init();
 //        if ($this->isNewRecord) {
@@ -596,6 +631,14 @@ class PatPatient extends RActiveRecord {
                 return $name;
             },
         ];
+        
+        foreach ($this->_global_fields as $global_field) {
+            $extend_glb = [$global_field => function($model, $global_field){
+                    return $model->patGlobalPatient->$global_field;
+                }];
+            $extend = array_merge($extend_glb, $extend);
+        }
+        
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
     }
@@ -640,6 +683,11 @@ class PatPatient extends RActiveRecord {
             $this->patient_guid = $this->patient_guid->toString();
 
         $this->oldAttributes = $this->attributes;
+        
+        foreach ($this->_global_fields as $global_field) {
+            $this->$global_field = @$this->patGlobalPatient->$global_field;
+        }
+        
         return parent::afterFind();
     }
 
