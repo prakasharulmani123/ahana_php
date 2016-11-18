@@ -196,6 +196,10 @@ class PatPatient extends RActiveRecord {
     public function getPatActiveCasesheetno() {
         return $this->hasOne(PatPatientCasesheet::className(), ['patient_id' => 'patient_id'])->tenant()->status()->active();
     }
+    
+    public function getPatGlobalPatient() {
+        return $this->hasOne(PatGlobalPatient::className(), ['patient_global_guid' => 'patient_global_guid']);
+    }
 
     public function beforeSave($insert) {
         if (!empty($this->patient_dob))
