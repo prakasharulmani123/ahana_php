@@ -2577,6 +2577,22 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
+            
+            //Myworks Doctors monthly pay
+            .state('myworks.patientMerge', {
+                url: '/patientMerge',
+                templateUrl: 'tpl/myworks/patient_merge.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/myworks/patient_merge.js');
+                                    }
+                            );
+                        }]
+                }
+            })
 
     $httpProvider.interceptors.push('APIInterceptor');
 
