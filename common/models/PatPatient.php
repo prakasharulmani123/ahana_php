@@ -79,9 +79,8 @@ class PatPatient extends RActiveRecord {
     public $patient_secondary_contact;
     public $patient_bill_type;
     public $patient_image;
-    
     public $_global_fields;
-    
+
     /**
      * @inheritdoc
      */
@@ -95,7 +94,7 @@ class PatPatient extends RActiveRecord {
         $this->_global_fields = array_diff($global_fields, $unset_fields);
         return parent::init();
     }
-    
+
 //    public function init() {
 //        parent::init();
 //        if ($this->isNewRecord) {
@@ -231,7 +230,7 @@ class PatPatient extends RActiveRecord {
     public function getPatActiveCasesheetno() {
         return $this->hasOne(PatPatientCasesheet::className(), ['patient_id' => 'patient_id'])->tenant()->status()->active();
     }
-    
+
     public function getPatGlobalPatient() {
         return $this->hasOne(PatGlobalPatient::className(), ['patient_global_guid' => 'patient_global_guid']);
     }
@@ -247,7 +246,6 @@ class PatPatient extends RActiveRecord {
                 $this->patient_reg_date = date('Y-m-d H:i:s');
 
             $this->patient_int_code = CoInternalCode::generateInternalCode('P', 'common\models\PatPatient', 'patient_int_code');
-
             //If Global ID empty means we will generate otherwise it could be imported data
             if (empty($this->patient_global_guid))
                 $this->patient_global_guid = self::guid();
@@ -257,6 +255,15 @@ class PatPatient extends RActiveRecord {
                 $this->patient_global_int_code = GlInternalCode::generateInternalCode($org_id, 'PG', 'common\models\GlPatient', 'patient_global_int_code');
             }
         }
+
+        $global_patient = new PatGlobalPatient();
+        if (!empty($this->patGlobalPatient)) {
+            $global_patient = $this->patGlobalPatient;
+        }
+        foreach ($this->_global_fields as $global_field) {
+            $global_patient->$global_field = $this->$global_field;
+        }
+        $global_patient->save(false);
 
         return parent::beforeSave($insert);
     }
@@ -352,6 +359,9 @@ class PatPatient extends RActiveRecord {
             if ($save) {
                 $attr = array_diff_key($this->attributes, $unset_cols);
                 $model->attributes = $attr;
+                foreach ($this->_global_fields as $global_field) {
+                    $model->$global_field = $this->$global_field;
+                }
                 $model->save(false);
                 if ($gl_patient_insert) {
                     $org_id = Yii::$app->user->identity->user->org_id;
@@ -631,14 +641,14 @@ class PatPatient extends RActiveRecord {
                 return $name;
             },
         ];
-        
+
         foreach ($this->_global_fields as $global_field) {
-            $extend_glb = [$global_field => function($model, $global_field){
+            $extend_glb = [$global_field => function($model, $global_field) {
                     return $model->patGlobalPatient->$global_field;
                 }];
             $extend = array_merge($extend_glb, $extend);
         }
-        
+
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
     }
@@ -683,11 +693,11 @@ class PatPatient extends RActiveRecord {
             $this->patient_guid = $this->patient_guid->toString();
 
         $this->oldAttributes = $this->attributes;
-        
+
         foreach ($this->_global_fields as $global_field) {
             $this->$global_field = @$this->patGlobalPatient->$global_field;
         }
-        
+
         return parent::afterFind();
     }
 

@@ -9,7 +9,7 @@ namespace common\models;
  *
  * @property integer $global_patient_id
  * @property string $patient_global_guid
- * @property integer $parent_id
+ * @property string $parent_id
  * @property integer $casesheetno
  * @property string $patient_global_int_code
  * @property string $patient_reg_date
@@ -25,7 +25,6 @@ namespace common\models;
  * @property string $patient_marital_status
  * @property string $patient_occupation
  * @property string $patient_blood_group
- * @property integer $patient_category_id
  * @property string $patient_email
  * @property string $patient_reg_mode
  * @property string $patient_type
@@ -58,10 +57,10 @@ class PatGlobalPatient extends RActiveRecord {
     public function rules() {
         return [
             [['patient_global_guid', 'patient_global_int_code', 'patient_title_code', 'patient_firstname', 'patient_gender', 'created_by'], 'required'],
-            [['parent_id', 'casesheetno', 'patient_care_taker', 'patient_category_id', 'created_by', 'modified_by'], 'integer'],
+            [['casesheetno', 'patient_care_taker', 'created_by', 'modified_by'], 'integer'],
             [['patient_reg_date', 'patient_dob', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['patient_image', 'status'], 'string'],
-            [['patient_global_guid', 'patient_firstname', 'patient_lastname', 'patient_relation_name', 'patient_care_taker_name', 'patient_occupation', 'patient_email', 'patient_ref_id', 'patient_mobile', 'patient_secondary_contact'], 'string', 'max' => 50],
+            [['patient_global_guid', 'parent_id', 'patient_firstname', 'patient_lastname', 'patient_relation_name', 'patient_care_taker_name', 'patient_occupation', 'patient_email', 'patient_ref_id', 'patient_mobile', 'patient_secondary_contact'], 'string', 'max' => 50],
             [['patient_global_int_code'], 'string', 'max' => 30],
             [['patient_title_code'], 'string', 'max' => 10],
             [['patient_relation_code', 'patient_gender', 'patient_marital_status', 'patient_reg_mode', 'patient_type', 'patient_bill_type'], 'string', 'max' => 2],
@@ -95,7 +94,6 @@ class PatGlobalPatient extends RActiveRecord {
             'patient_marital_status' => 'Patient Marital Status',
             'patient_occupation' => 'Patient Occupation',
             'patient_blood_group' => 'Patient Blood Group',
-            'patient_category_id' => 'Patient Category ID',
             'patient_email' => 'Patient Email',
             'patient_reg_mode' => 'Patient Reg Mode',
             'patient_type' => 'Patient Type',
