@@ -79,6 +79,7 @@ class PatPatient extends RActiveRecord {
     public $patient_secondary_contact;
     public $patient_bill_type;
     public $patient_image;
+    public $parent_id;
     public $_global_fields;
 
     /**
@@ -90,7 +91,7 @@ class PatPatient extends RActiveRecord {
 
     public function init() {
         $global_fields = PatGlobalPatient::getTableSchema()->getColumnNames();
-        $unset_fields = ['status', 'created_by', 'created_at', 'modified_by', 'modified_at', 'deleted_at', 'parent_id', 'global_patient_id'];
+        $unset_fields = ['status', 'created_by', 'created_at', 'modified_by', 'modified_at', 'deleted_at', 'global_patient_id'];
         $this->_global_fields = array_diff($global_fields, $unset_fields);
         return parent::init();
     }
@@ -110,7 +111,7 @@ class PatPatient extends RActiveRecord {
             [['patient_title_code', 'patient_firstname', 'patient_gender', 'patient_reg_mode', 'patient_mobile', 'patient_dob'], 'required'],
             [['patient_firstname'], 'string', 'min' => '2'],
             [['casesheetno', 'tenant_id', 'patient_care_taker', 'patient_category_id', 'created_by', 'modified_by'], 'integer'],
-            [['patient_reg_date', 'patient_dob', 'created_at', 'modified_at', 'deleted_at', 'patient_mobile', 'patient_bill_type', 'patient_guid', 'patient_image', 'patient_global_guid', 'patient_global_int_code', 'patient_int_code', 'patient_secondary_contact'], 'safe'],
+            [['patient_reg_date', 'patient_dob', 'created_at', 'modified_at', 'deleted_at', 'patient_mobile', 'patient_bill_type', 'patient_guid', 'patient_image', 'patient_global_guid', 'patient_global_int_code', 'patient_int_code', 'patient_secondary_contact', 'parent_id'], 'safe'],
             [['status'], 'string'],
             [['patient_title_code'], 'string', 'max' => 10],
             [['patient_firstname', 'patient_lastname', 'patient_relation_name', 'patient_care_taker_name', 'patient_occupation', 'patient_email', 'patient_ref_id'], 'string', 'max' => 50],
@@ -640,6 +641,9 @@ class PatPatient extends RActiveRecord {
                     $name .= ' (' . $model->patient_global_int_code . ')';
                 return $name;
             },
+            'childrens_count' => function ($model) {
+                return $model->patGlobalPatient->patPatientChildrensCount;
+            }
         ];
 
         foreach ($this->_global_fields as $global_field) {

@@ -116,5 +116,13 @@ class PatGlobalPatient extends RActiveRecord {
     public function getPatPatient() {
         return $this->hasMany(PatPatient::className(), ['patient_global_guid' => 'patient_global_guid']);
     }
+    
+    public function getPatPatientChildrens() {
+        return $this->hasMany(self::className(), ['parent_id' => 'patient_global_guid']);
+    }
+    
+    public function getPatPatientChildrensCount() {
+        return $this->getPatPatientChildrens()->count();
+    }
 
 }

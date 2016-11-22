@@ -7,6 +7,7 @@ use common\models\CoPatient;
 use common\models\GlPatient;
 use common\models\GlPatientShareResources;
 use common\models\GlPatientTenant;
+use common\models\PatGlobalPatient;
 use common\models\PatPatient;
 use common\models\PatPatientAddress;
 use common\models\PatPatientCasesheet;
@@ -140,7 +141,7 @@ class PatientController extends ActiveController {
             $tenant_id = Yii::$app->user->identity->logged_tenant_id;
 
             $lists = PatPatient::find()
-                    ->andWhere(['pat_patient.tenant_id' => $tenant_id,  'pat_patient.deleted_at' => '0000-00-00 00:00:00'])
+                    ->andWhere(['pat_patient.tenant_id' => $tenant_id, 'pat_patient.deleted_at' => '0000-00-00 00:00:00'])
                     ->joinWith('patGlobalPatient')
                     ->orOnCondition("pat_global_patient.patient_firstname like :search")
                     ->orOnCondition("pat_global_patient.patient_lastname like :search")
@@ -150,7 +151,7 @@ class PatientController extends ActiveController {
                     ->addParams([':search' => "%{$text}%"])
                     ->limit($limit)
                     ->all();
-                    
+
             foreach ($lists as $key => $patient) {
                 $patients[$key]['Patient'] = $patient;
                 $patients[$key]['PatientAddress'] = $patient->patPatientAddress;
@@ -158,7 +159,7 @@ class PatientController extends ActiveController {
                 $patients[$key]['same_branch'] = true;
                 $patients[$key]['same_org'] = true;
             }
-            
+
             //Search from same ORG but different branch
             if (empty($patients)) {
                 $lists = PatPatient::find()
@@ -479,6 +480,29 @@ class PatientController extends ActiveController {
             }
         }
         return ['patients' => $patients];
+    }
+
+    public function actionMergepatients() {
+        $post = Yii::$app->getRequest()->post();
+        if (!empty($post)) {
+            $parent_id = '';
+            $childrens = [];
+            foreach ($post as $key => $value) {
+                if ($value['is_primary']) {
+                    $parent_id = $value['Patient']['patient_global_guid'];
+                } else {
+                    $childrens[] = $value['Patient']['patient_global_guid'];
+                }
+            }
+
+            if ($parent_id != '' && !empty($childrens)) {
+                $children_ids = join("', '", $childrens);
+                PatGlobalPatient::updateAll(['parent_id' => $parent_id], "patient_global_guid IN ('$children_ids')");
+                return ['success' => true];
+            } else {
+                return ['success' => false, 'message' => 'Failed to Merge'];
+            }
+        }
     }
 
 }
