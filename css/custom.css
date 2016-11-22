@@ -326,8 +326,8 @@ out-patient-table .table > thead > tr > th label.i-checks{
     color: red;
 }
 
-.patient-search-result li.selected {
-    background-color: lightgray none repeat scroll 0 0;   
+.patient-search-result li.selected, .patient-merge-result li.selected {
+    background-color: lightgray;   
 }
 
 #prescriptioncont-header li.selected {
@@ -401,4 +401,23 @@ out-patient-table .table > thead > tr > th label.i-checks{
 .navbar-header-branchswitch {
   float: left;
   padding-top: 9px;
+}
+
+.merge-patientcont {
+  background-clip: padding-box;
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.176);
+  float: left;
+  font-size: 14px;
+  left: 20px;
+  list-style: outside none none;
+  margin: 2px 0 0;
+  padding: 5px;
+  position: absolute;
+  text-align: left;
+  top: 80%;
+  width: 400px;
+  z-index: 1000;
 }

@@ -24,6 +24,15 @@ $(document).mouseup(function (e) {
     } else {
         container_2.show();
     }
+    
+    var container_3 = $("#patient-merge1.result-patient-merge1");
+    var input_box_3 = $(".patient_merge_input1");
+
+    if (!container_3.is(e.target) && container_3.has(e.target).length === 0 && !input_box_3.is(e.target)) {
+        container_3.hide();
+    } else {
+        container_3.show();
+    }
 });
 
 $(document).bind('click', function (e) {

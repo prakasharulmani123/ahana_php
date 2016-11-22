@@ -2578,7 +2578,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 }
             })
             
-            //Myworks Doctors monthly pay
+            //Myworks Patient Merge
             .state('myworks.patientMerge', {
                 url: '/patientMerge',
                 templateUrl: 'tpl/myworks/patient_merge.html',
