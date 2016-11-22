@@ -26,7 +26,7 @@ app.controller('PatientMergeController', ['$rootScope', '$scope', '$timeout', '$
         }, true);
 
         $scope.filterFn = function (item) {
-            return !item.Patient.have_encounter && item.Patient.parent_id == '';
+            return !item.Patient.have_encounter && (item.Patient.parent_id == null ||  item.Patient.parent_id == '');
         };
 
         $("#patient-search1").keydown(function (e) {
