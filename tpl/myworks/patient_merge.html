@@ -19,9 +19,9 @@
                     <div class="panel-body">
                         <form role="form">
                             <div class="form-group">
-                                <input ng-model="patient" id="patient-search1" type="text" class="form-control patient_merge_input1" autocomplete="off">
-                                <div class="patient-merge-result" id="patient-merge-result1" ng-if="patient != '' && patient_search_result">
-                                    <ul class="merge-patientcont result-patient-merge1" id='patient-merge1'>
+                                <input ng-model="patient" id="patient-search" type="text" class="form-control patient_merge_input" autocomplete="off">
+                                <div class="patient-merge-result" id="patient-merge-result" ng-if="patient != '' && patient_search_result">
+                                    <ul class="merge-patientcont result-patient-merge" id='patient-merge'>
                                         <li ng-repeat="(key, patient) in patient_search_result| filter:filterFn" class="{{key == 0 ? 'selected' : ''}}">
                                             <div class="row"> 
                                                 <div class="col-xs-12 col-sm-2 col-md-2"> 
@@ -70,8 +70,20 @@
                     <div class="panel-body">
                         <form role="form" class="form-horizontal form-validation">
                             <div class="form-group">
-                                <label class="col-sm-4 control-label">Patient Name</label>
+                                <label class="col-sm-3 control-label">Patient Name</label>
                                 <div class="col-sm-8">{{selected_patient.Patient.fullname}}</div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Patient ID</label>
+                                <div class="col-sm-8">{{selected_patient.Patient.patient_global_int_code}}</div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">DOB</label>
+                                <div class="col-sm-8">{{selected_patient.Patient.patient_dob}}</div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Patient Mobile</label>
+                                <div class="col-sm-8">{{selected_patient.Patient.patient_mobile}}</div>
                             </div>
                         </form>
                     </div>

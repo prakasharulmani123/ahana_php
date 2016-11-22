@@ -26,11 +26,11 @@ app.controller('PatientMergeController', ['$rootScope', '$scope', '$timeout', '$
         }, true);
 
         $scope.filterFn = function (item) {
-            return !item.Patient.have_encounter && (item.Patient.parent_id == null ||  item.Patient.parent_id == '');
+            return !item.Patient.have_encounter && item.Patient.childrens_count == '0' && (item.Patient.parent_id == null || item.Patient.parent_id == '');
         };
 
-        $("#patient-search1").keydown(function (e) {
-            var parent_div = "#patient-merge-result1";
+        $("#patient-search").keydown(function (e) {
+            var parent_div = "#patient-merge-result";
             if (e.keyCode == 13) { // enter
                 if ($(parent_div).is(":visible")) {
                     $scope.selectOption(parent_div);

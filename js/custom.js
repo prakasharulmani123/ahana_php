@@ -25,8 +25,8 @@ $(document).mouseup(function (e) {
         container_2.show();
     }
     
-    var container_3 = $("#patient-merge1.result-patient-merge1");
-    var input_box_3 = $(".patient_merge_input1");
+    var container_3 = $("#patient-merge.result-patient-merge");
+    var input_box_3 = $(".patient_merge_input");
 
     if (!container_3.is(e.target) && container_3.has(e.target).length === 0 && !input_box_3.is(e.target)) {
         container_3.hide();
