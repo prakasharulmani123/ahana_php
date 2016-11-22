@@ -331,6 +331,10 @@ app.controller('PatientSearchController', ['$scope', '$http', '$rootScope', '$st
             }
         }, true);
 
+        $scope.filterFn = function (item) {
+            return (item.Patient.parent_id == null || item.Patient.parent_id == '');
+        };
+
         $("#patient-search").keydown(function (e) {
             if (e.keyCode == 13) { // enter
                 if ($(".patient-search-result").is(":visible")) {

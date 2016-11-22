@@ -20,7 +20,7 @@
                         <form role="form">
                             <div class="form-group">
                                 <input ng-model="patient" id="patient-search" type="text" class="form-control patient_merge_input" autocomplete="off">
-                                <div class="patient-merge-result" id="patient-merge-result" ng-if="patient != '' && patient_search_result">
+                                <div class="patient-merge-result" id="patient-merge-result" ng-if="patient != '' && patient_search_result.length > '0'">
                                     <ul class="merge-patientcont result-patient-merge" id='patient-merge'>
                                         <li ng-repeat="(key, patient) in patient_search_result| filter:filterFn" class="{{key == 0 ? 'selected' : ''}}">
                                             <div class="row"> 
@@ -30,7 +30,7 @@
                                                 </div>
                                                 <div class="col-xs-12 col-sm-5 col-md-6"> 
                                                     <div class="row ng-binding"> 
-                                                        <a tooltip="{{patient.Patient.fullcurrentaddress|| patient.Patient.fullpermanentaddress}}" ng-bind-html="patient.Patient.fullname | highlight:patient" href="javascript:void(0)" ng-click="displayPatient(patient.Patient.patient_global_guid, 'patient')" class="ng-binding">
+                                                        <a tooltip="{{patient.Patient.fullcurrentaddress|| patient.Patient.fullpermanentaddress}}" ng-bind-html="patient.Patient.fullname | highlight:patient" href="javascript:void(0)" ng-click="displayPatient(patient.Patient.patient_global_guid)" class="ng-binding">
                                                         </a>
                                                         <b ng-if="patient.Patient.patient_age">({{patient.Patient.patient_age}}y) </b>
                                                         <br>

@@ -421,3 +421,8 @@ out-patient-table .table > thead > tr > th label.i-checks{
   width: 400px;
   z-index: 1000;
 }
+
+.merge-patientcont img {
+  height: auto;
+  width: 100%;
+}

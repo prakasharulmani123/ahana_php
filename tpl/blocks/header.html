@@ -24,7 +24,7 @@
                     <input id="patient-search" type="text" ng-model="patientselected" class="form-control input-sm bg-light no-border rounded padder header_search_input" placeholder="Search...." autocomplete="off">
                     <div class="patient-search-result" ng-if="patientselected != '' && patient_lists" >
                         <ul class="search-patientcont-header" id='patientcont-header'>
-                            <li ng-repeat="(key, patient) in patient_lists| filter:patientselected" class="{{key == 0 ? 'selected' : ''}}">
+                            <li ng-repeat="(key, patient) in patient_lists| filter:filterFn" class="{{key == 0 ? 'selected' : ''}}">
                                 <div class="row"> 
                                     <div class="col-xs-12 col-sm-2 col-md-2"> 
                                         <img ng-if="$even" alt="" ng-src="{{patient.Patient.patient_image ? patient.Patient.patient_image : 'img/man-icon.png'}}" class="patient-image">

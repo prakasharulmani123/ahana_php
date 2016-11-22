@@ -66,7 +66,7 @@ app.controller('PatientMergeController', ['$rootScope', '$scope', '$timeout', '$
             return false;
         }
 
-        $scope.displayPatient = function (id, patient) {
+        $scope.displayPatient = function (id) {
             $(".merge-patientcont").hide();
             var filteredResult = $filter('filter')($scope.patient_search_result, {Patient: {patient_global_guid: id}});
             if (filteredResult.length > 0) {
