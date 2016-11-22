@@ -148,6 +148,7 @@ class PatientController extends ActiveController {
                     ->orOnCondition("pat_global_patient.patient_mobile like :search")
                     ->orOnCondition("pat_global_patient.patient_global_int_code like :search")
                     ->orOnCondition("pat_global_patient.casesheetno like :search")
+                    ->andWhere("pat_global_patient.parent_id is null")
                     ->addParams([':search' => "%{$text}%"])
                     ->limit($limit)
                     ->all();
@@ -170,6 +171,7 @@ class PatientController extends ActiveController {
                         ->orOnCondition("pat_global_patient.patient_mobile like :search")
                         ->orOnCondition("pat_global_patient.patient_global_int_code like :search")
                         ->orOnCondition("pat_global_patient.casesheetno like :search")
+                        ->andWhere("pat_global_patient.parent_id is null")
                         ->addParams([':search' => "%{$text}%"])
                         ->limit($limit)
                         ->groupBy('pat_patient.patient_global_guid')
