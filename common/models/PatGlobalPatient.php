@@ -1,8 +1,8 @@
 <?php
 
-use common\models\RActiveRecord;
-
 namespace common\models;
+
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "pat_global_patient".
@@ -123,6 +123,10 @@ class PatGlobalPatient extends RActiveRecord {
     
     public function getPatPatientChildrensCount() {
         return $this->getPatPatientChildrens()->count();
+    }
+    
+    public function getPatPatientChildrensGlobalIds() {
+        return ArrayHelper::map($this->getPatPatientChildrens()->all(), 'patient_global_guid', 'patient_global_int_code');
     }
 
 }

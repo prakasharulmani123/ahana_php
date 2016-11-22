@@ -643,6 +643,9 @@ class PatPatient extends RActiveRecord {
             },
             'childrens_count' => function ($model) {
                 return $model->patGlobalPatient->patPatientChildrensCount;
+            },
+            'childrens_global_ids' => function ($model) {
+                return implode(',', $model->patGlobalPatient->patPatientChildrensGlobalIds);
             }
         ];
 

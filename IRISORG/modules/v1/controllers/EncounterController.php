@@ -209,19 +209,26 @@ class EncounterController extends ActiveController {
 
     public function actionGetencounters() {
         $get = Yii::$app->getRequest()->get();
+        $tenant_id = Yii::$app->user->identity->logged_tenant_id;
 
         if (isset($get['id'])) {
-            $condition = [
-                'patient_guid' => $get['id'],
-            ];
-
-            if (isset($get['date'])) {
-                $condition = [
-                    'patient_guid' => $get['id'],
-                    'DATE(date)' => $get['date'],
-                ];
+            $condition['patient_guid'][$get['id']] = $get['id'];
+            
+            $patient = PatPatient::getPatientByGuid($get['id']);
+            
+            //Patient Secondary Ids
+            if($patient->patGlobalPatient->patPatientChildrensCount > 0){
+                $childGlobals = $patient->patGlobalPatient->patPatientChildrens;
+                foreach ($childGlobals as $childGlobal) {
+                    $childs = $childGlobal->patPatient;
+                    foreach ($childs as $child) {
+                        if($child->tenant_id == $tenant_id){
+                            $condition['patient_guid'][$child->patient_guid] = $child->patient_guid;
+                        }
+                    }
+                }
             }
-
+            
             $data = VEncounter::find()
                     ->where($condition)
                     ->groupBy('encounter_id')

@@ -50,6 +50,7 @@ use yii\db\ActiveRecord;
  */
 class GlPatient extends ActiveRecord {
 
+    public $parent_id;
     /**
      * @inheritdoc
      */
