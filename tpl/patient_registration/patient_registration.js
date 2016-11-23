@@ -206,11 +206,7 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
                     changeTimer = false;
                 }, 300);
             }
-        };
-        
-        $scope.filterFn = function (item) {
-            return (item.Patient.parent_id == null || item.Patient.parent_id == '');
-        };
+        }
 
         $scope.setDateEmpty = function () {
             $scope.data.PatPatient.patient_dob = '';

@@ -2,7 +2,7 @@
     <div class="panel-body">
         <p> <h4 ng-show="matchings.length == 0">  <i class="fa fa-exclamation-triangle"></i> No Matching Records!  </h4></p>     
         <p> <h4 ng-show="matchings.length > 0">  <i class="fa fa-exclamation-triangle"></i> One or more particulars matching to existing patient records!  </h4></p>     
-        <div class="search-patientcont" ng-repeat="(key, patient) in matchings| filter:filterFn">
+        <div class="search-patientcont" ng-repeat="(key, patient) in matchings">
             <div class="row"> 
                 <div class="col-xs-12 col-sm-2 col-md-2"> 
                     <img ng-if="$even" alt="" width="49" height="49" ng-src="{{patient.Patient.patient_image ? patient.Patient.patient_image : 'img/man-icon.png'}}" class="patient-image">
