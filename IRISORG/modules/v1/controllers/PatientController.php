@@ -493,7 +493,6 @@ class PatientController extends ActiveController {
         
         if (!empty($post)) {
             $this->migrateTables = $this->_getMigrationTable();
-            exit;
             $parent_id = $tenant_id = $patient_id = '';
             $childrens = [];
             foreach ($post as $key => $value) {
@@ -571,9 +570,6 @@ class PatientController extends ActiveController {
             return $prefix.\yii\helpers\BaseInflector::camelize($a);
         }, $migrate_tables);
         
-        echo '<pre>';
-        print_r($migrate_tables);
-        exit;
         return $migrate_tables;
     }
 
