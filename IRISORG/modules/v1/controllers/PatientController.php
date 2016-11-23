@@ -149,6 +149,7 @@ class PatientController extends ActiveController {
                     ->orOnCondition("pat_global_patient.patient_global_int_code like :search")
                     ->orOnCondition("pat_global_patient.casesheetno like :search")
                     ->andWhere("pat_global_patient.parent_id is null")
+                    ->orWhere("pat_global_patient.parent_id = ''")
                     ->addParams([':search' => "%{$text}%"])
                     ->limit($limit)
                     ->all();
@@ -172,6 +173,7 @@ class PatientController extends ActiveController {
                         ->orOnCondition("pat_global_patient.patient_global_int_code like :search")
                         ->orOnCondition("pat_global_patient.casesheetno like :search")
                         ->andWhere("pat_global_patient.parent_id is null")
+                        ->orWhere("pat_global_patient.parent_id = ''")
                         ->addParams([':search' => "%{$text}%"])
                         ->limit($limit)
                         ->groupBy('pat_patient.patient_global_guid')
@@ -193,6 +195,8 @@ class PatientController extends ActiveController {
                             ->orOnCondition("patient_mobile like :search")
 //                            ->orOnCondition("patient_global_int_code like :search")
                             ->orOnCondition("casesheetno like :search")
+                            ->andWhere("parent_id is null")
+                            ->orWhere("parent_id = ''")
                             ->addParams([':search' => "%{$text}%"])
                             ->limit($limit)
                             ->all();
@@ -486,12 +490,17 @@ class PatientController extends ActiveController {
 
     public function actionMergepatients() {
         $post = Yii::$app->getRequest()->post();
+        
         if (!empty($post)) {
-            $parent_id = '';
+            $this->migrateTables = $this->_getMigrationTable();
+            exit;
+            $parent_id = $tenant_id = $patient_id = '';
             $childrens = [];
             foreach ($post as $key => $value) {
                 if ($value['is_primary']) {
+                    $tenant_id = $value['Patient']['tenant_id'];
                     $parent_id = $value['Patient']['patient_global_guid'];
+                    $patient_id = $value['Patient']['patient_id'];
                 } else {
                     $childrens[] = $value['Patient']['patient_global_guid'];
                 }
@@ -500,11 +509,92 @@ class PatientController extends ActiveController {
             if ($parent_id != '' && !empty($childrens)) {
                 $children_ids = join("', '", $childrens);
                 PatGlobalPatient::updateAll(['parent_id' => $parent_id], "patient_global_guid IN ('$children_ids')");
+                GlPatient::updateAll(['parent_id' => $parent_id], "patient_global_guid IN ('$children_ids')");
+
+                $merge_patients = PatPatient::find()->andWhere("patient_global_guid IN ('$children_ids')")->all();
+
+                $connection = Yii::$app->client;
+                foreach ($merge_patients as $merge_patient) {
+                    if ($merge_patient->tenant_id == $tenant_id) {
+                        //Same Tenant
+                        $migration_details = json_encode($this->_migratePatientRecordsUp($patient_id, $merge_patient->patient_id));
+                        $command = $connection->createCommand("
+                            UPDATE pat_patient
+                            SET patient_global_guid = :patient_global_guid, migration_id = :migration_id, migration_details = :migration_details, modified_at = NOW(), deleted_at = NOW()
+                            WHERE patient_id = :patient_id", [':patient_id' => $merge_patient->patient_id, ':patient_global_guid' => $parent_id, 'migration_id' => $merge_patient->patient_global_guid, 'migration_details' => $migration_details]);
+                    } else {
+                        //Other Tenant
+                        $command = $connection->createCommand("
+                            UPDATE pat_patient
+                            SET patient_global_guid = :patient_global_guid,  migration_id = :migration_id, modified_at = NOW()
+                            WHERE patient_id = :patient_id", [':patient_id' => $merge_patient->patient_id, ':patient_global_guid' => $parent_id, 'migration_id' => $merge_patient->patient_global_guid]);
+
+                        GlPatientTenant::updateAll(['patient_global_guid' => $parent_id], ['patient_global_guid' => $merge_patient->patient_global_guid, 'patient_guid' => $merge_patient->patient_guid, 'tenant_id' => $merge_patient->tenant_id]);
+                    }
+                    $command->execute();
+                }
+                $connection->close();
+
                 return ['success' => true];
             } else {
                 return ['success' => false, 'message' => 'Failed to Merge'];
             }
         }
+    }
+    
+    private $migrateTables;
+    
+    private function _getMigrationTable() {
+        $connection = Yii::$app->client;
+        
+        $database = $connection->createCommand("SELECT DATABASE()")->queryScalar();
+        
+        $command = $connection->createCommand(" 
+            SELECT DISTINCT TABLE_NAME
+            FROM INFORMATION_SCHEMA.COLUMNS
+            WHERE COLUMN_NAME IN ('patient_id')
+            AND TABLE_NAME NOT IN ('pat_patient')
+            AND TABLE_SCHEMA= :db", [':db' => $database]);
+        $migrate_tables = ArrayHelper::map($command->queryAll(), 'TABLE_NAME', 'TABLE_NAME');
+        
+        $command = $connection->createCommand(" 
+            SELECT DISTINCT TABLE_NAME
+            FROM information_schema.views
+            WHERE TABLE_SCHEMA= :db", [':db' => $database]);
+        $unset_tables = ArrayHelper::map($command->queryAll(), 'TABLE_NAME', 'TABLE_NAME');
+        
+        $migrate_tables = array_diff($migrate_tables, $unset_tables);
+        $connection->close();
+        
+        $migrate_tables = array_map(function($a){
+            $prefix = '\common\models\\';
+            return $prefix.\yii\helpers\BaseInflector::camelize($a);
+        }, $migrate_tables);
+        
+        echo '<pre>';
+        print_r($migrate_tables);
+        exit;
+        return $migrate_tables;
+    }
+
+    private function _migratePatientRecordsUp($new_patient_id, $old_patient_id) {
+        $migrate_tables = $this->migrateTables;
+        $merge_details = [];
+
+        $connection = Yii::$app->client;
+        foreach ($migrate_tables as $table => $modal) {
+            $pk = $modal::primaryKey();
+            $merge_details[$table] = array_values(ArrayHelper::map($modal::find()->andWhere(['patient_id' => $old_patient_id])->all(), $pk, $pk));
+
+            $command = $connection->createCommand("
+                UPDATE $table
+                SET patient_id = :new_patient_id
+                WHERE patient_id = :old_patient_id", [':new_patient_id' => $new_patient_id, 'old_patient_id' => $old_patient_id]);
+            $command->execute();
+        }
+        $connection->close();
+
+        return $merge_details;
     }
 
 }
