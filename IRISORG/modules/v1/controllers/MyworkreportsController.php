@@ -40,6 +40,7 @@ class MyworkreportsController extends ActiveController {
                 ->joinWith('patAppointmentSeen')
                 ->joinWith("patAppointmentSeen.consultant")
                 ->joinWith("patient")
+                ->joinWith("patient.patGlobalPatient")
                 ->andWhere(['pat_encounter.tenant_id' => $tenant_id])
                 ->andWhere('pat_encounter.deleted_at = "0000-00-00 00:00:00"');
 
@@ -49,7 +50,7 @@ class MyworkreportsController extends ActiveController {
         }
 
         $encounters->addSelect(["CONCAT(co_user.title_code, '', co_user.name) as op_doctor_payment_consultant_name"]);
-        $encounters->addSelect(["CONCAT(pat_patient.patient_title_code, '', pat_patient.patient_firstname) as op_doctor_payment_patient_name"]);
+        $encounters->addSelect(["CONCAT(pat_global_patient.patient_title_code, '', pat_global_patient.patient_firstname) as op_doctor_payment_patient_name"]);
         $encounters->addSelect(["pat_appointment.amount as op_doctor_payment_amount"]);
         $encounters->addSelect(["pat_appointment.status_date as op_doctor_payment_seen_date"]);
         $encounters->addSelect(["pat_appointment.status_time as op_doctor_payment_seen_time"]);
@@ -76,6 +77,7 @@ class MyworkreportsController extends ActiveController {
 
         $consultants = PatConsultant::find()
                 ->joinWith("patient")
+                ->joinWith("patient.patGlobalPatient")
                 ->joinWith("consultant")
                 ->joinWith("encounter")
                 ->andWhere(['pat_encounter.tenant_id' => $tenant_id])
@@ -87,11 +89,11 @@ class MyworkreportsController extends ActiveController {
         }
 
         $consultants->addSelect(["CONCAT(co_user.title_code, '', co_user.name) as report_consultant_name"]);
-        $consultants->addSelect(["CONCAT(pat_patient.patient_title_code, '', pat_patient.patient_firstname) as report_patient_name"]);
+        $consultants->addSelect(["CONCAT(pat_global_patient.patient_title_code, '', pat_global_patient.patient_firstname) as report_patient_name"]);
         $consultants->addSelect(["COUNT(pat_consultant.charge_amount) as report_total_visit"]);
         $consultants->addSelect(["SUM(pat_consultant.charge_amount) as report_total_charge_amount"]);
         $consultants->groupBy(["pat_consultant.consultant_id", "pat_consultant.patient_id"]);
-        $consultants->orderBy(["pat_patient.patient_firstname" => SORT_ASC]);
+        $consultants->orderBy(["pat_global_patient.patient_firstname" => SORT_ASC]);
 
         $consultants = $consultants->all();
 
