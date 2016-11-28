@@ -327,7 +327,7 @@ out-patient-table .table > thead > tr > th label.i-checks{
 }
 
 .patient-search-result li.selected, .patient-merge-result li.selected {
-    background-color: lightgray;   
+    background-color: #eeeeee;   
 }
 
 #prescriptioncont-header li.selected {
@@ -407,18 +407,18 @@ out-patient-table .table > thead > tr > th label.i-checks{
   background-clip: padding-box;
   background-color: #fff;
   border: 1px solid rgba(0, 0, 0, 0.15);
-  border-radius: 4px;
+  border-radius: 0px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.176);
   float: left;
   font-size: 14px;
-  left: 20px;
+  /*left: 23px;*/
   list-style: outside none none;
   margin: 2px 0 0;
   padding: 5px;
   position: absolute;
   text-align: left;
-  top: 80%;
-  width: 400px;
+  top: 71%;
+  width: 90%;
   z-index: 1000;
 }
 
@@ -439,4 +439,16 @@ out-patient-table .table > thead > tr > th label.i-checks{
 
 .merge-patientcont span {
   color: #918e8e;
+}
+
+.merge-result-cont .panel-heading label {
+    margin-bottom: 0px;
+}
+
+.merge-result-cont .panel-heading {
+  padding: 4px;
+}
+
+.merge-result-cont .form-horizontal .form-group .col-sm-6 {
+  padding-top: 7px;
 }
