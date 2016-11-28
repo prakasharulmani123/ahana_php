@@ -91,6 +91,11 @@
                                 <td><span>Qty</span></td>
                                 <td><span>Return Qty</span></td>
                                 <td><span>MRP</span></td>
+                                <td><span>Line Total</span></td>
+                                <td><span>Disc %</span></td>
+                                <td><span>Disc. Amt</span></td>
+                                <td><span>Vat</span></td>
+                                <td><span>Vat Amt</span></td>
                                 <td><span>Total Amt</span></td>
                                 <!--<td><span>Action</span></td>-->
                             </tr>
@@ -128,6 +133,36 @@
                                     </span>
                                 </td>
                                 <td><span>{{saleitem.item_amount}}</span></td>
+                                <td>
+                                    <span 
+                                        editable-text="saleitem.discount_percentage" 
+                                        e-number-mask="" 
+                                        e-name="discount_percent" 
+                                        e-number-mask="" 
+                                        e-form="tableform" 
+                                        e-ng-keydown="updateColumn($data, key, 'discount_percentage')"  
+                                        e-ng-keyup="updateColumn($data, key, 'discount_percentage')" 
+                                        e-autocomplete="off" 
+                                        e-limit-to="5">
+                                        {{saleitem.discount_percentage|| 0}}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span>
+                                        {{saleitem.discount_amount|| 0}}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span>
+                                        {{saleitem.vat_percent}}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span>
+                                        {{saleitem.vat_amount}}
+                                    </span>
+                                </td>
+                                <td><span>{{saleitem.total_amount}}</span></td>
                                 <!--                                <td>
                                                                     <button type="button" ng-click="removeSaleItem($index)" class="btn btn-sm btn-danger pull-right">Delete</button>
                                                                 </td>-->
@@ -150,9 +185,15 @@
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="form-group">
+                    <label class="col-lg-5 control-label">Total Item Vat Amount</label>
+                    <div class="col-lg-7">
+                        <input type="text" class="form-control text-right" ng-value="data.total_item_vat_amount" readonly="">
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="col-lg-5 control-label">Total Item Sale Return Amount</label>
                     <div class="col-lg-7">
-                        <input type="text" class="form-control" ng-value="data.total_item_sale_amount" readonly="">
+                        <input type="text" class="form-control text-right" ng-value="data.total_item_sale_amount" readonly="">
                     </div>
                 </div>
                 <div class="form-group">
@@ -161,25 +202,25 @@
                         <input type="text" class="form-control" ng-model="data.total_item_discount_percent" ng-change="updateSaleRate()" maxlength="5" number-mask="">
                     </div>
                     <div class="col-lg-7">
-                        <input type="text" class="form-control" ng-value="data.total_item_discount_amount" readonly="">
+                        <input type="text" class="form-control text-right" ng-value="data.total_item_discount_amount" readonly="">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-lg-5 control-label">Total Return Amount</label>
                     <div class="col-lg-7">
-                        <input type="text" class="form-control" ng-value="data.total_item_amount" readonly="">
+                        <input type="text" class="form-control text-right" ng-value="data.total_item_amount" readonly="">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-lg-5 control-label">Round Off</label>
                     <div class="col-lg-7">
-                        <input type="text" class="form-control" ng-value="data.roundoff_amount" readonly="">
+                        <input type="text" class="form-control text-right" ng-value="data.roundoff_amount" readonly="">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-lg-5 control-label">Bill Amount</label>
                     <div class="col-lg-7">
-                        <input type="text" class="form-control" ng-value="data.bill_amount" readonly="">
+                        <input type="text" class="form-control text-right" ng-value="data.bill_amount" readonly="">
                     </div>
                 </div>
             </div>

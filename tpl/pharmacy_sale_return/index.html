@@ -67,6 +67,8 @@
                                     <th>Exp Date</th>
                                     <th>Qty</th>
                                     <th>MRP</th>
+                                    <th>Disc Amt</th>
+                                    <th>Vat Amt</th>
                                     <th>Total Amt</th>
                                 </tr>
                             </thead>
@@ -77,7 +79,9 @@
                                     <td>{{ saleitem.batch.expiry_date | moment:'MMM YYYY' || 'empty' }}</td>
                                     <td>{{ saleitem.quantity}}</td>
                                     <td>{{ saleitem.mrp}}</td>
-                                    <td>{{ saleitem.item_amount}}</td>
+                                    <td>{{ saleitem.discount_amount}}</td>
+                                    <td>{{ saleitem.vat_amount}}</td>
+                                    <td>{{ saleitem.total_amount}}</td>
                                 </tr>
                             </tbody>
                         </table>                            
