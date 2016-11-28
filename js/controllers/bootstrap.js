@@ -329,7 +329,6 @@ app.controller('PatientSearchController', ['$scope', '$http', '$rootScope', '$st
                         data: {'search': newValue},
                     }).success(
                             function (response) {
-                                console.log('Wooo');
                                 $('.patient_search_loader').removeClass('fa-spinner').addClass('fa-search');
                                 $scope.patient_lists = response.patients;
                             }

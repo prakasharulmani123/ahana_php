@@ -814,6 +814,7 @@ angular.module('app').factory('fileUpload', ['$http', function ($http) {
     }]);
 
 angular.module('app').controller('PatientLeftSideNotificationCtrl', ['$rootScope', '$scope', '$http', '$state', '$filter', '$timeout', function ($rootScope, $scope, $http, $state, $filter, $timeout) {
+        $scope.loadPatientDetail();
 
         $scope.assignNotifications = function () {
             //Assign Notes
