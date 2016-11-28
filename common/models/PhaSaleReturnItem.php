@@ -18,6 +18,11 @@ use yii\db\ActiveQuery;
  * @property string $package_name
  * @property string $mrp
  * @property string $item_amount
+ * @property string $discount_percentage
+ * @property string $discount_amount
+ * @property string $vat_percent
+ * @property string $vat_amount
+ * @property string $total_amount
  * @property string $status
  * @property integer $created_by
  * @property string $created_at
@@ -50,9 +55,9 @@ class PhaSaleReturnItem extends RActiveRecord {
             [['product_id', 'quantity', 'mrp'], 'required'],
             [['batch_no'], 'required', 'on' => 'saveform'],
             [['tenant_id', 'sale_ret_id', 'product_id', 'batch_id', 'quantity', 'created_by', 'modified_by'], 'integer'],
-            [['mrp', 'item_amount'], 'number'],
+            [['mrp', 'item_amount', 'discount_percentage', 'discount_amount', 'total_amount', 'vat_percent', 'vat_amount'], 'number'],
             [['status'], 'string'],
-            [['created_at', 'modified_at', 'deleted_at', 'expiry_date', 'batch_no', 'sale_item_id'], 'safe'],
+            [['created_at', 'modified_at', 'deleted_at', 'expiry_date', 'batch_no', 'sale_item_id', 'discount_percentage', 'discount_amount', 'total_amount', 'vat_percent', 'vat_amount'], 'safe'],
             [['package_name'], 'string', 'max' => 255]
         ];
     }

@@ -17,6 +17,7 @@ use yii\helpers\ArrayHelper;
  * @property string $patient_name
  * @property string $mobile_no
  * @property string $sale_date
+ * @property string $total_item_vat_amount
  * @property string $total_item_sale_amount
  * @property string $total_item_discount_percent
  * @property string $total_item_discount_amount
@@ -51,8 +52,8 @@ class PhaSaleReturn extends RActiveRecord {
         return [
             [['sale_date'], 'required'],
             [['tenant_id', 'patient_id', 'created_by', 'modified_by'], 'integer'],
-            [['sale_date', 'created_at', 'modified_at', 'deleted_at', 'sale_id', 'patient_name'], 'safe'],
-            [['total_item_sale_amount', 'total_item_discount_percent', 'total_item_discount_amount', 'total_item_amount', 'roundoff_amount', 'bill_amount'], 'number'],
+            [['sale_date', 'created_at', 'modified_at', 'deleted_at', 'sale_id', 'patient_name', 'total_item_vat_amount'], 'safe'],
+            [['total_item_sale_amount', 'total_item_discount_percent', 'total_item_discount_amount', 'total_item_amount', 'roundoff_amount', 'bill_amount', 'total_item_vat_amount'], 'number'],
             [['status'], 'string'],
             [['bill_no', 'mobile_no'], 'string', 'max' => 50]
         ];
@@ -69,6 +70,7 @@ class PhaSaleReturn extends RActiveRecord {
             'patient_id' => 'Patient ID',
             'mobile_no' => 'Mobile No',
             'sale_date' => 'Sale Date',
+            'total_item_vat_amount' => 'Total Item VAT Amount',
             'total_item_sale_amount' => 'Total Item Sale Amount',
             'total_item_discount_percent' => 'Total Item Discount Percent',
             'total_item_discount_amount' => 'Total Item Discount Amount',
