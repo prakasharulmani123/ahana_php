@@ -57,6 +57,11 @@ app.controller('PatientMergeController', ['$rootScope', '$scope', '$timeout', '$
                 }
             }
         });
+        
+        $("body").on("mouseover", ".result-patient-merge li", function () {
+            $(".result-patient-merge li").removeClass("selected");
+            $(this).addClass("selected");
+        });
 
         $scope.selectOption = function (parent_selector) {
             var link_tag = $(parent_selector + " .selected").find("a");

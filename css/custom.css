@@ -426,3 +426,17 @@ out-patient-table .table > thead > tr > th label.i-checks{
   height: auto;
   width: 100%;
 }
+
+.merge-patientcont li {
+  list-style: outside none none;
+  padding: 10px 10px 5px;
+}
+
+.merge-patientcont a {
+  color: #0672ce;
+  text-transform: uppercase;
+}
+
+.merge-patientcont span {
+  color: #918e8e;
+}
