@@ -41,12 +41,20 @@ namespace common\models;
 class PatPatientAddress extends RActiveRecord {
     
     public $incomplete_profile = '';
+    public $complete_profile_fields;
 
     /**
      * @inheritdoc
      */
     public static function tableName() {
         return 'pat_patient_address';
+    }
+    
+    public function init() {
+        $address_attributes = self::getTableSchema()->getColumnNames();
+        $unset_fields = ['created_by', 'created_at', 'modified_by', 'modified_at', 'deleted_at'];
+        $this->complete_profile_fields = array_diff($address_attributes, $unset_fields);
+        return parent::init();
     }
 
     /**
@@ -136,7 +144,11 @@ class PatPatientAddress extends RActiveRecord {
     }
     
     public function isIncompleteProfile(){
-        return (in_array(null, $this->attributes));
+        $address = [];
+        foreach ($this->complete_profile_fields as $global_field) {
+            $address[$global_field] = $this->$global_field;
+        }
+        return (in_array(null, $address));
     }
 
     public function fields() {
