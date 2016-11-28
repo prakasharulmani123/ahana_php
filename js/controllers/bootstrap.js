@@ -305,24 +305,32 @@ app.controller('TimepickerDemoCtrl', ['$scope', function ($scope) {
         };
     }]);
 
-app.controller('PatientSearchController', ['$scope', '$http', '$rootScope', '$state', '$sce', function ($scope, $http, $rootScope, $state, $sce) {
+app.controller('PatientSearchController', ['$scope', '$http', '$rootScope', '$state', '$sce', '$q', function ($scope, $http, $rootScope, $state, $sce, $q) {
         $scope.patient_lists = [];
         $scope.patientselected = '';
-
+        
         var changeTimer = false;
+        var canceler;
 
         $scope.$watch('patientselected', function (newValue, oldValue) {
             if (newValue != '') {
+                if (canceler) canceler.resolve();
+                canceler = $q.defer();
+                
                 if (changeTimer !== false)
                     clearTimeout(changeTimer);
 
                 changeTimer = setTimeout(function () {
+                    $('.patient_search_loader').addClass('fa-spinner').removeClass('fa-search');
                     $http({
                         method: 'POST',
                         url: $rootScope.IRISOrgServiceUrl + '/patient/search',
+                        timeout: canceler.promise,
                         data: {'search': newValue},
                     }).success(
                             function (response) {
+                                console.log('Wooo');
+                                $('.patient_search_loader').removeClass('fa-spinner').addClass('fa-search');
                                 $scope.patient_lists = response.patients;
                             }
                     );
