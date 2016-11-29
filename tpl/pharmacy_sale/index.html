@@ -118,6 +118,9 @@
                                                     <i class="fa fa-money"></i>
                                                 </a>
                                             </span>
+                                            <button tooltip="Print Bill"  class="label bg-primary dk" ng-click="printSaleBill(row, saleitem)">
+                                                <i class="fa fa-print"></i>
+                                            </button>
                                         </td> 
                                     </tr>
                                 </tbody>
@@ -132,6 +135,10 @@
                 </tbody>
             </table>
         </div>
+    </div>
+    
+    <div ng-include="'tpl/pharmacy_sale/_print_sale_bill.html'">
+        {% include 'tpl/pharmacy_sale/_print_sale_bill.html' %}
     </div>
 
 </div>

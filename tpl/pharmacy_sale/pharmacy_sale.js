@@ -96,6 +96,11 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading saleList!";
                     });
+                    
+            //Consultant List
+            $rootScope.commonService.GetDoctorList('', '1', false, '1', function (response) {
+                $scope.doctors = response.doctorsList;
+            });
         };
 
         //For Form
@@ -895,5 +900,23 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 if (col == 'bill_no')
                     $scope.data.bill_no = response.code.next_fullcode;
             });
+        }
+        
+        $scope.printSaleBill = function (row, saleitem) {
+            $scope.data2 = row;
+            $scope.saleItems2 = saleitem.items;
+            $scope.getConsultantDetail(row.consultant_id);
+            $scope.getPaytypeDetail(row.payment_type);
+            $scope.btnid = 'print';
+            
+            angular.forEach($scope.saleItems2, function(item){
+                item.full_name = item.product.full_name;
+                item.batch_details = item.batch.batch_details;
+                item.expiry_date = item.batch.expiry_date;
+            });
+            
+            $timeout(function () {
+                save_success();
+            }, 1000)
         }
     }]);
