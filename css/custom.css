@@ -452,3 +452,18 @@ out-patient-table .table > thead > tr > th label.i-checks{
 .merge-result-cont .form-horizontal .form-group .col-sm-6 {
   padding-top: 7px;
 }
+
+.search-patientcont-header{
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.search-patientcont-div{
+    max-height: 508px;
+    overflow-y: auto;
+}
+
+.merge-patientcont.result-patient-merge {
+  max-height: 500px;
+  overflow-y: auto;
+}

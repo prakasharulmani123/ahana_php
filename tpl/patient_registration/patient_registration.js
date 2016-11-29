@@ -1,4 +1,4 @@
-app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$anchorScroll', '$modal', '$log', function ($rootScope, $scope, $timeout, $http, $state, $anchorScroll, $modal, $log) {
+app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$anchorScroll', '$modal', '$log', '$q', function ($rootScope, $scope, $timeout, $http, $state, $anchorScroll, $modal, $log, $q) {
 
         $scope.app.settings.patientTopBar = false;
         $scope.app.settings.patientSideMenu = false;
@@ -8,7 +8,10 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
         $scope.$on('register_patient_image', function(event, img) {
             $scope.data.PatPatient.patient_image = img; 
         });
+        
+        $scope.show_loader = false;
 
+        var canceler;
         //Index Page
         $scope.loadPatientsList = function () {
             // pagination set up
@@ -188,19 +191,34 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
             $scope.post_search(newValue);
         }, true);
 
+        $scope.$watch('data.is_advance', function (newValue, oldValue) {
+            if(newValue){
+                $('.search-patientcont-div').css('max-height', '1352px');
+            }else{
+                $('.search-patientcont-div').css('max-height', '508px');
+            }
+        }, true);
+
         $scope.post_search = function (newValue) {
             if (newValue != '') {
+                if (canceler) canceler.resolve();
+                canceler = $q.defer();
+                
                 if (changeTimer !== false)
                     clearTimeout(changeTimer);
 
+                $scope.show_loader = true;
+                
                 changeTimer = setTimeout(function () {
                     $http({
                         method: 'POST',
                         url: $rootScope.IRISOrgServiceUrl + '/patient/search',
+                        timeout: canceler.promise,
                         data: {'search': newValue},
                     }).success(
                             function (response) {
                                 $scope.matchings = response.patients;
+                                $scope.show_loader = false;
                             }
                     );
                     changeTimer = false;

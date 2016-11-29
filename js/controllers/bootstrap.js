@@ -321,7 +321,7 @@ app.controller('PatientSearchController', ['$scope', '$http', '$rootScope', '$st
                     clearTimeout(changeTimer);
 
                 changeTimer = setTimeout(function () {
-                    $('.patient_search_loader').addClass('fa-spinner').removeClass('fa-search');
+                    $('.patient_search_loader').addClass('fa-spin fa-refresh').removeClass('fa-search');
                     $http({
                         method: 'POST',
                         url: $rootScope.IRISOrgServiceUrl + '/patient/search',
@@ -329,7 +329,7 @@ app.controller('PatientSearchController', ['$scope', '$http', '$rootScope', '$st
                         data: {'search': newValue},
                     }).success(
                             function (response) {
-                                $('.patient_search_loader').removeClass('fa-spinner').addClass('fa-search');
+                                $('.patient_search_loader').removeClass('fa-spin fa-refresh').addClass('fa-search');
                                 $scope.patient_lists = response.patients;
                             }
                     );

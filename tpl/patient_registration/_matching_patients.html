@@ -1,7 +1,9 @@
 <div class="panel panel-default">
     <div class="panel-body">
-        <p> <h4 ng-show="matchings.length == 0">  <i class="fa fa-exclamation-triangle"></i> No Matching Records!  </h4></p>     
-        <p> <h4 ng-show="matchings.length > 0">  <i class="fa fa-exclamation-triangle"></i> One or more particulars matching to existing patient records!  </h4></p>     
+        <p> <h4 ng-show="show_loader">  <i class="fa fa-spin fa-refresh fa-lg"></i> &nbsp;&nbsp;Please Wait... Searching.... </h4></p>     
+        <p> <h4 ng-show="matchings.length == 0 && !show_loader">  <i class="fa fa-exclamation-triangle"></i> No Matching Records!  </h4></p>     
+        <p> <h4 ng-show="matchings.length > 0 && !show_loader">  <i class="fa fa-exclamation-triangle"></i> One or more particulars matching to existing patient records! </h4></p>     
+        <div ng-show="!show_loader" class="search-patientcont-div">
         <div class="search-patientcont" ng-repeat="(key, patient) in matchings">
             <div class="row"> 
                 <div class="col-xs-12 col-sm-2 col-md-2"> 
@@ -37,7 +39,7 @@
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-5 col-md-5" ng-if="patient.same_branch == true && patient.same_org == true"> 
-                    <p class="m-t-xxl "> 
+                    <p class=""> 
                         <button class="btn m-b-xs w-xs btn-info" ng-show="patient.PatientActiveEncounter.hasOwnProperty('encounter_id') != true" ng-click="$state.go('patient.appointment', {'id': patient.Patient.patient_guid})">
                             BOOK
                         </button>
@@ -63,5 +65,6 @@
                 </div>
             </div>
         </div>
+    </div>
     </div>
 </div>

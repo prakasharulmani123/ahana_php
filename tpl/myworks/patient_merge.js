@@ -1,23 +1,31 @@
-app.controller('PatientMergeController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$filter', function ($rootScope, $scope, $timeout, $http, $state, $filter) {
+app.controller('PatientMergeController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$filter', '$q', function ($rootScope, $scope, $timeout, $http, $state, $filter, $q) {
 
         $scope.patient = '';
         $scope.patient_search_result = [];
         $scope.selected_patients = [];
+        $scope.show_loader = false;
+        var canceler;
 
         var changeTimer = false;
         $scope.$watch('patient', function (newValue, oldValue) {
             if (newValue != '') {
+                if (canceler) canceler.resolve();
+                canceler = $q.defer();
+                
                 if (changeTimer !== false)
                     clearTimeout(changeTimer);
 
+                $scope.show_loader = true;
                 changeTimer = setTimeout(function () {
                     $http({
                         method: 'POST',
                         url: $rootScope.IRISOrgServiceUrl + '/patient/search',
+                        timeout: canceler.promise,
                         data: {'search': newValue},
                     }).success(
                             function (response) {
                                 $scope.patient_search_result = response.patients;
+                                $scope.show_loader = false;
                             }
                     );
                     changeTimer = false;
