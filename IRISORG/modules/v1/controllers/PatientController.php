@@ -134,7 +134,7 @@ class PatientController extends ActiveController {
     public function actionSearch() {
         $post = Yii::$app->getRequest()->post();
         $patients = [];
-        $limit = 10;
+        $limit = 20;
 
         if (isset($post['search']) && !empty($post['search']) && strlen($post['search']) >= 2) {
             $text = $post['search'];
