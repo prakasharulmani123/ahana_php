@@ -4,6 +4,7 @@ app.controller('ModalPatientFutureAppointmentController', ['scope', '$scope', '$
         $scope.title = $modalInstance.data.title;
         $scope.app = scope.app;
         $scope.patientObj = scope.patientObj;
+        $scope.show_appt_loader = false;
 
         //For Datepicker
         $scope.open = function ($event) {
@@ -17,20 +18,27 @@ app.controller('ModalPatientFutureAppointmentController', ['scope', '$scope', '$
             $scope.data = {};
             $scope.data.status_date = moment($scope.date).format('YYYY-MM-DD');
             $scope.data.patient_id = $scope.patientObj.patient_id;
-            $scope.data.consultant_id = $scope.patientObj.last_consultant_id;
-            $scope.getTimeOfAppointment();
+            //Load Doctor List
+            $rootScope.commonService.GetDoctorList('', '1', false, '1', function (response) {
+                $scope.doctors = response.doctorsList;
+                $scope.data.consultant_id = $scope.patientObj.last_consultant_id;
+                $scope.getTimeOfAppointment();
+            });
             $scope.data.validate_casesheet = ($scope.patientObj.activeCasesheetno == null || $scope.patientObj.activeCasesheetno == '');
+            $scope.minDate = new Date();
         }
 
         //Time Slots Preparation
         $scope.getTimeOfAppointment = function () {
             if (typeof (this.data) != "undefined") {
-                if (typeof ($scope.patientObj.last_consultant_id) != 'undefined' && typeof (this.data.status_date != 'undefined')) {
-                    $scope.getTimeSlots($scope.patientObj.last_consultant_id, this.data.status_date);
+                if (typeof ($scope.data.consultant_id) != 'undefined' && typeof (this.data.status_date != 'undefined')) {
+                    $scope.getTimeSlots($scope.data.consultant_id, this.data.status_date);
                 }
             }
         }
         $scope.getTimeSlots = function (doctor_id, date) {
+            $scope.show_appt_loader = true;
+            $scope.data.status_time = '';
             $http.post($rootScope.IRISOrgServiceUrl + '/doctorschedule/getdoctortimeschedule', {doctor_id: doctor_id, schedule_date: date})
                     .success(function (response) {
                         $scope.timeslots = [];
@@ -38,8 +46,10 @@ app.controller('ModalPatientFutureAppointmentController', ['scope', '$scope', '$
                             $scope.timeslots.push({
                                 time: value.time,
                                 color: value.color,
+                                slot_12hour: value.slot_12hour,
                             });
                         });
+                        $scope.show_appt_loader = false;
                     }, function (x) {
                         response = {success: false, message: 'Server Error'};
                     });

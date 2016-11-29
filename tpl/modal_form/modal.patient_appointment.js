@@ -58,6 +58,7 @@ app.controller('ModalPatientAppointmentController', ['scope', '$scope', '$modalI
 
         $scope.getTimeSlots = function (doctor_id, date) {
             $scope.show_appt_loader = true;
+            $scope.data.status_time = '';
             $http.post($rootScope.IRISOrgServiceUrl + '/doctorschedule/getdoctortimeschedule', {doctor_id: doctor_id, schedule_date: date})
                     .success(function (response) {
                         $scope.timeslots = [];
@@ -65,6 +66,7 @@ app.controller('ModalPatientAppointmentController', ['scope', '$scope', '$modalI
                             $scope.timeslots.push({
                                 time: value.time,
                                 color: value.color,
+                                slot_12hour: value.slot_12hour,
                             });
                         });
                         $scope.show_appt_loader = false;

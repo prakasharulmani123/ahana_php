@@ -253,6 +253,7 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
         $scope.timeslotloader = false;
         $scope.getTimeSlots = function (doctor_id, date) {
             $scope.timeslotloader = true;
+            $scope.data.status_time = '';
             $http.post($rootScope.IRISOrgServiceUrl + '/doctorschedule/getdoctortimeschedule', {doctor_id: doctor_id, schedule_date: date})
                     .success(function (response) {
                         $scope.timeslots = [];
