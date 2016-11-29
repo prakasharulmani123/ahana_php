@@ -165,7 +165,7 @@ class DoctorscheduleController extends ActiveController {
         while ($start_time <= $end_time) {
             $disabled = false;
 
-            if (strtotime(date('H:i:s')) > $start_time) {
+            if (strtotime(date('H:i:s')) > $start_time && strtotime($schedule_date) == strtotime(date('Y-m-d'))) {
                 $disabled = true;
             }
 
