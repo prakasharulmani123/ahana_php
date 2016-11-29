@@ -22,6 +22,12 @@ use yii\db\ActiveQuery;
  * @property string $notes
  * @property integer $patient_cat_id
  * @property string $patient_bill_type
+ * @property string $payment_mode
+ * @property string $card_type
+ * @property integer $card_number
+ * @property string $bank_name
+ * @property string $bank_number
+ * @property string $bank_date
  * @property integer $created_by
  * @property string $created_at
  * @property integer $modified_by
@@ -50,12 +56,19 @@ class PatAppointment extends RActiveRecord {
     public function rules() {
         return [
             [['status_date', 'status_time', 'consultant_id', 'appt_status', 'patient_id'], 'required'],
-            [['patient_cat_id', 'amount'], 'required', 'on' => 'seen_status'],
+            [['patient_cat_id', 'amount', 'payment_mode'], 'required', 'on' => 'seen_status'],
             [['tenant_id', 'patient_id', 'encounter_id', 'consultant_id', 'created_by', 'modified_by'], 'integer'],
-            [['status_date', 'status_time', 'amount', 'notes', 'patient_cat_id', 'created_at', 'modified_at', 'deleted_at', 'patient_bill_type'], 'safe'],
+            [['status_date', 'status_time', 'amount', 'notes', 'patient_cat_id', 'created_at', 'modified_at', 'deleted_at', 'patient_bill_type', 'card_type', 'card_number', 'bank_name', 'bank_number', 'bank_date'], 'safe'],
             [['status', 'patient_bill_type'], 'string'],
             [['appt_status'], 'string', 'max' => 1],
-            [['appt_status'], 'unique', 'targetAttribute' => ['tenant_id', 'patient_id', 'encounter_id', 'appt_status'], 'message' => 'The combination has already been taken.']
+            [['appt_status'], 'unique', 'targetAttribute' => ['tenant_id', 'patient_id', 'encounter_id', 'appt_status'], 'message' => 'The combination has already been taken.'],
+            [['payment_mode', 'status'], 'string'],
+            [['card_type', 'card_number'], 'required', 'when' => function($model) {
+                    return $model->payment_mode == 'CD';
+                }],
+            [['bank_name', 'bank_number', 'bank_date'], 'required', 'when' => function($model) {
+                    return $model->payment_mode == 'CH';
+                }],
         ];
     }
 
