@@ -36,10 +36,10 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
                     } else {
                         var consultant_id = '';
                         if (response.model.liveAppointmentArrival.hasOwnProperty('appt_id')) {
-                            $scope.data = {'PatAppointment': {'appt_status': 'A', 'dummy_status': 'A', 'status_date': moment().format('YYYY-MM-DD HH:mm:ss')}};
+                            $scope.data = {'PatAppointment': {'appt_status': 'A', 'dummy_status': 'A', 'status_date': moment().format('YYYY-MM-DD HH:mm:ss'), 'payment_mode' : 'CA', 'bank_date': moment().format('YYYY-MM-DD HH:mm:ss')}};
                             consultant_id = response.model.liveAppointmentArrival.consultant_id;
                         } else if (response.model.liveAppointmentBooking.hasOwnProperty('appt_id')) {
-                            $scope.data = {'PatAppointment': {'appt_status': 'B', 'dummy_status': 'B', 'status_date': moment().format('YYYY-MM-DD HH:mm:ss')}};
+                            $scope.data = {'PatAppointment': {'appt_status': 'B', 'dummy_status': 'B', 'status_date': moment().format('YYYY-MM-DD HH:mm:ss'), 'payment_mode' : 'CA', 'bank_date': moment().format('YYYY-MM-DD HH:mm:ss')}};
                             consultant_id = response.model.liveAppointmentArrival.consultant_id;
                         }
                         if (consultant_id) {
@@ -176,9 +176,19 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
                 $scope.bill_types = response;
             });
 
-//             $timeout(function () {
+            $rootScope.commonService.GetPaymentModes(function (response) {
+                $scope.paymentModes = response;
+            });
+            
+            $rootScope.commonService.GetCardTypes(function (response) {
+                $scope.cardTypes = response;
+            });
+            
+             $timeout(function () {
+//                $scope.data.PatAppointment.payment_mode = 'CA';
+//                $scope.data.PatAppointment.bank_date = moment().format('YYYY-MM-DD HH:mm:ss');
 //                $scope.data.PatAppointment.status_date = moment().format('YYYY-MM-DD HH:mm:ss');
-//            }, 1000)
+            }, 1000)
         }
 
         //For Datepicker
@@ -225,6 +235,21 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
             }
         }
 
+        $scope.$watch('data.appt_status', function (newValue, oldValue) {
+            $scope.setCurrentArrivalTime();
+        });
+        
+        $scope.setCurrentArrivalTime = function(){
+            if($scope.data.appt_status == 'A' && $scope.timeslots.length > 0){
+                start = moment();
+                remainder = 5 - start.minute() % 5;
+                $scope.data.status_time = '';
+                $timeout(function () {
+                    $scope.data.status_time = moment(start).add("minutes", remainder ).format("HH:mm") + ':00';
+                }, 400);
+            }
+        }
+
         $scope.timeslotloader = false;
         $scope.getTimeSlots = function (doctor_id, date) {
             $scope.timeslotloader = true;
@@ -249,6 +274,7 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
                             }
                         });
                         $scope.timeslotloader = false;
+                        $scope.setCurrentArrivalTime();
                     }, function (x) {
                         $scope.timeslotloader = false;
                         response = {success: false, message: 'Server Error'};

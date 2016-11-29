@@ -66,7 +66,7 @@
             <label class="col-sm-3 control-label">Status * </label>
             <div class="col-sm-9">
                 <label class="i-checks" ng-repeat="appt_status_list in appt_status_lists">
-                    <input type="radio" checked="" value="{{appt_status_list.value}}" name="b" ng-model="data.appt_status">
+                    <input type="radio" checked="" value="{{appt_status_list.value}}" name="b" ng-model="data.appt_status" ng-change="setTimeOfAppointment();">
                     <i></i>
                     {{appt_status_list.label}}&nbsp; &nbsp;
                 </label>
