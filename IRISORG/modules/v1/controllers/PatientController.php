@@ -468,13 +468,14 @@ class PatientController extends ActiveController {
 
         if (isset($post['search']) && !empty($post['search']) && strlen($post['search']) >= 2) {
             $text = $post['search'];
+            $tenant_id = Yii::$app->user->identity->logged_tenant_id;
 
             $lists = PatPatient::find()
-                    ->tenant()
-                    ->active()
-                    ->orOnCondition("patient_firstname like :search")
-                    ->orOnCondition("patient_lastname like :search")
-                    ->orOnCondition("patient_global_int_code like :search")
+                    ->andWhere(['pat_patient.tenant_id' => $tenant_id, 'pat_patient.deleted_at' => '0000-00-00 00:00:00'])
+                    ->joinWith('patGlobalPatient')
+                    ->orOnCondition("pat_global_patient.patient_firstname like :search")
+                    ->orOnCondition("pat_global_patient.patient_lastname like :search")
+                    ->orOnCondition("pat_global_patient.patient_global_int_code like :search")
                     ->addParams([':search' => "%{$text}%"])
                     ->limit($limit)
                     ->all();
