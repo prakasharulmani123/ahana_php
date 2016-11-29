@@ -12,7 +12,7 @@
                         <div class="panel panel-default">
                             <div class="panel-body">
                                 <div class="form-group">
-                                    <label class="col-lg-4 control-label">Patient Name</label>
+                                    <label class="col-lg-4 control-label">Patient Name <span ng-show="show_patient_loader">&nbsp;&nbsp;<i class="fa fa-spin fa-refresh"></i></span></label>
                                     <div class="col-lg-8">
                                         <input autocomplete="off"
                                                placeholder="Patient Name"
@@ -28,7 +28,7 @@
                                 <div class="line line-dashed b-b line-lg "></div>
 
                                 <div class="form-group">
-                                    <label class="col-lg-4 control-label">Consultant </label>
+                                    <label class="col-lg-4 control-label">Consultant <span ng-show="show_consultant_loader">&nbsp;&nbsp;<i class="fa fa-spin fa-refresh"></i></span></label>
                                     <div class="col-lg-8">
                                         <select class="form-control selectpicker" data-live-search="true" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors | orderBy: fullname" data-ng-change="changeGetConsultant()">
                                             <option value="">Select Consultant</option>
@@ -38,7 +38,7 @@
                                 <div class="line line-dashed b-b line-lg "></div>
 
                                 <div class="form-group">
-                                    <label class="col-lg-4 control-label">Encounter #</label>
+                                    <label class="col-lg-4 control-label">Encounter # <span ng-show="show_encounter_loader">&nbsp;&nbsp;<i class="fa fa-spin fa-refresh"></i></span></label>
                                     <div class="col-lg-8">
                                         <select class="form-control selectpicker" data-live-search="true" 
                                                 ng-model="data.encounter_id" 
@@ -137,6 +137,7 @@
                                                 e-name='full_name'>
                                                 {{ saleitem.full_name || 'empty' }}
                                             </span>
+                                            <!--<span style="width: 10px; position: absolute; margin: 7px 10px;"><i class="fa fa-spin fa-refresh pull-right"></i></span>-->
                                         </div>
                                         <span id="t_full_name_{{key}}" class="hide">
                                             {{ saleitem.full_name || 'empty' }}
@@ -320,100 +321,3 @@
         &nbsp;
     </footer>
 </div>
-
-<!--Print Bill-->
-<div id="Getprintval" style="display: none">
-    <div class="invoice-details1">
-        <table width="100%" border="0" align="right" cellpadding="0" cellspacing="0" class="purchase-list-tab purchase-list-tab2 ">
-            <tr>
-                <th align="left">Patient Name :  </th>
-                <td align="left">{{data2.patient_name}}</td>
-            </tr>
-            <tr>
-                <th align="left">Mobile No :  </th>
-                <td align="left">{{data2.mobile_no}}</td>
-            </tr>
-            <tr>
-                <th align="left">Consultant :  </th>
-                <td align="left">{{consultant_name_taken}}</td>
-            </tr>
-            <tr>
-                <th align="left">Encounter# :  </th>
-                <td align="left">{{data2.encounter_id}}</td>
-            </tr>
-        </table>
-    </div>
-    <div class="invoice-details1 invoice-details2">
-        <table width="100%" border="0" align="right" cellpadding="0" cellspacing="0" class="purchase-list-tab purchase-list-tab2 ">
-            <tr>
-                <th align="left">Bill num  :  </th>
-                <td align="left">{{data2.bill_no}}</td>
-            </tr>
-            <tr>
-                <th align="left">Sale Date  :  </th>
-                <td align="left">{{data2.sale_date}}</td>
-            </tr>
-            <tr>
-                <th align="left">Payment Type  :  </th>
-                <td align="left">
-                    {{ purchase_type_name}}
-                </td>
-            </tr>         
-        </table>
-    </div>
-    <div class="clearfix"></div>
-    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="purchase-list-tab">
-        <tr>
-            <td><span>Product Name</span></td>
-            <td><span>Batch No</span></td>
-            <td><span>Exp Date</span></td>
-            <td><span>Qty</span></td>
-            <td><span>Unit</span></td>
-            <td><span>MRP</span></td>
-            <td><span>Vat</span></td>
-            <td><span>Vat Amt</span></td>
-            <td><span>Total Amt</span></td>
-        </tr>
-        <tr ng-repeat="(key, saleitem) in saleItems2">
-            <td> {{ saleitem.full_name || 'empty' }}</td>
-            <td> {{ saleitem.batch_details || 'empty' }}</td>
-            <td> {{ showExpiryDate(saleitem)}}</td>
-            <td> {{saleitem.quantity|| 0}}</td>
-            <td> {{ saleitem.package_name || 'empty' }}</td>
-            <td> {{saleitem.mrp|| 0}}</td>
-            <td> {{saleitem.vat_percent}}</td>
-            <td> {{saleitem.vat_amount}}</td>
-            <td> {{saleitem.item_amount}}</td>
-        </tr>      
-    </table>
-    <table width="300" border="0" align="right" cellpadding="0" cellspacing="0" class="purchase-list-tab purchase-list-tab2 ">
-        <tr>
-            <th align="right">Total Item Vat Amount : </th>
-            <td>{{data2.total_item_vat_amount}}</td>
-        </tr>
-        <tr>
-            <th align="right">Total Item Sale Amount : </th>
-            <td>{{data2.total_item_sale_amount}}</td>
-        </tr>
-        <tr>
-            <th align="right">Disc % : {{data2.total_item_discount_percent}} </th>
-            <td>{{data2.total_item_discount_amount}}</td>
-        </tr>
-        <tr>
-            <th align="right">Total Amount :  </th>
-            <td>{{data2.total_item_amount}}</td>
-        </tr>
-        <tr>
-            <th align="right">Welfare Amount :  </th>
-            <td>{{data2.welfare_amount}}</td>
-        </tr>
-        <tr>
-            <th align="right">Round Off :  </th>
-            <td>{{data2.roundoff_amount}}</td>
-        </tr>
-        <tr>
-            <th align="right">Bill Amount :  </th>
-            <td>{{data2.bill_amount}}</td>
-        </tr>
-    </table>
-</div>     

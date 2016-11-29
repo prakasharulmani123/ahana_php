@@ -1,8 +1,12 @@
-app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$anchorScroll', '$filter', '$timeout', '$modal', '$location', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $anchorScroll, $filter, $timeout, $modal, $location) {
+app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$anchorScroll', '$filter', '$timeout', '$modal', '$location', '$q', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $anchorScroll, $filter, $timeout, $modal, $location, $q) {
 
         editableThemes.bs3.inputClass = 'input-sm';
         editableThemes.bs3.buttonsClass = 'btn-sm';
         editableOptions.theme = 'bs3';
+        
+        $scope.show_patient_loader = false;
+        $scope.show_consultant_loader = false;
+        $scope.show_encounter_loader = false;
 
         $scope.$on('HK_CREATE', function (e) {
             if ($location.path() == '/pharmacy/sales') {
@@ -110,9 +114,11 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             $scope.patients = [];
             $scope.encounters = [];
 
+            $scope.show_consultant_loader = true;
             //Consultant List
             $rootScope.commonService.GetDoctorList('', '1', false, '1', function (response) {
                 $scope.doctors = response.doctorsList;
+                $scope.show_consultant_loader = false;
             });
 
             //Payment types
@@ -153,7 +159,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             id = $item.patient_id;
             $scope.data.patient_id = id;
             $scope.data.patient_guid = $item.patient_guid;
-            $scope.data.patient_name = $item.patient_firstname;
+            $scope.data.patient_name = $item.patient_firstname + ' ' + $item.patient_lastname;
             $scope.data.consultant_id = $item.last_consultant_id;
 
             $scope.getEncounter(id, 'add', '');
@@ -163,6 +169,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
         $scope.getEncounter = function (patient_id, mode, encounter_id) {
             if (patient_id) {
+                $scope.show_encounter_loader = true;
                 $rootScope.commonService.GetEncounterListByPatient('', '0,1', false, patient_id, function (response) {
                     angular.forEach(response, function (resp) {
                         resp.encounter_id = resp.encounter_id.toString();
@@ -175,6 +182,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                     } else if (mode == 'edit') {
                         $scope.data.encounter_id = encounter_id.toString();
                     }
+                    $scope.show_encounter_loader = false;
                 });
             }
 
@@ -779,19 +787,28 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             };
         }
 
+        var canceler;
+        
         $scope.getPatients = function (patientName) {
+            if (canceler) canceler.resolve();
+            canceler = $q.defer();
+            
+            $scope.show_patient_loader = true;
+        
             return $http({
                 method: 'POST',
                 url: $rootScope.IRISOrgServiceUrl + '/patient/getpatient',
                 data: {'search': patientName},
+                timeout: canceler.promise,
             }).then(
                     function (response) {
                         $scope.patients = [];
                         angular.forEach(response.data.patients, function (list) {
                             $scope.patients.push(list.Patient);
                         });
-                        return $scope.patients;
                         $scope.loadbar('hide');
+                        $scope.show_patient_loader = false;
+                        return $scope.patients;
                     }
             );
         };

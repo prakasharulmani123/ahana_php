@@ -1,7 +1,9 @@
-app.controller('ModalPatientAppointmentController', ['scope', '$scope', '$modalInstance', '$rootScope', '$timeout', '$http', '$state', function (scope, $scope, $modalInstance, $rootScope, $timeout, $http, $state) {
+app.controller('ModalPatientAppointmentController', ['scope', '$scope', '$modalInstance', '$rootScope', '$timeout', '$http', '$state', '$q', function (scope, $scope, $modalInstance, $rootScope, $timeout, $http, $state, $q) {
         
         $scope.title = $modalInstance.data.title;
         $scope.date = $modalInstance.data.date;
+        $scope.show_patient_loader = false;
+        $scope.show_appt_loader = false;
         
         $scope.getTitle = function(){
             return $modalInstance.data.title;
@@ -20,13 +22,13 @@ app.controller('ModalPatientAppointmentController', ['scope', '$scope', '$modalI
             });
             
             //Patients List
-            $rootScope.commonService.GetPatientList('', '1', false, function (response) {
-                $scope.patients = response.patientlist;
-                
-                $scope.patients = $.grep($scope.patients, function (e) {
-                    return e.have_encounter == false;
-                });
-            });
+//            $rootScope.commonService.GetPatientList('', '1', false, function (response) {
+//                $scope.patients = response.patientlist;
+//                
+//                $scope.patients = $.grep($scope.patients, function (e) {
+//                    return e.have_encounter == false;
+//                });
+//            });
         }
         
         $scope.initAppointmentForm = function () {
@@ -55,6 +57,7 @@ app.controller('ModalPatientAppointmentController', ['scope', '$scope', '$modalI
         }
 
         $scope.getTimeSlots = function (doctor_id, date) {
+            $scope.show_appt_loader = true;
             $http.post($rootScope.IRISOrgServiceUrl + '/doctorschedule/getdoctortimeschedule', {doctor_id: doctor_id, schedule_date: date})
                     .success(function (response) {
                         $scope.timeslots = [];
@@ -64,6 +67,7 @@ app.controller('ModalPatientAppointmentController', ['scope', '$scope', '$modalI
                                 color: value.color,
                             });
                         });
+                        $scope.show_appt_loader = false;
                     }, function (x) {
                         response = {success: false, message: 'Server Error'};
                     });
@@ -110,6 +114,34 @@ app.controller('ModalPatientAppointmentController', ['scope', '$scope', '$modalI
 
         $scope.cancel = function () {
             $modalInstance.dismiss('cancel');
+        };
+        
+        var canceler;
+        
+        $scope.patients = [];
+        
+        $scope.getModalPatients = function (patientName) {
+            if (canceler) canceler.resolve();
+            canceler = $q.defer();
+            
+            $scope.show_patient_loader = true;
+        
+            return $http({
+                method: 'POST',
+                url: $rootScope.IRISOrgServiceUrl + '/patient/getpatient',
+                data: {'search': patientName},
+                timeout: canceler.promise,
+            }).then(
+                    function (response) {
+                        $scope.patients = [];
+                        angular.forEach(response.data.patients, function (list) {
+                            if(!list.have_encounter)
+                                $scope.patients.push(list.Patient);
+                        });
+                        $scope.show_patient_loader = false;
+                        return $scope.patients;
+                    }
+            );
         };
     }]);
   
