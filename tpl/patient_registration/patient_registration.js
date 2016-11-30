@@ -4,11 +4,11 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
         $scope.app.settings.patientSideMenu = false;
         $scope.app.settings.patientContentClass = 'app-content app-content3';
         $scope.app.settings.patientFooterClass = 'app-footer app-footer3';
-        
-        $scope.$on('register_patient_image', function(event, img) {
-            $scope.data.PatPatient.patient_image = img; 
+
+        $scope.$on('register_patient_image', function (event, img) {
+            $scope.data.PatPatient.patient_image = img;
         });
-        
+
         $scope.show_loader = false;
 
         var canceler;
@@ -65,7 +65,7 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
             $rootScope.commonService.GetTitleCodes(function (response) {
                 $scope.titleCodes = response;
             });
-            
+
             $rootScope.commonService.GetMaritalStatus(function (response) {
                 $scope.maritalStatus = response;
             });
@@ -77,13 +77,13 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
             $rootScope.commonService.GetPatientCateogryList('', '1', false, function (response) {
                 $scope.categories = response.patientcategoryList;
             });
-            
+
             $rootScope.commonService.GetCareTaker(function (response) {
                 $scope.careTakers = response;
             });
         }
-        
-        $scope.back = function(){
+
+        $scope.back = function () {
             window.history.back();
         }
 
@@ -117,7 +117,7 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
                 }
             });
         }
-        
+
         $scope.updateState = function () {
             $scope.availableStates = [];
             $scope.availableCities = [];
@@ -152,7 +152,7 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
                 }
             });
         }
-        
+
         $scope.CopyAddress = function () {
             if ($scope.data.is_permanent) {
                 $scope.data.PatPatientAddress.addr_perm_address = $scope.data.PatPatientAddress.addr_current_address;
@@ -192,23 +192,24 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
         }, true);
 
         $scope.$watch('data.is_advance', function (newValue, oldValue) {
-            if(newValue){
+            if (newValue) {
                 $('.search-patientcont-div').css('max-height', '1352px');
-            }else{
+            } else {
                 $('.search-patientcont-div').css('max-height', '508px');
             }
         }, true);
 
         $scope.post_search = function (newValue) {
             if (newValue != '') {
-                if (canceler) canceler.resolve();
+                if (canceler)
+                    canceler.resolve();
                 canceler = $q.defer();
-                
+
                 if (changeTimer !== false)
                     clearTimeout(changeTimer);
 
                 $scope.show_loader = true;
-                
+
                 changeTimer = setTimeout(function () {
                     $http({
                         method: 'POST',
@@ -243,7 +244,8 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
                     data: {'age': newValue},
                 }).success(
                         function (response) {
-                            $scope.data.PatPatient.patient_dob = response.dob;
+                            var date_of_birth = moment(response.dob, 'YYYY-MM-DD').format('DD/MM/YYYY');
+                            $scope.data.PatPatient.patient_dob = date_of_birth;
                         }
                 );
             }
@@ -252,15 +254,19 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
         $scope.getAge = function () {
             var newValue = this.data.PatPatient.patient_dob;
             if (newValue != '') {
-                $http({
-                    method: 'POST',
-                    url: $rootScope.IRISOrgServiceUrl + '/patient/getagefromdate',
-                    data: {'date': newValue},
-                }).success(
-                        function (response) {
-                            $scope.data.PatPatient.patient_age = response.age;
-                        }
-                );
+                var date_of_birth = moment(newValue, 'DD/MM/YYYY').format('YYYY-MM-DD');
+                if (date_of_birth != "Invalid date") {
+                    $http({
+                        method: 'POST',
+                        url: $rootScope.IRISOrgServiceUrl + '/patient/getagefromdate',
+                        data: {'date': date_of_birth},
+                    }).success(
+                            function (response) {
+                                $scope.data.PatPatient.patient_age = response.age;
+                            }
+                    );
+                }
+
             }
         }
 
@@ -276,7 +282,9 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
             method = 'POST';
             succ_msg = 'Patient saved successfully';
 
-//            _that.data.PatPatient.patient_dob = moment(_that.data.PatPatient.patient_dob).format('YYYY-MM-DD');
+            if (_that.data.PatPatient.patient_dob != '' && typeof _that.data.PatPatient.patient_dob != 'undefined') {
+                _that.data.PatPatient.patient_dob = _that.data.PatPatient.patient_dob;
+            }
 
             $scope.loadbar('show');
             $http({
@@ -362,12 +370,12 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
                 }
             }
         };
-        
+
         $scope.openModal = function (size, ctrlr, tmpl, update_col) {
-            if(typeof $scope.data.PatPatientAddress == 'undefined'){
+            if (typeof $scope.data.PatPatientAddress == 'undefined') {
                 $scope.data.PatPatientAddress = {};
             }
-            
+
             var modalInstance = $modal.open({
                 templateUrl: tmpl,
                 controller: ctrlr,
@@ -394,25 +402,25 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
                 $log.info('Modal dismissed at: ' + new Date());
             });
         };
-        
-        $scope.afterCountryAdded = function(country_id){
-            if(typeof $scope.data.PatPatientAddress == 'undefined'){
+
+        $scope.afterCountryAdded = function (country_id) {
+            if (typeof $scope.data.PatPatientAddress == 'undefined') {
                 $scope.data.PatPatientAddress = {};
             }
             $scope.data.PatPatientAddress.addr_country_id = country_id;
             $scope.updateState2();
         }
-        
-        $scope.afterStateAdded = function(state_id){
-            if(typeof $scope.data.PatPatientAddress == 'undefined'){
+
+        $scope.afterStateAdded = function (state_id) {
+            if (typeof $scope.data.PatPatientAddress == 'undefined') {
                 $scope.data.PatPatientAddress = {};
             }
             $scope.data.PatPatientAddress.addr_state_id = state_id;
             $scope.updateState2();
         }
 
-        $scope.afterCityAdded = function(city_id){
-            if(typeof $scope.data.PatPatientAddress == 'undefined'){
+        $scope.afterCityAdded = function (city_id) {
+            if (typeof $scope.data.PatPatientAddress == 'undefined') {
                 $scope.data.PatPatientAddress = {};
             }
             $scope.data.PatPatientAddress.addr_city_id = city_id;

@@ -13,7 +13,7 @@
             require: 'ngModel',
             replace: true,
             transclude: true,
-            template: '<input ng-transclude ui-mask="19/39/2999" ui-mask-raw="false" ng-keypress="limitToValidDate($event)" placeholder="MM/DD/YYYY"/>',
+            template: '<input ng-transclude ui-mask="39/19/2999" ui-mask-raw="false" ng-keypress="limitToValidDate($event)" placeholder="DD/MM/YYYY"/>',
             link: function (scope, element, attrs, controller) {
                 scope.limitToValidDate = limitToValidDate;
                 var dateFilter = $filter("date");
@@ -52,16 +52,27 @@
 
                 controller.$validators.date = function (modelValue) {
                     return angular.isDefined(modelValue) && isValidDate(modelValue);
-                };
+                };                
+                
+                //MM/DD/YYYY
+//                var pattern = "^(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])(19|20)\\d\\d$" +
+//                        "|^(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])(19|20)\\d$" +
+//                        "|^(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])(19|20)$" +
+//                        "|^(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[12]$" +
+//                        "|^(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$" +
+//                        "|^(0[1-9]|1[012])([0-3])$" +
+//                        "|^(0[1-9]|1[012])$" +
+//                        "|^[01]$";
 
-                var pattern = "^(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])(19|20)\\d\\d$" +
-                        "|^(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])(19|20)\\d$" +
-                        "|^(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])(19|20)$" +
-                        "|^(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[12]$" +
-                        "|^(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$" +
-                        "|^(0[1-9]|1[012])([0-3])$" +
-                        "|^(0[1-9]|1[012])$" +
-                        "|^[01]$";
+                //DD/MM/YYYY
+                var pattern = "^(0[1-9]|[12][0-9]|3[01])(0[1-9]|1[012])(19|20)\\d\\d$" +
+                        "|^(0[1-9]|[12][0-9]|3[01])(0[1-9]|1[012])(19|20)\\d$" +
+                        "|^(0[1-9]|[12][0-9]|3[01])(0[1-9]|1[012])(19|20)$" +
+                        "|^(0[1-9]|[12][0-9]|3[01])(0[1-9]|1[012])[12]$" +
+                        "|^(0[1-9]|[12][0-9]|3[01])(0[1-9]|1[012])$" +
+                        "|^(0[1-9]|[12][0-9]|3[01])([0-3])$" +
+                        "|^(0[1-9]|[12][0-9]|3[01])$" +
+                        "|^[0123]$";
                 var regexp = new RegExp(pattern);
 
                 function limitToValidDate(event) {
