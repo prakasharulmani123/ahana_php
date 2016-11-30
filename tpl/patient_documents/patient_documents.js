@@ -179,19 +179,23 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                             $state.go("patient.document", {id: $state.params.id});
                         } else {
                             $scope.xslt = doc_type_response.result.document_xslt;
-                            $scope.initSaveDocument(function (auto_save_document) {
-                                $scope.xml = auto_save_document.data.xml;
-                                $scope.isLoading = false;
+                            $scope.$watch('patientObj', function (newValue, oldValue) {
+                                if (Object.keys(newValue).length > 0) {
+                                    $scope.initSaveDocument(function (auto_save_document) {
+                                        $scope.xml = auto_save_document.data.xml;
+                                        $scope.isLoading = false;
 
-                                $timeout(function () {
-                                    $scope.diagnosisDsmiv();
-                                }, 2000);
+                                        $timeout(function () {
+                                            $scope.diagnosisDsmiv();
+                                        }, 2000);
 
-                                $timeout(function () {
-                                    $scope.ckeditorReplace();
-                                }, 500);
-                                $scope.startAutoSave();
-                            });
+                                        $timeout(function () {
+                                            $scope.ckeditorReplace();
+                                        }, 500);
+                                        $scope.startAutoSave();
+                                    });
+                                }
+                            }, true);
                         }
                     });
                 }
