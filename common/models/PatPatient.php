@@ -108,7 +108,7 @@ class PatPatient extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['patient_title_code', 'patient_firstname', 'patient_gender', 'patient_reg_mode', 'patient_mobile', 'patient_dob'], 'required'],
+            [['patient_title_code', 'patient_firstname', 'patient_gender', 'patient_reg_mode', 'patient_mobile', 'patient_dob', 'patient_category_id'], 'required'],
             [['patient_firstname'], 'string', 'min' => '2'],
             [['casesheetno', 'tenant_id', 'patient_care_taker', 'patient_category_id', 'created_by', 'modified_by'], 'integer'],
             [['patient_reg_date', 'patient_dob', 'created_at', 'modified_at', 'deleted_at', 'patient_mobile', 'patient_bill_type', 'patient_guid', 'patient_image', 'patient_global_guid', 'patient_global_int_code', 'patient_int_code', 'patient_secondary_contact', 'parent_id', 'migration_id', 'migration_details'], 'safe'],
@@ -147,7 +147,7 @@ class PatPatient extends RActiveRecord {
             'patient_marital_status' => 'Marital Status',
             'patient_occupation' => 'Occupation',
             'patient_blood_group' => 'Blood Group',
-            'patient_category_id' => 'Category ID',
+            'patient_category_id' => 'Category',
             'patient_email' => 'Email',
             'patient_reg_mode' => 'Reg Mode',
             'patient_type' => 'Type',
@@ -238,7 +238,7 @@ class PatPatient extends RActiveRecord {
 
     public function beforeSave($insert) {
         if (!empty($this->patient_dob))
-            $this->patient_dob = date('Y-m-d', strtotime($this->patient_dob));
+            $this->patient_dob = date('Y-m-d', strtotime(str_replace ("/", "-", $this->patient_dob)));
 
         if ($insert) {
             $this->patient_guid = UuidHelpers::uuid();
