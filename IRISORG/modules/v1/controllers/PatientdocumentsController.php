@@ -118,7 +118,11 @@ class PatientdocumentsController extends ActiveController {
         $form = Yii::$app->getRequest()->post();
         $post = [];
         foreach ($form as $key => $value) {
-            $post[$value['name']] = str_replace("&nbsp;", "&#160;", $value['value']);
+            if (isset($value['value'])) {
+                $post[$value['name']] = str_replace("&nbsp;", "&#160;", $value['value']);
+            } else {
+                $post[$value['name']] = '';
+            }
         }
         $patient = PatPatient::getPatientByGuid($post['patient_id']);
         $type = 'CH';

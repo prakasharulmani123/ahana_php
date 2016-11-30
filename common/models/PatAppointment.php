@@ -4,6 +4,7 @@ namespace common\models;
 
 use common\models\query\PatAppointmentQuery;
 use DateTime;
+use Yii;
 use yii\db\ActiveQuery;
 
 /**
@@ -64,11 +65,11 @@ class PatAppointment extends RActiveRecord {
             [['appt_status'], 'unique', 'targetAttribute' => ['tenant_id', 'patient_id', 'encounter_id', 'appt_status'], 'message' => 'The combination has already been taken.'],
             [['payment_mode', 'status'], 'string'],
             [['card_type', 'card_number'], 'required', 'when' => function($model) {
-                    return $model->payment_mode == 'CD';
-                }],
+            return $model->payment_mode == 'CD';
+        }],
             [['bank_name', 'bank_number', 'bank_date'], 'required', 'when' => function($model) {
-                    return $model->payment_mode == 'CH';
-                }],
+            return $model->payment_mode == 'CH';
+        }],
         ];
     }
 
@@ -148,12 +149,12 @@ class PatAppointment extends RActiveRecord {
             //Close Encounter
             if ($this->appt_status == 'S' || $this->appt_status == 'C') {
                 $this->encounter->status = '0';
-                if($this->appt_status == 'S'){
+                if ($this->appt_status == 'S') {
                     $this->encounter->bill_no = CoInternalCode::generateInternalCode('B', 'common\models\PatEncounter', 'bill_no');
                 }
                 $this->encounter->save(false);
-                
-                if($this->appt_status == 'C'){
+
+                if ($this->appt_status == 'C') {
                     PatAppointment::updateAll(['status' => '0'], 'encounter_id = ' . $this->encounter->encounter_id . ' AND status = "1"');
                 }
             }
@@ -200,7 +201,7 @@ class PatAppointment extends RActiveRecord {
             },
             'waiting_elapsed' => function ($model) {
                 $date = date('Y-m-d', strtotime($model->status_date)) . ' ' . date('H:i:s', strtotime($model->status_time));
-        
+
                 $start_date = new DateTime($date);
 //                $since_start = $start_date->diff(new DateTime(date('Y-m-d H:i:s')));
 
@@ -208,11 +209,42 @@ class PatAppointment extends RActiveRecord {
                 $get_elapsed_time = AppConfiguration::getConfigurationByKey('ELAPSED_TIME');
                 if (isset($get_elapsed_time))
                     $default_elapsed_time = $get_elapsed_time->value;
-                
+
+//                $default_elapsed_time = 60; //One Min
                 $now = new DateTime('now');
-                $diff_seconds =  $now->getTimestamp() - $start_date->getTimestamp();
-                
+                $diff_seconds = $now->getTimestamp() - $start_date->getTimestamp();
+
                 return ($diff_seconds >= $default_elapsed_time);
+            },
+            'waiting_elapsed_time' => function ($model) {
+                $date = date('Y-m-d', strtotime($model->status_date)) . ' ' . date('H:i:s', strtotime($model->status_time));
+
+                $start_date = new DateTime($date);
+//                $since_start = $start_date->diff(new DateTime(date('Y-m-d H:i:s')));
+
+                $default_elapsed_time = 3600; //One Hour
+                $get_elapsed_time = AppConfiguration::getConfigurationByKey('ELAPSED_TIME');
+                if (isset($get_elapsed_time))
+                    $default_elapsed_time = $get_elapsed_time->value;
+
+//                $default_elapsed_time = 60; //One Min
+                $now = new DateTime('now');
+                $diff_seconds = $now->getTimestamp() - $start_date->getTimestamp();
+
+                if ($diff_seconds >= $default_elapsed_time) {
+                    $hours = floor($diff_seconds / 3600);
+                    $minutes = floor(($diff_seconds / 60) % 60);
+                    $seconds = $diff_seconds % 60;
+
+                    if ($hours > 0)
+                        return "$hours hr, $minutes mins";
+                    else if ($minutes > 0)
+                        return "$minutes mins";
+                    else
+                        return false;
+                }
+
+                return false;
             },
             'consultant_name' => function ($model) {
                 if (isset($model->consultant))
@@ -256,10 +288,15 @@ class PatAppointment extends RActiveRecord {
     }
 
     public static function getFutureAppointments() {
+        $tenant_id = Yii::$app->user->identity->logged_tenant_id;
         $future_appointments = self::find()
                 ->joinWith('encounter')
                 ->where(['>', 'status_date', date("Y-m-d")])
-                ->andWhere(['appt_status' => 'B', 'pat_encounter.status' => '1'])
+                ->andWhere([
+                    'appt_status' => 'B',
+                    'pat_encounter.status' => '1',
+                    'pat_encounter.tenant_id' => $tenant_id
+                ])
                 ->addSelect(["*", 'COUNT(*) AS consultant_perday_appt_count'])
                 ->groupBy(['consultant_id', 'status_date'])
                 ->all();
