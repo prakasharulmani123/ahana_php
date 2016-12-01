@@ -65,10 +65,10 @@ class PatAppointment extends RActiveRecord {
             [['appt_status'], 'unique', 'targetAttribute' => ['tenant_id', 'patient_id', 'encounter_id', 'appt_status'], 'message' => 'The combination has already been taken.'],
             [['payment_mode', 'status'], 'string'],
             [['card_type', 'card_number'], 'required', 'when' => function($model) {
-            return $model->payment_mode == 'CD';
+            return ($model->payment_mode == 'CD' && $model->appt_status == 'S');
         }],
             [['bank_name', 'bank_number', 'bank_date'], 'required', 'when' => function($model) {
-            return $model->payment_mode == 'CH';
+            return ($model->payment_mode == 'CH' && $model->appt_status == 'S');
         }],
         ];
     }
