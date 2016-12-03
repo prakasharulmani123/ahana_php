@@ -21,6 +21,7 @@ use yii\db\ActiveQuery;
  * @property integer $room_type_id
  * @property string $admission_status
  * @property integer $is_swap
+ * @property string $discharge_type
  * @property string $status
  * @property string $notes
  * @property integer $created_by
@@ -60,7 +61,7 @@ class PatAdmission extends RActiveRecord {
             [['consultant_id', 'floor_id', 'ward_id', 'room_id', 'room_type_id', 'status_date'], 'required'],
             [['swapPatientId', 'swapRoomId', 'swapRoomTypeId'], 'required', 'on' => 'swap'],
             [['tenant_id', 'patient_id', 'encounter_id', 'consultant_id', 'floor_id', 'ward_id', 'room_id', 'room_type_id', 'created_by', 'modified_by'], 'integer'],
-            [['status_date', 'created_at', 'modified_at', 'deleted_at', 'status_date', 'admission_status', 'is_swap'], 'safe'],
+            [['status_date', 'created_at', 'modified_at', 'deleted_at', 'status_date', 'admission_status', 'is_swap', 'discharge_type'], 'safe'],
             [['status', 'notes'], 'string'],
             ['admission_status', 'validateAdmissionStatus'],
             ['status_date', 'validateStatusDate'],
