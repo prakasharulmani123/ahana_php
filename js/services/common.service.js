@@ -68,6 +68,8 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
 
     service.GetCareTaker = GetCareTaker;
 
+    service.GetDischargeTypes = GetDischargeTypes;
+    
     return service;
 
     function ChangeStatus(modelName, primaryKey, callback) {
@@ -708,4 +710,15 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
         ];
         callback(response);
     }
+    
+    function GetDischargeTypes(callback) {
+        var response = [
+            {value: 'DT', label: 'Death'},
+            {value: 'DA', label: 'DAMA-Discharge Against Medical Advice'},
+            {value: 'AT', label: 'At Request'},
+            {value: 'AB', label: 'Abscond'},
+        ];
+        callback(response);
+    }
+
 }

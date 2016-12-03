@@ -43,6 +43,10 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
                     $state.go("patient.encounter", {id: $state.params.id});
                 }
                 $scope.showForm = true;
+                
+                $rootScope.commonService.GetDischargeTypes(function (response) {
+                    $scope.dischargeTypes = response;
+                });
             });
         }
 

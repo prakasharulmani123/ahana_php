@@ -11,7 +11,8 @@
                             initForm();
                             initTransferForm();
                             data.PatAdmission.status = '1';
-                            data.PatAdmission.admission_status = 'CD'
+                            data.PatAdmission.admission_status = 'CD';
+                            data.PatAdmission.discharge_type = 'DA'
                  " ng-show="showForm">
                 <form name="patientAppointmentForm" class="form-horizontal form-validation" novalidate="">
                     <div class="panel panel-default">
@@ -47,12 +48,25 @@
                             <div class="line line-dashed b-b line-lg "></div>
 
                             <div class="form-group">
+                                <label class="col-sm-3 control-label">Discharge Type *</label>
+                                <div class="col-sm-9">
+                                    <label class="i-checks" ng-repeat="dischargeType in dischargeTypes">
+                                        <input type="radio" checked="" value="{{dischargeType.value}}" ng-model="data.PatAdmission.discharge_type">
+                                        <i></i>
+                                        {{dischargeType.label}}&nbsp; &nbsp;
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="line line-dashed b-b line-lg "></div>
+                            
+                            <div class="form-group">
                                 <label class="col-sm-3 control-label">Notes  </label>
                                 <div class="col-sm-9">
                                     <textarea type="text" class="form-control" ng-model="data.PatAdmission.notes"></textarea>
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
+                            
                         </div>
                         <footer class="panel-footer text-right bg-light lter">
                             <button class="btn m-b-xs  btn-success save-btn" ng-click="saveAdmissionForm('discharge')">Save</button> &nbsp;

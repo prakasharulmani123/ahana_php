@@ -316,6 +316,7 @@
                             <tr>
                                 <th colspan="2">&nbsp;</th>
                                 <th>Category</th>
+                                <th>Date</th>
                                 <th>Headers</th>
                                 <th>Mode</th>
                                 <th>Details</th>
@@ -333,6 +334,7 @@
                                     </label>
                                 </td>
                                 <td>{{row.category}} </td>
+                                <td>{{row.payment_date| moment:'DD/MM/YYYY HH:mm:ss'}} </td>
                                 <td> {{row.headers}} </td>
                                 <td> {{row.trans_mode}} </td>
                                 <td>
