@@ -240,6 +240,8 @@ class PatAppointment extends RActiveRecord {
                         return "$hours hr, $minutes mins";
                     else if ($minutes > 0)
                         return "$minutes mins";
+                    else if ($seconds > 0)
+                        return "$seconds sec";
                     else
                         return false;
                 }

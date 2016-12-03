@@ -145,9 +145,11 @@ class PatPatientAddress extends RActiveRecord {
     
     public function isIncompleteProfile(){
         $address = [];
+        
         foreach ($this->complete_profile_fields as $global_field) {
             $address[$global_field] = $this->$global_field;
         }
+        
         return (in_array(null, $address));
     }
 
