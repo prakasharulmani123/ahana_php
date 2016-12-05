@@ -113,7 +113,6 @@ app.controller('PatientMergeController', ['$rootScope', '$scope', '$timeout', '$
                 $scope.loadbar('show');
                 post_url = $rootScope.IRISOrgServiceUrl + '/patient/mergepatients';
                 method = 'POST';
-                succ_msg = 'Patient Merged successfully';
                 $http({
                     method: method,
                     url: post_url,
@@ -121,7 +120,7 @@ app.controller('PatientMergeController', ['$rootScope', '$scope', '$timeout', '$
                 }).success(
                         function (response) {
                             if (response.success) {
-                                $scope.msg.successMessage = succ_msg;
+                                $scope.msg.successMessage = response.message;
                             } else {
                                 $scope.msg.errorMessage = response.message;
                             }
