@@ -494,12 +494,13 @@ class PatientController extends ActiveController {
         
         if (!empty($post)) {
             $this->migrateTables = $this->_getMigrationTable();
-            $parent_id = $tenant_id = $patient_id = '';
+            $parent_id = $tenant_id = $patient_id = $primary_patient_global_int_code = '';
             $childrens = [];
             foreach ($post as $key => $value) {
                 if ($value['is_primary']) {
                     $tenant_id = $value['Patient']['tenant_id'];
                     $parent_id = $value['Patient']['patient_global_guid'];
+                    $primary_patient_global_int_code = $value['Patient']['patient_global_int_code'];
                     $patient_id = $value['Patient']['patient_id'];
                 } else {
                     $childrens[] = $value['Patient']['patient_global_guid'];
@@ -535,7 +536,7 @@ class PatientController extends ActiveController {
                 }
                 $connection->close();
 
-                return ['success' => true];
+                return ['success' => true, 'message' => "Patient Merged successfully, Primay ID: {$primary_patient_global_int_code}"];
             } else {
                 return ['success' => false, 'message' => 'Failed to Merge'];
             }
