@@ -9,9 +9,10 @@ app.controller('PatientMergeController', ['$rootScope', '$scope', '$timeout', '$
         var changeTimer = false;
         $scope.$watch('patient', function (newValue, oldValue) {
             if (newValue != '') {
-                if (canceler) canceler.resolve();
+                if (canceler)
+                    canceler.resolve();
                 canceler = $q.defer();
-                
+
                 if (changeTimer !== false)
                     clearTimeout(changeTimer);
 
@@ -34,7 +35,8 @@ app.controller('PatientMergeController', ['$rootScope', '$scope', '$timeout', '$
         }, true);
 
         $scope.filterFn = function (item) {
-            return !item.Patient.have_encounter && item.Patient.childrens_count == '0';
+//            return !item.Patient.have_encounter && item.Patient.childrens_count == '0';
+            return item.Patient.childrens_count == '0';
         };
 
         $("#patient-search").keydown(function (e) {
@@ -65,7 +67,7 @@ app.controller('PatientMergeController', ['$rootScope', '$scope', '$timeout', '$
                 }
             }
         });
-        
+
         $("body").on("mouseover", ".result-patient-merge li", function () {
             $(".result-patient-merge li").removeClass("selected");
             $(this).addClass("selected");
@@ -83,15 +85,20 @@ app.controller('PatientMergeController', ['$rootScope', '$scope', '$timeout', '$
             $(".merge-patientcont").hide();
             var filteredResult = $filter('filter')($scope.patient_search_result, {Patient: {patient_global_guid: id}});
             if (filteredResult.length > 0) {
-                if ($scope.selected_patients.length < 3) {
-                    $scope.inserted = {
-                        'Patient': filteredResult[0].Patient,
-                        'is_primary': false
-                    };
-                    $scope.selected_patients.push($scope.inserted);
+                if (filteredResult[0].Patient.have_encounter) {
+                    alert('This patient have an active encounter, so you can not merge now');
                 } else {
-                    alert('Only 3 patients are allowed');
+                    if ($scope.selected_patients.length < 3) {
+                        $scope.inserted = {
+                            'Patient': filteredResult[0].Patient,
+                            'is_primary': false
+                        };
+                        $scope.selected_patients.push($scope.inserted);
+                    } else {
+                        alert('Only 3 patients are allowed');
+                    }
                 }
+
                 $scope.patient_search_result = [];
                 $scope.patient = '';
             }

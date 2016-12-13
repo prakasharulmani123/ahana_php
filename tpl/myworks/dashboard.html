@@ -9,9 +9,12 @@
 <!-- / main header -->
 <div class="wrapper-md ng-scope">
     <div ng-include="'tpl/blocks/alert.html'">
-            {% include 'tpl/blocks/alert.html' %}
-        </div>
+        {% include 'tpl/blocks/alert.html' %}
+    </div>
     <div ng-controller="MyworksController" class="ng-scope" ng-init="loadData()">
+        <button ng-click="openPdf()">Open Pdf</button>
+        <button ng-click="downloadPdf()">Download Pdf</button>
+        <button ng-click="printPdf()">Print Pdf</button>
         <h4 class="text-center">Hi {{app.username}}, Welcome to {{app.name}} ({{app.org_name}}) !!!</h4>
     </div>
 </div>

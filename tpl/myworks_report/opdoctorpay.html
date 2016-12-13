@@ -79,18 +79,21 @@
                                     <tr>
                                         <th id="work-base-grid_c0">S.No</th>
                                         <th id="work-base-grid_c0">Name</th>
+                                        <th id="work-base-grid_c0">Mobile</th>
                                         <th id="work-base-grid_c0">Seen On</th>
                                         <th id="work-base-grid_c1">Amount</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="(key, record) in records">
+                                    <tr ng-repeat="(key, record) in records | orderBy:'-new_op'" style="color: {{record.new_op ? 'red':'black'}}">
                                         <td>{{$index + 1}}</td>
                                         <td>{{record.patient_name}}</td>
+                                        <td>{{record.patient_mobile}}</td>
                                         <td>{{record.op_seen_date_time| moment:'YYYY-MM-DD hh:mm A'}}</td>
                                         <td>{{record.payment_amount}}</td>
                                     </tr>
                                     <tr>
+                                        <td></td>
                                         <td></td>
                                         <td></td>
                                         <td></td>
@@ -139,18 +142,21 @@
                                     <tr>
                                         <th id="work-base-grid_c0">S.No</th>
                                         <th id="work-base-grid_c0">Name</th>
+                                        <th id="work-base-grid_c0">Mobile</th>
                                         <th id="work-base-grid_c0">Seen On</th>
                                         <th id="work-base-grid_c1">Amount</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="(key, record) in records">
+                                    <tr ng-repeat="(key, record) in records | orderBy:'-new_op'" style="color: {{record.new_op ? 'red':'black'}}">
                                         <td>{{$index + 1}}</td>
                                         <td>{{record.patient_name}}</td>
+                                        <td>{{record.patient_mobile}}</td>
                                         <td>{{record.op_seen_date_time | moment:'YYYY-MM-DD hh:mm A'}}</td>
                                         <td align="right">{{record.payment_amount}}</td>
                                     </tr>
                                     <tr>
+                                        <td></td>
                                         <td></td>
                                         <td></td>
                                         <td align="right"><b>Total:</b></td>

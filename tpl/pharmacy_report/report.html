@@ -33,7 +33,7 @@
 
                             <div class="form-group" ng-if='show_search_consultant'>
                                 <select class="form-control selectpicker" data-live-search="true" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors | orderBy: fullname" data-ng-change="changeGetConsultant()">
-                                    <option value="">Select Consultant</option>
+                                    <option value="">All</option>
                                 </select>
                             </div>
 

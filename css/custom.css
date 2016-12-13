@@ -467,3 +467,12 @@ out-patient-table .table > thead > tr > th label.i-checks{
   max-height: 500px;
   overflow-y: auto;
 }
+
+.merge-patientcont span.admission_details {
+  color: #ffffff;
+  float: right;
+  font-size: 11px;
+  font-weight: normal;
+  white-space: normal;
+  width: auto;
+}

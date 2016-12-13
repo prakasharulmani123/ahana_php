@@ -9,6 +9,18 @@
                 {% include 'tpl/blocks/alert.html' %}
             </div>
             <div class="row">
+                <div class="col-sm-10" ng-if="view_data.childrens_global_ids != ''"> 
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <span ng-if="view_data.migration_created_by != '' ">
+                                <b> Merged By :  </b> {{view_data.migration_created_by}}
+                            </span>
+                            <span>
+                                <b> Secondary Patient Id's :  </b> {{view_data.childrens_global_ids}}
+                            </span>
+                        </div> 
+                    </div>
+                </div>
                 <div class="col-sm-2 pull-right"> 
                     <div class="btn-group btn-group-justified">
                         <a class="btn btn-info" ng-click="changeMode('update')">
@@ -78,13 +90,13 @@
                                 </div>
                                 <div class="line line-dashed b-b line-lg "></div>                                
 
-<!--                                <div class="form-group">
-                                    <label class="col-sm-3 control-label">Billing:     </label>
-                                    <div class="col-sm-9">
-                                        <p>{{view_data.bill_type}}</p>
-                                    </div>
-                                </div>
-                                <div class="line line-dashed b-b line-lg "></div>-->
+                                <!--                                <div class="form-group">
+                                                                    <label class="col-sm-3 control-label">Billing:     </label>
+                                                                    <div class="col-sm-9">
+                                                                        <p>{{view_data.bill_type}}</p>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="line line-dashed b-b line-lg "></div>-->
 
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">Blood Group:</label>
@@ -334,17 +346,17 @@
                                 </div>
                                 <div class="line line-dashed b-b line-lg "></div>
 
-<!--                                <div class="form-group">
-                                    <label class="col-sm-3 control-label">Billing</label>
-                                    <div class="col-sm-9">
-                                        <label class="i-checks" ng-repeat="bill_type in bill_types">
-                                            <input type="radio" checked="" value="{{bill_type.value}}" name="b" ng-model="patdata.PatPatient.patient_bill_type">
-                                            <i></i>
-                                            {{bill_type.label}}&nbsp; &nbsp;
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="line line-dashed b-b line-lg "></div>-->
+                                <!--                                <div class="form-group">
+                                                                    <label class="col-sm-3 control-label">Billing</label>
+                                                                    <div class="col-sm-9">
+                                                                        <label class="i-checks" ng-repeat="bill_type in bill_types">
+                                                                            <input type="radio" checked="" value="{{bill_type.value}}" name="b" ng-model="patdata.PatPatient.patient_bill_type">
+                                                                            <i></i>
+                                                                            {{bill_type.label}}&nbsp; &nbsp;
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="line line-dashed b-b line-lg "></div>-->
 
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">Blood Group</label>

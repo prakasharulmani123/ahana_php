@@ -102,7 +102,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
         $scope.formtype = '';
         $scope.initForm = function (formtype) {
             $scope.data = {};
-            if(formtype == 'add'){
+            if (formtype == 'add') {
                 $scope.data.formtype = 'add';
                 $scope.data.payment_type = 'CA';
                 $scope.formtype = 'add';
@@ -110,7 +110,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                 $scope.data.formtype = 'update';
                 $scope.formtype = 'update';
             }
-            
+
             $scope.loadbar('show');
             $rootScope.commonService.GetPaymentType(function (response) {
                 $scope.paymentTypes = response;
@@ -278,18 +278,22 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
         }
 
         $scope.checkExpDate = function (data, key) {
+            var show_warning_count = '2'; // 0 - 2 Months
             var choosen_date = new Date(data);
-            var choosen_date_month = choosen_date.getMonth();
-            var choosen_date_year = choosen_date.getYear();
-
             var today_date = new Date();
-            var today_date_month = today_date.getMonth();
-            var today_date_year = today_date.getYear();
+            
+            var d1 = choosen_date, d2 = today_date;
 
-            var show_warning_count = '3';
-            var show_warning = parseFloat(choosen_date_month) - parseFloat(today_date_month);
+            if (choosen_date < today_date) {
+                d1 = today_date;
+                d2 = choosen_date;
+            }
 
-            if (show_warning < show_warning_count && today_date_year == choosen_date_year) {
+            var m = (d1.getFullYear() - d2.getFullYear()) * 12 + (d1.getMonth() - d2.getMonth());
+            if (d1.getDate() < d2.getDate())
+                --m;
+
+            if (m < show_warning_count) {
                 $scope.purchaseitems[key].exp_warning = 'short expiry drug';
             } else {
                 $scope.purchaseitems[key].exp_warning = '';
@@ -307,19 +311,19 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                 }
             }
         }
-        
-        $scope.checkQuantity = function(data, key) {
-            if($scope.formtype == 'update'){
+
+        $scope.checkQuantity = function (data, key) {
+            if ($scope.formtype == 'update') {
                 old = $scope.purchaseitems[key].old_quantity;
-                if(old > data){
+                if (old > data) {
                     package_unit = $scope.purchaseitems[key].package_unit;
                     current_qty = (old - data) * package_unit;
                     stock = $scope.purchaseitems[key].available_qty; //Stock
                     total_returned_quantity = $scope.purchaseitems[key].total_returned_quantity; // Prior returned quantities
-                    
-                    if(current_qty > stock){
+
+                    if (current_qty > stock) {
                         return 'No stock';
-                    } else if(total_returned_quantity > data){
+                    } else if (total_returned_quantity > data) {
                         return 'Qty Mismatch';
                     }
                 }
@@ -766,7 +770,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                     $scope.data.gr_num = response.code.next_fullcode;
             });
         }
-        
+
         $scope.make_payment = function (purchase_id) {
             purchase = $filter('filter')($scope.displayedCollection, {purchase_id: purchase_id});
 
