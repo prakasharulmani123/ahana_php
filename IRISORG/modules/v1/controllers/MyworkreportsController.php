@@ -2,6 +2,7 @@
 
 namespace IRISORG\modules\v1\controllers;
 
+use common\models\PatAppointment;
 use common\models\PatConsultant;
 use common\models\PatEncounter;
 use Yii;
@@ -51,6 +52,9 @@ class MyworkreportsController extends ActiveController {
 
         $encounters->addSelect(["CONCAT(co_user.title_code, '', co_user.name) as op_doctor_payment_consultant_name"]);
         $encounters->addSelect(["CONCAT(pat_global_patient.patient_title_code, '', pat_global_patient.patient_firstname) as op_doctor_payment_patient_name"]);
+        $encounters->addSelect(["pat_global_patient.patient_mobile as op_doctor_payment_patient_mobile"]);
+        $encounters->addSelect(["pat_patient.patient_id as op_doctor_payment_patient_id"]);
+        $encounters->addSelect(["pat_encounter.encounter_id as encounter_id"]);
         $encounters->addSelect(["pat_appointment.amount as op_doctor_payment_amount"]);
         $encounters->addSelect(["pat_appointment.status_date as op_doctor_payment_seen_date"]);
         $encounters->addSelect(["pat_appointment.status_time as op_doctor_payment_seen_time"]);
@@ -61,8 +65,24 @@ class MyworkreportsController extends ActiveController {
         $total = 0;
 
         foreach ($encounters as $key => $encounter) {
+            $reports[$key]['new_op'] = false;
+
+            //Check first seen OP encounter
+            $first_seen_appointment = PatAppointment::find()
+                    ->status()
+                    ->andWhere(['patient_id' => $encounter['op_doctor_payment_patient_id'], 'appt_status' => 'S'])
+                    ->orderBy(['created_at' => SORT_ASC])
+                    ->one();
+
+            if (isset($first_seen_appointment) && !empty($first_seen_appointment)) {
+                if ($first_seen_appointment->encounter_id == $encounter['encounter_id']) {
+                    $reports[$key]['new_op'] = true;
+                }
+            }
+
             $reports[$key]['consultant_name'] = $encounter['op_doctor_payment_consultant_name'];
             $reports[$key]['patient_name'] = $encounter['op_doctor_payment_patient_name'];
+            $reports[$key]['patient_mobile'] = $encounter['op_doctor_payment_patient_mobile'];
             $reports[$key]['payment_amount'] = $encounter['op_doctor_payment_amount'];
             $reports[$key]['op_seen_date_time'] = $encounter['op_doctor_payment_seen_date'] . " " . $encounter['op_doctor_payment_seen_time'];
             $total += $encounter['op_doctor_payment_amount'];
@@ -83,8 +103,11 @@ class MyworkreportsController extends ActiveController {
                 ->andWhere(['pat_encounter.tenant_id' => $tenant_id])
                 ->andWhere('pat_consultant.deleted_at = "0000-00-00 00:00:00"');
 
-        if (isset($post['from']) && isset($post['to']) && isset($post['consultant_id'])) {
+        if (isset($post['from']) && isset($post['to'])) {
             $consultants->andWhere("date(pat_consultant.consult_date) between '{$post['from']}' AND '{$post['to']}'");
+        }
+
+        if (isset($post['consultant_id'])) {
             $consultants->andWhere("pat_consultant.consultant_id = {$post['consultant_id']}");
         }
 

@@ -87,7 +87,8 @@ class PharmacyreportController extends ActiveController {
 
         if (isset($post['from']) && isset($post['to'])) {
             $sales->andWhere("pha_sale.sale_date between '{$post['from']}' AND '{$post['to']}'");
-        } elseif (isset($post['consultant_id'])) {
+        } 
+        if (isset($post['consultant_id'])) {
             $sales->andWhere("pha_sale.consultant_id = {$post['consultant_id']}");
         }
 

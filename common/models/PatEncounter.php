@@ -42,6 +42,8 @@ class PatEncounter extends RActiveRecord {
     public $add_casesheet_no = 'A';
     public $total_amount = '';
     public $op_doctor_payment_patient_name;
+    public $op_doctor_payment_patient_mobile;
+    public $op_doctor_payment_patient_id;
     public $op_doctor_payment_amount;
     public $op_doctor_payment_consultant_name;
     public $op_doctor_payment_seen_date;
@@ -344,7 +346,7 @@ class PatEncounter extends RActiveRecord {
                     'encounter_id' => $this->encounter_id,
                     'tenant_id' => $this->tenant_id
                 ])
-                ->sum('charge_amount');
+                ->sum('total_charge');
 
         $total_charge += VBillingProcedures::find()
                 ->where([

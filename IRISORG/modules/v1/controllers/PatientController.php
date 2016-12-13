@@ -508,8 +508,9 @@ class PatientController extends ActiveController {
             }
 
             if ($parent_id != '' && !empty($childrens)) {
+                $user_id = Yii::$app->user->identity->user->user_id;
                 $children_ids = join("', '", $childrens);
-                PatGlobalPatient::updateAll(['parent_id' => $parent_id], "patient_global_guid IN ('$children_ids')");
+                PatGlobalPatient::updateAll(['parent_id' => $parent_id, 'migration_created_by' => $user_id], "patient_global_guid IN ('$children_ids')");
                 GlPatient::updateAll(['parent_id' => $parent_id], "patient_global_guid IN ('$children_ids')");
 
                 $merge_patients = PatPatient::find()->andWhere("patient_global_guid IN ('$children_ids')")->all();

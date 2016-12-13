@@ -10,6 +10,7 @@ use yii\helpers\ArrayHelper;
  * @property integer $global_patient_id
  * @property string $patient_global_guid
  * @property string $parent_id
+ * @property integer $migration_created_by
  * @property integer $casesheetno
  * @property string $patient_global_int_code
  * @property string $patient_reg_date
@@ -57,7 +58,7 @@ class PatGlobalPatient extends RActiveRecord {
     public function rules() {
         return [
             [['patient_global_guid', 'patient_global_int_code', 'patient_title_code', 'patient_firstname', 'patient_gender', 'created_by'], 'required'],
-            [['casesheetno', 'patient_care_taker', 'created_by', 'modified_by'], 'integer'],
+            [['migration_created_by', 'casesheetno', 'patient_care_taker', 'created_by', 'modified_by'], 'integer'],
             [['patient_reg_date', 'patient_dob', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['patient_image', 'status'], 'string'],
             [['patient_global_guid', 'parent_id', 'patient_firstname', 'patient_lastname', 'patient_relation_name', 'patient_care_taker_name', 'patient_occupation', 'patient_email', 'patient_ref_id', 'patient_mobile', 'patient_secondary_contact'], 'string', 'max' => 50],
