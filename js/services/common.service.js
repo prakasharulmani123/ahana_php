@@ -723,6 +723,13 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
     }
 
     function CheckAdminAccess(callback) {
-        callback(AuthenticationService.getCurrentUser().credentials.tenant_id == 0);
+        var ret = false;
+        var currentUser = AuthenticationService.getCurrentUser();
+        var loggedIn = Boolean(currentUser);
+        
+        if(loggedIn){
+            ret = currentUser.credentials.tenant_id == 0;
+        }
+        callback(ret);
     }
 }

@@ -2680,10 +2680,8 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
         if (loggedIn) {
             var stateName = toState.name;
             if (stateName) {
-                console.log(restrictedPage);
                 if (restrictedPage) {
                     $rootScope.commonService.CheckStateAccess(stateName, function (response) {
-                        console.log(response);
                         if (!response) {
                             $state.go('configuration.organization');
                         }

@@ -60,6 +60,7 @@ angular.module('app').directive('checkAccessAdmin', function ($timeout) {
         link: function ($scope, element, attrs) {
             element.addClass('hide');
             $timeout(function () {
+                console.log($scope.checkAdminAccess());
                 if ($scope.checkAdminAccess()) {
                     element.addClass('show2');
                 }

@@ -58,7 +58,7 @@
             <div class="app" id="app" ng-class="{'app-header-fixed':app.settings.headerFixed, 'app-aside-folded':app.settings.asideFolded, 'app-aside-dock':app.settings.asideDock, 'container':app.settings.container}" ui-view></div>
         </div>
         <!-- Your right Slidebar content. -->
-        <div class="sb-slidebar sb-right" id="makeit-full" >
+        <div class="sb-slidebar sb-right" id="makeit-full" ng-if="app.logged_tenant_id">
             <!-- User Info. -->
             <div id="user-info" class="sb-slidebar-content">
                 <div class="thumb-bg">
