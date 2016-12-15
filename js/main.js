@@ -233,6 +233,14 @@ angular.module('app')
                     return ret;
                 }
 
+                $scope.checkAdminAccess = function () {
+                    var ret = true;
+                    $rootScope.commonService.CheckAdminAccess(function (response) {
+                        ret = response;
+                    });
+                    return ret;
+                }
+
                 $scope.msg = {};
                 $scope.msg.successMessage = "";
                 $scope.msg.errorMessage = "";

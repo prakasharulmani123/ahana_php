@@ -69,6 +69,7 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
     service.GetCareTaker = GetCareTaker;
 
     service.GetDischargeTypes = GetDischargeTypes;
+    service.CheckAdminAccess = CheckAdminAccess;
     
     return service;
 
@@ -721,4 +722,7 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
         callback(response);
     }
 
+    function CheckAdminAccess(callback) {
+        callback(AuthenticationService.getCurrentUser().credentials.tenant_id == 0);
+    }
 }

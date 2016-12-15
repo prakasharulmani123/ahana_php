@@ -55,4 +55,16 @@ angular.module('app').directive('checkAccessCustom3', function ($timeout) {
         }
     }
 });
+angular.module('app').directive('checkAccessAdmin', function ($timeout) {
+    return {
+        link: function ($scope, element, attrs) {
+            element.addClass('hide');
+            $timeout(function () {
+                if ($scope.checkAdminAccess()) {
+                    element.addClass('show2');
+                }
+            }, 1000);
+        }
+    }
+});
 
