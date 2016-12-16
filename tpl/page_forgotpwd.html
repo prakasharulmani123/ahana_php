@@ -13,9 +13,8 @@
                     <input type="text" placeholder="Email" ng-model="email" class="form-control no-border" focus-me="true" required>
                 </div>
                 <div class="list-group-item">
-                    <select class="form-control" name="Country" ng-model="tenant_id" ng-options="tenant.value as tenant.label for tenant in tenants | orderBy: label" required>
-                        <option value="">Select Organization</option>
-                    </select>
+                    <select class="form-control" name="tenant" ng-model="tenant_id" ng-options="key as value for (key , value) in tenants | orderBy: label" required>
+                    </select>                    
                 </div>
             </div>
             <button id="forgot_btn" type="submit" ng-disabled="request.$invalid" class="btn btn-lg btn-{{forgotpasswordButtonClass}} btn-block" ng-click="passwordrequest()" data-loading-text="<i class='fa fa-spin fa-spinner'></i> Please Wait ....">Send Request</button>

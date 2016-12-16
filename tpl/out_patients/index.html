@@ -101,12 +101,12 @@
                                     </label>
                                 </td>
                                 <td align="center" valign="middle">
-                                    <div style="margin-top: -10px; position: relative;">
-                                        <img ng-if="(row.liveAppointmentArrival != '-' && row.liveAppointmentArrival.waiting_elapsed && row.appointmentSeen == '-')" class="pull-left" src="img/elapsed-waiting-time.png"  alt="" tooltip="Waiting Time ({{row.liveAppointmentArrival.waiting_elapsed_time}})" tooltip-trigger tooltip-animation="false" tooltip-placement="right"/>
-                                        <img ng-if="row.patient.hasalert" class="pull-left" src="img/symbol1.png"  alt="" tooltip="Has Alert" tooltip-trigger tooltip-animation="false" tooltip-placement="right"  />
-                                        <img ng-if="row.patient.incomplete_profile" class="pull-left" src="img/question.png"  alt="" tooltip="Incomplete Profile" tooltip-trigger tooltip-animation="false" tooltip-placement="right" />
-                                        <img ng-if="row.patient.new_user" class="pull-left" src="img/new.png"  alt="" tooltip="New" tooltip-trigger tooltip-animation="false" tooltip-placement="right" />
-                                    </div>
+                                    <!--<div style="margin-top: -10px; position: relative;">-->
+                                        <img ng-if="(row.liveAppointmentArrival != '-' && row.liveAppointmentArrival.waiting_elapsed && row.appointmentSeen == '-')" class="pull-left" src="img/elapsed-waiting-time.png"  alt="" tooltip="Waiting Time ({{row.liveAppointmentArrival.waiting_elapsed_time}})" tooltip-trigger tooltip-animation="false" tooltip-placement="top"/>
+                                        <img ng-if="row.patient.hasalert" class="pull-left" src="img/symbol1.png"  alt="" tooltip="Has Alert" tooltip-trigger tooltip-animation="false" tooltip-placement="top"  />
+                                        <img ng-if="row.patient.incomplete_profile" class="pull-left" src="img/question.png"  alt="" tooltip="Incomplete Profile" tooltip-trigger tooltip-animation="false" tooltip-placement="top" />
+                                        <img ng-if="row.patient.new_user" class="pull-left" src="img/new.png"  alt="" tooltip="New" tooltip-trigger tooltip-animation="false" tooltip-placement="top" />
+                                    <!--</div>-->
                                 </td>
                                 <td>
                                     <a ui-sref="patient.view({id: row.patient.patient_guid})">

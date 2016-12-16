@@ -97,11 +97,112 @@ app.controller('docmonthlypayController', ['$rootScope', '$scope', '$timeout', '
 
         }
 
+        $scope.printHeader = function () {
+            return {
+                text: $scope.app.name + " ( " + $scope.app.org_name + " )",
+                margin: 5,
+                alignment: 'center'
+            };
+        }
+
+        $scope.printFooter = function () {
+            return {
+                text: [
+                    {
+                        text: 'Report Genarate On : ',
+                        bold: true
+                    },
+                    moment().format('YYYY-MM-DD HH:mm:ss')
+                ],
+                margin: 5
+            };
+        }
+
+        $scope.printStyle = function () {
+            return {
+                header: {
+                    bold: true,
+                    color: '#000',
+                    fontSize: 11
+                },
+                demoTable: {
+                    color: '#666',
+                    fontSize: 10
+                }
+            };
+        }
+
+        $scope.printContent = function () {
+            var content = [];
+            var monthly_pay = $filter('groupBy')($scope.records, 'consultant_name');
+
+            var result_count = Object.keys(monthly_pay).length;
+            var index = 1;
+            angular.forEach(monthly_pay, function (value, key) {
+                var items = [];
+
+                items[0] = [{text: 'S.No', style: 'header'},
+                    {text: 'Patient Name', style: 'header'},
+                    {text: 'Visits', style: 'header'},
+                    {text: 'Amount', style: 'header'}];
+
+                var serial_no = 1;
+                var total = 0;
+                angular.forEach(value, function (patient_infos) {
+                    var s_no_string = serial_no.toString();
+                    items[serial_no] = [s_no_string, patient_infos.patient_name, patient_infos.total_visit, patient_infos.total_charge_amount];
+                    total += parseFloat(patient_infos.total_charge_amount);
+                    serial_no++;
+                });
+                items[serial_no] = ["", {text: "Total", colSpan: 2, alignment: 'right', style: 'header'}, "", {text: total.toString(), style: 'header'}];
+
+                content.push({
+                    text: 'To,'
+                },
+                {
+                    text: key,
+                    margin: [20, 10, 0, 10]
+                },
+                {
+                    text: 'Dear Doctor,'
+                },
+                {
+                    text: 'Thank you for your support to us for your patients.  I wish your satisfaction towards the quality of our service',
+                    margin: [0, 10, 0, 10]
+                },
+                {
+                    text: 'I hereby enclose the details and the payment due for you',
+                    margin: [0, 10, 0, 10]
+                },
+                {
+                    style: 'demoTable',
+                    table: {
+                        headerRows: 1,
+                        widths: ['*', '*', '*', '*'],
+                        body: items,
+                    },
+                    pageBreak: (index === result_count ? '' : 'after'),
+                });
+                index++;
+            });
+
+            return content;
+        }
+
         $scope.printReport = function () {
-            var innerContents = document.getElementById("printThisElement").innerHTML;
-            var popupWinindow = window.open('', '_blank', 'width=830,height=700,scrollbars=yes,menubar=no,toolbar=no,location=no,status=no,titlebar=no');
-            popupWinindow.document.open();
-            popupWinindow.document.write('<html><head><link href="css/print.css" rel="stylesheet" type="text/css" /></head><body onload="window.print()">' + innerContents + '</html>');
-            popupWinindow.document.close();
+            var docDefinition = {
+                header: $scope.printHeader(),
+                footer: $scope.printFooter(),
+                styles: $scope.printStyle(),
+                content: $scope.printContent(),
+                pageMargins : 50,
+            };
+            pdfMake.createPdf(docDefinition).print();
+            
+//            var innerContents = document.getElementById("printThisElement").innerHTML;
+//            var popupWinindow = window.open('', '_blank', 'width=830,height=700,scrollbars=yes,menubar=no,toolbar=no,location=no,status=no,titlebar=no');
+//            popupWinindow.document.open();
+//            popupWinindow.document.write('<html><head><link href="css/print.css" rel="stylesheet" type="text/css" /></head><body onload="window.print()">' + innerContents + '</html>');
+//            popupWinindow.document.close();
         }
     }]);

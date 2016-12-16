@@ -138,11 +138,12 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                     }
                 } else if (type == 'OP') {
                     if (status == '1') {
-                        $scope.more_li.push({
-                            href: 'patient.changeStatus({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})',
-                            name: 'Change Status',
-                            mode: 'sref'
-                        },
+                        $scope.more_li.push(
+//                                {
+//                            href: 'patient.changeStatus({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})',
+//                            name: 'Change Status',
+//                            mode: 'sref'
+//                        },
                         {
                             href: "cancelAppointment(" + enc_id + ")",
                             name: 'Cancel Appointment',

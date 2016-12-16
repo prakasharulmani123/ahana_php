@@ -4,122 +4,6 @@ app.controller('MyworksController', ['$rootScope', '$scope', '$timeout', '$http'
         editableThemes.bs3.buttonsClass = 'btn-sm';
         editableOptions.theme = 'bs3';
 
-        var docDefinition = {
-            header: {text: 'simple text', margin: 5},
-            footer: {
-                columns: [
-                    'Left part',
-                    {text: 'Right part', alignment: 'center'}
-                ],
-                margin: 5
-            },
-            content: [
-                {
-                    text: 'Fruits and Calories'
-                },
-                {
-                    style: 'demoTable',
-                    table: {
-                        headerRows: 1,
-                        widths: ['*', '*', '*'],
-                        body: [
-                            [
-                                {text: 'Fruit', style: 'header'},
-                                {text: 'Quantity', style: 'header'},
-                                {text: 'Calories', style: 'header'}
-                            ],
-                            ['Apple', '100 grams', '52'],
-                            ['Bananas', '100 grams', '89'],
-                            ['Guava', '100 grams', '68'],
-                            ['Lemon', '100 grams', '29'],
-                            ['Mangos', '100 grams', '60'],
-                            ['Orange', '100 grams', '47'], ['Bananas', '100 grams', '89'],
-                            ['Guava', '100 grams', '68'],
-                            ['Lemon', '100 grams', '29'],
-                            ['Mangos', '100 grams', '60'],
-                            ['Orange', '100 grams', '47'], ['Bananas', '100 grams', '89'],
-                            ['Guava', '100 grams', '68'],
-                            ['Lemon', '100 grams', '29'],
-                            ['Mangos', '100 grams', '60'],
-                            ['Orange', '100 grams', '47'], ['Bananas', '100 grams', '89'],
-                            ['Guava', '100 grams', '68'],
-                            ['Lemon', '100 grams', '29'],
-                            ['Mangos', '100 grams', '60'],
-                            ['Orange', '100 grams', '47'], ['Bananas', '100 grams', '89'],
-                            ['Guava', '100 grams', '68'],
-                            ['Lemon', '100 grams', '29'],
-                            ['Mangos', '100 grams', '60'],
-                            ['Orange', '100 grams', '47'], ['Bananas', '100 grams', '89'],
-                            ['Guava', '100 grams', '68'],
-                            ['Lemon', '100 grams', '29'],
-                            ['Mangos', '100 grams', '60'],
-                            ['Orange', '100 grams', '47'], ['Bananas', '100 grams', '89'],
-                            ['Guava', '100 grams', '68'],
-                            ['Lemon', '100 grams', '29'],
-                            ['Mangos', '100 grams', '60'],
-                            ['Orange', '100 grams', '47'], ['Bananas', '100 grams', '89'],
-                            ['Guava', '100 grams', '68'],
-                            ['Lemon', '100 grams', '29'],
-                            ['Mangos', '100 grams', '60'],
-                            ['Orange', '100 grams', '47'], ['Bananas', '100 grams', '89'],
-                            ['Guava', '100 grams', '68'],
-                            ['Lemon', '100 grams', '29'],
-                            ['Mangos', '100 grams', '60'],
-                            ['Orange', '100 grams', '47'], ['Bananas', '100 grams', '89'],
-                            ['Guava', '100 grams', '68'],
-                            ['Lemon', '100 grams', '29'],
-                            ['Mangos', '100 grams', '60'],
-                            ['Orange', '100 grams', '47'],
-                            ['Strawberries', '100 grams', '33'],
-                            ['Lemon', '100 grams', '29'],
-                            ['Mangos', '100 grams', '60'],
-                            ['Orange', '100 grams', '47'],
-                            ['Strawberries', '100 grams', '33'],
-                            ['Lemon', '100 grams', '29'],
-                            ['Mangos', '100 grams', '60'],
-                            ['Orange', '100 grams', '47'],
-                            ['Strawberries', '100 grams', '33'],
-                            ['Lemon', '100 grams', '29'],
-                            ['Mangos', '100 grams', '60'],
-                            ['Orange', '100 grams', '47'],
-                            ['Strawberries', '100 grams', '33'],
-                            ['Lemon', '100 grams', '29'],
-                            ['Mangos', '100 grams', '60'],
-                            ['Orange', '100 grams', '47'],
-                            ['Strawberries', '100 grams', '33'],
-                            ['Lemon', '100 grams', '29'],
-                            ['Mangos', '100 grams', '60'],
-                            ['Orange', '100 grams', '47'],
-                            ['Strawberries', '100 grams', '33']
-                        ]
-                    }
-                }
-            ],
-            styles: {
-                header: {
-                    bold: true,
-                    color: '#000',
-                    fontSize: 11
-                },
-                demoTable: {
-                    color: '#666',
-                    fontSize: 10
-                }
-            }
-        };
-
-        $scope.openPdf = function () {
-            pdfMake.createPdf(docDefinition).open();
-        };
-
-        $scope.downloadPdf = function () {
-            pdfMake.createPdf(docDefinition).download();
-        };
-
-        $scope.printPdf = function () {
-            pdfMake.createPdf(docDefinition).print();
-        };
-
         //Organization Index
         $scope.loadData = function () {
             _that = this;
@@ -138,5 +22,76 @@ app.controller('MyworksController', ['$rootScope', '$scope', '$timeout', '$http'
                     }
             )
         };
+        
+//        var docDefinition = {
+//            header: {text: 'Ahana', margin: 5},
+//            footer: {
+//                text: [
+//                    {
+//                        text: 'Report Genarate On : ',
+//                        bold: true
+//                    },
+//                    '12/15/2016 12:05:11 PM'
+//                ],
+//                margin: 5
+//            },
+//            content: [
+//                {
+//                    text: 'To,'
+//                },
+//                {
+//                    text: 'Dr.Jannet (Counsellor)',
+//                    margin: [20, 10, 0, 10]
+//                },
+//                {
+//                    text: 'Dear Doctor,'
+//                },
+//                {
+//                    text: 'Thank you for your support to us for your patients.  I wish your satisfaction towards the quality of our service',
+//                    margin: [0, 10, 0, 10]
+//                },
+//                {
+//                    text: 'I hereby enclose the details and the payment due for you',
+//                    margin: [0, 10, 0, 10]
+//                },
+//                {
+//                    style: 'demoTable',
+//                    table: {
+//                        headerRows: 1,
+//                        widths: ['*', '*', '*'],
+//                        body: [
+//                            [
+//                                {text: 'Fruit', style: 'header'},
+//                                {text: 'Quantity', style: 'header'},
+//                                {text: 'Calories', style: 'header'}
+//                            ],
+//                            ['Apple', '100 grams', '52'],
+//                            ['Apple1', '100 grams', '52'],
+//                        ]
+//                    },
+//                    pageBreak: 'after',
+//                }
+//            ],
+//            styles: {
+//                header: {
+//                    bold: true,
+//                    color: '#000',
+//                    fontSize: 11
+//                },
+//                demoTable: {
+//                    color: '#666',
+//                    fontSize: 10
+//                }
+//            }};
+//
+//        $scope.openPdf = function () {
+//            pdfMake.createPdf(docDefinition).open();
+//        };
+//        $scope.downloadPdf = function () {
+//            pdfMake.createPdf(docDefinition).download();
+//        };
+//        $scope.printPdf = function () {
+//            pdfMake.createPdf(docDefinition).print();
+//        };
 
     }]);
