@@ -165,12 +165,18 @@
                                     <tr>
                                         <th>Product</th>
                                         <th>Quantity</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr ng-repeat="(gKey, reorderitem) in row.items | orderBy: reorder_item_id">
                                         <td>{{reorderitem.product.full_name}}</td>
                                         <td>{{reorderitem.quantity}}</td>
+                                        <td>
+                                            <a title="Delete" class="label bg-dark" href="#">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>                            
