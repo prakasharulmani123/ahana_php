@@ -239,7 +239,7 @@ class PatPatient extends RActiveRecord {
 
     public function beforeSave($insert) {
         if (!empty($this->patient_dob))
-            $this->patient_dob = date('Y-m-d', strtotime(str_replace ("/", "-", $this->patient_dob)));
+            $this->patient_dob = date('Y-m-d', strtotime(str_replace("/", "-", $this->patient_dob)));
 
         if ($insert) {
             $this->patient_guid = UuidHelpers::uuid();
@@ -620,17 +620,14 @@ class PatPatient extends RActiveRecord {
                 }
             },
             'new_user' => function($model) {
-                $today = date("Y-m-d");
-                $reg_date = date('Y-m-d', strtotime($model->patient_reg_date));
-                $active_encounter = $model->patActiveEncounter;
-                if (isset($active_encounter)) {
-                    $encounter_date = date('Y-m-d', strtotime($active_encounter->encounter_date));
-                    if ($encounter_date == $reg_date) {
+                $active_op = $model->patActiveOp;
+                if (isset($active_op) && !empty($active_op)) {
+                    if ($model->getPatLastSeenAppointment()->count() == 0) {
                         return true;
                     }
-                } elseif ($reg_date == $today) {
-                    return true;
+                    return false;
                 }
+                return false;
             },
             'name_with_int_code' => function($model) {
                 $name = ucfirst($model->patient_firstname);
@@ -650,85 +647,86 @@ class PatPatient extends RActiveRecord {
             },
             'migration_created_by' => function ($model) {
                 $global_record = $model->patGlobalPatient->getPatPatientChildrens()->one();
-                if(!empty($global_record)){
+                if (!empty($global_record)) {
                     $user = CoUser::find()->andWhere(['user_id' => $global_record->migration_created_by])->one();
-                    if(!empty($user)){
+                    if (!empty($user)) {
                         return $user->title_code . ucfirst($user->name);
                     }
                 }
                 return false;
             }
-        ];
+                ];
 
-        foreach ($this->_global_fields as $global_field) {
-            $extend_glb = [$global_field => function($model, $global_field) {
-                    return $model->patGlobalPatient->$global_field;
-                }];
-            $extend = array_merge($extend_glb, $extend);
+                foreach ($this->_global_fields as $global_field) {
+                    $extend_glb = [$global_field => function($model, $global_field) {
+                            return $model->patGlobalPatient->$global_field;
+                        }];
+                    $extend = array_merge($extend_glb, $extend);
+                }
+
+                $fields = array_merge(parent::fields(), $extend);
+                return $fields;
+            }
+
+            public static function getPatientAge($date) {
+                $birthDate = date('m/d/Y', strtotime($date));
+                $birthDate = explode("/", $birthDate);
+                return (date("md", date("U", mktime(0, 0, 0, $birthDate[0], $birthDate[1], $birthDate[2]))) > date("md") ? ((date("Y") - $birthDate[2]) - 1) : (date("Y") - $birthDate[2]));
+            }
+
+            public static function getPatientBirthdate($age) {
+                return date('Y-m-d', strtotime($age . ' years ago'));
+            }
+
+            public static function getPatientlist($tenant = null, $status = '1', $deleted = false) {
+                if (!$deleted)
+                    $list = self::find()->tenant($tenant)->status($status)->active()->all();
+                else
+                    $list = self::find()->tenant($tenant)->deleted()->all();
+
+                return $list;
+            }
+
+            public static function getPatientByGuid($patient_guid) {
+                $patient = self::find()->where(['patient_guid' => $patient_guid])->one();
+                return $patient;
+            }
+
+            public static function getActiveEncounterByPatientId($patient_id) {
+                return PatEncounter::find()->status()->active()->andWhere(['patient_id' => $patient_id])->one();
+            }
+
+            public static function getActiveEncounterByPatientGuid($patient_guid) {
+                $patient = self::find()->where(['patient_guid' => $patient_guid])->one();
+                return self::getActiveEncounterByPatientId($patient->patient_id);
+            }
+
+            protected $oldAttributes;
+
+            public function afterFind() {
+                if (is_object($this->patient_guid))
+                    $this->patient_guid = $this->patient_guid->toString();
+
+                $this->oldAttributes = $this->attributes;
+
+                foreach ($this->_global_fields as $global_field) {
+                    $this->$global_field = @$this->patGlobalPatient->$global_field;
+                }
+
+                return parent::afterFind();
+            }
+
+            public static function getPatientNextVisitDays($date) {
+                $now = strtotime(date('Y-m-d'));
+                $date = strtotime($date);
+                $datediff = abs($now - $date);
+                return floor($datediff / (60 * 60 * 24));
+            }
+
+            public static function getPatientNextvisitDate($days) {
+                $date = date('Y-m-d');
+                return date('Y-m-d', strtotime($date . "+$days days"));
+            }
+
         }
-
-        $fields = array_merge(parent::fields(), $extend);
-        return $fields;
-    }
-
-    public static function getPatientAge($date) {
-        $birthDate = date('m/d/Y', strtotime($date));
-        $birthDate = explode("/", $birthDate);
-        return (date("md", date("U", mktime(0, 0, 0, $birthDate[0], $birthDate[1], $birthDate[2]))) > date("md") ? ((date("Y") - $birthDate[2]) - 1) : (date("Y") - $birthDate[2]));
-    }
-
-    public static function getPatientBirthdate($age) {
-        return date('Y-m-d', strtotime($age . ' years ago'));
-    }
-
-    public static function getPatientlist($tenant = null, $status = '1', $deleted = false) {
-        if (!$deleted)
-            $list = self::find()->tenant($tenant)->status($status)->active()->all();
-        else
-            $list = self::find()->tenant($tenant)->deleted()->all();
-
-        return $list;
-    }
-
-    public static function getPatientByGuid($patient_guid) {
-        $patient = self::find()->where(['patient_guid' => $patient_guid])->one();
-        return $patient;
-    }
-
-    public static function getActiveEncounterByPatientId($patient_id) {
-        return PatEncounter::find()->status()->active()->andWhere(['patient_id' => $patient_id])->one();
-    }
-
-    public static function getActiveEncounterByPatientGuid($patient_guid) {
-        $patient = self::find()->where(['patient_guid' => $patient_guid])->one();
-        return self::getActiveEncounterByPatientId($patient->patient_id);
-    }
-
-    protected $oldAttributes;
-
-    public function afterFind() {
-        if (is_object($this->patient_guid))
-            $this->patient_guid = $this->patient_guid->toString();
-
-        $this->oldAttributes = $this->attributes;
-
-        foreach ($this->_global_fields as $global_field) {
-            $this->$global_field = @$this->patGlobalPatient->$global_field;
-        }
-
-        return parent::afterFind();
-    }
-
-    public static function getPatientNextVisitDays($date) {
-        $now = strtotime(date('Y-m-d'));
-        $date = strtotime($date);
-        $datediff = abs($now - $date);
-        return floor($datediff / (60 * 60 * 24));
-    }
-
-    public static function getPatientNextvisitDate($days) {
-        $date = date('Y-m-d');
-        return date('Y-m-d', strtotime($date . "+$days days"));
-    }
-
-}
+        
