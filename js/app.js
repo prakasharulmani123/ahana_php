@@ -30,7 +30,8 @@ angular.module('app', [
     'ng-auto-save',
     'datatables',
     'ui.mask',
-    'scrollable-table'
+    'scrollable-table',
+    'ng.deviceDetector'
 //    'restangular'
 //    'LocalStorageModule',
 ]);

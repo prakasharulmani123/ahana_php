@@ -2,10 +2,13 @@
 
 /* Controllers */
 angular.module('app')
-        .controller('AppCtrl', ['$scope', '$localStorage', '$window', '$rootScope', '$state', '$cookieStore', '$http', 'CommonService', '$timeout', 'AuthenticationService', 'toaster', 'hotkeys', '$modal', '$filter',
-            function ($scope, $localStorage, $window, $rootScope, $state, $cookieStore, $http, CommonService, $timeout, AuthenticationService, toaster, hotkeys, $modal, $filter) {
+        .controller('AppCtrl', ['$scope', '$localStorage', '$window', '$rootScope', '$state', '$cookieStore', '$http', 'CommonService', '$timeout', 'AuthenticationService', 'toaster', 'hotkeys', '$modal', '$filter', 'deviceDetector',
+            function ($scope, $localStorage, $window, $rootScope, $state, $cookieStore, $http, CommonService, $timeout, AuthenticationService, toaster, hotkeys, $modal, $filter, deviceDetector) {
 //                socket.forward('someEvent', $scope);
 
+                //Angular module to detect OS / Browser / Device
+                $scope.deviceDetector = deviceDetector;
+                
                 $scope.$on('socket:someEvent', function (ev, data) {
                     console.log($scope.theData);
                 });

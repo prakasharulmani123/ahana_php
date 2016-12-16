@@ -1,5 +1,7 @@
 app.controller('docmonthlypayController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$anchorScroll', '$filter', '$timeout', function ($rootScope, $scope, $timeout, $http, $state, $anchorScroll, $filter, $timeout) {
 
+        console.log($scope.deviceDetector);
+        
         $scope.initReport = function () {
             $scope.showTable = false;
             $scope.consultant_fullname = '';
@@ -195,7 +197,8 @@ app.controller('docmonthlypayController', ['$rootScope', '$scope', '$timeout', '
                 footer: $scope.printFooter(),
                 styles: $scope.printStyle(),
                 content: $scope.printContent(),
-                pageMargins : 50,
+                pageMargins : ($scope.deviceDetector.browser == 'firefox' ? 75 : 50),
+                pageSize: 'A4',
             };
             pdfMake.createPdf(docDefinition).print();
             
