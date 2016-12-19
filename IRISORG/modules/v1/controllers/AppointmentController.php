@@ -3,6 +3,7 @@
 namespace IRISORG\modules\v1\controllers;
 
 use common\models\PatAppointment;
+use common\models\PatEncounter;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -61,10 +62,10 @@ class AppointmentController extends ActiveController {
 
             if ($valid) {
                 $amount = $appt_model->amount;
-                $amount_words = Yii::$app->hepler->convert_number_to_words( (int) ($amount)).' Rupees Only';
-                    
+                $amount_words = Yii::$app->hepler->convert_number_to_words((int) ($amount)) . ' Rupees Only';
+
                 $appt_model->save(false);
-                return ['success' => true , 'amount_in_words' => $amount_words, 'bill_no' => $appt_model->encounter->bill_no];
+                return ['success' => true, 'amount_in_words' => $amount_words, 'bill_no' => $appt_model->encounter->bill_no];
             } else {
                 return ['success' => false, 'message' => Html::errorSummary($appt_model)];
             }
@@ -84,40 +85,62 @@ class AppointmentController extends ActiveController {
 
     public function actionBulkcancel() {
         $post = Yii::$app->getRequest()->post();
-        if(!empty($post)){
-            foreach($post as $key => $value){
+        if (!empty($post)) {
+            foreach ($post as $key => $value) {
                 $data = array();
                 $data['appt_status'] = "C";
                 $data['encounter_id'] = $value['encounter_id'];
                 $data['status_time'] = date("H:i:s");
                 $data['status_date'] = date("Y-m-d");
                 $data['patient_id'] = $value['patient_id'];
-                
+
                 $model = new PatAppointment;
                 $model->attributes = $data;
                 $model->save(false);
             }
         }
     }
-    
+
     public function actionBulkreschedule() {
         $post = Yii::$app->getRequest()->post();
 
-        if(!empty($post)){
-            foreach($post['appointments'] as $key => $value){
+        if (!empty($post)) {
+            foreach ($post['appointments'] as $key => $value) {
                 $appointment = PatAppointment::find()->where(['appt_id' => $value['appt_id']])->one();
-                
-                //Update Encounter Table
-                $appointment_encounter = $appointment->encounter;
-                $appointment_encounter->encounter_date = $post['data']['status_date'];
-                $appointment_encounter->save(false);
-                
-                //Update Appointment Table
-                $appointment->status_time = $value['status_time'];
-                $appointment->status_date = $post['data']['status_date'];
-                $appointment->consultant_id = $post['data']['consultant_id'];
-                $appointment->notes = 'Appointment rescheduled';
-                $appointment->save(false);
+
+                //Cancel Old appointment informations
+                $data = array();
+                $data['appt_status'] = "C";
+                $data['encounter_id'] = $appointment->encounter_id;
+                $data['status_time'] = date("H:i:s");
+                $data['status_date'] = date("Y-m-d");
+                $data['patient_id'] = $appointment->patient_id;
+
+                $model = new PatAppointment;
+                $model->attributes = $data;
+                $model->save(false);
+
+                //Create New Enconter and Book.
+                $en_model = new PatEncounter();
+                $appt_model = new PatAppointment();
+
+                $model_attr = [
+                    'patient_id' => $appointment->patient_id,
+                    'encounter_type' => 'OP',
+                    'encounter_date' => @$post['data']['status_date'],
+                    'add_casesheet_no' => '',
+                    'consultant_id' => @$post['data']['consultant_id']
+                ];
+                $en_model->attributes = $model_attr;
+                $en_model->save(false);
+
+                $appt_model->encounter_id = $en_model->encounter_id;
+                $appt_model->status_time = $value['status_time'];
+                $appt_model->status_date = $post['data']['status_date'];
+                $appt_model->consultant_id = $post['data']['consultant_id'];
+                $appt_model->appt_status = "B";
+                $appt_model->patient_id = $appointment->patient_id;
+                $appt_model->save(false);
             }
         }
     }
