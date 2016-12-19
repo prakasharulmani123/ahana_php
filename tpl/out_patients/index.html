@@ -95,7 +95,7 @@
                             </tr>
                             <tr ng-show="value.expanded" ng-repeat="(key, row) in value.all" ng-if="row.appointmentSeen == '-'" class="tr_oplistcheckbox tr_oplistcheckbox_{{op_key}}">
                                 <td>
-                                    <label class="i-checks" ng-if="row.liveAppointmentArrival == '-'"> 
+                                    <label class="i-checks"> 
                                         <input ng-model="row.selected" ng-true-value="'1'" ng-false-value="'0'" ng-checked="row.selected == '1'" class="oplistcheckbox oplistcheckbox_{{op_key}}" id="oplist_{{op_key}}_{{key}}" type="checkbox" name="status" ng-click="moreOptions(op_key, key, row.liveAppointmentConsultant.user_id, row.liveAppointmentBooking.appt_id, row)"> 
                                         <i></i> 
                                     </label>
@@ -202,10 +202,6 @@
                                             </div> 
                                         </div>
                                     </div>
-
-                                    <div ng-if="row.appointmentSeen != '-'">
-                                        Seen
-                                    </div>
                                 </td>
                                 <td>{{row.liveAppointmentConsultant.title_code}} {{row.liveAppointmentConsultant.name}}</td>
                                 <td align="left">
@@ -271,11 +267,7 @@
                                         <span class="text-muted"> {{row.liveAppointmentArrival.status_date}} </span>
                                     </div>
                                 </td>
-                                <td>
-                                    <div ng-if="row.appointmentSeen != '-'">
-                                        Seen
-                                    </div>
-                                </td>
+                                <td> Seen </td>
                                 <td>{{row.liveAppointmentConsultant.title_code}} {{row.liveAppointmentConsultant.name}}</td>
                                 <td align="left">
                                     <div ng-include="'tpl/patient/patient_table_nav_bar.html'">
