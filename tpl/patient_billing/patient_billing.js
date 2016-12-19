@@ -135,14 +135,17 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
         $scope.$watch('patientObj.patient_id', function (newValue, oldValue) {
             if (newValue != '') {
                 $rootScope.commonService.GetEncounterListByPatient('', '0,1', false, $scope.patientObj.patient_id, function (response) {
-                    angular.forEach(response, function (resp) {
-                        if (resp.encounter_type == 'IP') {
-                            resp.encounter_id = resp.encounter_id.toString();
+                    //Most probably because splice() mutates the array, and angular.forEach() uses invalid indexes
+                    //That's y used while instead of foreach
+                    var i = response.length;
+                    while (i--) {
+                        var patient_details = response[i];
+                        if (patient_details.encounter_type == 'IP') {
+                            patient_details.encounter_id = patient_details.encounter_id.toString();
                         } else {
-                            var index = response.indexOf(resp);
-                            response.splice(index, 1);
+                            response.splice(i, 1);
                         }
-                    });
+                    }
                     $scope.encounters = response;
                     if (response != null) {
                         $scope.enc.selected = $scope.encounters[0];
