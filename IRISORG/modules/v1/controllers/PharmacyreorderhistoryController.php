@@ -63,6 +63,28 @@ class PharmacyreorderhistoryController extends ActiveController {
         }
     }
 
+    public function actionRemoveitem() {
+        $reorder_item_id = Yii::$app->getRequest()->post('id');
+        if ($reorder_item_id) {
+            $reorder_item_model = PhaReorderHistoryItem::find()->where(['reorder_item_id' => $reorder_item_id])->one();
+            $reorder_item_model->remove();
+
+            //Check any active items, If no then delete Reorder History too
+            $reorder_items_count = PhaReorderHistoryItem::find()
+                    ->where(['reorder_id' => $reorder_item_model->reorder_id])
+                    ->active()
+                    ->count();
+            if ($reorder_items_count == 0) {
+                $reorder_history_model = PhaReorderHistory::find()
+                        ->where(['reorder_id' => $reorder_item_model->reorder_id])
+                        ->one();
+                $reorder_history_model->remove();
+            }
+            
+            return ['success' => true];
+        }
+    }
+
     public function actionGetpurchases() {
         $get = Yii::$app->getRequest()->get();
 
@@ -166,7 +188,7 @@ class PharmacyreorderhistoryController extends ActiveController {
                 ->having('available_qty <= product_reorder_min')
                 ->all();
 
-        $reorder_products = ArrayHelper::map(PhaReorderHistoryItem::find()->tenant()->status()->all(), 'product_id', 'product_id');
+        $reorder_products = ArrayHelper::map(PhaReorderHistoryItem::find()->tenant()->status()->active()->all(), 'product_id', 'product_id');
         $reports = [];
 
         foreach ($stocks as $key => $purchase) {

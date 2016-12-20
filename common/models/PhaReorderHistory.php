@@ -90,7 +90,7 @@ class PhaReorderHistory extends RActiveRecord {
      * @return ActiveQuery
      */
     public function getPhaReorderHistoryItems() {
-        return $this->hasMany(PhaReorderHistoryItem::className(), ['reorder_id' => 'reorder_id']);
+        return $this->hasMany(PhaReorderHistoryItem::className(), ['reorder_id' => 'reorder_id'])->active();
     }
 
     public function fields() {
