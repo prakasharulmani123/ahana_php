@@ -173,7 +173,7 @@
                                         <td>{{reorderitem.product.full_name}}</td>
                                         <td>{{reorderitem.quantity}}</td>
                                         <td>
-                                            <a title="Delete" class="label bg-dark" href="#">
+                                            <a data-button="pharmacy.reorderDelete" check-access-custom class="btn m-b-xs btn-dark" title="Delete" ng-click="removeRow(reorderitem)">
                                                 <i class="fa fa-trash"></i>
                                             </a>
                                         </td>

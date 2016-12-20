@@ -1,4 +1,4 @@
-app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$anchorScroll', '$filter', '$timeout', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $anchorScroll, $filter, $timeout) {
+app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$anchorScroll', '$filter', '$timeout', 'modalService', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $anchorScroll, $filter, $timeout, modalService) {
 
         editableThemes.bs3.inputClass = 'input-sm';
         editableThemes.bs3.buttonsClass = 'btn-sm';
@@ -128,6 +128,36 @@ app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http
                     $scope.errorData = $scope.errorSummary(data);
                 else
                     $scope.errorData = data.message;
+            });
+        };
+
+        //Delete
+        $scope.removeRow = function (reorderitem) {
+            var modalOptions = {
+                closeButtonText: 'No',
+                actionButtonText: 'Yes',
+                headerText: 'Delete Reorder Item?',
+                bodyText: 'Are you sure you want to delete this reorder item?'
+            };
+
+            modalService.showModal({}, modalOptions).then(function (result) {
+                $scope.loadbar('show');
+                $http({
+                    method: 'POST',
+                    url: $rootScope.IRISOrgServiceUrl + "/pharmacyreorderhistory/removeitem",
+                    data: {id: reorderitem.reorder_item_id},
+                }).then(
+                        function (response) {
+                            $scope.loadbar('hide');
+                            if (response.data.success === true) {
+                                $scope.loadReordersList("RH");
+                                $scope.msg.successMessage = 'Deleted successfully';
+                            }
+                            else {
+                                $scope.errorData = response.data.message;
+                            }
+                        }
+                );
             });
         };
 
