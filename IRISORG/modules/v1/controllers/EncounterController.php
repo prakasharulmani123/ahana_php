@@ -213,9 +213,9 @@ class EncounterController extends ActiveController {
 
         if (isset($get['id'])) {
             $condition['patient_guid'][$get['id']] = $get['id'];
-            
+
             $patient = PatPatient::getPatientByGuid($get['id']);
-            
+
             $data = VEncounter::find()
                     ->where($condition)
                     ->groupBy('encounter_id')
@@ -255,7 +255,66 @@ class EncounterController extends ActiveController {
         return $model;
     }
 
+    //Reducing query for speed up. In-Progress
     public function actionOutpatients() {
+        $get = Yii::$app->getRequest()->get();
+        $date = date('Y-m-d');
+        $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+
+        //Default Current OP
+        $query = "DATE(encounter_date) = '{$date}'";
+        if (isset($get['type'])) {
+            if ($get['type'] == 'Previous')
+                $query = "DATE(encounter_date) < '{$date}'";
+            else if ($get['type'] == 'Future')
+                $query = "DATE(encounter_date) > '{$date}'";
+        }
+
+        //Check "View logged in doctor appointments".
+        $condition = [
+            'pat_encounter.tenant_id' => $tenant_id,
+            'pat_appointment.consultant_id' => Yii::$app->user->identity->user->user_id,
+            'pat_appointment.status' => '1',
+        ];
+        //Check "View all doctors appointments".
+        if (isset($get['all'])) {
+            if ($get['all']) {
+                $condition = [
+                    'pat_encounter.tenant_id' => $tenant_id,
+                    'pat_appointment.status' => '1',
+                ];
+            }
+        }
+
+        $result = [];
+
+        $seen_query = "(SELECT
+                            COUNT(*)
+                          FROM `pat_encounter` pe
+                            LEFT JOIN `pat_appointment` pa
+                              ON `pe`.`encounter_id` = `pa`.`encounter_id`
+                          WHERE ((((`pe`.`status` = '0')
+                                   AND (`pe`.`tenant_id` = '{$tenant_id}')
+                                   AND (`pa`.`appt_status` = 'S'))
+                                  AND (`pe`.`encounter_type` = 'OP'))
+                                 AND (DATE(`pe`.`encounter_date`) = '{$date}'))
+                              AND (`pa`.`consultant_id` = `pat_appointment`.`consultant_id`))";
+
+        $details = PatEncounter::find()
+                ->joinWith('patAppointments')
+                ->addSelect(['*', "{$seen_query} as seen_count"])
+                ->where($condition)
+                ->encounterType("OP")
+                ->andWhere($query)
+                ->orderBy([
+                    'encounter_date' => SORT_DESC,
+                ])
+                ->all();
+
+        return ['success' => true, 'result' => $details];
+    }
+
+    public function actionOutpatientsold() {
         $get = Yii::$app->getRequest()->get();
 
         $date = date('Y-m-d');
@@ -325,7 +384,7 @@ class EncounterController extends ActiveController {
                         'encounter_date' => SORT_DESC,
                     ])
                     ->all();
-            
+
             $seen_encounters = PatEncounter::find()
                     ->joinWith('patAppointments')
                     ->where($seen_condition)
