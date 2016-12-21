@@ -79,7 +79,7 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
         }
 
         $timeout(function () {
-//            $scope.startAutoRefresh();
+            $scope.startAutoRefresh();
         }, 5000);
         var stop;
         $scope.last_log_id = "";
