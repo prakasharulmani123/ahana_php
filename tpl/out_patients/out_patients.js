@@ -47,7 +47,8 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
             // Get data's from service
             $http.get($rootScope.IRISOrgServiceUrl + '/encounter/outpatients?type=' + type + '&all=' + all)
                     .success(function (OutPatients) {
-                        $scope.rowCollection = OutPatients.result;
+                        var prepared_result = $scope.prepareCollection(OutPatients);
+                        $scope.rowCollection = prepared_result;
 
                         $scope.updateCollection();
 
@@ -61,8 +62,24 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                     });
         };
 
+        $scope.prepareCollection = function (OutPatients) {
+            var result = [];
+            var key_index = 0;
+            
+            grouped_result = $filter('groupBy')(OutPatients.result, 'consultant_id');
+            angular.forEach(grouped_result, function (value) {
+                result[key_index] = {
+                    data: value[0],
+                    all: value,
+                    seen_count: value[0].seen_count
+                };
+                key_index++;
+            });
+            return result
+        }
+
         $timeout(function () {
-            $scope.startAutoRefresh();
+//            $scope.startAutoRefresh();
         }, 5000);
         var stop;
         $scope.last_log_id = "";
@@ -384,8 +401,8 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
             }
             return true;
         };
-        
-        $scope.expandAllRow = function(expanded) {
+
+        $scope.expandAllRow = function (expanded) {
             angular.forEach($scope.rowCollection, function (row) {
                 row.expanded = expanded;
                 $scope.setRowExpanded(row.data.liveAppointmentConsultant.user_id, expanded);
