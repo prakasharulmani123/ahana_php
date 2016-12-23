@@ -49,7 +49,10 @@ class PatEncounter extends RActiveRecord {
     public $op_doctor_payment_seen_date;
     public $op_doctor_payment_seen_time;
     public $consultant_id;
+    public $total_booking;
     public $seen_count;
+    public $arrived_count;
+    public $booked_count;
 
     /**
      * @inheritdoc
@@ -65,7 +68,7 @@ class PatEncounter extends RActiveRecord {
         return [
             [['encounter_date'], 'required'],
             [['tenant_id', 'patient_id', 'finalize', 'authorize', 'created_by', 'modified_by', 'discharge'], 'integer'],
-            [['encounter_date', 'inactive_date', 'created_at', 'modified_at', 'deleted_at', 'casesheet_no', 'discharge', 'total_amount', 'bill_no', 'bill_notes', 'consultant_id', 'seen_count'], 'safe'],
+            [['encounter_date', 'inactive_date', 'created_at', 'modified_at', 'deleted_at', 'casesheet_no', 'discharge', 'total_amount', 'bill_no', 'bill_notes', 'consultant_id', 'total_booking', 'seen_count', 'arrived_count', 'booked_count'], 'safe'],
             [['status', 'casesheet_no', 'add_casesheet_no'], 'string'],
             [['concession_amount'], 'number'],
             [['encounter_type'], 'string', 'max' => 5],
@@ -334,8 +337,17 @@ class PatEncounter extends RActiveRecord {
                     return ($total - $paid);
                 }
             },
+            'total_booking' => function ($model) {
+                return $model->total_booking;
+            },
             'seen_count' => function ($model) {
                 return $model->seen_count;
+            },
+            'arrived_count' => function ($model) {
+                return $model->arrived_count;
+            },
+            'booked_count' => function ($model) {
+                return $model->booked_count;
             },
             'consultant_id' => function ($model) {
                 return (isset($model->patLiveAppointmentBooking) ? $model->patLiveAppointmentBooking->consultant_id : '-');
