@@ -49,6 +49,7 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                     .success(function (OutPatients) {
                         var prepared_result = $scope.prepareCollection(OutPatients);
                         $scope.rowCollection = prepared_result;
+//                        $scope.rowCollection = OutPatients.result;
 
                         $scope.updateCollection();
 
@@ -62,21 +63,7 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                     });
         };
 
-        $scope.prepareCollection = function (OutPatients) {
-            var result = [];
-            var key_index = 0;
-            
-            grouped_result = $filter('groupBy')(OutPatients.result, 'consultant_id');
-            angular.forEach(grouped_result, function (value) {
-                result[key_index] = {
-                    data: value[0],
-                    all: value,
-                    seen_count: value[0].seen_count
-                };
-                key_index++;
-            });
-            return result
-        }
+
 
         $timeout(function () {
             $scope.startAutoRefresh();
@@ -325,50 +312,53 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
             });
         };
 
-        $scope.updateCollection = function () {
+        $scope.prepareCollection = function (OutPatients) {
             $scope.isLoading = true;
-            rowCollection = $scope.rowCollection;
-            displayedCollection = $scope.rowCollection;
-
-            $scope.rowCollection = []; // base collection
-            $scope.displayedCollection = [].concat($scope.rowCollection); // displayed collection
+            var result = [];
+            var key_index = 0;
+            $scope.census = OutPatients.result.length;
+            if ($scope.census > 6) {
+                $scope.css = {
+                    'style': 'height:550px; overflow-y: auto; overflow-x: hidden;',
+                };
+            }
 
             $timeout(function () {
-                $scope.rowCollection = rowCollection;
-
-                $scope.census = 0;
-                angular.forEach($scope.rowCollection, function (row) {
-                    var booked = 0;
-                    var arrived = 0;
-
-                    angular.forEach(row.all, function (appt) {
-                        if (appt.liveAppointmentArrival == '-' && appt.appointmentSeen == '-') {
-                            appt.sts = 'B';
-                            booked++;
-                        }
-                        if (appt.liveAppointmentArrival != '-' && appt.appointmentSeen == '-') {
-                            appt.sts = 'A';
-                            arrived++;
-                        }
-                        appt.selected = '0';
-                        $scope.census++;
-                    });
-
-                    if ($scope.census > 6) {
-                        $scope.css = {
-                            'style': 'height:550px; overflow-y: auto; overflow-x: hidden;',
-                        };
-                    }
-
-                    row.booking_count = booked;
-                    row.arrived_count = arrived;
-                    row.selected = '0';
-                    row.seenExpanded = false;
-                    row.expanded = $scope.getRowExpand(row.data.liveAppointmentConsultant.user_id);
-                    row.all = $filter('orderBy')(row.all, ['sts', 'liveAppointmentArrival.status_datetime', 'liveAppointmentBooking.status_datetime', 'appointmentSeen.status_datetime']);
+                grouped_result = $filter('groupBy')(OutPatients.result, 'consultant_id');
+                angular.forEach(grouped_result, function (value) {
+                    result[key_index] = {
+                        data: value[0],
+                        all: value,
+                        seen_count: value[0].seen_count,
+                        booking_count: value[0].booked_count,
+                        arrived_count: value[0].arrived_count,
+                        selected: '0',
+                        seenExpanded: false,
+                        expanded: false,
+                    };
+                    key_index++;
                 });
-                $scope.displayedCollection = [].concat($scope.rowCollection);
                 $scope.isLoading = false;
+            }, 200);
+
+            return result;
+        }
+
+        $scope.updateCollection = function () {
+            $timeout(function () {
+                angular.forEach($scope.rowCollection, function (row) {
+                    angular.forEach(row.all, function (appt) {
+//                        if (appt.liveAppointmentArrival == '-' && appt.appointmentSeen == '-') {
+//                            appt.sts = 'B';
+//                        }
+//                        if (appt.liveAppointmentArrival != '-' && appt.appointmentSeen == '-') {
+//                            appt.sts = 'A';
+//                        }
+                        appt.selected = '0';
+                    });
+//                    row.expanded = $scope.getRowExpand(row.data.liveAppointmentConsultant.user_id);
+//                    row.all = $filter('orderBy')(row.all, ['sts', 'liveAppointmentArrival.status_datetime', 'liveAppointmentBooking.status_datetime', 'appointmentSeen.status_datetime']);
+                });
             }, 200);
         }
 
