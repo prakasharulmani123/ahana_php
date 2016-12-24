@@ -110,7 +110,7 @@
                                     {{ saleitem.expiry_date | moment:'MMM YYYY' || 'empty' }}
                                 </td>
                                 <td>
-                                    {{saleitem.sale_quantity|| 0}}
+                                    {{saleitem.total_returned_quantity > 0 ? saleitem.sale_quantity - saleitem.total_returned_quantity + ' (' + saleitem.sale_quantity + ')' : saleitem.sale_quantity}}
                                 </td>
                                 <td>
                                     <span 
@@ -232,7 +232,7 @@
     <footer class="panel-footer text-right bg-light lter">
         <button class="btn m-b-xs  btn-success save-btn">Save</button>
         &nbsp;
-        <button class="btn m-b-xs btn-dark" ng-click="$state.go('pharmacy.sales')"><i class="fa fa-times"></i> Cancel</button>
+        <button type="button" class="btn m-b-xs btn-dark" ng-click="$state.go('pharmacy.saleReturn')"><i class="fa fa-times"></i> Cancel</button>
         &nbsp;
     </footer>
 </div>
