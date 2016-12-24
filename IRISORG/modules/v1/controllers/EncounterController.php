@@ -449,7 +449,10 @@ class EncounterController extends ActiveController {
         if (isset($get['patient_id']))
             $patient_id = $get['patient_id'];
 
-        $model = PatEncounter::getEncounterListByPatient($tenant, $status, $deleted, $patient_id);
+        if (isset($get['encounter_type']))
+            $encounter_type = $get['encounter_type'];
+
+        $model = PatEncounter::getEncounterListByPatient($tenant, $status, $deleted, $patient_id, $encounter_type);
 
         return $model;
     }

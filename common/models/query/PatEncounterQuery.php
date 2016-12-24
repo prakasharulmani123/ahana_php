@@ -7,6 +7,9 @@ use Yii;
 class PatEncounterQuery extends CommonQuery {
     
     public function encounterType($type = 'IP') {
+        if (strpos($type, ',') !== false) {
+            $type = explode(',', $type);
+        }
         return $this->andWhere(['encounter_type' => $type]);
     }
 

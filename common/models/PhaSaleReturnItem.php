@@ -58,10 +58,22 @@ class PhaSaleReturnItem extends RActiveRecord {
             [['mrp', 'item_amount', 'discount_percentage', 'discount_amount', 'total_amount', 'vat_percent', 'vat_amount'], 'number'],
             [['status'], 'string'],
             [['created_at', 'modified_at', 'deleted_at', 'expiry_date', 'batch_no', 'sale_item_id', 'discount_percentage', 'discount_amount', 'total_amount', 'vat_percent', 'vat_amount'], 'safe'],
-            [['package_name'], 'string', 'max' => 255]
+            [['package_name'], 'string', 'max' => 255],
+            [['quantity', 'mrp', 'total_amount'], 'validateAmount'],
+            [['expiry_date'], 'validateExpiryDate', 'on' => 'saveform'],
         ];
     }
 
+    public function validateAmount($attribute, $params) {
+        if ($this->$attribute <= 0)
+            $this->addError($attribute, "{$this->getAttributeLabel($attribute)} must be greater than 0 for {$this->product->fullname}");
+    }
+    
+    public function validateExpiryDate($attribute, $params) {
+        if ($this->$attribute <= 0)
+            $this->addError($attribute, "{$this->getAttributeLabel($attribute)} must be greater than 0 for {$this->product->fullname}");
+    }
+    
     /**
      * @inheritdoc
      */

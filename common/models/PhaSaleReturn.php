@@ -38,6 +38,7 @@ use yii\helpers\ArrayHelper;
  */
 class PhaSaleReturn extends RActiveRecord {
 
+    public $noitem = false;
     /**
      * @inheritdoc
      */
@@ -55,10 +56,16 @@ class PhaSaleReturn extends RActiveRecord {
             [['sale_date', 'created_at', 'modified_at', 'deleted_at', 'sale_id', 'patient_name', 'total_item_vat_amount'], 'safe'],
             [['total_item_sale_amount', 'total_item_discount_percent', 'total_item_discount_amount', 'total_item_amount', 'roundoff_amount', 'bill_amount', 'total_item_vat_amount'], 'number'],
             [['status'], 'string'],
-            [['bill_no', 'mobile_no'], 'string', 'max' => 50]
+            [['bill_no', 'mobile_no'], 'string', 'max' => 50],
+            [['noitem'], 'validateNoitem'],
         ];
     }
 
+    public function validateNoitem($attribute, $params) {
+        if ($this->noitem)
+            $this->addError($attribute, "Select atleast one item to return");
+    }
+    
     /**
      * @inheritdoc
      */
