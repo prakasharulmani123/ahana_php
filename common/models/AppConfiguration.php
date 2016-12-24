@@ -66,32 +66,32 @@ class AppConfiguration extends RActiveRecord {
             ],
             'SHARE_ENCOUNTER' => [
                 'code' => 'ENCOUNTER',
-                'value' => '0',
+                'value' => '1',
                 'notes' => 'Share Encounter',
             ],
             'SHARE_NOTES' => [
                 'code' => 'NOTES',
-                'value' => '0',
+                'value' => '1',
                 'notes' => 'Share Notes',
             ],
             'SHARE_CONSULTANT' => [
                 'code' => 'CONSULTANT',
-                'value' => '0',
+                'value' => '1',
                 'notes' => 'Share Consultant',
             ],
             'SHARE_ALERT' => [
                 'code' => 'ALERT',
-                'value' => '0',
+                'value' => '1',
                 'notes' => 'Share Alert',
             ],
             'SHARE_VITALS' => [
                 'code' => 'VITALS',
-                'value' => '0',
+                'value' => '1',
                 'notes' => 'Share Vitals',
             ],
             'SHARE_PRESCRIPTION' => [
                 'code' => 'PRESCRIPTION',
-                'value' => '0',
+                'value' => '1',
                 'notes' => 'Share Prescription',
             ],
             'SHARE_BILLING' => [
@@ -101,7 +101,7 @@ class AppConfiguration extends RActiveRecord {
             ],
             'SHARE_PROCEDURE' => [
                 'code' => 'PROCEDURE',
-                'value' => '0',
+                'value' => '1',
                 'notes' => 'Share Procedure',
             ],
             'SHARE_BASIC_DATA' => [
