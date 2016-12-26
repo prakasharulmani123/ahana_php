@@ -16,9 +16,9 @@
                             <div class="panel panel-default">
                                 <div class="panel-body">
                                     <div class="form-group">
-                                        <label class="col-lg-2 control-label">Sale Bill No.</label>
+                                        <label class="col-lg-2 control-label">Select Bill No. / UHID</label>
                                         <div class="col-lg-4">
-                                            <select class="form-control selectpicker" data-live-search="true" ng-model="data.sale_id" ng-options="sale.sale_id as sale.bill_no for sale in saleinvoice | orderBy: invoice_no"  data-ng-change="getSaleReturnItems()">
+                                            <select class="form-control selectpicker" data-live-search="true" ng-model="data.sale_id" ng-options="sale.sale_id as sale.bill_no_with_patient for sale in saleinvoice | orderBy: invoice_no"  data-ng-change="getSaleReturnItems()">
                                             <option value="">Select Bill No.</option>
                                         </select>
                                         </div>

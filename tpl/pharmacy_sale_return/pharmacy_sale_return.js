@@ -59,7 +59,7 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
             $scope.products = [];
             $scope.batches = [];
 
-            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacysale?fields=sale_id,bill_no')
+            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacysale?fields=sale_id,bill_no,bill_no_with_patient')
                     .success(function (saleList) {
                         $scope.saleinvoice = saleList;
                         $timeout(function () {
