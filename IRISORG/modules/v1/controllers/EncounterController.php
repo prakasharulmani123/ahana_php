@@ -369,7 +369,6 @@ class EncounterController extends ActiveController {
                 JOIN pat_encounter b
                 ON b.encounter_id = a.encounter_id
                 WHERE a.tenant_id = :tid
-                AND b.status = '1'
                 AND b.encounter_type = :ptype
                 AND DATE(b.encounter_date) = :enc_date
                 GROUP BY a.consultant_id",[':enc_date' =>  $date,':tid' => $tenant_id,':ptype' => 'OP']);
@@ -395,7 +394,7 @@ class EncounterController extends ActiveController {
                 ->andWhere($query)
                 ->orderBy([
                     'pat_appointment.appt_status' => SORT_ASC,
-                    'pat_appointment.status_time' => SORT_ASC,
+                    'pat_appointment.status_timea' => SORT_ASC,
                 ])
                 ->all();
 
