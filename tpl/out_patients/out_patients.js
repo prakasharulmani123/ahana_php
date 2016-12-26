@@ -45,7 +45,7 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
             }
 
             // Get data's from service
-            $http.get($rootScope.IRISOrgServiceUrl + '/encounter/outpatients?type=' + type + '&all=' + all)
+            $http.get($rootScope.IRISOrgServiceUrl + '/encounter/outpatients?addtfields=oplist&type=' + type + '&all=' + all)
                     .success(function (OutPatients) {
                         var prepared_result = $scope.prepareCollection(OutPatients);
                         $scope.rowCollection = prepared_result;
@@ -122,7 +122,7 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
             $timeout(function () {
                 angular.forEach($scope.displayedCollection, function (value, op_key) {
                     angular.forEach(value.all, function (row, key) {
-                        $scope.moreOptions(op_key, key, row.liveAppointmentConsultant.user_id, row.liveAppointmentBooking.appt_id, row);
+                        $scope.moreOptions(op_key, key, row.consultant_id, row.apptBookingData.appt_id, row);
                     });
                 });
             }, 800);
@@ -139,6 +139,8 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
 
                 if (appt_exists.length == 0) {
                     consultant_exists = $filter('filter')($scope.checkboxes.items, {consultant_id: consultant_id});
+                    rowData = row.apptBookingData;
+                    angular.extend(rowData, {patient_name: row.apptPatientData.fullname, consultant_id: row.consultant_id, encounter_id: row.encounter_id, patient_id: row.patient_id});
                     if (consultant_exists.length == 0) {
                         $('.oplistcheckbox').not('.oplistcheckbox_' + op_key).attr('checked', false);
 //                        $('.oplistcheckbox').not('#oplist_' + op_key + '_' + key).attr('checked', false);
@@ -146,13 +148,13 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                         $scope.checkboxes.items.push({
                             appt_id: appt_id,
                             consultant_id: consultant_id,
-                            row: row.liveAppointmentBooking
+                            row: rowData
                         });
                     } else {
                         $scope.checkboxes.items.push({
                             appt_id: appt_id,
                             consultant_id: consultant_id,
-                            row: row.liveAppointmentBooking
+                            row: rowData
                         });
                     }
                 }
@@ -170,7 +172,6 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
             angular.forEach($scope.checkboxes.items, function (item) {
                 $scope.currentAppointmentSelectedItems.push(item.row);
             });
-
             $scope.currentAppointmentSelected = $scope.currentAppointmentSelectedItems.length;
         }
 
@@ -289,8 +290,8 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                     function (response) {
                         $scope.loadbar('hide');
                         $scope.msg.successMessage = 'Status changed successfully';
-                        $scope.rowCollection[op_key]['all'][key].liveAppointmentArrival = response;
-                        $scope.displayedCollection[op_key]['all'][key].liveAppointmentArrival = response;
+                        $scope.rowCollection[op_key]['all'][key].apptArrivalData = response;
+                        $scope.displayedCollection[op_key]['all'][key].apptArrivalData = response;
 
                         angular.forEach($scope.displayedCollection, function (value, parent_key) {
                             if (parent_key == op_key) {
@@ -321,13 +322,14 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
             }
 
             grouped_result = $filter('groupBy')(OutPatients.result, 'consultant_id');
-            angular.forEach(grouped_result, function (value) {
+            angular.forEach(grouped_result, function (value,key) {
                 result[key_index] = {
-                    data: value[0],
+                    consultant_id: key,
+                    consultant_name: value[0].apptConsultantData.fullname,
                     all: value,
-                    seen_count: value[0].seen_count,
-                    booking_count: value[0].booked_count,
-                    arrived_count: value[0].arrived_count,
+                    seen_count: OutPatients.consultants[key].seen,
+                    booking_count: OutPatients.consultants[key].booked,
+                    arrived_count: OutPatients.consultants[key].arrival,
                     selected: '0',
                     seenExpanded: false,
                 };
@@ -350,17 +352,17 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                 angular.forEach($scope.rowCollection, function (row) {
 
                     angular.forEach(row.all, function (appt) {
-                        if (appt.liveAppointmentArrival == '-' && appt.appointmentSeen == '-') {
+                        if (appt.apptArrivalData == '-' && appt.apptSeenData == '-') {
                             appt.sts = 'B';
                         }
-                        if (appt.liveAppointmentArrival != '-' && appt.appointmentSeen == '-') {
+                        if (appt.apptArrivalData != '-' && appt.apptSeenData == '-') {
                             appt.sts = 'A';
                         }
                         appt.selected = '0';
                     });
-                    
-                    row.expanded = $scope.getRowExpand(row.data.liveAppointmentConsultant.user_id);
-                    row.all = $filter('orderBy')(row.all, ['sts', 'liveAppointmentArrival.status_datetime', 'liveAppointmentBooking.status_datetime', 'appointmentSeen.status_datetime']);
+
+                    row.expanded = $scope.getRowExpand(row.consultant_id);
+                    row.all = $filter('orderBy')(row.all, ['sts', 'apptArrivalData.status_datetime', 'apptBookingData.status_datetime', 'apptSeenData.status_datetime']);
                 });
                 $scope.displayedCollection = [].concat($scope.rowCollection);
                 $scope.isLoading = false;
@@ -400,7 +402,7 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
         $scope.expandAllRow = function (expanded) {
             angular.forEach($scope.rowCollection, function (row) {
                 row.expanded = expanded;
-                $scope.setRowExpanded(row.data.liveAppointmentConsultant.user_id, expanded);
+                $scope.setRowExpanded(row.consultant_id, expanded);
             });
         };
     }]);
