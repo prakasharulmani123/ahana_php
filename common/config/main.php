@@ -27,16 +27,23 @@ function setClientDb() {
     $sth->execute(array(':domain' => DOMAIN_PATH));
     $read = $sth->fetch(PDO::FETCH_OBJ);
 
-    $client = ['class' => 'yii\db\Connection', 'charset' => 'utf8'];
+    $client = [
+        'class' => 'yii\db\Connection',
+        'enableSchemaCache' => true,
+//        'schemaCacheDuration' => 3600,
+//        'schemaCache' => 'cache',
+        'charset' => 'utf8'
+    ];
+
     $is_read = false;
     if (!empty($read)) {
         $is_read = true;
-        
+
         $read->org_db_host = base64_decode($read->org_db_host);
         $read->org_db_username = base64_decode($read->org_db_username);
         $read->org_db_password = base64_decode($read->org_db_password);
         $read->org_database = base64_decode($read->org_database);
-        
+
         $client['dsn'] = "mysql:host={$read->org_db_host};dbname={$read->org_database}";
         $client['username'] = "{$read->org_db_username}";
         $client['password'] = "{$read->org_db_password}";
