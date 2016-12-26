@@ -113,7 +113,7 @@ class EncounterController extends ActiveController {
 
                 $appt_model->encounter_id = $model->encounter_id;
 
-                //If appointment status is A (Arrived), then save first B (Booked) record 
+                //If appointment status is A (Arrived), then save first B (Booked) record
                 if ($appt_model->appt_status == "A") {
                     $appt_model->appt_status = "B";
                     $appt_model->save(false);
@@ -324,16 +324,71 @@ class EncounterController extends ActiveController {
                                 AND (DATE(`pe`.`encounter_date`) = '{$date}'))
                                 AND (`pa`.`consultant_id` = `pat_appointment`.`consultant_id`))";
 
-        $booked_query = "(SELECT total_booking) - (SELECT arrived_count)";                        
-                                
+        $booked_query = "(SELECT total_booking) - (SELECT arrived_count)";
+
+        $connection = Yii::$app->client;
+        $command = $connection->createCommand("SELECT a.consultant_id,
+                (
+                    SELECT COUNT(*)
+                    FROM pat_appointment c
+                    JOIN pat_encounter d
+                    ON d.encounter_id = c.encounter_id
+                    WHERE d.tenant_id = :tid
+                    AND d.status = '1'
+                    AND c.appt_status = 'B'
+                    AND d.encounter_type = :ptype
+                    AND DATE(d.encounter_date) = :enc_date
+                    AND c.consultant_id = a.consultant_id
+                ) AS booking,
+                (
+                    SELECT COUNT(*)
+                    FROM pat_appointment c
+                    JOIN pat_encounter d
+                    ON d.encounter_id = c.encounter_id
+                    WHERE d.tenant_id = :tid
+                    AND d.status = '1'
+                    AND c.appt_status = 'A'
+                    AND d.encounter_type = :ptype
+                    AND DATE(d.encounter_date) = :enc_date
+                    AND c.consultant_id = a.consultant_id
+                ) AS arrival,
+                (
+                    SELECT COUNT(*)
+                    FROM pat_appointment c
+                    JOIN pat_encounter d
+                    ON d.encounter_id = c.encounter_id
+                    WHERE d.tenant_id = :tid
+                    AND d.status = '0'
+                    AND c.appt_status = 'S'
+                    AND d.encounter_type = :ptype
+                    AND DATE(d.encounter_date) = :enc_date
+                    AND c.consultant_id = a.consultant_id
+                ) AS seen,
+                (SELECT booking)-(SELECT arrival) AS booked
+                FROM pat_appointment a
+                JOIN pat_encounter b
+                ON b.encounter_id = a.encounter_id
+                WHERE a.tenant_id = :tid
+                AND b.status = '1'
+                AND b.encounter_type = :ptype
+                AND DATE(b.encounter_date) = :enc_date
+                GROUP BY a.consultant_id",[':enc_date' =>  $date,':tid' => $tenant_id,':ptype' => 'OP']);
+
+        $counts = $command->queryAll(\PDO::FETCH_OBJ);
+        $consultants = [];
+        if($counts){
+            foreach($counts as $v)
+                $consultants[$v->consultant_id] = ['booked' => $v->booked,'arrival' => $v->arrival,'seen' => $v->seen];
+        }
+
         $details = PatEncounter::find()
                 ->joinWith('patAppointments')
                 ->addSelect([
                     '*',
-                    "{$total_booking} as total_booking",
-                    "{$seen_query} as seen_count",
-                    "{$arrived_query} as arrived_count",
-                    "{$booked_query} as booked_count",
+//                    "{$total_booking} as total_booking",
+//                    "{$seen_query} as seen_count",
+//                    "{$arrived_query} as arrived_count",
+//                    "{$booked_query} as booked_count",
                 ])
                 ->where($condition)
                 ->encounterType("OP")
@@ -344,7 +399,7 @@ class EncounterController extends ActiveController {
                 ])
                 ->all();
 
-        return ['success' => true, 'result' => $details];
+        return ['success' => true, 'result' => $details,'consultants' => $consultants];
     }
 
     public function actionOutpatientsold() {

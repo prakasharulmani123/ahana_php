@@ -197,56 +197,13 @@ class PatAppointment extends RActiveRecord {
     public function fields() {
         $extend = [
             'status_datetime' => function ($model) {
-                return $model->status_date . ' ' . $model->status_time;
+                return $model->status_datetime;
             },
             'waiting_elapsed' => function ($model) {
-                $date = date('Y-m-d', strtotime($model->status_date)) . ' ' . date('H:i:s', strtotime($model->status_time));
-
-                $start_date = new DateTime($date);
-//                $since_start = $start_date->diff(new DateTime(date('Y-m-d H:i:s')));
-
-                $default_elapsed_time = 3600; //One Hour
-                $get_elapsed_time = AppConfiguration::getConfigurationByKey('ELAPSED_TIME');
-                if (isset($get_elapsed_time))
-                    $default_elapsed_time = $get_elapsed_time->value;
-
-//                $default_elapsed_time = 60; //One Min
-                $now = new DateTime('now');
-                $diff_seconds = $now->getTimestamp() - $start_date->getTimestamp();
-
-                return ($diff_seconds >= $default_elapsed_time);
+                return $model->waiting_elapsed;
             },
             'waiting_elapsed_time' => function ($model) {
-                $date = date('Y-m-d', strtotime($model->status_date)) . ' ' . date('H:i:s', strtotime($model->status_time));
-
-                $start_date = new DateTime($date);
-//                $since_start = $start_date->diff(new DateTime(date('Y-m-d H:i:s')));
-
-                $default_elapsed_time = 3600; //One Hour
-                $get_elapsed_time = AppConfiguration::getConfigurationByKey('ELAPSED_TIME');
-                if (isset($get_elapsed_time))
-                    $default_elapsed_time = $get_elapsed_time->value;
-
-//                $default_elapsed_time = 60; //One Min
-                $now = new DateTime('now');
-                $diff_seconds = $now->getTimestamp() - $start_date->getTimestamp();
-
-                if ($diff_seconds >= $default_elapsed_time) {
-                    $hours = floor($diff_seconds / 3600);
-                    $minutes = floor(($diff_seconds / 60) % 60);
-                    $seconds = $diff_seconds % 60;
-
-                    if ($hours > 0)
-                        return "$hours hr, $minutes mins";
-                    else if ($minutes > 0)
-                        return "$minutes mins";
-                    else if ($seconds > 0)
-                        return "$seconds sec";
-                    else
-                        return false;
-                }
-
-                return false;
+                return $model->waiting_elapsed_time;
             },
             'consultant_name' => function ($model) {
                 if (isset($model->consultant))
@@ -258,16 +215,10 @@ class PatAppointment extends RActiveRecord {
                 return isset($model->consultant_perday_appt_count) ? $model->consultant_perday_appt_count : '-';
             },
             'patient_name' => function ($model) {
-                if (isset($model->patient))
-                    return $model->patient->patient_title_code . $model->patient->patient_firstname;
-                else
-                    return '-';
+                return $model->patient_name;
             },
             'patient_mobile' => function ($model) {
-                if (isset($model->patient))
-                    return $model->patient->patient_mobile;
-                else
-                    return '-';
+                return $model->patient_mobile;
             },
             'patient_guid' => function ($model) {
                 if (isset($model->patient))
@@ -278,6 +229,75 @@ class PatAppointment extends RActiveRecord {
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
+    }
+
+    public function getPatient_name() {
+        if (isset($this->patient))
+            return $this->patient->patient_title_code . $this->patient->patient_firstname;
+        else
+            return '-';
+    }
+
+    public function getPatient_mobile() {
+        if (isset($this->patient))
+            return $this->patient->patient_mobile;
+        else
+            return '-';
+    }
+
+    public function getStatus_datetime() {
+        return "{$this->status_date} {$this->status_time}";
+    }
+
+    public function getWaiting_elapsed() {
+        $date = date('Y-m-d', strtotime($this->status_date)) . ' ' . date('H:i:s', strtotime($this->status_time));
+
+        $start_date = new DateTime($date);
+//                $since_start = $start_date->diff(new DateTime(date('Y-m-d H:i:s')));
+
+        $default_elapsed_time = 3600; //One Hour
+        $get_elapsed_time = AppConfiguration::getConfigurationByKey('ELAPSED_TIME');
+        if (isset($get_elapsed_time))
+            $default_elapsed_time = $get_elapsed_time->value;
+
+//                $default_elapsed_time = 60; //One Min
+        $now = new DateTime('now');
+        $diff_seconds = $now->getTimestamp() - $start_date->getTimestamp();
+
+        return ($diff_seconds >= $default_elapsed_time);
+    }
+
+    public function getWaiting_elapsed_time() {
+        $date = date('Y-m-d', strtotime($this->status_date)) . ' ' . date('H:i:s', strtotime($this->status_time));
+
+        $start_date = new DateTime($date);
+//                $since_start = $start_date->diff(new DateTime(date('Y-m-d H:i:s')));
+
+        $default_elapsed_time = 3600; //One Hour
+        $get_elapsed_time = AppConfiguration::getConfigurationByKey('ELAPSED_TIME');
+        if (isset($get_elapsed_time))
+            $default_elapsed_time = $get_elapsed_time->value;
+
+//                $default_elapsed_time = 60; //One Min
+        $now = new DateTime('now');
+        $diff_seconds = $now->getTimestamp() - $start_date->getTimestamp();
+
+        if ($diff_seconds >= $default_elapsed_time) {
+            $hours = floor($diff_seconds / 3600);
+            $minutes = floor(($diff_seconds / 60) % 60);
+            $seconds = $diff_seconds % 60;
+
+            if ($hours > 0)
+                return "$hours hr, $minutes mins";
+            else if ($minutes > 0)
+                return "$minutes mins";
+            else if ($seconds > 0)
+                return "$seconds sec";
+            else
+                return false;
+        }
+
+        return false;
     }
 
     public static function find() {

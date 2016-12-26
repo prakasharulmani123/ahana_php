@@ -460,46 +460,29 @@ class PatPatient extends RActiveRecord {
     public function fields() {
         $extend = [
             'fullname' => function ($model) {
-                return $model->patient_title_code . ucfirst($model->patient_firstname);
+                return $model->fullname;
             },
             'patient_age' => function ($model) {
-                $age = '';
-                if ($model->patient_dob != '' && $model->patient_dob != "0000-00-00")
-                    $age = self::getPatientAge($model->patient_dob);
-                return $age;
+                return $model->patient_age;
             },
             'org_name' => function ($model) {
-                if (isset($this->tenant->tenant_name))
-                    return $this->tenant->tenant_name;
-            },
-            'sex' => function ($model) {
-                if (isset($model->patient_reg_date))
-                    return date('Y-m-d', strtotime($model->patient_reg_date));
+                return $model->org_name;
             },
             'patient_category' => function ($model) {
-                if (isset($model->patientCategory->patient_short_code)) {
-                    return $model->patientCategory->patient_short_code;
-                }
+                return $model->patient_category;
             },
             'patient_category_fullname' => function ($model) {
-                if (isset($model->patientCategory->patient_cat_name)) {
-                    $category_name = $model->patientCategory->patient_cat_name;
-                    return $category_name;
-                }
+                return $model->patient_category_fullname;
             },
             'patient_category_color' => function ($model) {
-                if (isset($model->patientCategory->patient_cat_color) && strtolower($model->patientCategory->patient_cat_color) != '#ffffff') {
-                    return $model->patientCategory->patient_cat_color;
-                } else {
-                    return "#19A9D5";
-                }
+                return $model->patient_category_color;
             },
             'address' => function ($model) {
                 if (isset($model->patPatientAddress))
                     return $model->patPatientAddress;
             },
-            'hasalert' => function ($model) {
-                return (!empty($this->activePatientAlert)) ? true : false;
+            'hasalert' => function () {
+                return $this->hasalert;
             },
             'alert' => function ($model) {
                 if (!empty($this->activePatientAlert)) {
@@ -512,26 +495,7 @@ class PatPatient extends RActiveRecord {
                 }
             },
             'fullcurrentaddress' => function ($model) {
-                if (isset($model->patPatientAddress)) {
-                    $result = '';
-                    if ($model->patPatientAddress->addr_current_address != '') {
-                        $result .= $model->patPatientAddress->addr_current_address;
-                    }
-
-                    if ($model->patPatientAddress->addr_city_id != '') {
-                        $result .= ' ' . $model->patPatientAddress->addrCity->city_name;
-                    }
-
-                    if ($model->patPatientAddress->addr_state_id != '') {
-                        $result .= ' ' . $model->patPatientAddress->addrState->state_name;
-                    }
-
-                    if ($model->patPatientAddress->addr_country_id != '') {
-                        $result .= ' ' . $model->patPatientAddress->addrCountry->country_name;
-                    }
-
-                    return $result;
-                }
+                return $model->fullcurrentaddress;
             },
             'fullpermanentaddress' => function ($model) {
                 if (isset($model->patPatientAddress)) {
@@ -599,10 +563,7 @@ class PatPatient extends RActiveRecord {
                 return (isset($model->patHaveEncounter)) ? $model->patHaveEncounter->encounter_type : '';
             },
             'incomplete_profile' => function($model) {
-                if (!isset($model->patPatientAddress))
-                    return true;
-                else
-                    return $model->patPatientAddress->isIncompleteProfile();
+                return $model->incomplete_profile;
             },
             'name_with_casesheet' => function($model) {
                 $name = ucfirst($model->patient_firstname);
@@ -620,14 +581,7 @@ class PatPatient extends RActiveRecord {
                 }
             },
             'new_user' => function($model) {
-                $active_op = $model->patActiveOp;
-                if (isset($active_op) && !empty($active_op)) {
-                    if ($model->getPatLastSeenAppointment()->count() == 0) {
-                        return true;
-                    }
-                    return false;
-                }
-                return false;
+                return $model->new_user;
             },
             'name_with_int_code' => function($model) {
                 $name = ucfirst($model->patient_firstname);
@@ -666,6 +620,88 @@ class PatPatient extends RActiveRecord {
 
                 $fields = array_merge(parent::fields(), $extend);
                 return $fields;
+            }
+
+            public function getHasalert() {
+                return (!empty($this->activePatientAlert)) ? true : false;
+            }
+
+            public function getIncomplete_profile() {
+                if (!isset($this->patPatientAddress))
+                    return true;
+                else
+                    return $this->patPatientAddress->isIncompleteProfile();
+            }
+
+            public function getNew_user() {
+                $active_op = $this->patActiveOp;
+                if (isset($active_op) && !empty($active_op)) {
+                    if ($this->getPatLastSeenAppointment()->count() == 0) {
+                        return true;
+                    }
+                    return false;
+                }
+                return false;
+            }
+
+            public function getFullcurrentaddress() {
+                if (isset($this->patPatientAddress)) {
+                    $result = '';
+                    if ($this->patPatientAddress->addr_current_address != '') {
+                        $result .= $this->patPatientAddress->addr_current_address;
+                    }
+
+                    if ($this->patPatientAddress->addr_city_id != '') {
+                        $result .= ' ' . $this->patPatientAddress->addrCity->city_name;
+                    }
+
+                    if ($this->patPatientAddress->addr_state_id != '') {
+                        $result .= ' ' . $this->patPatientAddress->addrState->state_name;
+                    }
+
+                    if ($this->patPatientAddress->addr_country_id != '') {
+                        $result .= ' ' . $this->patPatientAddress->addrCountry->country_name;
+                    }
+
+                    return $result;
+                }
+            }
+
+            public function getFullname() {
+                return $this->patient_title_code . ucfirst($this->patient_firstname);
+            }
+
+            public function getPatient_age() {
+                $age = '';
+                if ($this->patient_dob != '' && $this->patient_dob != "0000-00-00")
+                    $age = self::getPatientAge($this->patient_dob);
+
+                return $age;
+            }
+
+            public function getOrg_name() {
+                if (isset($this->tenant->tenant_name))
+                    return $this->tenant->tenant_name;
+            }
+
+            public function getPatient_category() {
+                if (isset($this->patientCategory->patient_short_code)) {
+                    return $this->patientCategory->patient_short_code;
+                }
+            }
+
+            public function getPatient_category_fullname() {
+                if (isset($this->patientCategory->patient_cat_name)) {
+                    return $this->patientCategory->patient_cat_name;
+                }
+            }
+
+            public function getPatient_category_color() {
+                if (isset($this->patientCategory->patient_cat_color) && strtolower($this->patientCategory->patient_cat_color) != '#ffffff') {
+                    return $this->patientCategory->patient_cat_color;
+                } else {
+                    return "#19A9D5";
+                }
             }
 
             public static function getPatientAge($date) {
@@ -729,4 +765,3 @@ class PatPatient extends RActiveRecord {
             }
 
         }
-        

@@ -218,7 +218,7 @@ class PatEncounter extends RActiveRecord {
     }
 
     /**
-     * 
+     *
      * @return type
      */
     public function getPatCurrentAdmissionExecptClinicalDischarge() {
@@ -226,7 +226,7 @@ class PatEncounter extends RActiveRecord {
     }
 
     /**
-     * 
+     *
      * @return type
      */
     public function getPatLastRoomAdmission() {
@@ -234,7 +234,7 @@ class PatEncounter extends RActiveRecord {
     }
 
     /**
-     * 
+     *
      * @return type
      */
     public function getPatAdmissionDischarge() {
@@ -250,7 +250,7 @@ class PatEncounter extends RActiveRecord {
     }
 
     /**
-     * 
+     *
      * @return type
      */
     public function fields() {
@@ -351,10 +351,85 @@ class PatEncounter extends RActiveRecord {
             },
             'consultant_id' => function ($model) {
                 return (isset($model->patLiveAppointmentBooking) ? $model->patLiveAppointmentBooking->consultant_id : '-');
-            }
+            },
+            'consultant_name' => function ($model) {
+                return (isset($model->patLiveAppointmentBooking->consultant->fullname) ? $model->patLiveAppointmentBooking->consultant->fullname : '-');
+            },
+            'apptArrivalData' => function ($model) {
+                if (isset($model->patLiveAppointmentArrival)):
+                    return $model->patLiveAppointmentArrival->getAttributes([
+                        'status_date',
+                        'waiting_elapsed',
+                        'waiting_elapsed_time',
+                        'appt_status',
+                        'status_datetime'
+                    ]);
+                else:
+                    return '-';
+                endif;
+            },
+            'apptSeenData' => function ($model) {
+                if (isset($model->patAppointmentSeen)) {
+                    return $model->patAppointmentSeen->getAttributes([
+                        'status_datetime'
+                    ]);
+                } else {
+                    return '-';
+                }
+            },
+            'apptBookingData' => function ($model) {
+                if (isset($model->patLiveAppointmentBooking)) {
+                    return $model->patLiveAppointmentBooking->getAttributes([
+                        'appt_id',
+                        'status_datetime',
+                        'status_date',
+                        'status_time'
+                    ]);
+                } else {
+                    return '-';
+                }
+            },
+            'apptConsultantData' => function ($model) {
+                if (isset($model->patLiveAppointmentBooking->consultant)) {
+                    return $model->patLiveAppointmentBooking->consultant->getAttributes([
+                        'fullname',
+                        'title_code',
+                        'name'
+                    ]);
+                } else {
+                    return '-';
+                }
+            },
+            'apptPatientData' => function ($model) {
+                if (isset($model->patient)) {
+                    return $model->patient->getAttributes([
+                        'hasalert',
+                        'incomplete_profile',
+                        'new_user',
+                        'patient_guid',
+                        'patient_image',
+                        'fullcurrentaddress',
+                        'fullname',
+                        'patient_age',
+                        'patient_global_int_code',
+                        'patient_category',
+                        'patient_category_fullname',
+                        'patient_mobile',
+                        'patient_id'
+                    ]);
+                } else {
+                    return '-';
+                }
+            },
         ];
-        $fields = array_merge(parent::fields(), $extend);
-        return $fields;
+
+        if (Yii::$app->request->get('addtfields') == 'oplist') {
+            $oplist_keys = ['consultant_id', 'apptArrivalData','apptSeenData','apptConsultantData','apptPatientData','apptBookingData'];
+
+            return array_merge(parent::fields(), array_intersect_key($extend, array_flip($oplist_keys)));
+        }
+
+        return array_merge(parent::fields(), $extend);
     }
 
     public function getTotalCharge() {

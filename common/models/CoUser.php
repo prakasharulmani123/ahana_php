@@ -132,13 +132,13 @@ class CoUser extends RActiveRecord {
      * @return ActiveQuery
      */
     public function getUsersRoles() {
-        
+
         if(isset(Yii::$app->user->identity->logged_tenant_id))
-        {    
+        {
             return $this->hasMany(CoUsersRoles::className(), ['user_id' => 'user_id'])->andWhere(['tenant_id' => Yii::$app->user->identity->logged_tenant_id]);
         }else{
             return $this->hasMany(CoUsersRoles::className(), ['user_id' => 'user_id']);
-        }    
+        }
     }
 
     /**
@@ -207,7 +207,7 @@ class CoUser extends RActiveRecord {
                 return (isset($model->speciality) ? $model->speciality->speciality_name : '-');
             },
             'fullname' => function ($model) {
-                return $model->title_code . ucfirst($model->name);
+                return $model->fullname;
             },
             'consult_speciality_name' => function ($model) {
                 $speciality_name = isset($model->speciality) ? " ( ".$model->speciality->speciality_name." )" : "";
@@ -216,6 +216,10 @@ class CoUser extends RActiveRecord {
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
+    }
+
+    public function getFullname() {
+        return $this->title_code . ucfirst($this->name);
     }
 
     public static function getMyUserlist() {
@@ -228,7 +232,7 @@ class CoUser extends RActiveRecord {
             $list = self::find()->status($status)->active()->careprovider($care_provider)->all();
         else
             $list = self::find()->deleted()->careprovider($care_provider)->all();
-//        
+//
 //        echo "<pre>";
 //        print_r($list);exit;
 
