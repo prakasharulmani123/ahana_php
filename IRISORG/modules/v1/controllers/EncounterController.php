@@ -449,6 +449,7 @@ class EncounterController extends ActiveController {
         if (isset($get['patient_id']))
             $patient_id = $get['patient_id'];
 
+        $encounter_type = 'IP,OP';
         if (isset($get['encounter_type']))
             $encounter_type = $get['encounter_type'];
 
