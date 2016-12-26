@@ -392,9 +392,7 @@ class PatEncounter extends RActiveRecord {
             'apptConsultantData' => function ($model) {
                 if (isset($model->patLiveAppointmentBooking->consultant)) {
                     return $model->patLiveAppointmentBooking->consultant->getAttributes([
-                        'fullname',
-                        'title_code',
-                        'name'
+                        'fullname'
                     ]);
                 } else {
                     return '-';

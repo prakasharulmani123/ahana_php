@@ -288,44 +288,6 @@ class EncounterController extends ActiveController {
 
         $result = [];
 
-        $total_booking = "(SELECT
-                            COUNT(*)
-                        FROM `pat_encounter` pe
-                            LEFT JOIN `pat_appointment` pa
-                                ON `pe`.`encounter_id` = `pa`.`encounter_id`
-                        WHERE ((((`pe`.`status` = '1')
-                            AND (`pe`.`tenant_id` = '{$tenant_id}')
-                            AND (`pa`.`appt_status` = 'B'))
-                            AND (`pe`.`encounter_type` = 'OP'))
-                            AND (DATE(`pe`.`encounter_date`) = '{$date}'))
-                            AND (`pa`.`consultant_id` = `pat_appointment`.`consultant_id`))";
-
-        $seen_query = "(SELECT
-                            COUNT(*)
-                        FROM `pat_encounter` pe
-                            LEFT JOIN `pat_appointment` pa
-                                ON `pe`.`encounter_id` = `pa`.`encounter_id`
-                        WHERE ((((`pe`.`status` = '0')
-                            AND (`pe`.`tenant_id` = '{$tenant_id}')
-                            AND (`pa`.`appt_status` = 'S'))
-                            AND (`pe`.`encounter_type` = 'OP'))
-                            AND (DATE(`pe`.`encounter_date`) = '{$date}'))
-                            AND (`pa`.`consultant_id` = `pat_appointment`.`consultant_id`))";
-
-        $arrived_query = "(SELECT
-                                COUNT(*)
-                            FROM `pat_encounter` pe
-                                LEFT JOIN `pat_appointment` pa
-                                    ON `pe`.`encounter_id` = `pa`.`encounter_id`
-                            WHERE ((((`pe`.`status` = '1')
-                                AND (`pe`.`tenant_id` = '{$tenant_id}')
-                                AND (`pa`.`appt_status` = 'A'))
-                                AND (`pe`.`encounter_type` = 'OP'))
-                                AND (DATE(`pe`.`encounter_date`) = '{$date}'))
-                                AND (`pa`.`consultant_id` = `pat_appointment`.`consultant_id`))";
-
-        $booked_query = "(SELECT total_booking) - (SELECT arrived_count)";
-
         $connection = Yii::$app->client;
         $command = $connection->createCommand("SELECT a.consultant_id,
                 (
@@ -383,14 +345,14 @@ class EncounterController extends ActiveController {
         $details = PatEncounter::find()
                 ->joinWith('patAppointments')
                 ->addSelect([
-                    '{{pat_encounter}}.*',
+                    '{{pat_encounter}}.*'
                 ])
                 ->where($condition)
                 ->encounterType("OP")
                 ->andWhere($query)
                 ->orderBy([
-                    'pat_appointment.appt_status' => SORT_ASC,
-                    'pat_appointment.status_time' => SORT_ASC,
+                    '{{pat_appointment}}.appt_status' => SORT_ASC,
+                    '{{pat_appointment}}.status_time' => SORT_ASC,
                 ])
                 ->all();
 
