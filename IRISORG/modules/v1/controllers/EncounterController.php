@@ -383,11 +383,7 @@ class EncounterController extends ActiveController {
         $details = PatEncounter::find()
                 ->joinWith('patAppointments')
                 ->addSelect([
-                    '*',
-//                    "{$total_booking} as total_booking",
-//                    "{$seen_query} as seen_count",
-//                    "{$arrived_query} as arrived_count",
-//                    "{$booked_query} as booked_count",
+                    '{{pat_encounter}}.*',
                 ])
                 ->where($condition)
                 ->encounterType("OP")
