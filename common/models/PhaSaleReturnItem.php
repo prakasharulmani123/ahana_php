@@ -70,8 +70,9 @@ class PhaSaleReturnItem extends RActiveRecord {
     }
     
     public function validateExpiryDate($attribute, $params) {
-        if ($this->$attribute <= 0)
-            $this->addError($attribute, "{$this->getAttributeLabel($attribute)} must be greater than 0 for {$this->product->fullname}");
+        if($this->isNewRecord && strtotime(date('Y-m', strtotime('+1 months'))) >= strtotime(date('Y-m', strtotime($this->$attribute)))){
+            $this->addError($attribute, "{$this->getAttributeLabel($attribute)} must be greater than one month");
+        }
     }
     
     /**

@@ -79,9 +79,9 @@ class PharmacysalereturnController extends ActiveController {
             foreach ($post['product_items'] as $key => $product_item) {
                 if($product_item['quantity'] > 0){
                     $item_model = new PhaSaleReturnItem();
-//                    if (isset($product_item['sale_ret_item_id'])) {
-//                        $item = PhaSaleReturnItem::find()->tenant()->andWhere(['sale_ret_item_id' => $product_item['sale_ret_item_id']])->one();
-//                    }
+                    if (isset($product_item['sale_ret_item_id'])) {
+                        $item_model = PhaSaleReturnItem::find()->tenant()->andWhere(['sale_ret_item_id' => $product_item['sale_ret_item_id']])->one();
+                    }
                     $item_model->scenario = 'saveform';
                     $item_model->attributes = $product_item;
                     $valid = $item_model->validate() && $valid;
