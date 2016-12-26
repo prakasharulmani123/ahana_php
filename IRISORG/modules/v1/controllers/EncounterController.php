@@ -394,7 +394,7 @@ class EncounterController extends ActiveController {
                 ->andWhere($query)
                 ->orderBy([
                     'pat_appointment.appt_status' => SORT_ASC,
-                    'pat_appointment.status_timea' => SORT_ASC,
+                    'pat_appointment.status_time' => SORT_ASC,
                 ])
                 ->all();
 
