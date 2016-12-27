@@ -173,7 +173,7 @@ angular.module('app')
               {
                   name: 'smart-table',
                   files: [
-                      'bower_components/angular-smart-table/dist/smart-table.min.js'
+//                      'bower_components/angular-smart-table/dist/smart-table.min.js'
                   ]
               }
           ]
