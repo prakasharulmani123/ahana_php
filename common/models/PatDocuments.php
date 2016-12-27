@@ -37,6 +37,7 @@ class PatDocuments extends RActiveRecord {
     public $relationship;
     public $primary_care_giver;
     public $information;
+    public $information_adequacy;
     public $total_duration;
     public $mode_of_onset;
     public $course_type;
@@ -124,7 +125,7 @@ class PatDocuments extends RActiveRecord {
         return [
             [['patient_id', 'doc_type_id', 'encounter_id'], 'required'],
             [['name', 'age', 'gender', 'address', 'education', 'martial_status', 'relationship'], 'required', 'on' => 'CH'],
-            [['information', 'total_duration', 'mode_of_onset', 'course_type', 'nature'], 'required', 'on' => 'CH'],
+            [['information', 'information_adequacy', 'total_duration', 'mode_of_onset', 'course_type', 'nature'], 'required', 'on' => 'CH'],
             [['tenant_id', 'patient_id', 'doc_type_id', 'encounter_id', 'created_by', 'modified_by'], 'integer'],
             [['document_xml', 'status'], 'string'],
             [['rb_pb_treatmenthistory'], 'required', 'when' => function($model) {
@@ -133,7 +134,7 @@ class PatDocuments extends RActiveRecord {
             [['RBtypeoffamily', 'RBtypeofmarriage'], 'required', 'when' => function($model) {
             return $model->family_history == 'true';
         }],
-            [['RBpbprenatal', 'RBpbperinatal', 'RBpbperinatal2', 'RBpbdevelopmentmilestone', 'RBpbparentallack'], 'required', 'when' => function($model) {
+            [['RBpbprenatal', 'RBpbperinatal', 'RBpbperinatal2', 'RBpbdevelopmentmilestone'], 'required', 'when' => function($model) {
             return $model->birth_and_development == 'true';
         }],
             [['RBpbbreakstudy', 'RBpbfrechangeschool', 'RBpbacademicperfor', 'RBpbteacherrelation', 'RBpbstudentrelation'], 'required', 'when' => function($model) {
@@ -221,6 +222,8 @@ class PatDocuments extends RActiveRecord {
             'DDLInsight' => 'Insight',
             'RBKnowledgeaboutmentalillness' => 'Knowledge about mental illness',
             'RBAttitudeillness' => 'Attitude towards illness & treatment',
+            'information' => 'Information (Reliability)',
+            'information_adequacy' => 'Information (Adequacy)',
         ];
     }
 

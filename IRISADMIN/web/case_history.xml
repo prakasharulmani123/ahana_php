@@ -227,13 +227,21 @@
                 </FIELD>
             </FIELD>
             
-            <FIELD id="information" header2Class="Informant" type="RadioButtonList" label="Information" required="true">
+            <FIELD id="information" header2Class="Informant" type="RadioButtonList" label="Information (Reliability)" required="true">
                 <PROPERTIES>
                     <PROPERTY name="name">information</PROPERTY>
                 </PROPERTIES>
                 <LISTITEMS>
                     <LISTITEM value="Reliable" id="RBInfo1" Selected="False">Reliable</LISTITEM>
                     <LISTITEM value="Unreliable" id="RBInfo2" Selected="False">Unreliable</LISTITEM>
+                </LISTITEMS>
+            </FIELD>
+            
+            <FIELD id="information_adequacy" header2Class="Informant" type="RadioButtonList" label="Information (Adequacy)" required="true">
+                <PROPERTIES>
+                    <PROPERTY name="name">information_adequacy</PROPERTY>
+                </PROPERTIES>
+                <LISTITEMS>
                     <LISTITEM value="Adequate" id="RBInfo3" Selected="False">Adequate</LISTITEM>
                     <LISTITEM value="Inadequate" id="RBInfo4" Selected="False">Inadequate</LISTITEM>
                 </LISTITEMS>
@@ -486,7 +494,7 @@
         <PANELBODY>
             <FIELD type="Header2" label="Past Psychiatric History" class="past_psychiatric_history"></FIELD>
             
-            <FIELD id="similar_episodes" header2Class="past_psychiatric_history" type="RadioButtonList" label="Similar Episodes" Backcontrols="hide" Backdivid="similar_episodes_ddl_div">
+            <FIELD id="similar_episodes" header2Class="past_psychiatric_history" type="RadioButtonList" label="Past Episodes" Backcontrols="hide" Backdivid="similar_episodes_ddl_div">
                 <PROPERTIES>
                     <PROPERTY name="name">similar_episodes</PROPERTY>
                 </PROPERTIES>
@@ -569,6 +577,7 @@
                             <LISTITEM value="Mycocardial Infarction" Selected="False">Mycocardial Infarction</LISTITEM>
                             <LISTITEM value="Allergies" Selected="False">Allergies</LISTITEM>
                             <LISTITEM value="IHD" Selected="False">IHD</LISTITEM>
+                            <LISTITEM value="Thyroid dysfunction" Selected="False">Thyroid dysfunction</LISTITEM>
                         </LISTITEMS>
                     </FIELD>
                     
@@ -782,6 +791,14 @@
                             <LISTITEM value="75" Selected="False">75</LISTITEM>
                             <LISTITEM value="100" Selected="False">100</LISTITEM>
                         </LISTITEMS>
+                    </FIELD>
+                    
+                    <FIELD id="date_of_last_ect" type="TextBox" label="Date of Last ECT">
+                        <PROPERTIES>
+                            <PROPERTY name="id">date_of_last_ect</PROPERTY>
+                            <PROPERTY name="name">date_of_last_ect</PROPERTY>
+                            <PROPERTY name="class">form-control</PROPERTY>
+                        </PROPERTIES>
                     </FIELD>
                 </FIELD>
                 
@@ -1204,13 +1221,14 @@
                         </FIELD>
                     </FIELD>
                 
-                    <FIELD id="RBpbparentallack" header2Class="Birth_and_Development" type="RadioButtonList" label="Parental Lack" Backcontrols="hide" Backdivid="parentallackDiv" required="true">
+                    <FIELD id="RBpbparentallack" header2Class="Birth_and_Development" type="RadioButtonList" label="Parental Lack" Backcontrols="hide" Backdivid="parentallackDiv">
                         <PROPERTIES>
                             <PROPERTY name="name">RBpbparentallack</PROPERTY>
                         </PROPERTIES>
                         <LISTITEMS>
                             <LISTITEM value="Mother" id="RBpbparentallack1" Selected="False" onclick="OThersvisible(this.id,'parentallackDiv','block');">Mother</LISTITEM>
                             <LISTITEM value="Father" id="RBpbparentallack2" Selected="False" onclick="OThersvisible(this.id,'parentallackDiv','block');">Father</LISTITEM>
+                            <LISTITEM value="Both" id="RBpbparentallack3" Selected="False" onclick="OThersvisible(this.id,'parentallackDiv','block');">Both</LISTITEM>
                         </LISTITEMS>
                         <FIELD id="RBparentallackreason" type="RadioButtonList" label="Reason: ">
                             <PROPERTIES>
@@ -2034,8 +2052,8 @@
                         <PROPERTY name="name">RBRelevance</PROPERTY>
                     </PROPERTIES>
                     <LISTITEMS>
-                        <LISTITEM value="Normal" id="RBRelevance1" Selected="False">Normal</LISTITEM>
-                        <LISTITEM value="Increased" id="RBRelevance2" Selected="False">Increased</LISTITEM>
+                        <LISTITEM value="Relevant" id="RBRelevance1" Selected="False">Relevant</LISTITEM>
+                        <LISTITEM value="Irrelevant" id="RBRelevance2" Selected="False">Irrelevant</LISTITEM>
                     </LISTITEMS>
                 </FIELD>
                 

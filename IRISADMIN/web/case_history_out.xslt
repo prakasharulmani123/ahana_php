@@ -110,7 +110,8 @@
                                                             </xsl:if>
                                                         </xsl:for-each>
                                                     </xsl:attribute>
-                                                    <xsl:value-of select="VALUE" disable-output-escaping="yes"></xsl:value-of>
+                                                    <!--<xsl:value-of select="VALUE" disable-output-escaping="yes"></xsl:value-of>-->
+                                                    <xsl:value-of select="VALUE" ></xsl:value-of>
                                                 </div>
                                             </div>
                                         </div>
@@ -613,7 +614,7 @@
                                                                                 </xsl:if>
                                                                             </xsl:for-each>
                                                                         </xsl:attribute>
-                                                                        <xsl:value-of select="VALUE" disable-output-escaping="yes"></xsl:value-of>
+                                                                        <xsl:value-of select="VALUE" ></xsl:value-of>
                                                                     </div>
                                                                 </div>
                                                             </div>

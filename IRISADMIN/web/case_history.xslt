@@ -1394,8 +1394,12 @@
                                                                     <xsl:if test="@required='true'">
                                                                         <span class="required"> *</span>
                                                                     </xsl:if>
+                                                                    <a class="panelbar_clear pull-right" data-divid="{@id}">(X)</a>
                                                                 </label>&#160;&#160;
                                                                 <div class="col-sm-8">
+                                                                    <xsl:attribute name="id">
+                                                                        <xsl:value-of select="@id"></xsl:value-of>
+                                                                    </xsl:attribute>
                                                                     <xsl:for-each select="LISTITEMS/LISTITEM">
                                                                         <input type="radio">
                                                                             <xsl:attribute name="value">
