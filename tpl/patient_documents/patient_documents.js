@@ -161,6 +161,16 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     source: axis2,
                 });
             });
+
+            $("#date_of_last_ect").datepicker({
+                changeMonth: true,
+                changeYear: true,
+                showButtonPanel: false,
+                dateFormat: 'yy-mm-dd',
+//                onClose: function(dateText, inst) { 
+//                    $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
+//                }
+            });
         }
 
 // Initialize Create Form
