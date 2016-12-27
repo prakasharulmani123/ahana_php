@@ -190,7 +190,7 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
             modalInstance.result.then(function (selectedItem) {
                 $scope.selected = selectedItem;
             }, function () {
-                $scope.loadOutPatientsList($scope.op_type);
+//                $scope.loadOutPatientsList($scope.op_type);
                 $log.info('Modal dismissed at: ' + new Date());
             });
         };

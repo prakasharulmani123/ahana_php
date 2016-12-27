@@ -2,13 +2,13 @@
 
 /* Controllers */
 angular.module('app')
-        .controller('AppCtrl', ['$scope', '$localStorage', '$window', '$rootScope', '$state', '$cookieStore', '$http', 'CommonService', '$timeout', 'AuthenticationService', 'toaster', 'hotkeys', '$modal', '$filter', 'deviceDetector',
-            function ($scope, $localStorage, $window, $rootScope, $state, $cookieStore, $http, CommonService, $timeout, AuthenticationService, toaster, hotkeys, $modal, $filter, deviceDetector) {
+        .controller('AppCtrl', ['$scope', '$localStorage', '$window', '$rootScope', '$state', '$cookieStore', '$http', 'CommonService', '$timeout', 'AuthenticationService', 'toaster', 'hotkeys', '$modal', '$filter', 'deviceDetector', 'IO_BARCODE_TYPES',
+            function ($scope, $localStorage, $window, $rootScope, $state, $cookieStore, $http, CommonService, $timeout, AuthenticationService, toaster, hotkeys, $modal, $filter, deviceDetector, IO_BARCODE_TYPES) {
 //                socket.forward('someEvent', $scope);
 
                 //Angular module to detect OS / Browser / Device
                 $scope.deviceDetector = deviceDetector;
-                
+
                 $scope.$on('socket:someEvent', function (ev, data) {
                     console.log($scope.theData);
                 });
@@ -63,6 +63,18 @@ angular.module('app')
                         patientMaritalStatus: '',
                         patientUnseenNotesCount: '0',
                         patientUnseenVitalsCount: '0',
+                    },
+                    IO: {
+                        types: IO_BARCODE_TYPES,
+                        code: '1234567890128',
+                        type: 'CODE128B',
+                        barcodeOptions: {
+                            displayValue: true,
+                            textAlign: 'center',
+                            fontSize: 18,
+                            height: 72,
+                            width: 1.2,
+                        },
                     }
                 }
 
@@ -189,7 +201,7 @@ angular.module('app')
                                         $scope.msg.errorMessage = "An Error has occured while loading patient!";
                                     } else {
                                         $scope.patientObj = patient;
-                                        
+
                                         $scope.setPatientAleratHtml(patient);
 
                                         $rootScope.commonService.GetLabelFromValue(patient.patient_gender, 'GetGenderList', function (response) {
@@ -206,9 +218,9 @@ angular.module('app')
                                 });
                     }
                 };
-                
-                $scope.setPatientAleratHtml = function(patient){
-                    if(patient.alert){
+
+                $scope.setPatientAleratHtml = function (patient) {
+                    if (patient.alert) {
                         var alert_link = '#/patient/alert/' + patient.patient_guid;
                         $scope.patient_alert_html = '<div>' + patient.alert + '<br><a class="text-info alert-read-more" ui-sref="patient.alert({id: $scope.patientObj.patient_guid})" href="' + alert_link + '">ReadMore</a><div>';
                     }

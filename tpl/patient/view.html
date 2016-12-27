@@ -9,7 +9,7 @@
                 {% include 'tpl/blocks/alert.html' %}
             </div>
             <div class="row">
-                <div class="col-sm-10" ng-if="view_data.childrens_global_ids != ''"> 
+                <div class="col-sm-6" ng-show="view_data.childrens_global_ids != ''">
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <span ng-if="view_data.migration_created_by != '' ">
@@ -18,11 +18,14 @@
                             <span>
                                 <b> Secondary Patient Id's :  </b> {{view_data.childrens_global_ids}}
                             </span>
-                        </div> 
+                        </div>
                     </div>
                 </div>
-                <div class="col-sm-2 pull-right"> 
+                <div class="col-sm-4 pull-right">
                     <div class="btn-group btn-group-justified">
+                        <a class="btn btn-default" ng-click="printLabel()">
+                            <i class="fa fa-print"></i>  Print Label
+                        </a>
                         <a class="btn btn-info" ng-click="changeMode('update')">
                             <i class="fa fa-pencil"></i>  Update Patient
                         </a>
@@ -33,7 +36,7 @@
                 <div class="col-sm-6">
                     <form name="formValidate" class="form-horizontal form-validation">
                         <div class="panel panel-default">
-                            <div class="panel-body">                    
+                            <div class="panel-body">
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">Registration Date:</label>
                                     <div class="col-sm-9">
@@ -88,7 +91,7 @@
                                         <p>{{view_data.patient_mobile}}</p>
                                     </div>
                                 </div>
-                                <div class="line line-dashed b-b line-lg "></div>                                
+                                <div class="line line-dashed b-b line-lg "></div>
 
                                 <!--                                <div class="form-group">
                                                                     <label class="col-sm-3 control-label">Billing:     </label>
@@ -190,7 +193,7 @@
                                         <p>  {{view_data.address.addr_current_address}}</p>
                                     </div>
                                 </div>
-                                <div class="line line-dashed b-b line-lg "></div>                                
+                                <div class="line line-dashed b-b line-lg "></div>
 
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">City:  </label>
@@ -230,7 +233,7 @@
                                         <p>  {{view_data.address.addr_perm_address}}</p>
                                     </div>
                                 </div>
-                                <div class="line line-dashed b-b line-lg "></div>                                
+                                <div class="line line-dashed b-b line-lg "></div>
 
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">City:  </label>
@@ -493,7 +496,7 @@
                                         <label class="i-checks m-b-none">
                                             <input ng-model="patdata.is_permanent" type="checkbox" name="b[]" ng-click="CopyAddress()"><i></i>
                                         </label>
-                                        <b>Same as current address</b> 
+                                        <b>Same as current address</b>
                                     </div>
                                 </div>
                                 <div class="line line-dashed b-b line-lg "></div>
@@ -544,3 +547,7 @@
         </div>
     </div>
 </div>
+
+<script type="text/ng-template" id="modal.patient_label.html">
+    <div ng-include="'tpl/modal_form/modal.patient_label.html'"></div>
+</script>

@@ -626,7 +626,11 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('tpl/room_types_rooms/room_types_rooms.js');
+                            return $ocLazyLoad.load(['smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/room_types_rooms/room_types_rooms.js');
+                                    }
+                            );
                         }]
                 }
             })
@@ -2577,7 +2581,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
-            
+
             //Myworks Patient Merge
             .state('myworks.patientMerge', {
                 url: '/patientMerge',

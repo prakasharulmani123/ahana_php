@@ -1,0 +1,30 @@
+<div class="bg-light lter b-b wrapper-md">
+    <h1 class="m-n h3">Patient Label</h1>
+</div>
+<div class="wrapper-md">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row" id="print-area">
+                        <div class="col-xs-6">
+                            <b>Name:</b> {{data.view_data.fullname}}<br />
+                            <b>ID:</b> {{data.view_data.patient_global_int_code}}<br />
+                            <b>Gender:</b> {{data.app.patientDetail.patientSex}}<br />
+                            <b>Age: </b> {{data.view_data.patient_age}}
+                        </div>
+                        <div class="col-xs-6 text-right">
+                            <io-barcode code="{{data.view_data.patient_global_int_code}}" type="{{data.app.IO.type}}" options="data.app.IO.barcodeOptions"></io-barcode>
+                        </div>
+                    </div>
+                </div>
+                <footer class="panel-footer text-right bg-light lter">
+                    <button class="btn m-b-xs  btn-success save-btn" ng-click="print()">Print</button>
+                    &nbsp;
+                    <button class="btn m-b-xs  btn-dark" ng-click="$close()"><i class="fa fa-times"></i> Close</button>
+                    &nbsp;
+                </footer>
+            </div>
+        </div>
+    </div>
+</div>

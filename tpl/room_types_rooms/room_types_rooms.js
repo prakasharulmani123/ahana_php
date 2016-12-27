@@ -24,9 +24,9 @@ app.controller('RoomTypesRoomsController', ['$scope', '$http', '$filter', '$stat
                     .success(function (rooms) {
                         $scope.isLoading = false;
                         $scope.rowCollection = rooms;
-                        
+
                          //Avoid pagination problem, when come from other pages.
-                        $scope.footable_redraw();
+//                        $scope.footable_redraw();
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading roomtypes!";
