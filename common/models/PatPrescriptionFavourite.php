@@ -150,6 +150,12 @@ class PatPrescriptionFavourite extends RActiveRecord
             'drug_name' => function ($model) {
                 return (isset($model->drugClass->drug_name) ? $model->drugClass->drug_name : '-');
             },
+            'description_routes' => function ($model) {
+                return (isset($model->product->productDescription) ? $model->product->productDescription->routes : '-');
+            },
+            'product_price' => function ($model) {
+                return (isset($model->product->phaLatestBatch) ? $model->product->phaLatestBatch->phaProductBatchRate->mrp : 0);
+            },
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
