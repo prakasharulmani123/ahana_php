@@ -55,13 +55,63 @@ class RoomController extends ActiveController {
     }
 
     public function actionGetrooms() {
-        $model = CoRoom::find()->tenant()->active()->orderBy(['created_at' => SORT_DESC])->all();
-        $data = [];
-        foreach ($model as $key => $value) {
-            $data[$key] = $value->attributes;
-            $data[$key]['roomTypes'] = $value->roomTypes;
+//        $model = CoRoom::find()->tenant()->active()->orderBy(['created_at' => SORT_DESC])->all();
+//        $data = [];
+//        foreach ($model as $key => $value) {
+//            $data[$key] = $value->attributes;
+//            $data[$key]['roomTypes'] = $value->roomTypes;
+//        }
+//        return $data;
+
+        $requestData = $_REQUEST;
+
+        $modelClass = $this->modelClass;
+        $totalData = $modelClass::find()->tenant()->active()->count();
+        $totalFiltered = $totalData;
+
+        if (!empty($requestData['search']['value'])) {
+            $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+            $totalFiltered = $modelClass::find()->tenant()->active()
+                    ->andFilterWhere([
+                        'OR',
+                        ['like', 'co_room.bed_name', $requestData['search']['value']],
+                    ])
+                    ->count();
+
+            $rooms = $modelClass::find()->tenant()->active()
+                    ->andFilterWhere([
+                        'OR',
+                        ['like', 'co_room.bed_name', $requestData['search']['value']],
+                    ])
+                    ->limit($requestData['length'])
+                    ->offset($requestData['start'])
+                    ->orderBy(['created_at' => SORT_DESC])
+                    ->all();
+        } else {
+            $rooms = $modelClass::find()
+                    ->tenant()
+                    ->active()
+                    ->limit($requestData['length'])
+                    ->offset($requestData['start'])
+                    ->orderBy(['created_at' => SORT_DESC])
+                    ->all();
         }
-        return $data;
+
+        $data = array();
+        foreach ($rooms as $room) {
+            $nestedData = array();
+            $nestedData['room_id'] = $room->room_id;
+            $nestedData['bed_name'] = $room->bed_name;
+            $nestedData['roomTypes'] = \yii\helpers\ArrayHelper::map($room->roomTypes, 'room_type_id', 'room_type_name');
+            $data[] = $nestedData;
+        }
+
+        return array(
+            "draw" => intval($requestData['draw']),
+            "recordsTotal" => intval($totalData),
+            "recordsFiltered" => intval($totalFiltered),
+            "data" => $data   // total data array
+        );
     }
 
     //room_types_rooms.js
@@ -106,7 +156,7 @@ class RoomController extends ActiveController {
             return ['success' => false, 'message' => 'Please Fill the Form'];
         }
     }
-    
+
     public function actionGetroomlist() {
         $tenant = null;
         $status = '1';
@@ -122,7 +172,7 @@ class RoomController extends ActiveController {
 
         if (isset($get['deleted']))
             $deleted = $get['deleted'] == 'true';
-        
+
         if (isset($get['occupied_status']))
             $occupied_status = $get['occupied_status'];
 
