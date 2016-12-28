@@ -113,7 +113,7 @@ class EncounterController extends ActiveController {
 
                 $appt_model->encounter_id = $model->encounter_id;
 
-                //If appointment status is A (Arrived), then save first B (Booked) record
+                //If appointment status is A (Arrived), then save first B (Booked) record 
                 if ($appt_model->appt_status == "A") {
                     $appt_model->appt_status = "B";
                     $appt_model->save(false);
@@ -236,7 +236,7 @@ class EncounterController extends ActiveController {
 
             $activeEncounter = PatPatient::getActiveEncounterByPatientGuid($get['id']);
 
-            return ['success' => true, 'encounters' => $data, 'active_encounter' => $activeEncounter];
+            return ['success' => true, 'encounters' => $data, 'active_encounter' => $activeEncounter ? : null];
         } else {
             return ['success' => false, 'message' => 'Invalid Access'];
         }
@@ -474,29 +474,20 @@ class EncounterController extends ActiveController {
         $post = Yii::$app->getRequest()->post();
         if (!empty($post)) {
             $patient = PatPatient::find()->where(['patient_guid' => $post['patient_id']])->one();
-            $model = PatEncounter::find()
+            $enc_type = isset($post['encounter_type']) ? $post['encounter_type'] : ['IP', 'OP'];
+            $encounter = PatEncounter::find()
                     ->tenant()
+                    ->andWhere(['encounter_type' => $enc_type])
                     ->andWhere(['patient_id' => $patient->patient_id])
-                    ->orderBy(['encounter_id' => SORT_DESC])
-                    ->one();
+                    ->orderBy(['encounter_id' => SORT_DESC]);
+            
+            $model = $encounter->one();
 
             if (!empty($model) && ((empty($model->patAdmissionDischarge) && empty($model->patAdmissionCancel) && $model->encounter_type == 'IP') || $model->status == '1')) {
-                return ['success' => true, 'model' => $model];
+                return ['success' => true, 'model' => $model, 'encounters' => $encounter->andWhere(['status' => '1'])->all()];
             } else {
                 return ['success' => false];
             }
-
-//            $model = PatEncounter::find()
-//                    ->tenant()
-//                    ->status()
-//                    ->andWhere(['patient_id' => $patient->patient_id])
-//                    ->one();
-//
-//            if (!empty($model)) {
-//                return ['success' => true, 'model' => $model];
-//            } else {
-//                return ['success' => false];
-//            }
         }
     }
 

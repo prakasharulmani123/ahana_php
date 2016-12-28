@@ -262,9 +262,14 @@ class PharmacyproductController extends ActiveController {
             //Retrieve One product
             $command = $this->_connection->createCommand("
                     SELECT a.product_id, a.product_name, b.generic_id, b.generic_name, c.drug_class_id, c.drug_name, 
-                    CONCAT(b.generic_name, ' // ', a.product_name, ' | ', a.product_unit_count, ' | ', a.product_unit) AS prescription, '' as selected, a.product_description_id
+                    CONCAT(
+                        IF(b.generic_name IS NOT NULL, b.generic_name, ''),
+                        IF(a.product_name IS NOT NULL, CONCAT(' // ', a.product_name), ''),
+                        IF(a.product_unit_count IS NOT NULL, CONCAT(' | ', a.product_unit_count), ''),
+                        IF(a.product_unit IS NOT NULL, CONCAT(' | ', a.product_unit), '')
+                    ) AS prescription, '' as selected, a.product_description_id
                     FROM pha_product a
-                    JOIN pha_generic b
+                    LEFT OUTER JOIN pha_generic b
                     ON b.generic_id = a.generic_id
                     LEFT OUTER JOIN pha_drug_class c
                     ON c.drug_class_id = a.drug_class_id
@@ -277,9 +282,14 @@ class PharmacyproductController extends ActiveController {
             //Retrieve (product && generic || drug)
             $command = $this->_connection->createCommand("
                     SELECT a.product_id, a.product_name, b.generic_id, b.generic_name, c.drug_class_id, c.drug_name, 
-                    CONCAT(b.generic_name, ' // ', a.product_name, ' | ', a.product_unit_count, ' | ', a.product_unit) AS prescription, '' as selected, a.product_description_id
+                    CONCAT(
+                        IF(b.generic_name IS NOT NULL, b.generic_name, ''),
+                        IF(a.product_name IS NOT NULL, CONCAT(' // ', a.product_name), ''),
+                        IF(a.product_unit_count IS NOT NULL, CONCAT(' | ', a.product_unit_count), ''),
+                        IF(a.product_unit IS NOT NULL, CONCAT(' | ', a.product_unit), '')
+                    ) AS prescription, '' as selected, a.product_description_id
                     FROM pha_product a
-                    JOIN pha_generic b
+                    LEFT OUTER JOIN pha_generic b
                     ON b.generic_id = a.generic_id
                     LEFT OUTER JOIN pha_drug_class c
                     ON c.drug_class_id = a.drug_class_id
@@ -297,9 +307,14 @@ class PharmacyproductController extends ActiveController {
             //Retrieve (product || generic || drug)
             $command = $this->_connection->createCommand("
                     SELECT a.product_id, a.product_name, b.generic_id, b.generic_name, c.drug_class_id, c.drug_name, 
-                    CONCAT(b.generic_name, ' // ', a.product_name, ' | ', a.product_unit_count, ' | ', a.product_unit) AS prescription, '' as selected, a.product_description_id
+                    CONCAT(
+                        IF(b.generic_name IS NOT NULL, b.generic_name, ''),
+                        IF(a.product_name IS NOT NULL, CONCAT(' // ', a.product_name), ''),
+                        IF(a.product_unit_count IS NOT NULL, CONCAT(' | ', a.product_unit_count), ''),
+                        IF(a.product_unit IS NOT NULL, CONCAT(' | ', a.product_unit), '')
+                    ) AS prescription, '' as selected, a.product_description_id
                     FROM pha_product a
-                    JOIN pha_generic b
+                    LEFT OUTER JOIN pha_generic b
                     ON b.generic_id = a.generic_id
                     LEFT OUTER JOIN pha_drug_class c
                     ON c.drug_class_id = a.drug_class_id

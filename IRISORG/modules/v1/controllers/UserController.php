@@ -42,7 +42,7 @@ class UserController extends ActiveController {
         $behaviors = parent::behaviors();
         $behaviors['authenticator'] = [
             'class' => QueryParamAuth::className(),
-            'only' => ['dashboard', 'createuser', 'updateuser', 'getuser', 'getlogin', 'updatelogin', 'getuserdata', 'getuserslistbyuser', 'assignroles', 'assignbranches', 'getmybranches', 'getswitchedbrancheslist', 'getdoctorslist', 'checkstateaccess', 'getusercredentialsbytoken', 'passwordauth', 'changepassword'],
+            'only' => ['dashboard', 'createuser', 'updateuser', 'getuser', 'getlogin', 'updatelogin', 'getuserdata', 'getuserslistbyuser', 'assignroles', 'assignbranches', 'getmybranches', 'getswitchedbrancheslist', 'getdoctorslist', 'getdoctorslistforpatient', 'checkstateaccess', 'getusercredentialsbytoken', 'passwordauth', 'changepassword'],
         ];
         $behaviors['contentNegotiator'] = [
             'class' => ContentNegotiator::className(),
@@ -483,6 +483,46 @@ class UserController extends ActiveController {
             $care_provider = $get['care_provider'];
 
         return ['doctorsList' => CoUser::getDoctorsList($tenant, $care_provider, $status, $deleted)];
+    }
+
+    public function actionGetdoctorslistforpatient() {
+        $tenant = null;
+        $status = '1';
+        $deleted = false;
+        $care_provider = '1';
+
+        $get = Yii::$app->getRequest()->get();
+
+        if (isset($get['tenant']))
+            $tenant = $get['tenant'];
+
+        if (isset($get['status']))
+            $status = strval($get['status']);
+
+        if (isset($get['deleted']))
+            $deleted = $get['deleted'] == 'true';
+
+        if (isset($get['care_provider']))
+            $care_provider = $get['care_provider'];
+        
+        $doctors = CoUser::getDoctorsList($tenant, $care_provider, $status, $deleted);
+        
+        $patient = \common\models\PatPatient::getPatientByGuid($get['patient_guid']);
+        if($patient->patActiveOPEncounters){
+            $exist_doc = [];
+            
+            foreach ($patient->patActiveOPEncounters as $op_enc) {
+                $exist_doc[] = $op_enc->patLiveAppointmentBooking ? $op_enc->patLiveAppointmentBooking->consultant_id : '';
+            }
+            
+            foreach ($doctors as $key => $doctor) {
+                if(in_array($doctor->user_id, $exist_doc)){
+                    unset($doctors[$key]);
+                }
+            }
+        }
+
+        return ['doctorsList' => array_values($doctors)];
     }
 
     protected function excludeColumns($attrs) {
