@@ -51,13 +51,6 @@ app.controller('VitalsController', ['$rootScope', '$scope', '$timeout', '$http',
                     $scope.encounters = response;
                     if (response != null) {
                         $scope.enc.selected = $scope.encounters[0];
-                        var actEnc = $filter('filter')($scope.encounters, {status: '1'});
-                        $scope.active_encounters = [];
-                        if(actEnc.length){
-                            angular.forEach(actEnc, function(enc){
-                                $scope.active_encounters.push(parseInt(enc.encounter_id));
-                            });
-                        }
                     }
                 });
             }

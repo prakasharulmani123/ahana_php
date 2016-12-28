@@ -102,7 +102,7 @@
                                     <!-- notes list -->
                                     <div ng-repeat="note in child.notes| orderBy: 'pat_note_id'" class="bg-grey-only r r-2x m-b-xs wrapper-xs b-l b-2x b-{{note.seen_by == 0 ? 'danger' : 'info'}}">
                                         <!--                                        <p><b>Encounter: {{note.encounter_id}}</b></p>-->
-                                        <a check-access-custom3 class="label bg-dark" title="Edit" data-url='patient.noteUpdate' ng-click="GetNote('{{$state.params.id}}','{{note.pat_note_id}}')">
+                                        <a ng-if="note.encounter_status == '1'" check-access-custom3 class="label bg-dark" title="Edit" data-url='patient.noteUpdate' ng-click="GetNote('{{$state.params.id}}','{{note.pat_note_id}}')">
                                             <i class="fa fa-pencil"></i>
                                         </a> &nbsp;&nbsp;
                                         {{note.notes}}
@@ -148,7 +148,7 @@
                                     <!-- vitals list -->
                                     <div ng-repeat="vital in child.vitals" class="vitals-cont">
                                         <div class="vitals-cont-date">
-                                            <a check-access-custom3 class="label bg-dark" title="Edit" data-url='patient.vitalUpdate' ng-click="GetVital('{{$state.params.id}}','{{vital.vital_id}}')">
+                                            <a ng-if="vital.encounter_status == '1'" check-access-custom3 class="label bg-dark" title="Edit" data-url='patient.vitalUpdate' ng-click="GetVital('{{$state.params.id}}','{{vital.vital_id}}')">
                                                 <i class="fa fa-pencil"></i>
                                             </a> &nbsp;&nbsp;
                                             <span class="label bg-{{vital.seen_by == 0 ? 'danger' : 'info'}} ng-binding ng-scope">

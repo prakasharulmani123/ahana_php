@@ -70,7 +70,7 @@
                         <td valign="middle"> {{note.created_at| moment:'DD/MM/YYYY'}} </td>
                         <td valign="middle"> {{note.short_notes}} </td>
                         <td valign="middle">
-                            <div ng-if="active_encounters.indexOf(note.encounter_id) != -1">
+                            <div ng-if="note.encounter_status">
                             <a class="label bg-dark" title="View" check-access  ui-sref="patient.noteView({id: '{{$state.params.id}}', note_id: '{{note.pat_note_id}}'})">
                                 <i class="fa fa-eye"></i>
                             </a>&nbsp;&nbsp;&nbsp;

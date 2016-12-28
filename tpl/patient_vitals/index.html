@@ -6,7 +6,7 @@
     <div class="panel panel-default">
         <div class="row wrapper">
             <div class="col-sm-9">
-                <button class="btn btn-info" ng-show="enc.selected.status == '1'" ng-click="$state.go('patient.vitalCreate', {id: $state.params.id})">
+                <button class="btn btn-info" ng-show="enc.selected.encounter_status" ng-click="$state.go('patient.vitalCreate', {id: $state.params.id})">
                     <i class="fa fa-plus"></i> Create Vital 
                 </button>
             </div>
@@ -73,7 +73,7 @@
                         <td> {{vital.pulse_rate || '-'}} </td>
                         <td> {{vital.weight || '-'}} </td>
                         <td>
-                            <div ng-if="vital.tenant_id != null && enc.selected.status == '1' && enc.selected.encounter_id == vital.encounter_id">
+                            <div ng-if="vital.tenant_id != null && vital.encounter_status">
                                 <a class="label bg-info dk" title="Edit" check-access  ui-sref="patient.vitalUpdate({id: '{{$state.params.id}}', vital_id: '{{vital.vital_id}}'})">
                                     <i class="fa fa-pencil"></i>
                                 </a>&nbsp;&nbsp;&nbsp;
