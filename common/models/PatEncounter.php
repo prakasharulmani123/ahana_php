@@ -419,6 +419,9 @@ class PatEncounter extends RActiveRecord {
                     return '-';
                 }
             },
+            'encounter_status' => function ($model) {
+                return $this->isActiveEncounter();
+            },
         ];
 
         if (Yii::$app->request->get('addtfields') == 'oplist') {
@@ -530,4 +533,7 @@ class PatEncounter extends RActiveRecord {
         return parent::afterSave($insert, $changedAttributes);
     }
 
+    public function isActiveEncounter() {
+        return ((empty($this->patAdmissionDischarge) && empty($this->patAdmissionCancel) && $this->encounter_type == 'IP') || $this->status == '1') ? 1 : 0;
+    }
 }

@@ -483,7 +483,7 @@ class EncounterController extends ActiveController {
             
             $model = $encounter->one();
 
-            if (!empty($model) && ((empty($model->patAdmissionDischarge) && empty($model->patAdmissionCancel) && $model->encounter_type == 'IP') || $model->status == '1')) {
+            if (!empty($model) && $model->isActiveEncounter()) {
                 return ['success' => true, 'model' => $model, 'encounters' => $encounter->andWhere(['status' => '1'])->all()];
             } else {
                 return ['success' => false];

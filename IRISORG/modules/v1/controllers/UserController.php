@@ -508,7 +508,7 @@ class UserController extends ActiveController {
         $doctors = CoUser::getDoctorsList($tenant, $care_provider, $status, $deleted);
         
         $patient = \common\models\PatPatient::getPatientByGuid($get['patient_guid']);
-        if($patient->patActiveOPEncounters){
+        if(isset($patient->patActiveOPEncounters)){
             $exist_doc = [];
             
             foreach ($patient->patActiveOPEncounters as $op_enc) {

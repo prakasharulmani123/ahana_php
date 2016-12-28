@@ -115,4 +115,14 @@ class PatVitals extends RActiveRecord {
     public static function find() {
         return new PatVitalsQuery(get_called_class());
     }
+    
+    public function fields() {
+        $extend = [
+            'encounter_status' => function ($model) {
+                return $model->encounter->isActiveEncounter();
+            },
+        ];
+        $fields = array_merge(parent::fields(), $extend);
+        return $fields;
+    }
 }

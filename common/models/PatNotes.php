@@ -136,6 +136,9 @@ class PatNotes extends RActiveRecord {
                     return '-';
                 }
             },
+            'encounter_status' => function ($model) {
+                return $model->encounter->isActiveEncounter();
+            },
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
