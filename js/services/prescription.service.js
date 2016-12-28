@@ -28,5 +28,8 @@ function PrescriptionService($http, $cookieStore, $rootScope, $window, $localSto
             var index = items.indexOf(item);
             items.splice(index, 1);
         },
+        deleteAllPrescriptionItem: function () {
+            items = [];
+        },
     };
 }

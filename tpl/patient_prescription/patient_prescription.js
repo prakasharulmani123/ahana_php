@@ -52,6 +52,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 //            $scope.data.consultant_id = '';
             $scope.prescription = '';
             $scope.data.prescriptionItems = [];
+            PrescriptionService.deleteAllPrescriptionItem();
         };
 
         $scope.priceTotal = function () {
