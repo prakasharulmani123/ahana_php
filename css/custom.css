@@ -3,7 +3,7 @@ To change this license header, choose License Headers in Project Properties.
 To change this template file, choose Tools | Templates
 and open the template in the editor.
 */
-/* 
+/*
     Created on : 30 Jan, 2016, 4:06:26 PM
     Author     : ark-05
 */
@@ -104,9 +104,9 @@ th[st-sort] {
 .prescrip-header{
     width:100%;
     float:left;
-    padding:10px; 
-    padding-bottom:0px; 
-    margin-bottom:15px; 
+    padding:10px;
+    padding-bottom:0px;
+    margin-bottom:15px;
     height:40px
 }
 
@@ -126,7 +126,7 @@ th[st-sort] {
     width: 100% !important;
 }
 
-.hms-plus:focus { 
+.hms-plus:focus {
     color: #ffffff !important;
 }
 
@@ -136,12 +136,12 @@ video {
 }
 
 #makeit-full.fullscreen{
-    z-index: 9999; 
-    width: 50%; 
+    z-index: 9999;
+    width: 50%;
 }
 
 .app-aside-right.fullscreen{
-    width: 50%; 
+    width: 50%;
 }
 
 .cropArea {
@@ -327,7 +327,7 @@ out-patient-table .table > thead > tr > th label.i-checks{
 }
 
 .patient-search-result li.selected, .patient-merge-result li.selected {
-    background-color: #eeeeee;   
+    background-color: #eeeeee;
 }
 
 #prescriptioncont-header li.selected {
@@ -479,4 +479,9 @@ out-patient-table .table > thead > tr > th label.i-checks{
 
 .editable-wrap.editable-select {
   width: 100%;
+}
+
+.form-horizontal .panel-body .form-group {
+    margin-right: 0;
+    margin-left: 0;
 }

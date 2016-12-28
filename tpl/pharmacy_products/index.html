@@ -7,24 +7,24 @@
     <div ng-include="'tpl/blocks/alert.html'">
         {% include 'tpl/blocks/alert.html' %}
     </div>
-    
+
     <div class="row">
         <div class="col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <b> Product Management </b>
                 </div>
-                <div class="panel-body b-b b-light">                   
-                    <!--<input id="filter" type="text" class="form-control input-sm w-sm inline m-r" placeholder="Search"/>-->                   
+                <div class="panel-body b-b b-light">
+                    <!--<input id="filter" type="text" class="form-control input-sm w-sm inline m-r" placeholder="Search"/>-->
                     <button check-access-button ng-click="$state.go('pharmacy.productAdd')" class="btn btn-sm btn-info pull-right">
                         <i class="fa fa-plus"></i> &nbsp; Add Product
                     </button>
                 </div>
                 <div>
-                    <table datatable="" dt-options="showCase.dtOptions" dt-columns="showCase.dtColumns" class="row-border hover"></table>
+                    <table id="DT_PHARM_PROD" datatable="" dt-options="showCase.dtOptions" dt-columns="showCase.dtColumns" class="row-border hover"></table>
 <!--                    <table class="table m-b-none" ui-jq="footable" data-filter="#filter" data-page-size="10">
                         <thead>
-                            <tr>                              
+                            <tr>
                                 <th>Product name</th>
                                 <th>Product code</th>
                                 <th>Product Type</th>
@@ -34,12 +34,12 @@
                                 <th>Drug Class</th>
                                 <th data-sort-ignore="true">Action</th>
                             </tr>
-                        </thead>  
+                        </thead>
                         <tbody ng-if="isLoading == true">
                             <tr>
                                 <td colspan="8" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
                             </tr>
-                        </tbody>  
+                        </tbody>
                         <tbody ng-if="isLoading == false">
                             <tr ng-repeat="row in displayedCollection| orderBy: product_name">
                                 <td>

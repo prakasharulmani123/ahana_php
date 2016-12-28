@@ -12,26 +12,67 @@ Array.prototype.containsObjectWithProperty = function (propertyName, propertyVal
 
 'use strict';
 /* Controllers */
-app.controller('RoomTypesRoomsController', ['$scope', '$http', '$filter', '$state', '$rootScope', '$timeout', function ($scope, $http, $filter, $state, $rootScope, $timeout) {
-
+app.controller('RoomTypesRoomsController', ['$scope', '$http', '$filter', '$state', '$rootScope', '$timeout', '$localStorage', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', function ($scope, $http, $filter, $state, $rootScope, $timeout, $localStorage, DTOptionsBuilder, DTColumnBuilder, $compile) {
         //Index Page
-        $scope.loadList = function () {
-            $scope.isLoading = true;
-            $scope.rowCollection = [];
+        var vm = this;
+        var token = $localStorage.user.access_token;
+        vm.dtOptions = DTOptionsBuilder.newOptions()
+                .withOption('ajax', {
+                    // Either you specify the AjaxDataProp here
+                    // dataSrc: 'data',
+                    url: $rootScope.IRISOrgServiceUrl + '/room/getrooms?access-token=' + token,
+                    type: 'GET',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("x-domain-path", $rootScope.clientUrl);
+                    }
+                })
+                // or here
+                .withDataProp('data')
+                .withOption('processing', true)
+                .withOption('serverSide', true)
+                .withOption('stateSave', true)
+                .withOption('bLengthChange', false)
+                .withPaginationType('full_numbers')
+                .withOption('createdRow', createdRow);
 
-            // Get data's from service
-            $http.get($rootScope.IRISOrgServiceUrl + '/room/getrooms')
-                    .success(function (rooms) {
-                        $scope.isLoading = false;
-                        $scope.rowCollection = rooms;
+        vm.dtColumns = [
+            DTColumnBuilder.newColumn('bed_name').withTitle('Bed No.'),
+            DTColumnBuilder.newColumn('roomTypes').withTitle('Bed Types').renderWith(typesDTHtml),
+            DTColumnBuilder.newColumn(null).withTitle('Actions').notSortable().renderWith(actionsDTHtml)
+        ];
 
-                         //Avoid pagination problem, when come from other pages.
-//                        $scope.footable_redraw();
-                    })
-                    .error(function () {
-                        $scope.errorData = "An Error has occured while loading roomtypes!";
-                    });
-        };
+        function createdRow(row, data, dataIndex) {
+            $compile(angular.element(row).contents())($scope);
+        }
+
+        function typesDTHtml(data, type, full, meta) {
+            value = '';
+            angular.forEach(data, function(v, k){
+                value += '<span class="label bg-primary">'+v+'</span>&nbsp;';
+            });
+            return value;
+        }
+
+        function actionsDTHtml(data, type, full, meta) {
+            return '<a class="label bg-dark" title="Edit" check-access  ui-sref="configuration.roomTypeRoomUpdate({room_id: ' + data.room_id + '})">' +
+                    '<i class="fa fa-pencil"></i>' +
+                    '</a>';
+        }
+
+//        $scope.loadList = function () {
+//            $scope.isLoading = true;
+//            $scope.rowCollection = [];
+//
+//            // Get data's from service
+//            $http.get($rootScope.IRISOrgServiceUrl + '/room/getrooms')
+//                    .success(function (rooms) {
+//                        $scope.isLoading = false;
+//                        $scope.rowCollection = rooms;
+//                    })
+//                    .error(function () {
+//                        $scope.errorData = "An Error has occured while loading roomtypes!";
+//                    });
+//        };
 
         //Get Organization bed types
         $scope.selectedRoomandRoomTypes = [];

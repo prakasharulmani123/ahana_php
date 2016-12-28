@@ -43,6 +43,7 @@ app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http
                 .withDataProp('data')
                 .withOption('processing', true)
                 .withOption('serverSide', true)
+                .withOption('stateSave', true)
                 .withOption('bLengthChange', false)
                 .withPaginationType('full_numbers')
                 .withOption('createdRow', createdRow);
