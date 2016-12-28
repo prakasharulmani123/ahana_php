@@ -17,26 +17,33 @@ use yii\db\ActiveQuery;
  * @author ark-05
  */
 class CommonQuery extends ActiveQuery {
+    public $tblName;
 
+    public function __construct($modelClass, $config = array()) {
+        $this->tblName = $modelClass::tableName();
+        
+        parent::__construct($modelClass, $config);
+    }
     public function tenant($tenant_id = NULL) {
         if ($tenant_id == null && empty($tenant_id))
             $tenant_id = Yii::$app->user->identity->logged_tenant_id;
-        return $this->andWhere(['tenant_id' => $tenant_id]);
+
+        return $this->andWhere(["{$this->tblName}.tenant_id" => $tenant_id]);
     }
 
     public function status($status = '1') {
         if (strpos($status, ',') !== false) {
             $status = explode(',', $status);
         }
-        return $this->andWhere(['status' => $status]);
+        return $this->andWhere(["{$this->tblName}.status" => $status]);
     }
 
     public function active() {
-        return $this->andWhere('deleted_at = "0000-00-00 00:00:00"');
+        return $this->andWhere("{$this->tblName}.deleted_at = '0000-00-00 00:00:00'");
     }
 
     public function deleted() {
-        return $this->andWhere('deleted_at != "0000-00-00 00:00:00"');
+        return $this->andWhere("{$this->tblName}.deleted_at != '0000-00-00 00:00:00'");
     }
 
 }

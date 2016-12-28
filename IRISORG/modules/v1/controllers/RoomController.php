@@ -72,16 +72,20 @@ class RoomController extends ActiveController {
         if (!empty($requestData['search']['value'])) {
             $tenant_id = Yii::$app->user->identity->logged_tenant_id;
             $totalFiltered = $modelClass::find()->tenant()->active()
+                    ->joinWith(['roomTypes'])
                     ->andFilterWhere([
                         'OR',
                         ['like', 'co_room.bed_name', $requestData['search']['value']],
+                        ['like', 'co_room_type.room_type_name', $requestData['search']['value']],
                     ])
                     ->count();
 
             $rooms = $modelClass::find()->tenant()->active()
+                    ->joinWith(['roomTypes'])
                     ->andFilterWhere([
                         'OR',
                         ['like', 'co_room.bed_name', $requestData['search']['value']],
+                        ['like', 'co_room_type.room_type_name', $requestData['search']['value']],
                     ])
                     ->limit($requestData['length'])
                     ->offset($requestData['start'])
