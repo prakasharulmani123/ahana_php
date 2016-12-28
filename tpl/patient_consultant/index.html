@@ -73,7 +73,7 @@
                         <td> {{patConsultant.consultant_name}} </td>
                         <td valign="middle"> {{patConsultant.short_notes}} </td>
                         <td>
-                            <div ng-if="patConsultant.tenant_id != null && enc.selected.status == '1' && enc.selected.encounter_id == value.data.encounter_id">
+                            <div ng-if="patConsultant.tenant_id != null && enc.selected.status == '1' && active_encounters.indexOf(value.data.encounter_id) != -1">
                                 <a title="Edit" check-access  ui-sref="patient.consultantUpdate({id: $state.params.id, cons_id: patConsultant.pat_consult_id})" class="label bg-info dk">
                                     <i class="fa fa-pencil"></i>
                                 </a>&nbsp;&nbsp;&nbsp;

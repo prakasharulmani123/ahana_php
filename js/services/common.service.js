@@ -26,6 +26,7 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
     service.GetSpecialityList = GetSpecialityList;
     service.GetInternalCodeList = GetInternalCodeList;
     service.GetDoctorList = GetDoctorList;
+    service.GetDoctorListForPatient = GetDoctorListForPatient;
     service.GetDayList = GetDayList;
     service.CheckStateAccess = CheckStateAccess;
     service.GetGenderList = GetGenderList;
@@ -339,6 +340,18 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
         var response;
 
         $http.get($rootScope.IRISOrgServiceUrl + '/user/getdoctorslist?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts + '&care_provider=' + care_provider)
+                .success(function (response) {
+                    callback(response);
+                }, function (x) {
+                    response = {success: false, message: 'Server Error'};
+                    callback(response);
+                });
+    }
+
+    function GetDoctorListForPatient(tenant, sts, del_sts, care_provider, patient_guid, callback) {
+        var response;
+
+        $http.get($rootScope.IRISOrgServiceUrl + '/user/getdoctorslistforpatient?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts + '&care_provider=' + care_provider + '&patient_guid=' + patient_guid)
                 .success(function (response) {
                     callback(response);
                 }, function (x) {

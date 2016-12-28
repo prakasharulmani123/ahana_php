@@ -32,7 +32,11 @@ app.controller('VitalsController', ['$rootScope', '$scope', '$timeout', '$http',
                     alert("Sorry, you can't create a vital");
                     $state.go("patient.vitals", {id: $state.params.id});
                 } else {
-                    $scope.encounter = response.model
+                    if(!$scope.encounter)
+                        $scope.encounter = response.model;
+                    $scope.all_encounters = response.encounters;
+                    if (!$scope.data.encounter_id)
+                        $scope.data.encounter_id = $scope.encounter.encounter_id;
                 }
             });
         }
@@ -47,6 +51,13 @@ app.controller('VitalsController', ['$rootScope', '$scope', '$timeout', '$http',
                     $scope.encounters = response;
                     if (response != null) {
                         $scope.enc.selected = $scope.encounters[0];
+                        var actEnc = $filter('filter')($scope.encounters, {status: '1'});
+                        $scope.active_encounters = [];
+                        if(actEnc.length){
+                            angular.forEach(actEnc, function(enc){
+                                $scope.active_encounters.push(parseInt(enc.encounter_id));
+                            });
+                        }
                     }
                 });
             }
@@ -121,7 +132,7 @@ app.controller('VitalsController', ['$rootScope', '$scope', '$timeout', '$http',
 
                 angular.extend(_that.data, {
                     patient_id: $scope.patientObj.patient_id,
-                    encounter_id: $scope.encounter.encounter_id,
+//                    encounter_id: $scope.encounter.encounter_id,
                 });
             } else {
                 post_url = $rootScope.IRISOrgServiceUrl + '/patientvitals/' + _that.data.vital_id;
@@ -166,6 +177,7 @@ app.controller('VitalsController', ['$rootScope', '$scope', '$timeout', '$http',
                         $scope.loadbar('hide');
                         $scope.data = response;
                         $scope.encounter = {encounter_id: response.encounter_id};
+                        $scope.initCanCreateVital();
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');

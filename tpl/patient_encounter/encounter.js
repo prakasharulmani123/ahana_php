@@ -52,19 +52,45 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                                 });
                             });
 
-                            if (response.active_encounter) {
-                                $scope.class1 = 'col-sm-9';
-                                $scope.class2 = '';
-                                $scope.class3 = 'col-sm-3';
-                            } else {
-                                $scope.class1 = 'col-sm-3';
-                                $scope.class2 = 'col-sm-6';
-                                $scope.class3 = 'col-sm-3';
-                            }
-
                             $scope.activeEncounter = response.active_encounter;
                             $scope.displayedCollection = [].concat($scope.rowCollection);
                             $scope.more_li = {};
+                            $scope.activeOPEncounter = [];
+                            $scope.activeIPEncounter = [];
+                            
+                            if (response.active_encounter) {
+                                var actIP = $filter('filter')($scope.activeEncounter, {
+                                    encounter_type: 'IP'
+                                });
+                                if(actIP.length)
+                                    $scope.activeIPEncounter = actIP[0];
+                                
+                                var actOP = $filter('filter')($scope.activeEncounter, {
+                                    encounter_type: 'OP'
+                                });
+                                if(actOP.length)
+                                    $scope.activeOPEncounter = actOP[0];
+                            }
+                            
+                            console.log((Object.keys($scope.activeOPEncounter).length == 0 && $scope.activeIPEncounter.length == 0) || (Object.keys($scope.activeIPEncounter).length > 0));
+                            if(Object.keys($scope.activeOPEncounter).length == 0 && Object.keys($scope.activeIPEncounter).length == 0){
+                                $scope.class1 = 'col-sm-3';
+                                $scope.class2 = 'col-sm-6 text-center';
+                                $scope.class3 = 'col-sm-3';
+                            } else if(Object.keys($scope.activeIPEncounter).length > 0){
+                                $scope.class1 = 'col-sm-9';
+                                $scope.class2 = '';
+                                $scope.class3 = 'col-sm-3';
+                            } else if(Object.keys($scope.activeOPEncounter).length > 0){
+                                $scope.class1 = 'col-sm-5';
+                                $scope.class2 = 'col-sm-4 text-center';
+                                $scope.class3 = 'col-sm-3';
+                                $scope.more_max = 1;
+                            } else {
+                                $scope.class1 = 'col-sm-3';
+                                $scope.class2 = 'col-sm-6 text-center';
+                                $scope.class3 = 'col-sm-3';
+                            }
 
                             angular.forEach($scope.rowCollection, function (row) {
                                 angular.forEach(row.all, function (all) {
@@ -150,13 +176,13 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                             mode: 'click',
                             url: 'patient.cancelAppointment'
                         });
+                    }else{
+                        $scope.more_li.push({
+                            href: 'patient.editDoctorFee({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})',
+                            name: 'Edit Doctor Fee',
+                            mode: 'sref'
+                        });
                     }
-
-                    $scope.more_li.push({
-                        href: 'patient.editDoctorFee({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})',
-                        name: 'Edit Doctor Fee',
-                        mode: 'sref'
-                    });
                 }
             }
         }
@@ -229,7 +255,11 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
         $scope.cancelAdmissionCloseEncounter = function (enc_id, id, row_sts) {
             $scope.isPatientHaveActiveEncounter(function (response) {
                 if (response.success == true) {
-                    if (response.model.encounter_id != enc_id) {
+                    var actEnc = $filter('filter')($scope.activeEncounter, {
+                        encounter_id: enc_id
+                    });
+                    
+                    if (actEnc.length == 0) {
                         alert("This is not an active Encounter");
                         $state.go("patient.encounter", {id: $state.params.id});
                     } else {
@@ -296,7 +326,12 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
         $scope.cancelAdmission = function (enc_id, id, row_sts) {
             $scope.isPatientHaveActiveEncounter(function (response) {
                 if (response.success == true) {
-                    if (response.model.encounter_id != enc_id) {
+                    var actEnc = $filter('filter')($scope.activeEncounter, {
+                        encounter_id: enc_id
+                    });
+                    
+                    console.log(actEnc.length);
+                    if (actEnc.length == 0) {
                         alert("This is not an active Encounter");
                         $state.go("patient.encounter", {id: $state.params.id});
                     } else {
@@ -383,7 +418,12 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
         $scope.cancelAppointment = function (enc_id) {
             $scope.isPatientHaveActiveEncounter(function (response) {
                 if (response.success == true) {
-                    if (response.model.encounter_id != enc_id) {
+                    var actEnc = $filter('filter')($scope.activeEncounter, {
+                        encounter_id: enc_id
+                    });
+                    
+                    console.log(actEnc.length);
+                    if (actEnc.length == 0) {
                         alert("This is not an active Encounter");
                         $state.go("patient.encounter", {id: $state.params.id});
                     } else {

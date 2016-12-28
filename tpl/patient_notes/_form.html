@@ -2,7 +2,11 @@
     <div class="panel-body">
         <div class="form-group">
             <label class="col-sm-3 control-label">Encounter # </label>
-            <div class="col-sm-9">
+            <div class="col-sm-5" ng-if="all_encounters.length > 1">
+                <select class="form-control" ng-model="data.encounter_id" ng-options="all_encounter.encounter_id as all_encounter.encounter_id for all_encounter in all_encounters | orderBy: encounter_id">
+                </select>
+            </div>
+            <div class="col-sm-9" ng-if="all_encounters.length == 1">
                 {{encounter.encounter_id}}
             </div>
         </div>

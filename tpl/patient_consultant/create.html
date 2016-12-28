@@ -1,4 +1,4 @@
-<div ng-controller="PatConsultantsController" ng-init="initCanCreatePatConsultant()" ng-show="showForm">
+<div ng-controller="PatConsultantsController" ng-init="initCanCreatePatConsultant(); initForm();" ng-show="showForm">
     <div class="bg-light lter b-b wrapper-md">
         <h1 class="m-n h3">Create Patient Consultant</h1>
     </div>
@@ -8,10 +8,8 @@
         </div>
         <div class="row">
             <div class="col-sm-7" ng-init="
-                            initForm();
                             data.status = '1';
                             data.patient_id = $state.params.id;
-                            data.encounter_id = $state.params.enc_id;
                             data.formtype = 'add';">
                 <form name="PatConsultantForm" class="form-horizontal form-validation" novalidate="">
                     <div ng-include="'tpl/patient_consultant/_form.html'">

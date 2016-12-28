@@ -26,15 +26,23 @@ app.controller('NotesController', ['$rootScope', '$scope', '$timeout', '$http', 
                     });
         }
 
+        $scope.initForm = function () {
+            $scope.data = {};
+            $scope.data.formtype = 'add';
+        }
+        
         $scope.initCanCreateNote = function () {
             $scope.isPatientHaveActiveEncounter(function (response) {
                 if (response.success == false) {
                     alert("Sorry, you can't create a note");
                     $state.go("patient.view", {id: $state.params.id});
                 } else {
-                    $scope.data = {};
-                    $scope.data.formtype = 'add';
-                    $scope.encounter = response.model
+                    if(!$scope.encounter)
+                        $scope.encounter = response.model;
+                    
+                    $scope.all_encounters = response.encounters;
+                    if (!$scope.data.encounter_id)
+                        $scope.data.encounter_id = $scope.encounter.encounter_id;
                 }
             });
         }
@@ -96,7 +104,7 @@ app.controller('NotesController', ['$rootScope', '$scope', '$timeout', '$http', 
 
                 angular.extend(_that.data, {
                     patient_id: $scope.patientObj.patient_id,
-                    encounter_id: $scope.encounter.encounter_id
+//                    encounter_id: $scope.encounter.encounter_id
                 });
             } else {
                 post_url = $rootScope.IRISOrgServiceUrl + '/patientnotes/' + _that.data.pat_note_id;
@@ -140,6 +148,7 @@ app.controller('NotesController', ['$rootScope', '$scope', '$timeout', '$http', 
                     function (response) {
                         $scope.loadbar('hide');
                         $scope.data = response;
+                        $scope.initCanCreateNote();
                         $scope.encounter = {encounter_id: response.encounter_id};
                     }
             ).error(function (data, status) {

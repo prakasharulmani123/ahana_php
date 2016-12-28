@@ -5,8 +5,8 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
         $scope.app.settings.patientContentClass = 'app-content patient_content ';
         $scope.app.settings.patientFooterClass = 'app-footer';
 
-        $scope.isPatientHaveActiveEncounter = function (callback) {
-            $http.post($rootScope.IRISOrgServiceUrl + '/encounter/patienthaveactiveencounter', {patient_id: $state.params.id})
+        $scope.isPatientHaveActiveEncounter = function (encounter_type, callback) {
+            $http.post($rootScope.IRISOrgServiceUrl + '/encounter/patienthaveactiveencounter', {patient_id: $state.params.id, encounter_type: encounter_type})
                     .success(function (response) {
                         callback(response);
                     }, function (x) {
@@ -16,7 +16,7 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
         }
 
         $scope.initCanCreateAppointment = function () {
-            $scope.isPatientHaveActiveEncounter(function (response) {
+            $scope.isPatientHaveActiveEncounter('IP', function (response) {
                 if (response.success == true) {
                     alert("This patient already have an active appointment. You can't create a new appointment");
                     $state.go("patient.view", {id: $state.params.id});
@@ -26,21 +26,28 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
 
         $scope.patient_det = {};
         $scope.initCanSaveAppointment = function () {
-            $scope.isPatientHaveActiveEncounter(function (response) {
+            $scope.isPatientHaveActiveEncounter('OP', function (response) {
+                console.log(response);
+                $scope.activeEncounter = response.encounters;
                 if (response.success == true) {
                     $scope.patient_det = response.model.patient;
-
-                    if (response.model.encounter_id != $state.params.enc_id) {
+                    
+                    var actEnc = $filter('filter')($scope.activeEncounter, {
+                        encounter_id: $state.params.enc_id
+                    });
+                    
+                    if (actEnc.length == 0) {
+//                    if (response.model.encounter_id != $state.params.enc_id) {
                         alert("This is not an active Encounter");
                         $state.go("patient.encounter", {id: $state.params.id});
                     } else {
                         var consultant_id = '';
-                        if (response.model.liveAppointmentArrival.hasOwnProperty('appt_id')) {
+                        if (actEnc[0].liveAppointmentArrival.hasOwnProperty('appt_id')) {
                             $scope.data = {'PatAppointment': {'appt_status': 'A', 'dummy_status': 'A', 'status_date': moment().format('YYYY-MM-DD HH:mm:ss'), 'payment_mode' : 'CA', 'bank_date': moment().format('YYYY-MM-DD HH:mm:ss')}};
-                            consultant_id = response.model.liveAppointmentArrival.consultant_id;
-                        } else if (response.model.liveAppointmentBooking.hasOwnProperty('appt_id')) {
+                            consultant_id = actEnc[0].liveAppointmentArrival.consultant_id;
+                        } else if (actEnc[0].liveAppointmentBooking.hasOwnProperty('appt_id')) {
                             $scope.data = {'PatAppointment': {'appt_status': 'B', 'dummy_status': 'B', 'status_date': moment().format('YYYY-MM-DD HH:mm:ss'), 'payment_mode' : 'CA', 'bank_date': moment().format('YYYY-MM-DD HH:mm:ss')}};
-                            consultant_id = response.model.liveAppointmentArrival.consultant_id;
+                            consultant_id = actEnc[0].liveAppointmentArrival.consultant_id;
                         }
                         if (consultant_id) {
                             $http.get($rootScope.IRISOrgServiceUrl + '/default/getconsultantcharges?consultant_id=' + consultant_id)
@@ -147,7 +154,7 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
 
         $scope.initForm = function () {
             //Load Doctor List
-            $rootScope.commonService.GetDoctorList('', '1', false, '1', function (response) {
+            $rootScope.commonService.GetDoctorListForPatient('', '1', false, '1', $state.params.id, function (response) {
                 $scope.doctors = response.doctorsList;
             });
             $rootScope.commonService.GetPatientAppointmentStatus(function (response) {
@@ -431,7 +438,7 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
         }
 
         $scope.cancelAppointment = function () {
-            $scope.isPatientHaveActiveEncounter(function (response) {
+            $scope.isPatientHaveActiveEncounter('OP', function (response) {
                 if (response.success == true) {
                     if (response.model.encounter_id != $state.params.enc_id) {
                         alert("This is not an active Encounter");

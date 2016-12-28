@@ -3,7 +3,12 @@
         <div class="col" ng-show="pres_status == 'current'">
             <div class="bg-light lter b-b wrapper-md" style="width:100%;float:left; padding:10px; padding-bottom:0px; margin-bottom:15px;">
                 <div class="col-sm-3 m-b-xs">  <h1 class="m-n h3">Prescription</h1> </div>
-                <div class="col-sm-3 m-b-xs pull-right right">
+                <div class="col-sm-3 m-b-xs pull-right right" ng-if="all_encounters.length > 1">
+                    <b> Encounter Id : </b>&nbsp;&nbsp;&nbsp;
+                    <select style="width: 50%" class="form-control pull-right" ng-model="data.encounter_id" ng-options="all_encounter.encounter_id as all_encounter.encounter_id for all_encounter in all_encounters | orderBy: encounter_id">
+                    </select>
+                </div>
+                <div class="col-sm-3 m-b-xs pull-right right" ng-if="all_encounters.length == 1">
                     <b> Encounter Id : </b> {{enc.selected.encounter_id}}
                 </div>
             </div>
@@ -88,7 +93,7 @@
                                                                 </div>
                                                                 <div class="col-sm-3">
                                                                     <label> Product</label>
-                                                                    <select class="form-control" name="Generic" ng-model="addData.product" ng-options="product as product.full_name for product in products | filter:$viewValue" data-ng-change="setGeneric();
+                                                                    <select class="form-control" name="Product" ng-model="addData.product" ng-options="product as product.full_name for product in products | filter:$viewValue" data-ng-change="setGeneric();
                                                                                     getRoutes(false, null, null)">
                                                                         <option value="">Select Product</option>
                                                                     </select>
@@ -104,6 +109,7 @@
                                                                 <div class="col-sm-3">
                                                                     <label> Freq</label>
                                                                     <!--Ui-mask & Typeahead Not working -->
+                                                                    <!--typeahead="frequency as frequency.freq_name for frequency in frequencies | filter:$viewValue"-->
                                                                     <input autocomplete="off" 
                                                                            type="text" 
                                                                            name="masked" 
@@ -111,7 +117,6 @@
                                                                            ng-model="addData.frequency" 
                                                                            model-view-value="true" 
                                                                            class="form-control m-b"
-                                                                           typeahead="frequency as frequency.freq_name for frequency in frequencies | filter:$viewValue"
                                                                            required>
                                                                 </div>
                                                                 <div class="col-sm-3">
@@ -190,7 +195,7 @@
                                                                   e-form="tableform" 
                                                                   onbeforesave="checkInput($data)" 
                                                                   e-ng-change="setProductId($data, key)" 
-                                                                  e-ng-options="product.full_name as product.full_name for product in all_products | filter:$viewValue | limitTo:8| filter:{generic_id : item.generic_id}" 
+                                                                  e-ng-options="product.full_name as product.full_name for product in all_products | filter:$viewValue | filter:{generic_id : item.generic_id}" 
                                                                   e-required>
                                                                 {{ showProduct(item)}}
                                                             </span>
@@ -243,6 +248,7 @@
                                                                                                                             {{ item.frequency || 'empty' }}
                                                                                                                         </span>-->
 
+                                                            <!--e-typeahead="frequency as frequency.freq_name for frequency in frequencies | filter:$viewValue"-->
                                                             <div id="freq_{{key}}_3" class="freq_div_{{key}} hide" style="width: 85%; float:left">
                                                                 <span editable-text="item.frequency"
                                                                       e-tabindex="{{key}}3"
@@ -251,7 +257,6 @@
                                                                       e-ui-mask="9-9-9"
                                                                       e-model-view-value="true"
                                                                       e-form="tableform" 
-                                                                      e-typeahead="frequency as frequency.freq_name for frequency in frequencies | filter:$viewValue"
                                                                       e-autocomplete="off"
                                                                       e-id="frequency_{{key}}_3"
                                                                       e-ng-change="freqChange($data, item, key)"
@@ -267,7 +272,6 @@
                                                                       e-ui-mask="9-9-9-9"
                                                                       e-model-view-value="true"
                                                                       e-form="tableform" 
-                                                                      e-typeahead="frequency as frequency.freq_name for frequency in frequencies | filter:$viewValue"
                                                                       e-autocomplete="off"
                                                                       e-id="frequency_{{key}}_4"
                                                                       e-ng-change="freqChange($data, item, key)"
@@ -283,7 +287,6 @@
                                                                       e-ui-mask="9-9-9-9-9"
                                                                       e-model-view-value="true"
                                                                       e-form="tableform" 
-                                                                      e-typeahead="frequency as frequency.freq_name for frequency in frequencies | filter:$viewValue"
                                                                       e-autocomplete="off"
                                                                       e-id="frequency_{{key}}_5"
                                                                       e-ng-change="freqChange($data, item, key)"

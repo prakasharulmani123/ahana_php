@@ -62,9 +62,13 @@ app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', 
         $scope.initCanCreatePatConsultant = function () {
             $scope.showForm = false;
             $scope.isPatientHaveActiveEncounter(function (response) {
+                $scope.all_encounters = response.encounters;
                 is_success = true;
                 if (response.success == true) {
-                    if (response.model.encounter_id != $state.params.enc_id) {
+                    var actEnc = $filter('filter')($scope.all_encounters, {
+                        encounter_id: $scope.data.encounter_id
+                    });
+                    if (actEnc.length == 0) {
                         is_success = false;
                     }
                 } else {
@@ -77,6 +81,9 @@ app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', 
                 }
 
                 $scope.showForm = true;
+                $scope.encounter = response.model;
+                if(!$scope.data.encounter_id)
+                    $scope.data.encounter_id = $scope.encounter.encounter_id;
             });
         }
 
@@ -97,6 +104,13 @@ app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', 
                     $scope.encounters = response;
                     if (response != null) {
                         $scope.enc.selected = $scope.encounters[0];
+                        var actEnc = $filter('filter')($scope.encounters, {status: '1'});
+                        $scope.active_encounters = [];
+                        if(actEnc.length){
+                            angular.forEach(actEnc, function(enc){
+                                $scope.active_encounters.push(parseInt(enc.encounter_id));
+                            });
+                        }
                     }
                 });
             }
@@ -169,7 +183,7 @@ app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', 
                 method = 'POST';
                 succ_msg = 'Consultant saved successfully';
 
-                angular.extend(_that.data, {patient_id: $scope.patientObj.patient_id, encounter_id: $state.params.enc_id});
+                angular.extend(_that.data, {patient_id: $scope.patientObj.patient_id});
             } else {
                 post_url = $rootScope.IRISOrgServiceUrl + '/patientconsultants/' + _that.data.pat_consult_id;
                 method = 'PUT';
@@ -213,6 +227,7 @@ app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', 
                     function (response) {
                         $scope.loadbar('hide');
                         $scope.data = response;
+                        $scope.initCanCreatePatConsultant();
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');
