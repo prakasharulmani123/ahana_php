@@ -688,12 +688,22 @@
                             </LISTITEMS>
                         </FIELD>
                         
-                        <FIELD id="txtPhamacoSideEffects" type="TextBox">
+                        <FIELD id="radioPhamacoSideeffect" type="RadioButtonList" Backcontrols="hide" Backdivid="radioPhamacoSideeffectDiv">
                             <PROPERTIES>
-                                <PROPERTY name="id">txtPhamacoSideEffects</PROPERTY>
-                                <PROPERTY name="name">txtPhamacoSideEffects</PROPERTY>
-                                <PROPERTY name="class">form-control</PROPERTY>
+                                <PROPERTY name="name">radioPhamacoSideeffect</PROPERTY>
                             </PROPERTIES>
+                            <LISTITEMS>
+                                <LISTITEM value="Yes" id="radioPhamacoSideeffect1" Selected="False" onclick="OThersvisible(this.id,'radioPhamacoSideeffectDiv','block');">Yes</LISTITEM>
+                                <LISTITEM value="No" id="radioPhamacoSideeffect2" Selected="False" onclick="OThersvisible(this.id,'radioPhamacoSideeffectDiv','none');">No</LISTITEM>
+                            </LISTITEMS>
+                            <FIELD id="txtPhamacoSideEffects" type="TextBox" label="Reason: ">
+                                <PROPERTIES>
+                                    <PROPERTY name="id">txtPhamacoSideEffects</PROPERTY>
+                                    <PROPERTY name="name">txtPhamacoSideEffects</PROPERTY>
+                                    <PROPERTY name="class">form-control</PROPERTY>
+                                    <PROPERTY name="placeholder">Reason</PROPERTY>
+                                </PROPERTIES>
+                            </FIELD>
                         </FIELD>
                     </COLUMNS>
                 </FIELD>

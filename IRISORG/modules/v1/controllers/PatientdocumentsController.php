@@ -1015,6 +1015,10 @@ class PatientdocumentsController extends ActiveController {
                     $listitem14->addAttribute('value', 'IHD');
                     $listitem14->addAttribute('Selected', 'False');
 
+                    $listitem15 = $listitems->addChild('LISTITEM', 'Thyroid dysfunction');
+                    $listitem15->addAttribute('value', 'Thyroid dysfunction');
+                    $listitem15->addAttribute('Selected', 'False');
+
                     //FIELD 2
                     $field2 = $columns->addChild('FIELD');
                     $field2->addAttribute('id', $text_box);
@@ -1128,12 +1132,13 @@ class PatientdocumentsController extends ActiveController {
                 if ($y->attributes()->type == 'PanelBar') {
                     foreach ($y->FIELD as $x) {
                         if ($x->attributes()->type == 'RadGrid' && $x->attributes()->AddButtonTableId == $table_id) {
-
                             $text_box = 'txtPhamacoDrugName' . $rowCount; //Textbox1 Name
                             $text_box2 = 'txtPhamacoDuration' . $rowCount; //Textbox2 Name
                             $text_box3 = 'txtPhamacoSideEffects' . $rowCount; //Textbox2 Name
                             $radio = 'radioPhamacoCurrentlyUnderTreatment' . $rowCount; //DDL Name
                             $dropdown = 'DDLPhamacoDuration' . $rowCount; //DDL Name
+                            $radio1 = 'radioPhamacoSideeffect' . $rowCount;
+                            $radio_back_div = 'radioPhamacoSideeffectDiv' . $rowCount;
 
                             $columns = $x->addChild('COLUMNS');
 
@@ -1234,19 +1239,49 @@ class PatientdocumentsController extends ActiveController {
 
                             //FIELD 4
                             $field4 = $columns->addChild('FIELD');
-                            $field4->addAttribute('id', $text_box3);
-                            $field4->addAttribute('type', 'TextBox');
+                            $field4->addAttribute('id', $radio1);
+                            $field4->addAttribute('type', 'RadioButtonList');
+                            $field4->addAttribute('Backcontrols', 'hide');
+                            $field4->addAttribute('Backdivid', $radio_back_div);
 
                             $properties1 = $field4->addChild('PROPERTIES');
 
-                            $property1 = $properties1->addChild('PROPERTY', $text_box3);
-                            $property1->addAttribute('name', 'id');
-
-                            $property2 = $properties1->addChild('PROPERTY', $text_box3);
+                            $property2 = $properties1->addChild('PROPERTY', $radio1);
                             $property2->addAttribute('name', 'name');
 
-                            $property222 = $properties1->addChild('PROPERTY', 'form-control');
-                            $property222->addAttribute('name', 'class');
+                            $listitems = $field4->addChild('LISTITEMS');
+
+                            $listitem1 = $listitems->addChild('LISTITEM', 'Yes');
+                            $listitem1->addAttribute('value', 'Yes');
+                            $listitem1->addAttribute('id', 'radioPhamacoSideeffect1' . $rowCount);
+                            $listitem1->addAttribute('Selected', 'False');
+                            $listitem1->addAttribute('onclick', "OThersvisible(this.id, '$radio_back_div', 'block');");
+
+                            $listitem2 = $listitems->addChild('LISTITEM', 'No');
+                            $listitem2->addAttribute('value', 'No');
+                            $listitem2->addAttribute('id', 'radioPhamacoSideeffect1' . $rowCount);
+                            $listitem2->addAttribute('Selected', 'False');
+                            $listitem2->addAttribute('onclick', "OThersvisible(this.id, '$radio_back_div', 'none');");
+
+                            //SUB FIELD 1
+                            $field4_sub = $field4->addChild('FIELD');
+                            $field4_sub->addAttribute('id', 'txtPhamacoSideEffects' . $rowCount);
+                            $field4_sub->addAttribute('type', 'TextBox');
+                            $field4_sub->addAttribute('label', 'Reason: ');
+
+                            $field4_properties = $field4_sub->addChild('PROPERTIES');
+
+                            $property8 = $field4_properties->addChild('PROPERTY', 'txtPhamacoSideEffects' . $rowCount);
+                            $property8->addAttribute('name', 'id');
+
+                            $property9 = $field4_properties->addChild('PROPERTY', 'txtPhamacoSideEffects' . $rowCount);
+                            $property9->addAttribute('name', 'name');
+
+                            $property10 = $field4_properties->addChild('PROPERTY', 'form-control');
+                            $property10->addAttribute('name', 'class');
+
+                            $property11 = $field4_properties->addChild('PROPERTY', 'Reason');
+                            $property11->addAttribute('name', 'placeholder');
                         }
                     }
                 }
