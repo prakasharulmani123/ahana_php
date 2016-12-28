@@ -288,7 +288,7 @@ angular.module('app')
                     }).success(
                             function (response) {
                                 $scope.loadbar('hide');
-                                $scope.data = response;
+                                $scope.presc_right.notedata = response;
                                 $scope.encounter = {encounter_id: response.encounter_id};
                             }
                     ).error(function (data, status) {
@@ -302,28 +302,28 @@ angular.module('app')
 
                 $scope.addNotes = function () {
 
-                    if (jQuery.isEmptyObject($scope.data)) {
-                        $scope.xrror = true;
+                    if (jQuery.isEmptyObject($scope.presc_right.notedata)) {
+                        $scope.presc_right.notes_error = true;
                         return;
                     }
-                    $scope.notes_error = false;
+                    $scope.presc_right.notes_error = false;
 
                     $scope.errorData = "";
                     $scope.msg.successMessage = "";
 
-                    angular.extend($scope.data, {
+                    angular.extend($scope.presc_right.notedata, {
                         patient_id: $scope.patientObj.patient_id,
                         encounter_id: $scope.encounter_id
                     });
 
                     $scope.loadbar('show');
 
-                    if ($scope.data.pat_note_id == null) {
+                    if ($scope.presc_right.notedata.pat_note_id == null) {
                         var posturl = $rootScope.IRISOrgServiceUrl + '/patientnotes';
                         var method = 'POST';
                         var mode = 'add';
                     } else {
-                        var posturl = $rootScope.IRISOrgServiceUrl + '/patientnotes/' + $scope.data.pat_note_id;
+                        var posturl = $rootScope.IRISOrgServiceUrl + '/patientnotes/' + $scope.presc_right.notedata.pat_note_id;
                         var method = 'PUT';
                         var mode = 'update';
                     }
@@ -331,9 +331,9 @@ angular.module('app')
                     $http({
                         method: method,
                         url: posturl,
-                        data: $scope.data,
+                        data: $scope.presc_right.notedata,
                     }).success(function (response) {
-                        $scope.data = {};
+                        $scope.presc_right.notedata = {};
 
                         angular.extend(response, {
                             created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
@@ -364,6 +364,7 @@ angular.module('app')
                             });
                 }
 
+                $scope.presc_right = {};
                 $scope.GetVital = function (id, vital_id) {
 
                     $scope.errorData = "";
@@ -373,7 +374,7 @@ angular.module('app')
                     }).success(
                             function (response) {
                                 $scope.loadbar('hide');
-                                $scope.vitaldata = response;
+                                $scope.presc_right.vitaldata = response;
                                 $scope.encounter = {encounter_id: response.encounter_id};
                             }
                     ).error(function (data, status) {
@@ -386,28 +387,28 @@ angular.module('app')
                 }
 
                 $scope.addVital = function () {
-                    if (jQuery.isEmptyObject($scope.vitaldata)) {
-                        $scope.vital_error = true;
+                    if (jQuery.isEmptyObject($scope.presc_right.vitaldata)) {
+                        $scope.presc_right.vital_error = true;
                         return;
                     }
 
-                    $scope.vital_error = false;
+                    $scope.presc_right.vital_error = false;
 
                     $scope.errorData = "";
                     $scope.msg.successMessage = "";
 
-                    angular.extend($scope.vitaldata, {
+                    angular.extend($scope.presc_right.vitaldata, {
                         patient_id: $scope.patientObj.patient_id,
                         encounter_id: $scope.encounter_id,
                         vital_time: moment().format('YYYY-MM-DD HH:mm:ss')
                     });
 
-                    if ($scope.vitaldata.vital_id == null) {
+                    if ($scope.presc_right.vitaldata.vital_id == null) {
                         var posturl = $rootScope.IRISOrgServiceUrl + '/patientvitals';
                         var method = 'POST';
                         var mode = 'add';
                     } else {
-                        var posturl = $rootScope.IRISOrgServiceUrl + '/patientvitals/' + $scope.vitaldata.vital_id;
+                        var posturl = $rootScope.IRISOrgServiceUrl + '/patientvitals/' + $scope.presc_right.vitaldata.vital_id;
                         var method = 'PUT';
                         var mode = 'update';
                     }
@@ -417,9 +418,9 @@ angular.module('app')
                     $http({
                         method: method,
                         url: posturl,
-                        data: $scope.vitaldata,
+                        data: $scope.presc_right.vitaldata,
                     }).success(function (response) {
-                        $scope.vitaldata = {};
+                        $scope.presc_right.vitaldata = {};
 
                         if (mode == "update")
                         {

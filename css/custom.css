@@ -476,3 +476,7 @@ out-patient-table .table > thead > tr > th label.i-checks{
   white-space: normal;
   width: auto;
 }
+
+.editable-wrap.editable-select {
+  width: 100%;
+}

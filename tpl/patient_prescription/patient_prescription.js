@@ -15,7 +15,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $event.stopPropagation();
             $scope.opened = true;
         };
-
+        
         $scope.$watch('patientObj.patient_id', function (newValue, oldValue) {
             if (typeof newValue !== 'undefined' && newValue != '') {
                 $rootScope.commonService.GetEncounterListByPatient('', '0,1', false, $scope.patientObj.patient_id, function (response) {
@@ -290,7 +290,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     PrescriptionService.addPrescriptionItem(items);
                     $scope.data.prescriptionItems = PrescriptionService.getPrescriptionItems();
                     $scope.showOrhideFrequency(items.frequency.length);
-
+                    
                     $scope.addData = {};
 
                     $timeout(function () {
@@ -347,7 +347,6 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         }
 
         $scope.addGlobalSearch = function (prescription) {
-            console.log(prescription);
             var result = $filter('filter')($scope.data.prescriptionItems, {product_id: prescription.product_id});
 
             if (result.length > 0) {
@@ -384,8 +383,6 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                 'freqMaskCount': 4
                             };
                             
-                            console.log(items);
-
                             PrescriptionService.addPrescriptionItem(items);
                             $scope.data.prescriptionItems = PrescriptionService.getPrescriptionItems();
 
@@ -425,6 +422,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
         //Get the value from main.js
         $scope.$on('presc_fav', function (event, args) {
+            console.log(args);
             var result = $filter('filter')($scope.data.prescriptionItems, {product_id: args.product_id});
             if (result.length > 0) {
                 alert('This Product already added');
@@ -436,7 +434,17 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     'generic_name': args.generic_name,
                     'drug_class_id': args.drug_class_id,
                     'drug_name': args.drug_name,
+                    'route_id': '',
+                    'route': '',
+                    'frequency': '',
+                    'number_of_days': 0,
                     'is_favourite': 1,
+                    'description_routes': args.description_routes,
+                    'presc_date': moment().format('YYYY-MM-DD HH:mm:ss'),
+                    'price': args.product_price,
+                    'total': 0,
+                    'freqMask': '9-9-9-9',
+                    'freqMaskCount': 4
                 };
                 $scope.data.prescriptionItems.push(items);
 
@@ -488,8 +496,9 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     _that.data.prescriptionItems[key].product_name = '';
                 }
                 _that.data.prescriptionItems[key].frequency = $('.frequency_' + key + ':visible').val();
+                _that.data.prescriptionItems[key].total = $scope.calculate_price(prescriptionItem.frequency, prescriptionItem.number_of_days, prescriptionItem.price);
             });
-
+            
             /* For print bill */
             $scope.data2 = _that.data;
             $scope.prescriptionItems2 = $scope.data.prescriptionItems;
@@ -546,6 +555,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             } else {
                 $scope.pres_status = 'prev';
                 $("#prev_prescription").focus();
+                $scope.filterdate = '';                                                 
+                $scope.loadPrevPrescriptionsList();
             }
         }
 

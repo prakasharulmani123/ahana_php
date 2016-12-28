@@ -118,16 +118,16 @@
                             </div>
                         </div>
                         <div class="wrapper m-t b-t b-light">
-                            <form ng-submit="addNotes()" class="m-b-none ng-pristine ng-valid ng-submitted" ng-init="data = {};
-                                                notes_error = false;">
+                            <form ng-submit="addNotes()" class="m-b-none ng-pristine ng-valid ng-submitted" ng-init="presc_right.notedata = {};
+                                                presc_right.notes_error = false;">
                                 <div class="input-group">
-                                    <input type="text" placeholder="Say something" class="form-control" ng-model="data.notes">
+                                    <input type="text" placeholder="Say something" class="form-control" ng-model="presc_right.notedata.notes">
                                     <span class="input-group-btn">
-                                        <button type="button" class="btn btn-default save-btn" ng-click="addNotes()">{{ (data.pat_note_id == NULL)?"Add":"Save"}}</button>
+                                        <button type="button" class="btn btn-default save-btn" ng-click="addNotes()">{{ (presc_right.notedata.pat_note_id == NULL)?"Add":"Save"}}</button>
                                     </span>
                                 </div>
-                                <span class="text-danger" ng-show="notes_error">Enter Text !!! </span>
-                                <input type="hidden" ng-model="data.pat_note_id">
+                                <span class="text-danger" ng-show="presc_right.notes_error">Enter Text !!! </span>
+                                <input type="hidden" ng-model="presc_right.notedata.pat_note_id">
                             </form>
                         </div>
                     </div>
@@ -186,16 +186,16 @@
                         </div>
 
                         <div class="wrapper m-t b-t b-light">
-                            <form class="m-b-none ng-pristine ng-valid ng-submitted" ng-submit="addVital()" ng-init="vitaldata = {};
-                                                vital_error = false;">
+                            <form class="m-b-none ng-pristine ng-valid ng-submitted" ng-submit="addVital()" ng-init="presc_right.vitaldata = {};
+                                                presc_right.vital_error = false;">
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-sm-6">
-                                            <input type="text" maxlength="3" placeholder="Temperature" class="form-control" ng-model="vitaldata.temperature">
-                                            <span class="text-danger" ng-show="vital_error">Required</span>
+                                            <input type="text" maxlength="3" placeholder="Temperature" class="form-control" ng-model="presc_right.vitaldata.temperature">
+                                            <span class="text-danger" ng-show="presc_right.vital_error">Required</span>
                                         </div>
                                         <div class="col-sm-6">
-                                            <input type="text" maxlength="3" placeholder="Pulse" class="form-control" ng-model="vitaldata.pulse_rate">
+                                            <input type="text" maxlength="3" placeholder="Pulse" class="form-control" ng-model="presc_right.vitaldata.pulse_rate">
                                         </div>
                                     </div>
                                 </div>
@@ -203,10 +203,10 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-sm-6">
-                                            <input type="text" maxlength="3" placeholder="BP Systolic" class="form-control" ng-model="vitaldata.blood_pressure_systolic">
+                                            <input type="text" maxlength="3" placeholder="BP Systolic" class="form-control" ng-model="presc_right.vitaldata.blood_pressure_systolic">
                                         </div>
                                         <div class="col-sm-6">
-                                            <input type="text" maxlength="3" placeholder="BP Diastolic" class="form-control" ng-model="vitaldata.blood_pressure_diastolic">
+                                            <input type="text" maxlength="3" placeholder="BP Diastolic" class="form-control" ng-model="presc_right.vitaldata.blood_pressure_diastolic">
                                         </div>
                                     </div>
                                 </div>
@@ -214,13 +214,13 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-sm-6">
-                                            <input type="text" maxlength="3" placeholder="Weight" class="form-control" ng-model="vitaldata.weight">
+                                            <input type="text" maxlength="3" placeholder="Weight" class="form-control" ng-model="presc_right.vitaldata.weight">
                                         </div>
                                         <div class="col-sm-6">
                                             <span class="input-group-btn">
                                                 <button type="button" class="btn btn-default save-btn" ng-click="addVital()">Add</button>
                                             </span>
-                                            <input type="hidden" ng-model="data.vital_id">
+                                            <input type="hidden" ng-model="presc_right.vitaldata.vital_id">
                                         </div>
                                     </div>
                                 </div>
