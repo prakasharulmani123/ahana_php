@@ -77,6 +77,15 @@ app.controller('NotesController', ['$rootScope', '$scope', '$timeout', '$http', 
                             });
                         });
                         $scope.$broadcast('refreshDatepickers');
+                        
+                        $scope.active_encounters = [];
+                        $scope.isPatientHaveActiveEncounter(function (response) {
+                            if (response.success) {
+                                angular.forEach(response.encounters, function(enc){
+                                    $scope.active_encounters.push(parseInt(enc.encounter_id));
+                                });
+                            }
+                        });
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading patientnote!";

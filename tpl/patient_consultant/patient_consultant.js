@@ -63,10 +63,12 @@ app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', 
             $scope.showForm = false;
             $scope.isPatientHaveActiveEncounter(function (response) {
                 $scope.all_encounters = response.encounters;
+                enc_id = (!$scope.data.encounter_id) ? $state.params.enc_id : $scope.data.encounter_id;
+                
                 is_success = true;
                 if (response.success == true) {
                     var actEnc = $filter('filter')($scope.all_encounters, {
-                        encounter_id: $scope.data.encounter_id
+                        encounter_id: enc_id
                     });
                     if (actEnc.length == 0) {
                         is_success = false;

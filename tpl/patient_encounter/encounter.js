@@ -52,7 +52,10 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                                 });
                             });
 
-                            $scope.activeEncounter = response.active_encounter;
+                            var actEnc = $filter('filter')(response.encounters, {
+                                status: '1'
+                            });
+                            $scope.activeEncounter = actEnc;
                             $scope.displayedCollection = [].concat($scope.rowCollection);
                             $scope.more_li = {};
                             $scope.activeOPEncounter = [];
@@ -72,7 +75,6 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                                     $scope.activeOPEncounter = actOP[0];
                             }
                             
-                            console.log((Object.keys($scope.activeOPEncounter).length == 0 && $scope.activeIPEncounter.length == 0) || (Object.keys($scope.activeIPEncounter).length > 0));
                             if(Object.keys($scope.activeOPEncounter).length == 0 && Object.keys($scope.activeIPEncounter).length == 0){
                                 $scope.class1 = 'col-sm-3';
                                 $scope.class2 = 'col-sm-6 text-center';
