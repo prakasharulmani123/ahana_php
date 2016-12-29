@@ -27,7 +27,6 @@ app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http
         });
 
         var vm = this;
-        vm.persons = {};
         var token = $localStorage.user.access_token;
         vm.dtOptions = DTOptionsBuilder.newOptions()
                 .withOption('ajax', {
@@ -62,7 +61,6 @@ app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http
         }
 
         function actionsHtml(data, type, full, meta) {
-            vm.persons[data.product_id] = data;
             return '<a class="label bg-dark" title="Edit" check-access  ui-sref="pharmacy.productEdit({id: ' + data.product_id + '})">' +
                     '   <i class="fa fa-pencil"></i>' +
                     '</a>&nbsp;&nbsp;&nbsp;' +

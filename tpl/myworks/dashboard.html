@@ -16,40 +16,6 @@
                 <button ng-click="downloadPdf()">Download Pdf</button>
                 <button ng-click="printPdf()">Print Pdf</button>-->
         <h4 class="text-center">Hi {{app.username}}, Welcome to {{app.name}} ({{app.org_name}}) !!!</h4>
-
-        <table st-persist="myTable" st-table="rowCollection" class="table table-striped">
-            <thead>
-                <tr>
-                    <th st-sort="firstName">first name</th>
-                    <th st-sort="lastName">last name</th>
-                    <th st-sort="age">age</th>
-                    <th st-sort="email">email</th>
-                    <th st-sort="balance">balance</th>
-                </tr>
-                <tr>
-                    <th colspan="5">
-                        <input st-search placeholder="global search..." class="input-sm form-control"
-                               type="search"/>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr ng-repeat="row in rowCollection">
-                    <td>{{row.firstName}}</td>
-                    <td>{{row.lastName| uppercase}}</td>
-                    <td>{{row.age}}</td>
-                    <td>{{row.email}}</td>
-                    <td>{{row.balance| currency}}</td>
-                </tr>
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="5" class="text-center">
-                        <div st-pagination></div>
-                    </td>
-                </tr>
-            </tfoot>
-        </table>
     </div>
 </div>
 
