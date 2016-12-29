@@ -123,6 +123,90 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
         $scope.more_max = 4;
         $scope.total_billing = 0;
 
+        //All Billing Page
+        $scope.enabled_dates = [];
+        $scope.loadPatientAllBilling = function (type, date) {
+            $scope.errorData = '';
+            $scope.isLoading = true;
+            $scope.rowCollection = [];  // base collection
+//            $scope.itemsByPage = 10; // No.of records per page
+            $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
+
+            if (typeof date == 'undefined') {
+                url = $rootScope.IRISOrgServiceUrl + '/encounter/getallbilling?id=' + $state.params.id + '&type=' + type;
+            } else {
+                date = moment(date).format('YYYY-MM-DD');
+                url = $rootScope.IRISOrgServiceUrl + '/encounter/getallbilling?id=' + $state.params.id + '&type=' + type + '&date=' + date;
+            }
+
+            $http.get(url)
+                    .success(function (response) {
+                        if (response.success == true) {
+                            $scope.isLoading = false;
+                            $scope.rowCollection = response.encounters;
+                            $scope.$broadcast('refreshDatepickers');
+                        } else {
+                            $scope.errorData = response.message;
+                        }
+                    })
+                    .error(function () {
+                        $scope.errorData = "An Error has occured while loading encounter!";
+                    });
+        };
+        
+        $scope.printBillData = {};
+        $scope.printOPBill = function (item) {
+            $scope.printBillData.date = moment(item.date).format('DD/MM/YYYY hh:mm A');
+            $scope.printBillData.doctor = item.doctor;
+
+            //Patient Billing Types List
+            $rootScope.commonService.GetPatientBillingList(function (response) {
+                $scope.bill_types = response;
+            });
+
+            //Get appointment details
+            $http.post($rootScope.IRISOrgServiceUrl + '/encounter/appointmentseenencounter', {patient_id: $state.params.id, enc_id: item.encounter_id})
+                    .success(function (response) {
+                        //appointment seen amount
+                        $scope.printBillData.op_amount = response.model.appointmentSeen.amount;
+                        $scope.printBillData.op_amount_inwords = response.model.appointmentSeen_amt_inwords;
+                        $scope.printBillData.bill_no = response.model.bill_no;
+
+                        //Get Patient Bill Type
+                        if (response.model.appointmentSeen.patient_bill_type) {
+                            var billinfo = $filter('filter')($scope.bill_types, {
+                                value: response.model.appointmentSeen.patient_bill_type
+                            });
+                            $scope.printBillData.patient_bill_type = billinfo[0].label;
+                        } else {
+                            $scope.printBillData.patient_bill_type = '-';
+                        }
+
+                        //Patient Cateogry
+                        consultant_id = item.consultant_id;
+                        $http.get($rootScope.IRISOrgServiceUrl + '/default/getconsultantcharges?consultant_id=' + consultant_id)
+                                .success(function (response2) {
+                                    $scope.chargesList = response2.chargesList;
+                                    var charge = $filter('filter')($scope.chargesList, {patient_cat_id: response.model.appointmentSeen.patient_cat_id});
+                                    if (typeof charge[0] != 'undefined') {
+                                        $scope.printBillData.patient_cat_name = charge[0].op_dept;
+                                    }
+                                }, function (x) {
+                                    response2 = {success: false, message: 'Server Error'};
+                                });
+                    }, function (x) {
+                        response = {success: false, message: 'Server Error'};
+                    });
+
+            $timeout(function () {
+                var innerContents = document.getElementById('Getprintval').innerHTML;
+                var popupWinindow = window.open('', '_blank', 'width=800,height=800,scrollbars=yes,menubar=no,toolbar=no,location=no,status=no,titlebar=no');
+                popupWinindow.document.open();
+                popupWinindow.document.write('<html><head><link href="css/print.css" rel="stylesheet" type="text/css" /></head><body onload="window.print()">' + innerContents + '</html>');
+                popupWinindow.document.close();
+            }, 1000);
+        }
+        
         //Collapse / Expand 
         $scope.ctrl = {};
         $scope.allExpanded = true;

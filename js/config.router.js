@@ -2079,6 +2079,25 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             })
 
             //Patient Billing
+            .state('patient.allbilling', {
+                url: '/allbilling/{id}',
+                templateUrl: 'tpl/patient_billing/allbilling.html',
+                controller: 'PatientLeftSideNotificationCtrl',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table', 'ui.select']).then(
+                                    function () {
+                                        return $ocLazyLoad.load([
+                                            'tpl/patient_billing/patient_billing.js',
+                                        ]);
+                                    }
+                            );
+                        }]
+                }
+            })
+
+            //Patient Billing
             .state('patient.billing', {
                 url: '/billing/{id}',
                 templateUrl: 'tpl/patient_billing/index.html',

@@ -1,0 +1,95 @@
+<div ng-controller="BillingController">
+
+    <div class="bg-light lter b-b wrapper-md">
+        <h1 class="m-n h3"> Billing Lists</h1>
+
+
+    </div>
+    <div class="wrapper-md" ng-init="loadPatientAllBilling('Current');">
+        <div ng-include="'tpl/blocks/alert.html'">
+            {% include 'tpl/blocks/alert.html' %}
+        </div>
+        <div class="panel panel-default">
+            <div class="row wrapper pb-10">
+                <div class="col-sm-9 m-b-xs">
+                    <button class="btn btn-sm btn-grey" ng-click="loadPatientAllBilling('Current');"> &nbsp; &nbsp; <i class="fa fa-repeat"></i>  &nbsp; &nbsp; </button>    
+                </div>
+
+                <div class="col-sm-3" ng-hide="isLoading">
+                    <div class="row"> 
+                        <div class="col-sm-9">  
+                            <div class="input-group">
+                                <input placeholder="Filter by date" prevent-enter type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="filterdate" is-open="opened" datepicker-options="dateOptions" close-text="Close" max-date="maxDate" date-disabled="disabled(date, mode)" ng-change="loadPatientAllBilling('Current', filterdate);"/>
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-3">   
+                            <button title="Clear" ng-click="filterdate = '';
+                                    loadPatientAllBilling('Current')" class="btn m-b-xs  btn-dark">  
+                                <i class="fa fa-times"></i> 
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="table-responsive in-patient-table">
+                <script type="text/ng-template" id="myModalContent.html">
+                    <div ng-include="'tpl/inpatient.edit.html'"></div>
+                </script>
+                <table st-table="displayedCollection"  st-safe-src="rowCollection"  class="table table-striped b-t b-light">
+                    <thead>
+                        <tr>
+                            <th>Encounter Id </th>
+                            <th>Date</th>
+                            <th>Details</th>
+                            <th>Doctors Name</th>
+                            <th>Amount Paid</th>
+                            <th>Amount Pending</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody ng-hide="isLoading">
+                        <tr ng-repeat="encounter in displayedCollection">
+                            <td> {{encounter.encounter_id}} </td>
+                            <td> 
+                                <div>
+                                    {{encounter.date| moment:'DD/MM/YYYY'}} &nbsp;
+                                    <span class="label bg-light dk">{{encounter.date| moment:'hh:mm A'}}</span> 
+                                </div>
+                            </td>
+                            <td> 
+                                <span ng-if="encounter.encounter_type == 'OP'" class="label bg-primary">{{encounter.details}}</span>
+                                <span ng-if="encounter.encounter_type == 'IP'" class="label bg-success">{{encounter.details}}</span>
+                            </td>
+                            <td> {{encounter.doctor}} </td>
+                            <td> {{0}} </td>
+                            <td> {{0}} </td>
+                            <td>
+                                <button tooltip="Print Bill"  class="label bg-primary dk" ng-click="printOPBill(item)">
+                                    <i class="fa fa-print"></i>
+                                </button>
+                                
+                                <a check-access-custom3 tooltip="Cancel Clinical Discharge" class="label bg-danger dk" ng-show="(item.status == 1 && item.row_sts == 'CD')"  ng-click="cancelAdmission(item.encounter_id, item.id, item.row_sts)" data-url='patient.cancelLastEncounter'>
+                                    <i class="fa fa-remove"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tbody ng-show="isLoading">
+                        <tr>
+                            <td colspan="6" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div ng-include="'tpl/patient_appointment/_print_op_seen_bill.html'">
+        {% include 'tpl/patient_appointment/_print_op_seen_bill.html' %}
+    </div>
+</div>
