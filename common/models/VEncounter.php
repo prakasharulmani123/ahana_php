@@ -66,4 +66,11 @@ class VEncounter extends \common\models\RActiveRecord
             'date_time' => 'Date Time',
         ];
     }
+    
+    /**
+     * @return ActiveQuery
+     */
+    public function getEncounter() {
+        return $this->hasOne(PatEncounter::className(), ['encounter_id' => 'encounter_id']);
+    }
 }

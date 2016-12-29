@@ -267,7 +267,13 @@ class PharmacyproductController extends ActiveController {
                         IF(a.product_name IS NOT NULL, CONCAT(' // ', a.product_name), ''),
                         IF(a.product_unit_count IS NOT NULL, CONCAT(' | ', a.product_unit_count), ''),
                         IF(a.product_unit IS NOT NULL, CONCAT(' | ', a.product_unit), '')
-                    ) AS prescription, '' as selected, a.product_description_id
+                    ) AS prescription, '' as selected, a.product_description_id,
+                    (
+                        SELECT IF(SUM(d.available_qty) IS NOT NULL, SUM(d.available_qty), 0)
+                        FROM pha_product_batch d
+                        WHERE d.tenant_id = a.tenant_id
+                        AND d.product_id = a.product_id
+                    ) as available_quantity
                     FROM pha_product a
                     LEFT OUTER JOIN pha_generic b
                     ON b.generic_id = a.generic_id
@@ -287,7 +293,13 @@ class PharmacyproductController extends ActiveController {
                         IF(a.product_name IS NOT NULL, CONCAT(' // ', a.product_name), ''),
                         IF(a.product_unit_count IS NOT NULL, CONCAT(' | ', a.product_unit_count), ''),
                         IF(a.product_unit IS NOT NULL, CONCAT(' | ', a.product_unit), '')
-                    ) AS prescription, '' as selected, a.product_description_id
+                    ) AS prescription, '' as selected, a.product_description_id,
+                    (
+                        SELECT IF(SUM(d.available_qty) IS NOT NULL, SUM(d.available_qty), 0)
+                        FROM pha_product_batch d
+                        WHERE d.tenant_id = a.tenant_id
+                        AND d.product_id = a.product_id
+                    ) as available_quantity
                     FROM pha_product a
                     LEFT OUTER JOIN pha_generic b
                     ON b.generic_id = a.generic_id
@@ -312,7 +324,13 @@ class PharmacyproductController extends ActiveController {
                         IF(a.product_name IS NOT NULL, CONCAT(' // ', a.product_name), ''),
                         IF(a.product_unit_count IS NOT NULL, CONCAT(' | ', a.product_unit_count), ''),
                         IF(a.product_unit IS NOT NULL, CONCAT(' | ', a.product_unit), '')
-                    ) AS prescription, '' as selected, a.product_description_id
+                    ) AS prescription, '' as selected, a.product_description_id,
+                    (
+                        SELECT IF(SUM(d.available_qty) IS NOT NULL, SUM(d.available_qty), 0)
+                        FROM pha_product_batch d
+                        WHERE d.tenant_id = a.tenant_id
+                        AND d.product_id = a.product_id
+                    ) as available_quantity
                     FROM pha_product a
                     LEFT OUTER JOIN pha_generic b
                     ON b.generic_id = a.generic_id

@@ -156,6 +156,9 @@ class PatPrescriptionFavourite extends RActiveRecord
             'product_price' => function ($model) {
                 return (isset($model->product->phaLatestBatch) ? $model->product->phaLatestBatch->phaProductBatchRate->mrp : 0);
             },
+            'availableQuantity' => function ($model) {
+                return (isset($model->product->phaProductBatchesAvailableQty) ? $model->product->phaProductBatchesAvailableQty : 0);
+            },
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;

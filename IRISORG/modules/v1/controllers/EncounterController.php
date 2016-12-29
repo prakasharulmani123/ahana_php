@@ -242,6 +242,39 @@ class EncounterController extends ActiveController {
         }
     }
 
+    public function actionGetallbilling() {
+        $get = Yii::$app->getRequest()->get();
+        $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+
+        if (isset($get['id'])) {
+            $condition['patient_guid'][$get['id']] = $get['id'];
+
+            $patient = PatPatient::getPatientByGuid($get['id']);
+
+            $encounters = VEncounter::find()
+                    ->where($condition)
+                    ->groupBy('encounter_id')
+                    ->orderBy(['encounter_id' => SORT_DESC])
+                    ->all();
+            
+            $data = [];
+            foreach ($encounters as $k => $e) {
+                if($e->encounter_type == 'IP' || ($e->encounter_type == 'OP' && $e->encounter->patAppointmentSeen)){
+                    $data[$k] = $e->toArray();
+                    echo '<pre>';
+                    print_r($e->encounter->viewChargeCalculation);
+                    exit;
+                    $data[$k]['amount_paid'] = $e->encounter->paid;
+//                    $data[$k]['balance'] = $e->encounter->balance;
+                }
+            }
+
+            return ['success' => true, 'encounters' => array_values($data)];
+        } else {
+            return ['success' => false, 'message' => 'Invalid Access'];
+        }
+    }
+
     public function actionInpatients() {
         $model = PatEncounter::find()
                 ->tenant()
