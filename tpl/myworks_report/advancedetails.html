@@ -62,13 +62,13 @@
                             {{row.stay_duration}}
                         </td>
                         <td>
-                            {{row.total_charge -row.concession_amount | number:2 }}
+                            {{row.total_charge - row.total_concession | number:2 }}
                         </td>
                         <td>
                             {{ (row.paid || '0.00') | number:2 }}
                         </td>
                         <td>
-                            <span class="label" ng-class="(row.balance > 0) ? 'bg-success' : 'bg-danger'">{{row.balance | number:2}}</span>
+                            <span class="label" ng-class="(row.total_charge - row.total_concession - row.paid > 0) ? 'bg-success' : 'bg-danger'">{{row.total_charge - row.total_concession - row.paid | number:2}}</span>
                         </td>
                     </tr>
                 </tbody>
