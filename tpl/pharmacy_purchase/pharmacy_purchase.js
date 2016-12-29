@@ -1,4 +1,4 @@
-app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$anchorScroll', '$filter', '$timeout', '$location', '$modal', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $anchorScroll, $filter, $timeout, $location, $modal) {
+app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$anchorScroll', '$filter', '$timeout', '$location', '$modal','$log', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $anchorScroll, $filter, $timeout, $location, $modal, $log) {
 
         editableThemes.bs3.inputClass = 'input-sm';
         editableThemes.bs3.buttonsClass = 'btn-sm';
@@ -80,6 +80,29 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading purchaseList!";
                     });
+        };
+
+        //Modal
+        $scope.openMdl = function (size, ctrlr, tmpl, update_col) {
+            var modalInstance = $modal.open({
+                templateUrl: tmpl,
+                controller: ctrlr,
+                size: size,
+                resolve: {
+                    scope: function () {
+                        return $scope;
+                    },
+                    column: function () {
+                        return update_col;
+                    },
+                }
+            });
+
+            modalInstance.result.then(function (selectedItem) {
+                $scope.selected = selectedItem;
+            }, function () {
+                $log.info('Modal dismissed at: ' + new Date());
+            });
         };
 
         //Datepicker
@@ -281,7 +304,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             var show_warning_count = '2'; // 0 - 2 Months
             var choosen_date = new Date(data);
             var today_date = new Date();
-            
+
             var d1 = choosen_date, d2 = today_date;
 
             if (choosen_date < today_date) {
@@ -549,7 +572,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             $scope.data.invoice_date = moment($scope.data.invoice_date).format('YYYY-MM-DD');
 
             angular.forEach($scope.purchaseitems, function (purchaseitem, key) {
-                //Manual functions for Temp records//               
+                //Manual functions for Temp records//
                 if (purchaseitem.is_temp == '1') {
                     exp_date = purchaseitem.temp_expiry_date;
                     $scope.purchaseitems[key].mrp = purchaseitem.temp_mrp;

@@ -13,7 +13,7 @@ app.controller('SupplierModalInstanceCtrl', ['scope', '$scope', '$modalInstance'
                     });
                 });
         }
-        
+
         $scope.saveForm = function () {
             _that = this;
 
@@ -36,6 +36,9 @@ app.controller('SupplierModalInstanceCtrl', ['scope', '$scope', '$modalInstance'
                         $scope.data = {};
                         $timeout(function () {
                             scope.suppliers.push(response);
+                            scope.data.supplier_id = response.supplier_id;
+                            scope.data.supplier_id_1 = response.supplier_id;
+
                             $modalInstance.dismiss('cancel');
                         }, 1000)
                     }
@@ -51,7 +54,7 @@ app.controller('SupplierModalInstanceCtrl', ['scope', '$scope', '$modalInstance'
         $scope.cancel = function () {
             $modalInstance.dismiss('cancel');
         };
-        
+
         $scope.updateState2 = function () {
             $scope.availableStates2 = [];
             $scope.availableCities2 = [];
@@ -83,4 +86,3 @@ app.controller('SupplierModalInstanceCtrl', ['scope', '$scope', '$modalInstance'
             });
         }
     }]);
-  

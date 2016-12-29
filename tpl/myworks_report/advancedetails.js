@@ -6,7 +6,7 @@ app.controller('advancedetailsController', ['$rootScope', '$scope', '$timeout', 
             $scope.rowCollection = [];
 
             // Get data's from service
-            $http.get($rootScope.IRISOrgServiceUrl + '/myworkreports/advancedetails')
+            $http.get($rootScope.IRISOrgServiceUrl + '/myworkreports/advancedetails?addtfields=advdetails')
                     .success(function (advancedetails) {
                         $scope.isLoading = false;
                         $scope.rowCollection = advancedetails;

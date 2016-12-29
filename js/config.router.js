@@ -1795,7 +1795,10 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load('xeditable').then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/pharmacy_purchase/pharmacy_purchase.js');
+                                        return $ocLazyLoad.load([
+                                            'tpl/pharmacy_purchase/pharmacy_purchase.js',
+                                            'tpl/modal_form/modal.supplier.js'
+                                        ]);
                                     }
                             );
                         }]

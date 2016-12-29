@@ -9,8 +9,8 @@
     <div class="panel panel-default">
         <div class="row wrapper">
             <div class="col-sm-4 m-b-xs">
-                <button class="btn btn-sm btn-grey" ng-click="loadReport()"> 
-                    &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
+                <button class="btn btn-sm btn-grey" ng-click="loadReport()">
+                    &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp;
                 </button>
                 <input id="filter" type="text" class="form-control input-sm w-sm inline m-r" placeholder="Search"/>
             </div>
@@ -50,26 +50,25 @@
                 <tbody ng-if="isLoading == false">
                     <tr ng-repeat="row in rowCollection | orderBy: name">
                         <td>
-                            {{row.patient.fullname}}
+                            {{row.apptPatientData.fullname}}
                         </td>
                         <td>
                             {{row.encounter_date | moment:'YYYY-MM-DD'}}
                         </td>
                         <td>
-                            {{row.patient.current_room}}
+                            {{row.apptPatientData.current_room}}
                         </td>
                         <td>
                             {{row.stay_duration}}
                         </td>
                         <td>
-                            {{row.total_charge}}
+                            {{row.total_charge -row.concession_amount | number:2 }}
                         </td>
-                        <td> 
-                            {{row.paid}} 
+                        <td>
+                            {{ (row.paid || '0.00') | number:2 }}
                         </td>
-                        <td> 
-                            <span class="label bg-success" ng-if="row.balance > 0">{{row.balance}}</span>
-                            <span class="label bg-danger" ng-if="row.balance < 0">{{row.balance}}</span>
+                        <td>
+                            <span class="label" ng-class="(row.balance > 0) ? 'bg-success' : 'bg-danger'">{{row.balance | number:2}}</span>
                         </td>
                     </tr>
                 </tbody>

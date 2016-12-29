@@ -887,7 +887,7 @@ body {
   text-decoration: none;
   background-color: transparent;
   border: none;
-  
+
 }
 
 .navbar-brand {
@@ -923,7 +923,7 @@ body {
   .app-footer {
     margin-left: 125px;
   }
-  
+
     .app-aside{
 		width:125px;
 		  }
@@ -940,7 +940,7 @@ body {
   .visible-folded {
     display: none;
   }
- 
+
   .app-aside-folded .visible-folded {
     display: inherit;
   }
@@ -5262,7 +5262,7 @@ a.text-#000000:hover {
 
 .in-patient-table tr:hover .actions-icons-cont{
 	display:block;
-	
+
 }
 
 .actions-icons-cont
@@ -5289,7 +5289,7 @@ a.text-#000000:hover {
 }
 
 
-.in-patient-table .dropdown-menu 
+.in-patient-table .dropdown-menu
 {
 	left:-120px !important;
 	position:absolute;

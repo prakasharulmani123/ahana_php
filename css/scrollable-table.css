@@ -1,14 +1,16 @@
 .scrollableContainer {
-    height: 350px;
+    height: 62vh;
     position: relative;
-    padding-top: 35px;
+    padding-top: 46px;
     overflow: hidden;
 }
 .scrollableContainer .headerSpacer {
     border: 1px solid #dddddd;
+    border-left: 0;
+    border-right: 0;
     /*border-bottom-color: #bbb;*/
     position: absolute;
-    height: 36px;
+    height: 46px;
     top: 0;
     right: 0;
     left: 0;
@@ -32,10 +34,10 @@
     overflow-x: auto;
     overflow-y: auto;
 /*    border: 1px solid #d5d5d5;*/
-    /*  the implementation of this is still quite buggy; specifically, it doesn't like the 
-        absolutely positioned headers within 
+    /*  the implementation of this is still quite buggy; specifically, it doesn't like the
+        absolutely positioned headers within
     -webkit-overflow-scrolling: touch;  */
-    -webkit-overflow-scrolling: auto; 
+    -webkit-overflow-scrolling: auto;
 }
 .scrollArea table {
     overflow-x: auto;
@@ -51,19 +53,22 @@
     min-width: 40px;
 }
 .scrollArea table .th-inner {
-    overflow: hidden;
+/*    overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
+    white-space: nowrap;*/
     position: absolute;
     top: 0;
-    height: 36px;
-    line-height: 36px;
+    height: 46px;
+    /*line-height: 36px;*/
 }
 
 .scrollArea table th .box {
     padding: 0 8px;
     padding-right: 11px;    /*  order icon width*/
 /*    border-left: 1px solid #ddd;*/
+    height: 46px;
+    vertical-align: middle;
+    display: table-cell;
 }
 
 /*  to hack fix firefox border issue    */
