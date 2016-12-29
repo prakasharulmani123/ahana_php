@@ -529,12 +529,7 @@ class PatPatient extends RActiveRecord {
                 return isset($model->patActiveIp) ? date('d/m/Y', strtotime($model->patActiveIp->encounter_date)) : '';
             },
             'current_room' => function ($model) {
-                if (isset($model->patActiveIp)) {
-                    $admission = $model->patActiveIp->patCurrentAdmission;
-                    return "{$admission->floor->floor_name} > {$admission->ward->ward_name} > {$admission->room->bed_name} ({$admission->roomType->room_type_name})";
-                } else {
-                    return '-';
-                }
+                return $model->current_room;
             },
             'last_consultant_id' => function ($model) {
                 return isset($model->patLastAppointment) ? $model->patLastAppointment->consultant_id : '';
@@ -631,6 +626,15 @@ class PatPatient extends RActiveRecord {
                     return true;
                 else
                     return $this->patPatientAddress->isIncompleteProfile();
+            }
+
+            public function getCurrent_room() {
+                if (isset($this->patActiveIp)) {
+                    $admission = $this->patActiveIp->patCurrentAdmission;
+                    return "{$admission->floor->floor_name} > {$admission->ward->ward_name} > {$admission->room->bed_name} ({$admission->roomType->room_type_name})";
+                } else {
+                    return '-';
+                }
             }
 
             public function getNew_user() {

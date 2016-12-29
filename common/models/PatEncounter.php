@@ -413,7 +413,8 @@ class PatEncounter extends RActiveRecord {
                         'patient_category',
                         'patient_category_fullname',
                         'patient_mobile',
-                        'patient_id'
+                        'patient_id',
+                        'current_room'
                     ]);
                 } else {
                     return '-';
@@ -424,10 +425,17 @@ class PatEncounter extends RActiveRecord {
             },
         ];
 
-        if (Yii::$app->request->get('addtfields') == 'oplist') {
-            $oplist_keys = ['consultant_id', 'apptArrivalData','apptSeenData','apptConsultantData','apptPatientData','apptBookingData'];
+        if ($addtField = Yii::$app->request->get('addtfields')) {
+            switch ($addtField):
+                case 'oplist':
+                    $addt_keys = ['consultant_id', 'apptArrivalData','apptSeenData','apptConsultantData','apptPatientData','apptBookingData'];
+                    break;
+                case 'advdetails':
+                    $addt_keys = ['apptPatientData','stay_duration','total_charge','paid','balance'];
+                    break;
+            endswitch;
 
-            return array_merge(parent::fields(), array_intersect_key($extend, array_flip($oplist_keys)));
+            return array_merge(parent::fields(), array_intersect_key($extend, array_flip($addt_keys)));
         }
 
         return array_merge(parent::fields(), $extend);
