@@ -330,6 +330,11 @@ class PatEncounter extends RActiveRecord {
                     return $this->getTotalCharge();
                 }
             },
+            'total_concession' => function ($model) {
+                if ($model->encounter_type == 'IP') {
+                    return $this->getTotalConcession();
+                }
+            },
             'balance' => function ($model) {
                 if ($model->encounter_type == 'IP') {
                     $total = $this->getTotalCharge();
@@ -431,7 +436,7 @@ class PatEncounter extends RActiveRecord {
                     $addt_keys = ['consultant_id', 'apptArrivalData','apptSeenData','apptConsultantData','apptPatientData','apptBookingData'];
                     break;
                 case 'advdetails':
-                    $addt_keys = ['apptPatientData','stay_duration','total_charge','paid','balance'];
+                    $addt_keys = ['apptPatientData','stay_duration','total_charge','total_concession','paid','balance'];
                     break;
             endswitch;
 
@@ -473,6 +478,37 @@ class PatEncounter extends RActiveRecord {
                 ->sum('total_charge');
 
         return $total_charge;
+    }
+
+    public function getTotalConcession() {
+        return $this->concession_amount + $this->OtherConcession;
+    }
+
+    public function getOtherConcession() {
+        $total_concession = 0;
+
+        $total_concession += VBillingProcedures::find()
+                ->where([
+                    'encounter_id' => $this->encounter_id,
+                    'tenant_id' => $this->tenant_id
+                ])
+                ->sum('concession_amount');
+
+        $total_concession += VBillingProfessionals::find()
+                ->where([
+                    'encounter_id' => $this->encounter_id,
+                    'tenant_id' => $this->tenant_id
+                ])
+                ->sum('concession_amount');
+
+        $total_concession += VBillingOtherCharges::find()
+                ->where([
+                    'encounter_id' => $this->encounter_id,
+                    'tenant_id' => $this->tenant_id
+                ])
+                ->sum('concession_amount');
+
+        return $total_concession;
     }
 
     public function getAdvanceDetails() {
