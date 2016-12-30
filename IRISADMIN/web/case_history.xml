@@ -2336,14 +2336,14 @@
                         <LISTITEM id="RBOrientation1" value="Oriented" Selected="False" onclick="OThersvisible(this.id,'divOrien','block');">Oriented</LISTITEM>
                         <LISTITEM id="RBOrientation2" value="Disoriented" Selected="False" onclick="OThersvisible(this.id,'divOrien','none');">Disoriented</LISTITEM>
                     </LISTITEMS>
-                    <FIELD id="RBNatureofDelusion" type="RadioButtonList" label="Nature of Delusion">
+                    <FIELD id="CBNatureofDelusion" type="CheckBoxList">
                         <PROPERTIES>
-                            <PROPERTY name="name">RBNatureofDelusion</PROPERTY>
+                            <PROPERTY name="name">CBNatureofDelusion[]</PROPERTY>
                         </PROPERTIES>
                         <LISTITEMS>
-                            <LISTITEM id="RBNatureofDelusion1" value="Thought" Selected="False">Thought</LISTITEM>
-                            <LISTITEM id="RBNatureofDelusion2" value="Impulse" Selected="False">Impulse</LISTITEM>
-                            <LISTITEM id="RBNatureofDelusion3" value="Images" Selected="False">Images</LISTITEM>
+                            <LISTITEM id="CBNatureofDelusion1" value="Time" Selected="False">Time</LISTITEM>
+                            <LISTITEM id="CBNatureofDelusion2" value="Place" Selected="False">Place</LISTITEM>
+                            <LISTITEM id="CBNatureofDelusion3" value="Person" Selected="False">Person</LISTITEM>
                         </LISTITEMS>
                     </FIELD>
                 </FIELD>

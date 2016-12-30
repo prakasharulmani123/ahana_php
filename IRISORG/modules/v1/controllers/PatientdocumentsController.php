@@ -119,11 +119,17 @@ class PatientdocumentsController extends ActiveController {
         $post = [];
         foreach ($form as $key => $value) {
             if (isset($value['value'])) {
-                $post[$value['name']] = str_replace("&nbsp;", "&#160;", $value['value']);
+                if (strpos($value['name'], '[]') !== false) {
+                    $field_name = str_replace("[]", "", $value['name']);
+                    $post[$field_name][] = str_replace("&nbsp;", "&#160;", $value['value']);
+                } else {
+                    $post[$value['name']] = str_replace("&nbsp;", "&#160;", $value['value']);
+                }
             } else {
                 $post[$value['name']] = '';
             }
         }
+
         $patient = PatPatient::getPatientByGuid($post['patient_id']);
         $type = 'CH';
         $case_history_xml = PatDocumentTypes::getDocumentType($type);
