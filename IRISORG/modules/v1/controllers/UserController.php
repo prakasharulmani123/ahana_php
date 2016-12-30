@@ -512,7 +512,7 @@ class UserController extends ActiveController {
             $exist_doc = [];
             
             foreach ($patient->patActiveOPEncounters as $op_enc) {
-                $exist_doc[] = $op_enc->patLiveAppointmentBooking ? $op_enc->patLiveAppointmentBooking->consultant_id : '';
+                $exist_doc[] = $op_enc->patLiveAppointmentBooking->consultant_id;
             }
             
             foreach ($doctors as $key => $doctor) {

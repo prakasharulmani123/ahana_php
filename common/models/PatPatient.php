@@ -226,6 +226,10 @@ class PatPatient extends RActiveRecord {
         return $this->hasOne(PatEncounter::className(), ['patient_id' => 'patient_id'])->status('1')->orderBy(['encounter_id' => SORT_DESC]);
     }
 
+    public function getPatActiveOPEncounters() {
+        return $this->hasMany(PatEncounter::className(), ['patient_id' => 'patient_id'])->andWhere(['encounter_type' => 'OP'])->status('1')->orderBy(['encounter_id' => SORT_DESC]);
+    }
+
     /**
      * @return ActiveQuery
      */
@@ -732,6 +736,7 @@ class PatPatient extends RActiveRecord {
                 return $patient;
             }
 
+            /* I think this function is not used anywhere - prakash**/
             public static function getActiveEncounterByPatientId($patient_id) {
                 return PatEncounter::find()->status()->active()->andWhere(['patient_id' => $patient_id])->one();
             }
