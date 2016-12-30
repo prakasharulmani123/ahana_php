@@ -287,10 +287,10 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
                 });
     }
 
-    function GetPatientCateogryList(tenant, sts, del_sts, callback) {
+    function GetPatientCateogryList(sts, del_sts, callback) {
         var response;
 
-        $http.get($rootScope.IRISOrgServiceUrl + '/patientcategory/getpatientcategorylist?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts)
+        $http.get($rootScope.IRISOrgServiceUrl + '/patientcategory/getpatientcategorylist?status=' + sts + '&deleted=' + del_sts)
                 .success(function (response) {
                     callback(response);
                 }, function (x) {

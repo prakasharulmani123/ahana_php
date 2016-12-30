@@ -24,7 +24,7 @@ app.controller('ChargePerCategoriesController', ['$rootScope', '$scope', '$timeo
                         $scope.errorData = "An Error has occured while loading charges!";
                     });
 
-            $rootScope.commonService.GetPatientCateogryList('', '1', false, function (response) {
+            $rootScope.commonService.GetPatientCateogryList('1', false, function (response) {
                 $scope.patient_categories = [];
                 angular.forEach(response.patientcategoryList, function (value) {
                     value.amount = '';
@@ -91,7 +91,7 @@ app.controller('ChargePerCategoriesController', ['$rootScope', '$scope', '$timeo
                             $scope.sub_categories.push(insert_subcat);
                         });
 
-                        $rootScope.commonService.GetPatientCateogryList('', '1', false, function (response) {
+                        $rootScope.commonService.GetPatientCateogryList('1', false, function (response) {
                             $scope.patient_categories = [];
                             angular.forEach(response.patientcategoryList, function (value) {
                                 value.amount = '';

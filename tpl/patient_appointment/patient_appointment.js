@@ -174,6 +174,9 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
         }
 
         $scope.$watch('patientObj.activeCasesheetno', function (newValue, oldValue) {
+            if(typeof $scope.data == 'undefined')
+                $scope.data = {};
+            
             $scope.toggleMin();
             $scope.data.validate_casesheet = ($scope.patientObj.activeCasesheetno == null || $scope.patientObj.activeCasesheetno == '');
         }, true);

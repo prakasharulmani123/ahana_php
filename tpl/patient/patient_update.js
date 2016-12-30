@@ -54,7 +54,7 @@
 //                $scope.maritalStatuses = response;
 //            });
 //
-//            $rootScope.commonService.GetPatientCateogryList('', '1', false, function (response) {
+//            $rootScope.commonService.GetPatientCateogryList('1', false, function (response) {
 //                $scope.categories = response.patientcategoryList;
 //            });
 //        }

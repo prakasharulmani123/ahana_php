@@ -64,7 +64,7 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label">Mobile No * </label>
                 <div class="col-sm-9">
-                    <input type="text" ng-model="data.PatPatient.patient_mobile"  name="patient_mobile" class="form-control" placeholder="" number-mask="" required>
+                    <input type="text" ng-model="data.PatPatient.patient_mobile"  name="patient_mobile" class="form-control" placeholder="" number-mask="" maxlength="10" required>
                     <div style="color:maroon; display: none;">
                         <div ng-show="submitted && patientForm.patient_mobile.$error.required">Mobile No cannot be blank.</div>
                     </div>
