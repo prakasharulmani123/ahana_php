@@ -45,7 +45,7 @@ class PatientcategoryController extends ActiveController {
         $modelClass = $this->modelClass;
 
         return new ActiveDataProvider([
-            'query' => $modelClass::find()->tenant()->active()->orderBy(['patient_cat_name' => SORT_ASC]),
+            'query' => $modelClass::find()->active()->orderBy(['patient_cat_name' => SORT_ASC]),
             'pagination' => false,
         ]);
     }
@@ -53,8 +53,8 @@ class PatientcategoryController extends ActiveController {
     public function actionGetpatientcategorylist() {
         $get = Yii::$app->getRequest()->get();
 
-        if (isset($get['tenant']))
-            $tenant = $get['tenant'];
+//        if (isset($get['tenant']))
+//            $tenant = $get['tenant'];
 
         if (isset($get['status']))
             $status = strval($get['status']);
@@ -62,7 +62,7 @@ class PatientcategoryController extends ActiveController {
         if (isset($get['deleted']))
             $deleted = $get['deleted'] == 'true';
 
-        return ['patientcategoryList' => CoPatientCategory::getPatientCateogrylist($tenant, $status, $deleted)];
+        return ['patientcategoryList' => CoPatientCategory::getPatientCateogrylist($status, $deleted)];
     }
 
 }

@@ -35,6 +35,7 @@ use yii\helpers\ArrayHelper;
  * @property string $patient_mobile
  * @property string $patient_secondary_contact
  * @property string $patient_bill_type
+ * @property integer $patient_category_id
  * @property resource $patient_image
  * @property string $status
  * @property integer $created_by
@@ -58,8 +59,8 @@ class PatGlobalPatient extends RActiveRecord {
     public function rules() {
         return [
             [['patient_global_guid', 'patient_global_int_code', 'patient_title_code', 'patient_firstname', 'patient_gender', 'created_by'], 'required'],
-            [['migration_created_by', 'casesheetno', 'patient_care_taker', 'created_by', 'modified_by'], 'integer'],
-            [['patient_reg_date', 'patient_dob', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
+            [['migration_created_by', 'casesheetno', 'patient_care_taker', 'created_by', 'modified_by', 'patient_category_id'], 'integer'],
+            [['patient_reg_date', 'patient_dob', 'created_at', 'modified_at', 'deleted_at', 'patient_category_id'], 'safe'],
             [['patient_image', 'status'], 'string'],
             [['patient_global_guid', 'parent_id', 'patient_firstname', 'patient_lastname', 'patient_relation_name', 'patient_care_taker_name', 'patient_occupation', 'patient_email', 'patient_ref_id', 'patient_mobile', 'patient_secondary_contact'], 'string', 'max' => 50],
             [['patient_global_int_code'], 'string', 'max' => 30],
@@ -105,6 +106,7 @@ class PatGlobalPatient extends RActiveRecord {
             'patient_secondary_contact' => 'Patient Secondary Contact',
             'patient_bill_type' => 'Patient Bill Type',
             'patient_image' => 'Patient Image',
+            'patient_category_id' => 'Patient Category',
             'status' => 'Status',
             'created_by' => 'Created By',
             'created_at' => 'Created At',
@@ -129,5 +131,4 @@ class PatGlobalPatient extends RActiveRecord {
     public function getPatPatientChildrensGlobalIds() {
         return ArrayHelper::map($this->getPatPatientChildrens()->all(), 'patient_global_guid', 'patient_global_int_code');
     }
-
 }

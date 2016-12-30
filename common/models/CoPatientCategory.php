@@ -76,11 +76,11 @@ class CoPatientCategory extends RActiveRecord {
         return new CoPatientCategoryQuery(get_called_class());
     }
     
-    public static function getPatientCateogrylist($tenant = null, $status = '1', $deleted = false) {
+    public static function getPatientCateogrylist($status = '1', $deleted = false) {
         if (!$deleted)
-            $list = self::find()->tenant($tenant)->status($status)->active()->all();
+            $list = self::find()->status($status)->active()->all();
         else
-            $list = self::find()->tenant($tenant)->deleted()->all();
+            $list = self::find()->deleted()->all();
 
         return $list;
     }

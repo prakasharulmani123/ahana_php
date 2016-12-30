@@ -65,8 +65,10 @@ class ChargepersubcategoryController extends ActiveController {
     public function actionGetcustomlist() {
         $lists = CoChargePerSubcategory::find()->orderBy(['charge_type' => SORT_ASC, 'charge_id' => SORT_ASC])->all();
         $ret = [];
+        $tenant_id = Yii::$app->user->identity->logged_tenant_id;
         foreach ($lists as $key => $list) {
-            $ret[$list->charge_type][$list->charge->charge_code_id][$list->charge_link_id] = array('id' => $list->sub_charge_id, 'amount' => $list->charge_amount);
+            if($list->charge->tenant_id == $tenant_id)
+                $ret[$list->charge_type][$list->charge->charge_code_id][$list->charge_link_id] = array('id' => $list->sub_charge_id, 'amount' => $list->charge_amount);
         }
         return $ret;
     }

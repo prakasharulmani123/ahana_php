@@ -78,6 +78,7 @@ class PatPatient extends RActiveRecord {
     public $patient_mobile;
     public $patient_secondary_contact;
     public $patient_bill_type;
+    public $patient_category_id;
     public $patient_image;
     public $parent_id;
     public $migration_created_by;
