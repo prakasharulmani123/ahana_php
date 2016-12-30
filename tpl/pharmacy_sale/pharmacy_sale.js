@@ -582,6 +582,12 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
             $scope.data.roundoff_amount = roundoff_amount.toFixed(2);
             $scope.data.bill_amount = bill_amount.toFixed(2);
+            $scope.data.amount_received = bill_amount;
+            $scope.updateBalance();
+        }
+        
+        $scope.updateBalance = function () {
+            $scope.data.balance = $scope.data.amount_received - $scope.data.bill_amount;
         }
 
         $scope.getBtnId = function (btnid)

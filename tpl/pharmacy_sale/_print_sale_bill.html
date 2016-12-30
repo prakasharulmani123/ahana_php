@@ -92,5 +92,13 @@
             <th align="right">Bill Amount :  </th>
             <td>{{data2.bill_amount}}</td>
         </tr>
+        <tr ng-if="data2.payment_type == 'CA'">
+            <th align="right">Amount Received :  </th>
+            <td>{{data2.amount_received}}</td>
+        </tr>
+        <tr ng-if="data2.payment_type == 'CA'">
+            <th align="right">Balance :  </th>
+            <td>{{data2.balance}}</td>
+        </tr>
     </table>
 </div>

@@ -258,13 +258,13 @@
                 <div class="form-group">
                     <label class="col-lg-5 control-label">Total Item Vat Amount</label>
                     <div class="col-lg-7">
-                        <input type="text" class="form-control text-right" ng-value="data.total_item_vat_amount" readonly="">
+                        <input type="text" class="form-control text-right" ng-value="data.total_item_vat_amount" readonly="" tabindex="-1">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-lg-5 control-label">Total Item Sale Amount</label>
                     <div class="col-lg-7">
-                        <input type="text" class="form-control text-right" ng-value="data.total_item_sale_amount" readonly="">
+                        <input type="text" class="form-control text-right" ng-value="data.total_item_sale_amount" readonly="" tabindex="-1">
                     </div>
                 </div>
                 <div class="form-group">
@@ -273,13 +273,13 @@
                         <input type="text" class="form-control text-right" ng-model="data.total_item_discount_percent" ng-change="updateSaleRate()" maxlength="5" number-mask="">
                     </div>
                     <div class="col-lg-7">
-                        <input type="text" class="form-control text-right" ng-value="data.total_item_discount_amount" readonly="">
+                        <input type="text" class="form-control text-right" ng-value="data.total_item_discount_amount" readonly="" tabindex="-1">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-lg-5 control-label">Total Amount</label>
                     <div class="col-lg-7">
-                        <input type="text" class="form-control text-right" ng-value="data.total_item_amount" readonly="">
+                        <input type="text" class="form-control text-right" ng-value="data.total_item_amount" readonly="" tabindex="-1">
                     </div>
                 </div>
                 <div class="form-group hide">
@@ -291,13 +291,23 @@
                 <div class="form-group">
                     <label class="col-lg-5 control-label">Round Off</label>
                     <div class="col-lg-7">
-                        <input type="text" class="form-control text-right" ng-value="data.roundoff_amount" readonly="">
+                        <input type="text" class="form-control text-right" ng-value="data.roundoff_amount" readonly="" tabindex="-1">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-lg-5 control-label">Bill Amount</label>
                     <div class="col-lg-7">
-                        <input type="text" class="form-control text-right" ng-value="data.bill_amount" readonly="">
+                        <input type="text" class="form-control text-right" ng-value="data.bill_amount" readonly="" tabindex="-1" style="font-size: 20px;">
+                    </div>
+                </div>
+                <div class="form-group" ng-show="data.payment_type == 'CA'">
+                    <label class="col-lg-5 control-label">Amount Received</label>
+                    <div class="col-lg-3">
+                        <input type="text" class="form-control text-right" ng-model="data.amount_received" number-mask="" ng-keyup="updateBalance()" ng-keydown="updateBalance()">
+                    </div>
+                    <label class="col-lg-2 control-label">Balance</label>
+                    <div class="col-lg-2">
+                        <input type="text" class="form-control text-right" ng-value="data.balance" readonly="" tabindex="-1">
                     </div>
                 </div>
             </div>
