@@ -25,6 +25,8 @@ use yii\helpers\ArrayHelper;
  * @property string $welfare_amount
  * @property string $roundoff_amount
  * @property string $bill_amount
+ * @property string $amount_received
+ * @property string $balance
  * @property string $payment_status
  * @property string $status
  * @property integer $created_by
@@ -59,8 +61,16 @@ class PhaSale extends RActiveRecord {
             [['tenant_id', 'patient_id', 'consultant_id', 'created_by', 'modified_by'], 'integer'],
             [['sale_date', 'created_at', 'modified_at', 'deleted_at', 'encounter_id', 'patient_name'], 'safe'],
             [['payment_type', 'payment_status', 'status'], 'string'],
-            [['total_item_vat_amount', 'total_item_sale_amount', 'total_item_discount_percent', 'total_item_discount_amount', 'total_item_amount', 'welfare_amount', 'roundoff_amount', 'bill_amount'], 'number'],
-            [['mobile_no'], 'string', 'max' => 50]
+            [['total_item_vat_amount', 'total_item_sale_amount', 'total_item_discount_percent', 'total_item_discount_amount', 'total_item_amount', 'welfare_amount', 'roundoff_amount', 'bill_amount', 'amount_received', 'balance'], 'number'],
+            [['mobile_no'], 'string', 'max' => 50],
+            [['amount_received'], 'compare', 'compareAttribute' => 'bill_amount', 'operator' => '>=', 'type' => 'number', 'when' => function($model) {
+            if ($model->payment_type == 'CA')
+                return true;
+        }],
+            [['balance'], 'compare', 'compareValue' => 0, 'operator' => '>=', 'type' => 'number', 'when' => function($model) {
+            if ($model->payment_type == 'CA')
+                return true;
+        }],
         ];
     }
 
@@ -120,7 +130,7 @@ class PhaSale extends RActiveRecord {
                     $sale_billing_model = new PhaSaleBilling();
                 } else {
                     $sale_billing_model = PhaSaleBilling::find()->where(['sale_id' => $this->sale_id])->one();
-                    if(empty($sale_billing_model))
+                    if (empty($sale_billing_model))
                         $sale_billing_model = new PhaSaleBilling();
                 }
 
@@ -181,7 +191,7 @@ class PhaSale extends RActiveRecord {
         $extend = [
             'bill_no_with_patient' => function ($model) {
                 $bill_no = (isset($model->bill_no) ? $model->bill_no : '-');
-                $bill_no .= (isset($model->patient_id) ? ' ('.$model->patient->patGlobalPatient->patient_global_int_code.')' : '');
+                $bill_no .= (isset($model->patient_id) ? ' (' . $model->patient->patGlobalPatient->patient_global_int_code . ')' : '');
                 return $bill_no;
             },
             'patient' => function ($model) {
@@ -195,10 +205,10 @@ class PhaSale extends RActiveRecord {
             },
             'billings_total_balance_amount' => function ($model) {
                 $paid_amount = 0;
-                if(isset($model->phaSaleBillingsTotalPaidAmount)){
+                if (isset($model->phaSaleBillingsTotalPaidAmount)) {
                     $paid_amount = $model->phaSaleBillingsTotalPaidAmount;
-                } 
-                
+                }
+
                 $balance = $model->bill_amount - $paid_amount;
                 return number_format($balance, '2');
             },
