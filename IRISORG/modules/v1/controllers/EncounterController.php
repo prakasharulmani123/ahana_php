@@ -261,11 +261,7 @@ class EncounterController extends ActiveController {
             foreach ($encounters as $k => $e) {
                 if($e->encounter_type == 'IP' || ($e->encounter_type == 'OP' && $e->encounter->patAppointmentSeen)){
                     $data[$k] = $e->toArray();
-                    echo '<pre>';
-                    print_r($e->encounter->viewChargeCalculation);
-                    exit;
-                    $data[$k]['amount_paid'] = $e->encounter->paid;
-//                    $data[$k]['balance'] = $e->encounter->balance;
+                    $data[$k]['view_calculation'] = $e->encounter->viewChargeCalculation;
                 }
             }
 

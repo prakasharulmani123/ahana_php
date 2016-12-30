@@ -324,8 +324,8 @@ class PatEncounter extends RActiveRecord {
                 if ($model->encounter_type == 'IP') {
                     return $this->getAdvanceDetails();
                 } elseif ($model->encounter_type == 'OP') {
-                    if ($model->encounter->patAppointmentSeen) {
-                        return $model->encounter->patAppointmentSeen->amount;
+                    if ($model->patAppointmentSeen) {
+                        return $model->patAppointmentSeen->amount;
                     }
                 }
                 return 0;
@@ -516,9 +516,9 @@ class PatEncounter extends RActiveRecord {
 //            }
 
             public function getViewChargeCalculation() {
-                if ($this->encounter_type == 'IP') {
-                    $total_charge = $total_concession = 0;
+                $total_charge = $total_concession = $total_paid = $balance = 0;
 
+                if ($this->encounter_type == 'IP') {
                     $recurring = VBillingRecurring::find()
                                     ->where([
                                         'encounter_id' => $this->encounter_id,
@@ -546,13 +546,25 @@ class PatEncounter extends RActiveRecord {
                                         'tenant_id' => $this->tenant_id
                                     ])
                                     ->select('SUM(total_charge) as total_charge, SUM(concession_amount) as concession_amount')->one();
+                    
+                    $total_paid = VBillingAdvanceCharges::find()
+                                    ->where([
+                                        'encounter_id' => $this->encounter_id,
+                                        'tenant_id' => $this->tenant_id
+                                    ])
+                                    ->sum('total_charge');
+
 
                     $total_charge = $recurring->total_charge + $procedure->total_charge + $professional->total_charge + $other_charge->total_charge;
                     $total_concession = $this->concession_amount + $procedure->concession_amount + $professional->concession_amount + $other_charge->concession_amount;
-
-                    return compact('total_charge', 'total_concession');
+                    
+                    $balance = $total_charge - $total_concession - $total_paid;
+                } elseif ($this->encounter_type == 'OP') {
+                    if ($this->patAppointmentSeen) {
+                        $total_paid = $this->patAppointmentSeen->amount;
+                    }
                 }
-                return false;
+                return compact('total_charge', 'total_concession','total_paid','balance');
             }
 
             public function getAdvanceDetails() {
