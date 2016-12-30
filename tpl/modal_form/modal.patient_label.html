@@ -7,6 +7,25 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div class="row" id="print-area">
+                        <style type="text/css">
+                            @media print {
+                                html, body {
+                                    display: block;
+                                    font-family: "Calibri";
+                                    margin: 0;
+                                }
+                                @page {
+                                    size: 8cm 8cm;
+                                }
+                                .col-xs-6{
+                                    width: 50%;
+                                    float: left;
+                                }
+                                b{
+                                    display: none;
+                                }
+                            }
+                        </style>
                         <div class="col-xs-6">
                             <b>Name:</b> {{data.view_data.fullname}}<br />
                             <b>ID:</b> {{data.view_data.patient_global_int_code}}<br />
@@ -14,7 +33,7 @@
                             <b>Age: </b> {{data.view_data.patient_age}}
                         </div>
                         <div class="col-xs-6 text-right">
-                            <io-barcode code="{{data.view_data.patient_global_int_code}}" type="{{data.app.IO.type}}" options="data.app.IO.barcodeOptions"></io-barcode>
+                            <io-barcode code="{{data.view_data.patient_global_int_code}}" type="{{data.app.IO.type}}" code="{{data.app.IO.code}}" options="data.app.IO.barcodeOptions"></io-barcode>
                         </div>
                     </div>
                 </div>

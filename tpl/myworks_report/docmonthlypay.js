@@ -1,7 +1,7 @@
 app.controller('docmonthlypayController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$anchorScroll', '$filter', '$timeout', function ($rootScope, $scope, $timeout, $http, $state, $anchorScroll, $filter, $timeout) {
 
         console.log($scope.deviceDetector);
-        
+
         $scope.initReport = function () {
             $scope.showTable = false;
             $scope.consultant_fullname = '';
@@ -50,6 +50,8 @@ app.controller('docmonthlypayController', ['$rootScope', '$scope', '$timeout', '
                     .success(function (response) {
                         $scope.loadbar('hide');
                         $scope.records = response.report;
+                        console.log($scope.records);
+
                         $scope.total = response.total;
                         $scope.date = moment().format('YYYY-MM-DD hh:mm A');
                     })
@@ -201,7 +203,7 @@ app.controller('docmonthlypayController', ['$rootScope', '$scope', '$timeout', '
                 pageSize: 'A4',
             };
             pdfMake.createPdf(docDefinition).print();
-            
+
 //            var innerContents = document.getElementById("printThisElement").innerHTML;
 //            var popupWinindow = window.open('', '_blank', 'width=830,height=700,scrollbars=yes,menubar=no,toolbar=no,location=no,status=no,titlebar=no');
 //            popupWinindow.document.open();

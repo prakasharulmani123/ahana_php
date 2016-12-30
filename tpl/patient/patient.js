@@ -348,7 +348,8 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
     }]);
 app.controller('PatientPrintController', ['scope', '$scope', '$timeout', function (scope, $scope, $timeout) {
         $scope.data = scope;
-        
+//        angular.extend($scope.data.app.IO.barcodeOptions, {height: 25, width: 1});
+
         $scope.print = function () {
             $timeout(function () {
                 var innerContents = document.getElementById('print-area').innerHTML;
