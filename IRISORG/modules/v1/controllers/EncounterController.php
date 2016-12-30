@@ -213,8 +213,12 @@ class EncounterController extends ActiveController {
 
         if (isset($get['id'])) {
             $condition['patient_guid'][$get['id']] = $get['id'];
+            
+            if(isset($get['date'])){
+                $condition['DATE(date)'] = $get['date'];
+            }
 
-            $patient = PatPatient::getPatientByGuid($get['id']);
+//            $patient = PatPatient::getPatientByGuid($get['id']);
 
             $data = VEncounter::find()
                     ->where($condition)
@@ -248,9 +252,11 @@ class EncounterController extends ActiveController {
 
         if (isset($get['id'])) {
             $condition['patient_guid'][$get['id']] = $get['id'];
-
-            $patient = PatPatient::getPatientByGuid($get['id']);
-
+            
+            if(isset($get['date'])){
+                $condition['DATE(date)'] = $get['date'];
+            }
+            
             $encounters = VEncounter::find()
                     ->where($condition)
                     ->groupBy('encounter_id')
@@ -262,6 +268,9 @@ class EncounterController extends ActiveController {
                 if($e->encounter_type == 'IP' || ($e->encounter_type == 'OP' && $e->encounter->patAppointmentSeen)){
                     $data[$k] = $e->toArray();
                     $data[$k]['view_calculation'] = $e->encounter->viewChargeCalculation;
+                    
+                    if($e->encounter_type == 'OP')
+                        $data[$k]['seen'] = $e->encounter->patAppointmentSeen;
                 }
             }
 
