@@ -124,14 +124,19 @@ class MyworkreportsController extends ActiveController {
         $total = 0;
 
         foreach ($consultants as $key => $encounter) {
-            $reports[$key]['consultant_name'] = $encounter['report_consultant_name'];
-            $reports[$key]['patient_name'] = $encounter['report_patient_name'];
-            $reports[$key]['total_visit'] = $encounter['report_total_visit'];
-            $reports[$key]['total_charge_amount'] = $encounter['report_total_charge_amount'];
-            $total += $encounter['report_total_charge_amount'];
+            $reports[$encounter['report_consultant_name']]['items'][] = [
+                'patient_name' => $encounter['report_patient_name'],
+                'total_visit' => $encounter['report_total_visit'],
+                'total_charge_amount' => $encounter['report_total_charge_amount'],
+            ];
+//            $reports[$key]['consultant_name'] = $encounter['report_consultant_name'];
+//            $reports[$key]['patient_name'] = $encounter['report_patient_name'];
+//            $reports[$key]['total_visit'] = $encounter['report_total_visit'];
+//            $reports[$key]['total_charge_amount'] = $encounter['report_total_charge_amount'];
+            @$reports[$encounter['report_consultant_name']]['total'] += $encounter['report_total_charge_amount'];
         }
 
-        return ['report' => $reports, 'total' => $total];
+        return ['report' => $reports];
     }
 
     public function actionAdvancedetails() {
