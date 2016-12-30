@@ -2099,7 +2099,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
 
             //Patient Billing
             .state('patient.billing', {
-                url: '/billing/{id}',
+                url: '/billing/{id}?enc_id',
                 templateUrl: 'tpl/patient_billing/index.html',
                 controller: 'PatientLeftSideNotificationCtrl',
                 resolve: {

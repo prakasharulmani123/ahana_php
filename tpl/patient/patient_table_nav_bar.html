@@ -10,7 +10,11 @@
     <img src="img/medi-icon2.png"  alt="" tooltip="Encounters " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
 </a>
 
-<a check-access ui-sref="patient.billing({id: row.apptPatientData.patient_guid})">
+<a check-access ui-sref="patient.billing({id: row.apptPatientData.patient_guid})" ng-if="row.encounter_type == 'IP'">
+    <img src="img/medi-icon3.png"  alt="" tooltip=" Billing " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
+</a>
+
+<a check-access ui-sref="patient.allbilling({id: row.apptPatientData.patient_guid})" ng-if="row.encounter_type == 'OP'">
     <img src="img/medi-icon3.png"  alt="" tooltip=" Billing " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
 </a>
 
