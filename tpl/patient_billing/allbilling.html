@@ -66,8 +66,8 @@
                                 <span ng-if="encounter.encounter_type == 'IP'" class="label bg-success">{{encounter.details}}</span>
                             </td>
                             <td> {{encounter.doctor}} </td>
-                            <td> {{0}} </td>
-                            <td> {{0}} </td>
+                            <td> {{(encounter.view_calculation.total_paid || 0) | number:2 }} </td>
+                            <td> {{(encounter.view_calculation.balance || 0) | number:2}} </td>
                             <td>
                                 <button tooltip="Print Bill"  class="label bg-primary dk" ng-click="printOPBill(item)">
                                     <i class="fa fa-print"></i>
