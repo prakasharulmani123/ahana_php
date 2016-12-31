@@ -392,7 +392,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
                             PrescriptionService.addPrescriptionItem(items);
                             $scope.data.prescriptionItems = PrescriptionService.getPrescriptionItems();
-                            
+
                             $timeout(function () {
                                 $("#prescriptioncont-header.search-patientcont-header").hide();
                                 if (!prescription.hasOwnProperty('route')) {
@@ -784,6 +784,13 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                                 $scope.data.prescriptionItems = PrescriptionService.getPrescriptionItems();
                                             }
 
+                                        }
+                                    } else {
+                                        if (typeof date == 'undefined') {
+                                            var typed_prescription = PrescriptionService.getPrescriptionItems();
+                                            if (typed_prescription.length > 0) {
+                                                $scope.data.prescriptionItems = typed_prescription;
+                                            }
                                         }
                                     }
 
