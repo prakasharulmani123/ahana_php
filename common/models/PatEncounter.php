@@ -423,7 +423,8 @@ class PatEncounter extends RActiveRecord {
                                 'patient_category_fullname',
                                 'patient_mobile',
                                 'patient_id',
-                                'current_room'
+                                'current_room',
+                                'patient_category_color'
                     ]);
                 } else {
                     return '-';
