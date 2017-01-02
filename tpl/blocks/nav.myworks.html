@@ -1,32 +1,32 @@
 <a href class="btn no-shadow navbar-btn" ng-click="app.settings.asideFolded = !app.settings.asideFolded">
     <i class="fa {{app.settings.asideFolded ? 'fa-indent' : 'fa-dedent'}} fa-fw"></i>
-</a> 
+</a>
 <ul class="nav ng-scope">
-    <li class="ng-scope"> 
-        <a class="auto" href=""> 
-            <span class="pull-right text-muted"> 
-                <i class="fa fa-fw fa-angle-right text"></i> 
-                <i class="fa fa-fw fa-angle-down text-active"></i> 
-            </span> 
-            <i class="fa fa-file-text icon text-info-lter"></i> 
-            <span class="ng-binding"> Reports </span> 
+    <li class="ng-scope">
+        <a class="auto" href="">
+            <span class="pull-right text-muted">
+                <i class="fa fa-fw fa-angle-right text"></i>
+                <i class="fa fa-fw fa-angle-down text-active"></i>
+            </span>
+            <i class="fa fa-file-text icon text-info-lter"></i>
+            <span class="ng-binding"> Reports </span>
         </a>
         <ul class="nav nav-sub dk">
-            <li ui-sref-active="active"> 
-                <a check-access ui-sref="myworks.opDoctorPay"> <span>OP Doctor Pay</span> </a> 
+            <li ui-sref-active="active">
+                <a check-access ui-sref="myworks.opDoctorPay"> <span>OP Doctor Pay</span> </a>
             </li>
-            <li ui-sref-active="active"> 
-                <a check-access ui-sref="myworks.advanceDetails"> <span>Advance Details</span> </a> 
+            <li ui-sref-active="active">
+                <a check-access ui-sref="myworks.advanceDetails"> <span>Advance Details</span> </a>
             </li>
-            <li ui-sref-active="active"> 
-                <a check-access ui-sref="myworks.monthlyDocPay"> <span>Doctor's Monthly Pay</span> </a> 
+            <li ui-sref-active="active">
+                <a check-access ui-sref="myworks.monthlyDocPay"> <span>Monthly Pay</span> </a>
             </li>
         </ul>
     </li>
-    <li ui-sref-active="active"> 
+    <li ui-sref-active="active">
         <a check-access ui-sref="myworks.patientMerge">
             <i class="fa fa-users icon text-info-lter"></i>
-            <span>Patients Merge</span> 
-        </a> 
+            <span>Patients Merge</span>
+        </a>
     </li>
 </ul>
