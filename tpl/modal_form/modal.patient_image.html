@@ -6,7 +6,7 @@
         <div class="alert ng-isolate-scope alert-danger alert-dismissable" ng-show="errorData2" ng-bind-html="errorData2"></div>
         <div class="row">
             <form name="uploadimage" class="form-horizontal form-validation" novalidate="">
-                <div class="col-sm-6" ng-init="data.verify_password = ''">
+                <div class="col-sm-6">
                     <div class="modal-body">
                         <div class="panel panel-default">
                             <div class="panel-body">
@@ -26,6 +26,14 @@
                                     ></ng-camera>
                             </div>
                         </div>
+                        <div class="panel panel-default" ng-show="data.patientObj.patient_image">
+                            <div class="panel-heading">Profile Photo:</div>
+                            <div class="panel-body">
+                                <div class="text-center">
+                                <img ng-src="{{data.patientObj.patient_image}}"  alt="" width="250" height="200" />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -34,8 +42,8 @@
                         <div class="panel panel-default">
                             <div class="panel-body">
                                 <div class="cropArea">
-                                    <img-crop 
-                                        image="myImage" 
+                                    <img-crop
+                                        image="myImage"
                                         result-image="myCroppedImage"
                                         area-type="square"
                                         area-min-size="125"
@@ -56,22 +64,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!--                <div class="col-sm-6" ng-init="data.verify_password = ''">
-                                    <div class="modal-body">
-                                        <div class="panel panel-default">
-                                            <div class="panel-body">
-                                                <input type="file" file-model="myFile" accept="image/*" ui-jq="filestyle" type="file" data-icon="false" data-classButton="btn btn-default" data-classInput="form-control inline v-middle input-s">
-                                            </div>
-                                            <footer class="panel-footer text-right bg-light lter">
-                                                <button class="btn m-b-xs  btn-success save-btn" ng-click="uploadFile()">Submit</button>
-                                                &nbsp;
-                                                <button class="btn m-b-xs  btn-dark" ng-click="cancel()"><i class="fa fa-times"></i> Cancel</button>
-                                                &nbsp;
-                                            </footer>
-                                        </div>
-                                    </div>
-                                </div>-->
             </form>
         </div>
     </div>

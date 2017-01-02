@@ -796,7 +796,7 @@ angular.module('app')
                 $scope.printOPBill = function (item) {
                     $scope.printBillData.date = moment(item.date).format('DD/MM/YYYY hh:mm A');
                     $scope.printBillData.doctor = item.doctor;
-                    
+
                     //Get appointment details
                     $http.post($rootScope.IRISOrgServiceUrl + '/encounter/appointmentseenencounter', {patient_id: $state.params.id, enc_id: item.encounter_id})
                             .success(function (response) {
@@ -822,7 +822,7 @@ angular.module('app')
 //                $scope.printOPBill = function (item) {
 //                    $scope.printBillData.date = moment(item.date).format('DD/MM/YYYY hh:mm A');
 //                    $scope.printBillData.doctor = item.consultant_name;
-//                    
+//
 //                    //Patient Billing Types List
 //                    $rootScope.commonService.GetPatientBillingList(function (response) {
 //                        $scope.bill_types = response;
@@ -1057,6 +1057,7 @@ angular.module('app').controller('PatientLeftSideNotificationCtrl', ['$rootScope
 angular.module('app').controller('PatientImageController', ['scope', '$scope', '$modalInstance', '$rootScope', '$timeout', 'fileUpload', '$state', '$http', 'block', function (scope, $scope, $modalInstance, $rootScope, $timeout, fileUpload, $state, $http, block) {
         $scope.fileUpload = fileUpload;
         $scope.block = block;
+        $scope.data = scope;
 
         $scope.uploadFile = function () {
             var file = $scope.myFile;
