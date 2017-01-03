@@ -35,26 +35,31 @@ class MyworkreportsController extends ActiveController {
 
     public function actionOpdoctorpaymentreport() {
         $post = Yii::$app->getRequest()->post();
-        $tenant_id = Yii::$app->user->identity->logged_tenant_id;
 
         $encounters = PatEncounter::find()
                 ->joinWith('patAppointmentSeen')
                 ->joinWith("patAppointmentSeen.consultant")
                 ->joinWith("patient")
                 ->joinWith("patient.patGlobalPatient")
-                ->andWhere(['pat_encounter.tenant_id' => $tenant_id])
+                ->joinWith("tenant")
                 ->andWhere('pat_encounter.deleted_at = "0000-00-00 00:00:00"');
 
-        if (isset($post['from']) && isset($post['to']) && isset($post['consultant_id'])) {
+        if (isset($post['from']) && isset($post['to']) && isset($post['consultant_id']) && isset($post['tenant_id'])) {
+            $consultant_ids = join("','", $post['consultant_id']);
+            $tenant_ids = join("','", $post['tenant_id']);
             $encounters->andWhere("date(pat_encounter.encounter_date) between '{$post['from']}' AND '{$post['to']}'");
-            $encounters->andWhere("pat_appointment.consultant_id = {$post['consultant_id']}");
+            $encounters->andWhere("pat_appointment.consultant_id IN ( '$consultant_ids' )");
+            $encounters->andWhere("pat_encounter.tenant_id IN ( '$tenant_ids' )");
         }
 
+        $encounters->addSelect(["pat_encounter.encounter_id as encounter_id"]);
+        $encounters->addSelect(["pat_patient.patient_id as op_doctor_payment_patient_id"]);
+
+        $encounters->addSelect(["co_tenant.tenant_name as branch_name"]);
         $encounters->addSelect(["CONCAT(co_user.title_code, '', co_user.name) as op_doctor_payment_consultant_name"]);
         $encounters->addSelect(["CONCAT(pat_global_patient.patient_title_code, '', pat_global_patient.patient_firstname) as op_doctor_payment_patient_name"]);
+        $encounters->addSelect(["pat_global_patient.patient_global_int_code as op_doctor_payment_patient_global_int_code"]);
         $encounters->addSelect(["pat_global_patient.patient_mobile as op_doctor_payment_patient_mobile"]);
-        $encounters->addSelect(["pat_patient.patient_id as op_doctor_payment_patient_id"]);
-        $encounters->addSelect(["pat_encounter.encounter_id as encounter_id"]);
         $encounters->addSelect(["pat_appointment.amount as op_doctor_payment_amount"]);
         $encounters->addSelect(["pat_appointment.status_date as op_doctor_payment_seen_date"]);
         $encounters->addSelect(["pat_appointment.status_time as op_doctor_payment_seen_time"]);
@@ -62,8 +67,6 @@ class MyworkreportsController extends ActiveController {
         $encounters = $encounters->all();
 
         $reports = [];
-        $total = 0;
-
         foreach ($encounters as $key => $encounter) {
             $reports[$key]['new_op'] = false;
 
@@ -80,15 +83,16 @@ class MyworkreportsController extends ActiveController {
                 }
             }
 
+            $reports[$key]['branch_name'] = $encounter['branch_name'];
             $reports[$key]['consultant_name'] = $encounter['op_doctor_payment_consultant_name'];
             $reports[$key]['patient_name'] = $encounter['op_doctor_payment_patient_name'];
+            $reports[$key]['patient_global_int_code'] = $encounter['op_doctor_payment_patient_global_int_code'];
             $reports[$key]['patient_mobile'] = $encounter['op_doctor_payment_patient_mobile'];
             $reports[$key]['payment_amount'] = $encounter['op_doctor_payment_amount'];
             $reports[$key]['op_seen_date_time'] = $encounter['op_doctor_payment_seen_date'] . " " . $encounter['op_doctor_payment_seen_time'];
-            $total += $encounter['op_doctor_payment_amount'];
         }
 
-        return ['report' => $reports, 'total' => $total];
+        return ['report' => $reports];
     }
 
     public function actionDocmonthlypayreport() {
@@ -139,17 +143,25 @@ class MyworkreportsController extends ActiveController {
         return ['report' => $reports];
     }
 
-    public function actionAdvancedetails() {
-        $model = PatEncounter::find()
-                ->tenant()
-                ->status()
-                ->encounterType("IP")
-                ->orderBy([
-                    'encounter_date' => SORT_DESC,
-                ])
-                ->all();
+    public function actionIpbillstatus() {
+        $post = Yii::$app->getRequest()->post();
 
-        return $model;
+        if (isset($post['consultant_id']) && isset($post['tenant_id'])) {
+            $consultant_ids = join("','", $post['consultant_id']);
+            $tenant_ids = join("','", $post['tenant_id']);
+            $model = PatEncounter::find()
+                    ->joinWith('patLiveAdmission')
+                    ->status()
+                    ->encounterType("IP")
+                    ->andWhere("pat_admission.consultant_id IN ( '$consultant_ids' )")
+                    ->andWhere("pat_encounter.tenant_id IN ( '$tenant_ids' )")
+                    ->orderBy([
+                        'encounter_date' => SORT_DESC,
+                    ])
+                    ->all();
+
+            return $model;
+        }
     }
 
 }

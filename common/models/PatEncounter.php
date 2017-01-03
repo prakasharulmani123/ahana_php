@@ -42,6 +42,7 @@ class PatEncounter extends RActiveRecord {
     public $add_casesheet_no = 'A';
     public $total_amount = '';
     public $op_doctor_payment_patient_name;
+    public $op_doctor_payment_patient_global_int_code;
     public $op_doctor_payment_patient_mobile;
     public $op_doctor_payment_patient_id;
     public $op_doctor_payment_amount;
@@ -53,6 +54,7 @@ class PatEncounter extends RActiveRecord {
     public $seen_count;
     public $arrived_count;
     public $booked_count;
+    public $branch_name;
 
     /**
      * @inheritdoc
@@ -68,7 +70,7 @@ class PatEncounter extends RActiveRecord {
         return [
             [['encounter_date'], 'required'],
             [['tenant_id', 'patient_id', 'finalize', 'authorize', 'created_by', 'modified_by', 'discharge'], 'integer'],
-            [['encounter_date', 'inactive_date', 'created_at', 'modified_at', 'deleted_at', 'casesheet_no', 'discharge', 'total_amount', 'bill_no', 'bill_notes', 'consultant_id', 'total_booking', 'seen_count', 'arrived_count', 'booked_count'], 'safe'],
+            [['encounter_date', 'inactive_date', 'created_at', 'modified_at', 'deleted_at', 'casesheet_no', 'discharge', 'total_amount', 'bill_no', 'bill_notes', 'consultant_id', 'total_booking', 'seen_count', 'arrived_count', 'booked_count', 'branch_name'], 'safe'],
             [['status', 'casesheet_no', 'add_casesheet_no'], 'string'],
             [['concession_amount'], 'number'],
             [['encounter_type'], 'string', 'max' => 5],
@@ -255,6 +257,9 @@ class PatEncounter extends RActiveRecord {
      */
     public function fields() {
         $extend = [
+            'branch_name' => function ($model) {
+                return (isset($model->tenant->tenant_name) ? $model->tenant->tenant_name : '-');
+            },
             'patient' => function ($model) {
                 return (isset($model->patient) ? $model->patient : '-');
             },
