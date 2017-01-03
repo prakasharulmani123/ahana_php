@@ -1,0 +1,100 @@
+<div class="bg-light lter b-b wrapper-md">
+    <h1 class="m-n h3">Patient Groups</h1>
+</div>
+
+<div class="wrapper-md" ng-controller="PatientGroupsController" ng-init="loadPharmacyPatientGroupsList()">
+    <div ng-include="'tpl/blocks/alert.html'">
+        {% include 'tpl/blocks/alert.html' %}
+    </div>
+    <div class="panel panel-default">
+        <div class="row wrapper">
+            <div class="col-sm-1 m-b-xs">
+                <button class="btn btn-sm btn-grey" ng-click="loadPharmacyPatientGroupsList()"> 
+                    &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
+                </button>
+            </div>
+            <input id="filter" type="text" class="form-control input-sm w-sm inline m-r" placeholder="Search" ng-model="form_filter"/>
+        </div>
+
+        <div>
+            <table data-filter="#filter" data-filtering="true" ui-jq="footable" class="table m-b-none footable-loaded footable default">
+                <thead>
+                    <tr>
+                        <th align="left" valign="top" data-toggle="true">
+                            <button class="btn btn-sm btn-default" type="button" ng-click="ctrl.expandAll(allExpanded = !allExpanded)">
+                                <i ng-if="!allExpanded" class="fa fa-plus text"></i>
+                                <i ng-if="allExpanded" class="fa fa-minus text"></i>
+                            </button>
+                        </th>
+                        <th>Group name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat-start="row in rowCollection | orderBy: group_name">
+                        <td align="left" valign="top" width="5%">
+                            <button ng-click="expanded = !expanded" expand class="btn btn-sm btn-default hms-plus">
+                                <i ng-if="!expanded" class="fa fa-plus text"></i>
+                                <i ng-if="expanded" class="fa fa-minus text"></i>
+                            </button>
+                        </td>
+                        <td>
+                            {{row.group_name}}
+                        </td>
+                    </tr>
+
+                    <tr ng-repeat-end ng-show="expanded" data-value="{{row.group_name}}">
+                        <td data-value="{{row.group_name}}">&nbsp;</td>
+
+                        <td colspan="2" data-value="{{row.group_name}}">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="panel panel-default inner-panel">
+                                        <div class="panel-heading">
+                                            <b> Patients </b> 
+                                            <button class="label bg-primary pull-right" ng-click="rowform.$show();
+                                                        addSubRow(row.patient_group_id)" type="button">Add Row
+                                            </button>
+                                        </div>
+
+                                        <ul class="list-group no-radius">
+                                            <li class="list-group-item" ng-repeat="patient in row.patients">
+                                                <span class="pull-right" ng-show="!rowform.$visible"> 
+                                                    <!--<button ng-click="rowform.$show()" class="badge bg-dark ng-binding">Edit</button>-->  
+                                                    <button ng-click="deleteSubRow(row.patient_group_id, patient.global_patient_id, patient.temp_patient_group_id);" class="badge bg-danger ng-binding">Delete</button>
+                                                </span>
+
+                                                <form editable-form name="rowform" onbeforesave="updatePatient($data, patient.global_patient_id, row.patient_group_id, patient.temp_patient_group_id)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == patient">
+                                                    <span class="pull-right">
+                                                        <button type="submit" ng-disabled="rowform.$waiting" class="badge bg-success">
+                                                            Save
+                                                        </button>
+                                                        &nbsp;&nbsp;
+                                                        <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()" class="badge bg-danger">
+                                                            Cancel
+                                                        </button>
+                                                    </span>
+                                                </form>
+
+                                                <span 
+                                                    editable-text="patient.global_patient_id" 
+                                                    e-name="patient" 
+                                                    e-form="rowform" 
+                                                    onbeforesave="checkInput($data)"
+                                                    e-typeahead-editable="false" 
+                                                    e-typeahead="patient as patient.name_with_int_code for patient in getPatients($viewValue) | filter:{name_with_int_code:$viewValue} | limitTo: 10"
+                                                    >
+                                                    {{patient.patient_title_code + patient.patient_firstname|| 'empty' }}
+                                                </span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot class="hide-if-no-paging"></tfoot>
+            </table>
+        </div>
+    </div>
+</div>

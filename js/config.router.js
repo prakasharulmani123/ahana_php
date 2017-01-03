@@ -2111,6 +2111,22 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 }
             })
 
+            //PHARMACY PATIENT GROUP
+            .state('pharmacy.patientgroup', {
+                url: '/patientgroup',
+                templateUrl: 'tpl/patient_groups/pharmacy_patient_list.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['xeditable']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/patient_groups/patient_groups.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+
             //Patient Billing
             .state('patient.allbilling', {
                 url: '/allbilling/{id}',

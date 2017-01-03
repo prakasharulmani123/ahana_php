@@ -3,7 +3,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         editableThemes.bs3.inputClass = 'input-sm';
         editableThemes.bs3.buttonsClass = 'btn-sm';
         editableOptions.theme = 'bs3';
-        
+
         $scope.show_patient_loader = false;
         $scope.show_consultant_loader = false;
         $scope.show_encounter_loader = false;
@@ -96,7 +96,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading saleList!";
                     });
-                    
+
             //Consultant List
             $rootScope.commonService.GetDoctorList('', '1', false, '1', function (response) {
                 $scope.doctors = response.doctorsList;
@@ -130,6 +130,11 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             $rootScope.commonService.GetPaymentType(function (response) {
                 $scope.paymentTypes = response;
                 $scope.paymentTypes.push({value: 'COD', label: 'Cash On Delivery'});
+            });
+
+            //Payment types
+            $rootScope.commonService.GetPatientGroup('1', false, function (response) {
+                $scope.patientgroups = response.patientgroupList;
             });
 
             if ($scope.data.formtype == 'update') {
@@ -168,6 +173,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             $scope.data.consultant_id = $item.last_consultant_id;
 
             $scope.getEncounter(id, 'add', '');
+            $scope.getPatientGroupByPatient($item.patient_guid);
             //Hided the below one 
 //            $scope.getPatientMobileNo(id);
         }
@@ -191,6 +197,31 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 });
             }
 
+        }
+
+        $scope.getPatientGroupByPatient = function (patient_id) {
+            if (patient_id) {
+                $scope.show_group_loader = true;
+                $http.get($rootScope.IRISOrgServiceUrl + '/patientgroup/getpatientgroupbypatient?id=' + patient_id)
+                        .success(function (response) {
+                            $scope.data.patient_group_id = $scope.data.patient_group_name = '';
+                            if (response.groups.length) {
+                                $scope.data.patient_group_id = response.groups[0].patient_group_id;
+                                $scope.data.patient_group_name = response.groups[0].group_name;
+                            }
+                            $scope.show_group_loader = false;
+                        })
+                        .error(function () {
+                            $scope.errorData = "An Error has occured while loading products!";
+                        });
+            }
+        }
+
+        $scope.updatePatientGroupname = function () {
+            selected = $filter('filter')($scope.patientgroups, {patient_group_id: $scope.data.patient_group_id});
+            if (selected.length)
+                $scope.data.patient_group_name = selected[0].group_name;
+            console.log($scope.data.patient_group_name);
         }
 
         //Get selected patient mobile no.
@@ -585,7 +616,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             $scope.data.amount_received = bill_amount;
             $scope.updateBalance();
         }
-        
+
         $scope.updateBalance = function () {
             $scope.data.balance = $scope.data.amount_received - $scope.data.bill_amount;
         }
@@ -799,13 +830,14 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         }
 
         var canceler;
-        
+
         $scope.getPatients = function (patientName) {
-            if (canceler) canceler.resolve();
+            if (canceler)
+                canceler.resolve();
             canceler = $q.defer();
-            
+
             $scope.show_patient_loader = true;
-        
+
             return $http({
                 method: 'POST',
                 url: $rootScope.IRISOrgServiceUrl + '/patient/getpatient',
@@ -907,20 +939,20 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                     $scope.data.bill_no = response.code.next_fullcode;
             });
         }
-        
+
         $scope.printSaleBill = function (row, saleitem) {
             $scope.data2 = row;
             $scope.saleItems2 = saleitem.items;
             $scope.getConsultantDetail(row.consultant_id);
             $scope.getPaytypeDetail(row.payment_type);
             $scope.btnid = 'print';
-            
-            angular.forEach($scope.saleItems2, function(item){
+
+            angular.forEach($scope.saleItems2, function (item) {
                 item.full_name = item.product.full_name;
                 item.batch_details = item.batch.batch_details;
                 item.expiry_date = item.batch.expiry_date;
             });
-            
+
             $timeout(function () {
                 save_success();
             }, 1000)
