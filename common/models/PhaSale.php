@@ -3,7 +3,9 @@
 namespace common\models;
 
 use common\models\query\PhaSaleQuery;
+use Yii;
 use yii\db\ActiveQuery;
+use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -29,6 +31,9 @@ use yii\helpers\ArrayHelper;
  * @property string $balance
  * @property string $payment_status
  * @property string $status
+ * @property string $patient_name
+ * @property integer $patient_group_id
+ * @property string $patient_group_name
  * @property integer $created_by
  * @property string $created_at
  * @property integer $modified_by
@@ -59,7 +64,7 @@ class PhaSale extends RActiveRecord {
         return [
             [['sale_date'], 'required'],
             [['tenant_id', 'patient_id', 'consultant_id', 'created_by', 'modified_by'], 'integer'],
-            [['sale_date', 'created_at', 'modified_at', 'deleted_at', 'encounter_id', 'patient_name'], 'safe'],
+            [['sale_date', 'created_at', 'modified_at', 'deleted_at', 'encounter_id', 'patient_name', 'patient_group_id', 'patient_group_name'], 'safe'],
             [['payment_type', 'payment_status', 'status'], 'string'],
             [['total_item_vat_amount', 'total_item_sale_amount', 'total_item_discount_percent', 'total_item_discount_amount', 'total_item_amount', 'welfare_amount', 'roundoff_amount', 'bill_amount', 'amount_received', 'balance'], 'number'],
             [['mobile_no'], 'string', 'max' => 50],
@@ -113,6 +118,12 @@ class PhaSale extends RActiveRecord {
             if ($this->payment_type != 'CA') {
                 $this->payment_status = 'P';
             }
+        }
+
+        //Patient Grouping
+        if ($this->patient_group_id && $this->patient_id) {
+            $patient = PatPatient::findOne(['patient_id' => $this->patient_id]);
+            PatGlobalPatient::syncPatientGroup($patient->patGlobalPatient->global_patient_id, [$this->patient_group_id]);
         }
 
         return parent::beforeSave($insert);

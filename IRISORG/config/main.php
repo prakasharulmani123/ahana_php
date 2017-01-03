@@ -53,7 +53,7 @@ return [
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/roomcharge'], 'extraPatterns' => ['POST remove' => 'remove', 'GET getroomchargecategorylist' => 'getroomchargecategorylist']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/speciality'], 'extraPatterns' => ['GET getspecialitylist' => 'getspecialitylist']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/patientcategory'], 'extraPatterns' => ['GET getpatientcategorylist' => 'getpatientcategorylist']],
-                ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/patientgroup']],
+                ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/patientgroup'], 'extraPatterns' => ['GET getpatientgrouplist' => 'getpatientgrouplist', 'GET getpatientgroupbypatient' => 'getpatientgroupbypatient', 'POST syncpatient' => 'syncpatient']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/chargepercategory']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/chargepersubcategory'], 'extraPatterns' => ['GET getroomchargesubcategorylist' => 'getroomchargesubcategorylist', 'POST saveallchargecategory' => 'saveallchargecategory']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/internalcode'], 'extraPatterns' => ['GET getinternalcode' => 'getinternalcode']],

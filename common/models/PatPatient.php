@@ -608,7 +608,10 @@ class PatPatient extends RActiveRecord {
                     }
                 }
                 return false;
-            }
+            },
+            'have_patient_group' => function ($model) {
+                return !empty($model->patGlobalPatient->patientGroups);
+            },
                 ];
 
                 foreach ($this->_global_fields as $global_field) {

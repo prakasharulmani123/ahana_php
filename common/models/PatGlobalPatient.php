@@ -2,6 +2,9 @@
 
 namespace common\models;
 
+use cornernote\linkall\LinkAllBehavior;
+use Yii;
+use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -115,20 +118,68 @@ class PatGlobalPatient extends RActiveRecord {
             'deleted_at' => 'Deleted At',
         ];
     }
-    
+
     public function getPatPatient() {
         return $this->hasMany(PatPatient::className(), ['patient_global_guid' => 'patient_global_guid']);
     }
-    
+
     public function getPatPatientChildrens() {
         return $this->hasMany(self::className(), ['parent_id' => 'patient_global_guid']);
     }
-    
+
     public function getPatPatientChildrensCount() {
         return $this->getPatPatientChildrens()->count();
     }
-    
+
     public function getPatPatientChildrensGlobalIds() {
         return ArrayHelper::map($this->getPatPatientChildrens()->all(), 'patient_global_guid', 'patient_global_int_code');
     }
+
+    public function behaviors() {
+        $extend = [
+            LinkAllBehavior::className(),
+        ];
+
+        $behaviour = array_merge(parent::behaviors(), $extend);
+        return $behaviour;
+    }
+
+    public function getPatientGroupsPatients() {
+        return $this->hasMany(CoPatientGroupsPatients::className(), ['global_patient_id' => 'global_patient_id']);
+    }
+
+    public function getPatientGroups() {
+        return $this->hasMany(CoPatientGroup::className(), ['patient_group_id' => 'patient_group_id'])->via('patientGroupsPatients');
+    }
+
+    public function fields() {
+        if ($onlyField = Yii::$app->request->get('onlyfields')) {
+            switch ($onlyField):
+                case 'pharmacylist':
+                    $only_keys = ['global_patient_id', 'patient_firstname', 'patient_lastname', 'patient_title_code', 'patient_global_guid'];
+                    break;
+            endswitch;
+
+            return array_intersect_key(parent::fields(), array_flip($only_keys));
+        }
+        return parent::fields();
+    }
+
+    public static function syncPatientGroup($global_patient_id, $patient_group_ids, $type = 'link') {
+        $patient = self::find()->where(['global_patient_id' => $global_patient_id])->one();
+        if ($type == 'link') {
+            foreach ($patient_group_ids as $patient_group_id) {
+                $groups[] = CoPatientGroup::find()->where(['patient_group_id' => $patient_group_id])->one();
+            }
+        } else {
+            $groups = [];
+        }
+        $extraColumns = ['created_by' => Yii::$app->user->identity->user_id, 'modified_by' => Yii::$app->user->identity->user_id, 'modified_at' => new Expression('NOW()')]; // extra columns to be saved to the many to many table
+        $unlink = true; // unlink tags not in the list
+        $delete = true; // delete unlinked tags
+
+        $patient->linkAll('patientGroups', $groups, $extraColumns, $unlink, $delete);
+        return $patient;
+    }
+
 }
