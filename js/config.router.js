@@ -2624,16 +2624,16 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
-            //Myworks AdvanceDetails
-            .state('myworks.advanceDetails', {
-                url: '/advanceDetails',
-                templateUrl: 'tpl/myworks_report/advancedetails.html',
+            //Myworks ipBillStatus
+            .state('myworks.ipBillStatus', {
+                url: '/ipBillStatus',
+                templateUrl: 'tpl/myworks_report/ipBillStatus.html',
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['smart-table']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/myworks_report/advancedetails.js');
+                                        return $ocLazyLoad.load('tpl/myworks_report/ipBillStatus.js');
                                     }
                             );
                         }]
