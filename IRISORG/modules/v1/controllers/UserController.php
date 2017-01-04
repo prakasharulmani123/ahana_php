@@ -504,19 +504,19 @@ class UserController extends ActiveController {
 
         if (isset($get['care_provider']))
             $care_provider = $get['care_provider'];
-        
+
         $doctors = CoUser::getDoctorsList($tenant, $care_provider, $status, $deleted);
-        
+
         $patient = \common\models\PatPatient::getPatientByGuid($get['patient_guid']);
-        if(isset($patient->patActiveOPEncounters)){
+        if (isset($patient->patActiveOPEncounters)) {
             $exist_doc = [];
-            
+
             foreach ($patient->patActiveOPEncounters as $op_enc) {
                 $exist_doc[] = $op_enc->patLiveAppointmentBooking->consultant_id;
             }
-            
+
             foreach ($doctors as $key => $doctor) {
-                if(in_array($doctor->user_id, $exist_doc)){
+                if (in_array($doctor->user_id, $exist_doc)) {
                     unset($doctors[$key]);
                 }
             }
@@ -595,8 +595,13 @@ class UserController extends ActiveController {
 
                 if ($column == 'discharge')
                     $encounter->status = 0;
+
+                if ($column == 'finalize')
+                    $encounter->finalize_date = date("Y-m-d");
             }else {
                 $encounter->$column = 0;
+                if ($column == 'finalize')
+                    $encounter->finalize_date = "0000-00-00";
             }
 
             $encounter->save(false);

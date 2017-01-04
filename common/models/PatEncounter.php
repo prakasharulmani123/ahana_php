@@ -19,6 +19,7 @@ use yii\db\ActiveQuery;
  * @property string $bill_no
  * @property string $bill_notes
  * @property integer $finalize
+ * @property string $finalize_date
  * @property integer $authorize
  * @property integer $discharge
  * @property string $status
@@ -70,7 +71,7 @@ class PatEncounter extends RActiveRecord {
         return [
             [['encounter_date'], 'required'],
             [['tenant_id', 'patient_id', 'finalize', 'authorize', 'created_by', 'modified_by', 'discharge'], 'integer'],
-            [['encounter_date', 'inactive_date', 'created_at', 'modified_at', 'deleted_at', 'casesheet_no', 'discharge', 'total_amount', 'bill_no', 'bill_notes', 'consultant_id', 'total_booking', 'seen_count', 'arrived_count', 'booked_count', 'branch_name'], 'safe'],
+            [['encounter_date', 'inactive_date', 'created_at', 'modified_at', 'deleted_at', 'casesheet_no', 'discharge', 'total_amount', 'bill_no', 'bill_notes', 'consultant_id', 'total_booking', 'seen_count', 'arrived_count', 'booked_count', 'branch_name', 'finalize_date'], 'safe'],
             [['status', 'casesheet_no', 'add_casesheet_no'], 'string'],
             [['concession_amount'], 'number'],
             [['encounter_type'], 'string', 'max' => 5],
@@ -242,6 +243,10 @@ class PatEncounter extends RActiveRecord {
     public function getPatAdmissionDischarge() {
         return $this->hasOne(PatAdmission::className(), ['encounter_id' => 'encounter_id'])->andWhere(['IN', 'admission_status', ['D', 'CD']])->orderBy(['created_at' => SORT_DESC]);
     }
+    
+    public function getPatAdmissionClinicalDischarge() {
+        return $this->hasOne(PatAdmission::className(), ['encounter_id' => 'encounter_id'])->andWhere(['IN', 'admission_status', ['CD']])->orderBy(['created_at' => SORT_DESC]);
+    }
 
     public function getPatAdmissionCancel() {
         return $this->hasOne(PatAdmission::className(), ['encounter_id' => 'encounter_id'])->andWhere(['IN', 'admission_status', ['AC']])->orderBy(['created_at' => SORT_DESC]);
@@ -309,6 +314,10 @@ class PatEncounter extends RActiveRecord {
             },
             'sts_status' => function ($model) {
                 return !$this->sts_status;
+            },
+            'clinical_discharge_date' => function ($model) {
+                if (!empty($model->patAdmissionClinicalDischarge))
+                    return $model->patAdmissionClinicalDischarge->status_date;
             },
             'discharge_date' => function ($model) {
                 if (!empty($model->patAdmissionDischarge))

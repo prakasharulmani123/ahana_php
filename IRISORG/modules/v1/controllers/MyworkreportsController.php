@@ -95,54 +95,6 @@ class MyworkreportsController extends ActiveController {
         return ['report' => $reports];
     }
 
-    public function actionDocmonthlypayreport() {
-        $post = Yii::$app->getRequest()->post();
-        $tenant_id = Yii::$app->user->identity->logged_tenant_id;
-
-        $consultants = PatConsultant::find()
-                ->joinWith("patient")
-                ->joinWith("patient.patGlobalPatient")
-                ->joinWith("consultant")
-                ->joinWith("encounter")
-                ->andWhere(['pat_encounter.tenant_id' => $tenant_id])
-                ->andWhere('pat_consultant.deleted_at = "0000-00-00 00:00:00"');
-
-        if (isset($post['from']) && isset($post['to'])) {
-            $consultants->andWhere("date(pat_consultant.consult_date) between '{$post['from']}' AND '{$post['to']}'");
-        }
-
-        if (isset($post['consultant_id'])) {
-            $consultants->andWhere("pat_consultant.consultant_id = {$post['consultant_id']}");
-        }
-
-        $consultants->addSelect(["CONCAT(co_user.title_code, '', co_user.name) as report_consultant_name"]);
-        $consultants->addSelect(["CONCAT(pat_global_patient.patient_title_code, '', pat_global_patient.patient_firstname) as report_patient_name"]);
-        $consultants->addSelect(["COUNT(pat_consultant.charge_amount) as report_total_visit"]);
-        $consultants->addSelect(["SUM(pat_consultant.charge_amount) as report_total_charge_amount"]);
-        $consultants->groupBy(["pat_consultant.consultant_id", "pat_consultant.patient_id"]);
-        $consultants->orderBy(["pat_global_patient.patient_firstname" => SORT_ASC]);
-
-        $consultants = $consultants->all();
-
-        $reports = [];
-        $total = 0;
-
-        foreach ($consultants as $key => $encounter) {
-            $reports[$encounter['report_consultant_name']]['items'][] = [
-                'patient_name' => $encounter['report_patient_name'],
-                'total_visit' => $encounter['report_total_visit'],
-                'total_charge_amount' => $encounter['report_total_charge_amount'],
-            ];
-//            $reports[$key]['consultant_name'] = $encounter['report_consultant_name'];
-//            $reports[$key]['patient_name'] = $encounter['report_patient_name'];
-//            $reports[$key]['total_visit'] = $encounter['report_total_visit'];
-//            $reports[$key]['total_charge_amount'] = $encounter['report_total_charge_amount'];
-            @$reports[$encounter['report_consultant_name']]['total'] += $encounter['report_total_charge_amount'];
-        }
-
-        return ['report' => $reports];
-    }
-
     public function actionIpbillstatus() {
         $post = Yii::$app->getRequest()->post();
 
@@ -162,6 +114,80 @@ class MyworkreportsController extends ActiveController {
 
             return $model;
         }
+    }
+
+    public function actionDischargedpatientbills() {
+        $post = Yii::$app->getRequest()->post();
+
+        $encounters = PatEncounter::find()
+                ->joinWith('patAdmissionClinicalDischarge')
+                ->status()
+                ->encounterType("IP")
+                ->finalized()
+                ->unauthorized();
+
+        if (isset($post['from']) && isset($post['to']) && isset($post['consultant_id']) && isset($post['tenant_id'])) {
+            $consultant_ids = join("','", $post['consultant_id']);
+            $tenant_ids = join("','", $post['tenant_id']);
+            $encounters->andWhere("date(pat_encounter.finalize_date) between '{$post['from']}' AND '{$post['to']}'");
+            $encounters->andWhere("pat_admission.consultant_id IN ( '$consultant_ids' )");
+            $encounters->andWhere("pat_encounter.tenant_id IN ( '$tenant_ids' )");
+        }
+
+        $encounters->andWhere("pat_encounter.bill_no != ''");
+
+        $result = $encounters->all();
+
+        return $result;
+    }
+
+    public function actionIpdoctorspay() {
+        $post = Yii::$app->getRequest()->post();
+
+        $consultants = PatConsultant::find()
+                ->joinWith("patient")
+                ->joinWith("patient.patGlobalPatient")
+                ->joinWith("consultant")
+                ->joinWith("encounter")
+                ->joinWith("tenant")
+                ->andWhere('pat_encounter.encounter_type = "IP"')
+                ->andWhere('pat_encounter.status = "1"')
+                ->andWhere('pat_encounter.finalize > "0"')
+                ->andWhere('pat_encounter.authorize = "0"')
+                ->andWhere('pat_consultant.deleted_at = "0000-00-00 00:00:00"');
+
+        if (isset($post['from']) && isset($post['to']) && isset($post['consultant_id']) && isset($post['tenant_id'])) {
+            $tenant_ids = join("','", $post['tenant_id']);
+            $consultant_ids = join("','", $post['consultant_id']);
+            $consultants->andWhere("pat_consultant.tenant_id IN ( '$tenant_ids' )");
+            $consultants->andWhere("pat_consultant.consultant_id IN ( '$consultant_ids' )");
+            $consultants->andWhere("date(pat_encounter.finalize_date) between '{$post['from']}' AND '{$post['to']}'");
+        }
+
+        $consultants->addSelect(["co_tenant.tenant_name as branch_name"]);
+        $consultants->addSelect(["CONCAT(co_user.title_code, '', co_user.name) as report_consultant_name"]);
+        $consultants->addSelect(["CONCAT(pat_global_patient.patient_title_code, '', pat_global_patient.patient_firstname) as report_patient_name"]);
+        $consultants->addSelect(["pat_global_patient.patient_global_int_code as report_patient_global_int_code"]);
+        $consultants->addSelect(["COUNT(pat_consultant.charge_amount) as report_total_visit"]);
+        $consultants->addSelect(["SUM(pat_consultant.charge_amount) as report_total_charge_amount"]);
+
+        $consultants->groupBy(["pat_consultant.consultant_id", "pat_consultant.patient_id"]);
+        $consultants->orderBy(["pat_global_patient.patient_firstname" => SORT_ASC]);
+
+        $consultants = $consultants->all();
+
+        $reports = [];
+
+        foreach ($consultants as $key => $encounter) {
+            $reports[$key]['branch_name'] = $encounter['branch_name'];
+            $reports[$key]['consultant_name'] = $encounter['report_consultant_name'];
+            $reports[$key]['patient_name'] = $encounter['report_patient_name'];
+            $reports[$key]['patient_global_int_code'] = $encounter['report_patient_global_int_code'];
+            $reports[$key]['total_visit'] = $encounter['report_total_visit'];
+            $reports[$key]['total_charge_amount'] = $encounter['report_total_charge_amount'];
+        }
+
+        return ['report' => $reports];
     }
 
 }
