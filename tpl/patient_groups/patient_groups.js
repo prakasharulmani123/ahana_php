@@ -1,4 +1,4 @@
-app.controller('PatientGroupsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'toaster', 'editableThemes', 'editableOptions', '$q', '$filter', function ($rootScope, $scope, $timeout, $http, $state, toaster, editableThemes, editableOptions, $q, $filter) {
+app.controller('PatientGroupsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'toaster', 'editableThemes', 'editableOptions', '$q', '$filter', 'fileUpload', function ($rootScope, $scope, $timeout, $http, $state, toaster, editableThemes, editableOptions, $q, $filter, fileUpload) {
 
         editableThemes.bs3.inputClass = 'input-sm';
         editableThemes.bs3.buttonsClass = 'btn-sm';
@@ -236,5 +236,4 @@ app.controller('PatientGroupsController', ['$rootScope', '$scope', '$timeout', '
                     $scope.errorData = data.message;
             });
         };
-
     }]);

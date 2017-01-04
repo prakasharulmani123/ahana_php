@@ -2386,7 +2386,10 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['xeditable', 'smart-table']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/organization/org.js');
+                                        return $ocLazyLoad.load([
+                                            'tpl/organization/org.js',
+                                            'tpl/modal_form/modal.pharmacy_purchase_import_errorlog.js'
+                                        ]);
                                     }
                             );
                         }]

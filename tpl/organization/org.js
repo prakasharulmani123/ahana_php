@@ -1,4 +1,4 @@
-app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', 'transformRequestAsFormPost', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, transformRequestAsFormPost) {
+app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', 'transformRequestAsFormPost', 'fileUpload', 'AuthenticationService', '$modal', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, transformRequestAsFormPost, fileUpload, AuthenticationService, $modal) {
 
         editableThemes.bs3.inputClass = 'input-sm';
         editableThemes.bs3.buttonsClass = 'btn-sm';
@@ -152,6 +152,91 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                     $scope.errorData = $scope.errorSummary(data);
                 else
                     $scope.errorData = data.message;
+            });
+        }
+        
+        $scope.import_process_text = '';
+        $scope.progress_imported_rows = 0;
+        $scope.success_import_rows = 0;
+        $scope.failed_import_rows = 0;
+        $scope.total_import_rows = 0;
+        $scope.import_percent = 0;
+        $scope.import_error_log = true;
+        
+        $scope.importCsv = function(){
+            $scope.loadbar('show');
+            $scope.import_process_text = 'Fetching the Excel Data. Please wait until the importing begins. This might take few mins';
+            var currentUser = AuthenticationService.getCurrentUser();
+            fileUpload.uploadFileToUrl($scope.myFile, $rootScope.IRISOrgServiceUrl + '/pharmacypurchase/import?tenant_id=' + currentUser.credentials.logged_tenant_id).success(function (response) {
+                if(response.success){
+                    $scope.total_import_rows = response.message.total_rows;
+                    $scope.import_process_text = 'Importing started';
+                    $scope.import_start(1);
+                }else{
+                    $scope.errorData2 = response.message;
+                }
+            }).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData2 = $scope.errorSummary(data);
+                else
+                    $scope.errorData2 = data.message;
+            });
+        }
+        
+        $scope.import_start = function(id){
+            $scope.loadbar('show');
+            $http({
+                method: 'POST',
+                url: $rootScope.IRISOrgServiceUrl + '/pharmacypurchase/importstart',
+                data: {id: id, max_id: $scope.total_import_rows},
+            }).success(
+                    function (response) {
+                        $scope.progress_imported_rows = $scope.progress_imported_rows + 1;
+                        $scope.import_process_text = 'Import progressing (' + $scope.progress_imported_rows + '/' + $scope.total_import_rows + ')';
+                        
+                        if(response.success){
+                            $scope.success_import_rows = $scope.success_import_rows + 1;
+                        }else{
+                            $scope.failed_import_rows = $scope.failed_import_rows + 1;
+                        }
+                        
+                        $scope.import_percent = ($scope.progress_imported_rows/$scope.total_import_rows) * 100;
+                        
+                        if(response.continue){
+                            $scope.import_start(response.continue);
+                        }else{
+                            $scope.import_process_text = 'Import completed (' + $scope.progress_imported_rows + '/' + $scope.total_import_rows + ')';
+                            $scope.showImportErrorLog();
+                        }
+                        $scope.loadbar('hide');
+                    }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        }
+        
+        $scope.showImportErrorLog = function(){
+            var modalInstance = $modal.open({
+                templateUrl: 'tpl/modal_form/modal.pharmacy_purchase_import_errorlog.html',
+                controller: "PharmacyPurchaseImportController",
+                resolve: {
+                    scope: function () {
+                        return $scope;
+                    },
+                }
+            });
+            modalInstance.data = $scope.futureappointmentSelectedItems;
+
+            modalInstance.result.then(function (selectedItem) {
+                $scope.selected = selectedItem;
+            }, function () {
+                $scope.loadFutureAppointmentsList();
+                $log.info('Modal dismissed at: ' + new Date());
             });
         }
     }]);
