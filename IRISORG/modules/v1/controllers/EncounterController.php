@@ -113,7 +113,7 @@ class EncounterController extends ActiveController {
 
                 $appt_model->encounter_id = $model->encounter_id;
 
-                //If appointment status is A (Arrived), then save first B (Booked) record 
+                //If appointment status is A (Arrived), then save first B (Booked) record
                 if ($appt_model->appt_status == "A") {
                     $appt_model->appt_status = "B";
                     $appt_model->save(false);
@@ -213,8 +213,8 @@ class EncounterController extends ActiveController {
 
         if (isset($get['id'])) {
             $condition['patient_guid'][$get['id']] = $get['id'];
-            
-            if(isset($get['date'])){
+
+            if (isset($get['date'])) {
                 $condition['DATE(date)'] = $get['date'];
             }
 
@@ -252,24 +252,24 @@ class EncounterController extends ActiveController {
 
         if (isset($get['id'])) {
             $condition['patient_guid'][$get['id']] = $get['id'];
-            
-            if(isset($get['date'])){
+
+            if (isset($get['date'])) {
                 $condition['DATE(date)'] = $get['date'];
             }
-            
+
             $encounters = VEncounter::find()
                     ->where($condition)
                     ->groupBy('encounter_id')
                     ->orderBy(['encounter_id' => SORT_DESC])
                     ->all();
-            
+
             $data = [];
             foreach ($encounters as $k => $e) {
-                if($e->encounter_type == 'IP' || ($e->encounter_type == 'OP' && $e->encounter->patAppointmentSeen)){
+                if ($e->encounter_type == 'IP' || ($e->encounter_type == 'OP' && $e->encounter->patAppointmentSeen)) {
                     $data[$k] = $e->toArray();
                     $data[$k]['view_calculation'] = $e->encounter->viewChargeCalculation;
-                    
-                    if($e->encounter_type == 'OP')
+
+                    if ($e->encounter_type == 'OP')
                         $data[$k]['seen'] = $e->encounter->patAppointmentSeen;
                 }
             }
@@ -295,39 +295,59 @@ class EncounterController extends ActiveController {
 
     //Reducing query for speed up. In-Progress
     public function actionOutpatients() {
-        $get = Yii::$app->getRequest()->get();
-        $date = date('Y-m-d');
-        $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+        $GET = Yii::$app->getRequest()->get();
+        $GET['date'] = date('Y-m-d');
+        $GET['tenant_id'] = Yii::$app->user->identity->logged_tenant_id;
+        $consultants = $opRowExp = [];
 
-        //Default Current OP
-        $query = "DATE(encounter_date) = '{$date}'";
-        if (isset($get['type'])) {
-            if ($get['type'] == 'Previous')
-                $query = "DATE(encounter_date) < '{$date}'";
-            else if ($get['type'] == 'Future')
-                $query = "DATE(encounter_date) > '{$date}'";
-        }
+        $counts = $this->OPResultsCount($GET);
+        $cookies = Yii::$app->request->cookies;
+        $opRowExp = $cookies->getValue('opRowExp', false);
+        if ($counts) {
+            foreach ($counts as $i => $v) {
+                if (!$opRowExp) {
+                    $opRowColl[$i]['consultant_id'] = $v->consultant_id;
+                    $opRowColl[$i]['rowopen'] = ($i == 0) ? true : false;
+                }
+                $consultants[$v->consultant_id] = ['consultant_name' => $v->consultant_name, 'booked' => $v->booked, 'arrival' => $v->arrival, 'seen' => $v->seen];
+            }
 
-        //Check "View logged in doctor appointments".
-        $condition = [
-            'pat_encounter.tenant_id' => $tenant_id,
-            'pat_appointment.consultant_id' => Yii::$app->user->identity->user->user_id,
-            'pat_appointment.status' => '1',
-        ];
-        //Check "View all doctors appointments".
-        if (isset($get['all'])) {
-            if ($get['all']) {
-                $condition = [
-                    'pat_encounter.tenant_id' => $tenant_id,
-                    'pat_appointment.status' => '1',
-                ];
+            if (!$opRowExp) {
+                $opRowExp = json_encode($opRowColl);
+                $cookieSend = Yii::$app->response->cookies;
+                $cookieSend->add(new \yii\web\Cookie([
+                    'name' => 'opRowExp',
+                    'value' => $opRowExp,
+                    'httpOnly' => false
+                ]));
+            }
+            $expandConsultant = array_map(function($row) {
+                return ($row->rowopen == true) ? (int) $row->consultant_id : null;
+            }, json_decode($opRowExp));
+
+            if (!empty($filterConsult = array_filter($expandConsultant))) {
+                $GET['cid'] = $filterConsult;
             }
         }
 
-        $result = [];
+        $results = $this->OPResults($GET);
 
+        return ['success' => true, 'result' => $results, 'consultants' => $consultants];
+    }
+
+    protected function OPResultsCount($params) {
         $connection = Yii::$app->client;
-        $command = $connection->createCommand("SELECT a.consultant_id,
+        $dtop = '=';
+        $eStatus = "0,1";
+        if (strtolower(@$params['type']) == 'previous') {
+            $dtop = '<';
+            $eStatus = "1";
+        } else if (@$params['type'] == 'Future') {
+            $dtop = '>';
+        }
+//                AND b.statusa IN ($eStatus)
+
+        $command = $connection->createCommand("SELECT a.consultant_id, CONCAT(c.title_code,c.name) as consultant_name,
                 (
                     SELECT COUNT(*)
                     FROM pat_appointment c
@@ -337,7 +357,7 @@ class EncounterController extends ActiveController {
                     AND d.status = '1'
                     AND c.appt_status = 'B'
                     AND d.encounter_type = :ptype
-                    AND DATE(d.encounter_date) = :enc_date
+                    AND DATE(d.encounter_date) {$dtop} :enc_date
                     AND c.consultant_id = a.consultant_id
                 ) AS booking,
                 (
@@ -349,7 +369,7 @@ class EncounterController extends ActiveController {
                     AND d.status = '1'
                     AND c.appt_status = 'A'
                     AND d.encounter_type = :ptype
-                    AND DATE(d.encounter_date) = :enc_date
+                    AND DATE(d.encounter_date) {$dtop} :enc_date
                     AND c.consultant_id = a.consultant_id
                 ) AS arrival,
                 (
@@ -361,40 +381,58 @@ class EncounterController extends ActiveController {
                     AND d.status = '0'
                     AND c.appt_status = 'S'
                     AND d.encounter_type = :ptype
-                    AND DATE(d.encounter_date) = :enc_date
+                    AND DATE(d.encounter_date) {$dtop} :enc_date
                     AND c.consultant_id = a.consultant_id
                 ) AS seen,
                 (SELECT booking)-(SELECT arrival) AS booked
                 FROM pat_appointment a
-                JOIN pat_encounter b
-                ON b.encounter_id = a.encounter_id
+                JOIN pat_encounter b ON b.encounter_id = a.encounter_id
+                JOIN co_user c ON c.user_id = a.consultant_id
                 WHERE a.tenant_id = :tid
                 AND b.encounter_type = :ptype
-                AND DATE(b.encounter_date) = :enc_date
-                GROUP BY a.consultant_id",[':enc_date' =>  $date,':tid' => $tenant_id,':ptype' => 'OP']);
+                AND DATE(b.encounter_date) {$dtop} :enc_date
+                GROUP BY a.consultant_id", [':enc_date' => $params['date'], ':tid' => $params['tenant_id'], ':ptype' => 'OP']);
 
-        $counts = $command->queryAll(\PDO::FETCH_OBJ);
-        $consultants = [];
-        if($counts){
-            foreach($counts as $v)
-                $consultants[$v->consultant_id] = ['booked' => $v->booked,'arrival' => $v->arrival,'seen' => $v->seen];
+        return $command->queryAll(\PDO::FETCH_OBJ);
+    }
+
+    protected function OPResults($params) {
+//        Default condition
+        $condition = [
+            'pat_encounter.tenant_id' => $params['tenant_id'],
+        ];
+
+//        By Default Open Status
+        $condition['pat_appointment.status'] = '1';
+//        $condition['pat_encounter.status'] = '1';
+//        Check "View all doctors appointments".
+//        if (@$params['cid'] > 0 || (is_array($params['cid']) && !empty($params['cid']))) {
+        if (is_numeric(@$params['cid']) && @$params['cid'] > 0) {
+            $condition['pat_appointment.consultant_id'] = $params['cid'];
         }
 
-        $details = PatEncounter::find()
-                ->joinWith('patAppointments')
-                ->addSelect([
-                    '{{pat_encounter}}.*'
-                ])
-                ->where($condition)
-                ->encounterType("OP")
-                ->andWhere($query)
-                ->orderBy([
-                    '{{pat_appointment}}.appt_status' => SORT_ASC,
-                    '{{pat_appointment}}.status_time' => SORT_ASC,
-                ])
-                ->all();
+//        Encounter Date Condition
+        $encDtCond = ['=', 'DATE(encounter_date)', $params['date']];
+        if (strtolower(@$params['type']) == 'previous') {
+            $encDtCond = ['<', 'DATE(encounter_date)', $params['date']];
+        } else if (@$params['type'] == 'Future') {
+            $encDtCond = ['>', 'DATE(encounter_date)', $params['date']];
+        }
 
-        return ['success' => true, 'result' => $details,'consultants' => $consultants];
+
+        return PatEncounter::find()
+                        ->joinWith('patAppointments')
+                        ->addSelect([
+                            '{{pat_encounter}}.*'
+                        ])
+                        ->where($condition)
+                        ->encounterType("OP")
+                        ->andWhere($encDtCond)
+                        ->orderBy([
+                            '{{pat_appointment}}.appt_status' => SORT_ASC,
+                            '{{pat_appointment}}.status_time' => SORT_ASC,
+                        ])
+                        ->all();
     }
 
     public function actionOutpatientsold() {
@@ -518,7 +556,7 @@ class EncounterController extends ActiveController {
                     ->andWhere(['encounter_type' => $enc_type])
                     ->andWhere(['patient_id' => $patient->patient_id])
                     ->orderBy(['encounter_id' => SORT_DESC]);
-            
+
             $model = $encounter->one();
 
             if (!empty($model) && $model->isActiveEncounter()) {

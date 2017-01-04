@@ -419,12 +419,41 @@ class PatientController extends ActiveController {
 
         if ($file) {
             $model = PatPatient::find()->tenant()->andWhere(['patient_guid' => $_GET['patient_id']])->one();
-            $model->patient_image = $file;
+            $filename = $this->convertBlobToFile($file, $model->patient_global_int_code);
+            $model->patient_image = $filename;
             $model->save(false);
+            $model->refresh();
             return ['success' => true, 'patient' => $model];
         } else {
             return ['success' => false, 'message' => 'Invalid File'];
         }
+    }
+
+    public function actionBlobtofile() {
+        $images = PatGlobalPatient::find()->where(['not', ['patient_image' => NULL]])->all();
+        foreach ($images as $image) {
+            $filename = $this->convertBlobToFile($image->patient_image, $image->patient_global_int_code);
+            if($filename){
+                $image->patient_image = $filename;
+                $image->update(false);
+            }
+            echo $filename;
+        }
+    }
+
+    protected function convertBlobToFile($base64_string, $gCode) {
+        defined('DS') or define('DS', DIRECTORY_SEPARATOR);
+        $filename = "{$gCode}.jpg";
+        $output_file = "images" . DS . "uavatar" . DS . $filename;
+
+        $ifp = fopen($output_file, "wb");
+        $data = explode(',', $base64_string);
+        if (isset($data[1])) {
+            fwrite($ifp, base64_decode($data[1]));
+            fclose($ifp);
+            return $filename;
+        }
+        return false;
     }
 
     public function actionImportpatient() {
@@ -491,7 +520,7 @@ class PatientController extends ActiveController {
 
     public function actionMergepatients() {
         $post = Yii::$app->getRequest()->post();
-        
+
         if (!empty($post)) {
             $this->migrateTables = $this->_getMigrationTable();
             $parent_id = $tenant_id = $patient_id = $primary_patient_global_int_code = '';
@@ -543,36 +572,36 @@ class PatientController extends ActiveController {
             }
         }
     }
-    
+
     private $migrateTables;
-    
+
     private function _getMigrationTable() {
         $connection = Yii::$app->client;
-        
+
         $database = $connection->createCommand("SELECT DATABASE()")->queryScalar();
-        
-        $command = $connection->createCommand(" 
+
+        $command = $connection->createCommand("
             SELECT DISTINCT TABLE_NAME
             FROM INFORMATION_SCHEMA.COLUMNS
             WHERE COLUMN_NAME IN ('patient_id')
             AND TABLE_NAME NOT IN ('pat_patient')
             AND TABLE_SCHEMA= :db", [':db' => $database]);
         $migrate_tables = ArrayHelper::map($command->queryAll(), 'TABLE_NAME', 'TABLE_NAME');
-        
-        $command = $connection->createCommand(" 
+
+        $command = $connection->createCommand("
             SELECT DISTINCT TABLE_NAME
             FROM information_schema.views
             WHERE TABLE_SCHEMA= :db", [':db' => $database]);
         $unset_tables = ArrayHelper::map($command->queryAll(), 'TABLE_NAME', 'TABLE_NAME');
-        
+
         $migrate_tables = array_diff($migrate_tables, $unset_tables);
         $connection->close();
-        
-        $migrate_tables = array_map(function($a){
+
+        $migrate_tables = array_map(function($a) {
             $prefix = '\common\models\\';
-            return $prefix.\yii\helpers\BaseInflector::camelize($a);
+            return $prefix . \yii\helpers\BaseInflector::camelize($a);
         }, $migrate_tables);
-        
+
         return $migrate_tables;
     }
 

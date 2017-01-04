@@ -443,7 +443,7 @@ class PatEncounter extends RActiveRecord {
                 if ($addtField = Yii::$app->request->get('addtfields')) {
                     switch ($addtField):
                         case 'oplist':
-                            $addt_keys = ['consultant_id', 'apptArrivalData', 'apptSeenData', 'apptConsultantData', 'apptPatientData', 'apptBookingData'];
+                            $addt_keys = ['consultant_id', 'apptArrivalData', 'apptSeenData', 'apptPatientData', 'apptBookingData'];
                             break;
                         case 'advdetails':
                             $addt_keys = ['apptPatientData', 'stay_duration', 'viewChargeCalculation', 'total_charge', 'paid', 'balance'];
@@ -552,7 +552,7 @@ class PatEncounter extends RActiveRecord {
                                         'tenant_id' => $this->tenant_id
                                     ])
                                     ->select('SUM(total_charge) as total_charge, SUM(concession_amount) as concession_amount')->one();
-                    
+
                     $total_paid = VBillingAdvanceCharges::find()
                                     ->where([
                                         'encounter_id' => $this->encounter_id,
@@ -563,7 +563,7 @@ class PatEncounter extends RActiveRecord {
 
                     $total_charge = $recurring->total_charge + $procedure->total_charge + $professional->total_charge + $other_charge->total_charge;
                     $total_concession = $this->concession_amount + $procedure->concession_amount + $professional->concession_amount + $other_charge->concession_amount;
-                    
+
                     $balance = $total_charge - $total_concession - $total_paid;
                 } elseif ($this->encounter_type == 'OP') {
                     if ($this->patAppointmentSeen) {
@@ -644,4 +644,3 @@ class PatEncounter extends RActiveRecord {
             }
 
         }
-        
