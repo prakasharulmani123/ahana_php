@@ -298,44 +298,23 @@ class EncounterController extends ActiveController {
         $GET = Yii::$app->getRequest()->get();
         $GET['date'] = date('Y-m-d');
         $GET['tenant_id'] = Yii::$app->user->identity->logged_tenant_id;
-        $consultants = $opRowExp = [];
-
-        $counts = $this->OPResultsCount($GET);
-        $cookies = Yii::$app->request->cookies;
-        $opRowExp = $cookies->getValue('opRowExp', false);
-        if ($counts) {
-            foreach ($counts as $i => $v) {
-                if (!$opRowExp) {
-                    $opRowColl[$i]['consultant_id'] = $v->consultant_id;
-                    $opRowColl[$i]['rowopen'] = ($i == 0) ? true : false;
-                }
-                $consultants[$v->consultant_id] = ['consultant_name' => $v->consultant_name, 'booked' => $v->booked, 'arrival' => $v->arrival, 'seen' => $v->seen];
-            }
-
-            if (!$opRowExp) {
-                $opRowExp = json_encode($opRowColl);
-                $cookieSend = Yii::$app->response->cookies;
-                $cookieSend->add(new \yii\web\Cookie([
-                    'name' => 'opRowExp',
-                    'value' => $opRowExp,
-                    'httpOnly' => false
-                ]));
-            }
-            $expandConsultant = array_map(function($row) {
-                return ($row->rowopen == true) ? (int) $row->consultant_id : null;
-            }, json_decode($opRowExp));
-
-            if (!empty($filterConsult = array_filter($expandConsultant))) {
-                $GET['cid'] = $filterConsult;
-            }
+        $results = $consultants = $only = [];
+        if (isset($GET['only'])) {
+            $only = explode(",", $GET['only']);
+        }
+        if (!$only || in_array('counts', $only)) {
+            $consultants = $this->OPResultsCount($GET);
         }
 
-        $results = $this->OPResults($GET);
+        if (!$only || in_array('results', $only)) {
+            $results = $this->OPResults($GET);
+        }
 
         return ['success' => true, 'result' => $results, 'consultants' => $consultants];
     }
 
     protected function OPResultsCount($params) {
+        $consultants = $opRowExp = [];
         $connection = Yii::$app->client;
         $dtop = '=';
         $eStatus = "0,1";
@@ -345,7 +324,6 @@ class EncounterController extends ActiveController {
         } else if (@$params['type'] == 'Future') {
             $dtop = '>';
         }
-//                AND b.statusa IN ($eStatus)
 
         $command = $connection->createCommand("SELECT a.consultant_id, CONCAT(c.title_code,c.name) as consultant_name,
                 (
@@ -393,7 +371,38 @@ class EncounterController extends ActiveController {
                 AND DATE(b.encounter_date) {$dtop} :enc_date
                 GROUP BY a.consultant_id", [':enc_date' => $params['date'], ':tid' => $params['tenant_id'], ':ptype' => 'OP']);
 
-        return $command->queryAll(\PDO::FETCH_OBJ);
+        $counts = $command->queryAll(\PDO::FETCH_OBJ);
+
+//        $cookies = Yii::$app->request->cookies; //KEYWORD: COOKIE EXPAND
+//        $opRowExp = $cookies->getValue('opRowExp', false);
+        if ($counts) {
+            foreach ($counts as $i => $v) {
+                if (!$opRowExp) { //KEYWORD: COOKIE EXPAND
+                    $opRowColl[$i]['consultant_id'] = $v->consultant_id;
+                    $opRowColl[$i]['rowopen'] = ($i == 0) ? true : false;
+                }
+                $consultants[$v->consultant_id] = ['consultant_name' => $v->consultant_name, 'booked' => $v->booked, 'arrival' => $v->arrival, 'seen' => $v->seen];
+            }
+
+//            if (!$opRowExp) { //KEYWORD: COOKIE EXPAND
+//                $opRowExp = json_encode($opRowColl);
+//                $cookieSend = Yii::$app->response->cookies;
+//                $cookieSend->add(new \yii\web\Cookie([
+//                    'name' => 'opRowExp',
+//                    'value' => $opRowExp,
+//                    'httpOnly' => false
+//                ]));
+//            }
+//            $expandConsultant = array_map(function($row) {
+//                return ($row->rowopen == true) ? (int) $row->consultant_id : null;
+//            }, json_decode($opRowExp));
+//
+//            if (!empty($filterConsult = array_filter($expandConsultant))) {
+//                $GET['cid'] = $filterConsult;
+//            }
+        }
+
+        return $consultants;
     }
 
     protected function OPResults($params) {
@@ -404,9 +413,13 @@ class EncounterController extends ActiveController {
 
 //        By Default Open Status
         $condition['pat_appointment.status'] = '1';
-//        $condition['pat_encounter.status'] = '1';
+        if (@$params['seen'] == 'true') {
+            $condition['pat_encounter.status'] = '0';
+        } else if (@$params['seen'] == 'false') {
+            $condition['pat_encounter.status'] = '1';
+        }
 //        Check "View all doctors appointments".
-//        if (@$params['cid'] > 0 || (is_array($params['cid']) && !empty($params['cid']))) {
+//        if (@$params['cid'] > 0 || (is_array($params['cid']) && !empty($params['cid']))) { //KEYWORD: COOKIE EXPAND
         if (is_numeric(@$params['cid']) && @$params['cid'] > 0) {
             $condition['pat_appointment.consultant_id'] = $params['cid'];
         }
