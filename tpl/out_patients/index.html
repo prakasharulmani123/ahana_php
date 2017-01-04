@@ -113,7 +113,7 @@
                                 </td>
                                 <td>
                                     <a ui-sref="patient.view({id: row.apptPatientData.patient_guid})">
-                                        <img class="pull-left patient-image" width="30" height="30" src="img/man-icon.png" ng-attr-lazy-img="{{ row.apptPatientData.patient_image ? row.apptPatientData.patient_image : ($even ? 'img/man-icon.png' : 'img/man-icon2.png') }}" />
+                                        <img class="pull-left patient-image" width="30" height="30" src="img/man-icon.png" ng-attr-lazy-img="{{ row.apptPatientData.patient_img_url ? row.apptPatientData.patient_img_url : ($even ? 'img/man-icon.png' : 'img/man-icon2.png') }}" />
                                     </a>
 
                                     <a ui-sref="patient.view({id: row.apptPatientData.patient_guid})" tooltip="{{row.apptPatientData.fullcurrentaddress}}">
@@ -236,8 +236,7 @@
                                 </td>
                                 <td>
                                     <a ui-sref="patient.view({id: row.apptPatientData.patient_guid})">
-                                        <img ng-if="$even" class="pull-left patient-image" alt="" width="30" height="30" ng-src="{{row.apptPatientData.patient_image ? row.apptPatientData.patient_image : 'img/man-icon.png'}}">
-                                        <img ng-if="$odd" class="pull-left patient-image" alt="" width="30" height="30" ng-src="{{row.apptPatientData.patient_image ? row.apptPatientData.patient_image : 'img/man-icon2.png'}}">
+                                        <img class="pull-left patient-image" width="30" height="30" src="img/man-icon.png" ng-attr-lazy-img="{{ row.apptPatientData.patient_img_url ? row.apptPatientData.patient_img_url : ($even ? 'img/man-icon.png' : 'img/man-icon2.png') }}" />
                                     </a>
                                     <a ui-sref="patient.view({id: row.apptPatientData.patient_guid})" tooltip="{{row.apptPatientData.fullcurrentaddress}}">
                                         {{row.apptPatientData.fullname}}

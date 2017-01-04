@@ -1064,7 +1064,7 @@ angular.module('app').controller('PatientImageController', ['scope', '$scope', '
             var uploadUrl = $rootScope.IRISOrgServiceUrl + '/patient/uploadimage?patient_id=' + $state.params.id;
             fileUpload.uploadFileToUrl(file, uploadUrl).success(function (response) {
                 if (response.success) {
-                    scope.patientObj.patient_image = response.patient.patient_image+'?v='+new Date().valueOf();
+                    scope.patientObj.patient_img_url = response.patient.patient_img_url+'?v='+new Date().valueOf();
                     $scope.cancel();
                 } else {
                     $scope.errorData2 = response.message;
@@ -1115,10 +1115,10 @@ angular.module('app').controller('PatientImageController', ['scope', '$scope', '
                     function (response) {
                         if (response.success) {
                             if (block == 'topbar')
-                                scope.patientObj.patient_image = response.patient.patient_image+'?v='+new Date().valueOf();
+                                scope.patientObj.patient_img_url = response.patient.patient_img_url+'?v='+new Date().valueOf();
 
                             if (block == 'register') {
-                                scope.$broadcast('register_patient_image', response.file);
+                                scope.$broadcast('register_patient_img_url', response.file);
                             }
                             $scope.cancel();
                         } else {

@@ -6,8 +6,8 @@
     <div class="panel panel-default">
         <div class="row wrapper pb-0">
             <div class="col-sm-5 m-b-xs">
-                <button class="btn btn-sm btn-grey" ng-click="loadInPatientsList()"> 
-                    &nbsp; &nbsp; <i class="fa fa-refresh"></i> &nbsp; &nbsp; 
+                <button class="btn btn-sm btn-grey" ng-click="loadInPatientsList()">
+                    &nbsp; &nbsp; <i class="fa fa-refresh"></i> &nbsp; &nbsp;
                 </button>
                 <span ng-show="currentAdmissionSelected > 0">
                     <button ng-click="addConsultantVisit()" class="btn btn-sm btn-grey">
@@ -20,7 +20,7 @@
             </div>
             <div class="col-sm-4"></div>
             <div class="col-sm-3 pull-right text-right hide">
-                <p class="badge bg-primary mt-10"> 
+                <p class="badge bg-primary mt-10">
                     <b> Census: {{displayedCollection.length}} </b>
                 </p>
             </div>
@@ -32,9 +32,9 @@
                     <thead>
                         <tr>
                             <th align="center" valign="middle" style="width:40px;">
-                                <label class="i-checks"> 
-                                    <input ng-model="selectall" ng-true-value="'1'" ng-false-value="'0'" ng-click="updateCheckbox()" type="checkbox" name="checkall" class=""> 
-                                    <i></i> 
+                                <label class="i-checks">
+                                    <input ng-model="selectall" ng-true-value="'1'" ng-false-value="'0'" ng-click="updateCheckbox()" type="checkbox" name="checkall" class="">
+                                    <i></i>
                                 </label>&nbsp; &nbsp;
                             </th>
                             <th style="width:65px;">&nbsp;</th>
@@ -55,9 +55,9 @@
                         </tr>
                         <tr ng-repeat="(ip_key, row) in displayedCollection| orderBy: patient_firstname">
                             <td align="center" valign="middle" style="width:40px;">
-                                <label class="i-checks"> 
-                                    <input ng-model="row.selected" ng-checked="row.selected == '1'"  ng-click="moreOptions(ip_key, row)" ng-true-value="'1'" ng-false-value="'0'" class="iplistcheckbox iplistcheckbox_{{ip_key}}" id="iplist_{{ip_key}}" type="checkbox" name="status"> 
-                                    <i></i> 
+                                <label class="i-checks">
+                                    <input ng-model="row.selected" ng-checked="row.selected == '1'"  ng-click="moreOptions(ip_key, row)" ng-true-value="'1'" ng-false-value="'0'" class="iplistcheckbox iplistcheckbox_{{ip_key}}" id="iplist_{{ip_key}}" type="checkbox" name="status">
+                                    <i></i>
                                 </label>
                             </td>
                             <td align="center" valign="middle">
@@ -67,11 +67,10 @@
                                 </div>
                             </td>
                             <td>
-                                <img ng-if="$even" class="pull-left patient-image" alt="" width="30" height="30" ng-src="{{row.patient.patient_image ? row.patient.patient_image : 'img/man-icon.png'}}">
-                                <img ng-if="$odd" class="pull-left patient-image" alt="" width="30" height="30" ng-src="{{row.patient.patient_image ? row.patient.patient_image : 'img/man-icon2.png'}}">
+                                <img width="30" height="30" class="pull-left patient-image" src="img/man-icon.png" ng-attr-lazy-img="{{ row.patient.patient_img_url ? row.patient.patient_img_url : ($even ? 'img/man-icon.png' : 'img/man-icon2.png') }}" />
                                 <a ui-sref="patient.view({id: row.patient.patient_guid})" tooltip="{{row.patient.fullcurrentaddress}}">
-                                    {{row.patient.fullname}} 
-                                </a>({{row.patient.patient_age}}y) <br/> 
+                                    {{row.patient.fullname}}
+                                </a>({{row.patient.patient_age}}y) <br/>
                                 {{row.patient.patient_global_int_code}}
                             </td>
                             <td>{{row.patient.activeCasesheetno}}</td>

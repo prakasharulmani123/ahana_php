@@ -1132,7 +1132,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             .state('patient.outPatients', {
                 url: '/outPatients/:type',
                 params: {
-                    type: { value: 'current', squash: false }
+                    type: {value: 'current', squash: false}
                 },
                 templateUrl: 'tpl/out_patients/index.html',
                 resolve: {
@@ -2677,8 +2677,12 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
     $httpProvider.interceptors.push('APIInterceptor');
 
 }
-run.$inject = ['$rootScope', '$state', '$stateParams', '$location', '$cookieStore', '$http', '$window', 'CommonService', 'AuthenticationService', '$timeout'];
-function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $window, CommonService, AuthenticationService, $timeout) {
+run.$inject = ['$rootScope', '$state', '$stateParams', '$location', '$cookieStore', '$http', '$window', 'CommonService', 'AuthenticationService', '$timeout', '$templateCache'];
+function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $window, CommonService, AuthenticationService, $timeout, $templateCache) {
+    $rootScope.$on('$viewContentLoaded', function () {
+        $templateCache.removeAll();
+    });
+
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
 

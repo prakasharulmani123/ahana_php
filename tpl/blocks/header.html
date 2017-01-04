@@ -1,5 +1,5 @@
 <!-- header -->
-<header id="header" class="app-header navbar" role="menu"> 
+<header id="header" class="app-header navbar" role="menu">
     <!-- navbar header -->
     <div class="visible-xs navbar-header {{app.settings.navbarHeaderColor}}">
         <button class="pull-right visible-xs dk" ui-toggle-class="show" data-target=".navbar-collapse">
@@ -8,14 +8,14 @@
         <button class="pull-right visible-xs" ui-toggle-class="off-screen" data-target=".app-aside" ui-scroll-to="app">
             <i class="glyphicon glyphicon-align-justify"></i>
         </button>
-        <a href="#/" class="navbar-brand text-lt"> 
+        <a href="#/" class="navbar-brand text-lt">
             <span class="hidden-folded m-l-xs">{{app.name}}</span>
-        </a> 
+        </a>
     </div>
-    <!-- / navbar header --> 
+    <!-- / navbar header -->
 
     <!-- navbar collapse -->
-    <div class="collapse pos-rlt navbar-collapse box-shadow {{app.settings.navbarCollapseColor}}" ng-init="initSwitchedBranch()"> 
+    <div class="collapse pos-rlt navbar-collapse box-shadow {{app.settings.navbarCollapseColor}}" ng-init="initSwitchedBranch()">
 
         <!-- search form -->
         <form class="navbar-form navbar-form-sm navbar-left shift" ui-shift="prependTo" data-target=".navbar-collapse" role="search" ng-controller="PatientSearchController">
@@ -25,13 +25,12 @@
                     <div class="patient-search-result" ng-if="patientselected != '' && patient_lists" >
                         <ul class="search-patientcont-header" id='patientcont-header'>
                             <li ng-repeat="(key, patient) in patient_lists| filter:patientselected" class="{{key == 0 ? 'selected' : ''}}">
-                                <div class="row"> 
-                                    <div class="col-xs-12 col-sm-2 col-md-2"> 
-                                        <img ng-if="$even" alt="" ng-src="{{patient.Patient.patient_image ? patient.Patient.patient_image : 'img/man-icon.png'}}" class="patient-image">
-                                        <img ng-if="$odd" alt="" ng-src="{{patient.Patient.patient_image ? patient.Patient.patient_image : 'img/man-icon2.png'}}" class="patient-image">
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-2 col-md-2">
+                                        <img width="36" height="36" class="patient-image" src="img/man-icon.png" ng-attr-lazy-img="{{ patient.Patient.patient_img_url ? patient.Patient.patient_img_url : ($even ? 'img/man-icon.png' : 'img/man-icon2.png') }}" />
                                     </div>
-                                    <div class="col-xs-12 col-sm-5 col-md-6"> 
-                                        <div class="row ng-binding"> 
+                                    <div class="col-xs-12 col-sm-5 col-md-6">
+                                        <div class="row ng-binding">
                                             <a ng-if="patient.same_branch == true && patient.same_org == true" tooltip="{{patient.Patient.fullcurrentaddress || patient.Patient.fullpermanentaddress}}" ng-bind-html="patient.Patient.fullname | highlight:patientselected" href="javascript:void(0)" ng-click="goToPatient(patient.Patient.patient_guid)" class="ng-binding">
                                             </a>
                                             <a ng-if="patient.same_branch == false && patient.same_org == true" tooltip="{{patient.Patient.fullcurrentaddress || patient.Patient.fullpermanentaddress}}" ng-bind-html="patient.Patient.fullname | highlight:patientselected" href="javascript:void(0)" ng-click="importViewPatient(patient.Patient, key)" class="ng-binding">
@@ -39,7 +38,7 @@
                                             <b ng-if="patient.Patient.patient_age">({{patient.Patient.patient_age}}y) </b>
                                             <br>
                                             <span class="pull-left" ng-bind-html="patient.Patient.patient_global_int_code | highlight:patientselected"></span> &nbsp; &nbsp;
-                                            <span ng-bind-html="patient.Patient.patient_mobile | highlight:patientselected"> </span> 
+                                            <span ng-bind-html="patient.Patient.patient_mobile | highlight:patientselected"> </span>
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-sm-5 col-md-4 pull-right right" ng-if="patient.same_branch == true && patient.same_org == true">
@@ -58,8 +57,8 @@
                                             BOOK
                                         </button>
                                     </div>
-                                    <div class="col-xs-12 col-sm-5 col-md-4 pull-right right" ng-if="patient.same_branch == false && patient.same_org == false"> 
-                                        <p class=""> 
+                                    <div class="col-xs-12 col-sm-5 col-md-4 pull-right right" ng-if="patient.same_branch == false && patient.same_org == false">
+                                        <p class="">
                                             <button class="btn btn-primary" id="import_{{key}}" ng-click="importPatient(patient.Patient, key)">
                                                 IMPORT DATA
                                             </button>
@@ -68,8 +67,8 @@
                                 </div>
                             </li>
                             <li>
-                                <div class="row"> 
-                                    <div class="col-xs-12 col-sm-12 col-md-12 pull-right right">  
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 pull-right right">
                                         <button class="btn m-b-xs w-xs btn-success fullwidth" ng-click="goToRegistration()">Register</button>
                                     </div>
                                 </div>
@@ -79,11 +78,11 @@
 
                     <span class="input-group-btn">
                         <button type="submit" class="btn btn-sm bg-light rounded"><i class="fa fa-search patient_search_loader"></i></button>
-                    </span> 
+                    </span>
                 </div>
             </div>
         </form>
-        <!-- / search form --> 
+        <!-- / search form -->
 
         <div class="navbar-header">
             <button class="pull-right visible-xs dk" ui-toggle-class="show" data-target=".navbar-collapse">
@@ -120,15 +119,15 @@
             <select class="form-control" ng-model="branch_switch.branch_id" ng-options="branch.branch_id as branch.branch_name for branch in switched_branches_list | orderBy: branch_name" ng-change="switchBranch()">
             </select>
         </div>
-        <!-- / link and dropdown --> 
+        <!-- / link and dropdown -->
 
         <!-- nabar right -->
         <ul class="nav navbar-nav navbar-right">
             <li class="hidden-xs"> <a class="sb-toggle-right" href="#"> <i class="fa fa-bars"></i> </a> </li>
         </ul>
-        <!-- / navbar right --> 
+        <!-- / navbar right -->
     </div>
-    <!-- / navbar collapse --> 
+    <!-- / navbar collapse -->
 </header>
 <!-- / header -->
 <script>
