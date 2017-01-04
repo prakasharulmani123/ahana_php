@@ -52,11 +52,11 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
             }
 
             // Get data's from service
-            $http.get($rootScope.IRISOrgServiceUrl + '/encounter/outpatients?addtfields=oplist&type=' + type + '&cid=' + cid)
+            $http.get($rootScope.IRISOrgServiceUrl + '/encounter/outpatients?addtfields=oplist&type=' + type + '&cid=' + cid + '&seen=false')
                     .success(function (OutPatients) {
                         var prepared_result = $scope.prepareCollection(OutPatients);
                         $scope.rowCollection = prepared_result;
-//                        $scope.rowCollection = OutPatients.result;
+                        //                        $scope.rowCollection = OutPatients.result;
 
                         $scope.updateCollection();
 
@@ -68,7 +68,38 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading patients!";
                     });
+
+//            $timeout(function () {
+//                $http.get($rootScope.IRISOrgServiceUrl + '/encounter/outpatients?addtfields=oplist&type=' + type + '&cid=' + cid+'&seen=true')
+//                    .success(function (OutPatients) {
+//                        angular.forEach(OutPatients.consultants, function (value, key) {
+//                            var seen_enc = $filter('filter')(OutPatients.result, {consultant_id: key});
+//                            var rowcoll = $filter('filter')($scope.rowCollection, {consultant_id: key});
+//                            rowcoll[0].seen_records = seen_enc;
+//                        });
+//                    })
+//                    .error(function () {
+//                        $scope.errorData = "An Error has occured while loading patients!";
+//                    });
+//            }, 3000);
         };
+
+        $scope.expandSeen = function ($event, cid, rowopen) {
+            if (rowopen) {
+                var spinner = angular.element($event.currentTarget).closest('b').find('i.fa-spin');
+                spinner.removeClass('hide');
+                $http.get($rootScope.IRISOrgServiceUrl + '/encounter/outpatients?addtfields=oplist&type=' + $scope.op_type + '&cid=' + cid + '&seen=true&only=results')
+                    .success(function (OutPatients) {
+                        var rowcoll = $filter('filter')($scope.rowCollection, {consultant_id: cid});
+                        rowcoll[0].seen_records = OutPatients.result;
+                        spinner.addClass('hide');
+                    })
+                    .error(function () {
+                        $scope.errorData = "An Error has occured while loading seen data!";
+                        spinner.addClass('hide');
+                    });
+            }
+        }
 
         $timeout(function () {
             $scope.startAutoRefresh();
@@ -117,7 +148,7 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                 if (parent_key == op_key)
                     value.selected = parent.selected;
 
-                angular.forEach(value.all, function (row, key) {
+                angular.forEach(value.act_enc, function (row, key) {
                     row.selected = '0';
 
                     if (parent_key == op_key) {
@@ -128,7 +159,7 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
 
             $timeout(function () {
                 angular.forEach($scope.displayedCollection, function (value, op_key) {
-                    angular.forEach(value.all, function (row, key) {
+                    angular.forEach(value.act_enc, function (row, key) {
                         $scope.moreOptions(op_key, key, row.consultant_id, row.apptBookingData.appt_id, row);
                     });
                 });
@@ -275,13 +306,13 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
             } else {
                 st_d = st_t = '';
             }
-            $scope.displayedCollection[op_key]['all'][key].sts_date = st_d;
-            $scope.displayedCollection[op_key]['all'][key].sts_time = st_t;
+            $scope.displayedCollection[op_key]['act_enc'][key].sts_date = st_d;
+            $scope.displayedCollection[op_key]['act_enc'][key].sts_time = st_t;
         }
 
         $scope.onTimeSet = function (newDate, oldDate, op_key, key) {
-            $scope.displayedCollection[op_key]['all'][key].sts_date = moment(newDate).format('YYYY-MM-DD');
-            $scope.displayedCollection[op_key]['all'][key].sts_time = moment(newDate).format('hh:mm A');
+            $scope.displayedCollection[op_key]['act_enc'][key].sts_date = moment(newDate).format('YYYY-MM-DD');
+            $scope.displayedCollection[op_key]['act_enc'][key].sts_time = moment(newDate).format('hh:mm A');
         }
 
         $scope.changeAppointmentStatus = function (_data, op_key, key) {
@@ -297,8 +328,8 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                     function (response) {
                         $scope.loadbar('hide');
                         $scope.msg.successMessage = 'Status changed successfully';
-                        $scope.rowCollection[op_key]['all'][key].apptArrivalData = response;
-                        $scope.displayedCollection[op_key]['all'][key].apptArrivalData = response;
+                        $scope.rowCollection[op_key]['act_enc'][key].apptArrivalData = response;
+                        $scope.displayedCollection[op_key]['act_enc'][key].apptArrivalData = response;
 
                         angular.forEach($scope.displayedCollection, function (value, parent_key) {
                             if (parent_key == op_key) {
@@ -330,11 +361,12 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
 
 //            grouped_result = $filter('groupBy')(OutPatients.result, 'consultant_id');
             angular.forEach(OutPatients.consultants, function (value, key) {
-                var doc_enc = $filter('filter')(OutPatients.result, {consultant_id: key});
+                var act_enc = $filter('filter')(OutPatients.result, {consultant_id: key, apptSeenData: "-"});
                 result[key_index] = {
                     consultant_id: key,
                     consultant_name: value.consultant_name,
-                    all: doc_enc,
+                    act_enc: act_enc,
+                    seen_records: {},
                     seen_count: value.seen,
                     booking_count: value.booked,
                     arrived_count: value.arrival,
@@ -358,7 +390,7 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                 $scope.rowCollection = rowCollection;
 
                 angular.forEach($scope.rowCollection, function (row) {
-                    angular.forEach(row.all, function (appt) {
+                    angular.forEach(row.act_enc, function (appt) {
                         if (appt.apptArrivalData == '-' && appt.apptSeenData == '-') {
                             appt.sts = 'B';
                         }
@@ -369,7 +401,7 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                     });
 
                     row.expanded = $scope.getRowExpand(row.consultant_id);
-                    row.all = $filter('orderBy')(row.all, ['sts', 'apptArrivalData.status_datetime', 'apptBookingData.status_datetime', 'apptSeenData.status_datetime']);
+                    row.act_enc = $filter('orderBy')(row.act_enc, ['sts', 'apptArrivalData.status_datetime', 'apptBookingData.status_datetime', 'apptSeenData.status_datetime']);
                 });
                 $scope.displayedCollection = [].concat($scope.rowCollection);
                 $scope.isLoading = false;

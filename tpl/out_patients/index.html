@@ -10,14 +10,13 @@
         <div class="col-sm-6">
             <div class="btn-group op-btn-group">
                 <button class="btn btn-info current-op-patient" ng-click="loadOutPatientsList('current')">
-                    <i class="fa fa-user-md"></i>  Today's Appointments
+                    <i class="fa fa-user-md"></i>&nbsp;&nbsp;Today's Appointments
                 </button>
                 <a class="btn btn-info" ui-sref="patient.futureAppointment">
-                    <i class="fa fa-hospital-o"></i>
-                    Scheduled Appointments
+                    <i class="fa fa-hospital-o"></i>&nbsp;&nbsp;Scheduled Appointments
                 </a>
                 <button class="btn btn-info previous-op-patient" ng-click="loadOutPatientsList('previous')">
-                    <i class="fa fa-user-md"></i>  Past Appointments
+                    <i class="fa fa-user-md"></i>&nbsp;&nbsp;Past Appointments
                 </button>
             </div>
         </div>
@@ -47,7 +46,7 @@
 
         <div class="table-responsive in-patient-table out-patient-table">
             <!--<div style="{{css.style}}">-->
-            <!--<pre>{{displayedCollection | json}}</pre>-->
+            <!--<pre>{{rowCollection}}</pre>-->
                 <scrollable-table watch="displayedCollection">
                     <table st-table="displayedCollection"  st-safe-src="rowCollection"  class="table table-striped b-t b-light">
                         <thead>
@@ -93,11 +92,11 @@
                                         <span class="badge bg-primary">Consultant: {{value.consultant_name}}</span>&nbsp; &nbsp;
                                         <span class="badge bg-black">Booked: {{value.booking_count}}</span>&nbsp; &nbsp;
                                         <span class="badge bg-success">Arrived: {{value.arrived_count}}</span>&nbsp; &nbsp;
-                                        <span class="badge bg-info">Seen: {{value.seen_count}}</span>&nbsp; &nbsp;
+                                        <span class="badge bg-info" ng-if="op_type != 'previous'">Seen: {{value.seen_count}}</span>&nbsp; &nbsp;
                                     </b>
                                 </td>
                             </tr>
-                            <tr ng-show="value.expanded" ng-repeat="(key, row) in value.all" ng-if="row.apptSeenData == '-'" class="tr_oplistcheckbox tr_oplistcheckbox_{{op_key}}">
+                            <tr ng-show="value.expanded" ng-repeat="(key, row) in value.act_enc" ng-if="row.apptSeenData == '-'" class="tr_oplistcheckbox tr_oplistcheckbox_{{op_key}}">
                                 <td>
                                     <label class="i-checks">
                                         <input ng-model="row.selected" ng-true-value="'1'" ng-false-value="'0'" ng-checked="row.selected == '1'" class="oplistcheckbox oplistcheckbox_{{op_key}}" id="oplist_{{op_key}}_{{key}}" type="checkbox" name="status" ng-click="moreOptions(op_key, key, row.consultant_id, row.apptBookingData.appt_id, row)">
@@ -217,15 +216,16 @@
                                 <td>&nbsp; </td>
                                 <td colspan="10">
                                     <b>
-                                        <button ng-click="value.seenExpanded = !value.seenExpanded;" expand class="btn btn-sm btn-default hms-plus">
+                                        <button ng-click="value.seenExpanded = !value.seenExpanded; expandSeen($event, value.consultant_id, value.seenExpanded);" expand class="btn btn-sm btn-default hms-plus">
                                             <i ng-if="!value.seenExpanded" class="fa fa-plus text"></i>
                                             <i ng-if="value.seenExpanded" class="fa fa-minus text"></i>
                                         </button>&nbsp; &nbsp;
                                         <span class="badge bg-info">Seen: {{value.seen_count}}</span>&nbsp; &nbsp;
+                                        <i class="fa fa-spin fa-refresh hide"></i>
                                     </b>
                                 </td>
                             </tr>
-                            <tr ng-show="value.expanded && value.seenExpanded" ng-repeat="(key, row) in value.all" ng-if="value.seen_count > '0' && row.apptSeenData != '-'" class="tr_oplistcheckbox tr_oplistcheckbox_{{op_key}}">
+                            <tr ng-show="value.expanded && value.seenExpanded" ng-repeat="(key, row) in value.seen_records" ng-if="value.seen_count > '0' && row.apptSeenData != '-'" class="tr_oplistcheckbox tr_oplistcheckbox_{{op_key}}">
                                 <td> &nbsp; </td>
                                 <td align="center" valign="middle">
                                     <div style="margin-top: -10px; position: relative;">
