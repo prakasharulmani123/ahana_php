@@ -25,6 +25,7 @@ app.controller('ipBillStatusController', ['$rootScope', '$scope', '$timeout', '$
         
         //Index Page
         $scope.loadReport = function () {
+            $scope.records = [];
             $scope.isLoading = true;
             $scope.showTable = true;
 

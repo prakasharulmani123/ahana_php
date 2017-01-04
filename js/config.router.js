@@ -2642,16 +2642,31 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
-            //Myworks Doctors monthly pay
-            .state('myworks.monthlyDocPay', {
-                url: '/monthlyDocPay',
-                templateUrl: 'tpl/myworks_report/docmonthlypay.html',
+            //Myworks Discharged Patient Bills
+            .state('myworks.dischargedPatientBills', {
+                url: '/dischargedPatientBills',
+                templateUrl: 'tpl/myworks_report/dischargedPatientBills.html',
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['smart-table']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/myworks_report/docmonthlypay.js');
+                                        return $ocLazyLoad.load('tpl/myworks_report/dischargedPatientBills.js');
+                                    }
+                            );
+                        }]
+                }
+            })
+            //Myworks IP Doctors Pay
+            .state('myworks.ipDoctorsPay', {
+                url: '/ipDoctorsPay',
+                templateUrl: 'tpl/myworks_report/ipDoctorsPay.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/myworks_report/ipDoctorsPay.js');
                                     }
                             );
                         }]
