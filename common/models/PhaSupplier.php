@@ -135,4 +135,14 @@ class PhaSupplier extends RActiveRecord
 
         return $list;
     }
+    
+    public static function getSupplierid($name, $tenant = null) {
+        $supplier = self::find()->tenant($tenant)->andWhere(['supplier_name' => $name])->one();
+        if(!$supplier){
+            $supplier = new PhaSupplier;
+            $supplier->supplier_name = $name;
+            $supplier->save(false);
+        }
+        return $supplier->supplier_id;
+    }
 }
