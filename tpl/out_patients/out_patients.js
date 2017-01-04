@@ -10,6 +10,7 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
         //index.html - To Avoid the status column design broken, used the below controlsTpl
         editableThemes.bs3.controlsTpl = '<div class="editable-controls" ng-class="{\'has-error\': $error}"></div>';
         editableOptions.theme = 'bs3';
+        var currentUser = $rootScope.authenticationService.getCurrentUser();
 
         $scope.ctrl = {};
         $scope.allExpanded = true;
@@ -29,8 +30,14 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
 
         //Index Page
         $scope.loadOutPatientsList = function (type, clearObj) {
+            if (typeof type == 'undefined') {
+                type = ($state.params.type) ? $state.params.type : 'current';
+            }
+
             $scope.op_type = type;
 
+            $('.op-btn-group button, .op-btn-group a').removeClass('active');
+            $('.op-btn-group button.' + type + '-op-patient').addClass('active');
             // pagination set up
             if (typeof clearObj == 'undefined') {
                 $scope.isLoading = true;
@@ -39,13 +46,13 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                 $scope.displayedCollection = [].concat($scope.rowCollection); // displayed collection
             }
 
-            var all = 0;
+            var cid = currentUser.credentials.user_id;
             if ($scope.checkAccess('patient.viewAllDoctorsAppointments')) {
-                all = 1;
+                cid = -1;
             }
 
             // Get data's from service
-            $http.get($rootScope.IRISOrgServiceUrl + '/encounter/outpatients?addtfields=oplist&type=' + type + '&all=' + all)
+            $http.get($rootScope.IRISOrgServiceUrl + '/encounter/outpatients?addtfields=oplist&type=' + type + '&cid=' + cid)
                     .success(function (OutPatients) {
                         var prepared_result = $scope.prepareCollection(OutPatients);
                         $scope.rowCollection = prepared_result;
@@ -321,15 +328,16 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                 };
             }
 
-            grouped_result = $filter('groupBy')(OutPatients.result, 'consultant_id');
-            angular.forEach(grouped_result, function (value,key) {
+//            grouped_result = $filter('groupBy')(OutPatients.result, 'consultant_id');
+            angular.forEach(OutPatients.consultants, function (value, key) {
+                var doc_enc = $filter('filter')(OutPatients.result, {consultant_id: key});
                 result[key_index] = {
                     consultant_id: key,
-                    consultant_name: value[0].apptConsultantData.fullname,
-                    all: value,
-                    seen_count: OutPatients.consultants[key].seen,
-                    booking_count: OutPatients.consultants[key].booked,
-                    arrived_count: OutPatients.consultants[key].arrival,
+                    consultant_name: value.consultant_name,
+                    all: doc_enc,
+                    seen_count: value.seen,
+                    booking_count: value.booked,
+                    arrived_count: value.arrival,
                     selected: '0',
                     seenExpanded: false,
                 };
@@ -350,7 +358,6 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                 $scope.rowCollection = rowCollection;
 
                 angular.forEach($scope.rowCollection, function (row) {
-
                     angular.forEach(row.all, function (appt) {
                         if (appt.apptArrivalData == '-' && appt.apptSeenData == '-') {
                             appt.sts = 'B';
@@ -369,10 +376,11 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
             }, 200);
         }
 
+        $.cookie.json = true;
         $scope.setRowExpanded = function (consultant_id, rowopen) {
             var opRowExpand = [];
-            if (typeof $cookieStore.get('op_list') !== 'undefined') {
-                opRowExpand = $cookieStore.get('op_list');
+            if (typeof $.cookie('opRowExp') !== 'undefined') {
+                opRowExpand = $.cookie('opRowExp');
             }
             exists = $filter('filter')(opRowExpand, {consultant_id: consultant_id});
             if (exists.length == 0) {
@@ -383,12 +391,13 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
             } else {
                 exists[0].rowopen = rowopen;
             }
-            $cookieStore.put('op_list', opRowExpand);
+            $.cookie('opRowExp', opRowExpand, {path: '/'});
+//            $cookieStore.put('opRowExp', opRowExpand,{path: '/'});
         }
 
         $scope.getRowExpand = function (consultant_id) {
-            if (typeof $cookieStore.get('op_list') !== 'undefined') {
-                var opRowExpand = $cookieStore.get('op_list');
+            if (typeof $.cookie('opRowExp') !== 'undefined') {
+                var opRowExpand = $.cookie('opRowExp');
                 exists = $filter('filter')(opRowExpand, {consultant_id: consultant_id});
                 if (exists.length == 0) {
                     return true;

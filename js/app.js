@@ -31,7 +31,8 @@ angular.module('app', [
     'datatables',
     'ui.mask',
     'scrollable-table',
-    'ng.deviceDetector'
+    'ng.deviceDetector',
+    'angularLazyImg'
 //    'restangular'
 //    'LocalStorageModule',
 ]);

@@ -1130,7 +1130,10 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
 
             // Out-Patient
             .state('patient.outPatients', {
-                url: '/outPatients',
+                url: '/outPatients/:type',
+                params: {
+                    type: { value: 'current', squash: false }
+                },
                 templateUrl: 'tpl/out_patients/index.html',
                 resolve: {
                     deps: ['$ocLazyLoad',

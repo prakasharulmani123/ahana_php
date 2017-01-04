@@ -10,9 +10,9 @@
     </div>-->
     <div class="row wrapper">
       <div class="col-sm-5 m-b-xs">
-      
-      <button class="btn btn-sm btn-grey"> &nbsp; &nbsp; <i class="fa fa-repeat"></i>  &nbsp; &nbsp; </button>    
-      
+
+      <button class="btn btn-sm btn-grey"> &nbsp; &nbsp; <i class="fa fa-repeat"></i>  &nbsp; &nbsp; </button>
+
       <div class="btn-group" dropdown is-open="status.isopen">
             <button type="button" class=" btn btn-sm btn-grey" dropdown-toggle ng-disabled="disabled">
              More &nbsp;&nbsp;<span class="caret"></span>
@@ -24,7 +24,7 @@
               <li class="divider"></li>
               <li><a href>Separated link</a></li>
             </ul>
-          </div>        
+          </div>
       </div>
       <div class="col-sm-4">
       </div>
@@ -41,7 +41,7 @@
               <li><a href>Separated link</a></li>
             </ul>
           </div>
-          
+
           <div class="btn-group pull-right" dropdown>
             <button type="button" class=" btn btn-sm btn-grey" dropdown-toggle >
               &nbsp;&nbsp; Select &nbsp;&nbsp;<span class="caret"></span>
@@ -54,15 +54,15 @@
               <li><a href>Separated link</a></li>
             </ul>
           </div>
-          
-         
+
+
       </div>
     </div>
     <div class="table-responsive in-patient-table">
      <script type="text/ng-template" id="myModalContent.html">
             <div ng-include="'tpl/inpatient.edit.html'"></div>
           </script>
-          
+
       <table  class="table table-striped b-t b-light">
         <thead>
           <tr>
@@ -87,7 +87,7 @@
         <tbody>
           <tr>
             <td align="center" valign="middle"><label class="i-checks m-b-none"><input type="checkbox" name="post[]"><i></i></label></td>
-            <td><img class="pull-left" src="img/man-icon.png"  alt="" />  <a href="#">Mr. PatIent name </a>(35y) <br/> 
+            <td><img class="pull-left" src="img/man-icon.png"  alt="" />  <a href="#">Mr. PatIent name </a>(35y) <br/>
             AH12345</td>
             <td align="center" valign="middle"><img src="img/cate-1.png"  alt="" /></td>
             <td><a editable-text="user.name">9988776655</a></td>
@@ -102,15 +102,15 @@
             <br /><span class="text-muted">Prepare final bill!</span></td>
             <td>Dr. Vikhram</td>
             <td>Comments if any</td>
-            <td> <div class="actions-icons-cont">  
-           
-         
-            
+            <td> <div class="actions-icons-cont">
+
+
+
             <a href="#">  <i tooltip="Cancel" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" class="fa fa-times-circle"></i>  </a>
       <span ng-controller="ModalDemoCtrl"><a href="#" ng-click="open()">  <i tooltip="Modify" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" class="fa fa-pencil"></i>   </a></span>
-             
+
              <a href="#">  <i tooltip="Delete" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" class="fa fa-trash"></i>   </a>
-             
+
              <span class="dropdown hidden-sm" dropdown>
             <a href class="dropdown-toggle" dropdown-toggle>
               <img src="img/actions-icon.png"  alt="" />
@@ -129,27 +129,27 @@
           </tr>
           <tr>
             <td align="center" valign="middle"><label class="i-checks m-b-none"><input type="checkbox" name="post[]"><i></i></label></td>
-            <td><img class="pull-left" src="img/man-icon2.png"  alt="" />  <a href="#">Mr. PatIent name </a>(35y) <br/> 
+            <td><img class="pull-left" src="img/man-icon2.png"  alt="" />  <a href="#">Mr. PatIent name </a>(35y) <br/>
             AH12345</td>
             <td align="center" valign="middle"><img src="img/cate-2.png"  alt="" /></td>
             <td><a editable-text="user.name">9988776655</a></td>
             <td>
               <a href class="active" ui-toggle-class><i class="fa fa-times text-danger text"></i></a>
             10:30 am <br/>  <span class="text-muted"> 04-Mar-2015</span></td>
-            <td>8:40 am <br/> 
+            <td>8:40 am <br/>
               <span class="text-muted"> 15 mins late! </span> </td>
             <td><a editable-select="user2.status" e-ng-options="s.value as s.text for s in statuses"> {{ showStatus(user2) }} </a><br /><span class="text-muted">In-progress!</span></td>
             <td>Dr. Vikhram</td>
             <td>Comments if any</td>
-            <td> <div class="actions-icons-cont">  
-           
-         
-            
+            <td> <div class="actions-icons-cont">
+
+
+
             <a href="#">  <i tooltip="Cancel" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" class="fa fa-times-circle"></i>  </a>
       <span ng-controller="ModalDemoCtrl"><a href="#" ng-click="open()">  <i tooltip="Modify" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" class="fa fa-pencil"></i>   </a></span>
-             
+
              <a href="#">  <i tooltip="Delete" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" class="fa fa-trash"></i>   </a>
-             
+
              <span class="dropdown hidden-sm" dropdown>
             <a href class="dropdown-toggle" dropdown-toggle>
               <img src="img/actions-icon.png"  alt="" />
@@ -168,27 +168,27 @@
           </tr>
           <tr>
             <td align="center" valign="middle"><label class="i-checks m-b-none"><input type="checkbox" name="post[]"><i></i></label></td>
-            <td><img class="pull-left" src="img/man-icon.png"  alt="" />  <a href="#">Mr. PatIent name </a>(35y) <br/> 
+            <td><img class="pull-left" src="img/man-icon.png"  alt="" />  <a href="#">Mr. PatIent name </a>(35y) <br/>
             AH12345</td>
             <td align="center" valign="middle">&nbsp;</td>
             <td><a editable-text="user.name">9988776655</a></td>
             <td>
               <a href class="active" ui-toggle-class><i class="fa fa-times text-danger text"></i></a>
             10:30 am <br/>  <span class="text-muted"> 04-Mar-2015</span></td>
-            <td>12:40 am <br/> 
+            <td>12:40 am <br/>
             <span class="text-danger-dk"> 1 hr 3 mins late! </span> </td>
             <td><a editable-select="user3.status" e-ng-options="s.value as s.text for s in statuses"> {{ showStatus(user3) }} </a><br /><span class="text-danger-dk">Waiting!</span></td>
             <td>Dr. Vikhram</td>
             <td>Comments if any</td>
-            <td> <div class="actions-icons-cont">  
-           
-         
-            
+            <td> <div class="actions-icons-cont">
+
+
+
             <a href="#">  <i tooltip="Cancel" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" class="fa fa-times-circle"></i>  </a>
       <span ng-controller="ModalDemoCtrl"><a href="#" ng-click="open()">  <i tooltip="Modify" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" class="fa fa-pencil"></i>   </a></span>
-             
+
              <a href="#">  <i tooltip="Delete" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" class="fa fa-trash"></i>   </a>
-             
+
              <span class="dropdown hidden-sm" dropdown>
             <a href class="dropdown-toggle" dropdown-toggle>
               <img src="img/actions-icon.png"  alt="" />
@@ -207,7 +207,7 @@
           </tr>
           <tr>
             <td align="center" valign="middle"><label class="i-checks m-b-none"><input type="checkbox" name="post[]"><i></i></label></td>
-            <td><img class="pull-left" src="img/man-icon2.png"  alt="" />  <a href="#">Mr. PatIent name </a>(35y) <br/> 
+            <td><img class="pull-left" src="img/man-icon2.png"  alt="" />  <a href="#">Mr. PatIent name </a>(35y) <br/>
             AH12345</td>
             <td align="center" valign="middle"><img src="img/cate-3.png"  alt="" /></td>
             <td><a editable-text="user.name">9988776655</a></td>
@@ -219,15 +219,15 @@
               <span class="text-danger-dk">Waiting!</span></td>
             <td>Dr. Vikhram</td>
             <td>Comments if any</td>
-            <td> <div class="actions-icons-cont">  
-           
-         
-            
+            <td> <div class="actions-icons-cont">
+
+
+
             <a href="#">  <i tooltip="Cancel" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" class="fa fa-times-circle"></i>  </a>
       <span ng-controller="ModalDemoCtrl"><a href="#" ng-click="open()">  <i tooltip="Modify" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" class="fa fa-pencil"></i>   </a></span>
-             
+
              <a href="#">  <i tooltip="Delete" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" class="fa fa-trash"></i>   </a>
-             
+
              <span class="dropdown hidden-sm" dropdown>
             <a href class="dropdown-toggle" dropdown-toggle>
               <img src="img/actions-icon.png"  alt="" />
@@ -246,7 +246,7 @@
           </tr>
           <tr>
             <td align="center" valign="middle"><label class="i-checks m-b-none"><input type="checkbox" name="post[]"><i></i></label></td>
-            <td><img class="pull-left" src="img/man-icon.png"  alt="" />  <a href="#">Mr. PatIent name </a>(35y) <br/> 
+            <td><img class="pull-left" src="img/man-icon.png"  alt="" />  <a href="#">Mr. PatIent name </a>(35y) <br/>
             AH12345</td>
             <td align="center" valign="middle">&nbsp;</td>
             <td><a editable-text="user.name">9988776655</a></td>
@@ -257,15 +257,15 @@
             <td><div class="text-info-dk">Scheduled</div></td>
             <td>Dr. Vikhram</td>
             <td>Comments if any</td>
-            <td> <div class="actions-icons-cont">  
-           
-         
-            
+            <td> <div class="actions-icons-cont">
+
+
+
             <a href="#">  <i tooltip="Cancel" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" class="fa fa-times-circle"></i>  </a>
       <span ng-controller="ModalDemoCtrl"><a href="#" ng-click="open()">  <i tooltip="Modify" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" class="fa fa-pencil"></i>   </a></span>
-             
+
              <a href="#">  <i tooltip="Delete" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" class="fa fa-trash"></i>   </a>
-             
+
              <span class="dropdown hidden-sm" dropdown>
             <a href class="dropdown-toggle" dropdown-toggle>
               <img src="img/actions-icon.png"  alt="" />
@@ -284,7 +284,7 @@
           </tr>
           <tr>
             <td align="center" valign="middle"><label class="i-checks m-b-none"><input type="checkbox" name="post[]"><i></i></label></td>
-            <td><img class="pull-left" src="img/man-icon2.png"  alt="" />  <a href="#">Mr. PatIent name </a>(35y) <br/> 
+            <td><img class="pull-left" src="img/man-icon2.png"  alt="" />  <a href="#">Mr. PatIent name </a>(35y) <br/>
             AH12345</td>
             <td align="center" valign="middle"><img src="img/cate-1.png"  alt="" /></td>
             <td><a editable-text="user.name">9988776655</a></td>
@@ -295,15 +295,15 @@
             <td><div class="text-info-dk">Scheduled</div></td>
             <td>Dr. Vikhram</td>
             <td>Comments if any</td>
-            <td> <div class="actions-icons-cont">  
-           
-         
-            
+            <td> <div class="actions-icons-cont">
+
+
+
             <a href="#">  <i tooltip="Cancel" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" class="fa fa-times-circle"></i>  </a>
       <span ng-controller="ModalDemoCtrl"><a href="#" ng-click="open()">  <i tooltip="Modify" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" class="fa fa-pencil"></i>   </a></span>
-             
+
              <a href="#">  <i tooltip="Delete" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" class="fa fa-trash"></i>   </a>
-             
+
              <span class="dropdown hidden-sm" dropdown>
             <a href class="dropdown-toggle" dropdown-toggle>
               <img src="img/actions-icon.png"  alt="" />
@@ -322,7 +322,7 @@
           </tr>
           <tr>
             <td align="center" valign="middle"><label class="i-checks m-b-none"><input type="checkbox" name="post[]"><i></i></label></td>
-            <td><img class="pull-left" src="img/man-icon.png"  alt="" />  <a href="#">Mr. PatIent name </a>(35y) <br/> 
+            <td><img class="pull-left" src="img/man-icon.png"  alt="" />  <a href="#">Mr. PatIent name </a>(35y) <br/>
             AH12345</td>
             <td align="center" valign="middle">&nbsp;</td>
             <td><a editable-text="user.name">9988776655</a></td>
@@ -334,15 +334,15 @@
             <td><a editable-select="user.status" e-ng-options="s.value as s.text for s in statuses"> {{ showStatus(user) }} </a><br /><span class="text-muted">Prepare final bill!</span></td>
             <td>Dr. Vikhram</td>
             <td>Comments if any</td>
-            <td> <div class="actions-icons-cont">  
-           
-         
-            
+            <td> <div class="actions-icons-cont">
+
+
+
             <a href="#">  <i tooltip="Cancel" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" class="fa fa-times-circle"></i>  </a>
       <span ng-controller="ModalDemoCtrl"><a href="#" ng-click="open()">  <i tooltip="Modify" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" class="fa fa-pencil"></i>   </a></span>
-             
+
              <a href="#">  <i tooltip="Delete" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" class="fa fa-trash"></i>   </a>
-             
+
              <span class="dropdown hidden-sm" dropdown>
             <a href class="dropdown-toggle" dropdown-toggle>
               <img src="img/actions-icon.png"  alt="" />
@@ -361,7 +361,7 @@
           </tr>
           <tr>
             <td align="center" valign="middle"><label class="i-checks m-b-none"><input type="checkbox" name="post[]"><i></i></label></td>
-            <td><img class="pull-left" src="img/man-icon2.png"  alt="" />  <a href="#">Mr. PatIent name </a>(35y) <br/> 
+            <td><img class="pull-left" src="img/man-icon2.png"  alt="" />  <a href="#">Mr. PatIent name </a>(35y) <br/>
             AH12345</td>
             <td align="center" valign="middle">&nbsp;</td>
             <td><a editable-text="user.name">9988776655</a></td>
@@ -372,15 +372,15 @@
             <td><a editable-select="user.status" e-ng-options="s.value as s.text for s in statuses"> {{ showStatus(user) }} </a><br /><span class="text-muted">Prepare final bill!</span></td>
             <td>Dr. Vikhram</td>
             <td>Comments if any</td>
-            <td> <div class="actions-icons-cont">  
-           
-         
-            
+            <td> <div class="actions-icons-cont">
+
+
+
             <a href="#">  <i tooltip="Cancel" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" class="fa fa-times-circle"></i>  </a>
       <span ng-controller="ModalDemoCtrl"><a href="#" ng-click="open()">  <i tooltip="Modify" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" class="fa fa-pencil"></i>   </a></span>
-             
+
              <a href="#">  <i tooltip="Delete" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" class="fa fa-trash"></i>   </a>
-             
+
              <span class="dropdown hidden-sm" dropdown>
             <a href class="dropdown-toggle" dropdown-toggle>
               <img src="img/actions-icon.png"  alt="" />
@@ -399,7 +399,7 @@
           </tr>
           <tr>
             <td align="center" valign="middle"><label class="i-checks m-b-none"><input type="checkbox" name="post[]"><i></i></label></td>
-            <td><img class="pull-left" src="img/man-icon.png"  alt="" />  <a href="#">Mr. PatIent name </a>(35y) <br/> 
+            <td><img class="pull-left" src="img/man-icon.png"  alt="" />  <a href="#">Mr. PatIent name </a>(35y) <br/>
             AH12345</td>
             <td align="center" valign="middle"><img src="img/cate-4.png"  alt="" /></td>
             <td><a editable-text="user.name">9988776655</a></td>
@@ -410,15 +410,15 @@
             <td><a editable-select="user.status" e-ng-options="s.value as s.text for s in statuses"> {{ showStatus(user) }} </a><br /><span class="text-muted">Prepare final bill!</span></td>
             <td>Dr. Vikhram</td>
             <td>Comments if any</td>
-            <td> <div class="actions-icons-cont">  
-           
-         
-            
+            <td> <div class="actions-icons-cont">
+
+
+
             <a href="#">  <i tooltip="Cancel" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" class="fa fa-times-circle"></i>  </a>
       <span ng-controller="ModalDemoCtrl"><a href="#" ng-click="open()">  <i tooltip="Modify" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" class="fa fa-pencil"></i>   </a></span>
-             
+
              <a href="#">  <i tooltip="Delete" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" class="fa fa-trash"></i>   </a>
-             
+
              <span class="dropdown hidden-sm" dropdown>
             <a href class="dropdown-toggle" dropdown-toggle>
               <img src="img/actions-icon.png"  alt="" />
@@ -437,7 +437,7 @@
           </tr>
           <tr>
             <td align="center" valign="middle"><label class="i-checks m-b-none"><input type="checkbox" name="post[]"><i></i></label></td>
-            <td><img class="pull-left" src="img/man-icon2.png"  alt="" />  <a href="#">Mr. PatIent name </a>(35y) <br/> 
+            <td><img class="pull-left" src="img/man-icon2.png"  alt="" />  <a href="#">Mr. PatIent name </a>(35y) <br/>
             AH12345</td>
             <td align="center" valign="middle"><img src="img/cate-5.png"  alt="" /></td>
             <td><a editable-text="user.name">9988776655</a></td>
@@ -448,15 +448,15 @@
             <td><a editable-select="user.status" e-ng-options="s.value as s.text for s in statuses"> {{ showStatus(user) }} </a><br /><span class="text-muted">Prepare final bill!</span></td>
             <td>Dr. Vikhram</td>
             <td>Comments if any</td>
-            <td> <div class="actions-icons-cont">  
-           
-         
-            
+            <td> <div class="actions-icons-cont">
+
+
+
             <a href="#">  <i tooltip="Cancel" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" class="fa fa-times-circle"></i>  </a>
       <span ng-controller="ModalDemoCtrl"><a href="#" ng-click="open()">  <i tooltip="Modify" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" class="fa fa-pencil"></i>   </a></span>
-             
+
              <a href="#">  <i tooltip="Delete" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" class="fa fa-trash"></i>   </a>
-             
+
              <span class="dropdown hidden-sm" dropdown>
             <a href class="dropdown-toggle" dropdown-toggle>
               <img src="img/actions-icon.png"  alt="" />
@@ -476,18 +476,18 @@
         </tbody>
       </table>
     </div>
-        
-      
+
+
     <footer class="panel-footer">
       <div class="row">
         <div class="col-sm-4 hidden-xs">
-          
-               
+
+
         </div>
         <div class="col-sm-4 text-center">
           <small class="text-muted inline m-t-sm m-b-sm">showing 20-30 of 50 items</small>
         </div>
-        <div class="col-sm-4 text-right text-center-xs">                
+        <div class="col-sm-4 text-right text-center-xs">
           <ul class="pagination pagination-sm m-t-none m-b-none">
             <li><a href><i class="fa fa-chevron-left"></i></a></li>
             <li><a href>1</a></li>

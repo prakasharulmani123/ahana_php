@@ -1,31 +1,34 @@
 <div class="bg-light lter b-b wrapper-md">
     <h1 class="m-n h3">Out-Patient</h1>
 </div>
-
+<div ng-controller="OutPatientsController">
 <div class="wrapper-md tab-btn">
     <div ng-include="'tpl/blocks/alert.html'">
         {% include 'tpl/blocks/alert.html' %}
     </div>
     <div class="row">
-        <div class="col-sm-4">
-            <div class="btn-group btn-group-justified">
-                <a class="btn btn-info active" ng-click="loadOutPatientsList('current')">
+        <div class="col-sm-6">
+            <div class="btn-group op-btn-group">
+                <button class="btn btn-info current-op-patient" ng-click="loadOutPatientsList('current')">
                     <i class="fa fa-user-md"></i>  Today's Appointments
-                </a>
+                </button>
                 <a class="btn btn-info" ui-sref="patient.futureAppointment">
                     <i class="fa fa-hospital-o"></i>
                     Scheduled Appointments
                 </a>
+                <button class="btn btn-info previous-op-patient" ng-click="loadOutPatientsList('previous')">
+                    <i class="fa fa-user-md"></i>  Past Appointments
+                </button>
             </div>
         </div>
     </div>
 </div>
 
-<div class="wrapper-md" ng-controller="OutPatientsController" ng-init="loadOutPatientsList('current')">
+<div class="wrapper-md" ng-init="loadOutPatientsList(op_type)">
     <div class="panel panel-default">
         <div class="row wrapper pb-0">
             <div class="col-sm-5 m-b-xs">
-                <button class="btn btn-sm btn-grey" ng-click="loadOutPatientsList('current')"> &nbsp; &nbsp; <i class="fa fa-refresh"></i>  &nbsp; &nbsp; </button>
+                <button class="btn btn-sm btn-grey" ng-click="loadOutPatientsList(op_type)"> &nbsp; &nbsp; <i class="fa fa-refresh"></i>  &nbsp; &nbsp; </button>
                 <span ng-show="currentAppointmentSelected > 0">
                     <button ng-click="rescheduleAppointments()" class="btn btn-sm btn-primary">
                         <i class="fa fa-retweet"></i> Reschedule Appointments
@@ -44,6 +47,7 @@
 
         <div class="table-responsive in-patient-table out-patient-table">
             <!--<div style="{{css.style}}">-->
+            <!--<pre>{{displayedCollection | json}}</pre>-->
                 <scrollable-table watch="displayedCollection">
                     <table st-table="displayedCollection"  st-safe-src="rowCollection"  class="table table-striped b-t b-light">
                         <thead>
@@ -110,8 +114,7 @@
                                 </td>
                                 <td>
                                     <a ui-sref="patient.view({id: row.apptPatientData.patient_guid})">
-                                        <img ng-if="$even" class="pull-left patient-image" alt="" width="30" height="30" ng-src="{{row.apptPatientData.patient_image ? row.apptPatientData.patient_image : 'img/man-icon.png'}}">
-                                        <img ng-if="$odd" class="pull-left patient-image" alt="" width="30" height="30" ng-src="{{row.apptPatientData.patient_image ? row.apptPatientData.patient_image : 'img/man-icon2.png'}}">
+                                        <img class="pull-left patient-image" width="30" height="30" src="img/man-icon.png" ng-attr-lazy-img="{{ row.apptPatientData.patient_image ? row.apptPatientData.patient_image : ($even ? 'img/man-icon.png' : 'img/man-icon2.png') }}" />
                                     </a>
 
                                     <a ui-sref="patient.view({id: row.apptPatientData.patient_guid})" tooltip="{{row.apptPatientData.fullcurrentaddress}}">
@@ -203,7 +206,7 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>{{row.apptConsultantData.fullname}}</td>
+                                <td>{{value.consultant_name}}</td>
                                 <td align="left">
                                     <div ng-include="'tpl/patient/patient_table_nav_bar.html'">
                                         {% include 'tpl/patient/patient_table_nav_bar.html' %}
@@ -268,7 +271,7 @@
                                     </div>
                                 </td>
                                 <td> Seen </td>
-                                <td>{{row.apptConsultantData.fullname}}</td>
+                                <td>{{value.consultant_name}}</td>
                                 <td align="left">
                                     <div ng-include="'tpl/patient/patient_table_nav_bar.html'">
                                         {% include 'tpl/patient/patient_table_nav_bar.html' %}
@@ -295,14 +298,4 @@
         </div>
     </div>
 </div>
-
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('body').on('.checkall', 'click', function () {
-            alert('asdas')
-        });
-        $('.checkall').on('ifChecked', function (event) {
-            alert(event.type + ' callback');
-        });
-    });
-</script>
+</div>
