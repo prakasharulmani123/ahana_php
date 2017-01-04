@@ -419,7 +419,7 @@ class PatEncounter extends RActiveRecord {
                                 'incomplete_profile',
                                 'new_user',
                                 'patient_guid',
-                                'patient_image',
+                                'patient_img_url',
                                 'fullcurrentaddress',
                                 'fullname',
                                 'patient_age',

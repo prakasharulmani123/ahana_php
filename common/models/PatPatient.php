@@ -470,6 +470,9 @@ class PatPatient extends RActiveRecord {
             'patient_age' => function ($model) {
                 return $model->patient_age;
             },
+            'patient_img_url' => function ($model) {
+                return $model->patient_img_url;
+            },
             'org_name' => function ($model) {
                 return $model->org_name;
             },
@@ -609,7 +612,7 @@ class PatPatient extends RActiveRecord {
                 }
                 return false;
             },
-            'have_patient_group' => function ($model) {
+                    'have_patient_group' => function ($model) {
                 return !empty($model->patGlobalPatient->patientGroups);
             },
                 ];
@@ -740,7 +743,8 @@ class PatPatient extends RActiveRecord {
                 return $patient;
             }
 
-            /* I think this function is not used anywhere - prakash**/
+            /* I think this function is not used anywhere - prakash* */
+
             public static function getActiveEncounterByPatientId($patient_id) {
                 return PatEncounter::find()->status()->active()->andWhere(['patient_id' => $patient_id])->one();
             }
@@ -775,6 +779,13 @@ class PatPatient extends RActiveRecord {
             public static function getPatientNextvisitDate($days) {
                 $date = date('Y-m-d');
                 return date('Y-m-d', strtotime($date . "+$days days"));
+            }
+
+            public function getPatient_img_url() {
+                if ($this->patient_image)
+                    return \yii\helpers\Url::to("@web/images/uavatar/{$this->patient_image}", true);
+                    
+                return false;
             }
 
         }

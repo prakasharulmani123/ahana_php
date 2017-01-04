@@ -181,11 +181,4 @@ class PatGlobalPatient extends RActiveRecord {
         $patient->linkAll('patientGroups', $groups, $extraColumns, $unlink, $delete);
         return $patient;
     }
-
-    public function afterFind() {
-        parent::afterFind();
-        if ($this->patient_image)
-            $this->patient_image = \yii\helpers\Url::to("@web/images/uavatar/{$this->patient_image}", true);
-    }
-
 }
