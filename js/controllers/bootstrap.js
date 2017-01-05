@@ -308,7 +308,7 @@ app.controller('TimepickerDemoCtrl', ['$scope', function ($scope) {
 app.controller('PatientSearchController', ['$scope', '$http', '$rootScope', '$state', '$sce', '$q', function ($scope, $http, $rootScope, $state, $sce, $q) {
         $scope.patient_lists = [];
         $scope.patientselected = '';
-        
+
         var changeTimer = false;
         var canceler;
 
@@ -316,7 +316,7 @@ app.controller('PatientSearchController', ['$scope', '$http', '$rootScope', '$st
             if (newValue != '') {
                 if (canceler) canceler.resolve();
                 canceler = $q.defer();
-                
+
                 if (changeTimer !== false)
                     clearTimeout(changeTimer);
 
