@@ -155,59 +155,61 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
             });
         }
         
-        $scope.import_process_text = '';
-        $scope.progress_imported_rows = 0;
-        $scope.success_import_rows = 0;
-        $scope.failed_import_rows = 0;
-        $scope.total_import_rows = 0;
-        $scope.import_percent = 0;
-        $scope.import_error_log = true;
+        $scope.initImportParams = function () {
+            $scope.import_process_text = '';
+            $scope.progress_imported_rows = $scope.success_import_rows = $scope.failed_import_rows = $scope.total_import_rows = $scope.import_percent = 0;
+            $scope.import_error_log = false;
+        }
         
-        $scope.importCsv = function(){
+        $scope.importCsv = function () {
+            $scope.initImportParams();
             $scope.loadbar('show');
             $scope.import_process_text = 'Fetching the Excel Data. Please wait until the importing begins. This might take few mins';
+            $scope.import_log = Date.parse(moment().format());
             var currentUser = AuthenticationService.getCurrentUser();
-            fileUpload.uploadFileToUrl($scope.myFile, $rootScope.IRISOrgServiceUrl + '/pharmacypurchase/import?tenant_id=' + currentUser.credentials.logged_tenant_id).success(function (response) {
-                if(response.success){
+            fileUpload.uploadFileToUrl($scope.myFile, $rootScope.IRISOrgServiceUrl + '/pharmacypurchase/import?tenant_id=' + currentUser.credentials.logged_tenant_id + '&import_log=' + $scope.import_log).success(function (response) {
+                if (response.success) {
                     $scope.total_import_rows = response.message.total_rows;
                     $scope.import_process_text = 'Importing started';
-                    $scope.import_start(1);
-                }else{
-                    $scope.errorData2 = response.message;
+                    $scope.import_start(response.message.id, response.message.max_id);
+                } else {
+                    $scope.loadbar('hide');
+                    $scope.import_process_text = '';
+                    $scope.errorData = response.message;
                 }
             }).error(function (data, status) {
                 $scope.loadbar('hide');
                 if (status == 422)
-                    $scope.errorData2 = $scope.errorSummary(data);
+                    $scope.errorData = $scope.errorSummary(data);
                 else
-                    $scope.errorData2 = data.message;
+                    $scope.errorData = data.message;
             });
         }
-        
-        $scope.import_start = function(id){
+
+        $scope.import_start = function (id, max) {
             $scope.loadbar('show');
             $http({
                 method: 'POST',
                 url: $rootScope.IRISOrgServiceUrl + '/pharmacypurchase/importstart',
-                data: {id: id, max_id: $scope.total_import_rows},
+                data: {id: id, max_id: max, import_log: $scope.import_log},
             }).success(
                     function (response) {
-                        $scope.progress_imported_rows = $scope.progress_imported_rows + 1;
-                        $scope.import_process_text = 'Import progressing (' + $scope.progress_imported_rows + '/' + $scope.total_import_rows + ')';
-                        
-                        if(response.success){
-                            $scope.success_import_rows = $scope.success_import_rows + 1;
-                        }else{
-                            $scope.failed_import_rows = $scope.failed_import_rows + 1;
+                        if (response.success) {
+                            $scope.success_import_rows++;
+                            $scope.progress_imported_rows++;
+                        } else if (response.continue) {
+                            $scope.failed_import_rows++;
+                            $scope.progress_imported_rows++;
                         }
-                        
-                        $scope.import_percent = ($scope.progress_imported_rows/$scope.total_import_rows) * 100;
-                        
-                        if(response.continue){
-                            $scope.import_start(response.continue);
-                        }else{
+
+                        $scope.import_process_text = 'Import progressing (' + $scope.progress_imported_rows + '/' + $scope.total_import_rows + ')';
+                        $scope.import_percent = ($scope.progress_imported_rows / $scope.total_import_rows) * 100;
+
+                        if (response.continue) {
+                            $scope.import_start(response.continue, max);
+                        } else {
                             $scope.import_process_text = 'Import completed (' + $scope.progress_imported_rows + '/' + $scope.total_import_rows + ')';
-                            $scope.showImportErrorLog();
+                            $scope.import_error_log = true;
                         }
                         $scope.loadbar('hide');
                     }
@@ -219,25 +221,18 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                     $scope.errorData = data.message;
             });
         }
-        
-        $scope.showImportErrorLog = function(){
+
+        $scope.showImportErrorLog = function () {
             var modalInstance = $modal.open({
                 templateUrl: 'tpl/modal_form/modal.pharmacy_purchase_import_errorlog.html',
-                controller: "PharmacyPurchaseImportController",
+                controller: "PurchaseImportErrorLogController",
                 resolve: {
                     scope: function () {
                         return $scope;
                     },
                 }
             });
-            modalInstance.data = $scope.futureappointmentSelectedItems;
-
-            modalInstance.result.then(function (selectedItem) {
-                $scope.selected = selectedItem;
-            }, function () {
-                $scope.loadFutureAppointmentsList();
-                $log.info('Modal dismissed at: ' + new Date());
-            });
+            modalInstance.data = {import_log: $scope.import_log};
         }
     }]);
 

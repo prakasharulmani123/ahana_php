@@ -1,4 +1,4 @@
-<div ng-controller="PharmacyPurchaseImportController">
+<div ng-init="loadErrorLogs()">
     <div class="bg-light lter b-b wrapper-md">
         <h1 class="m-n h3"> Error Logs</h1>
     </div>
@@ -7,7 +7,7 @@
             {% include 'tpl/blocks/alert.html' %}
         </div>
         <div class="row">
-            <div ng-init="loadErrorLogs()">
+            <div>
                     <table class="table m-b-none" ui-jq="footable" data-filter="#filter" data-page-size="10">
                         <thead>
                             <tr>
@@ -21,12 +21,12 @@
                             </tr>
                         </tbody>                        
                         <tbody ng-if="isLoading == false">
-                            <tr ng-repeat="row in rowCollection| orderBy: city_name">
+                            <tr ng-repeat="row in rowCollection">
                                 <td>
                                     {{row.invoice_no}}
                                 </td>
-                                <td>
-                                    {!! row.response !!}
+                                <td ng-bind-html="row.response">
+                                    
                                 </td>
                             </tr>
                         </tbody>
