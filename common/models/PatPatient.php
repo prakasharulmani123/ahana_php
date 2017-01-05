@@ -624,8 +624,17 @@ class PatPatient extends RActiveRecord {
                     $extend = array_merge($extend_glb, $extend);
                 }
 
-                $fields = array_merge(parent::fields(), $extend);
-                return $fields;
+                $addt_keys = [];
+                if ($addtField = Yii::$app->request->get('addtfields')) {
+                    switch ($addtField):
+                        case 'search':
+                            $addt_keys = ['patient_img_url', 'fullcurrentaddress', 'fullpermanentaddress', 'fullname', 'patient_guid','patient_age','patient_global_int_code','patient_mobile','have_encounter','org_name'];
+                            break;
+                    endswitch;
+                }
+
+                $extFields = ($addt_keys) ? array_intersect_key($extend, array_flip($addt_keys)) : $extend;
+                return array_merge(parent::fields(), $extFields);
             }
 
             public function getHasalert() {
@@ -784,7 +793,7 @@ class PatPatient extends RActiveRecord {
             public function getPatient_img_url() {
                 if ($this->patient_image)
                     return \yii\helpers\Url::to("@web/images/uavatar/{$this->patient_image}", true);
-                    
+
                 return false;
             }
 

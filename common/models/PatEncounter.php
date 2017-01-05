@@ -243,7 +243,7 @@ class PatEncounter extends RActiveRecord {
     public function getPatAdmissionDischarge() {
         return $this->hasOne(PatAdmission::className(), ['encounter_id' => 'encounter_id'])->andWhere(['IN', 'admission_status', ['D', 'CD']])->orderBy(['created_at' => SORT_DESC]);
     }
-    
+
     public function getPatAdmissionClinicalDischarge() {
         return $this->hasOne(PatAdmission::className(), ['encounter_id' => 'encounter_id'])->andWhere(['IN', 'admission_status', ['CD']])->orderBy(['created_at' => SORT_DESC]);
     }
@@ -449,6 +449,7 @@ class PatEncounter extends RActiveRecord {
             },
                 ];
 
+                $addt_keys = [];
                 if ($addtField = Yii::$app->request->get('addtfields')) {
                     switch ($addtField):
                         case 'oplist':
@@ -457,12 +458,15 @@ class PatEncounter extends RActiveRecord {
                         case 'advdetails':
                             $addt_keys = ['apptPatientData', 'stay_duration', 'viewChargeCalculation', 'total_charge', 'paid', 'balance'];
                             break;
+                        case 'search':
+                            $addt_keys = ['floor_name','room_name','room_type_name','liveAdmission', 'liveAppointmentBooking'];
+                            break;
                     endswitch;
-
-                    return array_merge(parent::fields(), array_intersect_key($extend, array_flip($addt_keys)));
                 }
 
-                return array_merge(parent::fields(), $extend);
+                $extFields = ($addt_keys) ? array_intersect_key($extend, array_flip($addt_keys)) : $extend;
+
+                return array_merge(parent::fields(), $extFields);
             }
 
             public function getTotalCharge() {

@@ -141,22 +141,27 @@ class PatientController extends ActiveController {
             $tenant_id = Yii::$app->user->identity->logged_tenant_id;
 
             $lists = PatPatient::find()
-                    ->andWhere(['pat_patient.tenant_id' => $tenant_id, 'pat_patient.deleted_at' => '0000-00-00 00:00:00'])
+                    ->andWhere([
+                        'pat_patient.tenant_id' => $tenant_id,
+                        'pat_patient.deleted_at' => '0000-00-00 00:00:00',
+                        'pat_global_patient.parent_id' => NULL
+                    ])
                     ->joinWith('patGlobalPatient')
-                    ->orOnCondition("pat_global_patient.patient_firstname like :search")
-                    ->orOnCondition("pat_global_patient.patient_lastname like :search")
-                    ->orOnCondition("pat_global_patient.patient_mobile like :search")
-                    ->orOnCondition("pat_global_patient.patient_global_int_code like :search")
-                    ->orOnCondition("pat_global_patient.casesheetno like :search")
-                    ->andWhere("pat_global_patient.parent_id is null")
+                    ->andFilterWhere([
+                        'or',
+                        ['like', 'pat_global_patient.patient_firstname', $text],
+                        ['like', 'pat_global_patient.patient_lastname', $text],
+                        ['like', 'pat_global_patient.patient_mobile', $text],
+                        ['like', 'pat_global_patient.patient_global_int_code', $text],
+                        ['like', 'pat_global_patient.casesheetno', $text],
+                    ])
                     ->orWhere("pat_global_patient.parent_id = ''")
-                    ->addParams([':search' => "%{$text}%"])
                     ->limit($limit)
                     ->all();
 
             foreach ($lists as $key => $patient) {
                 $patients[$key]['Patient'] = $patient;
-                $patients[$key]['PatientAddress'] = $patient->patPatientAddress;
+//                $patients[$key]['PatientAddress'] = $patient->patPatientAddress; // :NOUSE
                 $patients[$key]['PatientActiveEncounter'] = $patient->patActiveEncounter;
                 $patients[$key]['same_branch'] = true;
                 $patients[$key]['same_org'] = true;
@@ -166,15 +171,16 @@ class PatientController extends ActiveController {
             if (empty($patients)) {
                 $lists = PatPatient::find()
                         ->joinWith('patGlobalPatient')
-                        ->andWhere("pat_patient.status = '1' AND pat_patient.tenant_id != $tenant_id")
-                        ->orOnCondition("pat_global_patient.patient_firstname like :search")
-                        ->orOnCondition("pat_global_patient.patient_lastname like :search")
-                        ->orOnCondition("pat_global_patient.patient_mobile like :search")
-                        ->orOnCondition("pat_global_patient.patient_global_int_code like :search")
-                        ->orOnCondition("pat_global_patient.casesheetno like :search")
-                        ->andWhere("pat_global_patient.parent_id is null")
+                        ->andWhere("pat_patient.status = '1' AND pat_patient.tenant_id != {$tenant_id} AND pat_global_patient.parent_id IS NULL")
+                        ->andFilterWhere([
+                            'or',
+                            ['like', 'pat_global_patient.patient_firstname', $text],
+                            ['like', 'pat_global_patient.patient_lastname', $text],
+                            ['like', 'pat_global_patient.patient_mobile', $text],
+                            ['like', 'pat_global_patient.patient_global_int_code', $text],
+                            ['like', 'pat_global_patient.casesheetno', $text],
+                        ])
                         ->orWhere("pat_global_patient.parent_id = ''")
-                        ->addParams([':search' => "%{$text}%"])
                         ->limit($limit)
                         ->groupBy('pat_patient.patient_global_guid')
                         ->all();
@@ -189,15 +195,15 @@ class PatientController extends ActiveController {
                 if (empty($patients)) {
 
                     $lists = GlPatient::find()
-                            ->andWhere("status = '1' AND tenant_id != $tenant_id")
-                            ->orOnCondition("patient_firstname like :search")
-                            ->orOnCondition("patient_lastname like :search")
-                            ->orOnCondition("patient_mobile like :search")
-//                            ->orOnCondition("patient_global_int_code like :search")
-                            ->orOnCondition("casesheetno like :search")
-                            ->andWhere("parent_id is null")
-                            ->orWhere("parent_id = ''")
-                            ->addParams([':search' => "%{$text}%"])
+                            ->andWhere("status = '1' AND tenant_id != {$tenant_id} AND (parent_id IS NULL OR parent_id = '')")
+                            ->andFilterWhere([
+                                'or',
+                                ['like', 'patient_firstname', $text],
+                                ['like', 'patient_lastname', $text],
+                                ['like', 'patient_mobile', $text],
+//                                ['like', 'patient_global_int_code', $text],
+                                ['like', 'casesheetno', $text],
+                            ])
                             ->limit($limit)
                             ->all();
 
