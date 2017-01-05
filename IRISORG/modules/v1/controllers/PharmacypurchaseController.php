@@ -352,7 +352,7 @@ class PharmacypurchaseController extends ActiveController {
                 $product_name = $this->clean(str_replace('-', ' ', $row[5]));
                 $pkg_unit = $this->clean($row[6]);
                 $batch = $row[7];
-                $expiry_date = date('Y-m-d', strtotime(str_replace('-', ' ', $row[8])));
+                $expiry_date = date('Y-m-d', strtotime(str_replace('/', '/1/', $row[8])));
                 $mrp = $row[9];
                 $purchase_price = $row[14];
                 $qty = $row[11];
