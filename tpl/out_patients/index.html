@@ -93,6 +93,7 @@
                                         <span class="badge bg-black">Booked: {{value.booking_count}}</span>&nbsp; &nbsp;
                                         <span class="badge bg-success">Arrived: {{value.arrived_count}}</span>&nbsp; &nbsp;
                                         <span class="badge bg-info" ng-if="op_type != 'previous'">Seen: {{value.seen_count}}</span>&nbsp; &nbsp;
+                                        <i class="fa fa-spin fa-spinner" ng-if="value.rowLoading == true"></i>
                                     </b>
                                 </td>
                             </tr>
@@ -216,12 +217,12 @@
                                 <td>&nbsp; </td>
                                 <td colspan="10">
                                     <b>
-                                        <button ng-click="value.seenExpanded = !value.seenExpanded; expandSeen($event, value.consultant_id, value.seenExpanded);" expand class="btn btn-sm btn-default hms-plus">
+                                        <button ng-click="value.seenExpanded = !value.seenExpanded; expandSeen(value.consultant_id, value.seenExpanded);" expand class="btn btn-sm btn-default hms-plus">
                                             <i ng-if="!value.seenExpanded" class="fa fa-plus text"></i>
                                             <i ng-if="value.seenExpanded" class="fa fa-minus text"></i>
                                         </button>&nbsp; &nbsp;
                                         <span class="badge bg-info">Seen: {{value.seen_count}}</span>&nbsp; &nbsp;
-                                        <i class="fa fa-spin fa-refresh hide"></i>
+                                        <i class="fa fa-spin fa-spinner" ng-if="value.rowSeenLoading == true"></i>
                                     </b>
                                 </td>
                             </tr>

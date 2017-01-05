@@ -13,11 +13,10 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
         var currentUser = $rootScope.authenticationService.getCurrentUser();
 
         $scope.ctrl = {};
-        $scope.allExpanded = true;
+        $scope.allExpanded = false;
 //        $scope.expanded = true;
         $scope.ctrl.expandAll = function (expanded) {
             $scope.expandAllRow(expanded);
-//            $scope.$broadcast('onExpandAll', {expanded: expanded});
         };
 
         //Checkbox initialize
@@ -68,35 +67,20 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading patients!";
                     });
-
-//            $timeout(function () {
-//                $http.get($rootScope.IRISOrgServiceUrl + '/encounter/outpatients?addtfields=oplist&type=' + type + '&cid=' + cid+'&seen=true')
-//                    .success(function (OutPatients) {
-//                        angular.forEach(OutPatients.consultants, function (value, key) {
-//                            var seen_enc = $filter('filter')(OutPatients.result, {consultant_id: key});
-//                            var rowcoll = $filter('filter')($scope.rowCollection, {consultant_id: key});
-//                            rowcoll[0].seen_records = seen_enc;
-//                        });
-//                    })
-//                    .error(function () {
-//                        $scope.errorData = "An Error has occured while loading patients!";
-//                    });
-//            }, 3000);
         };
 
-        $scope.expandSeen = function ($event, cid, rowopen) {
+        $scope.expandSeen = function (cid, rowopen) {
             if (rowopen) {
-                var spinner = angular.element($event.currentTarget).closest('b').find('i.fa-spin');
-                spinner.removeClass('hide');
+                var seenrowcoll = $filter('filter')($scope.rowCollection, {consultant_id: cid})[0];
+                seenrowcoll.rowSeenLoading = true;
                 $http.get($rootScope.IRISOrgServiceUrl + '/encounter/outpatients?addtfields=oplist&type=' + $scope.op_type + '&cid=' + cid + '&seen=true&only=results')
                     .success(function (OutPatients) {
-                        var rowcoll = $filter('filter')($scope.rowCollection, {consultant_id: cid});
-                        rowcoll[0].seen_records = OutPatients.result;
-                        spinner.addClass('hide');
+                        seenrowcoll.seen_records = OutPatients.result;
+                        seenrowcoll.rowSeenLoading = false;
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading seen data!";
-                        spinner.addClass('hide');
+                        seenrowcoll.rowSeenLoading = false;
                     });
             }
         }
@@ -372,6 +356,8 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                     arrived_count: value.arrival,
                     selected: '0',
                     seenExpanded: false,
+                    rowLoading: false,
+                    rowSeenLoading: false,
                 };
                 key_index++;
             });
@@ -409,22 +395,35 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
         }
 
         $.cookie.json = true;
-        $scope.setRowExpanded = function (consultant_id, rowopen) {
+        $scope.setRowExpanded = function (cid, rowopen) {
             var opRowExpand = [];
             if (typeof $.cookie('opRowExp') !== 'undefined') {
                 opRowExpand = $.cookie('opRowExp');
             }
-            exists = $filter('filter')(opRowExpand, {consultant_id: consultant_id});
+            exists = $filter('filter')(opRowExpand, {consultant_id: cid});
             if (exists.length == 0) {
                 opRowExpand.push({
-                    'consultant_id': consultant_id,
+                    'consultant_id': cid,
                     'rowopen': rowopen,
                 });
             } else {
                 exists[0].rowopen = rowopen;
             }
             $.cookie('opRowExp', opRowExpand, {path: '/'});
-//            $cookieStore.put('opRowExp', opRowExpand,{path: '/'});
+
+            if (rowopen) {
+                var docRow = $filter('filter')($scope.rowCollection, {consultant_id: cid})[0];
+                docRow.rowLoading = true;
+                $http.get($rootScope.IRISOrgServiceUrl + '/encounter/outpatients?addtfields=oplist&type=' + $scope.op_type + '&cid=' + cid + '&seen=false&only=results')
+                        .success(function (OutPatients) {
+                            docRow.act_enc = OutPatients.result;
+                            docRow.rowLoading = false;
+                        })
+                        .error(function () {
+                            $scope.errorData = "An Error has occured while loading seen data!";
+                            docRow.rowLoading = false;
+                        });
+            }
         }
 
         $scope.getRowExpand = function (consultant_id) {
@@ -432,7 +431,7 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                 var opRowExpand = $.cookie('opRowExp');
                 exists = $filter('filter')(opRowExpand, {consultant_id: consultant_id});
                 if (exists.length == 0) {
-                    return true;
+                    return false;
                 } else {
                     return exists[0].rowopen;
                 }
@@ -442,6 +441,8 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
 
         $scope.expandAllRow = function (expanded) {
             angular.forEach($scope.rowCollection, function (row) {
+                if(expanded && row.expanded) return; // If already opened
+
                 row.expanded = expanded;
                 $scope.setRowExpanded(row.consultant_id, expanded);
             });
