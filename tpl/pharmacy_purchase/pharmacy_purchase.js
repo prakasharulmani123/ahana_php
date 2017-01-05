@@ -155,9 +155,11 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                         $scope.products = [];
                         $scope.batches = [];
 
+                        $scope.productloader = '<i class="fa fa-spin fa-spinner"></i>';
                         $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct?fields=product_id,product_name,full_name,purchaseVat')
                                 .success(function (products) {
                                     $scope.products = products;
+                                    $scope.productloader = '';
                                 })
                                 .error(function () {
                                     $scope.errorData = "An Error has occured while loading products!";
