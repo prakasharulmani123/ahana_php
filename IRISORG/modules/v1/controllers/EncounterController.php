@@ -317,10 +317,10 @@ class EncounterController extends ActiveController {
         $consultants = $opRowExp = [];
         $connection = Yii::$app->client;
         $dtop = '=';
-        $eStatus = "0,1";
+        $eStatus = "'0','1'";
         if (strtolower(@$params['type']) == 'previous') {
             $dtop = '<';
-            $eStatus = "1";
+            $eStatus = "'1'";
         } else if (@$params['type'] == 'Future') {
             $dtop = '>';
         }
@@ -361,13 +361,13 @@ class EncounterController extends ActiveController {
                     AND d.encounter_type = :ptype
                     AND DATE(d.encounter_date) {$dtop} :enc_date
                     AND c.consultant_id = a.consultant_id
-                ) AS seen,
-                (SELECT booking)-(SELECT arrival) AS booked
+                ) AS seen
                 FROM pat_appointment a
                 JOIN pat_encounter b ON b.encounter_id = a.encounter_id
                 JOIN co_user c ON c.user_id = a.consultant_id
                 WHERE a.tenant_id = :tid
                 AND b.encounter_type = :ptype
+                AND b.status IN ($eStatus)
                 AND DATE(b.encounter_date) {$dtop} :enc_date
                 GROUP BY a.consultant_id", [':enc_date' => $params['date'], ':tid' => $params['tenant_id'], ':ptype' => 'OP']);
 
@@ -381,7 +381,7 @@ class EncounterController extends ActiveController {
                     $opRowColl[$i]['consultant_id'] = $v->consultant_id;
                     $opRowColl[$i]['rowopen'] = ($i == 0) ? true : false;
                 }
-                $consultants[$v->consultant_id] = ['consultant_name' => $v->consultant_name, 'booked' => $v->booked, 'arrival' => $v->arrival, 'seen' => $v->seen];
+                $consultants[$v->consultant_id] = ['consultant_name' => $v->consultant_name, 'booked' => ($v->booking - $v->arrival), 'arrival' => $v->arrival, 'seen' => $v->seen];
             }
 
 //            if (!$opRowExp) { //KEYWORD: COOKIE EXPAND
