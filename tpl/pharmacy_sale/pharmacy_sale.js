@@ -147,9 +147,11 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 $scope.addRow();
             }
 
+            $scope.productloader = '<i class="fa fa-spin fa-spinner"></i>';
             $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct?fields=product_id,product_name,product_location,product_reorder_min,full_name,salesVat,salesPackageName,availableQuantity')
                     .success(function (products) {
                         $scope.products = products;
+                        $scope.productloader = '';
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading products!";
@@ -935,7 +937,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
         $scope.setFutureInternalCode = function (code, col) {
             $rootScope.commonService.GetInternalCodeList('', code, '1', false, function (response) {
-                if (col == 'bill_no')
+                if (col == 'bill_no' && response.code)
                     $scope.data.bill_no = response.code.next_fullcode;
             });
         }

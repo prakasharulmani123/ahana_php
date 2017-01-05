@@ -4,7 +4,7 @@ app.controller('PurchaseImportErrorLogController', ['scope', '$scope', '$rootSco
             $scope.isLoading = true;
             // pagination set up
             $scope.rowCollection = [];  // base collection
-            $scope.itemsByPage = 30; // No.of records per page
+            $scope.itemsByPage = 100; // No.of records per page
             $scope.rowCollection = [].concat($scope.rowCollection);  // displayed collection
 
             var currentUser = AuthenticationService.getCurrentUser();
