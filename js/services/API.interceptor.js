@@ -1,25 +1,29 @@
-angular.module('app').factory('APIInterceptor', function ($localStorage, $rootScope, $q, $window, $timeout) {
+angular.module('app').factory('APIInterceptor', function ($localStorage, $rootScope, $q, $timeout, $templateCache) {
     return {
-        request: function (config) {
-            config.params = config.params || {};
+        request: function (request) {
+            request.params = request.params || {};
 
-            var is_api = config.url.indexOf($rootScope.IRISOrgServiceUrl);
+            var is_api = request.url.indexOf($rootScope.IRISOrgServiceUrl);
             if (is_api >= 0) {
-                if(typeof config.headers['x-domain-path'] == 'undefined' || config.headers['x-domain-path'] == '')
-                    config.headers['x-domain-path'] = $rootScope.clientUrl;
+                if (typeof request.headers['x-domain-path'] == 'undefined' || request.headers['x-domain-path'] == '')
+                    request.headers['x-domain-path'] = $rootScope.clientUrl;
             }
-            config.headers['config-route'] = $rootScope.$state.current.name;
-            config.headers['request-time'] = moment().format('YYYY-MM-DD hh:mm:ss');
+            request.headers['config-route'] = $rootScope.$state.current.name;
+            request.headers['request-time'] = moment().format('YYYY-MM-DD hh:mm:ss');
 
             if (typeof $localStorage.user != 'undefined') {
                 var token = $localStorage.user.access_token;
                 if (token && is_api >= 0) {
-                    config.params['access-token'] = token;
+                    request.params['access-token'] = token;
                 }
             }
-            return config;
+            if ($templateCache.get(request.url) === undefined) {
+                request.params['appVersion'] = $rootScope.appVersion;
+            }
+
+            return request;
         },
-        response: function(response) {
+        response: function (response) {
             $('.selectpicker').selectpicker('refresh');
             $timeout(function () {
                 $('.selectpicker').selectpicker('refresh');

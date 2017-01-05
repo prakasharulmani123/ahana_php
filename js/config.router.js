@@ -2696,11 +2696,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
 
 }
 run.$inject = ['$rootScope', '$state', '$stateParams', '$location', '$cookieStore', '$http', '$window', 'CommonService', 'AuthenticationService', '$timeout', '$templateCache'];
-function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $window, CommonService, AuthenticationService, $timeout, $templateCache) {
-    $rootScope.$on('$viewContentLoaded', function () {
-        $templateCache.removeAll();
-    });
-
+function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $window, CommonService, AuthenticationService, $timeout) {
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
 
@@ -2727,6 +2723,7 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
     $rootScope.authenticationService = AuthenticationService;
     $rootScope.IRISOrgUrl = orgUrl;
     $rootScope.clientUrl = clientURL;
+    $rootScope.appVersion = '1.0';
 
 //    var currentUser = AuthenticationService.getCurrentUser();
 
