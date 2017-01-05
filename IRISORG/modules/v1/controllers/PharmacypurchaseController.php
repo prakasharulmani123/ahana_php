@@ -257,6 +257,7 @@ class PharmacypurchaseController extends ActiveController {
                         $post_data['product_items'][$key]['batch_id'] = $lineitem->batch_id;
                         $post_data['product_items'][$key]['quantity'] = $lineitem->quantity;
                         $post_data['product_items'][$key]['free_quantity'] = $lineitem->free_quantity;
+                        $post_data['product_items'][$key]['expiry_date'] = $lineitem->expiry_date;
 
                         $post_data['product_items'][$key]['package_name'] = $package->package_name;
                         $post_data['product_items'][$key]['free_quantity_unit'] = $package->package_name;
@@ -396,6 +397,16 @@ class PharmacypurchaseController extends ActiveController {
                 $last_invoice = $invoice_no;
             }
         }
+        //Here we going to insert the last purchase row
+        if (isset($import[$last_invoice])) {
+            $lineitems = json_encode($import[$last_invoice]['lineitems']);
+            $sql = "INSERT INTO test_purchase_import(tenant_id, invoice_no, invoice_date, payment_type, supplier_id, lineitems, import_log) VALUES({$import[$last_invoice]['tenant_id']},'{$import[$last_invoice]['invoice_no']}', '{$import[$last_invoice]['invoice_date']}', '{$import[$last_invoice]['payment_type']}', " . '"' . $import[$last_invoice]['supplier_id'] . '"' . ",'{$lineitems}', '{$import[$last_invoice]['import_log']}')";
+            $command = $connection->createCommand($sql);
+            $command->execute();
+            unset($import[$last_invoice]);
+            $import = [];
+        }
+
         // close the file
         fclose($handle);
         // return the messages
