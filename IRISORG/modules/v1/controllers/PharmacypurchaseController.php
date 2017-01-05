@@ -276,7 +276,7 @@ class PharmacypurchaseController extends ActiveController {
                         $post_data['product_items'][$key]['vat_percent'] = $post_data['product_items'][$key]['vat_percent'];
                         $post_data['product_items'][$key]['vat_amount'] = ($post_data['product_items'][$key]['total_amount'] * ($post_data['product_items'][$key]['vat_percent'] / 100)); // Excluding vat $lineitem->batch_id;
 
-                        $post_data['total_item_purchase_amount'] += $post_data['product_items'][$key]['purchase_amount'];
+                        $post_data['total_item_purchase_amount'] += $post_data['product_items'][$key]['purchase_amount'] - $post_data['product_items'][$key]['discount_amount'];
                         $post_data['total_item_vat_amount'] += $post_data['product_items'][$key]['vat_amount'];
                         $post_data['total_item_discount_amount'] += $post_data['product_items'][$key]['discount_amount'];
                     } else {
@@ -287,7 +287,7 @@ class PharmacypurchaseController extends ActiveController {
                     }
                 }
 
-                $post_data['before_disc_amount'] = $post_data['after_disc_amount'] = $post_data['total_item_purchase_amount'];
+                $post_data['before_disc_amount'] = $post_data['after_disc_amount'] = ($post_data['total_item_purchase_amount'] + $post_data['product_items'][$key]['vat_amount']);
                 $post_data['net_amount'] = round($post_data['after_disc_amount']);
                 $post_data['roundoff_amount'] = bcadd(abs($post_data['net_amount'] - $post_data['after_disc_amount']), 0, 2);
 
