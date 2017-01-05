@@ -463,9 +463,10 @@ class PatientController extends ActiveController {
     }
 
     public function actionImportpatient() {
-        $post = Yii::$app->getRequest()->post();
-
-        if (!empty($post)) {
+        $cond = Yii::$app->getRequest()->post();
+        $Patient = PatPatient::find()->where($cond)->one();
+        if (!empty($Patient)) {
+            $PatientData = ArrayHelper::toArray($Patient);
             $model = new PatPatient;
 
             $unset_attr = [
@@ -484,9 +485,8 @@ class PatientController extends ActiveController {
                 'org_name',
             ];
             $unset_attr = array_combine($unset_attr, $unset_attr);
-            $post = array_diff_key($post, $unset_attr);
 
-            $model->attributes = $post;
+            $model->attributes = array_diff_key($PatientData, $unset_attr);
 
             if ($model->save(false)) {
                 return ['success' => true, 'patient' => $model];
