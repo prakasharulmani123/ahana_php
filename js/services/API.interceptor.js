@@ -18,7 +18,7 @@ angular.module('app').factory('APIInterceptor', function ($localStorage, $rootSc
                 }
             }
             if ($templateCache.get(request.url) === undefined) {
-                request.params['appVersion'] = $rootScope.appVersion;
+                request.params['v'] = APP_VERSION;
             }
 
             return request;

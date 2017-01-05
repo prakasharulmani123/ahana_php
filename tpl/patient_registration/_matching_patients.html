@@ -17,15 +17,9 @@
                         </a>
                         <b ng-if="patient.Patient.patient_age">({{patient.Patient.patient_age}}y) </b> <br/>
                         {{patient.Patient.patient_global_int_code}}
-<!--                        <p class="m-t" ng-if="patient.same_branch">
-                            {{patient.PatientAddress.addr_current_address}} <br/>
-                            {{patient.PatientAddress.city_name}} {{patient.PatientAddress.addr_zip}} <br/>
-                            {{patient.PatientAddress.state_name}}
-                        </p>-->
                         <p class="m-t" ng-if="patient.same_branch == false">
                             <span>
                                 Organization: <b>{{patient.Patient.org_name}}</b> <br/>
-                                <!--                                Branch: <b>{{patient.Patient.tenant_name}}</b> <br/> -->
                             </span>
                         </p>
                         <p>

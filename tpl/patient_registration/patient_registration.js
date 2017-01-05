@@ -213,7 +213,7 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
                 changeTimer = setTimeout(function () {
                     $http({
                         method: 'POST',
-                        url: $rootScope.IRISOrgServiceUrl + '/patient/search',
+                        url: $rootScope.IRISOrgServiceUrl + '/patient/search?addtfields=search',
                         timeout: canceler.promise,
                         data: {'search': newValue},
                     }).success(

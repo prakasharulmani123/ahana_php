@@ -685,7 +685,7 @@ angular.module('app')
                     });
                 }
                 //Same ORG But different branch so Import and View
-                $scope.importViewPatient = function (patient, key) {
+                $scope.importViewPatient = function (patient_global_guid, key) {
                     $scope.errorData = "";
                     $scope.msg.successMessage = "";
 
@@ -694,7 +694,7 @@ angular.module('app')
                     $http({
                         method: 'POST',
                         url: $rootScope.IRISOrgServiceUrl + '/patient/importpatient',
-                        data: patient,
+                        data: {'patient_global_guid': patient_global_guid},
                     }).success(
                             function (response) {
                                 $scope.loadbar('hide');

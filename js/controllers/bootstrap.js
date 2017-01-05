@@ -324,7 +324,7 @@ app.controller('PatientSearchController', ['$scope', '$http', '$rootScope', '$st
                     $('.patient_search_loader').addClass('fa-spin fa-refresh').removeClass('fa-search');
                     $http({
                         method: 'POST',
-                        url: $rootScope.IRISOrgServiceUrl + '/patient/search',
+                        url: $rootScope.IRISOrgServiceUrl + '/patient/search?addtfields=search',
                         timeout: canceler.promise,
                         data: {'search': newValue},
                     }).success(
