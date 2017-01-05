@@ -212,7 +212,7 @@
                                     </div>
                                 </td>
                             </tr>
-                            <tr ng-show="value.expanded"  ng-if="value.seen_count > '0'">
+                            <tr ng-show="value.expanded"  ng-if="value.seen_count > '0' && op_type != 'previous'">
                                 <td>&nbsp; </td>
                                 <td colspan="10">
                                     <b>
@@ -225,7 +225,7 @@
                                     </b>
                                 </td>
                             </tr>
-                            <tr ng-show="value.expanded && value.seenExpanded" ng-repeat="(key, row) in value.seen_records" ng-if="value.seen_count > '0' && row.apptSeenData != '-'" class="tr_oplistcheckbox tr_oplistcheckbox_{{op_key}}">
+                            <tr ng-show="value.expanded && value.seenExpanded" ng-repeat="(key, row) in value.seen_records" ng-if="value.seen_count > '0' && row.apptSeenData != '-' && op_type != 'previous'" class="tr_oplistcheckbox tr_oplistcheckbox_{{op_key}}">
                                 <td> &nbsp; </td>
                                 <td align="center" valign="middle">
                                     <div style="margin-top: -10px; position: relative;">

@@ -2723,7 +2723,7 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
     $rootScope.authenticationService = AuthenticationService;
     $rootScope.IRISOrgUrl = orgUrl;
     $rootScope.clientUrl = clientURL;
-    $rootScope.appVersion = '1.0';
+    $rootScope.appVersion = '1.0.3';
 
 //    var currentUser = AuthenticationService.getCurrentUser();
 
