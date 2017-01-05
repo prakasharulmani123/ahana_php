@@ -31,7 +31,6 @@
                                     </div>
                                     <div class="col-xs-12 col-sm-5 col-md-6">
                                         <div class="row ng-binding">
-                                            {{(patient.same_branch == false && patient.same_org == true) ? 'True' : 'False' }}
                                             <a ng-if="patient.same_branch == true && patient.same_org == true" tooltip="{{patient.Patient.fullcurrentaddress || patient.Patient.fullpermanentaddress}}" ng-bind-html="patient.Patient.fullname | highlight:patientselected" href="javascript:void(0)" ng-click="goToPatient(patient.Patient.patient_guid)" class="ng-binding">
                                             </a>
                                             <a ng-if="patient.same_branch == false && patient.same_org == true" tooltip="{{patient.Patient.fullcurrentaddress || patient.Patient.fullpermanentaddress}}" ng-bind-html="patient.Patient.fullname | highlight:patientselected" href="javascript:void(0)" ng-click="importViewPatient(patient.Patient.patient_global_guid, key)" class="ng-binding">
