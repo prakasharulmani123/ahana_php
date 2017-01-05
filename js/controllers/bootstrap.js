@@ -311,10 +311,12 @@ app.controller('PatientSearchController', ['$scope', '$http', '$rootScope', '$st
 
         var changeTimer = false;
         var canceler;
+        $scope.seacrhing_global == false;
 
         $scope.$watch('patientselected', function (newValue, oldValue) {
             if (newValue != '') {
-                if (canceler) canceler.resolve();
+                if (canceler)
+                    canceler.resolve();
                 canceler = $q.defer();
 
                 if (changeTimer !== false)
@@ -322,17 +324,19 @@ app.controller('PatientSearchController', ['$scope', '$http', '$rootScope', '$st
 
                 changeTimer = setTimeout(function () {
                     $('.patient_search_loader').addClass('fa-spin fa-refresh').removeClass('fa-search');
+                    $scope.seacrhing_global = true;
                     $http({
                         method: 'POST',
                         url: $rootScope.IRISOrgServiceUrl + '/patient/search?addtfields=search',
                         timeout: canceler.promise,
                         data: {'search': newValue},
-                    }).success(
-                            function (response) {
-                                $('.patient_search_loader').removeClass('fa-spin fa-refresh').addClass('fa-search');
-                                $scope.patient_lists = response.patients;
-                            }
-                    );
+                    }).success(function (response) {
+                        $('.patient_search_loader').removeClass('fa-spin fa-refresh').addClass('fa-search');
+                        $scope.patient_lists = response.patients;
+                        $scope.seacrhing_global = false;
+                    }).error(function () {
+                        $scope.seacrhing_global = false;
+                    });
                     changeTimer = false;
                 }, 300);
             }

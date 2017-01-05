@@ -22,8 +22,10 @@
             <div class="form-group">
                 <div class="input-group">
                     <input id="patient-search" type="text" ng-model="patientselected" class="form-control input-sm bg-light no-border rounded padder header_search_input" placeholder="Search...." autocomplete="off">
-                    <div class="patient-search-result" ng-if="patientselected != '' && patient_lists" >
+                    <div class="patient-search-result" ng-if="patientselected != ''" >
                         <ul class="search-patientcont-header" id='patientcont-header'>
+                            <li ng-if="seacrhing_global == true"><div class="text-center"><i class="fa fa-spin fa-spinner"></i></div></li>
+                            <li ng-if="seacrhing_global == false && patient_lists == false"><div class="text-center">No Record Found !!!</div></li>
                             <li ng-repeat="(key, patient) in patient_lists| filter:patientselected" class="{{key == 0 ? 'selected' : ''}}">
                                 <div class="row">
                                     <div class="col-xs-12 col-sm-2 col-md-2">
