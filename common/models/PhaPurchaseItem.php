@@ -65,7 +65,8 @@ class PhaPurchaseItem extends RActiveRecord {
             [['created_at', 'modified_at', 'deleted_at', 'vat_percent', 'batch_id', 'expiry_date', 'free_quantity_unit', 'batch_no', 'package_unit', 'free_quantity_package_unit'], 'safe'],
             [['package_name'], 'string', 'max' => 255],
             ['purchase_rate', 'validateProductRate'],
-            [['quantity', 'mrp', 'purchase_rate', 'purchase_amount', 'total_amount'], 'validateAmount'],
+            [['mrp', 'purchase_rate'], 'validateAmount'],
+            [['quantity'], 'validateQuantity'],
             [['package_name'], 'validateBatch'],
         ];
     }
@@ -96,6 +97,11 @@ class PhaPurchaseItem extends RActiveRecord {
     public function validateAmount($attribute, $params) {
         if ($this->$attribute <= 0)
             $this->addError($attribute, "{$this->getAttributeLabel($attribute)} must be greater than 0 for {$this->product->fullname}");
+    }
+
+    public function validateQuantity($attribute, $params) {
+        if ($this->$attribute <= 0 && $this->free_quantity <= 0)
+            $this->addError($attribute, "{$this->getAttributeLabel($attribute)} or Freequantity must be greater than 0 for {$this->product->fullname}");
     }
 
     /**

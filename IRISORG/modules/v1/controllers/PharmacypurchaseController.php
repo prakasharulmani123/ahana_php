@@ -99,7 +99,7 @@ class PharmacypurchaseController extends ActiveController {
         return $this->_save_purchase($post);
     }
 
-    private function _save_purchase($post) {
+    private function _save_purchase($post, $process = 'default') {
         if (!empty($post)) {
             //Validation
             $model = new PhaPurchase;
@@ -160,7 +160,12 @@ class PharmacypurchaseController extends ActiveController {
 
                 return ['success' => true, 'model' => $model];
             } else {
-                return ['success' => false, 'message' => Html::errorSummary([$model, $item_model])];
+                if ($process == 'import') {
+                    $err_summary = json_encode(array_merge($model->errors, $item_model->errors));
+                } else {
+                    $err_summary = Html::errorSummary([$model, $item_model]);
+                }
+                return ['success' => false, 'message' => $err_summary];
             }
         } else {
             return ['success' => false, 'message' => 'Fill the Form'];
@@ -173,7 +178,7 @@ class PharmacypurchaseController extends ActiveController {
         $filename = $_FILES['file']['name'];
         $ext = pathinfo($filename, PATHINFO_EXTENSION);
         if (!in_array($ext, $allowed)) {
-            return ['success' => false, 'message' => 'Unsupported Format'];
+            return ['success' => false, 'message' => 'Unsupported File Format. CSV Files only accepted'];
         }
 
         $fileName = 'import_csv';
@@ -184,10 +189,10 @@ class PharmacypurchaseController extends ActiveController {
         $uploadFile = $uploadPath . $fileName;
         if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadFile)) {
             $file = Url::to($uploadFile);
-            $result = $this->import($file, $get['tenant_id']);
+            $result = $this->import($file, $get['tenant_id'], $get['import_log']);
             return ['success' => true, 'message' => $result];
         } else {
-            return ['success' => false, 'message' => 'Failed to import'];
+            return ['success' => false, 'message' => 'Failed to import. Try again later'];
         }
     }
 
@@ -195,7 +200,7 @@ class PharmacypurchaseController extends ActiveController {
         $get = Yii::$app->getRequest()->get();
         $connection = Yii::$app->client;
         $connection->open();
-        $command = $connection->createCommand("SELECT * FROM test_purchase_import WHERE tenant_id = {$get['tenant_id']} AND status = '0'");
+        $command = $connection->createCommand("SELECT * FROM test_purchase_import WHERE tenant_id = {$get['tenant_id']} AND status = '0' AND import_log = {$get['import_log']}");
         $result = $command->queryAll(PDO::FETCH_OBJ);
         return ['success' => true, 'result' => $result];
     }
@@ -203,13 +208,14 @@ class PharmacypurchaseController extends ActiveController {
     public function actionImportstart() {
         $post = Yii::$app->getRequest()->post();
         $id = $post['id'];
+        $import_log = $post['import_log'];
         $max_id = $post['max_id'];
 
         if ($id <= $max_id) {
             $next_id = $id + 1;
             $connection = Yii::$app->client;
             $connection->open();
-            $command = $connection->createCommand("SELECT * FROM test_purchase_import WHERE id = {$id}");
+            $command = $connection->createCommand("SELECT * FROM test_purchase_import WHERE id = {$id} AND import_log = $import_log");
             $result = $command->queryAll(PDO::FETCH_OBJ);
 
             if ($result) {
@@ -220,12 +226,14 @@ class PharmacypurchaseController extends ActiveController {
                 $post_data['tenant_id'] = $result->tenant_id;
                 $post_data['invoice_date'] = $result->invoice_date;
                 $post_data['invoice_no'] = $result->invoice_no;
+                $post_data['payment_type'] = $result->payment_type;
+                $post_data['import_log'] = $result->import_log;
                 $post_data['total_item_purchase_amount'] = $post_data['total_item_vat_amount'] = $post_data['total_item_discount_amount'] = 0;
                 $post_data['before_disc_amount'] = $post_data['after_disc_amount'] = $post_data['total_item_purchase_amount'] = 0;
 
                 $lineitems = json_decode($result->lineitems);
 
-                $failed_products = [];
+                $failed_products = $failed_packages = [];
                 foreach ($lineitems as $key => $lineitem) {
                     //Search Product exists
                     $command = $connection->createCommand("SELECT product_id, product_name, b.vat,
@@ -234,6 +242,7 @@ class PharmacypurchaseController extends ActiveController {
                                                 JOIN pha_vat b
                                                 ON b.vat_id = purchase_vat_id
                                                 WHERE MATCH(product_name) AGAINST ('{$lineitem->product_id}*' IN BOOLEAN MODE)
+                                                AND pha_product.tenant_id = {$post_data['tenant_id']}
                                                 ORDER BY score DESC
                                                 LIMIT 1");
                     $product_result = $command->queryAll(PDO::FETCH_OBJ);
@@ -270,7 +279,10 @@ class PharmacypurchaseController extends ActiveController {
                         $post_data['total_item_vat_amount'] += $post_data['product_items'][$key]['vat_amount'];
                         $post_data['total_item_discount_amount'] += $post_data['product_items'][$key]['discount_amount'];
                     } else {
-                        $failed_products[] = $lineitem->product_id;
+                        if(!$product_result)
+                            $failed_products[] = $lineitem->product_id;
+                        if(!$package)
+                            $failed_packages[] = $lineitem->package_name;
                     }
                 }
 
@@ -281,7 +293,7 @@ class PharmacypurchaseController extends ActiveController {
                 if (isset($post_data['product_items'])) {
                     if (count($lineitems) == count($post_data['product_items'])) {
                         $post_data['supplier_id'] = PhaSupplier::getSupplierid($result->supplier_id, $post_data['tenant_id']);
-                        $res = $this->_save_purchase($post_data);
+                        $res = $this->_save_purchase($post_data, 'import');
 
                         if ($res['success']) {
                             $return = ['success' => true, 'continue' => $next_id, 'message' => 'success'];
@@ -291,12 +303,13 @@ class PharmacypurchaseController extends ActiveController {
                     }
                 }
 
-                if ($failed_products) {
-                    $failed_products = implode(',', $failed_products);
-                    $return = ['success' => false, 'continue' => $next_id, 'message' => "<div><ul><li>Products not exists: {$failed_products} </li></ul></div>"];
+                if ($failed_products || $failed_packages) {
+                    $message = $failed_products ? "Products not exists: ".implode(',', $failed_products) : ' ';
+                    $message .= $failed_packages ? "Packages not exists: ".implode(',', $failed_packages) : '';
+                    $return = ['success' => false, 'continue' => $next_id, 'message' => $message];
                 }
             } else {
-                $return = ['success' => false, 'continue' => $next_id, 'message' => '<div><ul><li>Import data not found</li></ul></div>'];
+                $return = ['success' => false, 'continue' => $next_id, 'message' => 'Import data not found'];
             }
         } else {
             $return = ['success' => false, 'continue' => 0];
@@ -304,7 +317,8 @@ class PharmacypurchaseController extends ActiveController {
 
         if ($return['continue']) {
             $status = $return['success'] ? 1 : 0;
-            $message = str_replace('<p>Please fix the following errors:</p>', '', $return['message']);
+            $message = $return['message'];
+//            $message = str_replace('<p>Please fix the following errors:</p>', '', $return['message']);
             $sql = "UPDATE test_purchase_import SET `status` = '{$status}', response = '{$message}' WHERE id={$id}";
             $command = $connection->createCommand($sql);
             $command->execute();
@@ -313,7 +327,7 @@ class PharmacypurchaseController extends ActiveController {
         return $return;
     }
 
-    public function import($filename, $tenant_id) {
+    public function import($filename, $tenant_id, $import_log) {
         // open the file
         $handle = fopen($filename, "r");
         // read the 1st row as headings
@@ -325,73 +339,78 @@ class PharmacypurchaseController extends ActiveController {
         $import = [];
         $connection = Yii::$app->client;
         $connection->open();
-        $sql = "truncate table test_purchase_import";
-        $command = $connection->createCommand($sql);
-        $command->execute();
+//        $sql = "truncate table test_purchase_import";
+//        $command = $connection->createCommand($sql);
+//        $command->execute();
+        
         while (($row = fgetcsv($handle)) !== FALSE) {
             $invoice_no = $row[1];
-            $invoice_date = date('Y-m-d', strtotime(str_replace('/', '-', $row[2])));
-            $payment_type = $row[3] == 'CREDIT' ? 'CR' : 'CA';
-            $supplier_name = $row[4];
-            $product_name = $this->clean(str_replace('-', ' ', $row[5]));
-            $pkg_unit = $this->clean($row[6]);
-            $batch = $row[7];
-            $expiry = date('Y-m-d', strtotime($row[8]));
-            $mrp = $row[9];
-            $purchase_price = $row[16];
-            $qty = $row[12];
-            $free = $row[14];
-            $free_unit = $pkg_unit;
-            $disc_perc = $row[18];
-            $vat_perc = $row[19];
+            if ($invoice_no) {
+                $invoice_date = date('Y-m-d', strtotime(str_replace('/', '-', $row[2])));
+                $payment_type = $row[3] == 'CREDIT' ? 'CR' : 'CA';
+                $supplier_name = $row[4];
+                $product_name = $this->clean(str_replace('-', ' ', $row[5]));
+                $pkg_unit = $this->clean($row[6]);
+                $batch = $row[7];
+                $expiry_date = date('Y-m-d', strtotime(str_replace('-', ' ', $row[8])));
+                $mrp = $row[9];
+                $purchase_price = $row[14];
+                $qty = $row[11];
+                $free = $row[13];
+                $free_unit = $pkg_unit;
+                $disc_perc = $row[16];
+                $vat_perc = $row[17];
 
-            //Here we going to insert the purchase
-            if (isset($last_invoice) && $last_invoice != $invoice_no) {
-                $lineitems = json_encode($import[$last_invoice]['lineitems']);
-                $sql = "INSERT INTO test_purchase_import(tenant_id, invoice_no, invoice_date, payment_type, supplier_id, lineitems) VALUES({$import[$last_invoice]['tenant_id']},'{$import[$last_invoice]['invoice_no']}', '{$import[$last_invoice]['invoice_date']}', '{$import[$last_invoice]['payment_type']}', " . '"' . $import[$last_invoice]['supplier_id'] . '"' . ",'{$lineitems}')";
-                $command = $connection->createCommand($sql);
-                $command->execute();
-                unset($import[$last_invoice]);
-                $import = [];
+                //Here we going to insert the purchase
+                if (isset($last_invoice) && $last_invoice != $invoice_no) {
+                    $lineitems = json_encode($import[$last_invoice]['lineitems']);
+                    $sql = "INSERT INTO test_purchase_import(tenant_id, invoice_no, invoice_date, payment_type, supplier_id, lineitems, import_log) VALUES({$import[$last_invoice]['tenant_id']},'{$import[$last_invoice]['invoice_no']}', '{$import[$last_invoice]['invoice_date']}', '{$import[$last_invoice]['payment_type']}', " . '"' . $import[$last_invoice]['supplier_id'] . '"' . ",'{$lineitems}', '{$import[$last_invoice]['import_log']}')";
+                    $command = $connection->createCommand($sql);
+                    $command->execute();
+                    unset($import[$last_invoice]);
+                    $import = [];
+                }
+
+                if (!isset($import[$invoice_no])) {
+                    $import[$invoice_no]['tenant_id'] = $tenant_id;
+                    $import[$invoice_no]['invoice_no'] = $invoice_no;
+                    $import[$invoice_no]['invoice_date'] = $invoice_date;
+                    $import[$invoice_no]['payment_type'] = $payment_type;
+                    $import[$invoice_no]['supplier_id'] = $supplier_name;
+                    $import[$invoice_no]['import_log'] = $import_log;
+                }
+                $import[$invoice_no]['lineitems'][] = [
+                    'product_id' => $product_name,
+                    'expiry_date' => $expiry_date,
+                    'batch_id' => $batch,
+                    'quantity' => $qty,
+                    'package_name' => $pkg_unit,
+                    'free_quantity' => $free,
+                    'free_quantity_unit' => $free_unit,
+                    'mrp' => $mrp,
+                    'purchase_rate' => $purchase_price,
+                    'discount_percent' => $disc_perc,
+                    'vat_percent' => $vat_perc,
+                ];
+
+                $last_invoice = $invoice_no;
             }
-
-            if (!isset($import[$invoice_no])) {
-                $import[$invoice_no]['tenant_id'] = $tenant_id;
-                $import[$invoice_no]['invoice_no'] = $invoice_no;
-                $import[$invoice_no]['invoice_date'] = $invoice_date;
-                $import[$invoice_no]['payment_type'] = $payment_type;
-                $import[$invoice_no]['supplier_id'] = $supplier_name;
-            }
-            $import[$invoice_no]['lineitems'][] = [
-                'product_id' => $product_name,
-                'batch_id' => $batch,
-                'quantity' => $qty,
-                'package_name' => $pkg_unit,
-                'free_quantity' => $free,
-                'free_quantity_unit' => $free_unit,
-                'mrp' => $mrp,
-                'purchase_rate' => $purchase_price,
-                'discount_percent' => $disc_perc,
-                'vat_percent' => $vat_perc,
-            ];
-
-            $last_invoice = $invoice_no;
         }
-
         // close the file
         fclose($handle);
         // return the messages
         @unlink($filename);
 
-        $command = $connection->createCommand("SELECT COUNT(*) AS 'total_rows' FROM test_purchase_import");
+        $command = $connection->createCommand("SELECT COUNT(*) AS 'total_rows', (SELECT MIN(id) FROM test_purchase_import WHERE import_log = $import_log) AS id,
+                                            (SELECT MAX(id) FROM test_purchase_import WHERE import_log = $import_log) AS max_id
+                                            FROM test_purchase_import WHERE import_log = $import_log");
         $result = $command->queryAll(PDO::FETCH_OBJ);
         $connection->close();
         return $result[0];
     }
 
     public function clean($string) {
-        $string = str_replace(' ', '', $string); // Replaces all spaces with hyphens.
-        return preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
+        return preg_replace("/[^ \w]+/", '', $string); // Removes special chars.
     }
 
 }
