@@ -439,7 +439,7 @@ class PatientController extends ActiveController {
         $images = PatGlobalPatient::find()->where(['not', ['patient_image' => NULL]])->all();
         foreach ($images as $image) {
             $filename = $this->convertBlobToFile($image->patient_image, $image->patient_global_int_code);
-            if($filename){
+            if ($filename) {
                 $image->patient_image = $filename;
                 $image->update(false);
             }
@@ -450,7 +450,12 @@ class PatientController extends ActiveController {
     protected function convertBlobToFile($base64_string, $gCode) {
         defined('DS') or define('DS', DIRECTORY_SEPARATOR);
         $filename = "{$gCode}.jpg";
-        $output_file = "images" . DS . "uavatar" . DS . $filename;
+        $uploadPath = "images" . DS . "uavatar" . DS ;
+        if (!file_exists($uploadPath)) {
+            mkdir($uploadPath, 0777, true);
+        }
+
+        $output_file = $uploadPath.$filename;
 
         $ifp = fopen($output_file, "wb");
         $data = explode(',', $base64_string);
