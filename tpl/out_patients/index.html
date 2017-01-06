@@ -222,6 +222,7 @@
                                             <i ng-if="value.seenExpanded" class="fa fa-minus text"></i>
                                         </button>&nbsp; &nbsp;
                                         <span class="badge bg-info">Seen: {{value.seen_count}}</span>&nbsp; &nbsp;
+                                        {{ value.rowSeenLoading | boolean }}
                                         <i class="fa fa-spin fa-spinner" ng-if="value.rowSeenLoading == true"></i>
                                     </b>
                                 </td>

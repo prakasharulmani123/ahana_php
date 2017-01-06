@@ -44,13 +44,13 @@
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-sm-5 col-md-4 pull-right right" ng-if="patient.same_branch == true && patient.same_org == true">
-                                        <button class="btn m-b-xs w-xs btn-info" ng-show="patient.PatientActiveEncounter.hasOwnProperty('encounter_id') != true" ng-click="goToAppointment(patient.Patient.patient_guid)">
+                                        <button class="btn m-b-xs w-xs btn-info" ng-show="patient.PatientActiveEncounter == null" ng-click="goToAppointment(patient.Patient.patient_guid)">
                                             BOOK
                                         </button>
-                                        <span class="label label-primary admission_details" ng-show="patient.PatientActiveEncounter.liveAdmission.hasOwnProperty('admn_id') == true">
-                                            {{patient.PatientActiveEncounter.floor_name}} > {{patient.PatientActiveEncounter.room_name}} > {{patient.PatientActiveEncounter.room_type_name}}
+                                        <span class="label label-primary admission_details" ng-show="patient.PatientActiveEncounter != null && patient.PatientActiveEncounter.searchEncData.isAdmission != false">
+                                            {{patient.PatientActiveEncounter.searchEncData.isAdmission.floor_name}} > {{patient.PatientActiveEncounter.searchEncData.isAdmission.room_name}} > {{patient.PatientActiveEncounter.searchEncData.isAdmission.room_type_name}}
                                         </span>
-                                        <span class="label label-primary admission_details" ng-show="patient.PatientActiveEncounter.liveAppointmentBooking.hasOwnProperty('appt_id') == true">
+                                        <span class="label label-primary admission_details" ng-show="patient.PatientActiveEncounter != null && patient.PatientActiveEncounter.searchEncData.isAppointment == true">
                                             Booked
                                         </span>
                                     </div>

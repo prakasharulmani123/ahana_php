@@ -40,11 +40,11 @@
                                                     <span ng-bind-html="patient.Patient.patient_mobile | highlight:patient"> </span>
                                                 </div>
                                             </div>
-                                            <div class="col-xs-12 col-sm-5 col-md-4 pull-right right" ng-if="patient.Patient.have_encounter == true">
-                                                <span class="label label-primary admission_details" ng-show="patient.PatientActiveEncounter.liveAdmission.hasOwnProperty('admn_id') == true">
-                                                    {{patient.PatientActiveEncounter.floor_name}} > {{patient.PatientActiveEncounter.room_name}} > {{patient.PatientActiveEncounter.room_type_name}}
+                                            <div class="col-xs-12 col-sm-5 col-md-4 pull-right right" ng-if="patient.PatientActiveEncounter != null">
+                                                <span class="label label-primary admission_details" ng-show="patient.PatientActiveEncounter.searchEncData.isAdmission != false">
+                                                    {{patient.PatientActiveEncounter.searchEncData.isAdmission.floor_name}} > {{patient.PatientActiveEncounter.searchEncData.isAdmission.room_name}} > {{patient.PatientActiveEncounter.searchEncData.isAdmission.room_type_name}}
                                                 </span>
-                                                <span class="label label-primary admission_details" ng-show="patient.PatientActiveEncounter.liveAppointmentBooking.hasOwnProperty('appt_id') == true">
+                                                <span class="label label-primary admission_details" ng-show="patient.PatientActiveEncounter.searchEncData.isAppointment == true">
                                                     Booked
                                                 </span>
                                             </div>
