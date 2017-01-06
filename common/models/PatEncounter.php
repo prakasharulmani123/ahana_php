@@ -474,6 +474,11 @@ class PatEncounter extends RActiveRecord {
                     switch ($addtField):
                         case 'oplist':
                             $addt_keys = ['consultant_id', 'apptArrivalData', 'apptSeenData', 'apptPatientData', 'apptBookingData'];
+                            $parent_fields = [
+                                'encounter_id' => 'encounter_id',
+                                'patient_id' => 'patient_id',
+                                'consultant_id' => 'consultant_id'
+                            ];
                             break;
                         case 'advdetails':
                             $addt_keys = ['apptPatientData', 'stay_duration', 'viewChargeCalculation', 'total_charge', 'paid', 'balance'];
