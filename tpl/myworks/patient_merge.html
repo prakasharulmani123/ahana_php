@@ -27,8 +27,7 @@
                                     <li ng-repeat="(key, patient) in patient_search_result| filter:filterFn" class="{{key == 0 ? 'selected' : ''}}">
                                         <div class="row" ng-click="displayPatient(patient.Patient.patient_global_guid)">
                                             <div class="col-xs-12 col-sm-2 col-md-2">
-                                                <img ng-if="$even" alt="" ng-src="{{patient.Patient.patient_img_url ? patient.Patient.patient_img_url : 'img/man-icon.png'}}" class="patient-image">
-                                                <img ng-if="$odd" alt="" ng-src="{{patient.Patient.patient_img_url ? patient.Patient.patient_img_url : 'img/man-icon2.png'}}" class="patient-image">
+                                                <img class="patient-image" src="img/man-icon.png" ng-attr-lazy-img="{{ patient.Patient.patient_img_url ? patient.Patient.patient_img_url : ($even ? 'img/man-icon.png' : 'img/man-icon2.png') }}" />
                                             </div>
                                             <div class="col-xs-12 col-sm-5 col-md-6">
                                                 <div class="row ng-binding">
