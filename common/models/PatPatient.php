@@ -630,6 +630,9 @@ class PatPatient extends RActiveRecord {
                         case 'search':
                             $addt_keys = ['patient_img_url', 'fullcurrentaddress', 'fullpermanentaddress', 'fullname', 'patient_guid','patient_age','patient_global_int_code','patient_mobile','org_name'];
                             break;
+                        case 'merge_search':
+                            $addt_keys = ['patient_img_url', 'fullcurrentaddress', 'fullpermanentaddress', 'fullname', 'patient_guid','patient_age','patient_global_int_code','patient_mobile','org_name','childrens_count'];
+                            break;
                     endswitch;
                 }
 
