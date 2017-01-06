@@ -447,8 +447,28 @@ class PatEncounter extends RActiveRecord {
                     'encounter_status' => function ($model) {
                 return $this->isActiveEncounter();
             },
+                    'searchEncData' => function ($model) {
+                if (isset($model)) {
+                    $isAppointment = $model->getPatLiveAppointmentBooking()->exists();
+                    if ($isAdmission = $model->getPatLiveAdmission()->exists()) {
+                        $admData = $model->patLiveAdmission;
+                        $isAdmission = [
+                            'floor_name' => $admData->floor->floor_name,
+                            'room_name' => $admData->room->bed_name,
+                            'room_type_name' => $admData->roomType->room_type_name,
+                        ];
+                    }
+                    return [
+                        'isAppointment' => $isAppointment,
+                        'isAdmission' => $isAdmission
+                    ];
+                } else {
+                    return '-';
+                }
+            },
                 ];
 
+                $parent_fields = parent::fields();
                 $addt_keys = [];
                 if ($addtField = Yii::$app->request->get('addtfields')) {
                     switch ($addtField):
@@ -459,14 +479,15 @@ class PatEncounter extends RActiveRecord {
                             $addt_keys = ['apptPatientData', 'stay_duration', 'viewChargeCalculation', 'total_charge', 'paid', 'balance'];
                             break;
                         case 'search':
-                            $addt_keys = ['floor_name','room_name','room_type_name','liveAdmission', 'liveAppointmentBooking'];
+                            $addt_keys = ['searchEncData'];
+                            $parent_fields = ['encounter_id' => 'encounter_id'];
                             break;
                     endswitch;
                 }
 
                 $extFields = ($addt_keys) ? array_intersect_key($extend, array_flip($addt_keys)) : $extend;
 
-                return array_merge(parent::fields(), $extFields);
+                return array_merge($parent_fields, $extFields);
             }
 
             public function getTotalCharge() {
@@ -567,11 +588,11 @@ class PatEncounter extends RActiveRecord {
                                     ->select('SUM(total_charge) as total_charge, SUM(concession_amount) as concession_amount')->one();
 
                     $total_paid = VBillingAdvanceCharges::find()
-                                    ->where([
-                                        'encounter_id' => $this->encounter_id,
-                                        'tenant_id' => $this->tenant_id
-                                    ])
-                                    ->sum('total_charge');
+                            ->where([
+                                'encounter_id' => $this->encounter_id,
+                                'tenant_id' => $this->tenant_id
+                            ])
+                            ->sum('total_charge');
 
 
                     $total_charge = $recurring->total_charge + $procedure->total_charge + $professional->total_charge + $other_charge->total_charge;
@@ -583,7 +604,7 @@ class PatEncounter extends RActiveRecord {
                         $total_paid = $this->patAppointmentSeen->amount;
                     }
                 }
-                return compact('total_charge', 'total_concession','total_paid','balance');
+                return compact('total_charge', 'total_concession', 'total_paid', 'balance');
             }
 
             public function getAdvanceDetails() {

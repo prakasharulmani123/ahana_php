@@ -628,7 +628,7 @@ class PatPatient extends RActiveRecord {
                 if ($addtField = Yii::$app->request->get('addtfields')) {
                     switch ($addtField):
                         case 'search':
-                            $addt_keys = ['patient_img_url', 'fullcurrentaddress', 'fullpermanentaddress', 'fullname', 'patient_guid','patient_age','patient_global_int_code','patient_mobile','have_encounter','org_name'];
+                            $addt_keys = ['patient_img_url', 'fullcurrentaddress', 'fullpermanentaddress', 'fullname', 'patient_guid','patient_age','patient_global_int_code','patient_mobile','org_name'];
                             break;
                     endswitch;
                 }
