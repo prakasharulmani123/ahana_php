@@ -4,7 +4,7 @@
             <div class="col-md-1 pati-thumb">
                 <div class="row">
                     <a ng-click="openUploadForm('topbar')">
-                        <img src="img/patient-img2.jpg" ng-attr-lazy-img="{{ patientObj.patient_img_url ? patientObj.patient_img_url : 'img/patient-img2.jpg' }}" alt="" width="125" height="103" />
+                        <img class="patient_image" data-preview-img="{{ patientObj.patient_img_url ? patientObj.patient_img_url : '' }}" src="img/patient-img2.jpg" ng-attr-lazy-img="{{ patientObj.patient_img_url ? patientObj.patient_img_url : 'img/patient-img2.jpg' }}" alt="" width="125" height="103" />
                     </a>
                 </div>
             </div>
@@ -44,14 +44,14 @@
                     <div class="patient-details-part">
                         <i class="fa fa-hospital-o"></i> <b> Org :  </b> {{patientObj.org_name}}
                     </div>
-<!--                    <div class="patient-details-part" ng-if="patientObj.childrens_global_ids != ''">
-                        <i class="fa fa-bullseye"></i> <b> Secondary Patient Ids :  </b> {{patientObj.childrens_global_ids}}
-                    </div>-->
-<!--                    <div class="patient-details-part b-n">
-                        <div ng-if="patientObj.patient_category" style="background-color: {{patientObj.patient_category_color}}" class="category_badge header-badge" tooltip="{{patientObj.patient_category_fullname}}" tooltip-trigger tooltip-animation="false" tooltip-placement="top">
-                            {{patientObj.patient_category| uppercase}}
-                        </div>
-                    </div>-->
+                    <!--                    <div class="patient-details-part" ng-if="patientObj.childrens_global_ids != ''">
+                                            <i class="fa fa-bullseye"></i> <b> Secondary Patient Ids :  </b> {{patientObj.childrens_global_ids}}
+                                        </div>-->
+                    <!--                    <div class="patient-details-part b-n">
+                                            <div ng-if="patientObj.patient_category" style="background-color: {{patientObj.patient_category_color}}" class="category_badge header-badge" tooltip="{{patientObj.patient_category_fullname}}" tooltip-trigger tooltip-animation="false" tooltip-placement="top">
+                                                {{patientObj.patient_category| uppercase}}
+                                            </div>
+                                        </div>-->
                     <div class="patient-details-part b-n" ng-show="patientObj.hasalert">
                         <div style="cursor: pointer" class="alert_badge header-badge trigger-close" popover="{{patient_alert_html}}" popover-trigger="click" popover-placement="bottom">
                             <i class="fa fa-warning"></i>
@@ -62,3 +62,18 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".patient_image").mouseover(function () {
+            if ($('.patient_image').attr('src') != 'img/patient-img2.jpg') {
+                $("#patient-preview-pop-up img").attr('src', $('.patient_image').attr('src'));
+                $("#patient-preview-pop-up").show();
+            }
+
+        });
+        $(".patient_image").mouseout(function () {
+            $("#patient-preview-pop-up").hide();
+        });
+    });
+</script>

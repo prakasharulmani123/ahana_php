@@ -148,7 +148,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             }
 
             $scope.productloader = '<i class="fa fa-spin fa-spinner"></i>';
-            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct?fields=product_id,product_name,product_location,product_reorder_min,full_name,salesVat,salesPackageName,availableQuantity')
+            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct?fields=product_id,product_name,product_location,product_reorder_min,full_name,salesVat,salesPackageName,availableQuantity,generic_id')
                     .success(function (products) {
                         $scope.products = products;
                         $scope.productloader = '';
@@ -223,7 +223,6 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             selected = $filter('filter')($scope.patientgroups, {patient_group_id: $scope.data.patient_group_id});
             if (selected.length)
                 $scope.data.patient_group_name = selected[0].group_name;
-            console.log($scope.data.patient_group_name);
         }
 
         //Get selected patient mobile no.
@@ -254,7 +253,6 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         $scope.saleItems = [];
         // Add first row in sale item table.
         $scope.addRow = function (focus) {
-            console.log(focus);
             $scope.inserted = {
                 product_id: '',
                 product_name: '',
@@ -271,7 +269,8 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 discount_amount: '0',
                 vat_percent: '0',
                 vat_amount: '0',
-                total_amount: '0'
+                total_amount: '0',
+                generic_id: '',
             };
             $scope.saleItems.push($scope.inserted);
 
@@ -428,6 +427,10 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             });
             $scope.updateRow(key);
         }
+        
+        $scope.productFilter = function(product, key){
+            return product.product_id != $scope.saleItems[key].product_id;
+        }
 
         //After product choosed, then some values in the row.
         $scope.updateProductRow = function (item, model, label, key) {
@@ -436,6 +439,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             $scope.saleItems[key].product_location = item.product_location;
             $scope.saleItems[key].vat_percent = item.salesVat.vat;
             $scope.saleItems[key].package_name = item.salesPackageName;
+            $scope.saleItems[key].generic_id = parseInt(item.generic_id);
 
             $scope.loadbar('show');
             $scope.updateRow(key);
@@ -463,6 +467,16 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                     if (obj.available_qty <= 0) {
                         $scope.batches.splice(i, 1);
                     }
+                }
+                
+                var batch_exists = $filter('filter')($scope.batches, {product_id: item.product_id});
+                var alternates = $filter('filter')($scope.products, {generic_id: item.generic_id, product_id: !item.product_id}, true);
+                
+                console.log(alternates);
+                if(!batch_exists.length){
+//                    $('#i_alternate_medicine_'+key).removeClass('hide');
+                }else{
+//                    $('#i_alternate_medicine_'+key).addClass('hide');
                 }
 
 //                $scope.saleItems[key].batch_details = response.batchList[0].batch_details;
@@ -493,6 +507,14 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 selected = $filter('filter')($scope.batches, {batch_no: batch.batch_no});
             }
             return selected.length ? selected[0].batch_details : 'Not set';
+        };
+
+        $scope.showAlternateProduct = function (product) {
+            var selected = [];
+            if (product.product_id) {
+                selected = $filter('filter')($scope.products, {product_id: product.product_id});
+            }
+            return selected.length ? selected[0].full_name : 'Not set';
         };
 
         //After barch choosed, then update some values in the row.

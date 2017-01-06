@@ -28,8 +28,7 @@
         <link rel="stylesheet" href="bower_components/ng-camera/app/style.css"/>
         <link rel="stylesheet" type="text/css" href="bower_components/ngImgCrop/compile/minified/ng-img-crop.css">
         <script type="text/javascript">
-            var APP_VERSION = '1.1.5';
-        </script>
+                    var APP_VERSION = '1.1.5';        </script>
         <!-- jQuery -->
         <script src="bower_components/jquery/dist/jquery.min.js"></script>
         <script src="bower_components/angular-datatables/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
@@ -121,8 +120,8 @@
                             </div>
                         </div>
                         <div class="wrapper m-t b-t b-light">
-                            <form ng-submit="addNotes()" class="m-b-none ng-pristine ng-valid ng-submitted" ng-init="presc_right.notedata = {};
-                                                presc_right.notes_error = false;">
+                                                <form ng-submit="addNotes()" class="m-b-none ng-pristine ng-valid ng-submitted" ng-init="presc_right.notedata = {};
+                                        presc_right.notes_error = false;">
                                 <div class="input-group">
                                     <input type="text" placeholder="Say something" class="form-control" ng-model="presc_right.notedata.notes">
                                     <span class="input-group-btn">
@@ -189,8 +188,8 @@
                         </div>
 
                         <div class="wrapper m-t b-t b-light">
-                            <form class="m-b-none ng-pristine ng-valid ng-submitted" ng-submit="addVital()" ng-init="presc_right.vitaldata = {};
-                                                presc_right.vital_error = false;">
+                                                <form class="m-b-none ng-pristine ng-valid ng-submitted" ng-submit="addVital()" ng-init="presc_right.vitaldata = {};
+                                        presc_right.vital_error = false;">
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-sm-6">
@@ -265,8 +264,11 @@
                     </div>
                 </div>
             </div>
-
         </div>
+        <div id="patient-preview-pop-up" style="display:none;">
+            <img src="" />
+        </div>
+
         <script type="text/javascript" src="node_modules/moment/moment.js"></script>
         <!-- Angular -->
         <script src="bower_components/angular/angular.js"></script>

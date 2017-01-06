@@ -485,3 +485,13 @@ out-patient-table .table > thead > tr > th label.i-checks{
     margin-right: 0;
     margin-left: 0;
 }
+
+#patient-preview-pop-up {
+  float: left;
+  height: 100%;
+  left: 125px;
+  position: absolute;
+  top: 53px;
+  width: 100%;
+  z-index: 99;
+}
