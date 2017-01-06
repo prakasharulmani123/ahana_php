@@ -310,7 +310,7 @@ class PatPatient extends RActiveRecord {
             CoInternalCode::increaseInternalCode("CS");
 
             $header = "Patient Registration";
-            $message = "{$this->patient_title_code} {$this->patient_firstname} Registered Successfully.";
+            $message = "{$this->fullname} Registered Successfully.";
             $date = $this->patient_reg_date;
         } else {
             $header = "Patient Update";
@@ -692,7 +692,7 @@ class PatPatient extends RActiveRecord {
             }
 
             public function getFullname() {
-                return $this->patient_title_code . ucfirst($this->patient_firstname);
+                return ucwords("{$this->patient_title_code} {$this->patient_firstname}");
             }
 
             public function getPatient_age() {

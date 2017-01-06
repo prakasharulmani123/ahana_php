@@ -153,16 +153,23 @@ class PatGlobalPatient extends RActiveRecord {
     }
 
     public function fields() {
+        $extend = [
+            'fullname' => function ($model) {
+                return $model->fullname;
+            }];
+
+        $fields = array_merge(parent::fields(), $extend);
+                
         if ($onlyField = Yii::$app->request->get('onlyfields')) {
             switch ($onlyField):
                 case 'pharmacylist':
-                    $only_keys = ['global_patient_id', 'patient_firstname', 'patient_lastname', 'patient_title_code', 'patient_global_guid'];
+                    $only_keys = ['global_patient_id', 'fullname', 'patient_global_guid'];
                     break;
             endswitch;
 
-            return array_intersect_key(parent::fields(), array_flip($only_keys));
+            return array_intersect_key($fields, array_flip($only_keys));
         }
-        return parent::fields();
+        return $fields;
     }
 
     public static function syncPatientGroup($global_patient_id, $patient_group_ids, $type = 'link') {
@@ -181,4 +188,9 @@ class PatGlobalPatient extends RActiveRecord {
         $patient->linkAll('patientGroups', $groups, $extraColumns, $unlink, $delete);
         return $patient;
     }
+
+    public function getFullname() {
+        return ucwords("{$this->patient_title_code} {$this->patient_firstname}");
+    }
+
 }

@@ -57,7 +57,7 @@ class MyworkreportsController extends ActiveController {
 
         $encounters->addSelect(["co_tenant.tenant_name as branch_name"]);
         $encounters->addSelect(["CONCAT(co_user.title_code, '', co_user.name) as op_doctor_payment_consultant_name"]);
-        $encounters->addSelect(["CONCAT(pat_global_patient.patient_title_code, '', pat_global_patient.patient_firstname) as op_doctor_payment_patient_name"]);
+        $encounters->addSelect(["CONCAT(pat_global_patient.patient_title_code, ' ', pat_global_patient.patient_firstname) as op_doctor_payment_patient_name"]);
         $encounters->addSelect(["pat_global_patient.patient_global_int_code as op_doctor_payment_patient_global_int_code"]);
         $encounters->addSelect(["pat_global_patient.patient_mobile as op_doctor_payment_patient_mobile"]);
         $encounters->addSelect(["pat_appointment.amount as op_doctor_payment_amount"]);
@@ -166,7 +166,7 @@ class MyworkreportsController extends ActiveController {
 
         $consultants->addSelect(["co_tenant.tenant_name as branch_name"]);
         $consultants->addSelect(["CONCAT(co_user.title_code, '', co_user.name) as report_consultant_name"]);
-        $consultants->addSelect(["CONCAT(pat_global_patient.patient_title_code, '', pat_global_patient.patient_firstname) as report_patient_name"]);
+        $consultants->addSelect(["CONCAT(pat_global_patient.patient_title_code, ' ', pat_global_patient.patient_firstname) as report_patient_name"]);
         $consultants->addSelect(["pat_global_patient.patient_global_int_code as report_patient_global_int_code"]);
         $consultants->addSelect(["COUNT(pat_consultant.charge_amount) as report_total_visit"]);
         $consultants->addSelect(["SUM(pat_consultant.charge_amount) as report_total_charge_amount"]);
