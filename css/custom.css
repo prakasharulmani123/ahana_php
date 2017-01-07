@@ -477,7 +477,7 @@ out-patient-table .table > thead > tr > th label.i-checks{
   width: auto;
 }
 
-.editable-wrap.editable-select {
+.editable-wrap.editable-select, .editable-wrap.editable-text {    
   width: 100%;
 }
 

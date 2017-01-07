@@ -157,14 +157,13 @@
                                             <b>Location:</b> {{saleitem.product_location}}
                                         </span>
                                         <div class="custom-warning" style="" ng-show="saleitem.min_reorder_msg"> {{saleitem.min_reorder_msg}}</div>
-                                        <div id="i_alternate_medicine_{{key}}" class="">
-                                            {{ saleitem.generic_id }}
+                                        <div id="i_alternate_medicine_{{key}}" class="hide">
                                             <span 
                                                 editable-select="saleitem.alternate_product" 
                                                 e-name="alternate_product" 
                                                 e-form="tableform" 
-                                                onbeforesave="checkInput($data, key, $index)" 
-                                                e-ng-options="product as product.full_name for product in products | filter:{generic_id: saleitem.generic_id}: true | filter:productFilter" 
+                                                e-ng-options="product as product.full_name for product in products | filter:{generic_id: saleitem.generic_id}: true" 
+                                                e-ng-change="updateAlternateProductRow($data, key, $index)" 
                                                 >
                                                 {{ showAlternateProduct(saleitem) || 'empty' }}
                                             </span>
@@ -174,6 +173,7 @@
                                         <div id="i_batch_details_{{key}}">
                                             <span 
                                                 editable-select="saleitem.batch_details" 
+                                                data-e-id="batch_details" 
                                                 e-name="batch_details" 
                                                 e-form="tableform" 
                                                 onbeforesave="checkInput($data, key, $index)" 
@@ -197,7 +197,6 @@
                                             editable-text="saleitem.quantity" 
                                             e-number-mask="" 
                                             e-name="quantity" 
-                                            e-number-mask="" 
                                             e-form="tableform" 
                                             onbeforesave="checkInput($data, key, $index); checkAmount($data, key, $index); checkQuantity($data, key)" 
                                             e-ng-keydown="updateColumn($data, key, 'quantity')"  
