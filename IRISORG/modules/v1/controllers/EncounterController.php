@@ -208,39 +208,29 @@ class EncounterController extends ActiveController {
     }
 
     public function actionGetencounters() {
-        $get = Yii::$app->getRequest()->get();
+        $GET = Yii::$app->getRequest()->get();
         $tenant_id = Yii::$app->user->identity->logged_tenant_id;
 
-        if (isset($get['id'])) {
-            $condition['patient_guid'][$get['id']] = $get['id'];
+        if (isset($GET['id'])) {
+            $condition['patient_guid'][$GET['id']] = $GET['id'];
 
-            if (isset($get['date'])) {
-                $condition['DATE(date)'] = $get['date'];
+            if (isset($GET['date'])) {
+                $condition['DATE(date)'] = $GET['date'];
             }
-
-//            $patient = PatPatient::getPatientByGuid($get['id']);
 
             $data = VEncounter::find()
                     ->where($condition)
-                    ->groupBy('encounter_id')
-                    ->orderBy(['encounter_id' => SORT_DESC])
+                    ->orderBy(['encounter_id' => SORT_DESC, 'id' => SORT_ASC])
                     ->asArray()
                     ->all();
 
-            foreach ($data as $key => $value) {
-                $details = VEncounter::find()
-                        ->where(['encounter_id' => $value['encounter_id']])
-                        ->andWhere($condition)
-                        ->orderBy(['id' => SORT_ASC])
-                        ->asArray()
-                        ->all();
+            $encounters = array_values(\yii\helpers\ArrayHelper::index($data, null, ['encounter_id', function($element) {
+                            return 'all';
+                        }]));
 
-                $data[$key]['all'] = $details;
-            }
+            $activeEncounter = PatPatient::getActiveEncounterByPatientGuid($GET['id']);
 
-            $activeEncounter = PatPatient::getActiveEncounterByPatientGuid($get['id']);
-
-            return ['success' => true, 'encounters' => $data, 'active_encounter' => $activeEncounter ? : null];
+            return ['success' => true, 'encounters' => $encounters, 'activeEncounter' => $activeEncounter ? $activeEncounter : false];
         } else {
             return ['success' => false, 'message' => 'Invalid Access'];
         }
@@ -318,8 +308,8 @@ class EncounterController extends ActiveController {
                         'value' => $opRowExp,
                         'httpOnly' => false
                     ]));
-                }else{
-                     $expandConsultant = array_map(function($row) {
+                } else {
+                    $expandConsultant = array_map(function($row) {
                         return ($row->rowopen == true) ? (int) $row->consultant_id : null;
                     }, json_decode($opRowExp));
 
@@ -399,11 +389,11 @@ class EncounterController extends ActiveController {
 
         if ($counts) {
             foreach ($counts as $i => $v) {
-                $booked  = $v->booking - $v->arrival;
+                $booked = $v->booking - $v->arrival;
                 $arrival = $v->arrival;
-                $seen    = $v->seen;
+                $seen = $v->seen;
 
-                if($booked > 0 || $arrival > 0 || $seen > 0)
+                if ($booked > 0 || $arrival > 0 || $seen > 0)
                     $consultants[$v->consultant_id] = [
                         'consultant_name' => $v->consultant_name,
                         'booked' => $booked,

@@ -19,21 +19,19 @@ use Yii;
  * @property string $status
  * @property string $date_time
  */
-class VEncounter extends \common\models\RActiveRecord
-{
+class VEncounter extends \common\models\RActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'v_encounter';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['id', 'encounter_id', 'patient_id'], 'integer'],
             [['date_time'], 'safe'],
@@ -50,8 +48,7 @@ class VEncounter extends \common\models\RActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'id' => 'ID',
             'encounter_id' => 'Encounter ID',
@@ -66,11 +63,12 @@ class VEncounter extends \common\models\RActiveRecord
             'date_time' => 'Date Time',
         ];
     }
-    
+
     /**
      * @return ActiveQuery
      */
     public function getEncounter() {
         return $this->hasOne(PatEncounter::className(), ['encounter_id' => 'encounter_id']);
     }
+
 }
