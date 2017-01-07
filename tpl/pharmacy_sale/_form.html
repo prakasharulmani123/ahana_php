@@ -156,13 +156,14 @@
                                         <span ng-if="saleitem.product_location">
                                             <b>Location:</b> {{saleitem.product_location}}
                                         </span>
+                                        <div class="text-danger" style="" ng-show="saleitem.out_of_stock_msg"> {{saleitem.out_of_stock_msg}}</div>
                                         <div class="custom-warning" style="" ng-show="saleitem.min_reorder_msg"> {{saleitem.min_reorder_msg}}</div>
                                         <div id="i_alternate_medicine_{{key}}" class="hide">
                                             <span 
                                                 editable-select="saleitem.alternate_product" 
                                                 e-name="alternate_product" 
                                                 e-form="tableform" 
-                                                e-ng-options="product as product.full_name for product in products | filter:{generic_id: saleitem.generic_id}: true" 
+                                                e-ng-options="product as product.full_name for product in alternateproducts[key] | filter:$viewValue" 
                                                 e-ng-change="updateAlternateProductRow($data, key, $index)" 
                                                 >
                                                 {{ showAlternateProduct(saleitem) || 'empty' }}
@@ -177,7 +178,7 @@
                                                 e-name="batch_details" 
                                                 e-form="tableform" 
                                                 onbeforesave="checkInput($data, key, $index)" 
-                                                e-ng-options="batch as batch.batch_details for batch in batches | filter:$viewValue | limitTo:8| filter:{product_id : saleitem.product_id}" 
+                                                e-ng-options="batch as batch.batch_details for batch in batches | filter:$viewValue | limitTo:8| filter:{product_id : saleitem.product_id}: true" 
                                                 e-ng-change="updateBatchRow($data, key, $index)">
                                                 {{ showBatch(saleitem)}}
                                             </span>

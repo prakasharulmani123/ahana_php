@@ -151,6 +151,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct?fields=product_id,product_name,product_location,product_reorder_min,full_name,salesVat,salesPackageName,availableQuantity,generic_id')
                     .success(function (products) {
                         $scope.products = products;
+                        $scope.alternateproducts = {};
                         $scope.productloader = '';
                     })
                     .error(function () {
@@ -474,11 +475,10 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 });
 
                 $('#i_full_name_' + key + ' #full_name').val(data.full_name);
-                if (data.availableQuantity <= data.product_reorder_min) {
-                    $scope.saleItems[key].min_reorder_msg = 'reached min order level (' + data.product_reorder_min + ')';
-                } else {
+                $scope.productInlineAlert(data, key);
+
+                if (!$scope.saleItems[key].out_of_stock_msg) {
                     $('#i_alternate_medicine_' + key).addClass('hide');
-                    $scope.saleItems[key].min_reorder_msg = '';
                     $scope.setFocus('batch_details', index);
                 }
             }
@@ -521,14 +521,19 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                     }
                 }
 
-                var batch_exists = $filter('filter')($scope.batches, {product_id: item.product_id});
-                var alternates = $filter('filter')($scope.products, {generic_id: item.generic_id, product_id: !item.product_id}, true);
-
-                if (!batch_exists.length) {
+                //For alternate medicines
+                $scope.alternateproducts[key] = {};
+                var batch_exists = $filter('filter')($scope.batches, {product_id: item.product_id}, true);
+                $scope.alternateproducts[key] = $filter('filter')($scope.products, {generic_id: item.generic_id}, true);
+                $scope.alternateproducts[key] = $scope.alternateproducts[key].filter(function (n) {
+                    return (n.product_id != item.product_id)
+                });
+                if (!batch_exists.length && $scope.alternateproducts[key].length) {
                     $('#i_alternate_medicine_' + key).removeClass('hide');
                 } else {
                     $('#i_alternate_medicine_' + key).addClass('hide');
                 }
+                //end
 
 //                $scope.saleItems[key].batch_details = response.batchList[0].batch_details;
 //                $scope.saleItems[key].batch_no = response.batchList[0].batch_no;
@@ -538,10 +543,17 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 $scope.saleItems[key].quantity = 0;
             });
 
-            if (item.availableQuantity <= item.product_reorder_min) {
+            $scope.productInlineAlert(item, key);
+        }
+
+        $scope.productInlineAlert = function (item, key) {
+            $scope.saleItems[key].min_reorder_msg = '';
+            $scope.saleItems[key].out_of_stock_msg = '';
+
+            if (item.availableQuantity == 0) {
+                $scope.saleItems[key].out_of_stock_msg = 'Out of stock';
+            } else if (item.availableQuantity <= item.product_reorder_min) {
                 $scope.saleItems[key].min_reorder_msg = 'reached min order level (' + item.product_reorder_min + ')';
-            } else {
-                $scope.saleItems[key].min_reorder_msg = '';
             }
         }
 
