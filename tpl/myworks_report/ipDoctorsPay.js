@@ -26,7 +26,7 @@ app.controller('ipDoctorsPay', ['$rootScope', '$scope', '$timeout', '$http', '$s
             $scope.data.consultant_id = '';
             $scope.data.tenant_id = '';
         }
-        
+
         $scope.$watch('data.consultant_id', function (newValue, oldValue) {
             if (newValue != '' && typeof newValue != 'undefined') {
                 if ($scope.data.consultant_id.length == $scope.doctors.length) {
@@ -111,7 +111,7 @@ app.controller('ipDoctorsPay', ['$rootScope', '$scope', '$timeout', '$http', '$s
         $scope.parseFloat = function (row) {
             return parseFloat(row);
         }
-        
+
         $scope.printHeader = function () {
             return {
                 text: "IP Doctors Pay",
@@ -142,7 +142,8 @@ app.controller('ipDoctorsPay', ['$rootScope', '$scope', '$timeout', '$http', '$s
                 },
                 demoTable: {
                     color: '#000',
-                    fontSize: 10
+                    fontSize: 10,
+                    margin: [0, 0, 0, 20]
                 }
             };
         }
@@ -243,8 +244,7 @@ app.controller('ipDoctorsPay', ['$rootScope', '$scope', '$timeout', '$http', '$s
                         headerRows: 1,
                         widths: ['*', '*'],
                         body: branches,
-                    },
-                    margin: [0, 0, 0, 20]
+                    }
                 });
 
                 angular.forEach(branch_wise, function (branch, branch_name) {
@@ -295,9 +295,14 @@ app.controller('ipDoctorsPay', ['$rootScope', '$scope', '$timeout', '$http', '$s
                         table: {
                             headerRows: 1,
                             widths: ['*', '*', '*', '*', '*'],
+                            dontBreakRows: true,
                             body: items,
                         },
-                        margin: [0, 0, 0, 20],
+                        layout: {
+                            hLineWidth: function (i, node) {
+                                return (i === 0 || i === node.table.body.length) ? 1 : 0.5;
+                            }
+                        },                        
                         pageBreak: (index === result_count ? '' : 'after'),
                     });
                 });

@@ -5,7 +5,6 @@ app.controller('opdoctorpayController', ['$rootScope', '$scope', '$timeout', '$h
             $scope.tenants = [];
             $scope.doctors = [];
             $scope.data = {};
-
             $rootScope.commonService.GetDoctorList('', '1', false, '1', function (response) {
                 $scope.doctors = response.doctorsList;
             });
@@ -14,8 +13,12 @@ app.controller('opdoctorpayController', ['$rootScope', '$scope', '$timeout', '$h
                     $scope.tenants = response.tenantList;
                 }
             });
-            $scope.data.from = moment().format('YYYY-MM-DD');
+            $scope.data.consultant_id = '';
+            $scope.data.tenant_id = '';
             $scope.data.to = moment().format('YYYY-MM-DD');
+            $scope.data.from = moment($scope.data.to).add(-1, 'days').format('YYYY-MM-DD');
+            $scope.fromMaxDate = new Date($scope.data.to);
+            $scope.toMinDate = new Date($scope.data.from);
         }
 
         $scope.clearReport = function () {
@@ -27,6 +30,40 @@ app.controller('opdoctorpayController', ['$rootScope', '$scope', '$timeout', '$h
             $scope.data.tenant_id = '';
         }
 
+        $scope.$watch('data.from', function (newValue, oldValue) {
+            if (newValue != '' && typeof newValue != 'undefined') {
+                $scope.toMinDate = new Date($scope.data.from);
+
+                if (!angular.isUndefined($scope.data.consultant_id)) {
+                    if ($scope.data.consultant_id.length == $scope.doctors.length) {
+                        $scope.data.to = moment($scope.data.from).add(+1, 'days').format('YYYY-MM-DD');
+                    }
+                } 
+                
+                if (!angular.isUndefined($scope.data.tenant_id)) {
+                    if ($scope.data.tenant_id.length == Object.keys($scope.tenants).length) {
+                        $scope.data.to = moment($scope.data.from).add(+1, 'days').format('YYYY-MM-DD');
+                    }
+                }
+            }
+        }, true);
+        $scope.$watch('data.to', function (newValue, oldValue) {
+            if (newValue != '' && typeof newValue != 'undefined') {
+                $scope.fromMaxDate = new Date($scope.data.to);
+
+                if (!angular.isUndefined($scope.data.consultant_id)) {
+                    if ($scope.data.consultant_id.length == $scope.doctors.length) {
+                        $scope.data.from = moment($scope.data.to).add(-1, 'days').format('YYYY-MM-DD');
+                    }
+                } 
+                
+                if (!angular.isUndefined($scope.data.tenant_id)) {
+                    if ($scope.data.tenant_id.length == Object.keys($scope.tenants).length) {
+                        $scope.data.from = moment($scope.data.to).add(-1, 'days').format('YYYY-MM-DD');
+                    }
+                }
+            }
+        }, true);
         $scope.$watch('data.consultant_id', function (newValue, oldValue) {
             if (newValue != '' && typeof newValue != 'undefined') {
                 if ($scope.data.consultant_id.length == $scope.doctors.length) {
@@ -36,12 +73,12 @@ app.controller('opdoctorpayController', ['$rootScope', '$scope', '$timeout', '$h
                         var branch_wise_deselect_all = branch_wise_button.find(".bs-deselect-all");
                         branch_wise_deselect_all.click();
                         $('#get_report').attr("disabled", true);
-                        $scope.data.from = moment().add(-1, 'days').format('YYYY-MM-DD');
+
+                        $scope.data.from = moment($scope.data.to).add(-1, 'days').format('YYYY-MM-DD');
                     });
                 }
             }
         }, true);
-
         $scope.$watch('data.tenant_id', function (newValue, oldValue) {
             if (newValue != '' && typeof newValue != 'undefined') {
                 if ($scope.data.tenant_id.length == Object.keys($scope.tenants).length) {
@@ -51,7 +88,8 @@ app.controller('opdoctorpayController', ['$rootScope', '$scope', '$timeout', '$h
                         var consultant_wise_deselect_all = consultant_wise_button.find(".bs-deselect-all");
                         consultant_wise_deselect_all.click();
                         $('#get_report').attr("disabled", true);
-                        $scope.data.from = moment().add(-1, 'days').format('YYYY-MM-DD');
+                        
+                        $scope.data.from = moment($scope.data.to).add(-1, 'days').format('YYYY-MM-DD');
                     });
                 }
             }
@@ -62,23 +100,17 @@ app.controller('opdoctorpayController', ['$rootScope', '$scope', '$timeout', '$h
             $scope.records = [];
             $scope.loadbar('show');
             $scope.showTable = true;
-
             $scope.errorData = "";
             $scope.msg.successMessage = "";
-
             var data = {};
             if (typeof $scope.data.from !== 'undefined' && $scope.data.from != '')
                 angular.extend(data, {from: moment($scope.data.from).format('YYYY-MM-DD')});
-
             if (typeof $scope.data.to !== 'undefined' && $scope.data.to != '')
                 angular.extend(data, {to: moment($scope.data.to).format('YYYY-MM-DD')});
-
             if (typeof $scope.data.consultant_id !== 'undefined' && $scope.data.consultant_id != '')
                 angular.extend(data, {consultant_id: $scope.data.consultant_id});
-
             if (typeof $scope.data.tenant_id !== 'undefined' && $scope.data.tenant_id != '')
                 angular.extend(data, {tenant_id: $scope.data.tenant_id});
-
             // Get data's from service
             $http.post($rootScope.IRISOrgServiceUrl + '/myworkreports/opdoctorpaymentreport', data)
                     .success(function (response) {
@@ -90,18 +122,15 @@ app.controller('opdoctorpayController', ['$rootScope', '$scope', '$timeout', '$h
                         $scope.errorData = "An Error has occured";
                     });
         };
-
         $scope.parseFloat = function (row) {
             return parseFloat(row);
         }
 
-        //For Datepicker
+//For Datepicker
         $scope.open = function ($event, mode) {
             $event.preventDefault();
             $event.stopPropagation();
-
             $scope.opened1 = $scope.opened2 = false;
-
             switch (mode) {
                 case 'opened1':
                     $scope.opened1 = true;
@@ -111,7 +140,6 @@ app.controller('opdoctorpayController', ['$rootScope', '$scope', '$timeout', '$h
                     break;
             }
         };
-
         $scope.printHeader = function () {
             return {
                 text: "OP Payments",
@@ -142,7 +170,8 @@ app.controller('opdoctorpayController', ['$rootScope', '$scope', '$timeout', '$h
                 },
                 demoTable: {
                     color: '#000',
-                    fontSize: 10
+                    fontSize: 10,
+                    margin: [0, 0, 0, 20]
                 }
             };
         }
@@ -150,7 +179,6 @@ app.controller('opdoctorpayController', ['$rootScope', '$scope', '$timeout', '$h
         $scope.printContent = function () {
             var content = [];
             var consultant_wise = $filter('groupBy')($scope.records, 'consultant_name');
-
             var result_count = Object.keys(consultant_wise).length;
             var index = 1;
             angular.forEach(consultant_wise, function (details, doctor_name) {
@@ -159,26 +187,20 @@ app.controller('opdoctorpayController', ['$rootScope', '$scope', '$timeout', '$h
                 var generated_on = $scope.generated_on;
                 var generated_by = $scope.app.username;
                 var consultant_wise_total = 0;
-
                 //Branchwise
                 var branch_wise = $filter('groupBy')(details, 'branch_name');
-
                 var branches = [];
                 branches.push(
                         [{text: 'Branches', alignment: 'center', style: 'header', colSpan: 2}, ""],
                         [{text: 'Branch Name', style: 'header'}, {text: 'Amount', style: 'header'}]
                         );
-
                 angular.forEach(branch_wise, function (branch, branch_name) {
                     var branch_wise_total = 0;
-
                     angular.forEach(branch, function (record, key) {
                         branch_wise_total += parseFloat(record.payment_amount);
                         consultant_wise_total += parseFloat(record.payment_amount);
                     });
-
                     var branch_total = branch_wise_total.toString();
-
                     branches.push([
                         {text: branch_name},
                         {text: branch_total, alignment: 'right'}
@@ -196,7 +218,6 @@ app.controller('opdoctorpayController', ['$rootScope', '$scope', '$timeout', '$h
                         alignment: 'right'
                     }
                 ]);
-
                 content_info.push({
                     columns: [
                         {
@@ -243,17 +264,13 @@ app.controller('opdoctorpayController', ['$rootScope', '$scope', '$timeout', '$h
                         headerRows: 1,
                         widths: ['*', '*'],
                         body: branches,
-                    },
-                    margin: [0, 0, 0, 20]
+                    }
                 });
-
                 angular.forEach(branch_wise, function (branch, branch_name) {
                     var items = [];
-
                     items.push([
                         {text: branch_name, style: 'header', colSpan: 6}, "", "", "", "", ""
                     ]);
-
                     items.push([
                         {text: 'S.No', style: 'header'},
                         {text: 'Patient Name', style: 'header'},
@@ -262,10 +279,8 @@ app.controller('opdoctorpayController', ['$rootScope', '$scope', '$timeout', '$h
                         {text: 'Seen On', style: 'header'},
                         {text: 'Amount', style: 'header'}
                     ]);
-
                     var items_serial_no = 1;
                     var total = 0;
-
                     angular.forEach(branch, function (record, key) {
                         var s_no_string = items_serial_no.toString();
                         items.push([
@@ -279,7 +294,6 @@ app.controller('opdoctorpayController', ['$rootScope', '$scope', '$timeout', '$h
                         total += parseFloat(record.payment_amount);
                         items_serial_no++;
                     });
-
                     items.push([
                         {
                             text: "Total",
@@ -291,15 +305,19 @@ app.controller('opdoctorpayController', ['$rootScope', '$scope', '$timeout', '$h
                             style: 'header'
                         }
                     ]);
-
                     content_info.push({
                         style: 'demoTable',
                         table: {
-                            headerRows: 1,
-                            widths: ['*', '*', '*', '*', '*', '*'],
+                            widths: [40, '*', '*', '*', '*', 'auto'],
+                            headerRows: 2,
+                            dontBreakRows: true,
                             body: items,
                         },
-                        margin: [0, 0, 0, 20],
+                        layout: {
+                            hLineWidth: function (i, node) {
+                                return (i === 0 || i === node.table.body.length) ? 1 : 0.5;
+                            }
+                        },
                         pageBreak: (index === result_count ? '' : 'after'),
                     });
                 });
