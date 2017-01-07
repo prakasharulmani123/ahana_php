@@ -22,6 +22,34 @@ app.controller('ipBillStatusController', ['$rootScope', '$scope', '$timeout', '$
             $scope.data.consultant_id = '';
             $scope.data.tenant_id = '';
         }
+        
+        $scope.$watch('data.consultant_id', function (newValue, oldValue) {
+            if (newValue != '' && typeof newValue != 'undefined') {
+                if ($scope.data.consultant_id.length == $scope.doctors.length) {
+                    $timeout(function () {
+                        // anything you want can go here and will safely be run on the next digest.
+                        var branch_wise_button = $('button[data-id="branch_wise"]').next();
+                        var branch_wise_deselect_all = branch_wise_button.find(".bs-deselect-all");
+                        branch_wise_deselect_all.click();
+                        $('#get_report').attr("disabled", true);
+                    });
+                }
+            }
+        }, true);
+
+        $scope.$watch('data.tenant_id', function (newValue, oldValue) {
+            if (newValue != '' && typeof newValue != 'undefined') {
+                if ($scope.data.tenant_id.length == Object.keys($scope.tenants).length) {
+                    $timeout(function () {
+                        // anything you want can go here and will safely be run on the next digest.
+                        var consultant_wise_button = $('button[data-id="consultant_wise"]').next();
+                        var consultant_wise_deselect_all = consultant_wise_button.find(".bs-deselect-all");
+                        consultant_wise_deselect_all.click();
+                        $('#get_report').attr("disabled", true);
+                    });
+                }
+            }
+        }, true);
 
         //Index Page
         $scope.loadReport = function () {
