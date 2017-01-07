@@ -29,10 +29,10 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
 
             if (typeof date == 'undefined') {
-                url = $rootScope.IRISOrgServiceUrl + '/encounter/getencounters?id=' + $state.params.id + '&type=' + type;
+                url = $rootScope.IRISOrgServiceUrl + '/encounter/getencounters?addtfields=eprencounter&id=' + $state.params.id + '&type=' + type;
             } else {
                 date = moment(date).format('YYYY-MM-DD');
-                url = $rootScope.IRISOrgServiceUrl + '/encounter/getencounters?id=' + $state.params.id + '&type=' + type + '&date=' + date;
+                url = $rootScope.IRISOrgServiceUrl + '/encounter/getencounters?addtfields=eprencounter&id=' + $state.params.id + '&type=' + type + '&date=' + date;
             }
 
             $http.get(url)
@@ -43,48 +43,51 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
 
                             angular.forEach($scope.rowCollection, function (row) {
                                 row.last_row_sts = '';
-                                angular.forEach(row.all, function (all) {
+                                angular.forEach(row.all, function (data, k) {
                                     var today_date = moment().format('YYYY-MM-DD');
-                                    var encounter_date = moment(all.date).format('YYYY-MM-DD');
+                                    var encounter_date = moment(data.date).format('YYYY-MM-DD');
                                     var result = (moment(encounter_date).isAfter(today_date));
-                                    all.is_future = result;
-                                    row.last_row_sts = all.row_sts;
+                                    data.is_future = result;
+
+                                    var result = $filter('filter')($scope.enabled_dates, moment(data.date_time).format('YYYY-MM-DD'));
+                                    if (result.length == 0)
+                                        $scope.enabled_dates.push(moment(data.date_time).format('YYYY-MM-DD'));
+
+                                    if (k == 0) {
+                                        row.encounter_id = data.encounter_id;
+                                        row.encounter_type = data.encounter_type;
+                                        row.doctor = data.doctor;
+                                        row.date = data.date;
+                                        row.status = data.status;
+                                    }
+                                    row.last_row_sts = data.row_sts;
                                 });
                             });
 
-                            var actEnc = $filter('filter')(response.encounters, {
-                                status: '1'
-                            });
-                            
-                            $scope.activeEncounter = actEnc.length ? actEnc : null;
+                            $scope.activeEncounter = response.activeEncounter;
                             $scope.displayedCollection = [].concat($scope.rowCollection);
                             $scope.more_li = {};
                             $scope.activeOPEncounter = [];
                             $scope.activeIPEncounter = [];
-                            
-                            if (response.active_encounter) {
-                                var actIP = $filter('filter')($scope.activeEncounter, {
-                                    encounter_type: 'IP'
-                                });
-                                if(actIP.length)
-                                    $scope.activeIPEncounter = actIP[0];
-                                
-                                var actOP = $filter('filter')($scope.activeEncounter, {
-                                    encounter_type: 'OP'
-                                });
-                                if(actOP.length)
-                                    $scope.activeOPEncounter = actOP[0];
+
+                            if ($scope.activeEncounter) {
+                                var actEncType = $scope.activeEncounter.encounter_type;
+                                if (actEncType == 'OP') {
+                                    $scope.activeOPEncounter = $scope.activeEncounter;
+                                } else if (actEncType == 'IP') {
+                                    $scope.activeIPEncounter = $scope.activeEncounter;
+                                }
                             }
-                            
-                            if(Object.keys($scope.activeOPEncounter).length == 0 && Object.keys($scope.activeIPEncounter).length == 0){
+
+                            if (Object.keys($scope.activeOPEncounter).length == 0 && Object.keys($scope.activeIPEncounter).length == 0) {
                                 $scope.class1 = 'col-sm-3';
                                 $scope.class2 = 'col-sm-6 text-center';
                                 $scope.class3 = 'col-sm-3';
-                            } else if(Object.keys($scope.activeIPEncounter).length > 0){
+                            } else if (Object.keys($scope.activeIPEncounter).length > 0) {
                                 $scope.class1 = 'col-sm-9';
                                 $scope.class2 = '';
                                 $scope.class3 = 'col-sm-3';
-                            } else if(Object.keys($scope.activeOPEncounter).length > 0){
+                            } else if (Object.keys($scope.activeOPEncounter).length > 0) {
                                 $scope.class1 = 'col-sm-5';
                                 $scope.class2 = 'col-sm-4 text-center';
                                 $scope.class3 = 'col-sm-3';
@@ -95,13 +98,6 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                                 $scope.class3 = 'col-sm-3';
                             }
 
-                            angular.forEach($scope.rowCollection, function (row) {
-                                angular.forEach(row.all, function (all) {
-                                    var result = $filter('filter')($scope.enabled_dates, moment(all.date_time).format('YYYY-MM-DD'));
-                                    if (result.length == 0)
-                                        $scope.enabled_dates.push(moment(all.date_time).format('YYYY-MM-DD'));
-                                });
-                            });
                             $scope.$broadcast('refreshDatepickers');
                         } else {
                             $scope.errorData = response.message;
@@ -173,13 +169,13 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
 //                            name: 'Change Status',
 //                            mode: 'sref'
 //                        },
-                        {
-                            href: "cancelAppointment(" + enc_id + ")",
-                            name: 'Cancel Appointment',
-                            mode: 'click',
-                            url: 'patient.cancelAppointment'
-                        });
-                    }else{
+                                {
+                                    href: "cancelAppointment(" + enc_id + ")",
+                                    name: 'Cancel Appointment',
+                                    mode: 'click',
+                                    url: 'patient.cancelAppointment'
+                                });
+                    } else {
                         $scope.more_li.push({
                             href: 'patient.editDoctorFee({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})',
                             name: 'Edit Doctor Fee',
@@ -208,7 +204,7 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                     var actEnc = $filter('filter')($scope.activeEncounter, {
                         encounter_id: enc_id
                     });
-                    
+
                     if (actEnc.length == 0) {
                         alert("This is not an active Encounter");
                         $state.go("patient.encounter", {id: $state.params.id});
@@ -279,7 +275,7 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                     var actEnc = $filter('filter')($scope.activeEncounter, {
                         encounter_id: enc_id
                     });
-                    
+
                     console.log(actEnc.length);
                     if (actEnc.length == 0) {
                         alert("This is not an active Encounter");
@@ -371,7 +367,7 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                     var actEnc = $filter('filter')($scope.activeEncounter, {
                         encounter_id: enc_id
                     });
-                    
+
                     console.log(actEnc.length);
                     if (actEnc.length == 0) {
                         alert("This is not an active Encounter");
