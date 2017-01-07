@@ -35,13 +35,15 @@ app.controller('reportController', ['$rootScope', '$scope', '$timeout', '$http',
             $scope.mode = $state.params.mode;
             $scope.show_search = true;
             $scope.show_search_consultant = false;
-            $scope.data.from = '';
-            $scope.data.to = '';
+            $scope.data.from = moment().subtract(1, 'months').format('YYYY-MM-DD');
+            $scope.data.to = moment().format('YYYY-MM-DD');
+            $scope.fromMaxDate = new Date($scope.data.to);
+            $scope.toMinDate = new Date($scope.data.from);
 
 
             if ($scope.mode == 'purchase') {
                 $scope.report_title = 'Purchase Report';
-                $scope.url = '/pharmacyreport/purchasereport';
+                $scope.url = '/pharmacyreport/purchasereport?addtfields=purchasereport';
             } else if ($scope.mode == 'sale') {
                 $scope.show_search_consultant = true;
                 $scope.report_title = 'Sale Report';
@@ -55,8 +57,15 @@ app.controller('reportController', ['$rootScope', '$scope', '$timeout', '$http',
                 $scope.report_title = 'Stock Report';
                 $scope.url = '/pharmacyreport/stockreport';
                 $scope.loadReport();
+            } else if ($scope.mode == 'purchasevat') {
+                $scope.report_title = 'Purchase Vat Report';
+                $scope.url = '/pharmacyreport/purchasereport?addtfields=purchasevatreport';
             }
 
+        }
+
+        $scope.parseFloat = function (row) {
+            return parseFloat(row);
         }
 
         //Index Page
@@ -68,6 +77,8 @@ app.controller('reportController', ['$rootScope', '$scope', '$timeout', '$http',
             $scope.msg.successMessage = "";
 
             var data = {};
+            $scope.purchase = {};
+
             if (typeof $scope.data.from !== 'undefined' && $scope.data.from != '')
                 angular.extend(data, {from: moment($scope.data.from).format('YYYY-MM-DD')});
 
@@ -114,4 +125,16 @@ app.controller('reportController', ['$rootScope', '$scope', '$timeout', '$http',
             popupWinindow.document.write('<html><head><link href="css/print.css" rel="stylesheet" type="text/css" /></head><body onload="window.print()">' + innerContents + '</html>');
             popupWinindow.document.close();
         }
+
+        $scope.$watch('data.from', function (newValue, oldValue) {
+            if (newValue != '' && typeof newValue != 'undefined') {
+                $scope.toMinDate = new Date($scope.data.from);
+            }
+        }, true);
+
+        $scope.$watch('data.to', function (newValue, oldValue) {
+            if (newValue != '' && typeof newValue != 'undefined') {
+                $scope.fromMaxDate = new Date($scope.data.to);
+            }
+        }, true);
     }]);

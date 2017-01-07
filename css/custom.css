@@ -490,7 +490,7 @@ out-patient-table .table > thead > tr > th label.i-checks{
   float: left;
   height: 100%;
   left: 125px;
-  position: absolute;
+  position: fixed;
   top: 53px;
   width: 100%;
   z-index: 99;

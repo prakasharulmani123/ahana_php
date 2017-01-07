@@ -14,7 +14,8 @@
                             <div class="form-group">
                                 <label>From  :</label>
                                 <div class="input-group ">
-                                    <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="data.from" is-open="opened1" datepicker-options="dateOptions" close-text="Close"/>
+                                    <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="data.from" is-open="opened1" datepicker-options="dateOptions" close-text="Close" max-date="fromMaxDate" 
+/>
                                     <span class="input-group-btn">
                                         <button type="button" class="btn btn-default" ng-click="open($event, 'opened1')"><i class="glyphicon glyphicon-calendar"></i></button>
                                     </span>
@@ -24,7 +25,7 @@
                             <div class="form-group">
                                 <label>To :</label>
                                 <div class="input-group ">
-                                    <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="data.to" is-open="opened2" datepicker-options="dateOptions" close-text="Close"/>
+                                    <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="data.to" is-open="opened2" datepicker-options="dateOptions" close-text="Close" min-date="toMinDate"/>
                                     <span class="input-group-btn">
                                         <button type="button" class="btn btn-default" ng-click="open($event, 'opened2')"><i class="glyphicon glyphicon-calendar"></i></button>
                                     </span>
@@ -57,16 +58,16 @@
                         <div class="col-sm-4 pull-right right"> 
                             <!-- modal -->
                             <div class="text-right">
-                                <div class="btn-group dropdown" dropdown>
+<!--                                <div class="btn-group dropdown" dropdown>
                                     <button class="btn btn-danger" dropdown-toggle> <i class="fa fa-download"></i> Export <span class="caret"></span></button>
                                     <ul class="dropdown-menu">
                                         <li><a ng-click="exportAction('excel')">EXCEL</a></li>
-                                        <!--<li><a ng-click="exportAction('pdf')">PDF</a></li>-->
+                                        <li><a ng-click="exportAction('pdf')">PDF</a></li>
                                         <li><a ng-click="exportAction('doc')">DOC</a></li>
-                                        <!--<li><a ng-click="exportAction('png')">PNG</a></li>-->
+                                        <li><a ng-click="exportAction('png')">PNG</a></li>
                                         <li><a ng-click="exportAction('powerpoint')">POWER POINT</a></li>
                                     </ul>
-                                </div>
+                                </div>-->
                                 &nbsp;
                                 <button class="btn btn-primary" ng-click="printReport()">
                                     <i class="fa fa-print"></i> Print
@@ -89,6 +90,11 @@
                         <div ng-if="mode == 'stock'">
                             <div ng-include="'tpl/pharmacy_report/_stock_report.html'">
                                 {% include 'tpl/pharmacy_report/_stock_report.html' %}
+                            </div>
+                        </div>
+                        <div ng-if="mode == 'purchasevat'">
+                            <div ng-include="'tpl/pharmacy_report/_purchase_vat_report.html'">
+                                {% include 'tpl/pharmacy_report/_purchase_vat_report.html' %}
                             </div>
                         </div>
                     </div>
