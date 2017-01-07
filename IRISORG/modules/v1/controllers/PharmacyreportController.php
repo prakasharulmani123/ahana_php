@@ -36,30 +36,32 @@ class PharmacyreportController extends ActiveController {
     public function actionPurchasereport() {
         $post = Yii::$app->getRequest()->post();
         $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+        
+        $reports = \common\models\PhaPurchase::find()->tenant()->andWhere("pha_purchase.invoice_date between '{$post['from']}' AND '{$post['to']}'")->all();
 
-        $purchases = PhaPurchaseItem::find()
-                ->joinWith('purchase')
-                ->joinWith('product')
-                ->andWhere(['pha_product.tenant_id' => $tenant_id]);
-
-        if (isset($post['from']) && isset($post['to'])) {
-            $purchases->andWhere("pha_purchase.invoice_date between '{$post['from']}' AND '{$post['to']}'");
-        }
-
-        $purchases = $purchases->addSelect(["CONCAT(
-            IF(pha_product.product_name IS NULL OR pha_product.product_name = '', ' ', pha_product.product_name),
-            IF(pha_product.product_unit_count IS NULL OR pha_product.product_unit_count = '', ' ', CONCAT(' | ', pha_product.product_unit_count)),
-            IF(pha_product.product_unit IS NULL OR pha_product.product_unit = '', ' ', CONCAT(' | ', pha_product.product_unit))
-        ) as product_name", 'SUM(total_amount) as total_purhcase_amount'])
-                ->groupBy(['pha_product.product_id'])
-                ->all();
-
-        $reports = [];
-
-        foreach ($purchases as $key => $purchase) {
-            $reports[$key]['product_name'] = $purchase['product_name'];
-            $reports[$key]['total_amount'] = $purchase['total_purhcase_amount'];
-        }
+//        $purchases = PhaPurchaseItem::find()
+//                ->joinWith('purchase')
+//                ->joinWith('product')
+//                ->andWhere(['pha_product.tenant_id' => $tenant_id]);
+//
+//        if (isset($post['from']) && isset($post['to'])) {
+//            $purchases->andWhere("pha_purchase.invoice_date between '{$post['from']}' AND '{$post['to']}'");
+//        }
+//
+//        $purchases = $purchases->addSelect(["CONCAT(
+//            IF(pha_product.product_name IS NULL OR pha_product.product_name = '', ' ', pha_product.product_name),
+//            IF(pha_product.product_unit_count IS NULL OR pha_product.product_unit_count = '', ' ', CONCAT(' | ', pha_product.product_unit_count)),
+//            IF(pha_product.product_unit IS NULL OR pha_product.product_unit = '', ' ', CONCAT(' | ', pha_product.product_unit))
+//        ) as product_name", 'SUM(total_amount) as total_purhcase_amount'])
+//                ->groupBy(['pha_product.product_id'])
+//                ->all();
+//
+//        $reports = [];
+//
+//        foreach ($purchases as $key => $purchase) {
+//            $reports[$key]['product_name'] = $purchase['product_name'];
+//            $reports[$key]['total_amount'] = $purchase['total_purhcase_amount'];
+//        }
 
         return ['report' => $reports];
     }

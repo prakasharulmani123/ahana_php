@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\models\query\PhaPurchaseQuery;
+use Yii;
 use yii\db\ActiveQuery;
 use yii\helpers\ArrayHelper;
 
@@ -39,7 +40,7 @@ use yii\helpers\ArrayHelper;
  * @property PhaPurchaseItem[] $phaPurchaseItems
  */
 class PhaPurchase extends RActiveRecord {
-    
+
     public $after_save = true;
 
     /**
@@ -146,6 +147,9 @@ class PhaPurchase extends RActiveRecord {
             'supplier' => function ($model) {
                 return (isset($model->supplier) ? $model->supplier : '-');
             },
+            'supplier_name' => function ($model) {
+                return (isset($model->supplier) ? $model->supplier->supplier_name : '-');
+            },
             'items' => function ($model) {
                 return (isset($model->phaPurchaseItems) ? $model->phaPurchaseItems : '-');
             },
@@ -162,8 +166,33 @@ class PhaPurchase extends RActiveRecord {
                 return $balance;
             },
         ];
-        $fields = array_merge(parent::fields(), $extend);
-        return $fields;
+
+        $parent_fields = parent::fields();
+        $addt_keys = [];
+        if ($addtField = Yii::$app->request->get('addtfields')) {
+            switch ($addtField):
+                case 'purchasereport':
+                    $addt_keys = ['supplier_name'];
+                    $parent_fields = [
+                        'invoice_no' => 'invoice_no',
+                        'net_amount' => 'net_amount',
+                    ];
+                    break;
+                case 'purchasevatreport':
+                    $addt_keys = ['supplier_name'];
+                    $parent_fields = [
+                        'invoice_no' => 'invoice_no',
+                        'total_item_purchase_amount' => 'total_item_purchase_amount',
+                        'total_item_vat_amount' => 'total_item_vat_amount',
+                        'net_amount' => 'net_amount',
+                    ];
+                    break;
+            endswitch;
+        }
+
+        $extFields = ($addt_keys) ? array_intersect_key($extend, array_flip($addt_keys)) : $extend;
+
+        return array_merge($parent_fields, $extFields);
     }
 
     public function afterSave($insert, $changedAttributes) {
