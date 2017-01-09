@@ -112,7 +112,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     });
 
             //Get Vitals
-            $http.get($rootScope.IRISOrgServiceUrl + '/patientvitals/getpatientvitals?patient_id=' + $state.params.id)
+            $http.get($rootScope.IRISOrgServiceUrl + '/patientvitals/getpatientvitals?addtfields=eprvitals&patient_id=' + $state.params.id)
                     .success(function (vitals) {
                         $scope.child.vitals = [];
                         angular.forEach(vitals.result, function (result) {

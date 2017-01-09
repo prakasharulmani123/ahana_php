@@ -32,7 +32,7 @@ app.controller('VitalsController', ['$rootScope', '$scope', '$timeout', '$http',
                     alert("Sorry, you can't create a vital");
                     $state.go("patient.vitals", {id: $state.params.id});
                 } else {
-                    if(!$scope.encounter)
+                    if (!$scope.encounter)
                         $scope.encounter = response.model;
                     $scope.all_encounters = response.encounters;
                     if (!$scope.data.encounter_id)
@@ -41,29 +41,30 @@ app.controller('VitalsController', ['$rootScope', '$scope', '$timeout', '$http',
             });
         }
 
-        $scope.enc = {};
-        $scope.$watch('patientObj.patient_id', function (newValue, oldValue) {
-            if (newValue != '') {
-                $rootScope.commonService.GetEncounterListByPatient('', '0,1', false, $scope.patientObj.patient_id, function (response) {
-                    angular.forEach(response, function (resp) {
-                        resp.encounter_id = resp.encounter_id.toString();
-                    });
-                    $scope.encounters = response;
-                    if (response != null) {
-                        $scope.enc.selected = $scope.encounters[0];
-                    }
-                });
-            }
-        }, true);
-
-        $scope.$watch('enc.selected.encounter_id', function (newValue, oldValue) {
-            if (newValue != '' && typeof newValue != 'undefined') {
-                $scope.loadPatVitalsList();
-            }
-        }, true);
+//        $scope.enc = {};
+//        $scope.$watch('patientObj.patient_id', function (newValue, oldValue) {
+//            if (newValue != '') {
+//                $rootScope.commonService.GetEncounterListByPatient('', '0,1', false, $scope.patientObj.patient_id, function (response) {
+//                    angular.forEach(response, function (resp) {
+//                        resp.encounter_id = resp.encounter_id.toString();
+//                    });
+//                    $scope.encounters = response;
+//                    if (response != null) {
+//                        $scope.enc.selected = $scope.encounters[0];
+//                    }
+//                });
+//            }
+//        }, true);
+//
+//        $scope.$watch('enc.selected.encounter_id', function (newValue, oldValue) {
+//            if (newValue != '' && typeof newValue != 'undefined') {
+//                $scope.loadPatVitalsList();
+//            }
+//        }, true);
 
         //Index Page
         $scope.enabled_dates = [];
+        $scope.HaveActEnc = false;
         $scope.loadPatVitalsList = function (date) {
             $scope.isLoading = true;
             // pagination set up
@@ -72,10 +73,10 @@ app.controller('VitalsController', ['$rootScope', '$scope', '$timeout', '$http',
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
 
             if (typeof date == 'undefined') {
-                url = $rootScope.IRISOrgServiceUrl + '/patientvitals/getpatientvitals?patient_id=' + $state.params.id;
+                url = $rootScope.IRISOrgServiceUrl + '/patientvitals/getpatientvitals?addtfields=eprvitals&only=result,actenc&patient_id=' + $state.params.id;
             } else {
                 date = moment(date).format('YYYY-MM-DD');
-                url = $rootScope.IRISOrgServiceUrl + '/patientvitals/getpatientvitals?patient_id=' + $state.params.id + '&date=' + date;
+                url = $rootScope.IRISOrgServiceUrl + '/patientvitals/getpatientvitals?addtfields=eprvitals&only=result,actenc&patient_id=' + $state.params.id + '&date=' + date;
             }
 
             // Get data's from service
@@ -84,9 +85,13 @@ app.controller('VitalsController', ['$rootScope', '$scope', '$timeout', '$http',
                         $scope.isLoading = false;
                         $scope.rowCollection = vitals.result;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
+                        $scope.HaveActEnc = vitals.HaveActEnc;
 
                         angular.forEach($scope.rowCollection, function (row) {
                             angular.forEach(row.all, function (all) {
+                                if (!row.encounter_id)
+                                    row.encounter_id = all.encounter_id;
+
                                 var result = $filter('filter')($scope.enabled_dates, moment(all.vital_time).format('YYYY-MM-DD'));
                                 if (result.length == 0)
                                     $scope.enabled_dates.push(moment(all.vital_time).format('YYYY-MM-DD'));
@@ -180,7 +185,7 @@ app.controller('VitalsController', ['$rootScope', '$scope', '$timeout', '$http',
                     $scope.errorData = data.message;
             });
         };
-        
+
         //Delete
         $scope.removeRow = function (row) {
             var modalOptions = {

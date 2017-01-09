@@ -117,8 +117,8 @@
             </li>
         </ul>
 
-        <div class="navbar-header-branchswitch" ng-if="switched_branches_list.length > 0">
-            <select class="form-control" ng-model="branch_switch.branch_id" ng-options="branch.branch_id as branch.branch_name for branch in switched_branches_list | orderBy: branch_name" ng-change="switchBranch()">
+        <div class="navbar-header-branchswitch" ng-if="switched_branches_list">
+            <select class="form-control" ng-model="branch_switch.branch_id" ng-options="branch_id as branch_name for (branch_id,branch_name) in switched_branches_list | orderBy: branch_name" ng-change="switchBranch()">
             </select>
         </div>
         <!-- / link and dropdown -->

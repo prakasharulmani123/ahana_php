@@ -47,7 +47,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['js/controllers/signin.js?v='+APP_VERSION]);
+                            return uiLoad.load(['js/controllers/signin.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -58,7 +58,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['js/controllers/signin.js?v='+APP_VERSION]);
+                            return uiLoad.load(['js/controllers/signin.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -69,7 +69,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['js/controllers/signin.js?v='+APP_VERSION]);
+                            return uiLoad.load(['js/controllers/signin.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -102,7 +102,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('tpl/roles/roles.js?v='+APP_VERSION);
+                            return $ocLazyLoad.load('tpl/roles/roles.js?v=' + APP_VERSION);
                         }]
                 }
             })
@@ -112,7 +112,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/roles/roles.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/roles/roles.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -122,7 +122,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/roles/roles.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/roles/roles.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -135,7 +135,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['xeditable', 'smart-table']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/organization/org.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/organization/org.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -149,7 +149,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('tpl/registration/registration.js?v='+APP_VERSION);
+                            return $ocLazyLoad.load('tpl/registration/registration.js?v=' + APP_VERSION);
                         }]
                 }
             })
@@ -160,10 +160,10 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                     deps: ['uiLoad',
                         function (uiLoad) {
                             return uiLoad.load([
-                                'tpl/registration/registration.js?v='+APP_VERSION,
-                                'tpl/modal_form/modal.country.js?v='+APP_VERSION,
-                                'tpl/modal_form/modal.state.js?v='+APP_VERSION,
-                                'tpl/modal_form/modal.city.js?v='+APP_VERSION
+                                'tpl/registration/registration.js?v=' + APP_VERSION,
+                                'tpl/modal_form/modal.country.js?v=' + APP_VERSION,
+                                'tpl/modal_form/modal.state.js?v=' + APP_VERSION,
+                                'tpl/modal_form/modal.city.js?v=' + APP_VERSION
                             ]);
                         }]
                 }
@@ -175,10 +175,10 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                     deps: ['uiLoad',
                         function (uiLoad) {
                             return uiLoad.load([
-                                'tpl/registration/registration.js?v='+APP_VERSION,
-                                'tpl/modal_form/modal.country.js?v='+APP_VERSION,
-                                'tpl/modal_form/modal.state.js?v='+APP_VERSION,
-                                'tpl/modal_form/modal.city.js?v='+APP_VERSION
+                                'tpl/registration/registration.js?v=' + APP_VERSION,
+                                'tpl/modal_form/modal.country.js?v=' + APP_VERSION,
+                                'tpl/modal_form/modal.state.js?v=' + APP_VERSION,
+                                'tpl/modal_form/modal.city.js?v=' + APP_VERSION
                             ]);
                         }]
                 }
@@ -190,7 +190,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/registration/registration.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/registration/registration.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -203,7 +203,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load('smart-table').then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/organization_module/org_module.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/organization_module/org_module.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -217,7 +217,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/role_rights/role_rights.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/role_rights/role_rights.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -228,7 +228,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/user_roles/user_roles.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/user_roles/user_roles.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -239,7 +239,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/user_branches/user_branches.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/user_branches/user_branches.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -250,7 +250,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('tpl/floors/floors.js?v='+APP_VERSION);
+                            return $ocLazyLoad.load('tpl/floors/floors.js?v=' + APP_VERSION);
                         }]
                 }
             })
@@ -260,7 +260,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/floors/floors.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/floors/floors.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -270,7 +270,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/floors/floors.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/floors/floors.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -284,7 +284,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load('smart-table').then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/room_maintenance/room_maintenance.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/room_maintenance/room_maintenance.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -296,7 +296,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/room_maintenance/room_maintenance.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/room_maintenance/room_maintenance.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -306,7 +306,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/room_maintenance/room_maintenance.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/room_maintenance/room_maintenance.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -317,7 +317,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('tpl/wards/wards.js?v='+APP_VERSION);
+                            return $ocLazyLoad.load('tpl/wards/wards.js?v=' + APP_VERSION);
                         }]
                 }
             })
@@ -327,7 +327,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/wards/wards.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/wards/wards.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -337,7 +337,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/wards/wards.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/wards/wards.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -350,7 +350,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load('xeditable').then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/room_charge_category/room_charge_category.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/room_charge_category/room_charge_category.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -364,7 +364,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load('xeditable').then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/room_charge_category/room_charge_category.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/room_charge_category/room_charge_category.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -378,7 +378,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load('xeditable').then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/room_charge_category/room_charge_category.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/room_charge_category/room_charge_category.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -396,7 +396,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load('xeditable').then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/room_charge_category_custom/room_charge_category_custom.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/room_charge_category_custom/room_charge_category_custom.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -410,7 +410,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load('xeditable').then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/room_charge_category_custom/room_charge_category_custom.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/room_charge_category_custom/room_charge_category_custom.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -424,7 +424,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load('xeditable').then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/room_charge_category_custom/room_charge_category_custom.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/room_charge_category_custom/room_charge_category_custom.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -442,7 +442,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load('xeditable').then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/room_charge_category_custom/room_charge_category_custom.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/room_charge_category_custom/room_charge_category_custom.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -456,7 +456,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load('xeditable').then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/room_charge_category_custom/room_charge_category_custom.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/room_charge_category_custom/room_charge_category_custom.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -470,7 +470,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load('xeditable').then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/room_charge_category_custom/room_charge_category_custom.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/room_charge_category_custom/room_charge_category_custom.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -484,7 +484,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('tpl/room_charge_category_item/room_charge_category_item.js?v='+APP_VERSION);
+                            return $ocLazyLoad.load('tpl/room_charge_category_item/room_charge_category_item.js?v=' + APP_VERSION);
                         }]
                 }
             })
@@ -494,7 +494,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/room_charge_category_item/room_charge_category_item.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/room_charge_category_item/room_charge_category_item.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -504,7 +504,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/room_charge_category_item/room_charge_category_item.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/room_charge_category_item/room_charge_category_item.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -517,7 +517,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load('smart-table').then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/room_type/room_type.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/room_type/room_type.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -529,7 +529,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/room_type/room_type.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/room_type/room_type.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -539,7 +539,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/room_type/room_type.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/room_type/room_type.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -551,7 +551,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('tpl/room/room.js?v='+APP_VERSION);
+                            return $ocLazyLoad.load('tpl/room/room.js?v=' + APP_VERSION);
                         }]
                 }
             })
@@ -561,7 +561,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/room/room.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/room/room.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -571,7 +571,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/room/room.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/room/room.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -581,7 +581,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/room/room.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/room/room.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -594,7 +594,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load('smart-table').then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/room_charge/room_charge.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/room_charge/room_charge.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -606,7 +606,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/room_charge/room_charge.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/room_charge/room_charge.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -616,7 +616,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/room_charge/room_charge.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/room_charge/room_charge.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -629,7 +629,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['smart-table']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/room_types_rooms/room_types_rooms.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/room_types_rooms/room_types_rooms.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -641,7 +641,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/room_types_rooms/room_types_rooms.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/room_types_rooms/room_types_rooms.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -653,7 +653,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('tpl/specialities/speciality.js?v='+APP_VERSION);
+                            return $ocLazyLoad.load('tpl/specialities/speciality.js?v=' + APP_VERSION);
                         }]
                 }
             })
@@ -663,7 +663,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/specialities/speciality.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/specialities/speciality.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -673,7 +673,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/specialities/speciality.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/specialities/speciality.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -684,7 +684,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('tpl/countries/countries.js?v='+APP_VERSION);
+                            return $ocLazyLoad.load('tpl/countries/countries.js?v=' + APP_VERSION);
                         }]
                 }
             })
@@ -694,7 +694,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/countries/countries.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/countries/countries.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -704,7 +704,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/countries/countries.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/countries/countries.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -715,7 +715,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('tpl/states/states.js?v='+APP_VERSION);
+                            return $ocLazyLoad.load('tpl/states/states.js?v=' + APP_VERSION);
                         }]
                 }
             })
@@ -725,7 +725,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/states/states.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/states/states.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -735,7 +735,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/states/states.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/states/states.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -746,7 +746,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('tpl/cities/cities.js?v='+APP_VERSION);
+                            return $ocLazyLoad.load('tpl/cities/cities.js?v=' + APP_VERSION);
                         }]
                 }
             })
@@ -756,7 +756,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/cities/cities.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/cities/cities.js?v=' + APP_VERSION]);
                         }]
 
                 }
@@ -767,7 +767,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/cities/cities.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/cities/cities.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -778,7 +778,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('tpl/alerts/alerts.js?v='+APP_VERSION);
+                            return $ocLazyLoad.load('tpl/alerts/alerts.js?v=' + APP_VERSION);
                         }]
                 }
             })
@@ -788,7 +788,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/alerts/alerts.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/alerts/alerts.js?v=' + APP_VERSION]);
                         }]
 
                 }
@@ -799,7 +799,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/alerts/alerts.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/alerts/alerts.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -811,7 +811,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('tpl/patient_categories/patient_category.js?v='+APP_VERSION);
+                            return $ocLazyLoad.load('tpl/patient_categories/patient_category.js?v=' + APP_VERSION);
                         }]
                 }
             })
@@ -823,7 +823,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load('smart-table').then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/patient_categories/patient_category.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/patient_categories/patient_category.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -835,7 +835,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/patient_categories/patient_category.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/patient_categories/patient_category.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -848,7 +848,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['xeditable']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/charge_per_category/charge_per_category.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/charge_per_category/charge_per_category.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -862,7 +862,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['xeditable', 'smart-table']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/charge_per_category/charge_per_category.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/charge_per_category/charge_per_category.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -876,7 +876,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['xeditable', 'smart-table']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/charge_per_category/charge_per_category.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/charge_per_category/charge_per_category.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -890,7 +890,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/internal_code/internal_code.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/internal_code/internal_code.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -904,7 +904,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['xeditable']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/doctor_schedule/doctor_schedule.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/doctor_schedule/doctor_schedule.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -918,7 +918,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load('xeditable').then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/doctor_schedule/doctor_schedule.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/doctor_schedule/doctor_schedule.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -932,7 +932,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('tpl/patient_groups/patient_groups.js?v='+APP_VERSION);
+                            return $ocLazyLoad.load('tpl/patient_groups/patient_groups.js?v=' + APP_VERSION);
                         }]
                 }
             })
@@ -942,7 +942,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/patient_groups/patient_groups.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/patient_groups/patient_groups.js?v=' + APP_VERSION]);
                         }]
 
                 }
@@ -953,7 +953,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/patient_groups/patient_groups.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/patient_groups/patient_groups.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -971,10 +971,10 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                     deps: ['uiLoad',
                         function (uiLoad) {
                             return uiLoad.load([
-                                'tpl/patient_registration/patient_registration.js?v='+APP_VERSION,
-                                'tpl/modal_form/modal.country.js?v='+APP_VERSION,
-                                'tpl/modal_form/modal.state.js?v='+APP_VERSION,
-                                'tpl/modal_form/modal.city.js?v='+APP_VERSION
+                                'tpl/patient_registration/patient_registration.js?v=' + APP_VERSION,
+                                'tpl/modal_form/modal.country.js?v=' + APP_VERSION,
+                                'tpl/modal_form/modal.state.js?v=' + APP_VERSION,
+                                'tpl/modal_form/modal.city.js?v=' + APP_VERSION
                             ]);
                         }]
                 }
@@ -986,7 +986,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/patient/patient.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/patient/patient.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -997,7 +997,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/patient/patient_update.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/patient/patient_update.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -1008,7 +1008,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/patient/patient_casesheet.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/patient/patient_casesheet.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -1023,7 +1023,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['smart-table', 'xeditable']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/patient_encounter/encounter.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/patient_encounter/encounter.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -1038,7 +1038,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load('smart-table').then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/patient_appointment/patient_appointment.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/patient_appointment/patient_appointment.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -1054,7 +1054,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load('smart-table').then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/patient_admission/patient_admission.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/patient_admission/patient_admission.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -1070,7 +1070,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load('smart-table').then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/patient_admission/patient_admission.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/patient_admission/patient_admission.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -1086,7 +1086,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load('smart-table').then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/patient_admission/patient_admission.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/patient_admission/patient_admission.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -1102,7 +1102,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load('smart-table').then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/patient_admission/patient_admission.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/patient_admission/patient_admission.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -1119,9 +1119,9 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                             return $ocLazyLoad.load(['smart-table', 'ui.select']).then(
                                     function () {
                                         return $ocLazyLoad.load([
-                                            'tpl/in_patients/in_patients.js?v='+APP_VERSION,
-                                            'tpl/modal_form/modal.patient_consultant_visit.js?v='+APP_VERSION,
-                                            'tpl/modal_form/modal.patient_procedures.js?v='+APP_VERSION
+                                            'tpl/in_patients/in_patients.js?v=' + APP_VERSION,
+                                            'tpl/modal_form/modal.patient_consultant_visit.js?v=' + APP_VERSION,
+                                            'tpl/modal_form/modal.patient_procedures.js?v=' + APP_VERSION
                                         ]);
                                     }
                             );
@@ -1142,8 +1142,8 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                             return $ocLazyLoad.load(['smart-table', 'xeditable']).then(
                                     function () {
                                         return $ocLazyLoad.load([
-                                            'tpl/out_patients/out_patients.js?v='+APP_VERSION,
-                                            'tpl/modal_form/modal.patient_appointment_reschedule.js?v='+APP_VERSION
+                                            'tpl/out_patients/out_patients.js?v=' + APP_VERSION,
+                                            'tpl/modal_form/modal.patient_appointment_reschedule.js?v=' + APP_VERSION
                                         ]);
                                     }
                             );
@@ -1158,7 +1158,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/patient_admission/patient_admission.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/patient_admission/patient_admission.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -1172,7 +1172,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['smart-table', 'ui.select']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/patient_procedure/procedure.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/patient_procedure/procedure.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -1187,7 +1187,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['smart-table', 'ui.select']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/patient_procedure/procedure.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/patient_procedure/procedure.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -1202,7 +1202,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['smart-table', 'ui.select']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/patient_procedure/procedure.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/patient_procedure/procedure.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -1219,8 +1219,8 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                             return $ocLazyLoad.load(['smart-table', 'ui.select']).then(
                                     function () {
                                         return $ocLazyLoad.load([
-                                            'tpl/patient_appointment/patient_appointment.js?v='+APP_VERSION,
-                                            'tpl/modal_form/modal.patient_future_appointment.js?v='+APP_VERSION
+                                            'tpl/patient_appointment/patient_appointment.js?v=' + APP_VERSION,
+                                            'tpl/modal_form/modal.patient_future_appointment.js?v=' + APP_VERSION
                                         ]);
                                     }
                             );
@@ -1237,7 +1237,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['smart-table', 'ui.select']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/patient_appointment/patient_appointment.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/patient_appointment/patient_appointment.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -1254,7 +1254,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['xeditable', 'smart-table']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/patient_alert/patient_alert.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/patient_alert/patient_alert.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -1268,7 +1268,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/patient_alert/patient_alert.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/patient_alert/patient_alert.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -1280,7 +1280,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/patient_alert/patient_alert.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/patient_alert/patient_alert.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -1295,7 +1295,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['smart-table']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/patient_notes/patient_notes.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/patient_notes/patient_notes.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -1309,7 +1309,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/patient_notes/patient_notes.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/patient_notes/patient_notes.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -1321,7 +1321,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/patient_notes/patient_notes.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/patient_notes/patient_notes.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -1333,7 +1333,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/patient_notes/patient_notes.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/patient_notes/patient_notes.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -1348,7 +1348,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['smart-table', 'ui.select']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/patient_consultant/patient_consultant.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/patient_consultant/patient_consultant.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -1362,7 +1362,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/patient_consultant/patient_consultant.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/patient_consultant/patient_consultant.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -1374,7 +1374,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/patient_consultant/patient_consultant.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/patient_consultant/patient_consultant.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -1394,7 +1394,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['smart-table']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/pharmacy_brand/pharmacy_brand.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/pharmacy_brand/pharmacy_brand.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -1407,7 +1407,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/pharmacy_brand/pharmacy_brand.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/pharmacy_brand/pharmacy_brand.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -1419,7 +1419,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/pharmacy_brand/pharmacy_brand.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/pharmacy_brand/pharmacy_brand.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -1433,7 +1433,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['smart-table']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/pharmacy_brandrep/pharmacy_brandrep.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/pharmacy_brandrep/pharmacy_brandrep.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -1447,7 +1447,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/pharmacy_brandrep/pharmacy_brandrep.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/pharmacy_brandrep/pharmacy_brandrep.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -1459,7 +1459,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/pharmacy_brandrep/pharmacy_brandrep.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/pharmacy_brandrep/pharmacy_brandrep.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -1472,7 +1472,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['smart-table']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/pharmacy_brand_division/pharmacy_brand_division.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/pharmacy_brand_division/pharmacy_brand_division.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -1485,7 +1485,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/pharmacy_brand_division/pharmacy_brand_division.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/pharmacy_brand_division/pharmacy_brand_division.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -1497,7 +1497,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/pharmacy_brand_division/pharmacy_brand_division.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/pharmacy_brand_division/pharmacy_brand_division.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -1511,7 +1511,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['smart-table']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/pharmacy_drugclass/pharmacy_drugclass.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/pharmacy_drugclass/pharmacy_drugclass.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -1524,7 +1524,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/pharmacy_drugclass/pharmacy_drugclass.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/pharmacy_drugclass/pharmacy_drugclass.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -1536,7 +1536,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/pharmacy_drugclass/pharmacy_drugclass.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/pharmacy_drugclass/pharmacy_drugclass.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -1550,7 +1550,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['smart-table']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/pharmacy_generic_name/pharmacy_generic_name.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/pharmacy_generic_name/pharmacy_generic_name.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -1564,7 +1564,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/pharmacy_generic_name/pharmacy_generic_name.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/pharmacy_generic_name/pharmacy_generic_name.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -1576,7 +1576,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/pharmacy_generic_name/pharmacy_generic_name.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/pharmacy_generic_name/pharmacy_generic_name.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -1590,7 +1590,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['smart-table']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/pharmacy_routes/pharmacy_routes.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/pharmacy_routes/pharmacy_routes.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -1603,7 +1603,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/pharmacy_routes/pharmacy_routes.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/pharmacy_routes/pharmacy_routes.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -1614,7 +1614,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/pharmacy_routes/pharmacy_routes.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/pharmacy_routes/pharmacy_routes.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -1628,7 +1628,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['smart-table']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/pharmacy_prodesc/pharmacy_prodesc.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/pharmacy_prodesc/pharmacy_prodesc.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -1641,7 +1641,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/pharmacy_prodesc/pharmacy_prodesc.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/pharmacy_prodesc/pharmacy_prodesc.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -1653,7 +1653,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/pharmacy_prodesc/pharmacy_prodesc.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/pharmacy_prodesc/pharmacy_prodesc.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -1666,7 +1666,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['smart-table']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/pharmacy_packing_unit/pharmacy_packing_unit.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/pharmacy_packing_unit/pharmacy_packing_unit.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -1680,7 +1680,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/pharmacy_packing_unit/pharmacy_packing_unit.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/pharmacy_packing_unit/pharmacy_packing_unit.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -1692,7 +1692,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/pharmacy_packing_unit/pharmacy_packing_unit.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/pharmacy_packing_unit/pharmacy_packing_unit.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -1706,7 +1706,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['smart-table']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/pharmacy_supplier/pharmacy_supplier.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/pharmacy_supplier/pharmacy_supplier.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -1720,7 +1720,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/pharmacy_supplier/pharmacy_supplier.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/pharmacy_supplier/pharmacy_supplier.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -1732,7 +1732,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/pharmacy_supplier/pharmacy_supplier.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/pharmacy_supplier/pharmacy_supplier.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -1746,7 +1746,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['smart-table']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/pharmacy_vat/pharmacy_vat.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/pharmacy_vat/pharmacy_vat.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -1759,7 +1759,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/pharmacy_vat/pharmacy_vat.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/pharmacy_vat/pharmacy_vat.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -1771,7 +1771,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/pharmacy_vat/pharmacy_vat.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/pharmacy_vat/pharmacy_vat.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -1785,7 +1785,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load('xeditable').then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/pharmacy_drug_generic/pharmacy_drug_generic.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/pharmacy_drug_generic/pharmacy_drug_generic.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -1800,7 +1800,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load('xeditable').then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/pharmacy_drug_generic/pharmacy_drug_generic.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/pharmacy_drug_generic/pharmacy_drug_generic.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -1816,7 +1816,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load('xeditable').then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/pharmacy_drug_generic/pharmacy_drug_generic.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/pharmacy_drug_generic/pharmacy_drug_generic.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -1833,8 +1833,8 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                             return $ocLazyLoad.load('xeditable').then(
                                     function () {
                                         return $ocLazyLoad.load([
-                                            'tpl/pharmacy_purchase/pharmacy_purchase.js?v='+APP_VERSION,
-                                            'tpl/modal_form/modal.supplier.js?v='+APP_VERSION
+                                            'tpl/pharmacy_purchase/pharmacy_purchase.js?v=' + APP_VERSION,
+                                            'tpl/modal_form/modal.supplier.js?v=' + APP_VERSION
                                         ]);
                                     }
                             );
@@ -1851,7 +1851,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load('xeditable').then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/pharmacy_purchase/pharmacy_purchase.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/pharmacy_purchase/pharmacy_purchase.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -1868,8 +1868,8 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                             return $ocLazyLoad.load('xeditable').then(
                                     function () {
                                         return $ocLazyLoad.load([
-                                            'tpl/pharmacy_purchase/pharmacy_purchase.js?v='+APP_VERSION,
-                                            'tpl/pharmacy_purchase/purchase_make_payment.js?v='+APP_VERSION,
+                                            'tpl/pharmacy_purchase/pharmacy_purchase.js?v=' + APP_VERSION,
+                                            'tpl/pharmacy_purchase/purchase_make_payment.js?v=' + APP_VERSION,
                                         ]);
                                     }
                             );
@@ -1886,7 +1886,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load('xeditable').then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/pharmacy_purchase_return/pharmacy_purchase_return.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/pharmacy_purchase_return/pharmacy_purchase_return.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -1902,7 +1902,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load('xeditable').then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/pharmacy_purchase_return/pharmacy_purchase_return.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/pharmacy_purchase_return/pharmacy_purchase_return.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -1918,7 +1918,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load('xeditable').then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/pharmacy_purchase_return/pharmacy_purchase_return.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/pharmacy_purchase_return/pharmacy_purchase_return.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -1932,7 +1932,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load(['tpl/pharmacy_products/pharmacy_products.js?v='+APP_VERSION]);
+                            return $ocLazyLoad.load(['tpl/pharmacy_products/pharmacy_products.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -1944,14 +1944,14 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                     deps: ['uiLoad',
                         function (uiLoad) {
                             return uiLoad.load([
-                                'tpl/pharmacy_products/pharmacy_products.js?v='+APP_VERSION,
-                                'tpl/modal_form/modal.description.js?v='+APP_VERSION,
-                                'tpl/modal_form/modal.brand.js?v='+APP_VERSION,
-                                'tpl/modal_form/modal.division.js?v='+APP_VERSION,
-                                'tpl/modal_form/modal.generic.js?v='+APP_VERSION,
-                                'tpl/modal_form/modal.vat.js?v='+APP_VERSION,
-                                'tpl/modal_form/modal.package.js?v='+APP_VERSION,
-                                'tpl/modal_form/modal.supplier.js?v='+APP_VERSION,
+                                'tpl/pharmacy_products/pharmacy_products.js?v=' + APP_VERSION,
+                                'tpl/modal_form/modal.description.js?v=' + APP_VERSION,
+                                'tpl/modal_form/modal.brand.js?v=' + APP_VERSION,
+                                'tpl/modal_form/modal.division.js?v=' + APP_VERSION,
+                                'tpl/modal_form/modal.generic.js?v=' + APP_VERSION,
+                                'tpl/modal_form/modal.vat.js?v=' + APP_VERSION,
+                                'tpl/modal_form/modal.package.js?v=' + APP_VERSION,
+                                'tpl/modal_form/modal.supplier.js?v=' + APP_VERSION,
                             ]);
                         }]
                 }
@@ -1963,7 +1963,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/pharmacy_products/pharmacy_products.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/pharmacy_products/pharmacy_products.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -1978,8 +1978,8 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                             return $ocLazyLoad.load('xeditable').then(
                                     function () {
                                         return $ocLazyLoad.load([
-                                            'tpl/pharmacy_sale/pharmacy_sale.js?v='+APP_VERSION,
-                                            'tpl/pharmacy_sale/sale_make_payment.js?v='+APP_VERSION,
+                                            'tpl/pharmacy_sale/pharmacy_sale.js?v=' + APP_VERSION,
+                                            'tpl/pharmacy_sale/sale_make_payment.js?v=' + APP_VERSION,
                                         ]);
                                     }
                             );
@@ -1996,7 +1996,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load('xeditable').then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/pharmacy_sale/pharmacy_sale.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/pharmacy_sale/pharmacy_sale.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -2012,7 +2012,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load('xeditable').then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/pharmacy_sale/pharmacy_sale.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/pharmacy_sale/pharmacy_sale.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -2028,7 +2028,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['xeditable', 'smart-table']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/pharmacy_stock/pharmacy_stock.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/pharmacy_stock/pharmacy_stock.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -2044,7 +2044,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load('xeditable').then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/pharmacy_sale_return/pharmacy_sale_return.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/pharmacy_sale_return/pharmacy_sale_return.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -2060,7 +2060,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load('xeditable').then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/pharmacy_sale_return/pharmacy_sale_return.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/pharmacy_sale_return/pharmacy_sale_return.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -2076,7 +2076,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load('xeditable').then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/pharmacy_sale_return/pharmacy_sale_return.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/pharmacy_sale_return/pharmacy_sale_return.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -2092,7 +2092,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['xeditable', 'smart-table']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/pharmacy_stock/pharmacy_stock.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/pharmacy_stock/pharmacy_stock.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -2108,7 +2108,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['xeditable', 'smart-table']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/pharmacy_report/report.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/pharmacy_report/report.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -2124,7 +2124,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['xeditable']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/patient_groups/patient_groups.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/patient_groups/patient_groups.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -2142,7 +2142,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                             return $ocLazyLoad.load(['smart-table', 'ui.select']).then(
                                     function () {
                                         return $ocLazyLoad.load([
-                                            'tpl/patient_billing/patient_billing.js?v='+APP_VERSION,
+                                            'tpl/patient_billing/patient_billing.js?v=' + APP_VERSION,
                                         ]);
                                     }
                             );
@@ -2161,9 +2161,9 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                             return $ocLazyLoad.load(['smart-table', 'ui.select']).then(
                                     function () {
                                         return $ocLazyLoad.load([
-                                            'tpl/patient_billing/patient_billing.js?v='+APP_VERSION,
-                                            'tpl/modal_form/modal.password_auth.js?v='+APP_VERSION,
-                                            'tpl/modal_form/modal.print_bill.js?v='+APP_VERSION,
+                                            'tpl/patient_billing/patient_billing.js?v=' + APP_VERSION,
+                                            'tpl/modal_form/modal.password_auth.js?v=' + APP_VERSION,
+                                            'tpl/modal_form/modal.print_bill.js?v=' + APP_VERSION,
                                         ]);
                                     }
                             );
@@ -2178,7 +2178,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/patient_payment/patient_payment.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/patient_payment/patient_payment.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -2190,7 +2190,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/patient_payment/patient_payment.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/patient_payment/patient_payment.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -2202,7 +2202,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/patient_other_charges/patient_other_charges.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/patient_other_charges/patient_other_charges.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -2213,7 +2213,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/patient_other_charges/patient_other_charges.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/patient_other_charges/patient_other_charges.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -2228,7 +2228,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/patient_extra_concession/patient_extra_concession.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/patient_extra_concession/patient_extra_concession.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -2242,7 +2242,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/patient_extra_concession/patient_extra_concession.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/patient_extra_concession/patient_extra_concession.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -2257,7 +2257,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/patient_extra_concession/patient_extra_concession.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/patient_extra_concession/patient_extra_concession.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -2271,7 +2271,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/patient_extra_concession/patient_extra_concession.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/patient_extra_concession/patient_extra_concession.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -2283,7 +2283,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/patient_billing/patient_billing.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/patient_billing/patient_billing.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -2296,7 +2296,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/patient/timeline.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/patient/timeline.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -2312,7 +2312,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                             return $ocLazyLoad.load(['smart-table', 'ui.select', 'xeditable']).then(
                                     function () {
                                         return $ocLazyLoad.load([
-                                            'tpl/patient_prescription/patient_prescription.js?v='+APP_VERSION
+                                            'tpl/patient_prescription/patient_prescription.js?v=' + APP_VERSION
                                         ]);
                                     }
                             );
@@ -2330,7 +2330,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['smart-table']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/patient_vitals/patient_vitals.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/patient_vitals/patient_vitals.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -2344,7 +2344,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/patient_vitals/patient_vitals.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/patient_vitals/patient_vitals.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -2356,7 +2356,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/patient_vitals/patient_vitals.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/patient_vitals/patient_vitals.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -2370,7 +2370,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['xeditable', 'smart-table']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/organization/org.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/organization/org.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -2388,8 +2388,8 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                             return $ocLazyLoad.load(['xeditable', 'smart-table']).then(
                                     function () {
                                         return $ocLazyLoad.load([
-                                            'tpl/organization/org.js?v='+APP_VERSION,
-                                            'tpl/modal_form/modal.pharmacy_purchase_import_errorlog.js?v='+APP_VERSION
+                                            'tpl/organization/org.js?v=' + APP_VERSION,
+                                            'tpl/modal_form/modal.pharmacy_purchase_import_errorlog.js?v=' + APP_VERSION
                                         ]);
                                     }
                             );
@@ -2406,14 +2406,14 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                     deps: ['$ocLazyLoad', 'uiLoad',
                         function ($ocLazyLoad, uiLoad) {
                             return uiLoad.load(
-                                    JQ_CONFIG.fullcalendar.concat('tpl/future_appointment/future_appointment_calender.js?v='+APP_VERSION)
+                                    JQ_CONFIG.fullcalendar.concat('tpl/future_appointment/future_appointment_calender.js?v=' + APP_VERSION)
                                     ).then(
                                     function () {
                                         return $ocLazyLoad.load([
                                             'xeditable',
                                             'ui.calendar',
-                                            'tpl/modal_form/modal.patient_appointment.js?v='+APP_VERSION,
-                                            'tpl/out_patients/out_patients.js?v='+APP_VERSION
+                                            'tpl/modal_form/modal.patient_appointment.js?v=' + APP_VERSION,
+                                            'tpl/out_patients/out_patients.js?v=' + APP_VERSION
                                         ]);
                                     }
                             )
@@ -2431,8 +2431,8 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                             return $ocLazyLoad.load(['smart-table']).then(
                                     function () {
                                         return $ocLazyLoad.load([
-                                            'tpl/future_appointment/future_appointment.js?v='+APP_VERSION,
-                                            'tpl/modal_form/modal.patient_appointment_reschedule.js?v='+APP_VERSION
+                                            'tpl/future_appointment/future_appointment.js?v=' + APP_VERSION,
+                                            'tpl/modal_form/modal.patient_appointment_reschedule.js?v=' + APP_VERSION
                                         ]);
                                     }
                             );
@@ -2448,7 +2448,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/patient_documents/patient_documents.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/patient_documents/patient_documents.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -2460,8 +2460,8 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                     deps: ['uiLoad',
                         function (uiLoad) {
                             return uiLoad.load([
-                                'ckeditor/ckeditor.js?v='+APP_VERSION,
-                                'tpl/patient_documents/patient_documents.js?v='+APP_VERSION
+                                'ckeditor/ckeditor.js?v=' + APP_VERSION,
+                                'tpl/patient_documents/patient_documents.js?v=' + APP_VERSION
                             ]);
                         }]
                 }
@@ -2474,8 +2474,8 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                     deps: ['uiLoad',
                         function (uiLoad) {
                             return uiLoad.load([
-                                'ckeditor/ckeditor.js?v='+APP_VERSION,
-                                'tpl/patient_documents/patient_documents.js?v='+APP_VERSION
+                                'ckeditor/ckeditor.js?v=' + APP_VERSION,
+                                'tpl/patient_documents/patient_documents.js?v=' + APP_VERSION
                             ]);
                         }]
                 }
@@ -2487,7 +2487,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/patient_documents/patient_documents.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/patient_documents/patient_documents.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -2501,7 +2501,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load('angularFileUpload').then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/patient_scanned_documents/patient_scanned_documents.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/patient_scanned_documents/patient_scanned_documents.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -2517,7 +2517,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load('textAngular').then(
                                     function () {
-                                        return $ocLazyLoad.load(['tpl/patient_other_documents/patient_other_documents.js?v='+APP_VERSION]);
+                                        return $ocLazyLoad.load(['tpl/patient_other_documents/patient_other_documents.js?v=' + APP_VERSION]);
                                     }
                             );
                         }]
@@ -2532,7 +2532,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load('textAngular').then(
                                     function () {
-                                        return $ocLazyLoad.load(['tpl/patient_other_documents/patient_other_documents.js?v='+APP_VERSION]);
+                                        return $ocLazyLoad.load(['tpl/patient_other_documents/patient_other_documents.js?v=' + APP_VERSION]);
                                     }
                             );
                         }]
@@ -2545,7 +2545,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/patient_other_documents/patient_other_documents.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/patient_other_documents/patient_other_documents.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -2558,7 +2558,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/patient_share/patient_share.js?v='+APP_VERSION]);
+                            return uiLoad.load(['tpl/patient_share/patient_share.js?v=' + APP_VERSION]);
                         }]
                 }
             })
@@ -2572,7 +2572,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load('xeditable').then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/pharmacy_reorder/pharmacy_reorder.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/pharmacy_reorder/pharmacy_reorder.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -2588,7 +2588,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load('xeditable').then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/pharmacy_reorder/pharmacy_reorder.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/pharmacy_reorder/pharmacy_reorder.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -2610,7 +2610,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['xeditable', 'smart-table']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/myworks/myworks.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/myworks/myworks.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -2625,7 +2625,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['smart-table']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/myworks_report/opdoctorpay.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/myworks_report/opdoctorpay.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -2640,7 +2640,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['smart-table']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/myworks_report/ipBillStatus.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/myworks_report/ipBillStatus.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -2655,7 +2655,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['smart-table']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/myworks_report/dischargedPatientBills.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/myworks_report/dischargedPatientBills.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -2670,7 +2670,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['smart-table']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/myworks_report/ipDoctorsPay.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/myworks_report/ipDoctorsPay.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -2686,7 +2686,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['smart-table']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/myworks/patient_merge.js?v='+APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/myworks/patient_merge.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
@@ -2788,6 +2788,5 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
                 }
             }
         }
-
     });
 }
