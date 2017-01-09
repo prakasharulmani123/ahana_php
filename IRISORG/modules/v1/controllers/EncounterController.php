@@ -228,9 +228,10 @@ class EncounterController extends ActiveController {
                             return 'all';
                         }]));
 
-            $activeEncounter = PatPatient::getActiveEncounterByPatientGuid($GET['id']);
+//            $activeEncounter = PatPatient::getActiveEncounterByPatientGuid($GET['id']);
 
-            return ['success' => true, 'encounters' => $encounters, 'activeEncounter' => $activeEncounter ? $activeEncounter : false];
+            return ['success' => true, 'encounters' => $encounters];
+//            return ['success' => true, 'encounters' => $encounters, 'activeEncounter' => $activeEncounter ? $activeEncounter : false];
         } else {
             return ['success' => false, 'message' => 'Invalid Access'];
         }
