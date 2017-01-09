@@ -63,55 +63,65 @@ class PatientvitalsController extends ActiveController {
         }
     }
 
-    public function actionGetpatientvitals(){
-        $get = Yii::$app->getRequest()->get();
+    public function actionGetpatientvitals() {
+        $GET = Yii::$app->getRequest()->get();
         $user_id = Yii::$app->user->identity->user->user_id;
-        
-        if(!empty($get)){
-            $patient = PatPatient::getPatientByGuid($get['patient_id']);
-            
-            $condition = [
-                'patient_id' => $patient->patient_id,
-            ];
-            
-            if (isset($get['date'])) {
-                $condition = [
-                    'patient_id' => $patient->patient_id,
-                    'DATE(vital_time)' => $get['date'],
-                ];
-            }
-            
-            $result = [];
-            $data = PatVitals::find()
-                    ->tenant()
-                    ->active()
-                    ->status()
-                    ->andWhere($condition)
-                    ->groupBy('encounter_id')
-                    ->orderBy(['encounter_id' => SORT_DESC])
-                    ->all();
 
-            foreach ($data as $key => $value) {
-                $details = PatVitals::find()
+        if (!empty($GET)) {
+            $patient = PatPatient::getPatientByGuid($GET['patient_id']);
+            $only = $result = $uservitals = [];
+            $HaveActEnc = false;
+            if (isset($GET['only'])) {
+                $only = explode(',', $GET['only']);
+            }
+
+
+            $condition['patient_id'] = $patient->patient_id;
+            if (isset($GET['date'])) {
+                $condition['DATE(vital_time)'] = $GET['date'];
+            }
+            if (!$only || in_array('result', $only)) {
+                $data = PatVitals::find()
                         ->tenant()
                         ->active()
                         ->status()
                         ->andWhere($condition)
-                        ->andWhere(['encounter_id' => $value->encounter_id])
-                        ->orderBy(['vital_id' => SORT_DESC])
+//                    ->groupBy('encounter_id')
+                        ->orderBy(['encounter_id' => SORT_DESC, 'vital_id' => SORT_DESC])
                         ->all();
-                $result[$key] = ['data' => $value, 'all' => $details];
+
+                $result = array_values(\yii\helpers\ArrayHelper::index($data, null, ['encounter_id', function($element) {
+                                return 'all';
+                            }]));
             }
-            
-            $uservitals = PatVitalsUsers::find()
-                    ->tenant()
-                    ->andWhere(['user_id' => $user_id, 'seen' => '0', 'patient_id' => $patient->patient_id])
-                    ->all();
-            
-            return ['success' => true, 'result' => $result, 'uservitals' => $uservitals];
+
+            if (!$only || in_array('actenc', $only)) {
+                $HaveActEnc = (bool) $patient->patActiveEncounter;
+            }
+
+//            foreach ($data as $key => $value) {
+//                $details = PatVitals::find()
+//                        ->tenant()
+//                        ->active()
+//                        ->status()
+//                        ->andWhere($condition)
+//                        ->andWhere(['encounter_id' => $value->encounter_id])
+//                        ->orderBy(['vital_id' => SORT_DESC])
+//                        ->all();
+//                $result[$key] = ['data' => $value, 'all' => $details];
+//            }
+
+            if (!$only || in_array('uservitals', $only)) {
+                $uservitals = PatVitalsUsers::find()
+                        ->tenant()
+                        ->andWhere(['user_id' => $user_id, 'seen' => '0', 'patient_id' => $patient->patient_id])
+                        ->all();
+            }
+
+            return ['success' => true, 'result' => $result, 'uservitals' => $uservitals, 'HaveActEnc' => $HaveActEnc];
         }
     }
-    
+
     public function actionAssignvitals() {
         $post = Yii::$app->request->post();
         $user_id = Yii::$app->user->identity->user->user_id;
@@ -120,26 +130,27 @@ class PatientvitalsController extends ActiveController {
         $user = CoUser::find()->where(['user_id' => $user_id])->one();
         $patient = PatPatient::getPatientByGuid($post['patient_guid']);
         $vitals = PatVitals::find()->tenant()->andWhere(['patient_id' => $patient->patient_id])->andWhere("created_by != $user_id")->all();
-        
+
         $extraColumns = ['tenant_id' => $tenant_id, 'modified_by' => Yii::$app->user->identity->user_id, 'modified_at' => new Expression('NOW()'), 'patient_id' => $patient->patient_id]; // extra columns to be saved to the many to many table
         $unlink = true; // unlink tags not in the list
         $delete = true; // delete unlinked tags
         $user->linkAll('vitals', $vitals, $extraColumns, $unlink, $delete);
         return ['success' => true];
     }
-    
+
     public function actionSeenvitals() {
         $post = Yii::$app->request->post();
         $user_id = Yii::$app->user->identity->user->user_id;
         $ids = implode(',', $post['ids']);
-        
+
         $patient = PatPatient::getPatientByGuid($post['patient_guid']);
         $vitals = PatVitals::find()->tenant()->active()->andWhere(['patient_id' => $patient->patient_id])->orderBy(['created_at' => SORT_DESC])->all();
-        
+
         PatVitalsUsers::updateAll(['seen' => '1'], "user_id = :user_id AND vital_id IN ($ids) AND patient_id = :patient_id", [
-            ':user_id' => $user_id, 
+            ':user_id' => $user_id,
             ':patient_id' => $patient->patient_id
-            ]);
+        ]);
         return ['success' => true];
     }
+
 }

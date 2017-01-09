@@ -97,7 +97,7 @@ class PatVitals extends RActiveRecord {
     public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
-    
+
     /**
      * @return ActiveQuery
      */
@@ -111,18 +111,44 @@ class PatVitals extends RActiveRecord {
     public function getUsers() {
         return $this->hasMany(CoUser::className(), ['user_id' => 'user_id'])->via('vitalsUsers');
     }
-    
+
     public static function find() {
         return new PatVitalsQuery(get_called_class());
     }
-    
+
     public function fields() {
         $extend = [
             'encounter_status' => function ($model) {
                 return $model->encounter->isActiveEncounter();
             },
         ];
-        $fields = array_merge(parent::fields(), $extend);
-        return $fields;
+
+        $parent_fields = parent::fields();
+        $addt_keys = [];
+        if ($addtField = Yii::$app->request->get('addtfields')) {
+            switch ($addtField):
+                case 'eprvitals':
+                    $parent_fields = [
+                        'vital_id' => 'vital_id',
+                        'tenant_id' => 'tenant_id',
+                        'encounter_id' => 'encounter_id',
+                        'patient_id' => 'patient_id',
+                        'vital_time' => 'vital_time',
+                        'temperature' => 'temperature',
+                        'blood_pressure_systolic' => 'blood_pressure_systolic',
+                        'blood_pressure_diastolic' => 'blood_pressure_diastolic',
+                        'pulse_rate' => 'pulse_rate',
+                        'weight' => 'weight',
+                        'status' => 'status'
+                    ];
+                    $addt_keys = ['encounter_status'];
+                    break;
+            endswitch;
+        }
+
+        $extFields = ($addt_keys) ? array_intersect_key($extend, array_flip($addt_keys)) : $extend;
+
+        return array_merge($parent_fields, $extFields);
     }
+
 }

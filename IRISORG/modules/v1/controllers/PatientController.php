@@ -445,17 +445,38 @@ class PatientController extends ActiveController {
             }
             echo $filename;
         }
+        exit;
+    }
+
+    public function actionZerobytefile() {
+        $handle = opendir('images/uavatar/');
+        $directory = "images/uavatar/";
+        $images = glob($directory . "*.jpg");
+        $emptyImages = [];
+
+        $count = 0;
+        $emptyImages = '';
+        foreach ($images as $image) {
+            if (filesize($image) == 0) {
+                $fname = basename($image, ".jpg");
+                $emptyImages .= "'$fname',";
+                $count++;
+            }
+        }
+        echo trim($emptyImages,",");
+
+        exit;
     }
 
     protected function convertBlobToFile($base64_string, $gCode) {
         defined('DS') or define('DS', DIRECTORY_SEPARATOR);
         $filename = "{$gCode}.jpg";
-        $uploadPath = "images" . DS . "uavatar" . DS ;
+        $uploadPath = "images" . DS . "uavatar" . DS;
         if (!file_exists($uploadPath)) {
             mkdir($uploadPath, 0777, true);
         }
 
-        $output_file = $uploadPath.$filename;
+        $output_file = $uploadPath . $filename;
 
         $ifp = fopen($output_file, "wb");
         $data = explode(',', $base64_string);

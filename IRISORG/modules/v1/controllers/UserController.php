@@ -446,6 +446,7 @@ class UserController extends ActiveController {
     }
 
     public function actionGetswitchedbrancheslist() {
+        $GET = Yii::$app->getRequest()->get();
         $tenant_id = Yii::$app->user->identity->user->tenant_id;
         $org_id = Yii::$app->user->identity->user->org_id;
         if ($tenant_id == 0) {
@@ -454,12 +455,16 @@ class UserController extends ActiveController {
                     ->status()
                     ->andWhere(['org_id' => $org_id])
                     ->all();
-            return ['success' => true, 'branches' => $branches, 'default_branch' => Yii::$app->user->identity->logged_tenant_id];
         } else {
             $user_id = Yii::$app->user->identity->user->user_id;
             $branches = CoUsersBranches::find()->andWhere(['user_id' => $user_id])->all();
-            return ['success' => true, 'branches' => $branches, 'default_branch' => Yii::$app->user->identity->logged_tenant_id];
         }
+
+        if(isset($GET['map'])){
+            $map = explode(',', $GET['map']);
+            $branches = ArrayHelper::map($branches, $map[0], $map[1]);
+        }
+        return ['success' => true, 'branches' => $branches, 'default_branch' => strval(Yii::$app->user->identity->logged_tenant_id)];
     }
 
     public function actionGetdoctorslist() {
