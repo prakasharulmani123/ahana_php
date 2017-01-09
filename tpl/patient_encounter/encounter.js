@@ -27,6 +27,9 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
             $scope.rowCollection = [];  // base collection
 //            $scope.itemsByPage = 10; // No.of records per page
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
+            $scope.activeEncounter = null;
+            $scope.activeOPEncounter = [];
+            $scope.activeIPEncounter = [];
 
             if (typeof date == 'undefined') {
                 url = $rootScope.IRISOrgServiceUrl + '/encounter/getencounters?addtfields=eprencounter&id=' + $state.params.id + '&type=' + type;
@@ -60,24 +63,20 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                                         row.date = data.date;
                                         row.status = data.status;
                                     }
+                                    if (!$scope.activeEncounter && data.status == '1') {
+                                        $scope.activeEncounter = data;
+                                        if (data.encounter_type == 'OP') {
+                                            $scope.activeOPEncounter = $scope.activeEncounter;
+                                        } else if (data.encounter_type == 'IP') {
+                                            $scope.activeIPEncounter = $scope.activeEncounter;
+                                        }
+                                    }
                                     row.last_row_sts = data.row_sts;
                                 });
                             });
 
-                            $scope.activeEncounter = response.activeEncounter;
                             $scope.displayedCollection = [].concat($scope.rowCollection);
                             $scope.more_li = {};
-                            $scope.activeOPEncounter = [];
-                            $scope.activeIPEncounter = [];
-
-                            if ($scope.activeEncounter) {
-                                var actEncType = $scope.activeEncounter.encounter_type;
-                                if (actEncType == 'OP') {
-                                    $scope.activeOPEncounter = $scope.activeEncounter;
-                                } else if (actEncType == 'IP') {
-                                    $scope.activeIPEncounter = $scope.activeEncounter;
-                                }
-                            }
 
                             if (Object.keys($scope.activeOPEncounter).length == 0 && Object.keys($scope.activeIPEncounter).length == 0) {
                                 $scope.class1 = 'col-sm-3';
