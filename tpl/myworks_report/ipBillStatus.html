@@ -9,6 +9,19 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="panel panel-default">
+                    <div class="panel-body p-b">
+                        <div class="form-group">
+                            <ul>
+                                <li>Kindly select 'ALL' option for any one for the drop downs only</li>
+                                <li>If 'ALL' option is selected for both drop downs then either one will be reset to the option 'DESELECT ALL'</li>
+                                <li>Print mode is <b>"Landscape"</b></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="panel panel-default">
                     <div class="panel-body p-b form-horizontal">
                         <form role="form" class="form-inline" name="searchForm" novalidate>
                             <div class="form-group">
@@ -26,15 +39,15 @@
                 </div>
             </div>
             
-            <div class="col-sm-12" ng-if='showTable'>
+            <div class="col-sm-12" ng-if='showTable && records.length > 0'>
                 <span class="text-right">
                     <button class="btn btn-primary" ng-click="printReport()">
-                        <i class="fa fa-print"></i> Print
+                        <i class="fa fa-print"></i> Print <span ng-bind-html="printloader"></span>
                     </button>
                 </span>
             </div>
             
-            <div class="col-sm-12" ng-if='showTable'>
+            <div class="col-sm-12" ng-if='showTable && records.length > 0'>
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <div class="col-sm-6 m-b-xs">

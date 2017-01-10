@@ -54,7 +54,7 @@ app.controller('ipBillStatusController', ['$rootScope', '$scope', '$timeout', '$
         //Index Page
         $scope.loadReport = function () {
             $scope.records = [];
-            $scope.isLoading = true;
+            $scope.loadbar('show');
             $scope.showTable = true;
 
             $scope.errorData = "";
@@ -114,6 +114,7 @@ app.controller('ipBillStatusController', ['$rootScope', '$scope', '$timeout', '$
             };
         }
 
+        $scope.printloader = '';
         $scope.printContent = function () {
             var generated_on = $scope.generated_on;
             var generated_by = $scope.app.username;
@@ -189,21 +190,34 @@ app.controller('ipBillStatusController', ['$rootScope', '$scope', '$timeout', '$
                     pageBreak: (index === result_count ? '' : 'after'),
                 });
                 content.push(content_info);
+                if (index == result_count) {
+                    $scope.printloader = '';
+                }
                 index++;
             });
             return content;
         }
 
         $scope.printReport = function () {
-            var docDefinition = {
-                header: $scope.printHeader(),
-                footer: $scope.printFooter(),
-                styles: $scope.printStyle(),
-                content: $scope.printContent(),
-                pageMargins: ($scope.deviceDetector.browser == 'firefox' ? 75 : 50),
-                pageSize: 'A4',
-                pageOrientation: 'landscape',
-            };
-            pdfMake.createPdf(docDefinition).print();
+            $scope.printloader = '<i class="fa fa-spin fa-spinner"></i>';
+            $timeout(function () {
+                var print_content = $scope.printContent();
+                if (print_content.length > 0) {
+                    var docDefinition = {
+                        header: $scope.printHeader(),
+                        footer: $scope.printFooter(),
+                        styles: $scope.printStyle(),
+                        content: print_content,
+                        pageMargins: ($scope.deviceDetector.browser == 'firefox' ? 75 : 50),
+                        pageSize: 'A4',
+                        pageOrientation: 'landscape',
+                    };
+                    var pdf_document = pdfMake.createPdf(docDefinition);
+                    var doc_content_length = Object.keys(pdf_document).length;
+                    if(doc_content_length > 0) {
+                        pdf_document.print();
+                    }
+                }
+            }, 1000);
         }
     }]);

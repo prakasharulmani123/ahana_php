@@ -14,8 +14,13 @@ app.controller('ipDoctorsPay', ['$rootScope', '$scope', '$timeout', '$http', '$s
                     $scope.tenants = response.tenantList;
                 }
             });
-            $scope.data.from = moment().format('YYYY-MM-DD');
+            
+            $scope.data.consultant_id = '';
+            $scope.data.tenant_id = '';
             $scope.data.to = moment().format('YYYY-MM-DD');
+            $scope.data.from = moment($scope.data.to).add(-1, 'days').format('YYYY-MM-DD');
+            $scope.fromMaxDate = new Date($scope.data.to);
+            $scope.toMinDate = new Date($scope.data.from);
         }
 
         $scope.clearReport = function () {
@@ -27,6 +32,48 @@ app.controller('ipDoctorsPay', ['$rootScope', '$scope', '$timeout', '$http', '$s
             $scope.data.tenant_id = '';
         }
 
+        $scope.$watch('data.from', function (newValue, oldValue) {
+            if (newValue != '' && typeof newValue != 'undefined') {
+                $scope.toMinDate = new Date($scope.data.from);
+
+                if (!angular.isUndefined($scope.data.consultant_id)) {
+                    if ($scope.data.consultant_id.length == $scope.doctors.length) {
+                        $scope.data.to = moment($scope.data.from).add(+1, 'days').format('YYYY-MM-DD');
+                    } else if($scope.data.consultant_id.length > 2 && $scope.data.tenant_id.length != Object.keys($scope.tenants).length) {
+                        $scope.data.to = moment($scope.data.from).add(+6, 'days').format('YYYY-MM-DD');
+                    }
+                }
+
+                if (!angular.isUndefined($scope.data.tenant_id)) {
+                    if ($scope.data.tenant_id.length == Object.keys($scope.tenants).length) {
+                        $scope.data.to = moment($scope.data.from).add(+1, 'days').format('YYYY-MM-DD');
+                    } else if($scope.data.tenant_id.length > 2 && $scope.data.consultant_id.length != $scope.doctors.length) {
+                        $scope.data.to = moment($scope.data.from).add(+6, 'days').format('YYYY-MM-DD');
+                    }
+                }
+            }
+        }, true);
+        $scope.$watch('data.to', function (newValue, oldValue) {
+            if (newValue != '' && typeof newValue != 'undefined') {
+                $scope.fromMaxDate = new Date($scope.data.to);
+
+                if (!angular.isUndefined($scope.data.consultant_id)) {
+                    if ($scope.data.consultant_id.length == $scope.doctors.length) {
+                        $scope.data.from = moment($scope.data.to).add(-1, 'days').format('YYYY-MM-DD');
+                    } else if($scope.data.consultant_id.length > 2 && $scope.data.tenant_id.length != Object.keys($scope.tenants).length) {
+                        $scope.data.from = moment($scope.data.to).add(-6, 'days').format('YYYY-MM-DD');
+                    }
+                }
+
+                if (!angular.isUndefined($scope.data.tenant_id)) {
+                    if ($scope.data.tenant_id.length == Object.keys($scope.tenants).length) {
+                        $scope.data.from = moment($scope.data.to).add(-1, 'days').format('YYYY-MM-DD');
+                    } else if($scope.data.tenant_id.length > 2 && $scope.data.consultant_id.length != $scope.doctors.length) {
+                        $scope.data.from = moment($scope.data.to).add(-6, 'days').format('YYYY-MM-DD');
+                    }
+                }
+            }
+        }, true);
         $scope.$watch('data.consultant_id', function (newValue, oldValue) {
             if (newValue != '' && typeof newValue != 'undefined') {
                 if ($scope.data.consultant_id.length == $scope.doctors.length) {
@@ -36,8 +83,11 @@ app.controller('ipDoctorsPay', ['$rootScope', '$scope', '$timeout', '$http', '$s
                         var branch_wise_deselect_all = branch_wise_button.find(".bs-deselect-all");
                         branch_wise_deselect_all.click();
                         $('#get_report').attr("disabled", true);
-                        $scope.data.from = moment().add(-1, 'days').format('YYYY-MM-DD');
+
+                        $scope.data.from = moment($scope.data.to).add(-1, 'days').format('YYYY-MM-DD');
                     });
+                } else if($scope.data.consultant_id.length > 2 && $scope.data.tenant_id.length != Object.keys($scope.tenants).length) {
+                    $scope.data.from = moment($scope.data.to).add(-6, 'days').format('YYYY-MM-DD');
                 }
             }
         }, true);
@@ -51,8 +101,11 @@ app.controller('ipDoctorsPay', ['$rootScope', '$scope', '$timeout', '$http', '$s
                         var consultant_wise_deselect_all = consultant_wise_button.find(".bs-deselect-all");
                         consultant_wise_deselect_all.click();
                         $('#get_report').attr("disabled", true);
-                        $scope.data.from = moment().add(-1, 'days').format('YYYY-MM-DD');
+
+                        $scope.data.from = moment($scope.data.to).add(-1, 'days').format('YYYY-MM-DD');
                     });
+                } else if($scope.data.tenant_id.length > 2 && $scope.data.consultant_id.length != $scope.doctors.length) {
+                    $scope.data.from = moment($scope.data.to).add(-6, 'days').format('YYYY-MM-DD');
                 }
             }
         }, true);
@@ -148,6 +201,7 @@ app.controller('ipDoctorsPay', ['$rootScope', '$scope', '$timeout', '$http', '$s
             };
         }
 
+        $scope.printloader = '';
         $scope.printContent = function () {
             var content = [];
             var consultant_wise = $filter('groupBy')($scope.records, 'consultant_name');
@@ -307,21 +361,33 @@ app.controller('ipDoctorsPay', ['$rootScope', '$scope', '$timeout', '$http', '$s
                     });
                 });
                 content.push(content_info);
+                if (index == result_count) {
+                    $scope.printloader = '';
+                }
                 index++;
             });
             return content;
         }
 
         $scope.printReport = function () {
+            $scope.printloader = '<i class="fa fa-spin fa-spinner"></i>';
+            $timeout(function () {
+                var print_content = $scope.printContent();
+                if (print_content.length > 0) {
             var docDefinition = {
                 header: $scope.printHeader(),
                 footer: $scope.printFooter(),
                 styles: $scope.printStyle(),
-                content: $scope.printContent(),
+                        content: print_content,
                 pageMargins: ($scope.deviceDetector.browser == 'firefox' ? 75 : 50),
                 pageSize: 'A4',
             };
-            pdfMake.createPdf(docDefinition).print();
+                    var pdf_document = pdfMake.createPdf(docDefinition);
+                    var doc_content_length = Object.keys(pdf_document).length;
+                    if(doc_content_length > 0) {
+                        pdf_document.print();
         }
-
+                }
+            }, 1000);
+        }
     }]);
