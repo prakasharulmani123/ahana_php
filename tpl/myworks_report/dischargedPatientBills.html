@@ -14,6 +14,7 @@
                             <ul>
                                 <li>Kindly select 'ALL' option for any one for the drop downs only</li>
                                 <li>If 'ALL' option is selected for both drop downs then either one will be reset to the option 'DESELECT ALL'</li>
+                                <li>If more than 2 options is selected in either one of the drop down then the report will be generated only for a 7 days. The date will automatically reset in the date pickers</li>
                                 <li>Also if all option is selected in either one of the drop down then the report will be generated only for a single day. The date will automatically reset in the date pickers</li>
                                 <li>Print mode is <b>"Landscape"</b></li>
                             </ul>
@@ -48,11 +49,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <select id="consultant_wise" class="form-control selectpicker" data-select-all-text="All" data-deselect-all-text="Deselect" data-actions-box="true" data-selected-text-format="count" data-live-search="true" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors | orderBy: fullname" multiple required>
+                                <select id="consultant_wise" class="form-control selectpicker" data-actions-box="true" data-selected-text-format="count" data-live-search="true" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors | orderBy: fullname" multiple required>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <select id="branch_wise" class="form-control selectpicker" data-actions-box="true" data-selected-text-format="count" data-live-search="true"  name="tenant" ng-model="data.tenant_id" ng-options="key as value for (key , value) in tenants | orderBy: label" multiple required>
+                                <select id="branch_wise" class="form-control selectpicker" data-actions-box="true" data-selected-text-format="count" data-live-search="true"  ng-model="data.tenant_id" ng-options="key as value for (key , value) in tenants | orderBy: label" multiple required>
                                 </select>
                             </div>
                             <button id="get_report" class="btn btn-success get-report" ng-disabled="searchForm.$invalid" ng-click="loadReport()">Get Report</button>
@@ -61,7 +62,7 @@
                     </div>    
                 </div>
             </div>
-            
+
             <div class="col-sm-12" ng-if='showTable && records.length > 0'>
                 <span class="text-right">
                     <button class="btn btn-primary" ng-click="printReport()">

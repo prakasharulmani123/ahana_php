@@ -1,51 +1,60 @@
 app.controller('ipBillStatusController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$anchorScroll', '$filter', function ($rootScope, $scope, $timeout, $http, $state, $anchorScroll, $filter) {
 
-        $scope.initReport = function () {
-            $scope.showTable = false;
-            $scope.tenants = [];
-            $scope.doctors = [];
-            $scope.data = {};
-
-            $rootScope.commonService.GetDoctorList('', '1', false, '1', function (response) {
-                $scope.doctors = response.doctorsList;
-            });
-            $rootScope.commonService.GetTenantList(function (response) {
-                if (response.success == true) {
-                    $scope.tenants = response.tenantList;
-                }
-            });
-        }
-
         $scope.clearReport = function () {
             $scope.showTable = false;
             $scope.data = {};
             $scope.data.consultant_id = '';
             $scope.data.tenant_id = '';
+            $scope.deselectAll('branch_wise');
+            $scope.deselectAll('consultant_wise');
         }
-        
+
+        $scope.initReport = function () {
+            $scope.doctors = [];
+            $rootScope.commonService.GetDoctorList('', '1', false, '1', function (response) {
+                $scope.doctors = response.doctorsList;
+            });
+
+            $scope.tenants = [];
+            $rootScope.commonService.GetTenantList(function (response) {
+                if (response.success == true) {
+                    $scope.tenants = response.tenantList;
+                }
+            });
+
+            $scope.clearReport();
+        }
+
+        $scope.deselectAll = function (type) {
+            $timeout(function () {
+                // anything you want can go here and will safely be run on the next digest.
+                if (type == 'branch_wise') {
+                    var branch_wise_button = $('button[data-id="branch_wise"]').next();
+                    var branch_wise_deselect_all = branch_wise_button.find(".bs-deselect-all");
+                    branch_wise_deselect_all.click();
+                } else if (type == 'consultant_wise') {
+                    var consultant_wise_button = $('button[data-id="consultant_wise"]').next();
+                    var consultant_wise_deselect_all = consultant_wise_button.find(".bs-deselect-all");
+                    consultant_wise_deselect_all.click();
+                }
+                $('#get_report').attr("disabled", true);
+            });
+        }
+
         $scope.$watch('data.consultant_id', function (newValue, oldValue) {
             if (newValue != '' && typeof newValue != 'undefined') {
                 if ($scope.data.consultant_id.length == $scope.doctors.length) {
                     $timeout(function () {
-                        // anything you want can go here and will safely be run on the next digest.
-                        var branch_wise_button = $('button[data-id="branch_wise"]').next();
-                        var branch_wise_deselect_all = branch_wise_button.find(".bs-deselect-all");
-                        branch_wise_deselect_all.click();
-                        $('#get_report').attr("disabled", true);
+                        $scope.deselectAll('branch_wise');
                     });
                 }
             }
         }, true);
-
         $scope.$watch('data.tenant_id', function (newValue, oldValue) {
             if (newValue != '' && typeof newValue != 'undefined') {
                 if ($scope.data.tenant_id.length == Object.keys($scope.tenants).length) {
                     $timeout(function () {
-                        // anything you want can go here and will safely be run on the next digest.
-                        var consultant_wise_button = $('button[data-id="consultant_wise"]').next();
-                        var consultant_wise_deselect_all = consultant_wise_button.find(".bs-deselect-all");
-                        consultant_wise_deselect_all.click();
-                        $('#get_report').attr("disabled", true);
+                        $scope.deselectAll('consultant_wise');
                     });
                 }
             }
@@ -56,14 +65,12 @@ app.controller('ipBillStatusController', ['$rootScope', '$scope', '$timeout', '$
             $scope.records = [];
             $scope.loadbar('show');
             $scope.showTable = true;
-
             $scope.errorData = "";
             $scope.msg.successMessage = "";
 
             var data = {};
             if (typeof $scope.data.consultant_id !== 'undefined' && $scope.data.consultant_id != '')
                 angular.extend(data, {consultant_id: $scope.data.consultant_id});
-
             if (typeof $scope.data.tenant_id !== 'undefined' && $scope.data.tenant_id != '')
                 angular.extend(data, {tenant_id: $scope.data.tenant_id});
 
@@ -88,16 +95,17 @@ app.controller('ipBillStatusController', ['$rootScope', '$scope', '$timeout', '$
         }
 
         $scope.printFooter = function () {
-            return {
-                text: [
-                    {
-                        text: 'Report Genarate On : ',
-                        bold: true
-                    },
-                    moment().format('YYYY-MM-DD HH:mm:ss')
-                ],
-                margin: 5
-            };
+//            return {
+//                text: [
+//                    {
+//                        text: 'Report Genarate On : ',
+//                        bold: true
+//                    },
+//                    moment().format('YYYY-MM-DD HH:mm:ss')
+//                ],
+//                margin: 5
+//            };
+            return true;
         }
 
         $scope.printStyle = function () {
@@ -109,7 +117,7 @@ app.controller('ipBillStatusController', ['$rootScope', '$scope', '$timeout', '$
                 },
                 demoTable: {
                     color: '#000',
-                    fontSize: 10
+                    fontSize: 10,
                 }
             };
         }
@@ -184,7 +192,7 @@ app.controller('ipBillStatusController', ['$rootScope', '$scope', '$timeout', '$
                     style: 'demoTable',
                     table: {
                         headerRows: 1,
-                        widths: ['*', '*','*', '*','*', '*','*', '*','*', '*'],
+                        widths: ['auto', 'auto', '*', '*', 'auto', '*', 'auto', '*', 'auto', 'auto'],
                         body: branches,
                     },
                     pageBreak: (index === result_count ? '' : 'after'),
@@ -214,7 +222,7 @@ app.controller('ipBillStatusController', ['$rootScope', '$scope', '$timeout', '$
                     };
                     var pdf_document = pdfMake.createPdf(docDefinition);
                     var doc_content_length = Object.keys(pdf_document).length;
-                    if(doc_content_length > 0) {
+                    if (doc_content_length > 0) {
                         pdf_document.print();
                     }
                 }
