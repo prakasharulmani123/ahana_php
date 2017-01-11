@@ -187,6 +187,11 @@ class PhaPurchase extends RActiveRecord {
                         'net_amount' => 'net_amount',
                     ];
                     break;
+                case 'viewlist':
+                    $addt_keys = ['supplier_name','items'];
+                    $pFields = ['invoice_no','gr_num','invoice_date','total_item_purchase_amount','total_item_vat_amount','discount_percent','discount_amount','roundoff_amount','net_amount','purchase_id','payment_type','payment_status'];
+                    $parent_fields = array_combine($pFields, $pFields);
+                    break;
             endswitch;
         }
 

@@ -68,11 +68,39 @@ class PharmacypurchaseController extends ActiveController {
     }
 
     public function actionGetpurchases() {
-        $get = Yii::$app->getRequest()->get();
+        $GET = Yii::$app->getRequest()->get();
 
-        if (isset($get['payment_type'])) {
-            $data = PhaPurchase::find()->tenant()->active()->andWhere(['payment_type' => $get['payment_type']])->orderBy(['created_at' => SORT_DESC])->all();
-            return ['success' => true, 'purchases' => $data];
+        if (isset($GET['payment_type'])) {
+            $limit = isset($GET['l']) ? $GET['l'] : 5;
+            $page = isset($GET['p']) ? $GET['p'] : 1;
+            $condition['payment_type'] = $GET['payment_type'];
+
+            if (isset($GET['dt'])) {
+                $condition['invoice_date'] = $GET['dt'];
+            }
+            $data = PhaPurchase::find()->tenant()->active()->andWhere($condition);
+            if (isset($GET['s']) && !empty($GET['s'])) {
+                $text = $GET['s'];
+                $data->joinWith(['supplier','phaPurchaseItems.product','phaPurchaseItems.batch'])
+                        ->andFilterWhere([
+                            'or',
+                            ['like', 'pha_product.product_name', $text],
+                            ['like', 'pha_product_batch.batch_no', $text],
+                            ['like', 'pha_supplier.supplier_name', $text],
+                            ['like', 'invoice_no', $text],
+                            ['like', 'gr_num', $text],
+                ]);
+            }
+
+            $offset = abs($page - 1) * $limit;
+            $result = $data->orderBy(['created_at' => SORT_DESC])
+                    ->limit($limit)
+                    ->groupBy('pha_purchase.purchase_id')
+                    ->offset($offset)
+                    ->all();
+
+
+            return ['success' => true, 'purchases' => $result];
         } else {
             return ['success' => false, 'message' => 'Invalid Access'];
         }
@@ -280,15 +308,15 @@ class PharmacypurchaseController extends ActiveController {
                         $post_data['total_item_vat_amount'] += $post_data['product_items'][$key]['vat_amount'];
                         $post_data['total_item_discount_amount'] += $post_data['product_items'][$key]['discount_amount'];
                     } else {
-                        if(!$product_result)
+                        if (!$product_result)
                             $failed_products[] = $lineitem->product_id;
-                        if(!$package)
+                        if (!$package)
                             $failed_packages[] = $lineitem->package_name;
                     }
                 }
 
                 $post_data['before_disc_amount'] = ($post_data['total_item_purchase_amount'] + $post_data['total_item_vat_amount']);
-                $post_data['after_disc_amount'] = $post_data['before_disc_amount']; 
+                $post_data['after_disc_amount'] = $post_data['before_disc_amount'];
                 $post_data['net_amount'] = round($post_data['after_disc_amount']);
                 $post_data['roundoff_amount'] = bcadd(abs($post_data['net_amount'] - $post_data['after_disc_amount']), 0, 2);
 
@@ -306,8 +334,8 @@ class PharmacypurchaseController extends ActiveController {
                 }
 
                 if ($failed_products || $failed_packages) {
-                    $message = $failed_products ? "Products not exists: ".implode(',', $failed_products) : ' ';
-                    $message .= $failed_packages ? "Packages not exists: ".implode(',', $failed_packages) : '';
+                    $message = $failed_products ? "Products not exists: " . implode(',', $failed_products) : ' ';
+                    $message .= $failed_packages ? "Packages not exists: " . implode(',', $failed_packages) : '';
                     $return = ['success' => false, 'continue' => $next_id, 'message' => $message];
                 }
             } else {
@@ -344,7 +372,7 @@ class PharmacypurchaseController extends ActiveController {
 //        $sql = "truncate table test_purchase_import";
 //        $command = $connection->createCommand($sql);
 //        $command->execute();
-        
+
         while (($row = fgetcsv($handle)) !== FALSE) {
             $invoice_no = $row[1];
             if ($invoice_no) {
