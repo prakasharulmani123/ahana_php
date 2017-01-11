@@ -32,7 +32,8 @@ angular.module('app', [
     'ui.mask',
     'scrollable-table',
     'ng.deviceDetector',
-    'angularLazyImg'
+    'angularLazyImg',
+    'infinite-scroll',
 //    'restangular'
 //    'LocalStorageModule',
 ]);

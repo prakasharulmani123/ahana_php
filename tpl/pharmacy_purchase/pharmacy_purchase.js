@@ -1,4 +1,4 @@
-app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$anchorScroll', '$filter', '$timeout', '$location', '$modal','$log', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $anchorScroll, $filter, $timeout, $location, $modal, $log) {
+app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$anchorScroll', '$filter', '$timeout', '$location', '$modal', '$log', '$localStorage', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $anchorScroll, $filter, $timeout, $location, $modal, $log, $localStorage, DTOptionsBuilder, DTColumnBuilder, $compile) {
 
         editableThemes.bs3.inputClass = 'input-sm';
         editableThemes.bs3.buttonsClass = 'btn-sm';
@@ -50,32 +50,62 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
         };
 
         //Index Page
+        $scope.itemsByPage = 10; // No.of records per page
+
+        $scope.loadMorePurchaseItemList = function (payment_type) {
+            if ($scope.isLoading)
+                return;
+
+            $scope.pageIndex++;
+            $scope.isLoading = true;
+
+            var pageURL = $rootScope.IRISOrgServiceUrl + '/pharmacypurchase/getpurchases?addtfields=viewlist&payment_type=' + payment_type + '&p=' + $scope.pageIndex + '&l=' + $scope.itemsByPage;
+            if (typeof $scope.form_filter != 'undefined' && $scope.form_filter != '') {
+                pageURL += '&s=' + $scope.form_filter;
+            }
+
+            if (typeof $scope.form_filter1 != 'undefined' && $scope.form_filter1 != '') {
+                pageURL += '&dt=' + moment($scope.form_filter1).format('YYYY-MM-DD');
+            }
+
+            $http.get(pageURL)
+                    .success(function (purchaseList) {
+                        $scope.isLoading = false;
+                        $scope.rowCollection = $scope.rowCollection.concat(purchaseList.purchases);
+                        $scope.displayedCollection = [].concat($scope.rowCollection);
+                    })
+                    .error(function () {
+                        $scope.errorData = "An Error has occured while loading purchaseList!";
+                    });
+        };
         $scope.loadPurchaseItemList = function (payment_type) {
             $scope.errorData = $scope.msg.successMessage = '';
-            if (payment_type == 'CA') {
-                $scope.purchase_payment_type_name = 'Cash';
-            }
-            if (payment_type == 'CR') {
-                $scope.purchase_payment_type_name = 'Credit';
-            }
-            $scope.purchase_payment_type = payment_type;
-
-            $scope.activeMenu = payment_type;
+            $scope.purchase_payment_type_name = (payment_type == 'CA') ? 'Cash' : 'Credit';
+            $scope.activeMenu = $scope.purchase_payment_type = payment_type;
 
             $scope.isLoading = true;
             // pagination set up
             $scope.rowCollection = [];  // base collection
-            $scope.itemsByPage = 10; // No.of records per page
+            $scope.pageIndex = 1;
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
 
+            var pageURL = $rootScope.IRISOrgServiceUrl + '/pharmacypurchase/getpurchases?addtfields=viewlist&payment_type=' + payment_type + '&p=' + $scope.pageIndex + '&l=' + $scope.itemsByPage;
+
+            if (typeof $scope.form_filter != 'undefined' && $scope.form_filter != '') {
+                pageURL += '&s=' + $scope.form_filter;
+            }
+
+            if (typeof $scope.form_filter1 != 'undefined' && $scope.form_filter1 != '') {
+                pageURL += '&dt=' + moment($scope.form_filter1).format('YYYY-MM-DD');
+            }
             // Get data's from service
-            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacypurchase/getpurchases?payment_type=' + payment_type)
+            $http.get(pageURL)
 //            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacypurchase')
                     .success(function (purchaseList) {
                         $scope.isLoading = false;
                         $scope.rowCollection = purchaseList.purchases;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
-                        $scope.form_filter = null;
+//                        $scope.form_filter = null;
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading purchaseList!";
