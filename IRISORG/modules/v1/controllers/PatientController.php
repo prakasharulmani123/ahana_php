@@ -463,7 +463,7 @@ class PatientController extends ActiveController {
                 $count++;
             }
         }
-        echo trim($emptyImages,",");
+        echo trim($emptyImages, ",");
 
         exit;
     }
@@ -526,20 +526,33 @@ class PatientController extends ActiveController {
         $post = Yii::$app->getRequest()->post();
         $patients = [];
         $limit = 10;
+        $only = Yii::$app->request->get('only');
 
         if (isset($post['search']) && !empty($post['search']) && strlen($post['search']) >= 2) {
             $text = $post['search'];
             $tenant_id = Yii::$app->user->identity->logged_tenant_id;
 
             $lists = PatPatient::find()
-                    ->andWhere(['pat_patient.tenant_id' => $tenant_id, 'pat_patient.deleted_at' => '0000-00-00 00:00:00'])
+                    ->andWhere([
+                        'pat_patient.tenant_id' => $tenant_id,
+                        'pat_patient.deleted_at' => '0000-00-00 00:00:00',
+                        'pat_global_patient.parent_id' => NULL
+                    ])
                     ->joinWith('patGlobalPatient')
-                    ->orOnCondition("pat_global_patient.patient_firstname like :search")
-                    ->orOnCondition("pat_global_patient.patient_lastname like :search")
-                    ->orOnCondition("pat_global_patient.patient_global_int_code like :search")
-                    ->addParams([':search' => "%{$text}%"])
+                    ->andFilterWhere([
+                        'or',
+                        ['like', 'pat_global_patient.patient_firstname', $text],
+                        ['like', 'pat_global_patient.patient_lastname', $text],
+                        ['like', 'pat_global_patient.patient_mobile', $text],
+                        ['like', 'pat_global_patient.patient_global_int_code', $text],
+                        ['like', 'pat_global_patient.casesheetno', $text],
+                    ])
                     ->limit($limit)
                     ->all();
+
+            if ($only == 'patients') {
+                return ['patients' => $lists];
+            }
 
             foreach ($lists as $key => $patient) {
                 $patients[$key]['Patient'] = $patient;

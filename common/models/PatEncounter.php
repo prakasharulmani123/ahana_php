@@ -469,7 +469,7 @@ class PatEncounter extends RActiveRecord {
                 ];
 
                 $parent_fields = parent::fields();
-                $addt_keys = [];
+                $addt_keys = $extFields = [];
                 if ($addtField = Yii::$app->request->get('addtfields')) {
                     switch ($addtField):
                         case 'oplist':
@@ -487,10 +487,15 @@ class PatEncounter extends RActiveRecord {
                             $addt_keys = ['searchEncData'];
                             $parent_fields = ['encounter_id' => 'encounter_id'];
                             break;
+                        case 'sale_encounter_id':
+                            $addt_keys = false;
+                            $parent_fields = ['encounter_id' => 'encounter_id'];
+                            break;
                     endswitch;
                 }
 
-                $extFields = ($addt_keys) ? array_intersect_key($extend, array_flip($addt_keys)) : $extend;
+                if($addt_keys !== false)
+                    $extFields = ($addt_keys) ? array_intersect_key($extend, array_flip($addt_keys)) : $extend;
 
                 return array_merge($parent_fields, $extFields);
             }

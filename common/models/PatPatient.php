@@ -624,11 +624,17 @@ class PatPatient extends RActiveRecord {
                     $extend = array_merge($extend_glb, $extend);
                 }
 
+                $parent_fields = parent::fields();
                 $addt_keys = [];
                 if ($addtField = Yii::$app->request->get('addtfields')) {
                     switch ($addtField):
                         case 'search':
                             $addt_keys = ['patient_img_url', 'fullcurrentaddress', 'fullpermanentaddress', 'fullname', 'patient_guid','patient_age','patient_global_int_code','patient_mobile','org_name'];
+                            break;
+                        case 'salecreate':
+                            $pFields = ['patient_id','patient_guid'];
+                            $parent_fields = array_combine($pFields, $pFields);
+                            $addt_keys = ['name_with_int_code', 'fullname','last_consultant_id'];
                             break;
                         case 'merge_search':
                             $addt_keys = ['patient_img_url', 'fullcurrentaddress', 'fullpermanentaddress', 'fullname', 'patient_guid','patient_age','patient_global_int_code','patient_mobile','org_name','childrens_count'];
@@ -637,7 +643,7 @@ class PatPatient extends RActiveRecord {
                 }
 
                 $extFields = ($addt_keys) ? array_intersect_key($extend, array_flip($addt_keys)) : $extend;
-                return array_merge(parent::fields(), $extFields);
+                return array_merge($parent_fields, $extFields);
             }
 
             public function getHasalert() {
