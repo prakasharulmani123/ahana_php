@@ -8,6 +8,7 @@ use common\models\PhaSale;
 use Yii;
 use yii\filters\auth\QueryParamAuth;
 use yii\filters\ContentNegotiator;
+use yii\helpers\ArrayHelper;
 use yii\rest\ActiveController;
 use yii\web\Response;
 
@@ -52,14 +53,46 @@ class PharmacyreportController extends ActiveController {
         $model = PhaSale::find()
                 ->tenant()
                 ->andWhere("pha_sale.sale_date between '{$post['from']}' AND '{$post['to']}'");
-                
+
         if (isset($post['payment_type'])) {
             $model->andWhere(['pha_sale.payment_type' => $post['payment_type']]);
+            if ($post['payment_type'] == 'CR' && isset($post['patient_group_name'])) {
+                $patient_group_names = join("','", $post['patient_group_name']);
+                $model->andWhere("pha_sale.patient_group_name IN ( '$patient_group_names' )");
+            }
         }
 
         $reports = $model->all();
 
         return ['report' => $reports];
+    }
+
+    public function actionGetsalegrouplist() {
+        $get = Yii::$app->getRequest()->get();
+
+        if (isset($get['tenant']))
+            $tenant = $get['tenant'];
+
+        if (isset($get['status']))
+            $status = strval($get['status']);
+
+        if (isset($get['deleted']))
+            $deleted = $get['deleted'] == 'true';
+
+        $saleGroups = PhaSale::find()
+                ->tenant($tenant)
+                ->status($status)
+                ->active()
+                ->andWhere("patient_group_name != ''")
+                ->groupBy('patient_group_name')
+                ->all();
+
+        $saleGroupsList = [];
+        if (!empty($saleGroups)) {
+            $saleGroupsList = ArrayHelper::map($saleGroups, 'patient_group_name', 'patient_group_name');
+        }
+
+        return ['saleGroupsList' => $saleGroupsList];
     }
 
     public function actionStockreport() {
