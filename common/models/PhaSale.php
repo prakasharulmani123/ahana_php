@@ -208,6 +208,12 @@ class PhaSale extends RActiveRecord {
             'patient' => function ($model) {
                 return (isset($model->patient) ? $model->patient : '-');
             },
+            'patient_uhid' => function ($model) {
+                return (isset($model->patient) ? $model->patient->patient_global_int_code : '-');
+            },
+            'patient_name' => function ($model) {
+                return (isset($model->patient) ? ucwords("{$model->patient->patient_title_code} {$model->patient->patient_firstname}")  : '-');
+            },
             'items' => function ($model) {
                 return (isset($model->phaSaleItems) ? $model->phaSaleItems : '-');
             },
@@ -224,8 +230,34 @@ class PhaSale extends RActiveRecord {
                 return number_format($balance, '2');
             },
         ];
-        $fields = array_merge(parent::fields(), $extend);
-        return $fields;
+            
+        $parent_fields = parent::fields();
+        $addt_keys = [];
+        if ($addtField = Yii::$app->request->get('addtfields')) {
+            switch ($addtField):
+                case 'salereport':
+                    $addt_keys = ['patient_name', 'patient_uhid'];
+                    $parent_fields = [
+                        'bill_no' => 'bill_no',
+                        'payment_type' => 'payment_type',
+                        'bill_amount' => 'bill_amount',
+                        'patient_group_name' => 'patient_group_name',
+                    ];
+                    break;
+                case 'salevatreport':
+                    $addt_keys = ['patient_name'];
+                    $parent_fields = [
+                        'bill_no' => 'bill_no',
+                        'total_item_amount' => 'total_item_amount',
+                        'total_item_vat_amount' => 'total_item_vat_amount',
+                        'bill_amount' => 'bill_amount',
+                    ];
+                    break;
+            endswitch;
+        }
+        
+        $extFields = ($addt_keys) ? array_intersect_key($extend, array_flip($addt_keys)) : $extend;
+        return array_merge($parent_fields, $extFields);
     }
 
     public function getSaleItemIds() {
