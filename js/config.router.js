@@ -2099,16 +2099,32 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 }
             })
 
-            //PHARMACY REPORT
-            .state('pharmacy.report', {
-                url: '/report/{mode}',
-                templateUrl: 'tpl/pharmacy_report/report.html',
+            //PHARMACY PURCHASE REPORT
+            .state('pharmacy.purchaseReport', {
+                url: '/purchaseReport',
+                templateUrl: 'tpl/pharmacy_report/purchaseReport.html',
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load(['xeditable', 'smart-table']).then(
+                            return $ocLazyLoad.load(['smart-table']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/pharmacy_report/report.js?v=' + APP_VERSION);
+                                        return $ocLazyLoad.load('tpl/pharmacy_report/purchaseReport.js?v=' + APP_VERSION);
+                                    }
+                            );
+                        }]
+                }
+            })
+            
+            //PHARMACY PURCHASE VAT REPORT
+            .state('pharmacy.purchaseVatReport', {
+                url: '/purchaseVatReport',
+                templateUrl: 'tpl/pharmacy_report/purchaseVatReport.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/pharmacy_report/purchaseVatReport.js?v=' + APP_VERSION);
                                     }
                             );
                         }]

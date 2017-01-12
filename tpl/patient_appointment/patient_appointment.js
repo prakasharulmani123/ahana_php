@@ -31,11 +31,11 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
                 $scope.activeEncounter = response.encounters;
                 if (response.success == true) {
                     $scope.patient_det = response.model.patient;
-                    
+
                     var actEnc = $filter('filter')($scope.activeEncounter, {
                         encounter_id: $state.params.enc_id
                     });
-                    
+
                     if (actEnc.length == 0) {
 //                    if (response.model.encounter_id != $state.params.enc_id) {
                         alert("This is not an active Encounter");
@@ -43,10 +43,10 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
                     } else {
                         var consultant_id = '';
                         if (actEnc[0].liveAppointmentArrival.hasOwnProperty('appt_id')) {
-                            $scope.data = {'PatAppointment': {'appt_status': 'A', 'dummy_status': 'A', 'status_date': moment().format('YYYY-MM-DD HH:mm:ss'), 'payment_mode' : 'CA', 'bank_date': moment().format('YYYY-MM-DD HH:mm:ss')}};
+                            $scope.data = {'PatAppointment': {'appt_status': 'A', 'dummy_status': 'A', 'status_date': moment().format('YYYY-MM-DD HH:mm:ss'), 'payment_mode': 'CA', 'bank_date': moment().format('YYYY-MM-DD HH:mm:ss')}};
                             consultant_id = actEnc[0].liveAppointmentArrival.consultant_id;
                         } else if (actEnc[0].liveAppointmentBooking.hasOwnProperty('appt_id')) {
-                            $scope.data = {'PatAppointment': {'appt_status': 'B', 'dummy_status': 'B', 'status_date': moment().format('YYYY-MM-DD HH:mm:ss'), 'payment_mode' : 'CA', 'bank_date': moment().format('YYYY-MM-DD HH:mm:ss')}};
+                            $scope.data = {'PatAppointment': {'appt_status': 'B', 'dummy_status': 'B', 'status_date': moment().format('YYYY-MM-DD HH:mm:ss'), 'payment_mode': 'CA', 'bank_date': moment().format('YYYY-MM-DD HH:mm:ss')}};
                             consultant_id = actEnc[0].liveAppointmentArrival.consultant_id;
                         }
                         if (consultant_id) {
@@ -121,13 +121,15 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
 
         $scope.chargeAmount = '';
         $scope.updateCharge = function () {
+            $scope.errorData = '';
             _that = this;
             var charge = $filter('filter')($scope.chargesList, {patient_cat_id: _that.data.PatAppointment.patient_cat_id});
-            if (typeof charge[0] != 'undefined')
+            if (charge != null && typeof charge[0] != 'undefined')
             {
                 $scope.chargeAmount = $scope.data.PatAppointment.amount = charge[0].charge_amount;
                 $scope.cat_name_taken = charge[0].op_dept;
             } else {
+                $scope.errorData = "No Charges assigned for this doctor in this branch, Kindly assign some charges in this branch. Then only patient category will display";
                 $scope.chargeAmount = $scope.data.PatAppointment.amount = 0;
                 $scope.data.PatAppointment.patient_cat_id = '';
             }
@@ -174,9 +176,9 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
         }
 
         $scope.$watch('patientObj.activeCasesheetno', function (newValue, oldValue) {
-            if(typeof $scope.data == 'undefined')
+            if (typeof $scope.data == 'undefined')
                 $scope.data = {};
-            
+
             $scope.toggleMin();
             $scope.data.validate_casesheet = ($scope.patientObj.activeCasesheetno == null || $scope.patientObj.activeCasesheetno == '');
         }, true);
@@ -189,12 +191,12 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
             $rootScope.commonService.GetPaymentModes(function (response) {
                 $scope.paymentModes = response;
             });
-            
+
             $rootScope.commonService.GetCardTypes(function (response) {
                 $scope.cardTypes = response;
             });
-            
-             $timeout(function () {
+
+            $timeout(function () {
 //                $scope.data.PatAppointment.payment_mode = 'CA';
 //                $scope.data.PatAppointment.bank_date = moment().format('YYYY-MM-DD HH:mm:ss');
 //                $scope.data.PatAppointment.status_date = moment().format('YYYY-MM-DD HH:mm:ss');
@@ -248,14 +250,14 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
         $scope.$watch('data.appt_status', function (newValue, oldValue) {
             $scope.setCurrentArrivalTime();
         });
-        
-        $scope.setCurrentArrivalTime = function(){
-            if($scope.data.appt_status == 'A' && $scope.timeslots.length > 0){
+
+        $scope.setCurrentArrivalTime = function () {
+            if ($scope.data.appt_status == 'A' && $scope.timeslots.length > 0) {
                 start = moment();
                 remainder = 5 - start.minute() % 5;
                 $scope.data.status_time = '';
                 $timeout(function () {
-                    $scope.data.status_time = moment(start).add("minutes", remainder ).format("HH:mm") + ':00';
+                    $scope.data.status_time = moment(start).add("minutes", remainder).format("HH:mm") + ':00';
                 }, 400);
             }
         }

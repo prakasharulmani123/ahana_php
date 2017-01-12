@@ -39,6 +39,12 @@
                 </div>
             </div>
             
+            <div class="col-sm-12" ng-if='showTable && records.length == 0'>
+                <div class="panel panel-default">
+                    <div class="panel-body">No Records Found</div>
+                </div>
+            </div>
+            
             <div class="col-sm-12" ng-if='showTable && records.length > 0'>
                 <span class="text-right">
                     <button class="btn btn-primary" ng-click="printReport()">
