@@ -457,13 +457,14 @@ class UserController extends ActiveController {
                     ->all();
         } else {
             $user_id = Yii::$app->user->identity->user->user_id;
-            $branches = CoUsersBranches::find()->andWhere(['user_id' => $user_id])->all();
+            $branches = CoUsersBranches::find()->joinWith('branch')->addSelect('co_tenant.tenant_id as tenant_id')->addSelect('co_tenant.tenant_name as tenant_name')->andWhere(['user_id' => $user_id])->all();
         }
-
+        
         if(isset($GET['map'])){
             $map = explode(',', $GET['map']);
             $branches = ArrayHelper::map($branches, $map[0], $map[1]);
         }
+
         return ['success' => true, 'branches' => $branches, 'default_branch' => strval(Yii::$app->user->identity->logged_tenant_id)];
     }
 

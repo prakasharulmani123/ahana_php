@@ -24,6 +24,7 @@ use yii\db\ActiveQuery;
 class CoUsersBranches extends RActiveRecord {
 
     public $branch_ids;
+    public $tenant_name;
 
     /**
      * @inheritdoc
@@ -39,7 +40,7 @@ class CoUsersBranches extends RActiveRecord {
         return [
             [['tenant_id', 'user_id', 'branch_ids'], 'required', 'on' => 'branchassign'],
             [['tenant_id', 'user_id', 'branch_id', 'created_by', 'modified_by'], 'integer'],
-            [['created_at', 'modified_at', 'branch_ids'], 'safe']
+            [['created_at', 'modified_at', 'branch_ids','tenant_name'], 'safe']
         ];
     }
 
