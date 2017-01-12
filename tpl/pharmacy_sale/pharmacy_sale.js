@@ -172,12 +172,12 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             id = $item.patient_id;
             $scope.data.patient_id = id;
             $scope.data.patient_guid = $item.patient_guid;
-            $scope.data.patient_name = $item.patient_firstname + ' ' + $item.patient_lastname;
+            $scope.data.patient_name = $item.fullname;
             $scope.data.consultant_id = $item.last_consultant_id;
 
             $scope.getEncounter(id, 'add', '');
             $scope.getPatientGroupByPatient($item.patient_guid);
-            //Hided the below one 
+            //Hided the below one
 //            $scope.getPatientMobileNo(id);
         }
 
@@ -197,7 +197,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                         $scope.data.encounter_id = encounter_id.toString();
                     }
                     $scope.show_encounter_loader = false;
-                });
+                },'sale_encounter_id');
             }
 
         }
@@ -823,7 +823,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             }).success(
                     function (response) {
 //                        $rootScope.commonService.GetProductList('', '1', false, function (response2) {
-//                            
+//
 //                        });
                         $scope.loadbar('hide');
 
@@ -899,14 +899,14 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
             return $http({
                 method: 'POST',
-                url: $rootScope.IRISOrgServiceUrl + '/patient/getpatient',
+                url: $rootScope.IRISOrgServiceUrl + '/patient/getpatient?addtfields=salecreate&only=patients',
                 data: {'search': patientName},
                 timeout: canceler.promise,
             }).then(
                     function (response) {
                         $scope.patients = [];
                         angular.forEach(response.data.patients, function (list) {
-                            $scope.patients.push(list.Patient);
+                            $scope.patients.push(list);
                         });
                         $scope.loadbar('hide');
                         $scope.show_patient_loader = false;
@@ -915,7 +915,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             );
         };
 
-//        // Get Patient Name 
+//        // Get Patient Name
 //        var changeTimer = false;
 //        $scope.$watch('data.patient_name', function (newValue, oldValue) {
 //            if (newValue != '') {

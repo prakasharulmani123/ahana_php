@@ -40,8 +40,8 @@
                                 <div class="form-group">
                                     <label class="col-lg-4 control-label">Encounter # <span ng-show="show_encounter_loader">&nbsp;&nbsp;<i class="fa fa-spin fa-refresh"></i></span></label>
                                     <div class="col-lg-8">
-                                        <select class="form-control selectpicker" data-live-search="true" 
-                                                ng-model="data.encounter_id" 
+                                        <select class="form-control selectpicker" data-live-search="true"
+                                                ng-model="data.encounter_id"
                                                 ng-options="encounter.encounter_id as encounter.encounter_id for encounter in encounters | orderBy: encounter_id"
                                                 ng-change="getPrescription()"
                                                 >
@@ -130,22 +130,24 @@
                                     <td><span>Total</span></td>
                                     <td><span>Action</span></td>
                                 </tr>
-                                <tr ng-repeat="(key, saleitem) in saleItems">
+                                <tr class="r-v-top" ng-repeat="(key, saleitem) in saleItems">
                                     <td>
                                         <div id="i_full_name_{{key}}">
-                                            <span 
-                                                editable-text="saleitem.full_name" 
-                                                e-class="fullname" 
-                                                e-name="full_name" 
-                                                e-form="tableform" 
-                                                onbeforesave="checkInput($data, key, $index)" 
-                                                e-typeahead="product as product.full_name for product in products | filter:{full_name:$viewValue} | limitTo:8" 
-                                                e-typeahead-editable="false" 
-                                                e-typeahead-on-select="updateProductRow($item, $model, $label, key)" 
-                                                e-autocomplete="off" 
+                                            <span
+                                                editable-text="saleitem.full_name"
+                                                e-class="fullname"
+                                                e-name="full_name"
+                                                e-form="tableform"
+                                                onbeforesave="checkInput($data, key, $index)"
+                                                e-typeahead="product as product.full_name for product in products | filter:{full_name:$viewValue} | limitTo:8"
+                                                e-typeahead-min-length=0
+                                                e-typeahead-editable="false"
+                                                e-typeahead-on-select="updateProductRow($item, $model, $label, key)"
+                                                e-autocomplete="off"
+                                                data-e-id="full_name"
                                                 e-ng-change="clearProductRow($data, key)"
-                                                data-e-id="full_name" 
                                                 >
+
                                                 {{ saleitem.full_name || 'empty' }}
                                             </span>
                                             <!--<span style="width: 10px; position: absolute; margin: 7px 10px;"><i class="fa fa-spin fa-refresh pull-right"></i></span>-->
@@ -159,12 +161,12 @@
                                         <div class="text-danger" style="" ng-show="saleitem.out_of_stock_msg"> {{saleitem.out_of_stock_msg}}</div>
                                         <div class="custom-warning" style="" ng-show="saleitem.min_reorder_msg"> {{saleitem.min_reorder_msg}}</div>
                                         <div id="i_alternate_medicine_{{key}}" class="hide">
-                                            <span 
-                                                editable-select="saleitem.alternate_product" 
-                                                e-name="alternate_product" 
-                                                e-form="tableform" 
-                                                e-ng-options="product as product.full_name for product in alternateproducts[key] | filter:$viewValue" 
-                                                e-ng-change="updateAlternateProductRow($data, key, $index)" 
+                                            <span
+                                                editable-select="saleitem.alternate_product"
+                                                e-name="alternate_product"
+                                                e-form="tableform"
+                                                e-ng-options="product as product.full_name for product in alternateproducts[key] | filter:$viewValue"
+                                                e-ng-change="updateAlternateProductRow($data, key, $index)"
                                                 >
                                                 {{ showAlternateProduct(saleitem) || 'empty' }}
                                             </span>
@@ -172,13 +174,13 @@
                                     </td>
                                     <td>
                                         <div id="i_batch_details_{{key}}">
-                                            <span 
-                                                editable-select="saleitem.batch_details" 
-                                                data-e-id="batch_details" 
-                                                e-name="batch_details" 
-                                                e-form="tableform" 
-                                                onbeforesave="checkInput($data, key, $index)" 
-                                                e-ng-options="batch as batch.batch_details for batch in batches | filter:$viewValue | limitTo:8| filter:{product_id : saleitem.product_id}: true" 
+                                            <span
+                                                editable-select="saleitem.batch_details"
+                                                data-e-id="batch_details"
+                                                e-name="batch_details"
+                                                e-form="tableform"
+                                                onbeforesave="checkInput($data, key, $index)"
+                                                e-ng-options="batch as batch.batch_details for batch in batches | filter:$viewValue | limitTo:8| filter:{product_id : saleitem.product_id}: true"
                                                 e-ng-change="updateBatchRow($data, key, $index)">
                                                 {{ showBatch(saleitem)}}
                                             </span>
@@ -194,17 +196,17 @@
                                         </span>
                                     </td>
                                     <td>
-                                        <span 
-                                            editable-text="saleitem.quantity" 
-                                            e-number-mask="" 
-                                            e-name="quantity" 
-                                            e-form="tableform" 
-                                            onbeforesave="checkInput($data, key, $index); checkAmount($data, key, $index); checkQuantity($data, key)" 
-                                            e-ng-keydown="updateColumn($data, key, 'quantity')"  
-                                            e-ng-keyup="updateColumn($data, key, 'quantity')" 
-                                            e-autocomplete="off" 
-                                            e-limit-to="7" 
-                                            data-e-id="quantity" 
+                                        <span
+                                            editable-text="saleitem.quantity"
+                                            e-number-mask=""
+                                            e-name="quantity"
+                                            e-form="tableform"
+                                            onbeforesave="checkInput($data, key, $index); checkAmount($data, key, $index); checkQuantity($data, key)"
+                                            e-ng-keydown="updateColumn($data, key, 'quantity')"
+                                            e-ng-keyup="updateColumn($data, key, 'quantity')"
+                                            e-autocomplete="off"
+                                            e-limit-to="7"
+                                            data-e-id="quantity"
                                             ng-click="addRowWhenFocus(key)"
                                             e-select-on-click="">
                                             {{saleitem.quantity|| 0}}
@@ -222,17 +224,17 @@
                                     </td>
                                     <td><span>{{saleitem.item_amount}}</span></td>
                                     <td>
-                                        <span 
-                                            editable-text="saleitem.discount_percentage" 
+                                        <span
+                                            editable-text="saleitem.discount_percentage"
                                             e-name="discount_percentage"
-                                            e-number-mask="" 
-                                            e-form="tableform" 
-                                            onbeforesave="checkInput($data)" 
-                                            e-ng-keydown="updateColumn($data, key, 'discount_percentage')"  
-                                            e-ng-keyup="updateColumn($data, key, 'discount_percentage')" 
-                                            e-autocomplete="off" 
-                                            e-limit-to="2" 
-                                            e-maxlength="5" 
+                                            e-number-mask=""
+                                            e-form="tableform"
+                                            onbeforesave="checkInput($data)"
+                                            e-ng-keydown="updateColumn($data, key, 'discount_percentage')"
+                                            e-ng-keyup="updateColumn($data, key, 'discount_percentage')"
+                                            e-autocomplete="off"
+                                            e-limit-to="2"
+                                            e-maxlength="5"
                                             >
                                             {{saleitem.discount_percentage|| 0}}
                                         </span>
@@ -273,8 +275,8 @@
                         </div>
                     </div>
                 </div>
-            </div>    
-        </div>    
+            </div>
+        </div>
     </div>
     <div class="col-sm-offset-6 col-sm-6">
         <div class="panel panel-default">
@@ -341,7 +343,7 @@
 
 <div class="row">
     <footer class="panel-footer text-right bg-light lter">
-        <button class="btn m-b-xs  btn-primary save-print-bill" id="save_print" ng-click="getBtnId('print')"> 
+        <button class="btn m-b-xs  btn-primary save-print-bill" id="save_print" ng-click="getBtnId('print')">
             <i class="fa fa-print"></i> Save and Print Bill
         </button>
         &nbsp;

@@ -477,7 +477,7 @@ out-patient-table .table > thead > tr > th label.i-checks{
   width: auto;
 }
 
-.editable-wrap.editable-select, .editable-wrap.editable-text {    
+.editable-wrap.editable-select, .editable-wrap.editable-text {
   width: 100%;
 }
 
@@ -494,4 +494,7 @@ out-patient-table .table > thead > tr > th label.i-checks{
   top: 53px;
   width: 100%;
   z-index: 99;
+}
+.r-v-top > td{
+    vertical-align: top !important;
 }

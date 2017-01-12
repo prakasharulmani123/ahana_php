@@ -74,7 +74,7 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
     service.GetDischargeTypes = GetDischargeTypes;
     service.CheckAdminAccess = CheckAdminAccess;
     service.GetSaleGroups = GetSaleGroups;
-    
+
     return service;
 
     function ChangeStatus(modelName, primaryKey, callback) {
@@ -405,10 +405,10 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
                 });
     }
 
-    function GetEncounterListByPatient(tenant, sts, del_sts, pat_id, callback) {
+    function GetEncounterListByPatient(tenant, sts, del_sts, pat_id, callback, addtfields, only) {
         var response;
 
-        $http.get($rootScope.IRISOrgServiceUrl + '/encounter/getencounterlistbypatient?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts + '&patient_id=' + pat_id)
+        $http.get($rootScope.IRISOrgServiceUrl + '/encounter/getencounterlistbypatient?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts + '&patient_id=' + pat_id + '&addtfields=' + addtfields + '&only=' + only)
                 .success(function (response) {
                     callback(response);
                 }, function (x) {
@@ -750,7 +750,7 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
         ];
         callback(response);
     }
-    
+
     function GetDischargeTypes(callback) {
         var response = [
             {value: 'DT', label: 'Death'},
@@ -765,13 +765,13 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
         var ret = false;
         var currentUser = AuthenticationService.getCurrentUser();
         var loggedIn = Boolean(currentUser);
-        
+
         if(loggedIn){
             ret = currentUser.credentials.tenant_id == 0;
         }
         callback(ret);
     }
-    
+
     function GetSaleGroups(tenant, sts, del_sts, callback) {
         var response;
 
