@@ -39,6 +39,12 @@
                     </div>    
                 </div>
             </div>
+            
+            <div class="col-sm-12" ng-if='showTable && records.length == 0'>
+                <div class="panel panel-default">
+                    <div class="panel-body">No Records Found</div>
+                </div>
+            </div>
 
             <div class="col-sm-12" ng-if='showTable && records.length > 0'>
                 <span class="text-right">
@@ -94,7 +100,7 @@
                                     <td>{{record.bill_no}}</td>
                                     <td>{{record.patient_name}}</td>
                                     <td ng-init="sale.sale_amount = sale.sale_amount + parseFloat(record.total_item_amount);">
-                                        {{record.total_item_sale_amount}}
+                                        {{record.total_item_amount}}
                                     </td>
                                     <td ng-init="sale.vat_amount = sale.vat_amount + parseFloat(record.total_item_vat_amount);">
                                         {{record.total_item_vat_amount}}

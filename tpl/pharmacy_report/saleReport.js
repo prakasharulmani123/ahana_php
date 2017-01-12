@@ -21,6 +21,8 @@ app.controller('saleReportController', ['$rootScope', '$scope', '$timeout', '$ht
             $scope.data.to = moment().format('YYYY-MM-DD');
             $scope.data.from = moment($scope.data.to).add(-1, 'days').format('YYYY-MM-DD');
             $scope.data.payment_type = '';
+            $scope.data.patient_group_name = '';
+            $scope.deselectAll();
             $scope.fromMaxDate = new Date($scope.data.to);
             $scope.toMinDate = new Date($scope.data.from);
         }
@@ -30,7 +32,23 @@ app.controller('saleReportController', ['$rootScope', '$scope', '$timeout', '$ht
             $rootScope.commonService.GetPaymentType(function (response) {
                 $scope.paymentTypes = response;
             });
+
+            $scope.saleGroups = {};
+            $scope.saleGroupsLength = 0;
+            $rootScope.commonService.GetSaleGroups('', '1', false, function (response) {
+                $scope.saleGroups = response.saleGroupsList;
+                $scope.saleGroupsLength = Object.keys($scope.saleGroups).length;
+            });
             $scope.clearReport();
+        }
+
+        $scope.deselectAll = function () {
+            $timeout(function () {
+                // anything you want can go here and will safely be run on the next digest.
+                var patient_group_button = $('button[data-id="patient_group"]').next();
+                var patient_group_deselect_all = patient_group_button.find(".bs-deselect-all");
+                patient_group_deselect_all.click();
+            });
         }
 
         $scope.$watch('data.from', function (newValue, oldValue) {
@@ -47,6 +65,7 @@ app.controller('saleReportController', ['$rootScope', '$scope', '$timeout', '$ht
         //Index Page
         $scope.loadReport = function () {
             $scope.records = [];
+            $scope.sale = {};
             $scope.loadbar('show');
             $scope.showTable = true;
             $scope.errorData = "";
@@ -59,6 +78,8 @@ app.controller('saleReportController', ['$rootScope', '$scope', '$timeout', '$ht
                 angular.extend(data, {to: moment($scope.data.to).format('YYYY-MM-DD')});
             if (typeof $scope.data.payment_type !== 'undefined' && $scope.data.payment_type != '')
                 angular.extend(data, {payment_type: $scope.data.payment_type});
+            if (typeof $scope.data.patient_group_name !== 'undefined' && $scope.data.patient_group_name != '')
+                angular.extend(data, {patient_group_name: $scope.data.patient_group_name});
 
             // Get data's from service
             $http.post($rootScope.IRISOrgServiceUrl + '/pharmacyreport/salereport?addtfields=salereport', data)
@@ -71,6 +92,18 @@ app.controller('saleReportController', ['$rootScope', '$scope', '$timeout', '$ht
                         $scope.errorData = "An Error has occured";
                     });
         };
+
+        $scope.salePaymentType = function (payment_type) {
+            var sale_payment_type = '-'
+            if (payment_type == 'CA') {
+                sale_payment_type = 'Cash';
+            } else if (payment_type == 'CR') {
+                sale_payment_type = 'Credit';
+            } else if (payment_type == 'COD') {
+                sale_payment_type = 'CashOnDelivery';
+            }
+            return sale_payment_type;
+        }
 
         $scope.parseFloat = function (row) {
             return parseFloat(row);

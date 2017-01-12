@@ -73,6 +73,7 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
 
     service.GetDischargeTypes = GetDischargeTypes;
     service.CheckAdminAccess = CheckAdminAccess;
+    service.GetSaleGroups = GetSaleGroups;
     
     return service;
 
@@ -769,5 +770,17 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
             ret = currentUser.credentials.tenant_id == 0;
         }
         callback(ret);
+    }
+    
+    function GetSaleGroups(tenant, sts, del_sts, callback) {
+        var response;
+
+        $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyreport/getsalegrouplist?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts)
+                .success(function (response) {
+                    callback(response);
+                }, function (x) {
+                    response = {success: false, message: 'Server Error'};
+                    callback(response);
+                });
     }
 }

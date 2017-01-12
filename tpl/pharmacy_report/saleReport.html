@@ -38,10 +38,20 @@
                                     <option value="">Select Payment Type</option>
                                 </select>
                             </div>
+                            <div class="form-group" ng-show="data.payment_type == 'CR' && saleGroupsLength > 0">
+                                <select id="patient_group" class="form-control selectpicker" data-actions-box="true" data-selected-text-format="count" data-live-search="true"  ng-model="data.patient_group_name" ng-options="key as value for (key , value) in saleGroups" multiple>
+                                </select>
+                            </div>
                             <button class="btn btn-success get-report" ng-disabled="searchForm.$invalid" ng-click="loadReport()">Get Report</button>
                             <button class="btn btn-dark" ng-click="clearReport()">Clear</button>
                         </form>
                     </div>    
+                </div>
+            </div>
+
+            <div class="col-sm-12" ng-if='showTable && records.length == 0'>
+                <div class="panel panel-default">
+                    <div class="panel-body">No Records Found</div>
                 </div>
             </div>
 
@@ -100,8 +110,8 @@
                                     <td>{{record.bill_no}}</td>
                                     <td>{{record.patient_name}}</td>
                                     <td>{{record.patient_uhid}}</td>
-                                    <td>{{record.patient_group_name}}</td>
-                                    <td>{{record.payment_type}}</td>
+                                    <td>{{record.patient_group_name|| '-'}}</td>
+                                    <td>{{salePaymentType(record.payment_type)}}</td>
                                     <td ng-init="sale.total_amount = sale.total_amount + parseFloat(record.bill_amount);">
                                         {{record.bill_amount}}
                                     </td>

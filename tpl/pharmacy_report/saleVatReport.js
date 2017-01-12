@@ -19,7 +19,7 @@ app.controller('saleVatReportController', ['$rootScope', '$scope', '$timeout', '
             $scope.showTable = false;
             $scope.data = {};
             $scope.data.to = moment().format('YYYY-MM-DD');
-            $scope.data.from = moment().subtract(1, 'months').format('YYYY-MM-DD');
+            $scope.data.from = moment($scope.data.to).add(-1, 'days').format('YYYY-MM-DD');
             $scope.fromMaxDate = new Date($scope.data.to);
             $scope.toMinDate = new Date($scope.data.from);
         }
@@ -42,6 +42,7 @@ app.controller('saleVatReportController', ['$rootScope', '$scope', '$timeout', '
         //Index Page
         $scope.loadReport = function () {
             $scope.records = [];
+            $scope.sale = {};
             $scope.loadbar('show');
             $scope.showTable = true;
             $scope.errorData = "";
