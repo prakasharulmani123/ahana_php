@@ -487,7 +487,7 @@ class PatientController extends ActiveController {
             fclose($ifp);
 
             $oldFile = "images" . DS . "uavatar" . DS . $model->patient_image;
-            if (file_exists($oldFile)) {
+            if ($model->patient_image && file_exists($oldFile)) {
                 unlink($oldFile);
             }
             return $filename;
