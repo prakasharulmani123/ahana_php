@@ -425,7 +425,7 @@ class PatientController extends ActiveController {
 
         if ($file) {
             $model = PatPatient::find()->tenant()->andWhere(['patient_guid' => $_GET['patient_id']])->one();
-            $filename = $this->convertBlobToFile($file, $model->patient_global_int_code);
+            $filename = $this->convertBlobToFile($file, $model);
             $model->patient_image = $filename;
             $model->save(false);
             $model->refresh();
@@ -438,7 +438,7 @@ class PatientController extends ActiveController {
     public function actionBlobtofile() {
         $images = PatGlobalPatient::find()->where(['not', ['patient_image' => NULL]])->all();
         foreach ($images as $image) {
-            $filename = $this->convertBlobToFile($image->patient_image, $image->patient_global_int_code);
+            $filename = $this->convertBlobToFile($image->patient_image, $image);
             if ($filename) {
                 $image->patient_image = $filename;
                 $image->update(false);
@@ -468,9 +468,11 @@ class PatientController extends ActiveController {
         exit;
     }
 
-    protected function convertBlobToFile($base64_string, $gCode) {
+    protected function convertBlobToFile($base64_string, $model) {
         defined('DS') or define('DS', DIRECTORY_SEPARATOR);
-        $filename = "{$gCode}.jpg";
+        $gCode = $model->patient_global_int_code;
+
+        $filename = "{$gCode}_" . time() . ".jpg";
         $uploadPath = "images" . DS . "uavatar" . DS;
         if (!file_exists($uploadPath)) {
             mkdir($uploadPath, 0777, true);
@@ -483,6 +485,11 @@ class PatientController extends ActiveController {
         if (isset($data[1])) {
             fwrite($ifp, base64_decode($data[1]));
             fclose($ifp);
+
+            $oldFile = "images" . DS . "uavatar" . DS . $model->patient_image;
+            if (file_exists($oldFile)) {
+                unlink($oldFile);
+            }
             return $filename;
         }
         return false;

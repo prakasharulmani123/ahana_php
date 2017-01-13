@@ -4,6 +4,8 @@ namespace common\models;
 
 use common\models\query\PhaProductBatchQuery;
 use yii\db\ActiveQuery;
+use Yii;
+
 
 /**
  * This is the model class for table "pha_product_batch".
@@ -125,8 +127,22 @@ class PhaProductBatch extends RActiveRecord {
                 return isset($model->product) ? $model->product : '';
             },
         ];
-        $fields = array_merge(parent::fields(), $extend);
-        return $fields;
+        $parent_fields = parent::fields();
+        $addt_keys = $extFields = [];
+        if ($addtField = Yii::$app->request->get('addtfields')) {
+            switch ($addtField):
+                case 'sale_batch_by_product':
+                    $addt_keys = ['batch_details','per_unit_price'];
+                    $pFields = ['batch_no','available_qty','product_id','expiry_date'];
+                    $parent_fields = array_combine($pFields, $pFields);
+                    break;
+            endswitch;
+        }
+
+        if ($addt_keys !== false)
+            $extFields = ($addt_keys) ? array_intersect_key($extend, array_flip($addt_keys)) : $extend;
+
+        return array_merge($parent_fields, $extFields);
     }
 
     public function beforeSave($insert) {
