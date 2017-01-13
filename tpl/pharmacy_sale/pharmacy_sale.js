@@ -515,7 +515,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 $scope.saleItems[key].expiry_date = '';
                 $scope.saleItems[key].mrp = 0;
                 $scope.saleItems[key].quantity = 0;
-            });
+            },'sale_batch_by_product');
         }
 
         $scope.productInlineAlert = function (item, key) {

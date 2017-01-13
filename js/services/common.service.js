@@ -559,10 +559,10 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
                 });
     }
 
-    function GetBatchListByProduct(product_id, callback) {
+    function GetBatchListByProduct(product_id, callback, addtfields, only) {
         var response;
 
-        $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproductbatch/getbatchbyproduct?product_id=' + product_id)
+        $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproductbatch/getbatchbyproduct?product_id=' + product_id + '&addtfields=' + addtfields + '&only=' + only)
                 .success(function (response) {
                     callback(response);
                 }, function (x) {
