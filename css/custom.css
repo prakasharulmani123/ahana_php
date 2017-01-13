@@ -487,13 +487,14 @@ out-patient-table .table > thead > tr > th label.i-checks{
 }
 
 #patient-preview-pop-up {
-  float: left;
-  height: 100%;
-  left: 125px;
+  left: 140px;
   position: fixed;
   top: 53px;
-  width: 100%;
   z-index: 99;
+}
+#patient-preview-pop-up img{
+    /*border-radius: 20px;*/
+    /*border: 5px solid #23b7e5;*/
 }
 .r-v-top > td{
     vertical-align: top !important;

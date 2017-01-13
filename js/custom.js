@@ -3,7 +3,16 @@ $(document).ready(function () {
         setTimeout(function () { // Wait for closing animation to finish.
             $.slidebars.close();
         }, 400);
-    })
+    });
+
+    $("body").on('mouseover','img[data-preview-img!=""]',function () {
+        var prevSRC = $(this).data('preview-img');
+        $("#patient-preview-pop-up img").attr('src', prevSRC);
+        $("#patient-preview-pop-up").show();
+    }).on('mouseout','img[data-preview-img!=""]',function () {
+//        $("#patient-preview-pop-up img").attr('src', '');
+        $("#patient-preview-pop-up").hide();
+    });
 });
 
 $(document).mouseup(function (e) {
@@ -24,7 +33,7 @@ $(document).mouseup(function (e) {
     } else {
         container_2.show();
     }
-    
+
     var container_3 = $("#patient-merge.result-patient-merge");
     var input_box_3 = $(".patient_merge_input");
 
@@ -38,7 +47,7 @@ $(document).mouseup(function (e) {
 $(document).bind('click', function (e) {
     var $clicked = $(e.target);
     if ($clicked.closest('.patient-details-part').find('.trigger-close').length == 0) {
-        if($('.patient-details-part .trigger-close').next('.popover').is(':visible'))
+        if ($('.patient-details-part .trigger-close').next('.popover').is(':visible'))
             $('.trigger-close').trigger('click');
     }
     if ($clicked.hasClass('alert-read-more')) {
