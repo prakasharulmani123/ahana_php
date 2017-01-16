@@ -88,7 +88,17 @@ class UserController extends ActiveController {
     }
 
     public function actionGetuserdata() {
-        $model = CoUser::find()->active()->exceptSuperUser()->orderBy(['created_at' => SORT_DESC])->all();
+        $get = Yii::$app->request->get();
+        if(isset($get['cp']) && $get['cp'] == 'C'){
+            $model = CoUser::find()
+                    ->active()
+                    ->exceptSuperUser()
+                    ->andWhere(['care_provider' => 1])
+                    ->orderBy(['created_at' => SORT_DESC])
+                    ->all();
+        } else {
+            $model = CoUser::find()->active()->exceptSuperUser()->orderBy(['created_at' => SORT_DESC])->all();
+        }
         $data = [];
         foreach ($model as $key => $user) {
             $data[$key] = $user->attributes;
