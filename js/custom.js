@@ -5,13 +5,18 @@ $(document).ready(function () {
         }, 400);
     });
 
-    $("body").on('mouseover','img[data-preview-img!=""]',function () {
+//Image Preview
+    $("body").on('mouseover', 'img', function () {
         var prevSRC = $(this).data('preview-img');
-        $("#patient-preview-pop-up img").attr('src', prevSRC);
-        $("#patient-preview-pop-up").show();
-    }).on('mouseout','img[data-preview-img!=""]',function () {
-//        $("#patient-preview-pop-up img").attr('src', '');
-        $("#patient-preview-pop-up").hide();
+        if (prevSRC != '') {
+            $("#patient-preview-pop-up img").attr('src', prevSRC);
+            $("#patient-preview-pop-up").show();
+        }
+    }).on('mouseout', 'img', function () {
+        if ($("#patient-preview-pop-up").is(':visible')) {
+            $("#patient-preview-pop-up img").attr('src', '');
+            $("#patient-preview-pop-up").hide();
+        }
     });
 });
 

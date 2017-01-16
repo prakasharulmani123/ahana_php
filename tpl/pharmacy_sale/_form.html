@@ -109,6 +109,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <b>Sale Items</b>&nbsp;<span ng-bind-html="productloader"></span>
+                {{ products | json }}
             </div>
             <div class="panel-body">
                 <div class="row">
@@ -165,7 +166,7 @@
                                                 editable-select="saleitem.alternate_product"
                                                 e-name="alternate_product"
                                                 e-form="tableform"
-                                                e-ng-options="product as product.full_name for product in alternateproducts[key] | filter:$viewValue"
+                                                e-ng-options="product as product.full_name for product in saleitem.alternateproducts | filter:$viewValue"
                                                 e-ng-change="updateAlternateProductRow($data, key, $index)"
                                                 >
                                                 {{ showAlternateProduct(saleitem) || 'empty' }}
@@ -180,7 +181,7 @@
                                                 e-name="batch_details"
                                                 e-form="tableform"
                                                 onbeforesave="checkInput($data, key, $index)"
-                                                e-ng-options="batch as batch.batch_details for batch in batches | filter:$viewValue | limitTo:8| filter:{product_id : saleitem.product_id}: true"
+                                                e-ng-options="batch as batch.batch_details for batch in saleitem.product_batches | filter:$viewValue | limitTo:8| filter:{product_id : saleitem.product_id}: true"
                                                 e-ng-change="updateBatchRow($data, key, $index)">
                                                 {{ showBatch(saleitem)}}
                                             </span>
