@@ -162,13 +162,14 @@ app.controller('saleReportController', ['$rootScope', '$scope', '$timeout', '$ht
             var total = 0;
             angular.forEach($scope.records, function (record, key) {
                 var s_no_string = serial_no.toString();
-                var sale_payment_type = $scope.salePaymentType(record.payment_type)
+                var sale_payment_type = $scope.salePaymentType(record.payment_type);
+                var patient_group_name = (record.patient_group_name) ? record.patient_group_name : '-';
                 reports.push([
                     s_no_string,
                     record.bill_no,
                     record.patient_name,
                     record.patient_uhid,
-                    record.patient_group_name,
+                    patient_group_name,
                     sale_payment_type,
                     record.bill_amount,
                 ]);
@@ -235,10 +236,16 @@ app.controller('saleReportController', ['$rootScope', '$scope', '$timeout', '$ht
             }, {
                 style: 'demoTable',
                 table: {
-                    headerRows: 1,
-                    widths: ['*', '*', '*', '*', '*', '*', '*'],
+                    headerRows: 2,
+                    widths: ['auto', 'auto', '*', '*', '*', '*', '*'],
                     body: reports,
+                    dontBreakRows: true,
                 },
+                layout: {
+                    hLineWidth: function (i, node) {
+                        return (i === 0 || i === node.table.body.length) ? 1 : 0.5;
+                    }
+                }
             });
 
             return content;

@@ -73,7 +73,7 @@ app.controller('saleVatReportController', ['$rootScope', '$scope', '$timeout', '
         //For Print
         $scope.printHeader = function () {
             return {
-                text: "Purchase VAT Report",
+                text: "Sale VAT Report",
                 margin: 5,
                 alignment: 'center'
             };
@@ -110,34 +110,34 @@ app.controller('saleVatReportController', ['$rootScope', '$scope', '$timeout', '
             ]);
             reports.push([
                 {text: 'S.No', style: 'header'},
-                {text: 'Invoice no', style: 'header'},
-                {text: 'Supplier', style: 'header'},
-                {text: 'Vat Purchase Amount', style: 'header'},
+                {text: 'Bill No', style: 'header'},
+                {text: 'Patient Name', style: 'header'},
+                {text: 'Vat Sale Amount', style: 'header'},
                 {text: 'Vat Tax Amount', style: 'header'},
                 {text: 'Total Amount', style: 'header'},
             ]);
 
             var serial_no = 1;
             var result_count = $scope.records.length;
-            var purchase_amount = 0;
+            var sale_amount = 0;
             var vat_amount = 0;
             var total_amount = 0;
             angular.forEach($scope.records, function (record, key) {
                 var s_no_string = serial_no.toString();
-                
+
                 reports.push([
                     s_no_string,
-                    record.invoice_no,
-                    record.supplier_name,
-                    record.total_item_purchase_amount,
+                    record.bill_no,
+                    record.patient_name,
+                    record.total_item_amount,
                     record.total_item_vat_amount,
-                    record.net_amount,
+                    record.bill_amount,
                 ]);
-                
-                purchase_amount += parseFloat(record.total_item_purchase_amount);
+
+                sale_amount += parseFloat(record.total_item_amount);
                 vat_amount += parseFloat(record.total_item_vat_amount);
-                total_amount += parseFloat(record.net_amount);
-                
+                total_amount += parseFloat(record.bill_amount);
+
                 if (serial_no == result_count) {
                     $scope.printloader = '';
                 }
@@ -145,7 +145,7 @@ app.controller('saleVatReportController', ['$rootScope', '$scope', '$timeout', '
             });
             reports.push([
                 {
-                    text: 'Total Purchase Value',
+                    text: 'Totals',
                     style: 'header',
                     alignment: 'right',
                     colSpan: 3
@@ -153,7 +153,7 @@ app.controller('saleVatReportController', ['$rootScope', '$scope', '$timeout', '
                 "",
                 "",
                 {
-                    text: purchase_amount.toFixed(2).toString(),
+                    text: sale_amount.toFixed(2).toString(),
                     style: 'header',
                     alignment: 'right'
                 },
@@ -175,7 +175,7 @@ app.controller('saleVatReportController', ['$rootScope', '$scope', '$timeout', '
                     {
                         text: [
                             {text: 'Report Name: ', bold: true},
-                            'Purchase VAT Report'
+                            'Sale VAT Report'
                         ],
                         margin: [0, 0, 0, 20]
                     },
