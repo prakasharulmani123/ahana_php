@@ -144,7 +144,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             })
             //CONFIGURATION USER REGISTRATION
             .state('configuration.registration', {
-                url: '/registration',
+                url: '/registration/{mode}',
                 templateUrl: 'tpl/registration/index.html',
                 resolve: {
                     deps: ['$ocLazyLoad',

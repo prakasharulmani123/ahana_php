@@ -4,9 +4,10 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
         $scope.loadList = function () {
             $scope.isLoading = true;
             $scope.rowCollection = [];
+            var cp = $state.params.mode;
 
             // Get data's from service
-            $http.get($rootScope.IRISOrgServiceUrl + '/user/getuserdata')
+            $http.get($rootScope.IRISOrgServiceUrl + '/user/getuserdata?cp='+cp)
                     .success(function (users) {
                         $scope.isLoading = false;
                         $scope.rowCollection = users;
