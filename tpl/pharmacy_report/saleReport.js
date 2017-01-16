@@ -112,7 +112,7 @@ app.controller('saleReportController', ['$rootScope', '$scope', '$timeout', '$ht
         //For Print
         $scope.printHeader = function () {
             return {
-                text: "Purchase Report",
+                text: "Sale Report",
                 margin: 5,
                 alignment: 'center'
             };
@@ -145,13 +145,16 @@ app.controller('saleReportController', ['$rootScope', '$scope', '$timeout', '$ht
 
             var reports = [];
             reports.push([
-                {text: branch_name, style: 'header', colSpan: 4}, "", "", ""
+                {text: branch_name, style: 'header', colSpan: 7}, "", "", "", "", "", ""
             ]);
             reports.push([
                 {text: 'S.No', style: 'header'},
-                {text: 'Invoice no', style: 'header'},
-                {text: 'Supplier', style: 'header'},
-                {text: 'Purchase Value', style: 'header'},
+                {text: 'Bill No', style: 'header'},
+                {text: 'Patient Name', style: 'header'},
+                {text: 'UHID', style: 'header'},
+                {text: 'Group', style: 'header'},
+                {text: 'Payment Type', style: 'header'},
+                {text: 'Sale Value', style: 'header'},
             ]);
 
             var serial_no = 1;
@@ -159,13 +162,17 @@ app.controller('saleReportController', ['$rootScope', '$scope', '$timeout', '$ht
             var total = 0;
             angular.forEach($scope.records, function (record, key) {
                 var s_no_string = serial_no.toString();
+                var sale_payment_type = $scope.salePaymentType(record.payment_type)
                 reports.push([
                     s_no_string,
-                    record.invoice_no,
-                    record.supplier_name,
-                    record.net_amount,
+                    record.bill_no,
+                    record.patient_name,
+                    record.patient_uhid,
+                    record.patient_group_name,
+                    sale_payment_type,
+                    record.bill_amount,
                 ]);
-                total += parseFloat(record.net_amount);
+                total += parseFloat(record.bill_amount);
                 if (serial_no == result_count) {
                     $scope.printloader = '';
                 }
@@ -173,11 +180,14 @@ app.controller('saleReportController', ['$rootScope', '$scope', '$timeout', '$ht
             });
             reports.push([
                 {
-                    text: 'Total Purchase Value',
+                    text: 'Total Sale Value',
                     style: 'header',
                     alignment: 'right',
-                    colSpan: 3
+                    colSpan: 6
                 },
+                "",
+                "",
+                "",
                 "",
                 "",
                 {
@@ -193,7 +203,7 @@ app.controller('saleReportController', ['$rootScope', '$scope', '$timeout', '$ht
                     {
                         text: [
                             {text: 'Report Name: ', bold: true},
-                            'Purchase Report'
+                            'Sale Report'
                         ],
                         margin: [0, 0, 0, 20]
                     },
@@ -225,16 +235,10 @@ app.controller('saleReportController', ['$rootScope', '$scope', '$timeout', '$ht
             }, {
                 style: 'demoTable',
                 table: {
-                    headerRows: 2,
-                    widths: ['auto', 'auto', '*', 'auto'],
+                    headerRows: 1,
+                    widths: ['*', '*', '*', '*', '*', '*', '*'],
                     body: reports,
-                    dontBreakRows: true,
                 },
-                layout: {
-                    hLineWidth: function (i, node) {
-                        return (i === 0 || i === node.table.body.length) ? 1 : 0.5;
-                    }
-                }
             });
 
             return content;
@@ -253,6 +257,7 @@ app.controller('saleReportController', ['$rootScope', '$scope', '$timeout', '$ht
                         pageMargins: ($scope.deviceDetector.browser == 'firefox' ? 75 : 50),
                         pageSize: 'A4',
                     };
+                    
                     var pdf_document = pdfMake.createPdf(docDefinition);
                     var doc_content_length = Object.keys(pdf_document).length;
                     if (doc_content_length > 0) {

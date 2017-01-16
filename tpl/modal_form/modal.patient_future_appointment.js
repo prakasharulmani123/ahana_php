@@ -66,6 +66,8 @@ app.controller('ModalPatientFutureAppointmentController', ['scope', '$scope', '$
             method = 'POST';
             succ_msg = 'Appointment saved successfully';
             
+            _that.data.status_date = moment(_that.data.status_date).format('YYYY-MM-DD');
+            
             scope.loadbar('show');
             $http({
                 method: method,
