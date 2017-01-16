@@ -570,7 +570,7 @@ class EncounterController extends ActiveController {
                     ->tenant()
                     ->andWhere(['encounter_type' => $enc_type])
                     ->andWhere(['patient_id' => $patient->patient_id])
-                    ->orderBy(['encounter_id' => SORT_DESC]);
+                    ->orderBy(['status' => SORT_DESC]);
 
             $model = $encounter->one();
 
