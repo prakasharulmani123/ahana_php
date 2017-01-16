@@ -315,6 +315,9 @@ class PhaProduct extends RActiveRecord {
             'latest_price' => function ($model) {
                 return (isset($model->phaLatestBatch) ? $model->phaLatestBatch->phaProductBatchRate->mrp : 0);
             },
+            'product_batches' => function ($model) {
+                return $model->getPhaProductBatches()->andWhere('available_qty > 0')->all();
+            },
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;

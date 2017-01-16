@@ -50,7 +50,7 @@ class PharmacyproductController extends ActiveController {
         $modelClass = $this->modelClass;
 
         return new ActiveDataProvider([
-            'query' => $modelClass::find()->tenant()->active()->orderBy(['created_at' => SORT_DESC]),
+            'query' => $modelClass::find()->tenant()->active()->limit(5)->orderBy(['created_at' => SORT_DESC]),
             'pagination' => false,
         ]);
     }
@@ -261,7 +261,7 @@ class PharmacyproductController extends ActiveController {
         if (isset($post['product_id'])) {
             //Retrieve One product
             $command = $this->_connection->createCommand("
-                    SELECT a.product_id, a.product_name, b.generic_id, b.generic_name, c.drug_class_id, c.drug_name, 
+                    SELECT a.product_id, a.product_name, b.generic_id, b.generic_name, c.drug_class_id, c.drug_name,
                     CONCAT(
                         IF(b.generic_name IS NOT NULL, b.generic_name, ''),
                         IF(a.product_name IS NOT NULL, CONCAT(' // ', a.product_name), ''),
@@ -287,7 +287,7 @@ class PharmacyproductController extends ActiveController {
         } else {
             //Retrieve (product && generic || drug)
             $command = $this->_connection->createCommand("
-                    SELECT a.product_id, a.product_name, b.generic_id, b.generic_name, c.drug_class_id, c.drug_name, 
+                    SELECT a.product_id, a.product_name, b.generic_id, b.generic_name, c.drug_class_id, c.drug_name,
                     CONCAT(
                         IF(b.generic_name IS NOT NULL, b.generic_name, ''),
                         IF(a.product_name IS NOT NULL, CONCAT(' // ', a.product_name), ''),
@@ -318,7 +318,7 @@ class PharmacyproductController extends ActiveController {
         if (empty($products) && !isset($post['product_id'])) {
             //Retrieve (product || generic || drug)
             $command = $this->_connection->createCommand("
-                    SELECT a.product_id, a.product_name, b.generic_id, b.generic_name, c.drug_class_id, c.drug_name, 
+                    SELECT a.product_id, a.product_name, b.generic_id, b.generic_name, c.drug_class_id, c.drug_name,
                     CONCAT(
                         IF(b.generic_name IS NOT NULL, b.generic_name, ''),
                         IF(a.product_name IS NOT NULL, CONCAT(' // ', a.product_name), ''),
@@ -388,7 +388,7 @@ class PharmacyproductController extends ActiveController {
             $command = $this->_connection->createCommand("
                     SELECT a.route_id, a.route_name as route,
                     (
-                        SELECT GROUP_CONCAT(c.description_id) 
+                        SELECT GROUP_CONCAT(c.description_id)
                         FROM  pha_descriptions_routes c
                         WHERE c.route_id = a.route_id
                         AND c.tenant_id = a.tenant_id
@@ -414,8 +414,8 @@ class PharmacyproductController extends ActiveController {
         $strings = $this->_getFrquenceyMatchStrings($text);
 
         if (!empty($strings)) {
-            $query = "SELECT freq_id, freq_name as frequency 
-                    FROM pat_prescription_frequency 
+            $query = "SELECT freq_id, freq_name as frequency
+                    FROM pat_prescription_frequency
                     WHERE";
             foreach ($strings as $key => $string) {
                 $query .= " freq_name like '%$string%' OR";
@@ -429,7 +429,7 @@ class PharmacyproductController extends ActiveController {
             $frequencies = $command->queryAll();
         } else if (isset($post['route_id'])) {
             $command = $this->_connection->createCommand("
-                    SELECT freq_id, freq_name as frequency 
+                    SELECT freq_id, freq_name as frequency
                     FROM pat_prescription_frequency
                     WHERE tenant_id = :tenant_id
                     ORDER BY  freq_name

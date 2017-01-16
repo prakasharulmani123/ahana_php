@@ -4,7 +4,7 @@ namespace common\models;
 
 use common\models\query\PhaVatQuery;
 use yii\db\ActiveQuery;
-
+use Yii;
 /**
  * This is the model class for table "pha_vat".
  *
@@ -79,6 +79,21 @@ class PhaVat extends RActiveRecord {
             $list = self::find()->tenant($tenant)->deleted()->all();
 
         return $list;
+    }
+
+    public function fields() {
+        $parent_fields = parent::fields();
+        if ($addtField = Yii::$app->request->get('addtfields')) {
+            switch ($addtField):
+                case 'pharm_sale_prod_json':
+                    $parent_fields = [
+                        'vat' => 'vat'
+                    ];
+                    break;
+            endswitch;
+        }
+
+        return $parent_fields;
     }
 
 }

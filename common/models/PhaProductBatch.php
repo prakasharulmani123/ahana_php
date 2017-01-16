@@ -132,6 +132,7 @@ class PhaProductBatch extends RActiveRecord {
         if ($addtField = Yii::$app->request->get('addtfields')) {
             switch ($addtField):
                 case 'sale_batch_by_product':
+                case 'pharm_sale_prod_json':
                     $addt_keys = ['batch_details','per_unit_price'];
                     $pFields = ['batch_no','available_qty','product_id','expiry_date'];
                     $parent_fields = array_combine($pFields, $pFields);
