@@ -932,28 +932,39 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load('tpl/patient_groups/patient_groups.js?v=' + APP_VERSION);
+                            return $ocLazyLoad.load(['xeditable']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/patient_groups/patient_groups.js?v=' + APP_VERSION);
+                                    }
+                            );
                         }]
-                }
+                }               
             })
             .state('configuration.patientgroupCreate', {
                 url: '/patientgroupCreate',
                 templateUrl: 'tpl/patient_groups/create.html',
                 resolve: {
-                    deps: ['uiLoad',
-                        function (uiLoad) {
-                            return uiLoad.load(['tpl/patient_groups/patient_groups.js?v=' + APP_VERSION]);
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['xeditable']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/patient_groups/patient_groups.js?v=' + APP_VERSION);
+                                    }
+                            );
                         }]
-
                 }
             })
             .state('configuration.patientgroupUpdate', {
                 url: '/patientgroupUpdate/{id}',
                 templateUrl: 'tpl/patient_groups/update.html',
                 resolve: {
-                    deps: ['uiLoad',
-                        function (uiLoad) {
-                            return uiLoad.load(['tpl/patient_groups/patient_groups.js?v=' + APP_VERSION]);
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['xeditable']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/patient_groups/patient_groups.js?v=' + APP_VERSION);
+                                    }
+                            );
                         }]
                 }
             })
