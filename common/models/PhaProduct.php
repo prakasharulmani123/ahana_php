@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\models\query\PhaProductQuery;
+use Yii;
 use yii\db\ActiveQuery;
 
 /**
@@ -318,9 +319,28 @@ class PhaProduct extends RActiveRecord {
             'product_batches' => function ($model) {
                 return $model->getPhaProductBatches()->andWhere('available_qty > 0')->all();
             },
+            'product_batches_count' => function ($model) {
+                return $model->getPhaProductBatches()->andWhere('available_qty > 0')->count();
+            },
         ];
-        $fields = array_merge(parent::fields(), $extend);
-        return $fields;
+
+        $parent_fields = parent::fields();
+        $addt_keys = $extFields = [];
+        if ($addtField = Yii::$app->request->get('addtfields')) {
+            switch ($addtField):
+                case 'pharm_sale_alternateprod':
+                    $addt_keys = ['full_name', 'product_batches_count'];
+                    $parent_fields = [
+                        'product_id' => 'product_id',
+                    ];
+                    break;
+            endswitch;
+        }
+
+        if ($addt_keys !== false)
+            $extFields = ($addt_keys) ? array_intersect_key($extend, array_flip($addt_keys)) : $extend;
+
+        return array_merge($parent_fields, $extFields);
     }
 
     public function beforeSave($insert) {
