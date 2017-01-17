@@ -782,10 +782,8 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             $scope.msg.successMessage = "";
 
             $scope.data.sale_date = moment($scope.data.sale_date).format('YYYY-MM-DD');
-            console.log($scope.saleItems.length);
 
             angular.forEach($scope.saleItems, function (saleitem, key) {
-                console.log('AAAA'+key);
 //                alert(saleitem.expiry_date);
                 $scope.saleItems[key].expiry_date = moment(saleitem.expiry_date).format('YYYY-MM-DD');
 
@@ -809,7 +807,6 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 delete saleitem.product_batches;
 
             });
-            console.log('CCCCCCCCCC');
 
             /* For print bill */
             $scope.data2 = _that.data;
@@ -818,7 +815,6 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             $scope.getPaytypeDetail(_that.data.payment_type);
 
             angular.extend(_that.data, {product_items: $scope.saleItems});
-            console.log(_that.data);
             $scope.loadbar('show');
             $http({
                 method: 'POST',
