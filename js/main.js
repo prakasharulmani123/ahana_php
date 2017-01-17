@@ -496,14 +496,14 @@ angular.module('app')
 //                    }
 //                });
 
-//                hotkeys.add({
-//                    combo: 'f8',
-//                    description: 'Cancel',
-//                    callback: function (event) {
-//                        $scope.$broadcast('HK_CANCEL');
-//                        event.preventDefault();
-//                    }
-//                });
+                hotkeys.add({
+                    combo: 'f8',
+                    description: 'Cancel',
+                    callback: function (event) {
+                        $scope.$broadcast('HK_CANCEL');
+                        event.preventDefault();
+                    }
+                });
 
                 hotkeys.add({
                     combo: 'f9',

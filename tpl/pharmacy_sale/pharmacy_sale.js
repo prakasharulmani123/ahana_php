@@ -15,6 +15,13 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             }
         });
 
+        $scope.$on('HK_CANCEL', function (e) {
+            if (confirm('Are you sure want to leave?')) {
+                $scope.loadbar('show');
+                $state.go('pharmacy.sales');
+            }
+        });
+
         $scope.$on('HK_SAVE', function (e) {
             var location_url = $location.path().split('/');
             var url = location_url[1] + '/' + location_url[2];
