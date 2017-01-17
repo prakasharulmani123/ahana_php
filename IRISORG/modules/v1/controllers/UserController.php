@@ -93,7 +93,7 @@ class UserController extends ActiveController {
             $model = CoUser::find()
                     ->active()
                     ->exceptSuperUser()
-                    ->andWhere(['care_provider' => 1])
+                    ->andWhere(['care_provider' => '1'])
                     ->orderBy(['created_at' => SORT_DESC])
                     ->all();
         } else {
