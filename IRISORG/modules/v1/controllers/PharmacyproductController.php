@@ -48,7 +48,7 @@ class PharmacyproductController extends ActiveController {
     public function prepareDataProvider() {
         /* @var $modelClass BaseActiveRecord */
         $modelClass = $this->modelClass;
-
+//        andWhere('product_id IN (1909, 591)')
         return new ActiveDataProvider([
             'query' => $modelClass::find()->tenant()->active()->limit(5)->orderBy(['created_at' => SORT_DESC]),
             'pagination' => false,
