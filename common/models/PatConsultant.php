@@ -38,6 +38,7 @@ class PatConsultant extends RActiveRecord {
     public $report_total_visit;
     public $report_total_charge_amount;
     public $branch_name;
+
     /**
      * @inheritdoc
      */
@@ -59,15 +60,25 @@ class PatConsultant extends RActiveRecord {
     }
 
     public function validateConsultant($attribute, $params) {
-        if ($this->isNewRecord && isset(Yii::$app->user->identity->user->tenant_id) && Yii::$app->user->identity->user->tenant_id != 0) {
-            $current_date = date('Y-m-d');
-            $upto_date = date('Y-m-d', strtotime($current_date . "+3 days"));
-
-            if ($upto_date < date('Y-m-d', strtotime($this->consult_date)))
-                $this->addError($attribute, "Consultant Date must be lesser than {$upto_date}");
-            else if(date('Y-m-d', strtotime($this->consult_date)) < $current_date)
-                $this->addError($attribute, "Consultant Date must be greater than {$current_date}");
+        $encounter = PatEncounter::find()
+                ->where([
+                    'pat_encounter.encounter_id' => $this->encounter_id,
+                ])
+                ->one();
+        $encounter_date = date('Y-m-d', strtotime($encounter->encounter_date));
+        if (date('Y-m-d', strtotime($this->consult_date)) < $encounter_date) {
+            $this->addError($attribute, "Consultant Visit Date must be greater than the Admission date( {$encounter_date} )");
         }
+
+//        if ($this->isNewRecord && isset(Yii::$app->user->identity->user->tenant_id) && Yii::$app->user->identity->user->tenant_id != 0) {
+//            $current_date = date('Y-m-d');
+//            $upto_date = date('Y-m-d', strtotime($current_date . "+3 days"));
+//
+//            if ($upto_date < date('Y-m-d', strtotime($this->consult_date)))
+//                $this->addError($attribute, "Consultant Date must be lesser than {$upto_date}");
+//            else if (date('Y-m-d', strtotime($this->consult_date)) < $current_date)
+//                $this->addError($attribute, "Consultant Date must be greater than {$current_date}");
+//        }
     }
 
     /**
@@ -138,8 +149,8 @@ class PatConsultant extends RActiveRecord {
                 }
             },
             'consultant_name' => function ($model) {
-                $specname = isset($model->consultant->speciality)? " ( ".$model->consultant->speciality->speciality_name ." )":"";
-                return (isset($model->consultant->name)) ? $model->consultant->title_code.$model->consultant->name.$specname: '-';
+                $specname = isset($model->consultant->speciality) ? " ( " . $model->consultant->speciality->speciality_name . " )" : "";
+                return (isset($model->consultant->name)) ? $model->consultant->title_code . $model->consultant->name . $specname : '-';
             },
             'encounter_status' => function ($model) {
                 return $model->encounter->isActiveEncounter();
@@ -148,7 +159,7 @@ class PatConsultant extends RActiveRecord {
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
     }
-    
+
     public function beforeSave($insert) {
         $this->charge_amount = CoChargePerCategory::getChargeAmount(-1, 'P', $this->consultant_id, 'OP', $this->patient->patient_category_id);
         return parent::beforeSave($insert);
@@ -158,11 +169,12 @@ class PatConsultant extends RActiveRecord {
         $consultant = "Consultant : <b>{$this->consultant->title_code} {$this->consultant->name}</b>";
         if ($insert) {
             $message = $this->notes != '' ? "{$this->notes} <br /> $consultant" : $consultant;
-        }else{
+        } else {
             $message = $this->notes != '' ? "Updated: {$this->notes} <br /> $consultant" : "Updated: $consultant";
         }
         PatTimeline::insertTimeLine($this->patient_id, $this->consult_date, 'Consultation', '', $message, 'CONSULTANT', $this->encounter_id);
-        
+
         return parent::afterSave($insert, $changedAttributes);
     }
+
 }

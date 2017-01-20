@@ -497,7 +497,11 @@ class PatientController extends ActiveController {
 
     public function actionImportpatient() {
         $cond = Yii::$app->getRequest()->post();
-        $Patient = PatPatient::find()->where($cond)->one();
+        $Patient = PatPatient::find()->where([
+                    'patient_global_guid' => $cond['patient_global_guid'],
+                ])
+                ->one();
+        
         if (!empty($Patient)) {
             $PatientData = ArrayHelper::toArray($Patient);
             $model = new PatPatient;

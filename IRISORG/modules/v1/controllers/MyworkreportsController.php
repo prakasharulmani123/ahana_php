@@ -121,10 +121,10 @@ class MyworkreportsController extends ActiveController {
 
         $encounters = PatEncounter::find()
                 ->joinWith('patAdmissionClinicalDischarge')
-                ->status()
+//                ->status()
                 ->encounterType("IP")
-                ->finalized()
-                ->unauthorized();
+                ->finalized();
+//                ->unauthorized();
 
         if (isset($post['from']) && isset($post['to']) && isset($post['consultant_id']) && isset($post['tenant_id'])) {
             $consultant_ids = join("','", $post['consultant_id']);
@@ -151,9 +151,9 @@ class MyworkreportsController extends ActiveController {
                 ->joinWith("encounter")
                 ->joinWith("tenant")
                 ->andWhere('pat_encounter.encounter_type = "IP"')
-                ->andWhere('pat_encounter.status = "1"')
+//                ->andWhere('pat_encounter.status = "1"')
                 ->andWhere('pat_encounter.finalize > "0"')
-                ->andWhere('pat_encounter.authorize = "0"')
+//                ->andWhere('pat_encounter.authorize = "0"')
                 ->andWhere('pat_consultant.deleted_at = "0000-00-00 00:00:00"');
 
         if (isset($post['from']) && isset($post['to']) && isset($post['consultant_id']) && isset($post['tenant_id'])) {
