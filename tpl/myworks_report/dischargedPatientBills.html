@@ -14,8 +14,7 @@
                             <ul>
                                 <li>Kindly select 'ALL' option for any one for the drop downs only</li>
                                 <li>If 'ALL' option is selected for both drop downs then either one will be reset to the option 'DESELECT ALL'</li>
-                                <li>If more than 2 options is selected in either one of the drop down then the report will be generated only for a 7 days. The date will automatically reset in the date pickers</li>
-                                <li>Also if all option is selected in either one of the drop down then the report will be generated only for a single day. The date will automatically reset in the date pickers</li>
+                                <li>If more than 3 options is selected in either one of the drop down then the report will be generated only for a 30 days. The date will automatically reset in the date pickers</li>
                                 <li>Print mode is <b>"Landscape"</b></li>
                             </ul>
                         </div>
@@ -127,8 +126,8 @@
                                     <td>{{row.apptPatientData.fullname}}</td>
                                     <td>{{row.encounter_date| moment:'YYYY-MM-DD'}}</td>
                                     <td>{{row.clinical_discharge_date| moment:'YYYY-MM-DD'}}</td>
-                                    <td>{{row.apptPatientData.current_room}}</td>
-                                    <td>{{row.patient.consultant_name}}</td>
+                                    <td>{{row.currentAdmission.room_details}}</td>
+                                    <td>{{row.currentAdmission.consultant_name}}</td>
                                     <td>{{row.viewChargeCalculation.total_charge - row.viewChargeCalculation.total_concession| number:2 }}</td>
                                     <td>
                                         <span class="label {{(row.total_charge - row.total_concession - row.paid < 0) ? 'bg-danger' : 'bg-success'}}">
