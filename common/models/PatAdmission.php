@@ -307,9 +307,20 @@ class PatAdmission extends RActiveRecord {
             'room' => function ($model) {
                 return (isset($model->room) ? $model->room : '-');
             },
+            'room_details' => function ($model) {
+                return $model->roomdetails;
+            },
+            'consultant_name' => function ($model) {
+                $consultant = $model->consultant;
+                return $consultant->title_code . $consultant->name;
+            },
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
+    }
+
+    public function getRoomdetails() {
+        return "{$this->floor->floor_name} > {$this->ward->ward_name} > {$this->room->bed_name} ({$this->roomType->room_type_name})";
     }
 
 }

@@ -48,12 +48,21 @@ use yii\helpers\ArrayHelper;
  * @property string $deleted_at
  */
 class PatGlobalPatient extends RActiveRecord {
+    
+    public $complete_profile_fields;
 
     /**
      * @inheritdoc
      */
     public static function tableName() {
         return 'pat_global_patient';
+    }
+    
+    public function init() {
+        $global_attributes = self::getTableSchema()->getColumnNames();
+        $unset_fields = ['parent_id', 'migration_created_by', 'casesheetno', 'patient_global_int_code', 'patient_reg_date', 'patient_relation_code', 'patient_relation_name', 'patient_type', 'patient_ref_id', 'patient_bill_type', 'created_by', 'created_at', 'modified_by', 'modified_at', 'deleted_at'];
+        $this->complete_profile_fields = array_diff($global_attributes, $unset_fields);
+        return parent::init();
     }
 
     /**
@@ -150,6 +159,16 @@ class PatGlobalPatient extends RActiveRecord {
 
     public function getPatientGroups() {
         return $this->hasMany(CoPatientGroup::className(), ['patient_group_id' => 'patient_group_id'])->via('patientGroupsPatients');
+    }
+    
+    public function isIncompleteProfile(){
+        $global_fields = [];
+        
+        foreach ($this->complete_profile_fields as $global_field) {
+            $global_fields[$global_field] = $this->$global_field;
+        }
+        
+        return (in_array(null, $global_fields));
     }
 
     public function fields() {

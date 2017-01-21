@@ -612,198 +612,202 @@ class PatPatient extends RActiveRecord {
                 }
                 return false;
             },
-                    'have_patient_group' => function ($model) {
+            'have_patient_group' => function ($model) {
                 return !empty($model->patGlobalPatient->patientGroups);
             },
-                ];
+        ];
 
-                foreach ($this->_global_fields as $global_field) {
-                    $extend_glb = [$global_field => function($model, $global_field) {
-                            return $model->patGlobalPatient->$global_field;
-                        }];
-                    $extend = array_merge($extend_glb, $extend);
-                }
-
-                $parent_fields = parent::fields();
-                $addt_keys = [];
-                if ($addtField = Yii::$app->request->get('addtfields')) {
-                    switch ($addtField):
-                        case 'search':
-                            $addt_keys = ['patient_img_url', 'fullcurrentaddress', 'fullpermanentaddress', 'fullname', 'patient_guid','patient_age','patient_global_int_code','patient_mobile','org_name'];
-                            break;
-                        case 'salecreate':
-                            $pFields = ['patient_id','patient_guid'];
-                            $parent_fields = array_combine($pFields, $pFields);
-                            $addt_keys = ['name_with_int_code', 'fullname','last_consultant_id'];
-                            break;
-                        case 'merge_search':
-                            $addt_keys = ['patient_img_url', 'fullcurrentaddress', 'fullpermanentaddress', 'fullname', 'patient_guid','patient_age','patient_global_int_code','patient_mobile','org_name','childrens_count'];
-                            break;
-                    endswitch;
-                }
-
-                $extFields = ($addt_keys) ? array_intersect_key($extend, array_flip($addt_keys)) : $extend;
-                return array_merge($parent_fields, $extFields);
-            }
-
-            public function getHasalert() {
-                return (!empty($this->activePatientAlert)) ? true : false;
-            }
-
-            public function getIncomplete_profile() {
-                if (!isset($this->patPatientAddress))
-                    return true;
-                else
-                    return $this->patPatientAddress->isIncompleteProfile();
-            }
-
-            public function getCurrent_room() {
-                if (isset($this->patActiveIp)) {
-                    $admission = $this->patActiveIp->patCurrentAdmission;
-                    return "{$admission->floor->floor_name} > {$admission->ward->ward_name} > {$admission->room->bed_name} ({$admission->roomType->room_type_name})";
-                } else {
-                    return '-';
-                }
-            }
-
-            public function getNew_user() {
-                $active_op = $this->patActiveOp;
-                if (isset($active_op) && !empty($active_op)) {
-                    if ($this->getPatLastSeenAppointment()->count() == 0) {
-                        return true;
-                    }
-                    return false;
-                }
-                return false;
-            }
-
-            public function getFullcurrentaddress() {
-                if (isset($this->patPatientAddress)) {
-                    $result = '';
-                    if ($this->patPatientAddress->addr_current_address != '') {
-                        $result .= $this->patPatientAddress->addr_current_address;
-                    }
-
-                    if ($this->patPatientAddress->addr_city_id != '') {
-                        $result .= ' ' . $this->patPatientAddress->addrCity->city_name;
-                    }
-
-                    if ($this->patPatientAddress->addr_state_id != '') {
-                        $result .= ' ' . $this->patPatientAddress->addrState->state_name;
-                    }
-
-                    if ($this->patPatientAddress->addr_country_id != '') {
-                        $result .= ' ' . $this->patPatientAddress->addrCountry->country_name;
-                    }
-
-                    return $result;
-                }
-            }
-
-            public function getFullname() {
-                return ucwords("{$this->patient_title_code} {$this->patient_firstname}");
-            }
-
-            public function getPatient_age() {
-                $age = '';
-                if ($this->patient_dob != '' && $this->patient_dob != "0000-00-00")
-                    $age = self::getPatientAge($this->patient_dob);
-
-                return $age;
-            }
-
-            public function getOrg_name() {
-                if (isset($this->tenant->tenant_name))
-                    return $this->tenant->tenant_name;
-            }
-
-            public function getPatient_category() {
-                if (isset($this->patientCategory->patient_short_code)) {
-                    return $this->patientCategory->patient_short_code;
-                }
-            }
-
-            public function getPatient_category_fullname() {
-                if (isset($this->patientCategory->patient_cat_name)) {
-                    return $this->patientCategory->patient_cat_name;
-                }
-            }
-
-            public function getPatient_category_color() {
-                if (isset($this->patientCategory->patient_cat_color) && strtolower($this->patientCategory->patient_cat_color) != '#ffffff') {
-                    return $this->patientCategory->patient_cat_color;
-                } else {
-                    return "#19A9D5";
-                }
-            }
-
-            public static function getPatientAge($date) {
-                $birthDate = date('m/d/Y', strtotime($date));
-                $birthDate = explode("/", $birthDate);
-                return (date("md", date("U", mktime(0, 0, 0, $birthDate[0], $birthDate[1], $birthDate[2]))) > date("md") ? ((date("Y") - $birthDate[2]) - 1) : (date("Y") - $birthDate[2]));
-            }
-
-            public static function getPatientBirthdate($age) {
-                return date('Y-m-d', strtotime($age . ' years ago'));
-            }
-
-            public static function getPatientlist($tenant = null, $status = '1', $deleted = false) {
-                if (!$deleted)
-                    $list = self::find()->tenant($tenant)->status($status)->active()->all();
-                else
-                    $list = self::find()->tenant($tenant)->deleted()->all();
-
-                return $list;
-            }
-
-            public static function getPatientByGuid($patient_guid) {
-                $patient = self::find()->where(['patient_guid' => $patient_guid])->one();
-                return $patient;
-            }
-
-            /* I think this function is not used anywhere - prakash* */
-
-            public static function getActiveEncounterByPatientId($patient_id) {
-                return PatEncounter::find()->status()->active()->andWhere(['patient_id' => $patient_id])->one();
-            }
-
-            public static function getActiveEncounterByPatientGuid($patient_guid) {
-                $patient = self::find()->where(['patient_guid' => $patient_guid])->one();
-                return self::getActiveEncounterByPatientId($patient->patient_id);
-            }
-
-            protected $oldAttributes;
-
-            public function afterFind() {
-                if (is_object($this->patient_guid))
-                    $this->patient_guid = $this->patient_guid->toString();
-
-                $this->oldAttributes = $this->attributes;
-
-                foreach ($this->_global_fields as $global_field) {
-                    $this->$global_field = @$this->patGlobalPatient->$global_field;
-                }
-
-                return parent::afterFind();
-            }
-
-            public static function getPatientNextVisitDays($date) {
-                $now = strtotime(date('Y-m-d'));
-                $date = strtotime($date);
-                $datediff = abs($now - $date);
-                return floor($datediff / (60 * 60 * 24));
-            }
-
-            public static function getPatientNextvisitDate($days) {
-                $date = date('Y-m-d');
-                return date('Y-m-d', strtotime($date . "+$days days"));
-            }
-
-            public function getPatient_img_url() {
-                if ($this->patient_image)
-                    return \yii\helpers\Url::to("@web/images/uavatar/{$this->patient_image}", true);
-
-                return false;
-            }
-
+        foreach ($this->_global_fields as $global_field) {
+            $extend_glb = [$global_field => function($model, $global_field) {
+                    return $model->patGlobalPatient->$global_field;
+                }];
+            $extend = array_merge($extend_glb, $extend);
         }
+
+        $parent_fields = parent::fields();
+        $addt_keys = [];
+        if ($addtField = Yii::$app->request->get('addtfields')) {
+            switch ($addtField):
+                case 'search':
+                    $addt_keys = ['patient_img_url', 'fullcurrentaddress', 'fullpermanentaddress', 'fullname', 'patient_guid', 'patient_age', 'patient_global_int_code', 'patient_mobile', 'org_name'];
+                    break;
+                case 'salecreate':
+                    $pFields = ['patient_id', 'patient_guid'];
+                    $parent_fields = array_combine($pFields, $pFields);
+                    $addt_keys = ['name_with_int_code', 'fullname', 'last_consultant_id'];
+                    break;
+                case 'merge_search':
+                    $addt_keys = ['patient_img_url', 'fullcurrentaddress', 'fullpermanentaddress', 'fullname', 'patient_guid', 'patient_age', 'patient_global_int_code', 'patient_mobile', 'org_name', 'childrens_count'];
+                    break;
+            endswitch;
+        }
+
+        $extFields = ($addt_keys) ? array_intersect_key($extend, array_flip($addt_keys)) : $extend;
+        return array_merge($parent_fields, $extFields);
+    }
+
+    public function getHasalert() {
+        return (!empty($this->activePatientAlert)) ? true : false;
+    }
+
+    public function getIncomplete_profile() {
+        if (!isset($this->patPatientAddress)) {
+            return true;
+        } else if ($this->patPatientAddress->isIncompleteProfile()) {
+            return true;
+        } else if ($this->patGlobalPatient->isIncompleteProfile()) {
+            return true;
+        }
+        return false;
+    }
+
+    public function getCurrent_room() {
+        if (isset($this->patActiveIp)) {
+            $admission = $this->patActiveIp->patCurrentAdmission;
+            return "{$admission->floor->floor_name} > {$admission->ward->ward_name} > {$admission->room->bed_name} ({$admission->roomType->room_type_name})";
+        } else {
+            return '-';
+        }
+    }
+
+    public function getNew_user() {
+        $active_op = $this->patActiveOp;
+        if (isset($active_op) && !empty($active_op)) {
+            if ($this->getPatLastSeenAppointment()->count() == 0) {
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
+    public function getFullcurrentaddress() {
+        if (isset($this->patPatientAddress)) {
+            $result = '';
+            if ($this->patPatientAddress->addr_current_address != '') {
+                $result .= $this->patPatientAddress->addr_current_address;
+            }
+
+            if ($this->patPatientAddress->addr_city_id != '') {
+                $result .= ' ' . $this->patPatientAddress->addrCity->city_name;
+            }
+
+            if ($this->patPatientAddress->addr_state_id != '') {
+                $result .= ' ' . $this->patPatientAddress->addrState->state_name;
+            }
+
+            if ($this->patPatientAddress->addr_country_id != '') {
+                $result .= ' ' . $this->patPatientAddress->addrCountry->country_name;
+            }
+
+            return $result;
+        }
+    }
+
+    public function getFullname() {
+        return ucwords("{$this->patient_title_code} {$this->patient_firstname}");
+    }
+
+    public function getPatient_age() {
+        $age = '';
+        if ($this->patient_dob != '' && $this->patient_dob != "0000-00-00")
+            $age = self::getPatientAge($this->patient_dob);
+
+        return $age;
+    }
+
+    public function getOrg_name() {
+        if (isset($this->tenant->tenant_name))
+            return $this->tenant->tenant_name;
+    }
+
+    public function getPatient_category() {
+        if (isset($this->patientCategory->patient_short_code)) {
+            return $this->patientCategory->patient_short_code;
+        }
+    }
+
+    public function getPatient_category_fullname() {
+        if (isset($this->patientCategory->patient_cat_name)) {
+            return $this->patientCategory->patient_cat_name;
+        }
+    }
+
+    public function getPatient_category_color() {
+        if (isset($this->patientCategory->patient_cat_color) && strtolower($this->patientCategory->patient_cat_color) != '#ffffff') {
+            return $this->patientCategory->patient_cat_color;
+        } else {
+            return "#19A9D5";
+        }
+    }
+
+    public static function getPatientAge($date) {
+        $birthDate = date('m/d/Y', strtotime($date));
+        $birthDate = explode("/", $birthDate);
+        return (date("md", date("U", mktime(0, 0, 0, $birthDate[0], $birthDate[1], $birthDate[2]))) > date("md") ? ((date("Y") - $birthDate[2]) - 1) : (date("Y") - $birthDate[2]));
+    }
+
+    public static function getPatientBirthdate($age) {
+        return date('Y-m-d', strtotime($age . ' years ago'));
+    }
+
+    public static function getPatientlist($tenant = null, $status = '1', $deleted = false) {
+        if (!$deleted)
+            $list = self::find()->tenant($tenant)->status($status)->active()->all();
+        else
+            $list = self::find()->tenant($tenant)->deleted()->all();
+
+        return $list;
+    }
+
+    public static function getPatientByGuid($patient_guid) {
+        $patient = self::find()->where(['patient_guid' => $patient_guid])->one();
+        return $patient;
+    }
+
+    /* I think this function is not used anywhere - prakash* */
+
+    public static function getActiveEncounterByPatientId($patient_id) {
+        return PatEncounter::find()->status()->active()->andWhere(['patient_id' => $patient_id])->one();
+    }
+
+    public static function getActiveEncounterByPatientGuid($patient_guid) {
+        $patient = self::find()->where(['patient_guid' => $patient_guid])->one();
+        return self::getActiveEncounterByPatientId($patient->patient_id);
+    }
+
+    protected $oldAttributes;
+
+    public function afterFind() {
+        if (is_object($this->patient_guid))
+            $this->patient_guid = $this->patient_guid->toString();
+
+        $this->oldAttributes = $this->attributes;
+
+        foreach ($this->_global_fields as $global_field) {
+            $this->$global_field = @$this->patGlobalPatient->$global_field;
+        }
+
+        return parent::afterFind();
+    }
+
+    public static function getPatientNextVisitDays($date) {
+        $now = strtotime(date('Y-m-d'));
+        $date = strtotime($date);
+        $datediff = abs($now - $date);
+        return floor($datediff / (60 * 60 * 24));
+    }
+
+    public static function getPatientNextvisitDate($days) {
+        $date = date('Y-m-d');
+        return date('Y-m-d', strtotime($date . "+$days days"));
+    }
+
+    public function getPatient_img_url() {
+        if ($this->patient_image)
+            return \yii\helpers\Url::to("@web/images/uavatar/{$this->patient_image}", true);
+
+        return false;
+    }
+
+}
