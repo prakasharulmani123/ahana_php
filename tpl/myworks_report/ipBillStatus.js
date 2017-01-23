@@ -64,7 +64,7 @@ app.controller('ipBillStatusController', ['$rootScope', '$scope', '$timeout', '$
         $scope.loadReport = function () {
             $scope.records = [];
             $scope.loadbar('show');
-            $scope.showTable = true;
+            $scope.loading = true;
             $scope.errorData = "";
             $scope.msg.successMessage = "";
 
@@ -78,6 +78,8 @@ app.controller('ipBillStatusController', ['$rootScope', '$scope', '$timeout', '$
             $http.post($rootScope.IRISOrgServiceUrl + '/myworkreports/ipbillstatus', data)
                     .success(function (response) {
                         $scope.loadbar('hide');
+                        $scope.loading = false;
+                        $scope.showTable = true;
                         $scope.records = response;
                         $scope.generated_on = moment().format('YYYY-MM-DD hh:mm A');
                     })

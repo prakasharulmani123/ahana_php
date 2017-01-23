@@ -131,7 +131,7 @@ app.controller('opdoctorpayController', ['$rootScope', '$scope', '$timeout', '$h
         $scope.loadReport = function () {
             $scope.records = [];
             $scope.loadbar('show');
-            $scope.showTable = true;
+            $scope.loading = true;
             $scope.errorData = "";
             $scope.msg.successMessage = "";
             
@@ -149,6 +149,8 @@ app.controller('opdoctorpayController', ['$rootScope', '$scope', '$timeout', '$h
             $http.post($rootScope.IRISOrgServiceUrl + '/myworkreports/opdoctorpaymentreport', data)
                     .success(function (response) {
                         $scope.loadbar('hide');
+                        $scope.loading = false;
+                        $scope.showTable = true;
                         $scope.records = response.report;
                         $scope.generated_on = moment().format('YYYY-MM-DD hh:mm A');
                     })

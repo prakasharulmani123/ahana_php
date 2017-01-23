@@ -149,7 +149,7 @@ app.controller('dischargedPatientBillsController', ['$rootScope', '$scope', '$ti
         $scope.loadReport = function () {
             $scope.records = [];
             $scope.loadbar('show');
-            $scope.showTable = true;
+            $scope.loading = true;
             $scope.errorData = "";
             $scope.msg.successMessage = "";
 
@@ -167,6 +167,8 @@ app.controller('dischargedPatientBillsController', ['$rootScope', '$scope', '$ti
             $http.post($rootScope.IRISOrgServiceUrl + '/myworkreports/dischargedpatientbills', data)
                     .success(function (response) {
                         $scope.loadbar('hide');
+                        $scope.loading = false;
+                        $scope.showTable = true;
                         $scope.records = response;
                         $scope.generated_on = moment().format('YYYY-MM-DD hh:mm A');
                     })
