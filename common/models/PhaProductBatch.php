@@ -6,7 +6,6 @@ use common\models\query\PhaProductBatchQuery;
 use yii\db\ActiveQuery;
 use Yii;
 
-
 /**
  * This is the model class for table "pha_product_batch".
  *
@@ -133,8 +132,13 @@ class PhaProductBatch extends RActiveRecord {
             switch ($addtField):
                 case 'sale_batch_by_product':
                 case 'pharm_sale_prod_json':
-                    $addt_keys = ['batch_details','per_unit_price'];
-                    $pFields = ['batch_no','available_qty','product_id','expiry_date'];
+                    $addt_keys = ['batch_details', 'per_unit_price'];
+                    $pFields = ['batch_no', 'available_qty', 'product_id', 'expiry_date'];
+                    $parent_fields = array_combine($pFields, $pFields);
+                    break;
+                case 'sale_update':
+                    $addt_keys = ['batch_details'];
+                    $pFields = ['batch_no', 'available_qty', 'expiry_date'];
                     $parent_fields = array_combine($pFields, $pFields);
                     break;
             endswitch;

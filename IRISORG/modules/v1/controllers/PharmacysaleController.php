@@ -148,7 +148,7 @@ class PharmacysaleController extends ActiveController {
                         $item->delete();
                     }
                 }
-                return ['success' => true, 'model' => $model];
+                return ['success' => true, 'bill_no' => $model->bill_no];
             } else {
                 return ['success' => false, 'message' => Html::errorSummary([$model, $item_model])];
             }

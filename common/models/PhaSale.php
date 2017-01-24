@@ -253,6 +253,16 @@ class PhaSale extends RActiveRecord {
                         'bill_amount' => 'bill_amount',
                     ];
                     break;
+                case 'sale_list':
+                    $addt_keys = ['patient_name', 'billings_total_paid_amount', 'billings_total_balance_amount'];
+                    $parent_fields = [
+                        'sale_id' => 'sale_id',
+                        'bill_no' => 'bill_no',
+                        'sale_date' => 'sale_date',
+                        'bill_amount' => 'bill_amount',
+                        'encounter_id' => 'encounter_id',
+                    ];
+                    break;
             endswitch;
         }
         
