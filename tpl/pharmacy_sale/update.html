@@ -7,8 +7,7 @@
             {% include 'tpl/blocks/alert.html' %}
         </div>
         <div class="row">
-            <div class="col-sm-12" ng-init="data.formtype = 'update';
-                            initForm();" novalidate="">
+            <div class="col-sm-12" ng-init="initForm('update')" novalidate="">
                 <form 
                     editable-form 
                     name="tableform" 

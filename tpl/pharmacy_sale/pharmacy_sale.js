@@ -7,6 +7,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         $scope.show_patient_loader = false;
         $scope.show_consultant_loader = false;
         $scope.show_encounter_loader = false;
+        $scope.show_group_loader = false;
 
         $scope.$on('HK_CREATE', function (e) {
             if ($location.path() == '/pharmacy/sales') {
@@ -86,7 +87,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
 
             // Get data's from service
-            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacysale/getsales?payment_type=' + payment_type)
+            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacysale/getsales?payment_type=' + payment_type + '&addtfields=sale_list')
                     .success(function (saleList) {
                         $scope.isLoading = false;
                         $scope.rowCollection = saleList.sales;
@@ -105,7 +106,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                         $scope.errorData = "An Error has occured while loading saleList!";
                     });
 
-            //Consultant List
+            //Consultant List - Index Print Bill Section 
             $rootScope.commonService.GetDoctorList('', '1', false, '1', function (response) {
                 $scope.doctors = response.doctorsList;
             });
@@ -113,18 +114,21 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
         //For Form
         $scope.formtype = '';
-        $scope.initForm = function () {
-            //Patients List
-//            $rootScope.commonService.GetPatientList('', '1', false, function (response) {
-//                $scope.patients = [];
-//                angular.forEach(response.patientlist, function (list) {
-//                    $scope.patients.push(list);
-//                });
-//            });
-//            $scope.data.patient_name = undefined;
-//            Above code hide for slow response.
+        $scope.initForm = function (formtype) {
+            $scope.data = {};
+            if (formtype == 'add') {
+                $scope.formtype = 'add';
+                $scope.data.payment_type = 'CA';
+                $scope.data.sale_date = moment().format('YYYY-MM-DD');
+                $scope.data.formtype = 'add';
+//                $scope.setFutureInternalCode('SA', 'bill_no');
+                $scope.addRow();
+            } else {
+                $scope.formtype = 'update';
+                $scope.data.formtype = 'update';
+                $scope.loadForm();
+            }
 
-            $scope.patients = [];
             $scope.encounters = [];
 
             $scope.show_consultant_loader = true;
@@ -140,33 +144,22 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 $scope.paymentTypes.push({value: 'COD', label: 'Cash On Delivery'});
             });
 
-            //Payment types
+            //Patient Groups
+            $scope.show_group_loader = true;
             $rootScope.commonService.GetPatientGroup('1', false, function (response) {
                 $scope.patientgroups = response.patientgroupList;
+                $scope.show_group_loader = false;
             });
 
-            if ($scope.data.formtype == 'update') {
-                $scope.formtype = 'update';
-                $scope.loadForm();
-            } else {
-                $scope.formtype = 'add';
-                $scope.setFutureInternalCode('SA', 'bill_no');
-                $scope.data.sale_date = moment().format('YYYY-MM-DD');
-                $scope.addRow();
-            }
-
             $scope.productloader = '<i class="fa fa-spin fa-spinner"></i>';
-//            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct?fields=product_id,product_name,product_location,product_reorder_min,full_name,salesVat,salesPackageName,availableQuantity,generic_id&addtfields=pharm_sale_prod_json')
             $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct?fields=product_id,full_name')
                     .success(function (products) {
                         $scope.products = products;
-                        $scope.alternateproducts = {};
                         $scope.productloader = '';
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading products!";
                     });
-            $scope.batches = [];
         }
 
         $scope.showExpiryDate = function (saleitem) {
@@ -178,16 +171,13 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         };
 
         $scope.formatPatient = function ($item, $model, $label) {
-            id = $item.patient_id;
-            $scope.data.patient_id = id;
+            $scope.data.patient_id = $item.patient_id;
             $scope.data.patient_guid = $item.patient_guid;
             $scope.data.patient_name = $item.fullname;
             $scope.data.consultant_id = $item.last_consultant_id;
 
-            $scope.getEncounter(id, 'add', '');
+            $scope.getEncounter($item.patient_id, 'add', '');
             $scope.getPatientGroupByPatient($item.patient_guid);
-            //Hided the below one
-//            $scope.getPatientMobileNo(id);
         }
 
         $scope.getEncounter = function (patient_id, mode, encounter_id) {
@@ -201,7 +191,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
                     if (response.length > 0 && response != null && mode == 'add') {
                         $scope.data.encounter_id = response[0].encounter_id;
-                        $scope.getPrescription();
+                        $scope.getPrescription(); //Waiting For testing
                     } else if (mode == 'edit') {
                         $scope.data.encounter_id = encounter_id.toString();
                     }
@@ -224,24 +214,17 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                             $scope.show_group_loader = false;
                         })
                         .error(function () {
-                            $scope.errorData = "An Error has occured while loading products!";
+                            $scope.errorData = "An Error has occured while loading groups!";
                         });
             }
         }
 
         $scope.updatePatientGroupname = function () {
-            selected = $filter('filter')($scope.patientgroups, {patient_group_id: $scope.data.patient_group_id});
+            selected = $filter('filter')($scope.patientgroups, {patient_group_id: $scope.data.patient_group_id}, true);
             if (selected.length)
                 $scope.data.patient_group_name = selected[0].group_name;
-        }
-
-        //Get selected patient mobile no.
-        $scope.getPatientMobileNo = function (id) {
-            var patient_id = id;
-            var patient_mobile_no = $.grep($scope.patients, function (patient) {
-                return patient.Patient.patient_id == patient_id;
-            })[0].Patient.patient_mobile;
-            $scope.data.mobile_no = patient_mobile_no;
+            else 
+                $scope.data.patient_group_name = '';
         }
 
         //Sale Date Datepicker
@@ -298,14 +281,6 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 };
             }
         };
-
-        //Hide by Nad.
-//        $scope.addRowWhenFocus = function (key) {
-//            //Add New Row when focus Quantity
-//            if (key + 1 == $scope.saleItems.length) {
-//                $scope.addRow(false);
-//            }
-//        }
 
         // Remove Sale Item
         $scope.removeSaleItem = function (index) {
@@ -383,26 +358,11 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 if (error_exists && error_msg != '') {
                     return error_msg;
                 }
+            } else {
+                if (data <= 0) {
+                    return "Not be 0";
+                }
             }
-        }
-
-        //Get the products
-        var changeTimer = false;
-
-        $scope.getProduct = function (saleitem) {
-//            var name = saleitem.full_name.$viewValue;
-//            if (changeTimer !== false)
-//                clearTimeout(changeTimer);
-//
-//            changeTimer = setTimeout(function () {
-//                $scope.loadbar('show');
-//                $rootScope.commonService.GetProductListByName(name, function (response) {
-//                    if (response.productList.length > 0)
-//                        $scope.products = response.productList;
-//                    $scope.loadbar('hide');
-//                });
-//                changeTimer = false;
-//            }, 300);
         }
 
         $scope.clearProductRow = function (data, key) {
@@ -412,13 +372,14 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 $scope.saleItems[key].product_location = '';
                 $scope.saleItems[key].vat_percent = '0';
                 $scope.saleItems[key].package_name = '';
-//                $scope.batches = [];
                 $scope.saleItems[key].batch_details = '';
                 $scope.saleItems[key].batch_no = '';
                 $scope.saleItems[key].expiry_date = '';
                 $scope.saleItems[key].mrp = 0;
                 $scope.saleItems[key].quantity = 0;
                 $scope.saleItems[key].discount_percentage = 0;
+                $scope.saleItems[key].generic_id = '';
+                $scope.saleItems[key].product_batches = [];
                 $scope.clearFormEditables(this.$form, key);
             }
         }
@@ -438,57 +399,10 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             $scope.updateRow(key);
         }
 
-        $scope.productFilter = function (product, key) {
-            return product.product_id != $scope.saleItems[key].product_id;
-        }
-
-        $scope.updateAlternateProductRow = function (data, key, index) {
-            if (data) {
-                var selectedObj = $filter('filter')($scope.products, {product_id: data.product_id})[0];
-                $scope.productDetail(data.product_id, selectedObj).then(function () {
-                    $scope.saleItems[key].product_id = selectedObj.product_id;
-                    $scope.saleItems[key].full_name = selectedObj.full_name;
-                    $scope.saleItems[key].product_name = selectedObj.product_name;
-                    $scope.saleItems[key].product_location = selectedObj.product_location;
-                    $scope.saleItems[key].vat_percent = selectedObj.salesVat.vat;
-                    $scope.saleItems[key].package_name = selectedObj.salesPackageName;
-                    $scope.saleItems[key].generic_id = selectedObj.generic_id;
-                    $scope.saleItems[key].product_batches = selectedObj.product_batches;
-                    $('#i_full_name_' + key + ' #full_name').val(selectedObj.full_name);
-
-                    $scope.updateRow(key);
-
-//                    $scope.getreadyBatch(selectedObj, key, true);
-                    $scope.productInlineAlert(selectedObj, key);
-
-                    if (!$scope.saleItems[key].out_of_stock_msg) {
-                        $('#i_alternate_medicine_' + key).addClass('hide');
-                        $scope.setFocus('batch_details', index);
-                    }
-                });
-
-
-//                $scope.saleItems[key].full_name = data.full_name;
-//                $scope.saleItems[key].product_name = data.product_name;
-//                $scope.saleItems[key].product_id = data.product_id;
-//                $scope.saleItems[key].product_location = data.product_location;
-//                $('#i_full_name_' + key + ' #full_name').val(data.full_name);
-
-//                $scope.updateRow(key);
-//                $scope.getreadyBatch(data, key, false);
-//                $scope.productInlineAlert(data, key);
-//
-//                if (!$scope.saleItems[key].out_of_stock_msg) {
-//                    $('#i_alternate_medicine_' + key).addClass('hide');
-//                    $scope.setFocus('batch_details', index);
-//                }
-            }
-        }
-
         $scope.productDetail = function (product_id, product_obj) {
             var deferred = $q.defer();
             deferred.notify();
-            var Fields = 'product_name,product_location,product_reorder_min,full_name,salesVat,salesPackageName,availableQuantity,generic_id,product_batches'; // product_batches
+            var Fields = 'product_name,product_location,product_reorder_min,full_name,salesVat,salesPackageName,availableQuantity,generic_id,product_batches';
 
             $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproducts/' + product_id + '?fields=' + Fields + '&addtfields=pharm_sale_prod_json')
                     .success(function (product) {
@@ -505,59 +419,61 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             return deferred.promise;
         };
 
-        //After product choosed, then some values in the row.
+        $scope.updateAlternateProductRow = function (data, key, index) {
+            if (data) {
+                var selectedObj = $filter('filter')($scope.products, {product_id: data.product_id}, true)[0];
+                $scope.productDetail(data.product_id, selectedObj).then(function () {
+                    $scope.saleItems[key].product_id = selectedObj.product_id;
+                    $scope.saleItems[key].full_name = selectedObj.full_name;
+                    $scope.saleItems[key].product_name = selectedObj.product_name;
+                    $scope.saleItems[key].product_location = selectedObj.product_location;
+                    $scope.saleItems[key].vat_percent = selectedObj.salesVat.vat;
+                    $scope.saleItems[key].package_name = selectedObj.salesPackageName;
+                    $scope.saleItems[key].generic_id = selectedObj.generic_id;
+                    $scope.saleItems[key].product_batches = selectedObj.product_batches;
+                    $('#i_full_name_' + key + ' #full_name').val(selectedObj.full_name);
+
+                    $scope.productInlineAlert(selectedObj, key);
+
+                    $scope.updateRow(key);
+
+                    if (!$scope.saleItems[key].out_of_stock_msg) {
+                        $('#i_alternate_medicine_' + key).addClass('hide');
+                        $scope.setFocus('batch_details', index);
+                    }
+                });
+            }
+        }
+
+        //After product choosed, then update some obejct attributes in the sale items array.
         $scope.updateProductRow = function (item, model, label, key) {
-            var selectedObj = $filter('filter')($scope.products, {product_id: item.product_id})[0];
+            var selectedObj = $filter('filter')($scope.products, {product_id: item.product_id}, true)[0];
             $scope.productDetail(item.product_id, selectedObj).then(function () {
                 $scope.saleItems[key].product_id = selectedObj.product_id;
                 $scope.saleItems[key].product_name = selectedObj.product_name;
                 $scope.saleItems[key].product_location = selectedObj.product_location;
+                $scope.saleItems[key].full_name = selectedObj.full_name;
                 $scope.saleItems[key].vat_percent = selectedObj.salesVat.vat;
                 $scope.saleItems[key].package_name = selectedObj.salesPackageName;
                 $scope.saleItems[key].generic_id = selectedObj.generic_id;
                 $scope.saleItems[key].product_batches = selectedObj.product_batches;
 
-                $scope.updateRow(key);
-
-                $scope.getreadyBatch(selectedObj, key, true);
+                $scope.getreadyBatch(selectedObj, key);
                 $scope.productInlineAlert(selectedObj, key);
+
+                $scope.updateRow(key);
             });
         }
 
-        $scope.getreadyBatch = function (item, key, primary) {
-//            $scope.loadbar('show');
-//            ids = [];
-//            angular.forEach($scope.saleItems, function (item) {
-//                ids.push(item.product_id);
-//            });
-//
-//            $rootScope.commonService.GetBatchListByProduct(ids, function (response) {
-//                $scope.loadbar('hide');
-//
-//                angular.forEach(response.batchList, function (item) {
-//                    selected = $filter('filter')($scope.batches, {batch_no: item.batch_no});
-//                    if (selected.length == 0) {
-//                        $scope.batches.push(item);
-//                    } else {
-//                        selected[0].available_qty = item.available_qty;
-//                        selected[0].batch_details = item.batch_details;
-//                    }
-//                });
-//
-//                for (var i = 0; i < $scope.batches.length; i++) {
-//                    var obj = $scope.batches[i];
-//                    if (obj.available_qty <= 0) {
-//                        $scope.batches.splice(i, 1);
-//                    }
-//                }
-
-            if (item.availableQuantity <= 0 && primary) {
-
+        $scope.getreadyBatch = function (item, key) {
+            $scope.saleItems[key].batch_details = '';
+            $scope.saleItems[key].batch_no = '';
+            $scope.saleItems[key].expiry_date = '';
+            $scope.saleItems[key].mrp = 0;
+            $scope.saleItems[key].quantity = 0;
+            if (item.availableQuantity <= 0) {
                 $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/getproductlistbygeneric?generic_id=' + item.generic_id + '&addtfields=pharm_sale_alternateprod')
                         .success(function (product) {
-//                Fields.split(",").forEach(function (item) {
-//                    selectedObj[item] = product[item];
-//                });
                             //For alternate medicines
                             item.alternateproducts = product.productList.filter(function (n) {
                                 return (n.product_id != item.product_id && n.product_batches_count > '0')
@@ -568,40 +484,11 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                             } else {
                                 $('#i_alternate_medicine_' + key).addClass('hide');
                             }
-//
-//                $scope.updateRow(key);
-//
-//                $scope.getreadyBatch(selectedObj, key, true);
-//                $scope.productInlineAlert(selectedObj, key);
-//
                         })
                         .error(function () {
                             $scope.errorData = "An Error has occured while loading product!";
                         });
-
-//                    $scope.saleItems[key].alternateproducts = selectedObj.product_batches;
-                //For alternate medicines
-//                var batch_exists = $filter('filter')($scope.batches, {product_id: item.product_id}, true);
-//                $scope.alternateproducts[key] = {};
-//                $scope.alternateproducts[key] = $filter('filter')($scope.products, {generic_id: item.generic_id}, true);
-//                $scope.alternateproducts[key] = $scope.alternateproducts[key].filter(function (n) {
-//                    return (n.product_id != item.product_id)
-//                });
-//                if (!batch_exists.length && $scope.alternateproducts[key].length) {
-//                    $('#i_alternate_medicine_' + key).removeClass('hide');
-//                } else {
-//                    $('#i_alternate_medicine_' + key).addClass('hide');
-//                }
-                //end
             }
-
-//                $scope.saleItems[key].batch_details = response.batchList[0].batch_details;
-//                $scope.saleItems[key].batch_no = response.batchList[0].batch_no;
-            $scope.saleItems[key].batch_no = '';
-            $scope.saleItems[key].expiry_date = '';
-            $scope.saleItems[key].mrp = 0;
-            $scope.saleItems[key].quantity = 0;
-//            }, 'sale_batch_by_product');
         }
 
         $scope.productInlineAlert = function (item, key) {
@@ -622,12 +509,12 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             $scope.displayedCollection.push(resp);
         }
 
-        $scope.showBatch = function (batch) {
-            var selected = [];
-            if (batch.batch_no) {
-                selected = $filter('filter')($scope.batches, {batch_no: batch.batch_no});
+        $scope.showBatch = function (batch, key) {
+            if (batch) {
+                prod_batches = $scope.saleItems[key].product_batches;
+                selected = $filter('filter')(prod_batches, {batch_details: batch}, true);
+                return selected.length ? selected[0].batch_details : 'Not set';
             }
-            return selected.length ? selected[0].batch_details : 'Not set';
         };
 
         $scope.showAlternateProduct = function (product) {
@@ -639,16 +526,21 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         };
 
         //After barch choosed, then update some values in the row.
-        $scope.updateBatchRow = function (item, key) {
-            $scope.saleItems[key].batch_details = item.batch_details;
-            $scope.saleItems[key].batch_no = item.batch_no;
-            $scope.saleItems[key].expiry_date = item.expiry_date;
+        $scope.updateBatchRow = function (batch, key) {
+            var prod_batches = $scope.saleItems[key].product_batches;
+            var selected = $filter('filter')(prod_batches, {batch_details: batch}, true);
+            if (selected.length > 0) {
+                item = selected[0];
+                $scope.saleItems[key].batch_details = item.batch_details;
+                $scope.saleItems[key].batch_no = item.batch_no;
+                $scope.saleItems[key].expiry_date = item.expiry_date;
 //            $scope.saleItems[key].mrp = item.mrp;
-            $scope.saleItems[key].mrp = item.per_unit_price;
+                $scope.saleItems[key].mrp = item.per_unit_price;
 
-            $scope.setFocus('quantity', key);
-            $scope.checkExpDate(item.expiry_date, key);
+                $scope.setFocus('quantity', key);
+                $scope.checkExpDate(item.expiry_date, key);
 //            $scope.addRowWhenFocus(key);
+            }
         }
 
         $scope.checkExpDate = function (data, key) {
@@ -784,7 +676,6 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             $scope.data.sale_date = moment($scope.data.sale_date).format('YYYY-MM-DD');
 
             angular.forEach($scope.saleItems, function (saleitem, key) {
-//                alert(saleitem.expiry_date);
                 $scope.saleItems[key].expiry_date = moment(saleitem.expiry_date).format('YYYY-MM-DD');
 
                 if (angular.isObject(saleitem.full_name)) {
@@ -800,12 +691,11 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 } else if ((saleitem.batch_no == '0' || saleitem.batch_no == '') && typeof saleitem.batch_details !== 'undefined') {
                     $scope.saleItems[key].batch_no = saleitem.batch_details;
                 }
-                
+
                 //Unset unwanted columns 
                 delete saleitem.alternate_product;
                 delete saleitem.alternateproducts;
-                delete saleitem.product_batches;
-
+//                delete saleitem.product_batches; // Need product batches if form success false.
             });
 
             /* For print bill */
@@ -826,17 +716,17 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                         if (response.success == true) {
                             $scope.loadbar('hide');
                             if (mode == 'add') {
-                                msg = 'New bill generated ' + response.model.bill_no;
+                                msg = 'New bill generated ' + response.bill_no;
                                 $scope.data = {};
                                 $scope.data.sale_date = moment().format('YYYY-MM-DD');
                                 $scope.data.formtype = 'add';
                                 $scope.data.payment_type = 'CA';
                                 $scope.getPaytypeDetail(_that.data.payment_type);
-                                $scope.setFutureInternalCode('SA', 'bill_no');
+//                                $scope.setFutureInternalCode('SA', 'bill_no');
                                 $scope.saleItems = [];
                                 $scope.addRow();
                                 $scope.tableform.$show();
-                                $scope.data2.bill_no = response.model.bill_no;
+                                $scope.data2.bill_no = response.bill_no;
                             } else {
                                 msg = 'Bill updated successfully';
                             }
@@ -881,10 +771,9 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
         $scope.getConsultantDetail = function (consultant_id) {
             if (consultant_id) {
-                consultant_details = $filter('filter')($scope.doctors, {user_id: consultant_id});
-                $scope.consultant_name_taken = consultant_details.length > 0 ? consultant_details[0].name : '';
+                consultant_details = $filter('filter')($scope.doctors, {user_id: consultant_id}, true);
+                $scope.consultant_name_taken = consultant_details.length > 0 ? consultant_details[0].fullname : '';
             }
-
         }
 
         $scope.changeGetPayType = function () {
@@ -910,7 +799,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             _that = this;
             $scope.errorData = "";
             $http({
-                url: $rootScope.IRISOrgServiceUrl + "/pharmacysales/" + $state.params.id,
+                url: $rootScope.IRISOrgServiceUrl + "/pharmacysales/" + $state.params.id + "?addtfields=sale_update",
                 method: "GET"
             }).success(
                     function (response) {
@@ -961,7 +850,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         };
 
         $scope.make_payment = function (sale_id, checked_sale_id) {
-            sale = $filter('filter')($scope.displayedCollection, {sale_id: sale_id});
+            sale = $filter('filter')($scope.displayedCollection, {sale_id: sale_id}, true);
 
             var modalInstance = $modal.open({
                 templateUrl: 'tpl/pharmacy_sale/modal.makepayment.html',
@@ -981,7 +870,6 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         }
 
         var canceler;
-
         $scope.getPatients = function (patientName) {
             if (canceler)
                 canceler.resolve();
@@ -997,15 +885,81 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             }).then(
                     function (response) {
                         $scope.patients = [];
-                        angular.forEach(response.data.patients, function (list) {
-                            $scope.patients.push(list);
-                        });
+                        $scope.patients = response.data.patients;
                         $scope.loadbar('hide');
                         $scope.show_patient_loader = false;
                         return $scope.patients;
                     }
             );
         };
+
+        $scope.getPrescription = function () {
+            $scope.loadbar('show');
+            $http.get($rootScope.IRISOrgServiceUrl + '/patientprescription/getpreviousprescription?patient_id=' + $scope.data.patient_guid + '&encounter_id=' + $scope.data.encounter_id)
+                    .success(function (prescriptionList) {
+                        $scope.loadbar('hide');
+                        $scope.saleItems = [];
+
+                        ids = [];
+                        angular.forEach(prescriptionList.prescriptions, function (prescription) {
+                            angular.forEach(prescription.items, function (item) {
+                                $scope.inserted = {
+                                    full_name: item.product.full_name,
+                                    batch_details: '',
+                                    product_id: item.product_id,
+                                    product_name: item.product_name,
+                                    package_name: '',
+                                    vat_percent: '0',
+                                    batch_no: '',
+                                    expiry_date: '',
+                                    mrp: '0',
+                                    quantity: '0',
+                                    vat_amount: '0',
+                                    item_amount: '0',
+                                };
+
+                                exists = $filter('filter')($scope.saleItems, {product_id: item.product_id}, true);
+                                if (exists.length == 0) {
+                                    $scope.saleItems.push($scope.inserted);
+                                    ids.push(item.product_id);
+                                }
+                            });
+                        });
+
+//                        $rootScope.commonService.GetBatchListByProduct(ids, function (response) {
+//                            $scope.batches = response.batchList;
+//                        });
+
+                        if ($scope.saleItems.length == 0) {
+                            $scope.addRow();
+                        }
+
+                        $timeout(function () {
+                            $scope.setFocus('full_name', $scope.saleItems.length - 1);
+                        });
+                    })
+                    .error(function () {
+                        $scope.errorData = "An Error has occured while loading list!";
+                    });
+        }
+
+        $scope.printSaleBill = function (row, saleitem) {
+            $scope.data2 = row;
+            $scope.saleItems2 = saleitem.items;
+            $scope.getConsultantDetail(row.consultant_id);
+            $scope.getPaytypeDetail(row.payment_type);
+            $scope.btnid = 'print';
+
+            angular.forEach($scope.saleItems2, function (item) {
+                item.full_name = item.product.full_name;
+                item.batch_details = item.batch.batch_details;
+                item.expiry_date = item.batch.expiry_date;
+            });
+
+            $timeout(function () {
+                save_success();
+            }, 1000)
+        }
 
 //        // Get Patient Name
 //        var changeTimer = false;
@@ -1033,79 +987,49 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 //                }, 300);
 //            }
 //        }, true);
+        //Get the products
+//        var changeTimer = false;
+//        $scope.productFilter = function (product, key) {
+//            return product.product_id != $scope.saleItems[key].product_id;
+//        }
 
-        $scope.getPrescription = function () {
-            $scope.loadbar('show');
-            $http.get($rootScope.IRISOrgServiceUrl + '/patientprescription/getpreviousprescription?patient_id=' + $scope.data.patient_guid + '&encounter_id=' + $scope.data.encounter_id)
-                    .success(function (prescriptionList) {
-                        $scope.loadbar('hide');
-                        $scope.saleItems = [];
+//        $scope.getProduct = function (saleitem) {
+//            var name = saleitem.full_name.$viewValue;
+//            if (changeTimer !== false)
+//                clearTimeout(changeTimer);
+//
+//            changeTimer = setTimeout(function () {
+//                $scope.loadbar('show');
+//                $rootScope.commonService.GetProductListByName(name, function (response) {
+//                    if (response.productList.length > 0)
+//                        $scope.products = response.productList;
+//                    $scope.loadbar('hide');
+//                });
+//                changeTimer = false;
+//            }, 300);
+//        }
 
-                        ids = [];
-                        angular.forEach(prescriptionList.prescriptions, function (prescription) {
-                            angular.forEach(prescription.items, function (item) {
-                                $scope.inserted = {
-                                    full_name: item.product.full_name,
-                                    batch_details: '',
-                                    product_id: item.product_id,
-                                    product_name: item.product_name,
-                                    package_name: '',
-                                    vat_percent: '0',
-                                    batch_no: '',
-                                    expiry_date: '',
-                                    mrp: '0',
-                                    quantity: '0',
-                                    vat_amount: '0',
-                                    item_amount: '0',
-                                };
+//        $scope.setFutureInternalCode = function (code, col) {
+//            $rootScope.commonService.GetInternalCodeList('', code, '1', false, function (response) {
+//                if (col == 'bill_no' && response.code)
+//                    $scope.data.bill_no = response.code.next_fullcode;
+//            });
+//        }
 
-                                exists = $filter('filter')($scope.saleItems, {product_id: item.product_id});
-                                if (exists.length == 0) {
-                                    $scope.saleItems.push($scope.inserted);
-                                    ids.push(item.product_id);
-                                }
-                            });
-                        });
+        //Hide by Nad.
+//        $scope.addRowWhenFocus = function (key) {
+//            //Add New Row when focus Quantity
+//            if (key + 1 == $scope.saleItems.length) {
+//                $scope.addRow(false);
+//            }
+//        }
 
-                        $rootScope.commonService.GetBatchListByProduct(ids, function (response) {
-                            $scope.batches = response.batchList;
-                        });
-
-                        if ($scope.saleItems.length == 0) {
-                            $scope.addRow();
-                        }
-
-                        $timeout(function () {
-                            $scope.setFocus('full_name', $scope.saleItems.length - 1);
-                        });
-                    })
-                    .error(function () {
-                        $scope.errorData = "An Error has occured while loading list!";
-                    });
-        }
-
-        $scope.setFutureInternalCode = function (code, col) {
-            $rootScope.commonService.GetInternalCodeList('', code, '1', false, function (response) {
-                if (col == 'bill_no' && response.code)
-                    $scope.data.bill_no = response.code.next_fullcode;
-            });
-        }
-
-        $scope.printSaleBill = function (row, saleitem) {
-            $scope.data2 = row;
-            $scope.saleItems2 = saleitem.items;
-            $scope.getConsultantDetail(row.consultant_id);
-            $scope.getPaytypeDetail(row.payment_type);
-            $scope.btnid = 'print';
-
-            angular.forEach($scope.saleItems2, function (item) {
-                item.full_name = item.product.full_name;
-                item.batch_details = item.batch.batch_details;
-                item.expiry_date = item.batch.expiry_date;
-            });
-
-            $timeout(function () {
-                save_success();
-            }, 1000)
-        }
+        //Get selected patient mobile no.
+//        $scope.getPatientMobileNo = function (id) {
+//            var patient_id = id;
+//            var patient_mobile_no = $.grep($scope.patients, function (patient) {
+//                return patient.Patient.patient_id == patient_id;
+//            })[0].Patient.patient_mobile;
+//            $scope.data.mobile_no = patient_mobile_no;
+//        }
     }]);

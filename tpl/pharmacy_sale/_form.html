@@ -12,7 +12,12 @@
                         <div class="panel panel-default">
                             <div class="panel-body">
                                 <div class="form-group">
-                                    <label class="col-lg-4 control-label">Patient Name <span ng-show="show_patient_loader">&nbsp;&nbsp;<i class="fa fa-spin fa-refresh"></i></span></label>
+                                    <label class="col-lg-4 control-label">
+                                        Patient Name 
+                                        <span ng-show="show_patient_loader">&nbsp;&nbsp;
+                                            <i class="fa fa-spin fa-refresh"></i>
+                                        </span>
+                                    </label>
                                     <div class="col-lg-8">
                                         <input autocomplete="off"
                                                placeholder="Patient Name"
@@ -28,9 +33,15 @@
                                 <div class="line line-dashed b-b line-lg "></div>
 
                                 <div class="form-group">
-                                    <label class="col-lg-4 control-label">Consultant <span ng-show="show_consultant_loader">&nbsp;&nbsp;<i class="fa fa-spin fa-refresh"></i></span></label>
+                                    <label class="col-lg-4 control-label">
+                                        Consultant 
+                                        <span ng-show="show_consultant_loader">
+                                            &nbsp;&nbsp;
+                                            <i class="fa fa-spin fa-refresh"></i>
+                                        </span>
+                                    </label>
                                     <div class="col-lg-8">
-                                        <select class="form-control selectpicker" data-live-search="true" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors | orderBy: fullname" data-ng-change="changeGetConsultant()">
+                                        <select class="form-control selectpicker" data-live-search="true" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors | orderBy: 'name'" data-ng-change="changeGetConsultant()">
                                             <option value="">Select Consultant</option>
                                         </select>
                                     </div>
@@ -38,11 +49,17 @@
                                 <div class="line line-dashed b-b line-lg "></div>
 
                                 <div class="form-group">
-                                    <label class="col-lg-4 control-label">Encounter # <span ng-show="show_encounter_loader">&nbsp;&nbsp;<i class="fa fa-spin fa-refresh"></i></span></label>
+                                    <label class="col-lg-4 control-label">
+                                        Encounter # 
+                                        <span ng-show="show_encounter_loader">
+                                            &nbsp;&nbsp;
+                                            <i class="fa fa-spin fa-refresh"></i>
+                                        </span>
+                                    </label>
                                     <div class="col-lg-8">
                                         <select class="form-control selectpicker" data-live-search="true"
                                                 ng-model="data.encounter_id"
-                                                ng-options="encounter.encounter_id as encounter.encounter_id for encounter in encounters | orderBy: encounter_id"
+                                                ng-options="encounter.encounter_id as encounter.encounter_id for encounter in encounters | orderBy: 'encounter_id'"
                                                 ng-change="getPrescription()"
                                                 >
                                             <option value="">Select Encounter</option>
@@ -56,14 +73,6 @@
                     <div class="col-sm-6">
                         <div class="panel panel-default">
                             <div class="panel-body">
-                                <!--                                <div class="form-group" ng-if="data.bill_no">
-                                                                    <label class="col-lg-4 control-label">Bill No</label>
-                                                                    <div class="col-lg-8">
-                                                                        <label class="label bg-danger">{{data.bill_no}}</label>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="line line-dashed b-b line-lg"  ng-if="data.bill_no"></div>-->
-
                                 <div class="form-group">
                                     <label class="col-lg-4 control-label">Sale Date *</label>
                                     <div class="col-lg-8">
@@ -87,14 +96,18 @@
                                 <div class="line line-dashed b-b line-lg "></div>
 
                                 <div class="form-group">
-                                    <label class="col-lg-4 control-label">Patient Group <span ng-show="show_group_loader">&nbsp;&nbsp;<i class="fa fa-spin fa-refresh"></i></span></label>
+                                    <label class="col-lg-4 control-label">
+                                        Patient Group 
+                                        <span ng-show="show_group_loader">&nbsp;&nbsp;
+                                            <i class="fa fa-spin fa-refresh"></i>
+                                        </span>
+                                    </label>
                                     <div class="col-lg-8 col-sm-9">
-                                        <select class="form-control" name="Patientgroup" ng-model="data.patient_group_id" ng-options="patientgroup.patient_group_id as patientgroup.group_name for patientgroup in patientgroups | orderBy: patientgroup.group_name" data-ng-change="updatePatientGroupname()">
+                                        <select class="form-control" name="Patientgroup" ng-model="data.patient_group_id" ng-options="patientgroup.patient_group_id as patientgroup.group_name for patientgroup in patientgroups | orderBy: 'group_name'" data-ng-change="updatePatientGroupname()">
                                             <option value="">Select Group</option>
                                         </select>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -102,14 +115,11 @@
             </div>
         </div>
     </div>
-</div>
-
-<div class="row">
+    
     <div class="col-sm-12">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <b>Sale Items</b>&nbsp;<span ng-bind-html="productloader"></span>
-                {{ products | json }}
             </div>
             <div class="panel-body">
                 <div class="row">
@@ -148,10 +158,8 @@
                                                 data-e-id="full_name"
                                                 e-ng-change="clearProductRow($data, key)"
                                                 >
-
                                                 {{ saleitem.full_name || 'empty' }}
                                             </span>
-                                            <!--<span style="width: 10px; position: absolute; margin: 7px 10px;"><i class="fa fa-spin fa-refresh pull-right"></i></span>-->
                                         </div>
                                         <span id="t_full_name_{{key}}" class="hide">
                                             {{ saleitem.full_name || 'empty' }}
@@ -159,8 +167,12 @@
                                         <span ng-if="saleitem.product_location">
                                             <b>Location:</b> {{saleitem.product_location}}
                                         </span>
-                                        <div class="text-danger" style="" ng-show="saleitem.out_of_stock_msg"> {{saleitem.out_of_stock_msg}}</div>
-                                        <div class="custom-warning" style="" ng-show="saleitem.min_reorder_msg"> {{saleitem.min_reorder_msg}}</div>
+                                        <div class="text-danger" style="" ng-show="saleitem.out_of_stock_msg"> 
+                                            {{saleitem.out_of_stock_msg}}
+                                        </div>
+                                        <div class="custom-warning" style="" ng-show="saleitem.min_reorder_msg"> 
+                                            {{saleitem.min_reorder_msg}}
+                                        </div>
                                         <div id="i_alternate_medicine_{{key}}" class="hide">
                                             <span
                                                 editable-select="saleitem.alternate_product"
@@ -181,15 +193,17 @@
                                                 e-name="batch_details"
                                                 e-form="tableform"
                                                 onbeforesave="checkInput($data, key, $index)"
-                                                e-ng-options="batch as batch.batch_details for batch in saleitem.product_batches | filter:$viewValue | limitTo:8| filter:{product_id : saleitem.product_id}: true"
+                                                e-ng-options="batch.batch_details as batch.batch_details for batch in saleitem.product_batches | filter:$viewValue | limitTo:8"
                                                 e-ng-change="updateBatchRow($data, key, $index)">
-                                                {{ showBatch(saleitem)}}
+                                                {{ showBatch($data, key)}}
                                             </span>
                                         </div>
                                         <span id="t_batch_details_{{key}}" class="hide">
                                             {{ saleitem.batch_details || 'empty' }}
                                         </span>
-                                        <div class="custom-warning" style="" ng-show="saleitem.exp_warning"> {{saleitem.exp_warning}}</div>
+                                        <div class="custom-warning" style="" ng-show="saleitem.exp_warning"> 
+                                            {{saleitem.exp_warning}}
+                                        </div>
                                     </td>
                                     <td>
                                         <span>
@@ -230,7 +244,7 @@
                                             e-name="discount_percentage"
                                             e-number-mask=""
                                             e-form="tableform"
-                                            onbeforesave="checkInput($data)"
+                                            onbeforesave="checkInput($data, key, $index)"
                                             e-ng-keydown="updateColumn($data, key, 'discount_percentage')"
                                             e-ng-keyup="updateColumn($data, key, 'discount_percentage')"
                                             e-autocomplete="off"
@@ -341,6 +355,7 @@
         </div>
     </div>
 </div>
+
 
 <div class="row">
     <footer class="panel-footer text-right bg-light lter">
