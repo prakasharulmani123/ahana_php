@@ -126,7 +126,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             } else {
                 $scope.formtype = 'update';
                 $scope.data.formtype = 'update';
-                $scope.loadForm();
+                $scope.loadForm(); // Waiting For testing
             }
 
             $scope.encounters = [];
@@ -803,21 +803,16 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 method: "GET"
             }).success(
                     function (response) {
-//                        $rootScope.commonService.GetProductList('', '1', false, function (response2) {
-//
-//                        });
                         $scope.loadbar('hide');
-
                         $scope.data = response;
 //                        $scope.data.patient_name = response.patient.fullname;
                         $scope.data.patient_guid = response.patient.patient_guid;
                         $scope.getConsultantDetail($scope.data.consultant_id);
                         $scope.getPaytypeDetail($scope.data.payment_type);
-                        $scope.products = [];
+//                        $scope.products = []; 
 //                        $scope.products = response2.productList;
 
                         $scope.saleItems = response.items;
-//                        console.log($scope.saleItems);
                         angular.forEach($scope.saleItems, function (item, key) {
                             angular.extend($scope.saleItems[key], {
                                 full_name: item.product.full_name,
