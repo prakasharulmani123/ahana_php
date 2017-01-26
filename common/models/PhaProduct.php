@@ -286,6 +286,9 @@ class PhaProduct extends RActiveRecord {
             'brand_name' => function ($model) {
                 return (isset($model->brand) ? $model->brand->brand_name : '-');
             },
+            'brand_code' => function ($model) {
+                return (isset($model->brand) ? $model->brand->brand_code : '-');
+            },
             'division_name' => function ($model) {
                 return (isset($model->division) ? $model->division->division_name : '-');
             },
@@ -336,6 +339,12 @@ class PhaProduct extends RActiveRecord {
                     break;
                  case 'sale_update':
                     $addt_keys = ['full_name'];
+                    $parent_fields = [
+                        'product_id' => 'product_id',
+                    ];
+                    break;
+                 case 'sale_print':
+                    $addt_keys = ['full_name', 'brand_name', 'brand_code'];
                     $parent_fields = [
                         'product_id' => 'product_id',
                     ];
