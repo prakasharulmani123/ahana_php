@@ -223,7 +223,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             selected = $filter('filter')($scope.patientgroups, {patient_group_id: $scope.data.patient_group_id}, true);
             if (selected.length)
                 $scope.data.patient_group_name = selected[0].group_name;
-            else 
+            else
                 $scope.data.patient_group_name = '';
         }
 
@@ -513,7 +513,11 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             if (batch) {
                 prod_batches = $scope.saleItems[key].product_batches;
                 selected = $filter('filter')(prod_batches, {batch_details: batch}, true);
-                return selected.length ? selected[0].batch_details : 'Not set';
+                if (selected) {
+                    return selected.length ? selected[0].batch_details : 'Not set';
+                } else {
+                    return 'Not set';
+                }
             }
         };
 
@@ -522,7 +526,11 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             if (product.product_id) {
                 selected = $filter('filter')($scope.products, {product_id: product.product_id});
             }
-            return selected.length ? selected[0].full_name : 'Not set';
+            if (selected) {
+                return selected.length ? selected[0].full_name : 'Not set';
+            } else {
+                return 'Not set';
+            }
         };
 
         //After barch choosed, then update some values in the row.
@@ -699,11 +707,6 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             });
 
             /* For print bill */
-            $scope.data2 = _that.data;
-            $scope.saleItems2 = $scope.saleItems;
-            $scope.getConsultantDetail(_that.data.consultant_id);
-            $scope.getPaytypeDetail(_that.data.payment_type);
-
             angular.extend(_that.data, {product_items: $scope.saleItems});
             $scope.loadbar('show');
             $http({
@@ -717,24 +720,11 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                             $scope.loadbar('hide');
                             if (mode == 'add') {
                                 msg = 'New bill generated ' + response.bill_no;
-                                $scope.data = {};
-                                $scope.data.sale_date = moment().format('YYYY-MM-DD');
-                                $scope.data.formtype = 'add';
-                                $scope.data.payment_type = 'CA';
-                                $scope.getPaytypeDetail(_that.data.payment_type);
-//                                $scope.setFutureInternalCode('SA', 'bill_no');
-                                $scope.saleItems = [];
-                                $scope.addRow();
-                                $scope.tableform.$show();
-                                $scope.data2.bill_no = response.bill_no;
                             } else {
                                 msg = 'Bill updated successfully';
                             }
                             $scope.msg.successMessage = msg;
-                            $timeout(function () {
-                                //                                $state.go('pharmacy.sales');
-                                save_success();
-                            }, 1000)
+                            $scope.printSaleBill(response.saleId);
                         } else {
 //                            $scope.tableform.$show();
                             $scope.loadbar('hide');
@@ -752,17 +742,6 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                     $scope.errorData = data.message;
             });
         };
-
-        var save_success = function () {
-            if ($scope.btnid == "print")
-            {
-                var innerContents = document.getElementById("Getprintval").innerHTML;
-                var popupWinindow = window.open('', '_blank', 'width=600,height=700,scrollbars=yes,menubar=no,toolbar=no,location=no,status=no,titlebar=no');
-                popupWinindow.document.open();
-                popupWinindow.document.write('<html><head><link href="css/print.css" rel="stylesheet" type="text/css" /></head><body onload="window.print()">' + innerContents + '</html>');
-                popupWinindow.document.close();
-            }
-        }
 
         $scope.changeGetConsultant = function () {
             _that = this;
@@ -809,8 +788,6 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                         $scope.data.patient_guid = response.patient.patient_guid;
                         $scope.getConsultantDetail($scope.data.consultant_id);
                         $scope.getPaytypeDetail($scope.data.payment_type);
-//                        $scope.products = []; 
-//                        $scope.products = response2.productList;
 
                         $scope.saleItems = response.items;
                         angular.forEach($scope.saleItems, function (item, key) {
@@ -833,7 +810,6 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                         $timeout(function () {
                             delete $scope.data.items;
                         }, 3000);
-
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');
@@ -938,22 +914,211 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                     });
         }
 
-        $scope.printSaleBill = function (row, saleitem) {
-            $scope.data2 = row;
-            $scope.saleItems2 = saleitem.items;
-            $scope.getConsultantDetail(row.consultant_id);
-            $scope.getPaytypeDetail(row.payment_type);
-            $scope.btnid = 'print';
+        /*PRINT BILL*/
+        $scope.printHeader = function () {
+            return true;
+        }
 
-            angular.forEach($scope.saleItems2, function (item) {
-                item.full_name = item.product.full_name;
-                item.batch_details = item.batch.batch_details;
-                item.expiry_date = item.batch.expiry_date;
+        $scope.printFooter = function () {
+            return true;
+        }
+
+        $scope.printStyle = function () {
+            return {
+                header: {
+                    bold: true,
+                    color: '#000',
+                    fontSize: 8
+                },
+                demoTable: {
+                    color: '#000',
+                    fontSize: 8
+                }
+            };
+        }
+
+        $scope.printloader = '';
+        $scope.printContent = function () {
+            var generated_on = moment().format('YYYY-MM-DD hh:mm A');
+            var generated_by = $scope.app.username;
+
+            var content = [];
+
+            var result_count = Object.keys($scope.saleItems2).length;
+            var index = 1;
+            var loop_count = 0;
+
+            var groupedArr = createGroupedArray($scope.saleItems2, 2);
+            var sale_info = $scope.data2;
+
+            angular.forEach(groupedArr, function (sales, key) {
+                var perPageInfo = [];
+
+                var perPageItems = [];
+                perPageItems.push([
+                    {text: 'S.No', style: 'header'},
+                    {text: 'Particulars', style: 'header'},
+                    {text: 'MFR', style: 'header'},
+                    {text: 'Batch', style: 'header'},
+                    {text: 'Expiry', style: 'header'},
+                    {text: 'Qty', style: 'header'},
+                    {text: 'Rate', style: 'header'},
+                    {text: 'Amount', style: 'header'},
+                ]);
+
+                angular.forEach(sales, function (row, key) {
+                    perPageItems.push([
+                        index.toString(),
+                        row.product.full_name,
+                        row.product.brand_code,
+                        row.batch_no,
+                        moment(row.expiry_date).format('MM/YY'),
+                        row.quantity.toString(),
+                        row.mrp,
+                        row.total_amount,
+                    ]);
+                    index++;
+                    loop_count++;
+                });
+                perPageItems.push([
+                    {text: 'For Ahana Hospital', colSpan: 2},
+                    "",
+                    {text: 'GET WELL SOON', colSpan: 3, alignment: 'center'},
+                    "",
+                    "",
+                    {text: 'TOTAL'},
+                    {text: (loop_count === result_count ? sale_info.bill_amount.toString() : ''), colSpan: 2, alignment: 'right'},
+                    "",
+                ]);
+
+                perPageInfo.push({
+                    columns: [
+                        {
+                            text: [
+                                {text: 'Pt. Name ', bold: true},
+                                sale_info.patient_name
+                            ],
+                            margin: [0, 0, 0, 20]
+                        },
+                        {
+                            text: [
+                                {text: 'No: ', bold: true},
+                                sale_info.bill_no + "/" + sale_info.payment_type_name
+                            ],
+                            margin: [0, 0, 0, 20]
+                        }
+
+                    ]
+                }, {
+                    columns: [
+                        {
+                            text: [
+                                {text: 'Address: ', bold: true},
+                                "Test address"
+                            ],
+                            margin: [0, 0, 0, 20]
+                        },
+                        {
+                            text: [
+                                {text: ' Date: ', bold: true},
+                                generated_on
+                            ],
+                            margin: [0, 0, 0, 20]
+                        }
+                    ]
+                }, {
+                    style: 'demoTable',
+                    table: {
+                        headerRows: 1,
+                        widths: [20, 150, 50, '*', 'auto', 'auto', 50, 50],
+                        body: perPageItems,
+                    },
+                    pageBreak: (loop_count === result_count ? '' : 'after'),
+                });
+                content.push(perPageInfo);
+                if (index == result_count) {
+                    $scope.printloader = '';
+                }
             });
+            return content;
+        }
 
-            $timeout(function () {
+        var createGroupedArray = function (arr, chunkSize) {
+            var groups = [], i;
+            for (i = 0; i < arr.length; i += chunkSize) {
+                groups.push(arr.slice(i, i + chunkSize));
+            }
+            return groups;
+        }
+
+        var save_success = function () {
+            if ($scope.btnid == "print") {
+                $scope.printloader = '<i class="fa fa-spin fa-spinner"></i>';
+                var print_content = $scope.printContent();
+                if (print_content.length > 0) {
+                    var docDefinition = {
+                        header: $scope.printHeader(),
+                        footer: $scope.printFooter(),
+                        styles: $scope.printStyle(),
+                        content: print_content,
+                        pageSize: {width: 4 * 72, height: 8 * 72},
+                        pageOrientation: 'landscape',
+                    };
+                    var pdf_document = pdfMake.createPdf(docDefinition);
+                    var doc_content_length = Object.keys(pdf_document).length;
+                    if (doc_content_length > 0) {
+                        pdf_document.print();
+                    }
+                }
+            } else {
+                $state.go($state.current, {}, {reload: true});
+            }
+        }
+
+        $scope.saleDetail = function (sale_id) {
+            $scope.data2 = {};
+            $scope.saleItems2 = [];
+            $scope.loadbar('show');
+
+            var deferred = $q.defer();
+            deferred.notify();
+
+            $http.get($rootScope.IRISOrgServiceUrl + "/pharmacysales/" + sale_id + "?addtfields=sale_print")
+                    .success(function (response) {
+                        $scope.loadbar('hide');
+                        $scope.data2 = response;
+                        $scope.data2.patient_name = response.patient_name;
+                        $scope.data2.patient_guid = response.patient_uhid;
+//                        $scope.getConsultantDetail($scope.data2.consultant_id);
+                        $scope.getPaytypeDetail($scope.data2.payment_type);
+                        $scope.data2.payment_type_name = $scope.purchase_type_name;
+
+                        $scope.saleItems2 = response.items;
+                        angular.forEach($scope.saleItems2, function (item, key) {
+                            angular.extend($scope.saleItems2[key], {
+                                full_name: item.product.full_name,
+                                batch_no: item.batch.batch_no,
+                                batch_details: item.batch.batch_details,
+                                expiry_date: item.batch.expiry_date,
+                                quantity: item.quantity,
+                            });
+                        });
+                        deferred.resolve();
+                    })
+                    .error(function () {
+                        $scope.errorData = "An Error has occured while loading sale!";
+                        deferred.reject();
+                    });
+
+            return deferred.promise;
+        };
+
+        $scope.printSaleBill = function (sale_id) {
+            $scope.saleDetail(sale_id).then(function () {
+                delete $scope.data2.items;
+                $scope.btnid = 'print';
                 save_success();
-            }, 1000)
+            });
         }
 
 //        // Get Patient Name

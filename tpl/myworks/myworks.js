@@ -15,83 +15,86 @@ app.controller('MyworksController', ['$rootScope', '$scope', '$timeout', '$http'
                     function (response) {
                         if (response.data.success === true) {
                             _that.data = response.data.return;
-                        }
-                        else {
+                        } else {
                             $scope.errorData = response.data;
                         }
                     }
             )
         };
 
-//        var docDefinition = {
-//            header: {text: 'Ahana', margin: 5},
-//            footer: {
-//                text: [
-//                    {
-//                        text: 'Report Genarate On : ',
-//                        bold: true
-//                    },
-//                    '12/15/2016 12:05:11 PM'
-//                ],
-//                margin: 5
-//            },
-//            content: [
-//                {
-//                    text: 'To,'
-//                },
-//                {
-//                    text: 'Dr.Jannet (Counsellor)',
-//                    margin: [20, 10, 0, 10]
-//                },
-//                {
-//                    text: 'Dear Doctor,'
-//                },
-//                {
-//                    text: 'Thank you for your support to us for your patients.  I wish your satisfaction towards the quality of our service',
-//                    margin: [0, 10, 0, 10]
-//                },
-//                {
-//                    text: 'I hereby enclose the details and the payment due for you',
-//                    margin: [0, 10, 0, 10]
-//                },
-//                {
-//                    style: 'demoTable',
-//                    table: {
-//                        headerRows: 1,
-//                        widths: ['*', '*', '*'],
-//                        body: [
-//                            [
-//                                {text: 'Fruit', style: 'header'},
-//                                {text: 'Quantity', style: 'header'},
-//                                {text: 'Calories', style: 'header'}
-//                            ],
-//                            ['Apple', '100 grams', '52'],
-//                            ['Apple1', '100 grams', '52'],
-//                        ]
-//                    },
-//                    pageBreak: 'after',
-//                }
-//            ],
-//            styles: {
-//                header: {
-//                    bold: true,
-//                    color: '#000',
-//                    fontSize: 11
-//                },
-//                demoTable: {
-//                    color: '#666',
-//                    fontSize: 10
-//                }
-//            }};
-//
-//        $scope.openPdf = function () {
-//            pdfMake.createPdf(docDefinition).open();
-//        };
-//        $scope.downloadPdf = function () {
-//            pdfMake.createPdf(docDefinition).download();
-//        };
-//        $scope.printPdf = function () {
-//            pdfMake.createPdf(docDefinition).print();
-//        };
+        var docDefinition = {
+            pageSize: {width: 4 * 72, height: 8 * 72},
+            pageOrientation: 'landscape',
+//            pageMargins: [40, 160, 40, 60],
+
+            header: {text: 'Ahana', margin: 5},
+            footer: {
+                text: [
+                    {
+                        text: 'Report Genarate On : ',
+                        bold: true
+                    },
+                    '12/15/2016 12:05:11 PM'
+                ],
+                margin: 5
+            },
+            content: [
+                {
+                    style: 'demoTable',
+                    table: {
+                        headerRows: 1,
+                        widths: ['*', '*', '*', '*', '*', '*', '*', '*'],
+                        body: [
+                            [
+                                {text: 'S.No', style: 'header'},
+                                {text: 'Particulars', style: 'header'},
+                                {text: 'MFR', style: 'header'},
+                                {text: 'Batch', style: 'header'},
+                                {text: 'Expiry', style: 'header'},
+                                {text: 'Qty', style: 'header'},
+                                {text: 'Rate', style: 'header'},
+                                {text: 'Amount', style: 'header'},
+                            ],
+                            ['1', 'Syp', 'RPG', '123456', '07/16', '5', '30.00', '150.00'],
+                            ['2', 'Syp', 'RPG', '123456', '07/16', '5', '30.00', '150.00'],
+                            ['3', 'Syp', 'RPG', '123456', '07/16', '5', '30.00', '150.00'],
+                            ['4', 'Syp', 'RPG', '123456', '07/16', '5', '30.00', '150.00'],
+                            ['5', 'Syp', 'RPG', '123456', '07/16', '5', '30.00', '150.00'],
+                            ['6', 'Syp', 'RPG', '123456', '07/16', '5', '30.00', {text: '150.00', pageBreak: 'after'}],
+                            ['7', 'Syp', 'RPG', '123456', '07/16', '5', '30.00', '150.00'],
+                            ['8', 'Syp', 'RPG', '123456', '07/16', '5', '30.00', '150.00'],
+                            ['9', 'Syp', 'RPG', '123456', '07/16', '5', '30.00', '150.00'],
+                            ['10', 'Syp', 'RPG', '123456', '07/16', '5', '30.00', '150.00'],
+                            ['11', 'Syp', 'RPG', '123456', '07/16', '5', '30.00', {text: '150.00', pageBreak: 'after'}],
+                            ['12', 'Syp', 'RPG', '123456', '07/16', '5', '30.00', '150.00'],
+                            ['13', 'Syp', 'RPG', '123456', '07/16', '5', '30.00', '150.00'],
+                            ['14', 'Syp', 'RPG', '123456', '07/16', '5', '30.00', '150.00'],
+                            ['15', 'Syp', 'RPG', '123456', '07/16', '5', '30.00', '150.00'],
+                        ]
+                    },
+                }
+            ],
+            styles: {
+                header: {
+                    bold: true,
+                    color: '#000',
+                    fontSize: 11
+                },
+                demoTable: {
+                    color: '#666',
+                    fontSize: 10
+                }
+            }
+        };
+
+        $scope.openPdf = function () {
+            pdfMake.createPdf(docDefinition).open();
+        };
+        $scope.downloadPdf = function () {
+            pdfMake.createPdf(docDefinition).download();
+        };
+        $scope.printPdf = function () {
+            pdfMake.createPdf(docDefinition).print();
+        };
 
     }]);
