@@ -186,7 +186,7 @@ class PharmacypurchaseController extends ActiveController {
                     PhaReorderHistoryItem::updateAll(['status' => '0'], ['reorder_id' => $post['reorder_id']]);
                 }
 
-                return ['success' => true, 'model' => $model];
+                return ['success' => true, 'invoice_no' => $model->invoice_no];
             } else {
                 if ($process == 'import') {
                     $err_summary = json_encode(array_merge($model->errors, $item_model->errors));

@@ -146,6 +146,21 @@ class PhaProductBatch extends RActiveRecord {
                     $pFields = ['batch_no', 'expiry_date'];
                     $parent_fields = array_combine($pFields, $pFields);
                     break;
+                case 'pharm_purchase_prod_json':
+                    $addt_keys = ['batch_details', 'mrp'];
+                    $pFields = ['batch_no', 'available_qty', 'product_id', 'expiry_date', 'package_name'];
+                    $parent_fields = array_combine($pFields, $pFields);
+                    break;
+                case 'purchase_update':
+                    $addt_keys = ['batch_details', 'mrp'];
+                    $pFields = ['batch_no', 'available_qty', 'expiry_date'];
+                    $parent_fields = array_combine($pFields, $pFields);
+                    break;
+                case 'viewlist':
+                    $addt_keys = ['batch_details'];
+                    $pFields = ['batch_no'];
+                    $parent_fields = array_combine($pFields, $pFields);
+                    break;
             endswitch;
         }
 

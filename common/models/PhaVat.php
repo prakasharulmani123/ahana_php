@@ -90,6 +90,11 @@ class PhaVat extends RActiveRecord {
                         'vat' => 'vat'
                     ];
                     break;
+                case 'pharm_purchase_prod_json':
+                    $parent_fields = [
+                        'vat' => 'vat'
+                    ];
+                    break;
             endswitch;
         }
 

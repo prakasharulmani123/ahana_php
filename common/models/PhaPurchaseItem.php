@@ -174,12 +174,12 @@ class PhaPurchaseItem extends RActiveRecord {
 
     public function fields() {
         $extend = [
-//            'product' => function ($model) {
-//                return (isset($model->product) ? $model->product : '-');
-//            },
-//            'batch' => function ($model) {
-//                return (isset($model->batch) ? $model->batch : '-');
-//            },
+            'product' => function ($model) {
+                return (isset($model->product) ? $model->product : '-');
+            },
+            'batch' => function ($model) {
+                return (isset($model->batch) ? $model->batch : '-');
+            },
             'total_returned_quantity' => function($model) {
                 return (isset($model->phaPurchaseReturnItemsTotal) ? $model->phaPurchaseReturnItemsTotal : '0');
             }
