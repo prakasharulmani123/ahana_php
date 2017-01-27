@@ -360,6 +360,12 @@ class PhaProduct extends RActiveRecord {
                     $pFields = ['product_id'];
                     $parent_fields = array_combine($pFields, $pFields);
                     break;
+                case 'reorderhistory':
+                    $addt_keys = ['full_name'];
+                    $parent_fields = [
+                        'product_id' => 'product_id',
+                    ];
+                    break;
             endswitch;
         }
 
