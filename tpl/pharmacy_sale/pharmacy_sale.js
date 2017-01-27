@@ -724,7 +724,11 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                 msg = 'Bill updated successfully';
                             }
                             $scope.msg.successMessage = msg;
-                            $scope.printSaleBill(response.saleId);
+                            if ($scope.btnid == "print") {
+                                $scope.printSaleBill(response.saleId);
+                            } else {
+                                $state.go($state.current, {}, {reload: true});
+                            }
                         } else {
 //                            $scope.tableform.$show();
                             $scope.loadbar('hide');
