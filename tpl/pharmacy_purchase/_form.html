@@ -123,7 +123,7 @@
                                                 e-name="batch_details"
                                                 e-autocomplete="off"
                                                 onbeforesave="checkInput($data)"
-                                                e-typeahead="batch as batch.batch_details for batch in batches | filter:{batch_details: $viewValue} | limitTo:8"
+                                                e-typeahead="batch as batch.batch_details for batch in purchaseitem.batches | filter:{batch_details: $viewValue} | limitTo:8"
                                                 e-typeahead-on-select="updateBatchRow($item, $model, $label, key)"
                                                 e-ng-change="clearBatchRow($data, key);">
                                                 {{ purchaseitem.batch_details || 'empty' }}

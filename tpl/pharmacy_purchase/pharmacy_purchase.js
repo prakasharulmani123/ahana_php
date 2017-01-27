@@ -1,4 +1,4 @@
-app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$anchorScroll', '$filter', '$timeout', '$location', '$modal', '$log', '$localStorage', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $anchorScroll, $filter, $timeout, $location, $modal, $log, $localStorage, DTOptionsBuilder, DTColumnBuilder, $compile) {
+app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$anchorScroll', '$filter', '$timeout', '$location', '$modal', '$log', '$localStorage', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', '$q' , function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $anchorScroll, $filter, $timeout, $location, $modal, $log, $localStorage, DTOptionsBuilder, DTColumnBuilder, $compile, $q) {
 
         editableThemes.bs3.inputClass = 'input-sm';
         editableThemes.bs3.buttonsClass = 'btn-sm';
@@ -183,10 +183,9 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                         }
 
                         $scope.products = [];
-                        $scope.batches = [];
 
                         $scope.productloader = '<i class="fa fa-spin fa-spinner"></i>';
-                        $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct?fields=product_id,product_name,full_name,purchaseVat')
+                        $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct?fields=product_id,full_name') //product_name, purchaseVat
                                 .success(function (products) {
                                     $scope.products = products;
                                     $scope.productloader = '';
@@ -385,17 +384,34 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             }
         }
 
+        $scope.productDetail = function (product_id, product_obj) {
+            var deferred = $q.defer();
+            deferred.notify();
+            var Fields = 'product_name,purchaseVat,product_batches';
+
+            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproducts/' + product_id + '?fields=' + Fields + '&addtfields=pharm_purchase_prod_json')
+                    .success(function (product) {
+                        Fields.split(",").forEach(function (item) {
+                            product_obj[item] = product[item];
+                        });
+                        deferred.resolve();
+                    })
+                    .error(function () {
+                        $scope.errorData = "An Error has occured while loading product!";
+                        deferred.reject();
+                    });
+
+            return deferred.promise;
+        };
+
         //Update / Clear - Single Row
         $scope.updateProductRow = function (item, model, label, key) {
-            $scope.purchaseitems[key].product_id = item.product_id;
-            $scope.purchaseitems[key].vat_percent = item.purchaseVat.vat;
-
-            $scope.loadbar('show');
-
-            $rootScope.commonService.GetBatchListByProduct(item.product_id, function (response) {
-                $scope.loadbar('hide');
-                $scope.batches = response.batchList;
-
+            var selectedObj = $filter('filter')($scope.products, {product_id: item.product_id}, true)[0];
+            $scope.productDetail(item.product_id, selectedObj).then(function () {
+                $scope.purchaseitems[key].product_id = item.product_id;
+                $scope.purchaseitems[key].vat_percent = selectedObj.purchaseVat.vat;
+                $scope.purchaseitems[key].batches = selectedObj.product_batches;
+                
                 $scope.purchaseitems[key].batch_no = '0';
                 $scope.purchaseitems[key].batch_details = '';
                 $scope.purchaseitems[key].expiry_date = '';
@@ -414,8 +430,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                 $scope.purchaseitems[key].temp_package_name = '';
                 $scope.purchaseitems[key].temp_mrp = 0;
                 $scope.purchaseitems[key].is_temp = 0;
-                $scope.purchaseitems[key].exp_warning = '';
-
+                $scope.purchaseitems[key].exp_warning = '';            
                 $scope.updateRow(key);
             });
         }
@@ -424,8 +439,6 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             if (!data) {
                 $scope.purchaseitems[key].product_id = '';
                 $scope.purchaseitems[key].vat_percent = '0';
-
-                $scope.batches = [];
 
                 $scope.purchaseitems[key].batch_no = '0';
                 $scope.purchaseitems[key].batch_details = '';
@@ -693,7 +706,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                                 $scope.loadbar('hide');
                                 if (mode == 'add') {
                                     $scope.data = {};
-                                    $scope.msg.successMessage = 'New Purchase bill generated  ' + response.model.invoice_no;
+                                    $scope.msg.successMessage = 'New Purchase bill generated  ' + response.invoice_no;
                                     $scope.data.invoice_date = moment().format('YYYY-MM-DD');
                                     $scope.data.formtype = 'add';
                                     $scope.data.payment_type = 'CA';
@@ -747,7 +760,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             _that = this;
             $scope.errorData = "";
             $http({
-                url: $rootScope.IRISOrgServiceUrl + "/pharmacypurchases/" + $state.params.id,
+                url: $rootScope.IRISOrgServiceUrl + "/pharmacypurchases/" + $state.params.id + "?addtfields=purchase_update",
                 method: "GET"
             }).success(
                     function (response) {
