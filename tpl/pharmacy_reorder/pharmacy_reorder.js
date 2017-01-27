@@ -62,7 +62,7 @@ app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http
                 $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
 
                 // Get data's from service
-                $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyreorderhistory')
+                $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyreorderhistory?addtfields=viewlist')
                         .success(function (response) {
                             $scope.isLoading = false;
                             $scope.loadbar('hide');
@@ -182,7 +182,7 @@ app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http
             _that = this;
             $scope.errorData = "";
             $http({
-                url: $rootScope.IRISOrgServiceUrl + "/pharmacyreorderhistories/" + $state.params.id,
+                url: $rootScope.IRISOrgServiceUrl + "/pharmacyreorderhistories/" + $state.params.id + "?addtfields=reorderhistory",
                 method: "GET"
             }).success(
                     function (response) {
