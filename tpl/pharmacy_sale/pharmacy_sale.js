@@ -755,7 +755,9 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         $scope.getConsultantDetail = function (consultant_id) {
             if (consultant_id) {
                 consultant_details = $filter('filter')($scope.doctors, {user_id: consultant_id}, true);
-                $scope.consultant_name_taken = consultant_details.length > 0 ? consultant_details[0].fullname : '';
+                if (consultant_details) {
+                    $scope.consultant_name_taken = consultant_details.length > 0 ? consultant_details[0].fullname : '';
+                }
             }
         }
 
@@ -971,9 +973,28 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 ]);
 
                 angular.forEach(sales, function (row, key) {
+                    var percentage = parseInt(row.discount_percentage);
+                    if (percentage > 0) {
+                        var particulars = {
+                            columns: [
+                                {
+                                    width: 140,
+                                    text: row.product.full_name,
+                                    alignment: 'left'
+                                },
+                                {
+                                    width: 'auto',
+                                    text: percentage.toString(),
+                                    alignment: 'right',
+                                }
+                            ]
+                        }
+                    } else {
+                        var particulars = row.product.full_name;
+                    }
                     perPageItems.push([
                         index.toString(),
-                        row.product.full_name,
+                        particulars,
                         row.product.brand_code,
                         row.batch_no,
                         moment(row.expiry_date).format('MM/YY'),
