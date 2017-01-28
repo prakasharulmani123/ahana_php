@@ -257,7 +257,7 @@ class PharmacyreorderhistoryController extends ActiveController {
                         $item_model->save(false);
                     }
                 }
-                return ['success' => true, 'model' => $model];
+                return ['success' => true]; //, 'model' => $model
             } else {
                 return ['success' => false, 'message' => Html::errorSummary([$model, $item_model])];
             }
