@@ -154,7 +154,6 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
         //For Form
         $scope.formtype = '';
         $scope.initForm = function (formtype) {
-            console.log(formtype);
             $scope.data = {};
             if (formtype == 'add') {
                 $scope.data.formtype = 'add';
@@ -893,6 +892,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                     }
                 ]
             });
+            console.log(purchaseInfo);
             content.push(purchaseInfo);
             if (index == result_count) {
                 $scope.printloader = '';
@@ -936,10 +936,6 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                     .success(function (response) {
                         $scope.loadbar('hide');
                         $scope.data2 = response;
-//                        $scope.getSupplierDetail($scope.data2.supplier_id)
-//                        $scope.data2.supplier_name_taken = $scope.supplier_name_taken;
-//                        $scope.getPaytypeDetail($scope.data2.payment_type);
-                        $scope.data2.payment_type_name = $scope.purchase_payment_type_name;
 
                         $scope.purchaseitems2 = response.items;
                         angular.forEach($scope.purchaseitems2, function (item, key) {
