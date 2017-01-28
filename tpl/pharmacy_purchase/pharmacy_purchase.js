@@ -1,4 +1,4 @@
-app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$anchorScroll', '$filter', '$timeout', '$location', '$modal', '$log', '$localStorage', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', '$q' , function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $anchorScroll, $filter, $timeout, $location, $modal, $log, $localStorage, DTOptionsBuilder, DTColumnBuilder, $compile, $q) {
+app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$anchorScroll', '$filter', '$timeout', '$location', '$modal', '$log', '$localStorage', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', '$q', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $anchorScroll, $filter, $timeout, $location, $modal, $log, $localStorage, DTOptionsBuilder, DTColumnBuilder, $compile, $q) {
 
         editableThemes.bs3.inputClass = 'input-sm';
         editableThemes.bs3.buttonsClass = 'btn-sm';
@@ -154,6 +154,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
         //For Form
         $scope.formtype = '';
         $scope.initForm = function (formtype) {
+            console.log(formtype);
             $scope.data = {};
             if (formtype == 'add') {
                 $scope.data.formtype = 'add';
@@ -411,7 +412,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                 $scope.purchaseitems[key].product_id = item.product_id;
                 $scope.purchaseitems[key].vat_percent = selectedObj.purchaseVat.vat;
                 $scope.purchaseitems[key].batches = selectedObj.product_batches;
-                
+
                 $scope.purchaseitems[key].batch_no = '0';
                 $scope.purchaseitems[key].batch_details = '';
                 $scope.purchaseitems[key].expiry_date = '';
@@ -430,7 +431,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                 $scope.purchaseitems[key].temp_package_name = '';
                 $scope.purchaseitems[key].temp_mrp = 0;
                 $scope.purchaseitems[key].is_temp = 0;
-                $scope.purchaseitems[key].exp_warning = '';            
+                $scope.purchaseitems[key].exp_warning = '';
                 $scope.updateRow(key);
             });
         }
@@ -702,29 +703,22 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                         function (response) {
                             $anchorScroll();
                             if (response.success == true) {
-
                                 $scope.loadbar('hide');
                                 if (mode == 'add') {
-                                    $scope.data = {};
                                     $scope.msg.successMessage = 'New Purchase bill generated  ' + response.invoice_no;
-                                    $scope.data.invoice_date = moment().format('YYYY-MM-DD');
-                                    $scope.data.formtype = 'add';
-                                    $scope.data.payment_type = 'CA';
-                                    $scope.purchaseitems = [];
-                                    $scope.setFutureInternalCode('PG', 'gr_num');
-                                    $scope.addRow();
-                                    $scope.tableform.$show();
                                 } else {
                                     $scope.msg.successMessage = 'Purchase updated successfully';
                                 }
-                                $timeout(function () {
-                                    save_success();
-                                }, 1000);
+
+                                if ($scope.btnid == "print") {
+                                    $scope.printPurchaseBill(response.purchaseId);
+                                } else {
+                                    $state.go($state.current, {}, {reload: true});
+                                }
                             } else {
                                 $scope.loadbar('hide');
                                 $scope.errorData = response.message;
                             }
-
                             return false;
                         }
                 ).error(function (data, status) {
@@ -735,24 +729,245 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                     else
                         $scope.errorData = data.message;
                 });
-
-                var save_success = function () {
-                    if ($scope.btnid == "print")
-                    {
-                        var innerContents = document.getElementById("Getprintval").innerHTML;
-                        var popupWinindow = window.open('', '_blank', 'width=600,height=700,scrollbars=yes,menubar=no,toolbar=no,location=no,status=no,titlebar=no');
-                        popupWinindow.document.open();
-                        popupWinindow.document.write('<html><head><link href="css/print.css" rel="stylesheet" type="text/css" /></head><body onload="window.print()">' + innerContents + '</html>');
-                        popupWinindow.document.close();
-                    } else {
-//                    $scope.data = {};
-//                    $timeout(function () {
-//                        $state.go('pharmacy.purchase');
-//                    }, 1000)
-                    }
-                }
             }
         };
+
+        /*PRINT BILL*/
+        $scope.printHeader = function () {
+            return {
+                text: "Purchase Bill",
+                margin: 5,
+                alignment: 'center'
+            };
+        }
+
+        $scope.printFooter = function () {
+            return true;
+        }
+
+        $scope.printStyle = function () {
+            return {
+                header: {
+                    bold: true,
+                    color: '#000',
+                    fontSize: 11
+                },
+                demoTable: {
+                    color: '#000',
+                    fontSize: 10
+                }
+            };
+        }
+
+        $scope.printloader = '';
+        $scope.printContent = function () {
+            var generated_by = $scope.app.username;
+
+            var content = [];
+            var purchaseInfo = [];
+            var purchaseItems = [];
+
+            var result_count = Object.keys($scope.purchaseitems2).length;
+            var index = 1;
+            var loop_count = 0;
+
+            var purchase = $scope.data2;
+            purchaseItems.push([
+                {text: 'S.No', style: 'header'},
+                {text: 'Product Name', style: 'header'},
+                {text: 'Batch No', style: 'header'},
+                {text: 'Exp Date', style: 'header'},
+                {text: 'Qty', style: 'header'},
+                {text: 'P.Unit', style: 'header'},
+                {text: 'Free', style: 'header'},
+                {text: 'FreeUnit', style: 'header'},
+                {text: 'MRP', style: 'header'},
+                {text: 'P.Price', style: 'header'},
+                {text: 'Amt', style: 'header'},
+                {text: 'Dis %', style: 'header'},
+                {text: 'Dis Amt', style: 'header'},
+                {text: 'P.Vat%', style: 'header'},
+                {text: 'Vat Amt', style: 'header'},
+                {text: 'Total Amt', style: 'header'},
+            ]);
+
+            angular.forEach($scope.purchaseitems2, function (row, key) {
+                purchaseItems.push([
+                    index.toString(),
+                    row.product.full_name,
+                    row.batch_no,
+                    moment(row.expiry_date).format('MM/YY'),
+                    row.quantity.toString(),
+                    row.package_name,
+                    row.free_quantity,
+                    (row.free_quantity_package_unit ? row.free_quantity_package_unit : '-'),
+                    row.mrp,
+                    row.purchase_rate,
+                    row.purchase_amount,
+                    row.discount_percent,
+                    row.discount_amount,
+                    row.vat_percent,
+                    row.vat_amount,
+                    row.total_amount,
+                ]);
+                index++;
+                loop_count++;
+            });
+
+            purchaseInfo.push({
+                columns: [
+                    {
+                        text: [
+                            {text: 'Invoice No: ', bold: true},
+                            purchase.invoice_no
+                        ],
+                        margin: [0, 0, 0, 10]
+                    },
+                    {
+                        text: [
+                            {text: 'Payment Type: ', bold: true},
+                            purchase.payment_type_name
+                        ],
+                        margin: [0, 0, 0, 10]
+                    }
+
+                ]
+            }, {
+                columns: [
+                    {
+                        text: [
+                            {text: 'Invoice Date: ', bold: true},
+                            purchase.invoice_date
+                        ],
+                        margin: [0, 0, 0, 10]
+                    },
+                    {
+                        text: [
+                            {text: ' Supplier Name: ', bold: true},
+                            purchase.supplier_name
+                        ],
+                        margin: [0, 0, 0, 10]
+                    }
+                ]
+            }, {
+                columns: [
+                    {
+                        text: [
+                            {text: 'GR No: ', bold: true},
+                            purchase.gr_num
+                        ],
+                        margin: [0, 0, 0, 20]
+                    },
+                ]
+            }, {
+                style: 'demoTable',
+                margin: [0, 0, 0, 20],
+                table: {
+                    headerRows: 1,
+                    widths: [30, '*', '*', 40, 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', '*', 'auto', '*', 'auto', '*', '*'],
+                    body: purchaseItems,
+                },
+//                pageBreak: (loop_count === result_count ? '' : 'after'),
+            }, {
+                columns: [
+                    {
+                        alignment: 'right',
+                        text: [
+                            {text: 'Total Disc. Amount: ', bold: true},
+                            purchase.total_item_discount_amount + '\n\n',
+                            {text: 'Total Vat Amount: ', bold: true},
+                            purchase.total_item_vat_amount + '\n\n',
+                            {text: 'Total Amount: ', bold: true},
+                            purchase.total_item_purchase_amount + '\n\n',
+                            {text: 'Disc(' + purchase.discount_percent + ') %: ', bold: true},
+                            purchase.discount_amount + '\n\n',
+                            {text: 'Before Disc. Total: ', bold: true},
+                            purchase.before_disc_amount + '\n\n',
+                            {text: 'After Disc. Total: ', bold: true},
+                            purchase.after_disc_amount + '\n\n',
+                            {text: 'Round Off: ', bold: true},
+                            purchase.roundoff_amount + '\n\n',
+                            {text: 'Net Amount: ', bold: true},
+                            purchase.net_amount + '\n\n',
+                        ],
+                    }
+                ]
+            });
+            content.push(purchaseInfo);
+            if (index == result_count) {
+                $scope.printloader = '';
+            }
+            return content;
+        }
+
+        var save_success = function () {
+            if ($scope.btnid == "print") {
+                $scope.printloader = '<i class="fa fa-spin fa-spinner"></i>';
+                var print_content = $scope.printContent();
+                if (print_content.length > 0) {
+                    var docDefinition = {
+                        header: $scope.printHeader(),
+                        footer: $scope.printFooter(),
+                        styles: $scope.printStyle(),
+                        content: print_content,
+                        pageSize: 'A4',
+                        pageOrientation: 'landscape',
+                    };
+                    var pdf_document = pdfMake.createPdf(docDefinition);
+                    var doc_content_length = Object.keys(pdf_document).length;
+                    if (doc_content_length > 0) {
+                        pdf_document.print();
+                    }
+                }
+            } else {
+                $state.go($state.current, {}, {reload: true});
+            }
+        }
+
+        $scope.purchaseDetail = function (purchase_id) {
+            $scope.data2 = {};
+            $scope.purchaseitems2 = [];
+            $scope.loadbar('show');
+
+            var deferred = $q.defer();
+            deferred.notify();
+
+            $http.get($rootScope.IRISOrgServiceUrl + "/pharmacypurchases/" + purchase_id + "?addtfields=purchase_print")
+                    .success(function (response) {
+                        $scope.loadbar('hide');
+                        $scope.data2 = response;
+//                        $scope.getSupplierDetail($scope.data2.supplier_id)
+//                        $scope.data2.supplier_name_taken = $scope.supplier_name_taken;
+//                        $scope.getPaytypeDetail($scope.data2.payment_type);
+                        $scope.data2.payment_type_name = $scope.purchase_payment_type_name;
+
+                        $scope.purchaseitems2 = response.items;
+                        angular.forEach($scope.purchaseitems2, function (item, key) {
+                            angular.extend($scope.purchaseitems2[key], {
+                                full_name: item.product.full_name,
+                                batch_no: item.batch.batch_no,
+                                batch_details: item.batch.batch_details,
+                                expiry_date: item.batch.expiry_date,
+                                quantity: item.quantity,
+                            });
+                        });
+                        deferred.resolve();
+                    })
+                    .error(function () {
+                        $scope.errorData = "An Error has occured while loading purchase!";
+                        deferred.reject();
+                    });
+
+            return deferred.promise;
+        };
+
+        $scope.printPurchaseBill = function (purchase_id) {
+            $scope.purchaseDetail(purchase_id).then(function () {
+                delete $scope.data2.items;
+                $scope.btnid = 'print';
+                save_success();
+            });
+        }
 
         //Get Data for update Form
         $scope.loadForm = function () {
