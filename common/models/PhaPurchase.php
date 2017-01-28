@@ -150,6 +150,12 @@ class PhaPurchase extends RActiveRecord {
             'supplier_name' => function ($model) {
                 return (isset($model->supplier) ? $model->supplier->supplier_name : '-');
             },
+            'payment_type_name' => function ($model) {
+                if($model->payment_type == 'CA')
+                    return "Cash";
+                elseif($model->payment_type == 'CR')
+                    return "Credit";
+            },
             'items' => function ($model) {
                 return (isset($model->phaPurchaseItems) ? $model->phaPurchaseItems : '-');
             },
