@@ -803,7 +803,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                     row.mrp,
                     row.purchase_rate,
                     row.purchase_amount,
-                    row.discount_percent,
+                    (row.discount_percent ? row.discount_percent : '-'),
                     row.discount_amount,
                     row.vat_percent,
                     row.vat_amount,
