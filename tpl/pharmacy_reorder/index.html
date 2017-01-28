@@ -155,6 +155,9 @@
                         <td><label class="label label-{{row.status == '1' ? 'danger' : 'success'}}">{{row.status == '1' ? 'Not Reordered' : 'Reordered'}}</label></td>
                         <td>
                             <a ng-if="row.status == '1'" class="btn btn-primary" ui-sref="pharmacy.reorderHistoryUpdate({id: row.reorder_id})">Add Stock</a>
+                            <button tooltip="Print"  class="label bg-primary dk" ng-click="printReorderHistory(row.reorder_id)">
+                                <i class="fa fa-print"></i>
+                            </button>
                         </td>
                     </tr>
                     <tr ng-repeat-end ng-show="expanded" data-value="{{row.supplier.supplier_name}} {{row.reorder_date}} {{row.user.fullname}}">

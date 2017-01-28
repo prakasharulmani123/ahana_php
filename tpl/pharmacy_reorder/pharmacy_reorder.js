@@ -152,14 +152,154 @@ app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http
                             if (response.data.success === true) {
                                 $scope.loadReordersList("RH");
                                 $scope.msg.successMessage = 'Deleted successfully';
-                            }
-                            else {
+                            } else {
                                 $scope.errorData = response.data.message;
                             }
                         }
                 );
             });
         };
+
+        $scope.printHeader = function () {
+            return {
+                text: "Reorder History",
+                margin: 5,
+                alignment: 'center'
+            };
+        }
+
+        $scope.printFooter = function () {
+            return {
+                text: [
+                    {
+                        text: 'Report Genarate On : ',
+                        bold: true
+                    },
+                    moment().format('YYYY-MM-DD HH:mm:ss')
+                ],
+                margin: 5
+            };
+        }
+
+        $scope.printStyle = function () {
+            return {
+                header: {
+                    bold: true,
+                    color: '#000',
+                    fontSize: 11
+                },
+                demoTable: {
+                    color: '#000',
+                    fontSize: 10
+                }
+            };
+        }
+
+        $scope.printloader = '';
+        $scope.printContent = function () {
+            var generated_on = $scope.generated_on;
+            var generated_by = $scope.app.username;
+
+            var content = [];
+            var reorder_content = $scope.print_reorder;
+
+            var result_count = Object.keys(reorder_content.items).length;
+            var index = 1;
+            var content_info = [];
+            var reorder_items = [];
+            
+            reorder_items.push([
+                {text: 'S.No', style: 'header'},
+                {text: 'Product', style: 'header'},
+                {text: 'Quantity', style: 'header'}
+            ]);
+
+            var serial_no = 1;
+            angular.forEach(reorder_content.items, function (row, key) {
+                var s_no_string = serial_no.toString();
+                reorder_items.push([
+                    s_no_string,
+                    row.product.full_name,
+                    row.quantity.toString(),
+                ]);
+                serial_no++;
+            });
+
+            content_info.push({
+                columns: [
+                    {
+                        text: [
+                            {text: 'Supplier Name: ', bold: true},
+                            reorder_content.supplier.supplier_name
+                        ],
+                        margin: [0, 0, 0, 20]
+                    },
+                    {
+                        text: [
+                            {text: 'Reorder Date: ', bold: true},
+                            reorder_content.reorder_date
+                        ],
+                        margin: [0, 0, 0, 20]
+                    }
+
+                ]
+            }, {
+                columns: [
+                    {
+                        text: [
+                            {text: 'Reorder By: ', bold: true},
+                            reorder_content.user.fullname
+                        ],
+                        margin: [0, 0, 0, 20]
+                    }
+                ]
+            }, {
+                style: 'demoTable',
+                table: {
+                    headerRows: 1,
+                    widths: ['*', '*', '*'],
+                    body: reorder_items,
+                },
+                pageBreak: (index === result_count ? '' : 'after'),
+            });
+            content.push(content_info);
+            if (index == result_count) {
+                $scope.printloader = '';
+            }
+            index++;
+            return content;
+        }
+
+        $scope.printReport = function () {
+            $scope.printloader = '<i class="fa fa-spin fa-spinner"></i>';
+            $timeout(function () {
+                var print_content = $scope.printContent();
+                if (print_content.length > 0) {
+                    var docDefinition = {
+                        header: $scope.printHeader(),
+                        footer: $scope.printFooter(),
+                        styles: $scope.printStyle(),
+                        content: print_content,
+                        pageMargins: ($scope.deviceDetector.browser == 'firefox' ? 75 : 50),
+                        pageSize: 'A4',
+                    };
+                    var pdf_document = pdfMake.createPdf(docDefinition);
+                    var doc_content_length = Object.keys(pdf_document).length;
+                    if (doc_content_length > 0) {
+                        pdf_document.print();
+                    }
+                }
+            }, 1000);
+        }
+
+        $scope.print_reorder = '';
+        $scope.printReorderHistory = function (reorder_id) {
+            reorder_history = $filter('filter')($scope.displayedCollection, {reorder_id: reorder_id});
+            if (reorder_history) {
+                $scope.print_reorder = reorder_history[0];
+                $scope.printReport();
+            }
+        }
 
         //For Form - Nad
         $scope.initForm = function () {
