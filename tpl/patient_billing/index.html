@@ -125,7 +125,7 @@
                             <th>	Stay Duration</th>
                             <th align="right" style="text-align:right;">Total Charge</th>
                         </tr>
-                        <tr ng-repeat="(key, row) in recurring_charges | orderBy:from_date">
+                        <tr ng-repeat="(key, row) in recurring_charges | orderBy:'from_date'">
                             <td>{{row.charge_item}} </td>
                             <td> {{row.charge_amount}} </td>
                             <td> {{row.room_type}} </td>
