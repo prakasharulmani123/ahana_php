@@ -55,11 +55,27 @@
                     <tbody ng-hide="isLoading">
                         <tr ng-repeat="encounter in displayedCollection" ng-init="encounter.seen.doctor = encounter.seen.consultant_name">
                             <td> {{encounter.encounter_id}} </td>
-                            <td> 
-                                <div>
-                                    {{encounter.date| moment:'DD/MM/YYYY'}} &nbsp;
-                                    <span class="label bg-light dk">{{encounter.date| moment:'hh:mm A'}}</span> 
-                                </div>
+                            <td class="logindeatils">
+                                <p ng-if="encounter.encounter_type == 'OP'"> 
+                                    <b> OP: </b>
+                                    {{encounter.date| moment:'DD/MM/YYYY'}} 
+                                    {{encounter.date| moment:'hh:mm A'}}
+                                </p>
+                                <p ng-if="encounter.encounter_type == 'IP'"> 
+                                    <b> Admission: </b>
+                                    {{encounter.date| moment:'DD/MM/YYYY'}} 
+                                    {{encounter.date| moment:'hh:mm A'}}
+                                </p>
+                                <p ng-if="encounter.encounter_type == 'IP'"> 
+                                    <b>Discharge: </b>
+                                    <span ng-if="encounter.discharge_date != '-'">
+                                        {{encounter.discharge_date| moment:'DD/MM/YYYY'}}
+                                        {{encounter.discharge_date| moment:'hh:mm A'}}
+                                    </span>
+                                    <span ng-if="encounter.discharge_date == '-'">
+                                        -
+                                    </span>
+                                </p>
                             </td>
                             <td> 
                                 <span ng-if="encounter.encounter_type == 'OP'" class="label bg-primary">{{encounter.details}}</span>
