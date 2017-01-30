@@ -262,6 +262,14 @@ class EncounterController extends ActiveController {
 
                     if ($e->encounter_type == 'OP')
                         $data[$k]['seen'] = $e->encounter->patAppointmentSeen;
+
+                    if ($e->encounter_type == 'IP') {
+                        if (!empty($e->encounter->patAdmissionDischarge)) {
+                            $data[$k]['discharge_date'] = $e->encounter->patAdmissionDischarge->status_date;
+                        } else {
+                            $data[$k]['discharge_date'] = '-';
+                        }
+                    }
                 }
             }
 
