@@ -117,6 +117,7 @@ class PatientController extends ActiveController {
 
                 if (isset($post['PatPatientAddress'])) {
                     $addr_model->patient_id = $model->patient_id;
+                    $addr_model->patient_global_guid = $model->patient_global_guid;
                     $addr_model->save(false);
                 }
 

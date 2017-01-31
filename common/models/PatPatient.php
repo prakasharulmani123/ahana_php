@@ -177,7 +177,7 @@ class PatPatient extends RActiveRecord {
      * @return ActiveQuery
      */
     public function getPatPatientAddress() {
-        return $this->hasOne(PatPatientAddress::className(), ['patient_id' => 'patient_id']);
+        return $this->hasOne(PatPatientAddress::className(), ['patient_global_guid' => 'patient_global_guid']);
     }
 
     public function getPatientCategory() {
