@@ -185,7 +185,7 @@ class PatPatient extends RActiveRecord {
     }
 
     public function getActivePatientAlert() {
-        return $this->hasMany(PatAlert::className(), ['patient_id' => 'patient_id'])->active()->orderBy(['created_at' => SORT_DESC]);
+        return $this->hasMany(PatAlert::className(), ['patient_id' => 'patient_id'])->status()->active()->orderBy(['created_at' => SORT_DESC]);
     }
 
     /**

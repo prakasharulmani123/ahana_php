@@ -42,7 +42,7 @@ class PatAlert extends RActiveRecord {
             [['tenant_id', 'alert_id', 'patient_id', 'created_by', 'modified_by'], 'integer'],
             [['alert_description', 'status'], 'string'],
             [['created_at', 'modified_at', 'deleted_at'], 'safe'],
-            [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'patient_id', 'alert_id', 'deleted_at'], 'message' => 'The combination of alert has already been taken.'],
+//            [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'patient_id', 'alert_id', 'deleted_at'], 'message' => 'The combination of alert has already been taken.'],
         ];
     }
 
