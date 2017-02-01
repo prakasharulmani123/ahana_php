@@ -33,14 +33,21 @@ app.controller('PatientAlertsController', ['$rootScope', '$scope', '$timeout', '
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
 
             // Get data's from service
-            $http.get($rootScope.IRISOrgServiceUrl + '/patientalert')
+            $http.get($rootScope.IRISOrgServiceUrl + '/patientalert/getpatientalerts?patient_id=' + $state.params.id)
                     .success(function (alerts) {
                         $scope.isLoading = false;
-                        $scope.rowCollection = alerts;
+                        $scope.rowCollection = alerts.result;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
-                        
-                        if($scope.rowCollection.length == 0){
+
+                        if ($scope.rowCollection.length == 0) {
                             $scope.$emit('patient_alert', {hasalert: false, alert: ''});
+                        } else {
+                            active = $filter('filter')($scope.rowCollection, {status: '1'}, true);
+                            if (active.length > 0) {
+                                $scope.$emit('patient_alert', {hasalert: true, alert: active[0].alert_description});
+                            } else {
+                                $scope.$emit('patient_alert', {hasalert: false, alert: ''});
+                            }
                         }
                     })
                     .error(function () {
@@ -58,7 +65,7 @@ app.controller('PatientAlertsController', ['$rootScope', '$scope', '$timeout', '
         $scope.updateAlert = function ($data, pat_alert_id) {
             $scope.errorData = "";
             $scope.msg.successMessage = "";
-            
+
             $scope.loadbar('show');
             $http({
                 method: 'PUT',
@@ -68,7 +75,11 @@ app.controller('PatientAlertsController', ['$rootScope', '$scope', '$timeout', '
                     function (response) {
                         $scope.loadbar('hide');
                         $scope.msg.successMessage = response.alert_description + ' (Alert) updated successfully';
-                        $anchorScroll();
+                        $timeout(function () {
+                            $scope.loadPatientAlertsList();
+                            $anchorScroll();
+//                            $state.go('patient.alert', {id: $state.params.id});
+                        }, 1000)
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');
@@ -169,8 +180,7 @@ app.controller('PatientAlertsController', ['$rootScope', '$scope', '$timeout', '
                             if (response.data.success === true) {
                                 $scope.loadPatientAlertsList();
                                 $scope.msg.successMessage = 'Alert deleted successfully';
-                            }
-                            else {
+                            } else {
                                 $scope.errorData = response.data.message;
                             }
                         }
