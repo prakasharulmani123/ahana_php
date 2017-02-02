@@ -263,17 +263,21 @@ class PharmacypurchaseController extends ActiveController {
 
                 $failed_products = $failed_packages = [];
                 foreach ($lineitems as $key => $lineitem) {
-                    //Search Product exists
-                    $command = $connection->createCommand("SELECT product_id, product_name, b.vat,
-                                                MATCH(product_name) AGAINST ('{$lineitem->product_id}*' IN BOOLEAN MODE) AS score
-                                                FROM pha_product
-                                                JOIN pha_vat b
-                                                ON b.vat_id = purchase_vat_id
-                                                WHERE MATCH(product_name) AGAINST ('{$lineitem->product_id}*' IN BOOLEAN MODE)
-                                                AND pha_product.tenant_id = {$post_data['tenant_id']}
-                                                ORDER BY score DESC
-                                                LIMIT 1");
-                    $product_result = $command->queryAll(PDO::FETCH_OBJ);
+                    if($lineitem->product_id){
+                        //Search Product exists
+                        $command = $connection->createCommand("SELECT product_id, product_name, b.vat,
+                                                    MATCH(product_name) AGAINST ('{$lineitem->product_id}*' IN BOOLEAN MODE) AS score
+                                                    FROM pha_product
+                                                    JOIN pha_vat b
+                                                    ON b.vat_id = purchase_vat_id
+                                                    WHERE MATCH(product_name) AGAINST ('{$lineitem->product_id}*' IN BOOLEAN MODE)
+                                                    AND pha_product.tenant_id = {$post_data['tenant_id']}
+                                                    ORDER BY score DESC
+                                                    LIMIT 1");
+                        $product_result = $command->queryAll(PDO::FETCH_OBJ);
+                    }else{
+                        $product_result = false;
+                    }
 
                     //Search Package exists
                     $package = PhaPackageUnit::find()->tenant($post_data['tenant_id'])->andWhere(['package_name' => $lineitem->package_name])->one();
