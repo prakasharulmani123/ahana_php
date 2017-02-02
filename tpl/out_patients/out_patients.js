@@ -74,14 +74,20 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                 var seenrowcoll = $filter('filter')($scope.rowCollection, {consultant_id: cid})[0];
                 seenrowcoll.rowSeenLoading = true;
                 $http.get($rootScope.IRISOrgServiceUrl + '/encounter/outpatients?addtfields=oplist&type=' + $scope.op_type + '&cid=' + cid + '&seen=true&only=results')
-                    .success(function (OutPatients) {
-                        seenrowcoll.seen_records = OutPatients.result;
-                        seenrowcoll.rowSeenLoading = false;
-                    })
-                    .error(function () {
-                        $scope.errorData = "An Error has occured while loading seen data!";
-                        seenrowcoll.rowSeenLoading = false;
-                    });
+                        .success(function (OutPatients) {
+                            seenrowcoll.seen_records = OutPatients.result;
+                            seenrowcoll.rowSeenLoading = false;
+
+                            $timeout(function () {
+                                profilePhoto(".patientImage");
+                            }, 1000);
+                        })
+                        .error(function () {
+                            $scope.errorData = "An Error has occured while loading seen data!";
+                            seenrowcoll.rowSeenLoading = false;
+                        });
+
+
             }
         }
 
@@ -391,11 +397,11 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                 });
                 $scope.displayedCollection = [].concat($scope.rowCollection);
                 $scope.isLoading = false;
-                
+
                 $timeout(function () {
                     profilePhoto(".patientImage");
                 }, 1000);
-                
+
             }, 200);
         }
 
@@ -428,7 +434,7 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                             $scope.errorData = "An Error has occured while loading seen data!";
                             docRow.rowLoading = false;
                         });
-                        
+
                 $timeout(function () {
                     profilePhoto(".patientImage");
                 }, 1000);
@@ -450,7 +456,8 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
 
         $scope.expandAllRow = function (expanded) {
             angular.forEach($scope.rowCollection, function (row) {
-                if(expanded && row.expanded) return; // If already opened
+                if (expanded && row.expanded)
+                    return; // If already opened
 
                 row.expanded = expanded;
                 $scope.setRowExpanded(row.consultant_id, expanded);
