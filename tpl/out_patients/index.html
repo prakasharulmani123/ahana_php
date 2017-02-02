@@ -2,51 +2,51 @@
     <h1 class="m-n h3">Out-Patient</h1>
 </div>
 <div ng-controller="OutPatientsController">
-<div class="wrapper-md tab-btn">
-    <div ng-include="'tpl/blocks/alert.html'">
-        {% include 'tpl/blocks/alert.html' %}
-    </div>
-    <div class="row">
-        <div class="col-sm-6">
-            <div class="btn-group op-btn-group">
-                <button class="btn btn-info current-op-patient" ng-click="loadOutPatientsList('current')">
-                    <i class="fa fa-user-md"></i>&nbsp;&nbsp;Today's Appointments
-                </button>
-                <a class="btn btn-info" ui-sref="patient.futureAppointment">
-                    <i class="fa fa-hospital-o"></i>&nbsp;&nbsp;Scheduled Appointments
-                </a>
-                <button class="btn btn-info previous-op-patient" ng-click="loadOutPatientsList('previous')">
-                    <i class="fa fa-user-md"></i>&nbsp;&nbsp;Past Appointments
-                </button>
+    <div class="wrapper-md tab-btn">
+        <div ng-include="'tpl/blocks/alert.html'">
+            {% include 'tpl/blocks/alert.html' %}
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="btn-group op-btn-group">
+                    <button class="btn btn-info current-op-patient" ng-click="loadOutPatientsList('current')">
+                        <i class="fa fa-user-md"></i>&nbsp;&nbsp;Today's Appointments
+                    </button>
+                    <a class="btn btn-info" ui-sref="patient.futureAppointment">
+                        <i class="fa fa-hospital-o"></i>&nbsp;&nbsp;Scheduled Appointments
+                    </a>
+                    <button class="btn btn-info previous-op-patient" ng-click="loadOutPatientsList('previous')">
+                        <i class="fa fa-user-md"></i>&nbsp;&nbsp;Past Appointments
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="wrapper-md" ng-init="loadOutPatientsList(op_type)">
-    <div class="panel panel-default">
-        <div class="row wrapper pb-0">
-            <div class="col-sm-5 m-b-xs">
-                <button class="btn btn-sm btn-grey" ng-click="loadOutPatientsList(op_type)"> &nbsp; &nbsp; <i class="fa fa-refresh"></i>  &nbsp; &nbsp; </button>
-                <span ng-show="currentAppointmentSelected > 0">
-                    <button ng-click="rescheduleAppointments()" class="btn btn-sm btn-primary">
-                        <i class="fa fa-retweet"></i> Reschedule Appointments
-                    </button>
-                    <button ng-click="cancelAppointments()" class="btn btn-sm btn-dark">
-                        <i class="fa fa-times"></i> Cancel Appointment
-                    </button>
-                </span>
+    <div class="wrapper-md" ng-init="loadOutPatientsList(op_type)">
+        <div class="panel panel-default">
+            <div class="row wrapper pb-0">
+                <div class="col-sm-5 m-b-xs">
+                    <button class="btn btn-sm btn-grey" ng-click="loadOutPatientsList(op_type)"> &nbsp; &nbsp; <i class="fa fa-refresh"></i>  &nbsp; &nbsp; </button>
+                    <span ng-show="currentAppointmentSelected > 0">
+                        <button ng-click="rescheduleAppointments()" class="btn btn-sm btn-primary">
+                            <i class="fa fa-retweet"></i> Reschedule Appointments
+                        </button>
+                        <button ng-click="cancelAppointments()" class="btn btn-sm btn-dark">
+                            <i class="fa fa-times"></i> Cancel Appointment
+                        </button>
+                    </span>
+                </div>
+                <div class="col-sm-4"></div>
+                <!-- hide by Nad -->
+                <!--            <div class="col-sm-3 pull-right text-right">
+                                <h4 class="badge bg-primary mt-10"> <b> Census: {{census}} </b></h4>
+                            </div>-->
             </div>
-            <div class="col-sm-4"></div>
-            <!-- hide by Nad -->
-            <!--            <div class="col-sm-3 pull-right text-right">
-                            <h4 class="badge bg-primary mt-10"> <b> Census: {{census}} </b></h4>
-                        </div>-->
-        </div>
 
-        <div class="table-responsive in-patient-table out-patient-table">
-            <!--<div style="{{css.style}}">-->
-            <!--<pre>{{rowCollection}}</pre>-->
+            <div class="table-responsive in-patient-table out-patient-table">
+                <!--<div style="{{css.style}}">-->
+                <!--<pre>{{rowCollection}}</pre>-->
                 <scrollable-table watch="displayedCollection">
                     <table st-table="displayedCollection"  st-safe-src="rowCollection"  class="table table-striped b-t b-light">
                         <thead>
@@ -106,15 +106,15 @@
                                 </td>
                                 <td align="center" valign="middle">
                                     <!--<div style="margin-top: -10px; position: relative;">-->
-                                        <img ng-if="(row.apptArrivalData != '-' && row.apptArrivalData.waiting_elapsed && row.apptSeenData == '-')" class="pull-left" src="img/elapsed-waiting-time.png"  alt="" tooltip="Waiting Time ({{row.apptArrivalData.waiting_elapsed_time}})" tooltip-trigger tooltip-animation="false" tooltip-placement="top"/>
-                                        <img ng-if="row.apptPatientData.hasalert" class="pull-left" src="img/symbol1.png"  alt="" tooltip="Has Alert" tooltip-trigger tooltip-animation="false" tooltip-placement="top"  />
-                                        <img ng-if="row.apptPatientData.incomplete_profile" class="pull-left" src="img/question.png"  alt="" tooltip="Incomplete Profile" tooltip-trigger tooltip-animation="false" tooltip-placement="top" />
-                                        <img ng-if="row.apptPatientData.new_user" class="pull-left" src="img/new.png"  alt="" tooltip="New" tooltip-trigger tooltip-animation="false" tooltip-placement="top" />
+                                    <img ng-if="(row.apptArrivalData != '-' && row.apptArrivalData.waiting_elapsed && row.apptSeenData == '-')" class="pull-left" src="img/elapsed-waiting-time.png"  alt="" tooltip="Waiting Time ({{row.apptArrivalData.waiting_elapsed_time}})" tooltip-trigger tooltip-animation="false" tooltip-placement="top"/>
+                                    <img ng-if="row.apptPatientData.hasalert" class="pull-left" src="img/symbol1.png"  alt="" tooltip="Has Alert" tooltip-trigger tooltip-animation="false" tooltip-placement="top"  />
+                                    <img ng-if="row.apptPatientData.incomplete_profile" class="pull-left" src="img/question.png"  alt="" tooltip="Incomplete Profile" tooltip-trigger tooltip-animation="false" tooltip-placement="top" />
+                                    <img ng-if="row.apptPatientData.new_user" class="pull-left" src="img/new.png"  alt="" tooltip="New" tooltip-trigger tooltip-animation="false" tooltip-placement="top" />
                                     <!--</div>-->
                                 </td>
-                                <td>
+                                <td class="{{row.apptPatientData.patient_img_url ? 'patientImage' : ''}}">
                                     <a ui-sref="patient.view({id: row.apptPatientData.patient_guid})">
-                                        <img class="pull-left patient-image" width="30" height="30" src="img/man-icon.png" data-preview-img="{{ row.apptPatientData.patient_img_url ? row.apptPatientData.patient_img_url : '' }}" ng-attr-lazy-img="{{ row.apptPatientData.patient_img_url ? row.apptPatientData.patient_img_url : ($even ? 'img/man-icon.png' : 'img/man-icon2.png') }}" />
+                                        <img class="pull-left patient-image" width="30" height="30" src="img/man-icon.png" ng-attr-lazy-img="{{ row.apptPatientData.patient_img_url ? row.apptPatientData.patient_img_url : ($even ? 'img/man-icon.png' : 'img/man-icon2.png') }}" />
                                     </a>
 
                                     <a ui-sref="patient.view({id: row.apptPatientData.patient_guid})" tooltip="{{row.apptPatientData.fullcurrentaddress}}">
@@ -174,14 +174,14 @@
                                                 <span class="glyphicon glyphicon-ok"></span>
                                             </button>
                                             <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel();
-                                                        setTimings(op_key, key, 'unset')" class="btn btn-default btn-sm">
+                                                    setTimings(op_key, key, 'unset')" class="btn btn-default btn-sm">
                                                 <span class="glyphicon glyphicon-remove"></span>
                                             </button>
                                         </form>
                                         <div class="buttons" ng-show="!rowform.$visible">
                                             <a ng-click="rowform.$show();
-                                                        row.sts_status = 'A';
-                                                        setTimings(op_key, key, 'set')" class="ng-scope ng-binding editable editable-click"> Booked </a><br />
+                                               row.sts_status = 'A';
+                                               setTimings(op_key, key, 'set')" class="ng-scope ng-binding editable editable-click"> Booked </a><br />
                                         </div>
                                     </div>
 
@@ -235,7 +235,7 @@
                                         <img ng-if="row.apptPatientData.new_user" class="pull-left" src="img/new.png"  alt="" tooltip="New" tooltip-trigger tooltip-animation="false" tooltip-placement="right" />
                                     </div>
                                 </td>
-                                <td>
+                                <td class="{{row.apptPatientData.patient_img_url ? 'patientImage' : ''}}">
                                     <a ui-sref="patient.view({id: row.apptPatientData.patient_guid})">
                                         <img class="pull-left patient-image" width="30" height="30" src="img/man-icon.png" ng-attr-lazy-img="{{ row.apptPatientData.patient_img_url ? row.apptPatientData.patient_img_url : ($even ? 'img/man-icon.png' : 'img/man-icon2.png') }}" />
                                     </a>
@@ -294,8 +294,21 @@
                         </tfoot>
                     </table>
                 </scrollable-table>
-            <!--</div>-->
+                <!--</div>-->
+            </div>
         </div>
     </div>
 </div>
-</div>
+
+
+<script>
+    $(function () {
+        if ($.isFunction($.fn.photoZoom)) {
+            profilePhoto(".patientImage");
+        } else {
+            $.getScript("js/photoZoom.js", function (data, textStatus, jqxhr) {
+                profilePhoto(".patientImage");
+            });
+        }
+    });
+</script>

@@ -391,6 +391,11 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                 });
                 $scope.displayedCollection = [].concat($scope.rowCollection);
                 $scope.isLoading = false;
+                
+                $timeout(function () {
+                    profilePhoto(".patientImage");
+                }, 1000);
+                
             }, 200);
         }
 
@@ -423,6 +428,10 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                             $scope.errorData = "An Error has occured while loading seen data!";
                             docRow.rowLoading = false;
                         });
+                        
+                $timeout(function () {
+                    profilePhoto(".patientImage");
+                }, 1000);
             }
         }
 

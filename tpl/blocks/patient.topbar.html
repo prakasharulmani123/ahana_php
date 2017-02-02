@@ -2,9 +2,10 @@
     <div class="patient-row1">
         <div class="patient-panel">
             <div class="col-md-1 pati-thumb">
-                <div class="row">
+                <div class="row" id="{{patientObj.patient_img_url ? 'patientTopbarPhoto' : ''}}">
                     <a ng-click="openUploadForm('topbar')">
-                        <img class="patient_image" data-preview-img="{{ patientObj.patient_img_url ? patientObj.patient_img_url : '' }}" src="img/patient-img2.jpg" ng-attr-lazy-img="{{ patientObj.patient_img_url ? patientObj.patient_img_url : 'img/patient-img2.jpg' }}" alt="" width="125" height="103" />
+                        <!--<img class="patient_image" data-preview-img="{{ patientObj.patient_img_url ? patientObj.patient_img_url : '' }}" src="img/patient-img2.jpg" ng-attr-lazy-img="{{ patientObj.patient_img_url ? patientObj.patient_img_url : 'img/patient-img2.jpg' }}" alt="" width="125" height="103" />-->
+                        <img class="patient_image" src="img/patient-img2.jpg" ng-attr-lazy-img="{{ patientObj.patient_img_url ? patientObj.patient_img_url : 'img/patient-img2.jpg' }}" alt="" width="125" height="103" />
                     </a>
                 </div>
             </div>
@@ -62,3 +63,19 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(function () {
+        if ($.isFunction($.fn.photoZoom)) {
+            setTimeout(function () {
+                profilePhoto("#patientTopbarPhoto");
+            }, 1000);
+        } else {
+            $.getScript("js/photoZoom.js", function (data, textStatus, jqxhr) {
+                setTimeout(function () {
+                    profilePhoto("#patientTopbarPhoto");
+                }, 1000);
+            });
+        }
+    });    
+</script>

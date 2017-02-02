@@ -72,3 +72,13 @@ function chunk(str, n) {
     return ret
 }
 
+function profilePhoto(selecter) {
+    $(selecter).photoZoom({
+        zoomStyle: {
+            "border": "1px solid #ccc",
+            "background-color": "#fff",
+            "box-shadow": "0 0 5px #888",
+            'z-index': '999'
+        },
+    });
+}
