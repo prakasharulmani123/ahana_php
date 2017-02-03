@@ -1,4 +1,4 @@
-app.controller('PatientGroupsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'toaster', 'editableThemes', 'editableOptions', '$q', '$filter', 'fileUpload', function ($rootScope, $scope, $timeout, $http, $state, toaster, editableThemes, editableOptions, $q, $filter, fileUpload) {
+app.controller('PatientGroupsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'toaster', 'editableThemes', 'editableOptions', '$q', '$filter', 'fileUpload', 'modalService', function ($rootScope, $scope, $timeout, $http, $state, toaster, editableThemes, editableOptions, $q, $filter, fileUpload, modalService) {
 
         editableThemes.bs3.inputClass = 'input-sm';
         editableThemes.bs3.buttonsClass = 'btn-sm';
@@ -106,7 +106,7 @@ app.controller('PatientGroupsController', ['$rootScope', '$scope', '$timeout', '
                     if (selected_patient.length) {
                         selected_patient[0].patient_title_code = filter_global_patient[0].patient_title_code;
                         selected_patient[0].patient_firstname = filter_global_patient[0].patient_firstname;
-                        
+
                         $scope.loadbar('show');
                         $http({
                             method: post_method,
@@ -234,6 +234,44 @@ app.controller('PatientGroupsController', ['$rootScope', '$scope', '$timeout', '
                     $scope.errorData = $scope.errorSummary(data);
                 else
                     $scope.errorData = data.message;
+            });
+        };
+
+        //Delete
+        $scope.removeRow = function (row) {
+            $scope.msg.errorMessage = "";
+            $scope.msg.successMessage = "";
+            
+            var modalOptions = {
+                closeButtonText: 'No',
+                actionButtonText: 'Yes',
+                headerText: 'Delete Patient Group?',
+                bodyText: 'Are you sure to delete this patient group?'
+            };
+
+            modalService.showModal({}, modalOptions).then(function (result) {
+                $scope.loadbar('show');
+                $http({
+                    method: 'POST',
+                    url: $rootScope.IRISOrgServiceUrl + '/patientgroup/remove',
+                    data: {id: row.patient_group_id}
+                }).success(
+                        function (response) {
+                            if (response.success) {
+                                $scope.msg.successMessage = 'Group Deleted Successfully';
+                            } else {
+                                $scope.msg.errorMessage = response.message;
+                            }
+                            $scope.loadbar('hide');
+                            $scope.loadPatientGroupsList();
+                        }
+                ).error(function (data, status) {
+                    $scope.loadbar('hide');
+                    if (status === 422)
+                        $scope.errorData = $scope.errorSummary(data);
+                    else
+                        $scope.errorData = data.message;
+                });
             });
         };
     }]);
