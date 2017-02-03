@@ -3,6 +3,7 @@
 namespace IRISORG\modules\v1\controllers;
 
 use common\models\CoPatientGroup;
+use common\models\CoPatientGroupsPatients;
 use common\models\PatGlobalPatient;
 use common\models\PatPatient;
 use Yii;
@@ -91,6 +92,21 @@ class PatientgroupController extends ActiveController {
             }
         }
         return ['patient' => $gl_patient];
+    }
+
+    public function actionRemove() {
+        $id = Yii::$app->getRequest()->post('id');
+        if ($id) {
+            //check any patients assigned to this group
+            $patients_assigned = CoPatientGroupsPatients::find()->where(['patient_group_id' => $id])->count();
+            if ($patients_assigned > 0) {
+                return ['success' => false, 'message' => $patients_assigned . ' Patient(s) are assigned to this group, you can not delete this group'];
+            } else {
+                $model = CoPatientGroup::find()->where(['patient_group_id' => $id])->one();
+                $model->remove();
+                return ['success' => true];
+            }
+        }
     }
 
 }
