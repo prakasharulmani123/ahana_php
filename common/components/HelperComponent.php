@@ -299,7 +299,7 @@ class HelperComponent extends Component {
                             'room_type' => $current_admission->roomType->room_type_name,
                             'charge_item_id' => $charge->charge_item_id,
                             'charge_item' => $charge->roomChargeItem->charge_item_name,
-                            'recurr_date' => date('Y-m-d', strtotime($current_admission->status_date . "+$i days")),
+                            'recurr_date' => $recurr_date,
                             'charge_amount' => $charge->charge,
                             'recurr_group' => $current_admission->admn_id,
                         ];
