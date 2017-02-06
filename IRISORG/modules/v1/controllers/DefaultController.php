@@ -208,6 +208,32 @@ class DefaultController extends Controller {
         }
     }
 
+    public function actionUpdatebillingmanually() {
+        $post = Yii::$app->request->post();
+        if (!empty($post)) {
+            $active_encounters = PatEncounter::find()->tenant($post['tenant_id'])->status()->active();
+            if (isset($post['encounter_id']) && $post['encounter_id'] != '') {
+                $active_encounters->andWhere(['encounter_id' => $post['encounter_id']]);
+            }
+            $active_encounters = $active_encounters->all();
+
+            $recurr_date = '';
+            if (isset($post['recurr_date']) && $post['recurr_date'] != '') {
+                $recurr_date = $post['recurr_date'];
+            }
+
+            foreach ($active_encounters as $key => $active_encounter) {
+                $nearest_admission = \common\models\PatAdmission::find()
+                        ->andWhere(['encounter_id' => $active_encounter->encounter_id])
+                        ->andWhere("DATE(status_date) <='" . $recurr_date . "'")
+                        ->orderBy(['created_at' => SORT_DESC])
+                        ->one();
+               
+                Yii::$app->hepler->updateRecurring($nearest_admission, $recurr_date);
+            }
+        }
+    }
+
     public function actionGetDiagnosisList() {
         $list = array();
         $data = PatDiagnosis::find()->all();

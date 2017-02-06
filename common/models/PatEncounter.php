@@ -581,21 +581,21 @@ class PatEncounter extends RActiveRecord {
                                         'encounter_id' => $this->encounter_id,
                                         'tenant_id' => $this->tenant_id
                                     ])
-                                    ->select('SUM(total_charge) as total_charge, SUM(concession_amount) as concession_amount')->one();
+                                    ->select('SUM(total_charge) as total_charge, SUM(concession_amount) as concession_amount, SUM(extra_amount) as extra_amount')->one();
 
                     $professional = VBillingProfessionals::find()
                                     ->where([
                                         'encounter_id' => $this->encounter_id,
                                         'tenant_id' => $this->tenant_id
                                     ])
-                                    ->select('SUM(total_charge) as total_charge, SUM(concession_amount) as concession_amount')->one();
+                                    ->select('SUM(total_charge) as total_charge, SUM(concession_amount) as concession_amount, SUM(extra_amount) as extra_amount')->one();
 
                     $other_charge = VBillingOtherCharges::find()
                                     ->where([
                                         'encounter_id' => $this->encounter_id,
                                         'tenant_id' => $this->tenant_id
                                     ])
-                                    ->select('SUM(total_charge) as total_charge, SUM(concession_amount) as concession_amount')->one();
+                                    ->select('SUM(total_charge) as total_charge, SUM(concession_amount) as concession_amount, SUM(extra_amount) as extra_amount')->one();
 
                     $total_paid = VBillingAdvanceCharges::find()
                             ->where([
@@ -605,7 +605,9 @@ class PatEncounter extends RActiveRecord {
                             ->sum('total_charge');
 
 
-                    $total_charge = $recurring->total_charge + $procedure->total_charge + $professional->total_charge + $other_charge->total_charge;
+                    $row_total_charge = $recurring->total_charge + $procedure->total_charge + $professional->total_charge + $other_charge->total_charge;
+                    $extra_charge = $procedure->extra_amount + $professional->extra_amount + $other_charge->extra_amount;
+                    $total_charge = $row_total_charge + $extra_charge;
                     $total_concession = $this->concession_amount + $procedure->concession_amount + $professional->concession_amount + $other_charge->concession_amount;
 
                     $balance = $total_charge - $total_concession - $total_paid;

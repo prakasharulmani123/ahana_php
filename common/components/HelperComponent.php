@@ -129,12 +129,12 @@ class HelperComponent extends Component {
         return rand(0, 1000);
     }
 
-    public function updateRecurring($admission) {
+    public function updateRecurring($admission, $recurring_date = '') {
         if (empty($admission))
             return;
 
         //Check Recurring Exists on that date
-        $recurr_date = date('Y-m-d');
+        $recurr_date = ($recurring_date) ? $recurring_date : date('Y-m-d');
         $current_recurring = PatBillingRecurring::find()->select(['SUM(charge_amount) as charge_amount', 'room_type_id'])->tenant($admission->tenant_id)->andWhere(['encounter_id' => $admission->encounter_id, 'recurr_date' => $recurr_date])->groupBy(['recurr_date', 'room_type_id'])->one();
 
         if (empty($current_recurring)) {
