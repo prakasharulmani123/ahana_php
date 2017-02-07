@@ -194,8 +194,8 @@ app.controller('prescriptionRegisterController', ['$rootScope', '$scope', '$time
                     content_info.push({
                         style: 'demoTable',
                         table: {
-                            widths: [40, '*', '*', 'auto', '*', 'auto'],
-                            headerRows: 1,
+                            widths: ['*', 'auto', 'auto', 'auto', 'auto', '*'],
+                            headerRows: 2,
                             dontBreakRows: true,
                             body: items,
                         },
