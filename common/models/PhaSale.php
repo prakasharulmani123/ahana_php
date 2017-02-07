@@ -69,13 +69,13 @@ class PhaSale extends RActiveRecord {
             [['total_item_vat_amount', 'total_item_sale_amount', 'total_item_discount_percent', 'total_item_discount_amount', 'total_item_amount', 'welfare_amount', 'roundoff_amount', 'bill_amount', 'amount_received', 'balance'], 'number'],
             [['mobile_no'], 'string', 'max' => 50],
             [['amount_received'], 'compare', 'compareAttribute' => 'bill_amount', 'operator' => '>=', 'type' => 'number', 'when' => function($model) {
-            if ($model->payment_type == 'CA')
-                return true;
-        }],
+                    if ($model->payment_type == 'CA')
+                        return true;
+                }],
             [['balance'], 'compare', 'compareValue' => 0, 'operator' => '>=', 'type' => 'number', 'when' => function($model) {
-            if ($model->payment_type == 'CA')
-                return true;
-        }],
+                    if ($model->payment_type == 'CA')
+                        return true;
+                }],
         ];
     }
 
@@ -212,7 +212,7 @@ class PhaSale extends RActiveRecord {
                 return (isset($model->patient) ? $model->patient->patient_global_int_code : '-');
             },
             'patient_name' => function ($model) {
-                return (isset($model->patient) ? ucwords("{$model->patient->patient_title_code} {$model->patient->patient_firstname}")  : '-');
+                return (isset($model->patient) ? ucwords("{$model->patient->patient_title_code} {$model->patient->patient_firstname}") : '-');
             },
             'items' => function ($model) {
                 return (isset($model->phaSaleItems) ? $model->phaSaleItems : '-');
@@ -229,8 +229,14 @@ class PhaSale extends RActiveRecord {
                 $balance = $model->bill_amount - $paid_amount;
                 return number_format($balance, '2');
             },
+            'consultant_name' => function ($model) {
+                return (isset($model->consultant) ? $model->consultant->title_code . ucwords($model->consultant->name) : '-');
+            },
+            'branch_name' => function ($model) {
+                return (isset($model->tenant->tenant_name) ? $model->tenant->tenant_name : '-');
+            },
         ];
-            
+
         $parent_fields = parent::fields();
         $addt_keys = [];
         if ($addtField = Yii::$app->request->get('addtfields')) {
@@ -263,9 +269,17 @@ class PhaSale extends RActiveRecord {
                         'encounter_id' => 'encounter_id',
                     ];
                     break;
+                case 'prescregister':
+                    $addt_keys = ['branch_name', 'consultant_name', 'patient_name', 'items'];
+                    $parent_fields = [
+                        'sale_id' => 'sale_id',
+                        'sale_date' => 'sale_date',
+                        'bill_no' => 'bill_no',
+                    ];
+                    break;
             endswitch;
         }
-        
+
         $extFields = ($addt_keys) ? array_intersect_key($extend, array_flip($addt_keys)) : $extend;
         return array_merge($parent_fields, $extFields);
     }

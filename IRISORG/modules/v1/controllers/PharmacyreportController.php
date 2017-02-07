@@ -67,6 +67,26 @@ class PharmacyreportController extends ActiveController {
         return ['report' => $reports];
     }
 
+    //Prescriptionregister Report
+    public function actionPrescriptionregisterreport() {
+        $post = Yii::$app->getRequest()->post();
+
+        $model = PhaSale::find()
+                    ->andWhere(['not', ['pha_sale.patient_id' => null]]);
+
+        if (isset($post['from']) && isset($post['consultant_id']) && isset($post['tenant_id'])) {
+            $consultant_ids = join("','", $post['consultant_id']);
+            $tenant_ids = join("','", $post['tenant_id']);
+            $model->andWhere(["pha_sale.sale_date" => $post['from']]);
+            $model->andWhere("pha_sale.consultant_id IN ( '$consultant_ids' )");
+            $model->andWhere("pha_sale.tenant_id IN ( '$tenant_ids' )");
+        }
+
+        $reports = $model->all();
+
+        return ['report' => $reports];
+    }
+
     public function actionGetsalegrouplist() {
         $get = Yii::$app->getRequest()->get();
 
