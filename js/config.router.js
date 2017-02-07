@@ -938,7 +938,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                                     }
                             );
                         }]
-                }               
+                }
             })
             .state('configuration.patientgroupCreate', {
                 url: '/patientgroupCreate',
@@ -2125,7 +2125,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
-            
+
             //PHARMACY PURCHASE VAT REPORT
             .state('pharmacy.purchaseVatReport', {
                 url: '/purchaseVatReport',
@@ -2141,7 +2141,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
-            
+
             //PHARMACY SALE REPORT
             .state('pharmacy.saleReport', {
                 url: '/saleReport',
@@ -2157,7 +2157,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
-            
+
             //PHARMACY SALE VAT REPORT
             .state('pharmacy.saleVatReport', {
                 url: '/saleVatReport',
@@ -2176,7 +2176,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
 
             //PHARMACY PRESCRIPTION REGISTER
             .state('pharmacy.prescriptionRegister', {
-                url: '/saleVatReport',
+                url: '/prescriptionRegister',
                 templateUrl: 'tpl/pharmacy_report/prescriptionRegister.html',
                 resolve: {
                     deps: ['$ocLazyLoad',

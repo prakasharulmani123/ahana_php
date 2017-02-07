@@ -1,6 +1,6 @@
-<div ng-controller="saleReportController" ng-init="initReport();">
+<div ng-controller="prescriptionRegisterController" ng-init="initReport();">
     <div class="bg-light lter b-b wrapper-md">
-        <h1 class="m-n h3">Sale Report</h1>
+        <h1 class="m-n h3">Prescription Register</h1>
     </div>
     <div class="wrapper-md">
         <div ng-include="'tpl/blocks/alert.html'">
@@ -10,11 +10,11 @@
             <div class="col-sm-12">
                 <div class="panel panel-default">
                     <div class="panel-body p-b form-horizontal">
-                        <form role="form" class="form-inline" name="searchForm">
+                        <form role="form" class="form-inline" name="searchForm" novalidate>
                             <div class="form-group">
-                                <label>From  :</label>
+                                <label>Date  :</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="data.from" is-open="opened1" datepicker-options="dateOptions" close-text="Close" max-date="fromMaxDate" />
+                                    <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="data.from" is-open="opened1" datepicker-options="dateOptions" max-date="fromMaxDate" close-text="Close"/>
                                     <span class="input-group-btn">
                                         <button type="button" class="btn btn-default" ng-click="open($event, 'opened1')">
                                             <i class="glyphicon glyphicon-calendar"></i>
@@ -23,99 +23,115 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label>To :</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="data.to" is-open="opened2" datepicker-options="dateOptions" close-text="Close" min-date="toMinDate" />
-                                    <span class="input-group-btn">
-                                        <button type="button" class="btn btn-default" ng-click="open($event, 'opened2')">
-                                            <i class="glyphicon glyphicon-calendar"></i>
-                                        </button>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <select id="payment_type" class="form-control" ng-model="data.payment_type" ng-options="paymentType.value as paymentType.label for paymentType in paymentTypes">
-                                    <option value="">Select Payment Type</option>
+                                <select id="consultant_wise" class="form-control selectpicker" data-actions-box="true" data-selected-text-format="count" data-live-search="true" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors | orderBy: 'name'" multiple required>
                                 </select>
                             </div>
-                            <button class="btn btn-success get-report" ng-disabled="searchForm.$invalid" ng-click="loadReport()">Get Report</button>
+                            <div class="form-group">
+                                <select id="branch_wise" class="form-control selectpicker" data-actions-box="true" data-selected-text-format="count" data-live-search="true"  ng-model="data.tenant_id" ng-options="key as value for (key , value) in tenants | orderBy: label" multiple required>
+                                </select>
+                            </div>
+                            <button id="get_report" class="btn btn-success get-report" ng-disabled="searchForm.$invalid" ng-click="loadReport()">Get Report</button>
                             <button class="btn btn-dark" ng-click="clearReport()">Clear</button>
                         </form>
                     </div>    
                 </div>
             </div>
 
+            <div class="col-sm-12" ng-if='loading'>
+                <div class="panel panel-default">
+                    <div class="panel-body text-center">
+                        <i class="fa fa-spin fa-spinner"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12" ng-if='showTable && records.length == 0'>
+                <div class="panel panel-default">
+                    <div class="panel-body">No Records Found</div>
+                </div>
+            </div>
+
             <div class="col-sm-12" ng-if='showTable && records.length > 0'>
                 <span class="text-right">
-                    <button class="btn btn-primary" ng-click="printReport()">
+                    <button class="btn btn-primary" ng-click="printReport();">
                         <i class="fa fa-print"></i> Print <span ng-bind-html="printloader"></span>
                     </button>
                 </span>
             </div>
 
-            <div class="col-sm-12" ng-if='showTable && records.length > 0'>
+            <div class="col-sm-12" ng-if='showTable' ng-repeat="(branch_name, sales) in records | groupBy: 'branch_name'">
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        <div class="col-sm-4 m-b-xs">
+                        <div class="col-sm-6 m-b-xs">
                             <span>
-                                <b>Report Name : </b>  Sale Report <br>
+                                <b>Branch Name : </b> 
+                                {{branch_name}}<br>
                             </span>
-                            <span ng-show="data.from != '' && data.to != ''">
-                                <b> Date / Duration : </b>{{ data.from | date:'dd-MM-yyyy'}} - {{ data.to | date:'dd-MM-yyyy'}} 
+                            <span>
+                                <b>Report Name : </b> 
+                                Prescription Register<br>
+                            </span>
+                            <span ng-show="data.from != ''">
+                                <b> Date : </b>
+                                {{ data.from | date:'dd-MM-yyyy'}} <br>
                             </span>
                         </div>
-                        <div class="col-sm-4 m-b-xs">
+                        <div class="col-sm-6"> 
                             <span ng-show="generated_on != ''">
                                 <b>Generated On : </b> {{generated_on}} <br>
                             </span>
                             <span ng-show="app.username != ''">
                                 <b>Generated By : </b> {{app.username}} <br>
                             </span>
+                        </div>                            
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div ng-repeat="(key, sale) in sales">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <b>
+                                                {{sale.sale_date}} 
+                                                {{sale.bill_no}} 
+                                                {{sale.consultant_name}} 
+                                                {{sale.patient_name}} 
+                                            </b>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div  class="col-sm-12">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th id="work-base-grid_c0">Product Name</th>
+                                            <th id="work-base-grid_c0">Qty</th>
+                                            <th id="work-base-grid_c0">Brand</th>
+                                            <th id="work-base-grid_c0">Batch</th>
+                                            <th id="work-base-grid_c0">Expiry</th>
+                                            <th id="work-base-grid_c1">Pharmacy Signature</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="(item_key, item) in sale.items">
+                                            <td>{{item.product.full_name}}</td>
+                                            <td>{{item.quantity}}</td>
+                                            <td>{{item.product.brand_code}}</td>
+                                            <td>{{item.batch.batch_no}}</td>
+                                            <td>{{item.batch.expiry_date| moment:'MM/YYYY'}}</td>
+                                            <td>&nbsp;</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <div class="col-sm-12" ng-show='showTable && records.length > 0'>
-                <div class="panel panel-default">
-                    <div class="panel-heading font-bold">
-                        {{app.org_name}}
-                    </div>
-                    <div class="panel-body" ng-init="sale = {}">
-                        <table class="export-table print-table table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th id="work-base-grid_c0">S.No</th>
-                                    <th id="work-base-grid_c1">Bill No</th>
-                                    <th id="work-base-grid_c2">Patient Name</th>
-                                    <th id="work-base-grid_c2">UHID</th>
-                                    <th id="work-base-grid_c2">Group</th>
-                                    <th id="work-base-grid_c2">Payment Type</th>
-                                    <th id="work-base-grid_c3">Sale Value</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr ng-repeat="(key, record) in records">
-                                    <td>{{key + 1}}</td>
-                                    <td>{{record.bill_no}}</td>
-                                    <td>{{record.patient_name}}</td>
-                                    <td>{{record.patient_uhid}}</td>
-                                    <td>{{record.patient_group_name}}</td>
-                                    <td>{{record.payment_type}}</td>
-                                    <td ng-init="sale.total_amount = sale.total_amount + parseFloat(record.bill_amount);">
-                                        {{record.bill_amount}}
-                                    </td>
-                                </tr>
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td colspan="6" class="text-right"><b>Total Sale Value</b></td>
-                                    <td><b>{{sale.total_amount| number:2}}</b></td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                </div>
+                </div>    
             </div>
         </div>
     </div>

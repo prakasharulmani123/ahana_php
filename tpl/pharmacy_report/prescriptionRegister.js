@@ -1,4 +1,4 @@
-app.controller('saleVatReportController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$anchorScroll', '$filter', '$timeout', function ($rootScope, $scope, $timeout, $http, $state, $anchorScroll, $filter, $timeout) {
+app.controller('prescriptionRegisterController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$anchorScroll', '$filter', '$timeout', function ($rootScope, $scope, $timeout, $http, $state, $anchorScroll, $filter, $timeout) {
 
         //For Datepicker
         $scope.open = function ($event, mode) {
@@ -18,45 +18,68 @@ app.controller('saleVatReportController', ['$rootScope', '$scope', '$timeout', '
         $scope.clearReport = function () {
             $scope.showTable = false;
             $scope.data = {};
-            $scope.data.to = moment().format('YYYY-MM-DD');
-            $scope.data.from = moment().subtract(1, 'months').format('YYYY-MM-DD');
-            $scope.fromMaxDate = new Date($scope.data.to);
-            $scope.toMinDate = new Date($scope.data.from);
+            $scope.data.consultant_id = '';
+            $scope.data.tenant_id = '';
+            $scope.data.from = moment().format('YYYY-MM-DD');
+            $scope.fromMaxDate = new Date();
+            $scope.deselectAll('branch_wise');
+            $scope.deselectAll('consultant_wise');
         }
 
         $scope.initReport = function () {
+            $scope.doctors = [];
+            $rootScope.commonService.GetDoctorList('', '1', false, '1', function (response) {
+                $scope.doctors = response.doctorsList;
+            });
+
+            $scope.tenants = [];
+            $rootScope.commonService.GetTenantList(function (response) {
+                if (response.success == true) {
+                    $scope.tenants = response.tenantList;
+                }
+            });
+
             $scope.clearReport();
         }
 
-        $scope.$watch('data.from', function (newValue, oldValue) {
-            if (newValue != '' && typeof newValue != 'undefined') {
-                $scope.toMinDate = new Date($scope.data.from);
-            }
-        }, true);
-        $scope.$watch('data.to', function (newValue, oldValue) {
-            if (newValue != '' && typeof newValue != 'undefined') {
-                $scope.fromMaxDate = new Date($scope.data.to);
-            }
-        }, true);
+        $scope.deselectAll = function (type) {
+            $timeout(function () {
+                // anything you want can go here and will safely be run on the next digest.
+                if (type == 'branch_wise') {
+                    var branch_wise_button = $('button[data-id="branch_wise"]').next();
+                    var branch_wise_deselect_all = branch_wise_button.find(".bs-deselect-all");
+                    branch_wise_deselect_all.click();
+                } else if (type == 'consultant_wise') {
+                    var consultant_wise_button = $('button[data-id="consultant_wise"]').next();
+                    var consultant_wise_deselect_all = consultant_wise_button.find(".bs-deselect-all");
+                    consultant_wise_deselect_all.click();
+                }
+                $('#get_report').attr("disabled", true);
+            });
+        }
 
         //Index Page
         $scope.loadReport = function () {
             $scope.records = [];
             $scope.loadbar('show');
-            $scope.showTable = true;
+            $scope.loading = true;
             $scope.errorData = "";
             $scope.msg.successMessage = "";
 
             var data = {};
             if (typeof $scope.data.from !== 'undefined' && $scope.data.from != '')
                 angular.extend(data, {from: moment($scope.data.from).format('YYYY-MM-DD')});
-            if (typeof $scope.data.to !== 'undefined' && $scope.data.to != '')
-                angular.extend(data, {to: moment($scope.data.to).format('YYYY-MM-DD')});
+            if (typeof $scope.data.consultant_id !== 'undefined' && $scope.data.consultant_id != '')
+                angular.extend(data, {consultant_id: $scope.data.consultant_id});
+            if (typeof $scope.data.tenant_id !== 'undefined' && $scope.data.tenant_id != '')
+                angular.extend(data, {tenant_id: $scope.data.tenant_id});
 
             // Get data's from service
-            $http.post($rootScope.IRISOrgServiceUrl + '/pharmacyreport/salereport?addtfields=salevatreport', data)
+            $http.post($rootScope.IRISOrgServiceUrl + '/pharmacyreport/prescriptionregisterreport?addtfields=prescregister', data)
                     .success(function (response) {
                         $scope.loadbar('hide');
+                        $scope.loading = false;
+                        $scope.showTable = true;
                         $scope.records = response.report;
                         $scope.generated_on = moment().format('YYYY-MM-DD hh:mm A');
                     })
@@ -65,14 +88,10 @@ app.controller('saleVatReportController', ['$rootScope', '$scope', '$timeout', '
                     });
         };
 
-        $scope.parseFloat = function (row) {
-            return parseFloat(row);
-        }
-
         //For Print
         $scope.printHeader = function () {
             return {
-                text: "Purchase VAT Report",
+                text: "Prescription Register",
                 margin: 5,
                 alignment: 'center'
             };
@@ -92,132 +111,113 @@ app.controller('saleVatReportController', ['$rootScope', '$scope', '$timeout', '
                 demoTable: {
                     color: '#000',
                     fontSize: 10,
+                    margin: [0, 0, 0, 20]
                 }
             };
         }
 
         $scope.printloader = '';
         $scope.printContent = function () {
+            var content = [];
+            
+            var date_rage = moment($scope.data.from).format('YYYY-MM-DD');
             var generated_on = $scope.generated_on;
             var generated_by = $scope.app.username;
-            var date_rage = moment($scope.data.from).format('YYYY-MM-DD') + " - " + moment($scope.data.to).format('YYYY-MM-DD');
-            var branch_name = $scope.app.org_name;
 
-            var reports = [];
-            reports.push([
-                {text: branch_name, style: 'header', colSpan: 6}, "", "", "", "", ""
-            ]);
-            reports.push([
-                {text: 'S.No', style: 'header'},
-                {text: 'Invoice no', style: 'header'},
-                {text: 'Supplier', style: 'header'},
-                {text: 'Vat Purchase Amount', style: 'header'},
-                {text: 'Vat Tax Amount', style: 'header'},
-                {text: 'Total Amount', style: 'header'},
-            ]);
+            var branch_wise = $filter('groupBy')($scope.records, 'branch_name');
+            var result_count = Object.keys(branch_wise).length;
+            var index = 1;
+            angular.forEach(branch_wise, function (sales, branch_name) {
+                var content_info = [];
+                
+                content_info.push({
+                    columns: [
+                        {
+                            text: [
+                                {text: 'Branch Name: ', bold: true},
+                                branch_name
+                            ],
+                            margin: [0, 0, 0, 5]
+                        },
+                        {
+                            text: [
+                                {text: 'Generated On: ', bold: true},
+                                generated_on
+                            ],
+                            margin: [0, 0, 0, 5]
+                        }
+                    ]
+                }, {
+                    columns: [
+                        {
+                            text: [
+                                {text: 'Date: ', bold: true},
+                                date_rage
+                            ],
+                            margin: [0, 0, 0, 5]
+                        },
+                        {
+                            text: [
+                                {text: ' Generated By: ', bold: true},
+                                generated_by
+                            ],
+                            margin: [0, 0, 0, 5]
+                        }
+                    ]
+                });
 
-            var serial_no = 1;
-            var result_count = $scope.records.length;
-            var purchase_amount = 0;
-            var vat_amount = 0;
-            var total_amount = 0;
-            angular.forEach($scope.records, function (record, key) {
-                var s_no_string = serial_no.toString();
+                angular.forEach(sales, function (sale, sale_key) {
+                    var items = [];
+                    var sale_header = sale.sale_date + ' ' + sale.bill_no + ' ' + sale.consultant_name + ' ' + sale.patient_name;
+                    items.push([
+                        {text: sale_header, style: 'header', colSpan: 6}, "", "", "", "", ""
+                    ]);
+                    items.push([
+                        {text: 'Product Name', style: 'header'},
+                        {text: 'Qty', style: 'header'},
+                        {text: 'Brand', style: 'header'},
+                        {text: 'Batch', style: 'header'},
+                        {text: 'Expiry', style: 'header'},
+                        {text: 'Pharmacy Signature', style: 'header'}
+                    ]);
+                    angular.forEach(sale.items, function (item, item_key) {
+                        items.push([
+                            item.product.full_name,
+                            item.quantity.toString(),
+                            item.product.brand_code,
+                            item.batch.batch_no,
+                            moment(item.batch.expiry_date).format('MM/YYYY'),
+                            ''
+                        ]);
+                    });
+
+                    content_info.push({
+                        style: 'demoTable',
+                        table: {
+                            widths: [40, '*', '*', 'auto', '*', 'auto'],
+                            headerRows: 1,
+                            dontBreakRows: true,
+                            body: items,
+                        },
+                        layout: {
+                            hLineWidth: function (i, node) {
+                                return (i === 0 || i === node.table.body.length) ? 1 : 0.5;
+                            }
+                        }                        
+                    });
+                });
                 
-                reports.push([
-                    s_no_string,
-                    record.invoice_no,
-                    record.supplier_name,
-                    record.total_item_purchase_amount,
-                    record.total_item_vat_amount,
-                    record.net_amount,
-                ]);
-                
-                purchase_amount += parseFloat(record.total_item_purchase_amount);
-                vat_amount += parseFloat(record.total_item_vat_amount);
-                total_amount += parseFloat(record.net_amount);
-                
-                if (serial_no == result_count) {
+                content_info.push({
+                    text: '',
+                    pageBreak: (index === result_count ? '' : 'after'),
+                });
+
+                content.push(content_info);
+                if (index == result_count) {
                     $scope.printloader = '';
                 }
-                serial_no++;
+                index++;
             });
-            reports.push([
-                {
-                    text: 'Total Purchase Value',
-                    style: 'header',
-                    alignment: 'right',
-                    colSpan: 3
-                },
-                "",
-                "",
-                {
-                    text: purchase_amount.toFixed(2).toString(),
-                    style: 'header',
-                    alignment: 'right'
-                },
-                {
-                    text: vat_amount.toFixed(2).toString(),
-                    style: 'header',
-                    alignment: 'right'
-                },
-                {
-                    text: total_amount.toFixed(2).toString(),
-                    style: 'header',
-                    alignment: 'right'
-                },
-            ]);
-
-            var content = [];
-            content.push({
-                columns: [
-                    {
-                        text: [
-                            {text: 'Report Name: ', bold: true},
-                            'Purchase VAT Report'
-                        ],
-                        margin: [0, 0, 0, 20]
-                    },
-                    {
-                        text: [
-                            {text: ' Generated On: ', bold: true},
-                            generated_on
-                        ],
-                        margin: [0, 0, 0, 20]
-                    }
-                ]
-            }, {
-                columns: [
-                    {
-                        text: [
-                            {text: 'Date: ', bold: true},
-                            date_rage
-                        ],
-                        margin: [0, 0, 0, 20]
-                    },
-                    {
-                        text: [
-                            {text: ' Generated By: ', bold: true},
-                            generated_by
-                        ],
-                        margin: [0, 0, 0, 20]
-                    }
-                ]
-            }, {
-                style: 'demoTable',
-                table: {
-                    headerRows: 2,
-                    widths: ['auto', 'auto', '*', 'auto', 'auto', 'auto'],
-                    body: reports,
-                    dontBreakRows: true,
-                },
-                layout: {
-                    hLineWidth: function (i, node) {
-                        return (i === 0 || i === node.table.body.length) ? 1 : 0.5;
-                    }
-                }
-            });
-
             return content;
         }
 
