@@ -30,6 +30,11 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
             return tot;
         }
         
+        $scope.getTotalPrice = function (row) {
+            tot = parseFloat(row.total_charge) + parseFloat(row.extra_amount) - parseFloat(row.concession_amount);
+            return tot;
+        }
+        
         $scope.parseFloat = function (row) {
             return parseFloat(row);
         }
