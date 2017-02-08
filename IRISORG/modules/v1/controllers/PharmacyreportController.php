@@ -115,6 +115,7 @@ class PharmacyreportController extends ActiveController {
         return ['saleGroupsList' => $saleGroupsList];
     }
 
+    //Not using now 
     public function actionStockreport() {
         $post = Yii::$app->getRequest()->post();
         $tenant_id = Yii::$app->user->identity->logged_tenant_id;
