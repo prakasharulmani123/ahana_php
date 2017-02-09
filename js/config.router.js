@@ -995,9 +995,12 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 templateUrl: 'tpl/patient/view.html',
                 controller: 'PatientLeftSideNotificationCtrl',
                 resolve: {
-                    deps: ['uiLoad',
-                        function (uiLoad) {
-                            return uiLoad.load(['tpl/patient/patient.js?v=' + APP_VERSION]);
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load([
+                                'tpl/patient/patient.js?v=' + APP_VERSION,
+                                'tpl/modal_form/modal.patient_label.js?v=' + APP_VERSION
+                            ]);
                         }]
                 }
             })

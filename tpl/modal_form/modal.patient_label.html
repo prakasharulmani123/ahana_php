@@ -7,7 +7,7 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div class="row" id="print-area">
-                        <style type="text/css">
+<!--                        <style type="text/css">
                             @media print {
                                 html, body {
                                     display: block;
@@ -25,14 +25,14 @@
                                     display: none;
                                 }
                             }
-                        </style>
+                        </style>-->
                         <div class="col-xs-6">
                             <b>Name:</b> {{data.view_data.fullname}}<br />
                             <b>UHID:</b> {{data.view_data.patient_global_int_code}}<br />
                             <b>Gender:</b> {{data.app.patientDetail.patientSex}}<br />
                             <b>Age: </b> {{data.view_data.patient_age}}
                         </div>
-                        <div class="col-xs-6 text-right">
+                        <div class="col-xs-6 text-right" id="patient-barcode">
                             <io-barcode code="{{data.view_data.patient_global_int_code}}" type="{{data.app.IO.type}}" code="{{data.app.IO.code}}" options="data.app.IO.barcodeOptions"></io-barcode>
                         </div>
                     </div>

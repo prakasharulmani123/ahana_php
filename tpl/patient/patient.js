@@ -1,4 +1,4 @@
-app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$anchorScroll', 'fileUpload', '$modal', function ($rootScope, $scope, $timeout, $http, $state, $anchorScroll, fileUpload, $modal) {
+app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$anchorScroll', 'fileUpload', '$modal', '$log', function ($rootScope, $scope, $timeout, $http, $state, $anchorScroll, fileUpload, $modal, $log) {
 
         $scope.app.settings.patientTopBar = true;
         $scope.app.settings.patientSideMenu = true;
@@ -330,33 +330,18 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
 
         $scope.printLabel = function () {
             var modalInstance = $modal.open({
-                templateUrl: 'modal.patient_label.html',
-                controller: 'PatientPrintController',
+                templateUrl: 'tpl/modal_form/modal.patient_label.html',
+                controller: 'PatientLabelController',
                 resolve: {
                     scope: function () {
                         return $scope;
                     },
                 }
             });
-
-//            modalInstance.result.then(function (selectedItem) {
-//                $scope.selected = selectedItem;
-//            }, function () {
-//                $log.info('Modal dismissed at: ' + new Date());
-//            });
+            modalInstance.result.then(function (selectedItem) {
+                $scope.selected = selectedItem;
+            }, function () {
+                $log.info('Modal dismissed at: ' + new Date());
+            });
         };
-    }]);
-app.controller('PatientPrintController', ['scope', '$scope', '$timeout', function (scope, $scope, $timeout) {
-        $scope.data = scope;
-//        angular.extend($scope.data.app.IO.barcodeOptions, {height: 25, width: 1});
-
-        $scope.print = function () {
-            $timeout(function () {
-                var innerContents = document.getElementById('print-area').innerHTML;
-                var popupWinindow = window.open('', '_blank', 'width=800,height=800,scrollbars=yes,menubar=no,toolbar=no,location=no,status=no,titlebar=no');
-                popupWinindow.document.open();
-                popupWinindow.document.write('<html><head><link href="css/print.css" rel="stylesheet" type="text/css" /></head><body onload="window.print()">' + innerContents + '</html>');
-                popupWinindow.document.close();
-            }, 1000);
-        }
     }]);
