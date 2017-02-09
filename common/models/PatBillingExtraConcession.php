@@ -58,8 +58,8 @@ class PatBillingExtraConcession extends RActiveRecord {
         $attribute_name = ($this->mode == 'E') ? 'extra_amount' : 'concession_amount';
         $name = BaseInflector::camel2words($attribute_name);
 
-        if (empty($this->$attribute_name) || $this->$attribute_name < 1 && $attribute_name == $attribute) {
-            $this->addError($attribute, "{$name} can not be empty");
+        if ($this->$attribute_name < 0 && $attribute_name == $attribute) {
+            $this->addError($attribute, "{$name} should be greater than 0");
         }
     }
 
