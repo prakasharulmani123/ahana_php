@@ -134,7 +134,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                             [{text: 'Name', bold: true}, ':', $scope.patientObj.fullname],
                             [{text: 'Patient ID', bold: true}, ':', $scope.patientObj.patient_global_int_code],
                             [{text: 'Age', bold: true}, ':', $scope.patientObj.patient_age.toString()],
-                            [{text: 'Sex', bold: true}, ':', $scope.app.patientDetail.patientSex]
+                            [{text: 'Gender', bold: true}, ':', $scope.app.patientDetail.patientSex]
                         ]
                     }
                 },
@@ -228,7 +228,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
             bill.push([
                 {text: 'From Date', bold: true},
                 {text: 'To Date', bold: true},
-                {text: 'DESCRIPTION', bold: true},
+                {text: 'Description', bold: true},
                 {text: 'Debit', bold: true, alignment: 'right'},
                 {text: 'Credit', bold: true, alignment: 'right'},
                 {text: 'Net', bold: true, alignment: 'right'},
@@ -284,7 +284,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                     {}
                 ]);
                 bill.push([
-                    {text: 'DESCRIPTION', bold: true, colSpan: 3},
+                    {text: 'Description', bold: true, colSpan: 3},
                     {},
                     {},
                     {text: 'Debit', bold: true, alignment: 'right'},
@@ -333,7 +333,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                     {}
                 ]);
                 bill.push([
-                    {text: 'DESCRIPTION', bold: true, colSpan: 3},
+                    {text: 'Description', bold: true, colSpan: 3},
                     {},
                     {},
                     {text: 'Debit', bold: true, alignment: 'right'},
@@ -345,7 +345,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                     var row_total = $scope.getTotalPrice(row);
                     var net_total = parseFloat(detailed_billing.total.net_step_2_total) + parseFloat(row.net_amount)
                     bill.push([
-                        {text: row.category + '(' + row.headers + ') (' + row.visit_count + ')', style: 'rows', colSpan: 3},
+                        {text: row.category + '(' + row.headers + ')', style: 'rows', colSpan: 3},
                         '',
                         '',
                         {text: row_total.toString(), style: 'rows', alignment: 'right'},
@@ -382,7 +382,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                     {}
                 ]);
                 bill.push([
-                    {text: 'DESCRIPTION', bold: true, colSpan: 3},
+                    {text: 'Description', bold: true, colSpan: 3},
                     {},
                     {},
                     {text: 'Debit', bold: true, alignment: 'right'},
@@ -432,7 +432,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                 ]);
                 bill.push([
                     {text: 'Date', bold: true},
-                    {text: 'DESCRIPTION', bold: true, colSpan: 2},
+                    {text: 'Description', bold: true, colSpan: 2},
                     {},
                     {text: 'Debit', bold: true, alignment: 'right'},
                     {text: 'Credit', bold: true, alignment: 'right'},
