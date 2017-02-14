@@ -67,10 +67,118 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
         }
 
         $scope.printStyle = function () {
-            return true;
+            return {
+                rows: {
+                    fontSize: 10
+                }
+            };
         }
 
-        $scope.billSummary = function () {
+        $scope.printFirstRow = function () {
+            if ($scope.enc.selected.bill_no)
+                var billNo = $scope.enc.selected.bill_no;
+            else
+                var billNo = '-';
+
+            if ($scope.bill_type == 'detailed_bill') {
+                var h1 = 'DETAILED BILLING SUMMARY';
+            } else {
+                var h1 = 'BILLING SUMMARY';
+            }
+
+            return [
+                {
+                    margin: [0, 20, 0, 20],
+                    colSpan: 2,
+                    text: [
+                        {text: 'Bill NO : ', bold: true},
+                        billNo
+                    ]
+                },
+                {},
+                {
+                    margin: [0, 20, 0, 20],
+                    colSpan: 2,
+                    bold: true,
+                    alignment: 'center',
+                    text: h1
+                },
+                {},
+                {
+                    margin: [0, 20, 0, 20],
+                    colSpan: 2,
+                    text: [
+                        {text: 'Generated On: ', bold: true},
+                        $scope.report_generated_date
+                    ]
+                },
+                {}
+            ];
+        }
+
+        $scope.printPatientDetails = function () {
+            var admission_date = moment($scope.enc.selected.encounter_date).format('DD/MM/YYYY - hh:mm A');
+            if ($scope.enc.selected.discharge_date)
+                var discharge_date = moment($scope.enc.selected.discharge_date).format('DD/MM/YYYY - hh:mm A');
+            else
+                var discharge_date = '-';
+
+            return [
+                {
+                    colSpan: 3,
+                    layout: 'noBorders',
+                    table: {
+                        widths: ['auto', 10, 'auto'],
+                        body: [
+                            [{text: 'Patient Detail :', bold: true, colSpan: 3, decoration: 'underline'}, {}, {}],
+                            [{text: 'Name', bold: true}, ':', $scope.patientObj.fullname],
+                            [{text: 'Patient ID', bold: true}, ':', $scope.patientObj.patient_global_int_code],
+                            [{text: 'Age', bold: true}, ':', $scope.patientObj.patient_age.toString()],
+                            [{text: 'Sex', bold: true}, ':', $scope.app.patientDetail.patientSex]
+                        ]
+                    }
+                },
+                {},
+                {},
+                {
+                    colSpan: 3,
+                    layout: 'noBorders',
+                    table: {
+                        widths: ['auto', 10, 'auto'],
+                        body: [
+                            [{text: 'Admission Date', bold: true}, ':', admission_date],
+                            [{text: 'Discharge Date', bold: true}, ':', discharge_date],
+                            [{text: 'Ward No', bold: true}, ':', $scope.patientObj.current_room],
+                            [{text: 'No.ofDays', bold: true}, ':', $scope.enc.selected.stay_duration.toString()],
+                            [{text: 'Consultant Name', bold: true}, ':', $scope.patientObj.consultant_name],
+                        ]
+                    }
+                },
+                {},
+                {}
+            ];
+        }
+
+        $scope.printBillingSummary = function () {
+            return [
+                {
+                    colSpan: 6,
+                    layout: 'noBorders',
+                    table: {
+                        widths: ['auto', 'auto', '*', 'auto', 'auto', 'auto'],
+                        dontBreakRows: true,
+                        body: $scope.billSummaryContent()
+                    }
+                },
+                {},
+                {},
+                {},
+                {},
+                {}
+            ]
+        }
+
+        $scope.billSummaryContent = function () {
             var bill = [];
             var detailed_billing = {
                 total: {
@@ -80,12 +188,12 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                     net_step_2_total: '0',
                     consultant_net_total: '0',
                     consultant_total: '0',
-                    net_step_3_total:'0',
-                    other_net_total:'0',
-                    other_total:'0',
-                    net_step_4_total:'0',
-                    advance_net_total:'0',
-                    advance_total:'0',
+                    net_step_3_total: '0',
+                    other_net_total: '0',
+                    other_total: '0',
+                    net_step_4_total: '0',
+                    advance_net_total: '0',
+                    advance_total: '0',
                 }
             };
             var detailed_recurr_billing = {
@@ -98,9 +206,9 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                     charge: '0'
                 }
             };
-            
+
             bill.push([
-                {text: 'Billing Summary:', bold: true, colSpan: 6, decoration: 'underline', },
+                {text: 'Billing Summary:', bold: true, colSpan: 6, decoration: 'underline', margin: [0, 10, 0, 10]},
                 {},
                 {},
                 {},
@@ -110,7 +218,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
 
             //Recurring charges START
             bill.push([
-                {text: 'Room Charge', bold: true, colSpan: 6, fillColor: '#eeeeee'},
+                {text: 'Room Charge', bold: true, colSpan: 6, fillColor: '#eeeeee', margin: [2, 10, 0, 10]},
                 {},
                 {},
                 {},
@@ -121,316 +229,334 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                 {text: 'From Date', bold: true},
                 {text: 'To Date', bold: true},
                 {text: 'DESCRIPTION', bold: true},
-                {text: 'Debit', bold: true},
-                {text: 'Credit', bold: true},
-                {text: 'Net', bold: true},
-            ]);            
+                {text: 'Debit', bold: true, alignment: 'right'},
+                {text: 'Credit', bold: true, alignment: 'right'},
+                {text: 'Net', bold: true, alignment: 'right'},
+            ]);
             angular.forEach($scope.recurring_charges, function (row, key) {
                 var recu_price = $scope.getTotalRecurringPrice(row);
+                var recu_from = moment(row.from_date).format('DD/MM/YYYY');
+                var recu_to = moment(row.to_date).format('DD/MM/YYYY');
                 bill.push([
-                    row.from_date,
-                    row.to_date,
-                    row.charge_item + '(' + row.charge_amount + '*' + row.duration + ')' + '(' + row.room_type + ')',
-                    recu_price.toString(),
+                    {text: recu_from, style: 'rows'},
+                    {text: recu_to, style: 'rows'},
+                    {text: row.charge_item + '(' + row.charge_amount + '*' + row.duration + ')' + '(' + row.room_type + ')', style: 'rows'},
+                    {text: recu_price.toString(), style: 'rows', alignment: 'right'},
                     '',
-                    row.net_amount.toString()
+                    {text: row.net_amount.toString(), style: 'rows', alignment: 'right'},
                 ]);
                 detailed_recurr_billing.total.recurring_total = parseFloat(detailed_recurr_billing.total.recurring_total) + recu_price
             });
             bill.push([
+                {
+                    text: 'Sub Total',
+                    bold: true,
+                    margin: [0, 10, 0, 0],
+                    alignment: 'right',
+                    colSpan: 3
+                },
                 '',
                 '',
-                {text: 'Sub Total', bold: true, margin: [0, 10, 0, 0], alignment: 'right'},
-                {text: detailed_recurr_billing.total.recurring_total.toString(), bold: true, margin: [0, 10, 0, 0]},
+                {
+                    text: detailed_recurr_billing.total.recurring_total.toString(),
+                    bold: true,
+                    alignment: 'right',
+                    margin: [0, 10, 0, 0]
+                },
                 '',
-                {text: detailed_recurr_billing.total.recurring_total.toString(), bold: true, margin: [0, 10, 0, 0]},
+                {
+                    text: detailed_recurr_billing.total.recurring_total.toString(),
+                    bold: true,
+                    alignment: 'right',
+                    margin: [0, 10, 0, 0]
+                },
             ]);
             //Recurring charges END          
-            
+
             //Procedure charges START
-            bill.push([
-                {text: 'Procedure Charges', bold: true, colSpan: 6, fillColor: '#eeeeee'},
-                {},
-                {},
-                {},
-                {},
-                {}
-            ]);
-            bill.push([
-                {text: 'DESCRIPTION', bold: true, colSpan: 3},
-                {},
-                {},
-                {text: 'Debit', bold: true},
-                {text: 'Credit', bold: true},
-                {text: 'Net', bold: true},
-            ]);  
-            angular.forEach($scope.procedures, function (row, key) {
-                detailed_billing.total.net_step_1_total = detailed_recurr_billing.total.recurring_total;
-                var row_total = $scope.getTotalPrice(row);
-                var net_total = parseFloat(detailed_billing.total.net_step_1_total) + parseFloat(row.net_amount)
+            if ($scope.procedures) {
                 bill.push([
-                    {text: row.category, colSpan: 3},
-                    '',
-                    '',
-                    row_total.toString(),
-                    '',
-                    net_total.toString()
+                    {text: 'Procedure Charges', bold: true, colSpan: 6, fillColor: '#eeeeee', margin: [2, 10, 0, 10]},
+                    {},
+                    {},
+                    {},
+                    {},
+                    {}
                 ]);
-                
-                detailed_non_billing.total.charge = parseFloat(detailed_non_billing.total.charge) + row_total;
-                detailed_billing.total.procedure_total = parseFloat(detailed_billing.total.procedure_total) + row_total;
-                detailed_billing.total.procedure_net_total = detailed_recurr_billing.total.recurring_total + parseFloat(row.net_amount);
-            });
-            bill.push([
-                {text: 'Sub Total', bold: true, margin: [0, 10, 0, 0], alignment: 'right', colSpan: 3},
-                '',
-                '',
-                {text: detailed_billing.total.procedure_total.toString(), bold: true, margin: [0, 10, 0, 0]},
-                '',
-                {text: detailed_billing.total.procedure_net_total.toString(), bold: true, margin: [0, 10, 0, 0]},
-            ]);
+                bill.push([
+                    {text: 'DESCRIPTION', bold: true, colSpan: 3},
+                    {},
+                    {},
+                    {text: 'Debit', bold: true, alignment: 'right'},
+                    {text: 'Credit', bold: true, alignment: 'right'},
+                    {text: 'Net', bold: true, alignment: 'right'},
+                ]);
+                angular.forEach($scope.procedures, function (row, key) {
+                    detailed_billing.total.net_step_1_total = detailed_recurr_billing.total.recurring_total;
+                    var row_total = $scope.getTotalPrice(row);
+                    var net_total = parseFloat(detailed_billing.total.net_step_1_total) + parseFloat(row.net_amount)
+                    bill.push([
+                        {text: row.category, colSpan: 3, style: 'rows'},
+                        '',
+                        '',
+                        {text: row_total.toString(), style: 'rows', alignment: 'right'},
+                        '',
+                        {text: net_total.toString(), style: 'rows', alignment: 'right'}
+                    ]);
+
+                    detailed_non_billing.total.charge = parseFloat(detailed_non_billing.total.charge) + row_total;
+                    detailed_billing.total.procedure_total = parseFloat(detailed_billing.total.procedure_total) + row_total;
+                    detailed_billing.total.procedure_net_total = detailed_recurr_billing.total.recurring_total + parseFloat(row.net_amount);
+                });
+                bill.push([
+                    {text: 'Sub Total', bold: true, margin: [0, 10, 0, 0], alignment: 'right', colSpan: 3},
+                    '',
+                    '',
+                    {text: detailed_billing.total.procedure_total.toString(), bold: true, margin: [0, 10, 0, 0], alignment: 'right'},
+                    '',
+                    {text: detailed_billing.total.procedure_net_total.toString(), bold: true, margin: [0, 10, 0, 0], alignment: 'right'},
+                ]);
+            }
+            if (detailed_billing.total.procedure_net_total == '0') {
+                detailed_billing.total.procedure_net_total = detailed_recurr_billing.total.recurring_total;
+            }
             //Procedure charges END
-            
+
             //Professional charges START
-            bill.push([
-                {text: 'Professional Charges', bold: true, colSpan: 6, fillColor: '#eeeeee'},
-                {},
-                {},
-                {},
-                {},
-                {}
-            ]);
-            bill.push([
-                {text: 'DESCRIPTION', bold: true, colSpan: 3},
-                {},
-                {},
-                {text: 'Debit', bold: true},
-                {text: 'Credit', bold: true},
-                {text: 'Net', bold: true},
-            ]);  
-            angular.forEach($scope.consultants, function (row, key) {
-                detailed_billing.total.net_step_2_total = detailed_billing.total.procedure_net_total;
-                var row_total = $scope.getTotalPrice(row);
-                var net_total = parseFloat(detailed_billing.total.net_step_2_total) + parseFloat(row.net_amount)
+            if ($scope.consultants) {
                 bill.push([
-                    {text: row.category + '(' + row.headers + ') (' + row.visit_count + ')', colSpan: 3},
-                    '',
-                    '',
-                    row_total.toString(),
-                    '',
-                    net_total.toString()
+                    {text: 'Professional Charges', bold: true, colSpan: 6, fillColor: '#eeeeee', margin: [2, 10, 0, 10]},
+                    {},
+                    {},
+                    {},
+                    {},
+                    {}
                 ]);
-                
-                detailed_non_billing.total.charge = parseFloat(detailed_non_billing.total.charge) + row_total;
-                detailed_billing.total.consultant_total = parseFloat(detailed_billing.total.consultant_total) + row_total;
-                detailed_billing.total.consultant_net_total = parseFloat(detailed_billing.total.procedure_net_total) + parseFloat(row.net_amount);
-            });
-            bill.push([
-                {text: 'Sub Total', bold: true, margin: [0, 10, 0, 0], alignment: 'right', colSpan: 3},
-                '',
-                '',
-                {text: detailed_billing.total.consultant_total.toString(), bold: true, margin: [0, 10, 0, 0]},
-                '',
-                {text: detailed_billing.total.consultant_net_total.toString(), bold: true, margin: [0, 10, 0, 0]},
-            ]);
+                bill.push([
+                    {text: 'DESCRIPTION', bold: true, colSpan: 3},
+                    {},
+                    {},
+                    {text: 'Debit', bold: true, alignment: 'right'},
+                    {text: 'Credit', bold: true, alignment: 'right'},
+                    {text: 'Net', bold: true, alignment: 'right'},
+                ]);
+                angular.forEach($scope.consultants, function (row, key) {
+                    detailed_billing.total.net_step_2_total = detailed_billing.total.procedure_net_total;
+                    var row_total = $scope.getTotalPrice(row);
+                    var net_total = parseFloat(detailed_billing.total.net_step_2_total) + parseFloat(row.net_amount)
+                    bill.push([
+                        {text: row.category + '(' + row.headers + ') (' + row.visit_count + ')', style: 'rows', colSpan: 3},
+                        '',
+                        '',
+                        {text: row_total.toString(), style: 'rows', alignment: 'right'},
+                        '',
+                        {text: net_total.toString(), style: 'rows', alignment: 'right'}
+                    ]);
+
+                    detailed_non_billing.total.charge = parseFloat(detailed_non_billing.total.charge) + row_total;
+                    detailed_billing.total.consultant_total = parseFloat(detailed_billing.total.consultant_total) + row_total;
+                    detailed_billing.total.consultant_net_total = parseFloat(detailed_billing.total.procedure_net_total) + parseFloat(row.net_amount);
+                });
+                bill.push([
+                    {text: 'Sub Total', bold: true, margin: [0, 10, 0, 0], alignment: 'right', colSpan: 3},
+                    '',
+                    '',
+                    {text: detailed_billing.total.consultant_total.toString(), alignment: 'right', bold: true, margin: [0, 10, 0, 0]},
+                    '',
+                    {text: detailed_billing.total.consultant_net_total.toString(), alignment: 'right', bold: true, margin: [0, 10, 0, 0]},
+                ]);
+            }
+            if (detailed_billing.total.consultant_net_total == '0') {
+                detailed_billing.total.consultant_net_total = detailed_billing.total.procedure_net_total;
+            }
             //Professional charges END
-            
+
             //Other charges START
-            bill.push([
-                {text: 'Other Charges', bold: true, colSpan: 6, fillColor: '#eeeeee'},
-                {},
-                {},
-                {},
-                {},
-                {}
-            ]);
-            bill.push([
-                {text: 'DESCRIPTION', bold: true, colSpan: 3},
-                {},
-                {},
-                {text: 'Debit', bold: true},
-                {text: 'Credit', bold: true},
-                {text: 'Net', bold: true},
-            ]);  
-            angular.forEach($scope.other_charges, function (row, key) {
-                detailed_billing.total.net_step_3_total = detailed_billing.total.consultant_net_total;
-                var row_total = $scope.getTotalPrice(row);
-                var net_total = parseFloat(detailed_billing.total.net_step_3_total) + parseFloat(row.net_amount)
+            if ($scope.other_charges) {
                 bill.push([
-                    {text: row.category + '(' + row.headers + ')', colSpan: 3},
-                    '',
-                    '',
-                    row_total.toString(),
-                    '',
-                    net_total.toString()
+                    {text: 'Other Charges', bold: true, colSpan: 6, fillColor: '#eeeeee', margin: [2, 10, 0, 10]},
+                    {},
+                    {},
+                    {},
+                    {},
+                    {}
                 ]);
-                
-                detailed_non_billing.total.charge = parseFloat(detailed_non_billing.total.charge) + row_total;
-                detailed_billing.total.other_total = parseFloat(detailed_billing.total.other_total) + row_total;
-                detailed_billing.total.other_net_total = parseFloat(detailed_billing.total.consultant_net_total) + parseFloat(row.net_amount);
-            });
-            if(detailed_billing.total.other_net_total == '0'){
+                bill.push([
+                    {text: 'DESCRIPTION', bold: true, colSpan: 3},
+                    {},
+                    {},
+                    {text: 'Debit', bold: true, alignment: 'right'},
+                    {text: 'Credit', bold: true, alignment: 'right'},
+                    {text: 'Net', bold: true, alignment: 'right'},
+                ]);
+                angular.forEach($scope.other_charges, function (row, key) {
+                    detailed_billing.total.net_step_3_total = detailed_billing.total.consultant_net_total;
+                    var row_total = $scope.getTotalPrice(row);
+                    var net_total = parseFloat(detailed_billing.total.net_step_3_total) + parseFloat(row.net_amount)
+                    bill.push([
+                        {text: row.category + '(' + row.headers + ')', colSpan: 3, style: 'rows'},
+                        '',
+                        '',
+                        {text: row_total.toString(), style: 'rows', alignment: 'right'},
+                        '',
+                        {text: net_total.toString(), style: 'rows', alignment: 'right'}
+                    ]);
+
+                    detailed_non_billing.total.charge = parseFloat(detailed_non_billing.total.charge) + row_total;
+                    detailed_billing.total.other_total = parseFloat(detailed_billing.total.other_total) + row_total;
+                    detailed_billing.total.other_net_total = parseFloat(detailed_billing.total.consultant_net_total) + parseFloat(row.net_amount);
+                });
+                bill.push([
+                    {text: 'Sub Total', bold: true, margin: [0, 10, 0, 0], alignment: 'right', colSpan: 3},
+                    '',
+                    '',
+                    {text: detailed_billing.total.other_total.toString(), bold: true, margin: [0, 10, 0, 0], alignment: 'right'},
+                    '',
+                    {text: detailed_billing.total.other_net_total.toString(), bold: true, margin: [0, 10, 0, 0], alignment: 'right'},
+                ]);
+            }
+            if (detailed_billing.total.other_net_total == '0') {
                 detailed_billing.total.other_net_total = detailed_billing.total.consultant_net_total;
             }
-            bill.push([
-                {text: 'Sub Total', bold: true, margin: [0, 10, 0, 0], alignment: 'right', colSpan: 3},
-                '',
-                '',
-                {text: detailed_billing.total.other_total.toString(), bold: true, margin: [0, 10, 0, 0]},
-                '',
-                {text: detailed_billing.total.other_net_total.toString(), bold: true, margin: [0, 10, 0, 0]},
-            ]);
             //Other charges END
-            
+
             //Advance START
-            bill.push([
-                {text: 'Advance', bold: true, colSpan: 6, fillColor: '#eeeeee'},
-                {},
-                {},
-                {},
-                {},
-                {}
-            ]);
-            bill.push([
-                {text: 'Date', bold: true},
-                {text: 'DESCRIPTION', bold: true, colSpan: 2},
-                {},
-                {text: 'Debit', bold: true},
-                {text: 'Credit', bold: true},
-                {text: 'Net', bold: true},
-            ]);  
-            angular.forEach($scope.advances, function (row, key) {
-                detailed_billing.total.net_step_4_total = detailed_billing.total.other_net_total;
-                var row_total = parseFloat(row.total_charge);
-                var net_total = parseFloat(detailed_billing.total.net_step_4_total) - parseFloat(row.net_amount)
+            if ($scope.advances) {
                 bill.push([
-                    row.payment_date,
-                    {text: row.headers, colSpan: 2},
-                    '',
-                    '',
-                    row.total_charge.toString(),
-                    net_total.toString()
+                    {text: 'Advance', bold: true, colSpan: 6, fillColor: '#eeeeee', margin: [2, 10, 0, 10]},
+                    {},
+                    {},
+                    {},
+                    {},
+                    {}
                 ]);
-                
-                detailed_non_billing.total.adv_charge = parseFloat(detailed_non_billing.total.adv_charge) + row_total;
-                detailed_billing.total.advance_total = parseFloat(detailed_billing.total.advance_total) + row_total;
-                detailed_billing.total.advance_net_total = parseFloat(detailed_billing.total.other_net_total) - parseFloat(row.net_amount);
-            });
-            bill.push([
-                {text: 'Sub Total', bold: true, margin: [0, 10, 0, 0], alignment: 'right', colSpan: 3},
-                '',
-                '',
-                {text: detailed_billing.total.advance_total.toString(), bold: true, margin: [0, 10, 0, 0]},
-                '',
-                {text: detailed_billing.total.advance_net_total.toString(), bold: true, margin: [0, 10, 0, 0]},
-            ]);
+                bill.push([
+                    {text: 'Date', bold: true},
+                    {text: 'DESCRIPTION', bold: true, colSpan: 2},
+                    {},
+                    {text: 'Debit', bold: true, alignment: 'right'},
+                    {text: 'Credit', bold: true, alignment: 'right'},
+                    {text: 'Net', bold: true, alignment: 'right'},
+                ]);
+                angular.forEach($scope.advances, function (row, key) {
+                    detailed_billing.total.net_step_4_total = detailed_billing.total.other_net_total;
+                    var row_total = parseFloat(row.total_charge);
+                    var net_total = parseFloat(detailed_billing.total.net_step_4_total) - parseFloat(row.net_amount);
+                    var payment_date = moment(row.payment_date).format('DD/MM/YYYY');
+                    bill.push([
+                        {text: payment_date, style: 'rows'},
+                        {text: row.headers, colSpan: 2, style: 'rows'},
+                        '',
+                        '',
+                        {text: parseInt(row.total_charge).toString(), style: 'rows', alignment: 'right'},
+                        {text: net_total.toString(), style: 'rows', alignment: 'right'}
+                    ]);
+
+                    detailed_non_billing.total.adv_charge = parseFloat(detailed_non_billing.total.adv_charge) + row_total;
+                    detailed_billing.total.advance_total = parseFloat(detailed_billing.total.advance_total) + row_total;
+                    detailed_billing.total.advance_net_total = parseFloat(detailed_billing.total.other_net_total) - parseFloat(row.net_amount);
+                });
+                bill.push([
+                    {text: 'Sub Total', bold: true, margin: [0, 10, 0, 0], alignment: 'right', colSpan: 4},
+                    '',
+                    '',
+                    '',
+                    {text: detailed_billing.total.advance_total.toString(), bold: true, margin: [0, 10, 0, 0], alignment: 'right'},
+                    {text: detailed_billing.total.advance_net_total.toString(), bold: true, margin: [0, 10, 0, 0], alignment: 'right'},
+                ]);
+            }
             //Advance END
+            bill.push([
+                {
+                    text: 'Gradn Total : ' + (parseFloat($scope.billing.total.price) + parseFloat($scope.recurr_billing.total.recurring_total)).toString(),
+                    fillColor: '#eeeeee',
+                    bold: true,
+                    margin: [0, 10, 2, 0],
+                    alignment: 'right',
+                    colSpan: 6,
+                },
+                '',
+                '',
+                '',
+                '',
+                '',
+            ]);
+            bill.push([
+                {
+                    text: 'Advance : ' + $scope.billing.total.advance_charge.toString(),
+                    fillColor: '#eeeeee',
+                    bold: true,
+                    margin: [0, 10, 2, 0],
+                    alignment: 'right',
+                    colSpan: 6,
+                },
+                '',
+                '',
+                '',
+                '',
+                '',
+            ]);
+            bill.push([
+                {
+                    text: 'Room Discount : ' + $scope.enc.selected.concession_amount.toString(),
+                    fillColor: '#eeeeee',
+                    bold: true,
+                    margin: [0, 10, 2, 0],
+                    alignment: 'right',
+                    colSpan: 6,
+                },
+                '',
+                '',
+                '',
+                '',
+                '',
+            ]);
+            bill.push([
+                {
+                    text: 'Other Discount : ' + $scope.billing.total.concession.toString(),
+                    fillColor: '#eeeeee',
+                    bold: true,
+                    margin: [0, 10, 2, 0],
+                    alignment: 'right',
+                    colSpan: 6,
+                },
+                '',
+                '',
+                '',
+                '',
+                '',
+            ]);
+            bill.push([
+                {
+                    text: 'Net Total : ' + ((parseFloat($scope.billing.total.price) + parseFloat($scope.recurr_billing.total.recurring_total)) - parseFloat($scope.billing.total.advance_charge) - parseFloat($scope.enc.selected.concession_amount)).toString(),
+                    fillColor: '#eeeeee',
+                    bold: true,
+                    margin: [0, 10, 2, 0],
+                    alignment: 'right',
+                    colSpan: 6,
+                },
+                '',
+                '',
+                '',
+                '',
+                '',
+            ]);
 
             return bill;
         }
 
         //Detailed Bill Content
         $scope.printDetailedBill = function () {
-            var admission_date = moment($scope.enc.selected.encounter_date).format('DD/MM/YYYY - hh:mm A');
-            if ($scope.enc.selected.discharge_date)
-                var discharge_date = moment($scope.enc.selected.discharge_date).format('DD/MM/YYYY - hh:mm A');
-            else
-                var discharge_date = '-';
-
-            if ($scope.enc.selected.bill_no)
-                var billNo = $scope.enc.selected.bill_no;
-            else
-                var billNo = '-';
-
             var content = [
                 {
                     table: {
                         widths: ['*', '*', '*', '*', '*', 100],
                         headerRows: 1,
-                        //dontBreakRows: true,
-                        //keepWithHeaderRows: 1,
                         body: [
-                            [
-                                {
-                                    margin: [0, 20, 0, 20],
-                                    colSpan: 2,
-                                    text: [
-                                        {text: 'Bill NO : ', bold: true, alignment: 'center'},
-                                        billNo
-                                    ]
-                                },
-                                {},
-                                {
-                                    margin: [0, 20, 0, 20],
-                                    text: 'DETAILED BILLING SUMMARY',
-                                    colSpan: 2,
-                                    bold: true,
-                                    alignment: 'center'
-
-                                },
-                                {},
-                                {
-                                    margin: [0, 20, 0, 20],
-                                    colSpan: 2,
-                                    text: [
-                                        {text: 'Report Generated On: ', bold: true, alignment: 'center'},
-                                        $scope.report_generated_date
-                                    ],
-                                },
-                                {}
-                            ],
-                            [
-                                {
-                                    colSpan: 3,
-                                    layout: 'noBorders',
-                                    table: {
-                                        widths: ['auto', 10, 'auto'],
-                                        body: [
-                                            [{text: 'Patient Detail:', bold: true, colSpan: 3, decoration: 'underline'}, {}, {}],
-                                            [{text: 'Name', bold: true}, ':', $scope.patientObj.fullname],
-                                            [{text: 'Patient ID', bold: true}, ':', $scope.patientObj.patient_global_int_code],
-                                            [{text: 'Age', bold: true}, ':', $scope.patientObj.patient_age.toString()],
-                                            [{text: 'Sex', bold: true}, ':', $scope.app.patientDetail.patientSex]
-                                        ]
-                                    }
-                                },
-                                {},
-                                {},
-                                {
-                                    colSpan: 3,
-                                    layout: 'noBorders',
-                                    table: {
-                                        widths: ['auto', 10, 'auto'],
-                                        body: [
-                                            [{text: 'Admission Date', bold: true}, ':', admission_date],
-                                            [{text: 'Discharge Date', bold: true}, ':', discharge_date],
-                                            [{text: 'Ward No', bold: true}, ':', $scope.patientObj.current_room],
-                                            [{text: 'No.ofDays', bold: true}, ':', $scope.enc.selected.stay_duration.toString()],
-                                            [{text: 'Consultant Name', bold: true}, ':', $scope.patientObj.consultant_name],
-                                        ]
-                                    }
-                                },
-                                {},
-                                {}
-                            ],
-                            [
-                                {
-                                    colSpan: 6,
-                                    layout: 'noBorderss',
-                                    table: {
-                                        widths: ['*', '*', 'auto', 'auto', 'auto', 'auto'],
-                                        dontBreakRows: true,
-                                        body: $scope.billSummary()
-                                    }
-                                },
-                                {},
-                                {},
-                                {},
-                                {},
-                                {}
-                            ]
+                            $scope.printFirstRow(),
+                            $scope.printPatientDetails(),
+                            $scope.printBillingSummary(),
                         ]
-
                     }
                 }
             ];

@@ -892,7 +892,6 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                     }
                 ]
             });
-            console.log(purchaseInfo);
             content.push(purchaseInfo);
             if (index == result_count) {
                 $scope.printloader = '';
