@@ -262,86 +262,91 @@ class PharmacypurchaseController extends ActiveController {
                 $lineitems = json_decode($result->lineitems);
 
                 $failed_products = $failed_packages = [];
-                foreach ($lineitems as $key => $lineitem) {
-                    if($lineitem->product_id){
-                        //Search Product exists
-                        $command = $connection->createCommand("SELECT product_id, product_name, b.vat,
-                                                    MATCH(product_name) AGAINST ('{$lineitem->product_id}*' IN BOOLEAN MODE) AS score
-                                                    FROM pha_product
-                                                    JOIN pha_vat b
-                                                    ON b.vat_id = purchase_vat_id
-                                                    WHERE MATCH(product_name) AGAINST ('{$lineitem->product_id}*' IN BOOLEAN MODE)
-                                                    AND pha_product.tenant_id = {$post_data['tenant_id']}
-                                                    ORDER BY score DESC
-                                                    LIMIT 1");
-                        $product_result = $command->queryAll(PDO::FETCH_OBJ);
-                    }else{
-                        $product_result = false;
-                    }
+                if($lineitems){
+                    foreach ($lineitems as $key => $lineitem) {
+                        if($lineitem->product_id){
+                            //Search Product exists
+                            $command = $connection->createCommand("SELECT product_id, product_name, b.vat,
+                                                        MATCH(product_name) AGAINST ('{$lineitem->product_id}*' IN BOOLEAN MODE) AS score
+                                                        FROM pha_product
+                                                        JOIN pha_vat b
+                                                        ON b.vat_id = purchase_vat_id
+                                                        WHERE MATCH(product_name) AGAINST ('{$lineitem->product_id}*' IN BOOLEAN MODE)
+                                                        AND pha_product.tenant_id = {$post_data['tenant_id']}
+                                                        ORDER BY score DESC
+                                                        LIMIT 1");
+                            $product_result = $command->queryAll(PDO::FETCH_OBJ);
+                        }else{
+                            $product_result = false;
+                        }
 
-                    //Search Package exists
-                    $package = PhaPackageUnit::find()->tenant($post_data['tenant_id'])->andWhere(['package_name' => $lineitem->package_name])->one();
+                        //Search Package exists
+                        $package = PhaPackageUnit::find()->tenant($post_data['tenant_id'])->andWhere(['package_name' => $lineitem->package_name])->one();
 
-                    if ($product_result && $package) {
-                        $product_result = $product_result[0];
-                        $post_data['product_items'][$key]['product_id'] = $product_result->product_id;
-                        $post_data['product_items'][$key]['batch_no'] = $lineitem->batch_id;
-                        $post_data['product_items'][$key]['batch_id'] = $lineitem->batch_id;
-                        $post_data['product_items'][$key]['quantity'] = $lineitem->quantity;
-                        $post_data['product_items'][$key]['free_quantity'] = $lineitem->free_quantity;
-                        $post_data['product_items'][$key]['expiry_date'] = $lineitem->expiry_date;
+                        if ($product_result && $package) {
+                            $product_result = $product_result[0];
+                            $post_data['product_items'][$key]['product_id'] = $product_result->product_id;
+                            $post_data['product_items'][$key]['batch_no'] = $lineitem->batch_id;
+                            $post_data['product_items'][$key]['batch_id'] = $lineitem->batch_id;
+                            $post_data['product_items'][$key]['quantity'] = $lineitem->quantity;
+                            $post_data['product_items'][$key]['free_quantity'] = $lineitem->free_quantity;
+                            $post_data['product_items'][$key]['expiry_date'] = $lineitem->expiry_date;
 
-                        $post_data['product_items'][$key]['package_name'] = $package->package_name;
-                        $post_data['product_items'][$key]['free_quantity_unit'] = $package->package_name;
+                            $post_data['product_items'][$key]['package_name'] = $package->package_name;
+                            $post_data['product_items'][$key]['free_quantity_unit'] = $package->package_name;
 
-                        $post_data['product_items'][$key]['package_unit'] = $package->package_unit;
-                        $post_data['product_items'][$key]['free_quantity_package_unit'] = $package->package_unit;
+                            $post_data['product_items'][$key]['package_unit'] = $package->package_unit;
+                            $post_data['product_items'][$key]['free_quantity_package_unit'] = $package->package_unit;
 
-                        $post_data['product_items'][$key]['mrp'] = $lineitem->mrp;
-                        $post_data['product_items'][$key]['purchase_rate'] = $lineitem->purchase_rate;
-                        $post_data['product_items'][$key]['discount_percent'] = $lineitem->discount_percent;
-                        $post_data['product_items'][$key]['vat_percent'] = $lineitem->vat_percent;
+                            $post_data['product_items'][$key]['mrp'] = $lineitem->mrp;
+                            $post_data['product_items'][$key]['purchase_rate'] = $lineitem->purchase_rate;
+                            $post_data['product_items'][$key]['discount_percent'] = $lineitem->discount_percent;
+                            $post_data['product_items'][$key]['vat_percent'] = $lineitem->vat_percent;
 
-                        $post_data['product_items'][$key]['purchase_amount'] = ($post_data['product_items'][$key]['purchase_rate'] * $post_data['product_items'][$key]['quantity']);
-                        $post_data['product_items'][$key]['discount_amount'] = ($post_data['product_items'][$key]['purchase_amount'] * ($post_data['product_items'][$key]['discount_percent'] / 100));
-                        $post_data['product_items'][$key]['total_amount'] = $post_data['product_items'][$key]['purchase_amount'] - $post_data['product_items'][$key]['discount_amount'];
-                        $post_data['product_items'][$key]['vat_percent'] = $post_data['product_items'][$key]['vat_percent'];
-                        $post_data['product_items'][$key]['vat_amount'] = ($post_data['product_items'][$key]['total_amount'] * ($post_data['product_items'][$key]['vat_percent'] / 100)); // Excluding vat $lineitem->batch_id;
+                            $post_data['product_items'][$key]['purchase_amount'] = ($post_data['product_items'][$key]['purchase_rate'] * $post_data['product_items'][$key]['quantity']);
+                            $post_data['product_items'][$key]['discount_amount'] = ($post_data['product_items'][$key]['purchase_amount'] * ($post_data['product_items'][$key]['discount_percent'] / 100));
+                            $post_data['product_items'][$key]['total_amount'] = $post_data['product_items'][$key]['purchase_amount'] - $post_data['product_items'][$key]['discount_amount'];
+                            $post_data['product_items'][$key]['vat_percent'] = $post_data['product_items'][$key]['vat_percent'];
+                            $post_data['product_items'][$key]['vat_amount'] = ($post_data['product_items'][$key]['total_amount'] * ($post_data['product_items'][$key]['vat_percent'] / 100)); // Excluding vat $lineitem->batch_id;
 
-                        $post_data['total_item_purchase_amount'] += $post_data['product_items'][$key]['purchase_amount'] - $post_data['product_items'][$key]['discount_amount'];
-                        $post_data['total_item_vat_amount'] += $post_data['product_items'][$key]['vat_amount'];
-                        $post_data['total_item_discount_amount'] += $post_data['product_items'][$key]['discount_amount'];
-                    } else {
-                        if (!$product_result)
-                            $failed_products[] = $lineitem->product_id;
-                        if (!$package)
-                            $failed_packages[] = $lineitem->package_name;
-                    }
-                }
-
-                $post_data['before_disc_amount'] = ($post_data['total_item_purchase_amount'] + $post_data['total_item_vat_amount']);
-                $post_data['after_disc_amount'] = $post_data['before_disc_amount'];
-                $post_data['net_amount'] = round($post_data['after_disc_amount']);
-                $post_data['roundoff_amount'] = bcadd(abs($post_data['net_amount'] - $post_data['after_disc_amount']), 0, 2);
-
-                if (isset($post_data['product_items'])) {
-                    if (count($lineitems) == count($post_data['product_items'])) {
-                        $post_data['supplier_id'] = PhaSupplier::getSupplierid($result->supplier_id, $post_data['tenant_id']);
-                        $res = $this->_save_purchase($post_data, 'import');
-
-                        if ($res['success']) {
-                            $return = ['success' => true, 'continue' => $next_id, 'message' => 'success'];
+                            $post_data['total_item_purchase_amount'] += $post_data['product_items'][$key]['purchase_amount'] - $post_data['product_items'][$key]['discount_amount'];
+                            $post_data['total_item_vat_amount'] += $post_data['product_items'][$key]['vat_amount'];
+                            $post_data['total_item_discount_amount'] += $post_data['product_items'][$key]['discount_amount'];
                         } else {
-                            $return = ['success' => false, 'continue' => $next_id, 'message' => $res['message']];
+                            if (!$product_result)
+                                $failed_products[] = $lineitem->product_id;
+                            if (!$package)
+                                $failed_packages[] = $lineitem->package_name;
                         }
                     }
+                    
+                    $post_data['before_disc_amount'] = ($post_data['total_item_purchase_amount'] + $post_data['total_item_vat_amount']);
+                    $post_data['after_disc_amount'] = $post_data['before_disc_amount'];
+                    $post_data['net_amount'] = round($post_data['after_disc_amount']);
+                    $post_data['roundoff_amount'] = bcadd(abs($post_data['net_amount'] - $post_data['after_disc_amount']), 0, 2);
+
+                    if (isset($post_data['product_items'])) {
+                        if (count($lineitems) == count($post_data['product_items'])) {
+                            $post_data['supplier_id'] = PhaSupplier::getSupplierid($result->supplier_id, $post_data['tenant_id']);
+                            $res = $this->_save_purchase($post_data, 'import');
+
+                            if ($res['success']) {
+                                $return = ['success' => true, 'continue' => $next_id, 'message' => 'success'];
+                            } else {
+                                $return = ['success' => false, 'continue' => $next_id, 'message' => $res['message']];
+                            }
+                        }
+                    }
+
+                    if ($failed_products || $failed_packages) {
+                        $message = $failed_products ? "Products not exists: " . implode(',', $failed_products) : ' ';
+                        $message .= $failed_packages ? "Packages not exists: " . implode(',', $failed_packages) : '';
+                        $return = ['success' => false, 'continue' => $next_id, 'message' => $message];
+                    }
+                }else{
+                    $return = ['success' => false, 'continue' => $next_id, 'message' => 'Import data not found'];
                 }
 
-                if ($failed_products || $failed_packages) {
-                    $message = $failed_products ? "Products not exists: " . implode(',', $failed_products) : ' ';
-                    $message .= $failed_packages ? "Packages not exists: " . implode(',', $failed_packages) : '';
-                    $return = ['success' => false, 'continue' => $next_id, 'message' => $message];
-                }
             } else {
                 $return = ['success' => false, 'continue' => $next_id, 'message' => 'Import data not found'];
             }

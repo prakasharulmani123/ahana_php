@@ -78,6 +78,7 @@ class PatEncounter extends RActiveRecord {
             ['concession_amount', 'validateConcessionAmount'],
             ['encounter_date', 'validateAdmissionDate'],
             ['encounter_date', 'validateAppointment'],
+            ['encounter_date', 'validateOtherAdmission'],
         ];
     }
 
@@ -105,6 +106,23 @@ class PatEncounter extends RActiveRecord {
 
             if (!empty($result))
                 $this->addError($attribute, "Admission already taken in this date. Kindly choose another date");
+        }
+    }
+
+    //check admission takes place in any other tenant
+    public function validateOtherAdmission($attribute, $params) {
+        if ($this->encounter_type == 'IP') {
+            $result = PatEncounter::find()
+                    ->joinWith('patient')
+                    ->where([
+                        'pat_patient.patient_global_guid' => $this->patient->patient_global_guid,
+                        'pat_encounter.status' => '1',
+                    ])
+                    ->encounterType($this->encounter_type)
+                    ->one();
+
+            if (!empty($result))
+                $this->addError($attribute, "Admission already taken in {$result->tenant->tenant_name}");
         }
     }
 
