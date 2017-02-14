@@ -118,6 +118,7 @@ class PatEncounter extends RActiveRecord {
                         'pat_patient.patient_global_guid' => $this->patient->patient_global_guid,
                         'pat_encounter.status' => '1',
                     ])
+                    ->andWhere(['<>','encounter_id', $this->encounter_id ?: ''])
                     ->encounterType($this->encounter_type)
                     ->one();
 
