@@ -160,6 +160,12 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
         }
 
         $scope.printBillingSummary = function () {
+            if ($scope.bill_type == 'detailed_bill') {
+                var content = $scope.detailedBillSummaryContent();
+            } else {
+                var content = $scope.billSummaryContent();
+            }
+
             return [
                 {
                     colSpan: 6,
@@ -167,7 +173,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                     table: {
                         widths: ['auto', 'auto', '*', 'auto', 'auto', 'auto'],
                         dontBreakRows: true,
-                        body: $scope.billSummaryContent()
+                        body: content
                     }
                 },
                 {},
@@ -179,6 +185,119 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
         }
 
         $scope.billSummaryContent = function () {
+            var bill = [];
+            bill.push([
+                {text: 'Billing Summary:', bold: true, colSpan: 6, decoration: 'underline', margin: [0, 10, 0, 10]},
+                {},
+                {},
+                {},
+                {},
+                {}
+            ]);
+            bill.push([
+                {text: 'Description of service', bold: true, colSpan: 5},
+                {},
+                {},
+                {},
+                {},
+                {text: 'Unit Price', bold: true, alignment:'right'}
+            ]);
+            bill.push([
+                {text: 'Recurring Charges', style: 'rows', colSpan: 5},
+                {},
+                {},
+                {},
+                {},
+                {text: $scope.recurr_billing.total.recurring_total.toFixed(2).toString(), alignment:'right'}
+            ]);
+            bill.push([
+                {text: 'Non-recurring charges', style: 'rows', colSpan: 5},
+                {},
+                {},
+                {},
+                {},
+                {text: $scope.billing.total.price.toFixed(2).toString(), alignment:'right'}
+            ]);
+            
+            bill.push([
+                {
+                    text: 'Gradn Total : ' + (parseFloat($scope.billing.total.price) + parseFloat($scope.recurr_billing.total.recurring_total)).toFixed(2).toString(),
+                    fillColor: '#eeeeee',
+                    bold: true,
+                    margin: [0, 10, 2, 0],
+                    alignment: 'right',
+                    colSpan: 6,
+                },
+                '',
+                '',
+                '',
+                '',
+                '',
+            ]);
+            bill.push([
+                {
+                    text: 'Advance : ' + $scope.billing.total.advance_charge.toFixed(2).toString(),
+                    fillColor: '#eeeeee',
+                    bold: true,
+                    margin: [0, 10, 2, 0],
+                    alignment: 'right',
+                    colSpan: 6,
+                },
+                '',
+                '',
+                '',
+                '',
+                '',
+            ]);
+            bill.push([
+                {
+                    text: 'Room Discount : ' + $scope.enc.selected.concession_amount.toString(),
+                    fillColor: '#eeeeee',
+                    bold: true,
+                    margin: [0, 10, 2, 0],
+                    alignment: 'right',
+                    colSpan: 6,
+                },
+                '',
+                '',
+                '',
+                '',
+                '',
+            ]);
+            bill.push([
+                {
+                    text: 'Other Discount : ' + $scope.billing.total.concession.toFixed(2).toString(),
+                    fillColor: '#eeeeee',
+                    bold: true,
+                    margin: [0, 10, 2, 0],
+                    alignment: 'right',
+                    colSpan: 6,
+                },
+                '',
+                '',
+                '',
+                '',
+                '',
+            ]);
+            bill.push([
+                {
+                    text: 'Net Total : ' + ((parseFloat($scope.billing.total.price) + parseFloat($scope.recurr_billing.total.recurring_total)) - parseFloat($scope.billing.total.advance_charge) - parseFloat($scope.enc.selected.concession_amount)).toFixed(2).toString(),
+                    fillColor: '#eeeeee',
+                    bold: true,
+                    margin: [0, 10, 2, 0],
+                    alignment: 'right',
+                    colSpan: 6,
+                },
+                '',
+                '',
+                '',
+                '',
+                '',
+            ]);
+            return bill;
+        }
+
+        $scope.detailedBillSummaryContent = function () {
             var bill = [];
             var detailed_billing = {
                 total: {
@@ -546,7 +665,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
         }
 
         //Detailed Bill Content
-        $scope.printDetailedBill = function () {
+        $scope.printIPBill = function () {
             var content = [
                 {
                     table: {
@@ -565,11 +684,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
 
         $scope.printBill = function () {
             $timeout(function () {
-                if ($scope.bill_type == 'detailed_bill') {
-                    var print_content = $scope.printDetailedBill();
-                } else {
-                    var print_content = $scope.printBillSummary();
-                }
+                var print_content = $scope.printIPBill();
 
                 if (print_content.length > 0) {
                     var docDefinition = {
