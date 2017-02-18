@@ -211,7 +211,11 @@ class DefaultController extends Controller {
     public function actionUpdatebillingmanually() {
         $post = Yii::$app->request->post();
         if (!empty($post)) {
-            $active_encounters = PatEncounter::find()->tenant($post['tenant_id'])->status()->active();
+            $status = 1;
+            if (isset($post['enc_status']) && $post['enc_status'] != '') {
+                $status = $post['enc_status'];
+            }
+            $active_encounters = PatEncounter::find()->tenant($post['tenant_id'])->status($status)->active();
             if (isset($post['encounter_id']) && $post['encounter_id'] != '') {
                 $active_encounters->andWhere(['encounter_id' => $post['encounter_id']]);
             }
@@ -226,6 +230,7 @@ class DefaultController extends Controller {
                 $nearest_admission = \common\models\PatAdmission::find()
                         ->andWhere(['encounter_id' => $active_encounter->encounter_id])
                         ->andWhere("DATE(status_date) <='" . $recurr_date . "'")
+                        ->andWhere(['not in','admission_status', ['C', 'CD', 'D']])
                         ->orderBy(['created_at' => SORT_DESC])
                         ->one();
                
