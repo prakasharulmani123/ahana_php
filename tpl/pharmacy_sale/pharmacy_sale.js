@@ -1020,17 +1020,17 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                     columns: [
                         {
                             text: [
-                                {text: 'Pt. Name ', bold: true, fontSize: '9'},
-                                {text: sale_info.patient_name, fontSize: '9'},
+                                {text: 'Pt. Name ', bold: true},
+                                sale_info.patient_name
                             ],
-//                            margin: [0, 0, 0, 20]
+                            margin: [0, 0, 0, 20]
                         },
                         {
                             text: [
-                                {text: 'No: ', bold: true, fontSize: '9'},
-                                {text: sale_info.bill_no + "/" + sale_info.payment_type_name, fontSize: '9'},
+                                {text: 'No: ', bold: true},
+                                sale_info.bill_no + "/" + sale_info.payment_type_name
                             ],
-//                            margin: [0, 0, 0, 20]
+                            margin: [0, 0, 0, 20]
                         }
 
                     ]
@@ -1038,19 +1038,17 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                     columns: [
                         {
                             text: [
-                                {text: 'Address: ', bold: true, fontSize: '9'},
-                                {text: "Test address", fontSize: '9'}
-                                
+                                {text: 'Address: ', bold: true},
+                                "Test address"
                             ],
-//                            margin: [0, 0, 0, 20]
+                            margin: [0, 0, 0, 20]
                         },
                         {
                             text: [
-                                {text: ' Date: ', bold: true, fontSize: '9'},
-                                {text: generated_on, fontSize: '9'}
-                                
+                                {text: ' Date: ', bold: true},
+                                generated_on
                             ],
-//                            margin: [0, 0, 0, 20]
+                            margin: [0, 0, 0, 20]
                         }
                     ]
                 }, {
@@ -1088,10 +1086,8 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                         footer: $scope.printFooter(),
                         styles: $scope.printStyle(),
                         content: print_content,
-                        pageSize: {width: 3.5 * 72, height: 8 * 72},
-                        pageOrientation: 'landscape', //portrait
-                        pageMargins: [ 10, 0, 2, 0 ],
-
+                        pageSize: {width: 4 * 72, height: 8 * 72},
+                        pageOrientation: 'landscape',
                     };
                     var pdf_document = pdfMake.createPdf(docDefinition);
                     var doc_content_length = Object.keys(pdf_document).length;
