@@ -499,3 +499,7 @@ out-patient-table .table > thead > tr > th label.i-checks{
 .r-v-top > td{
     vertical-align: top !important;
 }
+
+.app-content3 .app-content-body {
+    padding-bottom: 0px;
+}
