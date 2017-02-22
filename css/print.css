@@ -101,21 +101,27 @@
     width:100%;
     float:left;
     border-bottom:#bbbbbb solid 1px;
-    margin-bottom:25px;
+    margin-bottom:5px;
 }
 
 #logo {
     width:35%;
     float:left;
     float: left;
-    margin-top: 8px;
-    margin-bottom:25px;
+    /*margin-top: 8px;*/
+    margin-bottom:5px;
 }
 
 
 #logo h1
 {
     font-size:20px;
+}
+
+
+#logo .date {
+    font-size: 1.1em;
+    color: #777777;
 }
 
 .bill-heading
@@ -128,6 +134,8 @@
 {
     font-weight:normal;
     font-size:20px;
+    margin-bottom: 5px;
+    margin-top: 0px;
 }
 
 #logo img {
@@ -138,7 +146,7 @@
     float: right;
     width:35%;
     text-align: right;
-    margin-bottom:25px;
+    margin-bottom:5px;
 }
 
 
@@ -146,7 +154,7 @@
 #patient-detail {
     float: left;
     width:100%;
-    margin-bottom:25px;
+    margin-bottom:5px;
     border-bottom:#bbbbbb solid 1px;
 }
 
@@ -191,13 +199,13 @@
     width: 100%;
     border-collapse: collapse;
     border-spacing: 0;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
 
 .bill-cont table th,
 .bill-cont table td {
-    padding: 15px;
-    background: #EEEEEE;
+    padding: 5px;
+    /*background: #EEEEEE;*/
     border-bottom: 1px solid #FFFFFF;
 }
 

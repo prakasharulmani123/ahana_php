@@ -6,6 +6,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
 //        
         $scope.report_generated_date = moment().format('DD/MM/YYYY');
         $scope.app = scope.app;
+        $scope.report_generated_by = $scope.app.username;
         $scope.patientObj = scope.patientObj;
         $scope.billing = scope.billing;
         $scope.recurr_billing = scope.recurr_billing;
@@ -192,7 +193,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                 {},
                 {},
                 {},
-                {text: 'Unit Price', bold: true, alignment:'right'}
+                {text: 'Unit Price', bold: true, alignment: 'right'}
             ]);
             bill.push([
                 {text: 'Recurring Charges', style: 'rows', colSpan: 5},
@@ -200,7 +201,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                 {},
                 {},
                 {},
-                {text: $scope.recurr_billing.total.recurring_total.toFixed(2).toString(), alignment:'right'}
+                {text: $scope.recurr_billing.total.recurring_total.toFixed(2).toString(), alignment: 'right'}
             ]);
             bill.push([
                 {text: 'Non-recurring charges', style: 'rows', colSpan: 5},
@@ -208,9 +209,9 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                 {},
                 {},
                 {},
-                {text: $scope.billing.total.price.toFixed(2).toString(), alignment:'right'}
+                {text: $scope.billing.total.price.toFixed(2).toString(), alignment: 'right'}
             ]);
-            
+
             bill.push([
                 {
                     text: 'Gradn Total : ' + (parseFloat($scope.billing.total.price) + parseFloat($scope.recurr_billing.total.recurring_total)).toFixed(2).toString(),
