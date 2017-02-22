@@ -21,7 +21,7 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
 
             // Get data's from service
-            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacysalereturn')
+            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacysalereturn?addtfields=sale_return_list')
                     .success(function (saleList) {
                         $scope.isLoading = false;
                         $scope.rowCollection = saleList;
@@ -74,7 +74,7 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
         $scope.getSaleReturnItems = function () {
             $scope.saleItems = [];
             var sale_id = $scope.data.sale_id;
-            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacysales/' + sale_id)
+            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacysales/' + sale_id+ "?addtfields=sale_return")
                     .success(function (result) {
                         $scope.data.sale_date = result.sale_date;
                         $scope.data.patient_id = result.patient_id;
@@ -408,7 +408,7 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
             _that = this;
             $scope.errorData = "";
             $http({
-                url: $rootScope.IRISOrgServiceUrl + "/pharmacysalereturns/" + $state.params.id,
+                url: $rootScope.IRISOrgServiceUrl + "/pharmacysalereturns/" + $state.params.id+ "?addtfields=sale_return",
                 method: "GET"
             }).success(
                     function (response) {
