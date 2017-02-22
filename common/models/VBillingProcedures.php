@@ -12,6 +12,7 @@ use Yii;
  * @property integer $patient_id
  * @property integer $category_id
  * @property string $category
+ * @property string $date
  * @property string $headers
  * @property string $charge
  * @property string $visit_count
@@ -41,7 +42,8 @@ class VBillingProcedures extends \common\models\RActiveRecord
             [['charge', 'total_charge', 'extra_amount', 'concession_amount'], 'number'],
             [['category'], 'string', 'max' => 17],
             [['headers'], 'string', 'max' => 50],
-            [['trans_mode'], 'string', 'max' => 1]
+            [['trans_mode'], 'string', 'max' => 1],
+            [['date'], 'safe'],
         ];
     }
 
@@ -63,6 +65,7 @@ class VBillingProcedures extends \common\models\RActiveRecord
             'total_charge' => 'Total Charge',
             'extra_amount' => 'Extra Amount',
             'concession_amount' => 'Concession Amount',
+            'date' => 'Date',
         ];
     }
 }

@@ -40,7 +40,8 @@ class VBillingOtherCharges extends \common\models\RActiveRecord
             [['tenant_id', 'encounter_id', 'patient_id', 'category_id', 'visit_count', 'extra_amount', 'concession_amount'], 'integer'],
             [['charge', 'total_charge'], 'number'],
             [['category', 'headers'], 'string', 'max' => 50],
-            [['trans_mode'], 'string', 'max' => 1]
+            [['trans_mode'], 'string', 'max' => 1],
+            [['date'], 'safe'],
         ];
     }
 

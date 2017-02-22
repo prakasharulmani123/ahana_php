@@ -41,7 +41,8 @@ class VBillingProfessionals extends \common\models\RActiveRecord
             [['charge', 'total_charge', 'extra_amount', 'concession_amount'], 'number'],
             [['category'], 'string', 'max' => 20],
             [['headers'], 'string', 'max' => 50],
-            [['trans_mode'], 'string', 'max' => 1]
+            [['trans_mode'], 'string', 'max' => 1],
+            [['date'], 'safe'],
         ];
     }
 
