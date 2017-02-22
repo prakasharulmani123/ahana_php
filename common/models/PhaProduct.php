@@ -378,6 +378,18 @@ class PhaProduct extends RActiveRecord {
                         'product_id' => 'product_id',
                     ];
                     break;
+                case 'sale_return':
+                    $addt_keys = ['full_name'];
+                    $parent_fields = [
+                        'product_id' => 'product_id',
+                    ];
+                    break;
+                case 'sale_return_list':
+                    $addt_keys = ['full_name'];
+                    $parent_fields = [
+                        'product_id' => 'product_id',
+                    ];
+                    break;
             endswitch;
         }
 

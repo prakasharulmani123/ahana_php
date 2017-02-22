@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\models\query\PhaSaleReturnQuery;
+use Yii;
 use yii\db\ActiveQuery;
 use yii\helpers\ArrayHelper;
 
@@ -39,6 +40,7 @@ use yii\helpers\ArrayHelper;
 class PhaSaleReturn extends RActiveRecord {
 
     public $noitem = false;
+
     /**
      * @inheritdoc
      */
@@ -65,7 +67,7 @@ class PhaSaleReturn extends RActiveRecord {
         if ($this->noitem)
             $this->addError($attribute, "Select atleast one item to return");
     }
-    
+
     /**
      * @inheritdoc
      */
@@ -136,7 +138,7 @@ class PhaSaleReturn extends RActiveRecord {
 
         return parent::afterSave($insert, $changedAttributes);
     }
-    
+
     public static function find() {
         return new PhaSaleReturnQuery(get_called_class());
     }
@@ -156,8 +158,27 @@ class PhaSaleReturn extends RActiveRecord {
                 return (isset($model->sale) ? $model->sale->bill_no : '-');
             },
         ];
-        $fields = array_merge(parent::fields(), $extend);
-        return $fields;
+        $parent_fields = parent::fields();
+        $addt_keys = [];
+        if ($addtField = Yii::$app->request->get('addtfields')) {
+            switch ($addtField):
+                case 'sale_return_list':
+                    $addt_keys = ['patient', 'items'];
+                    $parent_fields = [
+                        'sale_ret_id' => 'sale_ret_id',
+                        'sale_id' => 'sale_id',
+                        'bill_no' => 'bill_no',
+                        'sale_date' => 'sale_date',
+                        'total_item_sale_amount' => 'total_item_sale_amount',
+                        'total_item_discount_amount' => 'total_item_discount_amount',
+                        'roundoff_amount' => 'roundoff_amount',
+                        'bill_amount' => 'bill_amount',
+                    ];
+                    break;
+            endswitch;
+        }
+        $extFields = ($addt_keys) ? array_intersect_key($extend, array_flip($addt_keys)) : $extend;
+        return array_merge($parent_fields, $extFields);
     }
 
     public function getSaleReturnItemIds() {
