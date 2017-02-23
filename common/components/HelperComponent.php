@@ -167,25 +167,41 @@ class HelperComponent extends Component {
         if (empty($room_charges))
             return;
 
-        foreach ($room_charges as $key => $charge) {
-            $data = [
-                'encounter_id' => $admission->encounter_id,
-                'patient_id' => $admission->patient_id,
-                'room_type_id' => $admission->room_type_id,
-                'room_type' => $admission->roomType->room_type_name,
-                'charge_item_id' => $charge->charge_item_id,
-                'charge_item' => $charge->roomChargeItem->charge_item_name,
-                'recurr_date' => $admission->status_date,
-                'charge_amount' => $this->_getChargeAmount($admission, $charge),
-                'recurr_group' => $admission->admn_id,
-            ];
-            $this->_insertRecurringModel($data);
+        // Admission may be Old date or Today
+        $from_date = date('Y-m-d', strtotime($admission->status_date));
+        $to_date = date('Y-m-d');
+        $diff_days = $this->_getDayDiff($from_date, $to_date);
+        for ($i = 0; $i <= $diff_days; $i++) {
+            $recurr_date = date('Y-m-d', strtotime($admission->status_date . "+$i days"));
+            //Check Recurring Exists on that date
+            $current_recurring = PatBillingRecurring::find()
+                    ->select(['SUM(charge_amount) as charge_amount', 'room_type_id'])
+                    ->tenant($admission->tenant_id)
+                    ->andWhere(['encounter_id' => $admission->encounter_id, 'recurr_date' => $recurr_date])
+                    ->groupBy(['recurr_date', 'room_type_id'])
+                    ->one();
+            if (empty($current_recurring)) {
+                foreach ($room_charges as $key => $charge) {
+                    $data = [
+                        'encounter_id' => $admission->encounter_id,
+                        'patient_id' => $admission->patient_id,
+                        'room_type_id' => $admission->room_type_id,
+                        'room_type' => $admission->roomType->room_type_name,
+                        'charge_item_id' => $charge->charge_item_id,
+                        'charge_item' => $charge->roomChargeItem->charge_item_name,
+                        'recurr_date' => $recurr_date,
+                        'charge_amount' => $this->_getChargeAmount($admission, $charge),
+                        'recurr_group' => $admission->admn_id,
+                    ];
+                    $this->_insertRecurringModel($data);
+                }
+            }
         }
     }
 
     public function transferRecurring($admission) {
         $today = date("Y-m-d");
-        if ($admission->status_date == $today) { 
+        if ($admission->status_date == $today) {
             // Normal Transfering
             $recurr_date = date('Y-m-d', strtotime($admission->status_date));
             //Check Recurring Exists on that date
@@ -212,7 +228,7 @@ class HelperComponent extends Component {
                     }
                 }
             }
-        } else if (strtotime($admission->status_date) < strtotime($today)) { 
+        } else if (strtotime($admission->status_date) < strtotime($today)) {
             // Transfering to old date
             $from_date = date('Y-m-d', strtotime($admission->status_date));
             $to_date = date('Y-m-d');
