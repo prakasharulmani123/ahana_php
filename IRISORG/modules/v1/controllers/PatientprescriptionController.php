@@ -99,8 +99,12 @@ class PatientprescriptionController extends ActiveController {
                     $item_model->setRouteId();
                     $item_model->save(false);
                 }
-
-                return ['success' => true, 'date' => date('d-M-Y H:i'), 'model' => $model];
+                
+                $consult_name = '';
+                if(isset($model->consultant)){
+                    $consult_name = $model->consultant->title_code .  $model->consultant->name;
+                }
+                return ['success' => true, 'date' => date('d-M-Y H:i'), 'model' => ['consultant_name' => $consult_name]];
             } else {
                 return ['success' => false, 'message' => Html::errorSummary([$model, $item_model])];
             }
