@@ -183,7 +183,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         }
 
         $scope.getGeneric = function ($item, $model, $label) {
-            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/getgenericlistbydrugclass?drug_class_id=' + $item.drug_class_id)
+            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/getgenericlistbydrugclass?drug_class_id=' + $item.drug_class_id + '&addtfields=presc_search')
                     .success(function (response) {
                         $scope.generics = response.genericList;
                         $scope.products = $scope.allproducts = response.productList;
@@ -289,8 +289,9 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     if (fav.length > 0) {
                         angular.extend(items, {is_favourite: 1});
                     }
-
+                    
                     PrescriptionService.addPrescriptionItem(items);
+                    console.log(PrescriptionService.getPrescriptionItems());
                     $scope.data.prescriptionItems = PrescriptionService.getPrescriptionItems();
                     $scope.showOrhideFrequency(items.frequency.length);
 
@@ -718,10 +719,10 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         $scope.all_products = products;
 
                         if (typeof date == 'undefined') {
-                            url = $rootScope.IRISOrgServiceUrl + '/patientprescription/getpreviousprescription?patient_id=' + $state.params.id;
+                            url = $rootScope.IRISOrgServiceUrl + '/patientprescription/getpreviousprescription?patient_id=' + $state.params.id + '&addtfields=prev_presc';
                         } else {
                             date = moment(date).format('YYYY-MM-DD');
-                            url = $rootScope.IRISOrgServiceUrl + '/patientprescription/getpreviousprescription?patient_id=' + $state.params.id + '&date=' + date;
+                            url = $rootScope.IRISOrgServiceUrl + '/patientprescription/getpreviousprescription?patient_id=' + $state.params.id + '&date=' + date + '&addtfields=prev_presc';
                         }
 
                         // Get data's from service
