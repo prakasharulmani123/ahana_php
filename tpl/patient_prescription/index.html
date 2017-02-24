@@ -1,40 +1,18 @@
 <div ng-controller="PrescriptionController">
     <div class="hbox hbox-auto-xs hbox-auto-sm">
+        <!-- CURRENT -->
         <div class="col" ng-show="pres_status == 'current'">
             <div class="bg-light lter b-b wrapper-md" style="width:100%;float:left; padding:10px; padding-bottom:0px; margin-bottom:15px;">
                 <div class="col-sm-3 m-b-xs">  <h1 class="m-n h3">Prescription</h1> </div>
                 <div class="col-sm-3 m-b-xs pull-right right" ng-if="all_encounters.length > 1">
                     <b> Encounter Id : </b>&nbsp;&nbsp;&nbsp;
-                    <select style="width: 50%" class="form-control pull-right" ng-model="data.encounter_id" ng-options="all_encounter.encounter_id as all_encounter.encounter_id for all_encounter in all_encounters | orderBy: encounter_id">
+                    <select style="width: 50%" class="form-control pull-right" ng-model="data.encounter_id" ng-options="all_encounter.encounter_id as all_encounter.encounter_id for all_encounter in all_encounters| orderBy: encounter_id">
                     </select>
                 </div>
                 <div class="col-sm-3 m-b-xs pull-right right" ng-if="all_encounters.length == 1">
                     <b> Encounter Id : </b> {{enc.selected.encounter_id}}
                 </div>
             </div>
-            <!--            <div class="bg-light lter b-b wrapper-md prescrip-header">
-                            <div class="col-sm-2 m-b-xs">  <h1 class="m-n h3">Prescription</h1> </div>
-                            <div class="col-sm-2 m-b-xs right">  <b>Encounter Id:</b> </div>
-                            <div class="col-sm-3 m-b-xs">
-                                <div class="btn-group btn-group-justified">
-                                    <ui-select ng-model="enc.selected" theme="bootstrap">
-                                        <ui-select-match placeholder="Select Encounter Id">{{$select.selected.encounter_id}}</ui-select-match>
-                                        <ui-select-choices repeat="item in encounters | filter: $select.search | orderBy: 'encounter_id' : true">
-                                            <div ng-bind-html="item.encounter_id | highlight: $select.search"></div>
-                                        </ui-select-choices>
-                                    </ui-select>
-                                    <br />
-                                </div>
-                            </div>
-                            <div class="col-sm-3 m-b-xs">
-                                <select class="form-control" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors | orderBy: name" ng-change="getTimeOfAppointment();">
-                                    <option value="">Select Consultant</option>
-                                </select>
-                            </div>
-                            <div class="col-sm-2 m-b-xs"> 
-                                <button class="btn m-b-xs  btn-dark">  <i class="fa fa-times"></i> Clear </button>
-                            </div>
-                        </div>-->
             <div class="wrapper-md p-b">
                 <div class="row">
                     <div class="col-sm-12">
@@ -79,7 +57,7 @@
                                                                 </div>
                                                                 <div class="col-sm-3">
                                                                     <label> Generic </label>
-                                                                    <select class="form-control" name="Generic" ng-model="addData.generic" ng-options="generic as generic.generic_name for generic in generics | filter:$viewValue" data-ng-change="getProduct(false, null, null)">
+                                                                    <select class="form-control" name="Generic" ng-model="addData.generic" ng-options="generic as generic.generic_name for generic in generics| filter:$viewValue" data-ng-change="getProduct(false, null, null)">
                                                                         <option value="">Select Generic</option>
                                                                     </select>
                                                                     <!--                                                                    <input autocomplete="off"
@@ -93,8 +71,8 @@
                                                                 </div>
                                                                 <div class="col-sm-3">
                                                                     <label> Product</label>
-                                                                    <select class="form-control" name="Product" ng-model="addData.product" ng-options="product as product.full_name for product in products | filter:$viewValue" data-ng-change="setGeneric();
-                                                                                        getRoutes(false, null, null)">
+                                                                    <select class="form-control" name="Product" ng-model="addData.product" ng-options="product as product.full_name for product in products| filter:$viewValue" data-ng-change="setGeneric();
+                                                                                            getRoutes(false, null, null)">
                                                                         <option value="">Select Product</option>
                                                                     </select>
                                                                     <!--                                                                    <input autocomplete="off"
@@ -121,7 +99,7 @@
                                                                 </div>
                                                                 <div class="col-sm-3">
                                                                     <label> Route </label>
-                                                                    <select class="form-control" name="Route" ng-model="addData.route" ng-options="route as route.route_name for route in routes | filter:$viewValue">
+                                                                    <select class="form-control" name="Route" ng-model="addData.route" ng-options="route as route.route_name for route in routes| filter:$viewValue">
                                                                         <option value="">Select Route</option>
                                                                     </select>
                                                                     <!--                                                                    <input autocomplete="off" 
@@ -151,7 +129,7 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-2">
-                                    <select class="form-control" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors | orderBy: name" ng-change="getTimeOfAppointment();">
+                                    <select class="form-control" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors| orderBy: name">
                                         <option value="">Select Consultant</option>
                                     </select>
                                 </div>
@@ -540,7 +518,7 @@
                                             <div class="form-group">
                                                 <label for="exampleInputEmail2"><i class="fa fa-calendar"></i> <b> Next Vist </b></label>
                                                 <input type="text" class="form-control multimonthdatepicker" ng-model="data.next_visit" ng-click="open($event)" prevent-enter="true" ng-change="setDayEmpty();
-                                                                    getDays();"/>    
+                                                            getDays();"/>    
                                             </div>
 
                                             <div class="form-group">
@@ -548,7 +526,7 @@
                                                     <i class="fa fa-calendar-o"></i> <b> No.of.Days </b>
                                                 </label>
                                                 <input autocomplete="off" type="text" ng-model="data.number_of_days" class="form-control m-b" number-mask="" ng-change="setDateEmpty();
-                                                                    getVisit();">    
+                                                                getVisit();">    
                                             </div>
 
                                             <div class="form-group">
@@ -597,7 +575,7 @@
                                 </div>
                                 <div class="col-sm-3">
                                     <button ng-click="filterdate = '';
-                                                loadPrevPrescriptionsList()" class="btn m-b-xs  btn-dark">  
+                                            loadPrevPrescriptionsList()" class="btn m-b-xs  btn-dark">  
                                         <i class="fa fa-times"></i> 
                                     </button>
                                 </div> 
@@ -725,31 +703,31 @@
 </div>
 
 <script>
-            $(document).ready(function () {
-    $('#search-form').on('click', function (e) {
-    e.stopPropagation();
-    });
-            $.getScript("js/slidebars.js", function (data, textStatus, jqxhr) {
+    $(document).ready(function () {
+        $('#search-form').on('click', function (e) {
+            e.stopPropagation();
+        });
+        $.getScript("js/slidebars.js", function (data, textStatus, jqxhr) {
             slidebar();
-            });
+        });
 //        prescription right navigation
-            $('.expand-notes').click(function (e) {
-    $('#makeit-full').toggleClass('fullscreen');
+        $('.expand-notes').click(function (e) {
+            $('#makeit-full').toggleClass('fullscreen');
             $('.note-full').toggleClass('fullscreen');
             var div_width = '-' + $('#makeit-full').css('width');
             $('#sb-site').css('transform', 'translate(' + div_width + ')');
             $('#sb-site').css('transition', 'none');
-    });
-            $(".multimonthdatepicker").datepicker({
-    numberOfMonths: 2,
+        });
+        $(".multimonthdatepicker").datepicker({
+            numberOfMonths: 2,
             showButtonPanel: true,
             dateFormat: 'yy-mm-dd',
             minDate: 0
+        });
     });
-    });
-            function slidebar() {
-            $.slidebars({
+    function slidebar() {
+        $.slidebars({
             scrollLock: true
-            });
-            }
+        });
+    }
 </script>

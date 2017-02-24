@@ -363,10 +363,10 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     angular.extend(prescription, {is_favourite: 1});
                 }
 
-                var fiter = $filter('filter')($scope.all_products, {product_id: prescription.product_id});
+                var fiter = $filter('filter')($scope.all_products, {product_id: parseInt(prescription.product_id)}, true);
                 var product = fiter[0];
-
-                $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproducts/' + product.product_id)
+                var Fields = 'full_name,description_routes,latest_price,availableQuantity';
+                $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproducts/' + product.product_id + '?fields=' + Fields)
                         .success(function (product) {
                             items = {
                                 'product_id': prescription.product_id,
