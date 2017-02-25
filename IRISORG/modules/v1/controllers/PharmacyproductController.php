@@ -306,10 +306,9 @@ class PharmacyproductController extends ActiveController {
                     ON b.generic_id = a.generic_id
                     LEFT OUTER JOIN pha_drug_class c
                     ON c.drug_class_id = a.drug_class_id
-                    WHERE a.tenant_id = :tenant_id
-                    AND MATCH(a.product_name) AGAINST(:search_text IN BOOLEAN MODE)
-                    AND (MATCH(b.generic_name) AGAINST(:search_text IN BOOLEAN MODE)
-                    OR MATCH(c.drug_name) AGAINST(:search_text IN BOOLEAN MODE))
+                    WHERE (a.tenant_id = :tenant_id AND MATCH(a.product_name) AGAINST(:search_text IN NATURAL LANGUAGE MODE))
+                    AND (b.tenant_id = :tenant_id AND MATCH(b.generic_name) AGAINST(:search_text IN NATURAL LANGUAGE MODE))
+                    OR (c.tenant_id = :tenant_id AND MATCH(c.drug_name) AGAINST(:search_text IN NATURAL LANGUAGE MODE))
                     ORDER BY a.product_name
                     LIMIT 0,:limit", [':search_text' => $text_search . '*', ':limit' => $limit, ':tenant_id' => $tenant_id]
             );
@@ -337,10 +336,9 @@ class PharmacyproductController extends ActiveController {
                     ON b.generic_id = a.generic_id
                     LEFT OUTER JOIN pha_drug_class c
                     ON c.drug_class_id = a.drug_class_id
-                    WHERE a.tenant_id = :tenant_id
-                    AND MATCH(a.product_name) AGAINST(:search_text IN BOOLEAN MODE)
-                    OR MATCH(b.generic_name) AGAINST(:search_text IN BOOLEAN MODE)
-                    OR MATCH(c.drug_name) AGAINST(:search_text IN BOOLEAN MODE)
+                    WHERE (a.tenant_id = :tenant_id AND MATCH(a.product_name) AGAINST(:search_text IN NATURAL LANGUAGE MODE))
+                    OR (b.tenant_id = :tenant_id AND MATCH(b.generic_name) AGAINST(:search_text IN NATURAL LANGUAGE MODE))
+                    OR (c.tenant_id = :tenant_id AND MATCH(c.drug_name) AGAINST(:search_text IN NATURAL LANGUAGE MODE))
                     ORDER BY a.product_name
                     LIMIT 0,:limit", [':search_text' => $text_search . '*', ':limit' => $limit, ':tenant_id' => $tenant_id]
             );
@@ -397,7 +395,7 @@ class PharmacyproductController extends ActiveController {
                     FROM pat_prescription_route a
                     JOIN pha_descriptions_routes b
                     ON a.route_id = b.route_id
-                    WHERE MATCH(a.route_name) AGAINST(:search_text IN BOOLEAN MODE)
+                    WHERE MATCH(a.route_name) AGAINST(:search_text IN NATURAL LANGUAGE MODE)
                     AND a.tenant_id = :tenant_id
                     GROUP BY a.route_name
                     ORDER BY a.route_name
