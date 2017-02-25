@@ -17,6 +17,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         };
 
         $scope.$watch('patientObj.patient_id', function (newValue, oldValue) {
+            $scope.spinnerbar('show');
             if (typeof newValue !== 'undefined' && newValue != '') {
                 $rootScope.commonService.GetEncounterListByPatient('', '0,1', false, $scope.patientObj.patient_id, function (response) {
                     angular.forEach(response, function (resp) {
@@ -24,6 +25,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     });
                     $scope.encounters = response;
                     if (response != null) {
+                        $scope.spinnerbar('hide');
                         $scope.enc.selected = $scope.encounters[0];
                         if ($scope.encounters[0].encounter_type == 'IP') {
                             $scope.data.consultant_id = $scope.encounters[0].liveAdmission.consultant_id;
@@ -40,7 +42,9 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         }, true);
 
         $scope.$watch('enc.selected.encounter_id', function (newValue, oldValue) {
+            $scope.spinnerbar('show');
             if (newValue != '' && typeof newValue != 'undefined') {
+                $scope.spinnerbar('hide');
                 PrescriptionService.setPatientId($scope.patientObj.patient_id);
                 $scope.loadPrevPrescriptionsList();
                 $scope.loadSideMenu();
@@ -289,9 +293,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     if (fav.length > 0) {
                         angular.extend(items, {is_favourite: 1});
                     }
-                    
+
                     PrescriptionService.addPrescriptionItem(items);
-                    console.log(PrescriptionService.getPrescriptionItems());
                     $scope.data.prescriptionItems = PrescriptionService.getPrescriptionItems();
                     $scope.showOrhideFrequency(items.frequency.length);
 
@@ -708,6 +711,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.enabled_dates = [];
         $scope.loadPrevPrescriptionsList = function (date) {
             $scope.isLoading = true;
+            $scope.spinnerbar('show');
             // pagination set up
 
             $scope.rowCollection = [];  // base collection
@@ -729,6 +733,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         $http.get(url)
                                 .success(function (prescriptionList) {
                                     $scope.isLoading = false;
+                                    $scope.spinnerbar('hide');
                                     $scope.rowCollection = prescriptionList.prescriptions;
 
                                     if ($scope.rowCollection.length > 0) {
@@ -750,7 +755,6 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                             if (typed_prescription.length > 0) {
                                                 $scope.data.prescriptionItems = typed_prescription;
                                             } else {
-                                                console.log('Yepp');
                                                 angular.forEach($scope.rowCollection[0].items, function (item, k) {
                                                     items = {
                                                         'product_id': item.product_id,
@@ -971,12 +975,6 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.lastSelected = {};
 
         $("body").on('keydown', '#prescription_global_search', function (e) {
-            if (e.keyCode == 13) { // enter
-                if ($("#prescriptioncont-header").is(":visible")) {
-                    $scope.selectOption();
-                }
-            }
-
             var selected = $("#prescriptioncont-header .selected");
             var li_count = $("#prescriptioncont-header li").length;
 
@@ -988,27 +986,25 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
                 if (li_count == 1) {
                     var selected = $("#prescriptioncont-header li:first");
-                    selected.addClass('selected');
+//                    selected.addClass('selected');
                 }
-            }
 
-            if (e.keyCode == 38) { // up
-                if (selected.prev().length == 0) {
-                    selected.siblings().last().addClass("selected");
-                } else {
-                    selected.prev().addClass("selected");
+                if (e.keyCode == 38) { // up
+                    if (selected.prev().length == 0) {
+                        selected.siblings().last().addClass("selected");
+                    } else {
+                        selected.prev().addClass("selected");
+                    }
                 }
-            }
 
-            if (e.keyCode == 40) { // down
-                if (selected.next().length == 0) {
-                    selected.siblings().first().addClass("selected");
-                } else {
-                    selected.next().addClass("selected");
+                if (e.keyCode == 40) { // down
+                    if (selected.next().length == 0) {
+                        selected.siblings().first().addClass("selected");
+                    } else {
+                        selected.next().addClass("selected");
+                    }
                 }
-            }
-
-            if (e.keyCode == 40 || e.keyCode == 38) {
+                
                 var a = $("#prescriptioncont-header .selected a");
                 if (a.length > 0) {
                     $scope.lastSelected = $scope.prescription_lists[a.data('key')];
@@ -1024,6 +1020,12 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             if ($(this).val() == '') {
                 $scope.lastSelected = {};
             }
+
+            if (e.keyCode == 13) { // enter
+                if ($("#prescriptioncont-header").is(":visible")) {
+                    $scope.selectOption();
+                }
+            }
         });
 
         $("body").on("mouseover", "#prescriptioncont-header li", function () {
@@ -1038,6 +1040,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
             var Selected = $scope.prescription_lists[link_tag.data('key')];
             $('#prescription_global_search').val(Selected.prescription);
+
             if (link_tag.length > 0) {
                 $(link_tag).trigger("click");
             } else {
