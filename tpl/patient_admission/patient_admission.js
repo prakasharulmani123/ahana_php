@@ -43,7 +43,7 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
                     $state.go("patient.encounter", {id: $state.params.id});
                 }
                 $scope.showForm = true;
-                
+
                 $rootScope.commonService.GetDischargeTypes(function (response) {
                     $scope.dischargeTypes = response;
                 });
@@ -137,7 +137,28 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
         }, true);
 
         $scope.initTransferForm = function () {
-            $scope.transferTypes = [{'value': 'TD', 'label': 'Consultant'}, {'value': 'TR', 'label': 'Room'}];
+            $scope.transferTypes = [
+                {'value': 'TD', 'label': 'Consultant'},
+                {'value': 'TR', 'label': 'Room'},
+                {'value': 'TRT', 'label': 'Room Type'},
+            ];
+
+            // Room Type Transfer
+            $scope.isPatientHaveActiveEncounter(function (response) {
+                $scope.roomDetails = response;
+                $scope.availableTypes = [];
+
+                _that = this;
+                angular.forEach($scope.roomTypesRoomsList, function (value) {
+                    if (value.room_id == response.model.currentAdmission.room_id) {
+                        var obj = {
+                            room_type_id: value.room_type_id,
+                            room_type_name: value.room_type_name
+                        };
+                        $scope.availableTypes.push(obj);
+                    }
+                });
+            });
 
             $timeout(function () {
                 $scope.data.PatAdmission.status_date = moment().format('YYYY-MM-DD HH:mm:ss');
@@ -364,11 +385,17 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
             } else if (mode == 'transfer') {
                 post_url = $rootScope.IRISOrgServiceUrl + '/admissions';
                 //Transfer
-                if (_that.data.PatAdmission.admission_status == 'TD') {
+                if (_that.data.PatAdmission.type_of_transfer == 'TD') {
+                    _that.data.PatAdmission.admission_status = 'TD';
                     succ_msg = "Doctor Transfered successfully";
-                } else if (_that.data.PatAdmission.admission_status == 'TR') {
+                } else if (_that.data.PatAdmission.type_of_transfer == 'TR' || _that.data.PatAdmission.type_of_transfer == 'TRT') {
+                    _that.data.PatAdmission.admission_status = 'TR';
+                    if(_that.data.PatAdmission.type_of_transfer == 'TRT'){
+                        _that.data.PatAdmission.floor_id = $scope.roomDetails.model.currentAdmission.floor_id;
+                        _that.data.PatAdmission.ward_id = $scope.roomDetails.model.currentAdmission.ward_id;
+                        _that.data.PatAdmission.room_id = $scope.roomDetails.model.currentAdmission.room_id;
+                    }
                     succ_msg = "Room Transfered successfully";
-
                 }
             }
             _that.data.PatAdmission.status_date = moment(_that.data.PatAdmission.status_date).format('YYYY-MM-DD HH:mm:ss');
