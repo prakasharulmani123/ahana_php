@@ -45,6 +45,7 @@ class PatAdmission extends RActiveRecord {
     public $swapRoom;
     public $swapRoomId;
     public $swapRoomTypeId;
+    public $type_of_transfer;
 
     /**
      * @inheritdoc
@@ -61,7 +62,7 @@ class PatAdmission extends RActiveRecord {
             [['consultant_id', 'floor_id', 'ward_id', 'room_id', 'room_type_id', 'status_date'], 'required'],
             [['swapPatientId', 'swapRoomId', 'swapRoomTypeId'], 'required', 'on' => 'swap'],
             [['tenant_id', 'patient_id', 'encounter_id', 'consultant_id', 'floor_id', 'ward_id', 'room_id', 'room_type_id', 'created_by', 'modified_by'], 'integer'],
-            [['status_date', 'created_at', 'modified_at', 'deleted_at', 'status_date', 'admission_status', 'is_swap', 'discharge_type'], 'safe'],
+            [['status_date', 'created_at', 'modified_at', 'deleted_at', 'status_date', 'admission_status', 'is_swap', 'discharge_type', 'type_of_transfer'], 'safe'],
             [['status', 'notes'], 'string'],
             ['admission_status', 'validateAdmissionStatus'],
             ['status_date', 'validateStatusDate'],
@@ -77,7 +78,7 @@ class PatAdmission extends RActiveRecord {
 
         if ($this->admission_status == 'TR' && !$this->isSwapping) {
             if ($current_admission->room_id == $this->room_id && $current_admission->room_type_id == $this->room_type_id) {
-                $this->addError($attribute, "Room can't be same. Change the Room");
+                $this->addError($attribute, "Room / Room Type can't be same. Change the Room / Room Type");
             }
         } else if ($this->admission_status == 'TD') {
             if ($current_admission->consultant_id == $this->consultant_id) {
@@ -186,7 +187,7 @@ class PatAdmission extends RActiveRecord {
             $this->setCurrentData();
 
             //Set Old room status to vacant
-            if (($this->admission_status == 'TR' || $this->admission_status == 'D' || $this->admission_status == 'AC') && !$this->isSwapping) {
+            if (($this->admission_status == 'TR' || $this->admission_status == 'D' || $this->admission_status == 'AC') && !$this->isSwapping && (!isset($this->type_of_transfer) || $this->type_of_transfer != 'TRT')) {
                 $this->vacantOldRoomId = $this->encounter->patCurrentAdmission->room_id;
             }
         } else {
