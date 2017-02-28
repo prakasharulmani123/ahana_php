@@ -986,7 +986,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
                 if (li_count == 1) {
                     var selected = $("#prescriptioncont-header li:first");
-//                    selected.addClass('selected');
+                    selected.addClass('selected');
                 }
 
                 if (e.keyCode == 38) { // up
