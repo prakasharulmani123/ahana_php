@@ -651,11 +651,15 @@ class EncounterController extends ActiveController {
         foreach ($bills as $key => $bill) {
             if ($key == 0) {
                 $prev_amount = 0;
+                $prev_concession_amount = 0;
             } else {
                 $prev_amount = $data[$name][$key - 1]['net_amount'];
+                $prev_concession_amount = $data[$name][$key - 1]['concession_net_amount'];
             }
             $data[$name][$key] = $bill->attributes;
-            $data[$name][$key]['net_amount'] = $prev_amount + ($bill->$charge_column + $bill->extra_amount - $bill->concession_amount);
+//            $data[$name][$key]['net_amount'] = $prev_amount + ($bill->$charge_column + $bill->extra_amount - $bill->concession_amount);
+            $data[$name][$key]['net_amount'] = $prev_amount + ($bill->$charge_column + $bill->extra_amount);
+            $data[$name][$key]['concession_net_amount'] = $prev_concession_amount + $bill->concession_amount;
         }
         return $data;
     }
