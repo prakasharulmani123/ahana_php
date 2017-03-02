@@ -287,8 +287,10 @@ class PharmacyproductController extends ActiveController {
             );
         } else {
             //Retrieve (product && generic || drug)
+            //Nad - Changed (product || generic || drug)
             $command = $this->_connection->createCommand("
                     SELECT a.product_id, a.product_name, b.generic_id, b.generic_name, c.drug_class_id, c.drug_name,
+                    MATCH(a.product_name) AGAINST (:search_text IN BOOLEAN MODE) AS score,
                     CONCAT(
                         IF(b.generic_name IS NOT NULL, b.generic_name, ''),
                         IF(a.product_name IS NOT NULL, CONCAT(' // ', a.product_name), ''),
@@ -307,14 +309,15 @@ class PharmacyproductController extends ActiveController {
                     LEFT OUTER JOIN pha_drug_class c
                     ON c.drug_class_id = a.drug_class_id
                     WHERE (a.tenant_id = :tenant_id AND MATCH(a.product_name) AGAINST(:search_text IN BOOLEAN MODE))
-                    AND (b.tenant_id = :tenant_id AND MATCH(b.generic_name) AGAINST(:search_text IN BOOLEAN MODE))
+                    OR (b.tenant_id = :tenant_id AND MATCH(b.generic_name) AGAINST(:search_text IN BOOLEAN MODE))
                     OR (c.tenant_id = :tenant_id AND MATCH(c.drug_name) AGAINST(:search_text IN BOOLEAN MODE))
-                    ORDER BY a.product_name
+                    ORDER BY score DESC, a.product_name
                     LIMIT 0,:limit", [':search_text' => $text_search . '*', ':limit' => $limit, ':tenant_id' => $tenant_id]
             );
         }
-        $products = $command->queryAll();
+        $products = $command->queryAll();        
 
+        //Below not need
         if (empty($products) && !isset($post['product_id'])) {
             //Retrieve (product || generic || drug)
             $command = $this->_connection->createCommand("
