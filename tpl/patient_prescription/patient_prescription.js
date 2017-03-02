@@ -356,10 +356,13 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         }
 
         $scope.addGlobalSearch = function (prescription) {
-            var result = $filter('filter')($scope.data.prescriptionItems, {product_id: prescription.product_id});
+            var result = $filter('filter')($scope.data.prescriptionItems, {product_id: prescription.product_id}, true);
 
             if (result.length > 0) {
                 alert('This Product already added');
+                $scope.prescription_lists = {};
+                $scope.lastSelected = {};
+                $scope.prescription = '';
             } else {
                 var fav = $filter('filter')($scope.child.favourites, {product_id: prescription.product_id});
 
@@ -406,12 +409,13 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                 } else {
                                     $scope.setFocus('number_of_days', $scope.data.prescriptionItems.length - 1);
                                 }
-                                $scope.prescription = '';
+                                
                                 if (typeof prescription.frequency != 'undefined')
                                     $scope.showOrhideFrequency(prescription.frequency.length);
                             });
                             $scope.prescription_lists = {};
                             $scope.lastSelected = {};
+                            $scope.prescription = '';
                         });
             }
         }
@@ -1004,7 +1008,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         selected.next().addClass("selected");
                     }
                 }
-                
+
                 var a = $("#prescriptioncont-header .selected a");
                 if (a.length > 0) {
                     $scope.lastSelected = $scope.prescription_lists[a.data('key')];
