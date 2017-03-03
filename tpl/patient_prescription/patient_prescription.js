@@ -173,6 +173,14 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         $scope.errorData = "An Error has occured while loading drugclass!";
                     });
 
+            $http.get($rootScope.IRISOrgServiceUrl + '/genericname')
+                    .success(function (response) {
+                        $scope.allgenerics = response;
+                    })
+                    .error(function () {
+                        $scope.errorData = "An Error has occured while loading generics!";
+                    });
+
             $rootScope.commonService.GetDoctorList('', '1', false, '1', function (response) {
                 $scope.doctors = response.doctorsList;
             });
@@ -186,6 +194,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $("#current_prescription").focus();
         }
 
+        $scope.generics = [];
+        $scope.products = [];
         $scope.getGeneric = function ($item, $model, $label) {
             $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/getgenericlistbydrugclass?drug_class_id=' + $item.drug_class_id + '&addtfields=presc_search')
                     .success(function (response) {
@@ -194,6 +204,36 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     }, function (x) {
                         $scope.errorData = "An Error has occured while loading generic!";
                     });
+        }
+
+        $scope.getDrugProduct = function ($item, $model, $label) {
+            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/getdrugproductbygeneric?generic_id=' + $item.generic_id + '&addtfields=presc_search')
+                    .success(function (response) {
+                        $scope.addData = {};
+                        $scope.addData = {
+                            drug_class: response.drug,
+                            generic: $item,
+                        };
+                        $scope.products = $scope.allproducts = response.productList;
+                    }, function (x) {
+                        $scope.errorData = "An Error has occured while loading generic!";
+                    });
+        }
+
+        $scope.watchDrug = function (search_form, selector) {
+            if (search_form) {
+                if (selector.addData.drug_class == '') {
+                    $scope.reset();
+                }
+            }
+        }
+
+        $scope.reset = function () {
+            $('#advanceSearchForm')[0].reset();
+            $scope.addData = {};
+            $scope.generics = [];
+            $scope.products = [];
+            $scope.routes = {};
         }
 
         $scope.setGeneric = function () {
@@ -261,12 +301,19 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.data = {};
         $scope.data.prescriptionItems = [];
         $scope.addForm = function () {
+            $scope.searchForm.DrugClass.$setValidity('required', true);
             if ($scope.searchForm.$valid) {
                 var result = $filter('filter')($scope.data.prescriptionItems, {product_id: $scope.addData.product.product_id});
 
                 if (result.length > 0) {
                     alert('This Product already added');
                 } else {
+                    if (!angular.isObject($scope.addData.drug_class)) {
+                        $scope.searchForm.DrugClass.$setValidity('required', false);
+                        return false;
+                    } else {
+                        $scope.searchForm.DrugClass.$setValidity('required', true);
+                    }
                     items = {
                         'product_id': $scope.addData.product.product_id,
                         'product_name': $scope.addData.product.full_name,
@@ -299,6 +346,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     $scope.showOrhideFrequency(items.frequency.length);
 
                     $scope.addData = {};
+                    $scope.reset();
 
                     $timeout(function () {
                         $("#search-form-div").removeClass('open');
@@ -409,7 +457,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                 } else {
                                     $scope.setFocus('number_of_days', $scope.data.prescriptionItems.length - 1);
                                 }
-                                
+
                                 if (typeof prescription.frequency != 'undefined')
                                     $scope.showOrhideFrequency(prescription.frequency.length);
                             });
