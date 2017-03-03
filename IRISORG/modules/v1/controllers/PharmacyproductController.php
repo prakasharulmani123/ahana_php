@@ -101,6 +101,16 @@ class PharmacyproductController extends ActiveController {
 
         return ['genericList' => $generics, 'productList' => $products];
     }
+    
+    public function actionGetdrugproductbygeneric() {
+        $get = Yii::$app->getRequest()->get();
+        $id = $get['generic_id'];
+
+        $drug = PhaDrugGeneric::find()->tenant()->andWhere(['generic_id' => $id])->active()->one();
+        $products = PhaProduct::find()->tenant()->andWhere(['generic_id' => $id])->active()->all();
+
+        return ['drug' => $drug, 'productList' => $products];
+    }
 
     public function actionGetproductlistbygeneric() {
         $get = Yii::$app->getRequest()->get();

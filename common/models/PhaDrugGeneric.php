@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\models\query\PhaDrugGenericQuery;
+use Yii;
 use yii\db\ActiveQuery;
 
 /**
@@ -108,7 +109,24 @@ class PhaDrugGeneric extends RActiveRecord
                 return (isset($model->drug->generics) ? $model->drug->generics : '-');
             },
         ];
-        $fields = array_merge(parent::fields(), $extend);
-        return $fields;
+            
+        $parent_fields = parent::fields();
+        $addt_keys = $extFields = [];
+        if ($addtField = Yii::$app->request->get('addtfields')) {
+            switch ($addtField):
+                case 'presc_search':
+                    $addt_keys = ['drug_name', 'generic_name'];
+                    $parent_fields = [
+                        'drug_class_id' => 'drug_class_id',
+                        'generic_id' => 'generic_id',
+                    ];
+                    break;
+            endswitch;
+        }
+
+        if ($addt_keys !== false)
+            $extFields = ($addt_keys) ? array_intersect_key($extend, array_flip($addt_keys)) : $extend;
+
+        return array_merge($parent_fields, $extFields);
     }
 }
