@@ -308,6 +308,11 @@ class PatAppointment extends RActiveRecord {
         $is_available = self::find()->joinWith('encounter')->where(['status_date' => $schedule_date, 'status_time' => $schedule_time, 'consultant_id' => $consultant_id, 'appt_status' => 'B', 'pat_encounter.status' => '1'])->count();
         return ($is_available == 0 ? true : false);
     }
+    //New Function instead of above one
+    public static function checkBookedSlots($consultant_id, $schedule_date) {
+        $booked_slots = self::find()->joinWith('encounter')->where(['status_date' => $schedule_date, 'consultant_id' => $consultant_id, 'appt_status' => 'B', 'pat_encounter.status' => '1'])->orderBy('status_time')->all();
+        return \yii\helpers\ArrayHelper::map($booked_slots, 'status_time', 'status_time');
+    }
 
     public static function getFutureAppointments() {
         $tenant_id = Yii::$app->user->identity->logged_tenant_id;
