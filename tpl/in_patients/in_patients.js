@@ -14,15 +14,19 @@ app.controller('InPatientsController', ['$rootScope', '$scope', '$timeout', '$ht
         $scope.css = {'style': ''};
 
         //Index Page
+        $scope.itemsByPage = 10; // No.of records per page
         $scope.loadInPatientsList = function () {
+            $scope.scrollStatus = true;
             $scope.isLoading = true;
             // pagination set up
             $scope.rowCollection = [];  // base collection
-            $scope.itemsByPage = 10; // No.of records per page
+            $scope.pageIndex = 1;
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
 
+            var pageURL = $rootScope.IRISOrgServiceUrl + '/encounter/inpatients?p=' + $scope.pageIndex + '&l=' + $scope.itemsByPage;
+
             // Get data's from service
-            $http.get($rootScope.IRISOrgServiceUrl + '/encounter/inpatients')
+            $http.get(pageURL)
                     .success(function (inpatients) {
                         $scope.isLoading = false;
                         $scope.rowCollection = inpatients;
@@ -35,7 +39,35 @@ app.controller('InPatientsController', ['$rootScope', '$scope', '$timeout', '$ht
                         $scope.currentAdmissionSelected = 0;
                     })
                     .error(function () {
-                        $scope.errorData = "An Error has occured while loading floors!";
+                        $scope.errorData = "An Error has occured while loading!";
+                    });
+        };
+        $scope.scrollStatus = true;
+        $scope.loadInPatientsListMore = function () {
+            if ($scope.isLoading)
+                return;
+
+            if (!$scope.scrollStatus)
+                return;
+
+            $scope.pageIndex++;
+            $scope.isLoading = true;
+
+            var pageURL = $rootScope.IRISOrgServiceUrl + '/encounter/inpatients?p=' + $scope.pageIndex + '&l=' + $scope.itemsByPage;
+
+            // Get data's from service
+            $http.get(pageURL)
+                    .success(function (inpatients) {
+                        if (inpatients.length == 0) {
+                            $scope.scrollStatus = false;
+                        }
+                        $scope.isLoading = false;
+                        $scope.rowCollection = $scope.rowCollection.concat(inpatients);
+
+                        $scope.updateCollection();
+                    })
+                    .error(function () {
+                        $scope.errorData = "An Error has occured while loading!";
                     });
         };
 
@@ -44,7 +76,8 @@ app.controller('InPatientsController', ['$rootScope', '$scope', '$timeout', '$ht
             $scope.isLoading = true;
             $timeout(function () {
                 angular.forEach($scope.rowCollection, function (row) {
-                    row.selected = '0';
+                    if (typeof row.selected == 'undefined')
+                        row.selected = '0';
                 });
 
                 $scope.displayedCollection = [].concat($scope.rowCollection);
@@ -52,11 +85,22 @@ app.controller('InPatientsController', ['$rootScope', '$scope', '$timeout', '$ht
 
                 if ($scope.displayedCollection.length > 6) {
                     $scope.css = {
-                        'style': 'height:550px; overflow-y: auto; overflow-x: hidden;',
+                        'style': 'height:68vh; overflow-y: auto; overflow-x: hidden;',
                     };
                 }
             }, 200);
         };
+
+        $scope.orderDir = 0;
+        $scope.orderCollection = function (order, orderDir) {
+            $scope.orderDir = 1 - orderDir;
+            if ($scope.orderDir) {
+                orderSign = '+';
+            } else {
+                orderSign = '-';
+            }
+            $scope.displayedCollection = $filter('orderBy')($scope.displayedCollection, orderSign + order);
+        }
 
         $scope.updateCheckbox = function () {
             angular.forEach($scope.displayedCollection, function (row) {

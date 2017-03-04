@@ -2853,6 +2853,13 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
         var restrictedPage = $.inArray($location.path(), ['/configuration/changePassword']) === -1;
         var currentUser = AuthenticationService.getCurrentUser();
         var loggedIn = Boolean(currentUser);
+        
+        //In patients page remove double scrollbar.
+        if(toState.name == 'patient.inPatients') {
+            $("body").css({"overflow":"hidden"});
+        } else {
+            $("body").css({"overflow":""});
+        }
 
         if (loggedIn) {
             var stateName = toState.name;
