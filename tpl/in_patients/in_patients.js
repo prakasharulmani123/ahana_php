@@ -14,7 +14,7 @@ app.controller('InPatientsController', ['$rootScope', '$scope', '$timeout', '$ht
         $scope.css = {'style': ''};
 
         //Index Page
-        $scope.itemsByPage = 10; // No.of records per page
+        $scope.itemsByPage = 20; // No.of records per page
         $scope.loadInPatientsList = function () {
             $scope.scrollStatus = true;
             $scope.isLoading = true;
