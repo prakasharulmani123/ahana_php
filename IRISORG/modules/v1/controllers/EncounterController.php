@@ -280,6 +280,10 @@ class EncounterController extends ActiveController {
     }
 
     public function actionInpatients() {
+        $GET = Yii::$app->getRequest()->get();
+        $limit = isset($GET['l']) ? $GET['l'] : 5;
+        $page = isset($GET['p']) ? $GET['p'] : 1;
+        $offset = abs($page - 1) * $limit;
         $model = PatEncounter::find()
                 ->tenant()
                 ->status()
@@ -287,6 +291,8 @@ class EncounterController extends ActiveController {
                 ->orderBy([
                     'encounter_date' => SORT_DESC,
                 ])
+                ->limit($limit)
+                ->offset($offset)
                 ->all();
 
         return $model;
@@ -645,7 +651,7 @@ class EncounterController extends ActiveController {
         }
         return $data;
     }
-    
+
     private function _addNonrecurrNetAmount($bills, $name, $charge_column) {
         $data[$name] = [];
         foreach ($bills as $key => $bill) {
