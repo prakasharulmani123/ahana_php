@@ -753,6 +753,7 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
 
     function GetDischargeTypes(callback) {
         var response = [
+            {value: 'RE', label: 'Recovered'},
             {value: 'DT', label: 'Death'},
             {value: 'DA', label: 'DAMA-Discharge Against Medical Advice'},
             {value: 'AT', label: 'At Request'},
