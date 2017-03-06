@@ -123,7 +123,8 @@ class PatEncounter extends RActiveRecord {
                     ->one();
 
             if (!empty($result))
-                $this->addError($attribute, "Admission already taken in {$result->tenant->tenant_name}");
+                $this->addError($attribute, "Patient already admitted in another branch of this organization");
+//                $this->addError($attribute, "Admission already taken in {$result->tenant->tenant_name}");
         }
     }
 
