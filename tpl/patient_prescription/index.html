@@ -74,6 +74,7 @@
                                                                            ng-model="addData.generic"
                                                                            ng-hide="generics.length > 0"
                                                                            typeahead-editable="false"
+                                                                           typeahead-min-length='2'
                                                                            typeahead="generic as generic.generic_name for generic in allgenerics | filter:$viewValue"
                                                                            typeahead-on-select="getDrugProduct($item, $model, $label)" />
                                                                 </div>
