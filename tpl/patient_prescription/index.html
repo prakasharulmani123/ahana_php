@@ -32,7 +32,7 @@
                                         <div class="patient-search-result" ng-if="prescription != '' && prescription_lists" >
                                             <ul class="search-patientcont-header" id='prescriptioncont-header' ng-show="prescription_lists.length > 0">
                                                 <li ng-repeat="(key, prescription_list) in prescription_lists" class="{{prescription_list.selected}}" ng-click="addGlobalSearch(prescription_list)">
-                                                    <a data-key="{{key}}" ng-bind-html="prescription_list.prescription | highlight:prescription" href="javascript:void(0)" class="ng-binding"></a>
+                                                    <a data-key="{{key}}" ng-bind-html="prescription_list.prescription | highlight:prescription" href="javascript:void(0)" class="ng-binding {{(prescription_list.available_quantity <= 0) ? 'text-danger' : ''}}"></a>
                                                 </li>
                                             </ul>
                                         </div>

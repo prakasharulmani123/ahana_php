@@ -507,3 +507,7 @@ out-patient-table .table > thead > tr > th label.i-checks{
 .out_of_stock td {
     background-color: #f3c2c2 !important;
 }
+
+.search-patientcont-header a.text-danger {
+    color: #f05050 !important;
+}
