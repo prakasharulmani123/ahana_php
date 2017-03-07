@@ -242,7 +242,8 @@ class PharmacyproductController extends ActiveController {
             $this->_connection = Yii::$app->client;
             $limit = 10;
 
-            $text_search = str_replace([' ', '(', ')'], ['* ', '', ''], $text);
+//            $text_search = str_replace([' ', '(', ')'], ['* ', '', ''], $text);
+            $text_search = "+".str_replace([' ', '(', ')'], [' +', '', ''], $text);
 
             //Get Products
             $products = $this->_getProducts($text_search, $tenant_id, $limit);
@@ -296,8 +297,7 @@ class PharmacyproductController extends ActiveController {
                     LIMIT 0,:limit", [':limit' => $limit, ':tenant_id' => $tenant_id, ':product_id' => $post['product_id']]
             );
         } else {
-            //Retrieve (product && generic || drug)
-            //Nad - Changed (product || generic || drug)
+            //Retrieve (product && generic || drug)            
             $command = $this->_connection->createCommand("
                     SELECT a.product_id, a.product_name, b.generic_id, b.generic_name, c.drug_class_id, c.drug_name,
                     MATCH(a.product_name) AGAINST (:search_text IN BOOLEAN MODE) AS score,
@@ -319,7 +319,7 @@ class PharmacyproductController extends ActiveController {
                     LEFT OUTER JOIN pha_drug_class c
                     ON c.drug_class_id = a.drug_class_id
                     WHERE (a.tenant_id = :tenant_id AND MATCH(a.product_name) AGAINST(:search_text IN BOOLEAN MODE))
-                    OR (b.tenant_id = :tenant_id AND MATCH(b.generic_name) AGAINST(:search_text IN BOOLEAN MODE))
+                    AND (b.tenant_id = :tenant_id AND MATCH(b.generic_name) AGAINST(:search_text IN BOOLEAN MODE))
                     OR (c.tenant_id = :tenant_id AND MATCH(c.drug_name) AGAINST(:search_text IN BOOLEAN MODE))
                     ORDER BY score DESC, a.product_name
                     LIMIT 0,:limit", [':search_text' => $text_search . '*', ':limit' => $limit, ':tenant_id' => $tenant_id]
@@ -480,6 +480,11 @@ class PharmacyproductController extends ActiveController {
                 $new_result[] = array_merge($product, $val, $prescription);
             }
         }
+        
+        //Nad
+        if(empty($new_result))
+            return $products;
+        
         return $new_result;
     }
 
