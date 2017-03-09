@@ -1,4 +1,4 @@
-app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$anchorScroll', '$filter', '$timeout', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $anchorScroll, $filter, $timeout) {
+app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$anchorScroll', '$filter', '$timeout', '$q', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $anchorScroll, $filter, $timeout, $q) {
 
         editableThemes.bs3.inputClass = 'input-sm';
         editableThemes.bs3.buttonsClass = 'btn-sm';
@@ -74,7 +74,7 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
         $scope.getSaleReturnItems = function () {
             $scope.saleItems = [];
             var sale_id = $scope.data.sale_id;
-            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacysales/' + sale_id+ "?addtfields=sale_return")
+            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacysales/' + sale_id + "?addtfields=sale_return")
                     .success(function (result) {
                         $scope.data.sale_date = result.sale_date;
                         $scope.data.patient_id = result.patient_id;
@@ -129,7 +129,7 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
                     stock = $scope.saleItems[key].available_qty; //Stock
                     package_unit = $scope.saleItems[key].package_unit;
                     current_qty = (old - quantity) * package_unit;
-                    
+
                     if (current_qty > stock) {
                         return 'No stock';
                     }
@@ -298,7 +298,7 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
 
 //            var vat_amount = (item_amount * (vat_perc / 100)).toFixed(2); // Exculding vat
             var vat_amount = ((total_amount * vat_perc) / (100 + vat_perc)).toFixed(2); // Including vat
-            
+
             $scope.saleItems[key].item_amount = item_amount;
             $scope.saleItems[key].discount_amount = disc_amount;
             $scope.saleItems[key].total_amount = total_amount;
@@ -408,7 +408,7 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
             _that = this;
             $scope.errorData = "";
             $http({
-                url: $rootScope.IRISOrgServiceUrl + "/pharmacysalereturns/" + $state.params.id+ "?addtfields=sale_return",
+                url: $rootScope.IRISOrgServiceUrl + "/pharmacysalereturns/" + $state.params.id + "?addtfields=sale_return",
                 method: "GET"
             }).success(
                     function (response) {
@@ -447,10 +447,206 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
             });
         };
 
-    }]);
+        $scope.saleReturnDetail = function (sale_return_id) {
+            $scope.loadbar('show');
+            var deferred = $q.defer();
+            deferred.notify();
 
-//app.filter('moment', function () {
-//    return function (dateString, format) {
-//        return moment(dateString).format(format);
-//    };
-//});
+            $scope.errorData = "";
+            $http.get($rootScope.IRISOrgServiceUrl + "/pharmacysalereturns/" + sale_return_id + "?addtfields=sale_return")
+                    .success(function (response) {
+                        $scope.loadbar('hide');
+                        $scope.data2 = response;
+                        $scope.saleItems2 = response.items;
+                        angular.forEach($scope.saleItems2, function (item, key) {
+                            angular.extend($scope.saleItems2[key], {
+                                full_name: item.product.full_name,
+                                batch_no: item.batch.batch_no,
+                                batch_details: item.batch.batch_details,
+                                expiry_date: item.batch.expiry_date,
+                                available_qty: item.batch.available_qty,
+                                old_quantity: item.quantity,
+                            });
+                        });
+                        deferred.resolve();
+                    })
+                    .error(function () {
+                        $scope.loadbar('hide');
+                        $scope.errorData = "An Error has occured while loading sale return!";
+                        deferred.reject();
+                    });
+
+            return deferred.promise;
+        }
+        
+        $scope.printSaleReturn = function (sale_return_id) {
+            $scope.saleReturnDetail(sale_return_id).then(function () {
+                delete $scope.data2.items;
+                $scope.btnid = 'print';
+                save_success();
+            });
+        }
+
+        /*PRINT BILL*/
+        $scope.printHeader = function () {
+            return {
+                text: "Sale Return Bill",
+                margin: 5,
+                alignment: 'center'
+            };
+        }
+
+        $scope.printFooter = function () {
+            return true;
+        }
+
+        $scope.printStyle = function () {
+            return {
+                header: {
+                    bold: true,
+                    color: '#000',
+                    fontSize: 11
+                },
+                demoTable: {
+                    color: '#000',
+                    fontSize: 10
+                }
+            };
+        }
+
+        $scope.printloader = '';
+        $scope.printContent = function () {
+            var generated_by = $scope.app.username;
+
+            var content = [];
+            var saleReturnInfo = [];
+            var saleReturnItems = [];
+
+            var result_count = Object.keys($scope.saleItems2).length;
+            var index = 1;
+            var loop_count = 0;
+            var sale = $scope.data2;
+
+            saleReturnItems.push([
+                {text: 'S.No', style: 'header'},
+                {text: 'Product Name', style: 'header'},
+                {text: 'Batch No', style: 'header'},
+                {text: 'Exp Date', style: 'header'},
+                {text: 'Qty', style: 'header'},
+                {text: 'MRP', style: 'header'},
+                {text: 'Line Total', style: 'header'},
+                {text: 'Dis %', style: 'header'},
+                {text: 'Dis Amt', style: 'header'},
+                {text: 'P.Vat%', style: 'header'},
+                {text: 'Vat Amt', style: 'header'},
+                {text: 'Total Amt', style: 'header'},
+            ]);
+
+            angular.forEach($scope.saleItems2, function (row, key) {
+                saleReturnItems.push([
+                    index.toString(),
+                    row.full_name,
+                    row.batch_no,
+                    moment(row.expiry_date).format('MM/YY'),
+                    row.quantity.toString(),
+                    row.mrp,
+                    row.item_amount,
+                    (row.discount_percent ? row.discount_percent : '-'),
+                    row.discount_amount,
+                    row.vat_percent,
+                    row.vat_amount,
+                    row.total_amount,
+                ]);
+                index++;
+                loop_count++;
+            });
+
+            saleReturnInfo.push({
+                columns: [
+                    {
+                        text: [
+                            {text: 'Invoice No: ', bold: true},
+                            sale.bill_no
+                        ],
+                        margin: [0, 0, 0, 10]
+                    },
+                    {
+                        text: [
+                            {text: 'Patient Name: ', bold: true},
+                            sale.patient_name
+                        ],
+                        margin: [0, 0, 0, 10]
+                    }
+                ]
+            }, {
+                columns: [
+                    {
+                        text: [
+                            {text: 'Invoice Date: ', bold: true},
+                            sale.sale_date
+                        ],
+                        margin: [0, 0, 0, 10]
+                    }
+                ]
+            }, {
+                style: 'demoTable',
+                margin: [0, 0, 0, 20],
+                table: {
+                    headerRows: 1,
+                    widths: [30, '*', 'auto', 50, 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+                    body: saleReturnItems,
+                },
+//                pageBreak: (loop_count === result_count ? '' : 'after'),
+            }, {
+                columns: [
+                    {
+                        alignment: 'right',
+                        text: [
+                            {text: 'Total Vat Amount: ', bold: true},
+                            sale.total_item_vat_amount + '\n\n',
+                            {text: 'Total Item Sale Return Amount: ', bold: true},
+                            sale.total_item_sale_amount + '\n\n',
+                            {text: 'Disc(' + sale.total_item_discount_percent + ') %: ', bold: true},
+                            sale.total_item_discount_amount + '\n\n',
+                            {text: 'Total Return Amount: ', bold: true},
+                            sale.total_item_amount + '\n\n',
+                            {text: 'Round Off: ', bold: true},
+                            sale.roundoff_amount + '\n\n',
+                            {text: 'Bill Amount: ', bold: true},
+                            sale.bill_amount + '\n\n',
+                        ],
+                    }
+                ]
+            });
+            content.push(saleReturnInfo);
+            if (index == result_count) {
+                $scope.printloader = '';
+            }
+            return content;
+        }
+
+        var save_success = function () {
+            if ($scope.btnid == "print") {
+                $scope.printloader = '<i class="fa fa-spin fa-spinner"></i>';
+                var print_content = $scope.printContent();
+                if (print_content.length > 0) {
+                    var docDefinition = {
+                        header: $scope.printHeader(),
+                        footer: $scope.printFooter(),
+                        styles: $scope.printStyle(),
+                        content: print_content,
+                        pageSize: 'A4',
+                        pageOrientation: 'landscape',
+                    };
+                    var pdf_document = pdfMake.createPdf(docDefinition);
+                    var doc_content_length = Object.keys(pdf_document).length;
+                    if (doc_content_length > 0) {
+                        pdf_document.print();
+                    }
+                }
+            } else {
+                $state.go($state.current, {}, {reload: true});
+            }
+        }
+
+    }]);
