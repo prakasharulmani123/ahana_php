@@ -90,11 +90,7 @@ class PatAdmission extends RActiveRecord {
     public function validateStatusDate($attribute, $params) {
         if ($this->isNewRecord) {
             if (!empty($this->admission_status)) {
-                if ($this->admission_status == 'CD') {
-                    $last_status_date = date('Y-m-d', strtotime($this->encounter->patCurrentAdmission->status_date));
-                    if (date('Y-m-d', strtotime($this->status_date)) < $last_status_date)
-                        $this->addError($attribute, "Date must be greater than last encounter date " . $last_status_date);
-                }else if ($this->admission_status != 'A') {
+                if ($this->admission_status != 'A') {
                     $current_admission = $this->encounter->patCurrentAdmission;
                     if ($current_admission->status_date > $this->status_date)
                         $this->addError($attribute, "Date must be greater than {$current_admission->status_date}");
