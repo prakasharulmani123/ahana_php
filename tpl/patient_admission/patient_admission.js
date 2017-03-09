@@ -47,6 +47,8 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
                 $rootScope.commonService.GetDischargeTypes(function (response) {
                     $scope.dischargeTypes = response;
                 });
+                
+                $scope.last_encounter_status_date = response.encounters[0].currentAdmission.status_date;
             });
         }
 
@@ -464,4 +466,23 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
                     $scope.errorData = data.message;
             });
         };
+        
+        //For Datetimepicker
+        $scope.dischargeBeforeRender = function ($view, $dates, $leftDate, $upDate, $rightDate) {
+            var today_date = new Date().valueOf();
+            
+            angular.forEach($dates, function (date, key) {
+                if (today_date < date.localDateValue()) {
+                    $dates[key].selectable = false;
+                }
+                
+//                $timeout(function () {
+//                    console.log($scope.last_encounter_status_date);
+//                    if ($scope.last_encounter_status_date < date.localDateValue()) {
+//                        $dates[key].selectable = false;
+//                    }
+//                }, 5000);
+            });
+            
+        }
     }]);

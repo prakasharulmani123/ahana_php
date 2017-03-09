@@ -29,10 +29,10 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Date of Discharge * </label>
                                 <div class="col-sm-9">
-                                    {{data.PatAdmission.status_date}}
+                                    <!--{{data.PatAdmission.status_date}}-->
                                     
                                     <!-- Datepicker Hide -->
-<!--                                    <div class="input-group w-md">
+                                    <div class="input-group w-md">
                                         <a class="dropdown-toggle" id="dropdown2" role="button" data-toggle="dropdown" data-target="#" href="javascript:void(0)">
                                             <div class="input-group">
                                                 <input type="text" class="form-control" data-ng-model="data.PatAdmission.status_date" data-date-time-input="YYYY-MM-DD hh:mm A" />
@@ -40,9 +40,9 @@
                                             </div>
                                         </a>
                                         <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                                            <datetimepicker data-ng-model="data.PatAdmission.status_date" data-datetimepicker-config="{ dropdownSelector: '#dropdown2' }" />
+                                            <datetimepicker data-ng-model="data.PatAdmission.status_date" data-datetimepicker-config="{ dropdownSelector: '#dropdown2' }" data-before-render="dischargeBeforeRender($view, $dates, $leftDate, $upDate, $rightDate)" prevent-enter="true" />
                                         </ul>
-                                    </div>-->
+                                    </div>
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
