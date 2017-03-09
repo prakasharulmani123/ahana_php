@@ -47,7 +47,7 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
                 $rootScope.commonService.GetDischargeTypes(function (response) {
                     $scope.dischargeTypes = response;
                 });
-                
+
                 $scope.last_encounter_status_date = response.encounters[0].currentAdmission.status_date;
             });
         }
@@ -392,7 +392,7 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
                     succ_msg = "Doctor Transfered successfully";
                 } else if (_that.data.PatAdmission.type_of_transfer == 'TR' || _that.data.PatAdmission.type_of_transfer == 'TRT') {
                     _that.data.PatAdmission.admission_status = 'TR';
-                    if(_that.data.PatAdmission.type_of_transfer == 'TRT'){
+                    if (_that.data.PatAdmission.type_of_transfer == 'TRT') {
                         _that.data.PatAdmission.floor_id = $scope.roomDetails.model.currentAdmission.floor_id;
                         _that.data.PatAdmission.ward_id = $scope.roomDetails.model.currentAdmission.ward_id;
                         _that.data.PatAdmission.room_id = $scope.roomDetails.model.currentAdmission.room_id;
@@ -466,23 +466,23 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
                     $scope.errorData = data.message;
             });
         };
-        
+
         //For Datetimepicker
         $scope.dischargeBeforeRender = function ($view, $dates, $leftDate, $upDate, $rightDate) {
             var today_date = new Date().valueOf();
-            
+
             angular.forEach($dates, function (date, key) {
                 if (today_date < date.localDateValue()) {
                     $dates[key].selectable = false;
                 }
-                
-//                $timeout(function () {
-//                    console.log($scope.last_encounter_status_date);
-//                    if ($scope.last_encounter_status_date < date.localDateValue()) {
-//                        $dates[key].selectable = false;
-//                    }
-//                }, 5000);
+
+                var d = new Date($scope.last_encounter_status_date);
+                d.setDate(d.getDate() - 1);
+                var last_sts_date = d.valueOf();
+                if (date.localDateValue() < last_sts_date) {
+                    $dates[key].selectable = false;
+                }
             });
-            
+
         }
     }]);
