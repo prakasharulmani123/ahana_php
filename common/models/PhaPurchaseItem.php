@@ -190,7 +190,7 @@ class PhaPurchaseItem extends RActiveRecord {
 
     public function beforeSave($insert) {
         $batch = $insert ? $this->_insertBatch() : $this->_updateBatch();
-        $batch_rate = $this->_updateBatchRate($batch->batch_id, $this->mrp, $this->package_unit);
+        $batch_rate = $this->_updateBatchRate($batch->batch_id, $this->mrp, (int) $this->package_unit);
 
         $this->batch_id = $batch->batch_id;
         $this->free_quantity = (!empty($this->free_quantity)) ? $this->free_quantity : 0;
@@ -216,7 +216,7 @@ class PhaPurchaseItem extends RActiveRecord {
     private function _insertBatch() {
         $batch = $this->_getBatchData();
 
-        $tot_qty = (($this->quantity * $this->package_unit) + ($this->free_quantity * $this->free_quantity_package_unit));
+        $tot_qty = (($this->quantity * (int) $this->package_unit) + ($this->free_quantity * (int) $this->free_quantity_package_unit));
 
         if (empty($batch)) {
             $batch = new PhaProductBatch;
