@@ -421,7 +421,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 var fiter = $filter('filter')($scope.all_products, {product_id: parseInt(prescription.product_id)}, true);
                 var product = fiter[0];
                 var Fields = 'full_name,description_routes,latest_price,availableQuantity';
-                $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproducts/' + product.product_id + '?fields=' + Fields)
+                $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproducts/' + product.product_id + '?fields=' + Fields + '&full_name_with_stock=1')
                         .success(function (product) {
                             items = {
                                 'product_id': prescription.product_id,
@@ -770,7 +770,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $scope.itemsByPage = 10; // No.of records per page
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
 
-            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct?fields=product_id,full_name,generic_id')
+            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct?fields=product_id,full_name,generic_id&full_name_with_stock=1')
                     .success(function (products) {
                         $scope.all_products = products;
 
