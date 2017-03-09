@@ -261,17 +261,11 @@ class PhaProduct extends RActiveRecord {
     public function fields() {
         $extend = [
             'full_name' => function ($model) {
-                $fullname = '';
-
-                if ($model->product_name)
-                    $fullname .= $model->product_name;
-                if ($model->product_unit_count)
-                    $fullname .= ' | ' . $model->product_unit_count;
-                if ($model->product_unit)
-                    $fullname .= ' | ' . $model->product_unit;
-//                if ($model->product_location)
-//                    $fullname .= '('.$model->product_location.')';
-
+                $fullname = $model->fullname;
+                if(Yii::$app->request->get('full_name_with_stock')){
+                    $avl = (isset($model->phaProductBatchesAvailableQty) ? $model->phaProductBatchesAvailableQty : 0);
+                    $fullname .= " ({$avl})";
+                }
                 return $fullname;
             },
             'purchaseVat' => function ($model) {
