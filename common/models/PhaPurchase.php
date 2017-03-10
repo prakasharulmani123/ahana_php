@@ -61,7 +61,7 @@ class PhaPurchase extends RActiveRecord {
             [['payment_type', 'payment_status', 'status'], 'string'],
             [['total_item_purchase_amount', 'total_item_vat_amount', 'total_item_discount_amount', 'discount_percent', 'discount_amount', 'roundoff_amount', 'net_amount', 'before_disc_amount', 'after_disc_amount'], 'number'],
             [['purchase_code', 'invoice_no'], 'string', 'max' => 50],
-            [['invoice_no'], 'unique', 'targetAttribute' => ['invoice_no', 'tenant_id', 'gr_num'], 'message' => 'Invoice Number has already been taken.']
+            [['invoice_no'], 'unique', 'targetAttribute' => ['invoice_no', 'tenant_id', 'gr_num'], 'message' => 'Invoice No / GR No has already been taken.']
         ];
     }
 
