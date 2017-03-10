@@ -182,7 +182,7 @@
                                                                   e-form="tableform" 
                                                                   onbeforesave="checkInput($data)" 
                                                                   e-ng-change="setProductId($data, key)" 
-                                                                  e-ng-options="product.full_name as product.full_name for product in all_products | filter:$viewValue | filter:{generic_id : item.generic_id}" 
+                                                                  e-ng-options="product.full_name as product.full_name for product in item.all_products | filter:$viewValue | filter:{generic_id : item.generic_id} : true" 
                                                                   e-required>
                                                                 {{ showProduct(item)}}
                                                             </span>
@@ -340,7 +340,7 @@
                                                                   e-form="tableform" 
                                                                   onbeforesave="checkInput($data)" 
                                                                   e-ng-change="setProductId($data, key)" 
-                                                                  e-ng-options="product.full_name as product.full_name for product in all_products | filter:$viewValue | filter:{generic_id : item.generic_id}" 
+                                                                  e-ng-options="product.full_name as product.full_name for product in item.all_products | filter:$viewValue | filter:{generic_id : item.generic_id} : true" 
                                                                   e-required>
                                                                 {{ showProduct(item)}}
                                                             </span>
