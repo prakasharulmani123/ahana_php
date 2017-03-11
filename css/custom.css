@@ -427,3 +427,31 @@ out-patient-table .table > thead > tr > th label.i-checks {
 .search-patientcont-header a.text-danger {
 	color: #f05050 !important;
 }
+
+
+
+
+
+
+
+
+@media (max-width: 767px) {
+  .hidden-xs {
+    display: none !important;
+  }
+}
+@media (min-width: 768px) and (max-width: 991px) {
+  .hidden-sm {
+    display: none !important;
+  }
+}
+
+@media (min-width: 1200px) {
+  .hidden-lg {
+    display: none !important;
+  }
+}
+
+.paitent-details2 {
+	margin-top: 20px;
+}

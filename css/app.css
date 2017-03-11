@@ -3724,17 +3724,7 @@ a.text-#000000:hover {
 }
 
 
-.col-md-1.pati-thumb
-{
-	width:125px;
-}
 
-.paitent-details2 {
-	padding-top:14px;
-	width:calc(100% - 125px) !important;
-	float:left;
-	padding-left:0px !important;
-}
 
 
 .in-patient-table .table > thead > tr > th {
@@ -3752,6 +3742,12 @@ a.text-#000000:hover {
 .no-m-sm {
 	margin: 0 !important;
 }
+}
+
+
+@media (min-width: 1200px) {
+	
+
 }
 
 

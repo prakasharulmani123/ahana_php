@@ -650,11 +650,7 @@ pati-thumb
 	width:125px;
 	float:left;
 }
-.paitent-details2 {
-	padding-top:14px;
-	width:calc(100% - 113px);
-	float:left;
-}
+
 .paitent-details2 i {
 	margin-left:40px;
 }
@@ -856,19 +852,9 @@ pati-thumb
 }
 
 
-@media (max-width: 767px) {
-  .hidden-xs {
-    display: none !important;
-  }
-}
-@media (min-width: 768px) and (max-width: 991px) {
-  .hidden-sm {
-    display: none !important;
-  }
-}
 
-@media (min-width: 1200px) {
-  .hidden-lg {
-    display: none !important;
-  }
-}
+
+
+
+
+
