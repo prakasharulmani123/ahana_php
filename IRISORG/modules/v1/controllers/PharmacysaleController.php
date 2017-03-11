@@ -61,6 +61,25 @@ class PharmacysaleController extends ActiveController {
         }
     }
     
+    public function actionGetsalebillno() {
+        $get = Yii::$app->getRequest()->get();
+        $text = $get['bill_no'];
+        
+        $sales = PhaSale::find()
+                ->tenant()
+                ->active()
+                ->leftJoin('pat_patient', 'pha_sale.patient_id=pat_patient.patient_id')
+                ->leftJoin('pat_global_patient', 'pat_global_patient.patient_global_guid=pat_patient.patient_global_guid')
+                ->andFilterWhere([
+                        'or',
+                        ['like', 'bill_no', $text],
+                        ['like', 'pat_global_patient.patient_global_int_code', $text],
+                    ])
+                ->all();
+
+        return $sales;
+    }
+    
     public function actionGetsales() {
         $get = Yii::$app->getRequest()->get();
 

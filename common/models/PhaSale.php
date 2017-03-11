@@ -277,6 +277,13 @@ class PhaSale extends RActiveRecord {
                         'bill_no' => 'bill_no',
                     ];
                     break;
+                case 'sale_bill_search':
+                    $addt_keys = ['bill_no_with_patient'];
+                    $parent_fields = [
+                        'sale_id' => 'sale_id',
+                        'bill_no' => 'bill_no',
+                    ];
+                    break;
             endswitch;
         }
 
