@@ -5,14 +5,14 @@
 <div class="wrapper-md" ng-controller="VitalsController" ng-init="loadPatVitalsList()">
     <div class="panel panel-default">
         <div class="row wrapper">
-            <div class="col-sm-9">
+            <div class="col-sm-8 col-lg-9">
                 <button class="btn btn-info" ng-show="HaveActEnc" ng-click="$state.go('patient.vitalCreate', {id: $state.params.id})">
                     <i class="fa fa-plus"></i> Create Vital
                 </button>
             </div>
-            <div class="col-sm-3">
+            <div class="col-sm-4 col-lg-3">
                 <div class="row">
-                    <div class="col-sm-9">
+                    <div class="col-sm-9 col-lg-9">
                         <div class="input-group">
                             <input placeholder="Filter by date" prevent-enter type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="filterdate" is-open="opened" datepicker-options="dateOptions" close-text="Close" max-date="maxDate" date-disabled="disabled(date, mode)" ng-change="loadPatVitalsList(filterdate);"/>
                             <span class="input-group-btn">
@@ -20,7 +20,7 @@
                             </span>
                         </div>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-3 ">
                         <button ng-click="filterdate = ''; loadPatVitalsList()" class="btn m-b-xs btn-dark">
                             <i class="fa fa-times"></i>
                         </button>
@@ -62,7 +62,7 @@
                         </td>
                     </tr>
                     <tr ng-repeat-end ng-show="expanded" ng-repeat="(vital_key, vital) in value.all">
-                        <td> &nbsp; </td>
+                        <td>&nbsp;  </td>
                         <td> {{vital.vital_time| moment:'DD/MM/YYYY'}} &nbsp;
                             <span class="label bg-light dk">{{vital.vital_time| moment:'hh:mm A'}}</span>
                         </td>

@@ -433,6 +433,42 @@ out-patient-table .table > thead > tr > th label.i-checks {
 
 
 
+/*11-3-2016*/
+
+
+
+
+.paitent-details2 {
+	margin-top: 20px;
+	padding-left:0px;
+}
+
+.col-md-1.pati-thumb
+{
+	width:125px;
+}
+
+.col-md-11.paitent-details2 {
+	padding-top:0px;
+	width:calc(100% - 125px) !important;
+	float:left;
+	padding-left:0px !important;
+}
+
+.label, .badge {
+	color: #ffffff !important;
+	font-size: 14px;
+	display: inline-block;
+	margin-bottom: 5px;
+}
+
+.prescription-field
+{
+	width:680px;
+}
+
+
+
 
 
 @media (max-width: 767px) {
@@ -441,17 +477,17 @@ out-patient-table .table > thead > tr > th label.i-checks {
   }
 }
 @media (min-width: 768px) and (max-width: 991px) {
-  .hidden-sm {
+ .prescription-field
+{
+	width:580px;
+}
+
+}
+@media (min-width: 992px) and (max-width: 1199px) {
+  .hidden-md {
     display: none !important;
   }
 }
 
-@media (min-width: 1200px) {
-  .hidden-lg {
-    display: none !important;
-  }
-}
 
-.paitent-details2 {
-	margin-top: 20px;
-}
+

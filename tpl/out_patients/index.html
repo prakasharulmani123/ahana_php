@@ -7,7 +7,7 @@
             {% include 'tpl/blocks/alert.html' %}
         </div>
         <div class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-12">
                 <div class="btn-group op-btn-group">
                     <button class="btn btn-info current-op-patient" ng-click="loadOutPatientsList('current')">
                         <i class="fa fa-user-md"></i>&nbsp;&nbsp;Today's Appointments
@@ -227,7 +227,7 @@
                                 </td>
                             </tr>
                             <tr ng-show="value.expanded && value.seenExpanded" ng-repeat="(key, row) in value.seen_records" ng-if="value.seen_count > '0' && row.apptSeenData != '-' && op_type != 'previous'" class="tr_oplistcheckbox tr_oplistcheckbox_{{op_key}}">
-                                <td> &nbsp; </td>
+                                <td>&nbsp;  </td>
                                 <td align="center" valign="middle">
                                     <div style="margin-top: -10px; position: relative;">
                                         <img ng-if="row.apptPatientData.hasalert" class="pull-left" src="img/symbol1.png"  alt="" tooltip="Has Alert" tooltip-trigger tooltip-animation="false" tooltip-placement="right"  />
