@@ -51,6 +51,7 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
                 $scope.formtype = 'update';
                 $scope.loadForm();
             } else {
+                $scope.data.sale_id = '';
                 $scope.data.sale_date = moment().format('YYYY-MM-DD');
                 $scope.addRow();
                 $scope.formtype = 'add';
@@ -59,19 +60,10 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
             $scope.products = [];
             $scope.batches = [];
 
-            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacysale?fields=sale_id,bill_no,bill_no_with_patient')
-                    .success(function (saleList) {
-                        $scope.saleinvoice = saleList;
-                        $timeout(function () {
-                            $('.selectpicker').selectpicker('refresh');
-                        }, 1000);
-                    })
-                    .error(function () {
-                        $scope.errorData = "An Error has occured while loading saleList!";
-                    });
         }
 
-        $scope.getSaleReturnItems = function () {
+        $scope.getSaleReturnItems = function ($item, $model, $label) {
+            $scope.data.sale_id = $item.sale_id;
             $scope.saleItems = [];
             var sale_id = $scope.data.sale_id;
             $http.get($rootScope.IRISOrgServiceUrl + '/pharmacysales/' + sale_id + "?addtfields=sale_return")
@@ -478,7 +470,7 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
 
             return deferred.promise;
         }
-        
+
         $scope.printSaleReturn = function (sale_return_id) {
             $scope.saleReturnDetail(sale_return_id).then(function () {
                 delete $scope.data2.items;
@@ -648,5 +640,28 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
                 $state.go($state.current, {}, {reload: true});
             }
         }
+
+        var canceler;
+        $scope.getSaleinvoices = function (bill_no) {
+            if (canceler)
+                canceler.resolve();
+            canceler = $q.defer();
+
+            $scope.show_patient_loader = true;
+
+            return $http({
+                method: 'GET',
+                url: $rootScope.IRISOrgServiceUrl + '/pharmacysale/getsalebillno?bill_no=' + bill_no + '&addtfields=sale_bill_search',
+                timeout: canceler.promise,
+            }).then(
+                    function (response) {
+                        $scope.saleinvoice = [];
+                        $scope.saleinvoice = response.data;
+                        $scope.loadbar('hide');
+                        $scope.show_patient_loader = false;
+                        return $scope.saleinvoice;
+                    }
+            );
+        };
 
     }]);
