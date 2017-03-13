@@ -16,9 +16,19 @@
                                     <div class="form-group">
                                         <label class="col-lg-2 control-label">Purchase Invoice No.</label>
                                         <div class="col-lg-4">
-                                            <select class="form-control selectpicker" data-live-search="true" ng-model="data.purchase_id" ng-options="purchase.purchase_id as purchase.invoice_no for purchase in purchaseinvoice | orderBy: invoice_no"  data-ng-change="getPurchaseReturnItems()">
+                                            <input autocomplete="off"
+                                               placeholder="Invoice No."
+                                               type="text"
+                                               class="form-control"
+                                               ng-model="select_purchase_id"
+                                               typeahead="purchase as purchase.invoice_no for purchase in getPurchaseinvoices($viewValue) | orderBy: invoice_no"
+                                               typeahead-on-select="getPurchaseReturnItems($item, $model, $label)"
+                                               typeahead-wait-ms="400"
+                                               />
+                                            
+<!--                                            <select class="form-control selectpicker" data-live-search="true" ng-model="data.purchase_id" ng-options="purchase.purchase_id as purchase.invoice_no for purchase in purchaseinvoice | orderBy: invoice_no"  data-ng-change="getPurchaseReturnItems()">
                                                 <option value="">Select Purchase Invoice No.</option>
-                                            </select>
+                                            </select>-->
                                         </div>
                                     </div>
                                 </div>

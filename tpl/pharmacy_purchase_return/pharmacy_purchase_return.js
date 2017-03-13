@@ -1,4 +1,4 @@
-app.controller('PurchaseReturnController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$anchorScroll', '$filter', '$timeout', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $anchorScroll, $filter, $timeout) {
+app.controller('PurchaseReturnController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$anchorScroll', '$filter', '$timeout', '$q', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $anchorScroll, $filter, $timeout, $q) {
 
         editableThemes.bs3.inputClass = 'input-sm';
         editableThemes.bs3.buttonsClass = 'btn-sm';
@@ -51,29 +51,31 @@ app.controller('PurchaseReturnController', ['$rootScope', '$scope', '$timeout', 
             $scope.products = [];
             $scope.batches = [];
 
-            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacypurchase?fields=purchase_id,invoice_no')
-                    .success(function (purchaseList) {
-                        $scope.purchaseinvoice = purchaseList;
-                        $timeout(function () {
-                            $('.selectpicker').selectpicker('refresh');
-                        }, 1000);
-                    })
-                    .error(function () {
-                        $scope.errorData = "An Error has occured while loading Purchase Invoice List!";
-                    });
+//            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacypurchase?fields=purchase_id,invoice_no')
+//                    .success(function (purchaseList) {
+//                        $scope.purchaseinvoice = purchaseList;
+//                        $timeout(function () {
+//                            $('.selectpicker').selectpicker('refresh');
+//                        }, 1000);
+//                    })
+//                    .error(function () {
+//                        $scope.errorData = "An Error has occured while loading Purchase Invoice List!";
+//                    });
 
             $scope.loadbar('hide');
         }
 
-        $scope.getPurchaseReturnItems = function () {
+        $scope.getPurchaseReturnItems = function ($item, $model, $label) {
+            $scope.data.purchase_id = $item.purchase_id;
             $scope.purchasereturnitems = [];
             var purchase_id = $scope.data.purchase_id;
-            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacypurchase/getpurchase?purchase_id=' + purchase_id)
+            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacypurchase/getpurchase?purchase_id=' + purchase_id+ '&addtfields=purchase_update')
                     .success(function (result) {
                         var purchase = result.purchase;
                         $scope.data.supplier_id = purchase.supplier_id;
-                        $scope.data.supplier_name = purchase.supplier.supplier_name;
+                        $scope.data.supplier_name = purchase.supplier_name;
                         $scope.data.purchase_date = purchase.invoice_date;
+                        $scope.data.invoice_no = purchase.invoice_no;
                         $scope.data.purchase_id = purchase.purchase_id;
 
                         angular.forEach(purchase.items, function (item, key) {
@@ -333,6 +335,29 @@ app.controller('PurchaseReturnController', ['$rootScope', '$scope', '$timeout', 
                 else
                     $scope.errorData = data.message;
             });
+        };
+
+        var canceler;
+        $scope.getPurchaseinvoices = function (bill_no) {
+            if (canceler)
+                canceler.resolve();
+            canceler = $q.defer();
+
+            $scope.show_patient_loader = true;
+
+            return $http({
+                method: 'GET',
+                url: $rootScope.IRISOrgServiceUrl + '/pharmacypurchase/getpurchasebillno?bill_no=' + bill_no + '&addtfields=purchase_bill_search',
+                timeout: canceler.promise,
+            }).then(
+                    function (response) {
+                        $scope.purchaseinvoice = [];
+                        $scope.purchaseinvoice = response.data;
+                        $scope.loadbar('hide');
+                        $scope.show_patient_loader = false;
+                        return $scope.purchaseinvoice;
+                    }
+            );
         };
 
     }]);
