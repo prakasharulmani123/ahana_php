@@ -51,9 +51,10 @@ app.controller('PasswordAuthController', ['scope', '$scope', '$modalInstance', '
                             $scope.data = {};
                             $timeout(function () {
                                 $modalInstance.dismiss('cancel');
-                                scope.enc.selected = response.encounter;
-                                scope.loadBillingCharges(encounter_id);
-                                scope.loadRoomConcession(encounter_id);
+                                $state.go($state.current, {}, {reload: true});
+//                                scope.enc.selected = response.encounter;
+//                                scope.loadBillingCharges(encounter_id);
+//                                scope.loadRoomConcession(encounter_id);
                             }, 1000)
                         }
                     }
