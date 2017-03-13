@@ -75,6 +75,7 @@ class PharmacysaleController extends ActiveController {
                         ['like', 'bill_no', $text],
                         ['like', 'pat_global_patient.patient_global_int_code', $text],
                     ])
+                ->limit(100)
                 ->all();
 
         return $sales;

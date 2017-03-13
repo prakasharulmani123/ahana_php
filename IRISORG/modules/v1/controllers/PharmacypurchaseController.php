@@ -81,7 +81,7 @@ class PharmacypurchaseController extends ActiveController {
             $data = PhaPurchase::find()->tenant()->active()->andWhere($condition);
             if (isset($GET['s']) && !empty($GET['s'])) {
                 $text = $GET['s'];
-                $data->joinWith(['supplier','phaPurchaseItems.product','phaPurchaseItems.batch'])
+                $data->joinWith(['supplier', 'phaPurchaseItems.product', 'phaPurchaseItems.batch'])
                         ->andFilterWhere([
                             'or',
                             ['like', 'pha_product.product_name', $text],
@@ -120,6 +120,24 @@ class PharmacypurchaseController extends ActiveController {
         } else {
             return ['success' => false, 'message' => 'Invalid Access'];
         }
+    }
+
+    public function actionGetpurchasebillno() {
+        $get = Yii::$app->getRequest()->get();
+        $text = $get['bill_no'];
+
+        $sales = PhaPurchase::find()
+                ->tenant()
+                ->active()
+                ->andFilterWhere([
+                    'or',
+                    ['like', 'invoice_no', $text],
+                ])
+                ->orderBy(['invoice_no' => SORT_ASC])
+                ->limit(100)
+                ->all();
+
+        return $sales;
     }
 
     public function actionSavepurchase() {
@@ -262,9 +280,9 @@ class PharmacypurchaseController extends ActiveController {
                 $lineitems = json_decode($result->lineitems);
 
                 $failed_products = $failed_packages = [];
-                if($lineitems){
+                if ($lineitems) {
                     foreach ($lineitems as $key => $lineitem) {
-                        if($lineitem->product_id){
+                        if ($lineitem->product_id) {
                             //Search Product exists
                             $command = $connection->createCommand("SELECT product_id, product_name, b.vat,
                                                         MATCH(product_name) AGAINST ('{$lineitem->product_id}*' IN BOOLEAN MODE) AS score
@@ -276,7 +294,7 @@ class PharmacypurchaseController extends ActiveController {
                                                         ORDER BY score DESC
                                                         LIMIT 1");
                             $product_result = $command->queryAll(PDO::FETCH_OBJ);
-                        }else{
+                        } else {
                             $product_result = false;
                         }
 
@@ -319,7 +337,7 @@ class PharmacypurchaseController extends ActiveController {
                                 $failed_packages[] = $lineitem->package_name;
                         }
                     }
-                    
+
                     $post_data['before_disc_amount'] = ($post_data['total_item_purchase_amount'] + $post_data['total_item_vat_amount']);
                     $post_data['after_disc_amount'] = $post_data['before_disc_amount'];
                     $post_data['net_amount'] = round($post_data['after_disc_amount']);
@@ -343,10 +361,9 @@ class PharmacypurchaseController extends ActiveController {
                         $message .= $failed_packages ? "Packages not exists: " . implode(',', $failed_packages) : '';
                         $return = ['success' => false, 'continue' => $next_id, 'message' => $message];
                     }
-                }else{
+                } else {
                     $return = ['success' => false, 'continue' => $next_id, 'message' => 'Import data not found'];
                 }
-
             } else {
                 $return = ['success' => false, 'continue' => $next_id, 'message' => 'Import data not found'];
             }

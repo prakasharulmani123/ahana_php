@@ -198,6 +198,18 @@ class PhaPurchase extends RActiveRecord {
                     $pFields = ['invoice_no','gr_num','invoice_date','total_item_purchase_amount','total_item_vat_amount','discount_percent','discount_amount','roundoff_amount','net_amount','purchase_id','payment_type','payment_status'];
                     $parent_fields = array_combine($pFields, $pFields);
                     break;
+                case 'purchase_update':
+                    $addt_keys = ['supplier_name', 'items'];
+                    $pFields = ['invoice_no', 'supplier_id', 'invoice_date', 'purchase_id'];
+                    $parent_fields = array_combine($pFields, $pFields);
+                    break;
+                case 'purchase_bill_search':
+                    $addt_keys = ['invoice_no'];
+                    $parent_fields = [
+                        'purchase_id' => 'purchase_id',
+                        'invoice_no' => 'invoice_no',
+                    ];
+                    break;
             endswitch;
         }
 
