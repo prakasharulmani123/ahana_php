@@ -439,7 +439,7 @@ out-patient-table .table > thead > tr > th label.i-checks {
 
 
 .paitent-details2 {
-	margin-top: 20px;
+	margin-top: 14px;
 	padding-left:0px;
 }
 
@@ -487,6 +487,14 @@ out-patient-table .table > thead > tr > th label.i-checks {
   .hidden-md {
     display: none !important;
   }
+}
+
+.presc-heading {
+    width: 100%;
+    float: left;
+    padding: 10px;
+    padding-bottom: 0px;
+    margin-bottom: 15px;
 }
 
 
