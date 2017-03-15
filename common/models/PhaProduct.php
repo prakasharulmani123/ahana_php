@@ -388,6 +388,7 @@ class PhaProduct extends RActiveRecord {
                     $addt_keys = ['full_name', 'description_routes', 'latest_price', 'availableQuantity'];
                     $parent_fields = [
                         'product_id' => 'product_id',
+                        'product_description_id' => 'product_description_id',
                     ];
                     break;
                 case 'presc_search':
@@ -395,6 +396,7 @@ class PhaProduct extends RActiveRecord {
                     $parent_fields = [
                         'product_id' => 'product_id',
                         'generic_id' => 'generic_id',
+                        'product_description_id' => 'product_description_id',
                     ];
                     break;
             endswitch;
