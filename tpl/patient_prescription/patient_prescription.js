@@ -13,12 +13,6 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.frequencies = {};
         //Stop Init
 
-        $scope.open = function ($event) {
-            $event.preventDefault();
-            $event.stopPropagation();
-            $scope.opened = true;
-        };
-
         //Start Watch Functions
         $scope.$watch('patientObj.patient_id', function (newValue, oldValue) {
             $scope.spinnerbar('show');
@@ -41,7 +35,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         $scope.data.encounter_id = $scope.enc.selected.encounter_id;
                         $scope.default_encounter_id = $scope.data.encounter_id;
                     }
-                });
+                }, 'prescription');
             }
         }, true);
 
@@ -61,6 +55,12 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $scope.tableform.$show();
         });
         //Stop Watch Functions
+        
+        $scope.open = function ($event) {
+            $event.preventDefault();
+            $event.stopPropagation();
+            $scope.opened = true;
+        };
 
         $scope.clearPrescription = function () {
 //            $scope.data.consultant_id = '';
