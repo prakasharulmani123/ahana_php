@@ -230,7 +230,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.generics = [];
         $scope.products = [];
         $scope.getGeneric = function ($item, $model, $label) {
-            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/getgenericlistbydrugclass?drug_class_id=' + $item.drug_class_id + '&addtfields=presc_search&full_name_with_stock=1')
+//            &full_name_with_stock=1
+            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/getgenericlistbydrugclass?drug_class_id=' + $item.drug_class_id + '&addtfields=presc_search')
                     .success(function (response) {
                         $scope.generics = response.genericList;
                         $scope.products = $scope.allproducts = response.productList;
@@ -240,7 +241,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         }
 
         $scope.getDrugProduct = function ($item, $model, $label) {
-            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/getdrugproductbygeneric?generic_id=' + $item.generic_id + '&addtfields=presc_search&full_name_with_stock=1')
+//            &full_name_with_stock=1
+            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/getdrugproductbygeneric?generic_id=' + $item.generic_id + '&addtfields=presc_search')
                     .success(function (response) {
                         $scope.addData = {};
                         $scope.addData = {
@@ -258,7 +260,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             deferred.notify();
 
             $scope.errorData = "";
-            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/getproductlistbygeneric?generic_id=' + generic_id + '&addtfields=presc_search&full_name_with_stock=1')
+//            &full_name_with_stock=1
+            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/getproductlistbygeneric?generic_id=' + generic_id + '&addtfields=presc_search')
                     .success(function (response) {
                         $scope.products = $scope.allproducts = response.productList;
                         deferred.resolve();
@@ -497,7 +500,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 var fiter = $filter('filter')($scope.all_products, {product_id: parseInt(prescription.product_id)}, true);
                 var product = fiter[0];
                 var Fields = 'full_name,description_routes,latest_price,availableQuantity,product_description_id';
-                $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproducts/' + product.product_id + '?fields=' + Fields + '&full_name_with_stock=1')
+//                + '&full_name_with_stock=1'
+                $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproducts/' + product.product_id + '?fields=' + Fields)
                         .success(function (product) {
                             $scope.getRelatedProducts(prescription.generic_id).then(function () {
                                 qty_count = $scope.calculate_qty(prescription.frequency, 1, product.product_description_id);
@@ -859,15 +863,18 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $scope.itemsByPage = 10; // No.of records per page
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
 
-            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct?fields=product_id,full_name,generic_id&full_name_with_stock=1')
+//            &full_name_with_stock=1
+            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct?fields=product_id,full_name,generic_id')
                     .success(function (products) {
                         $scope.all_products = products;
 
                         if (typeof date == 'undefined') {
-                            url = $rootScope.IRISOrgServiceUrl + '/patientprescription/getpreviousprescription?patient_id=' + $state.params.id + '&addtfields=prev_presc&full_name_with_stock=1';
+//                            &full_name_with_stock=1
+                            url = $rootScope.IRISOrgServiceUrl + '/patientprescription/getpreviousprescription?patient_id=' + $state.params.id + '&addtfields=prev_presc';
                         } else {
                             date = moment(date).format('YYYY-MM-DD');
-                            url = $rootScope.IRISOrgServiceUrl + '/patientprescription/getpreviousprescription?patient_id=' + $state.params.id + '&date=' + date + '&addtfields=prev_presc&full_name_with_stock=1';
+//                            &full_name_with_stock=1
+                            url = $rootScope.IRISOrgServiceUrl + '/patientprescription/getpreviousprescription?patient_id=' + $state.params.id + '&date=' + date + '&addtfields=prev_presc';
                         }
 
                         // Get data's from service

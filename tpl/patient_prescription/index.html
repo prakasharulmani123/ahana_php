@@ -159,11 +159,6 @@
                                         <option value="">Select Consultant</option>
                                     </select>
                                 </div>
-                                <div class="col-sm-1"> 
-                                    <button class="btn m-b-xs  btn-dark" ng-click="clearPrescription()">  
-                                        <i class="fa fa-times"></i> Clear 
-                                    </button>
-                                </div>
                             </div>
                             <form editable-form name="tableform" name="prescForm" class="form-horizontal form-validation" novalidate="" shown="true" onaftersave="saveForm()">
                                 <div class="table-responsive">
@@ -571,7 +566,7 @@
                                                 <label for="exampleInputEmail2">
                                                     <i class="fa fa-calendar-o"></i> <b> No.of.Days </b>
                                                 </label>
-                                                <input autocomplete="off" type="text" ng-model="data.number_of_days" class="form-control m-b" number-mask="" ng-change="setDateEmpty();
+                                                <input autocomplete="off" type="text" ng-model="data.number_of_days" class="form-control m-b w-100" number-mask="" ng-change="setDateEmpty();
                                                                 getVisit();">    
                                             </div>
 
@@ -579,10 +574,17 @@
                                                 <label for="exampleInputEmail2">
                                                     <i class="fa fa-rupee"></i> <b> Total Price</b>
                                                 </label>
-                                                <input type="text" class="form-control m-b" number-mask="" disabled="true" value="{{ priceTotal() | number:2}} "/>    
+                                                <input type="text" class="form-control m-b w-100" number-mask="" disabled="true" value="{{ priceTotal() | number:2}} "/>    
                                             </div>
-                                            <button class="btn btn-success save-btn-1" ng-click="getBtnId('save')"> <i class="fa fa-check"></i> Save </button>
-                                            <button class="btn btn-dark save-print" ng-click="getBtnId('print')"> <i class="fa fa-print"></i> Save & Print </button>
+                                            <button class="btn btn-success save-btn-1" ng-click="getBtnId('save')"> 
+                                                <i class="fa fa-check"></i> Save 
+                                            </button>
+                                            <button class="btn btn-dark save-print" ng-click="getBtnId('print')"> 
+                                                <i class="fa fa-print"></i> Save & Print 
+                                            </button>
+                                            <button class="btn btn-dark" ng-click="clearPrescription()">  
+                                                <i class="fa fa-times"></i> Clear 
+                                            </button>
                                         </div>
                                     </div>
                                 </footer>
