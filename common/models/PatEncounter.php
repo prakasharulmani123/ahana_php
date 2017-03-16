@@ -512,6 +512,9 @@ class PatEncounter extends RActiveRecord {
                             $addt_keys = false;
                             $parent_fields = ['encounter_id' => 'encounter_id'];
                             break;
+                        case 'prescription':
+                            $addt_keys = ['liveAdmission', 'liveAppointmentBooking'];
+                            break;
                     endswitch;
                 }
 
