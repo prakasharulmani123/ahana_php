@@ -401,6 +401,9 @@ out-patient-table .table > thead > tr > th label.i-checks {
 .editable-wrap.editable-select, .editable-wrap.editable-text {
 	width: 100%;
 }
+.out-patient-table .editable-wrap.editable-select, .editable-wrap.editable-text {
+	width: auto;
+}
 .form-horizontal .panel-body .form-group {
 	margin-right: 0;
 	margin-left: 0;
