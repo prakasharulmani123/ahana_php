@@ -55,7 +55,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $scope.tableform.$show();
         });
         //Stop Watch Functions
-        
+
         $scope.open = function ($event) {
             $event.preventDefault();
             $event.stopPropagation();
@@ -701,25 +701,9 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $scope.btnid = btnid;
         }
 
-        var save_success = function () {
-            if ($scope.btnid == "print")
-            {
-                var innerContents = document.getElementById("Getprintval").innerHTML;
-                var popupWinindow = window.open('', '_blank', 'width=830,height=700,scrollbars=yes,menubar=no,toolbar=no,location=no,status=no,titlebar=no');
-                popupWinindow.document.open();
-                popupWinindow.document.write('<html><head><link href="css/print.css" rel="stylesheet" type="text/css" /></head><body onload="window.print()">' + innerContents + '</html>');
-                popupWinindow.document.close();
-            } else {
-                $scope.pres_status = 'prev';
-                $("#prev_prescription").focus();
-                $scope.filterdate = '';
-                $scope.loadPrevPrescriptionsList();
-            }
-        }
-
         $scope.getFrequencyExists = function (freq, key) {
             var result = freq.split('-');
-            if (result[key] == "0")
+            if (result[key] == "0" || typeof result[key] == 'undefined')
             {
                 return "-";
             } else {
@@ -1248,4 +1232,218 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 return item[prop] <= val;
             }
         }
+
+        //PRINT Prescription
+        $scope.printHeader = function () {
+            return {
+                text: "Prescription",
+                margin: 5,
+                alignment: 'center'
+            };
+        }
+
+        $scope.printFooter = function () {
+            return {
+                text: "Printed Date : " + moment($scope.current_time).format('DD-MM-YYYY HH:mm'),
+                margin: 5,
+                alignment: 'center'
+            };
+        }
+
+        $scope.printStyle = function () {
+            return {
+                header: {
+                    bold: true,
+                    color: '#000',
+                    fontSize: 11,
+                    margin: [0, 5, 0, 0]
+                },
+                demoTable: {
+                    color: '#000',
+                    fontSize: 10
+                },
+                tableRows: {
+                    margin: [0, 10, 0, 10]
+                }
+            };
+        }
+
+        $scope.printloader = '';
+        $scope.printContent = function () {
+            var content = [];
+            var prescInfo = [];
+            var prescItems = [];
+
+            var items = $scope.prescriptionItems2;
+            prescItems.push([
+                {
+                    text: 'Description',
+                    style: 'header'
+                },
+                {
+                    image: $scope.imgExport('weather1'),
+                    width: 25
+                },
+                {
+                    image: $scope.imgExport('weather2'),
+                    width: 25
+                },
+                {
+                    image: $scope.imgExport('weather3'),
+                    width: 25
+                },
+                {
+                    image: $scope.imgExport('weather4'),
+                    width: 25
+                },
+                {
+                    image: $scope.imgExport('weather4'),
+                    width: 25
+                },
+                {
+                    text: 'Remarks', 
+                    style: 'header'
+                },
+            ]);
+
+            angular.forEach(items, function (item, key) {
+                var freq_0 = $scope.getFrequencyExists(item.frequency, 0);
+                var freq_1 = $scope.getFrequencyExists(item.frequency, 1);
+                var freq_2 = $scope.getFrequencyExists(item.frequency, 2);
+                var freq_3 = $scope.getFrequencyExists(item.frequency, 3);
+                var freq_4 = $scope.getFrequencyExists(item.frequency, 4);
+                prescItems.push([
+                    {
+                        text: item.product_name + "(" + item.number_of_days + " days)",
+                        style: "tableRows"
+                    },
+                    {
+                        alignment: 'center',
+                        text: freq_0,
+                        style: "tableRows"
+                    },
+                    {
+                        alignment: 'center',
+                        text: freq_1,
+                        style: "tableRows"
+                    },
+                    {
+                        alignment: 'center',
+                        text: freq_2,
+                        style: "tableRows"
+                    },
+                    {
+                        alignment: 'center',
+                        text: freq_3,
+                        style: "tableRows"
+                    },
+                    {
+                        alignment: 'center',
+                        text: freq_4,
+                        style: "tableRows"
+                    },
+                    {
+                        text: (item.remarks ? item.remarks : '-'),
+                        style: "tableRows"
+                    }
+                ]);
+            });
+
+            prescInfo.push({
+                columns: [
+                    {},
+                    {
+                        image: $("#patient_barcode").attr('src'),
+                        width: 180,
+                        margin: [20, 20, 20, 20]
+                    }
+                ]
+            }, {
+                columns: [
+                    {
+                        text: [
+                            {text: $scope.patientObj.fullname + "(" + $scope.patientObj.patient_age + " yrs)", bold: true},
+                        ],
+                        margin: [0, 0, 0, 30]
+                    },
+                    {
+                        alignment: 'right',
+                        text: [
+                            {text: ' Date :', bold: true},
+                            moment($scope.prescriptionItems2[0].presc_date).format('DD-MM-YYYY HH:mm')
+
+                        ],
+                        margin: [0, 0, 0, 30]
+                    }
+                ]
+            }, {
+                style: 'demoTable',
+                table: {
+                    headerRows: 1,
+                    widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto', '*'],
+                    body: prescItems,
+                }
+            }, {
+                columns: [
+                    {},
+                    {
+                        alignment: 'right',
+                        text: [
+                            {text: ' Next Review :', bold: true},
+                            moment($scope.data2.next_visit).format('DD-MM-YYYY')
+                        ],
+                        margin: [0, 20, 0, 0]
+                    }
+                ]
+            });
+            content.push(prescInfo);
+            return content;
+        }
+
+        var save_success = function () {
+            if ($scope.btnid == "print") {
+                $scope.printloader = '<i class="fa fa-spin fa-spinner"></i>';
+                $timeout(function () {
+                    var print_content = $scope.printContent();
+                    if (print_content.length > 0) {
+                        var docDefinition = {
+                            header: $scope.printHeader(),
+                            footer: $scope.printFooter(),
+                            styles: $scope.printStyle(),
+                            content: print_content,
+                            pageMargins: ($scope.deviceDetector.browser == 'firefox' ? 75 : 50),
+                            pageSize: 'A4',
+                        };
+                        var pdf_document = pdfMake.createPdf(docDefinition);
+                        var doc_content_length = Object.keys(pdf_document).length;
+                        if (doc_content_length > 0) {
+                            pdf_document.print();
+                        }
+                    }
+                }, 1000);
+            }
+            $scope.pres_status = 'prev';
+            $("#prev_prescription").focus();
+            $scope.filterdate = '';
+            $scope.loadPrevPrescriptionsList();
+        }
+
+        $scope.imgExport = function (imgID) {
+            var img = document.getElementById(imgID);
+            var canvas = document.createElement("canvas");
+            canvas.width = img.width;
+            canvas.height = img.height;
+
+            // Copy the image contents to the canvas
+            var ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0);
+
+            // Get the data-URL formatted image
+            // Firefox supports PNG and JPEG. You could check img.src to
+            // guess the original format, but be aware the using "image/jpg"
+            // will re-encode the image.
+            var dataURL = canvas.toDataURL("image/png");
+            return dataURL;
+        }
+
     }]);

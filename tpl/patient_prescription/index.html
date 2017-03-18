@@ -679,7 +679,12 @@
 
     <!--Print Bill-->
     <div id="Getprintval" ng-hide="true">
-        <div class="priscription-cont">
+        <io-barcode id="patient_barcode" code="{{patientObj.patient_global_int_code}}" type="{{ type}}" options="barcodeOptions"></io-barcode>
+        <img id="weather1" src="{{IRISOrgUrl}}/img/weather1.png" width="25" height="25" alt="" />
+        <img id="weather2" src="{{IRISOrgUrl}}/img/weather2.png" width="25" height="25" alt="" />
+        <img id="weather3" src="{{IRISOrgUrl}}/img/weather3.png" width="25" height="25" alt="" />
+        <img id="weather4" src="{{IRISOrgUrl}}/img/weather4.png" width="25" height="25" alt="" />
+<!--        <div class="priscription-cont">
             <main>
                 <table cellspacing="0" cellpadding="0" border="0" width="100%">
                     <thead>
@@ -691,14 +696,16 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td colspan="2" align="right"><io-barcode code="{{patientObj.patient_global_int_code}}" type="{{ type}}" options="barcodeOptions"></io-barcode></td>
+                            <td colspan="2" align="right"><io-barcode id="patient_barcode" code="{{patientObj.patient_global_int_code}}" type="{{ type}}" options="barcodeOptions"></io-barcode></td>
                     </tr>
                     <tr>
                         <td colspan="2">
                             <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                 <tr>
                                     <td><h2> {{patientObj.fullname}} <span>({{patientObj.patient_age}}yrs)</span></h2> </td>
-                                    <td align="right"><b>Date :</b>{{ prescriptionItems2[0].presc_date}}</td>
+                                    <td align="right">
+                                        <b>Date :</b>{{ prescriptionItems2[0].presc_date | moment:'DD-MM-YYYY HH:mm:ss'}}
+                                    </td>
                                 </tr>
                             </table>
                         </td>
@@ -709,10 +716,10 @@
                                 <table width="100%" border="0" cellspacing="0" cellpadding="0" >
                                     <tr>
                                         <th align="left" style="width:280px;"><strong>Description</strong></th>
-                                        <th align="center"><img src="img/weather1.png" width="20" height="25" alt="" /></th>
-                                        <th align="center"><img src="img/weather2.png" width="20" height="25" alt="" /></th>
-                                        <th align="center"><img src="img/weather3.png" width="20" height="25" alt="" /></th>
-                                        <th align="center"><img src="img/weather4.png" width="20" height="25" alt="" /></th>
+                                        <th align="center"><img id="weather1" src="{{IRISOrgUrl}}/img/weather1.png" width="25" height="25" alt="" /></th>
+                                        <th align="center"><img id="weather2" src="{{IRISOrgUrl}}/img/weather2.png" width="25" height="25" alt="" /></th>
+                                        <th align="center"><img id="weather3" src="{{IRISOrgUrl}}/img/weather3.png" width="25" height="25" alt="" /></th>
+                                        <th align="center"><img id="weather4" src="{{IRISOrgUrl}}/img/weather4.png" width="25" height="25" alt="" /></th>
                                         <th align="center">Remarks</th>
                                     </tr>
                                     <tr ng-repeat="(key, item) in prescriptionItems2">
@@ -731,22 +738,21 @@
                         <td colspan="2">
                             <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                 <tr>
-                                    <td>Next Review : <b> {{data2.next_visit}}</b></td>
+                                    <td>Next Review : <b> {{data2.next_visit | moment:'DD-MM-YYYY'}}</b></td>
                                     <td align="right">{{consultant_name}}</td>
                                 </tr>
                             </table>
                         </td>
                     </tr>
                     <tr>
-                        <td style="border-top:#2e2e2e solid 1px;">Printed Date : {{current_time}}</td>
+                        <td style="border-top:#2e2e2e solid 1px;">Printed Date : {{current_time | moment:'DD-MM-YYYY HH:mm'}}</td>
                         <td align="center" style="font-size:12px; border-top:#2e2e2e solid 1px;">{{app.org_appfull_address}} Ph :{{app.org_mobile}}</td>
                         <td style="border-top:#2e2e2e solid 1px;">&nbsp;</td>
                     </tr>
                     </tbody>
                 </table>
             </main>
-        </div>
-
+        </div>-->
     </div>     
 </div>
 
