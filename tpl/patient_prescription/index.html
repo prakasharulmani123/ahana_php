@@ -196,7 +196,7 @@
                                                                   e-name="product_name" 
                                                                   e-form="tableform" 
                                                                   onbeforesave="checkInput($data)" 
-                                                                  e-ng-change="setProductId($data, item.item_key)" 
+                                                                  e-ng-change="setProductId($data, item.item_key, tableform)" 
                                                                   e-ng-options="product.full_name as product.full_name for product in item.all_products | filter:$viewValue | filter:{generic_id : item.generic_id} : true" 
                                                                   e-required>
                                                                 {{ showProduct(item)}}

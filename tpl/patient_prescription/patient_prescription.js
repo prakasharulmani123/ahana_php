@@ -296,12 +296,27 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 $scope.addData.generic = result[0];
         }
 
-        $scope.setProductId = function ($data, key) {
+        $scope.setProductId = function ($data, key, tableform) {
             result = $filter('filter')($scope.data.prescriptionItems[key].all_products, {full_name: $data});
             if (result.length > 0) {
-                $scope.data.prescriptionItems[key].product_id = result[0].product_id;
-                $scope.data.prescriptionItems[key].description_routes = [];
-                $scope.data.prescriptionItems[key].description_routes = result[0].description_routes;
+                qty_count = $scope.calculate_qty($scope.data.prescriptionItems[key].frequency, $scope.data.prescriptionItems[key].number_of_days, result[0].product_description_id);
+                if (qty_count > 0) {
+                    $scope.data.prescriptionItems[key].product_id = result[0].product_id;
+                    $scope.data.prescriptionItems[key].description_routes = [];
+                    $scope.data.prescriptionItems[key].description_routes = result[0].description_routes;
+                    $scope.data.prescriptionItems[key].available_quantity = result[0].availableQuantity;
+                    $scope.data.prescriptionItems[key].in_stock = (parseInt(result[0].availableQuantity) > parseInt(qty_count));
+                    $scope.data.prescriptionItems[key].price = result[0].latest_price;
+                    $scope.data.prescriptionItems[key].product_description_id = result[0].product_description_id;
+                    $scope.data.prescriptionItems[key].qty = qty_count;
+                    $scope.data.prescriptionItems[key].total = $scope.calculate_price(qty_count, result[0].latest_price);
+
+                    angular.forEach(tableform.$editables, function (editableValue, editableKey) {
+                        if (editableValue.attrs.eIndex == key && editableValue.attrs.eName == 'qty') {
+                            editableValue.scope.$data = $scope.data.prescriptionItems[key].qty;
+                        }
+                    });
+                }
             }
         }
 
@@ -653,9 +668,12 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     _that.data.prescriptionItems[key].product_name = '';
                 }
                 _that.data.prescriptionItems[key].frequency = $('#freq_' + key + '_' + _that.data.prescriptionItems[key].freqMaskCount + ' input').val();
-                _that.data.prescriptionItems[key].total = $scope.calculate_price(prescriptionItem.qty, prescriptionItem.price);
+                qty_count = $scope.calculate_qty(_that.data.prescriptionItems[key].frequency, prescriptionItem.number_of_days, prescriptionItem.product_description_id);
+                _that.data.prescriptionItems[key].qty = qty_count;
+                _that.data.prescriptionItems[key].total = $scope.calculate_price(qty_count, prescriptionItem.price);
+                _that.data.prescriptionItems[key].in_stock = (parseInt(prescriptionItem.available_quantity) > parseInt(qty_count));
             });
-
+            
             /* For print bill */
             $scope.data2 = _that.data;
             $scope.prescriptionItems2 = $scope.data.prescriptionItems;
@@ -1301,7 +1319,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     width: 25
                 },
                 {
-                    text: 'Remarks', 
+                    text: 'Remarks',
                     style: 'header'
                 },
             ]);
