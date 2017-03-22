@@ -230,10 +230,10 @@ class DefaultController extends Controller {
                 $nearest_admission = \common\models\PatAdmission::find()
                         ->andWhere(['encounter_id' => $active_encounter->encounter_id])
                         ->andWhere("DATE(status_date) <='" . $recurr_date . "'")
-                        ->andWhere(['not in','admission_status', ['C', 'CD', 'D']])
+                        ->andWhere(['not in', 'admission_status', ['C', 'CD', 'D']])
                         ->orderBy(['created_at' => SORT_DESC])
                         ->one();
-               
+
                 Yii::$app->hepler->updateRecurring($nearest_admission, $recurr_date);
             }
         }
@@ -302,6 +302,26 @@ class DefaultController extends Controller {
             return ['success' => true, 'last_log_id' => $log->log_id];
         else
             return ['success' => true, 'last_log_id' => 0];
+    }
+
+    //Old patients create xml file inside the folder.
+    public function actionTestfilecreate() {
+        $patDocuments = \common\models\PatDocuments::find()->all();
+        foreach ($patDocuments as $patDocument) {
+            $fpath = "uploads/{$patDocument->tenant_id}/{$patDocument->patient->patient_global_int_code}";
+            \yii\helpers\FileHelper::createDirectory($fpath, 0755);
+            $file_name = "CH_{$patDocument->encounter_id}.xml";
+            $path = \yii::getAlias('@webroot') . '/' . $fpath . '/' . $file_name;
+
+            $myfile = fopen($path, "w") or die("Unable to open file!");
+            fwrite($myfile, $patDocument->document_xml);
+            fclose($myfile);
+            chmod($path, 0644);
+            
+            $patDocument->xml_path = $fpath.'/'.$file_name;
+            $patDocument->save(false);
+        }
+        return true;
     }
 
 }
