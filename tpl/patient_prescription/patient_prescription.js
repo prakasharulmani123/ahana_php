@@ -673,7 +673,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 _that.data.prescriptionItems[key].total = $scope.calculate_price(qty_count, prescriptionItem.price);
                 _that.data.prescriptionItems[key].in_stock = (parseInt(prescriptionItem.available_quantity) > parseInt(qty_count));
             });
-            
+
             /* For print bill */
             $scope.data2 = _that.data;
             $scope.prescriptionItems2 = $scope.data.prescriptionItems;
@@ -698,7 +698,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
                             $timeout(function () {
                                 $scope.getFav();
-                                save_success();
+                                save_success(true);
 //                                $state.go('patient.prescription', {id: $state.params.id});
                             }, 1000)
                         } else {
@@ -1388,7 +1388,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         alignment: 'right',
                         text: [
                             {text: ' Date :', bold: true},
-                            moment($scope.prescriptionItems2[0].presc_date).format('DD-MM-YYYY HH:mm')
+                            moment($scope.data2.pres_date).format('DD-MM-YYYY HH:mm')
 
                         ],
                         margin: [0, 0, 0, 30]
@@ -1418,7 +1418,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             return content;
         }
 
-        var save_success = function () {
+        var save_success = function (prev_refresh) {
             if ($scope.btnid == "print") {
                 $scope.printloader = '<i class="fa fa-spin fa-spinner"></i>';
                 $timeout(function () {
@@ -1440,10 +1440,14 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     }
                 }, 1000);
             }
-            $scope.pres_status = 'prev';
-            $("#prev_prescription").focus();
-            $scope.filterdate = '';
-            $scope.loadPrevPrescriptionsList();
+
+            if (prev_refresh) {
+                $scope.pres_status = 'prev';
+                $("#prev_prescription").focus();
+                $scope.filterdate = '';
+                $scope.loadPrevPrescriptionsList();
+            }
+
         }
 
         $scope.imgExport = function (imgID) {
@@ -1462,6 +1466,42 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             // will re-encode the image.
             var dataURL = canvas.toDataURL("image/png");
             return dataURL;
+        }
+
+        $scope.presDetail = function (pres_id) {
+            $scope.data2 = {};
+            $scope.prescriptionItems2 = [];
+            $scope.loadbar('show');
+
+            var deferred = $q.defer();
+            deferred.notify();
+
+            $http.get($rootScope.IRISOrgServiceUrl + "/patientprescriptions/" + pres_id + "?addtfields=presc_search")
+                    .success(function (response) {
+                        $scope.loadbar('hide');
+                        $scope.data2 = response;
+                        $scope.prescriptionItems2 = response.items;
+                        angular.forEach($scope.prescriptionItems2, function (item, key) {
+                            angular.extend($scope.prescriptionItems2[key], {
+                                frequency: item.frequency_name,
+                            });
+                        });
+                        deferred.resolve();
+                    })
+                    .error(function () {
+                        $scope.errorData = "An Error has occured while loading prescription!";
+                        deferred.reject();
+                    });
+
+            return deferred.promise;
+        }
+
+        $scope.printPres = function (pres_id) {
+            $scope.presDetail(pres_id).then(function () {
+                delete $scope.data2.items;
+                $scope.btnid = 'print';
+                save_success(false);
+            });
         }
 
     }]);
