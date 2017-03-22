@@ -223,6 +223,9 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $rootScope.commonService.GetPatientFrequency('', '1', false, function (response) {
                 $scope.frequencies = response.frequencylist;
             });
+            
+            $scope.data.next_visit = moment().format('YYYY-MM-DD');
+            $scope.getDays();
 
             $("#current_prescription").focus();
         }
