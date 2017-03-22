@@ -73,6 +73,10 @@ function chunk(str, n) {
 }
 
 function profilePhoto(selecter) {
+    $('table tbody img').each(function() {
+        $(this).attr('src', $(this).attr('lazy-img'));
+    });
+    
     $(selecter).photoZoom({
         zoomStyle: {
             "border": "1px solid #ccc",
