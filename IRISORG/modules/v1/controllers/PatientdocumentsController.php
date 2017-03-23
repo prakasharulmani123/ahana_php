@@ -131,6 +131,12 @@ class PatientdocumentsController extends ActiveController {
         }
 
         $patient = PatPatient::getPatientByGuid($post['patient_id']);
+        if(!isset($post['address'])){
+            $post['address'] = $patient->getFullcurrentaddress();
+        } else if($post['address'] == '') {
+            $post['address'] = $patient->getFullcurrentaddress();
+        }
+        
         $type = 'CH';
         $case_history_xml = PatDocumentTypes::getDocumentType($type);
 
