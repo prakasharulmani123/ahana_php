@@ -537,7 +537,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
 
         $("body").on("click", ".panelbar_clear", function () {
             var clear_div_id = $(this).data("divid");
-            $("#" + clear_div_id).find(':input').each(function () {
+            $("div#" + clear_div_id).find(':input').each(function () {
                 switch (this.type) {
                     case 'text':
                         this.value = "";
