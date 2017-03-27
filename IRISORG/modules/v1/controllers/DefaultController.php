@@ -173,7 +173,7 @@ class DefaultController extends Controller {
     public function actionUpdatebilling() {
         $post = Yii::$app->request->post();
         if (!empty($post)) {
-            $active_encounters = PatEncounter::find()->tenant($post['tenant_id'])->status()->active()->all();
+            $active_encounters = PatEncounter::find()->tenant($post['tenant_id'])->status()->unfinalized()->active()->all();
 
             foreach ($active_encounters as $key => $active_encounter) {
                 Yii::$app->hepler->updateRecurring($active_encounter->patCurrentAdmissionExecptClinicalDischarge);

@@ -89,7 +89,7 @@ class UserController extends ActiveController {
 
     public function actionGetuserdata() {
         $get = Yii::$app->request->get();
-        if(isset($get['cp']) && $get['cp'] == 'C'){
+        if (isset($get['cp']) && $get['cp'] == 'C') {
             $model = CoUser::find()
                     ->active()
                     ->exceptSuperUser()
@@ -467,10 +467,10 @@ class UserController extends ActiveController {
                     ->all();
         } else {
             $user_id = Yii::$app->user->identity->user->user_id;
-            $branches = CoUsersBranches::find()->joinWith('branch')->addSelect(['co_tenant.tenant_id as tenant_id','co_tenant.tenant_name as tenant_name'])->andWhere(['user_id' => $user_id])->all();
+            $branches = CoUsersBranches::find()->joinWith('branch')->addSelect(['co_tenant.tenant_id as tenant_id', 'co_tenant.tenant_name as tenant_name'])->andWhere(['user_id' => $user_id])->all();
         }
-        
-        if(isset($GET['map'])){
+
+        if (isset($GET['map'])) {
             $map = explode(',', $GET['map']);
             $branches = ArrayHelper::map($branches, $map[0], $map[1]);
         }
@@ -616,8 +616,13 @@ class UserController extends ActiveController {
                     $encounter->finalize_date = date("Y-m-d");
             }else {
                 $encounter->$column = 0;
-                if ($column == 'finalize')
+                if ($column == 'finalize') {
+                    //Un Finalize date is greater than finalize date - Add recurrings 
+                    if (date("Y-m-d") > $encounter->finalize_date) {
+                        Yii::$app->hepler->addRecurring($encounter->patCurrentAdmissionExecptClinicalDischarge);
+                    }
                     $encounter->finalize_date = "0000-00-00";
+                }
             }
 
             $encounter->save(false);

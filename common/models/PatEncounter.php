@@ -118,7 +118,7 @@ class PatEncounter extends RActiveRecord {
                         'pat_patient.patient_global_guid' => $this->patient->patient_global_guid,
                         'pat_encounter.status' => '1',
                     ])
-                    ->andWhere(['<>','encounter_id', $this->encounter_id ?: ''])
+                    ->andWhere(['<>', 'encounter_id', $this->encounter_id ?: ''])
                     ->encounterType($this->encounter_type)
                     ->one();
 
@@ -340,8 +340,15 @@ class PatEncounter extends RActiveRecord {
                     return $model->patAdmissionClinicalDischarge->status_date;
             },
             'discharge_date' => function ($model) {
-                if (!empty($model->patAdmissionDischarge))
-                    return $model->patAdmissionDischarge->status_date;
+                if (!empty($model->patAdmissionDischarge)) {
+                    if ($model->patAdmissionDischarge->admission_status == 'D') {
+                        return $model->patAdmissionDischarge->status_date;
+                    } else {
+                        if ($model->finalize_date != '0000-00-00') {
+                            return $model->finalize_date;
+                        }
+                    }
+                }
             },
             'stay_duration' => function ($model) {
                 if (!empty($model->patAdmissionDischarge))
@@ -411,7 +418,7 @@ class PatEncounter extends RActiveRecord {
                     return '-';
                 endif;
             },
-                    'apptSeenData' => function ($model) {
+            'apptSeenData' => function ($model) {
                 if (isset($model->patAppointmentSeen)) {
                     return $model->patAppointmentSeen->getAttributes([
                                 'status_datetime'
@@ -420,7 +427,7 @@ class PatEncounter extends RActiveRecord {
                     return '-';
                 }
             },
-                    'apptBookingData' => function ($model) {
+            'apptBookingData' => function ($model) {
                 if (isset($model->patLiveAppointmentBooking)) {
                     return $model->patLiveAppointmentBooking->getAttributes([
                                 'appt_id',
@@ -432,7 +439,7 @@ class PatEncounter extends RActiveRecord {
                     return '-';
                 }
             },
-                    'apptConsultantData' => function ($model) {
+            'apptConsultantData' => function ($model) {
                 if (isset($model->patLiveAppointmentBooking->consultant)) {
                     return $model->patLiveAppointmentBooking->consultant->getAttributes([
                                 'fullname'
@@ -441,7 +448,7 @@ class PatEncounter extends RActiveRecord {
                     return '-';
                 }
             },
-                    'apptPatientData' => function ($model) {
+            'apptPatientData' => function ($model) {
                 if (isset($model->patient)) {
                     return $model->patient->getAttributes([
                                 'hasalert',
@@ -464,10 +471,10 @@ class PatEncounter extends RActiveRecord {
                     return '-';
                 }
             },
-                    'encounter_status' => function ($model) {
+            'encounter_status' => function ($model) {
                 return $this->isActiveEncounter();
             },
-                    'searchEncData' => function ($model) {
+            'searchEncData' => function ($model) {
                 if (isset($model)) {
                     $isAppointment = $model->getPatLiveAppointmentBooking()->exists();
                     if ($isAdmission = $model->getPatLiveAdmission()->exists()) {
@@ -486,77 +493,77 @@ class PatEncounter extends RActiveRecord {
                     return '-';
                 }
             },
-                ];
+        ];
 
-                $parent_fields = parent::fields();
-                $addt_keys = $extFields = [];
-                if ($addtField = Yii::$app->request->get('addtfields')) {
-                    switch ($addtField):
-                        case 'oplist':
-                            $addt_keys = ['consultant_id', 'apptArrivalData', 'apptSeenData', 'apptPatientData', 'apptBookingData'];
-                            $parent_fields = [
-                                'encounter_id' => 'encounter_id',
-                                'patient_id' => 'patient_id',
-                                'consultant_id' => 'consultant_id',
-                                'created_at' => 'created_at'
-                            ];
-                            break;
-                        case 'advdetails':
-                            $addt_keys = ['apptPatientData', 'stay_duration', 'viewChargeCalculation', 'total_charge', 'paid', 'balance'];
-                            break;
-                        case 'search':
-                            $addt_keys = ['searchEncData'];
-                            $parent_fields = ['encounter_id' => 'encounter_id'];
-                            break;
-                        case 'sale_encounter_id':
-                            $addt_keys = false;
-                            $parent_fields = ['encounter_id' => 'encounter_id'];
-                            break;
-                        case 'prescription':
-                            $addt_keys = ['liveAdmission', 'liveAppointmentBooking'];
-                            break;
-                    endswitch;
-                }
+        $parent_fields = parent::fields();
+        $addt_keys = $extFields = [];
+        if ($addtField = Yii::$app->request->get('addtfields')) {
+            switch ($addtField):
+                case 'oplist':
+                    $addt_keys = ['consultant_id', 'apptArrivalData', 'apptSeenData', 'apptPatientData', 'apptBookingData'];
+                    $parent_fields = [
+                        'encounter_id' => 'encounter_id',
+                        'patient_id' => 'patient_id',
+                        'consultant_id' => 'consultant_id',
+                        'created_at' => 'created_at'
+                    ];
+                    break;
+                case 'advdetails':
+                    $addt_keys = ['apptPatientData', 'stay_duration', 'viewChargeCalculation', 'total_charge', 'paid', 'balance'];
+                    break;
+                case 'search':
+                    $addt_keys = ['searchEncData'];
+                    $parent_fields = ['encounter_id' => 'encounter_id'];
+                    break;
+                case 'sale_encounter_id':
+                    $addt_keys = false;
+                    $parent_fields = ['encounter_id' => 'encounter_id'];
+                    break;
+                case 'prescription':
+                    $addt_keys = ['liveAdmission', 'liveAppointmentBooking'];
+                    break;
+            endswitch;
+        }
 
-                if($addt_keys !== false)
-                    $extFields = ($addt_keys) ? array_intersect_key($extend, array_flip($addt_keys)) : $extend;
+        if ($addt_keys !== false)
+            $extFields = ($addt_keys) ? array_intersect_key($extend, array_flip($addt_keys)) : $extend;
 
-                return array_merge($parent_fields, $extFields);
-            }
+        return array_merge($parent_fields, $extFields);
+    }
 
-            public function getTotalCharge() {
-                $total_charge = 0;
+    public function getTotalCharge() {
+        $total_charge = 0;
 
-                $total_charge += VBillingRecurring::find()
-                        ->where([
-                            'encounter_id' => $this->encounter_id,
-                            'tenant_id' => $this->tenant_id
-                        ])
-                        ->sum('total_charge');
+        $total_charge += VBillingRecurring::find()
+                ->where([
+                    'encounter_id' => $this->encounter_id,
+                    'tenant_id' => $this->tenant_id
+                ])
+                ->sum('total_charge');
 
-                $total_charge += VBillingProcedures::find()
-                        ->where([
-                            'encounter_id' => $this->encounter_id,
-                            'tenant_id' => $this->tenant_id
-                        ])
-                        ->sum('total_charge');
+        $total_charge += VBillingProcedures::find()
+                ->where([
+                    'encounter_id' => $this->encounter_id,
+                    'tenant_id' => $this->tenant_id
+                ])
+                ->sum('total_charge');
 
-                $total_charge += VBillingProfessionals::find()
-                        ->where([
-                            'encounter_id' => $this->encounter_id,
-                            'tenant_id' => $this->tenant_id
-                        ])
-                        ->sum('total_charge');
+        $total_charge += VBillingProfessionals::find()
+                ->where([
+                    'encounter_id' => $this->encounter_id,
+                    'tenant_id' => $this->tenant_id
+                ])
+                ->sum('total_charge');
 
-                $total_charge += VBillingOtherCharges::find()
-                        ->where([
-                            'encounter_id' => $this->encounter_id,
-                            'tenant_id' => $this->tenant_id
-                        ])
-                        ->sum('total_charge');
+        $total_charge += VBillingOtherCharges::find()
+                ->where([
+                    'encounter_id' => $this->encounter_id,
+                    'tenant_id' => $this->tenant_id
+                ])
+                ->sum('total_charge');
 
-                return $total_charge;
-            }
+        return $total_charge;
+    }
 
 //            public function getTotalConcession() {
 //                return $this->concession_amount + $this->OtherConcession;
@@ -589,128 +596,128 @@ class PatEncounter extends RActiveRecord {
 //                return $total_concession;
 //            }
 
-            public function getViewChargeCalculation() {
-                $total_charge = $total_concession = $total_paid = $balance = 0;
+    public function getViewChargeCalculation() {
+        $total_charge = $total_concession = $total_paid = $balance = 0;
 
-                if ($this->encounter_type == 'IP') {
-                    $recurring = VBillingRecurring::find()
-                                    ->where([
-                                        'encounter_id' => $this->encounter_id,
-                                        'tenant_id' => $this->tenant_id
-                                    ])
-                                    ->select('SUM(total_charge) as total_charge')->one();
-
-                    $procedure = VBillingProcedures::find()
-                                    ->where([
-                                        'encounter_id' => $this->encounter_id,
-                                        'tenant_id' => $this->tenant_id
-                                    ])
-                                    ->select('SUM(total_charge) as total_charge, SUM(concession_amount) as concession_amount, SUM(extra_amount) as extra_amount')->one();
-
-                    $professional = VBillingProfessionals::find()
-                                    ->where([
-                                        'encounter_id' => $this->encounter_id,
-                                        'tenant_id' => $this->tenant_id
-                                    ])
-                                    ->select('SUM(total_charge) as total_charge, SUM(concession_amount) as concession_amount, SUM(extra_amount) as extra_amount')->one();
-
-                    $other_charge = VBillingOtherCharges::find()
-                                    ->where([
-                                        'encounter_id' => $this->encounter_id,
-                                        'tenant_id' => $this->tenant_id
-                                    ])
-                                    ->select('SUM(total_charge) as total_charge, SUM(concession_amount) as concession_amount, SUM(extra_amount) as extra_amount')->one();
-
-                    $total_paid = VBillingAdvanceCharges::find()
+        if ($this->encounter_type == 'IP') {
+            $recurring = VBillingRecurring::find()
                             ->where([
                                 'encounter_id' => $this->encounter_id,
                                 'tenant_id' => $this->tenant_id
                             ])
-                            ->sum('total_charge');
+                            ->select('SUM(total_charge) as total_charge')->one();
+
+            $procedure = VBillingProcedures::find()
+                            ->where([
+                                'encounter_id' => $this->encounter_id,
+                                'tenant_id' => $this->tenant_id
+                            ])
+                            ->select('SUM(total_charge) as total_charge, SUM(concession_amount) as concession_amount, SUM(extra_amount) as extra_amount')->one();
+
+            $professional = VBillingProfessionals::find()
+                            ->where([
+                                'encounter_id' => $this->encounter_id,
+                                'tenant_id' => $this->tenant_id
+                            ])
+                            ->select('SUM(total_charge) as total_charge, SUM(concession_amount) as concession_amount, SUM(extra_amount) as extra_amount')->one();
+
+            $other_charge = VBillingOtherCharges::find()
+                            ->where([
+                                'encounter_id' => $this->encounter_id,
+                                'tenant_id' => $this->tenant_id
+                            ])
+                            ->select('SUM(total_charge) as total_charge, SUM(concession_amount) as concession_amount, SUM(extra_amount) as extra_amount')->one();
+
+            $total_paid = VBillingAdvanceCharges::find()
+                    ->where([
+                        'encounter_id' => $this->encounter_id,
+                        'tenant_id' => $this->tenant_id
+                    ])
+                    ->sum('total_charge');
 
 
-                    $row_total_charge = $recurring->total_charge + $procedure->total_charge + $professional->total_charge + $other_charge->total_charge;
-                    $extra_charge = $procedure->extra_amount + $professional->extra_amount + $other_charge->extra_amount;
-                    $total_charge = $row_total_charge + $extra_charge;
-                    $total_concession = $this->concession_amount + $procedure->concession_amount + $professional->concession_amount + $other_charge->concession_amount;
+            $row_total_charge = $recurring->total_charge + $procedure->total_charge + $professional->total_charge + $other_charge->total_charge;
+            $extra_charge = $procedure->extra_amount + $professional->extra_amount + $other_charge->extra_amount;
+            $total_charge = $row_total_charge + $extra_charge;
+            $total_concession = $this->concession_amount + $procedure->concession_amount + $professional->concession_amount + $other_charge->concession_amount;
 
-                    $balance = $total_charge - $total_concession - $total_paid;
-                } elseif ($this->encounter_type == 'OP') {
-                    if ($this->patAppointmentSeen) {
-                        $total_paid = $this->patAppointmentSeen->amount;
-                    }
-                }
-                return compact('total_charge', 'total_concession', 'total_paid', 'balance');
+            $balance = $total_charge - $total_concession - $total_paid;
+        } elseif ($this->encounter_type == 'OP') {
+            if ($this->patAppointmentSeen) {
+                $total_paid = $this->patAppointmentSeen->amount;
             }
+        }
+        return compact('total_charge', 'total_concession', 'total_paid', 'balance');
+    }
 
-            public function getAdvanceDetails() {
-                $amount = VBillingAdvanceCharges::find()
-                        ->where([
-                            'encounter_id' => $this->encounter_id,
-                            'tenant_id' => $this->tenant_id
-                        ])
-                        ->sum('total_charge');
+    public function getAdvanceDetails() {
+        $amount = VBillingAdvanceCharges::find()
+                ->where([
+                    'encounter_id' => $this->encounter_id,
+                    'tenant_id' => $this->tenant_id
+                ])
+                ->sum('total_charge');
 
-                return $amount;
+        return $amount;
+    }
+
+    public static function getEncounterListByPatient($tenant = null, $status = '1', $deleted = false, $patient_id = null, $encounter_type = 'IP,OP') {
+        if (!$deleted)
+            $list = self::find()->tenant($tenant)->status($status)->active()->encounterType($encounter_type)->andWhere(['patient_id' => $patient_id])->orderBy(['encounter_id' => SORT_DESC])->all();
+        else
+            $list = self::find()->tenant($tenant)->encounterType($encounter_type)->deleted()->andWhere(['patient_id' => $patient_id])->orderBy(['encounter_id' => SORT_DESC])->all();
+
+        return $list;
+    }
+
+    public function beforeSave($insert) {
+        if ($insert) {
+            if (isset($this->patient->patActiveCasesheetno) && !empty($this->patient->patActiveCasesheetno)) {
+                $this->casesheet_no = $this->patient->patActiveCasesheetno->casesheet_no;
+            } else if (isset($this->add_casesheet_no) && !empty($this->add_casesheet_no)) {
+                $model = new PatPatientCasesheet();
+
+                $model->attributes = [
+                    'casesheet_no' => $this->add_casesheet_no,
+                    'patient_id' => $this->patient_id,
+                    'start_date' => date("Y-m-d"),
+                ];
+                $model->save(false);
+                $this->casesheet_no = $model->casesheet_no;
             }
-
-            public static function getEncounterListByPatient($tenant = null, $status = '1', $deleted = false, $patient_id = null, $encounter_type = 'IP,OP') {
-                if (!$deleted)
-                    $list = self::find()->tenant($tenant)->status($status)->active()->encounterType($encounter_type)->andWhere(['patient_id' => $patient_id])->orderBy(['encounter_id' => SORT_DESC])->all();
-                else
-                    $list = self::find()->tenant($tenant)->encounterType($encounter_type)->deleted()->andWhere(['patient_id' => $patient_id])->orderBy(['encounter_id' => SORT_DESC])->all();
-
-                return $list;
-            }
-
-            public function beforeSave($insert) {
-                if ($insert) {
-                    if (isset($this->patient->patActiveCasesheetno) && !empty($this->patient->patActiveCasesheetno)) {
-                        $this->casesheet_no = $this->patient->patActiveCasesheetno->casesheet_no;
-                    } else if (isset($this->add_casesheet_no) && !empty($this->add_casesheet_no)) {
-                        $model = new PatPatientCasesheet();
-
-                        $model->attributes = [
-                            'casesheet_no' => $this->add_casesheet_no,
-                            'patient_id' => $this->patient_id,
-                            'start_date' => date("Y-m-d"),
-                        ];
-                        $model->save(false);
-                        $this->casesheet_no = $model->casesheet_no;
-                    }
-                } else {
-                    if ($this->encounter_type == 'IP' && $this->finalize != 0 && $this->bill_no == NULL)
-                        $this->bill_no = CoInternalCode::generateInternalCode('B', 'common\models\PatEncounter', 'bill_no');
-                }
+        } else {
+            if ($this->encounter_type == 'IP' && $this->finalize != 0 && $this->bill_no == NULL)
+                $this->bill_no = CoInternalCode::generateInternalCode('B', 'common\models\PatEncounter', 'bill_no');
+        }
 
 //        if($this->encounter_type == 'IP')
 //            $this->status = $this->discharge == 0 ? '1' : '0';
 
-                return parent::beforeSave($insert);
-            }
+        return parent::beforeSave($insert);
+    }
 
-            public function afterSave($insert, $changedAttributes) {
-                if ($insert) {
-                    if ($this->encounter_type == 'IP')
-                        CoInternalCode::increaseInternalCode("B");
-                }
-
-                if ($this->discharge != 0) {
-                    $model = new PatAdmission;
-                    $model->attributes = [
-                        'encounter_id' => $this->encounter_id,
-                        'patient_id' => $this->patient_id,
-                        'status_date' => date('Y-m-d H:i:s'),
-                        'admission_status' => 'D',
-                    ];
-                    $model->save(false);
-                }
-
-                return parent::afterSave($insert, $changedAttributes);
-            }
-
-            public function isActiveEncounter() {
-                return ((empty($this->patAdmissionDischarge) && empty($this->patAdmissionCancel) && $this->encounter_type == 'IP') || $this->status == '1') ? 1 : 0;
-            }
-
+    public function afterSave($insert, $changedAttributes) {
+        if ($insert) {
+            if ($this->encounter_type == 'IP')
+                CoInternalCode::increaseInternalCode("B");
         }
+
+        if ($this->discharge != 0) {
+            $model = new PatAdmission;
+            $model->attributes = [
+                'encounter_id' => $this->encounter_id,
+                'patient_id' => $this->patient_id,
+                'status_date' => date('Y-m-d H:i:s'),
+                'admission_status' => 'D',
+            ];
+            $model->save(false);
+        }
+
+        return parent::afterSave($insert, $changedAttributes);
+    }
+
+    public function isActiveEncounter() {
+        return ((empty($this->patAdmissionDischarge) && empty($this->patAdmissionCancel) && $this->encounter_type == 'IP') || $this->status == '1') ? 1 : 0;
+    }
+
+}
