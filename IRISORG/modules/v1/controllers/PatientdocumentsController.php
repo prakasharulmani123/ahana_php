@@ -236,7 +236,9 @@ class PatientdocumentsController extends ActiveController {
                                                         if (isset($y->VALUE)) {
                                                             unset($y->VALUE);
                                                         }
-                                                        $y->addChild('VALUE', $value);
+                                                        $y->addChild('VALUE');
+                                                        if($value != '')
+                                                            $this->addCData($value, $y->VALUE);
                                                     } else {
                                                         foreach ($y->PROPERTIES->PROPERTY as $text_pro) {
                                                             if ($text_pro['name'] == 'value') {
@@ -291,7 +293,9 @@ class PatientdocumentsController extends ActiveController {
                                                 if (isset($field->VALUE)) {
                                                     unset($field->VALUE);
                                                 }
-                                                $field->addChild('VALUE', $value);
+                                                $field->addChild('VALUE');
+                                                if($value != '')
+                                                    $this->addCData($value, $field->VALUE);
                                             } else {
                                                 foreach ($field->PROPERTIES->PROPERTY as $text_pro) {
                                                     if ($text_pro['name'] == 'value') {
@@ -353,7 +357,9 @@ class PatientdocumentsController extends ActiveController {
                                     if (isset($pb->VALUE)) {
                                         unset($pb->VALUE);
                                     }
-                                    $pb->addChild('VALUE', $value);
+                                    $pb->addChild('VALUE');
+                                    if($value != '')
+                                        $this->addCData($value, $pb->VALUE);
                                 } else {
                                     foreach ($pb->PROPERTIES->PROPERTY as $text_pro) {
                                         if ($text_pro['name'] == 'value') {
@@ -398,7 +404,9 @@ class PatientdocumentsController extends ActiveController {
                                             if (isset($pbchild->VALUE)) {
                                                 unset($pbchild->VALUE);
                                             }
-                                            $pbchild->addChild('VALUE', $value);
+                                            $pbchild->addChild('VALUE');
+                                            if($value != '')
+                                                $this->addCData($value, $pbchild->VALUE);
                                         } else {
                                             foreach ($pbchild->PROPERTIES->PROPERTY as $text_pro) {
                                                 if ($text_pro['name'] == 'value') {
@@ -451,7 +459,9 @@ class PatientdocumentsController extends ActiveController {
                                                                 if (isset($y->VALUE)) {
                                                                     unset($y->VALUE);
                                                                 }
-                                                                $y->addChild('VALUE', $value);
+                                                                $y->addChild('VALUE');
+                                                                if($value != '')
+                                                                    $this->addCData($value, $y->VALUE);
                                                             } else {
                                                                 foreach ($y->PROPERTIES->PROPERTY as $text_pro) {
                                                                     if ($text_pro['name'] == 'value') {
@@ -506,7 +516,9 @@ class PatientdocumentsController extends ActiveController {
                                                         if (isset($field->VALUE)) {
                                                             unset($field->VALUE);
                                                         }
-                                                        $field->addChild('VALUE', $value);
+                                                        $field->addChild('VALUE');
+                                                        if($value != '')
+                                                            $this->addCData($value, $field->VALUE);
                                                     } else {
                                                         foreach ($field->PROPERTIES->PROPERTY as $text_pro) {
                                                             if ($text_pro['name'] == 'value') {
@@ -568,7 +580,9 @@ class PatientdocumentsController extends ActiveController {
                                             if (isset($pbsub->VALUE)) {
                                                 unset($pbsub->VALUE);
                                             }
-                                            $pbsub->addChild('VALUE', $value);
+                                            $pbsub->addChild('VALUE');
+                                            if($value != '')
+                                                $this->addCData($value, $pbsub->VALUE);
                                         } else {
                                             foreach ($pbsub->PROPERTIES->PROPERTY as $text_pro) {
                                                 if ($text_pro['name'] == 'value') {
@@ -613,7 +627,9 @@ class PatientdocumentsController extends ActiveController {
                                                     if (isset($pbsubchild->VALUE)) {
                                                         unset($pbsubchild->VALUE);
                                                     }
-                                                    $pbsubchild->addChild('VALUE', $value);
+                                                    $pbsubchild->addChild('VALUE');
+                                                    if($value != '')
+                                                        $this->addCData($value, $pbsubchild->VALUE);
                                                 } else {
                                                     foreach ($pbsubchild->PROPERTIES->PROPERTY as $text_pro) {
                                                         if ($text_pro['name'] == 'value') {
@@ -669,7 +685,9 @@ class PatientdocumentsController extends ActiveController {
                                                 if (isset($y->VALUE)) {
                                                     unset($y->VALUE);
                                                 }
-                                                $y->addChild('VALUE', $value);
+                                                $y->addChild('VALUE');
+                                                if($value != '')
+                                                    $this->addCData($value, $y->VALUE);
                                             } else {
                                                 foreach ($y->PROPERTIES->PROPERTY as $text_pro) {
                                                     if ($text_pro['name'] == 'value') {
@@ -723,7 +741,9 @@ class PatientdocumentsController extends ActiveController {
                                         if (isset($field->VALUE)) {
                                             unset($field->VALUE);
                                         }
-                                        $field->addChild('VALUE', $value);
+                                        $field->addChild('VALUE');
+                                        if($value != '')
+                                            $this->addCData($value, $field->VALUE);
                                     } else {
                                         foreach ($field->PROPERTIES->PROPERTY as $text_pro) {
                                             if ($text_pro['name'] == 'value') {
@@ -785,7 +805,9 @@ class PatientdocumentsController extends ActiveController {
                             if (isset($x->VALUE)) {
                                 unset($x->VALUE);
                             }
-                            $x->addChild('VALUE', $value);
+                            $x->addChild('VALUE');
+                            if($value != '')
+                                $this->addCData($value, $x->VALUE);
                         } else {
                             if (isset($x->PROPERTIES->PROPERTY)) {
                                 foreach ($x->PROPERTIES->PROPERTY as $text_pro) {
@@ -833,7 +855,9 @@ class PatientdocumentsController extends ActiveController {
                                     if (isset($y->VALUE)) {
                                         unset($y->VALUE);
                                     }
-                                    $y->addChild('VALUE', $value);
+                                    $y->addChild('VALUE');
+                                    if($value != '')
+                                        $this->addCData($value, $y->VALUE);
                                 } else {
                                     foreach ($y->PROPERTIES->PROPERTY as $text_pro) {
                                         if ($text_pro['name'] == 'value') {
@@ -854,6 +878,12 @@ class PatientdocumentsController extends ActiveController {
         $xml = $xmlLoad->asXML();
 
         return $xml;
+    }
+    
+    protected function addCData($cdata_text, \SimpleXMLElement $node) {
+        $node = dom_import_simplexml($node);
+        $no = $node->ownerDocument;
+        $node->appendChild($no->createCDATASection($cdata_text));
     }
 
     protected function preparePresentingComplaintsXml($xml, $table_id, $rowCount) {
