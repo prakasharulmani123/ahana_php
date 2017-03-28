@@ -1060,6 +1060,10 @@ class PatientdocumentsController extends ActiveController {
                     $listitem15 = $listitems->addChild('LISTITEM', 'Thyroid dysfunction');
                     $listitem15->addAttribute('value', 'Thyroid dysfunction');
                     $listitem15->addAttribute('Selected', 'False');
+                    
+                    $listitem16 = $listitems->addChild('LISTITEM', 'RTA &amp; Surgery');
+                    $listitem16->addAttribute('value', 'RTA &amp; Surgery');
+                    $listitem16->addAttribute('Selected', 'False');
 
                     //FIELD 2
                     $field2 = $columns->addChild('FIELD');
