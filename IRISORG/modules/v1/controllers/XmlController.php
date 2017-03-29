@@ -49,10 +49,14 @@ class XmlController extends Controller {
     }
     
     public function actionSetattrvalue() {
-        $node = 'LISTITEM';
-        $attr = 'value';
-        $find = 'RTA &amp; Surgery';
-        $replace = 'RTA & Surgery';
+        $node = 'FIELD';
+        $attr = 'label';
+        $find = 'Perinatal2';
+        $replace = 'Posnatal';
+//        $node = 'LISTITEM';
+//        $attr = 'value';
+//        $find = 'RTA &amp; Surgery';
+//        $replace = 'RTA & Surgery';
         $xpath = "/FIELDS/GROUP/PANELBODY//{$node}[@{$attr}='{$find}']";
 
         $all_files = $this->getAllFiles();
