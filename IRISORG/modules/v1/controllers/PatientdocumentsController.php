@@ -1313,7 +1313,7 @@ class PatientdocumentsController extends ActiveController {
                             $field4_sub = $field4->addChild('FIELD');
                             $field4_sub->addAttribute('id', 'txtPhamacoSideEffects' . $rowCount);
                             $field4_sub->addAttribute('type', 'TextBox');
-                            $field4_sub->addAttribute('label', 'Reason: ');
+                            $field4_sub->addAttribute('label', '');
 
                             $field4_properties = $field4_sub->addChild('PROPERTIES');
 
@@ -1326,7 +1326,7 @@ class PatientdocumentsController extends ActiveController {
                             $property10 = $field4_properties->addChild('PROPERTY', 'form-control');
                             $property10->addAttribute('name', 'class');
 
-                            $property11 = $field4_properties->addChild('PROPERTY', 'Reason');
+                            $property11 = $field4_properties->addChild('PROPERTY', 'Mention that side effect');
                             $property11->addAttribute('name', 'placeholder');
                         }
                     }
