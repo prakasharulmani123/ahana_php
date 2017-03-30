@@ -47,7 +47,14 @@ class XmlController extends Controller {
         $item->addAttribute('value', $value);
         $item->addAttribute('Selected', 'False');
     }
-    
+
+    private function createRadioButton($field, $item, $value, $id) {
+        $item = $field->addChild('LISTITEM', $item);
+        $item->addAttribute('value', $value);
+        $item->addAttribute('id', $id);
+        $item->addAttribute('Selected', 'False');
+    }
+
     public function actionSetattrvalue() {
         $node = 'FIELD';
         $attr = 'label';
@@ -88,12 +95,18 @@ class XmlController extends Controller {
 
     //2. Section of past medical history Can we add RTA & Surgery (earlier suggested by Gopi Sir)  - COMPLETED
     public function actionInsertnewnode() {
-        $field_type = 'DropDownList';
+        $field_type = 'RadioButtonList';
         if ($field_type == 'DropDownList') {
             $find_val = 'Thyroid dysfunction';
             $item = 'RTA &amp; Surgery';
             $value = 'RTA & Surgery';
             $xpath = "/FIELDS/GROUP/PANELBODY//LISTITEM[@value='{$find_val}']/parent::LISTITEMS";
+        } else if ($field_type == 'RadioButtonList') {
+            $find_val = 'RBknowledgeofspouse2';
+            $item = 'NA';
+            $value = 'NA';
+            $id = 'RBknowledgeofspouse3';
+            $xpath = "/FIELDS/GROUP/PANELBODY//LISTITEM[@id='{$find_val}']/parent::LISTITEMS";
         }
 
         $all_files = $this->getAllFiles();
@@ -113,7 +126,11 @@ class XmlController extends Controller {
                         foreach ($targets as $target) {
                             $target_array = (array) $target;
                             if (!in_array($value, $target_array['LISTITEM'])) {
-                                $this->createDDLItem($target, $item, $value);
+                                if ($field_type == 'DropDownList') {
+                                    $this->createDDLItem($target, $item, $value);
+                                } else if ($field_type == 'RadioButtonList') {
+                                    $this->createRadioButton($target, $item, $value, $id);
+                                }
                             }
                         }
                     }
@@ -162,7 +179,7 @@ class XmlController extends Controller {
     //3. Side effects - Changes
     public function actionSideeffects() {
         $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@type='RadGrid' and @ADDButtonID='RGPhamacoadd']//FIELD[@type='TextBox' and @label='Reason: ']";
-        
+
         $all_files = $this->getAllFiles();
         $error_files = [];
         if (!empty($all_files)) {
@@ -177,13 +194,44 @@ class XmlController extends Controller {
                     }
                     $targets = $xml->xpath($xpath);
                     if (!empty($targets)) {
-                        foreach($targets as $target){
-                            if($target['label'] != '') {
+                        foreach ($targets as $target) {
+                            if ($target['label'] != '') {
                                 $target['label'] = '';
                             }
-                            if($target->PROPERTIES->PROPERTY[3] == 'Reason'){
+                            if ($target->PROPERTIES->PROPERTY[3] == 'Reason') {
                                 $target->PROPERTIES->PROPERTY[3] = 'Mention that side effect';
                             }
+                        }
+                    }
+                    $xml->asXML($files);
+                }
+            }
+        }
+        echo "<pre>";
+        print_r($error_files);
+        exit;
+    }
+    
+    public function actionRbtocb(){
+        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@type='RadioButtonList' and @id='RBQuality']";
+
+        $all_files = $this->getAllFiles();
+        $error_files = [];
+        if (!empty($all_files)) {
+            foreach ($all_files as $key => $files) {
+                if (filesize($files) > 0) {
+                    libxml_use_internal_errors(true);
+                    $xml = simplexml_load_file($files, null, LIBXML_NOERROR);
+                    if ($xml === false) {
+                        $error_files[$key]['name'] = $files;
+                        $error_files[$key]['error'] = libxml_get_errors();
+                        continue;
+                    }
+                    $targets = $xml->xpath($xpath);
+                    if (!empty($targets)) {
+                        foreach ($targets as $target) {
+                            $target['type'] = 'CheckBoxList';
+                            $target->PROPERTIES->PROPERTY = $target->PROPERTIES->PROPERTY . '[]';
                         }
                     }
                     $xml->asXML($files);
