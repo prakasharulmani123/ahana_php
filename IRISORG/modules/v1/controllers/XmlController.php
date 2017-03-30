@@ -211,8 +211,8 @@ class XmlController extends Controller {
         print_r($error_files);
         exit;
     }
-    
-    public function actionRbtocb(){
+
+    public function actionRbtocb() {
         $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@type='RadioButtonList' and @id='RBQuality']";
 
         $all_files = $this->getAllFiles();
@@ -232,6 +232,42 @@ class XmlController extends Controller {
                         foreach ($targets as $target) {
                             $target['type'] = 'CheckBoxList';
                             $target->PROPERTIES->PROPERTY = $target->PROPERTIES->PROPERTY . '[]';
+                        }
+                    }
+                    $xml->asXML($files);
+                }
+            }
+        }
+        echo "<pre>";
+        print_r($error_files);
+        exit;
+    }
+
+    public function actionLiaddsetattr() {
+        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@id='referral_details' and @type='CheckBoxList']";
+
+        $all_files = $this->getAllFiles();
+        $error_files = [];
+        if (!empty($all_files)) {
+            foreach ($all_files as $key => $files) {
+                if (filesize($files) > 0) {
+                    libxml_use_internal_errors(true);
+                    $xml = simplexml_load_file($files, null, LIBXML_NOERROR);
+                    if ($xml === false) {
+                        $error_files[$key]['name'] = $files;
+                        $error_files[$key]['error'] = libxml_get_errors();
+                        continue;
+                    }
+                    $targets = $xml->xpath($xpath);
+                    if (!empty($targets)) {
+                        foreach ($targets as $target) {
+                            foreach ($target->LISTITEMS->LISTITEM as $list_item) {
+                                if (!isset($list_item['onclick'])) {
+                                    $list_item->addAttribute('onclick', "OThersvisible(this.id, 'referral_details_other_div', 'block');");
+                                } else {
+                                    $list_item['onclick'] = "OThersvisible(this.id, 'referral_details_other_div', 'block');";
+                                }
+                            }
                         }
                     }
                     $xml->asXML($files);
