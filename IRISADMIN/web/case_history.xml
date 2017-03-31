@@ -53,14 +53,14 @@
                     <PROPERTY name="name">referral_details[]</PROPERTY>
                 </PROPERTIES>
                 <LISTITEMS>
-                    <LISTITEM value="Self" id="RBRefferals1" Selected="False">Self</LISTITEM>
-                    <LISTITEM value="General Practitioner" id="RBRefferals2" Selected="False">General Practitioner</LISTITEM>
-                    <LISTITEM value="Neighbours" id="RBRefferals3" Selected="False">Neighbours</LISTITEM>
-                    <LISTITEM value="Traditional healer" id="RBRefferals4" Selected="False">Traditional healer</LISTITEM>
-                    <LISTITEM value="Other patient" id="RBRefferals5" Selected="False">Other patient</LISTITEM>
-                    <LISTITEM value="Other psychiatrist" id="RBRefferals6" Selected="False">Other psychiatrist</LISTITEM>
-                    <LISTITEM value="Media" id="RBRefferals7" Selected="False">Media</LISTITEM>
-                    <LISTITEM value="Others" id="RBRefferals8" Selected="False" onclick="OThersvisible(this.id, 'referral_details_other_div');">Others</LISTITEM>
+                    <LISTITEM value="Self" id="RBRefferals1" Selected="true" onclick="OThersvisible(this.id, 'referral_details_other_div', 'block');">Self</LISTITEM>
+                    <LISTITEM value="General Practitioner" id="RBRefferals2" Selected="false" onclick="OThersvisible(this.id, 'referral_details_other_div', 'block');">General Practitioner</LISTITEM>
+                    <LISTITEM value="Neighbours" id="RBRefferals3" Selected="false" onclick="OThersvisible(this.id, 'referral_details_other_div', 'block');">Neighbours</LISTITEM>
+                    <LISTITEM value="Traditional healer" id="RBRefferals4" Selected="false" onclick="OThersvisible(this.id, 'referral_details_other_div', 'block');">Traditional healer</LISTITEM>
+                    <LISTITEM value="Other patient" id="RBRefferals5" Selected="false" onclick="OThersvisible(this.id, 'referral_details_other_div', 'block');">Other patient</LISTITEM>
+                    <LISTITEM value="Other psychiatrist" id="RBRefferals6" Selected="false" onclick="OThersvisible(this.id, 'referral_details_other_div', 'block');">Other psychiatrist</LISTITEM>
+                    <LISTITEM value="Media" id="RBRefferals7" Selected="false" onclick="OThersvisible(this.id, 'referral_details_other_div', 'block');">Media</LISTITEM>
+                    <LISTITEM value="Others" id="RBRefferals8" Selected="false" onclick="OThersvisible(this.id, 'referral_details_other_div', 'block');">Others</LISTITEM>
                 </LISTITEMS>
                 <FIELD id="referral_details_other" type="TextBox" label="Referral Details Notes: ">
                     <PROPERTIES>
@@ -171,19 +171,19 @@
             
             <FIELD type="Header2" label="Informant" class="Informant"></FIELD>
             
-            <FIELD id="relationship" header2Class="Informant" type="RadioButtonList" label="Relationship" required="true" Backcontrols="hide" Backdivid="relationshipother_div">
+            <FIELD id="relationship" header2Class="Informant" type="CheckBoxList" label="Relationship" required="true" Backcontrols="hide" Backdivid="relationshipother_div">
                 <PROPERTIES>
-                    <PROPERTY name="name">relationship</PROPERTY>
+                    <PROPERTY name="name">relationship[]</PROPERTY>
                 </PROPERTIES>
                 <LISTITEMS>
-                    <LISTITEM value="Self" id="RBRelation1" Selected="False" onclick="OThersvisible(this.id,'relationshipother_div','none');">Self</LISTITEM>
-                    <LISTITEM value="Father" id="RBRelation2" Selected="False" onclick="OThersvisible(this.id,'relationshipother_div','none');">Father</LISTITEM>
-                    <LISTITEM value="Mother" id="RBRelation3" Selected="False" onclick="OThersvisible(this.id,'relationshipother_div','none');">Mother</LISTITEM>
-                    <LISTITEM value="Sibling" id="RBRelation4" Selected="False" onclick="OThersvisible(this.id,'relationshipother_div','none');">Sibling</LISTITEM>
-                    <LISTITEM value="Spouse" id="RBRelation5" Selected="False" onclick="OThersvisible(this.id,'relationshipother_div','none');">Spouse</LISTITEM>
-                    <LISTITEM value="Children" id="RBRelation6" Selected="False" onclick="OThersvisible(this.id,'relationshipother_div','none');">Children</LISTITEM>
-                    <LISTITEM value="Friend" id="RBRelation7" Selected="False" onclick="OThersvisible(this.id,'relationshipother_div','none');">Friend</LISTITEM>
-                    <LISTITEM value="Others" id="RBRelation8" Selected="False" onclick="OThersvisible(this.id,'relationshipother_div','block');">Others</LISTITEM>
+                    <LISTITEM value="Self" id="RBRelation1" Selected="false">Self</LISTITEM>
+                    <LISTITEM value="Father" id="RBRelation2" Selected="false">Father</LISTITEM>
+                    <LISTITEM value="Mother" id="RBRelation3" Selected="false">Mother</LISTITEM>
+                    <LISTITEM value="Sibling" id="RBRelation4" Selected="false">Sibling</LISTITEM>
+                    <LISTITEM value="Spouse" id="RBRelation5" Selected="false">Spouse</LISTITEM>
+                    <LISTITEM value="Children" id="RBRelation6" Selected="true">Children</LISTITEM>
+                    <LISTITEM value="Friend" id="RBRelation7" Selected="false">Friend</LISTITEM>
+                    <LISTITEM value="Others" id="RBRelation8" Selected="false" onclick="OThersvisible(this.id, 'relationshipother_div');">Others</LISTITEM>
                 </LISTITEMS>
                 <FIELD id="relationshipother" type="TextBox" label="Relationship Notes: ">
                     <PROPERTIES>
@@ -195,13 +195,21 @@
                 </FIELD>
             </FIELD>
             
-            <FIELD id="primary_care_giver" header2Class="Informant" type="RadioButtonList" label="Primary Care giver" required="true">
+            <FIELD id="primary_care_giver" header2Class="Informant" type="DropDownList" label="Primary Care giver" required="true">
                 <PROPERTIES>
+                    <PROPERTY name="id">primary_care_giver</PROPERTY>
                     <PROPERTY name="name">primary_care_giver</PROPERTY>
+                    <PROPERTY name="class">form-control</PROPERTY>
                 </PROPERTIES>
                 <LISTITEMS>
-                    <LISTITEM value="Yes" id="RBPrimarycare1" Selected="False">Yes</LISTITEM>
-                    <LISTITEM value="No" id="RBPrimarycare2" Selected="False">No</LISTITEM>
+                    <LISTITEM value="Self" Selected="True">Self</LISTITEM>
+                    <LISTITEM value="Father" Selected="False">Father</LISTITEM>
+                    <LISTITEM value="Mother" Selected="False">Mother</LISTITEM>
+                    <LISTITEM value="Sibling" Selected="False">Sibling</LISTITEM>
+                    <LISTITEM value="Spouse" Selected="False">Spouse</LISTITEM>
+                    <LISTITEM value="Children" Selected="False">Children</LISTITEM>
+                    <LISTITEM value="Friend" Selected="False">Friend</LISTITEM>
+                    <LISTITEM value="Others" Selected="False">Others</LISTITEM>
                 </LISTITEMS>
             </FIELD>
             
@@ -563,21 +571,22 @@
                             <PROPERTY name="class">form-control</PROPERTY>
                         </PROPERTIES>
                         <LISTITEMS>
-                            <LISTITEM value="" Selected="False">--Select--</LISTITEM>
-                            <LISTITEM value="Diabetes" Selected="False">Diabetes</LISTITEM>
-                            <LISTITEM value="Hypertension" Selected="False">Hypertension</LISTITEM>
-                            <LISTITEM value="Tuberculosis" Selected="False">Tuberculosis</LISTITEM>
-                            <LISTITEM value="Hepatitis" Selected="False">Hepatitis</LISTITEM>
-                            <LISTITEM value="Asthma" Selected="False">Asthma</LISTITEM>
-                            <LISTITEM value="Bronchitis" Selected="False">Bronchitis</LISTITEM>
-                            <LISTITEM value="Head injury/LOC" Selected="False">Head injury/LOC</LISTITEM>
-                            <LISTITEM value="Seizures" Selected="False">Seizures</LISTITEM>
-                            <LISTITEM value="Cerebrovascular Accidents" Selected="False">Cerebrovascular Accidents</LISTITEM>
-                            <LISTITEM value="Immuno compromised state" Selected="False">Immuno compromised state</LISTITEM>
-                            <LISTITEM value="Mycocardial Infarction" Selected="False">Mycocardial Infarction</LISTITEM>
-                            <LISTITEM value="Allergies" Selected="False">Allergies</LISTITEM>
-                            <LISTITEM value="IHD" Selected="False">IHD</LISTITEM>
-                            <LISTITEM value="Thyroid dysfunction" Selected="False">Thyroid dysfunction</LISTITEM>
+                            <LISTITEM value="" Selected="false">--Select--</LISTITEM>
+                            <LISTITEM value="Diabetes" Selected="false">Diabetes</LISTITEM>
+                            <LISTITEM value="Hypertension" Selected="false">Hypertension</LISTITEM>
+                            <LISTITEM value="Tuberculosis" Selected="false">Tuberculosis</LISTITEM>
+                            <LISTITEM value="Hepatitis" Selected="false">Hepatitis</LISTITEM>
+                            <LISTITEM value="Asthma" Selected="false">Asthma</LISTITEM>
+                            <LISTITEM value="Bronchitis" Selected="false">Bronchitis</LISTITEM>
+                            <LISTITEM value="Head injury/LOC" Selected="false">Head injury/LOC</LISTITEM>
+                            <LISTITEM value="Seizures" Selected="false">Seizures</LISTITEM>
+                            <LISTITEM value="Cerebrovascular Accidents" Selected="false">Cerebrovascular Accidents</LISTITEM>
+                            <LISTITEM value="Immuno compromised state" Selected="false">Immuno compromised state</LISTITEM>
+                            <LISTITEM value="Mycocardial Infarction" Selected="false">Mycocardial Infarction</LISTITEM>
+                            <LISTITEM value="Allergies" Selected="false">Allergies</LISTITEM>
+                            <LISTITEM value="IHD" Selected="false">IHD</LISTITEM>
+                            <LISTITEM value="Thyroid dysfunction" Selected="false">Thyroid dysfunction</LISTITEM>
+                            <LISTITEM value="RTA &amp; Surgery" Selected="False">RTA &amp; Surgery</LISTITEM>
                         </LISTITEMS>
                     </FIELD>
                     
@@ -643,7 +652,7 @@
                     <HEADER>
                         <TH>Drug name</TH>
                         <TH>Duration</TH>
-                        <TH>Currently under treatment</TH>
+                        <TH>Treatment Response</TH>
                         <TH>Side effects</TH>
                     </HEADER>
                     <COLUMNS>
@@ -696,12 +705,12 @@
                                 <LISTITEM value="Yes" id="radioPhamacoSideeffect1" Selected="False" onclick="OThersvisible(this.id,'radioPhamacoSideeffectDiv','block');">Yes</LISTITEM>
                                 <LISTITEM value="No" id="radioPhamacoSideeffect2" Selected="False" onclick="OThersvisible(this.id,'radioPhamacoSideeffectDiv','none');">No</LISTITEM>
                             </LISTITEMS>
-                            <FIELD id="txtPhamacoSideEffects" type="TextBox" label="Reason: ">
+                            <FIELD id="txtPhamacoSideEffects" type="TextBox" label="">
                                 <PROPERTIES>
                                     <PROPERTY name="id">txtPhamacoSideEffects</PROPERTY>
                                     <PROPERTY name="name">txtPhamacoSideEffects</PROPERTY>
                                     <PROPERTY name="class">form-control</PROPERTY>
-                                    <PROPERTY name="placeholder">Reason</PROPERTY>
+                                    <PROPERTY name="placeholder">Mention that side effect</PROPERTY>
                                 </PROPERTIES>
                             </FIELD>
                         </FIELD>
@@ -1065,7 +1074,7 @@
                         </LISTITEMS>
                     </FIELD>
                 
-                    <FIELD id="RBpbperinatal2" header2Class="Birth_and_Development" type="RadioButtonList" label="Perinatal2" Backcontrols="hide" Backdivid="perinatal2div" required="true">
+                    <FIELD id="RBpbperinatal2" header2Class="Birth_and_Development" type="RadioButtonList" label="Posnatal" Backcontrols="hide" Backdivid="perinatal2div" required="true">
                         <PROPERTIES>
                             <PROPERTY name="name">RBpbperinatal2</PROPERTY>
                         </PROPERTIES>
@@ -1604,7 +1613,7 @@
                             <PROPERTY name="name">RBmaritalsexualsatisfac</PROPERTY>
                         </PROPERTIES>
                         <LISTITEMS>
-                            <LISTITEM value="Statisfactory" id="RBmaritalsexualsatisfac1" Selected="False">Statisfactory</LISTITEM>
+                            <LISTITEM value="satisfactory" id="RBmaritalsexualsatisfac1" Selected="False">satisfactory</LISTITEM>
                             <LISTITEM value="Unsatisfactory" id="RBmaritalsexualsatisfac2" Selected="False">Unsatisfactory</LISTITEM>
                             <LISTITEM value="Neutral" id="RBmaritalsexualsatisfac3" Selected="False">Neutral</LISTITEM>
                         </LISTITEMS>
@@ -1627,6 +1636,7 @@
                         <LISTITEMS>
                             <LISTITEM value="Yes" id="RBknowledgeofspouse1" Selected="False">Yes</LISTITEM>
                             <LISTITEM value="No" id="RBknowledgeofspouse2" Selected="False">No</LISTITEM>
+                            <LISTITEM value="NA" id="RBknowledgeofspouse3" Selected="False">NA</LISTITEM>
                         </LISTITEMS>
                     </FIELD>
                 
@@ -1917,7 +1927,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="RBeyetoeyecontact" header2Class="General_Appearance_Behaviour" type="RadioButtonList" label="Eye to Eye contacat" required="true">
+                <FIELD id="RBeyetoeyecontact" header2Class="General_Appearance_Behaviour" type="RadioButtonList" label="Eye to Eye contact" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">RBeyetoeyecontact</PROPERTY>
                     </PROPERTIES>
@@ -2191,9 +2201,9 @@
                 
                 <FIELD type="Header2" label="Mood" class="Mood"></FIELD>
                 
-                <FIELD id="RBQuality" header2Class="Mood" type="RadioButtonList" label="Quality" required="true">
+                <FIELD id="RBQuality" header2Class="Mood" type="CheckBoxList" label="Quality" required="true">
                     <PROPERTIES>
-                        <PROPERTY name="name">RBQuality</PROPERTY>
+                        <PROPERTY name="name">RBQuality[]</PROPERTY>
                     </PROPERTIES>
                     <LISTITEMS>
                         <LISTITEM value="Euthymic" id="RBQuality1" Selected="False">Euthymic</LISTITEM>
@@ -2307,7 +2317,7 @@
                 
                 <FIELD type="Header2" label="Higher Mental Functions" class="Higher_Mental_Functions"></FIELD>
                 
-                <FIELD id="RBAttension" header2Class="Higher_Mental_Functions" type="RadioButtonList" label="Attension" required="true">
+                <FIELD id="RBAttension" header2Class="Higher_Mental_Functions" type="RadioButtonList" label="Attention" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">RBAttension</PROPERTY>
                     </PROPERTIES>
