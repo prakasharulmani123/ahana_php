@@ -58,8 +58,8 @@ class XmlController extends Controller {
     public function actionSetattrvalue() {
         $node = 'FIELD';
         $attr = 'label';
-        $find = 'Eye to Eye contacat';
-        $replace = 'Eye to Eye contact';
+        $find = 'Attension';
+        $replace = 'Attention';
 //        $node = 'LISTITEM';
 //        $attr = 'value';
 //        $find = 'RTA &amp; Surgery';
@@ -213,7 +213,7 @@ class XmlController extends Controller {
     }
 
     public function actionRbtocb() {
-        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@type='RadioButtonList' and @id='RBQuality']";
+        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@type='RadioButtonList' and @id='relationship']";
 
         $all_files = $this->getAllFiles();
         $error_files = [];
@@ -244,7 +244,7 @@ class XmlController extends Controller {
     }
 
     public function actionLiaddsetattr() {
-        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@id='referral_details' and @type='CheckBoxList']";
+        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@id='relationship' and @type='CheckBoxList']";
 
         $all_files = $this->getAllFiles();
         $error_files = [];
@@ -262,10 +262,12 @@ class XmlController extends Controller {
                     if (!empty($targets)) {
                         foreach ($targets as $target) {
                             foreach ($target->LISTITEMS->LISTITEM as $list_item) {
-                                if (!isset($list_item['onclick'])) {
-                                    $list_item->addAttribute('onclick', "OThersvisible(this.id, 'referral_details_other_div', 'block');");
-                                } else {
-                                    $list_item['onclick'] = "OThersvisible(this.id, 'referral_details_other_div', 'block');";
+                                if (isset($list_item['onclick'])) {
+                                    unset($list_item['onclick']);
+                                }
+
+                                if ($list_item['value'] == 'Others') {
+                                    $list_item->addAttribute('onclick', "OThersvisible(this.id, 'relationshipother_div');");
                                 }
                             }
                         }
@@ -278,8 +280,8 @@ class XmlController extends Controller {
         print_r($error_files);
         exit;
     }
-    
-    public function actionChangetxtattrval(){
+
+    public function actionChangetxtattrval() {
         $xpath = "/FIELDS/GROUP/PANELBODY//LISTITEM[@id='RBmaritalsexualsatisfac1']";
 
         $all_files = $this->getAllFiles();
