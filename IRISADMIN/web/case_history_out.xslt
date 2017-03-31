@@ -58,6 +58,23 @@
                                         <div class="line line-dashed b-b line-lg "></div>
                                     </xsl:if>
                                 </xsl:when>
+                                
+                                <!-- Main DropDownList-->
+                                <xsl:when test="@type='DropDownList'">
+                                    <div class="form-group {@header2Class}">
+                                        <label class="col-sm-3 control-label">
+                                            <xsl:value-of select="@label" />
+                                        </label>
+                                        <div class="col-sm-9">
+                                            <xsl:for-each select="LISTITEMS/LISTITEM">
+                                                <xsl:if test="@Selected = 'true'">
+                                                    <xsl:value-of select="@value"></xsl:value-of>
+                                                </xsl:if>
+                                            </xsl:for-each>
+                                        </div>
+                                    </div>
+                                    <div class="line line-dashed b-b line-lg "></div>
+                                </xsl:when>
                                     
                                 <!-- Main Text Box -->
                                 <xsl:when test="@type='TextBox'">

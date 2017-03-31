@@ -312,4 +312,55 @@ class XmlController extends Controller {
         exit;
     }
 
+    public function actionRbtoddl() {
+        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@type='RadioButtonList' and @id='primary_care_giver']";
+        $field_property = [
+            'id' => 'primary_care_giver',
+            'name' => 'primary_care_giver',
+            'class' => 'form-control'
+        ];
+        $list_items = ['Self', 'Father', 'Mother', 'Sibling', 'Spouse', 'Children', 'Friend', 'Others'];
+        
+        $all_files = $this->getAllFiles();
+        $error_files = [];
+        if (!empty($all_files)) {
+            foreach ($all_files as $key => $files) {
+                if (filesize($files) > 0) {
+                    libxml_use_internal_errors(true);
+                    $xml = simplexml_load_file($files, null, LIBXML_NOERROR);
+                    if ($xml === false) {
+                        $error_files[$key]['name'] = $files;
+                        $error_files[$key]['error'] = libxml_get_errors();
+                        continue;
+                    }
+                    $targets = $xml->xpath($xpath);
+                    if (!empty($targets)) {
+                        foreach ($targets as $target) {
+                            $target['type'] = 'DropDownList';
+
+                            unset($target->PROPERTIES);
+                            $properties = $target->addChild('PROPERTIES');
+                            foreach ($field_property as $key => $value) {
+                                $property_{$key} = $properties->addChild("PROPERTY", $value);
+                                $property_{$key}->addAttribute('name', $key);
+                            }
+
+                            unset($target->LISTITEMS);
+                            $listItems = $target->addChild('LISTITEMS');
+                            foreach ($list_items as $key => $value) {
+                                $item_{$key} = $listItems->addChild('LISTITEM', $value);
+                                $item_{$key}->addAttribute('value', $value);
+                                $item_{$key}->addAttribute('Selected', ($key == 0 ? "True" : "False" ));
+                            }
+                        }
+                    }
+                    $xml->asXML($files);
+                }
+            }
+        }
+        echo "<pre>";
+        print_r($error_files);
+        exit;
+    }
+
 }

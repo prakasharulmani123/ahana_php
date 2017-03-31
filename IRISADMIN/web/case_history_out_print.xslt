@@ -54,6 +54,22 @@
                                 </xsl:if>
                             </xsl:when>
                             
+                            <!-- Main DropDownList-->
+                            <xsl:when test="@type='DropDownList'">
+                                <tr class="{@header2Class}">
+                                    <td>
+                                        <xsl:value-of select="@label" />
+                                    </td>
+                                    <td>
+                                        <xsl:for-each select="LISTITEMS/LISTITEM">
+                                            <xsl:if test="@Selected = 'true'">
+                                                <xsl:value-of select="@value"></xsl:value-of>
+                                            </xsl:if>
+                                        </xsl:for-each>
+                                    </td>
+                                </tr>
+                            </xsl:when>
+                            
                             <!-- Main Text Box -->
                             <xsl:when test="@type='TextBox'">
                                 <xsl:if test="PROPERTIES/PROPERTY[@name = 'value' and string(.)]">
