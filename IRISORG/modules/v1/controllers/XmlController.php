@@ -39,7 +39,7 @@ class XmlController extends Controller {
                     'only' => ['*.xml'],
                     'recursive' => true,
         ]);
-        $base_xml = [realpath(dirname(__FILE__).'/../../../../IRISADMIN/web/case_history.xml')];
+        $base_xml = [realpath(dirname(__FILE__) . '/../../../../IRISADMIN/web/case_history.xml')];
         $all_files = \yii\helpers\ArrayHelper::merge($base_xml, $files);
         return $all_files;
     }
@@ -56,7 +56,7 @@ class XmlController extends Controller {
         $item->addAttribute('id', $id);
         $item->addAttribute('Selected', 'False');
     }
-    
+
     private function simplexml_insert_after($insert, $target) {
         $target_dom = dom_import_simplexml($target);
         $insert_dom = $target_dom->ownerDocument->importNode(dom_import_simplexml($insert), true);
@@ -66,7 +66,7 @@ class XmlController extends Controller {
             return $target_dom->parentNode->appendChild($insert_dom);
         }
     }
-    
+
     public function actionInsertnewfield() {
         $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@id='total_duration']";
         $insert = '<FIELD id="total_duration_notes" type="TextArea" label="Notes">
@@ -77,7 +77,7 @@ class XmlController extends Controller {
                     <PROPERTY name="placeholder">Notes</PROPERTY>
                 </PROPERTIES>
             </FIELD>';
-        
+
         $all_files = $this->getAllFiles();
         $error_files = [];
         if (!empty($all_files)) {
@@ -294,7 +294,7 @@ class XmlController extends Controller {
     }
 
     public function actionLiaddsetattr() {
-        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@id='relationship' and @type='CheckBoxList']";
+        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@id='precipitating_factor' and @type='CheckBoxList']";
 
         $all_files = $this->getAllFiles();
         $error_files = [];
@@ -315,10 +315,7 @@ class XmlController extends Controller {
                                 if (isset($list_item['onclick'])) {
                                     unset($list_item['onclick']);
                                 }
-
-                                if ($list_item['value'] == 'Others') {
-                                    $list_item->addAttribute('onclick', "OThersvisible(this.id, 'relationshipother_div');");
-                                }
+                                $list_item->addAttribute('onclick', "OThersvisible(this.id, 'precipitating_factor_other_div', 'block');");
                             }
                         }
                     }
@@ -370,7 +367,7 @@ class XmlController extends Controller {
             'class' => 'form-control'
         ];
         $list_items = ['Self', 'Father', 'Mother', 'Sibling', 'Spouse', 'Children', 'Friend', 'Others'];
-        
+
         $all_files = $this->getAllFiles();
         $error_files = [];
         if (!empty($all_files)) {
@@ -400,7 +397,7 @@ class XmlController extends Controller {
                             foreach ($list_items as $key => $value) {
                                 $item_{$key} = $listItems->addChild('LISTITEM', $value);
                                 $item_{$key}->addAttribute('value', $value);
-                                $item_{$key}->addAttribute('Selected', ($key == 0 ? "True" : "False" ));
+                                $item_{$key}->addAttribute('Selected', ($key == 0 ? "True" : "False"));
                             }
                         }
                     }

@@ -363,13 +363,13 @@
                     <PROPERTY name="name">precipitating_factor[]</PROPERTY>
                 </PROPERTIES>
                 <LISTITEMS>
-                    <LISTITEM value="Bereavement" id="RBpresent1" Selected="False">Bereavement</LISTITEM>
-                    <LISTITEM value="Financial loss" id="RBpresent2" Selected="False">Financial loss</LISTITEM>
-                    <LISTITEM value="Family conflicts" id="RBpresent3" Selected="False">Family conflicts</LISTITEM>
-                    <LISTITEM value="Difficulty at work" id="RBpresent4" Selected="False">Difficulty at work</LISTITEM>
-                    <LISTITEM value="Physical ailment" id="RBpresent5" Selected="False">Physical ailment</LISTITEM>
-                    <LISTITEM value="Relationship problems" id="RBpresent6" Selected="False">Relationship problems</LISTITEM>
-                    <LISTITEM value="Others" id="RBpresent7" Selected="False" onclick="OThersvisible(this.id, 'precipitating_factor_other_div');">Others</LISTITEM>
+                    <LISTITEM value="Bereavement" id="RBpresent1" Selected="False" onclick="OThersvisible(this.id, 'precipitating_factor_other_div', 'block');">Bereavement</LISTITEM>
+                    <LISTITEM value="Financial loss" id="RBpresent2" Selected="False" onclick="OThersvisible(this.id, 'precipitating_factor_other_div', 'block');">Financial loss</LISTITEM>
+                    <LISTITEM value="Family conflicts" id="RBpresent3" Selected="False" onclick="OThersvisible(this.id, 'precipitating_factor_other_div', 'block');">Family conflicts</LISTITEM>
+                    <LISTITEM value="Difficulty at work" id="RBpresent4" Selected="False" onclick="OThersvisible(this.id, 'precipitating_factor_other_div', 'block');">Difficulty at work</LISTITEM>
+                    <LISTITEM value="Physical ailment" id="RBpresent5" Selected="False" onclick="OThersvisible(this.id, 'precipitating_factor_other_div', 'block');">Physical ailment</LISTITEM>
+                    <LISTITEM value="Relationship problems" id="RBpresent6" Selected="False" onclick="OThersvisible(this.id, 'precipitating_factor_other_div', 'block');">Relationship problems</LISTITEM>
+                    <LISTITEM value="Others" id="RBpresent7" Selected="False" onclick="OThersvisible(this.id, 'precipitating_factor_other_div', 'block');">Others</LISTITEM>
                 </LISTITEMS>
                 <FIELD id="precipitating_factor_other" type="TextBox" label="Precipitating Factor Notes: ">
                     <PROPERTIES>
