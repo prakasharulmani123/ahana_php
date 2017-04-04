@@ -39,7 +39,9 @@ class XmlController extends Controller {
                     'only' => ['*.xml'],
                     'recursive' => true,
         ]);
-        return $files;
+        $base_xml = [realpath(dirname(__FILE__).'/../../../../IRISADMIN/web/case_history.xml')];
+        $all_files = \yii\helpers\ArrayHelper::merge($base_xml, $files);
+        return $all_files;
     }
 
     private function createDDLItem($field, $item, $value) {
@@ -53,6 +55,54 @@ class XmlController extends Controller {
         $item->addAttribute('value', $value);
         $item->addAttribute('id', $id);
         $item->addAttribute('Selected', 'False');
+    }
+    
+    private function simplexml_insert_after($insert, $target) {
+        $target_dom = dom_import_simplexml($target);
+        $insert_dom = $target_dom->ownerDocument->importNode(dom_import_simplexml($insert), true);
+        if ($target_dom->nextSibling) {
+            return $target_dom->parentNode->insertBefore($insert_dom, $target_dom->nextSibling);
+        } else {
+            return $target_dom->parentNode->appendChild($insert_dom);
+        }
+    }
+    
+    public function actionInsertnewfield() {
+        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@id='total_duration']";
+        $insert = '<FIELD id="total_duration_notes" type="TextArea" label="Notes">
+                <PROPERTIES>
+                    <PROPERTY name="id">total_duration_notes</PROPERTY>
+                    <PROPERTY name="name">total_duration_notes</PROPERTY>
+                    <PROPERTY name="class">form-control</PROPERTY>
+                    <PROPERTY name="placeholder">Notes</PROPERTY>
+                </PROPERTIES>
+            </FIELD>';
+        
+        $all_files = $this->getAllFiles();
+        $error_files = [];
+        if (!empty($all_files)) {
+            foreach ($all_files as $key => $files) {
+                if (filesize($files) > 0) {
+                    libxml_use_internal_errors(true);
+                    $xml = simplexml_load_file($files, null, LIBXML_NOERROR);
+                    if ($xml === false) {
+                        $error_files[$key]['name'] = $files;
+                        $error_files[$key]['error'] = libxml_get_errors();
+                        continue;
+                    }
+                    $targets = $xml->xpath($xpath);
+                    if (!empty($targets)) {
+                        foreach ($targets as $target) {
+                            $this->simplexml_insert_after(simplexml_load_string($insert), $target);
+                        }
+                    }
+                    $xml->asXML($files);
+                }
+            }
+        }
+        echo "<pre>";
+        print_r($error_files);
+        exit;
     }
 
     public function actionSetattrvalue() {

@@ -84,7 +84,7 @@
                     <LISTITEM value="Post Graduate" id="RBEducation5" Selected="False" onclick=" OThersvisible(this.id,'education_note_div');">Post Graduate</LISTITEM>
                     <LISTITEM value="Other" id="RBEducation6" Selected="False" onclick="OThersvisible(this.id,'education_note_div');">Other</LISTITEM>
                 </LISTITEMS>
-                <FIELD id="educationnote" type="TextBox"  label="Education Notes: ">
+                <FIELD id="educationnote" type="TextBox" label="Education Notes: ">
                     <PROPERTIES>
                         <PROPERTY name="id">educationnote</PROPERTY>
                         <PROPERTY name="name">educationnote</PROPERTY>
@@ -114,7 +114,7 @@
                 </FIELD>
             </FIELD>
             
-            <FIELD id="martial_status" type="RadioButtonList" label="Martial Status" required="true" >
+            <FIELD id="martial_status" type="RadioButtonList" label="Martial Status" required="true">
                 <PROPERTIES>
                     <PROPERTY name="name">martial_status</PROPERTY>
                 </PROPERTIES>
@@ -169,7 +169,7 @@
                 </LISTITEMS>
             </FIELD>
             
-            <FIELD type="Header2" label="Informant" class="Informant"></FIELD>
+            <FIELD type="Header2" label="Informant" class="Informant"/>
             
             <FIELD id="relationship" header2Class="Informant" type="CheckBoxList" label="Relationship" required="true" Backcontrols="hide" Backdivid="relationshipother_div">
                 <PROPERTIES>
@@ -326,6 +326,13 @@
                         <LISTITEM value="Days" Selected="False">Days</LISTITEM>
                     </LISTITEMS>
                 </FIELD>
+            </FIELD><FIELD id="total_duration_notes" type="TextArea" label="Notes">
+                <PROPERTIES>
+                    <PROPERTY name="id">total_duration_notes</PROPERTY>
+                    <PROPERTY name="name">total_duration_notes</PROPERTY>
+                    <PROPERTY name="class">form-control</PROPERTY>
+                    <PROPERTY name="placeholder">Notes</PROPERTY>
+                </PROPERTIES>
             </FIELD>
             
             <FIELD id="mode_of_onset" type="RadioButtonList" label="Mode of Onset" required="true">
@@ -404,7 +411,7 @@
                 </PROPERTIES>
             </FIELD>
             
-            <FIELD type="Header2" label="Associated Disturbances" class="associated_disturbances"></FIELD>
+            <FIELD type="Header2" label="Associated Disturbances" class="associated_disturbances"/>
             
             <FIELD id="sleep" header2Class="associated_disturbances" type="RadioButtonList" label="Sleep">
                 <PROPERTIES>
@@ -500,7 +507,7 @@
             <VALUE>Past History</VALUE>
         </PANELHEADER>
         <PANELBODY>
-            <FIELD type="Header2" label="Past Psychiatric History" class="past_psychiatric_history"></FIELD>
+            <FIELD type="Header2" label="Past Psychiatric History" class="past_psychiatric_history"/>
             
             <FIELD id="similar_episodes" header2Class="past_psychiatric_history" type="RadioButtonList" label="Past Episodes" Backcontrols="hide" Backdivid="similar_episodes_ddl_div">
                 <PROPERTIES>
@@ -551,7 +558,7 @@
                 </PROPERTIES>
             </FIELD>
             
-            <FIELD type="Header2" label="Past Medical History" class="past_medical_history"></FIELD>
+            <FIELD type="Header2" label="Past Medical History" class="past_medical_history"/>
             
             <FIELD type="RadGrid" header2Class="past_medical_history" ADDButton="True" ADDButtonID="RGMedHisadd" AddButtonTableId="RGMedicalHistory">
                 <PROPERTIES>
@@ -642,7 +649,7 @@
             </FIELD>
             
             <FIELD type="PanelBar" label="Treatment History" target_div="treatment_history">
-                <FIELD type="Header2" label="Phamacotherapy" class="Phamacotherapy"></FIELD>
+                <FIELD type="Header2" label="Phamacotherapy" class="Phamacotherapy"/>
                 
                 <FIELD type="RadGrid" header2Class="Phamacotherapy" ADDButton="True" ADDButtonID="RGPhamacoadd" AddButtonTableId="RGPhamaco">
                     <PROPERTIES>
@@ -735,15 +742,15 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD type="Header2" label="Electro Convulsive therapy" class="Electro_Convulsive_therapy"></FIELD>
+                <FIELD type="Header2" label="Electro Convulsive therapy" class="Electro_Convulsive_therapy"/>
                 
                 <FIELD id="previous_ects" header2Class="Electro_Convulsive_therapy" type="RadioButtonList" label="Previous ECT's" Backcontrols="hide" Backdivid="previous_ects_radio_div">
                     <PROPERTIES>
                         <PROPERTY name="name">previous_ects</PROPERTY>
                     </PROPERTIES>
                     <LISTITEMS>
-                        <LISTITEM value="No" id="previous_ects1"  Selected="False" onclick="OThersvisible(this.id,'previous_ects_radio_div','none');">No</LISTITEM>
-                        <LISTITEM value="Yes" id="previous_ects2"  Selected="False" onclick="OThersvisible(this.id,'previous_ects_radio_div','block');">Yes</LISTITEM>
+                        <LISTITEM value="No" id="previous_ects1" Selected="False" onclick="OThersvisible(this.id,'previous_ects_radio_div','none');">No</LISTITEM>
+                        <LISTITEM value="Yes" id="previous_ects2" Selected="False" onclick="OThersvisible(this.id,'previous_ects_radio_div','block');">Yes</LISTITEM>
                     </LISTITEMS>
                     <FIELD id="no_of_ects_ddl" type="DropDownList" label="No. of ECT course(s): ">
                         <PROPERTIES>
@@ -821,7 +828,7 @@
                     </FIELD>
                 </FIELD>
                 
-                <FIELD type="Header2" label="Counselling/Psychotherapy" class="Counselling_Psychotherapy"></FIELD>
+                <FIELD type="Header2" label="Counselling/Psychotherapy" class="Counselling_Psychotherapy"/>
                 
                 <FIELD id="rb_pb_mostrecentepisode" header2Class="Counselling_Psychotherapy" type="RadioButtonList" label="Most recent episode">
                     <PROPERTIES>
@@ -869,7 +876,7 @@
                     </FIELD>
                 </FIELD>
                 
-                <FIELD type="Header2" label="Alternative Therapies" class="Alternative_Therapies"></FIELD>
+                <FIELD type="Header2" label="Alternative Therapies" class="Alternative_Therapies"/>
                 
                 <FIELD type="RadGrid" header2Class="Alternative_Therapies" ADDButton="True" ADDButtonID="RGaltadd" AddButtonTableId="RGalt">
                     <PROPERTIES>
@@ -919,7 +926,7 @@
                     </COLUMNS>
                 </FIELD>
                 
-                <FIELD type="Header2" label="Treatment History Notes" class="treatment_history_notes"></FIELD>
+                <FIELD type="Header2" label="Treatment History Notes" class="treatment_history_notes"/>
                 
                 <FIELD id="treatment_history_notes" header2Class="treatment_history_notes" type="textareaFull" label="Notes">
                     <PROPERTIES>
@@ -1043,7 +1050,7 @@
             
             <FIELD type="PanelBar" label="Personal History" target_div="personal_history">
                 <FIELD type="PanelBar" label="Birth and Development" target_div="birth_and_development">
-                    <FIELD type="Header2" label="Birth and Development" class="Birth_and_Development"></FIELD>
+                    <FIELD type="Header2" label="Birth and Development" class="Birth_and_Development"/>
                 
                     <FIELD id="RBpbprenatal" header2Class="Birth_and_Development" type="RadioButtonList" label="Prenatal" Backcontrols="hide" Backdivid="PrenatalDiv" required="true">
                         <PROPERTIES>
@@ -1126,7 +1133,7 @@
                             <LISTITEM value="Normal" id="RBpbdevelopmentmilestone1" Selected="False" onclick="OThersvisible(this.id,'developmentmilestoneDiv','none');">Normal</LISTITEM>
                             <LISTITEM value="Delayed" id="RBpbdevelopmentmilestone2" Selected="False" onclick="OThersvisible(this.id,'developmentmilestoneDiv','block');">Delayed</LISTITEM>
                         </LISTITEMS>
-                        <FIELD id="RBdevlopmentmilestonesub" type="RadioButtonList" label="Specify: " >
+                        <FIELD id="RBdevlopmentmilestonesub" type="RadioButtonList" label="Specify: ">
                             <PROPERTIES>
                                 <PROPERTY name="name">RBdevlopmentmilestonesub</PROPERTY>
                             </PROPERTIES>
@@ -1271,7 +1278,7 @@
                 </FIELD>
                 
                 <FIELD type="PanelBar" label="Education History" target_div="education_history">
-                    <FIELD type="Header2" label="Education History" class="Education_History"></FIELD>
+                    <FIELD type="Header2" label="Education History" class="Education_History"/>
                 
                     <FIELD id="RBpbbreakstudy" header2Class="Education_History" type="RadioButtonList" label="Break in Studies" Backcontrols="hide" Backdivid="breakstudyDiv" required="true">
                         <PROPERTIES>
@@ -1396,7 +1403,7 @@
                 </FIELD>
                 
                 <FIELD type="PanelBar" label="Occupational History" target_div="occupational_history">
-                    <FIELD type="Header2" label="Occupational History" class="Occupational_History"></FIELD>
+                    <FIELD type="Header2" label="Occupational History" class="Occupational_History"/>
                 
                     <FIELD id="DDLstartedworking" header2Class="Occupational_History" type="DropDownList" label="Started working at" Backtext=" Years">
                         <PROPERTIES>
@@ -1499,7 +1506,7 @@
                 </FIELD>
                 
                 <FIELD type="PanelBar" label="Menstrual History" target_div="menstrual_history">
-                    <FIELD type="Header2" label="Menstrual History" class="Menstrual_History"></FIELD>
+                    <FIELD type="Header2" label="Menstrual History" class="Menstrual_History"/>
                 
                     <FIELD id="txtMenarche" header2Class="Menstrual_History" type="TextBox" label="Menarche" Backtext="Years">
                         <PROPERTIES>
@@ -1552,7 +1559,7 @@
                 </FIELD>
                 
                 <FIELD type="PanelBar" label="Marital History" target_div="marital_history">
-                    <FIELD type="Header2" label="Marital History" class="Marital_History"></FIELD>
+                    <FIELD type="Header2" label="Marital History" class="Marital_History"/>
                 
                     <FIELD id="txtDurationofMarriage" header2Class="Marital_History" type="TextBoxDDL" label="Duration of Marriage" required="true">
                         <PROPERTIES>
@@ -1651,7 +1658,7 @@
                 </FIELD>
                 
                 <FIELD type="PanelBar" label="Sexual History" target_div="sexual_history">
-                    <FIELD type="Header2" label="Sexual History" class="Sexual_History"></FIELD>
+                    <FIELD type="Header2" label="Sexual History" class="Sexual_History"/>
                 
                     <FIELD id="RBorientationSexual" header2Class="Sexual_History" type="RadioButtonList" label="Orientation">
                         <PROPERTIES>
@@ -1712,7 +1719,7 @@
                 </FIELD>
                 
                 <FIELD type="PanelBar" label="Substance History" target_div="substance_history">
-                    <FIELD type="Header2" label="Substance History" class="Substance_History"></FIELD>
+                    <FIELD type="Header2" label="Substance History" class="Substance_History"/>
                 
                     <FIELD type="RadGrid" header2Class="Substance_History" ADDButton="True" ADDButtonID="RGSubsadd" AddButtonTableId="RGSubs">
                         <PROPERTIES>
@@ -1787,7 +1794,7 @@
                 </FIELD>
                 
                 <FIELD type="PanelBar" label="Premorbid Personality" target_div="premorbid_personality">
-                    <FIELD type="Header2" label="Premorbid Personality" class="Premorbid_Personality"></FIELD>
+                    <FIELD type="Header2" label="Premorbid Personality" class="Premorbid_Personality"/>
                 
                     <FIELD id="CBattitudetoself" header2Class="Premorbid_Personality" type="CheckBoxList" label="Attitude to self" required="true">
                         <PROPERTIES>
@@ -1833,7 +1840,7 @@
                         </LISTITEMS>
                     </FIELD>
                 
-                    <FIELD id="CBmood"  header2Class="Premorbid_Personality" type="CheckBoxList" label="Mood">
+                    <FIELD id="CBmood" header2Class="Premorbid_Personality" type="CheckBoxList" label="Mood">
                         <PROPERTIES>
                             <PROPERTY name="name">CBmood[]</PROPERTY>
                         </PROPERTIES>
@@ -1871,7 +1878,7 @@
             </FIELD>
             
             <FIELD type="PanelBar" label="Mental Status Examination" target_div="mental_status_examination">
-                <FIELD type="Header2" label="General Appearance &amp; Behaviour" class="General_Appearance_Behaviour"></FIELD>
+                <FIELD type="Header2" label="General Appearance &amp; Behaviour" class="General_Appearance_Behaviour"/>
                 
                 <FIELD id="RBAppearance" header2Class="General_Appearance_Behaviour" type="RadioButtonList" label="Appearance" required="true">
                     <PROPERTIES>
@@ -1995,7 +2002,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD type="Header2" label="Catatonic phenomena" class="Catatonic_phenomena"></FIELD>
+                <FIELD type="Header2" label="Catatonic phenomena" class="Catatonic_phenomena"/>
                 
                 <FIELD id="CBPsychomotorActivity" header2Class="Catatonic_phenomena" type="CheckBoxList" label="Psychomotor Activity" required="true">
                     <PROPERTIES>
@@ -2011,7 +2018,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD type="Header2" label="Speech" class="Speech"></FIELD>
+                <FIELD type="Header2" label="Speech" class="Speech"/>
                 
                 <FIELD id="RBReactiontime" header2Class="Speech" type="RadioButtonList" label="Reaction time" required="true">
                     <PROPERTIES>
@@ -2085,7 +2092,7 @@
                     </PROPERTIES>
                 </FIELD>
                 
-                <FIELD type="Header2" label="Thought" class="Thought"></FIELD>
+                <FIELD type="Header2" label="Thought" class="Thought"/>
                 
                 <FIELD id="CBstreamform" header2Class="Thought" type="CheckBoxList" label="Stream &amp; Form" required="true">
                     <PROPERTIES>
@@ -2106,7 +2113,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD type="Header2" label="Possession of thought" class="Possession_of_thought"></FIELD>
+                <FIELD type="Header2" label="Possession of thought" class="Possession_of_thought"/>
                 
                 <FIELD id="RBObsession" header2Class="Possession_of_thought" type="RadioButtonList" label="Obsession" Backcontrols="hide" Backdivid="ObsessionDiv">
                     <PROPERTIES>
@@ -2147,7 +2154,7 @@
                     </PROPERTIES>
                 </FIELD>
                 
-                <FIELD type="Header2" label="Thought Content" class="Thought_Content"></FIELD>
+                <FIELD type="Header2" label="Thought Content" class="Thought_Content"/>
                 
                 <FIELD id="CBIdeas" header2Class="Thought_Content" type="CheckBoxList" label="Ideas">
                     <PROPERTIES>
@@ -2179,7 +2186,7 @@
                         <LISTITEM value="Bizzare" id="CBDelusions8" Selected="False" onclick="OThersvisible(this.id,'divDelu','block');">Bizzare</LISTITEM>
                         <LISTITEM value="Others" id="CBDelusions9" Selected="False" onclick="OThersvisible(this.id,'divDelu','block');">Others</LISTITEM>
                     </LISTITEMS>
-                    <FIELD id="RBnatureofdelusion" type="RadioButtonList" label="Nature of Delusion: " >
+                    <FIELD id="RBnatureofdelusion" type="RadioButtonList" label="Nature of Delusion: ">
                         <PROPERTIES>
                             <PROPERTY name="name">RBnatureofdelusion</PROPERTY>
                         </PROPERTIES>
@@ -2199,7 +2206,7 @@
                     </PROPERTIES>
                 </FIELD>
                 
-                <FIELD type="Header2" label="Mood" class="Mood"></FIELD>
+                <FIELD type="Header2" label="Mood" class="Mood"/>
                 
                 <FIELD id="RBQuality" header2Class="Mood" type="CheckBoxList" label="Quality" required="true">
                     <PROPERTIES>
@@ -2230,7 +2237,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD type="Header2" label="Affect" class="Affect"></FIELD>
+                <FIELD type="Header2" label="Affect" class="Affect"/>
                 
                 <FIELD id="txtSubjectively" header2Class="Affect" type="TextBox" label="Subjectively" required="true">
                     <PROPERTIES>
@@ -2257,7 +2264,7 @@
                     </PROPERTIES>
                 </FIELD>
                 
-                <FIELD type="Header2" label="Perception" class="Perception"></FIELD>
+                <FIELD type="Header2" label="Perception" class="Perception"/>
                 
                 <FIELD id="CBAuditoryhallucination" header2Class="Perception" type="CheckBoxList" label="Auditory hallucination">
                     <PROPERTIES>
@@ -2315,7 +2322,7 @@
                     </PROPERTIES>
                 </FIELD>
                 
-                <FIELD type="Header2" label="Higher Mental Functions" class="Higher_Mental_Functions"></FIELD>
+                <FIELD type="Header2" label="Higher Mental Functions" class="Higher_Mental_Functions"/>
                 
                 <FIELD id="RBAttension" header2Class="Higher_Mental_Functions" type="RadioButtonList" label="Attention" required="true">
                     <PROPERTIES>
@@ -2358,7 +2365,7 @@
                     </FIELD>
                 </FIELD>
                 
-                <FIELD type="Header2" label="Memory" class="Memory"></FIELD>
+                <FIELD type="Header2" label="Memory" class="Memory"/>
                 
                 <FIELD id="RBImmediate" header2Class="Memory" type="RadioButtonList" label="Immediate" required="true">
                     <PROPERTIES>
@@ -2411,7 +2418,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD type="Header2" label="Judgement" class="Judgement"></FIELD>
+                <FIELD type="Header2" label="Judgement" class="Judgement"/>
                 
                 <FIELD id="RBPersonal" header2Class="Judgement" type="RadioButtonList" label="Personal" required="true">
                     <PROPERTIES>
@@ -2510,7 +2517,7 @@
                 </PROPERTIES>
             </FIELD>
             
-            <FIELD type="Header2" label="DSM -IV TR" class="DSM_IV_TR"></FIELD>
+            <FIELD type="Header2" label="DSM -IV TR" class="DSM_IV_TR"/>
             
             <FIELD id="txtAxis1" header2Class="DSM_IV_TR" type="TextBox" label="Axis 1">
                 <PROPERTIES>
