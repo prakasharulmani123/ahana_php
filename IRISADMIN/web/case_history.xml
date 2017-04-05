@@ -549,12 +549,12 @@
                 </FIELD>
             </FIELD>
             
-            <FIELD id="past_psychiatric_history" header2Class="past_psychiatric_history" type="textareaFull" label="Notes">
+            <FIELD id="past_psychiatric_history" header2Class="past_psychiatric_history" type="TextArea" label="Notes">
                 <PROPERTIES>
                     <PROPERTY name="id">past_psychiatric_history</PROPERTY>
                     <PROPERTY name="name">past_psychiatric_history</PROPERTY>
-                    <PROPERTY name="class">form-control classy-edit</PROPERTY>
-                    <PROPERTY name="rows">6</PROPERTY>
+                    <PROPERTY name="class">form-control</PROPERTY>
+                    <PROPERTY name="placeholder">Notes</PROPERTY>
                 </PROPERTIES>
             </FIELD>
             
@@ -639,12 +639,12 @@
                 </COLUMNS>
             </FIELD>
             
-            <FIELD id="past_medical_history_notes" header2Class="past_medical_history" type="textareaFull" label="Notes">
+            <FIELD id="past_medical_history_notes" header2Class="past_medical_history" type="TextArea" label="Notes">
                 <PROPERTIES>
                     <PROPERTY name="id">past_medical_history_notes</PROPERTY>
                     <PROPERTY name="name">past_medical_history_notes</PROPERTY>
-                    <PROPERTY name="class">form-control classy-edit</PROPERTY>
-                    <PROPERTY name="rows">6</PROPERTY>
+                    <PROPERTY name="class">form-control</PROPERTY>
+                    <PROPERTY name="placeholder">Notes</PROPERTY>
                 </PROPERTIES>
             </FIELD>
             
@@ -928,12 +928,12 @@
                 
                 <FIELD type="Header2" label="Treatment History Notes" class="treatment_history_notes"/>
                 
-                <FIELD id="treatment_history_notes" header2Class="treatment_history_notes" type="textareaFull" label="Notes">
+                <FIELD id="treatment_history_notes" header2Class="treatment_history_notes" type="TextArea" label="Notes">
                     <PROPERTIES>
                         <PROPERTY name="id">treatment_history_notes</PROPERTY>
                         <PROPERTY name="name">treatment_history_notes</PROPERTY>
-                        <PROPERTY name="class">form-control classy-edit</PROPERTY>
-                        <PROPERTY name="rows">6</PROPERTY>
+                        <PROPERTY name="class">form-control</PROPERTY>
+                        <PROPERTY name="placeholder">Notes</PROPERTY>
                     </PROPERTIES>
                 </FIELD>
             </FIELD>
@@ -1038,12 +1038,12 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="history_family" type="textareaFull" label="Notes">
+                <FIELD id="history_family" type="TextArea" label="Notes">
                     <PROPERTIES>
                         <PROPERTY name="id">history_family</PROPERTY>
                         <PROPERTY name="name">history_family</PROPERTY>
-                        <PROPERTY name="class">form-control classy-edit</PROPERTY>
-                        <PROPERTY name="rows">6</PROPERTY>
+                        <PROPERTY name="class">form-control</PROPERTY>
+                        <PROPERTY name="placeholder">Notes</PROPERTY>
                     </PROPERTIES>
                 </FIELD>
             </FIELD>
@@ -1267,12 +1267,12 @@
                         </FIELD>
                     </FIELD>
                 
-                    <FIELD id="birthdevelopmentnotes" header2Class="Birth_and_Development" type="textareaFull" label="Notes">
+                    <FIELD id="birthdevelopmentnotes" header2Class="Birth_and_Development" type="TextArea" label="Notes">
                         <PROPERTIES>
                             <PROPERTY name="id">birthdevelopmentnotes</PROPERTY>
                             <PROPERTY name="name">birthdevelopmentnotes</PROPERTY>
-                            <PROPERTY name="class">form-control classy-edit</PROPERTY>
-                            <PROPERTY name="rows">6</PROPERTY>
+                            <PROPERTY name="class">form-control</PROPERTY>
+                            <PROPERTY name="placeholder">Notes</PROPERTY>
                         </PROPERTIES>
                     </FIELD>
                 </FIELD>
@@ -1392,12 +1392,12 @@
                         </FIELD>
                     </FIELD>
                 
-                    <FIELD id="educational_history_notes" header2Class="Education_History" type="textareaFull" label="Notes">
+                    <FIELD id="educational_history_notes" header2Class="Education_History" type="TextArea" label="Notes">
                         <PROPERTIES>
                             <PROPERTY name="id">educational_history_notes</PROPERTY>
                             <PROPERTY name="name">educational_history_notes</PROPERTY>
-                            <PROPERTY name="class">form-control classy-edit</PROPERTY>
-                            <PROPERTY name="rows">6</PROPERTY>
+                            <PROPERTY name="class">form-control</PROPERTY>
+                            <PROPERTY name="placeholder">Notes</PROPERTY>
                         </PROPERTIES>
                     </FIELD>
                 </FIELD>
@@ -1495,12 +1495,12 @@
                         </FIELD>
                     </FIELD>
                 
-                    <FIELD id="occupational_history_notes" header2Class="Occupational_History" type="textareaFull" label="Notes">
+                    <FIELD id="occupational_history_notes" header2Class="Occupational_History" type="TextArea" label="Notes">
                         <PROPERTIES>
                             <PROPERTY name="id">occupational_history_notes</PROPERTY>
                             <PROPERTY name="name">occupational_history_notes</PROPERTY>
-                            <PROPERTY name="class">form-control classy-edit</PROPERTY>
-                            <PROPERTY name="rows">6</PROPERTY>
+                            <PROPERTY name="class">form-control</PROPERTY>
+                            <PROPERTY name="placeholder">Notes</PROPERTY>
                         </PROPERTIES>
                     </FIELD>
                 </FIELD>
@@ -1647,12 +1647,12 @@
                         </LISTITEMS>
                     </FIELD>
                 
-                    <FIELD id="martial_history" header2Class="Marital_History" type="textareaFull" label="Notes">
+                    <FIELD id="martial_history" header2Class="Marital_History" type="TextArea" label="Notes">
                         <PROPERTIES>
                             <PROPERTY name="id">martial_history</PROPERTY>
                             <PROPERTY name="name">martial_history</PROPERTY>
-                            <PROPERTY name="class">form-control classy-edit</PROPERTY>
-                            <PROPERTY name="rows">6</PROPERTY>
+                            <PROPERTY name="class">form-control</PROPERTY>
+                            <PROPERTY name="placeholder">Notes</PROPERTY>
                         </PROPERTIES>
                     </FIELD>
                 </FIELD>
@@ -1708,12 +1708,12 @@
                         </LISTITEMS>
                     </FIELD>
                 
-                    <FIELD id="sexual_history_notes" header2Class="Sexual_History" type="textareaFull" label="Notes">
+                    <FIELD id="sexual_history_notes" header2Class="Sexual_History" type="TextArea" label="Notes">
                         <PROPERTIES>
                             <PROPERTY name="id">sexual_history_notes</PROPERTY>
                             <PROPERTY name="name">sexual_history_notes</PROPERTY>
-                            <PROPERTY name="class">form-control classy-edit</PROPERTY>
-                            <PROPERTY name="rows">6</PROPERTY>
+                            <PROPERTY name="class">form-control</PROPERTY>
+                            <PROPERTY name="placeholder">Notes</PROPERTY>
                         </PROPERTIES>
                     </FIELD>
                 </FIELD>
@@ -1783,12 +1783,12 @@
                         </COLUMNS>
                     </FIELD>
                 
-                    <FIELD id="substance_history_notes" header2Class="Substance_History" type="textareaFull" label="Notes">
+                    <FIELD id="substance_history_notes" header2Class="Substance_History" type="TextArea" label="Notes">
                         <PROPERTIES>
                             <PROPERTY name="id">substance_history_notes</PROPERTY>
                             <PROPERTY name="name">substance_history_notes</PROPERTY>
-                            <PROPERTY name="class">form-control classy-edit</PROPERTY>
-                            <PROPERTY name="rows">6</PROPERTY>
+                            <PROPERTY name="class">form-control</PROPERTY>
+                            <PROPERTY name="placeholder">Notes</PROPERTY>
                         </PROPERTIES>
                     </FIELD>
                 </FIELD>
@@ -1866,12 +1866,12 @@
                         </LISTITEMS>
                     </FIELD>
                 
-                    <FIELD id="premorbid_personality_notes" header2Class="Premorbid_Personality" type="textareaFull">
+                    <FIELD id="premorbid_personality_notes" header2Class="Premorbid_Personality" type="TextArea">
                         <PROPERTIES>
                             <PROPERTY name="id">premorbid_personality_notes</PROPERTY>
                             <PROPERTY name="name">premorbid_personality_notes</PROPERTY>
-                            <PROPERTY name="class">form-control classy-edit</PROPERTY>
-                            <PROPERTY name="rows">6</PROPERTY>
+                            <PROPERTY name="class">form-control</PROPERTY>
+                            <PROPERTY name="placeholder">Notes</PROPERTY>
                         </PROPERTIES>
                     </FIELD>
                 </FIELD>
@@ -2145,12 +2145,12 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="possession_of_thought_notes" header2Class="Possession_of_thought" type="textareaFull" label="Notes">
+                <FIELD id="possession_of_thought_notes" header2Class="Possession_of_thought" type="TextArea" label="Notes">
                     <PROPERTIES>
                         <PROPERTY name="id">possession_of_thought_notes</PROPERTY>
                         <PROPERTY name="name">possession_of_thought_notes</PROPERTY>
-                        <PROPERTY name="class">form-control classy-edit</PROPERTY>
-                        <PROPERTY name="rows">6</PROPERTY>
+                        <PROPERTY name="class">form-control</PROPERTY>
+                        <PROPERTY name="placeholder">Notes</PROPERTY>
                     </PROPERTIES>
                 </FIELD>
                 
@@ -2255,12 +2255,12 @@
                     </PROPERTIES>
                 </FIELD>
                 
-                <FIELD id="mood_notes" header2Class="Affect" type="textareaFull" label="Notes: ">
+                <FIELD id="mood_notes" header2Class="Affect" type="TextArea" label="Notes: ">
                     <PROPERTIES>
                         <PROPERTY name="id">mood_notes</PROPERTY>
                         <PROPERTY name="name">mood_notes</PROPERTY>
-                        <PROPERTY name="class">form-control classy-edit</PROPERTY>
-                        <PROPERTY name="rows">6</PROPERTY>
+                        <PROPERTY name="class">form-control</PROPERTY>
+                        <PROPERTY name="placeholder">Notes</PROPERTY>
                     </PROPERTIES>
                 </FIELD>
                 
@@ -2313,12 +2313,12 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="Perception_notes" header2Class="Perception" type="textareaFull" label="Notes">
+                <FIELD id="Perception_notes" header2Class="Perception" type="TextArea" label="Notes">
                     <PROPERTIES>
                         <PROPERTY name="id">Perception_notes</PROPERTY>
                         <PROPERTY name="name">Perception_notes</PROPERTY>
-                        <PROPERTY name="class">form-control classy-edit</PROPERTY>
-                        <PROPERTY name="rows">6</PROPERTY>
+                        <PROPERTY name="class">form-control</PROPERTY>
+                        <PROPERTY name="placeholder">Notes</PROPERTY>
                     </PROPERTIES>
                 </FIELD>
                 
@@ -2489,12 +2489,12 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="higher_mental_notes" header2Class="Judgement" type="textareaFull" label="Notes">
+                <FIELD id="higher_mental_notes" header2Class="Judgement" type="TextArea" label="Notes">
                     <PROPERTIES>
                         <PROPERTY name="id">higher_mental_notes</PROPERTY>
                         <PROPERTY name="name">higher_mental_notes</PROPERTY>
-                        <PROPERTY name="class">form-control classy-edit</PROPERTY>
-                        <PROPERTY name="rows">6</PROPERTY>
+                        <PROPERTY name="class">form-control</PROPERTY>
+                        <PROPERTY name="placeholder">Notes</PROPERTY>
                     </PROPERTIES>
                 </FIELD>
             </FIELD>

@@ -353,7 +353,7 @@ class PatientdocumentsController extends ActiveController {
                                             $list_value->attributes()['Selected'] = 'false';
                                         }
                                     }
-                                } elseif ($type == 'textareaFull') {
+                                } elseif ($type == 'textareaFull' || $type == 'TextArea') {
                                     if (isset($pb->VALUE)) {
                                         unset($pb->VALUE);
                                     }
@@ -400,7 +400,7 @@ class PatientdocumentsController extends ActiveController {
                                                     $list_value->attributes()['Selected'] = 'false';
                                                 }
                                             }
-                                        } elseif ($type == 'textareaFull') {
+                                        } elseif ($type == 'textareaFull' || $type == 'TextArea') {
                                             if (isset($pbchild->VALUE)) {
                                                 unset($pbchild->VALUE);
                                             }
@@ -455,7 +455,7 @@ class PatientdocumentsController extends ActiveController {
                                                                         $list_value->attributes()['Selected'] = 'false';
                                                                     }
                                                                 }
-                                                            } elseif ($type == 'textareaFull') {
+                                                            } elseif ($type == 'textareaFull' || $type == 'TextArea') {
                                                                 if (isset($y->VALUE)) {
                                                                     unset($y->VALUE);
                                                                 }

@@ -615,6 +615,21 @@
                                                             <div class="line line-dashed b-b line-lg "></div>
                                                         </xsl:if>
                                                     </xsl:when>
+                                                    
+                                                    <!-- Main Text Area-->
+                                                    <xsl:when test="@type='TextArea'">
+                                                        <xsl:if test="VALUE and VALUE!=''">
+                                                            <div class="form-group {@header2Class}">
+                                                                <label class="col-sm-3 control-label">
+                                                                    <xsl:value-of select="@label" />
+                                                                </label>
+                                                                <div class="col-sm-9">
+                                                                    <xsl:value-of select="VALUE"></xsl:value-of>
+                                                                </div>
+                                                            </div>
+                                                            <div class="line line-dashed b-b line-lg "></div>
+                                                        </xsl:if>
+                                                    </xsl:when>
                                                         
                                                     <xsl:when test="@type='textareaFull'">
                                                         <xsl:if test="VALUE and VALUE!=''">

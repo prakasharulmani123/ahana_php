@@ -601,6 +601,20 @@
                                                         </xsl:if>
                                                     </xsl:when>
                                                     
+                                                    <!-- Main Text Area-->
+                                                    <xsl:when test="@type='TextArea'">
+                                                        <xsl:if test="VALUE and VALUE!=''">
+                                                            <tr class="{@header2Class}">
+                                                                <td>
+                                                                    <xsl:value-of select="@label" />
+                                                                </td>
+                                                                <td>
+                                                                    <xsl:value-of select="VALUE"></xsl:value-of>
+                                                                </td>
+                                                            </tr>
+                                                        </xsl:if>
+                                                    </xsl:when>
+                                                    
                                                     <xsl:when test="@type='textareaFull'">
                                                         <xsl:if test="VALUE and VALUE!=''">
                                                             <tr class="{@header2Class}">

@@ -149,7 +149,7 @@
                                                     <span class="required"> *</span>
                                                 </xsl:if>
                                             </label>
-                                            <div class="col-sm-4">
+                                            <div class="col-sm-9">
                                                 <textarea>
                                                     <xsl:for-each select="PROPERTIES/PROPERTY">
                                                         <xsl:attribute name="{@name}">
@@ -1208,6 +1208,29 @@
                                                             
                                                                                 <div class="line line-dashed b-b line-lg "></div>
                                                                             </xsl:when>
+                                                                            
+                                                                            <!-- Panel Bar Main Text Area-->
+                                                                            <xsl:when test="@type='TextArea'">
+                                                                                <div class="form-group">
+                                                                                    <label class="col-sm-3 control-label">
+                                                                                        <xsl:value-of select="@label" />
+                                                                                        <xsl:if test="@required='true'">
+                                                                                            <span class="required"> *</span>
+                                                                                        </xsl:if>
+                                                                                    </label>
+                                                                                    <div class="col-sm-9">
+                                                                                        <textarea>
+                                                                                            <xsl:for-each select="PROPERTIES/PROPERTY">
+                                                                                                <xsl:attribute name="{@name}">
+                                                                                                    <xsl:value-of select="current()"></xsl:value-of>
+                                                                                                </xsl:attribute>
+                                                                                            </xsl:for-each>
+                                                                                            <xsl:value-of select="VALUE"></xsl:value-of>
+                                                                                        </textarea>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="line line-dashed b-b line-lg "></div>
+                                                                            </xsl:when>
                                                                         </xsl:choose>
                                                                     </xsl:for-each>
                                                                 </div>
@@ -1821,6 +1844,29 @@
                                                             
                                                             <div class="line line-dashed b-b line-lg "></div>
                                                         </xsl:when>
+                                                        
+                                                        <!-- Panel Bar Main Text Area-->
+                                                        <xsl:when test="@type='TextArea'">
+                                                            <div class="form-group">
+                                                                <label class="col-sm-3 control-label">
+                                                                    <xsl:value-of select="@label" />
+                                                                    <xsl:if test="@required='true'">
+                                                                        <span class="required"> *</span>
+                                                                    </xsl:if>
+                                                                </label>
+                                                                <div class="col-sm-9">
+                                                                    <textarea>
+                                                                        <xsl:for-each select="PROPERTIES/PROPERTY">
+                                                                            <xsl:attribute name="{@name}">
+                                                                                <xsl:value-of select="current()"></xsl:value-of>
+                                                                            </xsl:attribute>
+                                                                        </xsl:for-each>
+                                                                        <xsl:value-of select="VALUE"></xsl:value-of>
+                                                                    </textarea>
+                                                                </div>
+                                                            </div>
+                                                            <div class="line line-dashed b-b line-lg "></div>
+                                                        </xsl:when> 
                                                     </xsl:choose>
                                                 </xsl:for-each>
                                             </div>
