@@ -326,7 +326,8 @@
                         <LISTITEM value="Days" Selected="False">Days</LISTITEM>
                     </LISTITEMS>
                 </FIELD>
-            </FIELD><FIELD id="total_duration_notes" type="TextArea" label="Notes">
+            </FIELD>
+            <FIELD id="total_duration_notes" type="TextArea" label="Notes">
                 <PROPERTIES>
                     <PROPERTY name="id">total_duration_notes</PROPERTY>
                     <PROPERTY name="name">total_duration_notes</PROPERTY>
@@ -712,13 +713,27 @@
                                 <LISTITEM value="Yes" id="radioPhamacoSideeffect1" Selected="False" onclick="OThersvisible(this.id,'radioPhamacoSideeffectDiv','block');">Yes</LISTITEM>
                                 <LISTITEM value="No" id="radioPhamacoSideeffect2" Selected="False" onclick="OThersvisible(this.id,'radioPhamacoSideeffectDiv','none');">No</LISTITEM>
                             </LISTITEMS>
-                            <FIELD id="txtPhamacoSideEffects" type="TextBox" label="">
+                            <FIELD id="txtPhamacoSideEffects" type="DropDownList">
                                 <PROPERTIES>
                                     <PROPERTY name="id">txtPhamacoSideEffects</PROPERTY>
                                     <PROPERTY name="name">txtPhamacoSideEffects</PROPERTY>
                                     <PROPERTY name="class">form-control</PROPERTY>
-                                    <PROPERTY name="placeholder">Mention that side effect</PROPERTY>
                                 </PROPERTIES>
+                                <LISTITEMS>
+                                    <LISTITEM value="slurred speech" Selected="False">slurred speech</LISTITEM>
+                                    <LISTITEM value="blurred vision" Selected="False">blurred vision</LISTITEM>
+                                    <LISTITEM value="drowsiness" Selected="False">drowsiness</LISTITEM>
+                                    <LISTITEM value="extra pyramidal symptoms" Selected="False">extra pyramidal symptoms</LISTITEM>
+                                    <LISTITEM value="increased salivation" Selected="False">increased salivation</LISTITEM>
+                                    <LISTITEM value="dysphagia" Selected="False">dysphagia</LISTITEM>
+                                    <LISTITEM value="obesity" Selected="False">obesity</LISTITEM>
+                                    <LISTITEM value="milk secretion" Selected="False">milk secretion</LISTITEM>
+                                    <LISTITEM value="constipation" Selected="False">constipation</LISTITEM>
+                                    <LISTITEM value="hand tremors" Selected="False">hand tremors</LISTITEM>
+                                    <LISTITEM value="sexual dysfunction" Selected="False">sexual dysfunction</LISTITEM>
+                                    <LISTITEM value="menstrual problems" Selected="False">menstrual problems</LISTITEM>
+                                    <LISTITEM value="motor restlessness" Selected="False">motor restlessness</LISTITEM>
+                                </LISTITEMS>
                             </FIELD>
                         </FIELD>
                     </COLUMNS>
@@ -1809,7 +1824,8 @@
                             <LISTITEM value="Satisfied" id="CBattitudetoself6" Selected="False">Satisfied</LISTITEM>
                             <LISTITEM value="Over concerned" id="CBattitudetoself7" Selected="False">Over concerned</LISTITEM>
                         </LISTITEMS>
-                    </FIELD><FIELD id="CBattitudetowork" header2Class="Premorbid_Personality" type="CheckBoxList" label="Attitude to work and responsibilities">
+                    </FIELD>
+                    <FIELD id="CBattitudetowork" header2Class="Premorbid_Personality" type="CheckBoxList" label="Attitude to work and responsibilities">
                         <PROPERTIES>
                             <PROPERTY name="name">CBattitudetowork[]</PROPERTY>
                         </PROPERTIES>
@@ -1880,7 +1896,8 @@
                             <LISTITEM value="With friends" id="CBleisuretimespent2" Selected="False">With friends</LISTITEM>
                             <LISTITEM value="With family" id="CBleisuretimespent3" Selected="False">With family</LISTITEM>
                         </LISTITEMS>
-                    </FIELD><FIELD id="CBfantasies" header2Class="Premorbid_Personality" type="CheckBoxList" label="Fantasies and Dreams">
+                    </FIELD>
+                    <FIELD id="CBfantasies" header2Class="Premorbid_Personality" type="CheckBoxList" label="Fantasies and Dreams">
                         <PROPERTIES>
                             <PROPERTY name="name">CBfantasies[]</PROPERTY>
                         </PROPERTIES>

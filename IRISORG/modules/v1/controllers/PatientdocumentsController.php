@@ -272,7 +272,7 @@ class PatientdocumentsController extends ActiveController {
                                             } elseif ($type == 'DropDownList' || $type == 'RadioButtonList') {
                                                 $field->attributes()['Backcontrols'] = 'hide';
 //                                                $radio_field_id = ['radio_pb_illnesstype'];
-                                                $list_values_array = ['Other Illness'];
+                                                $list_values_array = ['Other Illness', 'Yes'];
 
                                                 $post_referral_details = $value;
                                                 $list_referral_details = $field->LISTITEMS->LISTITEM;
@@ -1312,8 +1312,7 @@ class PatientdocumentsController extends ActiveController {
                             //SUB FIELD 1
                             $field4_sub = $field4->addChild('FIELD');
                             $field4_sub->addAttribute('id', 'txtPhamacoSideEffects' . $rowCount);
-                            $field4_sub->addAttribute('type', 'TextBox');
-                            $field4_sub->addAttribute('label', '');
+                            $field4_sub->addAttribute('type', 'DropDownList');
 
                             $field4_properties = $field4_sub->addChild('PROPERTIES');
 
@@ -1325,9 +1324,60 @@ class PatientdocumentsController extends ActiveController {
 
                             $property10 = $field4_properties->addChild('PROPERTY', 'form-control');
                             $property10->addAttribute('name', 'class');
+                            
+                            $listitems3 = $field4_sub->addChild('LISTITEMS');
 
-                            $property11 = $field4_properties->addChild('PROPERTY', 'Mention that side effect');
-                            $property11->addAttribute('name', 'placeholder');
+                            $listitem31 = $listitems3->addChild('LISTITEM', 'slurred speech');
+                            $listitem31->addAttribute('value', 'slurred speech');
+                            $listitem31->addAttribute('Selected', 'False');
+
+                            $listitem32 = $listitems3->addChild('LISTITEM', 'blurred vision');
+                            $listitem32->addAttribute('value', 'blurred vision');
+                            $listitem32->addAttribute('Selected', 'False');
+
+                            $listitem33 = $listitems3->addChild('LISTITEM', 'drowsiness');
+                            $listitem33->addAttribute('value', 'drowsiness');
+                            $listitem33->addAttribute('Selected', 'False');
+
+                            $listitem34 = $listitems3->addChild('LISTITEM', 'extra pyramidal symptoms');
+                            $listitem34->addAttribute('value', 'extra pyramidal symptoms');
+                            $listitem34->addAttribute('Selected', 'False');
+
+                            $listitem35 = $listitems3->addChild('LISTITEM', 'increased salivation');
+                            $listitem35->addAttribute('value', 'increased salivation');
+                            $listitem35->addAttribute('Selected', 'False');
+
+                            $listitem36 = $listitems3->addChild('LISTITEM', 'dysphagia');
+                            $listitem36->addAttribute('value', 'dysphagia');
+                            $listitem36->addAttribute('Selected', 'False');
+
+                            $listitem37 = $listitems3->addChild('LISTITEM', 'obesity');
+                            $listitem37->addAttribute('value', 'obesity');
+                            $listitem37->addAttribute('Selected', 'False');
+
+                            $listitem38 = $listitems3->addChild('LISTITEM', 'milk secretion');
+                            $listitem38->addAttribute('value', 'milk secretion');
+                            $listitem38->addAttribute('Selected', 'False');
+
+                            $listitem39 = $listitems3->addChild('LISTITEM', 'constipation');
+                            $listitem39->addAttribute('value', 'constipation');
+                            $listitem39->addAttribute('Selected', 'False');
+
+                            $listitem310 = $listitems3->addChild('LISTITEM', 'hand tremors');
+                            $listitem310->addAttribute('value', 'hand tremors');
+                            $listitem310->addAttribute('Selected', 'False');
+
+                            $listitem311 = $listitems3->addChild('LISTITEM', 'sexual dysfunction');
+                            $listitem311->addAttribute('value', 'sexual dysfunction');
+                            $listitem311->addAttribute('Selected', 'False');
+
+                            $listitem312 = $listitems3->addChild('LISTITEM', 'menstrual problems');
+                            $listitem312->addAttribute('value', 'menstrual problems');
+                            $listitem312->addAttribute('Selected', 'False');
+
+                            $listitem313 = $listitems3->addChild('LISTITEM', 'motor restlessness');
+                            $listitem313->addAttribute('value', 'motor restlessness');
+                            $listitem313->addAttribute('Selected', 'False');
                         }
                     }
                 }

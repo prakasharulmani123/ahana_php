@@ -233,8 +233,9 @@ class XmlController extends Controller {
 
     //3. Side effects - Changes
     public function actionSideeffects() {
-        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@type='RadGrid' and @ADDButtonID='RGPhamacoadd']//FIELD[@type='TextBox' and @label='Reason: ']";
-
+        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@type='RadGrid' and @ADDButtonID='RGPhamacoadd']//FIELD[@type='RadioButtonList']/FIELD[@type='TextBox']";
+        $list_items = ['slurred speech', 'blurred vision', 'drowsiness', 'extra pyramidal symptoms', 'increased salivation', 'dysphagia', 'obesity', 'milk secretion', 'constipation', 'hand tremors', 'sexual dysfunction', 'menstrual problems', 'motor restlessness'];
+        
         $all_files = $this->getAllFiles();
         $error_files = [];
         if (!empty($all_files)) {
@@ -250,11 +251,17 @@ class XmlController extends Controller {
                     $targets = $xml->xpath($xpath);
                     if (!empty($targets)) {
                         foreach ($targets as $target) {
-                            if ($target['label'] != '') {
-                                $target['label'] = '';
+                            unset($target['label']);
+                            $target['type'] = 'DropDownList';
+                            if($target->PROPERTIES->PROPERTY[3]['name'] == 'placeholder'){
+                                unset($target->PROPERTIES->PROPERTY[3]);
                             }
-                            if ($target->PROPERTIES->PROPERTY[3] == 'Reason') {
-                                $target->PROPERTIES->PROPERTY[3] = 'Mention that side effect';
+                            
+                            $listItems = $target->addChild('LISTITEMS');
+                            foreach ($list_items as $itemkey => $value) {
+                                $item_{$itemkey} = $listItems->addChild('LISTITEM', $value);
+                                $item_{$itemkey}->addAttribute('value', $value);
+                                $item_{$itemkey}->addAttribute('Selected', "False");
                             }
                         }
                     }

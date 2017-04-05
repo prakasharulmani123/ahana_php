@@ -467,6 +467,17 @@
                                                                                                                             </xsl:if>
                                                                                                                         </xsl:for-each>
                                                                                                                     </xsl:when>
+                                                                                                                    
+                                                                                                                    <xsl:when test="@type='DropDownList'">
+                                                                                                                        <xsl:if test="boolean(LISTITEMS/LISTITEM/@Selected = 'true')">
+                                                                                                                            <xsl:for-each select="LISTITEMS/LISTITEM">
+                                                                                                                                <xsl:if test="@Selected = 'true'">
+                                                                                                            &#160;
+                                                                                                                                    <xsl:value-of select="@value"></xsl:value-of>
+                                                                                                                                </xsl:if>
+                                                                                                                            </xsl:for-each>
+                                                                                                                        </xsl:if>
+                                                                                                                    </xsl:when>
                                                                                                                 </xsl:choose>
                                                                                                             </xsl:for-each>
                                                                                                         </div>
