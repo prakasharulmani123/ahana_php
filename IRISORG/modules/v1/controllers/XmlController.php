@@ -68,15 +68,20 @@ class XmlController extends Controller {
     }
 
     public function actionInsertnewfield() {
-        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@id='total_duration']";
-        $insert = '<FIELD id="total_duration_notes" type="TextArea" label="Notes">
-                <PROPERTIES>
-                    <PROPERTY name="id">total_duration_notes</PROPERTY>
-                    <PROPERTY name="name">total_duration_notes</PROPERTY>
-                    <PROPERTY name="class">form-control</PROPERTY>
-                    <PROPERTY name="placeholder">Notes</PROPERTY>
-                </PROPERTIES>
-            </FIELD>';
+        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@id='CBleisuretimespent']";
+        $insert = '<FIELD id="CBfantasies" header2Class="Premorbid_Personality" type="CheckBoxList" label="Fantasies and Dreams">
+                        <PROPERTIES>
+                            <PROPERTY name="name">CBfantasies[]</PROPERTY>
+                        </PROPERTIES>
+                        <LISTITEMS>
+                            <LISTITEM value="Day Dreaming" id="CBfantasies1" Selected="False">Day Dreaming</LISTITEM>
+                            <LISTITEM value="Recurrent Dreams" id="CBfantasies2" Selected="False">Recurrent Dreams</LISTITEM>
+                            <LISTITEM value="Sexual Fantasies" id="CBfantasies3" Selected="False">Sexual Fantasies</LISTITEM>
+                            <LISTITEM value="Non sexual fantasies" id="CBfantasies4" Selected="False">Non sexual fantasies</LISTITEM>
+                            <LISTITEM value="Unrealistic" id="CBfantasies5" Selected="False">Unrealistic</LISTITEM>
+                            <LISTITEM value="Goal oriented" id="CBfantasies6" Selected="False">Goal oriented</LISTITEM>
+                        </LISTITEMS>
+                    </FIELD>';
 
         $all_files = $this->getAllFiles();
         $error_files = [];

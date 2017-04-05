@@ -1809,6 +1809,22 @@
                             <LISTITEM value="Satisfied" id="CBattitudetoself6" Selected="False">Satisfied</LISTITEM>
                             <LISTITEM value="Over concerned" id="CBattitudetoself7" Selected="False">Over concerned</LISTITEM>
                         </LISTITEMS>
+                    </FIELD><FIELD id="CBattitudetowork" header2Class="Premorbid_Personality" type="CheckBoxList" label="Attitude to work and responsibilities">
+                        <PROPERTIES>
+                            <PROPERTY name="name">CBattitudetowork[]</PROPERTY>
+                        </PROPERTIES>
+                        <LISTITEMS>
+                            <LISTITEM value="Perfectionist" id="CBattitudetowork1" Selected="False">Perfectionist</LISTITEM>
+                            <LISTITEM value="Flexible" id="CBattitudetowork2" Selected="False">Flexible</LISTITEM>
+                            <LISTITEM value="Adjustable" id="CBattitudetowork3" Selected="False">Adjustable</LISTITEM>
+                            <LISTITEM value="Argumentative" id="CBattitudetowork4" Selected="False">Argumentative</LISTITEM>
+                            <LISTITEM value="Acceptant" id="CBattitudetowork5" Selected="False">Acceptant</LISTITEM>
+                            <LISTITEM value="Avoidant" id="CBattitudetowork6" Selected="False">Avoidant</LISTITEM>
+                            <LISTITEM value="Ignorant" id="CBattitudetowork7" Selected="False">Ignorant</LISTITEM>
+                            <LISTITEM value="Responsible" id="CBattitudetowork8" Selected="False">Responsible</LISTITEM>
+                            <LISTITEM value="Lazy" id="CBattitudetowork9" Selected="False">Lazy</LISTITEM>
+                            <LISTITEM value="Competent" id="CBattitudetowork10" Selected="False">Competent</LISTITEM>
+                        </LISTITEMS>
                     </FIELD>
                 
                     <FIELD id="CBmoralreligiousattitude" header2Class="Premorbid_Personality" type="CheckBoxList" label="Moral and Religious attitude">
@@ -1863,6 +1879,18 @@
                             <LISTITEM value="Alone" id="CBleisuretimespent1" Selected="False">Alone</LISTITEM>
                             <LISTITEM value="With friends" id="CBleisuretimespent2" Selected="False">With friends</LISTITEM>
                             <LISTITEM value="With family" id="CBleisuretimespent3" Selected="False">With family</LISTITEM>
+                        </LISTITEMS>
+                    </FIELD><FIELD id="CBfantasies" header2Class="Premorbid_Personality" type="CheckBoxList" label="Fantasies and Dreams">
+                        <PROPERTIES>
+                            <PROPERTY name="name">CBfantasies[]</PROPERTY>
+                        </PROPERTIES>
+                        <LISTITEMS>
+                            <LISTITEM value="Day Dreaming" id="CBfantasies1" Selected="False">Day Dreaming</LISTITEM>
+                            <LISTITEM value="Recurrent Dreams" id="CBfantasies2" Selected="False">Recurrent Dreams</LISTITEM>
+                            <LISTITEM value="Sexual Fantasies" id="CBfantasies3" Selected="False">Sexual Fantasies</LISTITEM>
+                            <LISTITEM value="Non sexual fantasies" id="CBfantasies4" Selected="False">Non sexual fantasies</LISTITEM>
+                            <LISTITEM value="Unrealistic" id="CBfantasies5" Selected="False">Unrealistic</LISTITEM>
+                            <LISTITEM value="Goal oriented" id="CBfantasies6" Selected="False">Goal oriented</LISTITEM>
                         </LISTITEMS>
                     </FIELD>
                 
