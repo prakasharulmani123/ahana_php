@@ -84,7 +84,6 @@ class PatientController extends ActiveController {
         $post = Yii::$app->getRequest()->post();
         if (!empty($post['PatPatient']) || !empty($post['PatPatientAddress'])) {
             $model = new PatPatient();
-//            $model->setScenario('registration');
             $addr_model = new PatPatientAddress();
 
             if (isset($post['PatPatient']['patient_id'])) {
@@ -96,6 +95,7 @@ class PatientController extends ActiveController {
                         $addr_model = $patient->patPatientAddress;
                 }
             }
+            $model->setScenario('registration');
 
             if (isset($post['PatPatient'])) {
                 $model->attributes = $post['PatPatient'];
@@ -502,7 +502,7 @@ class PatientController extends ActiveController {
                     'patient_global_guid' => $cond['patient_global_guid'],
                 ])
                 ->one();
-        
+
         if (!empty($Patient)) {
             $PatientData = ArrayHelper::toArray($Patient);
             $model = new PatPatient;
