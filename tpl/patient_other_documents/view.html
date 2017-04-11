@@ -5,8 +5,11 @@
                 <div class="col-sm-6">
                     <h1 class="m-n h3">View Other Document</h1>
                 </div>
-                <div class="col-sm-6">
-                    <button class="btn btn-sm btn-dark pull-right" ng-click="$state.go('patient.document', {id: $state.params.id})">
+                <div class="col-sm-6 text-right">
+                    <button ng-click="printDocument()" class="btn btn-sm btn-primary"> 
+                        <i class="fa fa-print"></i> Print
+                    </button>
+                    <button class="btn btn-sm btn-dark" ng-click="$state.go('patient.document', {id: $state.params.id})">
                         <i class="fa fa-repeat"></i> Back
                     </button>
                 </div>
@@ -50,5 +53,8 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div ng-include="'tpl/patient_other_documents/_print.html'">
+        {% include 'tpl/patient_other_documents/_print.html' %}
     </div>
 </div>

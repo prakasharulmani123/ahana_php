@@ -1,0 +1,34 @@
+<div id="printThis" ng-hide="false">
+    <table>
+        <!--            <thead>
+                        <tr>
+                            <th>
+                                
+                            </th>
+                            <th>
+                                {{other_document.other_doc_name}} 
+                            </th>
+                            <th>
+                                <b>Date:</b> 
+                            </th>
+                        </tr>
+                    </thead>-->
+        <tbody>
+            <tr>
+                <td colspan="3" style="padding: 20px">
+                    <u><b>Patient Details:</b></u><br>
+                    <b>Name : </b>{{patientObj.fullname}} <br>
+                    <b>Patient ID :</b> {{patientObj.patient_global_int_code}} <br>
+                    <b>Age :</b> {{patientObj.patient_age}}<br>
+                    <b>Encounter # :</b> {{other_document.encounter_id}} <br>
+                    <b>Branch Name :</b> {{app.org_name}} <br>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" ng-bind-html="other_document.other_doc_content | sanitize">
+
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

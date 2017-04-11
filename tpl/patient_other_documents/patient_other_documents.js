@@ -116,6 +116,12 @@ app.controller('OtherDocumentsController', ['$rootScope', '$scope', '$timeout', 
                         $scope.errorData = "An Error has occured while loading patient other documents!";
                     });
         }
+        
+        $scope.printDocument = function () {
+            $("#printThis").removeClass("ng-hide");
+            printJS({printable: 'printThis', type: 'html', honorMarginPadding: false});
+            $("#printThis").addClass("ng-hide");
+        }
     }]);
 
 app.filter("sanitize", ['$sce', function ($sce) {

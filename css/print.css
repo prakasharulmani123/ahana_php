@@ -26,6 +26,10 @@
         page-break-after:auto
     }
 
+    #printThis th, #printThis td {
+        padding: 50px;
+    }
+
 }
 
 .voucher-table
@@ -443,4 +447,16 @@
 
 .documents{
     width: 100%;
+}
+
+#printThis table {
+    border-collapse: collapse;
+    width:100%;
+}
+
+#printThis table, #printThis th, #printThis td {
+    border: 1px solid black !important;
+}
+#printThis th, #printThis td {
+    padding: 20px;
 }
