@@ -343,6 +343,8 @@ class PatEncounter extends RActiveRecord {
                 if (!empty($model->patAdmissionDischarge)) {
                     if ($model->patAdmissionDischarge->admission_status == 'D') {
                         return $model->patAdmissionDischarge->status_date;
+                    } else if ($model->patAdmissionDischarge->admission_status == 'CD') {
+                        return $model->patAdmissionDischarge->status_date;
                     } else {
                         if ($model->finalize_date != '0000-00-00') {
                             return $model->finalize_date;
