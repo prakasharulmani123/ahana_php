@@ -230,7 +230,7 @@
                             
                             <!-- Main Grid -->
                             <xsl:when test="@type='RadGrid'">
-                                <tr class="form-group RadGrid {@header2Class}" data-radgrid="{@AddButtonTableId}">
+                                <tr class="RadGrid {@header2Class}" data-radgrid="{@AddButtonTableId}">
                                     <td colspan="2">
                                         <table>
                                             <xsl:for-each select="PROPERTIES/PROPERTY">
@@ -368,7 +368,7 @@
                                                     </xsl:when>
                                                     
                                                     <xsl:when test="@type='RadGrid'">
-                                                        <tr class="form-group RadGrid {@header2Class}" data-radgrid="{@AddButtonTableId}">
+                                                        <tr class="RadGrid {@header2Class}" data-radgrid="{@AddButtonTableId}">
                                                             <td colspan="2">
                                                                 <table>
                                                                     <xsl:for-each select="PROPERTIES/PROPERTY">
