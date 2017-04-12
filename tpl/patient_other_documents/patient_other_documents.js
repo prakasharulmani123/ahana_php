@@ -116,11 +116,15 @@ app.controller('OtherDocumentsController', ['$rootScope', '$scope', '$timeout', 
                         $scope.errorData = "An Error has occured while loading patient other documents!";
                     });
         }
-        
+
         $scope.printDocument = function () {
-            $("#printThis").removeClass("ng-hide");
-            printJS({printable: 'printThis', type: 'html', honorMarginPadding: false});
-            $("#printThis").addClass("ng-hide");
+            $('#printThis').printThis({
+                pageTitle: "Testing",
+                debug: false,
+                importCSS: false,
+                importStyle: false,
+                loadCSS: [$rootScope.IRISOrgUrl+"/css/print.css"],
+            });
         }
     }]);
 

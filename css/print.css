@@ -449,6 +449,10 @@
     width: 100%;
 }
 
+#printThis {
+    padding: 25px 45px;
+}
+
 #printThis table {
     border-collapse: collapse;
     width:100%;
