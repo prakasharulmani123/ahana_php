@@ -22,18 +22,19 @@ app.controller('OtherDocumentsController', ['$rootScope', '$scope', '$timeout', 
         // Initialize Create Form
         $scope.initForm = function () {
             $scope.isLoading = true;
-            $scope.isPatientHaveActiveEncounter(function (response) {
-                if (response.success == false) {
-                    $scope.isLoading = false;
-                    alert("Sorry, you can't create other document");
-                    $state.go("patient.document", {id: $state.params.id});
-                } else {
+//            $scope.isPatientHaveActiveEncounter(function (response) {
+//                if (response.success == false) {
+//                    $scope.isLoading = false;
+//                    alert("Sorry, you can't create other document");
+//                    $state.go("patient.document", {id: $state.params.id});
+//                } else {
                     $scope.data = {};
                     $scope.data.formtype = 'add';
                     $scope.data.status = '1';
-                    $scope.encounter = response.model;
-                }
-            });
+                    $scope.encounter = {encounter_id: $state.params.enc_id};
+                    $scope.isLoading = false;
+//                }
+//            });
         }
 
         //Get Data for update Form

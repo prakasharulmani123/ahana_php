@@ -83,14 +83,16 @@ app.controller('ScannedDocumentsController', ['$rootScope', '$scope', '$timeout'
             $scope.data.document_name = '';
             $scope.data.date_of_creation = moment().format('YYYY-MM-DD HH:mm:ss');
             $scope.isLoading = true;
-            $scope.isPatientHaveActiveEncounter(function (response) {
-                if (response.success == false) {
-                    $scope.isLoading = false;
-                    alert("Sorry, you can't upload a scanned document");
-                    $state.go("patient.document", {id: $state.params.id});
-                } else {
-                    $scope.encounter = response.model;
-                }
-            });
+            $scope.encounter = {encounter_id: $state.params.enc_id};
+            $scope.isLoading = false;
+//            $scope.isPatientHaveActiveEncounter(function (response) {
+//                if (response.success == false) {
+//                    $scope.isLoading = false;
+//                    alert("Sorry, you can't upload a scanned document");
+//                    $state.go("patient.document", {id: $state.params.id});
+//                } else {
+//                    $scope.encounter = response.model;
+//                }
+//            });
         }
     }]);

@@ -2532,7 +2532,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             })
             //Patient Document - Create
             .state('patient.addDocument', {
-                url: '/addDocument/{id}',
+                url: '/addDocument/{id}/{enc_id}',
                 templateUrl: 'tpl/patient_documents/create.html',
                 resolve: {
                     deps: ['uiLoad',
@@ -2572,7 +2572,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
 
             //Patient Scanned Document - Create
             .state('patient.addScannedDocument', {
-                url: '/addScannedDocument/{id}',
+                url: '/addScannedDocument/{id}/{enc_id}',
                 templateUrl: 'tpl/patient_scanned_documents/create.html',
                 resolve: {
                     deps: ['$ocLazyLoad',
@@ -2588,7 +2588,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
 
             //Patient Other Document - Create
             .state('patient.addOtherDocument', {
-                url: '/addOtherDocument/{id}',
+                url: '/addOtherDocument/{id}/{enc_id}',
                 templateUrl: 'tpl/patient_other_documents/create.html',
                 resolve: {
                     deps: ['$ocLazyLoad',

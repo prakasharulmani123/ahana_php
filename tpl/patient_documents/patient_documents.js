@@ -16,6 +16,19 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
 
             $scope.isLoading = true;
             $scope.rowCollection = [];
+            $scope.encounters_list = [];
+            
+            $scope.$watch('patientObj.patient_id', function (newValue, oldValue) {
+                if (newValue != '') {
+                    $rootScope.commonService.GetEncounterListByPatient('', '0,1', false, $scope.patientObj.patient_id, function (response) {
+                        angular.forEach(response, function (resp) {
+                            resp.encounter_id = resp.encounter_id.toString();
+                        });
+                        $scope.encounters_list = response;
+                    }, 'sale_encounter_id');
+                }
+            }, true);
+            
             $http.get($rootScope.IRISOrgServiceUrl + '/patientdocuments/getpatientdocuments?patient_id=' + $state.params.id)
                     .success(function (documents) {
                         $scope.isLoading = false;
@@ -30,11 +43,11 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
         $scope.switchAddDocument = function () {
             if ($scope.add_document) {
                 if ($scope.add_document == 'CH') {
-                    $state.go('patient.addDocument', {id: $state.params.id});
+                    $state.go('patient.addDocument', {id: $state.params.id, enc_id: $scope.add_doc_encounter_id});
                 } else if ($scope.add_document == 'SD') {
-                    $state.go('patient.addScannedDocument', {id: $state.params.id});
+                    $state.go('patient.addScannedDocument', {id: $state.params.id, enc_id: $scope.add_doc_encounter_id});
                 } else if ($scope.add_document == 'OD') {
-                    $state.go('patient.addOtherDocument', {id: $state.params.id});
+                    $state.go('patient.addOtherDocument', {id: $state.params.id, enc_id: $scope.add_doc_encounter_id});
                 }
             }
         }
@@ -61,8 +74,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                             if (response.data.success === true) {
                                 $scope.msg.successMessage = 'Document Deleted Successfully';
                                 $scope.loadPatDocumentsList();
-                            }
-                            else {
+                            } else {
                                 $scope.errorData = response.data.message;
                             }
                         }
@@ -176,13 +188,14 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
 // Initialize Create Form
         $scope.initForm = function () {
             $scope.isLoading = true;
-            $scope.isPatientHaveActiveEncounter(function (response) {
-                if (response.success == false) {
-                    $scope.isLoading = false;
-                    alert("Sorry, you can't create a document");
-                    $state.go("patient.document", {id: $state.params.id});
-                } else {
-                    $scope.encounter = response.model;
+//            $scope.isPatientHaveActiveEncounter(function (response) {
+//                if (response.success == false) {
+//                    $scope.isLoading = false;
+//                    alert("Sorry, you can't create a document");
+//                    $state.go("patient.document", {id: $state.params.id});
+//                } else {
+//                    $scope.encounter = response.model;
+                    $scope.encounter = {encounter_id: $state.params.enc_id};
                     $scope.getDocumentType(function (doc_type_response) {
                         if (doc_type_response.success == false) {
                             alert("Sorry, you can't create a document");
@@ -208,8 +221,8 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                             }, true);
                         }
                     });
-                }
-            });
+//                }
+//            });
         }
 
         $scope.initSaveDocument = function (callback) {
@@ -327,9 +340,9 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                 debug: false,
                 importCSS: false,
                 importStyle: false,
-                loadCSS: [$rootScope.IRISOrgUrl+"/css/print.css"],
+                loadCSS: [$rootScope.IRISOrgUrl + "/css/print.css"],
             });
-            
+
 //            $timeout(function () {
 //                var innerContents = document.getElementById("printThisElement").innerHTML;
 //                var popupWinindow = window.open('', '_blank', 'width=600,height=700,scrollbars=yes,menubar=no,toolbar=no,location=no,status=no,titlebar=no');
