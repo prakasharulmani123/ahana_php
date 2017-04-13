@@ -235,7 +235,7 @@ class XmlController extends Controller {
     public function actionSideeffects() {
         $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@type='RadGrid' and @ADDButtonID='RGPhamacoadd']//FIELD[@type='RadioButtonList']/FIELD[@type='TextBox']";
         $list_items = ['slurred speech', 'blurred vision', 'drowsiness', 'extra pyramidal symptoms', 'increased salivation', 'dysphagia', 'obesity', 'milk secretion', 'constipation', 'hand tremors', 'sexual dysfunction', 'menstrual problems', 'motor restlessness'];
-        
+
         $all_files = $this->getAllFiles();
         $error_files = [];
         if (!empty($all_files)) {
@@ -253,10 +253,10 @@ class XmlController extends Controller {
                         foreach ($targets as $target) {
                             unset($target['label']);
                             $target['type'] = 'DropDownList';
-                            if($target->PROPERTIES->PROPERTY[3]['name'] == 'placeholder'){
+                            if ($target->PROPERTIES->PROPERTY[3]['name'] == 'placeholder') {
                                 unset($target->PROPERTIES->PROPERTY[3]);
                             }
-                            
+
                             $listItems = $target->addChild('LISTITEMS');
                             foreach ($list_items as $itemkey => $value) {
                                 $item_{$itemkey} = $listItems->addChild('LISTITEM', $value);
@@ -453,6 +453,69 @@ class XmlController extends Controller {
                                     $property['name'] = 'placeholder';
                                     $property[0] = 'Notes';
                                 }
+                            }
+                        }
+                    }
+                    $xml->asXML($files);
+                }
+            }
+        }
+        echo "<pre>";
+        print_r($error_files);
+        exit;
+    }
+
+    public function actionDeletefield() {
+        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@type='RadGrid' and @ADDButtonID='RGCompliantadd']//FIELD[@type='TextBoxDDL']";
+
+        $all_files = $this->getAllFiles();
+        $error_files = [];
+        if (!empty($all_files)) {
+            foreach ($all_files as $key => $files) {
+                if (filesize($files) > 0) {
+                    libxml_use_internal_errors(true);
+                    $xml = simplexml_load_file($files, null, LIBXML_NOERROR);
+                    if ($xml === false) {
+                        $error_files[$key]['name'] = $files;
+                        $error_files[$key]['error'] = libxml_get_errors();
+                        continue;
+                    }
+                    $targets = $xml->xpath($xpath);
+                    if (!empty($targets)) {
+                        foreach ($targets as $target) {
+                            $dom = dom_import_simplexml($target);
+                            $dom->parentNode->removeChild($dom);
+                        }
+                    }
+                    $xml->asXML($files);
+                }
+            }
+        }
+        echo "<pre>";
+        print_r($error_files);
+        exit;
+    }
+
+    public function actionDeleteth() {
+        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@type='RadGrid' and @ADDButtonID='RGCompliantadd']/HEADER";
+
+        $all_files = $this->getAllFiles();
+        $error_files = [];
+        if (!empty($all_files)) {
+            foreach ($all_files as $key => $files) {
+                if (filesize($files) > 0) {
+                    libxml_use_internal_errors(true);
+                    $xml = simplexml_load_file($files, null, LIBXML_NOERROR);
+                    if ($xml === false) {
+                        $error_files[$key]['name'] = $files;
+                        $error_files[$key]['error'] = libxml_get_errors();
+                        continue;
+                    }
+                    $targets = $xml->xpath($xpath);
+                    if (!empty($targets)) {
+                        foreach ($targets as $target) {
+                            if (isset($target->TH[1])) {
+                                unset($target->TH[1]);
                             }
                         }
                     }

@@ -272,7 +272,7 @@
                 </PROPERTIES>
                 <HEADER>
                     <TH>Complaints</TH>
-                    <TH>Duration</TH>
+                    
                 </HEADER>
                 <COLUMNS>
                     <FIELD id="txtComplaints" type="TextBox">
@@ -282,27 +282,7 @@
                             <PROPERTY name="class">form-control</PROPERTY>
                         </PROPERTIES>
                     </FIELD>
-                    <FIELD id="txtDuration" type="TextBoxDDL">
-                        <PROPERTIES>
-                            <PROPERTY name="id">txtDuration</PROPERTY>
-                            <PROPERTY name="name">txtDuration</PROPERTY>
-                            <PROPERTY name="class">form-control</PROPERTY>
-                            <PROPERTY name="onkeydown">return isNumericKeyStroke(event)</PROPERTY>
-                        </PROPERTIES>
-                        <FIELD id="DDLDuration" type="DropDownList">
-                            <PROPERTIES>
-                                <PROPERTY name="id">DDLDuration</PROPERTY>
-                                <PROPERTY name="name">DDLDuration</PROPERTY>
-                                <PROPERTY name="class">form-control</PROPERTY>
-                            </PROPERTIES>
-                            <LISTITEMS>
-                                <LISTITEM value="Yrs" Selected="False">Yrs</LISTITEM>
-                                <LISTITEM value="Months" Selected="False">Months</LISTITEM>
-                                <LISTITEM value="Weeks" Selected="False">Weeks</LISTITEM>
-                                <LISTITEM value="Days" Selected="False">Days</LISTITEM>
-                            </LISTITEMS>
-                        </FIELD>
-                    </FIELD>
+                    
                 </COLUMNS>
             </FIELD>
             
