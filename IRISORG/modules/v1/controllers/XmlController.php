@@ -150,17 +150,17 @@ class XmlController extends Controller {
 
     //2. Section of past medical history Can we add RTA & Surgery (earlier suggested by Gopi Sir)  - COMPLETED
     public function actionInsertnewnode() {
-        $field_type = 'DropDownList';
+        $field_type = 'RadioButtonList';
         if ($field_type == 'DropDownList') {
             $find_val = 'Ayurveda';
             $item = 'Yoga/Naturopathy';
             $value = 'Yoga/Naturopathy';
             $xpath = "/FIELDS/GROUP/PANELBODY//LISTITEM[@value='{$find_val}']/parent::LISTITEMS";
         } else if ($field_type == 'RadioButtonList') {
-            $find_val = 'RBknowledgeofspouse2';
-            $item = 'NA';
-            $value = 'NA';
-            $id = 'RBknowledgeofspouse3';
+            $find_val = 'CBstreamform11';
+            $item = 'Others';
+            $value = 'Others';
+            $id = 'CBstreamform12';
             $xpath = "/FIELDS/GROUP/PANELBODY//LISTITEM[@id='{$find_val}']/parent::LISTITEMS";
         }
 

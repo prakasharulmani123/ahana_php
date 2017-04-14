@@ -2135,7 +2135,7 @@
                         <LISTITEM value="Perseveration" id="CBstreamform9" Selected="False">Perseveration</LISTITEM>
                         <LISTITEM value="Neologisms" id="CBstreamform10" Selected="False">Neologisms</LISTITEM>
                         <LISTITEM value="Word salad " id="CBstreamform11" Selected="False">Word salad</LISTITEM>
-                    </LISTITEMS>
+                    <LISTITEM value="Others" id="CBstreamform12" Selected="False">Others</LISTITEM></LISTITEMS>
                 </FIELD>
                 
                 <FIELD type="Header2" label="Possession of thought" class="Possession_of_thought"/>
