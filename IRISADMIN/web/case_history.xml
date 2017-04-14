@@ -2540,7 +2540,14 @@
                     <PROPERTY name="name">txtDiagnosis</PROPERTY>
                     <PROPERTY name="class">form-control</PROPERTY>
                 </PROPERTIES>
-            </FIELD>
+            </FIELD><FIELD id="diagnosis_notes" type="TextArea" label="Notes">
+                    <PROPERTIES>
+                        <PROPERTY name="id">diagnosis_notes</PROPERTY>
+                        <PROPERTY name="name">diagnosis_notes</PROPERTY>
+                        <PROPERTY name="class">form-control</PROPERTY>
+                        <PROPERTY name="placeholder">Notes</PROPERTY>
+                    </PROPERTIES>
+                </FIELD>
             
             <FIELD type="Header2" label="DSM -IV TR" class="DSM_IV_TR"/>
             
