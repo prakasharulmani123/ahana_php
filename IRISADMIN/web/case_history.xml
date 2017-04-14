@@ -202,7 +202,7 @@
                     <PROPERTY name="class">form-control</PROPERTY>
                 </PROPERTIES>
                 <LISTITEMS>
-                    <LISTITEM value="Self" Selected="True">Self</LISTITEM>
+                    
                     <LISTITEM value="Father" Selected="False">Father</LISTITEM>
                     <LISTITEM value="Mother" Selected="False">Mother</LISTITEM>
                     <LISTITEM value="Sibling" Selected="False">Sibling</LISTITEM>

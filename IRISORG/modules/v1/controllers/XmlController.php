@@ -527,5 +527,37 @@ class XmlController extends Controller {
         print_r($error_files);
         exit;
     }
+    
+    public function actionDeleteli() {
+        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@id='primary_care_giver']/LISTITEMS";
+
+        $all_files = $this->getAllFiles();
+        $error_files = [];
+        if (!empty($all_files)) {
+            foreach ($all_files as $key => $files) {
+                if (filesize($files) > 0) {
+                    libxml_use_internal_errors(true);
+                    $xml = simplexml_load_file($files, null, LIBXML_NOERROR);
+                    if ($xml === false) {
+                        $error_files[$key]['name'] = $files;
+                        $error_files[$key]['error'] = libxml_get_errors();
+                        continue;
+                    }
+                    $targets = $xml->xpath($xpath);
+                    if (!empty($targets)) {
+                        foreach ($targets as $target) {
+                            if (isset($target->LISTITEM[0])) {
+                                unset($target->LISTITEM[0]);
+                            }
+                        }
+                    }
+                    $xml->asXML($files);
+                }
+            }
+        }
+        echo "<pre>";
+        print_r($error_files);
+        exit;
+    }
 
 }
