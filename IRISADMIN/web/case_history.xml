@@ -895,7 +895,7 @@
                                 <LISTITEM value="Magico Religious" Selected="False">Magico Religious</LISTITEM>
                                 <LISTITEM value="Homeopathy" Selected="False">Homeopathy</LISTITEM>
                                 <LISTITEM value="Ayurveda" Selected="False">Ayurveda</LISTITEM>
-                            </LISTITEMS>
+                            <LISTITEM value="Yoga/Naturopathy" Selected="False">Yoga/Naturopathy</LISTITEM></LISTITEMS>
                         </FIELD>
                         
                         <FIELD id="radio_pb_taken" type="RadioButtonList">
