@@ -464,3 +464,7 @@
 #printThis th, #printThis td {
     padding: 20px;
 }
+
+#printThisElement {
+ font-size: 18px;   
+}
