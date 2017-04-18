@@ -1,3 +1,83 @@
+/* global words */
+app.filter('words', function () {
+    return function (value) {
+        var value1 = parseInt(value);
+        if (value1 && isInteger(value1))
+            return  toWords(value1);
+
+        return value;
+    };
+
+    function isInteger(x) {
+        return x % 1 === 0;
+    }
+});
+
+var th = ['', 'thousand', 'million', 'billion', 'trillion'];
+var dg = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
+var tn = ['ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
+var tw = ['twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+
+function toWords(s)
+{
+    s = s.toString();
+    s = s.replace(/[\, ]/g, '');
+    if (s != parseFloat(s))
+        return 'not a number';
+    var x = s.indexOf('.');
+    if (x == -1)
+        x = s.length;
+    if (x > 15)
+        return 'too big';
+    var n = s.split('');
+    var str = '';
+    var sk = 0;
+    for (var i = 0; i < x; i++)
+    {
+        if ((x - i) % 3 == 2)
+        {
+            if (n[i] == '1')
+            {
+                str += tn[Number(n[i + 1])] + ' ';
+                i++;
+                sk = 1;
+            } else if (n[i] != 0)
+            {
+                str += tw[n[i] - 2] + ' ';
+                sk = 1;
+            }
+        } else if (n[i] != 0)
+        {
+            str += dg[n[i]] + ' ';
+            if ((x - i) % 3 == 0)
+                str += 'hundred ';
+            sk = 1;
+        }
+
+
+        if ((x - i) % 3 == 1)
+        {
+            if (sk)
+                str += th[(x - i - 1) / 3] + ' ';
+            sk = 0;
+        }
+    }
+    if (x != s.length)
+    {
+        var y = s.length;
+        str += 'point ';
+        for (var i = x + 1; i < y; i++)
+            str += dg[n[i]] + ' ';
+    }
+    return capitalise(str.replace(/\s+/g, ' '));
+}
+
+function capitalise(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1).toUpperCase();
+}
+
+window.toWords = toWords;
+
 app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$anchorScroll', '$filter', '$timeout', '$modal', '$location', '$q', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $anchorScroll, $filter, $timeout, $modal, $location, $q) {
 
         editableThemes.bs3.inputClass = 'input-sm';
@@ -175,7 +255,8 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             $scope.data.patient_guid = $item.patient_guid;
             $scope.data.patient_name = $item.fullname;
             $scope.data.consultant_id = $item.last_consultant_id;
-
+            var patient_int_code = $item.patient_global_int_code;
+            $scope.patient_int_code = patient_int_code;
             $scope.getEncounter($item.patient_id, 'add', '');
             $scope.getPatientGroupByPatient($item.patient_guid);
         }
@@ -922,24 +1003,32 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
         /*PRINT BILL*/
         $scope.printHeader = function () {
-            return true;
+            return {
+                text: "Ahana \n PHARMACY SERVICE - 24HOURS",
+                style: 'header',
+                alignment: 'center'
+            };
         }
 
         $scope.printFooter = function () {
-            return true;
+            return {
+                text: "Printed Date : " + moment($scope.current_time).format('DD-MM-YYYY HH:mm'),
+                margin: 5,
+                alignment: 'center'
+            };
         }
 
         $scope.printStyle = function () {
             return {
                 header: {
-                    bold: true,
-                    color: '#000',
-                    fontSize: 8
+                    fontSize: 10,
+                    bold: true
                 },
                 demoTable: {
                     color: '#000',
                     fontSize: 8
-                }
+                },
+                // bill: { margin: [0, 10, 20, 0], }
             };
         }
 
@@ -954,23 +1043,25 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             var index = 1;
             var loop_count = 0;
 
-            var groupedArr = createGroupedArray($scope.saleItems2, 2);
+            var groupedArr = createGroupedArray($scope.saleItems2, 15); //Changed Description rows
             var sale_info = $scope.data2;
 
             angular.forEach(groupedArr, function (sales, key) {
                 var perPageInfo = [];
+                var perImageInfo = [];
 
                 var perPageItems = [];
                 perPageItems.push([
-                    {text: 'S.No', style: 'header'},
-                    {text: 'Particulars', style: 'header'},
+                    {text: 'Description', style: 'header'},
                     {text: 'MFR', style: 'header'},
                     {text: 'Batch', style: 'header'},
                     {text: 'Expiry', style: 'header'},
                     {text: 'Qty', style: 'header'},
-                    {text: 'Rate', style: 'header'},
+                    {text: 'Price', style: 'header'},
+                    {text: 'Vat%', style: 'header'},
                     {text: 'Amount', style: 'header'},
                 ]);
+
 
                 angular.forEach(sales, function (row, key) {
                     var percentage = parseInt(row.discount_percentage);
@@ -993,73 +1084,134 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                         var particulars = row.product.full_name;
                     }
                     perPageItems.push([
-                        index.toString(),
+
                         particulars,
                         row.product.brand_code,
                         row.batch_no,
                         moment(row.expiry_date).format('MM/YY'),
                         row.quantity.toString(),
                         row.mrp,
+                        row.vat_percent,
                         row.total_amount,
                     ]);
-                    index++;
-                    loop_count++;
+
+                    //loop_count++;
                 });
-                perPageItems.push([
-                    {text: 'For Ahana Hospital', colSpan: 2},
-                    "",
-                    {text: 'GET WELL SOON', colSpan: 3, alignment: 'center'},
-                    "",
-                    "",
-                    {text: 'TOTAL'},
-                    {text: (loop_count === result_count ? sale_info.bill_amount.toString() : ''), colSpan: 2, alignment: 'right'},
-                    "",
-                ]);
+                    var barcode = sale_info.patient.patient_int_code;
+                    var bar_image = $('#'+barcode).attr('src');
+                    if(bar_image)
+                    {
+                        perPageInfo.push({ alignment: 'justify',columns: [ { text: '\n\n Ahana PHARMACY - sale:'}, { image: bar_image,width:100,alignment:'right', } ],});
+                    }
+                    else
+                    {
+                        perPageInfo.push({ alignment: 'justify',columns: [ { text: '\n\n Ahana PHARMACY - sale:'}, ],});
+                    }
+                    
+                perPageInfo.push({
+                            table: {
+                                style: 'bill',
+                                headerRows: 1,
+                                widths: [150, 160, 160, '*'],
+                                body: [
+                                    [
+                                        {text: 'Bill No', style: 'tableHeader'}, [sale_info.bill_no],
+                                        {text: [
+                                                {text: 'Date: ', bold: true},
+                                                generated_on
+                                            ], }
+                                    ],
+                                    [
+                                        {text: 'Patient', style: 'tableHeader'}, [sale_info.patient_name || '-'],
+                                        {text: [
+                                                {text: 'Reg No : ', bold: true, colSpan: 3},
+                                                sale_info.patient.patient_int_code || '-'
+                                            ], }
+
+                                    ],
+                                    [{text: 'Address', style: 'tableHeader'}, {text: [sale_info.patient.fullpermanentaddress || '-'], style: 'tableHeader', colSpan: 3}],
+                                    [{text: 'Doctor', style: 'tableHeader'}, {text: [sale_info.consultant_name || '-'], style: 'tableHeader', colSpan: 3}],
+                                ],
+
+                            },
+                        },
+                        {
+                            table: {
+                                style: 'tableExample',
+                                headerRows: 1,
+                                widths: [100, 50, '*', 'auto', 'auto', 'auto', 50, '*'],
+                                body: perPageItems,
+                            },
+                            margin: [0, 20, 0, 0],
+                            //pageBreak: (loop_count === result_count ? '' : 'after'),
+                        });
 
                 perPageInfo.push({
+                    alignment: 'justify',
                     columns: [
                         {
-                            text: [
-                                {text: 'Pt. Name ', bold: true},
-                                sale_info.patient_name
-                            ],
-                            margin: [0, 0, 0, 20]
-                        },
-                        {
-                            text: [
-                                {text: 'No: ', bold: true},
-                                sale_info.bill_no + "/" + sale_info.payment_type_name
-                            ],
-                            margin: [0, 0, 0, 20]
-                        }
+                            style: 'tableExample1',
+                            table: {
+                                headerRows: 1,
+                                widths: ['auto', 'auto', '*'],
+                                body: [
+                                    ['Price', 'Vat', 'Total'],
+                                    [sale_info.total_item_amount, sale_info.total_item_vat_amount, sale_info.bill_amount]
+                                ],
 
-                    ]
-                }, {
-                    columns: [
-                        {
-                            text: [
-                                {text: 'Address: ', bold: true},
-                                "Test address"
-                            ],
-                            margin: [0, 0, 0, 20]
+                            },
                         },
+                        {},
                         {
-                            text: [
-                                {text: ' Date: ', bold: true},
-                                generated_on
-                            ],
-                            margin: [0, 0, 0, 20]
-                        }
-                    ]
-                }, {
-                    style: 'demoTable',
+                            style: 'tableExample',
+                            table: {
+                                headerRows: 1,
+                                body: [
+                                    [
+                                        {text: 'Total Value'}, {text: ':'},
+                                        {text: [sale_info.total_item_amount], alignment: 'right'}
+                                    ],
+                                    [
+                                        {text: 'Total Vat'}, {text: ':'},
+                                        {text: [sale_info.total_item_vat_amount], alignment: 'right'}
+                                    ],
+                                    [
+                                        {text: 'Round Off'}, {text: ':'},
+                                        {text: [sale_info.roundoff_amount], alignment: 'right'}
+                                    ],
+                                    [
+                                        {text: 'Ground Total'}, {text: ': RS'},
+                                        {text: [sale_info.bill_amount], fontSize: 18, alignment: 'right'}
+                                    ],
+                                ]
+                            },
+                            layout: 'noBorders',
+
+                        },
+                    ],
+                    margin: [0, 200, 0, 0],
+                });
+                perPageInfo.push({
+                    text: [
+                        $filter('words')(sale_info.bill_amount),
+                        {text: 'RUPEES ONLY'},
+                    ]});
+
+                perPageInfo.push({
+                    style: 'tableExample',
                     table: {
                         headerRows: 1,
-                        widths: [20, 150, 50, '*', 'auto', 'auto', 50, 50],
-                        body: perPageItems,
+                        body: [
+                            [generated_by, generated_by, generated_by, generated_by, ' '],
+                            ['billed By', 'Prepared By', 'Packed By', 'Qualified Pharma', 'Delivered By']
+
+                        ]
                     },
-                    pageBreak: (loop_count === result_count ? '' : 'after'),
+                    layout: 'noBorders',
+                    margin: [0, 20, 0, 0],
                 });
+
+
                 content.push(perPageInfo);
                 if (index == result_count) {
                     $scope.printloader = '';
@@ -1086,8 +1238,9 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                         footer: $scope.printFooter(),
                         styles: $scope.printStyle(),
                         content: print_content,
-                        pageSize: {width: 4 * 72, height: 8 * 72},
-                        pageOrientation: 'landscape',
+                        pageMargins: ($scope.deviceDetector.browser == 'firefox' ? 75 : 50),
+                        pageSize: 'A4',
+
                     };
                     var pdf_document = pdfMake.createPdf(docDefinition);
                     var doc_content_length = Object.keys(pdf_document).length;
@@ -1114,6 +1267,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                         $scope.data2 = response;
                         $scope.data2.patient_name = response.patient_name;
                         $scope.data2.patient_guid = response.patient_uhid;
+
 //                        $scope.getConsultantDetail($scope.data2.consultant_id);
                         $scope.getPaytypeDetail($scope.data2.payment_type);
                         $scope.data2.payment_type_name = $scope.purchase_type_name;

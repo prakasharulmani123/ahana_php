@@ -13,7 +13,10 @@
                             <div class="panel-body">
                                 <div class="form-group">
                                     <label class="col-lg-4 control-label">
-                                        Patient Name 
+                                        
+                                        <div ng-hide="true" ng-if="data.patient.patient_int_code"> <io-barcode id="{{ data.patient.patient_int_code ||'-'}}" code="{{ data.patient.patient_int_code ||'-'}}" type="CODE128B" options="barcodeOptions"></io-barcode></div>
+                                        <div ng-hide="true" ng-if="!data.patient.patient_int_code"> <io-barcode id="{{ patient_int_code || '-'}}" code="{{ patient_int_code || '-'}}" type="CODE128B" options="barcodeOptions"></io-barcode></div>
+                                        Patient Name
                                         <span ng-show="show_patient_loader">&nbsp;&nbsp;
                                             <i class="fa fa-spin fa-refresh"></i>
                                         </span>

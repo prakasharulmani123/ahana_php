@@ -104,6 +104,9 @@
                                 </thead>
                                 <tbody>
                                     <tr ng-repeat="(gKey, saleitem) in row.items | orderBy: sale_id">
+                                        <td ng-hide="true">
+                                                <io-barcode id="{{saleitem.patient_uhid}}" code="{{saleitem.patient_uhid}}" type="CODE128B" options="barcodeOptions"></io-barcode>
+                                        </td>
                                         <td>{{saleitem.bill_no}}</td>
                                         <td>{{saleitem.sale_date}}</td>
                                         <td>{{saleitem.bill_amount| number:2}}</td>
