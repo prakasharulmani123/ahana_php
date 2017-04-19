@@ -67,16 +67,22 @@ class XmlController extends Controller {
         }
     }
 
+    private function simplexml_insert_firstChild($insert, $target) {
+        $target_dom = dom_import_simplexml($target);
+        $insert_dom = $target_dom->ownerDocument->importNode(dom_import_simplexml($insert), true);
+        return $target_dom->insertBefore($insert_dom, $target_dom->firstChild);
+    }
+
     public function actionInsertnewfield() {
-        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@id='txtDiagnosis']";
-        $insert = '<FIELD id="diagnosis_notes" type="TextArea" label="Notes">
-                    <PROPERTIES>
-                        <PROPERTY name="id">diagnosis_notes</PROPERTY>
-                        <PROPERTY name="name">diagnosis_notes</PROPERTY>
-                        <PROPERTY name="class">form-control</PROPERTY>
-                        <PROPERTY name="placeholder">Notes</PROPERTY>
-                    </PROPERTIES>
-                </FIELD>';
+        $xpath = "/FIELDS/GROUP/PANELBODY";
+        $insert = '<FIELD id="TherapistName" type="TextBox">
+                <PROPERTIES>
+                    <PROPERTY name="id">TherapistName</PROPERTY>
+                    <PROPERTY name="name">TherapistName</PROPERTY>
+                    <PROPERTY name="class">form-control</PROPERTY>
+                    <PROPERTY name="placeholder">Therapist Name</PROPERTY>
+                </PROPERTIES>
+            </FIELD>';
 
         $all_files = $this->getAllFiles();
         $error_files = [];
@@ -92,9 +98,10 @@ class XmlController extends Controller {
                     }
                     $targets = $xml->xpath($xpath);
                     if (!empty($targets)) {
-                        foreach ($targets as $target) {
-                            $this->simplexml_insert_after(simplexml_load_string($insert), $target);
-                        }
+                        $this->simplexml_insert_firstChild(simplexml_load_string($insert), $targets[0]);
+//                        foreach ($targets as $target) {
+//                            $this->simplexml_insert_after(simplexml_load_string($insert), $target);
+//                        }
                     }
                     $xml->asXML($files);
                 }
@@ -522,7 +529,7 @@ class XmlController extends Controller {
         print_r($error_files);
         exit;
     }
-    
+
     public function actionDeleteli() {
         $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@id='primary_care_giver']/LISTITEMS";
 

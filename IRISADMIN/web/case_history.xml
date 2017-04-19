@@ -7,7 +7,14 @@
             </PROPERTIES>
             <VALUE>Demographic Details</VALUE>
         </PANELHEADER>
-        <PANELBODY>
+        <PANELBODY><FIELD id="TherapistName" type="TextBox">
+                <PROPERTIES>
+                    <PROPERTY name="id">TherapistName</PROPERTY>
+                    <PROPERTY name="name">TherapistName</PROPERTY>
+                    <PROPERTY name="class">form-control</PROPERTY>
+                    <PROPERTY name="placeholder">Therapist Name</PROPERTY>
+                </PROPERTIES>
+            </FIELD>
             <FIELD id="name" type="TextBox" label="Name" required="true">
                 <PROPERTIES>
                     <PROPERTY name="id">txtName</PROPERTY>

@@ -24,6 +24,22 @@
                             <xsl:for-each select="FIELD">
                                 <xsl:choose>
                                     
+                                    <!-- TherapistName Text Box -->
+                                    <xsl:when test="@type='TextBox' and @id='TherapistName'">
+                                        <div class="form-group">
+                                            <div class="col-sm-4 col-sm-offset-8">
+                                                <input type="text">
+                                                    <xsl:for-each select="PROPERTIES/PROPERTY">
+                                                        <xsl:attribute name="{@name}">
+                                                            <xsl:value-of select="current()"></xsl:value-of>
+                                                        </xsl:attribute>
+                                                    </xsl:for-each>
+                                                </input>
+                                            </div>
+                                        </div>
+                                        <div class="line line-dashed b-b line-lg "></div>
+                                    </xsl:when>
+                                    
                                     <!-- Main Header2 -->
                                     <xsl:when test="@type='Header2'">
                                         <div class="col-sm-12">

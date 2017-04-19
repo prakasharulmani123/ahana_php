@@ -16,6 +16,24 @@
                 <xsl:for-each select="PANELBODY">
                     <xsl:for-each select="FIELD">
                         <xsl:choose>
+                            <!-- TherapistName Text Box -->
+                            <xsl:when test="@type='TextBox' and @id='TherapistName'">
+                                <xsl:if test="PROPERTIES/PROPERTY[@name = 'value' and string(.)]">
+                                    <tr>
+                                        <td colspan="2" style="text-align: right">
+                                            <b>
+                                                <xsl:for-each select="PROPERTIES/PROPERTY">
+                                                    <xsl:if test="@name='value'">
+                                                        <xsl:value-of select="current()"></xsl:value-of>
+                                                        <xsl:value-of select="../../@Backtext"></xsl:value-of>
+                                                    </xsl:if>
+                                                </xsl:for-each>
+                                            </b>
+                                        </td>
+                                    </tr>
+                                </xsl:if>
+                            </xsl:when>
+                            
                             <!-- Main Header2-->
                             <xsl:when test="@type='Header2'">
                                 <tr class="header2" data-header2="{@class}">
