@@ -1097,7 +1097,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
                     //loop_count++;
                 });
-                    var barcode = sale_info.patient.patient_int_code;
+                    var barcode = sale_info.patient.patient_global_int_code;
                     var bar_image = $('#'+barcode).attr('src');
                     if(bar_image)
                     {
@@ -1125,7 +1125,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                         {text: 'Patient', style: 'tableHeader'}, [sale_info.patient_name || '-'],
                                         {text: [
                                                 {text: 'Reg No : ', bold: true, colSpan: 3},
-                                                sale_info.patient.patient_int_code || '-'
+                                                sale_info.patient.patient_global_int_code || '-'
                                             ], }
 
                                     ],
