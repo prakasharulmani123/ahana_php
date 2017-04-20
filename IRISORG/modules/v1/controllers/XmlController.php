@@ -73,6 +73,12 @@ class XmlController extends Controller {
         return $target_dom->insertBefore($insert_dom, $target_dom->firstChild);
     }
 
+    private function simplexml_append_child($insert, $target) {
+        $target_dom = dom_import_simplexml($target);
+        $insert_dom = $target_dom->ownerDocument->importNode(dom_import_simplexml($insert), true);
+        return $target_dom->parentNode->appendChild($insert_dom);
+    }
+
     public function actionInsertnewfield() {
         $xpath = "/FIELDS/GROUP/PANELBODY";
         $insert = '<FIELD id="TherapistName" type="TextBox">
@@ -551,6 +557,50 @@ class XmlController extends Controller {
                             if (isset($target->LISTITEM[0])) {
                                 unset($target->LISTITEM[0]);
                             }
+                        }
+                    }
+                    $xml->asXML($files);
+                }
+            }
+        }
+        echo "<pre>";
+        print_r($error_files);
+        exit;
+    }
+
+    public function actionRadgrid() {
+        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@type='RadGrid' and @ADDButtonID='RGCompliantadd']/COLUMNS";
+
+        $all_files = $this->getAllFiles();
+        $error_files = [];
+        if (!empty($all_files)) {
+            foreach ($all_files as $key => $files) {
+                if (filesize($files) > 0) {
+                    libxml_use_internal_errors(true);
+                    $xml = simplexml_load_file($files, null, LIBXML_NOERROR);
+                    if ($xml === false) {
+                        $error_files[$key]['name'] = $files;
+                        $error_files[$key]['error'] = libxml_get_errors();
+                        continue;
+                    }
+                    
+                    $targets = $xml->xpath($xpath);
+                    $no_of_targets = count($targets);
+                    if ($no_of_targets >= 3) {
+                        continue;
+                    }
+
+                    if (!empty($targets)) {
+                        $max = 3;
+                        for ($i = $no_of_targets; $i < $max; $i++) {
+                            $insert = "<COLUMNS><FIELD id='txtComplaints{$i}' type='TextBox'>
+                                            <PROPERTIES>
+                                                <PROPERTY name='id'>txtComplaints{$i}</PROPERTY>
+                                                <PROPERTY name='name'>txtComplaints{$i}</PROPERTY>
+                                                <PROPERTY name='class'>form-control</PROPERTY>
+                                            </PROPERTIES>
+                                        </FIELD></COLUMNS>";
+                            $this->simplexml_append_child(simplexml_load_string($insert), $targets[0]);
                         }
                     }
                     $xml->asXML($files);

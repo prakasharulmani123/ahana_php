@@ -7,7 +7,8 @@
             </PROPERTIES>
             <VALUE>Demographic Details</VALUE>
         </PANELHEADER>
-        <PANELBODY><FIELD id="TherapistName" type="TextBox">
+        <PANELBODY>
+            <FIELD id="TherapistName" type="TextBox">
                 <PROPERTIES>
                     <PROPERTY name="id">TherapistName</PROPERTY>
                     <PROPERTY name="name">TherapistName</PROPERTY>
@@ -290,6 +291,24 @@
                         </PROPERTIES>
                     </FIELD>
                     
+                </COLUMNS>
+                <COLUMNS>
+                    <FIELD id="txtComplaints1" type="TextBox">
+                        <PROPERTIES>
+                            <PROPERTY name="id">txtComplaints1</PROPERTY>
+                            <PROPERTY name="name">txtComplaints1</PROPERTY>
+                            <PROPERTY name="class">form-control</PROPERTY>
+                        </PROPERTIES>
+                    </FIELD>
+                </COLUMNS>
+                <COLUMNS>
+                    <FIELD id="txtComplaints2" type="TextBox">
+                        <PROPERTIES>
+                            <PROPERTY name="id">txtComplaints2</PROPERTY>
+                            <PROPERTY name="name">txtComplaints2</PROPERTY>
+                            <PROPERTY name="class">form-control</PROPERTY>
+                        </PROPERTIES>
+                    </FIELD>
                 </COLUMNS>
             </FIELD>
             
@@ -902,7 +921,8 @@
                                 <LISTITEM value="Magico Religious" Selected="False">Magico Religious</LISTITEM>
                                 <LISTITEM value="Homeopathy" Selected="False">Homeopathy</LISTITEM>
                                 <LISTITEM value="Ayurveda" Selected="False">Ayurveda</LISTITEM>
-                            <LISTITEM value="Yoga/Naturopathy" Selected="False">Yoga/Naturopathy</LISTITEM></LISTITEMS>
+                                <LISTITEM value="Yoga/Naturopathy" Selected="False">Yoga/Naturopathy</LISTITEM>
+                            </LISTITEMS>
                         </FIELD>
                         
                         <FIELD id="radio_pb_taken" type="RadioButtonList">
@@ -2142,7 +2162,8 @@
                         <LISTITEM value="Perseveration" id="CBstreamform9" Selected="False">Perseveration</LISTITEM>
                         <LISTITEM value="Neologisms" id="CBstreamform10" Selected="False">Neologisms</LISTITEM>
                         <LISTITEM value="Word salad " id="CBstreamform11" Selected="False">Word salad</LISTITEM>
-                    <LISTITEM value="Others" id="CBstreamform12" Selected="False">Others</LISTITEM></LISTITEMS>
+                        <LISTITEM value="Others" id="CBstreamform12" Selected="False">Others</LISTITEM>
+                    </LISTITEMS>
                 </FIELD>
                 
                 <FIELD type="Header2" label="Possession of thought" class="Possession_of_thought"/>
@@ -2547,14 +2568,15 @@
                     <PROPERTY name="name">txtDiagnosis</PROPERTY>
                     <PROPERTY name="class">form-control</PROPERTY>
                 </PROPERTIES>
-            </FIELD><FIELD id="diagnosis_notes" type="TextArea" label="Notes">
-                    <PROPERTIES>
-                        <PROPERTY name="id">diagnosis_notes</PROPERTY>
-                        <PROPERTY name="name">diagnosis_notes</PROPERTY>
-                        <PROPERTY name="class">form-control</PROPERTY>
-                        <PROPERTY name="placeholder">Notes</PROPERTY>
-                    </PROPERTIES>
-                </FIELD>
+            </FIELD>
+            <FIELD id="diagnosis_notes" type="TextArea" label="Notes">
+                <PROPERTIES>
+                    <PROPERTY name="id">diagnosis_notes</PROPERTY>
+                    <PROPERTY name="name">diagnosis_notes</PROPERTY>
+                    <PROPERTY name="class">form-control</PROPERTY>
+                    <PROPERTY name="placeholder">Notes</PROPERTY>
+                </PROPERTIES>
+            </FIELD>
             
             <FIELD type="Header2" label="DSM -IV TR" class="DSM_IV_TR"/>
             
