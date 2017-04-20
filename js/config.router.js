@@ -2850,7 +2850,7 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
 
     //Check Access
     $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
-        $rootScope.patientType = ' ';
+        $rootScope.currentPage = ' ';
         var restrictedPage = $.inArray($location.path(), ['/configuration/changePassword']) === -1;
         var currentUser = AuthenticationService.getCurrentUser();
         var loggedIn = Boolean(currentUser);
@@ -2858,9 +2858,9 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
         $rootScope.currentPage = page[0];
         
         if(toState.name == 'patient.inPatients') {
-            $rootScope.patientType = 'IP';
+            $rootScope.currentPage = 'IP';
         } else if(toState.name == 'patient.outPatients') {
-            $rootScope.patientType = 'OP';
+            $rootScope.currentPage = 'OP';
         }
         
         //In patients page remove double scrollbar.

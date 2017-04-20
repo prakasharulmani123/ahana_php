@@ -201,7 +201,7 @@ angular.module('app')
                                         $scope.msg.errorMessage = "An Error has occured while loading patient!";
                                     } else {
                                         $scope.patientObj = patient;
-                                        $rootScope.patientType = patient.encounter_type;
+                                        $rootScope.currentPage = patient.encounter_type;
                                         $scope.setPatientAleratHtml(patient);
 
                                         $rootScope.commonService.GetLabelFromValue(patient.patient_gender, 'GetGenderList', function (response) {
