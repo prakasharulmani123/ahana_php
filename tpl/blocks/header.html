@@ -100,20 +100,25 @@
 
         <!-- link and dropdown -->
         <ul class="nav navbar-nav hidden-sm">
-            <li ui-sref-active="active">
-                <a ui-sref="myworks.dashboard" check-access> My Works </a>
+            
+            <li class="{{(currentPage == 'myworks' ? 'topactive' : '')}}" ui-sref-active="active">
+                <a ui-sref="myworks.dashboard" check-access> My Works</a>
             </li>
-            <li ui-sref-active="active">
-                <a ui-sref="patient.inPatients" check-access> In-Patient </a>
+            
+            <li class="{{(patientType == 'IP' ? 'topactive' : '')}}" ui-sref-active="active">
+                <a ui-sref="patient.inPatients" check-access>In-Patient</a>
             </li>
-            <li ui-sref-active="active">
-                <a ui-sref="patient.outPatients" check-access> Out-Patients </a>
+            
+            <li class="{{(patientType == 'OP' ? 'topactive' : '')}}" ui-sref-active="active">
+                <a ui-sref="patient.outPatients" check-access>Out-Patients</a>
             </li>
-            <li ui-sref-active="active">
-                <a ui-sref="pharmacy.purchaseCreate" check-access>Pharmacy </a>
+            
+            <li class="{{(currentPage == 'pharmacy' ? 'topactive' : '')}}" ui-sref-active="active">
+                <a ui-sref="pharmacy.purchaseCreate" check-access> Pharmacy</a>
             </li>
-            <li ui-sref-active="active">
-                <a ui-sref="configuration.organization" check-access>Configuration</a>
+            
+            <li class="{{(currentPage == 'configuration' ? 'topactive' : '')}}" ui-sref-active="active">
+                <a ui-sref="configuration.organization" check-access> Configuration</a>
             </li>
         </ul>
 

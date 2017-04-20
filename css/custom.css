@@ -543,5 +543,8 @@ out-patient-table .table > thead > tr > th label.i-checks {
     width: 100px !important;
 }
 
-
-
+.app-header.navbar .nav > li > a:hover, .app-header.navbar .nav > li.topactive a {
+	background:none;
+	border-bottom:#000000 solid 4px;
+	padding-bottom:11px;
+}
