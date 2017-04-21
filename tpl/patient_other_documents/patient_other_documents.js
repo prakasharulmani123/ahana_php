@@ -28,11 +28,14 @@ app.controller('OtherDocumentsController', ['$rootScope', '$scope', '$timeout', 
 //                    alert("Sorry, you can't create other document");
 //                    $state.go("patient.document", {id: $state.params.id});
 //                } else {
-                    $scope.data = {};
-                    $scope.data.formtype = 'add';
-                    $scope.data.status = '1';
-                    $scope.encounter = {encounter_id: $state.params.enc_id};
-                    $scope.isLoading = false;
+            $scope.data = {};
+            $scope.data.formtype = 'add';
+            $scope.data.status = '1';
+            $scope.encounter = {encounter_id: $state.params.enc_id};
+            $scope.isLoading = false;
+            $timeout(function () {
+                $scope.ckeditorReplace();
+            }, 500);
 //                }
 //            });
         }
@@ -51,6 +54,9 @@ app.controller('OtherDocumentsController', ['$rootScope', '$scope', '$timeout', 
                         $scope.loadbar('hide');
                         $scope.data = response;
                         $scope.encounter = {encounter_id: response.encounter_id};
+                        $timeout(function () {
+                            $scope.ckeditorReplace();
+                        }, 500);
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');
@@ -64,8 +70,14 @@ app.controller('OtherDocumentsController', ['$rootScope', '$scope', '$timeout', 
 
         //Save Both Add & Update Data
         $scope.saveForm = function (mode) {
-            _that = this;
+            $scope.ckeditorupdate();
+            
+            _data = $('#other_document_form').serializeArray();
 
+            _that = this;
+            $(_data).each(function (i, field) {
+                _that.data[field.name] = field.value;
+            });
             $scope.errorData = "";
             $scope.msg.successMessage = "";
 
@@ -108,6 +120,15 @@ app.controller('OtherDocumentsController', ['$rootScope', '$scope', '$timeout', 
             });
         };
 
+        $scope.ckeditorupdate = function () {
+            for (instance in CKEDITOR.instances)
+                CKEDITOR.instances[instance].updateElement();
+        };
+
+        $scope.ckeditorReplace = function () {
+            CKEDITOR.replaceAll('editor1');
+        };
+
         $scope.loadView = function () {
             $http.get($rootScope.IRISOrgServiceUrl + '/patientotherdocuments/' + $state.params.other_doc_id)
                     .success(function (other_document) {
@@ -124,7 +145,7 @@ app.controller('OtherDocumentsController', ['$rootScope', '$scope', '$timeout', 
                 debug: false,
                 importCSS: false,
                 importStyle: false,
-                loadCSS: [$rootScope.IRISOrgUrl+"/css/print.css"],
+                loadCSS: [$rootScope.IRISOrgUrl + "/css/print.css"],
             });
         }
     }]);
