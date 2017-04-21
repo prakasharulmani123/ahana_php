@@ -17,7 +17,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
             $scope.isLoading = true;
             $scope.rowCollection = [];
             $scope.encounters_list = [];
-            
+
             $scope.$watch('patientObj.patient_id', function (newValue, oldValue) {
                 if (newValue != '') {
                     $rootScope.commonService.GetEncounterListByPatient('', '0,1', false, $scope.patientObj.patient_id, function (response) {
@@ -28,7 +28,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     }, 'sale_encounter_id');
                 }
             }, true);
-            
+
             $http.get($rootScope.IRISOrgServiceUrl + '/patientdocuments/getpatientdocuments?patient_id=' + $state.params.id)
                     .success(function (documents) {
                         $scope.isLoading = false;
@@ -195,32 +195,32 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
 //                    $state.go("patient.document", {id: $state.params.id});
 //                } else {
 //                    $scope.encounter = response.model;
-                    $scope.encounter = {encounter_id: $state.params.enc_id};
-                    $scope.getDocumentType(function (doc_type_response) {
-                        if (doc_type_response.success == false) {
-                            alert("Sorry, you can't create a document");
-                            $state.go("patient.document", {id: $state.params.id});
-                        } else {
-                            $scope.xslt = doc_type_response.result.document_xslt;
-                            $scope.$watch('patientObj', function (newValue, oldValue) {
-                                if (Object.keys(newValue).length > 0) {
-                                    $scope.initSaveDocument(function (auto_save_document) {
-                                        $scope.xml = auto_save_document.data.xml;
-                                        $scope.isLoading = false;
+            $scope.encounter = {encounter_id: $state.params.enc_id};
+            $scope.getDocumentType(function (doc_type_response) {
+                if (doc_type_response.success == false) {
+                    alert("Sorry, you can't create a document");
+                    $state.go("patient.document", {id: $state.params.id});
+                } else {
+                    $scope.xslt = doc_type_response.result.document_xslt;
+                    $scope.$watch('patientObj', function (newValue, oldValue) {
+                        if (Object.keys(newValue).length > 0) {
+                            $scope.initSaveDocument(function (auto_save_document) {
+                                $scope.xml = auto_save_document.data.xml;
+                                $scope.isLoading = false;
 
-                                        $timeout(function () {
-                                            $scope.diagnosisDsmiv();
-                                        }, 2000);
+                                $timeout(function () {
+                                    $scope.diagnosisDsmiv();
+                                }, 2000);
 
-                                        $timeout(function () {
-                                            $scope.ckeditorReplace();
-                                        }, 500);
-                                        $scope.startAutoSave();
-                                    });
-                                }
-                            }, true);
+                                $timeout(function () {
+                                    $scope.ckeditorReplace();
+                                }, 500);
+                                $scope.startAutoSave();
+                            });
                         }
-                    });
+                    }, true);
+                }
+            });
 //                }
 //            });
         }
@@ -562,14 +562,19 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                 switch (this.type) {
                     case 'text':
                         this.value = "";
+                        break;
                     case 'textarea':
                         this.value = "";
+                        break;
                     case 'checkbox':
                         this.checked = false;
+                        break;
                     case 'radio':
                         this.checked = false;
+                        break;
                     case 'select-one':
                         $(this).val($(this).find("option:first").val());
+                        break;
                 }
             });
         });
