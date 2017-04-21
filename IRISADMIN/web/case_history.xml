@@ -2244,9 +2244,9 @@
                             <PROPERTY name="name">RBnatureofdelusion</PROPERTY>
                         </PROPERTIES>
                         <LISTITEMS>
-                            <LISTITEM value="Thought" id="RBnatureofdelusion1" Selected="False">Thought</LISTITEM>
-                            <LISTITEM value="Impulse" id="RBnatureofdelusion2" Selected="False">Impulse</LISTITEM>
-                            <LISTITEM value="Images" id="RBnatureofdelusion3" Selected="False">Images</LISTITEM>
+                            <LISTITEM value="Well systematized" id="RBnatureofdelusion1" Selected="False">Well systematized</LISTITEM>
+                            <LISTITEM value="Poorly systematized" id="RBnatureofdelusion2" Selected="False">Poorly systematized</LISTITEM>
+                            
                         </LISTITEMS>
                     </FIELD>
                 </FIELD>

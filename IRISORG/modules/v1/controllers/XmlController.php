@@ -349,7 +349,7 @@ class XmlController extends Controller {
     }
 
     public function actionChangetxtattrval() {
-        $xpath = "/FIELDS/GROUP/PANELBODY//LISTITEM[@id='RBmaritalsexualsatisfac1']";
+        $xpath = "/FIELDS/GROUP/PANELBODY//LISTITEM[@id='RBnatureofdelusion2']";
 
         $all_files = $this->getAllFiles();
         $error_files = [];
@@ -366,8 +366,8 @@ class XmlController extends Controller {
                     $targets = $xml->xpath($xpath);
                     if (!empty($targets)) {
                         foreach ($targets as $target) {
-                            $target['value'] = 'satisfactory';
-                            $target[0] = 'satisfactory';
+                            $target['value'] = 'Poorly systematized';
+                            $target[0] = 'Poorly systematized';
                         }
                     }
                     $xml->asXML($files);
@@ -537,7 +537,7 @@ class XmlController extends Controller {
     }
 
     public function actionDeleteli() {
-        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@id='primary_care_giver']/LISTITEMS";
+        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@id='RBnatureofdelusion']/LISTITEMS";
 
         $all_files = $this->getAllFiles();
         $error_files = [];
@@ -554,8 +554,8 @@ class XmlController extends Controller {
                     $targets = $xml->xpath($xpath);
                     if (!empty($targets)) {
                         foreach ($targets as $target) {
-                            if (isset($target->LISTITEM[0])) {
-                                unset($target->LISTITEM[0]);
+                            if (isset($target->LISTITEM[2])) {
+                                unset($target->LISTITEM[2]);
                             }
                         }
                     }
