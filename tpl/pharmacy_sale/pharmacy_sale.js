@@ -1150,16 +1150,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                     alignment: 'justify',
                     columns: [
                         {
-                            style: 'tableExample1',
-                            table: {
-                                headerRows: 1,
-                                widths: ['auto', 'auto', '*'],
-                                body: [
-                                    ['Price', 'Vat', 'Total'],
-                                    [sale_info.total_item_amount, sale_info.total_item_vat_amount, sale_info.bill_amount]
-                                ],
-
-                            },
+                            
                         },
                         {},
                         {
