@@ -40,9 +40,19 @@
             <!-- Document Print Content-->
             <div ng-hide="true" id='printThisElement'>
                 <table style="width:100%">
-                    <thead>
-                        
-                    </thead>
+ <!--                   <thead>
+                        <tr>
+                            <th>
+                                <img width="60" height="60" alt="AHANA HOSPITALS" src="css/images/ah-logo.png" />
+                            </th>
+                            <th>
+                                {{app.org_name}} 
+                            </th>
+                            <th>
+                                <b>Date:</b> {{created_at| moment:'DD/MM/YYYY - hh:mm A'}}
+                            </th>
+                        </tr>
+                    </thead>-->
                     <tbody>
                         <tr>
                             <td colspan="3" ng-bind-html="xml | xslt:printxslt | sanitize">
