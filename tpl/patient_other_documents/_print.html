@@ -20,13 +20,16 @@
                     <b>Name : </b>{{patientObj.fullname}} <br>
                     <b>Patient ID :</b> {{patientObj.patient_global_int_code}} <br>
                     <b>Age :</b> {{patientObj.patient_age}}<br>
-                    <b>Encounter # :</b> {{other_document.encounter_id}} <br>
                     <b>Branch Name :</b> {{app.org_name}} <br>
                 </td>
             </tr>
             <tr>
-                <td colspan="3" ng-bind-html="other_document.other_doc_content | sanitize">
-
+                
+                <td colspan="3" style="padding: 20px">
+                    <b>Encounter # :</b> {{other_document.encounter_id}} <br>
+                    <b>Document Name :</b> {{other_document.other_doc_name}} <br>
+                    <b>Description :</b> <br>
+                    <p ng-bind-html="other_document.other_doc_content | sanitize"></p>
                 </td>
             </tr>
         </tbody>

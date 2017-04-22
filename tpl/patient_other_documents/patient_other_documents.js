@@ -141,7 +141,7 @@ app.controller('OtherDocumentsController', ['$rootScope', '$scope', '$timeout', 
 
         $scope.printDocument = function () {
             $('#printThis').printThis({
-                pageTitle: "Testing",
+                pageTitle: "Ahana",
                 debug: false,
                 importCSS: false,
                 importStyle: false,
