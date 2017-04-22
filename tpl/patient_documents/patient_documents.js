@@ -336,7 +336,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
 
         $scope.printDocument = function () {
             $('#printThisElement').printThis({
-                pageTitle: "Testing",
+                pageTitle: "Ahana",
                 debug: false,
                 importCSS: false,
                 importStyle: false,
