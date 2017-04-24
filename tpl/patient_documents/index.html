@@ -87,6 +87,10 @@
                                 <button type="button" title="Delete"  ng-click="deleteDocument(doc.doc_id, 'CH')" class="label bg-dark">
                                     <i class="fa fa-trash"></i>
                                 </button>
+                                &nbsp;&nbsp;&nbsp;
+                                <button title="Print"  class="label bg-dark" ng-click="printCasedocument(doc.doc_id)">
+                                <i class="fa fa-print"></i>
+                                </button>
                             </span>
                             <span ng-if="doc.doc_type == 'OD'">
                                 <a class="label bg-dark" title="View" check-access  ui-sref="patient.viewOtherDocument({id: '{{$state.params.id}}', other_doc_id: '{{doc.doc_id}}'})">
@@ -99,6 +103,10 @@
                                 &nbsp;&nbsp;&nbsp;
                                 <button type="button" title="Delete"  ng-click="deleteDocument(doc.doc_id, 'OD')" class="label bg-dark">
                                     <i class="fa fa-trash"></i>
+                                </button>
+                                &nbsp;&nbsp;&nbsp;
+                                <button title="Print"  class="label bg-dark" id="print" ng-click="printOtherdocument(doc.doc_id)">
+                                <i class="fa fa-print"></i>
                                 </button>
                             </span>
                             <span ng-if="doc.doc_type == 'SD'">
@@ -115,6 +123,40 @@
                     </tr>
                 </tbody>
             </table>
+            <div id="printThis" ng-hide="true">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td colspan="3" style="padding: 20px">
+                                <u><b>Patient Details:</b></u><br>
+                                <b>Name : </b>{{patientObj.fullname}} <br>
+                                <b>Patient ID :</b> {{patientObj.patient_global_int_code}} <br>
+                                <b>Age :</b> {{patientObj.patient_age}}<br>
+                                <b>Branch Name :</b> {{app.org_name}} <br>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="padding: 20px">
+                                <b>Encounter # :</b> {{other_document.encounter_id}} <br>
+                                <b>Document Name :</b> {{other_document.other_doc_name}} <br>
+                                <b>Description :</b>
+                                <p ng-bind-html="other_document.other_doc_content | sanitize"></p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div ng-hide="true" id='printThisElement'>
+                <table style="width:100%">
+                    <tbody>
+                        <tr>
+                            <td colspan="3" ng-bind-html="xml | xslt:printxslt | sanitize">
+
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>

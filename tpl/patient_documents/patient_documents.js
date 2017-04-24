@@ -369,109 +369,148 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                         $scope.xml = pat_doc_response.result.document_xml;
                         $scope.isLoading = false;
                         $timeout(function () {
-
-                            $(".classy-edit").each(function () {
-                                $(this).removeClass("form-control");
-                                $(this).html($(this).text());
-                            });
-
-                            $("#printThisElement table").each(function () {
-                                //RadGrid
-                                var RadGrid_tr = $(this).find("tr.RadGrid");
-                                $.each(RadGrid_tr, function (n, e)
-                                {
-                                    $this = $(this);
-                                    var RadGrid_tr_attr = $this.data("radgrid");
-                                    $('table#' + RadGrid_tr_attr + ' tbody tr').each(function () {
-                                        if ($('td:not(:empty)', this).length == 0)
-                                            $(this).remove();
-                                    });
-                                    $('table#' + RadGrid_tr_attr).each(function () {
-                                        if ($(this).find("tbody").html().trim().length === 0) {
-                                            $this.remove();
-                                        }
-                                    });
-                                });
-                                //Header2
-                                var header2_tr = $(this).find("tr.header2");
-                                $.each(header2_tr, function (n, e)
-                                {
-                                    var header2_tr_attr = $(this).data("header2");
-                                    var header2_has_tr = $("tr").hasClass(header2_tr_attr);
-                                    if (!header2_has_tr) {
-                                        $(this).remove();
-                                    }
-                                });
-                                var tr = $(this).find("tr");
-                                $.each(tr, function () {
-                                    $this = $(this);
-                                    if ($(this).find("td").length > 0) {
-                                        if ($(this).find("td").text().trim().length === 0) {
-                                            $this.remove();
-                                        }
-                                    }
-
-                                });
-                                var rowCount = $(this).find("tr").length;
-                                if (rowCount < 2) {
-                                    $(this).remove();
-                                }
-
-                            });
-                            $("#printThisElement table").each(function () {
-                                var PanelBar_tr = $(this).find("table tr.PanelBar");
-                                if (PanelBar_tr.length > 0) {
-                                    $.each(PanelBar_tr, function () {
-                                        $this = $(this);
-                                        if ($(this).find("td").length > 0) {
-                                            if ($(this).find("td").text().trim().length === 0) {
-                                                $this.remove();
-                                            }
-                                        }
-                                    });
-                                }
-
-                                var rowCount = $(this).find("tr").length;
-                                if (rowCount < 2) {
-                                    $(this).remove();
-                                }
-                            });
-                            $(".document-content .panel-default").each(function () {
-                                //RadGrid
-                                var RadGrid_div = $(this).find(".panel-body .RadGrid");
-                                $.each(RadGrid_div, function (n, e)
-                                {
-                                    $this = $(this);
-                                    var RadGrid_div_attr = $this.data("radgrid");
-                                    $('table#' + RadGrid_div_attr + ' tbody tr').each(function () {
-                                        if ($('td:not(:empty)', this).length == 0)
-                                            $(this).remove();
-                                    });
-                                    $('table#' + RadGrid_div_attr).each(function () {
-                                        if ($(this).find("tbody").html().trim().length === 0) {
-                                            $this.remove();
-                                        }
-                                    });
-                                });
-                                //Header2
-                                var header2_div = $(this).find(".panel-body .header2");
-                                $.each(header2_div, function (n, e)
-                                {
-                                    var header2_div_attr = $(this).data("header2");
-                                    var header2_has_div = $("div").hasClass(header2_div_attr);
-                                    if (!header2_has_div) {
-                                        $(this).remove();
-                                    }
-                                });
-                                //Panel Body
-                                var form_group = $(this).find(".panel-body .form-group");
-                                if (form_group.length == 0) {
-                                    $(this).remove();
-                                }
-                            });
+                                $scope.checkTablerow(); 
                         }, 100);
                     });
                 }
+            });
+        }
+        
+        $scope.printCasedocument = function (list) {
+            $scope.getDocumentType(function (doc_type_response) {
+                if (doc_type_response.success == false) {
+                    $scope.isLoading = false;
+                    alert("Sorry, you can't view a document");
+                    $state.go("patient.document", {id: $state.params.id});
+                } else {
+                    $scope.printxslt = doc_type_response.result.document_out_print_xslt;
+                    var doc_id = list;
+                    $scope.getDocument(doc_id, function (pat_doc_response) {
+                        $scope.created_at = pat_doc_response.result.created_at;
+                        $scope.xml = pat_doc_response.result.document_xml;
+                        $timeout(function () {
+                                $scope.checkTablerow();
+                        }, 100);
+                        $('#printThisElement').printThis({
+                        pageTitle: "Ahana",
+                        debug: false,
+                        importCSS: false,
+                        importStyle: false,
+                        loadCSS: [$rootScope.IRISOrgUrl + "/css/print.css"],
+                        });
+                    });
+                    
+                }
+            });
+        }
+        
+        $scope.checkTablerow = function() {
+            $(".classy-edit").each(function () {
+                $(this).removeClass("form-control");
+                $(this).html($(this).text());
+            });
+
+            $("#printThisElement table").each(function () {
+                                //RadGrid
+                var RadGrid_tr = $(this).find("tr.RadGrid");
+                $.each(RadGrid_tr, function (n, e)
+                {
+                    $this = $(this);
+                    var RadGrid_tr_attr = $this.data("radgrid");
+                    $('table#' + RadGrid_tr_attr + ' tbody tr').each(function () {
+                        if ($('td:not(:empty)', this).length == 0)
+                        $(this).remove();
+                    });
+                    
+                    $('table#' + RadGrid_tr_attr).each(function () {
+                        if ($(this).find("tbody").html().trim().length === 0) {
+                            $this.remove();
+                        }
+                    });
+                });
+                
+                //Header2
+                var header2_tr = $(this).find("tr.header2");
+                $.each(header2_tr, function (n, e)
+                {
+                    var header2_tr_attr = $(this).data("header2");
+                    var header2_has_tr = $("tr").hasClass(header2_tr_attr);
+                    if (!header2_has_tr) {
+                        $(this).remove();
+                    }
+                });
+                    
+                var tr = $(this).find("tr");
+                $.each(tr, function () {
+                    $this = $(this);
+                    if ($(this).find("td").length > 0) {
+                        if ($(this).find("td").text().trim().length === 0) {
+                            $this.remove();
+                        }
+                    }
+                });
+                
+                var rowCount = $(this).find("tr").length;
+                if (rowCount < 2) {
+                    $(this).remove();
+                }
+
+            });
+                            
+            $("#printThisElement table").each(function () {
+                var PanelBar_tr = $(this).find("table tr.PanelBar");
+                if (PanelBar_tr.length > 0) {
+                    $.each(PanelBar_tr, function () {
+                        $this = $(this);
+                        if ($(this).find("td").length > 0) {
+                            if ($(this).find("td").text().trim().length === 0) {
+                                $this.remove();
+                            }
+                        }
+                    });
+                }
+
+                                
+                var rowCount = $(this).find("tr").length;
+                    if (rowCount < 2) {
+                        $(this).remove();
+                    }
+            });
+            
+            $(".document-content .panel-default").each(function () {
+                                //RadGrid
+                var RadGrid_div = $(this).find(".panel-body .RadGrid");
+                $.each(RadGrid_div, function (n, e)
+                {
+                    $this = $(this);
+                    var RadGrid_div_attr = $this.data("radgrid");
+                    $('table#' + RadGrid_div_attr + ' tbody tr').each(function () {
+                        if ($('td:not(:empty)', this).length == 0)
+                            $(this).remove();
+                    });
+                    
+                    $('table#' + RadGrid_div_attr).each(function () {
+                        if ($(this).find("tbody").html().trim().length === 0) {
+                            $this.remove();
+                        }
+                    });
+                });
+                                
+                //Header2
+                var header2_div = $(this).find(".panel-body .header2");
+                $.each(header2_div, function (n, e)
+                    {
+                        var header2_div_attr = $(this).data("header2");
+                        var header2_has_div = $("div").hasClass(header2_div_attr);
+                        if (!header2_has_div) {
+                            $(this).remove();
+                        }
+                    });
+                                //Panel Body
+                    var form_group = $(this).find(".panel-body .form-group");
+                        if (form_group.length == 0) {
+                            $(this).remove();
+                        }
             });
         }
 
@@ -529,6 +568,25 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
 
         $scope.ckeditorReplace = function () {
             CKEDITOR.replaceAll('classy-edit');
+        };
+        
+        $scope.printOtherdocument = function (list) {
+            $http.get($rootScope.IRISOrgServiceUrl + '/patientotherdocuments/' + list)
+                .success(function (other_document) {
+                    $scope.other_document = other_document;
+                        //$timeout(function () {
+                        $('#printThis').printThis({
+                        pageTitle: "Ahana",
+                        debug: false,
+                        importCSS: false,
+                        importStyle: false,
+                        loadCSS: [$rootScope.IRISOrgUrl + "/css/print.css"],
+                        });
+                        //}, 100);
+                    })
+                .error(function () {
+                    $scope.errorData = "An Error has occured while loading patient other documents!";
+                });
         };
 
         $scope.panel_bars = [];
