@@ -127,7 +127,7 @@
                     <PROPERTY name="name">martial_status</PROPERTY>
                 </PROPERTIES>
                 <LISTITEMS>
-                    <LISTITEM value="Children" id="RBMartial1" Selected="False">Children</LISTITEM>
+                    
                     <LISTITEM value="Un married" id="RBMartial2" Selected="False">Un married</LISTITEM>
                     <LISTITEM value="Married" id="RBMartial2" Selected="False">Married</LISTITEM>
                     <LISTITEM value="Separated" id="RBMartial3" Selected="False">Separated</LISTITEM>

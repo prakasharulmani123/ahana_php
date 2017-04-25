@@ -537,7 +537,7 @@ class XmlController extends Controller {
     }
 
     public function actionDeleteli() {
-        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@id='RBnatureofdelusion']/LISTITEMS";
+        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@id='martial_status']/LISTITEMS";
 
         $all_files = $this->getAllFiles();
         $error_files = [];
@@ -554,8 +554,8 @@ class XmlController extends Controller {
                     $targets = $xml->xpath($xpath);
                     if (!empty($targets)) {
                         foreach ($targets as $target) {
-                            if (isset($target->LISTITEM[2])) {
-                                unset($target->LISTITEM[2]);
+                            if (isset($target->LISTITEM[0])) {
+                                unset($target->LISTITEM[0]);
                             }
                         }
                     }
