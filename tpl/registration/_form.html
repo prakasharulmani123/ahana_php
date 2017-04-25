@@ -63,7 +63,7 @@
                     <div class="col-lg-9">
                         <div class="input-group m-b">
                             <span class="input-group-addon">
-                                <input type="checkbox" ng-model="data.care_provider" ng-true-value="'1'" ng-false-value="'0'" >
+                                <input type="checkbox" ng-model="data.care_provider" ng-true-value="'1'" ng-false-value="'0'" ng-init="data.care_provider='0'">
                             </span>
                             <select class="form-control" ng-model="data.speciality_id" ng-disabled="data.care_provider == '0'" ng-options="speciality.speciality_id as speciality.speciality_name for speciality in specialities | orderBy: speciality_name">
                                 <option value="">Select Speciality</option>
