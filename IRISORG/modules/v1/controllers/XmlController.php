@@ -8,6 +8,7 @@ use yii\filters\ContentNegotiator;
 use yii\helpers\FileHelper;
 use yii\web\Controller;
 use yii\web\Response;
+use \common\models\PatDocumentTypes;
 
 class XmlController extends Controller {
 
@@ -42,6 +43,16 @@ class XmlController extends Controller {
         $base_xml = [realpath(dirname(__FILE__) . '/../../../../IRISADMIN/web/case_history.xml')];
         $all_files = \yii\helpers\ArrayHelper::merge($base_xml, $files);
         return $all_files;
+    }
+    
+    private function getAllXmlXsltFiles()
+    {
+        $location = (dirname(__FILE__) . '/../../../../IRISADMIN/web/');
+        $files = FileHelper::findFiles($location, [
+                    'only' => ['*.xml','*.xslt'],
+                    'recursive' => true,
+        ]);
+        return $files;
     }
 
     private function createDDLItem($field, $item, $value) {
@@ -565,6 +576,43 @@ class XmlController extends Controller {
         }
         echo "<pre>";
         print_r($error_files);
+        exit;
+    }
+    
+    public function actionUpdatedb()
+    {
+        $all_files = $this->getAllXmlXsltFiles();
+        if(!empty($all_files))
+            {
+                foreach ($all_files as $key => $files)
+                {
+                    if (filesize($files) > 0) {
+                       
+                        $fileContent = file_get_contents($files);
+                        //PatDocumentTypes::updateAllCounters(["document_xml" => $fileContent]);
+                        $docModel = PatDocumentTypes::find()->all();
+                            foreach($docModel as $doc)
+                            {
+                                if(basename($files)=='case_history.xml') {
+                                    $doc->document_xml = $fileContent;
+                                    $doc->save(false);
+                                }
+                                if(basename($files)=='case_history.xslt') {
+                                    $doc->document_xslt = $fileContent;
+                                    $doc->save(false);
+                                }
+                                if(basename($files)=='case_history_out.xslt') {
+                                    $doc->document_out_xslt = $fileContent;
+                                    $doc->save(false);
+                                }
+                                if(basename($files)=='case_history_out_print.xslt') {
+                                    $doc->document_out_print_xslt = $fileContent;
+                                    $doc->save(false);
+                                }
+                            }
+                    }
+                }
+            }
         exit;
     }
 
