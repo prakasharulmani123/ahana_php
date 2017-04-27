@@ -122,7 +122,7 @@
                 </FIELD>
             </FIELD>
             
-            <FIELD id="martial_status" type="RadioButtonList" label="Martial Status" required="true">
+            <FIELD id="martial_status" type="RadioButtonList" label="Marital Status" required="true">
                 <PROPERTIES>
                     <PROPERTY name="name">martial_status</PROPERTY>
                 </PROPERTIES>

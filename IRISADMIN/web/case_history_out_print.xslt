@@ -3,13 +3,14 @@
     <xsl:output method="html"/>
     <xsl:template match="/">
         <xsl:for-each select="FIELDS/GROUP">
-            <table style="margin-bottom:20px;">
+<!--            <table style="margin-bottom:20px;">-->
+                <table>
                 <xsl:for-each select="PANELHEADER">
                     <tr>
                         <td colspan="2">
-                            <h4>
-                                <xsl:value-of select="VALUE" /> 
-                            </h4>
+                            <h1>
+                                <xsl:value-of select="VALUE" />
+                            </h1>
                         </td>
                     </tr>
                 </xsl:for-each>
@@ -38,11 +39,9 @@
                             <xsl:when test="@type='Header2'">
                                 <tr class="header2" data-header2="{@class}">
                                     <td colspan="2">
-                                        <p>
-                                            <b>
+                                        <h2>
                                                 <xsl:value-of select="@label" />
-                                            </b>
-                                        </p>
+                                        </h2>
                                     </td>
                                 </tr>
                             </xsl:when>
@@ -124,11 +123,11 @@
                             <!-- Main Textarea Full -->
                             <xsl:when test="@type='textareaFull'">
                                 <xsl:if test="VALUE and VALUE!=''">
-                                    <tr class="{@header2Class}">
+<!--                                    <tr class="{@header2Class}">
                                         <th colspan="2">
                                             <xsl:value-of select="@label" />
                                         </th>
-                                    </tr>
+                                    </tr>-->
                                     <tr class="{@header2Class}">
                                         <td colspan="2">
                                             <span id="{@id}">
@@ -364,9 +363,9 @@
                                         <table>
                                             <tr>
                                                 <td colspan="2">
-                                                    <h4>
-                                                        <xsl:value-of select="@label"></xsl:value-of>
-                                                    </h4>
+                                                    <h2>
+                                                        <xsl:value-of select="@label"></xsl:value-of> 
+                                                    </h2>
                                                 </td>
                                             </tr>
                                             
@@ -376,11 +375,9 @@
                                                     <xsl:when test="@type='Header2'">
                                                         <tr class="header2" data-header2="{@class}">
                                                             <td colspan="2">
-                                                                <p>
-                                                                    <b>
+                                                                <h2>
                                                                         <xsl:value-of select="@label" /> 
-                                                                    </b>
-                                                                </p>
+                                                                </h2>
                                                             </td>
                                                         </tr>
                                                     </xsl:when>
