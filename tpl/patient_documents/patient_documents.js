@@ -335,13 +335,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
         }
 
         $scope.printDocument = function () {
-            $('#printThisElement').printThis({
-                pageTitle: "",
-                debug: false,
-                importCSS: false,
-                importStyle: false,
-                loadCSS: [$rootScope.IRISOrgUrl + "/css/print.css"],
-            });
+            $scope.printElement();
 
 //            $timeout(function () {
 //                var innerContents = document.getElementById("printThisElement").innerHTML;
@@ -391,13 +385,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                         $timeout(function () {
                                 $scope.checkTablerow();
                         }, 100);
-                        $('#printThisElement').printThis({
-                        pageTitle: "",
-                        debug: false,
-                        importCSS: false,
-                        importStyle: false,
-                        loadCSS: [$rootScope.IRISOrgUrl + "/css/print.css"],
-                        });
+                        $scope.printElement();
                     });
                     
                 }
@@ -512,6 +500,16 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                             $(this).remove();
                         }
             });
+        }
+        
+        $scope.printElement = function () {
+            $('#printThisElement').printThis({
+                pageTitle: "",
+                debug: false,
+                importCSS: false,
+                importStyle: false,
+                loadCSS: [$rootScope.IRISOrgUrl + "/css/print.css"],
+                });
         }
 
         $scope.submitXsl = function () {
