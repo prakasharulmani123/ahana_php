@@ -466,5 +466,21 @@
 }
 
 #printThisElement {
- font-size: 13px;   
+ font-size: 13px;
+  /*margin: 25px 10px 25px 10px;*/
+}
+
+#printThisElement h1{
+    margin-top: 10px;
+    margin-bottom: 0px;
+}
+#printThisElement h2{
+    margin-top: 10px;
+    margin-bottom: 0px;
+}
+
+@page
+{
+    size: auto;
+    margin: 150px 50px 150px 50px;
 }

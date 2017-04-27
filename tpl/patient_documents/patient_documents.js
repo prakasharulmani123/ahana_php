@@ -336,7 +336,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
 
         $scope.printDocument = function () {
             $('#printThisElement').printThis({
-                pageTitle: "Ahana",
+                pageTitle: "",
                 debug: false,
                 importCSS: false,
                 importStyle: false,
@@ -392,7 +392,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                                 $scope.checkTablerow();
                         }, 100);
                         $('#printThisElement').printThis({
-                        pageTitle: "Ahana",
+                        pageTitle: "",
                         debug: false,
                         importCSS: false,
                         importStyle: false,
