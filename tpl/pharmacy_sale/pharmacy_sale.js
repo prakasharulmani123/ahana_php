@@ -1028,7 +1028,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                     color: '#000',
                     fontSize: 8
                 },
-                // bill: { margin: [0, 10, 20, 0], }
+               
             };
         }
 
@@ -1110,9 +1110,8 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                     
                 perPageInfo.push({
                             table: {
-                                style: 'bill',
                                 headerRows: 1,
-                                widths: [150, 160, 160, '*'],
+                                widths: ['auto', 'auto', '*'],
                                 body: [
                                     [
                                         {text: 'Bill No', style: 'tableHeader'}, [sale_info.bill_no],
@@ -1124,13 +1123,13 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                     [
                                         {text: 'Patient', style: 'tableHeader'}, [sale_info.patient_name || '-'],
                                         {text: [
-                                                {text: 'Reg No : ', bold: true, colSpan: 3},
+                                                {text: 'Reg No : ', bold: true, colSpan: 2},
                                                 sale_info.patient.patient_global_int_code || '-'
                                             ], }
 
                                     ],
-                                    [{text: 'Address', style: 'tableHeader'}, {text: [sale_info.patient.fullpermanentaddress || '-'], style: 'tableHeader', colSpan: 3}],
-                                    [{text: 'Doctor', style: 'tableHeader'}, {text: [sale_info.consultant_name || '-'], style: 'tableHeader', colSpan: 3}],
+                                    [{text: 'Address', style: 'tableHeader'}, {text: [sale_info.patient.fullpermanentaddress || '-'], style: 'tableHeader', colSpan: 2}],
+                                    [{text: 'Doctor', style: 'tableHeader'}, {text: [sale_info.consultant_name || '-'], style: 'tableHeader', colSpan: 2}],
                                 ],
 
                             },
@@ -1139,7 +1138,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                             table: {
                                 style: 'tableExample',
                                 headerRows: 1,
-                                widths: [100, 50, '*', 'auto', 'auto', 'auto', 50, '*'],
+                                widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
                                 body: perPageItems,
                             },
                             margin: [0, 20, 0, 0],
@@ -1149,10 +1148,6 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 perPageInfo.push({
                     alignment: 'justify',
                     columns: [
-                        {
-                            
-                        },
-                        {},
                         {
                             style: 'tableExample',
                             table: {
@@ -1172,7 +1167,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                     ],
                                     [
                                         {text: 'Ground Total'}, {text: ': RS'},
-                                        {text: [sale_info.bill_amount], fontSize: 18, alignment: 'right'}
+                                        {text: [sale_info.bill_amount], fontSize: 16, alignment: 'right'}
                                     ],
                                 ]
                             },
@@ -1230,8 +1225,8 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                         styles: $scope.printStyle(),
                         content: print_content,
                         pageMargins: ($scope.deviceDetector.browser == 'firefox' ? 75 : 50),
-                        pageSize: 'A4',
-
+                        pageSize: 'A5',
+                       // pageOrientation: 'landscape',
                     };
                     var pdf_document = pdfMake.createPdf(docDefinition);
                     var doc_content_length = Object.keys(pdf_document).length;
