@@ -239,6 +239,32 @@ class DefaultController extends Controller {
         }
     }
 
+    public function actionUpdatebillingfinalizedip() {
+        $encounters = PatEncounter::find()->encounterType()->finalized()->all();
+        if (!empty($encounters)) {
+            foreach ($encounters as $encounter) {
+                //Check Recurring Exists on that date
+                $recurr_date = $encounter->finalize_date;
+                $current_recurring = \common\models\PatBillingRecurring::find()
+                        ->select(['SUM(charge_amount) as charge_amount', 'room_type_id'])
+                        ->tenant($encounter->tenant_id)
+                        ->andWhere(['encounter_id' => $encounter->encounter_id, 'recurr_date' => $recurr_date])
+                        ->groupBy(['recurr_date', 'room_type_id'])
+                        ->one();
+                if (empty($current_recurring)) {
+                    $nearest_admission = \common\models\PatAdmission::find()
+                            ->andWhere(['encounter_id' => $encounter->encounter_id])
+                            ->andWhere("DATE(status_date) <='" . $recurr_date . "'")
+                            ->andWhere(['not in', 'admission_status', ['C', 'CD', 'D']])
+                            ->orderBy(['created_at' => SORT_DESC])
+                            ->one();
+
+                    Yii::$app->hepler->updateRecurring($nearest_admission, $recurr_date);
+                }
+            }
+        }
+    }
+
     public function actionGetDiagnosisList() {
         $list = array();
         $data = PatDiagnosis::find()->all();
@@ -317,8 +343,8 @@ class DefaultController extends Controller {
             fwrite($myfile, $patDocument->document_xml);
             fclose($myfile);
             chmod($path, 0644);
-            
-            $patDocument->xml_path = $fpath.'/'.$file_name;
+
+            $patDocument->xml_path = $fpath . '/' . $file_name;
             $patDocument->save(false);
         }
         return true;
