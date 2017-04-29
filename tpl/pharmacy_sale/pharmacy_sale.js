@@ -1069,12 +1069,12 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                         var particulars = {
                             columns: [
                                 {
-                                    width: 140,
+                                    width: 'auto',
                                     text: row.product.full_name,
                                     alignment: 'left'
                                 },
                                 {
-                                    width: 'auto',
+                                    width: 20,
                                     text: percentage.toString(),
                                     alignment: 'right',
                                 }
@@ -1084,7 +1084,6 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                         var particulars = row.product.full_name;
                     }
                     perPageItems.push([
-
                         particulars,
                         row.product.brand_code,
                         row.batch_no,
@@ -1111,7 +1110,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 perPageInfo.push({
                             table: {
                                 headerRows: 1,
-                                widths: ['auto', 'auto', '*'],
+                                widths: ['auto', '*', 'auto'],
                                 body: [
                                     [
                                         {text: 'Bill No', style: 'tableHeader'}, [sale_info.bill_no],
@@ -1138,7 +1137,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                             table: {
                                 style: 'tableExample',
                                 headerRows: 1,
-                                widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+                                widths: ['auto', 'auto', 'auto', '*', 'auto', 'auto', 'auto', 'auto'],
                                 body: perPageItems,
                             },
                             margin: [0, 20, 0, 0],
@@ -1151,7 +1150,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                         {
                             style: 'tableExample',
                             table: {
-                                headerRows: 1,
+                                dontBreakRows: true,
                                 body: [
                                     [
                                         {text: 'Total Value'}, {text: ':'},
