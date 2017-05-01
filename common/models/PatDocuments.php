@@ -308,7 +308,7 @@ class PatDocuments extends RActiveRecord {
     protected function createXMLFile($tenant_id, $patient_id, $encounter_id, $content) {
         $fpath = "uploads/{$tenant_id}/{$patient_id}";
         \yii\helpers\FileHelper::createDirectory($fpath, 0777);
-        echo $file_name = "CH_{$encounter_id}_".time().".xml";
+        $file_name = "CH_{$encounter_id}.xml";
         $path = \yii::getAlias('@webroot') . '/' . $fpath . '/' . $file_name;
 
         $myfile = fopen($path, "w") or die("Unable to open file!");
