@@ -148,9 +148,9 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                         body: [
                             [{text: 'Admission Date', bold: true}, ':', admission_date],
                             [{text: 'Discharge Date', bold: true}, ':', discharge_date],
-                            [{text: 'Ward No', bold: true}, ':', $scope.patientObj.current_room],
+                            [{text: 'Ward No', bold: true}, ':', $scope.enc.selected.currentAdmission.room_details],
                             [{text: 'No.ofDays', bold: true}, ':', $scope.enc.selected.stay_duration.toString()],
-                            [{text: 'Consultant Name', bold: true}, ':', $scope.patientObj.consultant_name],
+                            [{text: 'Consultant Name', bold: true}, ':', $scope.enc.selected.currentAdmission.consultant_name],
                         ]
                     }
                 },
