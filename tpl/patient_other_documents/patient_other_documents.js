@@ -123,12 +123,10 @@ app.controller('OtherDocumentsController', ['$rootScope', '$scope', '$timeout', 
         };
 
         $scope.editorReplace = function (response) {
-            if(response) {
-                    $("#txtEditor").Editor();
-                    $('#txtEditor').Editor('setText',(response.other_doc_content));
-                }
-                else
-                    $("#txtEditor").Editor();
+            $("#txtEditor").Editor();
+            if (response) {
+                $('#txtEditor').Editor('setText', (response.other_doc_content));
+            }
         };
 
         $scope.loadView = function () {
