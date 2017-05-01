@@ -459,7 +459,7 @@
 }
 
 #printThis table, #printThis th, #printThis td {
-    border: 1px solid black !important;
+    border: 1px solid #AAAAAA !important;
 }
 #printThis th, #printThis td {
     padding: 20px;
