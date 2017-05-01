@@ -146,13 +146,13 @@ class PatientdocumentsController extends ActiveController {
                     'encounter_id' => $post['encounter_id'],
                 ])->one();
 
-        if (!empty($doc_exists)) {
-            $patient_document = $doc_exists;
-            $xml = $doc_exists->document_xml;
-        } else {
+        //if (!empty($doc_exists)) {
+           // $patient_document = $doc_exists;
+           // $xml = $doc_exists->document_xml;
+        //} else {
             $patient_document = new PatDocuments;
             $xml = $case_history_xml->document_xml;
-        }
+       // }
         $patient_document->scenario = $type;
 
         $attr = [
