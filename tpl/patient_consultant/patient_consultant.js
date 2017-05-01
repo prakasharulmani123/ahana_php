@@ -64,7 +64,7 @@ app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', 
             $scope.isPatientHaveActiveEncounter(function (response) {
                 $scope.all_encounters = response.encounters;
                 enc_id = (!$scope.data.encounter_id) ? $state.params.enc_id : $scope.data.encounter_id;
-                
+
                 is_success = true;
                 if (response.success == true) {
                     var actEnc = $filter('filter')($scope.all_encounters, {
@@ -84,7 +84,7 @@ app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', 
 
                 $scope.showForm = true;
                 $scope.encounter = response.model;
-                if(!$scope.data.encounter_id)
+                if (!$scope.data.encounter_id)
                     $scope.data.encounter_id = $scope.encounter.encounter_id;
             });
         }
@@ -165,6 +165,11 @@ app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', 
             $rootScope.commonService.GetDoctorList('', '1', false, '1', function (response) {
                 $scope.doctors = response.doctorsList;
             });
+            $timeout(function () {
+                $('.selectpicker').selectpicker({
+                    dropupAuto: false
+                });
+            }, 1000);
         }
 
         //Save Both Add & Update Data
@@ -255,8 +260,7 @@ app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', 
                             if (response.data.success === true) {
                                 $scope.loadPatConsultantsList();
                                 $scope.msg.successMessage = 'Patient Consultation Visit Deleted Successfully';
-                            }
-                            else {
+                            } else {
                                 $scope.errorData = response.data.message;
                             }
                         }
