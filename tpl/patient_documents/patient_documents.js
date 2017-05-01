@@ -397,7 +397,8 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                 $(this).removeClass("form-control");
                 $(this).html($(this).text());
             });
-
+            
+            
             $("#printThisElement table").each(function () {
                                 //RadGrid
                 var RadGrid_tr = $(this).find("tr.RadGrid");
@@ -503,6 +504,27 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
         }
         
         $scope.printElement = function () {
+            var date = new Date();
+
+            var month = date.getMonth()+1;
+            var day = date.getDate();
+            var output = ((''+day).length<2 ? '0' : '') + day + '/' +
+                    ((''+month).length<2 ? '0' : '') + month + '/' +
+                    date.getFullYear();
+            
+            var hours = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
+            var am_pm = date.getHours() >= 12 ? "PM" : "AM";
+            hours = hours < 10 ? "0" + hours : hours;
+            var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+            //var seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+            time = hours + ":" + minutes + am_pm;
+        
+            $timeout(function () {
+                $('#date_name').html(output);
+                $('#time').html(time);
+            }, 100); 
+                        
+            
             $('#printThisElement').printThis({
                 pageTitle: "",
                 debug: false,
