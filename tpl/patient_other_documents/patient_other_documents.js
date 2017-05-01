@@ -55,8 +55,7 @@ app.controller('OtherDocumentsController', ['$rootScope', '$scope', '$timeout', 
                         $scope.data = response;
                         $scope.encounter = {encounter_id: response.encounter_id};
                         $timeout(function () {
-                            $scope.editorReplace();
-                            $('#txtEditor').Editor('setText',(response.other_doc_content)); 
+                            $scope.editorReplace(response);
                         }, 500);
                     }
             ).error(function (data, status) {
@@ -72,7 +71,6 @@ app.controller('OtherDocumentsController', ['$rootScope', '$scope', '$timeout', 
         //Save Both Add & Update Data
         $scope.saveForm = function (mode) {
             $scope.editorupdate();
-            
             _data = $('#other_document_form').serializeArray();
             _that = this;
             $(_data).each(function (i, field) {
@@ -124,10 +122,13 @@ app.controller('OtherDocumentsController', ['$rootScope', '$scope', '$timeout', 
             $('.other_doc_content').val($('#txtEditor').Editor("getText"));
         };
 
-        $scope.editorReplace = function () {
-           // CKEDITOR.replaceAll('editor1');
-            $("#txtEditor").Editor();
-            
+        $scope.editorReplace = function (response) {
+            if(response) {
+                    $("#txtEditor").Editor();
+                    $('#txtEditor').Editor('setText',(response.other_doc_content));
+                }
+                else
+                    $("#txtEditor").Editor();
         };
 
         $scope.loadView = function () {
