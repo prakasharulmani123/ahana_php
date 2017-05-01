@@ -34,7 +34,7 @@ app.controller('OtherDocumentsController', ['$rootScope', '$scope', '$timeout', 
             $scope.encounter = {encounter_id: $state.params.enc_id};
             $scope.isLoading = false;
             $timeout(function () {
-                $scope.ckeditorReplace();
+                $scope.editorReplace();
             }, 500);
 //                }
 //            });
@@ -55,7 +55,8 @@ app.controller('OtherDocumentsController', ['$rootScope', '$scope', '$timeout', 
                         $scope.data = response;
                         $scope.encounter = {encounter_id: response.encounter_id};
                         $timeout(function () {
-                            $scope.ckeditorReplace();
+                            $scope.editorReplace();
+                            $('#txtEditor').Editor('setText',(response.other_doc_content)); 
                         }, 500);
                     }
             ).error(function (data, status) {
@@ -70,10 +71,9 @@ app.controller('OtherDocumentsController', ['$rootScope', '$scope', '$timeout', 
 
         //Save Both Add & Update Data
         $scope.saveForm = function (mode) {
-            $scope.ckeditorupdate();
+            $scope.editorupdate();
             
             _data = $('#other_document_form').serializeArray();
-
             _that = this;
             $(_data).each(function (i, field) {
                 _that.data[field.name] = field.value;
@@ -120,13 +120,14 @@ app.controller('OtherDocumentsController', ['$rootScope', '$scope', '$timeout', 
             });
         };
 
-        $scope.ckeditorupdate = function () {
-            for (instance in CKEDITOR.instances)
-                CKEDITOR.instances[instance].updateElement();
+        $scope.editorupdate = function () {
+            $('.other_doc_content').val($('#txtEditor').Editor("getText"));
         };
 
-        $scope.ckeditorReplace = function () {
-            CKEDITOR.replaceAll('editor1');
+        $scope.editorReplace = function () {
+           // CKEDITOR.replaceAll('editor1');
+            $("#txtEditor").Editor();
+            
         };
 
         $scope.loadView = function () {

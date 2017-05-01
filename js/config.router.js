@@ -2594,7 +2594,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                     deps: ['uiLoad',
                         function (uiLoad) {
                             return uiLoad.load([
-                                'ckeditor/ckeditor.js?v=' + APP_VERSION,
+                                'js/editor.js?v=' + APP_VERSION,
                                 'tpl/patient_other_documents/patient_other_documents.js?v=' + APP_VERSION
                             ]);
                         }]
@@ -2608,7 +2608,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                     deps: ['uiLoad',
                         function (uiLoad) {
                             return uiLoad.load([
-                                'ckeditor/ckeditor.js?v=' + APP_VERSION,
+                                'js/editor.js?v=' + APP_VERSION,
                                 'tpl/patient_other_documents/patient_other_documents.js?v=' + APP_VERSION
                             ]);
                         }]
