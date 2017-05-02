@@ -319,8 +319,8 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     $scope.getDocument(doc_id, function (pat_doc_response) {
                         $scope.xml = pat_doc_response.result.document_xml;
                         $scope.encounter = {encounter_id: pat_doc_response.result.encounter_id};
+                        $scope.doc_id = doc_id; // Set Document id
                         $scope.isLoading = false;
-
                         $timeout(function () {
                             $scope.diagnosisDsmiv();
                         }, 2000);
@@ -534,7 +534,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                 });
         }
 
-        $scope.submitXsl = function () {
+        $scope.submitXsl = function (doc_id) {
             $scope.ckeditorupdate();
 
             _data = $('#xmlform').serializeArray();
@@ -550,6 +550,9 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
             }, {
                 name: 'status',
                 value: '1',
+            }, {
+                name: 'doc_id',
+                value: doc_id,
             });
 
             if ($scope.panel_bars.length > 0) {
