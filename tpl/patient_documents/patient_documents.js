@@ -207,6 +207,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                             $scope.initSaveDocument(function (auto_save_document) {
                                 $scope.xml = auto_save_document.data.xml;
                                 $scope.isLoading = false;
+                                $scope.doc_id = auto_save_document.data.doc_id; // Set Document id
 
                                 $timeout(function () {
                                     $scope.diagnosisDsmiv();
@@ -215,7 +216,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                                 $timeout(function () {
                                     $scope.ckeditorReplace();
                                 }, 500);
-                                $scope.startAutoSave();
+                                $scope.startAutoSave(auto_save_document.data.doc_id);
                             });
                         }
                     }, true);
@@ -269,7 +270,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
             );
         };
         var stop;
-        $scope.startAutoSave = function () {
+        $scope.startAutoSave = function (doc_id) {
             // Don't start a new fight if we are already fighting
             if (angular.isDefined(stop))
                 return;
@@ -285,6 +286,10 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                 }, {
                     name: 'novalidate',
                     value: true,
+                },
+                {
+                    name: 'doc_id',
+                    value: doc_id,
                 });
 
                 $http({
@@ -328,7 +333,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                         $timeout(function () {
                             $scope.ckeditorReplace();
                         }, 500);
-                        $scope.startAutoSave();
+                        $scope.startAutoSave(doc_id);
                     });
                 }
             });

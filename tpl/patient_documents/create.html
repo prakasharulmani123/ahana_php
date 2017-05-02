@@ -21,7 +21,7 @@
         <div ng-hide="isLoading">
             <div ng-bind-html="xml | xslt:xslt | sanitize"></div>
             <footer class="panel-footer text-right bg-light lter">
-                <input type="submit" class="btn m-b-xs  btn-success save-btn" id="btn_sub" name="btn_sub" value="Submit" ng-click="submitXsl()"  />
+                <input type="submit" class="btn m-b-xs  btn-success save-btn" id="btn_sub" name="btn_sub" value="Submit" ng-click="submitXsl(doc_id)"  />
             </footer>
         </div>
     </div>
