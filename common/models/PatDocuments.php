@@ -301,16 +301,20 @@ class PatDocuments extends RActiveRecord {
     }
 
     public function beforeSave($insert) {
-        $this->xml_path = $this->createXMLFile(Yii::$app->user->identity->logged_tenant_id, $this->patient->patient_global_int_code, $this->encounter_id, $this->document_xml);
+        $this->xml_path = $this->createXMLFile(Yii::$app->user->identity->logged_tenant_id, $this->patient->patient_global_int_code, $this->encounter_id, $this->document_xml,$this->xml_path);
         return parent::beforeSave($insert);
     }
 
-    protected function createXMLFile($tenant_id, $patient_id, $encounter_id, $content) {
+    protected function createXMLFile($tenant_id, $patient_id, $encounter_id, $content,$file_name) {
         $fpath = "uploads/{$tenant_id}/{$patient_id}";
         \yii\helpers\FileHelper::createDirectory($fpath, 0777);
-        $file_name = "CH_{$encounter_id}_".time().".xml";
+        if(!empty($file_name)) {
+            $splitFile = explode('/', $file_name);
+            $file_name = end($splitFile);
+        } else {
+            $file_name = "CH_{$encounter_id}_".time().".xml";
+        }
         $path = \yii::getAlias('@webroot') . '/' . $fpath . '/' . $file_name;
-
         $myfile = fopen($path, "w") or die("Unable to open file!");
         fwrite($myfile, $content);
         fclose($myfile);

@@ -140,6 +140,7 @@ class PatientdocumentsController extends ActiveController {
         $type = 'CH';
         $case_history_xml = PatDocumentTypes::getDocumentType($type);
 
+        $doc_exists ='';
         if(!empty($post['doc_id']))
         {
             $doc_exists = PatDocuments::find()->tenant()->andWhere([
@@ -148,10 +149,8 @@ class PatientdocumentsController extends ActiveController {
                 'encounter_id' => $post['encounter_id'],
                 'doc_id' => $post['doc_id'],
             ])->one();
-        } else {
-                $doc_exists ='';
-            }
- 
+        }
+        
         if (!empty($doc_exists)) {
             $patient_document = $doc_exists;
             $xml = $doc_exists->document_xml;
@@ -191,8 +190,9 @@ class PatientdocumentsController extends ActiveController {
                 $patient_document->status = $post['status'];
 
             $patient_document->document_xml = $result;
+            
             $patient_document->save(false);
-            return ['success' => true, 'xml' => $result];
+            return ['success' => true, 'xml' => $result,'doc_id'=>$patient_document->doc_id ];
         } else {
             return ['success' => false, 'message' => Html::errorSummary([$patient_document])];
         }
