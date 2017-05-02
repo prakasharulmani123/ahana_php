@@ -140,12 +140,18 @@ class PatientdocumentsController extends ActiveController {
         $type = 'CH';
         $case_history_xml = PatDocumentTypes::getDocumentType($type);
 
-        $doc_exists = PatDocuments::find()->tenant()->andWhere([
-                    'patient_id' => $patient->patient_id,
-                    'doc_type_id' => $case_history_xml->doc_type_id,
-                    'encounter_id' => $post['encounter_id'],
-                ])->one();
-
+        if(!empty($post['doc_id']))
+        {
+            $doc_exists = PatDocuments::find()->tenant()->andWhere([
+                'patient_id' => $patient->patient_id,
+                'doc_type_id' => $case_history_xml->doc_type_id,
+                'encounter_id' => $post['encounter_id'],
+                'doc_id' => $post['doc_id'],
+            ])->one();
+        } else {
+                $doc_exists ='';
+            }
+ 
         if (!empty($doc_exists)) {
             $patient_document = $doc_exists;
             $xml = $doc_exists->document_xml;
