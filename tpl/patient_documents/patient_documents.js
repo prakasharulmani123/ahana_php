@@ -8,9 +8,19 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
         $scope.xslt = '';
         $scope.data = {};
         $scope.encounter = {};
+        
+        $scope.open = function ($event) {
+            $event.preventDefault();
+            $event.stopPropagation();
+            $scope.opened = true;
+        };
+        
+        
 
         //Documents Index Page
-        $scope.loadPatDocumentsList = function () {
+        $scope.loadPatDocumentsList = function (date) {
+            var filterDate = '';
+            if(date) filterDate = moment(date).format('YYYY-MM-DD');
             $scope.documents = [];
             $scope.documents.push({label: 'Case History', value: 'CH'}, {label: 'Scanned Documents', value: 'SD'}, {label: 'Other Documents', value: 'OD'});
 
@@ -29,7 +39,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                 }
             }, true);
 
-            $http.get($rootScope.IRISOrgServiceUrl + '/patientdocuments/getpatientdocuments?patient_id=' + $state.params.id)
+            $http.get($rootScope.IRISOrgServiceUrl + '/patientdocuments/getpatientdocuments?patient_id=' + $state.params.id +'&date='+filterDate)
                     .success(function (documents) {
                         $scope.isLoading = false;
                         $scope.rowCollection = documents.result;
@@ -694,6 +704,9 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                 }, {
                     name: 'novalidate',
                     value: true,
+                }, {
+                    name: 'doc_id',
+                    value: $scope.doc_id,
                 });
 
                 $http({
