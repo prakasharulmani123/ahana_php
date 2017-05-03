@@ -26,9 +26,9 @@
         page-break-after:auto
     }
 
-    #printThis th, #printThis td {
-        padding: 50px;
-    }
+/*    #printThis th, #printThis td {
+        padding: 10px;
+    }*/
 
 }
 
@@ -461,9 +461,9 @@
 #printThis table, #printThis th, #printThis td {
     border: 1px solid #AAAAAA !important;
 }
-#printThis th, #printThis td {
-    padding: 20px;
-}
+/*#printThis th, #printThis td {
+    padding: 5px;
+}*/
 
 /*#printThisElement {
  font-size: 13px;
