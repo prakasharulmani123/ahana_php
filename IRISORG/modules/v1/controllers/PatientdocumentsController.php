@@ -83,13 +83,22 @@ class PatientdocumentsController extends ActiveController {
     //Index Function
     public function actionGetpatientdocuments() {
         $get = Yii::$app->getRequest()->get();
-
+        //print_r($get); die;
         if (isset($get['patient_id'])) {
             $patient = PatPatient::getPatientByGuid($get['patient_id']);
-            $condition = [
+            if(!empty($get['date'])) {
+                $condition = [
                 'patient_id' => $patient->patient_id,
                 'deleted_at' => '0000-00-00 00:00:00',
-            ];
+                'DATE(date_time)'  => $get['date'], 
+                ];
+            } else {
+                $condition = [
+                'patient_id' => $patient->patient_id,
+                'deleted_at' => '0000-00-00 00:00:00',
+                ];
+            }
+            
             $data = VDocuments::find()
                     ->where($condition)
                     ->groupBy('encounter_id')
