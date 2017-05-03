@@ -8,19 +8,20 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
         $scope.xslt = '';
         $scope.data = {};
         $scope.encounter = {};
-        
+
         $scope.open = function ($event) {
             $event.preventDefault();
             $event.stopPropagation();
             $scope.opened = true;
         };
-        
-        
+
+
 
         //Documents Index Page
         $scope.loadPatDocumentsList = function (date) {
             var filterDate = '';
-            if(date) filterDate = moment(date).format('YYYY-MM-DD');
+            if (date)
+                filterDate = moment(date).format('YYYY-MM-DD');
             $scope.documents = [];
             $scope.documents.push({label: 'Case History', value: 'CH'}, {label: 'Scanned Documents', value: 'SD'}, {label: 'Other Documents', value: 'OD'});
 
@@ -39,7 +40,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                 }
             }, true);
 
-            $http.get($rootScope.IRISOrgServiceUrl + '/patientdocuments/getpatientdocuments?patient_id=' + $state.params.id +'&date='+filterDate)
+            $http.get($rootScope.IRISOrgServiceUrl + '/patientdocuments/getpatientdocuments?patient_id=' + $state.params.id + '&date=' + filterDate)
                     .success(function (documents) {
                         $scope.isLoading = false;
                         $scope.rowCollection = documents.result;
@@ -297,10 +298,10 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     name: 'novalidate',
                     value: true,
                 },
-                {
-                    name: 'doc_id',
-                    value: doc_id,
-                });
+                        {
+                            name: 'doc_id',
+                            value: doc_id,
+                        });
 
                 $http({
                     url: $rootScope.IRISOrgServiceUrl + "/patientdocuments/savedocument",
@@ -378,13 +379,13 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                         $scope.xml = pat_doc_response.result.document_xml;
                         $scope.isLoading = false;
                         $timeout(function () {
-                                $scope.checkTablerow(); 
+                            $scope.checkTablerow();
                         }, 100);
                     });
                 }
             });
         }
-        
+
         $scope.printCasedocument = function (list) {
             $scope.getDocumentType(function (doc_type_response) {
                 if (doc_type_response.success == false) {
@@ -398,24 +399,24 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                         $scope.created_at = pat_doc_response.result.created_at;
                         $scope.xml = pat_doc_response.result.document_xml;
                         $timeout(function () {
-                                $scope.checkTablerow();
+                            $scope.checkTablerow();
                         }, 100);
                         $scope.printElement();
                     });
-                    
+
                 }
             });
         }
-        
-        $scope.checkTablerow = function() {
+
+        $scope.checkTablerow = function () {
             $(".classy-edit").each(function () {
                 $(this).removeClass("form-control");
                 $(this).html($(this).text());
             });
-            
-            
+
+
             $("#printThisElement table").each(function () {
-                                //RadGrid
+                //RadGrid
                 var RadGrid_tr = $(this).find("tr.RadGrid");
                 $.each(RadGrid_tr, function (n, e)
                 {
@@ -423,16 +424,16 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     var RadGrid_tr_attr = $this.data("radgrid");
                     $('table#' + RadGrid_tr_attr + ' tbody tr').each(function () {
                         if ($('td:not(:empty)', this).length == 0)
-                        $(this).remove();
+                            $(this).remove();
                     });
-                    
+
                     $('table#' + RadGrid_tr_attr).each(function () {
                         if ($(this).find("tbody").html().trim().length === 0) {
                             $this.remove();
                         }
                     });
                 });
-                
+
                 //Header2
                 var header2_tr = $(this).find("tr.header2");
                 $.each(header2_tr, function (n, e)
@@ -443,7 +444,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                         $(this).remove();
                     }
                 });
-                    
+
                 var tr = $(this).find("tr");
                 $.each(tr, function () {
                     $this = $(this);
@@ -453,14 +454,14 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                         }
                     }
                 });
-                
+
                 var rowCount = $(this).find("tr").length;
                 if (rowCount < 2) {
                     $(this).remove();
                 }
 
             });
-                            
+
             $("#printThisElement table").each(function () {
                 var PanelBar_tr = $(this).find("table tr.PanelBar");
                 if (PanelBar_tr.length > 0) {
@@ -474,15 +475,15 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     });
                 }
 
-                                
+
                 var rowCount = $(this).find("tr").length;
-                    if (rowCount < 2) {
-                        $(this).remove();
-                    }
+                if (rowCount < 2) {
+                    $(this).remove();
+                }
             });
-            
+
             $(".document-content .panel-default").each(function () {
-                                //RadGrid
+                //RadGrid
                 var RadGrid_div = $(this).find(".panel-body .RadGrid");
                 $.each(RadGrid_div, function (n, e)
                 {
@@ -492,61 +493,61 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                         if ($('td:not(:empty)', this).length == 0)
                             $(this).remove();
                     });
-                    
+
                     $('table#' + RadGrid_div_attr).each(function () {
                         if ($(this).find("tbody").html().trim().length === 0) {
                             $this.remove();
                         }
                     });
                 });
-                                
+
                 //Header2
                 var header2_div = $(this).find(".panel-body .header2");
                 $.each(header2_div, function (n, e)
-                    {
-                        var header2_div_attr = $(this).data("header2");
-                        var header2_has_div = $("div").hasClass(header2_div_attr);
-                        if (!header2_has_div) {
-                            $(this).remove();
-                        }
-                    });
-                                //Panel Body
-                    var form_group = $(this).find(".panel-body .form-group");
-                        if (form_group.length == 0) {
-                            $(this).remove();
-                        }
+                {
+                    var header2_div_attr = $(this).data("header2");
+                    var header2_has_div = $("div").hasClass(header2_div_attr);
+                    if (!header2_has_div) {
+                        $(this).remove();
+                    }
+                });
+                //Panel Body
+                var form_group = $(this).find(".panel-body .form-group");
+                if (form_group.length == 0) {
+                    $(this).remove();
+                }
             });
         }
-        
+
         $scope.printElement = function () {
             var date = new Date();
 
-            var month = date.getMonth()+1;
+            var month = date.getMonth() + 1;
             var day = date.getDate();
-            var output = ((''+day).length<2 ? '0' : '') + day + '/' +
-                    ((''+month).length<2 ? '0' : '') + month + '/' +
+            var output = (('' + day).length < 2 ? '0' : '') + day + '/' +
+                    (('' + month).length < 2 ? '0' : '') + month + '/' +
                     date.getFullYear();
-            
+
             var hours = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
             var am_pm = date.getHours() >= 12 ? "PM" : "AM";
             hours = hours < 10 ? "0" + hours : hours;
             var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
             //var seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
             time = hours + ":" + minutes + am_pm;
-        
+
             $timeout(function () {
                 $('#date_name').html(output);
                 $('#time').html(time);
-            }, 100); 
-                        
-            
+            }, 100);
+
+
             $('#printThisElement').printThis({
                 pageTitle: "",
                 debug: false,
                 importCSS: false,
                 importStyle: false,
                 loadCSS: [$rootScope.IRISOrgUrl + "/css/print.css"],
-                });
+            });
         }
 
         $scope.submitXsl = function (doc_id) {
@@ -607,24 +608,24 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
         $scope.ckeditorReplace = function () {
             CKEDITOR.replaceAll('classy-edit');
         };
-        
+
         $scope.printOtherdocument = function (list) {
             $http.get($rootScope.IRISOrgServiceUrl + '/patientotherdocuments/' + list)
-                .success(function (other_document) {
-                    $scope.other_document = other_document;
+                    .success(function (other_document) {
+                        $scope.other_document = other_document;
                         //$timeout(function () {
                         $('#printThis').printThis({
-                        pageTitle: "Ahana",
-                        debug: false,
-                        importCSS: false,
-                        importStyle: false,
-                        loadCSS: [$rootScope.IRISOrgUrl + "/css/print.css"],
+                            pageTitle: "Ahana",
+                            debug: false,
+                            importCSS: false,
+                            importStyle: false,
+                            loadCSS: [$rootScope.IRISOrgUrl + "/css/print.css"],
                         });
                         //}, 100);
                     })
-                .error(function () {
-                    $scope.errorData = "An Error has occured while loading patient other documents!";
-                });
+                    .error(function () {
+                        $scope.errorData = "An Error has occured while loading patient other documents!";
+                    });
         };
 
         $scope.panel_bars = [];
@@ -719,6 +720,9 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                             $scope.loadbar('hide');
                             if (response.data.success == true) {
                                 $scope.xml = response.data.xml;
+                                $timeout(function () {
+                                    $scope.diagnosisDsmiv();
+                                }, 2000);
                                 $timeout(function () {
                                     angular.forEach($scope.panel_bars, function (bar) {
                                         if (bar.opened) {
