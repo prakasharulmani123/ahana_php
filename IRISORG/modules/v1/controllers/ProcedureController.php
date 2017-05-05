@@ -149,7 +149,7 @@ class ProcedureController extends ActiveController {
                 $pat_procedure->charge_subcat_id = $post['data']['charge_subcat_id'];
                 $pat_procedure->proc_date = $post['data']['proc_date'];
                 $pat_procedure->proc_consultant_ids = $post['data']['proc_consultant_ids'];
-                $pat_procedure->proc_description = $value['notes'];
+                if(!empty($value['notes'])) $pat_procedure->proc_description = $value['notes'];
                 $pat_procedure->save(false);
             }
             return ['success' => true];
