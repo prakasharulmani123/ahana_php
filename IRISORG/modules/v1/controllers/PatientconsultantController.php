@@ -130,7 +130,7 @@ class PatientconsultantController extends ActiveController {
                 $pat_consultant->patient_id = $value['patient_id'];
                 $pat_consultant->consultant_id = $post['data']['consultant_id'];
                 $pat_consultant->consult_date = $post['data']['consult_date'];
-                $pat_consultant->notes = $value['notes'];
+                if(!empty($value['notes'])) $pat_consultant->notes = $value['notes'];
                 $pat_consultant->save(false);
             }
             return ['success' => true];
