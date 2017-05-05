@@ -23,7 +23,7 @@ app.controller('PatientProcedureController', ['scope', '$scope', '$modalInstance
                 _that = this;
 
                 $scope.errorData = "";
-                scope.msg.successMessage = "";
+                $scope.successMessage = "";
 
                 docIds = [];
                 angular.forEach($scope.data.consultant_ids, function (list) {
@@ -51,7 +51,7 @@ app.controller('PatientProcedureController', ['scope', '$scope', '$modalInstance
                                     $scope.errorData = response.message;
                             } else {
                                 scope.loadbar('hide');
-                                scope.msg.successMessage = succ_msg;
+                                $scope.successMessage = succ_msg;
                                 $scope.data = {};
                                 $scope.patientdata = [];
                                 $timeout(function () {
