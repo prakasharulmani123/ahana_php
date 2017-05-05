@@ -18,7 +18,7 @@ app.controller('ConsultantVisitController', ['scope', '$scope', '$modalInstance'
                 _that.data.consult_date = moment(_that.data.consult_date).format('YYYY-MM-DD HH:mm:ss');
 
                 $scope.errorData = "";
-                scope.msg.successMessage = "";
+                $scope.successMessage = "";
 
                 post_url = $rootScope.IRISOrgServiceUrl + '/patientconsultant/bulkinsert';
                 method = 'POST';
@@ -39,7 +39,7 @@ app.controller('ConsultantVisitController', ['scope', '$scope', '$modalInstance'
                                     $scope.errorData = response.message;
                             } else {
                                 scope.loadbar('hide');
-                                scope.msg.successMessage = succ_msg;
+                                $scope.successMessage = succ_msg;
                                 $scope.data = {};
                                 $scope.patientdata = [];
                                 $timeout(function () {
