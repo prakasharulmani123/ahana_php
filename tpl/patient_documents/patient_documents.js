@@ -434,6 +434,16 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     });
                 });
 
+                //Remove empty sub box
+                var textbox_span = $(this).find("tr td");
+                $.each(textbox_span, function () {
+                    $this = $(this).find("span#sub_textbox")
+                    if ($this.text().trim().length === 0) {
+                        $this.parents("span").remove();
+                        //$this.parents("div").remove();
+                    }
+                });
+
                 //Header2
                 var header2_tr = $(this).find("tr.header2");
                 $.each(header2_tr, function (n, e)
@@ -516,6 +526,14 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                 if (form_group.length == 0) {
                     $(this).remove();
                 }
+
+                //Remove empty sub box
+
+                $this = $(this).find("span#sub_textbox")
+                if ($this.text().trim().length === 0) {
+                    $this.parents("span").remove();
+                }
+
             });
         }
 
