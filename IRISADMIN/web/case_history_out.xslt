@@ -167,7 +167,7 @@
                                                     </xsl:if>
                                                 </xsl:for-each>
                                                 <xsl:if test="FIELD">
-                                                    <div>
+                                                    <span>
                                                         <xsl:attribute name="id">
                                                             <xsl:value-of select="@Backdivid"/>
                                                         </xsl:attribute>
@@ -180,7 +180,9 @@
                                                                     <xsl:value-of select="@label"/> 
                                                                     <xsl:for-each select="PROPERTIES/PROPERTY">
                                                                         <xsl:if test="@name='value'">
+                                                                            <span id="sub_textbox">
                                                                             <xsl:value-of select="current()"/>
+                                                                            </span>
                                                                         </xsl:if>
                                                                     </xsl:for-each>
                                                                 </xsl:when>
@@ -189,7 +191,9 @@
                                                                     <xsl:value-of select="@label"/> 
                                                                     <xsl:for-each select="LISTITEMS/LISTITEM">
                                                                         <xsl:if test="@Selected = 'true'">
+                                                                            <span id="sub_textbox">
                                                                             <xsl:value-of select="current()"/>
+                                                                            </span>
                                                                         </xsl:if>
                                                                     </xsl:for-each>
                                                                 </xsl:when>
@@ -197,15 +201,16 @@
                                                                 <xsl:when test="@type='DropDownList'">
                                                                     <xsl:value-of select="@label"/>
                                                                     <xsl:for-each select="LISTITEMS/LISTITEM">
+                                                                        <span id="sub_textbox">
                                                                         <xsl:if test="@Selected = 'true'">
-                                                                         
-                                                                            <xsl:value-of select="@value"/>
+                                                                            <xsl:value-of select="@value"/>
                                                                         </xsl:if>
-                                                                    </xsl:for-each>
+                                                                        </span>
+                                                                        </xsl:for-each>
                                                                 </xsl:when>
                                                             </xsl:choose>
                                                         </xsl:for-each>
-                                                    </div>
+                                                    </span>
                                                     
                                                 </xsl:if>
                                             </div>
@@ -229,7 +234,7 @@
                                                     </xsl:if>
                                                 </xsl:for-each>
                                                 <xsl:if test="FIELD">
-                                                    <div>
+                                                    <span>
                                                         <xsl:attribute name="id">
                                                             <xsl:value-of select="@Backdivid"/>
                                                         </xsl:attribute>
@@ -242,13 +247,15 @@
                                                                     <xsl:value-of select="@label"/>
                                                                     <xsl:for-each select="PROPERTIES/PROPERTY">
                                                                         <xsl:if test="@name='value'">
+                                                                            <span id="sub_textbox">
                                                                             <xsl:value-of select="current()"/>
+                                                                            </span>
                                                                         </xsl:if>
                                                                     </xsl:for-each>
                                                                 </xsl:when>
                                                             </xsl:choose>
                                                         </xsl:for-each>
-                                                    </div>
+                                                    </span>
                                                 </xsl:if>
                                             </div>
                                         </div>
@@ -333,7 +340,7 @@
                                                                                     </xsl:if>
                                                                                 </xsl:for-each>
                                                                                 <xsl:if test="FIELD">
-                                                                                    <div>
+                                                                                    <span>
                                                                                         <xsl:attribute name="id">
                                                                                             <xsl:value-of select="@Backdivid"/>
                                                                                         </xsl:attribute>
@@ -346,13 +353,15 @@
                                                                                                     <xsl:value-of select="@label"/> 
                                                                                                     <xsl:for-each select="PROPERTIES/PROPERTY">
                                                                                                         <xsl:if test="@name='value'">
+                                                                                                            <span id="sub_textbox">
                                                                                                             <xsl:value-of select="current()"/>
+                                                                                                            </span>
                                                                                                         </xsl:if>
                                                                                                     </xsl:for-each>
                                                                                                 </xsl:when>
                                                                                             </xsl:choose>
                                                                                         </xsl:for-each>
-                                                                                    </div>
+                                                                                    </span>
                                                                                 </xsl:if>
                                                                             </xsl:if>
                                                                         </xsl:when>
@@ -375,7 +384,7 @@
                                             <h4 class="panel-title">
                                                 <!--<a class="accordion-toggle" data-toggle="collapse" data-target="#{@target_div}" href="javascript:void(0)">-->
                                                 <a class="accordion-toggle" href="javascript:void(0)">
-                                                    <span>
+                                                    <span>Gold
                                                         <xsl:value-of select="@label"/>
                                                     </span>
                                                 </a>
@@ -547,48 +556,56 @@
                                                                             <xsl:for-each select="FIELD">
                                                                                 <xsl:choose>
                                                                                     <xsl:when test="@type='DropDownList'">
-                                                                                        <div>
+                                                                                        <span>
                                                                                             <xsl:value-of select="@label"/> 
                                                                                             <xsl:for-each select="LISTITEMS/LISTITEM">
                                                                                                 <xsl:if test="@Selected = 'true'">
+                                                                                                    <span id="sub_textbox">
                                                                                                     <xsl:value-of select="@value"/>
+                                                                                                    </span>
                                                                                                 </xsl:if>
                                                                                             </xsl:for-each>
-                                                                                        </div>
+                                                                                        </span>
                                                                                     </xsl:when>
                                                                                     
                                                                                     <xsl:when test="@type='TextBox'">
-                                                                                        <div>
+                                                                                        <span>
                                                                                             <xsl:value-of select="@label"/> 
                                                                                             <xsl:for-each select="PROPERTIES/PROPERTY">
                                                                                                 <xsl:if test="@name='value'">
+                                                                                                    <span id="sub_textbox">
                                                                                                     <xsl:value-of select="current()"/>
+                                                                                                    </span>
                                                                                                 </xsl:if>
                                                                                             </xsl:for-each>
-                                                                                        </div>
+                                                                                        </span>
                                                                                     </xsl:when>
                                                                                     
                                                                                     <xsl:when test="@type='RadioButtonList'">
-                                                                                        <div>
+                                                                                        <span>
                                                                                             <xsl:value-of select="@label"/>
                                                                                             <xsl:for-each select="LISTITEMS/LISTITEM">
                                                                                                 <xsl:if test="@Selected = 'true'">
+                                                                                                    <span id="sub_textbox">
                                                                                                     <xsl:value-of select="current()"/>
+                                                                                                    </span>
                                                                                                 </xsl:if>
                                                                                             </xsl:for-each>
-                                                                                        </div>
+                                                                                        </span>
                                                                                     </xsl:when>
                                                                                     
                                                                                     <xsl:when test="@type='CheckBoxList'">
                                                                                         <xsl:value-of select="@label"/>
-                                                                                        <div>
+                                                                                        <span>
                                                                                             <xsl:for-each select="LISTITEMS/LISTITEM">
                                                                                                 <xsl:if test="@Selected = 'true'">
+                                                                                                    <span id="sub_textbox">
                                                                                                     <xsl:value-of select="concat(' ' , @value)"/>
                                                                                                     <xsl:if test="not(position() = last())">,</xsl:if>
+                                                                                                    </span>
                                                                                                 </xsl:if>
                                                                                             </xsl:for-each>
-                                                                                        </div>
+                                                                                        </span>
                                                                                     </xsl:when>
                                                                                 </xsl:choose>
                                                                             </xsl:for-each>
