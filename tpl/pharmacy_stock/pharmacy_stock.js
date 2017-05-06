@@ -1,4 +1,4 @@
-app.controller('stockController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$anchorScroll', '$filter', '$timeout', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $anchorScroll, $filter, $timeout) {
+app.controller('stockController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$anchorScroll', '$filter', '$timeout','$localStorage', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $anchorScroll, $filter, $timeout, $localStorage, DTOptionsBuilder, DTColumnBuilder, $compile) {
 
         editableThemes.bs3.inputClass = 'input-sm';
         editableThemes.bs3.buttonsClass = 'btn-sm';
@@ -42,33 +42,77 @@ app.controller('stockController', ['$rootScope', '$scope', '$timeout', '$http', 
                         $scope.errorData = "An Error has occured while loading products!";
                     });
         };
-
-        $scope.loadBatchList = function () {
-            $scope.loadbar('show');
-            $scope.isLoading = true;
-            
-            $scope.errorData = "";
-            $scope.msg.successMessage = "";
-            
-            // pagination set up
-            $scope.rowCollection = [];  // base collection
-
-            // Get data's from service
-            $http.post($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/searchbycriteria')
-                    .success(function (products) {
-                        $scope.isLoading = false;
-                        $scope.loadbar('hide');
-                        angular.forEach(products.productLists, function (product, key) {
-                            angular.extend(products.productLists[key], {full_name: product.product.full_name, description_name: product.product.description_name});
-                        });
-                        $scope.rowCollection = products.productLists;
-                        //Avoid pagination problem, when come from other pages.
-                        $scope.footable_redraw();
-                    })
-                    .error(function () {
-                        $scope.errorData = "An Error has occured while loading products!";
-                    });
-        };
+        
+        
+        //Batch details Index Page
+        var pb = this;
+        var token = $localStorage.user.access_token;
+        pb.dtOptions = DTOptionsBuilder.newOptions()
+                .withOption('ajax', {
+                    url: $rootScope.IRISOrgServiceUrl + '/pharmacyproduct/getbatchdetails?access-token=' + token,
+                    type: 'POST',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("x-domain-path", $rootScope.clientUrl);
+                    }
+                })
+                .withDataProp('data')
+                .withOption('processing', true)
+                .withOption('serverSide', true)
+                .withOption('bLengthChange', true)
+                .withOption('order', [0, 'desc'])
+                .withPaginationType('full_numbers')
+                .withOption('createdRow', createdRow);
+        
+        pb.dtColumns = [
+            DTColumnBuilder.newColumn('description_name').withTitle('Description').notSortable(),
+            DTColumnBuilder.newColumn('full_name').withTitle('Product Name').notSortable(),
+            DTColumnBuilder.newColumn('batch_no').withTitle('Batch No').notSortable(),
+            DTColumnBuilder.newColumn('expiry_date').withTitle('Expiry Date').notSortable(),
+            DTColumnBuilder.newColumn('mrp').withTitle('MRP').notSortable(),
+            DTColumnBuilder.newColumn('sales_package_name').withTitle('Sales Unit').notSortable(),
+            DTColumnBuilder.newColumn('sale_vat_percent').withTitle('Sales VAT').notSortable(),
+            DTColumnBuilder.newColumn('batch_id').withTitle('Batch Id').notVisible(),
+            DTColumnBuilder.newColumn(null).withTitle('Actions').notSortable().renderWith(actionsHtml)
+        ];
+        
+        function createdRow(row, data, dataIndex) {
+            // Recompiling so we can bind Angular directive to the DT
+            $compile(angular.element(row).contents())($scope);
+        }
+        
+        function actionsHtml(data, type, full, meta) {
+            return '<a class="label bg-dark" title="Edit" check-access  ui-sref="pharmacy.brandUpdate({id: ' + data.batch_id + '})">' +
+                    '   <i class="fa fa-pencil"></i>' +
+                    '</a>';
+        }
+        
+//          Batch details Index Page
+//        $scope.loadBatchList = function () {
+//            $scope.loadbar('show');
+//            $scope.isLoading = true;
+//            
+//            $scope.errorData = "";
+//            $scope.msg.successMessage = "";
+//            
+//            // pagination set up
+//            $scope.rowCollection = [];  // base collection
+//
+//            // Get data's from service
+//            $http.post($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/searchbycriteria?addtfields=batch_details')
+//                    .success(function (products) {
+//                        $scope.isLoading = false;
+//                        $scope.loadbar('hide');
+//                        angular.forEach(products.productLists, function (product, key) {
+//                            angular.extend(products.productLists[key], {full_name: product.product.full_name, description_name: product.product.description_name});
+//                        });
+//                        $scope.rowCollection = products.productLists;
+//                        //Avoid pagination problem, when come from other pages.
+//                        $scope.footable_redraw();
+//                    })
+//                    .error(function () {
+//                        $scope.errorData = "An Error has occured while loading products!";
+//                    });
+//        };
 
         $scope.adjustStock = function ($data, batch_id, key) {
             $scope.loadbar('show');
@@ -100,8 +144,8 @@ app.controller('stockController', ['$rootScope', '$scope', '$timeout', '$http', 
                         $scope.loadbar('hide');
                         if (response.success === true) {
                             $scope.msg.successMessage = 'Batch Details saved successfully';
-                            $scope.rowCollection[key].available_qty = response.batch.available_qty;
-                            $scope.rowCollection[key].add_stock = 0;
+//                            $scope.rowCollection[key].available_qty = response.batch.available_qty;
+//                            $scope.rowCollection[key].add_stock = 0;
                         } else {
                             $scope.errorData = response.message;
                         }
