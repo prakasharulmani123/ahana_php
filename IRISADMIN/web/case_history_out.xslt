@@ -199,14 +199,12 @@
                                                                 </xsl:when>
                                                             
                                                                 <xsl:when test="@type='DropDownList'">
-                                                                    <xsl:value-of select="@label"/>
                                                                     <xsl:for-each select="LISTITEMS/LISTITEM">
-                                                                        <span id="sub_textbox">
                                                                         <xsl:if test="@Selected = 'true'">
+                                                                            <xsl:value-of select="../../@label"/>
                                                                             <xsl:value-of select="@value"/>
                                                                         </xsl:if>
-                                                                        </span>
-                                                                        </xsl:for-each>
+                                                                    </xsl:for-each>
                                                                 </xsl:when>
                                                             </xsl:choose>
                                                         </xsl:for-each>
@@ -384,7 +382,7 @@
                                             <h4 class="panel-title">
                                                 <!--<a class="accordion-toggle" data-toggle="collapse" data-target="#{@target_div}" href="javascript:void(0)">-->
                                                 <a class="accordion-toggle" href="javascript:void(0)">
-                                                    <span>Gold
+                                                    <span>
                                                         <xsl:value-of select="@label"/>
                                                     </span>
                                                 </a>

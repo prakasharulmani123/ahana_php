@@ -204,13 +204,11 @@
                                                             </xsl:when>
                                                             
                                                             <xsl:when test="@type='DropDownList'">
-                                                                <br/><xsl:value-of select="@label" />&#160;
                                                                 <xsl:for-each select="LISTITEMS/LISTITEM">
-                                                                    <span id="sub_textbox">
                                                                     <xsl:if test="@Selected = 'true'">
+                                                                      <br/><xsl:value-of select="../../@label"/>  
                                                                       <xsl:value-of select="@value"></xsl:value-of>
                                                                     </xsl:if>
-                                                                    </span>
                                                                 </xsl:for-each>
                                                             </xsl:when>
                                                         </xsl:choose>
