@@ -101,7 +101,7 @@ class PharmacyproductController extends ActiveController {
 
         return ['genericList' => $generics, 'productList' => $products];
     }
-    
+
     public function actionGetdrugproductbygeneric() {
         $get = Yii::$app->getRequest()->get();
         $id = $get['generic_id'];
@@ -180,6 +180,89 @@ class PharmacyproductController extends ActiveController {
         return ['productLists' => $products];
     }
 
+    public function actionGetbatchdetails() {
+        $requestData = $_REQUEST;
+
+        $modelClass = 'common\models\PhaProductBatch';
+        $totalData = $modelClass::find()->tenant()->status()->count();
+        $totalFiltered = $totalData;
+
+        // Order Records
+//        if (isset($requestData['order'])) {
+//            if ($requestData['order'][0]['dir'] == 'asc') {
+//                $sort_dir = SORT_ASC;
+//            } elseif ($requestData['order'][0]['dir'] == 'desc') {
+//                $sort_dir = SORT_DESC;
+//            }
+//            $order_array = [$requestData['columns'][$requestData['order'][0]['column']]['data'] => $sort_dir];
+//        }
+//        
+        // Search Records
+        if (!empty($requestData['search']['value'])) {
+            $relations = ['product', 'product.productDescription', 'phaProductBatchRate', 'product.salesPackage', 'product.salesVat'];
+            $filters = [
+                'OR',
+                    ['like', 'pha_product_description.description_name', $requestData['search']['value']],
+                    ['like', 'pha_product.product_name', $requestData['search']['value']],
+                    ['like', 'pha_product.product_unit_count', $requestData['search']['value']],
+                    ['like', 'pha_product.product_unit', $requestData['search']['value']],
+                    ['like', 'pha_product_batch.batch_no', $requestData['search']['value']],
+                    ['like', 'pha_product_batch_rate.mrp', $requestData['search']['value']],
+                    ['like', 'pha_package_unit.package_name', $requestData['search']['value']],
+                    ['like', 'pha_vat.vat', $requestData['search']['value']],
+            ];
+            $conditions = [
+                'pha_product_batch.tenant_id' => Yii::$app->user->identity->logged_tenant_id,
+                'pha_product_batch.status' => '1',
+            ];
+            $totalFiltered = $modelClass::find()
+                    ->joinWith($relations)
+                    ->andWhere($conditions)
+                    ->andFilterWhere($filters)
+                    ->count();
+
+            $products = $modelClass::find()
+                    ->joinWith($relations)
+                    ->andWhere($conditions)
+                    ->andFilterWhere($filters)
+                    ->limit($requestData['length'])
+                    ->offset($requestData['start'])
+//                    ->orderBy($order_array)
+                    ->all();
+        } else {
+            $products = $modelClass::find()
+                    ->tenant()
+                    ->status()
+                    ->limit($requestData['length'])
+                    ->offset($requestData['start'])
+                    ->orderBy(['created_at' => SORT_DESC])
+                    ->all();
+        }
+
+        $data = array();
+        foreach ($products as $product) {
+            $nestedData = array();
+            $nestedData['description_name'] = $product->product->productDescription->description_name;
+            $nestedData['full_name'] = $product->product->fullName;
+            $nestedData['batch_no'] = $product->batch_no;
+            $nestedData['expiry_date'] = date("M-Y", strtotime($product->expiry_date));
+            $nestedData['mrp'] = $product->phaProductBatchRate->mrp;
+            $nestedData['sales_package_name'] = $product->product->salesPackage->package_name;
+            $nestedData['sale_vat_percent'] = $product->product->salesVat->vat;
+            $nestedData['batch_id'] = $product->batch_id;
+            $data[] = $nestedData;
+        }
+
+        $json_data = array(
+            "draw" => intval($requestData['draw']),
+            "recordsTotal" => intval($totalData),
+            "recordsFiltered" => intval($totalFiltered),
+            "data" => $data   // total data array
+        );
+
+        echo json_encode($json_data);
+    }
+
     public function actionAdjuststock() {
         $post = Yii::$app->getRequest()->post();
 
@@ -243,7 +326,7 @@ class PharmacyproductController extends ActiveController {
             $limit = 10;
 
 //            $text_search = str_replace([' ', '(', ')'], ['* ', '', ''], $text);
-            $text_search = "+".str_replace([' ', '(', ')'], [' +', '', ''], $text);
+            $text_search = "+" . str_replace([' ', '(', ')'], [' +', '', ''], $text);
 
             //Get Products
             $products = $this->_getProducts($text_search, $tenant_id, $limit);
@@ -325,7 +408,7 @@ class PharmacyproductController extends ActiveController {
                     LIMIT 0,:limit", [':search_text' => $text_search . '*', ':limit' => $limit, ':tenant_id' => $tenant_id]
             );
         }
-        $products = $command->queryAll();        
+        $products = $command->queryAll();
 
         //Below not need
         if (empty($products) && !isset($post['product_id'])) {
@@ -480,11 +563,11 @@ class PharmacyproductController extends ActiveController {
                 $new_result[] = array_merge($product, $val, $prescription);
             }
         }
-        
+
         //Nad
-        if(empty($new_result))
+        if (empty($new_result))
             return $products;
-        
+
         return $new_result;
     }
 
@@ -506,9 +589,9 @@ class PharmacyproductController extends ActiveController {
                     ])
                     ->andFilterWhere([
                         'OR',
-                        ['like', 'pha_product.product_name', $requestData['search']['value']],
-                        ['like', 'pha_product_description.description_name', $requestData['search']['value']],
-                        ['like', 'pha_brand.brand_name', $requestData['search']['value']],
+                            ['like', 'pha_product.product_name', $requestData['search']['value']],
+                            ['like', 'pha_product_description.description_name', $requestData['search']['value']],
+                            ['like', 'pha_brand.brand_name', $requestData['search']['value']],
                     ])
                     ->count();
 
@@ -520,9 +603,9 @@ class PharmacyproductController extends ActiveController {
                     ])
                     ->andFilterWhere([
                         'OR',
-                        ['like', 'pha_product.product_name', $requestData['search']['value']],
-                        ['like', 'pha_product_description.description_name', $requestData['search']['value']],
-                        ['like', 'pha_brand.brand_name', $requestData['search']['value']],
+                            ['like', 'pha_product.product_name', $requestData['search']['value']],
+                            ['like', 'pha_product_description.description_name', $requestData['search']['value']],
+                            ['like', 'pha_brand.brand_name', $requestData['search']['value']],
                     ])
                     ->limit($requestData['length'])
                     ->offset($requestData['start'])
