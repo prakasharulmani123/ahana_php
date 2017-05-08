@@ -287,7 +287,7 @@ class PharmacyproductController extends ActiveController {
 
         if (!empty($post)) {
             $model = PhaProductBatch::find()->tenant()->andWhere(['batch_id' => $post['batch_id']])->one();
-
+            
             if (!empty($model)) {
                 $model->expiry_date = $post['expiry_date'];
                 $model->batch_no = $post['batch_no'];
@@ -302,7 +302,7 @@ class PharmacyproductController extends ActiveController {
                     $model->save(false);
                     $rate->save(false);
 
-                    return ['success' => true, 'batch' => $model];
+                    return ['success' => true];
                 } else {
                     return ['success' => false, 'message' => Html::errorSummary([$model, $rate])];
                 }
