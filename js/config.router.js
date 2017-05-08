@@ -2106,7 +2106,10 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['xeditable', 'smart-table']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/pharmacy_stock/pharmacy_stock.js?v=' + APP_VERSION);
+                                        return $ocLazyLoad.load([
+                                            'tpl/pharmacy_stock/pharmacy_stock.js?v=' + APP_VERSION,
+                                            'tpl/modal_form/modal.batch.js?v=' + APP_VERSION
+                                        ]);
                                     }
                             );
                         }]

@@ -1,4 +1,4 @@
-app.controller('stockController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$anchorScroll', '$filter', '$timeout','$localStorage', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $anchorScroll, $filter, $timeout, $localStorage, DTOptionsBuilder, DTColumnBuilder, $compile) {
+app.controller('stockController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$modal','$log','editableOptions', 'editableThemes', '$anchorScroll', '$filter', '$timeout','$localStorage', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', function ($rootScope, $scope, $timeout, $http, $state, $modal, $log, editableOptions, editableThemes, $anchorScroll, $filter, $timeout, $localStorage, DTOptionsBuilder, DTColumnBuilder, $compile) {
 
         editableThemes.bs3.inputClass = 'input-sm';
         editableThemes.bs3.buttonsClass = 'btn-sm';
@@ -12,6 +12,7 @@ app.controller('stockController', ['$rootScope', '$scope', '$timeout', '$http', 
 
         $scope.displayedCollection = [];
         $scope.showTable = false;
+        $scope.batchDetails = [];
 
         //Index Page
         $scope.loadStockList = function () {
@@ -81,8 +82,11 @@ app.controller('stockController', ['$rootScope', '$scope', '$timeout', '$http', 
         }
         
         function actionsHtml(data, type, full, meta) {
-            return '<a class="label bg-dark" title="Edit" check-access  ui-sref="pharmacy.brandUpdate({id: ' + data.batch_id + '})">' +
-                    '   <i class="fa fa-pencil"></i>' +
+            //return '<a class="label bg-dark" title="Edit" check-access  ui-sref="pharmacy.brandUpdate({id: ' + data.batch_id + '})">' +
+            //        '   <i class="fa fa-pencil"></i>' +
+            //        '</a>';
+            return '<a ng-click="editBatchDetails({id: ' + data.batch_id + '})" title="Edit" class="label bg-dark">'+
+                        '<i class="fa fa-pencil"></i>'+
                     '</a>';
         }
         
@@ -114,6 +118,28 @@ app.controller('stockController', ['$rootScope', '$scope', '$timeout', '$http', 
 //                    });
 //        };
 
+        $scope.editBatchDetails = function (batch_id){
+            $scope.batchDetails = batch_id;
+            var modalInstance = $modal.open({
+                templateUrl: 'tpl/modal_form/modal.batch.html',
+                controller: 'BatchupdateController',
+                resolve: {
+                    scope: function () {
+                        return $scope;
+                    }
+                }
+            });
+            modalInstance.data = $scope.batchDetails;
+
+            modalInstance.result.then(function (selectedItem) {
+                $scope.selected = selectedItem;
+            }, function () {
+                $log.info('Modal dismissed at: ' + new Date());
+            });
+            
+            
+            //alert(JSON.stringify(batch_id));
+        }
         $scope.adjustStock = function ($data, batch_id, key) {
             $scope.loadbar('show');
             $scope.errorData = "";
