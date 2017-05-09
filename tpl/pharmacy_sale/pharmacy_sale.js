@@ -1004,7 +1004,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         /*PRINT BILL*/
         $scope.printHeader = function () {
             return {
-                text: [{text: 'Ahana\n',bold: true},{text: 'PHARMACY SERVICE - 24 HOURS'}],
+                text: [{text: 'Ahana\n', bold: true}, {text: 'PHARMACY SERVICE - 24 HOURS'}],
                 margin: 5,
                 alignment: 'center'
             };
@@ -1012,7 +1012,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
         $scope.printFooter = function () {
             return {
-                text: "Printed Date : " + moment($scope.current_time).format('DD-MM-YYYY HH:mm'),
+                text: "",
                 margin: 5,
                 alignment: 'center'
             };
@@ -1060,10 +1060,10 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             var index = 1;
             var loop_count = 0;
 
-            var groupedArr = createGroupedArray($scope.saleItems2, 15); //Changed Description rows
+            //var groupedArr = createGroupedArray($scope.saleItems2, 15); //Changed Description rows
             var sale_info = $scope.data2;
 
-            angular.forEach(groupedArr, function (sales, key) {
+            //angular.forEach(groupedArr, function (sales, key) {
                 var perPageInfo = [];
                 var perImageInfo = [];
 
@@ -1107,26 +1107,14 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 ]);
 
 
-                angular.forEach(sales, function (row, key) {
+                angular.forEach($scope.saleItems2, function (row, key) {
                     var percentage = parseInt(row.discount_percentage);
                     if (percentage > 0) {
-                        var particulars = {
-                            columns: [
-                                {
-                                    width: 'auto',
-                                    text: row.product.full_name,
-                                    alignment: 'left'
-                                },
-                                {
-                                    width: 20,
-                                    text: percentage.toString(),
-                                    alignment: 'right',
-                                }
-                            ]
-                        }
+                            var particulars = row.product.full_name +'('+percentage.toString()+')';
                     } else {
                         var particulars = row.product.full_name;
                     }
+                    
                     if (loop_count % 2 == 0)
                         var color = '';
                     else
@@ -1177,7 +1165,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                             text: row.total_amount,
                             fillColor: color,
                             style: 'td',
-                            alignment:'right',
+                            alignment: 'right',
                         },
                     ]);
 
@@ -1194,85 +1182,50 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 var bar_image = $('#' + barcode).attr('src');
                 if (bar_image) //Check Bar image is empty or not
                 {
-                    perPageInfo.push({layout: 'noBorders',
-                        table: {
-                            widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
-                            body: [
-                                [
-                                    {
-                                        colSpan: 6,
-                                        layout: 'noBorders',
-                                        table: {
-                                            body: [
-                                                [
-                                                    {
-                                                        text: payment,
-                                                        style: 'h1'
-                                                    }
-                                                ],
-                                                [
-                                                    {
-                                                        text: 'Ahana Pharmacy - Sale',
-                                                        style: 'normaltxt'
-                                                    }
-                                                ],
-                                            ]
-                                        },
-                                    },
-                                    {}, {}, {}, {}, {},
-                                    {
-                                        layout: 'noBorders',
-                                        table: {
-                                            body: [
-                                                [{image: bar_image, height: 20, width: 100, }]
-                                            ]
-                                        },
-                                    }
-                                ],
-                            ]
-                        },
-                    });
+                    var bar_img = [{image: bar_image, height: 20, width: 100, }];
                 } else
                 {
-                    perPageInfo.push({layout: 'noBorders',
-                        table: {
-                            widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
-                            body: [
-                                [
-                                    {
-                                        colSpan: 6,
-                                        layout: 'noBorders',
-                                        table: {
-                                            body: [
-                                                [
-                                                    {
-                                                        text: payment,
-                                                        style: 'h1'
-                                                    }
-                                                ],
-                                                [
-                                                    {
-                                                        text: 'Ahana Pharmacy - Sale',
-                                                        style: 'normaltxt'
-                                                    }
-                                                ],
-                                            ]
-                                        },
-                                    },
-                                    {}, {}, {}, {}, {},
-                                    {
-                                        layout: 'noBorders',
-                                        table: {
-                                            body: [
-                                                ['-']
-                                            ]
-                                        },
-                                    }
-                                ],
-                            ]
-                        },
-                    });
+                    var bar_img = [{text:''}];
                 }
+                perPageInfo.push({layout: 'noBorders',
+                    table: {
+                        widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+                        body: [
+                            [
+                                {
+                                    colSpan: 6,
+                                    layout: 'noBorders',
+                                    table: {
+                                        body: [
+                                            [
+                                                {
+                                                    text: payment,
+                                                    style: 'h1'
+                                                }
+                                            ],
+                                            [
+                                                {
+                                                    text: 'Ahana Pharmacy - Sale',
+                                                    style: 'normaltxt'
+                                                }
+                                            ],
+                                        ]
+                                    },
+                                },
+                                {}, {}, {}, {}, {},
+                                {
+                                    layout: 'noBorders',
+                                    table: {
+                                        body: [
+                                            bar_img
+                                        ]
+                                    },
+                                }
+                            ],
+                        ]
+                    },
+                });
+
 
                 perPageInfo.push({
                     layout: 'Borders',
@@ -1304,7 +1257,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                                     border: [false, false, false, false],
                                                     text: 'Bill No',
                                                     style: 'h2',
-                                                    margin:[-5,0,0,0],
+                                                    margin: [-5, 0, 0, 0],
                                                 },
                                                 {
                                                     text: ':',
@@ -1322,7 +1275,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                                     border: [false, false, false, false],
                                                     text: 'Patient',
                                                     style: 'h2',
-                                                    margin:[-5,0,0,0],
+                                                    margin: [-5, 0, 0, 0],
                                                 },
                                                 {
                                                     text: ':',
@@ -1340,7 +1293,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                                     border: [false, false, false, false],
                                                     text: 'Address',
                                                     style: 'h2',
-                                                    margin:[-5,0,0,0],
+                                                    margin: [-5, 0, 0, 0],
                                                 },
                                                 {
                                                     text: ':',
@@ -1358,7 +1311,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                                     border: [false, false, false, false],
                                                     text: 'Doctor',
                                                     style: 'h2',
-                                                    margin:[-5,0,0,0],
+                                                    margin: [-5, 0, 0, 0],
                                                 },
                                                 {
                                                     text: ':',
@@ -1423,11 +1376,10 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                             },
                             table: {
                                 headerRows: 1,
-                                // widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
                                 widths: [150, 50, 50, 50, 50, 50, '*'],
                                 body: perPageItems,
                             },
-                            //pageBreak: (loop_count === result_count ? '' : 'after'),
+                            pageBreak: (loop_count === result_count ? '' : 'after'),
                         });
 
                 perPageInfo.push({
@@ -1545,7 +1497,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 if (index == result_count) {
                     $scope.printloader = '';
                 }
-            });
+            //});
             return content;
         }
 
