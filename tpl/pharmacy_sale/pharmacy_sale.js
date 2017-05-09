@@ -1004,8 +1004,8 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         /*PRINT BILL*/
         $scope.printHeader = function () {
             return {
-                text: "Ahana \n PHARMACY SERVICE - 24HOURS",
-                style: 'header',
+                text: [{text: 'Ahana\n',bold: true},{text: 'PHARMACY SERVICE - 24 HOURS'}],
+                margin: 5,
                 alignment: 'center'
             };
         }
@@ -1020,15 +1020,31 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
         $scope.printStyle = function () {
             return {
-                header: {
-                    fontSize: 10,
-                    bold: true
+                h1: {
+                    fontSize: 11,
+                    bold: true,
                 },
-                demoTable: {
-                    color: '#000',
-                    fontSize: 8
+                h2: {
+                    fontSize: 9,
+                    bold: true,
                 },
-               
+                th: {
+                    fontSize: 9,
+                    bold: true,
+                    margin: [0, 3, 0, 3]
+                },
+                td: {
+                    fontSize: 8,
+                    margin: [0, 3, 0, 3]
+                },
+                normaltxt: {
+                    fontSize: 9,
+                },
+                grandtotal: {
+                    fontSize: 15,
+                    bold: true,
+                    margin: [5, 3, 5, 3]
+                }
             };
         }
 
@@ -1036,6 +1052,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         $scope.printContent = function () {
             var generated_on = moment().format('YYYY-MM-DD hh:mm A');
             var generated_by = $scope.app.username;
+            var organization = $scope.app.org_name;
 
             var content = [];
 
@@ -1052,14 +1069,41 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
                 var perPageItems = [];
                 perPageItems.push([
-                    {text: 'Description', style: 'header'},
-                    {text: 'MFR', style: 'header'},
-                    {text: 'Batch', style: 'header'},
-                    {text: 'Expiry', style: 'header'},
-                    {text: 'Qty', style: 'header'},
-                    {text: 'Price', style: 'header'},
-                    {text: 'Vat%', style: 'header'},
-                    {text: 'Amount', style: 'header'},
+                    {
+                        border: [false, true, false, true],
+                        text: 'Description',
+                        style: 'th'
+                    },
+                    {
+                        border: [false, true, false, true],
+                        text: 'MFR',
+                        style: 'th'
+                    },
+                    {
+                        border: [false, true, false, true],
+                        text: 'Batch',
+                        style: 'th'
+                    },
+                    {
+                        border: [false, true, false, true],
+                        text: 'Expiry',
+                        style: 'th'
+                    },
+                    {
+                        border: [false, true, false, true],
+                        text: 'Qty',
+                        style: 'th'
+                    },
+                    {
+                        border: [false, true, false, true],
+                        text: 'Price',
+                        style: 'th'
+                    },
+                    {
+                        border: [false, true, false, true],
+                        text: 'Amount',
+                        style: 'th'
+                    },
                 ]);
 
 
@@ -1083,118 +1127,418 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                     } else {
                         var particulars = row.product.full_name;
                     }
-                    perPageItems.push([
-                        particulars,
-                        row.product.brand_code,
-                        row.batch_no,
-                        moment(row.expiry_date).format('MM/YY'),
-                        row.quantity.toString(),
-                        row.mrp,
-                        row.vat_percent,
-                        row.total_amount,
-                    ]);
-
-                    //loop_count++;
-                });
-                    var barcode = sale_info.patient.patient_global_int_code;
-                    var bar_image = $('#'+barcode).attr('src');
-                    if(bar_image)
-                    {
-                        perPageInfo.push({ alignment: 'justify',columns: [ { text: '\n\n Ahana PHARMACY - sale:'}, { image: bar_image,width:100,alignment:'right', } ],});
-                    }
+                    if (loop_count % 2 == 0)
+                        var color = '';
                     else
-                    {
-                        perPageInfo.push({ alignment: 'justify',columns: [ { text: '\n\n Ahana PHARMACY - sale:'}, ],});
-                    }
-                    
-                perPageInfo.push({
-                            table: {
-                                headerRows: 1,
-                                widths: ['auto', '*', 'auto'],
-                                body: [
-                                    [
-                                        {text: 'Bill No', style: 'tableHeader'}, [sale_info.bill_no],
-                                        {text: [
-                                                {text: 'Date: ', bold: true},
-                                                generated_on
-                                            ], }
-                                    ],
-                                    [
-                                        {text: 'Patient', style: 'tableHeader'}, [sale_info.patient_name || '-'],
-                                        {text: [
-                                                {text: 'Reg No : ', bold: true, colSpan: 2},
-                                                sale_info.patient.patient_global_int_code || '-'
-                                            ], }
-
-                                    ],
-                                    [{text: 'Address', style: 'tableHeader'}, {text: [sale_info.patient.fullpermanentaddress || '-'], style: 'tableHeader', colSpan: 2}],
-                                    [{text: 'Doctor', style: 'tableHeader'}, {text: [sale_info.consultant_name || '-'], style: 'tableHeader', colSpan: 2}],
-                                ],
-
-                            },
+                        var color = '#eeeeee';
+                    if (result_count == loop_count + 1)
+                        var border = [false, false, false, true];
+                    else
+                        var border = [false, false, false, false];
+                    perPageItems.push([
+                        {
+                            border: border,
+                            text: particulars,
+                            fillColor: color,
+                            style: 'td'
                         },
                         {
+                            border: border,
+                            text: row.product.brand_code,
+                            fillColor: color,
+                            style: 'td'
+                        },
+                        {
+                            border: border,
+                            text: row.batch_no,
+                            fillColor: color,
+                            style: 'td'
+                        },
+                        {
+                            border: border,
+                            text: moment(row.expiry_date).format('MM/YY'),
+                            fillColor: color,
+                            style: 'td'
+                        },
+                        {
+                            border: border,
+                            text: row.quantity.toString(),
+                            fillColor: color,
+                            style: 'td'
+                        },
+                        {
+                            border: border,
+                            text: row.mrp,
+                            fillColor: color,
+                            style: 'td'
+                        },
+                        {
+                            border: border,
+                            text: row.total_amount,
+                            fillColor: color,
+                            style: 'td',
+                            alignment:'right',
+                        },
+                    ]);
+
+                    loop_count++;
+                });
+                if (sale_info.payment_type == 'CA')
+                    var payment = 'Cash Bill';
+                if (sale_info.payment_type == 'CR')
+                    var payment = 'Credit Bill';
+                if (sale_info.payment_type == 'COD')
+                    var payment = 'Cash On Delivery';
+
+                var barcode = sale_info.patient.patient_global_int_code;
+                var bar_image = $('#' + barcode).attr('src');
+                if (bar_image) //Check Bar image is empty or not
+                {
+                    perPageInfo.push({layout: 'noBorders',
+                        table: {
+                            widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+                            body: [
+                                [
+                                    {
+                                        colSpan: 6,
+                                        layout: 'noBorders',
+                                        table: {
+                                            body: [
+                                                [
+                                                    {
+                                                        text: payment,
+                                                        style: 'h1'
+                                                    }
+                                                ],
+                                                [
+                                                    {
+                                                        text: 'Ahana Pharmacy - Sale',
+                                                        style: 'normaltxt'
+                                                    }
+                                                ],
+                                            ]
+                                        },
+                                    },
+                                    {}, {}, {}, {}, {},
+                                    {
+                                        layout: 'noBorders',
+                                        table: {
+                                            body: [
+                                                [{image: bar_image, height: 20, width: 100, }]
+                                            ]
+                                        },
+                                    }
+                                ],
+                            ]
+                        },
+                    });
+                } else
+                {
+                    perPageInfo.push({layout: 'noBorders',
+                        table: {
+                            widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+                            body: [
+                                [
+                                    {
+                                        colSpan: 6,
+                                        layout: 'noBorders',
+                                        table: {
+                                            body: [
+                                                [
+                                                    {
+                                                        text: payment,
+                                                        style: 'h1'
+                                                    }
+                                                ],
+                                                [
+                                                    {
+                                                        text: 'Ahana Pharmacy - Sale',
+                                                        style: 'normaltxt'
+                                                    }
+                                                ],
+                                            ]
+                                        },
+                                    },
+                                    {}, {}, {}, {}, {},
+                                    {
+                                        layout: 'noBorders',
+                                        table: {
+                                            body: [
+                                                ['-']
+                                            ]
+                                        },
+                                    }
+                                ],
+                            ]
+                        },
+                    });
+                }
+
+                perPageInfo.push({
+                    layout: 'Borders',
+                    table: {
+                        widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+                        body: [
+                            [
+                                {
+                                    border: [false, true, false, false],
+                                    colSpan: 6,
+                                    layout: {
+                                        paddingLeft: function (i, node) {
+                                            return 0;
+                                        },
+                                        paddingRight: function (i, node) {
+                                            return 2;
+                                        },
+                                        paddingTop: function (i, node) {
+                                            return 0;
+                                        },
+                                        paddingBottom: function (i, node) {
+                                            return 0;
+                                        },
+                                    },
+                                    table: {
+                                        body: [
+                                            [
+                                                {
+                                                    border: [false, false, false, false],
+                                                    text: 'Bill No',
+                                                    style: 'h2',
+                                                    margin:[-5,0,0,0],
+                                                },
+                                                {
+                                                    text: ':',
+                                                    border: [false, false, false, false],
+                                                    style: 'h2'
+                                                },
+                                                {
+                                                    border: [false, false, false, false],
+                                                    text: sale_info.bill_no,
+                                                    style: 'normaltxt'
+                                                }
+                                            ],
+                                            [
+                                                {
+                                                    border: [false, false, false, false],
+                                                    text: 'Patient',
+                                                    style: 'h2',
+                                                    margin:[-5,0,0,0],
+                                                },
+                                                {
+                                                    text: ':',
+                                                    border: [false, false, false, false],
+                                                    style: 'h2'
+                                                },
+                                                {
+                                                    border: [false, false, false, false],
+                                                    text: [sale_info.patient_name || '-'],
+                                                    style: 'normaltxt'
+                                                }
+                                            ],
+                                            [
+                                                {
+                                                    border: [false, false, false, false],
+                                                    text: 'Address',
+                                                    style: 'h2',
+                                                    margin:[-5,0,0,0],
+                                                },
+                                                {
+                                                    text: ':',
+                                                    border: [false, false, false, false],
+                                                    style: 'h2'
+                                                },
+                                                {
+                                                    border: [false, false, false, false],
+                                                    text: [sale_info.patient.fullpermanentaddress || '-'],
+                                                    style: 'normaltxt'
+                                                }
+                                            ],
+                                            [
+                                                {
+                                                    border: [false, false, false, false],
+                                                    text: 'Doctor',
+                                                    style: 'h2',
+                                                    margin:[-5,0,0,0],
+                                                },
+                                                {
+                                                    text: ':',
+                                                    border: [false, false, false, false],
+                                                    style: 'h2'
+                                                },
+                                                {
+                                                    border: [false, false, false, false],
+                                                    text: [sale_info.consultant_name || '-'],
+                                                    style: 'normaltxt'
+                                                }
+                                            ],
+                                        ]
+                                    },
+                                },
+                                {}, {}, {}, {}, {},
+                                {
+                                    border: [false, true, false, false],
+                                    layout: 'noBorders',
+                                    table: {
+                                        body: [
+                                            [
+                                                {
+                                                    text: 'Date',
+                                                    style: 'h2'
+                                                },
+                                                {
+                                                    text: ':',
+                                                    style: 'h2'
+                                                },
+                                                {
+                                                    text: moment(sale_info.created_at).format('YYYY-MM-DD hh:mm A'),
+                                                    style: 'normaltxt'
+                                                }
+                                            ],
+                                            [
+                                                {
+                                                    text: 'Reg No',
+                                                    style: 'h2'
+                                                },
+                                                {
+                                                    text: ':',
+                                                    style: 'h2'
+                                                },
+                                                {
+                                                    text: [sale_info.patient.patient_global_int_code || '-'],
+                                                    style: 'normaltxt'
+                                                }
+                                            ],
+                                        ]
+                                    },
+                                }
+                            ],
+                        ]
+                    },
+                },
+                        {
+                            layout: {
+                                hLineWidth: function (i, node) {
+                                    return (i === 0) ? 3 : 1;
+                                }
+                            },
                             table: {
-                                style: 'tableExample',
                                 headerRows: 1,
-                                widths: ['auto', 'auto', 'auto', '*', 'auto', 'auto', 'auto', 'auto'],
+                                // widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+                                widths: [150, 50, 50, 50, 50, 50, '*'],
                                 body: perPageItems,
                             },
-                            margin: [0, 20, 0, 0],
                             //pageBreak: (loop_count === result_count ? '' : 'after'),
                         });
 
                 perPageInfo.push({
-                    alignment: 'justify',
-                    columns: [
-                        {
-                            style: 'tableExample',
-                            table: {
-                                dontBreakRows: true,
-                                body: [
-                                    [
-                                        {text: 'Total Value'}, {text: ':'},
-                                        {text: [sale_info.total_item_amount], alignment: 'right'}
-                                    ],
-                                    [
-                                        {text: 'Total Vat'}, {text: ':'},
-                                        {text: [sale_info.total_item_vat_amount], alignment: 'right'}
-                                    ],
-                                    [
-                                        {text: 'Round Off'}, {text: ':'},
-                                        {text: [sale_info.roundoff_amount], alignment: 'right'}
-                                    ],
-                                    [
-                                        {text: 'Ground Total'}, {text: ': RS'},
-                                        {text: [sale_info.bill_amount], fontSize: 16, alignment: 'right'}
-                                    ],
-                                ]
-                            },
-                            layout: 'noBorders',
-
-                        },
-                    ],
-                    margin: [0, 200, 0, 0],
-                });
-                perPageInfo.push({
-                    text: [
-                        $filter('words')(sale_info.bill_amount),
-                        {text: 'RUPEES ONLY'},
-                    ]});
-
-                perPageInfo.push({
-                    style: 'tableExample',
+                    layout: 'noBorders',
                     table: {
-                        headerRows: 1,
+                        widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
                         body: [
-                            [generated_by, generated_by, generated_by, generated_by, ' '],
-                            ['billed By', 'Prepared By', 'Packed By', 'Qualified Pharma', 'Delivered By']
-
+                            [
+                                {
+                                    colSpan: 6,
+                                    layout: 'noBorders',
+                                    table: {
+                                        body: [
+                                            [
+                                                {
+                                                    text: 'Billed By',
+                                                    style: 'h2'
+                                                },
+                                                {
+                                                    text: ':',
+                                                    style: 'h2'
+                                                },
+                                                {
+                                                    text: generated_by,
+                                                    style: 'normaltxt'
+                                                },
+                                            ],
+                                            [
+                                                {
+                                                    text: 'Billed At',
+                                                    style: 'h2'
+                                                },
+                                                {
+                                                    text: ':',
+                                                    style: 'h2'
+                                                },
+                                                {
+                                                    text: organization,
+                                                    style: 'normaltxt'
+                                                },
+                                            ],
+                                        ]
+                                    },
+                                },
+                                {}, {}, {}, {}, {},
+                                {
+                                    layout: 'noBorders',
+                                    table: {
+                                        body: [
+                                            [
+                                                {
+                                                    text: 'Total Value',
+                                                    style: 'h2',
+                                                    alignment: 'right'
+                                                },
+                                                {
+                                                    text: ':',
+                                                    style: 'h2'
+                                                },
+                                                {
+                                                    text: sale_info.total_item_amount,
+                                                    alignment: 'right'
+                                                },
+                                            ],
+                                            [
+                                                {
+                                                    text: 'Round Off',
+                                                    style: 'h2',
+                                                    alignment: 'right'
+                                                },
+                                                {
+                                                    text: ':',
+                                                    style: 'h2'
+                                                },
+                                                {
+                                                    text: sale_info.roundoff_amount,
+                                                    alignment: 'right'
+                                                },
+                                            ],
+                                            [
+                                                {
+                                                    text: 'Grand Total',
+                                                    fillColor: '#eeeeee',
+                                                    style: 'grandtotal',
+                                                    //color: 'white'
+                                                },
+                                                {
+                                                    text: ':',
+                                                    fillColor: '#eeeeee',
+                                                    style: 'grandtotal',
+                                                    //color: 'white'
+                                                },
+                                                {
+                                                    text: 'INR ' + [sale_info.bill_amount],
+                                                    fillColor: '#eeeeee',
+                                                    style: 'grandtotal',
+                                                    //color: 'white'
+                                                },
+                                            ],
+                                        ]
+                                    },
+                                }
+                            ],
                         ]
                     },
-                    layout: 'noBorders',
-                    margin: [0, 20, 0, 0],
                 });
+//                perPageInfo.push({
+//                    text: [
+//                        $filter('words')(sale_info.bill_amount),
+//                        {text: 'RUPEES ONLY'},
+//                    ]});
 
 
                 content.push(perPageInfo);
@@ -1223,9 +1567,12 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                         footer: $scope.printFooter(),
                         styles: $scope.printStyle(),
                         content: print_content,
+                        defaultStyle: {
+                            fontSize: 10
+                        },
                         pageMargins: ($scope.deviceDetector.browser == 'firefox' ? 75 : 50),
                         pageSize: 'A5',
-                       // pageOrientation: 'landscape',
+                        pageOrientation: 'landscape',
                     };
                     var pdf_document = pdfMake.createPdf(docDefinition);
                     var doc_content_length = Object.keys(pdf_document).length;

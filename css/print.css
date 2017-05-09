@@ -25,6 +25,9 @@
     body > table:nth-last-of-type(1){
         page-break-after:auto
     }
+    .hide {
+    display: none;
+}
 
 /*    #printThis th, #printThis td {
         padding: 10px;
