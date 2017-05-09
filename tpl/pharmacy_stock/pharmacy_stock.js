@@ -1,4 +1,4 @@
-app.controller('stockController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$modal','$log','editableOptions', 'editableThemes', '$anchorScroll', '$filter', '$timeout','$localStorage', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', function ($rootScope, $scope, $timeout, $http, $state, $modal, $log, editableOptions, editableThemes, $anchorScroll, $filter, $timeout, $localStorage, DTOptionsBuilder, DTColumnBuilder, $compile) {
+app.controller('stockController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$modal', '$log', 'editableOptions', 'editableThemes', '$anchorScroll', '$filter', '$timeout', '$localStorage', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', function ($rootScope, $scope, $timeout, $http, $state, $modal, $log, editableOptions, editableThemes, $anchorScroll, $filter, $timeout, $localStorage, DTOptionsBuilder, DTColumnBuilder, $compile) {
 
         editableThemes.bs3.inputClass = 'input-sm';
         editableThemes.bs3.buttonsClass = 'btn-sm';
@@ -19,10 +19,10 @@ app.controller('stockController', ['$rootScope', '$scope', '$timeout', '$http', 
             $scope.loadbar('show');
             $scope.showTable = true;
             $scope.isLoading = true;
-            
+
             $scope.errorData = "";
             $scope.msg.successMessage = "";
-            
+
             // pagination set up
             $scope.rowCollection = [];  // base collection
             $scope.itemsByPage = 20; // No.of records per page
@@ -43,8 +43,8 @@ app.controller('stockController', ['$rootScope', '$scope', '$timeout', '$http', 
                         $scope.errorData = "An Error has occured while loading products!";
                     });
         };
-        
-        
+
+
         //Batch details Index Page
         var pb = this;
         var token = $localStorage.user.access_token;
@@ -59,11 +59,12 @@ app.controller('stockController', ['$rootScope', '$scope', '$timeout', '$http', 
                 .withDataProp('data')
                 .withOption('processing', true)
                 .withOption('serverSide', true)
-                .withOption('bLengthChange', true)
-                .withOption('order', [0, 'desc'])
+                .withOption('stateSave', true)
+                .withOption('bLengthChange', false)
+                //.withOption('order', [0, 'desc'])
                 .withPaginationType('full_numbers')
                 .withOption('createdRow', createdRow);
-        
+
         pb.dtColumns = [
             DTColumnBuilder.newColumn('description_name').withTitle('Description').notSortable(),
             DTColumnBuilder.newColumn('full_name').withTitle('Product Name').notSortable(),
@@ -75,21 +76,21 @@ app.controller('stockController', ['$rootScope', '$scope', '$timeout', '$http', 
             DTColumnBuilder.newColumn('batch_id').withTitle('Batch Id').notVisible(),
             DTColumnBuilder.newColumn(null).withTitle('Actions').notSortable().renderWith(actionsHtml)
         ];
-        
+
         function createdRow(row, data, dataIndex) {
             // Recompiling so we can bind Angular directive to the DT
             $compile(angular.element(row).contents())($scope);
         }
-        
+
         function actionsHtml(data, type, full, meta) {
             //return '<a class="label bg-dark" title="Edit" check-access  ui-sref="pharmacy.brandUpdate({id: ' + data.batch_id + '})">' +
             //        '   <i class="fa fa-pencil"></i>' +
             //        '</a>';
-            return '<a ng-click="editBatchDetails({id: ' + data.batch_id + '})" title="Edit" class="label bg-dark">'+
-                        '<i class="fa fa-pencil"></i>'+
+            return '<a ng-click="editBatchDetails({id: ' + data.batch_id + '})" title="Edit" class="label bg-dark">' +
+                    '<i class="fa fa-pencil"></i>' +
                     '</a>';
         }
-        
+
 //          Batch details Index Page
 //        $scope.loadBatchList = function () {
 //            $scope.loadbar('show');
@@ -118,7 +119,7 @@ app.controller('stockController', ['$rootScope', '$scope', '$timeout', '$http', 
 //                    });
 //        };
 
-        $scope.editBatchDetails = function (batch_id){
+        $scope.editBatchDetails = function (batch_id) {
             $scope.batchDetails = batch_id;
             var modalInstance = $modal.open({
                 templateUrl: 'tpl/modal_form/modal.batch.html',
@@ -136,8 +137,8 @@ app.controller('stockController', ['$rootScope', '$scope', '$timeout', '$http', 
             }, function () {
                 $log.info('Modal dismissed at: ' + new Date());
             });
-            
-            
+
+
             //alert(JSON.stringify(batch_id));
         }
         $scope.adjustStock = function ($data, batch_id, key) {
