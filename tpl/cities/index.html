@@ -2,7 +2,7 @@
     <h1 class="m-n font-thin h3">Cities</h1>
 </div>
 
-<div class="wrapper-md" ng-controller="CitiesController" ng-init="loadCitiesList()">
+<div class="wrapper-md" ng-controller="CitiesController as city" ng-init="loadCitiesList()">
 
     <div ng-include="'tpl/blocks/alert.html'">
         {% include 'tpl/blocks/alert.html' %}
@@ -18,13 +18,15 @@
                     <!--                    <button class="btn btn-sm btn-grey" ng-click="loadCitiesList()"> 
                                     &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
                                 </button>-->
-                    <input id="filter" type="text" class="form-control input-sm w-sm inline m-r" placeholder="Search"/>
+<!--                    <input id="filter" type="text" class="form-control input-sm w-sm inline m-r" placeholder="Search"/>-->
                     <button check-access-button ng-click="$state.go('configuration.cityCreate')" class="btn btn-sm btn-info pull-right">
                         <i class="fa fa-plus"></i> &nbsp; Add New City
                     </button>
                 </div>
                 <div>
-                    <table class="table m-b-none" ui-jq="footable" data-filter="#filter" data-page-size="10">
+                    <table id="city_index" datatable="" dt-options="city.dtOptions" dt-columns="city.dtColumns" class="row-border hover"></table>
+                    
+<!--                    <table class="table m-b-none" ui-jq="footable" data-filter="#filter" data-page-size="10">
                         <thead>
                             <tr>
                                 <th data-toggle="true">City name</th>
@@ -79,7 +81,7 @@
                                 </td>
                             </tr>
                         </tfoot>
-                    </table>
+                    </table>-->
                 </div>
             </div>
         </div>
