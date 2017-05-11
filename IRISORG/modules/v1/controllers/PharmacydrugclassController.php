@@ -77,7 +77,7 @@ class PharmacydrugclassController extends ActiveController {
 
         return ['drugList' => PhaDrugClass::getDruglist($tenant, $status, $deleted, $notUsed)];
     }
-    
+
     public function actionGetdrugbygeneric() {
         $generic_id = Yii::$app->request->get('generic_id');
         if (!empty($generic_id)) {
@@ -86,6 +86,72 @@ class PharmacydrugclassController extends ActiveController {
         } else {
             return ['success' => false, 'message' => 'Invalid Access'];
         }
+    }
+
+    public function actionGetdrugclass() {
+        $requestData = $_REQUEST;
+        $modelClass = $this->modelClass;
+        $totalData = $modelClass::find()->tenant()->active()->count();
+        $totalFiltered = $totalData;
+
+        // Order Records
+        if (isset($requestData['order'])) {
+            if ($requestData['order'][0]['dir'] == 'asc') {
+                $sort_dir = SORT_ASC;
+            } elseif ($requestData['order'][0]['dir'] == 'desc') {
+                $sort_dir = SORT_DESC;
+            }
+            $order_array = [$requestData['columns'][$requestData['order'][0]['column']]['data'] => $sort_dir];
+        }
+
+        if (!empty($requestData['search']['value'])) {
+            $totalFiltered = $modelClass::find()
+                    ->tenant()
+                    ->active()
+                    ->andFilterWhere([
+                        'OR',
+                            ['like', 'drug_name', $requestData['search']['value']],
+                    ])
+                    ->count();
+
+            $drugClass = $modelClass::find()
+                    ->tenant()
+                    ->active()
+                    ->andFilterWhere([
+                        'OR',
+                            ['like', 'drug_name', $requestData['search']['value']],
+                    ])
+                    ->limit($requestData['length'])
+                    ->offset($requestData['start'])
+                    ->orderBy($order_array)
+                    ->all();
+        } else {
+            $drugClass = $modelClass::find()
+                    ->tenant()
+                    ->active()
+                    ->limit($requestData['length'])
+                    ->offset($requestData['start'])
+                    ->orderBy($order_array)
+                    ->all();
+        }
+
+        $data = array();
+        foreach ($drugClass as $drug) {
+            $nestedData = array();
+            $nestedData['drug_name'] = $drug->drug_name;
+            $nestedData['status'] = $drug->status;
+            $nestedData['drug_class_id'] = $drug->drug_class_id;
+            $data[] = $nestedData;
+        }
+
+        $json_data = array(
+            "draw" => intval($requestData['draw']),
+            "recordsTotal" => intval($totalData),
+            "recordsFiltered" => intval($totalFiltered),
+            "data" => $data   // total data array
+        );
+
+        echo json_encode($json_data);
     }
 
 }
