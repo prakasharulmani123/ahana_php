@@ -41,15 +41,13 @@ app.controller('GenericNameController', ['$rootScope', '$scope', '$timeout', '$h
                 .withOption('serverSide', true)
                 .withOption('stateSave', true)
                 .withOption('bLengthChange', true)
-                .withOption('order', [3, 'desc'])
+                .withOption('order', [0, 'desc'])
                 .withPaginationType('full_numbers')
                 .withOption('createdRow', createdRow);
         vm.dtColumns = [
-            DTColumnBuilder.newColumn('generic_id').withTitle('Generic ID').notVisible(),
-            DTColumnBuilder.newColumn('tenant_id').withTitle('Tenant ID').notVisible(),
-            DTColumnBuilder.newColumn('status').withTitle('Status').notVisible(),
             DTColumnBuilder.newColumn('generic_name').withTitle('Generic Name'),
-            DTColumnBuilder.newColumn(null).withTitle('Status').notSortable().renderWith(statusHtml),
+            DTColumnBuilder.newColumn('status').withTitle('Status').notSortable().renderWith(statusHtml),
+            DTColumnBuilder.newColumn('generic_id').withTitle('Generic ID').notVisible(),
             DTColumnBuilder.newColumn(null).withTitle('Actions').notSortable().renderWith(actionsHtml)
         ];
 

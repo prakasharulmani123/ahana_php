@@ -38,16 +38,14 @@ app.controller('CitiesController', ['$rootScope', '$scope', '$timeout', '$http',
                 .withOption('serverSide', true)
                 .withOption('stateSave', true)
                 .withOption('bLengthChange', true)
-                .withOption('order', [3, 'desc'])
+                .withOption('order', [0, 'asc'])
                 .withPaginationType('full_numbers')
                 .withOption('createdRow', createdRow);
         vm.dtColumns = [
-            DTColumnBuilder.newColumn('city_id').withTitle('City ID').notVisible(),
-            DTColumnBuilder.newColumn('tenant_id').withTitle('Tenant ID').notVisible(),
-            DTColumnBuilder.newColumn('state_id').withTitle('State ID').notVisible(),
-            DTColumnBuilder.newColumn('status').withTitle('Status').notVisible(),
             DTColumnBuilder.newColumn('city_name').withTitle('City Name'),
-            DTColumnBuilder.newColumn(null).withTitle('Status').notSortable().renderWith(statusHtml),
+            DTColumnBuilder.newColumn('status').withTitle('Status').notSortable().renderWith(statusHtml),
+            DTColumnBuilder.newColumn('tenant_id').withTitle('Tenant ID').notVisible(),
+            DTColumnBuilder.newColumn('city_id').withTitle('City ID').notVisible(),
             DTColumnBuilder.newColumn(null).withTitle('Actions').notSortable().renderWith(actionsHtml)
         ];
 
@@ -64,7 +62,7 @@ app.controller('CitiesController', ['$rootScope', '$scope', '$timeout', '$http',
                 vm.selected[full.city_id] = false;
             }
             var model_name = "'" + "CoMasterCity" + "'";
-            if (data.tenant_id) {
+            if (full.tenant_id) {
                 return  '<label class="i-checks ">' +
                         '<input type="checkbox" ng-model="city.selected[' + full.city_id + ']" ng-change="updateStatus(' + model_name + ', ' + full.city_id + ')">' +
                         '<i></i>' +
