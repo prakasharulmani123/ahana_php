@@ -63,7 +63,7 @@ class CityController extends ActiveController {
         $requestData = $_REQUEST;
 
         $modelClass = $this->modelClass;
-        $totalData = $modelClass::find()->count();
+        $totalData = $modelClass::find()->tenantWithNull()->status()->count();
         $totalFiltered = $totalData;
         
         // Order Records
@@ -79,13 +79,15 @@ class CityController extends ActiveController {
         if (!empty($requestData['search']['value'])) {
             $tenant_id = Yii::$app->user->identity->logged_tenant_id;
             $totalFiltered = $modelClass::find()
+                    ->tenantWithNull()
+                    ->status()
                     ->andFilterWhere([
                         'OR',
                             ['like', 'city_name', $requestData['search']['value']],
                             ])
                     ->count();
 
-            $cities = $modelClass::find()
+            $cities = $modelClass::find()->tenantWithNull()->status()
                     ->andFilterWhere([
                         'OR',
                             ['like', 'city_name', $requestData['search']['value']],
@@ -96,6 +98,8 @@ class CityController extends ActiveController {
                     ->all();
         } else {
             $cities = $modelClass::find()
+                    ->tenantWithNull()
+                    ->status()
                     ->limit($requestData['length'])
                     ->offset($requestData['start'])
                     ->orderBy($order_array)

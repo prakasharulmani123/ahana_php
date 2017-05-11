@@ -76,5 +76,72 @@ class GenericnameController extends ActiveController {
 
         return ['genericList' => PhaGeneric::getGenericlist($tenant, $status, $deleted, $notUsed)];
     }
+    
+        public function actionGetgenericname() {
+        $requestData = $_REQUEST;
+        $modelClass = $this->modelClass;
+        $totalData = $modelClass::find()->tenant()->status()->count();
+        $totalFiltered = $totalData;
+        
+        // Order Records
+        if (isset($requestData['order'])) {
+            if ($requestData['order'][0]['dir'] == 'asc') {
+                $sort_dir = SORT_ASC;
+            } elseif ($requestData['order'][0]['dir'] == 'desc') {
+                $sort_dir = SORT_DESC;
+            }
+            $order_array = [$requestData['columns'][$requestData['order'][0]['column']]['data'] => $sort_dir];
+        }
+
+        if (!empty($requestData['search']['value'])) {
+            $totalFiltered = $modelClass::find()
+                    ->tenant()
+                    ->status()
+                    ->andFilterWhere([
+                        'OR',
+                            ['like', 'generic_name', $requestData['search']['value']],
+                            ])
+                    ->count();
+
+            $genericNames = $modelClass::find()
+                    ->tenant()
+                    ->status()
+                    ->andFilterWhere([
+                        'OR',
+                            ['like', 'generic_name', $requestData['search']['value']],
+                            ])
+                    ->limit($requestData['length'])
+                    ->offset($requestData['start'])
+                    ->orderBy($order_array)
+                    ->all();
+        } else {
+            $genericNames = $modelClass::find()
+                    ->tenant()
+                    ->status()
+                    ->limit($requestData['length'])
+                    ->offset($requestData['start'])
+                    ->orderBy($order_array)
+                    ->all();
+        }
+
+        $data = array();
+        foreach ($genericNames as $generic) {
+            $nestedData = array();
+            $nestedData['generic_id'] = $generic->generic_id;
+            $nestedData['generic_name'] = $generic->generic_name;
+            $nestedData['tenant_id'] = $generic->tenant_id;
+            $nestedData['status'] = $generic->status;
+            $data[] = $nestedData;
+        }
+
+        $json_data = array(
+            "draw" => intval($requestData['draw']),
+            "recordsTotal" => intval($totalData),
+            "recordsFiltered" => intval($totalFiltered),
+            "data" => $data   // total data array
+        );
+
+        echo json_encode($json_data);
+    }
 
 }
