@@ -80,7 +80,7 @@ class GenericnameController extends ActiveController {
         public function actionGetgenericname() {
         $requestData = $_REQUEST;
         $modelClass = $this->modelClass;
-        $totalData = $modelClass::find()->tenant()->status()->count();
+        $totalData = $modelClass::find()->tenant()->active()->count();
         $totalFiltered = $totalData;
         
         // Order Records
@@ -96,7 +96,7 @@ class GenericnameController extends ActiveController {
         if (!empty($requestData['search']['value'])) {
             $totalFiltered = $modelClass::find()
                     ->tenant()
-                    ->status()
+                    ->active()
                     ->andFilterWhere([
                         'OR',
                             ['like', 'generic_name', $requestData['search']['value']],
@@ -105,7 +105,7 @@ class GenericnameController extends ActiveController {
 
             $genericNames = $modelClass::find()
                     ->tenant()
-                    ->status()
+                    ->active()
                     ->andFilterWhere([
                         'OR',
                             ['like', 'generic_name', $requestData['search']['value']],
@@ -117,7 +117,7 @@ class GenericnameController extends ActiveController {
         } else {
             $genericNames = $modelClass::find()
                     ->tenant()
-                    ->status()
+                    ->active()
                     ->limit($requestData['length'])
                     ->offset($requestData['start'])
                     ->orderBy($order_array)
@@ -127,10 +127,9 @@ class GenericnameController extends ActiveController {
         $data = array();
         foreach ($genericNames as $generic) {
             $nestedData = array();
-            $nestedData['generic_id'] = $generic->generic_id;
             $nestedData['generic_name'] = $generic->generic_name;
-            $nestedData['tenant_id'] = $generic->tenant_id;
             $nestedData['status'] = $generic->status;
+            $nestedData['generic_id'] = $generic->generic_id;
             $data[] = $nestedData;
         }
 

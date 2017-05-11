@@ -63,7 +63,7 @@ class CityController extends ActiveController {
         $requestData = $_REQUEST;
 
         $modelClass = $this->modelClass;
-        $totalData = $modelClass::find()->tenantWithNull()->status()->count();
+        $totalData = $modelClass::find()->tenantWithNull()->active()->count();
         $totalFiltered = $totalData;
         
         // Order Records
@@ -80,14 +80,14 @@ class CityController extends ActiveController {
             $tenant_id = Yii::$app->user->identity->logged_tenant_id;
             $totalFiltered = $modelClass::find()
                     ->tenantWithNull()
-                    ->status()
+                    ->active()
                     ->andFilterWhere([
                         'OR',
                             ['like', 'city_name', $requestData['search']['value']],
                             ])
                     ->count();
 
-            $cities = $modelClass::find()->tenantWithNull()->status()
+            $cities = $modelClass::find()->tenantWithNull()->active()
                     ->andFilterWhere([
                         'OR',
                             ['like', 'city_name', $requestData['search']['value']],
@@ -99,7 +99,7 @@ class CityController extends ActiveController {
         } else {
             $cities = $modelClass::find()
                     ->tenantWithNull()
-                    ->status()
+                    ->active()
                     ->limit($requestData['length'])
                     ->offset($requestData['start'])
                     ->orderBy($order_array)
@@ -109,11 +109,10 @@ class CityController extends ActiveController {
         $data = array();
         foreach ($cities as $city) {
             $nestedData = array();
-            $nestedData['city_id'] = $city->city_id;
             $nestedData['city_name'] = $city->city_name;
-            $nestedData['tenant_id'] = $city->tenant_id;
-            $nestedData['state_id'] = $city->state_id;
             $nestedData['status'] = $city->status;
+            $nestedData['tenant_id'] = $city->tenant_id;
+            $nestedData['city_id'] = $city->city_id;
             $data[] = $nestedData;
         }
 
