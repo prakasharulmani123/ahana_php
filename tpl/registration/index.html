@@ -2,7 +2,7 @@
     <h1 class="m-n h3">User Registration</h1>
 </div>
 
-<div class="wrapper-md" ng-controller="UsersController" ng-init="loadList()">
+<div class="wrapper-md" ng-controller="UsersController as user">
     <div ng-include="'tpl/blocks/alert.html'">
         {% include 'tpl/blocks/alert.html' %}
     </div>
@@ -12,7 +12,7 @@
                 <!--                    <button class="btn btn-sm btn-grey" ng-click="loadList()"> 
                                         &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
                                     </button>-->
-                <input id="filter" type="text" class="form-control input-sm w-sm inline m-r" placeholder="Search"/>
+<!--                <input id="filter" type="text" class="form-control input-sm w-sm inline m-r" placeholder="Search"/>-->
             </div>
             <div class="col-sm-4 pull-right right">
                 <button check-access-button ng-click="$state.go('configuration.user_create')" class="btn btn-sm btn-info pull-right">
@@ -22,7 +22,9 @@
         </div>
 
         <div>
-            <table class="table m-b-none" ui-jq="footable" data-filter="#filter" data-page-size="10">
+            
+            <table id="user_index" datatable="" dt-options="user.dtOptions" dt-columns="user.dtColumns" class="row-border hover"></table>
+<!--            <table class="table m-b-none" ui-jq="footable" data-filter="#filter" data-page-size="10">
                 <thead>
                     <tr>
                         <th data-toggle="true">
@@ -67,7 +69,7 @@
                         <td> 
                             {{row.email}} 
                         </td>
-                        <td data-value="1" class="logindeatils">
+                                    <td data-value="1" class="logindeatils">
                             <p> <b> Username : </b>{{row.username}}</p>
                             <p> <b>Activation Date : </b>{{row.activation_date}}</p>
                             <p> <b>Inactivation Date : </b>{{row.Inactivation_date}}</p>
@@ -91,7 +93,7 @@
                         </td>
                     </tr>
                 </tfoot>
-            </table>
+            </table>-->
         </div>
     </div>
 </div>

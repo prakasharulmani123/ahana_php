@@ -1,4 +1,4 @@
-app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$modal', '$log', function ($rootScope, $scope, $timeout, $http, $state, $modal, $log) {
+app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$modal', '$log', '$localStorage', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', function ($rootScope, $scope, $timeout, $http, $state, $modal, $log,$localStorage, DTOptionsBuilder, DTColumnBuilder, $compile) {
 
         //Index Page
         $scope.loadList = function () {
@@ -19,6 +19,67 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
                         $scope.errorData = "An Error has occured while loading users!";
                     });
         };
+        
+        var vm = this;
+        var token = $localStorage.user.access_token;
+        var cp = $state.params.mode;
+        vm.dtOptions = DTOptionsBuilder.newOptions()
+                .withOption('ajax', {
+                    // Either you specify the AjaxDataProp here
+                    // dataSrc: 'data',
+                    url: $rootScope.IRISOrgServiceUrl + '/user/getuserdata?cp='+cp+'&access-token=' + token,
+                    type: 'POST',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("x-domain-path", $rootScope.clientUrl);
+                    }
+                })
+                // or here
+                .withDataProp('data')
+                .withOption('processing', true)
+                .withOption('serverSide', true)
+                .withOption('stateSave', true)
+                .withOption('bLengthChange', true)
+                .withOption('order', [0, 'asc'])
+                .withPaginationType('full_numbers')
+                .withOption('createdRow', createdRow);
+        vm.dtColumns = [
+            DTColumnBuilder.newColumn('name').withTitle('Employee Name'),
+            DTColumnBuilder.newColumn('designation').withTitle('Designation').renderWith(designationHtml),
+            DTColumnBuilder.newColumn('mobile').withTitle('Mobile').renderWith(mobileHtml),
+            DTColumnBuilder.newColumn('email').withTitle('Email'),
+            DTColumnBuilder.newColumn('user_id').withTitle('User ID').notVisible(),
+            DTColumnBuilder.newColumn(null).withTitle('Login Credentials').notSortable().renderWith(loginHtml).withClass('logindeatils'),
+            DTColumnBuilder.newColumn(null).withTitle('Create / Update').notSortable().renderWith(createHtml),
+            DTColumnBuilder.newColumn(null).withTitle('Actions').notSortable().renderWith(actionsHtml)
+        ];
+
+        function createdRow(row, data, dataIndex) {
+            // Recompiling so we can bind Angular directive to the DT
+            $compile(angular.element(row).contents())($scope);
+        }
+        function designationHtml(data, type, full, meta) {
+            return '<span class="label bg-success"> '+data+' </span>';
+        }
+        function mobileHtml(data, type, full, meta) {
+            return '<span class="label bg-info"> '+data+' </span>';
+        }
+        function loginHtml(data, type, full, meta) {
+                
+            return '<p> <b> Username : </b>'+data.username+'</p>'+
+                   '<p> <b>Activation Date : </b>'+data.activation_date+'</p>'+
+                   '<p> <b>Inactivation Date : </b>'+data.Inactivation_date+'</p>';
+        }
+        function createHtml(data, type, full, meta) {
+            return  '<a title="'+data.login_link_text+'" class="'+data.login_link_btn+'" ui-sref="configuration.login_update({id: '+data.user_id+'})">'+
+                    '<i class="fa '+data.login_link_icon_class+'"></i> &nbsp;'+data.login_link_text+''+
+                    '</a>';
+        }
+        
+        function actionsHtml(data, type, full, meta) {
+            return '<a class="btn btn-dark" title="Edit" check-access  ui-sref="configuration.user_update({id: '+data.user_id+'})">'+
+                   '<i class="fa fa-pencil"></i>'+
+                   '</a>';
+        }
 
         //For User Form
         $scope.initForm = function () {
