@@ -87,38 +87,137 @@ class UserController extends ActiveController {
         }
     }
 
+//    public function actionGetuserdata() {
+//        $get = Yii::$app->request->get();
+//        if (isset($get['cp']) && $get['cp'] == 'C') {
+//            $model = CoUser::find()
+//                    ->active()
+//                    ->exceptSuperUser()
+//                    ->andWhere(['care_provider' => '1'])
+//                    ->orderBy(['created_at' => SORT_DESC])
+//                    ->all();
+//        } else {
+//            $model = CoUser::find()->active()->exceptSuperUser()->orderBy(['created_at' => SORT_DESC])->all();
+//        }
+//        $data = [];
+//        foreach ($model as $key => $user) {
+//            $data[$key] = $user->attributes;
+//            if (empty($user->login)) {
+//                $data[$key]['login_link_btn'] = 'btn btn-sm btn-info';
+//                $data[$key]['login_link_text'] = 'Create';
+//                $data[$key]['login_link_icon_class'] = 'fa-plus';
+//                $data[$key]['username'] = '-';
+//                $data[$key]['activation_date'] = '-';
+//                $data[$key]['Inactivation_date'] = '-';
+//            } else {
+//                $data[$key]['login_link_btn'] = 'btn btn-sm btn-primary';
+//                $data[$key]['login_link_text'] = 'Update';
+//                $data[$key]['login_link_icon_class'] = 'fa-pencil';
+//                $data[$key]['username'] = $user->login->username;
+//                $data[$key]['activation_date'] = $user->login->activation_date;
+//                $data[$key]['Inactivation_date'] = $user->login->Inactivation_date;
+//            }
+//        }
+//        return $data;
+//    }
+
     public function actionGetuserdata() {
+
         $get = Yii::$app->request->get();
-        if (isset($get['cp']) && $get['cp'] == 'C') {
-            $model = CoUser::find()
-                    ->active()
-                    ->exceptSuperUser()
-                    ->andWhere(['care_provider' => '1'])
-                    ->orderBy(['created_at' => SORT_DESC])
-                    ->all();
-        } else {
-            $model = CoUser::find()->active()->exceptSuperUser()->orderBy(['created_at' => SORT_DESC])->all();
-        }
-        $data = [];
-        foreach ($model as $key => $user) {
-            $data[$key] = $user->attributes;
-            if (empty($user->login)) {
-                $data[$key]['login_link_btn'] = 'btn btn-sm btn-info';
-                $data[$key]['login_link_text'] = 'Create';
-                $data[$key]['login_link_icon_class'] = 'fa-plus';
-                $data[$key]['username'] = '-';
-                $data[$key]['activation_date'] = '-';
-                $data[$key]['Inactivation_date'] = '-';
-            } else {
-                $data[$key]['login_link_btn'] = 'btn btn-sm btn-primary';
-                $data[$key]['login_link_text'] = 'Update';
-                $data[$key]['login_link_icon_class'] = 'fa-pencil';
-                $data[$key]['username'] = $user->login->username;
-                $data[$key]['activation_date'] = $user->login->activation_date;
-                $data[$key]['Inactivation_date'] = $user->login->Inactivation_date;
+
+        $requestData = $_REQUEST;
+        $modelClass = $this->modelClass;
+        $totalAllData = $modelClass::find()->active()->exceptSuperUser();
+        if (isset($get['cp']) && $get['cp'] == 'C')
+            $totalAllData->andWhere(['care_provider' => '1']);
+        $totalData = $totalAllData->count();
+        $totalFiltered = $totalData;
+
+        // Order Records
+        if (isset($requestData['order'])) {
+            if ($requestData['order'][0]['dir'] == 'asc') {
+                $sort_dir = SORT_ASC;
+            } elseif ($requestData['order'][0]['dir'] == 'desc') {
+                $sort_dir = SORT_DESC;
             }
+            $order_array = [$requestData['columns'][$requestData['order'][0]['column']]['data'] => $sort_dir];
         }
-        return $data;
+
+
+        if (!empty($requestData['search']['value'])) {
+            $filters = [
+                'OR',
+                    ['like', 'name', $requestData['search']['value']],
+                    ['like', 'designation', $requestData['search']['value']],
+                    ['like', 'mobile', $requestData['search']['value']],
+                    ['like', 'email', $requestData['search']['value']],
+            ];
+            $total = $modelClass::find()
+                    ->active()
+                    ->exceptSuperUser();
+            if (isset($get['cp']) && $get['cp'] == 'C')
+                $total->andWhere(['care_provider' => '1']);
+            $totalFiltered = $total->andFilterWhere($filters)
+                    ->count();
+
+            $users = $modelClass::find()
+                    ->active()
+                    ->exceptSuperUser();
+            if (isset($get['cp']) && $get['cp'] == 'C')
+                $users->andWhere(['care_provider' => '1']);
+            $usersall = $users->andFilterWhere($filters)
+                    ->limit($requestData['length'])
+                    ->offset($requestData['start'])
+                    ->orderBy($order_array)
+                    ->all();
+        }
+        else {
+            $users = $modelClass::find()
+                    ->active()
+                    ->exceptSuperUser();
+            if (isset($get['cp']) && $get['cp'] == 'C')
+                $users->andWhere(['care_provider' => '1']);
+            $usersall = $users->limit($requestData['length'])
+                    ->offset($requestData['start'])
+                    ->orderBy($order_array)
+                    ->all();
+        }
+
+        $data = array();
+        foreach ($usersall as $user) {
+            $data = $user->attributes;
+            if (empty($user->login)) {
+                $data['login_link_btn'] = 'btn btn-sm btn-info';
+                $data['login_link_text'] = 'Create';
+                $data['login_link_icon_class'] = 'fa-plus';
+                $data['username'] = '-';
+                $data['activation_date'] = '-';
+                $data['Inactivation_date'] = '-';
+            } else {
+                $data['login_link_btn'] = 'btn btn-sm btn-primary';
+                $data['login_link_text'] = 'Update';
+                $data['login_link_icon_class'] = 'fa-pencil';
+                $data['username'] = $user->login->username;
+                $data['activation_date'] = $user->login->activation_date;
+                $data['Inactivation_date'] = $user->login->Inactivation_date;
+            }
+            //$nestedData = array();
+            $data['name'] = $user->name;
+            $data['designation'] = $user->designation;
+            $data['mobile'] = $user->mobile;
+            $data['email'] = $user->email;
+            $data['user_id'] = $user->user_id;
+            $datas[] = $data;
+        }
+
+        $json_data = array(
+            "draw" => intval($requestData['draw']),
+            "recordsTotal" => intval($totalData),
+            "recordsFiltered" => intval($totalFiltered),
+            "data" => $datas   // total data array
+        );
+
+        echo json_encode($json_data);
     }
 
     public static function Getuserrolesresources() {
