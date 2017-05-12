@@ -219,8 +219,8 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
             }).then(
                     function (response) {
                         if (response.data.success === true) {
+                            $scope.data = response.data.return;
                             if (!jQuery.isEmptyObject(response.data.return.username)) {
-                                $scope.data = response.data.return;
                                 $scope.data.password = '';
                                 $scope.data.form_type = 'update';
                             } else {
