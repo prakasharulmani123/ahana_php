@@ -23,7 +23,7 @@
                             <div class="form-group">
                                 <label class="col-sm-4 control-label">Username * </label>
                                 <div class="col-sm-8">
-                                    <select class="form-control" ng-model="data.user_id" ng-options="user.user_id as user.fullname for user in users | orderBy: fullname" ng-change="getSavedBranches()">
+                                    <select class="form-control selectpicker" data-live-search="true" ng-model="data.user_id" ng-options="user.user_id as user.fullname for user in users | orderBy: fullname" ng-change="getSavedBranches()">
                                         <option value="" label="Select User">Select User</option>
                                     </select>
                                 </div>
@@ -36,9 +36,9 @@
                                     <div ng-repeat="branch in branches track by branch.tenant_id">
                                         <label class="i-checks ">
                                             <input type="checkbox" ng-disabled="branch.tenant_id == default_branch" ng-checked="selectedBranches.containsObjectWithProperty('tenant_id', branch.tenant_id)" ng-click="toggleSelection(branch)" /> 
-                                            <i></i> 
+                                            <i></i>
+                                            {{branch.tenant_name}}
                                         </label> 
-                                        {{branch.tenant_name}}
                                     </div>
                                 </div>
                             </div>

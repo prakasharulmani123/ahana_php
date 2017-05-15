@@ -26,7 +26,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Username * </label>
                                 <div class="col-sm-9">
-                                    <select class="form-control" ng-model="data.user_id" ng-options="user.user_id as user.name for user in users | orderBy: name" ng-change="getSavedRoles()">
+                                    <select class="form-control selectpicker" data-live-search="true" ng-model="data.user_id" ng-options="user.user_id as user.fullname for user in users | orderBy: name" ng-change="getSavedRoles()">
                                         <option value="">Select User</option>
                                     </select>
                                 </div>
@@ -37,7 +37,7 @@
                                 <label class="col-sm-3 control-label">Access Roles</label>
                                 <div class="col-sm-9">
                                     <div ng-repeat="role in roles track by role.role_id">
-                                        <label class="i-checks "><input type="checkbox" ng-checked="selectedRoles.containsObjectWithProperty('role_id', role.role_id)" name="status" ng-click="toggleSelection(role)" /> <i></i> </label> {{role.description}}
+                                        <label class="i-checks "><input type="checkbox" ng-checked="selectedRoles.containsObjectWithProperty('role_id', role.role_id)" name="status" ng-click="toggleSelection(role)" /> <i></i> {{role.description}}</label> 
                                     </div>
                                 </div>
                             </div>
