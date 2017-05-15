@@ -29,7 +29,7 @@ app.controller('stockController', ['$rootScope', '$scope', '$timeout', '$http', 
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
 
             // Get data's from service
-            $http.post($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/searchbycriteria', $scope.data)
+            $http.post($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/searchbycriteria?addtfields=stock_details', $scope.data)
                     .success(function (products) {
                         $scope.isLoading = false;
                         $scope.loadbar('hide');
@@ -145,7 +145,7 @@ app.controller('stockController', ['$rootScope', '$scope', '$timeout', '$http', 
             $scope.loadbar('show');
             $scope.errorData = "";
             $scope.msg.successMessage = "";
-            $http.post($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/adjuststock', {'batch_id': batch_id, 'adjust_qty': $data})
+            $http.post($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/adjuststock?addtfields=stock_details', {'batch_id': batch_id, 'adjust_qty': $data})
                     .success(function (response) {
                         $scope.loadbar('hide');
                         if (response.success === true) {
