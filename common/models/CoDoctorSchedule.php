@@ -88,7 +88,7 @@ class CoDoctorSchedule extends RActiveRecord {
     public function fields() {
         $extend = [
             'doctor_name' => function ($model) {
-                return (isset($model->user) ? $model->user->name : '-');
+                return (isset($model->user) ? $model->user->title_code.$model->user->name : '-');
             },
             'available_day' => function ($model) {
                 if (isset($model->schedule_day)) {
