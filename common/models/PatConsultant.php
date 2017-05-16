@@ -51,11 +51,11 @@ class PatConsultant extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['encounter_id', 'patient_id', 'consultant_id'], 'required'],
-            [['tenant_id', 'encounter_id', 'patient_id', 'consultant_id', 'created_by', 'modified_by'], 'integer'],
-            [['consult_date', 'created_at', 'modified_at', 'deleted_at', 'proc_id', 'charge_amount'], 'safe'],
-            [['notes', 'status'], 'string'],
-            [['consult_date'], 'validateConsultant'],
+                [['encounter_id', 'patient_id', 'consultant_id'], 'required'],
+                [['tenant_id', 'encounter_id', 'patient_id', 'consultant_id', 'created_by', 'modified_by'], 'integer'],
+                [['consult_date', 'created_at', 'modified_at', 'deleted_at', 'proc_id', 'charge_amount'], 'safe'],
+                [['notes', 'status'], 'string'],
+                [['consult_date'], 'validateConsultant'],
         ];
     }
 
@@ -161,7 +161,13 @@ class PatConsultant extends RActiveRecord {
     }
 
     public function beforeSave($insert) {
-        $this->charge_amount = CoChargePerCategory::getChargeAmount(-1, 'P', $this->consultant_id, 'OP', $this->patient->patient_category_id);
+        $encounter_type = $this->encounter->encounter_type;
+        $link_id = $this->patient->patient_category_id;
+        
+        if ($encounter_type == 'IP')
+            $link_id = $this->encounter->patCurrentAdmission->room_type_id;
+
+        $this->charge_amount = CoChargePerCategory::getChargeAmount(-1, 'P', $this->consultant_id, $encounter_type, $link_id);
         return parent::beforeSave($insert);
     }
 
