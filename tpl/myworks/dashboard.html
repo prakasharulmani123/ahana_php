@@ -16,21 +16,9 @@
                 <button ng-click="downloadPdf()">Download Pdf</button>-->
         <button ng-click="printPdf()">Print Pdf</button>
         <h4 class="text-center">Hi {{app.username}}, Welcome to {{app.name}} ({{app.org_name}}) !!!</h4>
-        
+
         <input type="button" id="sendData" value="send data" ng-click="treeSubmit()"/>
         <div id="pk-family-tree"></div>
-        <script>
-                    var pkFamily = null;
-                    setTimeout(function () {
-                        var initFamily = $('[ng-controller="MyworksController"]').scope().initFamily;
-                        var family = $('[ng-controller="MyworksController"]').scope().family;
-                        pkFamily = $('#pk-family-tree').pk_family({
-                            referenceVar: 'pkFamily', 
-                            family: family, 
-                            initFamily: initFamily, 
-                        });
-                    }, 2000);
-        </script>
     </div>
 </div>
 

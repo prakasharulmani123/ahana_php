@@ -4,14 +4,25 @@ app.controller('MyworksController', ['$rootScope', '$scope', '$timeout', '$http'
         editableThemes.bs3.buttonsClass = 'btn-sm';
         editableOptions.theme = 'bs3';
 
-        var family = [{"id":0,"name":"test one","gender":"M","age":"34","pic":"img/profile.png","father":1,"sibling":[],"spouse":4},{"id":1,"name":"Father Name","gender":"M","age":"54","pic":"img/profile.png","child":[0,3],"relation":"father","spouse":2,"father":5,"sibling":[]},{"id":2,"name":"Mother Name","gender":"F","age":"44","pic":"img/profile-f.png","relation":"spouse","father":7},{"id":3,"name":"S1","gender":"M","age":"40","pic":"img/profile.png","relation":"sibling"},{"id":4,"name":"Wife","gender":"F","age":"40","pic":"img/profile-f.png","relation":"spouse"},{"id":5,"name":"Grand Father","gender":"M","age":"60","pic":"img/profile.png","child":[1,6],"relation":"father"},{"id":6,"name":"asda","gender":"F","age":"40","pic":"img/profile-f.png","relation":"sibling","spouse":8},{"id":7,"name":"Test","gender":"M","age":"40","pic":"img/profile.png","child":[2],"relation":"father"},{"id":8,"name":"Housband","gender":"M","age":"50","pic":"img/profile.png","relation":"spouse"}];
+        $scope.family = [{"id":0,"name":"test one","gender":"M","age":"34","pic":"img/profile.png","father":1,"sibling":[],"spouse":4},{"id":1,"name":"Father Name","gender":"M","age":"54","pic":"img/profile.png","child":[0,3],"relation":"father","spouse":2,"father":5,"sibling":[]},{"id":2,"name":"Mother Name","gender":"F","age":"44","pic":"img/profile-f.png","relation":"spouse","father":7},{"id":3,"name":"S1","gender":"M","age":"40","pic":"img/profile.png","relation":"sibling"},{"id":4,"name":"Wife","gender":"F","age":"40","pic":"img/profile-f.png","relation":"spouse"},{"id":5,"name":"Grand Father","gender":"M","age":"60","pic":"img/profile.png","child":[1,6],"relation":"father"},{"id":6,"name":"asda","gender":"F","age":"40","pic":"img/profile-f.png","relation":"sibling","spouse":8},{"id":7,"name":"Test","gender":"M","age":"40","pic":"img/profile.png","child":[2],"relation":"father"},{"id":8,"name":"Housband","gender":"M","age":"50","pic":"img/profile.png","relation":"spouse"}];
         
-        var initFamily = [
+        $scope.initFamily = [
             {id: 0, name: "test one", gender: "M", age: "34", pic: "img/profile.png", parentId: -1, relatoin: ""}
-        ];
-
-        $scope.initFamily = initFamily;
-        $scope.family = family;
+        ];      
+        
+//        var pkFamily = null;    
+        $scope.drawTree = function() {
+            $timeout(function(){
+                 pkFamily = $('#pk-family-tree').pk_family({
+                                referenceVar: 'pkFamily',
+                                family: $scope.family,
+                                initFamily: $scope.initFamily,
+                            });
+            }, 2000);
+                       
+                    };
+                    
+                    $scope.drawTree(); 
 
         $scope.treeSubmit = function () {
             tree = $.getFamily();
