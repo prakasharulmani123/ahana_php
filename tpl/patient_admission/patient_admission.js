@@ -220,14 +220,41 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
             $event.stopPropagation();
             $scope.opened = true;
         };
-
+        
         $scope.beforeRender = function ($view, $dates, $leftDate, $upDate, $rightDate) {
-            var today_date = new Date().valueOf();
-            angular.forEach($dates, function (date, key) {
-                if (today_date < date.localDateValue()) {
-                    $dates[key].selectable = false;
-                }
-            });
+            var d = new Date();
+            var n = d.getDate();
+            var m = d.getMonth();
+            var y = d.getFullYear();
+            var today_date = (new Date(y, m, n)).valueOf();
+
+            if ($scope.checkAccess('patient.backdateadmission')) {
+                angular.forEach($dates, function (date, key) {
+                    var calender = new Date(date.localDateValue());
+                    var calender_n = calender.getDate();
+                    var calender_m = calender.getMonth();
+                    var calender_y = calender.getFullYear();
+                    var calender_date = (new Date(calender_y, calender_m, calender_n)).valueOf();
+                    
+                    //Hide - Future Dates only
+                    if (today_date < calender_date) {
+                        $dates[key].selectable = false;
+                    }
+                });
+            } else {
+                angular.forEach($dates, function (date, key) {
+                    var calender = new Date(date.localDateValue());
+                    var calender_n = calender.getDate();
+                    var calender_m = calender.getMonth();
+                    var calender_y = calender.getFullYear();
+                    var calender_date = (new Date(calender_y, calender_m, calender_n)).valueOf();
+
+                    //Hide - Future and Past Dates
+                    if (today_date != calender_date) {
+                        $dates[key].selectable = false;
+                    }
+                });
+            }
         }
 
         $scope.updateWard = function () {
