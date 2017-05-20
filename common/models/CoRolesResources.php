@@ -295,7 +295,7 @@ class CoRolesResources extends ActiveRecord {
                         }
                     }
 
-                    if ($tot2 == $checked2)
+                    if ($checked2 > 0 && $tot2 == $checked2)
                         $tree[$key]['children'][$cKey]['selected'] = true;
                     if ($checked2 > 0 && $unchecked2 > 0)
                         $tree[$key]['children'][$cKey]['__ivhTreeviewIndeterminate'] = true;
