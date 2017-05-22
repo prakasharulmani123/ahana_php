@@ -26,7 +26,8 @@ app.controller('stockController', ['$rootScope', '$scope', '$timeout', '$http', 
             $scope.maxSize = 10;     // Limit number for pagination display number.  
             $scope.totalCount = 0;  // Total number of items in all pages. initialize as a zero  
             $scope.pageIndex = 1;   // Current page number. First page is 1.-->  
-            $scope.pageSizeSelected = 10; // Maximum number of items per page.  
+            $scope.pageSizeSelected = 10; // Maximum number of items per page.
+            $scope.sortOptions = 'product_name desc';
 
             // pagination set up
             $scope.rowCollection = [];  // base collection
@@ -38,7 +39,7 @@ app.controller('stockController', ['$rootScope', '$scope', '$timeout', '$http', 
 
         // Get data's from service
         $scope.getStockList = function () {
-            $http.post($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/searchbycriteria?addtfields=stock_details&pageIndex=' + $scope.pageIndex + '&pageSize=' + $scope.pageSizeSelected, $scope.data)
+            $http.post($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/searchbycriteria?addtfields=stock_details&pageIndex=' + $scope.pageIndex + '&pageSize=' + $scope.pageSizeSelected+ '&sortOptions=' +$scope.sortOptions, $scope.data)
                     .success(function (products) {
                         $scope.isLoading = false;
                         $scope.loadbar('hide');
@@ -57,6 +58,11 @@ app.controller('stockController', ['$rootScope', '$scope', '$timeout', '$http', 
         $scope.pageChanged = function () {
             $scope.getStockList();
         };
+        
+        $scope.sortChanged = function (a) {
+            $scope.sortOptions = a;
+            $scope.getStockList();
+        }
 
         //This method is calling from dropDown  
         $scope.changePageSize = function () {

@@ -83,7 +83,11 @@
                         <table class="table " st-safe-src="rowCollection" st-table="displayedCollection">
                             <thead>
                                 <tr>
-                                    <th>Product Name</th>
+                                    <th>
+                                        <div class="sorting_asc" style='text-align:right;' ng-click="sortChanged('pha_product.product_name asc');"></div>
+                                        Product Name
+                                        <div class="sorting_desc" style='text-align:right;' ng-click="sortChanged('pha_product.product_name desc');"></div>
+                                    </th>
                                     <th>Code</th>
                                     <th>P.Unit</th>
                                     <th>P.Rate</th>
@@ -141,7 +145,7 @@
                                     <td align="center" colspan="11">  
                                         <div class="pull-right">  
                                             <pagination total-items="totalCount" ng-change="pageChanged()" items-per-page="pageSizeSelected" direction-links="true" ng-model="pageIndex" max-size="maxSize" class="pagination" boundary-links="true" rotate="false" num-pages="numPages"></pagination>  
-<!--                                            <a class="btn btn-primary">Page: {{pageIndex}} / {{numPages}}</a>  -->
+                                            <!--                                            <a class="btn btn-primary">Page: {{pageIndex}} / {{numPages}}</a>  -->
                                         </div>  
                                     </td>  
                                 </tr> 
