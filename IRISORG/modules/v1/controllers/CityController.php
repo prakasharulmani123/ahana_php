@@ -64,7 +64,7 @@ class CityController extends ActiveController {
         //print_r($_REQUEST); die;
         $modelClass = $this->modelClass;
         $totalCount = $modelClass::find()->tenantWithNull()->active()->count();
-        $totalData = $modelClass::find()->tenantWithNull()->active()->limit($_REQUEST['pageSize'])->offset($_REQUEST['pageIndex'])->all();
+        $totalData = $modelClass::find()->tenantWithNull()->active()->limit($_REQUEST['pageSize'])->offset($_REQUEST['pageIndex'])->orderBy($_REQUEST['sortOptions'])->all();
         return ['totalData' => $totalData,'totalCount' => $totalCount];
     }
     
