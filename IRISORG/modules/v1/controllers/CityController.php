@@ -59,6 +59,15 @@ class CityController extends ActiveController {
         }
     }
     
+    public function actionGetcity()
+    {
+        //print_r($_REQUEST); die;
+        $modelClass = $this->modelClass;
+        $totalCount = $modelClass::find()->tenantWithNull()->active()->count();
+        $totalData = $modelClass::find()->tenantWithNull()->active()->limit($_REQUEST['pageSize'])->offset($_REQUEST['pageIndex'])->all();
+        return ['totalData' => $totalData,'totalCount' => $totalCount];
+    }
+    
     public function actionGetcities() {
         $requestData = $_REQUEST;
 
