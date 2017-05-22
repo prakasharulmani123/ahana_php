@@ -23,13 +23,22 @@ app.controller('stockController', ['$rootScope', '$scope', '$timeout', '$http', 
             $scope.errorData = "";
             $scope.msg.successMessage = "";
 
+            $scope.maxSize = 10;     // Limit number for pagination display number.  
+            $scope.totalCount = 0;  // Total number of items in all pages. initialize as a zero  
+            $scope.pageIndex = 1;   // Current page number. First page is 1.-->  
+            $scope.pageSizeSelected = 10; // Maximum number of items per page.  
+
             // pagination set up
             $scope.rowCollection = [];  // base collection
-            $scope.itemsByPage = 20; // No.of records per page
-            $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
+            //$scope.itemsByPage = 20; // No.of records per page
+            //$scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
+            $scope.getStockList();
 
-            // Get data's from service
-            $http.post($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/searchbycriteria?addtfields=stock_details', $scope.data)
+        };
+
+        // Get data's from service
+        $scope.getStockList = function () {
+            $http.post($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/searchbycriteria?addtfields=stock_details&pageIndex=' + $scope.pageIndex + '&pageSize=' + $scope.pageSizeSelected, $scope.data)
                     .success(function (products) {
                         $scope.isLoading = false;
                         $scope.loadbar('hide');
@@ -38,12 +47,22 @@ app.controller('stockController', ['$rootScope', '$scope', '$timeout', '$http', 
                         });
                         $scope.rowCollection = products.productLists;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
+                        $scope.totalCount = products.totalCount;
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading products!";
                     });
+        }
+
+        $scope.pageChanged = function () {
+            $scope.getStockList();
         };
 
+        //This method is calling from dropDown  
+        $scope.changePageSize = function () {
+            $scope.pageIndex = 1;
+            $scope.getStockList();
+        };
 
         //Batch details Index Page
         var pb = this;
