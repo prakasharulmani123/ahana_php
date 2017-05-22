@@ -182,9 +182,10 @@ class PharmacyproductController extends ActiveController {
                     ->andHaving("search_column LIKE '$text'")
                     ->limit($_REQUEST['pageSize'])
                     ->offset($_REQUEST['pageIndex'])
+                    ->orderBy($_REQUEST['sortOptions'])
                     ->all();
         } else {
-            $products = PhaProductBatch::find()->tenant()->limit($_REQUEST['pageSize'])->offset($_REQUEST['pageIndex'])->all();
+            $products = PhaProductBatch::find()->joinWith('product')->tenant()->limit($_REQUEST['pageSize'])->offset($_REQUEST['pageIndex'])->orderBy($_REQUEST['sortOptions'])->all();
             $totalCount = PhaProductBatch::find()->tenant()->count();
         }
 
