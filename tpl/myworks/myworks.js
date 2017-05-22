@@ -1,6 +1,6 @@
 app.controller('MyworksController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$filter', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $filter) {
 
-editableThemes.bs3.inputClass = 'input-sm';
+        editableThemes.bs3.inputClass = 'input-sm';
         editableThemes.bs3.buttonsClass = 'btn-sm';
         editableOptions.theme = 'bs3';
         $scope.family = [{"id":0, "name":"test one", "gender":"M", "age":"34", "pic":"img/profile.png", "father":1, "sibling":[], "spouse":4}, {"id":1, "name":"Father Name", "gender":"M", "age":"54", "pic":"img/profile.png", "child":[0, 3], "relation":"father", "spouse":2, "father":5, "sibling":[]}, {"id":2, "name":"Mother Name", "gender":"F", "age":"44", "pic":"img/profile-f.png", "relation":"spouse", "father":7}, {"id":3, "name":"S1", "gender":"M", "age":"40", "pic":"img/profile.png", "relation":"sibling"}, {"id":4, "name":"Wife", "gender":"F", "age":"40", "pic":"img/profile-f.png", "relation":"spouse"}, {"id":5, "name":"Grand Father", "gender":"M", "age":"60", "pic":"img/profile.png", "child":[1, 6], "relation":"father"}, {"id":6, "name":"asda", "gender":"F", "age":"40", "pic":"img/profile-f.png", "relation":"sibling", "spouse":8}, {"id":7, "name":"Test", "gender":"M", "age":"40", "pic":"img/profile.png", "child":[2], "relation":"father"}, {"id":8, "name":"Housband", "gender":"M", "age":"50", "pic":"img/profile.png", "relation":"spouse"}];
@@ -17,6 +17,7 @@ editableThemes.bs3.inputClass = 'input-sm';
         });
         }, 2000);
         };
+        
         $scope.drawTree();
         $scope.treeSubmit = function () {
         tree = $.getFamily();
@@ -46,14 +47,14 @@ editableThemes.bs3.inputClass = 'input-sm';
                 $scope.totalCount = 0; // Total number of items in all pages. initialize as a zero  
                 $scope.pageIndex = 1; // Current page number. First page is 1.-->  
                 $scope.pageSizeSelected = 5; // Maximum number of items per page.  
-
+                $scope.sortOptions = 'city_id desc';
 
                 $scope.getEmployeeList();
                 //This method is calling from pagination number  
-
         };
+
         $scope.getEmployeeList = function () {
-        $http.get($rootScope.IRISOrgServiceUrl + "/city/getcity?pageIndex=" + $scope.pageIndex + "&pageSize=" + $scope.pageSizeSelected).then(
+        $http.get($rootScope.IRISOrgServiceUrl + "/city/getcity?pageIndex=" + $scope.pageIndex + "&pageSize=" + $scope.pageSizeSelected +"&sortOptions=" +$scope.sortOptions).then(
                 function (response) {
                 $scope.rowCollection = response.data.totalData;
                         $scope.totalCount = response.data.totalCount;
@@ -62,13 +63,19 @@ editableThemes.bs3.inputClass = 'input-sm';
                 var error = err;
                 });
         }
-$scope.pageChanged = function () {
-$scope.getEmployeeList();
+        
+        $scope.sortChanged = function (a) {
+            $scope.sortOptions = a;
+            $scope.getEmployeeList();
+        }
+        
+        $scope.pageChanged = function () {
+            $scope.getEmployeeList();
         };
         //This method is calling from dropDown  
         $scope.changePageSize = function () {
-        $scope.pageIndex = 1;
-                $scope.getEmployeeList();
+            $scope.pageIndex = 1;
+            $scope.getEmployeeList();
         };
 //        var docDefinition = {
 //            pageSize: {width: 4 * 72, height: 8 * 72},

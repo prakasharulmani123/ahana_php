@@ -11,22 +11,35 @@
     <div ng-include="'tpl/blocks/alert.html'">
         {% include 'tpl/blocks/alert.html' %}
     </div>
-        <div class="ng-scope" ng-init="loadData()">
-                    <button ng-click="openPdf()">Open Pdf</button>
-                    <button ng-click="downloadPdf()">Download Pdf</button>
-            <button ng-click="printPdf()">Print Pdf</button>
-            <h4 class="text-center">Hi {{app.username}}, Welcome to {{app.name}} ({{app.org_name}}) !!!</h4>
-    
-            <input type="button" id="sendData" value="send data" ng-click="treeSubmit()"/>
-            <div id="pk-family-tree"></div>
+    <div class="ng-scope" ng-init="loadData()">
+        <button ng-click="openPdf()">Open Pdf</button>
+        <button ng-click="downloadPdf()">Download Pdf</button>
+        <button ng-click="printPdf()">Print Pdf</button>
+        <h4 class="text-center">Hi {{app.username}}, Welcome to {{app.name}} ({{app.org_name}}) !!!</h4>
+
+        <input type="button" id="sendData" value="send data" ng-click="treeSubmit()"/>
+        <div id="pk-family-tree"></div>
     </div>
 
     <table class="table">
         <thead>
             <tr>
-                <th>City Id</th>
-                <th>City Names</th>
-            </tr>
+        <th><div class="votingButton" ng-click="sortChanged('city_id asc');">
+            <i class="glyphicon glyphicon-chevron-up"></i>
+        </div>
+        City Id
+        <div class="votingButton" ng-click="sortChanged('city_id desc');">
+            <i class="glyphicon glyphicon-chevron-down"></i>
+        </div></th>
+        
+        <th><div class="votingButton" ng-click="sortChanged('city_name asc');">
+            <i class="glyphicon glyphicon-chevron-up"></i>
+        </div>
+        City Name
+        <div class="votingButton" ng-click="sortChanged('city_name desc');">
+            <i class="glyphicon glyphicon-chevron-down"></i>
+        </div></th>
+        </tr>
         </thead>    
         <tbody>
             <tr ng-repeat="row in rowCollection">
