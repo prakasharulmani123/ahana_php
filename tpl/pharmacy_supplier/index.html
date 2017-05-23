@@ -2,7 +2,7 @@
     <h1 class="m-n font-thin h3">Suppliers</h1>
 </div>
 
-<div class="wrapper-md" ng-controller="SuppliersController" ng-init="loadSuppliersList()">
+<div class="wrapper-md" ng-controller="SuppliersController as supplier">
 
     <div ng-include="'tpl/blocks/alert.html'">
         {% include 'tpl/blocks/alert.html' %}
@@ -10,17 +10,19 @@
 
     <div class="panel panel-default">
         <div class="panel-body">
-            <button class="btn btn-sm btn-grey" ng-click="loadSuppliersList()"> 
+<!--            <button class="btn btn-sm btn-grey" ng-click="loadSuppliersList()"> 
                 &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
             </button>
-            <input id="filter" type="text" class="form-control input-sm w-sm inline m-r" placeholder="Search"/>
+            <input id="filter" type="text" class="form-control input-sm w-sm inline m-r" placeholder="Search"/>-->
             <button check-access-button ng-click="$state.go('pharmacy.supplierCreate')" class="btn btn-sm btn-info pull-right">
                 <i class="fa fa-plus"></i> &nbsp; Add new Supplier
             </button>
         </div>
 
         <div>
-            <table class="table m-b-none" ui-jq="footable" data-filter="#filter" data-page-size="10">
+            <table datatable="" dt-options="supplier.dtOptions" dt-columns="supplier.dtColumns" class="row-border hover"></table>
+            
+<!--            <table class="table m-b-none" ui-jq="footable" data-filter="#filter" data-page-size="10">
                 <thead>
                     <tr>
                         <th data-toggle="true">Supplier name</th>
@@ -79,7 +81,7 @@
                         </td>
                     </tr>
                 </tfoot>
-            </table>
+            </table>-->
         </div>
     </div>
 </div>

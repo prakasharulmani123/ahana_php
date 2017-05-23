@@ -548,3 +548,7 @@ out-patient-table .table > thead > tr > th label.i-checks {
 	border-bottom:#000000 solid 4px;
 	padding-bottom:11px;
 }
+.dataTables_wrapper .dataTables_paginate .paginate_button.current,
+.dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+    background: #337ab7 !important;
+}
