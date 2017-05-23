@@ -74,4 +74,82 @@ class PharmacysupplierController extends ActiveController {
         return ['supplierList' => PhaSupplier::getSupplierlist($tenant, $status, $deleted)];
     }
     
+    public function actionGetsupplierdetails()
+    {
+        $requestData = $_REQUEST;
+
+        $modelClass = $this->modelClass;
+        $totalData = $modelClass::find()->tenant()->active()->count();
+        $totalFiltered = $totalData;
+
+        // Order Records
+        if (isset($requestData['order'])) {
+            if ($requestData['order'][0]['dir'] == 'asc') {
+                $sort_dir = SORT_ASC;
+            } elseif ($requestData['order'][0]['dir'] == 'desc') {
+                $sort_dir = SORT_DESC;
+            }
+            $order_array = [$requestData['columns'][$requestData['order'][0]['column']]['data'] => $sort_dir];
+        }
+
+        // Search Records
+        if (!empty($requestData['search']['value'])) {
+            $totalFiltered = $modelClass::find()
+                    ->tenant()
+                    ->active()
+                    ->andFilterWhere([
+                        'OR',
+                        ['like', 'supplier_name', $requestData['search']['value']],
+                        ['like', 'supplier_mobile', $requestData['search']['value']],
+                        ['like', 'cst_no', $requestData['search']['value']],
+                        ['like', 'tin_no', $requestData['search']['value']],
+                    ])
+                    ->count();
+
+            $suppliers = $modelClass::find()
+                    ->tenant()
+                    ->active()
+                    ->andFilterWhere([
+                        'OR',
+                        ['like', 'supplier_name', $requestData['search']['value']],
+                        ['like', 'supplier_mobile', $requestData['search']['value']],
+                        ['like', 'cst_no', $requestData['search']['value']],
+                        ['like', 'tin_no', $requestData['search']['value']],
+                    ])
+                    ->limit($requestData['length'])
+                    ->offset($requestData['start'])
+                    ->orderBy($order_array)
+                    ->all();
+        } else {
+            $suppliers = $modelClass::find()
+                    ->tenant()
+                    ->active()
+                    ->limit($requestData['length'])
+                    ->offset($requestData['start'])
+                    ->orderBy($order_array)
+                    ->all();
+        }
+
+        $data = array();
+        foreach ($suppliers as $supplier) {
+            $nestedData = array();
+            $nestedData['supplier_name'] = $supplier->supplier_name;
+            $nestedData['supplier_mobile'] = $supplier->supplier_mobile;
+            $nestedData['cst_no'] = $supplier->cst_no;
+            $nestedData['tin_no'] = $supplier->tin_no;
+            $nestedData['status'] = $supplier->status;
+            $nestedData['supplier_id'] = $supplier->supplier_id;
+            $data[] = $nestedData;
+        }
+
+        $json_data = array(
+            "draw" => intval($requestData['draw']),
+            "recordsTotal" => intval($totalData),
+            "recordsFiltered" => intval($totalFiltered),
+            "data" => $data   // total data array
+        );
+
+        echo json_encode($json_data);
+    }
+    
 }
