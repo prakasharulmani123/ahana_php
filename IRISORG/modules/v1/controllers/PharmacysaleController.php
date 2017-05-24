@@ -83,27 +83,33 @@ class PharmacysaleController extends ActiveController {
 
     public function actionGetsales() {
         $get = Yii::$app->getRequest()->get();
-        $condition['payment_type'] = $get['payment_type'];
-        if (isset($get['dt'])) {
-            $condition['sale_date'] = $get['dt'];
-        }
-        
-        if (isset($get['payment_type'])) {
-            $data = [];
+        $data = [];
+        $searchCondition = '';
+
+        if ($get) {
+
+            $offset = abs($get['pageIndex'] - 1) * $get['pageSize'];
+            $condition['payment_type'] = $get['payment_type'];
+
+            if (isset($get['dt'])) {
+                $condition['sale_date'] = $get['dt'];
+            }
+            if (isset($get['s']) && !empty($get['s']) && $get['s'] != 'null') {
+                $text = $get['s'];
+                $searchCondition = [
+                    'or',
+                        ['like', 'patient_name', $text],
+                        ['like', 'encounter_id', $text],];
+            }
+
             $result = PhaSale::find()
                     ->tenant()
                     ->active()
                     ->andWhere($condition);
-            if (isset($get['s']) && !empty($get['s']) && $get['s'] != 'null') {
-                $text = $get['s'];
-                $result->andFilterWhere([
-                            'or',
-                                ['like', 'patient_name', $text],
-                                ['like', 'encounter_id', $text],
-                ]);
+            if ($searchCondition) {
+                $result->andFilterWhere($searchCondition);
             }
             $result->groupBy(['patient_name', 'encounter_id']);
-            $offset = abs($get['pageIndex'] - 1) * $get['pageSize'];
             $result->limit($get['pageSize'])->offset($offset);
             $sales = $result->all();
 
@@ -111,13 +117,8 @@ class PharmacysaleController extends ActiveController {
                     ->tenant()
                     ->active()
                     ->andWhere($condition);
-            if (isset($get['s']) && !empty($get['s']) && $get['s'] != 'null') {
-                $text = $get['s'];
-                $resultCount->andFilterWhere([
-                            'or',
-                                ['like', 'patient_name', $text],
-                                ['like', 'encounter_id', $text],
-                ]);
+            if ($searchCondition) {
+                $resultCount->andFilterWhere($searchCondition);
             }
             $resultCount->groupBy(['patient_name', 'encounter_id']);
             $totalCount = $resultCount->count();
