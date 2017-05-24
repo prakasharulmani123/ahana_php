@@ -60,56 +60,85 @@ class PharmacysaleController extends ActiveController {
             return ['success' => true];
         }
     }
-    
+
     public function actionGetsalebillno() {
         $get = Yii::$app->getRequest()->get();
         $text = $get['bill_no'];
-        
+
         $sales = PhaSale::find()
                 ->tenant()
                 ->active()
                 ->leftJoin('pat_patient', 'pha_sale.patient_id=pat_patient.patient_id')
                 ->leftJoin('pat_global_patient', 'pat_global_patient.patient_global_guid=pat_patient.patient_global_guid')
                 ->andFilterWhere([
-                        'or',
+                    'or',
                         ['like', 'bill_no', $text],
                         ['like', 'pat_global_patient.patient_global_int_code', $text],
-                    ])
+                ])
                 ->limit(100)
                 ->all();
 
         return $sales;
     }
-    
+
     public function actionGetsales() {
         $get = Yii::$app->getRequest()->get();
-
+        $condition['payment_type'] = $get['payment_type'];
+        if (isset($get['dt'])) {
+            $condition['sale_date'] = $get['dt'];
+        }
+        
         if (isset($get['payment_type'])) {
             $data = [];
-            $sales = PhaSale::find()
+            $result = PhaSale::find()
                     ->tenant()
                     ->active()
-                    ->andWhere(['payment_type' => $get['payment_type']])
-                    ->groupBy(['patient_name', 'encounter_id'])
-                    ->all();
-            
+                    ->andWhere($condition);
+            if (isset($get['s']) && !empty($get['s']) && $get['s'] != 'null') {
+                $text = $get['s'];
+                $result->andFilterWhere([
+                            'or',
+                                ['like', 'patient_name', $text],
+                                ['like', 'encounter_id', $text],
+                ]);
+            }
+            $result->groupBy(['patient_name', 'encounter_id']);
+            $offset = abs($get['pageIndex'] - 1) * $get['pageSize'];
+            $result->limit($get['pageSize'])->offset($offset);
+            $sales = $result->all();
+
+            $resultCount = PhaSale::find()
+                    ->tenant()
+                    ->active()
+                    ->andWhere($condition);
+            if (isset($get['s']) && !empty($get['s']) && $get['s'] != 'null') {
+                $text = $get['s'];
+                $resultCount->andFilterWhere([
+                            'or',
+                                ['like', 'patient_name', $text],
+                                ['like', 'encounter_id', $text],
+                ]);
+            }
+            $resultCount->groupBy(['patient_name', 'encounter_id']);
+            $totalCount = $resultCount->count();
+
             foreach ($sales as $key => $sale) {
                 $data[$key] = $sale->attributes;
-                
-                if(!empty($sale->encounter_id))
+
+                if (!empty($sale->encounter_id))
                     $sale_item = PhaSale::find()->tenant()->andWhere(['encounter_id' => $sale->encounter_id, 'payment_type' => $get['payment_type']]);
                 else
                     $sale_item = PhaSale::find()->tenant()->andWhere(['patient_name' => $sale->patient_name, 'payment_type' => $get['payment_type']]);
-                
+
                 $sale_ids = \yii\helpers\ArrayHelper::map($sale_item->all(), 'sale_id', 'sale_id');
                 $sum_paid_amount = \common\models\PhaSaleBilling::find()->tenant()->andWhere(['sale_id' => $sale_ids])->sum('paid_amount');
-                
+
                 $data[$key]['items'] = $sale_item->all();
                 $data[$key]['sum_bill_amount'] = $sale_item->sum('bill_amount');
                 $data[$key]['sum_paid_amount'] = !is_null($sum_paid_amount) ? $sum_paid_amount : 0;
                 $data[$key]['sum_balance_amount'] = $data[$key]['sum_bill_amount'] - $sum_paid_amount;
             }
-            return ['success' => true, 'sales' => $data];
+            return ['success' => true, 'sales' => $data, 'totalCount' => $totalCount];
         } else {
             return ['success' => false, 'message' => 'Invalid Access'];
         }
