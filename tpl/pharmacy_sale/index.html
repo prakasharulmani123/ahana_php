@@ -37,18 +37,33 @@
                         <button type="button" class="btn btn-sm btn-default" ng-click="open($event, 'opened1')">
                             <i class="glyphicon glyphicon-calendar"></i>
                         </button>
-                        <a href="javascript:void(0)" class="clear-filter btn btn-sm btn-dark" title="clear filter">
+                        <button class="btn btn-sm btn-grey" ng-click="loadSaleItemList(sale_payment_type)">
+                            &nbsp; &nbsp; <i class="fa fa-search"></i> &nbsp; &nbsp;
+                        </button>
+                        <button class="btn btn-sm btn-dark" title="clear filter" ng-click="form_filter = '';form_filter1 = '';loadSaleItemList(sale_payment_type)">
                             <i class="fa fa-times"></i>
-                        </a>
+                        </button>
                     </div>
                     <div class="col-sm-3">
                         <button check-access-button ng-click="$state.go('pharmacy.saleCreate')" class="btn btn-sm btn-info pull-right">
                             <i class="fa fa-plus"></i> &nbsp; Add New Sale
                         </button>
+                        <div class="dataTables_length">
+                            <label>Show
+                                <select id="ddlPageSize" class=" "  
+                                        ng-model="pageSizeSelected"  
+                                        ng-change="changePageSize()">  
+                                    <option value="10">10</option>  
+                                    <option value="25">25</option>  
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>  
+                                </select> entries
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
-            <table ui-jq="footable" data-filter="#filter" data-filter-minimum="1" class="table m-b-none footable default footablefilter">
+            <table class="table m-b-none default">
                 <thead>
                     <tr>
                         <th style="width: 5%" data-sort-ignore="true">
@@ -105,37 +120,46 @@
                                 <tbody>
                                     <tr ng-repeat="(gKey, saleitem) in row.items | orderBy: sale_id">
                                         <td ng-hide="true">
-                                                <io-barcode id="{{saleitem.patient_uhid}}" code="{{saleitem.patient_uhid}}" type="CODE128B" options="barcodeOptions"></io-barcode>
-                                        </td>
-                                        <td>{{saleitem.bill_no}}</td>
-                                        <td>{{saleitem.sale_date}}</td>
-                                        <td>{{saleitem.bill_amount| number:2}}</td>
-                                        <td>{{saleitem.billings_total_paid_amount| number:2}}</td>
-                                        <td ng-class="{hide : activeMenu === 'CA'}">{{saleitem.billings_total_balance_amount| number:2}}</td>
-                                        <td>
-                                            <a class="label bg-dark" title="Edit" check-access  ui-sref="pharmacy.saleUpdate({id: '{{saleitem.sale_id}}'})">
-                                                <i class="fa fa-pencil"></i>
-                                            </a>
-                                            <span ng-if="saleitem.payment_type != 'CA' && saleitem.payment_status != 'C'">
-                                                <a class="label bg-dark" title="Make Payment" ng-click="make_payment(row.sale_id, saleitem.sale_id)" data-button="pharmacy.makePayment" check-access-custom>
-                                                    <i class="fa fa-money"></i>
-                                                </a>
-                                            </span>
-                                            <button tooltip="Print Bill"  class="label bg-primary dk" ng-click="printSaleBill(saleitem.sale_id)">
-                                                <i class="fa fa-print"></i>
-                                            </button>
-                                        </td> 
-                                    </tr>
-                                </tbody>
-                            </table>                            
+                                <io-barcode id="{{saleitem.patient_uhid}}" code="{{saleitem.patient_uhid}}" type="CODE128B" options="barcodeOptions"></io-barcode>
                         </td>
+                        <td>{{saleitem.bill_no}}</td>
+                        <td>{{saleitem.sale_date}}</td>
+                        <td>{{saleitem.bill_amount| number:2}}</td>
+                        <td>{{saleitem.billings_total_paid_amount| number:2}}</td>
+                        <td ng-class="{hide : activeMenu === 'CA'}">{{saleitem.billings_total_balance_amount| number:2}}</td>
+                        <td>
+                            <a class="label bg-dark" title="Edit" check-access  ui-sref="pharmacy.saleUpdate({id: '{{saleitem.sale_id}}'})">
+                                <i class="fa fa-pencil"></i>
+                            </a>
+                            <span ng-if="saleitem.payment_type != 'CA' && saleitem.payment_status != 'C'">
+                                <a class="label bg-dark" title="Make Payment" ng-click="make_payment(row.sale_id, saleitem.sale_id)" data-button="pharmacy.makePayment" check-access-custom>
+                                    <i class="fa fa-money"></i>
+                                </a>
+                            </span>
+                            <button tooltip="Print Bill"  class="label bg-primary dk" ng-click="printSaleBill(saleitem.sale_id)">
+                                <i class="fa fa-print"></i>
+                            </button>
+                        </td> 
                     </tr>
                 </tbody>
-                <tbody ng-if="isLoading == true">
-                    <tr>
-                        <td colspan="7" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
-                    </tr>
-                </tbody>
+            </table>                            
+            </td>
+            </tr>
+            </tbody>
+            <tbody ng-if="isLoading == true">
+                <tr>
+                    <td colspan="7" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>  
+                    <td align="center" colspan="7">  
+                        <div class="pull-right">  
+                            <pagination total-items="totalCount" ng-change="pageChanged()" items-per-page="pageSizeSelected" direction-links="true" ng-model="pageIndex" max-size="maxSize" class="pagination" boundary-links="true" rotate="false" num-pages="numPages"></pagination>  
+                        </div>  
+                    </td>  
+                </tr> 
+            </tfoot>
             </table>
         </div>
     </div>
