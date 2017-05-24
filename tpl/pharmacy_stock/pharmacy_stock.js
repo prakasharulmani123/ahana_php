@@ -39,7 +39,7 @@ app.controller('stockController', ['$rootScope', '$scope', '$timeout', '$http', 
 
         // Get data's from service
         $scope.getStockList = function () {
-            $http.post($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/searchbycriteria?addtfields=stock_details&pageIndex=' + $scope.pageIndex + '&pageSize=' + $scope.pageSizeSelected+ '&sortOptions=' +$scope.sortOptions, $scope.data)
+            $http.post($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/searchbycriteria?addtfields=stock_details&pageIndex=' + $scope.pageIndex + '&pageSize=' + $scope.pageSizeSelected + '&sortOptions=' + $scope.sortOptions, $scope.data)
                     .success(function (products) {
                         $scope.isLoading = false;
                         $scope.loadbar('hide');
@@ -58,9 +58,18 @@ app.controller('stockController', ['$rootScope', '$scope', '$timeout', '$http', 
         $scope.pageChanged = function () {
             $scope.getStockList();
         };
-        
+
         $scope.sortChanged = function (a) {
-            $scope.sortOptions = a;
+            if (angular.isUndefined(a)) {
+                $scope.sortOptions = 'pha_product.product_name asc';
+                $scope.sortClass = 'sorting_asc';
+            } else if(a==='sorting_asc') {
+                $scope.sortOptions = 'pha_product.product_name desc';
+                $scope.sortClass = 'sorting_desc';
+            } else {
+                $scope.sortOptions = 'pha_product.product_name asc';
+                $scope.sortClass = 'sorting_asc';
+            }
             $scope.getStockList();
         }
 

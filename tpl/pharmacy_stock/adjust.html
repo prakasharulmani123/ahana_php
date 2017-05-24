@@ -83,11 +83,7 @@
                         <table class="table " st-safe-src="rowCollection" st-table="displayedCollection">
                             <thead>
                                 <tr>
-                                    <th>
-                                        <div class="sorting_asc" style='text-align:right;' ng-click="sortChanged('pha_product.product_name asc');"></div>
-                                        Product Name
-                                        <div class="sorting_desc" style='text-align:right;' ng-click="sortChanged('pha_product.product_name desc');"></div>
-                                    </th>
+                                    <th class="{{sortClass}}" ng-click="sortChanged(sortClass);" >Product Name</th>
                                     <th>Code</th>
                                     <th>P.Unit</th>
                                     <th>P.Rate</th>
