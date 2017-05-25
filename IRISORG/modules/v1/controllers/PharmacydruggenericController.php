@@ -126,5 +126,20 @@ class PharmacydruggenericController extends ActiveController {
             return ['success' => true];
         }
     }
+    
+    public function actionGetdruggeneric() {
+        $modelClass = $this->modelClass;
+        $get = Yii::$app->getRequest()->get();
+        if($get)
+        {
+            $limit = isset($get['l']) ? $get['l'] : 5;
+            $page = isset($get['p']) ? $get['p'] : 1;
+            $offset = abs($page - 1) * $limit;
+            $generics = $modelClass::find()->tenant()->active()->groupBy(['drug_class_id'])->limit($limit)->offset($offset)->orderBy(['created_at' => SORT_DESC])->all();
+            return ['success' => true, 'generics' => $generics];
+        } else {
+            return ['success' => false, 'message' => 'Invalid Access'];
+        }
+    }
 
 }

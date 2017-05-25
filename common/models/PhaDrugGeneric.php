@@ -121,6 +121,13 @@ class PhaDrugGeneric extends RActiveRecord
                         'generic_id' => 'generic_id',
                     ];
                     break;
+                case 'drug_genericnames':
+                    $addt_keys = ['drug_name', 'generic_name','genericnames'];
+                    $parent_fields = [
+                        'drug_class_id' => 'drug_class_id',
+                        'generic_id' => 'generic_id',
+                    ];
+                    break;
             endswitch;
         }
 
