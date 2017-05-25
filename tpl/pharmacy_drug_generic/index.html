@@ -14,7 +14,8 @@
                 <i class="fa fa-plus"></i> &nbsp; Add new Drug Class & Generic
             </button>
         </div>
-        <table st-table="displayedCollection"  st-safe-src="rowCollection" class="table m-b-none table-striped default">
+        <div class="constrained" style="height: 500px;overflow: auto;">
+            <table st-table="displayedCollection" st-safe-src="rowCollection" class="table m-b-none table-striped default" infinite-scroll='loadmoredrugGenericList()' infinite-scroll-container='".constrained"'>
             <thead>
                 <tr>
                     <th style="width: 5%">
@@ -81,5 +82,6 @@
                 </tr>
             </tbody>
         </table>
+    </div>
     </div>
 </div>

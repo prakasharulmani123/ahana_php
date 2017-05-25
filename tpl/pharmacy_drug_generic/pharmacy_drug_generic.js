@@ -4,31 +4,52 @@ app.controller('drugGenericController', ['$rootScope', '$scope', '$timeout', '$h
         editableThemes.bs3.buttonsClass = 'btn-sm';
         editableOptions.theme = 'bs3';
 
+        $scope.itemsByPage = 15; // No.of records per page
+
+        $scope.loadmoredrugGenericList = function () {
+            if ($scope.isLoading)
+                return;
+
+            $scope.pageIndex++;
+            $scope.isLoading = true;
+            $scope.errorData = $scope.msg.successMessage = '';
+
+            // Get data's from service
+            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacydruggeneric/getdruggeneric?addtfields=drug_genericnames&p=' + $scope.pageIndex + '&l=' + $scope.itemsByPage)
+                    .success(function (drugGenerics) {
+                        $scope.isLoading = false;
+                        $scope.rowCollection = $scope.rowCollection.concat(drugGenerics.generics);
+                        $scope.displayedCollection = [].concat($scope.rowCollection);
+                    })
+                    .error(function () {
+                        $scope.errorData = "An Error has occured while loading drugGenerics!";
+                    });
+        };
+
         //Index Page
         $scope.loaddrugGenericList = function () {
             $scope.errorData = $scope.msg.successMessage = '';
             $scope.isLoading = true;
             // pagination set up
             $scope.rowCollection = [];  // base collection
-            $scope.itemsByPage = 10; // No.of records per page
+            //$scope.itemsByPage = 10; // No.of records per page
+            $scope.pageIndex = 1;
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
 
             $scope.generics = {};
             $rootScope.commonService.GetGenericList('', '1', false, false, function (response) {
                 $scope.setGenericList(response);
                 // Get data's from service
-                $http.get($rootScope.IRISOrgServiceUrl + '/pharmacydruggeneric')
+                $http.get($rootScope.IRISOrgServiceUrl + '/pharmacydruggeneric/getdruggeneric?addtfields=drug_genericnames&p=' + $scope.pageIndex + '&l=' + $scope.itemsByPage)
                         .success(function (drugGenerics) {
                             $scope.isLoading = false;
-                            $scope.rowCollection = drugGenerics;
+                            $scope.rowCollection = drugGenerics.generics;
                             $scope.displayedCollection = [].concat($scope.rowCollection);
                         })
                         .error(function () {
                             $scope.errorData = "An Error has occured while loading drugGenerics!";
                         });
             });
-
-
         };
 
         // editable table
@@ -281,8 +302,7 @@ app.controller('drugGenericController', ['$rootScope', '$scope', '$timeout', '$h
                                 if (response.data.success === true) {
                                     $scope.msg.successMessage = row.charge_cat_name + ' deleted successfully !!!';
                                     $scope.displayedCollection.splice(index, 1);
-                                }
-                                else {
+                                } else {
                                     $scope.errorData = response.data.message;
                                 }
                             }
