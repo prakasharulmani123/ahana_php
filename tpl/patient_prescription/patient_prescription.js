@@ -1535,7 +1535,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             }
         };
 
-        $scope.curPrescFreqSale = function (freq, ftype, item, key) {
+        $scope.curPrescFreqSale = function (freq, ftype, item, key, method) {
             if (typeof freq != 'undefined') {
                 $('.freq_div_' + key).addClass('hide');
                 $('#freq_' + key + '_4_' + ftype).removeClass('hide');
@@ -1553,6 +1553,11 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     editableValue.scope.$data = $scope.data.prescriptionItems[key].frequency
                 }
             });
+
+            if (method == 'select') {
+                angular.element(document.querySelectorAll('#frequency_' + key + '_4_' + ftype))[0].focus();
+            }
+
         }
 
         $scope.getConsultantFreq = function () {
