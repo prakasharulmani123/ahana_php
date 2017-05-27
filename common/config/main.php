@@ -29,7 +29,7 @@ function setClientDb() {
 
     $client = [
         'class' => 'yii\db\Connection',
-        'enableSchemaCache' => true,
+        'enableSchemaCache' => false,
 //        'schemaCacheDuration' => 3600,
 //        'schemaCache' => 'cache',
         'charset' => 'utf8'
