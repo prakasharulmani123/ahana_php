@@ -553,6 +553,6 @@ out-patient-table .table > thead > tr > th label.i-checks {
     background: #337ab7 !important;
 }
 
-.curPresForm .dropdown-menu > li > a {
-    padding: 2px 5px;
+ul.dropdown-menu.curPrescFreq > li > a {
+    padding: 2px 5px !important;
 }
