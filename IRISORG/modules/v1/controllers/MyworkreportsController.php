@@ -165,6 +165,7 @@ class MyworkreportsController extends ActiveController {
         }
 
         $consultants->addSelect(["co_tenant.tenant_name as branch_name"]);
+        $consultants->addSelect(["pat_consultant.consultant_id as consultant_id"]);
         $consultants->addSelect(["CONCAT(co_user.title_code, '', co_user.name) as report_consultant_name"]);
         $consultants->addSelect(["CONCAT(pat_global_patient.patient_title_code, ' ', pat_global_patient.patient_firstname) as report_patient_name"]);
         $consultants->addSelect(["pat_global_patient.patient_global_int_code as report_patient_global_int_code"]);
@@ -177,17 +178,20 @@ class MyworkreportsController extends ActiveController {
         $consultants = $consultants->all();
 
         $reports = [];
-
+        $sheetname = [];
         foreach ($consultants as $key => $encounter) {
             $reports[$key]['branch_name'] = $encounter['branch_name'];
+            $reports[$key]['consultant_id'] = $encounter['consultant_id'];
+            $sheetname[$key]['consultant_id'] = $encounter['consultant_id'];
+            $sheetname[$key]['consultant_name'] = $encounter['report_consultant_name'];
             $reports[$key]['consultant_name'] = $encounter['report_consultant_name'];
             $reports[$key]['patient_name'] = $encounter['report_patient_name'];
             $reports[$key]['patient_global_int_code'] = $encounter['report_patient_global_int_code'];
             $reports[$key]['total_visit'] = $encounter['report_total_visit'];
             $reports[$key]['total_charge_amount'] = $encounter['report_total_charge_amount'];
         }
-
-        return ['report' => $reports];
+        $sheetname = array_map("unserialize", array_unique(array_map("serialize", $sheetname)));
+        return ['report' => $reports,'sheetname' => $sheetname];
     }
 
 }
