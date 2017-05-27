@@ -584,7 +584,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             var dropdownMenu;
             $('.dropdown').on('show.bs.dropdown', function (e) {
                 // grab the menu        
-                dropdownMenu = $(e.target).find('ul.dropdown-menu');
+                dropdownMenu = $(e.target).find('ul.dropdown-menu.curPrescFreq');
 
                 // detach it and append it to the body
                 $('body').append(dropdownMenu.detach());

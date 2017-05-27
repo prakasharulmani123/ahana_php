@@ -238,7 +238,7 @@
                                                                     <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
                                                                         <span class="fa fa-ellipsis-v"></span>
                                                                     </button>
-                                                                    <ul class="dropdown-menu">
+                                                                    <ul class="dropdown-menu curPrescFreq">
                                                                         <li ng-repeat="consFreq in consultantFreq| filter:{ freq_type: 'mask'} | limitTo:4">
                                                                             <a href ng-click="curPrescFreqSale(consFreq.freq_name, consFreq.freq_type, item, item.item_key)">{{consFreq.freq_name}}</a>
                                                                         </li>
