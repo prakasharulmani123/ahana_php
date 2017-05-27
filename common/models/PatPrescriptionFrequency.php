@@ -11,6 +11,8 @@ use yii\db\ActiveQuery;
  * @property integer $freq_id
  * @property integer $tenant_id
  * @property string $freq_name
+ * @property string $freq_type
+ * @property integer $consultant_id
  * @property string $status
  * @property integer $created_by
  * @property string $created_at

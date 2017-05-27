@@ -4,6 +4,7 @@ namespace IRISORG\modules\v1\controllers;
 
 use common\models\PatPatient;
 use common\models\PatPrescription;
+use common\models\PatPrescriptionFrequency;
 use common\models\PatPrescriptionItems;
 use common\models\PatPrescriptionRoute;
 use common\models\PhaDescriptionsRoutes;
@@ -94,6 +95,7 @@ class PatientprescriptionController extends ActiveController {
                 foreach ($post['prescriptionItems'] as $key => $item) {
                     $item_model = new PatPrescriptionItems();
                     $item_model->pres_id = $model->pres_id;
+                    $item_model->consultant_id = $model->consultant_id;
                     $item_model->attributes = $item;
                     $item_model->setFrequencyId();
                     $item_model->setRouteId();
@@ -149,6 +151,21 @@ class PatientprescriptionController extends ActiveController {
         if (!empty($id)) {
             $routes = PhaDescriptionsRoutes::find()->tenant()->andWhere(['description_id' => $id])->all();
             return ['success' => true, 'routes' => $routes];
+        } else {
+            return ['success' => false, 'message' => 'Invalid Access'];
+        }
+    }
+    
+    public function actionGetconsultantfreq() {
+        $get = Yii::$app->request->get();
+        if (!empty($get)) {
+            $freq = PatPrescriptionFrequency::find()
+                    ->tenant()
+                    ->status()
+                    ->active()
+                    ->andWhere(['consultant_id' => $get['consultant_id']])
+                    ->all();
+            return ['success' => true, 'freq' => $freq];
         } else {
             return ['success' => false, 'message' => 'Invalid Access'];
         }
