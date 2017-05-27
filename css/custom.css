@@ -552,3 +552,7 @@ out-patient-table .table > thead > tr > th label.i-checks {
 .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
     background: #337ab7 !important;
 }
+
+.curPresForm .dropdown-menu > li > a {
+    padding: 2px 5px;
+}

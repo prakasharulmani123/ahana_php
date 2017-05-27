@@ -36,7 +36,6 @@
                             {% include 'tpl/blocks/alert.html' %}
                         </div>
                         <div class="panel panel-default"> 
-
                             <div class="row wrapper pb-sm pb-0">
                                 <div class="col-sm-8" style="width:680px;" > 
                                     <div class="input-group">
@@ -100,15 +99,7 @@
                                                                     <select class="form-control" name="Product" ng-model="addData.product" ng-options="product as product.full_name for product in products| filter:$viewValue" data-ng-change="setGeneric();
                                                                                         getRoutes(false, null, null)">
                                                                         <option value="">Select Product</option>
-                                                                    </select>
-                                                                    <!--                                                                    <input autocomplete="off"
-                                                                                                                                               placeholder="Product"
-                                                                                                                                               type="text"
-                                                                                                                                               class="form-control"
-                                                                                                                                               ng-model="addData.product"
-                                                                                                                                               typeahead-editable="false"
-                                                                                                                                               typeahead="product as product.full_name for product in products | filter:$viewValue"
-                                                                                                                                               />-->
+                                                                    </select>                                                                    
                                                                 </div>
                                                                 <div class="col-sm-3">
                                                                     <label> Freq</label>
@@ -128,12 +119,6 @@
                                                                     <select class="form-control" name="Route" ng-model="addData.route" ng-options="route as route.route_name for route in routes| filter:$viewValue">
                                                                         <option value="">Select Route</option>
                                                                     </select>
-                                                                    <!--                                                                    <input autocomplete="off" 
-                                                                                                                                               type="text" 
-                                                                                                                                               ng-model="addData.route" 
-                                                                                                                                               class="form-control m-b" 
-                                                                                                                                               typeahead="route.route_name for route in routes | filter:$viewValue"
-                                                                                                                                               required>-->
                                                                 </div>
                                                                 <div class="col-sm-3">
                                                                     <label>No.of.Days </label>
@@ -152,15 +137,16 @@
                                                 </form>
                                             </div>
                                         </div>
+                                        <!-- Advance Search END-->
                                     </div>
                                 </div>
                                 <div class="col-sm-2">
-                                    <select class="form-control" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors| orderBy: name">
+                                    <select class="form-control" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors| orderBy: name" ng-change="getConsultantFreq()">
                                         <option value="">Select Consultant</option>
                                     </select>
                                 </div>
                             </div>
-                            <form editable-form name="tableform" name="prescForm" class="form-horizontal form-validation" novalidate="" shown="true" onaftersave="saveForm()">
+                            <form editable-form name="tableform" name="prescForm" class="form-horizontal form-validation curPresForm" novalidate="" shown="true" onaftersave="saveForm()">
                                 <div class="table-responsive">
                                     <div class="wrapper p-b">
                                         <div  style="height:220px;overflow-y: auto;" >
@@ -179,8 +165,7 @@
                                                         <th width="20" align="center">Actions</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody ng-hide="isLoading">
-                                                    <!--filter:lesserThan('available_quantity', 0) ng-init="key = item.item_key"-->
+                                                <tbody ng-hide="isLoading">                                                   
                                                     <tr class="{{(item.available_quantity == 0|| !item.in_stock) ? 'out_of_stock' : ''}}" ng-repeat="item in data.prescriptionItems" ng-init="key = item.item_key">
                                                         <td>
                                                             <a href ui-toggle-class class="{{item.is_favourite ? 'active' : ''}}">
@@ -200,19 +185,7 @@
                                                                   e-ng-options="product.full_name as product.full_name for product in item.all_products | filter:$viewValue | filter:{generic_id : item.generic_id} : true" 
                                                                   e-required>
                                                                 {{ showProduct(item)}}
-                                                            </span>
-                                                            <!--                                                            <span editable-text="item.product_name"
-                                                                                                                              e-class="form-control"
-                                                                                                                              e-name="product_name" 
-                                                                                                                              e-form="tableform" 
-                                                                                                                              onbeforesave="checkInput($data)"
-                                                                                                                              e-typeahead-editable="false"
-                                                                                                                              e-typeahead="product as product.full_name for product in products | filter:$viewValue"
-                                                                                                                              e-autocomplete="off"
-                                                                                                                              e-placeholder="Product"
-                                                                                                                              e-required>
-                                                                                                                            {{ item.product_name || 'empty' }}
-                                                                                                                        </span>-->
+                                                            </span>                                                            
                                                         </td>
                                                         <td>
                                                             <span editable-select="item.route" 
@@ -227,48 +200,10 @@
                                                                   e-ng-options="route.route_name as route.route_name for route in item.description_routes | filter:$viewValue" 
                                                                   e-required>
                                                                 {{ showRoute(item)}}
-                                                            </span>
-                                                            <!--                                                            <span editable-text="item.route"
-                                                                                                                              e-class="form-control m-b"
-                                                                                                                              e-name="route" 
-                                                                                                                              e-form="tableform" 
-                                                                                                                              onbeforesave="checkInput($data)"
-                                                                                                                              e-typeahead="route.route_name for route in item.description_routes | filter:$viewValue"
-                                                                                                                              e-autocomplete="off"
-                                                                                                                              e-placeholder="Route"
-                                                                                                                              e-id="route"
-                                                                                                                              e-required>
-                                                                                                                            {{ item.route || 'empty' }}
-                                                                                                                        </span>-->
+                                                            </span>                                                            
                                                         </td>
-                                                        <td>
-                                                            <!--                                                            <span editable-select="item.frequency"
-                                                                                                                              e-class="form-control m-b"
-                                                                                                                              e-name="masked" 
-                                                                                                                              e-form="tableform" 
-                                                                                                                              e-ng-options="frequency as frequency.freq_name for frequency in frequencies | filter:$viewValue"
-                                                                                                                              e-required>
-                                                                                                                            {{ item.frequency || 'empty' }}
-                                                                                                                        </span>-->
-
-                                                            <!--e-typeahead="frequency as frequency.freq_name for frequency in frequencies | filter:$viewValue"-->
-                                                            <div id="freq_{{item.item_key}}_3" class="freq_div_{{item.item_key}} hide" style="width: 75%; float:left">
-                                                                <span editable-text="item.frequency"
-                                                                      e-index ="{{item.item_key}}"
-                                                                      e-tabindex="2{{item.item_key}}3"
-                                                                      e-class="form-control m-b frequency_{{item.item_key}} freq_editable"
-                                                                      e-name="masked" 
-                                                                      e-ui-mask="9-9-9"
-                                                                      e-model-view-value="true"
-                                                                      e-form="tableform" 
-                                                                      e-autocomplete="off"
-                                                                      e-id="frequency_{{item.item_key}}_3"
-                                                                      e-ng-change="freqChange($data, item, item.item_key, tableform)"
-                                                                      >
-                                                                    {{ item.frequency || 'empty' }}
-                                                                </span>
-                                                            </div>
-                                                            <div id="freq_{{item.item_key}}_4" class="freq_div_{{item.item_key}}" style="width: 75%; float:left">
+                                                        <td>                                                            
+                                                            <div id="freq_{{item.item_key}}_4_mask" class="freq_div_{{item.item_key}}" style="width: 75%; float:left">
                                                                 <span editable-text="item.frequency"
                                                                       e-index ="{{item.item_key}}"
                                                                       e-tabindex="2{{item.item_key}}3"
@@ -284,26 +219,35 @@
                                                                     {{ item.frequency || 'empty' }}
                                                                 </span>
                                                             </div>
-                                                            <div id="freq_{{item.item_key}}_5" class="freq_div_{{item.item_key}} hide" style="width: 75%; float:left">
+                                                            <div id="freq_{{item.item_key}}_4_txt" class="freq_div_{{item.item_key}} hide" style="width: 75%; float:left">
                                                                 <span editable-text="item.frequency"
                                                                       e-index ="{{item.item_key}}"
                                                                       e-tabindex="2{{item.item_key}}3"
-                                                                      e-class="form-control m-b frequency_{{item.item_key}} freq_editable"
+                                                                      e-class="form-control"
                                                                       e-name="masked" 
-                                                                      e-ui-mask="9-9-9-9-9"
-                                                                      e-model-view-value="true"
                                                                       e-form="tableform" 
                                                                       e-autocomplete="off"
-                                                                      e-id="frequency_{{item.item_key}}_5"
-                                                                      e-ng-change="freqChange($data, item, item.item_key, tableform)"
+                                                                      e-id="frequency_{{item.item_key}}_4_txt"
+                                                                      e-ng-change="curPrescFreqSale($data, 'txt', item, item.item_key)"
                                                                       >
                                                                     {{ item.frequency || 'empty' }}
                                                                 </span>
                                                             </div>
                                                             <div style="width: 20px; float:left">
-                                                                <a href="javascript:void(0)" class="badge freq btn-dark change_mask_{{item.item_key}}" id="change_mask_{{item.item_key}}_3" ng-click="changeFreqMask(item.item_key, 3)">3</a>
-                                                                <a href="javascript:void(0)" class="badge freq btn-dark change_mask_{{item.item_key}} hide" id="change_mask_{{item.item_key}}_4" ng-click="changeFreqMask(item.item_key, 4)">4</a>
-                                                                <a href="javascript:void(0)" class="badge freq btn-dark change_mask_{{item.item_key}}" id="change_mask_{{item.item_key}}_5" ng-click="changeFreqMask(item.item_key, 5)">5</a>
+                                                                <div class="input-group-btn dropdown">
+                                                                    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                                                                        <span class="fa fa-ellipsis-v"></span>
+                                                                    </button>
+                                                                    <ul class="dropdown-menu">
+                                                                        <li ng-repeat="consFreq in consultantFreq| filter:{ freq_type: 'mask'} | limitTo:4">
+                                                                            <a href ng-click="curPrescFreqSale(consFreq.freq_name, consFreq.freq_type, item, item.item_key)">{{consFreq.freq_name}}</a>
+                                                                        </li>
+                                                                        <li class="divider"></li>
+                                                                        <li ng-repeat="consFreq in consultantFreq| filter:{ freq_type: 'txt'}">
+                                                                            <a href ng-click="curPrescFreqSale(consFreq.freq_name, consFreq.freq_type, item, item.item_key)">{{consFreq.freq_name}}</a>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
                                                             </div>
                                                         </td>
                                                         <td align="center">
@@ -358,191 +302,10 @@
                                                         <td>
                                                             {{ item.total | number:2}}
                                                         </td>
-                                                        <td align="left">
-                                                            <!--<button class="label bg-dark" ng-click="tableform.$show()"><i class="fa fa-pencil"></i></button>-->
+                                                        <td align="left">                                                         
                                                             <button type="button" class="label bg-info" ng-click="removeItem(item)"><i class=" fa fa-trash"></i></button>
                                                         </td>
-                                                    </tr>
-                                                    <!--                                                    <tr ng-repeat="item in data.prescriptionItems| filter:greaterThan('available_quantity', 0)" ng-init="key = item.item_key">
-                                                                                                            <td>
-                                                                                                                <a href ui-toggle-class class="{{item.is_favourite ? 'active' : ''}}">
-                                                                                                                    <i class="fa fa-star-o text-muted text" ng-click="updateFavourite(1, item.product_id)"></i>
-                                                                                                                    <i class="fa fa-star text-info text-active" ng-click="updateFavourite(0, item.product_id)"></i> 
-                                                                                                                </a>
-                                                                                                            </td>
-                                                                                                            <td>
-                                                                                                                <span editable-select="item.product_name"
-                                                                                                                      e-index ="{{key}}"
-                                                                                                                      e-tabindex="1{{key}}1"
-                                                                                                                      e-class="form-control"
-                                                                                                                      e-name="product_name" 
-                                                                                                                      e-form="tableform" 
-                                                                                                                      onbeforesave="checkInput($data)" 
-                                                                                                                      e-ng-change="setProductId($data, key)" 
-                                                                                                                      e-ng-options="product.full_name as product.full_name for product in item.all_products | filter:$viewValue | filter:{generic_id : item.generic_id} : true" 
-                                                                                                                      e-required>
-                                                                                                                    {{ showProduct(item)}}
-                                                                                                                </span>
-                                                                                                                                                                            <span editable-text="item.product_name"
-                                                                                                                                                                                  e-class="form-control"
-                                                                                                                                                                                  e-name="product_name" 
-                                                                                                                                                                                  e-form="tableform" 
-                                                                                                                                                                                  onbeforesave="checkInput($data)"
-                                                                                                                                                                                  e-typeahead-editable="false"
-                                                                                                                                                                                  e-typeahead="product as product.full_name for product in products | filter:$viewValue"
-                                                                                                                                                                                  e-autocomplete="off"
-                                                                                                                                                                                  e-placeholder="Product"
-                                                                                                                                                                                  e-required>
-                                                                                                                                                                                {{ item.product_name || 'empty' }}
-                                                                                                                                                                            </span>
-                                                                                                            </td>
-                                                                                                            <td>
-                                                                                                                <span editable-select="item.route" 
-                                                                                                                      e-index ="{{key}}"
-                                                                                                                      e-tabindex="1{{key}}2"
-                                                                                                                      e-class="form-control m-b"
-                                                                                                                      e-name="route" 
-                                                                                                                      e-form="tableform" 
-                                                                                                                      e-ng-change="setRouteId($data, key)" 
-                                                                                                                      onbeforesave="checkInput($data)"
-                                                                                                                      e-id="route"
-                                                                                                                      e-ng-options="route.route_name as route.route_name for route in item.description_routes | filter:$viewValue" 
-                                                                                                                      e-required>
-                                                                                                                    {{ showRoute(item)}}
-                                                                                                                </span>
-                                                                                                                                                                            <span editable-text="item.route"
-                                                                                                                                                                                  e-class="form-control m-b"
-                                                                                                                                                                                  e-name="route" 
-                                                                                                                                                                                  e-form="tableform" 
-                                                                                                                                                                                  onbeforesave="checkInput($data)"
-                                                                                                                                                                                  e-typeahead="route.route_name for route in item.description_routes | filter:$viewValue"
-                                                                                                                                                                                  e-autocomplete="off"
-                                                                                                                                                                                  e-placeholder="Route"
-                                                                                                                                                                                  e-id="route"
-                                                                                                                                                                                  e-required>
-                                                                                                                                                                                {{ item.route || 'empty' }}
-                                                                                                                                                                            </span>
-                                                                                                            </td>
-                                                                                                            <td>
-                                                                                                                                                                            <span editable-select="item.frequency"
-                                                                                                                                                                                  e-class="form-control m-b"
-                                                                                                                                                                                  e-name="masked" 
-                                                                                                                                                                                  e-form="tableform" 
-                                                                                                                                                                                  e-ng-options="frequency as frequency.freq_name for frequency in frequencies | filter:$viewValue"
-                                                                                                                                                                                  e-required>
-                                                                                                                                                                                {{ item.frequency || 'empty' }}
-                                                                                                                                                                            </span>
-                                                    
-                                                                                                                e-typeahead="frequency as frequency.freq_name for frequency in frequencies | filter:$viewValue"
-                                                                                                                <div id="freq_{{key}}_3" class="freq_div_{{key}} hide" style="width: 85%; float:left">
-                                                                                                                    <span editable-text="item.frequency"
-                                                                                                                          e-index ="{{key}}"
-                                                                                                                          e-tabindex="1{{key}}3"
-                                                                                                                          e-class="form-control m-b frequency_{{key}} freq_editable"
-                                                                                                                          e-name="masked" 
-                                                                                                                          e-ui-mask="9-9-9"
-                                                                                                                          e-model-view-value="true"
-                                                                                                                          e-form="tableform" 
-                                                                                                                          e-autocomplete="off"
-                                                                                                                          e-id="frequency_{{key}}_3"
-                                                                                                                          e-ng-change="freqChange($data, item, key, tableform)"
-                                                                                                                          >
-                                                                                                                        {{ item.frequency || 'empty' }}
-                                                                                                                    </span>
-                                                                                                                </div>
-                                                                                                                <div id="freq_{{key}}_4" class="freq_div_{{key}}" style="width: 85%; float:left">
-                                                                                                                    <span editable-text="item.frequency"
-                                                                                                                          e-index ="{{key}}"
-                                                                                                                          e-tabindex="1{{key}}3"
-                                                                                                                          e-class="form-control m-b frequency_{{key}} freq_editable"
-                                                                                                                          e-name="masked" 
-                                                                                                                          e-ui-mask="9-9-9-9"
-                                                                                                                          e-model-view-value="true"
-                                                                                                                          e-form="tableform" 
-                                                                                                                          e-autocomplete="off"
-                                                                                                                          e-id="frequency_{{key}}_4"
-                                                                                                                          e-ng-change="freqChange($data, item, key, tableform)"
-                                                                                                                          >
-                                                                                                                        {{ item.frequency || 'empty' }}
-                                                                                                                    </span>
-                                                                                                                </div>
-                                                                                                                <div id="freq_{{key}}_5" class="freq_div_{{key}} hide" style="width: 85%; float:left">
-                                                                                                                    <span editable-text="item.frequency"
-                                                                                                                          e-index ="{{key}}"
-                                                                                                                          e-tabindex="1{{key}}3"
-                                                                                                                          e-class="form-control m-b frequency_{{key}} freq_editable"
-                                                                                                                          e-name="masked" 
-                                                                                                                          e-ui-mask="9-9-9-9-9"
-                                                                                                                          e-model-view-value="true"
-                                                                                                                          e-form="tableform" 
-                                                                                                                          e-autocomplete="off"
-                                                                                                                          e-id="frequency_{{key}}_5"
-                                                                                                                          e-ng-change="freqChange($data, item, key, tableform)"
-                                                                                                                          >
-                                                                                                                        {{ item.frequency || 'empty' }}
-                                                                                                                    </span>
-                                                                                                                </div>
-                                                                                                                <div style="width: 20px; float:left">
-                                                                                                                    <a href="javascript:void(0)" class="badge freq btn-dark change_mask_{{key}}" id="change_mask_{{key}}_3" ng-click="changeFreqMask(key, 3)">3</a>
-                                                                                                                    <a href="javascript:void(0)" class="badge freq btn-dark change_mask_{{key}} hide" id="change_mask_{{key}}_4" ng-click="changeFreqMask(key, 4)">4</a>
-                                                                                                                    <a href="javascript:void(0)" class="badge freq btn-dark change_mask_{{key}}" id="change_mask_{{key}}_5" ng-click="changeFreqMask(key, 5)">5</a>
-                                                                                                                </div>
-                                                                                                            </td>
-                                                                                                            <td align="center">
-                                                                                                                <span editable-text="item.number_of_days"
-                                                                                                                      e-index ="{{key}}"
-                                                                                                                      e-tabindex="1{{key}}4"
-                                                                                                                      e-class="form-control"
-                                                                                                                      e-name="number_of_days" 
-                                                                                                                      e-form="tableform" 
-                                                                                                                      onbeforesave="checkInput($data)"
-                                                                                                                      e-autocomplete="off"
-                                                                                                                      e-id="number_of_days"
-                                                                                                                      e-ng-change="numberDaysChange($data, item, key, tableform)"
-                                                                                                                      e-number-mask=""
-                                                                                                                      e-required>
-                                                                                                                    {{ item.number_of_days || 'empty' }}
-                                                                                                                </span>
-                                                                                                            </td>
-                                                                                                            <td align="center">
-                                                                                                                <span editable-text="item.qty"
-                                                                                                                      e-index ="{{key}}"
-                                                                                                                      e-tabindex="1{{key}}5"
-                                                                                                                      e-class="form-control"
-                                                                                                                      e-name="qty" 
-                                                                                                                      e-form="tableform" 
-                                                                                                                      e-autocomplete="off"
-                                                                                                                      e-id="qty_{{key}}"
-                                                                                                                      e-ng-change="qtyChange($data, item, key, tableform)"
-                                                                                                                      e-number-mask=""
-                                                                                                                      e-required>
-                                                                                                                    {{ item.qty || 'empty' }}
-                                                                                                                </span>
-                                                                                                            </td>
-                                                                                                            <td>
-                                                                                                                {{ item.price}}
-                                                                                                            </td>
-                                                                                                            <td align="center">
-                                                                                                                <span editable-text="item.remarks"
-                                                                                                                      e-index ="{{key}}"
-                                                                                                                      e-tabindex="1{{key}}6"
-                                                                                                                      e-class="form-control"
-                                                                                                                      e-name="remarks" 
-                                                                                                                      e-form="tableform" 
-                                                                                                                      e-autocomplete="off"
-                                                                                                                      e-id="remarks"
-                                                                                                                      e-required>
-                                                                                                                    {{ item.remarks || 'empty' }}
-                                                                                                                </span>
-                                                                                                            </td>
-                                                                                                            <td>
-                                                                                                                {{ item.total | number:2}}
-                                                                                                            </td>
-                                                                                                            <td align="left">
-                                                                                                                <button class="label bg-dark" ng-click="tableform.$show()"><i class="fa fa-pencil"></i></button>
-                                                                                                                <button type="button" class="label bg-info" ng-click="removeItem(item)"><i class=" fa fa-trash"></i></button>
-                                                                                                            </td>
-                                                                                                        </tr>-->
+                                                    </tr>                                                    
                                                 </tbody>
                                                 <tbody ng-show="isLoading">
                                                     <tr>
@@ -684,75 +447,6 @@
         <img id="weather2" src="{{IRISOrgUrl}}/img/weather2.png" width="25" height="25" alt="" />
         <img id="weather3" src="{{IRISOrgUrl}}/img/weather3.png" width="25" height="25" alt="" />
         <img id="weather4" src="{{IRISOrgUrl}}/img/weather4.png" width="25" height="25" alt="" />
-<!--        <div class="priscription-cont">
-            <main>
-                <table cellspacing="0" cellpadding="0" border="0" width="100%">
-                    <thead>
-                        <tr>
-                            <td colspan="2" align="left">
-                                <span style="font-size: 20px;font-weight: bold; padding: 24px;">+</span>
-                            </td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td colspan="2" align="right"><io-barcode id="patient_barcode" code="{{patientObj.patient_global_int_code}}" type="{{ type}}" options="barcodeOptions"></io-barcode></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                                <tr>
-                                    <td><h2> {{patientObj.fullname}} <span>({{patientObj.patient_age}}yrs)</span></h2> </td>
-                                    <td align="right">
-                                        <b>Date :</b>{{ prescriptionItems2[0].presc_date | moment:'DD-MM-YYYY HH:mm:ss'}}
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2"> 
-                            <div style="width:100%; min-height:500px;"> 
-                                <table width="100%" border="0" cellspacing="0" cellpadding="0" >
-                                    <tr>
-                                        <th align="left" style="width:280px;"><strong>Description</strong></th>
-                                        <th align="center"><img id="weather1" src="{{IRISOrgUrl}}/img/weather1.png" width="25" height="25" alt="" /></th>
-                                        <th align="center"><img id="weather2" src="{{IRISOrgUrl}}/img/weather2.png" width="25" height="25" alt="" /></th>
-                                        <th align="center"><img id="weather3" src="{{IRISOrgUrl}}/img/weather3.png" width="25" height="25" alt="" /></th>
-                                        <th align="center"><img id="weather4" src="{{IRISOrgUrl}}/img/weather4.png" width="25" height="25" alt="" /></th>
-                                        <th align="center">Remarks</th>
-                                    </tr>
-                                    <tr ng-repeat="(key, item) in prescriptionItems2">
-                                        <td>{{ item.product_name || 'empty' }} <br/> <span> ({{ item.number_of_days || 'empty' }} days)</span> </td>
-                                        <td align="center">{{ getFrequencyExists(item.frequency, 0)}}</td>
-                                        <td align="center">{{ getFrequencyExists(item.frequency, 1)}}</td>
-                                        <td align="center">{{ getFrequencyExists(item.frequency, 2)}}</td>
-                                        <td align="center">{{ getFrequencyExists(item.frequency, 3)}}</td>
-                                        <td align="center">{{ item.remarks || '-'}}</td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                                <tr>
-                                    <td>Next Review : <b> {{data2.next_visit | moment:'DD-MM-YYYY'}}</b></td>
-                                    <td align="right">{{consultant_name}}</td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="border-top:#2e2e2e solid 1px;">Printed Date : {{current_time | moment:'DD-MM-YYYY HH:mm'}}</td>
-                        <td align="center" style="font-size:12px; border-top:#2e2e2e solid 1px;">{{app.org_appfull_address}} Ph :{{app.org_mobile}}</td>
-                        <td style="border-top:#2e2e2e solid 1px;">&nbsp;</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </main>
-        </div>-->
     </div>     
 </div>
 
