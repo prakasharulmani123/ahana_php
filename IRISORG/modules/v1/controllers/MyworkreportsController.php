@@ -54,7 +54,7 @@ class MyworkreportsController extends ActiveController {
 
         $encounters->addSelect(["pat_encounter.encounter_id as encounter_id"]);
         $encounters->addSelect(["pat_patient.patient_id as op_doctor_payment_patient_id"]);
-
+        $encounters->addSelect(["pat_appointment.consultant_id as consultant_id"]);
         $encounters->addSelect(["co_tenant.tenant_name as branch_name"]);
         $encounters->addSelect(["CONCAT(co_user.title_code, '', co_user.name) as op_doctor_payment_consultant_name"]);
         $encounters->addSelect(["CONCAT(pat_global_patient.patient_title_code, ' ', pat_global_patient.patient_firstname) as op_doctor_payment_patient_name"]);
@@ -67,6 +67,7 @@ class MyworkreportsController extends ActiveController {
         $encounters = $encounters->all();
 
         $reports = [];
+        $sheetname = [];
         foreach ($encounters as $key => $encounter) {
             $reports[$key]['new_op'] = false;
 
@@ -84,6 +85,9 @@ class MyworkreportsController extends ActiveController {
             }
 
             $reports[$key]['branch_name'] = $encounter['branch_name'];
+            $reports[$key]['consultant_id'] = $encounter['consultant_id'];
+            $sheetname[$key]['consultant_id'] = $encounter['consultant_id'];
+            $sheetname[$key]['consultant_name'] = $encounter['op_doctor_payment_consultant_name'];
             $reports[$key]['consultant_name'] = $encounter['op_doctor_payment_consultant_name'];
             $reports[$key]['patient_name'] = $encounter['op_doctor_payment_patient_name'];
             $reports[$key]['patient_global_int_code'] = $encounter['op_doctor_payment_patient_global_int_code'];
@@ -91,8 +95,8 @@ class MyworkreportsController extends ActiveController {
             $reports[$key]['payment_amount'] = $encounter['op_doctor_payment_amount'];
             $reports[$key]['op_seen_date_time'] = $encounter['op_doctor_payment_seen_date'] . " " . $encounter['op_doctor_payment_seen_time'];
         }
-
-        return ['report' => $reports];
+        $sheetname = array_map("unserialize", array_unique(array_map("serialize", $sheetname)));
+        return ['report' => $reports,'sheetname' => $sheetname];
     }
 
     public function actionIpbillstatus() {
