@@ -106,7 +106,7 @@ class PatientprescriptionController extends ActiveController {
                 if(isset($model->consultant)){
                     $consult_name = $model->consultant->title_code .  $model->consultant->name;
                 }
-                return ['success' => true, 'date' => date('d-M-Y H:i'), 'model' => ['consultant_name' => $consult_name]];
+                return ['success' => true, 'date' => date('d-M-Y H:i'), 'model' => ['consultant_name' => $consult_name, 'consultant_id' => $model->consultant_id]];
             } else {
                 return ['success' => false, 'message' => Html::errorSummary([$model, $item_model])];
             }
@@ -164,6 +164,7 @@ class PatientprescriptionController extends ActiveController {
                     ->status()
                     ->active()
                     ->andWhere(['consultant_id' => $get['consultant_id']])
+                    ->orderBy(['created_at'  => SORT_DESC])
                     ->all();
             return ['success' => true, 'freq' => $freq];
         } else {
