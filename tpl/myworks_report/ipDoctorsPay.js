@@ -171,12 +171,8 @@ app.controller('ipDoctorsPay', ['$rootScope', '$scope', '$timeout', '$http', '$s
                         $scope.loading = false;
                         $scope.showTable = true;
                         $scope.records = response.report;
-                        $scope.datas = response.consultant_ids
                         $scope.tableid = [];
                         $scope.sheet_name = [];
-//                        angular.forEach(response.consultant_ids, function (item, key) {
-//                            $scope.tableid.push('table_' + item);
-//                        });
                         angular.forEach(response.sheetname, function (item, key) {
                             $scope.tableid.push('table_' + item.consultant_id);
                             $scope.sheet_name.push(item.consultant_name);
