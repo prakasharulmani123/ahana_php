@@ -202,8 +202,25 @@
                                                                 {{ showRoute(item)}}
                                                             </span>                                                            
                                                         </td>
-                                                        <td>                                                            
-                                                            <div id="freq_{{item.item_key}}_4_mask" class="freq_div_{{item.item_key}}" style="width: 75%; float:left">
+                                                        <td> 
+                                                            <div id="freq_{{item.item_key}}_3" class="freq_div_{{item.item_key}} hide" style="width: 75%; float:left">
+                                                                <span editable-text="item.frequency"
+                                                                      e-index ="{{item.item_key}}"
+                                                                      e-tabindex="2{{item.item_key}}3"
+                                                                      e-class="form-control m-b frequency_{{item.item_key}} freq_editable"
+                                                                      e-name="masked" 
+                                                                      e-ui-mask="9-9-9"
+                                                                      e-model-view-value="true"
+                                                                      e-form="tableform" 
+                                                                      e-autocomplete="off"
+                                                                      e-id="frequency_{{item.item_key}}_3"
+                                                                      e-ng-change="freqChange($data, '3', item, item.item_key, tableform)"
+                                                                      e-select-on-click=""
+                                                                      >
+                                                                    {{ item.frequency || 'empty' }}
+                                                                </span>
+                                                            </div>
+                                                            <div id="freq_{{item.item_key}}_4" class="freq_div_{{item.item_key}}" style="width: 75%; float:left">
                                                                 <span editable-text="item.frequency"
                                                                       e-index ="{{item.item_key}}"
                                                                       e-tabindex="2{{item.item_key}}3"
@@ -213,14 +230,14 @@
                                                                       e-model-view-value="true"
                                                                       e-form="tableform" 
                                                                       e-autocomplete="off"
-                                                                      e-id="frequency_{{item.item_key}}_4_mask"
-                                                                      e-ng-change="freqChange($data, item, item.item_key, tableform)"
+                                                                      e-id="frequency_{{item.item_key}}_4"
+                                                                      e-ng-change="freqChange($data, '4', item, item.item_key, tableform)"
                                                                       e-select-on-click=""
                                                                       >
                                                                     {{ item.frequency || 'empty' }}
                                                                 </span>
                                                             </div>
-                                                            <div id="freq_{{item.item_key}}_4_txt" class="freq_div_{{item.item_key}} hide" style="width: 75%; float:left">
+                                                            <div id="freq_{{item.item_key}}_txt" class="freq_div_{{item.item_key}} hide" style="width: 75%; float:left">
                                                                 <span editable-text="item.frequency"
                                                                       e-index ="{{item.item_key}}"
                                                                       e-tabindex="2{{item.item_key}}3"
@@ -228,8 +245,8 @@
                                                                       e-name="masked" 
                                                                       e-form="tableform" 
                                                                       e-autocomplete="off"
-                                                                      e-id="frequency_{{item.item_key}}_4_txt"
-                                                                      e-ng-change="curPrescFreqSale($data, 'txt', item, item.item_key, 'change')"
+                                                                      e-id="frequency_{{item.item_key}}_txt"
+                                                                      e-ng-change="curPrescFreqSele($data, 'txt', item, item.item_key, 'change')"
                                                                       e-select-on-click=""
                                                                       >
                                                                     {{ item.frequency || 'empty' }}
@@ -241,12 +258,43 @@
                                                                         <span class="fa fa-ellipsis-v"></span>
                                                                     </button>
                                                                     <ul class="dropdown-menu curPrescFreq">
-                                                                        <li ng-repeat="consFreq in consultantFreq| filter:{ freq_type: 'mask'} | limitTo:4">
-                                                                            <a href ng-click="curPrescFreqSale(consFreq.freq_name, consFreq.freq_type, item, item.item_key, 'select')">{{consFreq.freq_name}}</a>
+                                                                        <!-- Mask 3 -->
+                                                                        <li ng-repeat="consFreq in currPresMask3| limitTo:3">
+                                                                            <a href ng-click="curPrescFreqSele(consFreq.freq_name, consFreq.freq_type, item, item.item_key, 'select')">{{consFreq.freq_name}}</a>
+                                                                        </li>
+                                                                        <li class="dropdown-submenu" ng-if="currPresMask3.length > 3">
+                                                                            <a tabindex="-1" href="#">More</a>
+                                                                            <ul class="dropdown-menu">
+                                                                                <li ng-repeat="consFreq in currPresMask3 | limitTo:(3 - currPresMask3.length)">
+                                                                                    <a href ng-click="curPrescFreqSele(consFreq.freq_name, consFreq.freq_type, item, item.item_key, 'select')">{{consFreq.freq_name}}</a>
+                                                                                </li>
+                                                                            </ul>
                                                                         </li>
                                                                         <li class="divider"></li>
-                                                                        <li ng-repeat="consFreq in consultantFreq| filter:{ freq_type: 'txt'}">
-                                                                            <a href ng-click="curPrescFreqSale(consFreq.freq_name, consFreq.freq_type, item, item.item_key, 'select')">{{consFreq.freq_name}}</a>
+                                                                        <!-- Mask 4 -->
+                                                                        <li ng-repeat="consFreq in currPresMask4| limitTo:3">
+                                                                            <a href ng-click="curPrescFreqSele(consFreq.freq_name, consFreq.freq_type, item, item.item_key, 'select')">{{consFreq.freq_name}}</a>
+                                                                        </li>
+                                                                        <li class="dropdown-submenu" ng-if="currPresMask4.length > 3">
+                                                                            <a tabindex="-1" href="#">More</a>
+                                                                            <ul class="dropdown-menu">
+                                                                                <li ng-repeat="consFreq in currPresMask4 | limitTo:(3 - currPresMask4.length)">
+                                                                                    <a href ng-click="curPrescFreqSele(consFreq.freq_name, consFreq.freq_type, item, item.item_key, 'select')">{{consFreq.freq_name}}</a>
+                                                                                </li>
+                                                                            </ul>
+                                                                        </li>
+                                                                        <li class="divider"></li>
+                                                                        <!-- Mask Txt -->
+                                                                        <li ng-repeat="consFreq in currPresMaskTxt| limitTo:3">
+                                                                            <a href ng-click="curPrescFreqSele(consFreq.freq_name, consFreq.freq_type, item, item.item_key, 'select')">{{consFreq.freq_name}}</a>
+                                                                        </li>
+                                                                        <li class="dropdown-submenu" ng-if="currPresMaskTxt.length > 3">
+                                                                            <a tabindex="-1" href="#">More</a>
+                                                                            <ul class="dropdown-menu">
+                                                                                <li ng-repeat="consFreq in currPresMaskTxt | limitTo:(3 - currPresMaskTxt.length)">
+                                                                                    <a href ng-click="curPrescFreqSele(consFreq.freq_name, consFreq.freq_type, item, item.item_key, 'select')">{{consFreq.freq_name}}</a>
+                                                                                </li>
+                                                                            </ul>
                                                                         </li>
                                                                     </ul>
                                                                 </div>
