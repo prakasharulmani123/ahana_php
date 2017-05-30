@@ -421,6 +421,7 @@ app.controller('ipDoctorsPay', ['$rootScope', '$scope', '$timeout', '$http', '$s
                     + '<Styles>'
                     + '<Style ss:ID="Currency"><NumberFormat ss:Format="Currency"></NumberFormat></Style>'
                     + '<Style ss:ID="Date"><NumberFormat ss:Format="Medium Date"></NumberFormat></Style>'
+                    + '<Style ss:ID="Bold"><Font ss:Bold="1"></Font></Style>'
                     + '</Styles>'
                     + '{worksheets}</Workbook>'
                     , tmplWorksheetXML = '<Worksheet ss:Name="{nameWS}"><Table>{rows}</Table></Worksheet>'
@@ -454,10 +455,14 @@ app.controller('ipDoctorsPay', ['$rootScope', '$scope', '$timeout', '$http', '$s
                                     var dataType = tables[i].rows[j].cells[k].getAttribute("data-type");
                                     var dataStyle = tables[i].rows[j].cells[k].getAttribute("data-style");
                                     var dataValue = tables[i].rows[j].cells[k].getAttribute("data-value");
+                                    var dataTagvalue = (dataValue) ? dataValue : tables[i].rows[j].cells[k].tagName;
                                     dataValue = (dataValue) ? dataValue : tables[i].rows[j].cells[k].innerText;
+                                    
+                                    if(dataTagvalue === 'TH') dataStyle = 'Bold';
+                                    
                                     var dataFormula = tables[i].rows[j].cells[k].getAttribute("data-formula");
                                     dataFormula = (dataFormula) ? dataFormula : (appname == 'Calc' && dataType == 'DateTime') ? dataValue : null;
-                                    ctx = {attributeStyleID: (dataStyle == 'Currency' || dataStyle == 'Date') ? ' ss:StyleID="' + dataStyle + '"' : ''
+                                    ctx = {attributeStyleID: (dataStyle == 'Currency' || dataStyle == 'Date' || dataStyle == 'Bold') ? ' ss:StyleID="' + dataStyle + '"' : ''
                                         , nameType: (dataType == 'Number' || dataType == 'DateTime' || dataType == 'Boolean' || dataType == 'Error') ? dataType : 'String'
                                         , data: (dataFormula) ? '' : dataValue
                                         , attributeFormula: (dataFormula) ? ' ss:Formula="' + dataFormula + '"' : ''

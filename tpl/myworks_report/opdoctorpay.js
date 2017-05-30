@@ -424,14 +424,14 @@ app.controller('opdoctorpayController', ['$rootScope', '$scope', '$timeout', '$h
                                     var dataType = tables[i].rows[j].cells[k].getAttribute("data-type");
                                     var dataStyle = tables[i].rows[j].cells[k].getAttribute("data-style");
                                     var dataValue = tables[i].rows[j].cells[k].getAttribute("data-value");
-                                    //var dataTagvalue = (dataValue) ? dataValue : tables[i].rows[j].cells[k];
+                                    var dataTagvalue = (dataValue) ? dataValue : tables[i].rows[j].cells[k].tagName;
                                     dataValue = (dataValue) ? dataValue : tables[i].rows[j].cells[k].innerText;
                                     
-                                   // if(dataTagvalue === '<th>') dataStyle = 'Bold'; else dataStyle = 'Boldss';
+                                    if(dataTagvalue === 'TH') dataStyle = 'Bold';
                                     
                                     var dataFormula = tables[i].rows[j].cells[k].getAttribute("data-formula");
                                     dataFormula = (dataFormula) ? dataFormula : (appname == 'Calc' && dataType == 'DateTime') ? dataValue : null;
-                                    ctx = {attributeStyleID: (dataStyle == 'Currency' || dataStyle == 'Date') ? ' ss:StyleID="' + dataStyle + '"' : ''
+                                    ctx = {attributeStyleID: (dataStyle == 'Currency' || dataStyle == 'Date' || dataStyle == 'Bold') ? ' ss:StyleID="' + dataStyle + '"' : ''
                                         , nameType: (dataType == 'Number' || dataType == 'DateTime' || dataType == 'Boolean' || dataType == 'Error') ? dataType : 'String'
                                         , data: (dataFormula) ? '' : dataValue
                                         , attributeFormula: (dataFormula) ? ' ss:Formula="' + dataFormula + '"' : ''
