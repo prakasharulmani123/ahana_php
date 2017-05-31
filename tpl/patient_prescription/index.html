@@ -140,7 +140,7 @@
                                         <!-- Advance Search END-->
                                     </div>
                                 </div>
-                                <div class="col-sm-2">
+                                <div class="col-sm-4">
                                     <select class="form-control" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors| orderBy: name" ng-change="getConsultantFreq()">
                                         <option value="">Select Consultant</option>
                                     </select>
@@ -154,15 +154,15 @@
                                                 <thead>
                                                     <tr>
                                                         <th width="30" align="left">Fav</th>
-                                                        <th width="150" align="left">Product</th>
+                                                        <th width="165" align="left">Product</th>
                                                         <th width="65" align="left">Route</th>
-                                                        <th width="70" align="left">Freq</th>
-                                                        <th width="35" align="center">No.of Days</th>
+                                                        <th width="70" align="left">Frequency</th>
+                                                        <th width="70" align="center">No.of Days</th>
                                                         <th width="25" align="center">Qty</th>
-                                                        <th width="50" align="center">Cost</th>
+                                                        <!--<th width="50" align="center">Cost</th>-->
                                                         <th width="45" align="center">Remarks</th>
-                                                        <th width="35" align="center">Total</th>
                                                         <th width="20" align="center">Actions</th>
+                                                        <th width="35" align="right" class="text-right prescription-total-b-l">Total</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody ng-hide="isLoading">                                                   
@@ -265,7 +265,7 @@
                                                                         <li class="dropdown-submenu" ng-if="currPresMask3.length > 3">
                                                                             <a tabindex="-1" href="#">More</a>
                                                                             <ul class="dropdown-menu">
-                                                                                <li ng-repeat="consFreq in currPresMask3 | limitTo:(3 - currPresMask3.length)">
+                                                                                <li ng-repeat="consFreq in currPresMask3| limitTo:(3 - currPresMask3.length)">
                                                                                     <a href ng-click="curPrescFreqSele(consFreq.freq_name, consFreq.freq_type, item, item.item_key, 'select')">{{consFreq.freq_name}}</a>
                                                                                 </li>
                                                                             </ul>
@@ -278,7 +278,7 @@
                                                                         <li class="dropdown-submenu" ng-if="currPresMask4.length > 3">
                                                                             <a tabindex="-1" href="#">More</a>
                                                                             <ul class="dropdown-menu">
-                                                                                <li ng-repeat="consFreq in currPresMask4 | limitTo:(3 - currPresMask4.length)">
+                                                                                <li ng-repeat="consFreq in currPresMask4| limitTo:(3 - currPresMask4.length)">
                                                                                     <a href ng-click="curPrescFreqSele(consFreq.freq_name, consFreq.freq_type, item, item.item_key, 'select')">{{consFreq.freq_name}}</a>
                                                                                 </li>
                                                                             </ul>
@@ -291,7 +291,7 @@
                                                                         <li class="dropdown-submenu" ng-if="currPresMaskTxt.length > 3">
                                                                             <a tabindex="-1" href="#">More</a>
                                                                             <ul class="dropdown-menu">
-                                                                                <li ng-repeat="consFreq in currPresMaskTxt | limitTo:(3 - currPresMaskTxt.length)">
+                                                                                <li ng-repeat="consFreq in currPresMaskTxt| limitTo:(3 - currPresMaskTxt.length)">
                                                                                     <a href ng-click="curPrescFreqSele(consFreq.freq_name, consFreq.freq_type, item, item.item_key, 'select')">{{consFreq.freq_name}}</a>
                                                                                 </li>
                                                                             </ul>
@@ -333,9 +333,9 @@
                                                                 </span>
                                                             </div>
                                                         </td>
-                                                        <td>
+<!--                                                        <td>
                                                             {{ item.price}}
-                                                        </td>
+                                                        </td>-->
                                                         <td align="center">
                                                             <span editable-text="item.remarks"
                                                                   e-index ="{{item.item_key}}"
@@ -349,17 +349,17 @@
                                                                 {{ item.remarks || 'empty' }}
                                                             </span>
                                                         </td>
-                                                        <td>
-                                                            {{ item.total | number:2}}
-                                                        </td>
-                                                        <td align="left">                                                         
+                                                        <td align="center">                                                         
                                                             <button type="button" class="label bg-info" ng-click="removeItem(item)"><i class=" fa fa-trash"></i></button>
+                                                        </td>
+                                                        <td class="text-right prescription-total-b-l">
+                                                            {{ item.total | number:2}}
                                                         </td>
                                                     </tr>                                                    
                                                 </tbody>
                                                 <tbody ng-show="isLoading">
                                                     <tr>
-                                                        <td colspan="10" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
+                                                        <td colspan="9" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -367,37 +367,46 @@
                                     </div>
                                 </div>
                                 <footer class="panel-footer">
-                                    <div class="form-horizontal">
-                                        <div class="form-inline">
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail2"><i class="fa fa-calendar"></i> <b> Next Vist </b></label>
-                                                <input type="text" class="form-control multimonthdatepicker" ng-model="data.next_visit" ng-click="open($event)" prevent-enter="true" ng-change="setDayEmpty();
-                                                                getDays();"/>    
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail2">
-                                                    <i class="fa fa-calendar-o"></i> <b> No.of.Days </b>
-                                                </label>
-                                                <input autocomplete="off" type="text" ng-model="data.number_of_days" class="form-control m-b w-100" number-mask="" ng-change="setDateEmpty();
-                                                                getVisit();">    
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail2">
-                                                    <i class="fa fa-rupee"></i> <b> Total Price</b>
-                                                </label>
-                                                <input type="text" class="form-control m-b w-100" number-mask="" disabled="true" value="{{ priceTotal() | number:2}} "/>    
-                                            </div>
-                                            <button class="btn btn-success save-btn-1" ng-click="getBtnId('save')"> 
-                                                <i class="fa fa-check"></i> Save 
-                                            </button>
-                                            <button class="btn btn-dark save-print" ng-click="getBtnId('print')"> 
-                                                <i class="fa fa-print"></i> Save & Print 
-                                            </button>
-                                            <button class="btn btn-dark" ng-click="clearPrescription()">  
-                                                <i class="fa fa-times"></i> Clear 
-                                            </button>
+                                    <div class="row">
+                                        <div class="table-responsive">
+                                            <table class="table noborder">
+                                                <tr>
+                                                    <td width="785"  align="left">
+                                                        <div class="form-horizontal">
+                                                            <div class="form-inline">
+                                                                <div class="form-group">
+                                                                    <label for="exampleInputEmail2"><i class="fa fa-calendar"></i> <b> Next Vist </b></label> &nbsp; &nbsp;
+                                                                    <input type="text" class="form-control multimonthdatepicker" ng-model="data.next_visit" ng-click="open($event)" prevent-enter="true" ng-change="setDayEmpty();
+                                                                                    getDays();"/>    
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="exampleInputEmail2">
+                                                                        &nbsp; &nbsp; <i class="fa fa-calendar-o"></i> <b> No.of.Days </b>
+                                                                    </label> &nbsp;&nbsp;
+                                                                    <input autocomplete="off" type="text" ng-model="data.number_of_days" class="form-control m-b w-100" number-mask="" ng-change="setDateEmpty();
+                                                                                    getVisit();">     
+                                                                </div>
+                                                                <div class="form-group prescription-btns">   
+                                                                    &nbsp; 
+                                                                    <button class="btn btn-success save-btn-1" ng-click="getBtnId('save')"> 
+                                                                        <i class="fa fa-check"></i> Save 
+                                                                    </button> &nbsp;
+                                                                    <button class="btn btn-dark save-print" ng-click="getBtnId('print')"> 
+                                                                        <i class="fa fa-print"></i> Save & Print 
+                                                                    </button> &nbsp;
+                                                                    <button class="btn btn-dark" ng-click="clearPrescription()">  
+                                                                        <i class="fa fa-times"></i> Clear 
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td width="180" align="right" class="prescription-total">  
+                                                        <i class="fa fa-rupee"></i> 
+                                                        <strong> {{ priceTotal() | number:2}}</strong>
+                                                    </td>
+                                                </tr>
+                                            </table>
                                         </div>
                                     </div>
                                 </footer>
