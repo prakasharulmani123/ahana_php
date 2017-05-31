@@ -582,4 +582,5 @@ ul.dropdown-menu.curPrescFreq > li > a, .dropdown-submenu > ul > li > a {
     border: none;
     background-color: transparent;
     box-shadow: none;
+    padding: 6px 8px;
 }
