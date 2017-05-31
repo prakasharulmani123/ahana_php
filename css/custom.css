@@ -566,6 +566,7 @@ ul.dropdown-menu.curPrescFreq > li > a, .dropdown-submenu > ul > li > a {
 .prescription-total
 {
     font-size: 20px;
+    color: #AAAAAA;
 }
 
 .prescription-total-b-l
@@ -575,4 +576,10 @@ ul.dropdown-menu.curPrescFreq > li > a, .dropdown-submenu > ul > li > a {
 
 .noborder td, .noborder th {
     border: none !important;
+}
+
+#prescription_item .dropdown-toggle {
+    border: none;
+    background-color: transparent;
+    box-shadow: none;
 }
