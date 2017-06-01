@@ -1608,6 +1608,12 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 } else {
                     $scope.currPresMaskTxt = maskTxt;
                 }
+                
+                //Make "Custom" is a first option in the array. 
+                var maskCustomTxt = $filter('filter')($scope.currPresMaskTxt, {freq_name: 'Custom'});
+                if(maskCustomTxt.length == 0) {
+                    $scope.currPresMaskTxt.unshift($scope.defaultMaskTxt);
+                }
             }
         }
 
