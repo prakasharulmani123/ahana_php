@@ -817,6 +817,18 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             }
         };
 
+        $scope.checkFrequency = function (data, item, key) {
+            var freqVal = $('#freq_' + key + '_' + item.freqType + ' input').val();
+            var freq_length = freqVal.replace(/\s/g, '').length;
+            if (item.freqType == 3 && freq_length != 5) {
+                return "Not empty.";
+            } else if (item.freqType == 4 && freq_length != 7) {
+                return "Not empty.";
+            } else if (item.freqType == 'txt' && freq_length == 0) {
+                return "Not empty.";
+            }
+        };
+
         $scope.prescription = '';
 
         var changeTimer = false;
@@ -1598,8 +1610,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 }
             }
         }
-        
-        
+
+
         //Not Used
 //        $scope.changeFreqMask = function (key, freq) {
 //            $('.freq_div_' + key).addClass('hide');

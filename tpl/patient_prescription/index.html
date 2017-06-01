@@ -216,7 +216,8 @@
                                                                       e-id="frequency_{{item.item_key}}_3"
                                                                       e-ng-change="freqChange($data, '3', item, item.item_key, tableform)"
                                                                       e-select-on-click=""
-                                                                      >
+                                                                      onbeforesave="checkFrequency($data, item, item.item_key)"
+                                                                      e-required>
                                                                     {{ item.frequency || 'empty' }}
                                                                 </span>
                                                             </div>
@@ -233,7 +234,8 @@
                                                                       e-id="frequency_{{item.item_key}}_4"
                                                                       e-ng-change="freqChange($data, '4', item, item.item_key, tableform)"
                                                                       e-select-on-click=""
-                                                                      >
+                                                                      onbeforesave="checkFrequency($data, item, item.item_key)"
+                                                                      e-required>
                                                                     {{ item.frequency || 'empty' }}
                                                                 </span>
                                                             </div>
@@ -248,7 +250,8 @@
                                                                       e-id="frequency_{{item.item_key}}_txt"
                                                                       e-ng-change="curPrescFreqSele($data, 'txt', item, item.item_key, 'change')"
                                                                       e-select-on-click=""
-                                                                      >
+                                                                      onbeforesave="checkFrequency($data, item, item.item_key)"
+                                                                      e-required>
                                                                     {{ item.frequency || 'empty' }}
                                                                 </span>
                                                             </div>
