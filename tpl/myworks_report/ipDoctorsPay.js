@@ -70,16 +70,16 @@ app.controller('ipDoctorsPay', ['$rootScope', '$scope', '$timeout', '$http', '$s
 
                 if (angular.isDefined($scope.data.consultant_id)) {
                     if ($scope.data.consultant_id.length > 3) {
-                        if (difference > 30) {
-                            $scope.data.to = moment($scope.data.from).add(+29, 'days').format('YYYY-MM-DD');
+                        if (difference > 31) {
+                            $scope.data.to = moment($scope.data.from).add(+30, 'days').format('YYYY-MM-DD');
                         }
                     }
                 }
 
                 if (angular.isDefined($scope.data.tenant_id)) {
                     if ($scope.data.tenant_id.length > 3) {
-                        if (difference > 30) {
-                            $scope.data.to = moment($scope.data.from).add(+29, 'days').format('YYYY-MM-DD');
+                        if (difference > 31) {
+                            $scope.data.to = moment($scope.data.from).add(+30, 'days').format('YYYY-MM-DD');
                         }
                     }
                 }
@@ -94,16 +94,16 @@ app.controller('ipDoctorsPay', ['$rootScope', '$scope', '$timeout', '$http', '$s
 
                 if (angular.isDefined($scope.data.consultant_id)) {
                     if ($scope.data.consultant_id.length > 3) {
-                        if (difference > 30) {
-                            $scope.data.from = moment($scope.data.to).add(-29, 'days').format('YYYY-MM-DD');
+                        if (difference > 31) {
+                            $scope.data.from = moment($scope.data.to).add(-30, 'days').format('YYYY-MM-DD');
                         }
                     }
                 }
 
                 if (angular.isDefined($scope.data.tenant_id)) {
                     if ($scope.data.tenant_id.length > 3) {
-                        if (difference > 30) {
-                            $scope.data.from = moment($scope.data.to).add(-29, 'days').format('YYYY-MM-DD');
+                        if (difference > 31) {
+                            $scope.data.from = moment($scope.data.to).add(-30, 'days').format('YYYY-MM-DD');
                         }
                     }
                 }
@@ -115,8 +115,8 @@ app.controller('ipDoctorsPay', ['$rootScope', '$scope', '$timeout', '$http', '$s
                     var from = moment($scope.data.from);
                     var to = moment($scope.data.to);
                     var difference = to.diff(from, 'days') + 1;
-                    if (difference > 30) {
-                        $scope.data.from = moment($scope.data.to).add(-29, 'days').format('YYYY-MM-DD');
+                    if (difference > 31) {
+                        $scope.data.from = moment($scope.data.to).add(-30, 'days').format('YYYY-MM-DD');
                     }
                 }
 
@@ -133,8 +133,8 @@ app.controller('ipDoctorsPay', ['$rootScope', '$scope', '$timeout', '$http', '$s
                     var from = moment($scope.data.from);
                     var to = moment($scope.data.to);
                     var difference = to.diff(from, 'days') + 1;
-                    if (difference > 30) {
-                        $scope.data.from = moment($scope.data.to).add(-29, 'days').format('YYYY-MM-DD');
+                    if (difference > 31) {
+                        $scope.data.from = moment($scope.data.to).add(-30, 'days').format('YYYY-MM-DD');
                     }
                 }
 
