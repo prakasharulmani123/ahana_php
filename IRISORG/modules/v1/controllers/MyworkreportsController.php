@@ -5,6 +5,7 @@ namespace IRISORG\modules\v1\controllers;
 use common\models\PatAppointment;
 use common\models\PatConsultant;
 use common\models\PatEncounter;
+use common\models\VBillingProfessionals;
 use Yii;
 use yii\filters\auth\QueryParamAuth;
 use yii\filters\ContentNegotiator;
@@ -167,7 +168,9 @@ class MyworkreportsController extends ActiveController {
             $consultants->andWhere("pat_consultant.consultant_id IN ( '$consultant_ids' )");
             $consultants->andWhere("date(pat_encounter.finalize_date) between '{$post['from']}' AND '{$post['to']}'");
         }
-
+        
+        $consultants->addSelect(["pat_patient.patient_id as patient_id"]);
+        $consultants->addSelect(["co_tenant.tenant_id as tenant_id"]);
         $consultants->addSelect(["co_tenant.tenant_name as branch_name"]);
         $consultants->addSelect(["pat_consultant.consultant_id as consultant_id"]);
         $consultants->addSelect(["CONCAT(co_user.title_code, '', co_user.name) as report_consultant_name"]);
@@ -175,6 +178,7 @@ class MyworkreportsController extends ActiveController {
         $consultants->addSelect(["pat_global_patient.patient_global_int_code as report_patient_global_int_code"]);
         $consultants->addSelect(["COUNT(pat_consultant.charge_amount) as report_total_visit"]);
         $consultants->addSelect(["SUM(pat_consultant.charge_amount) as report_total_charge_amount"]);
+        $consultants->addSelect(["GROUP_CONCAT(pat_encounter.encounter_id) as grouped_encounter_ids"]);
 
         $consultants->groupBy(["pat_consultant.consultant_id", "pat_consultant.patient_id"]);
         $consultants->orderBy(["pat_global_patient.patient_firstname" => SORT_ASC]);
@@ -183,6 +187,7 @@ class MyworkreportsController extends ActiveController {
 
         $reports = [];
         $sheetname = [];
+        
         foreach ($consultants as $key => $encounter) {
             $reports[$key]['branch_name'] = $encounter['branch_name'];
             $reports[$key]['consultant_id'] = $encounter['consultant_id'];
@@ -192,7 +197,17 @@ class MyworkreportsController extends ActiveController {
             $reports[$key]['patient_name'] = $encounter['report_patient_name'];
             $reports[$key]['patient_global_int_code'] = $encounter['report_patient_global_int_code'];
             $reports[$key]['total_visit'] = $encounter['report_total_visit'];
-            $reports[$key]['total_charge_amount'] = $encounter['report_total_charge_amount'];
+//            $reports[$key]['total_charge_amount'] = $encounter['report_total_charge_amount'];
+            $professional = VBillingProfessionals::find()
+                            ->where([
+                                'category_id' => $encounter['consultant_id'],
+                                'patient_id' => $encounter['patient_id'],
+                                'tenant_id' => $encounter['tenant_id']
+                            ])
+                            ->andWhere("encounter_id IN ({$encounter['grouped_encounter_ids']})")
+                            ->select('SUM(total_charge) as total_charge, SUM(concession_amount) as concession_amount, SUM(extra_amount) as extra_amount')->one();
+            
+            $reports[$key]['total_charge_amount'] = ($professional->total_charge + $professional->extra_amount) - $professional->concession_amount;
         }
         $sheetname = array_map("unserialize", array_unique(array_map("serialize", $sheetname)));
         return ['report' => $reports,'sheetname' => $sheetname];

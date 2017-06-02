@@ -38,6 +38,7 @@ class PatConsultant extends RActiveRecord {
     public $report_total_visit;
     public $report_total_charge_amount;
     public $branch_name;
+    public $grouped_encounter_ids;
 
     /**
      * @inheritdoc
