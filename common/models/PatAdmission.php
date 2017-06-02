@@ -66,7 +66,17 @@ class PatAdmission extends RActiveRecord {
             [['status', 'notes'], 'string'],
             ['admission_status', 'validateAdmissionStatus'],
             ['status_date', 'validateStatusDate'],
+            ['room_type_id', 'checkRoomChargeItems'],
         ];
+    }
+    
+    public function checkRoomChargeItems($attribute, $params) {
+        if(!empty($this->room_type_id)) {
+            $room_charges = Yii::$app->hepler->getRoomChargeItems($this->tenant_id, $this->room_type_id);
+            if(empty($room_charges)) {
+                $this->addError($attribute, "Room charges not setup in configuration menu, Unable to initiate admission");
+            }
+        }
     }
 
     public function validateAdmissionStatus($attribute, $params) {
