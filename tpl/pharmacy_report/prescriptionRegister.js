@@ -81,6 +81,16 @@ app.controller('prescriptionRegisterController', ['$rootScope', '$scope', '$time
                         $scope.loading = false;
                         $scope.showTable = true;
                         $scope.records = response.report;
+                        $scope.tableid = [];
+                        $scope.sheet_name = [];
+                        var newunique = {};
+                        angular.forEach(response.report, function (item, key) {
+                            if (!newunique[item.branch_name]) {
+                                $scope.sheet_name.push(item.branch_name);
+                                $scope.tableid.push('table_' + item.branch_name);
+                                newunique[item.branch_name] = item;
+                            }
+                        });
                         $scope.generated_on = moment().format('YYYY-MM-DD hh:mm A');
                     })
                     .error(function () {
