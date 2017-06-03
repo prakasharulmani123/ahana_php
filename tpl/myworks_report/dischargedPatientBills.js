@@ -170,6 +170,19 @@ app.controller('dischargedPatientBillsController', ['$rootScope', '$scope', '$ti
                         $scope.loading = false;
                         $scope.showTable = true;
                         $scope.records = response;
+                        $scope.tableid = [];
+                        $scope.sheet_name = [];
+                        var newunique = {}; var newunique1 = {};
+                        angular.forEach(response, function (item, key) {
+                            if (!newunique[item.tenant_id]) {
+                                $scope.tableid.push('table_' + item.tenant_id);
+                                newunique[item.tenant_id] = item;
+                            }
+                            if (!newunique1[item.branch_name]) {
+                                $scope.sheet_name.push(item.branch_name);
+                                newunique1[item.branch_name] = item;
+                            }
+                        });
                         $scope.generated_on = moment().format('YYYY-MM-DD hh:mm A');
                     })
                     .error(function () {
@@ -337,4 +350,81 @@ app.controller('dischargedPatientBillsController', ['$rootScope', '$scope', '$ti
                 }
             }, 1000);
         }
+        
+        $scope.tablesToExcel = (function () {
+            var uri = 'data:application/vnd.ms-excel;base64,'
+                    , tmplWorkbookXML = '<?xml version="1.0"?><?mso-application progid="Excel.Sheet"?><Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">'
+                    + '<DocumentProperties xmlns="urn:schemas-microsoft-com:office:office"><Author>Axel Richter</Author><Created>{created}</Created></DocumentProperties>'
+                    + '<Styles>'
+                    + '<Style ss:ID="Currency"><NumberFormat ss:Format="Currency"></NumberFormat></Style>'
+                    + '<Style ss:ID="Date"><NumberFormat ss:Format="Medium Date"></NumberFormat></Style>'
+                    + '<Style ss:ID="Bold"><Font ss:Bold="1"></Font></Style>'
+                    + '</Styles>'
+                    + '{worksheets}</Workbook>'
+                    , tmplWorksheetXML = '<Worksheet ss:Name="{nameWS}"><Table>{rows}</Table></Worksheet>'
+                    , tmplCellXML = '<Cell{attributeStyleID}{attributeFormula}><Data ss:Type="{nameType}">{data}</Data></Cell>'
+                    , base64 = function (s) {
+                        return window.btoa(unescape(encodeURIComponent(s)))
+                    }
+            , format = function (s, c) {
+                return s.replace(/{(\w+)}/g, function (m, p) {
+                    return c[p];
+                })
+            }
+            return function (tabless, wsnames, wbname, appname) {
+                var ctx = "";
+                var workbookXML = "";
+                var worksheetsXML = "";
+                var rowsXML = "";
+
+                for (var i = 0; i < tabless.length; i++) {
+
+                    var particularDiv = document.getElementById(tabless[i]);
+
+                    if (particularDiv) {
+                        var allTables = particularDiv.getElementsByTagName('table').length;
+                        tables = [];
+                        for (var x = 0; x < allTables; x++) {
+                            tables[i] = document.getElementById(tabless[i]).getElementsByTagName('table')[x];
+                            for (var j = 0; j < tables[i].rows.length; j++) {
+                                rowsXML += '<Row>'
+                                for (var k = 0; k < tables[i].rows[j].cells.length; k++) {
+                                    var dataType = tables[i].rows[j].cells[k].getAttribute("data-type");
+                                    var dataStyle = tables[i].rows[j].cells[k].getAttribute("data-style");
+                                    var dataValue = tables[i].rows[j].cells[k].getAttribute("data-value");
+                                    var dataTagvalue = (dataValue) ? dataValue : tables[i].rows[j].cells[k].tagName;
+                                    dataValue = (dataValue) ? dataValue : tables[i].rows[j].cells[k].innerText;
+                                    
+                                    if(dataTagvalue === 'TH') dataStyle = 'Bold';
+                                    
+                                    var dataFormula = tables[i].rows[j].cells[k].getAttribute("data-formula");
+                                    dataFormula = (dataFormula) ? dataFormula : (appname == 'Calc' && dataType == 'DateTime') ? dataValue : null;
+                                    ctx = {attributeStyleID: (dataStyle == 'Currency' || dataStyle == 'Date' || dataStyle == 'Bold') ? ' ss:StyleID="' + dataStyle + '"' : ''
+                                        , nameType: (dataType == 'Number' || dataType == 'DateTime' || dataType == 'Boolean' || dataType == 'Error') ? dataType : 'String'
+                                        , data: (dataFormula) ? '' : dataValue
+                                        , attributeFormula: (dataFormula) ? ' ss:Formula="' + dataFormula + '"' : ''
+                                    };
+                                    rowsXML += format(tmplCellXML, ctx);
+                                }
+                                rowsXML += '</Row>'
+                            }
+                        }
+                    }
+                    ctx = {rows: rowsXML, nameWS: wsnames[i] || 'Sheet' + i};
+                    worksheetsXML += format(tmplWorksheetXML, ctx);
+                    rowsXML = "";
+                }
+                    
+                ctx = {created: (new Date()).getTime(), worksheets: worksheetsXML};
+                workbookXML = format(tmplWorkbookXML, ctx);
+
+                var link = document.createElement("A");
+                link.href = uri + base64(workbookXML);
+                link.download = wbname || 'Workbook.xls';
+                link.target = '_blank';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        })();
     }]);
