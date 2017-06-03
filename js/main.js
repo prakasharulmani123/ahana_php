@@ -668,9 +668,9 @@ angular.module('app')
                                 $scope.loadbar('hide');
                                 if (response.success == true) {
                                     var patient_guid = response.patient.patient_guid;
-                                    $('#import_book_' + key).html('Completed').toggleClass('btn-success').removeAttr('ng-click');
+//                                    $('#import_book_' + key).html('Completed').toggleClass('btn-success').removeAttr('ng-click');
                                     $timeout(function () {
-                                        $state.go('patient.appointment', {id: patient_guid});
+                                        $state.go('patient.appointment', {id: patient_guid}, {reload: true});
                                     }, 1000);
                                 } else {
                                     $scope.errorData = response.message;
@@ -701,7 +701,7 @@ angular.module('app')
                                 if (response.success == true) {
                                     var patient_guid = response.patient.patient_guid;
                                     $timeout(function () {
-                                        $state.go('patient.view', {id: patient_guid});
+                                        $state.go('patient.view', {id: patient_guid}, {reload: true});
                                     }, 1000);
                                 } else {
                                     $scope.errorData = response.message;
