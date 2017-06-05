@@ -32,7 +32,7 @@ class CoDoctorInterval extends RActiveRecord {
      */
     public function rules() {
         return [
-                [['tenant_id', 'user_id', 'interval', 'created_by', 'modified_by'], 'required'],
+                [['interval'], 'required'],
                 [['tenant_id', 'user_id', 'interval', 'created_by', 'modified_by'], 'integer'],
                 [['created_at', 'modified_at', 'deleted_at'], 'safe'],
                 [['tenant_id'], 'exist', 'skipOnError' => true, 'targetClass' => CoTenant::className(), 'targetAttribute' => ['tenant_id' => 'tenant_id']],

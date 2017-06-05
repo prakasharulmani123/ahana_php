@@ -3,6 +3,7 @@
 namespace IRISORG\modules\v1\controllers;
 
 use common\models\CoDoctorSchedule;
+use common\models\CoDoctorInterval;
 use common\models\PatAppointment;
 use Yii;
 use yii\bootstrap\Html;
@@ -76,6 +77,7 @@ class DoctorscheduleController extends ActiveController {
         $post = Yii::$app->getRequest()->post();
 
         $model = new CoDoctorSchedule();
+        $interval_model = new CoDoctorInterval();
         $model->scenario = 'create';
 
         $model->attributes = array(
@@ -83,9 +85,16 @@ class DoctorscheduleController extends ActiveController {
             'custom_day' => isset($post['custom_day']) ? $post['custom_day'] : '',
             'timings' => isset($post['timings']) ? $post['timings'] : '',
         );
+
+        $interval_model->attributes = array(
+            'interval' => isset($post['interval']) ? $post['interval'] : '',
+        );
+
         $valid = $model->validate();
+        $valid = $interval_model->validate() && $valid;
+
         if (!$valid)
-            return ['success' => false, 'message' => Html::errorSummary([$model])];
+            return ['success' => false, 'message' => Html::errorSummary([$model, $interval_model])];
 
 //        if ($post['day_type'] == 'A') {
 //            $deleted = CoDoctorSchedule::find()->tenant()->where('user_id = :user_id and schedule_day != :schedule_day', ['user_id' => $post['user_id'], 'schedule_day' => '-1'])->all();
@@ -108,6 +117,18 @@ class DoctorscheduleController extends ActiveController {
                         'schedule_time_in' => date('H:i:s', strtotime($timing['schedule_time_in'])),
                         'schedule_time_out' => date('H:i:s', strtotime($timing['schedule_time_out'])),
                     ];
+                    $interval_attr = [
+                        'user_id' => $post['user_id'],
+                        'interval' => $post['interval'],
+                    ];
+
+                    $new_interval = new CoDoctorInterval();
+                    $interval_exits = CoDoctorInterval::find()->tenant()->active()->andWhere(['user_id' => $post['user_id']])->one();
+                    if (!empty($interval_exits)) {
+                        $new_interval = $interval_exits;
+                    }
+                    $new_interval->attributes = $interval_attr;
+                    $new_interval->save();
 
                     $exists = CoDoctorSchedule::find()->tenant()->active()->andwhere($attr)->one();
 
@@ -138,11 +159,20 @@ class DoctorscheduleController extends ActiveController {
                         ->active()
                         ->orderBy('schedule_time_in')
                         ->all();
+                
+                $interval = CoDoctorInterval::find()->tenant()
+                        ->where('user_id = :doctor_id', [':doctor_id' => $doctor_id])
+                        ->active()
+                        ->one();
+                if(empty($interval)) $interval_limit = 5;
+                else $interval_limit = $interval->interval;
+                
+                
 
                 $timerange = [];
                 if (!empty($all_schedules)) {
                     foreach ($all_schedules as $all_schedule) {
-                        $timerange = array_merge($timerange, self::getTimeScheduleSlots($post['doctor_id'], $date, $all_schedule['schedule_time_in'], $all_schedule['schedule_time_out'], '5'));
+                        $timerange = array_merge($timerange, self::getTimeScheduleSlots($post['doctor_id'], $date, $all_schedule['schedule_time_in'], $all_schedule['schedule_time_out'], $interval_limit));
                     }
                 }
 
@@ -161,7 +191,7 @@ class DoctorscheduleController extends ActiveController {
         $start_time = strtotime($startTime);
         $end_time = strtotime($endTime);
         $interval_mins = $interval * 60;
-        
+
         $bookedSlots = PatAppointment::checkBookedSlots($doctor_id, $schedule_date);
 
         while ($start_time <= $end_time) {
