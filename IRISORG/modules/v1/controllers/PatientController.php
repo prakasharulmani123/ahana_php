@@ -91,8 +91,10 @@ class PatientController extends ActiveController {
                 if (!empty($patient)) {
                     $model = $patient;
 
-                    if (!empty($patient->patPatientAddress))
+                    if (!empty($patient->patPatientAddress)){
                         $addr_model = $patient->patPatientAddress;
+                        $addr_model->setScenario('update');
+                    }
                 }
             }
             $model->setScenario('registration');
