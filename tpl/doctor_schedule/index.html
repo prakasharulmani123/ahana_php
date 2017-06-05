@@ -51,6 +51,32 @@
                     <td colspan="2" data-value="{{row.name}}">
                         <div class="row"  ng-repeat="day in row.days| orderBy: dayname">
                             <div class="col-sm-6">
+
+                                <div class="panel panel-default inner-panel">
+                                    <div class="panel-heading">
+                                        <b> Interval </b>
+                                    </div>
+                                    <div class="panel-body doc-timing">
+                                        <span editable-select="row.interval" e-ng-options="interval.value as interval.label for interval in intervals | orderBy: label" e-name="interval" e-form="intervalform" onbeforesave="checkInput($data)" onshow="loadGroups()" e-onkeydown="return false;">
+                                            {{row.interval|| 'empty'}} Min
+                                        </span>
+                                        <form editable-form name="intervalform" onbeforesave="updateInterval($data, row.user_id)" ng-show="intervalform.$visible" class="form-buttons form-inline" shown="inserted == row">
+                                            <button type="submit" ng-disabled="intervalform.$waiting" class="badge bg-success">
+                                                Save
+                                            </button>
+                                            &nbsp;&nbsp;
+                                            <button type="button" ng-disabled="intervalform.$waiting" ng-click="intervalform.$cancel()" class="badge bg-dark">
+                                                Cancel
+                                            </button>
+                                        </form>
+
+                                        <div class="buttons" ng-show="!intervalform.$visible">
+                                            <button class="badge bg-dark" ng-click="intervalform.$show()">Edit</button>
+                                            &nbsp;&nbsp;
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div class="panel panel-default inner-panel">
 
                                     <div class="panel-heading">
@@ -106,13 +132,13 @@
                     <td colspan="3" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
                 </tr>
             </tbody>
-<!--            <tfoot>
-                <tr>
-                    <td colspan="3" class="text-center">
-                        <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7"></div>
-                    </td>
-                </tr>
-            </tfoot>-->
+            <!--            <tfoot>
+                            <tr>
+                                <td colspan="3" class="text-center">
+                                    <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7"></div>
+                                </td>
+                            </tr>
+                        </tfoot>-->
         </table>
     </div>
 </div>

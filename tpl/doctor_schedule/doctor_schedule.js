@@ -4,6 +4,7 @@ app.controller('DoctorSchedulesController', ['$rootScope', '$scope', '$timeout',
         editableThemes.bs3.buttonsClass = 'btn-sm';
         editableOptions.theme = 'bs3';
 
+
         //Index Page
         $scope.loadDoctorSchedulesList = function () {
             $scope.isLoading = true;
@@ -11,6 +12,9 @@ app.controller('DoctorSchedulesController', ['$rootScope', '$scope', '$timeout',
             $scope.rowCollection = [];  // base collection
             $scope.itemsByPage = 10; // No.of records per page
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
+            $rootScope.commonService.GetIntervalList(function (response) {
+                    $scope.intervals = response;
+                });
 
             //Load All Doctor schedules
             $http.get($rootScope.IRISOrgServiceUrl + '/doctorschedule')
@@ -22,7 +26,9 @@ app.controller('DoctorSchedulesController', ['$rootScope', '$scope', '$timeout',
                             }
                             doctorSchedules[sub.user_id]['name'] = sub.doctor_name;
                             doctorSchedules[sub.user_id]['user_id'] = sub.user_id;
-
+                            //Get doctor interval details
+                            doctorSchedules[sub.user_id]['interval'] = sub.interval;
+                            
                             if (typeof doctorSchedules[sub.user_id]['days'] == 'undefined') {
                                 doctorSchedules[sub.user_id]['days'] = {};
                             }
@@ -56,7 +62,15 @@ app.controller('DoctorSchedulesController', ['$rootScope', '$scope', '$timeout',
                         $scope.errorData = "An Error has occured while loading roomChargesubCategorys!";
                     });
         };
-
+        $scope.loadGroups = function () {
+            $scope.intervals = [{value: '05', label: '05 Min'}, {value: '10', label: '10 Min'}, {value: '15', label: '15 Min'}, {value: '20', label: '20 Min'}, {value: '25', label: '25 Min'}, {value: '30', label: '30 Min'}, {value: '35', label: '35 Min'}, {value: '40', label: '40 Min'}, {value: '45', label: '45 Min'}, {value: '50', label: '50 Min'}, {value: '55', label: '55 Min'}, {value: '60', label: '60 Min'}];
+        };
+        $scope.$watch('interval', function (newVal, oldVal) {
+            if (newVal !== oldVal) {
+                var selected = $filter('filter')($scope.intervals, {id: interval});
+                $scope.intervals.value = selected.length ? selected[0].text : null;
+            }
+        });
         $scope.$watch('form_filter', function (newValue, oldValue) {
             if (typeof newValue != 'undefined' && newValue != '' && newValue != null) {
                 var footableFilter = $('table').data('footable-filter');
@@ -80,6 +94,10 @@ app.controller('DoctorSchedulesController', ['$rootScope', '$scope', '$timeout',
                     angular.forEach($scope.days, function (day) {
                         day.checked = true;
                     });
+                });
+
+                $rootScope.commonService.GetIntervalList(function (response) {
+                    $scope.intervals = response;
                 });
 
                 $scope.is_show = false;
@@ -194,6 +212,29 @@ app.controller('DoctorSchedulesController', ['$rootScope', '$scope', '$timeout',
                 $scope.timings.splice(index, 1);
         };
 
+        $scope.updateInterval = function (data, id) {
+            $scope.errorData = $scope.msg.successMessage = '';
+            post_method = 'POST';
+            post_url = $rootScope.IRISOrgServiceUrl + '/doctorinterval/setintervaltime?userid=' + id;
+            succ_msg = 'Doctorinterval Updated successfully';
+            $http({
+                method: post_method,
+                url: post_url,
+                data: data,
+            }).success(
+                    function (response) {
+                        $scope.loadbar('hide');
+                        $scope.msg.successMessage = succ_msg;
+                    }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        }
+
         $scope.updateTimings = function (data, id) {
             $scope.errorData = $scope.msg.successMessage = '';
             post_method = 'PUT';
@@ -241,8 +282,7 @@ app.controller('DoctorSchedulesController', ['$rootScope', '$scope', '$timeout',
                                                         if (response.data.success === true) {
                                                             delete $scope.displayedCollection[index1]['days'][index2]['timing'][index3];
                                                             $scope.msg.successMessage = 'Timing deleted successfully !!!';
-                                                        }
-                                                        else {
+                                                        } else {
                                                             $scope.errorData = response.data.message;
                                                         }
                                                     }
@@ -276,8 +316,7 @@ app.controller('DoctorSchedulesController', ['$rootScope', '$scope', '$timeout',
                                         if (response.data.success === true) {
                                             delete $scope.displayedCollection[index];
                                             $scope.msg.successMessage = 'Doctor Schedule deleted successfully !!!';
-                                        }
-                                        else {
+                                        } else {
                                             $scope.errorData = response.data.message;
                                         }
                                     }
