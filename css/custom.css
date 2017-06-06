@@ -584,3 +584,12 @@ ul.dropdown-menu.curPrescFreq > li > a, .dropdown-submenu > ul > li > a {
     box-shadow: none;
     padding: 6px 8px;
 }
+
+.bs-searchbox+.bs-actionsbox {
+    padding: 0 0 4px !important;
+}
+
+.bs-actionsbox .btn-block {
+    padding-right: 7px;
+    padding-left: 7px;
+}
