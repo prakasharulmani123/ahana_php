@@ -50,16 +50,6 @@ class DoctorintervalController extends ActiveController {
         ]);
     }
 
-    public function actionGetinterval() {
-        $get = Yii::$app->getRequest()->get();
-        $modelClass = $this->modelClass;
-        $interval = $modelClass::find()->tenant()->active()
-                ->select('interval')
-                ->where('user_id = :user_id', [':user_id' => $get['userid']])
-                ->one();
-        return $interval;
-    }
-
     public function actionSetintervaltime() {
         $post = Yii::$app->getRequest()->post();
         $interval_attr = [
