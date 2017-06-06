@@ -472,7 +472,7 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
     }
 
     function GetIntervalList(callback) {
-        var response = [{value: '05', label: '05 Min'}, {value: '10', label: '10 Min'}, {value: '15', label: '15 Min'}, {value: '20', label: '20 Min'}, {value: '25', label: '25 Min'}, {value: '30', label: '30 Min'}, {value: '35', label: '35 Min'}, {value: '40', label: '40 Min'}, {value: '45', label: '45 Min'}, {value: '50', label: '50 Min'}, {value: '55', label: '55 Min'}, {value: '60', label: '60 Min'}];
+        var response = [{value: 5, label: '05 Min'}, {value: 10, label: '10 Min'}, {value: 15, label: '15 Min'}, {value: 20, label: '20 Min'}, {value: 25, label: '25 Min'}, {value: 30, label: '30 Min'}, {value: 35, label: '35 Min'}, {value: 40, label: '40 Min'}, {value: 45, label: '45 Min'}, {value: 50, label: '50 Min'}, {value: 55, label: '55 Min'}, {value: 60, label: '60 Min'}];
         callback(response);
     }
     
