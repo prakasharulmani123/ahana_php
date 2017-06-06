@@ -106,6 +106,18 @@ class DoctorscheduleController extends ActiveController {
 //                $delete->delete();
 //            }
 //        }
+        $interval_attr = [
+            'user_id' => $post['user_id'],
+            'interval' => $post['interval'],
+        ];
+        $new_interval = new CoDoctorInterval();
+        $interval_exits = CoDoctorInterval::find()->tenant()->active()->andWhere(['user_id' => $post['user_id']])->one();
+        if (!empty($interval_exits)) {
+            $new_interval = $interval_exits;
+        }
+        $new_interval->attributes = $interval_attr;
+        $new_interval->save();
+
         foreach ($post['custom_day'] as $day) {
             if ($day['checked'] == 1) {
                 foreach ($post['timings'] as $timing) {
@@ -117,18 +129,6 @@ class DoctorscheduleController extends ActiveController {
                         'schedule_time_in' => date('H:i:s', strtotime($timing['schedule_time_in'])),
                         'schedule_time_out' => date('H:i:s', strtotime($timing['schedule_time_out'])),
                     ];
-                    $interval_attr = [
-                        'user_id' => $post['user_id'],
-                        'interval' => $post['interval'],
-                    ];
-
-                    $new_interval = new CoDoctorInterval();
-                    $interval_exits = CoDoctorInterval::find()->tenant()->active()->andWhere(['user_id' => $post['user_id']])->one();
-                    if (!empty($interval_exits)) {
-                        $new_interval = $interval_exits;
-                    }
-                    $new_interval->attributes = $interval_attr;
-                    $new_interval->save();
 
                     $exists = CoDoctorSchedule::find()->tenant()->active()->andwhere($attr)->one();
 
@@ -159,15 +159,17 @@ class DoctorscheduleController extends ActiveController {
                         ->active()
                         ->orderBy('schedule_time_in')
                         ->all();
-                
+
                 $interval = CoDoctorInterval::find()->tenant()
                         ->where('user_id = :doctor_id', [':doctor_id' => $doctor_id])
                         ->active()
                         ->one();
-                if(empty($interval)) $interval_limit = 5;
-                else $interval_limit = $interval->interval;
-                
-                
+                if (empty($interval))
+                    $interval_limit = 5;
+                else
+                    $interval_limit = $interval->interval;
+
+
 
                 $timerange = [];
                 if (!empty($all_schedules)) {

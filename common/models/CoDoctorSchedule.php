@@ -81,10 +81,6 @@ class CoDoctorSchedule extends RActiveRecord {
         return $this->hasOne(CoUser::className(), ['user_id' => 'user_id']);
     }
     
-    public function getInterval() {
-        return $this->hasOne(CoDoctorInterval::className(), ['user_id' => 'user_id']);
-    }
-
     public static function find() {
         return new CoDoctorScheduleQuery(get_called_class());
     }
@@ -95,7 +91,7 @@ class CoDoctorSchedule extends RActiveRecord {
                 return (isset($model->user) ? $model->user->title_code.$model->user->name : '-');
             },
             'interval' => function ($model) {
-                return (isset($model->interval) ? $model->interval->interval : '-');
+                return (isset($model->user->interval) ? $model->user->interval->interval : '-');
             },        
             'available_day' => function ($model) {
                 if (isset($model->schedule_day)) {

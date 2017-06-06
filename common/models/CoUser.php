@@ -196,6 +196,10 @@ class CoUser extends RActiveRecord {
     public function getSpeciality() {
         return $this->hasOne(CoSpeciality::className(), ['speciality_id' => 'speciality_id']);
     }
+    
+    public function getInterval() {
+        return $this->hasOne(CoDoctorInterval::className(), ['user_id' => 'user_id']);
+    }
 
     public static function find() {
         return new CoUserQuery(get_called_class());
