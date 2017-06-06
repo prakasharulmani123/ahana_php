@@ -593,3 +593,6 @@ ul.dropdown-menu.curPrescFreq > li > a, .dropdown-submenu > ul > li > a {
     padding-right: 7px;
     padding-left: 7px;
 }
+.input-sm {
+    height: 31px !important;	
+}

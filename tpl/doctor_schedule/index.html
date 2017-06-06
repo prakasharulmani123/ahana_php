@@ -57,23 +57,29 @@
                                         <b> Interval </b>
                                     </div>
                                     <div class="panel-body doc-timing">
-                                        <span editable-select="row.interval" e-ng-options="interval.value as interval.label for interval in intervals" e-name="interval" e-form="intervalform" e-onkeydown="return false;">
-                                            {{row.interval }} Min
-                                        </span>
-                                        <form editable-form name="intervalform" onbeforesave="updateInterval($data, row.user_id)" ng-show="intervalform.$visible" class="form-buttons form-inline" shown="inserted == row">
-                                            <button type="submit" ng-disabled="intervalform.$waiting" class="badge bg-success">
-                                                Save
-                                            </button>
-                                            &nbsp;&nbsp;
-                                            <button type="button" ng-disabled="intervalform.$waiting" ng-click="intervalform.$cancel()" class="badge bg-dark">
-                                                Cancel
-                                            </button>
-                                        </form>
-
-                                        <div class="buttons" ng-show="!intervalform.$visible">
-                                            <button class="badge bg-dark" ng-click="intervalform.$show()">Edit</button>
-                                            &nbsp;&nbsp;
-                                        </div>
+                                        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table">
+                                            <tr>
+                                                <td><span editable-select="row.interval" e-ng-options="interval.value as interval.label for interval in intervals" e-name="interval" e-form="intervalform" e-onkeydown="return false;">
+                                                        {{row.interval}} Min
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <form editable-form name="intervalform" onbeforesave="updateInterval($data, row.user_id)" ng-show="intervalform.$visible" class="form-buttons form-inline" shown="inserted == row">
+                                                        <button type="submit" ng-disabled="intervalform.$waiting" class="badge bg-success">
+                                                            Save
+                                                        </button>
+                                                        &nbsp;&nbsp;
+                                                        <button type="button" ng-disabled="intervalform.$waiting" ng-click="intervalform.$cancel()" class="badge bg-dark">
+                                                            Cancel
+                                                        </button>
+                                                    </form>
+                                                    <div class="buttons" ng-show="!intervalform.$visible">
+                                                        <button class="badge bg-dark" ng-click="intervalform.$show()">Edit</button>
+                                                        &nbsp;&nbsp;
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
                                     </div>
                                 </div>
 
