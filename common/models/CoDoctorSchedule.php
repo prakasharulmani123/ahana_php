@@ -91,7 +91,7 @@ class CoDoctorSchedule extends RActiveRecord {
                 return (isset($model->user) ? $model->user->title_code.$model->user->name : '-');
             },
             'interval' => function ($model) {
-                return (isset($model->user->interval) ? $model->user->interval->interval : '5');
+                return (isset($model->user->interval) ? $model->user->interval->interval : 5);
             },        
             'available_day' => function ($model) {
                 if (isset($model->schedule_day)) {
