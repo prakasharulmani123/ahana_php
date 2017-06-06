@@ -12,7 +12,7 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">Interval *</label>
             <div class="col-sm-9">
-                <select class="form-control" ng-model="data.interval" ng-options="interval.value as interval.label for interval in intervals | orderBy: label">
+                <select class="form-control" ng-model="data.interval" ng-options="interval.value as interval.label for interval in intervals">
                     <option value="">Select Interval</option>
                 </select>
             </div>

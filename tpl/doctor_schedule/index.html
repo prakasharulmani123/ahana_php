@@ -57,8 +57,8 @@
                                         <b> Interval </b>
                                     </div>
                                     <div class="panel-body doc-timing">
-                                        <span editable-select="row.interval" e-ng-options="interval.value as interval.label for interval in intervals | orderBy: label" e-name="interval" e-form="intervalform" e-onkeydown="return false;">
-                                            {{row.interval|| 'empty'}} Min
+                                        <span editable-select="row.interval" e-ng-options="interval.value as interval.label for interval in intervals" e-name="interval" e-form="intervalform" e-onkeydown="return false;">
+                                            {{row.interval }} Min
                                         </span>
                                         <form editable-form name="intervalform" onbeforesave="updateInterval($data, row.user_id)" ng-show="intervalform.$visible" class="form-buttons form-inline" shown="inserted == row">
                                             <button type="submit" ng-disabled="intervalform.$waiting" class="badge bg-success">
