@@ -66,7 +66,7 @@ class PatPatientAddress extends RActiveRecord {
             [['patient_id', 'addr_country_id', 'addr_state_id', 'addr_city_id', 'addr_perm_country_id', 'addr_perm_state_id', 'addr_perm_city_id', 'created_by', 'modified_by', 'addr_zip', 'addr_perm_zip'], 'integer'],
             [['addr_current_address', 'addr_perm_address'], 'string'],
             [['created_at', 'modified_at', 'deleted_at'], 'safe'],
-            [['addr_zip', 'addr_perm_zip'], 'string', 'length' => [5, 10]]
+            [['addr_zip', 'addr_perm_zip'], 'string', 'length' => [6, 10]]
         ];
     }
 
