@@ -489,7 +489,7 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
         }
 
         $scope.printFooter = function () {
-            return true;
+//            return true;
         }
 
         $scope.printStyle = function () {

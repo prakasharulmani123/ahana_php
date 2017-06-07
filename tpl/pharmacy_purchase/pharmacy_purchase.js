@@ -741,7 +741,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
         }
 
         $scope.printFooter = function () {
-            return true;
+//            return true;
         }
 
         $scope.printStyle = function () {

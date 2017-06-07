@@ -120,7 +120,7 @@ app.controller('ipBillStatusController', ['$rootScope', '$scope', '$timeout', '$
 //                ],
 //                margin: 5
 //            };
-            return true;
+//            return true;
         }
 
         $scope.printStyle = function () {

@@ -63,11 +63,11 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
 
         //PRINT
         $scope.printHeader = function () {
-            return true;
+//            return true;
         }
 
         $scope.printFooter = function () {
-            return true;
+//            return true;
         }
 
         $scope.printStyle = function () {

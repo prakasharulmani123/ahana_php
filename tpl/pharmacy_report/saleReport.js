@@ -119,7 +119,7 @@ app.controller('saleReportController', ['$rootScope', '$scope', '$timeout', '$ht
         }
 
         $scope.printFooter = function () {
-            return true;
+//            return true;
         }
 
         $scope.printStyle = function () {

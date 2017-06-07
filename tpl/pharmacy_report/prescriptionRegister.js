@@ -108,7 +108,7 @@ app.controller('prescriptionRegisterController', ['$rootScope', '$scope', '$time
         }
 
         $scope.printFooter = function () {
-            return true;
+//            return true;
         }
 
         $scope.printStyle = function () {

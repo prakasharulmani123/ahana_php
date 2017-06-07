@@ -2,13 +2,13 @@ app.controller('PatientLabelController', ['scope', '$scope', function (scope, $s
         $scope.data = scope;
 
         /*PRINT*/
-//        $scope.printHeader = function () {
+        $scope.printHeader = function () {
 //            return true;
-//        }
+        }
 
-//        $scope.printFooter = function () {
-//            return true;
-//        }
+        $scope.printFooter = function () {
+//            return true; 
+        }
 
         $scope.printStyle = function () {
             return true;
@@ -42,8 +42,8 @@ app.controller('PatientLabelController', ['scope', '$scope', function (scope, $s
             var print_content = $scope.printContent();
             if (print_content.length > 0) {
                 var docDefinition = {
-//                    header: $scope.printHeader(),
-//                    footer: $scope.printFooter(),
+                    header: $scope.printHeader(),
+                    footer: $scope.printFooter(),
                     styles: $scope.printStyle(),
                     content: print_content,
                     pageSize: {width: 3 * 72, height: 3 * 72}, //8cm

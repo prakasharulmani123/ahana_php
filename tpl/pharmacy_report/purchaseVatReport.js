@@ -79,7 +79,7 @@ app.controller('purchaseVatReportController', ['$rootScope', '$scope', '$timeout
         }
 
         $scope.printFooter = function () {
-            return true;
+//            return true;
         }
 
         $scope.printStyle = function () {
