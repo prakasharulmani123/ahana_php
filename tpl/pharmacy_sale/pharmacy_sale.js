@@ -1037,7 +1037,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         $scope.printHeader = function () {
             return {
                 text: [{text: 'Ahana\n', bold: true}, {text: 'PHARMACY SERVICE - 24 HOURS'}],
-                margin: 5,
+                margin: 20,
                 alignment: 'center'
             };
         }
