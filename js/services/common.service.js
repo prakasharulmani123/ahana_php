@@ -472,7 +472,13 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
     }
 
     function GetIntervalList(callback) {
-        var response = [{value: 5, label: '05 Min'}, {value: 10, label: '10 Min'}, {value: 15, label: '15 Min'}, {value: 20, label: '20 Min'}, {value: 25, label: '25 Min'}, {value: 30, label: '30 Min'}, {value: 35, label: '35 Min'}, {value: 40, label: '40 Min'}, {value: 45, label: '45 Min'}, {value: 50, label: '50 Min'}, {value: 55, label: '55 Min'}, {value: 60, label: '60 Min'}];
+        var response = [{value: 1, label: '1 Min'}, {value: 2, label: '2 Min'}, {value: 3, label: '3 Min'}, {value: 4, label: '4 Min'}, {value: 5, label: '5 Min'}, {value: 6, label: '6 Min'}, {value: 7, label: '7 Min'}, {value: 8, label: '8 Min'}, {value: 9, label: '9 Min'}, {value: 10, label: '10 Min'}, 
+            {value: 11, label: '11 Min'}, {value: 12, label: '12 Min'}, {value: 13, label: '13 Min'}, {value: 14, label: '14 Min'}, {value: 15, label: '15 Min'}, {value: 16, label: '16 Min'}, {value: 17, label: '17 Min'}, {value: 18, label: '18 Min'}, {value: 19, label: '19 Min'}, {value: 20, label: '20 Min'},
+            {value: 21, label: '21 Min'}, {value: 22, label: '22 Min'}, {value: 23, label: '23 Min'}, {value: 24, label: '24 Min'}, {value: 25, label: '25 Min'}, {value: 26, label: '26 Min'}, {value: 27, label: '27 Min'}, {value: 28, label: '28 Min'}, {value: 29, label: '29 Min'}, {value: 30, label: '30 Min'},
+            {value: 31, label: '31 Min'},{value: 32, label: '32 Min'},{value: 33, label: '33 Min'},{value: 34, label: '34 Min'},{value: 35, label: '35 Min'},{value: 36, label: '36 Min'},{value: 37, label: '37 Min'},{value: 38, label: '38 Min'},{value: 39, label: '39 Min'},{value: 40, label: '40 Min'},
+            {value: 41, label: '41 Min'},{value: 42, label: '42 Min'},{value: 43, label: '43 Min'},{value: 44, label: '44 Min'},{value: 45, label: '45 Min'},{value: 46, label: '46 Min'},{value: 47, label: '47 Min'},{value: 48, label: '48 Min'},{value: 49, label: '49 Min'},{value: 50, label: '50 Min'},
+            {value: 51, label: '51 Min'},{value: 52, label: '52 Min'},{value: 53, label: '53 Min'},{value: 54, label: '54 Min'},{value: 55, label: '55 Min'},{value: 56, label: '56 Min'},{value: 57, label: '57 Min'},{value: 58, label: '58 Min'},{value: 59, label: '59 Min'},{value: 60, label: '60 Min'}
+       ];
         callback(response);
     }
     
