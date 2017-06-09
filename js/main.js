@@ -71,9 +71,10 @@ angular.module('app')
                         barcodeOptions: {
                             displayValue: true,
                             textAlign: 'center',
-                            fontSize: 18,
+                            fontSize: 27,
                             height: 72,
-                            width: 1.2,
+                            width: 1.5,
+                            font: 'monospace'
                         },
                     }
                 }

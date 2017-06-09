@@ -17,24 +17,25 @@ app.controller('PatientLabelController', ['scope', '$scope', function (scope, $s
         $scope.printContent = function () {
             var encoded_image = $('#patient-barcode img').attr('src');
             var content = [];
-            content.push({
-                columns: [
+            content.push(
                     {
-                        fontSize: 5,
+                        fontSize: 8,
                         text: [
-                            'Name:' + $scope.data.view_data.fullname,
-                            '\nUHID:' + $scope.data.view_data.patient_global_int_code,
-                            '\nGender:' + $scope.data.app.patientDetail.patientSex,
-                            '\nAge:' + $scope.data.view_data.patient_age,
+                            'Name: ' + $scope.data.view_data.fullname,
+                            '\nUHID: ' + $scope.data.view_data.patient_global_int_code,
+                            '\nGender: ' + $scope.data.app.patientDetail.patientSex,
+                            '\nAge: ' + $scope.data.view_data.patient_age + "\n",
                         ],
+                        margin: [0, 0, 0, 5],
+                        
                     },
                     {
                         image: encoded_image,
-                        width: 80,
-                        height: 35
+                        width: 95,
+                        height: 25,
+                        
                     }
-                ]
-            });
+            );
             return content;
         }
 
@@ -42,12 +43,15 @@ app.controller('PatientLabelController', ['scope', '$scope', function (scope, $s
             var print_content = $scope.printContent();
             if (print_content.length > 0) {
                 var docDefinition = {
-                    header: $scope.printHeader(),
+                    header: $scope.printHeader(), 
                     footer: $scope.printFooter(),
                     styles: $scope.printStyle(),
                     content: print_content,
-                    pageSize: {width: 3 * 72, height: 3 * 72}, //8cm
-                    pageOrientation: 'A4',
+//                    pageSize: {width: 2.95 * 72, height: 1.96 * 72}, //8cm
+                    pageSize: {width: 1.25 * 72, height: 1.98 * 72}, //8cm
+                    pageOrientation: 'landscape',
+                    pageMargins: [10, 10, 50, 0],
+
                 };
                 var pdf_document = pdfMake.createPdf(docDefinition);
                 var doc_content_length = Object.keys(pdf_document).length;
