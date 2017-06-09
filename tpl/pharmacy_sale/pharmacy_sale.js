@@ -1036,7 +1036,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         /*PRINT BILL*/
         $scope.printHeader = function () {
             return {
-                text: [{text: 'Ahana\n', bold: true}, {text: 'PHARMACY SERVICE - 24 HOURS'}],
+                text:'',
                 margin: 20,
                 alignment: 'center'
             };
@@ -1044,7 +1044,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
         $scope.printFooter = function () {
             return {
-                text: "",
+                text: [{text: 'PHARMACY SERVICE - 24 HOURS'}],
                 margin: 5,
                 alignment: 'center'
             };
@@ -1079,6 +1079,24 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 }
             };
         }
+        
+        $scope.imgExport = function (imgID) {
+                var img = document.getElementById(imgID);
+                var canvas = document.createElement("canvas");
+                canvas.width = img.width;
+                canvas.height = img.height;
+
+                // Copy the image contents to the canvas
+                var ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0);
+
+                // Get the data-URL formatted image
+                // Firefox supports PNG and JPEG. You could check img.src to
+                // guess the original format, but be aware the using "image/jpg"
+                // will re-encode the image.
+                var dataURL = canvas.toDataURL("image/png");
+                return dataURL;
+            }
 
         $scope.printloader = '';
         $scope.printContent = function () {
@@ -1210,6 +1228,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             if (sale_info.payment_type == 'COD')
                 var payment = 'Cash On Delivery';
 
+            var ahana_log = $('#sale_logo').attr('src');
             var barcode = sale_info.patient.patient_global_int_code;
             var bar_image = $('#' + barcode).attr('src');
             if (bar_image) //Check Bar image is empty or not
@@ -1225,34 +1244,53 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                     body: [
                         [
                             {
-                                colSpan: 6,
+                                colSpan: 5,
                                 layout: 'noBorders',
                                 table: {
                                     body: [
                                         [
                                             {
-                                                text: payment,
-                                                style: 'h1'
+                                                image: $scope.imgExport('sale_logo'),
+                                                 height: 20, width: 100,
+                                                
                                             }
                                         ],
                                         [
+                                            
                                             {
-                                                text: 'Ahana Pharmacy - Sale',
-                                                style: 'normaltxt'
+                                                text : sale_info.branch_address,
+                                                fontSize: 09,
                                             }
                                         ],
                                     ]
                                 },
                             },
-                            {}, {}, {}, {}, {},
+                            {}, {}, {},{},
                             {
                                 layout: 'noBorders',
                                 table: {
                                     body: [
+                                        [
+                                            {
+                                                text : 'Cash on delivery:'+[sale_info.branch_phone],
+                                            }
+                                        ],
+                                    ]
+                                },
+                            }, 
+                            {
+                                layout: 'noBorders',
+                                table: {
+                                    body: [
+                                        [
+                                            {
+                                                text : 'DL No : MDU/5263/20,21',
+                                            }
+                                        ],
                                         bar_img
                                     ]
                                 },
-                            }
+                            },
                         ],
                     ]
                 },
@@ -1287,24 +1325,6 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                         [
                                             {
                                                 border: [false, false, false, false],
-                                                text: 'Bill No',
-                                                style: 'h2',
-                                                margin: [-5, 0, 0, 0],
-                                            },
-                                            {
-                                                text: ':',
-                                                border: [false, false, false, false],
-                                                style: 'h2'
-                                            },
-                                            {
-                                                border: [false, false, false, false],
-                                                text: sale_info.bill_no,
-                                                style: 'normaltxt'
-                                            }
-                                        ],
-                                        [
-                                            {
-                                                border: [false, false, false, false],
                                                 text: 'Patient',
                                                 style: 'h2',
                                                 margin: [-5, 0, 0, 0],
@@ -1317,6 +1337,23 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                             {
                                                 border: [false, false, false, false],
                                                 text: [sale_info.patient_name || '-'],
+                                                style: 'normaltxt'
+                                            }
+                                        ],
+                                        [
+                                            {
+                                                border: [false, false, false, false],
+                                                text: 'UHID',
+                                                style: 'h2'
+                                            },
+                                            {
+                                                text: ':',
+                                                border: [false, false, false, false],
+                                                style: 'h2'
+                                            },
+                                            {
+                                                border: [false, false, false, false],
+                                                text: [sale_info.patient.patient_global_int_code || '-'],
                                                 style: 'normaltxt'
                                             }
                                         ],
@@ -1367,6 +1404,24 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                     body: [
                                         [
                                             {
+                                                border: [false, false, false, false],
+                                                text: 'Bill No',
+                                                style: 'h2',
+                                                margin: [-5, 0, 0, 0],
+                                            },
+                                            {
+                                                text: ':',
+                                                border: [false, false, false, false],
+                                                style: 'h2'
+                                            },
+                                            {
+                                                border: [false, false, false, false],
+                                                text: [sale_info.bill_no]+ '/'+[payment],
+                                                style: 'normaltxt'
+                                            }
+                                        ],
+                                        [
+                                            {
                                                 text: 'Date',
                                                 style: 'h2'
                                             },
@@ -1376,20 +1431,6 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                             },
                                             {
                                                 text: moment(sale_info.created_at).format('YYYY-MM-DD hh:mm A'),
-                                                style: 'normaltxt'
-                                            }
-                                        ],
-                                        [
-                                            {
-                                                text: 'Reg No',
-                                                style: 'h2'
-                                            },
-                                            {
-                                                text: ':',
-                                                style: 'h2'
-                                            },
-                                            {
-                                                text: [sale_info.patient.patient_global_int_code || '-'],
                                                 style: 'normaltxt'
                                             }
                                         ],
@@ -1439,20 +1480,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                                 style: 'normaltxt'
                                             },
                                         ],
-                                        [
-                                            {
-                                                text: 'Billed At',
-                                                style: 'h2'
-                                            },
-                                            {
-                                                text: ':',
-                                                style: 'h2'
-                                            },
-                                            {
-                                                text: organization,
-                                                style: 'normaltxt'
-                                            },
-                                        ],
+                                        
                                     ]
                                 },
                             },

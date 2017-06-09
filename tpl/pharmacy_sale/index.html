@@ -63,6 +63,7 @@
                     </div>
                 </div>
             </div>
+            <img  id="sale_logo" src="img/ahanalogo.jpg"/>{{$localStorage.user.credentials.logged_tenant_id}} {{user.credentials.logged_tenant_id}} dsfs
             <table class="table m-b-none default">
                 <thead>
                     <tr>
@@ -121,6 +122,7 @@
                                     <tr ng-repeat="(gKey, saleitem) in row.items | orderBy: sale_id">
                                         <td ng-hide="true">
                                 <io-barcode id="{{saleitem.patient_uhid}}" code="{{saleitem.patient_uhid}}" type="CODE128B" options="barcodeOptions"></io-barcode>
+                                
                         </td>
                         <td>{{saleitem.bill_no}}</td>
                         <td>{{saleitem.sale_date}}</td>
