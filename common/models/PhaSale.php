@@ -235,6 +235,13 @@ class PhaSale extends RActiveRecord {
             'branch_name' => function ($model) {
                 return (isset($model->tenant->tenant_name) ? $model->tenant->tenant_name : '-');
             },
+            'branch_address' => function ($model) {
+                return (isset($model->tenant->tenant_address) ? $model->tenant->tenant_address : '-');
+            },
+            'branch_phone' => function ($model) {
+                return (isset($model->tenant->tenant_contact1) ? $model->tenant->tenant_contact1 : '-');
+            },
+                    
         ];
 
         $parent_fields = parent::fields();
