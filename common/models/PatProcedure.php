@@ -61,10 +61,12 @@ class PatProcedure extends RActiveRecord {
                 ])
                 ->andWhere(['admission_status' => 'CD'])
                 ->one();
-        $discharge_date = new \DateTime($discharge->status_date);
-        $proc_date = new \DateTime($this->proc_date);
-        if ($discharge_date <= $proc_date) {
-            $this->addError($attribute, "Procedure Date must be less than the Discharge date( {$discharge->status_date} )");
+        if (!empty($discharge)) {
+            $discharge_date = new \DateTime($discharge->status_date);
+            $proc_date = new \DateTime($this->proc_date);
+            if ($discharge_date <= $proc_date) {
+                $this->addError($attribute, "Procedure Date must be less than the Discharge date( {$discharge->status_date} )");
+            }
         }
     }
 
