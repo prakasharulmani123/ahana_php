@@ -1222,9 +1222,9 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 loop_count++;
             });
             if (sale_info.payment_type == 'CA')
-                var payment = 'Cash Bill';
+                var payment = 'Cash';
             if (sale_info.payment_type == 'CR')
-                var payment = 'Credit Bill';
+                var payment = 'Credit';
             if (sale_info.payment_type == 'COD')
                 var payment = 'Cash On Delivery';
 
@@ -1272,7 +1272,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                     body: [
                                         [
                                             {
-                                                text : 'Cash on delivery:'+[sale_info.branch_phone],
+                                                text : 'Cash on Delivery:'+[sale_info.branch_phone],
                                             }
                                         ],
                                     ]
@@ -1284,7 +1284,9 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                     body: [
                                         [
                                             {
-                                                text : 'DL No : MDU/5263/20,21',
+                                                text : 'DL Nos. : MDU/5263/20,21',
+                                                fontSize: 07,
+                                                alignment: 'center' 
                                             }
                                         ],
                                         bar_img
