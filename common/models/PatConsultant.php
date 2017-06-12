@@ -71,6 +71,17 @@ class PatConsultant extends RActiveRecord {
             $this->addError($attribute, "Consultant Visit Date must be greater than the Admission date( {$encounter_date} )");
         }
 
+        $discharge = PatAdmission::find()
+                ->where([
+                    'pat_admission.encounter_id' => $this->encounter_id,
+                ])
+                ->andWhere(['admission_status' => 'CD'])
+                ->one();
+        $discharge_date = new \DateTime($discharge->status_date);
+        $consult_date = new \DateTime($this->consult_date);
+        if ($discharge_date <= $consult_date) {
+            $this->addError($attribute, "Consultant Visit Date must be less than the Discharge date( {$discharge->status_date} )");
+        }
 //        if ($this->isNewRecord && isset(Yii::$app->user->identity->user->tenant_id) && Yii::$app->user->identity->user->tenant_id != 0) {
 //            $current_date = date('Y-m-d');
 //            $upto_date = date('Y-m-d', strtotime($current_date . "+3 days"));
@@ -164,7 +175,7 @@ class PatConsultant extends RActiveRecord {
     public function beforeSave($insert) {
         $encounter_type = $this->encounter->encounter_type;
         $link_id = $this->patient->patient_category_id;
-        
+
         if ($encounter_type == 'IP')
             $link_id = $this->encounter->patCurrentAdmission->room_type_id;
 

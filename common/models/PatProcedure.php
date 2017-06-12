@@ -46,11 +46,26 @@ class PatProcedure extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['charge_subcat_id', 'proc_date'], 'required'],
-            [['tenant_id', 'encounter_id', 'charge_subcat_id', 'created_by', 'modified_by', 'patient_id'], 'integer'],
-            [['proc_date', 'created_at', 'modified_at', 'deleted_at', 'patient_id', 'charge_amount'], 'safe'],
-            [['proc_consultant_ids', 'proc_description', 'status'], 'string']
+                [['charge_subcat_id', 'proc_date'], 'required'],
+                [['tenant_id', 'encounter_id', 'charge_subcat_id', 'created_by', 'modified_by', 'patient_id'], 'integer'],
+                [['proc_date', 'created_at', 'modified_at', 'deleted_at', 'patient_id', 'charge_amount'], 'safe'],
+                [['proc_consultant_ids', 'proc_description', 'status'], 'string'],
+                [['proc_date'], 'validateProcedure']
         ];
+    }
+
+    public function validateProcedure($attribute, $params) {
+        $discharge = PatAdmission::find()
+                ->where([
+                    'pat_admission.encounter_id' => $this->encounter_id,
+                ])
+                ->andWhere(['admission_status' => 'CD'])
+                ->one();
+        $discharge_date = new \DateTime($discharge->status_date);
+        $proc_date = new \DateTime($this->proc_date);
+        if ($discharge_date <= $proc_date) {
+            $this->addError($attribute, "Procedure Date must be less than the Discharge date( {$discharge->status_date} )");
+        }
     }
 
     /**
@@ -125,11 +140,11 @@ class PatProcedure extends RActiveRecord {
 
     public function afterSave($insert, $changedAttributes) {
         $procedure = "Procedure : <b>{$this->chargeCat->charge_subcat_name}</b>";
-        
+
         if ($insert) {
             $this->proc_consultant_ids = Json::decode($this->proc_consultant_ids);
             $message = $this->proc_description != '' ? "{$this->proc_description} <br /> $procedure" : $procedure;
-        }else{
+        } else {
             $message = $this->proc_description != '' ? "Updated: {$this->proc_description} <br /> $procedure" : "Updated: $procedure";
         }
         PatTimeline::insertTimeLine($this->patient_id, $this->proc_date, 'Procedure', '', $message, 'PROCEDURE', $this->encounter_id);
