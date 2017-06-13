@@ -200,6 +200,9 @@ class PatProcedure extends RActiveRecord {
             'encounter' => function ($model) {
                 return isset($model->encounter) ? $model->encounter : '-';
             },
+            'encounter_id' => function ($model) {
+                return isset($model->encounter) ? $model->encounter->encounter_id : '-';
+            },
             'procedure_name' => function ($model) {
                 return isset($model->chargeCat) ? $model->chargeCat->charge_subcat_name : '-';
             },
@@ -217,8 +220,25 @@ class PatProcedure extends RActiveRecord {
                 }
             },
         ];
-        $fields = array_merge(parent::fields(), $extend);
-        return $fields;
+
+        $parent_fields = parent::fields();
+        $addt_keys = $extFields = [];
+        if ($addtField = Yii::$app->request->get('addtfields')) {
+            switch ($addtField):
+                case 'procedurelist':
+                    $addt_keys = ['procedure_name', 'doctors', 'encounter_id'];
+                    $parent_fields = [
+                        'proc_description' => 'proc_description',
+                        'proc_date' => 'proc_date',
+                    ];
+                    break;
+            endswitch;
+        }
+
+        if ($addt_keys !== false)
+            $extFields = ($addt_keys) ? array_intersect_key($extend, array_flip($addt_keys)) : $extend;
+
+        return array_merge($parent_fields, $extFields);
     }
 
     public function afterFind() {

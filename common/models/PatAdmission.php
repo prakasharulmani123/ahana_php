@@ -59,21 +59,21 @@ class PatAdmission extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['consultant_id', 'floor_id', 'ward_id', 'room_id', 'room_type_id', 'status_date'], 'required'],
-            [['swapPatientId', 'swapRoomId', 'swapRoomTypeId'], 'required', 'on' => 'swap'],
-            [['tenant_id', 'patient_id', 'encounter_id', 'consultant_id', 'floor_id', 'ward_id', 'room_id', 'room_type_id', 'created_by', 'modified_by'], 'integer'],
-            [['status_date', 'created_at', 'modified_at', 'deleted_at', 'status_date', 'admission_status', 'is_swap', 'discharge_type', 'type_of_transfer'], 'safe'],
-            [['status', 'notes'], 'string'],
-            ['admission_status', 'validateAdmissionStatus'],
-            ['status_date', 'validateStatusDate'],
-            ['room_type_id', 'checkRoomChargeItems'],
+                [['consultant_id', 'floor_id', 'ward_id', 'room_id', 'room_type_id', 'status_date'], 'required'],
+                [['swapPatientId', 'swapRoomId', 'swapRoomTypeId'], 'required', 'on' => 'swap'],
+                [['tenant_id', 'patient_id', 'encounter_id', 'consultant_id', 'floor_id', 'ward_id', 'room_id', 'room_type_id', 'created_by', 'modified_by'], 'integer'],
+                [['status_date', 'created_at', 'modified_at', 'deleted_at', 'status_date', 'admission_status', 'is_swap', 'discharge_type', 'type_of_transfer'], 'safe'],
+                [['status', 'notes'], 'string'],
+                ['admission_status', 'validateAdmissionStatus'],
+                ['status_date', 'validateStatusDate'],
+                ['room_type_id', 'checkRoomChargeItems'],
         ];
     }
-    
+
     public function checkRoomChargeItems($attribute, $params) {
-        if(!empty($this->room_type_id)) {
+        if (!empty($this->room_type_id)) {
             $room_charges = Yii::$app->hepler->getRoomChargeItems($this->tenant_id, $this->room_type_id);
-            if(empty($room_charges)) {
+            if (empty($room_charges)) {
                 $this->addError($attribute, "Room charges not setup in configuration menu, Unable to initiate admission");
             }
         }
@@ -102,9 +102,33 @@ class PatAdmission extends RActiveRecord {
             if (!empty($this->admission_status)) {
                 if ($this->admission_status != 'A') {
                     $current_admission = $this->encounter->patCurrentAdmission;
-                    if ($current_admission->status_date > $this->status_date)
+                    if ($current_admission->status_date > $this->status_date) {
                         $this->addError($attribute, "Date must be greater than {$current_admission->status_date}");
-                }else if ($this->admission_status == 'A') {
+                    }
+                    if ($this->admission_status == 'CD') {
+                        $statusdateError = '';
+                        $consultant = PatConsultant::find()
+                                ->where(['pat_consultant.encounter_id' => $this->encounter_id])
+                                ->andWhere(['>=', 'pat_consultant.consult_date', $this->status_date])
+                                ->active()
+                                ->one();
+                        if (!empty($consultant))
+                            $statusdateError = "Discharge Date must be greater the Consultant Visit date( {$consultant->consult_date} )";
+
+                        if (empty($consultant)) {
+                            $procedure = PatProcedure::find()
+                                    ->where(['pat_procedure.encounter_id' => $this->encounter_id])
+                                    ->andWhere(['>=', 'pat_procedure.proc_date', $this->status_date])
+                                    ->active()
+                                    ->one();
+                            if (!empty($procedure))
+                                $statusdateError = "Discharge Date must be greater than the Procedure date( {$procedure->proc_date} )";
+                        }
+                        
+                        if (!empty($statusdateError))
+                            $this->addError($attribute, $statusdateError);
+                    }
+                } else if ($this->admission_status == 'A') {
                     if (date('Y-m-d', strtotime($this->status_date)) > date('Y-m-d'))
                         $this->addError($attribute, "Date must be lesser than " . date('d-m-Y'));
                 }
