@@ -50,6 +50,7 @@ class PatBillingExtraConcession extends RActiveRecord {
             [['extra_amount', 'concession_amount'], 'number'],
             [['created_at', 'modified_at', 'deleted_at', 'mode'], 'safe'],
             [['extra_amount', 'concession_amount'], 'validateAmount'],
+            [['extra_amount'], 'validateMinAmount'],
             [['concession_amount'], 'validateMaxAmount'],
         ];
     }
@@ -63,6 +64,26 @@ class PatBillingExtraConcession extends RActiveRecord {
         }
     }
 
+    public function validateMinAmount($attribute, $params) {
+        $view = ($this->ec_type == 'P') ? 'common\models\VBillingProcedures' : 'common\models\VBillingProfessionals';
+        $nonRecurr = $view::find()->where([
+                    'encounter_id' => $this->encounter_id,
+                    'tenant_id' => $this->tenant_id,
+                    'patient_id' => $this->patient_id,
+                    'category_id' => $this->link_id
+                ])->one();
+
+        if (!empty($nonRecurr)) {
+            $attribute_name = ($this->mode == 'E') ? 'extra_amount' : 'concession_amount';
+            $name = BaseInflector::camel2words($attribute_name);
+            
+            $total = $nonRecurr->total_charge + $this->extra_amount;
+            if ($this->concession_amount > $total && $attribute_name == $attribute) {
+                $this->addError($attribute, "Net Amount (Charge + Extra) should be greater than Concession amount");
+            }
+        }
+    }
+    
     public function validateMaxAmount($attribute, $params) {
         $view = ($this->ec_type == 'P') ? 'common\models\VBillingProcedures' : 'common\models\VBillingProfessionals';
         $nonRecurr = $view::find()->where([
@@ -75,9 +96,9 @@ class PatBillingExtraConcession extends RActiveRecord {
         if (!empty($nonRecurr)) {
             $attribute_name = ($this->mode == 'E') ? 'extra_amount' : 'concession_amount';
             $name = BaseInflector::camel2words($attribute_name);
-
-            if ($this->$attribute_name > $nonRecurr->total_charge && $attribute_name == $attribute) {
-                $this->addError($attribute, "{$name} should be lesser than Charge Amount ({$nonRecurr->total_charge})");
+            $total = $nonRecurr->total_charge + $nonRecurr->extra_amount;
+            if ($this->$attribute_name > $total && $attribute_name == $attribute) {
+                $this->addError($attribute, "{$name} should be lesser than Net (Charge + Extra) Amount ({$total})");
             }
         }
     }
