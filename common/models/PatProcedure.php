@@ -200,9 +200,6 @@ class PatProcedure extends RActiveRecord {
             'encounter' => function ($model) {
                 return isset($model->encounter) ? $model->encounter : '-';
             },
-            'encounter_id' => function ($model) {
-                return isset($model->encounter) ? $model->encounter->encounter_id : '-';
-            },
             'procedure_name' => function ($model) {
                 return isset($model->chargeCat) ? $model->chargeCat->charge_subcat_name : '-';
             },
@@ -230,6 +227,7 @@ class PatProcedure extends RActiveRecord {
                     $parent_fields = [
                         'proc_description' => 'proc_description',
                         'proc_date' => 'proc_date',
+                        'encounter_id' => 'encounter_id'
                     ];
                     break;
             endswitch;
