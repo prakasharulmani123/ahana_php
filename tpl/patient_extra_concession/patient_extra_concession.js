@@ -26,7 +26,6 @@ app.controller('ExtraConcessionController', ['$rootScope', '$scope', '$timeout',
                     $scope.data.formtype = 'add';
                     $scope.data.ec_type = $state.params.ec_type;
 
-                    console.log($state.params.ec_type);
                     $scope.initCategory($state.params.enc_id, $scope.patientObj.patient_id, $state.params.link_id, $state.params.ec_type);
                 }
             });
@@ -144,6 +143,8 @@ app.controller('ExtraConcessionController', ['$rootScope', '$scope', '$timeout',
                         $scope.loadbar('hide');
                         $scope.data.link_id = response.category_id;
                         $scope.data.total_charge = response.total_charge;
+                        $scope.data.extra_amount = response.extra_amount;
+                        $scope.data.concession_amount = response.concession_amount;
                         $scope.data.headers = response.headers;
                         $scope.data.type = response.category;
                     }
