@@ -67,7 +67,7 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
                     if (response != null) {
                         $scope.enc.selected = $scope.encounters[0];
                     }
-                });
+                },'sale_encounter_id');
             }
         }, true);
 
@@ -91,10 +91,10 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
 
             if (typeof date == 'undefined') {
-                url = $rootScope.IRISOrgServiceUrl + '/procedure/getprocedurebyencounter?patient_id=' + $state.params.id;
+                url = $rootScope.IRISOrgServiceUrl + '/procedure/getprocedurebyencounter?patient_id=' + $state.params.id + '&addtfields=procedurelist';
             } else {
                 date = moment(date).format('YYYY-MM-DD');
-                url = $rootScope.IRISOrgServiceUrl + '/procedure/getprocedurebyencounter?patient_id=' + $state.params.id + '&date=' + date;
+                url = $rootScope.IRISOrgServiceUrl + '/procedure/getprocedurebyencounter?patient_id=' + $state.params.id + '&date=' + date + '&addtfields=procedurelist';
             }
 
             // Get data's from service
