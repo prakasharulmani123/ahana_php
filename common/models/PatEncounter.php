@@ -69,16 +69,16 @@ class PatEncounter extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['encounter_date'], 'required'],
-            [['tenant_id', 'patient_id', 'finalize', 'authorize', 'created_by', 'modified_by', 'discharge'], 'integer'],
-            [['encounter_date', 'inactive_date', 'created_at', 'modified_at', 'deleted_at', 'casesheet_no', 'discharge', 'total_amount', 'bill_no', 'bill_notes', 'consultant_id', 'total_booking', 'seen_count', 'arrived_count', 'booked_count', 'branch_name', 'finalize_date'], 'safe'],
-            [['status', 'casesheet_no', 'add_casesheet_no'], 'string'],
-            [['concession_amount'], 'number'],
-            [['encounter_type'], 'string', 'max' => 5],
-            ['concession_amount', 'validateConcessionAmount'],
-            ['encounter_date', 'validateAdmissionDate'],
-            ['encounter_date', 'validateAppointment'],
-            ['encounter_date', 'validateOtherAdmission'],
+                [['encounter_date'], 'required'],
+                [['tenant_id', 'patient_id', 'finalize', 'authorize', 'created_by', 'modified_by', 'discharge'], 'integer'],
+                [['encounter_date', 'inactive_date', 'created_at', 'modified_at', 'deleted_at', 'casesheet_no', 'discharge', 'total_amount', 'bill_no', 'bill_notes', 'consultant_id', 'total_booking', 'seen_count', 'arrived_count', 'booked_count', 'branch_name', 'finalize_date'], 'safe'],
+                [['status', 'casesheet_no', 'add_casesheet_no'], 'string'],
+                [['concession_amount'], 'number'],
+                [['encounter_type'], 'string', 'max' => 5],
+                ['concession_amount', 'validateConcessionAmount'],
+                ['encounter_date', 'validateAdmissionDate'],
+                ['encounter_date', 'validateAppointment'],
+                ['encounter_date', 'validateOtherAdmission'],
         ];
     }
 
@@ -520,6 +520,12 @@ class PatEncounter extends RActiveRecord {
                 case 'sale_encounter_id':
                     $addt_keys = false;
                     $parent_fields = ['encounter_id' => 'encounter_id'];
+                    break;
+                case 'encounter_details':
+                    $addt_keys = false;
+                    $parent_fields = ['encounter_id' => 'encounter_id',
+                        'status' => 'status',
+                        'encounter_type' => 'encounter_type'];
                     break;
                 case 'prescription':
                     $addt_keys = ['liveAdmission', 'liveAppointmentBooking'];
