@@ -1346,7 +1346,8 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                             {
                                                 border: [false, false, false, false],
                                                 text: 'UHID',
-                                                style: 'h2'
+                                                style: 'h2',
+                                                margin: [-5, 0, 0, 0],
                                             },
                                             {
                                                 text: ':',
@@ -1374,6 +1375,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                             {
                                                 border: [false, false, false, false],
                                                 text: [sale_info.patient.fullpermanentaddress || '-'],
+                                                //text : 'A4,FIRE SERVICE COURTERS,MADURAI ROAD,VIRTHUNAGAR VIRUTHUNAGAR TAMILNADU INDIA',
                                                 style: 'normaltxt'
                                             }
                                         ],
@@ -1409,7 +1411,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                                 border: [false, false, false, false],
                                                 text: 'Bill No',
                                                 style: 'h2',
-                                                margin: [-5, 0, 0, 0],
+                                                margin: [-7, 0, 0, 0],
                                             },
                                             {
                                                 text: ':',
@@ -1425,7 +1427,8 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                         [
                                             {
                                                 text: 'Date',
-                                                style: 'h2'
+                                                style: 'h2',
+                                                margin: [-7, 0, 0, 0],
                                             },
                                             {
                                                 text: ':',
