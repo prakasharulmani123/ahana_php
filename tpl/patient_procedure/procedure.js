@@ -67,7 +67,7 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
                     if (response != null) {
                         $scope.enc.selected = $scope.encounters[0];
                     }
-                },'sale_encounter_id');
+                },'encounter_details');
             }
         }, true);
 

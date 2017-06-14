@@ -108,7 +108,7 @@ app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', 
                         $scope.enc.selected = $scope.encounters[0];
                         var actEnc = $filter('filter')($scope.encounters, {status: '1'});
                     }
-                },'sale_encounter_id');
+                },'encounter_details');
             }
         }, true);
 
