@@ -1375,7 +1375,6 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                             {
                                                 border: [false, false, false, false],
                                                 text: [sale_info.patient.fullpermanentaddress || '-'],
-                                                //text : 'A4,FIRE SERVICE COURTERS,MADURAI ROAD,VIRTHUNAGAR VIRUTHUNAGAR TAMILNADU INDIA',
                                                 style: 'normaltxt'
                                             }
                                         ],
@@ -1587,7 +1586,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                         defaultStyle: {
                             fontSize: 10
                         },
-                        pageMargins: ($scope.deviceDetector.browser == 'firefox' ? 75 : 50),
+                        pageMargins: ($scope.deviceDetector.browser == 'firefox' ? 50 : 50),
                         pageSize: 'A5',
                         pageOrientation: 'landscape',
                     };
