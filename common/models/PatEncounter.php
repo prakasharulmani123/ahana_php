@@ -708,6 +708,17 @@ class PatEncounter extends RActiveRecord {
         if ($insert) {
             if ($this->encounter_type == 'IP')
                 CoInternalCode::increaseInternalCode("B");
+        } else {
+            if ($changedAttributes['concession_amount'] != $this->concession_amount) {
+                $amount = number_format($this->concession_amount, 2);
+                $activity = "Concession amount {$amount}";
+                if ($changedAttributes['concession_amount'] == '0.00')
+                    $activity .= ' ( Add )';
+                else
+                    $activity .= ' ( Edit )';
+
+                PatBillingLog::insertBillingLog($this->patient_id, $this->encounter_id, $this->modified_at, 'R', 'Room Concession', $activity);
+            }
         }
 
         if ($this->discharge != 0) {

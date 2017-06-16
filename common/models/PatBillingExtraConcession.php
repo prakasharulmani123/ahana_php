@@ -44,14 +44,14 @@ class PatBillingExtraConcession extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['encounter_id', 'patient_id', 'ec_type', 'link_id'], 'required'],
-            [['tenant_id', 'encounter_id', 'patient_id', 'link_id', 'created_by', 'modified_by'], 'integer'],
-            [['ec_type', 'status'], 'string'],
-            [['extra_amount', 'concession_amount'], 'number'],
-            [['created_at', 'modified_at', 'deleted_at', 'mode'], 'safe'],
-            [['extra_amount', 'concession_amount'], 'validateAmount'],
-            [['extra_amount'], 'validateMinAmount'],
-            [['concession_amount'], 'validateMaxAmount'],
+                [['encounter_id', 'patient_id', 'ec_type', 'link_id'], 'required'],
+                [['tenant_id', 'encounter_id', 'patient_id', 'link_id', 'created_by', 'modified_by'], 'integer'],
+                [['ec_type', 'status'], 'string'],
+                [['extra_amount', 'concession_amount'], 'number'],
+                [['created_at', 'modified_at', 'deleted_at', 'mode'], 'safe'],
+                [['extra_amount', 'concession_amount'], 'validateAmount'],
+                [['extra_amount'], 'validateMinAmount'],
+                [['concession_amount'], 'validateMaxAmount'],
         ];
     }
 
@@ -76,14 +76,14 @@ class PatBillingExtraConcession extends RActiveRecord {
         if (!empty($nonRecurr)) {
             $attribute_name = ($this->mode == 'E') ? 'extra_amount' : 'concession_amount';
             $name = BaseInflector::camel2words($attribute_name);
-            
+
             $total = $nonRecurr->total_charge + $this->extra_amount;
             if ($this->concession_amount > $total && $attribute_name == $attribute) {
                 $this->addError($attribute, "Net Amount (Charge + Extra) should be greater than Concession amount");
             }
         }
     }
-    
+
     public function validateMaxAmount($attribute, $params) {
         $view = ($this->ec_type == 'P') ? 'common\models\VBillingProcedures' : 'common\models\VBillingProfessionals';
         $nonRecurr = $view::find()->where([
@@ -156,6 +156,37 @@ class PatBillingExtraConcession extends RActiveRecord {
 
     public static function find() {
         return new PatBillingExtraConcessionQuery(get_called_class());
+    }
+
+    public function afterSave($insert, $changedAttributes) {
+        $this->_insertBillingLog($insert, $changedAttributes);
+        return parent::afterSave($insert, $changedAttributes);
+    }
+
+    private function _insertBillingLog($insert, $changedAttributes) {
+        if ($this->ec_type == 'C') {
+            $header = 'Professional Charges ( ' . $this->user->title_code . ' ' . $this->user->name . ')';
+        } else {
+            $header = 'Procedure Charges ( ' . $this->roomchargesubcategory->charge_subcat_name. ')';
+        }
+
+        if ($this->mode == 'E') {
+            $amount = number_format($this->extra_amount, 2);
+            $activity = "Extra Amount {$amount}";
+            if($changedAttributes['extra_amount'] == '0.00' || $changedAttributes['extra_amount'] == '')
+                $activity .= ' ( Add )';
+            else 
+                $activity .= ' ( Edit )';
+        } else {
+            $amount = number_format($this->concession_amount, 2);
+            $activity = "Concession Amount {$amount}";
+            if($changedAttributes['concession_amount'] == '0.00' || $changedAttributes['concession_amount'] == '')
+                $activity .= ' ( Add )';
+            else 
+                $activity .= ' ( Edit )';
+        }
+        
+        PatBillingLog::insertBillingLog($this->patient_id, $this->encounter_id, $this->modified_at, 'N', $header, $activity);
     }
 
     public function fields() {
