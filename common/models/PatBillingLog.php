@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\models\query\PatBillingLogQuery;
 use yii\db\ActiveQuery;
 
 /**
@@ -105,6 +106,27 @@ class PatBillingLog extends RActiveRecord {
             'activity' => $activity,
         ];
         $model->save(false);
+    }
+    
+    public function fields() {
+        $extend = [
+            'log_type_name' => function ($model) {
+                if($this->log_type == 'N'){
+                    return 'Non Recurring';
+                } else {
+                    return 'Recurring';
+                }
+            },
+            'activity_by' => function ($model) {
+                return $model->createdUser->title_code . ' '. $model->createdUser->name;
+            }
+        ];
+        $fields = array_merge(parent::fields(), $extend);
+        return $fields;
+    }
+    
+    public static function find() {
+        return new PatBillingLogQuery(get_called_class());
     }
 
 }

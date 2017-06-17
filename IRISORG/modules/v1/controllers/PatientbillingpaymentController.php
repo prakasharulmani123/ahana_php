@@ -2,7 +2,9 @@
 
 namespace IRISORG\modules\v1\controllers;
 
+use common\models\PatBillingLog;
 use common\models\PatBillingPayment;
+use common\models\PatPatient;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -56,6 +58,27 @@ class PatientbillingpaymentController extends ActiveController {
             $model = PatBillingPayment::find()->where(['payment_id' => $id])->one();
             $model->remove();
             return ['success' => true];
+        }
+    }
+
+    public function actionBillinghistory() {
+        $GET = Yii::$app->getRequest()->get();
+
+        if (!empty($GET)) {
+            $patient = PatPatient::getPatientByGuid($GET['id']);
+
+            $condition['patient_id'] = $patient->patient_id;
+            $condition['encounter_id'] = $GET['enc_id'];
+
+            $data = PatBillingLog::find()
+                    ->tenant()
+                    ->active()
+                    ->status()
+                    ->andWhere($condition)
+                    ->orderBy(['date_time' => SORT_DESC])
+                    ->all();
+
+            return ['success' => true, 'result' => $data];
         }
     }
 
