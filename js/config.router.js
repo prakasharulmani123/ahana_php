@@ -2771,6 +2771,20 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
+            
+            //Patient Billing History
+            .state('patient.viewBillingHistory', {
+                url: '/viewBillingHistory/{id}/{enc_id}',
+                templateUrl: 'tpl/patient_billing/view_billing_history.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load([
+                                'tpl/patient_billing/patient_billing.js?v=' + APP_VERSION,
+                            ]);
+                        }]
+                }
+            })
 
     $httpProvider.interceptors.push('APIInterceptor');
 

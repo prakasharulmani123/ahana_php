@@ -1,14 +1,17 @@
 <div ng-controller="BillingController">
     <div class="bg-light lter b-b wrapper-md" style="width: 100%; float: left">
-        <div class="col-sm-10">
+        <div class="col-sm-8">
             <h1 class="m-n h3">Billing</h1>
         </div>
-        <div class="col-sm-2 text-right">
+        <div class="col-sm-4 text-right">
+            <button check-access-button ng-click="$state.go('patient.viewBillingHistory', {id: $state.params.id, enc_id: enc.selected.encounter_id})" class="btn btn-sm btn-info">
+                <i class="fa fa-file-text"></i> &nbsp; View Billing History
+            </button>
             <button class="btn btn-sm btn-primary"  ng-click="openPrintBill('lg')"> 
                 <i class="fa fa-print"></i> Print Bill
             </button>
             <button class="btn btn-sm btn-dark"  ng-click="$state.go('patient.allbilling', {id: $state.params.id})"> 
-                <i class="fa fa-close"></i> Back
+                <i class="fa fa-arrow-left"></i> Back
             </button>
         </div>
     </div>
@@ -133,7 +136,7 @@
                             <td> {{row.to_date}} </td>
                             <td> {{row.duration}} </td>
                             <td align="right" ng-init="row_recurring_total = getTotalRecurringPrice(row);
-                                                recurr_billing.total.recurring_total = recurr_billing.total.recurring_total + row_recurring_total;
+                                recurr_billing.total.recurring_total = recurr_billing.total.recurring_total + row_recurring_total;
                                 "> {{row_recurring_total| number:2}} </td>
                         </tr>
                         <tr>
@@ -209,7 +212,7 @@
                                 <td ng-init="billing.total.extra = billing.total.extra + parseFloat(row.extra_amount);
                                     "> {{row.extra_amount}} </td>
                                 <td align="right" ng-init="row_total = getTotalPrice(row);
-                                                    billing.total.price = billing.total.price + row_total;
+                                    billing.total.price = billing.total.price + row_total;
                                     "> {{row_total| number:2}} </td>
                             </tr>
                             <!-- Consultants -->
@@ -246,7 +249,7 @@
                                 <td ng-init="billing.total.extra = billing.total.extra + parseFloat(row.extra_amount);
                                     "> {{row.extra_amount}} </td>
                                 <td align="right" ng-init="row_total = getTotalPrice(row);
-                                                    billing.total.price = billing.total.price + row_total;
+                                    billing.total.price = billing.total.price + row_total;
                                     "> {{row_total| number:2}} </td>
                             </tr>
                             <!-- Other Charges -->
@@ -281,7 +284,7 @@
                                 <td> {{row.concession_amount}} </td>
                                 <td> {{row.extra_amount}} </td>
                                 <td align="right" ng-init="row_total = getTotalPrice(row);
-                                                    billing.total.price = billing.total.price + row_total;
+                                    billing.total.price = billing.total.price + row_total;
                                     "> {{row_total| number:2}} </td>
                             </tr>
                             <tr>
@@ -355,7 +358,7 @@
                                     </button>
                                 </td>
                                 <td align="right" ng-init="row_total = parseFloat(row.total_charge);
-                                                    billing.total.advance_charge = billing.total.advance_charge + row_total;
+                                    billing.total.advance_charge = billing.total.advance_charge + row_total;
                                     "> {{row_total| number:2}} 
                                 </td>
                             </tr>

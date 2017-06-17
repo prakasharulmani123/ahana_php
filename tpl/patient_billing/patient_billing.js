@@ -74,14 +74,12 @@ function toWords(s)
                 str += tn[Number(n[i + 1])] + ' ';
                 i++;
                 sk = 1;
-            }
-            else if (n[i] != 0)
+            } else if (n[i] != 0)
             {
                 str += tw[n[i] - 2] + ' ';
                 sk = 1;
             }
-        }
-        else if (n[i] != 0)
+        } else if (n[i] != 0)
         {
             str += dg[n[i]] + ' ';
             if ((x - i) % 3 == 0)
@@ -133,7 +131,7 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
             date = moment(date).format('YYYY-MM-DD');
             return $.inArray(date, $scope.enabled_dates) === -1;
         };
-        
+
         //All Billing Page
         $scope.enabled_dates = [];
         $scope.loadPatientAllBilling = function (type, date) {
@@ -155,7 +153,7 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
                         if (response.success == true) {
                             $scope.isLoading = false;
                             $scope.rowCollection = response.encounters;
-                            
+
                             angular.forEach($scope.rowCollection, function (row) {
                                 var result = $filter('filter')($scope.enabled_dates, moment(row.date_time).format('YYYY-MM-DD'));
                                 if (result.length == 0)
@@ -170,7 +168,7 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
                         $scope.errorData = "An Error has occured while loading encounter!";
                     });
         };
-        
+
         //Collapse / Expand 
         $scope.ctrl = {};
         $scope.allExpanded = true;
@@ -197,7 +195,7 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
                     $scope.encounters = response;
                     if (response != null) {
                         var sel_enc = $scope.encounters[0];
-                        if($state.params.enc_id){
+                        if ($state.params.enc_id) {
                             sel_enc = $filter('filter')($scope.encounters, {encounter_id: $state.params.enc_id});
                             sel_enc = sel_enc[0];
                         }
@@ -221,7 +219,7 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
                     encounter_id: $scope.enc.selected.encounter_id,
                     bill_notes: $scope.enc.selected.bill_notes,
                 };
-                
+
                 $scope.errorData = "";
 
                 post_url = $rootScope.IRISOrgServiceUrl + '/encounter/savebillnote';
@@ -457,8 +455,7 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
                                 }, true);
                                 $scope.more_advance_li = {};
                                 $scope.msg.successMessage = 'Advance Payment Deleted Successfully';
-                            }
-                            else {
+                            } else {
                                 $scope.errorData = response.data.message;
                             }
                         }
@@ -508,8 +505,7 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
                                     $scope.displayedCollection.splice(index, 1);
                                     $scope.loadPatConsultantsList();
                                     $scope.msg.successMessage = 'Patient Consultant Deleted Successfully';
-                                }
-                                else {
+                                } else {
                                     $scope.errorData = response.data.message;
                                 }
                             }
@@ -580,6 +576,29 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
             });
         }
 
+        //Patient Billing History
+        $scope.loadBillingHistory = function () {
+            $scope.errorData = '';
+            $scope.isLoading = true;
+            $scope.rowCollection = [];  // base collection
+//            $scope.itemsByPage = 10; // No.of records per page
+            $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
 
+            var url = $rootScope.IRISOrgServiceUrl + '/patientbillingpayment/billinghistory?id=' + $state.params.id + '&enc_id=' + $state.params.enc_id;
+
+            $http.get(url)
+                    .success(function (response) {
+                        if (response.success == true) {
+                            $scope.isLoading = false;
+                            $scope.rowCollection = response.result;
+                            $scope.displayedCollection = [].concat($scope.rowCollection);
+                        } else {
+                            $scope.errorData = response.message;
+                        }
+                    })
+                    .error(function () {
+                        $scope.errorData = "An Error has occured while loading billing history!";
+                    });
+        }
 
     }]);
