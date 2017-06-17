@@ -350,4 +350,59 @@ class DefaultController extends Controller {
         return true;
     }
 
+    public function actionUpdatebillinglog() {
+        //Non Recurring Log
+        $extra_concession_charges = \common\models\PatBillingExtraConcession::find()->all();
+        if (!empty($extra_concession_charges)) {
+            $connection = Yii::$app->client;
+            $connection->open();
+            
+            foreach ($extra_concession_charges as $charge) {
+                if ($charge->ec_type == 'C') {
+                    $header = 'Professional Charges ( ' . $charge->user->title_code . ' ' . $charge->user->name . ')';
+                } else {
+                    $header = 'Procedure Charges ( ' . $charge->roomchargesubcategory->charge_subcat_name . ')';
+                }
+                
+                //Extra amount Log
+                if ($charge->extra_amount != '0.00') {
+                    $activity = "Extra Amount {$charge->extra_amount} (Add)";
+                    
+                    $sql = "INSERT INTO pat_billing_log(tenant_id, patient_id, encounter_id, date_time, log_type, header, activity, created_by, created_at, modified_by, modified_at) VALUES({$charge->tenant_id},'{$charge->patient_id}', '{$charge->encounter_id}', '{$charge->created_at}', 'N', '{$header}', '{$activity}', '{$charge->created_by}', '{$charge->created_at}', '{$charge->created_by}', '{$charge->created_at}')";
+                    
+                    $command = $connection->createCommand($sql);
+                    $command->execute();
+                }
+
+                //Concession amount Log
+                if ($charge->concession_amount != '0.00') {
+                    $activity = "Concession Amount {$charge->concession_amount} (Add)";
+                    
+                    $sql = "INSERT INTO pat_billing_log(tenant_id, patient_id, encounter_id, date_time, log_type, header, activity, created_by, created_at, modified_by, modified_at) VALUES({$charge->tenant_id},'{$charge->patient_id}', '{$charge->encounter_id}', '{$charge->created_at}', 'N', '{$header}', '{$activity}', '{$charge->created_by}', '{$charge->created_at}', '{$charge->created_by}', '{$charge->created_at}')";
+                    
+                    $command = $connection->createCommand($sql);
+                    $command->execute();
+                }
+            }
+            
+            $connection->close();
+        }
+        
+        //Recurring Log
+        $encounters = PatEncounter::find()->where('concession_amount != 0.00')->all();
+        if(!empty($encounters)) {
+            $connection = Yii::$app->client;
+            $connection->open();
+            foreach($encounters as $encounter) {
+                $activity = "Concession amount {$encounter->concession_amount} ( Add )";
+                $sql = "INSERT INTO pat_billing_log(tenant_id, patient_id, encounter_id, date_time, log_type, header, activity, created_by, created_at, modified_by, modified_at) VALUES({$encounter->tenant_id},'{$encounter->patient_id}', '{$encounter->encounter_id}', '{$encounter->modified_at}', 'R', 'Room Concession', '{$activity}', '{$charge->modified_by}', '{$charge->modified_at}', '{$charge->modified_by}', '{$charge->modified_at}')";
+                
+                $command = $connection->createCommand($sql);
+                $command->execute();
+            }
+            $connection->close();
+        }
+                
+    }
+
 }
