@@ -119,7 +119,24 @@ class PharmacyreportController extends ActiveController {
         $tenant_id = Yii::$app->user->identity->logged_tenant_id;
         $conncection = Yii::$app->client;
         $command = $conncection->createCommand("
-             CALL pha_stock_report_by_date('2016-06-10')
+            SELECT
+                pha_product.product_name,  
+                pha_product_batch.batch_no,
+                pha_product_batch.available_qty, 
+                pha_purchase_item.purchase_rate, 
+                pha_product_batch.available_qty * pha_purchase_item.purchase_rate AS TotalRate,
+                pha_purchase_item.discount_percent, 
+                FORMAT((SELECT TotalRate) * (pha_purchase_item.discount_percent / 100), 2) AS disAmount,
+                IFNULL(FORMAT((SELECT TotalRate) - (SELECT disAmount), 2),(SELECT TotalRate)) AS `selfValue`
+            FROM `pha_product_batch`
+                LEFT JOIN `pha_product`
+                  ON `pha_product_batch`.`product_id` = `pha_product`.`product_id`
+                LEFT JOIN `pha_purchase_item`
+                  ON `pha_product_batch`.`batch_id` = `pha_purchase_item`.`batch_id`
+            WHERE `pha_product_batch`.`tenant_id` = {$tenant_id}
+               AND pha_purchase_item.tenant_id = {$tenant_id}
+               AND pha_purchase_item.purchase_item_id =  (SELECT MAX(purchase_item_id) FROM pha_purchase_item WHERE batch_id = pha_product_batch.batch_id)
+            ORDER BY `product_name` DESC
            
         ");
         $stock_report = $command->queryAll();
