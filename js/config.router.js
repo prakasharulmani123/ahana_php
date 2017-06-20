@@ -2785,6 +2785,22 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
+            
+            //PHARMACY Stock Report
+            .state('pharmacy.stockReport', {
+                url: '/stockReport',
+                templateUrl: 'tpl/pharmacy_report/stockReport.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/pharmacy_report/stockReport.js?v=' + APP_VERSION);
+                                    }
+                            );
+                        }]
+                }
+            })
 
     $httpProvider.interceptors.push('APIInterceptor');
 
