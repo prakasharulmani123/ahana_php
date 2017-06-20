@@ -41,7 +41,7 @@
             <div class="line line-dashed b-b line-lg "></div>
             <div class="form-group">
                 <label class="col-sm-3 control-label">DOB *</label>
-                <div class="col-sm-5">
+                <div class="col-sm-3">
                     <div class="input-group">
                         <input type="text" name="dob" class="form-control" ng-blur="setAgeEmpty();getAge();" ng-model="data.PatPatient.patient_dob" my-date required/>
                         <span ng-if="patientForm.data.PatPatient.patient_dob.$touched && $patientForm.data.PatPatient.patient_dob.$error.mask">Date Invalid!</span>
@@ -55,9 +55,14 @@
                         <div ng-show="submitted && patientForm.dob.$error.required">DOB cannot be blank.</div>
                     </div>
                 </div>
-                <div class="col-sm-4">
+                <div class="col-sm-2">
                     <input type="text" ng-model="data.PatPatient.patient_age" class="form-control" placeholder="Age" only-digits="" onkeydown="" ng-change="setDateEmpty();getDOB();">
                 </div>
+                <label style="float: left; padding-top: 5px;">(Yrs)</label>
+                <div class="col-sm-2">
+                <input type="text" ng-model="data.PatPatient.patient_age_month" class="form-control" placeholder="Months" only-digits="" onkeydown="" ng-change="setDateEmpty();getDOB();">
+                </div>
+                <label style="float: left; padding-top: 5px;">(Months)</label>
             </div>
             <div class="line line-dashed b-b line-lg "></div>
 

@@ -233,20 +233,23 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
 
         $scope.setAgeEmpty = function () {
             $scope.data.PatPatient.patient_age = '';
+            $scope.data.PatPatient.patient_age_month = '';
         }
 
         $scope.getDOB = function () {
             var newValue = this.data.PatPatient.patient_age;
-            if (parseInt(newValue) && !isNaN(newValue)) {
+            var newValue2 = this.data.PatPatient.patient_age_month;
+
+            if (!isNaN(newValue) && !isNaN(newValue2)) {
                 $http({
                     method: 'POST',
                     url: $rootScope.IRISOrgServiceUrl + '/patient/getdatefromage',
-                    data: {'age': newValue},
+                    data: {'age': newValue, 'month': newValue2},
                 }).success(
-                        function (response) {
-                            var date_of_birth = moment(response.dob, 'YYYY-MM-DD').format('DD/MM/YYYY');
-                            $scope.data.PatPatient.patient_dob = date_of_birth;
-                        }
+                    function (response) {
+                        var date_of_birth = moment(response.dob, 'YYYY-MM-DD').format('DD/MM/YYYY');
+                        $scope.data.PatPatient.patient_dob = date_of_birth;
+                    }
                 );
             }
         }
@@ -263,6 +266,7 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
                     }).success(
                             function (response) {
                                 $scope.data.PatPatient.patient_age = response.age;
+                                $scope.data.PatPatient.patient_age_month = response.month;
                             }
                     );
                 }

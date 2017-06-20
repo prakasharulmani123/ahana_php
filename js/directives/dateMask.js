@@ -21,7 +21,7 @@
                 var date = {};
 
                 function isValidMonth(month) {
-                    return month >= 0 && month < 12;
+                    return month >= 0 && month < 13;
                 }
 
                 function isValidDay(day) {
@@ -33,14 +33,20 @@
                 }
 
                 function isValidDate(inputDate) {
-                    inputDate = new Date(formatDate(inputDate));
-                    if (!angular.isDate(inputDate)) {
-                        return false;
+                    var dateAr = inputDate.split('/');
+                    if(dateAr.length && dateAr[0]){
+                        //Custom validation script by prakash for change dateformat d/m/y => m/d/Y
+                        return (isValidMonth(dateAr[1]) && isValidDay(dateAr[0].slice(-2)) && isValidYear(dateAr[2]));
+                    }else{
+                        inputDate = new Date(formatDate(inputDate));
+                        if (!angular.isDate(inputDate)) {
+                            return false;
+                        }
+                        date.month = inputDate.getMonth();
+                        date.day = inputDate.getDate();
+                        date.year = inputDate.getFullYear();
+                        return (isValidMonth(date.month) && isValidDay(date.day) && isValidYear(date.year));
                     }
-                    date.month = inputDate.getMonth();
-                    date.day = inputDate.getDate();
-                    date.year = inputDate.getFullYear();
-                    return (isValidMonth(date.month) && isValidDay(date.day) && isValidYear(date.year));
                 }
 
                 function formatDate(newDate) {
