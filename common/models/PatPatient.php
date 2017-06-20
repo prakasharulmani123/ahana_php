@@ -748,8 +748,8 @@ class PatPatient extends RActiveRecord {
         return (date("md", date("U", mktime(0, 0, 0, $birthDate[0], $birthDate[1], $birthDate[2]))) > date("md") ? ((date("Y") - $birthDate[2]) - 1) : (date("Y") - $birthDate[2]));
     }
 
-    public static function getPatientBirthdate($age) {
-        return date('Y-m-d', strtotime($age . ' years ago'));
+    public static function getPatientBirthdate($age, $months = 0) {
+        return date('Y-m-d', strtotime($age . ' years '.$months.' months ago'));
     }
 
     public static function getPatientlist($tenant = null, $status = '1', $deleted = false) {

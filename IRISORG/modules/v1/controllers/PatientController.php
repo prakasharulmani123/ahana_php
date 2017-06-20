@@ -2,6 +2,7 @@
 
 namespace IRISORG\modules\v1\controllers;
 
+use common\components\HelperComponent;
 use common\models\CoInternalCode;
 use common\models\CoPatient;
 use common\models\GlPatient;
@@ -225,10 +226,11 @@ class PatientController extends ActiveController {
         $post = Yii::$app->request->post();
         $age = '';
         if (isset($post['date'])) {
-            $age = PatPatient::getPatientAge($post['date']);
+//            $age = PatPatient::getPatientAge($post['date']);
+            $age = HelperComponent::getAgeWithMonth($post['date']);
         }
 
-        return ['age' => $age];
+        return ['age' => $age['years'], 'month' => $age['months']];
     }
 
     public function actionGetnextvisitdaysfromdate() {
@@ -245,7 +247,7 @@ class PatientController extends ActiveController {
         $post = Yii::$app->request->post();
         $dob = '';
         if (isset($post['age'])) {
-            $dob = PatPatient::getPatientBirthdate($post['age']);
+            $dob = PatPatient::getPatientBirthdate($post['age'], @$post['month']);
         }
 
         return ['dob' => $dob];
