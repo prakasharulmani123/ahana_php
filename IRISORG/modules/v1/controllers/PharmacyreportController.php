@@ -72,7 +72,7 @@ class PharmacyreportController extends ActiveController {
         $post = Yii::$app->getRequest()->post();
 
         $model = PhaSale::find()
-                    ->andWhere(['not', ['pha_sale.patient_id' => null]]);
+                ->andWhere(['not', ['pha_sale.patient_id' => null]]);
 
         if (isset($post['from']) && isset($post['consultant_id']) && isset($post['tenant_id'])) {
             $consultant_ids = join("','", $post['consultant_id']);
@@ -113,6 +113,17 @@ class PharmacyreportController extends ActiveController {
         }
 
         return ['saleGroupsList' => $saleGroupsList];
+    }
+
+    public function actionStockasonreport() {
+        $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+        $conncection = Yii::$app->client;
+        $command = $conncection->createCommand("
+             CALL pha_stock_report_by_date('2016-06-10')
+           
+        ");
+        $stock_report = $command->queryAll();
+        return ['stock_report' => $stock_report];
     }
 
     //Not using now 
