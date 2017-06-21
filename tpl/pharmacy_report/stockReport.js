@@ -19,6 +19,7 @@ app.controller('stockReportController', ['$rootScope', '$scope', '$timeout', '$h
             $scope.showTable = false;
             $scope.data = {};
             $scope.data.tenant_id = '';
+            $scope.data.tenant_name = '';
             $scope.data.from = moment().format('YYYY-MM-DD');
         }
 
@@ -30,6 +31,10 @@ app.controller('stockReportController', ['$rootScope', '$scope', '$timeout', '$h
                 }
             });
             $scope.clearReport();
+        }
+        
+        $scope.selectTenantname = function () {           
+            $scope.data.tenant_name = $scope.tenants[$scope.data.tenant_id];
         }
 
         //Index Page

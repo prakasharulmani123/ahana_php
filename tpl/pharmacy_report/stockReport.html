@@ -23,7 +23,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <select style="margin-bottom: 0px" id="branch_wise" class="form-control" ng-model="data.tenant_id" ng-options="key as value for (key , value) in tenants | orderBy: label" required>
+                                <select style="margin-bottom: 0px" id="branch_wise" class="form-control" ng-model="data.tenant_id" ng-options="key as value for (key , value) in tenants | orderBy: label" ng-change="selectTenantname()" required>
                                 </select>
                             </div>
                             <button id="get_report" class="btn btn-success get-report" ng-disabled="searchForm.$invalid" ng-click="loadReport()">Get Report</button>
@@ -74,12 +74,16 @@
 
             <div class="col-sm-12" ng-if='showTable && records.length > 0'>
                 <div class="panel panel-default">
-                    <div class="panel-heading font-bold">{{app.org_name}}</div>
+                    <div class="panel-heading font-bold">{{data.tenant_name}}</div>
                     <div class="panel-body" id="table">
                         <table class="table table-bordered">
                             <tr class="hide">
                                 <td>Report Name</td>
                                 <td>Stock Report</td>
+                            </tr>
+                            <tr class="hide">
+                                <td>Branch Name</td>
+                                <td>{{data.tenant_name}}</td>
                             </tr>
                             <tr class="hide">
                                 <td>Stock Date</td>
