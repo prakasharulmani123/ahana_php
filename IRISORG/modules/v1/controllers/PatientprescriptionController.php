@@ -106,7 +106,7 @@ class PatientprescriptionController extends ActiveController {
                 if(isset($model->consultant)){
                     $consult_name = $model->consultant->title_code .  $model->consultant->name;
                 }
-                return ['success' => true, 'date' => date('d-M-Y H:i'), 'model' => ['consultant_name' => $consult_name, 'consultant_id' => $model->consultant_id]];
+                return ['success' => true, 'pres_id' =>$model->pres_id, 'date' => date('d-M-Y H:i'), 'model' => ['consultant_name' => $consult_name, 'consultant_id' => $model->consultant_id]];
             } else {
                 return ['success' => false, 'message' => Html::errorSummary([$model, $item_model])];
             }
