@@ -4,6 +4,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.app.settings.patientSideMenu = true;
         $scope.app.settings.patientContentClass = 'app-content patient_content ';
         $scope.app.settings.patientFooterClass = 'app-footer';
+        $scope.today = new Date();
 
         //Start Init Variables, Objects, Arrays
         $scope.pres_status = 'current';
@@ -715,7 +716,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
                             $timeout(function () {
                                 $scope.getFav();
-                                save_success(true);
+                                save_success(true,response);
+
 //                                $state.go('patient.prescription', {id: $state.params.id});
                             }, 1000)
                         } else {
@@ -1426,27 +1428,30 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             return content;
         }
 
-        var save_success = function (prev_refresh) {
+        var save_success = function (prev_refresh, response) {
+//            if ($scope.btnid == "print") {
+//                $scope.printloader = '<i class="fa fa-spin fa-spinner"></i>';
+//                $timeout(function () {
+//                    var print_content = $scope.printContent();
+//                    if (print_content.length > 0) {
+//                        var docDefinition = {
+//                            header: $scope.printHeader(),
+//                            footer: $scope.printFooter(),
+//                            styles: $scope.printStyle(),
+//                            content: print_content,
+//                            pageMargins: ($scope.deviceDetector.browser == 'firefox' ? 75 : 50),
+//                            pageSize: 'A4',
+//                        };
+//                        var pdf_document = pdfMake.createPdf(docDefinition);
+//                        var doc_content_length = Object.keys(pdf_document).length;
+//                        if (doc_content_length > 0) {
+//                            pdf_document.print();
+//                        }
+//                    }
+//                }, 1000);
+//            }
             if ($scope.btnid == "print") {
-                $scope.printloader = '<i class="fa fa-spin fa-spinner"></i>';
-                $timeout(function () {
-                    var print_content = $scope.printContent();
-                    if (print_content.length > 0) {
-                        var docDefinition = {
-                            header: $scope.printHeader(),
-                            footer: $scope.printFooter(),
-                            styles: $scope.printStyle(),
-                            content: print_content,
-                            pageMargins: ($scope.deviceDetector.browser == 'firefox' ? 75 : 50),
-                            pageSize: 'A4',
-                        };
-                        var pdf_document = pdfMake.createPdf(docDefinition);
-                        var doc_content_length = Object.keys(pdf_document).length;
-                        if (doc_content_length > 0) {
-                            pdf_document.print();
-                        }
-                    }
-                }, 1000);
+                $scope.printPres(response.pres_id);
             }
 
             if (prev_refresh) {
@@ -1505,11 +1510,24 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         }
 
         $scope.printPres = function (pres_id) {
-            $scope.presDetail(pres_id).then(function () {
-                delete $scope.data2.items;
-                $scope.btnid = 'print';
-                save_success(false);
-            });
+//            $scope.presDetail(pres_id).then(function () {
+//                delete $scope.data2.items;
+//                $scope.btnid = 'print';
+//                save_success(false);
+//        });
+            $http.get($rootScope.IRISOrgServiceUrl + "/patientprescriptions/" + pres_id + "?addtfields=presc_search")
+                    .success(function (response) {
+                        $scope.prescription = response;
+                        $('#print_previous_pres').printThis({
+                            pageTitle: "Ahana",
+                            debug: false,
+                            importCSS: false,
+                            importStyle: false,
+                            pageMargins: ($scope.deviceDetector.browser == 'firefox' ? 50 : 50),
+                            loadCSS: [$rootScope.IRISOrgUrl + "/css/prescription_print.css"],
+                        });
+                    });
+
         }
 
         $scope.freqChange = function (freq, freq_type, item, key, tableform) {
@@ -1608,10 +1626,10 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 } else {
                     $scope.currPresMaskTxt = maskTxt;
                 }
-                
+
                 //Make "Custom" is a first option in the array. 
                 var maskCustomTxt = $filter('filter')($scope.currPresMaskTxt, {freq_name: 'Custom'});
-                if(maskCustomTxt.length == 0) {
+                if (maskCustomTxt.length == 0) {
                     $scope.currPresMaskTxt.unshift($scope.defaultMaskTxt);
                 }
             }

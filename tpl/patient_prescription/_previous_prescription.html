@@ -82,3 +82,85 @@
         </tr>
     </tbody>
 </table>
+<div id='print_previous_pres' ng-hide='true'>
+    <table class="invoice" align="center">
+        <tbody>
+            <tr>
+                <td colspan="3" class="referenceId">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td width="48%"><b>#{{prescription.pres_id}} / </b>{{today| date: "dd-MMMM-y" }}</td>
+                                <td width="4%" align="center" class="logoTxt">
+                                    <span>R</span>
+                                    <span class="absoluteTxt">X</span>
+                                </td>
+                                <td width="48%" align="right">
+                        <io-barcode code="{{patientObj.patient_global_int_code}}" type="CODE128B" options="barcodeOptions" width="125px" height="50px"></io-barcode>
+                </td>
+            </tr>
+        </tbody> 
+    </table>
+</td>
+</tr>
+<tr>
+    <td colspan="3" class="patientInfo">
+        <table>
+            <tbody>
+                <tr>
+                    <td width="5%" rowspan="3"><io-barcode code="{{patientObj.patient_global_int_code}}" type="CODE128B" options="barcodeOptions" style='height:50px;-ms-transform: rotate(90deg);-webkit-transform: rotate(90deg); transform: rotate(90deg);'></io-barcode></td>
+    <td width="55%"><h2>{{patientObj.fullname}} / {{patientObj.patient_age}}</h2></td>
+    <td width="40%" class="borderLeft">Issued by : <span class="lightColor">{{app.username}}</span></td>
+</tr>
+<tr>
+    <td>{{patientObj.patient_global_int_code}} 
+        <span ng-if="patientObj.patient_category" style="background-color: {{patientObj.patient_category_color}}" class="greenBg">
+            {{patientObj.patient_category| uppercase}}
+        </span>
+    </td>
+    <td class="borderLeft">Issued at : <span class="lightColor">{{app.org_name}}</span></td>
+</tr>
+<tr>
+    <td>Consultant : <span class="lightColor">{{prescription.consultant_name}}</span></td>
+    <!--<td class="borderLeft">Collection at : <span class="lightColor">Ram Nagar</span></td>-->
+</tr>
+</tbody> 
+</table>
+</td>
+</tr>
+<tr>
+    <td class="prescriptionInfo">
+        <table>
+            <thead>
+                <tr>
+                    <th><span>Medicine Name</span></th>
+                    <th width="5%" class="txtCenter"><img src="client/img/sunrise.png" alt="Morning" /></th>
+                    <th width="5%" class="txtCenter"><img src="client/img/brightness.png" alt="Afternoon" /></th>
+                    <th width="5%" class="txtCenter"><img src="client/img/sun-shining.png" alt="Evening" /></th>
+                    <th width="5%" class="txtCenter"><img src="client/img/moon.png" alt="Night" /></th>
+                    <th width="10%" class="txtCenter"><span>Days</span></th>
+                    <th><span>Remarks</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="(gKey, row) in prescription.items">
+                    <td><p>{{row.product_name}}</p><i>(oxcarmaipine)</i></td>
+                    <td class="txtCenter">{{ getFrequencyExists(row.frequency_name, 0)}}</td>
+                    <td class="txtCenter">{{ getFrequencyExists(row.frequency_name, 1)}}</td>
+                    <td class="txtCenter">{{ getFrequencyExists(row.frequency_name, 2)}}</td>
+                    <td class="txtCenter">{{ getFrequencyExists(row.frequency_name, 3)}}</td>
+                    <td class="txtCenter">{{row.number_of_days}}</td>
+                    <td>{{row.remarks||'-'}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </td>
+</tr> 
+</tbody>
+<tfoot class="nextVisit">
+    <tr>
+        <td><p class="txtCenter">* Next Visit - {{prescription.next_visit| date: "dd-MMMM-y" }}</p></td>
+    </tr>
+</tfoot>
+</table>
+</div>
