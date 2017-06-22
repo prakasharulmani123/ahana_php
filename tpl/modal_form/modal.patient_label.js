@@ -30,6 +30,11 @@ app.controller('PatientLabelController', ['scope', '$scope', function (scope, $s
             var dataURL = canvas.toDataURL("image/png");
             return dataURL;
         }
+        $scope.textDetail = function (name,len) {
+            var name_count = name.length;
+            if(name_count >= len) return  name.substring(0, len)+'...';
+            else return name;
+        }
         
         $scope.printContent = function () {
             var encoded_image = $('#patient-barcode img').attr('src');
@@ -44,13 +49,13 @@ app.controller('PatientLabelController', ['scope', '$scope', function (scope, $s
                     {
                         fontSize: 7,
                         text: [
-                            'Name: ' + $scope.data.view_data.fullname,
+                            'Name: ' + $scope.textDetail($scope.data.view_data.fullname,13),
                             '\nUHID: ' + $scope.data.view_data.patient_global_int_code,
                             '\nGender: ' + $scope.data.app.patientDetail.patientSex,
                             '\nAge: ' + $scope.data.view_data.patient_age,
-                            '\nDr Name: ' + $scope.data.view_data.consultant_name + "\n",
+                            '\nDr Name: ' + $scope.textDetail($scope.data.view_data.consultant_name,13) + "\n",
                         ],
-                        margin: [0, 0, 0, 5],
+                        margin: [0, 0, 0, 0],
 
                     },
                     {
