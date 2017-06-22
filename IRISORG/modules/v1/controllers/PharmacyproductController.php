@@ -289,6 +289,7 @@ class PharmacyproductController extends ActiveController {
         if (!empty($post)) {
             $model = PhaProductBatch::find()->tenant()->andWhere(['batch_id' => $post['batch_id']])->one();
             if (!empty($model)) {
+                $model->stock_adjust = true;
                 $model->total_qty = $model->total_qty + $post['adjust_qty'];
                 $model->available_qty = $model->available_qty + $post['adjust_qty'];
 

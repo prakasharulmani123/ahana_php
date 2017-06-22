@@ -39,6 +39,7 @@ class PhaProductBatch extends RActiveRecord {
     public $supplier_id_2;
     public $supplier_id_3;
     public $product_reorder_min;
+    public $stock_adjust = false;
 
     /**
      * @inheritdoc
@@ -52,12 +53,12 @@ class PhaProductBatch extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['tenant_id', 'product_id', 'batch_no', 'expiry_date', 'total_qty', 'available_qty', 'created_by'], 'required'],
-            [['tenant_id', 'product_id', 'total_qty', 'available_qty', 'created_by', 'modified_by'], 'integer'],
-            [['expiry_date', 'created_at', 'modified_at', 'deleted_at', 'package_unit', 'package_name'], 'safe'],
-            [['status'], 'string'],
-            [['batch_no'], 'string', 'max' => 255],
-            [['batch_no'], 'unique', 'targetAttribute' => ['tenant_id', 'product_id', 'batch_no', 'expiry_date', 'deleted_at'], 'message' => 'The combination of Batch NO. & Expiry Date has already been taken.']
+                [['tenant_id', 'product_id', 'batch_no', 'expiry_date', 'total_qty', 'available_qty', 'created_by'], 'required'],
+                [['tenant_id', 'product_id', 'total_qty', 'available_qty', 'created_by', 'modified_by'], 'integer'],
+                [['expiry_date', 'created_at', 'modified_at', 'deleted_at', 'package_unit', 'package_name'], 'safe'],
+                [['status'], 'string'],
+                [['batch_no'], 'string', 'max' => 255],
+                [['batch_no'], 'unique', 'targetAttribute' => ['tenant_id', 'product_id', 'batch_no', 'expiry_date', 'deleted_at'], 'message' => 'The combination of Batch NO. & Expiry Date has already been taken.']
         ];
     }
 
@@ -182,7 +183,7 @@ class PhaProductBatch extends RActiveRecord {
                     $parent_fields = array_combine($pFields, $pFields);
                     break;
                 case 'stock_details':
-                    $addt_keys = ['batch_details','mrp','product'];
+                    $addt_keys = ['batch_details', 'mrp', 'product'];
                     $pFields = ['batch_id', 'batch_no', 'available_qty', 'expiry_date'];
                     $parent_fields = array_combine($pFields, $pFields);
                     break;
@@ -198,6 +199,21 @@ class PhaProductBatch extends RActiveRecord {
     public function beforeSave($insert) {
         $this->expiry_date = date('Y-m', strtotime($this->expiry_date)) . '-01';
         return parent::beforeSave($insert);
+    }
+
+    public function afterSave($insert, $changedAttributes) {
+        if ($this->stock_adjust) {
+            if ($changedAttributes['total_qty'] != $this->total_qty && $changedAttributes['available_qty'] != $this->available_qty) {
+                $adjust_log = new PhaStockAdjustLog();
+                $adjust_log->batch_id = $this->batch_id;
+                $adjust_log->adjust_date_time = $this->modified_at;
+                $adjust_log->adjust_from = $changedAttributes['available_qty'];
+                $adjust_log->adjust_to = $this->available_qty;
+                $adjust_log->adjust_qty = $adjust_log->adjust_to - $adjust_log->adjust_from;
+                $adjust_log->save(false);
+            }
+        }
+        return parent::afterSave($insert, $changedAttributes);
     }
 
 }
