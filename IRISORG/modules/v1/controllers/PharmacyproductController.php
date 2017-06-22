@@ -142,6 +142,8 @@ class PharmacyproductController extends ActiveController {
         //print_r($_REQUEST); die;
         $post = Yii::$app->getRequest()->post();
         $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+        
+        $offset = abs($_REQUEST['pageIndex'] - 1) * $_REQUEST['pageSize'];
 
         if (isset($post['search_text'])) {
             switch ($post['search_type']) {
@@ -174,7 +176,6 @@ class PharmacyproductController extends ActiveController {
                     ->andHaving("search_column LIKE '$text'")
                     ->count();
             $totalCount = $productCount;
-            $offset = abs($_REQUEST['pageIndex'] - 1) * $_REQUEST['pageSize'];
             $products = PhaProductBatch::find()
                     ->addSelect(["*", $having_column])
                     ->joinWith('product')
@@ -186,10 +187,15 @@ class PharmacyproductController extends ActiveController {
                     ->orderBy($_REQUEST['sortOptions'])
                     ->all();
         } else {
-            $products = PhaProductBatch::find()->joinWith('product')->tenant()->limit($_REQUEST['pageSize'])->offset($_REQUEST['pageIndex'])->orderBy($_REQUEST['sortOptions'])->all();
+            $products = PhaProductBatch::find()
+                    ->joinWith('product')
+                    ->tenant()
+                    ->limit($_REQUEST['pageSize'])
+                    ->offset($offset)
+                    ->orderBy($_REQUEST['sortOptions'])
+                    ->all();
             $totalCount = PhaProductBatch::find()->tenant()->count();
         }
-
 
         return ['productLists' => $products,'totalCount' =>$totalCount];
     }
