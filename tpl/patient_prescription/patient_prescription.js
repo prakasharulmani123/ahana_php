@@ -716,7 +716,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
                             $timeout(function () {
                                 $scope.getFav();
-                                save_success(true,response);
+                                save_success(true, response);
 
 //                                $state.go('patient.prescription', {id: $state.params.id});
                             }, 1000)
@@ -1261,173 +1261,6 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             return false;
         }
 
-        //PRINT Prescription
-        $scope.printHeader = function () {
-            return {
-                text: "Prescription",
-                margin: 5,
-                alignment: 'center'
-            };
-        }
-
-        $scope.printFooter = function () {
-            return {
-                text: "Printed Date : " + moment($scope.current_time).format('DD-MM-YYYY HH:mm'),
-                margin: 5,
-                alignment: 'center'
-            };
-        }
-
-        $scope.printStyle = function () {
-            return {
-                header: {
-                    bold: true,
-                    color: '#000',
-                    fontSize: 11,
-                    margin: [0, 5, 0, 0]
-                },
-                demoTable: {
-                    color: '#000',
-                    fontSize: 10
-                },
-                tableRows: {
-                    margin: [0, 10, 0, 10]
-                }
-            };
-        }
-
-        $scope.printloader = '';
-        $scope.printContent = function () {
-            var content = [];
-            var prescInfo = [];
-            var prescItems = [];
-
-            var items = $scope.prescriptionItems2;
-            prescItems.push([
-                {
-                    text: 'Description',
-                    style: 'header'
-                },
-                {
-                    image: $scope.imgExport('weather1'),
-                    width: 25
-                },
-                {
-                    image: $scope.imgExport('weather2'),
-                    width: 25
-                },
-                {
-                    image: $scope.imgExport('weather3'),
-                    width: 25
-                },
-                {
-                    image: $scope.imgExport('weather4'),
-                    width: 25
-                },
-                {
-                    image: $scope.imgExport('weather4'),
-                    width: 25
-                },
-                {
-                    text: 'Remarks',
-                    style: 'header'
-                },
-            ]);
-
-            angular.forEach(items, function (item, key) {
-                var freq_0 = $scope.getFrequencyExists(item.frequency, 0);
-                var freq_1 = $scope.getFrequencyExists(item.frequency, 1);
-                var freq_2 = $scope.getFrequencyExists(item.frequency, 2);
-                var freq_3 = $scope.getFrequencyExists(item.frequency, 3);
-                var freq_4 = $scope.getFrequencyExists(item.frequency, 4);
-                prescItems.push([
-                    {
-                        text: item.product_name + "(" + item.number_of_days + " days)",
-                        style: "tableRows"
-                    },
-                    {
-                        alignment: 'center',
-                        text: freq_0,
-                        style: "tableRows"
-                    },
-                    {
-                        alignment: 'center',
-                        text: freq_1,
-                        style: "tableRows"
-                    },
-                    {
-                        alignment: 'center',
-                        text: freq_2,
-                        style: "tableRows"
-                    },
-                    {
-                        alignment: 'center',
-                        text: freq_3,
-                        style: "tableRows"
-                    },
-                    {
-                        alignment: 'center',
-                        text: freq_4,
-                        style: "tableRows"
-                    },
-                    {
-                        text: (item.remarks ? item.remarks : '-'),
-                        style: "tableRows"
-                    }
-                ]);
-            });
-
-            prescInfo.push({
-                columns: [
-                    {},
-                    {
-                        image: $("#patient_barcode").attr('src'),
-                        width: 180,
-                        margin: [20, 20, 20, 20]
-                    }
-                ]
-            }, {
-                columns: [
-                    {
-                        text: [
-                            {text: $scope.patientObj.fullname + "(" + $scope.patientObj.patient_age + " yrs)", bold: true},
-                        ],
-                        margin: [0, 0, 0, 30]
-                    },
-                    {
-                        alignment: 'right',
-                        text: [
-                            {text: ' Date :', bold: true},
-                            moment($scope.data2.pres_date).format('DD-MM-YYYY HH:mm')
-
-                        ],
-                        margin: [0, 0, 0, 30]
-                    }
-                ]
-            }, {
-                style: 'demoTable',
-                table: {
-                    headerRows: 1,
-                    widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto', '*'],
-                    body: prescItems,
-                }
-            }, {
-                columns: [
-                    {},
-                    {
-                        alignment: 'right',
-                        text: [
-                            {text: ' Next Review :', bold: true},
-                            moment($scope.data2.next_visit).format('DD-MM-YYYY')
-                        ],
-                        margin: [0, 20, 0, 0]
-                    }
-                ]
-            });
-            content.push(prescInfo);
-            return content;
-        }
-
         var save_success = function (prev_refresh, response) {
 //            if ($scope.btnid == "print") {
 //                $scope.printloader = '<i class="fa fa-spin fa-spinner"></i>';
@@ -1510,24 +1343,16 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         }
 
         $scope.printPres = function (pres_id) {
-//            $scope.presDetail(pres_id).then(function () {
-//                delete $scope.data2.items;
-//                $scope.btnid = 'print';
-//                save_success(false);
-//        });
-            $http.get($rootScope.IRISOrgServiceUrl + "/patientprescriptions/" + pres_id + "?addtfields=presc_search")
-                    .success(function (response) {
-                        $scope.prescription = response;
-                        $('#print_previous_pres').printThis({
-                            pageTitle: "Ahana",
-                            debug: false,
-                            importCSS: false,
-                            importStyle: false,
-                            pageMargins: ($scope.deviceDetector.browser == 'firefox' ? 50 : 50),
-                            loadCSS: [$rootScope.IRISOrgUrl + "/css/prescription_print.css"],
-                        });
-                    });
-
+            $scope.presDetail(pres_id).then(function () {
+                delete $scope.data2.items;
+                $('#print_previous_pres').printThis({
+                    pageTitle: "Ahana",
+                    debug: false,
+                    importCSS: false,
+                    importStyle: false,
+                    loadCSS: [$rootScope.IRISOrgUrl + "/css/prescription_print.css"],
+                });
+            });
         }
 
         $scope.freqChange = function (freq, freq_type, item, key, tableform) {
@@ -1660,6 +1485,173 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 //            return function (item) {
 //                return item[prop] <= val;
 //            }
+//        }
+
+        //PRINT Prescription
+//        $scope.printHeader = function () {
+//            return {
+//                text: "Prescription",
+//                margin: 5,
+//                alignment: 'center'
+//            };
+//        }
+//
+//        $scope.printFooter = function () {
+//            return {
+//                text: "Printed Date : " + moment($scope.current_time).format('DD-MM-YYYY HH:mm'),
+//                margin: 5,
+//                alignment: 'center'
+//            };
+//        }
+//
+//        $scope.printStyle = function () {
+//            return {
+//                header: {
+//                    bold: true,
+//                    color: '#000',
+//                    fontSize: 11,
+//                    margin: [0, 5, 0, 0]
+//                },
+//                demoTable: {
+//                    color: '#000',
+//                    fontSize: 10
+//                },
+//                tableRows: {
+//                    margin: [0, 10, 0, 10]
+//                }
+//            };
+//        }
+//
+//        $scope.printloader = '';
+//        $scope.printContent = function () {
+//            var content = [];
+//            var prescInfo = [];
+//            var prescItems = [];
+//
+//            var items = $scope.prescriptionItems2;
+//            prescItems.push([
+//                {
+//                    text: 'Description',
+//                    style: 'header'
+//                },
+//                {
+//                    image: $scope.imgExport('weather1'),
+//                    width: 25
+//                },
+//                {
+//                    image: $scope.imgExport('weather2'),
+//                    width: 25
+//                },
+//                {
+//                    image: $scope.imgExport('weather3'),
+//                    width: 25
+//                },
+//                {
+//                    image: $scope.imgExport('weather4'),
+//                    width: 25
+//                },
+//                {
+//                    image: $scope.imgExport('weather4'),
+//                    width: 25
+//                },
+//                {
+//                    text: 'Remarks',
+//                    style: 'header'
+//                },
+//            ]);
+//
+//            angular.forEach(items, function (item, key) {
+//                var freq_0 = $scope.getFrequencyExists(item.frequency, 0);
+//                var freq_1 = $scope.getFrequencyExists(item.frequency, 1);
+//                var freq_2 = $scope.getFrequencyExists(item.frequency, 2);
+//                var freq_3 = $scope.getFrequencyExists(item.frequency, 3);
+//                var freq_4 = $scope.getFrequencyExists(item.frequency, 4);
+//                prescItems.push([
+//                    {
+//                        text: item.product_name + "(" + item.number_of_days + " days)",
+//                        style: "tableRows"
+//                    },
+//                    {
+//                        alignment: 'center',
+//                        text: freq_0,
+//                        style: "tableRows"
+//                    },
+//                    {
+//                        alignment: 'center',
+//                        text: freq_1,
+//                        style: "tableRows"
+//                    },
+//                    {
+//                        alignment: 'center',
+//                        text: freq_2,
+//                        style: "tableRows"
+//                    },
+//                    {
+//                        alignment: 'center',
+//                        text: freq_3,
+//                        style: "tableRows"
+//                    },
+//                    {
+//                        alignment: 'center',
+//                        text: freq_4,
+//                        style: "tableRows"
+//                    },
+//                    {
+//                        text: (item.remarks ? item.remarks : '-'),
+//                        style: "tableRows"
+//                    }
+//                ]);
+//            });
+//
+//            prescInfo.push({
+//                columns: [
+//                    {},
+//                    {
+//                        image: $("#patient_barcode").attr('src'),
+//                        width: 180,
+//                        margin: [20, 20, 20, 20]
+//                    }
+//                ]
+//            }, {
+//                columns: [
+//                    {
+//                        text: [
+//                            {text: $scope.patientObj.fullname + "(" + $scope.patientObj.patient_age + " yrs)", bold: true},
+//                        ],
+//                        margin: [0, 0, 0, 30]
+//                    },
+//                    {
+//                        alignment: 'right',
+//                        text: [
+//                            {text: ' Date :', bold: true},
+//                            moment($scope.data2.pres_date).format('DD-MM-YYYY HH:mm')
+//
+//                        ],
+//                        margin: [0, 0, 0, 30]
+//                    }
+//                ]
+//            }, {
+//                style: 'demoTable',
+//                table: {
+//                    headerRows: 1,
+//                    widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto', '*'],
+//                    body: prescItems,
+//                }
+//            }, {
+//                columns: [
+//                    {},
+//                    {
+//                        alignment: 'right',
+//                        text: [
+//                            {text: ' Next Review :', bold: true},
+//                            moment($scope.data2.next_visit).format('DD-MM-YYYY')
+//                        ],
+//                        margin: [0, 20, 0, 0]
+//                    }
+//                ]
+//            });
+//            content.push(prescInfo);
+//            return content;
 //        }
 
     }]);

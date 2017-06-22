@@ -27,10 +27,12 @@
                             }
                         </style>-->
                         <div class="col-xs-6">
+                            <img id="ahana_image" width="200px" height="50px" src="img/ahanalogo_small.jpg" alt="ahana_log" /><br />
                             <b>Name:</b> {{data.view_data.fullname}}<br />
                             <b>UHID:</b> {{data.view_data.patient_global_int_code}}<br />
                             <b>Gender:</b> {{data.app.patientDetail.patientSex}}<br />
-                            <b>Age: </b> {{data.view_data.patient_age}}
+                            <b>Age: </b> {{data.view_data.patient_age}}<br />
+                            <b>Dr Name:</b> {{data.view_data.consultant_name}}
                         </div>
                         <div class="col-xs-6 text-right" id="patient-barcode">
                             <io-barcode code="{{data.view_data.patient_global_int_code}}" type="{{data.app.IO.type}}" code="{{data.app.IO.code}}" options="data.app.IO.barcodeOptions"></io-barcode>
