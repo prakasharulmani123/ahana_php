@@ -82,7 +82,7 @@
         </tr>
     </tbody>
 </table>
-<div id='print_previous_pres' ng-hide='true'>
+<div id='print_previous_pres'>
     <table class="invoice" align="center">
         <tbody>
             <tr>
@@ -108,7 +108,7 @@
         <table>
             <tbody>
                 <tr>
-                    <td width="5%" rowspan="3"><io-barcode code="{{patientObj.patient_global_int_code}}" type="CODE128B" options="barcodeOptions" style='height:50px;-ms-transform: rotate(90deg);-webkit-transform: rotate(90deg); transform: rotate(90deg);'></io-barcode></td>
+                    <td width="5%" rowspan="3"><io-barcode code="{{patientObj.patient_global_int_code}}" type="CODE128B" options="barcodeOptions" style='height:50px;-ms-transform: rotate(90deg);-webkit-transform: rotate(270deg); transform: rotate(270deg);'></io-barcode></td>
     <td width="55%"><h2>{{patientObj.fullname}} / {{patientObj.patient_age}}</h2></td>
     <td width="40%" class="borderLeft">Issued by : <span class="lightColor">{{app.username}}</span></td>
 </tr>
@@ -122,7 +122,7 @@
 </tr>
 <tr>
     <td>Consultant : <span class="lightColor">{{data2.consultant_name}}</span></td>
-    <!--<td class="borderLeft">Collection at : <span class="lightColor">Ram Nagar</span></td>-->
+    <td class="borderLeft"><!--Collection at : <span class="lightColor">Ram Nagar</span>--></td>
 </tr>
 </tbody> 
 </table>
@@ -134,10 +134,10 @@
             <thead>
                 <tr>
                     <th><span>Medicine Name</span></th>
-                    <th width="5%" class="txtCenter"><img src="client/img/sunrise.png" alt="Morning" /></th>
-                    <th width="5%" class="txtCenter"><img src="client/img/brightness.png" alt="Afternoon" /></th>
-                    <th width="5%" class="txtCenter"><img src="client/img/sun-shining.png" alt="Evening" /></th>
-                    <th width="5%" class="txtCenter"><img src="client/img/moon.png" alt="Night" /></th>
+                    <th width="5%" class="txtCenter"><span><img src="{{IRISOrgUrl}}/img/sunrise.png" alt="Morning" /></span></th>
+                    <th width="5%" class="txtCenter"><span><img src="{{IRISOrgUrl}}/img/brightness.png" alt="Afternoon" /></span></th>
+                    <th width="5%" class="txtCenter"><span><img src="{{IRISOrgUrl}}/img/sun-shining.png" alt="Evening" /></span></th>
+                    <th width="5%" class="txtCenter"><span><img src="{{IRISOrgUrl}}/img/moon.png" alt="Night" /></span></th>
                     <th width="10%" class="txtCenter"><span>Days</span></th>
                     <th><span>Remarks</span></th>
                 </tr>
@@ -157,10 +157,15 @@
     </td>
 </tr> 
 </tbody>
-<tfoot class="nextVisit">
+<!--<tfoot class="nextVisit">
     <tr>
         <td><p class="txtCenter">* Next Visit - {{data2.next_visit| date: "dd-MMMM-y" }}</p></td>
     </tr>
-</tfoot>
+</tfoot>-->
 </table>
+<div>    
+    <div style="position: absolute; bottom: 5px;">
+        <p class="txtCenter" style="font-size: 25px;">* Next Visit - {{data2.next_visit| date: "dd-MMMM-y" }}</p>
+    </div>
+</div>
 </div>
