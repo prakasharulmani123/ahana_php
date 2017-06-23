@@ -91,15 +91,25 @@ class XmlController extends Controller {
     }
 
     public function actionInsertnewfield() {
-        $xpath = "/FIELDS/GROUP/PANELBODY";
-        $insert = '<FIELD id="TherapistName" type="TextBox">
-                <PROPERTIES>
-                    <PROPERTY name="id">TherapistName</PROPERTY>
-                    <PROPERTY name="name">TherapistName</PROPERTY>
-                    <PROPERTY name="class">form-control</PROPERTY>
-                    <PROPERTY name="placeholder">Therapist Name</PROPERTY>
-                </PROPERTIES>
-            </FIELD>';
+        //$xpath = "/FIELDS/GROUP/PANELBODY/FIELD[@id='name']";
+        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD[@id='name']";
+//        $insert = '<FIELD id="TherapistName" type="TextBox">
+//                <PROPERTIES>
+//                    <PROPERTY name="id">TherapistName</PROPERTY>
+//                    <PROPERTY name="name">TherapistName</PROPERTY>
+//                    <PROPERTY name="class">form-control</PROPERTY>
+//                    <PROPERTY name="placeholder">Therapist Name</PROPERTY>
+//                </PROPERTIES>
+//            </FIELD>';
+        $insert = '<FIELD id="uhid" type="TextBox" label="UHID" required="true">
+                    <PROPERTIES>
+                        <PROPERTY name="id">uhid</PROPERTY>
+                        <PROPERTY name="name">uhid</PROPERTY>
+                        <PROPERTY name="readonly">readonly</PROPERTY>
+                        <PROPERTY name="class">form-control</PROPERTY>
+                    </PROPERTIES>
+                    </FIELD>';
+                    
 
         $all_files = $this->getAllFiles();
         $error_files = [];
@@ -115,13 +125,15 @@ class XmlController extends Controller {
                     }
                     $targets = $xml->xpath($xpath);
                     if (!empty($targets)) {
-                        $this->simplexml_insert_firstChild(simplexml_load_string($insert), $targets[0]);
+                        //print_r($targets[0]); die;
+                       // echo $files;
+                        $this->simplexml_insert_after(simplexml_load_string($insert), $targets[0]);
 //                        foreach ($targets as $target) {
 //                            $this->simplexml_insert_after(simplexml_load_string($insert), $target);
 //                        }
                     }
                     $xml->asXML($files);
-                }
+                } //die;
             }
         }
         echo "<pre>";
@@ -132,8 +144,8 @@ class XmlController extends Controller {
     public function actionSetattrvalue() {
         $node = 'FIELD';
         $attr = 'label';
-        $find = 'Martial Status';
-        $replace = 'Marital Status';
+        $find = 'Judgement';
+        $replace = 'Personal Judgement';
 //        $node = 'LISTITEM';
 //        $attr = 'value';
 //        $find = 'RTA &amp; Surgery';
