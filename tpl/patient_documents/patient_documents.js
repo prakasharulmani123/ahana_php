@@ -19,6 +19,12 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
 
         //Documents Index Page
         $scope.loadPatDocumentsList = function (date) {
+            $scope.$on('$locationChangeStart', function (event, next, current) {
+                // Here you can take the control and call your own functions:
+                //alert('Sorry ! Back Button is disabled');
+                // Prevent the browser default action (Going back):
+                event.preventDefault();
+            });
             var filterDate = '';
             if (date)
                 filterDate = moment(date).format('YYYY-MM-DD');
@@ -242,7 +248,12 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
             _data.push({
                 name: 'name',
                 value: $scope.patientObj.fullname,
-            }, {
+            }, 
+            {
+                name: 'uhid',
+                value: $scope.patientObj.patient_global_int_code,
+            },
+            {
                 name: 'age',
                 value: $scope.patientObj.patient_age,
             }, {
