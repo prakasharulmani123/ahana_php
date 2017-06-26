@@ -264,7 +264,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             });
 
             $scope.productloader = '<i class="fa fa-spin fa-spinner"></i>';
-            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct?fields=product_id,full_name')
+            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct?fields=product_id,full_name&not_expired=1')
                     .success(function (products) {
                         $scope.products = products;
                         $scope.productloader = '';
