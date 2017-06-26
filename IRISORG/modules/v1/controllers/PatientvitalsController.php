@@ -129,7 +129,7 @@ class PatientvitalsController extends ActiveController {
 
         $user = CoUser::find()->where(['user_id' => $user_id])->one();
         $patient = PatPatient::getPatientByGuid($post['patient_guid']);
-        $vitals = PatVitals::find()->tenant()->andWhere(['patient_id' => $patient->patient_id])->andWhere("created_by != $user_id")->all();
+        $vitals = PatVitals::find()->tenant()->active()->andWhere(['patient_id' => $patient->patient_id])->andWhere("created_by != $user_id")->all();
 
         $extraColumns = ['tenant_id' => $tenant_id, 'modified_by' => Yii::$app->user->identity->user_id, 'modified_at' => new Expression('NOW()'), 'patient_id' => $patient->patient_id]; // extra columns to be saved to the many to many table
         $unlink = true; // unlink tags not in the list
