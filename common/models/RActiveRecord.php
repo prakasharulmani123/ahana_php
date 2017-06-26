@@ -35,6 +35,8 @@ class RActiveRecord extends ActiveRecord {
                 'value' => function ($event) {
                     if (isset(Yii::$app->user->identity->user_id))
                         return Yii::$app->user->identity->user_id;
+                    else if(isset($this->created_by))
+                        return $this->created_by;
                 }
             ],
             'softDelete' => [

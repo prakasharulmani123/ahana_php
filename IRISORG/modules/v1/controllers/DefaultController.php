@@ -356,20 +356,20 @@ class DefaultController extends Controller {
         if (!empty($extra_concession_charges)) {
             $connection = Yii::$app->client;
             $connection->open();
-            
+
             foreach ($extra_concession_charges as $charge) {
                 if ($charge->ec_type == 'C') {
                     $header = 'Professional Charges ( ' . $charge->user->title_code . ' ' . $charge->user->name . ')';
                 } else {
                     $header = 'Procedure Charges ( ' . $charge->roomchargesubcategory->charge_subcat_name . ')';
                 }
-                
+
                 //Extra amount Log
                 if ($charge->extra_amount != '0.00') {
                     $activity = "Extra Amount {$charge->extra_amount} (Add)";
-                    
+
                     $sql = "INSERT INTO pat_billing_log(tenant_id, patient_id, encounter_id, date_time, log_type, header, activity, created_by, created_at, modified_by, modified_at) VALUES({$charge->tenant_id},'{$charge->patient_id}', '{$charge->encounter_id}', '{$charge->created_at}', 'N', '{$header}', '{$activity}', '{$charge->created_by}', '{$charge->created_at}', '{$charge->created_by}', '{$charge->created_at}')";
-                    
+
                     $command = $connection->createCommand($sql);
                     $command->execute();
                 }
@@ -377,32 +377,125 @@ class DefaultController extends Controller {
                 //Concession amount Log
                 if ($charge->concession_amount != '0.00') {
                     $activity = "Concession Amount {$charge->concession_amount} (Add)";
-                    
+
                     $sql = "INSERT INTO pat_billing_log(tenant_id, patient_id, encounter_id, date_time, log_type, header, activity, created_by, created_at, modified_by, modified_at) VALUES({$charge->tenant_id},'{$charge->patient_id}', '{$charge->encounter_id}', '{$charge->created_at}', 'N', '{$header}', '{$activity}', '{$charge->created_by}', '{$charge->created_at}', '{$charge->created_by}', '{$charge->created_at}')";
-                    
+
                     $command = $connection->createCommand($sql);
                     $command->execute();
                 }
             }
-            
+
             $connection->close();
         }
-        
+
         //Recurring Log
         $encounters = PatEncounter::find()->where('concession_amount != 0.00')->all();
-        if(!empty($encounters)) {
+        if (!empty($encounters)) {
             $connection = Yii::$app->client;
             $connection->open();
-            foreach($encounters as $encounter) {
+            foreach ($encounters as $encounter) {
                 $activity = "Concession amount {$encounter->concession_amount} ( Add )";
                 $sql = "INSERT INTO pat_billing_log(tenant_id, patient_id, encounter_id, date_time, log_type, header, activity, created_by, created_at, modified_by, modified_at) VALUES({$encounter->tenant_id},'{$encounter->patient_id}', '{$encounter->encounter_id}', '{$encounter->modified_at}', 'R', 'Room Concession', '{$activity}', '{$charge->modified_by}', '{$charge->modified_at}', '{$charge->modified_by}', '{$charge->modified_at}')";
-                
+
                 $command = $connection->createCommand($sql);
                 $command->execute();
             }
             $connection->close();
         }
-                
+    }
+
+    public function actionOpeningstockupdate() {
+        $connection = Yii::$app->client;
+        $connection->open();
+        $sql = "SELECT * FROM test_os_batch_wise";
+        $command = $connection->createCommand($sql);
+        $results = $command->queryAll();
+        if (!empty($results)) {
+            foreach ($results as $result) {
+                $product_exists = \common\models\PhaProduct::find()->where([
+                            'tenant_id' => $result['tenant_id'],
+                            'product_name' => $result['Name']
+                        ])
+                        ->one();
+                if (!empty($product_exists)) {
+                    //Package unit / mrp not empty
+                    if ($result['Add_Spec1'] != '' && $result['mrp'] != '') {
+                        $package_unit = (int) $result['Add_Spec1'];
+                        if ($package_unit) {
+                            $batch_exists = \common\models\PhaProductBatch::find()
+                                    ->andWhere([
+                                        'tenant_id' => $result['tenant_id'],
+                                        'product_id' => $product_exists->product_id,
+                                        'batch_no' => $result['Batch'],
+                                        'expiry_date' => date('Y-m', strtotime($result['ExpiryMy'])) . '-01',
+                                    ])
+                                    ->one();
+                            if (empty($batch_exists)) {
+                                $batch = new \common\models\PhaProductBatch();
+                                $batch->tenant_id = $result['tenant_id'];
+                                $batch->product_id = $product_exists->product_id;
+                                $batch->batch_no = $result['Batch'];
+                                $batch->expiry_date = $result['ExpiryMy'];
+                                $batch->package_unit = $package_unit;
+                                $batch->package_name = $result['Add_Spec1'];
+                                $batch->total_qty = $result['Total'];
+                                $batch->available_qty = $result['Total'];
+                                $batch->created_by = -1;
+                                $batch->save(false);
+
+                                $this->_updateBatchRate($result['tenant_id'], $batch->batch_id, $result['mrp'], $package_unit);
+                            } else {
+                                $reason = 'Duplicate batch entry';
+                                $datas = json_encode($result);
+                                $log = "INSERT INTO test_os_log (tenant_id, product_name, reason, datas) VALUES ({$result['tenant_id']}, '{$result['Name']}', '{$reason}', '{$datas}')";
+                                $command = $connection->createCommand($log);
+                                $command->execute();
+                            }
+                        } else {
+                            $reason = 'Package unit is not integer';
+                            $datas = json_encode($result);
+                            $log = "INSERT INTO test_os_log (tenant_id, product_name, reason, datas) VALUES ({$result['tenant_id']}, '{$result['Name']}', '{$reason}', '{$datas}')";
+                            $command = $connection->createCommand($log);
+                            $command->execute();
+                        }
+                    } else {
+                        $reason = 'Package unit / MRP is empty';
+                        $datas = json_encode($result);
+                        $log = "INSERT INTO test_os_log (tenant_id, product_name, reason, datas) VALUES ('{$result['tenant_id']}', '{$result['Name']}', '{$reason}', '{$datas}')";
+                        $command = $connection->createCommand($log);
+                        $command->execute();
+                    }
+                } else {
+                    $reason = 'Product Not exists';
+                    $datas = json_encode($result);
+                    $log = "INSERT INTO test_os_log (tenant_id, product_name, reason, datas) VALUES ({$result['tenant_id']}, '{$result['Name']}', '{$reason}', '{$datas}')";
+                    $command = $connection->createCommand($log);
+                    $command->execute();
+                }
+            }
+        }
+        $connection->close();
+    }
+
+    private function _updateBatchRate($tenant_id, $batch_id, $mrp, $package_unit) {
+        $batch_rate_exists = \common\models\PhaProductBatchRate::find()->andWhere([
+                    'tenant_id' => $tenant_id,
+                    'batch_id' => $batch_id])
+                ->one(); //, 'mrp' => $mrp
+        if (empty($batch_rate_exists)) {
+            $batch_rate = new \common\models\PhaProductBatchRate();
+            $batch_rate->mrp = $mrp;
+        } else {
+            $batch_rate = $batch_rate_exists;
+        }
+        //Per Unit Price
+        $per_unit_price = $mrp / $package_unit;
+        $batch_rate->tenant_id = $tenant_id;
+        $batch_rate->per_unit_price = $per_unit_price;
+        $batch_rate->batch_id = $batch_id;
+        $batch_rate->created_by = '-1';
+        $batch_rate->save(false);
+        return $batch_rate;
     }
 
 }
