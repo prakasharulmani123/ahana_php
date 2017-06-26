@@ -46,12 +46,17 @@ class PharmacyproductController extends ActiveController {
     }
 
     public function prepareDataProvider() {
-        /* @var $modelClass BaseActiveRecord */
+        $get = Yii::$app->getRequest()->get();
         $modelClass = $this->modelClass;
-//        andWhere('product_id IN (1909, 591)')
-//        limit(5)
+
+        $query = $modelClass::find()->tenant()->status()->active()->orderBy(['created_at' => SORT_DESC]);
+
+        if(isset($get['not_expired'])){
+            $query->not_expired();
+        }
+
         return new ActiveDataProvider([
-            'query' => $modelClass::find()->tenant()->status()->active()->orderBy(['created_at' => SORT_DESC]),
+            'query' => $query,
             'pagination' => false,
         ]);
     }

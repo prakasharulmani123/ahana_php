@@ -18,4 +18,10 @@ class PhaProductQuery extends CommonQuery {
         return $query;
     }
 
+    public function not_expired() {
+        $today = date('Y-m-d');
+        $query = $this->andWhere("exists (select * from pha_product_batch where pha_product_batch.product_id = pha_product.product_id And pha_product_batch.expiry_date >= '{$today}')");
+        return $query;
+    }
+
 }
