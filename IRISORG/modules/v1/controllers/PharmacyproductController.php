@@ -51,7 +51,7 @@ class PharmacyproductController extends ActiveController {
 
         $query = $modelClass::find()->tenant()->status()->active()->orderBy(['created_at' => SORT_DESC]);
 
-        if(isset($get['not_expired'])){
+        if (isset($get['not_expired'])) {
             $query->not_expired();
         }
 
@@ -143,11 +143,68 @@ class PharmacyproductController extends ActiveController {
         return ['productDescriptionList' => PhaProductDescription::getProductDescriptionList($tenant, $status, $deleted)];
     }
 
+    //Not used for data table model
+    public function actionGetbatchdetails() {
+        $get = Yii::$app->getRequest()->get();
+        $condition = '';
+        $filters = '';
+        $modelClass = 'common\models\PhaProductBatch';
+        $relations = ['product', 'product.productDescription', 'phaProductBatchRate', 'product.salesPackage', 'product.salesVat'];
+
+        $offset = abs($get['pageIndex'] - 1) * $get['pageSize'];
+
+        if (isset($get['s'])) {
+            $condition['batch_no'] = $get['s'];
+        }
+
+        if (isset($get['text'])) {
+            $filters = [
+                'OR',
+                    ['like', 'pha_product_description.description_name', $get['text']],
+                    ['like', 'pha_product.product_name', $get['text']],
+                    ['like', 'pha_product.product_unit_count', $get['text']],
+                    ['like', 'pha_product.product_unit', $get['text']],
+                    ['like', 'pha_product_batch_rate.mrp', $get['text']],
+                    ['like', 'pha_package_unit.package_name', $get['text']],
+                    ['like', 'pha_vat.vat', $get['text']],
+            ];
+        }
+
+        //Count batch details value
+        $count = $modelClass::find()->joinWith($relations)->tenant()->status();
+        if ($condition) {
+            $count->andWhere($condition);
+        }
+        if ($filters) {
+            $count->andFilterWhere($filters);
+        }
+        $totalCount = $count->count();
+
+        //Fetch the batch details result
+        $result = $modelClass::find()
+                ->joinWith($relations)
+                ->tenant()
+                ->status();
+        if ($condition) {
+            $result->andWhere($condition);
+        }
+        if ($filters) {
+            $result->andFilterWhere($filters);
+        }
+        $result->limit($get['pageSize'])
+                ->offset($offset);
+
+
+        $productLists = $result->all();
+
+        return ['success' => true, 'productLists' => $productLists, 'totalCount' => $totalCount];
+    }
+
     public function actionSearchbycriteria() {
         //print_r($_REQUEST); die;
         $post = Yii::$app->getRequest()->post();
         $tenant_id = Yii::$app->user->identity->logged_tenant_id;
-        
+
         $offset = abs($_REQUEST['pageIndex'] - 1) * $_REQUEST['pageSize'];
 
         if (isset($post['search_text'])) {
@@ -202,90 +259,7 @@ class PharmacyproductController extends ActiveController {
             $totalCount = PhaProductBatch::find()->tenant()->count();
         }
 
-        return ['productLists' => $products,'totalCount' =>$totalCount];
-    }
-
-    public function actionGetbatchdetails() {
-        $requestData = $_REQUEST;
-
-        $modelClass = 'common\models\PhaProductBatch';
-        $totalData = $modelClass::find()->tenant()->status()->count();
-        $totalFiltered = $totalData;
-
-        // Order Records
-//        if (isset($requestData['order'])) {
-//            if ($requestData['order'][0]['dir'] == 'asc') {
-//                $sort_dir = SORT_ASC;
-//            } elseif ($requestData['order'][0]['dir'] == 'desc') {
-//                $sort_dir = SORT_DESC;
-//            }
-//            $order_array = [$requestData['columns'][$requestData['order'][0]['column']]['data'] => $sort_dir];
-//        }
-//        
-        // Search Records
-        if (!empty($requestData['search']['value'])) {
-            $relations = ['product', 'product.productDescription', 'phaProductBatchRate', 'product.salesPackage', 'product.salesVat'];
-            $filters = [
-                'OR',
-                    ['like', 'pha_product_description.description_name', $requestData['search']['value']],
-                    ['like', 'pha_product.product_name', $requestData['search']['value']],
-                    ['like', 'pha_product.product_unit_count', $requestData['search']['value']],
-                    ['like', 'pha_product.product_unit', $requestData['search']['value']],
-                    ['like', 'pha_product_batch.batch_no', $requestData['search']['value']],
-                    ['like', 'pha_product_batch_rate.mrp', $requestData['search']['value']],
-                    ['like', 'pha_package_unit.package_name', $requestData['search']['value']],
-                    ['like', 'pha_vat.vat', $requestData['search']['value']],
-            ];
-            $conditions = [
-                'pha_product_batch.tenant_id' => Yii::$app->user->identity->logged_tenant_id,
-                'pha_product_batch.status' => '1',
-            ];
-            $totalFiltered = $modelClass::find()
-                    ->joinWith($relations)
-                    ->andWhere($conditions)
-                    ->andFilterWhere($filters)
-                    ->count();
-
-            $products = $modelClass::find()
-                    ->joinWith($relations)
-                    ->andWhere($conditions)
-                    ->andFilterWhere($filters)
-                    ->limit($requestData['length'])
-                    ->offset($requestData['start'])
-//                    ->orderBy($order_array)
-                    ->all();
-        } else {
-            $products = $modelClass::find()
-                    ->tenant()
-                    ->status()
-                    ->limit($requestData['length'])
-                    ->offset($requestData['start'])
-                    ->orderBy(['created_at' => SORT_DESC])
-                    ->all();
-        }
-
-        $data = array();
-        foreach ($products as $product) {
-            $nestedData = array();
-            $nestedData['description_name'] = $product->product->productDescription->description_name;
-            $nestedData['full_name'] = $product->product->fullName;
-            $nestedData['batch_no'] = $product->batch_no;
-            $nestedData['expiry_date'] = date("M-Y", strtotime($product->expiry_date));
-            $nestedData['mrp'] = $product->phaProductBatchRate->mrp;
-            $nestedData['sales_package_name'] = $product->product->salesPackage->package_name;
-            $nestedData['sale_vat_percent'] = $product->product->salesVat->vat;
-            $nestedData['batch_id'] = $product->batch_id;
-            $data[] = $nestedData;
-        }
-
-        $json_data = array(
-            "draw" => intval($requestData['draw']),
-            "recordsTotal" => intval($totalData),
-            "recordsFiltered" => intval($totalFiltered),
-            "data" => $data   // total data array
-        );
-
-        echo json_encode($json_data);
+        return ['productLists' => $products, 'totalCount' => $totalCount];
     }
 
     public function actionAdjuststock() {
@@ -313,7 +287,7 @@ class PharmacyproductController extends ActiveController {
 
         if (!empty($post)) {
             $model = PhaProductBatch::find()->tenant()->andWhere(['batch_id' => $post['batch_id']])->one();
-            
+
             if (!empty($model)) {
                 $model->expiry_date = $post['expiry_date'];
                 $model->batch_no = $post['batch_no'];
@@ -668,4 +642,93 @@ class PharmacyproductController extends ActiveController {
         echo json_encode($json_data);
     }
 
+    public function actionGetbatchlists() {
+        $list = PhaProductBatch::find()->status()->active()->select('batch_no')->distinct()->all();
+        return $list;
+//        echo 'asdasa'; die;
+    }
+
+    //Not used for data table model
+//public function actionGetbatchdetails() {
+//        $requestData = $_REQUEST;
+//
+//        $modelClass = 'common\models\PhaProductBatch';
+//        $totalData = $modelClass::find()->tenant()->status()->count();
+//        $totalFiltered = $totalData;
+//
+//        // Order Records
+////        if (isset($requestData['order'])) {
+////            if ($requestData['order'][0]['dir'] == 'asc') {
+////                $sort_dir = SORT_ASC;
+////            } elseif ($requestData['order'][0]['dir'] == 'desc') {
+////                $sort_dir = SORT_DESC;
+////            }
+////            $order_array = [$requestData['columns'][$requestData['order'][0]['column']]['data'] => $sort_dir];
+////        }
+////        
+//        // Search Records
+//        if (!empty($requestData['search']['value'])) {
+//            $relations = ['product', 'product.productDescription', 'phaProductBatchRate', 'product.salesPackage', 'product.salesVat'];
+//            $filters = [
+//                'OR',
+//                    ['like', 'pha_product_description.description_name', $requestData['search']['value']],
+//                    ['like', 'pha_product.product_name', $requestData['search']['value']],
+//                    ['like', 'pha_product.product_unit_count', $requestData['search']['value']],
+//                    ['like', 'pha_product.product_unit', $requestData['search']['value']],
+//                    ['like', 'pha_product_batch.batch_no', $requestData['search']['value']],
+//                    ['like', 'pha_product_batch_rate.mrp', $requestData['search']['value']],
+//                    ['like', 'pha_package_unit.package_name', $requestData['search']['value']],
+//                    ['like', 'pha_vat.vat', $requestData['search']['value']],
+//            ];
+//            $conditions = [
+//                'pha_product_batch.tenant_id' => Yii::$app->user->identity->logged_tenant_id,
+//                'pha_product_batch.status' => '1',
+//            ];
+//            $totalFiltered = $modelClass::find()
+//                    ->joinWith($relations)
+//                    ->andWhere($conditions)
+//                    ->andFilterWhere($filters)
+//                    ->count();
+//
+//            $products = $modelClass::find()
+//                    ->joinWith($relations)
+//                    ->andWhere($conditions)
+//                    ->andFilterWhere($filters)
+//                    ->limit($requestData['length'])
+//                    ->offset($requestData['start'])
+////                    ->orderBy($order_array)
+//                    ->all();
+//        } else {
+//            $products = $modelClass::find()
+//                    ->tenant()
+//                    ->status()
+//                    ->limit($requestData['length'])
+//                    ->offset($requestData['start'])
+//                    ->orderBy(['created_at' => SORT_DESC])
+//                    ->all();
+//        }
+//
+//        $data = array();
+//        foreach ($products as $product) {
+//            $nestedData = array();
+//            $nestedData['description_name'] = $product->product->productDescription->description_name;
+//            $nestedData['full_name'] = $product->product->fullName;
+//            $nestedData['batch_no'] = $product->batch_no;
+//            $nestedData['expiry_date'] = date("M-Y", strtotime($product->expiry_date));
+//            $nestedData['mrp'] = $product->phaProductBatchRate->mrp;
+//            $nestedData['sales_package_name'] = $product->product->salesPackage->package_name;
+//            $nestedData['sale_vat_percent'] = $product->product->salesVat->vat;
+//            $nestedData['batch_id'] = $product->batch_id;
+//            $data[] = $nestedData;
+//        }
+//
+//        $json_data = array(
+//            "draw" => intval($requestData['draw']),
+//            "recordsTotal" => intval($totalData),
+//            "recordsFiltered" => intval($totalFiltered),
+//            "data" => $data   // total data array
+//        );
+//
+//        echo json_encode($json_data);
+//    }
 }
