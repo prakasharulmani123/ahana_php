@@ -63,7 +63,7 @@ app.controller('stockController', ['$rootScope', '$scope', '$timeout', '$http', 
             if (angular.isUndefined(a)) {
                 $scope.sortOptions = 'pha_product.product_name asc';
                 $scope.sortClass = 'sorting_asc';
-            } else if(a==='sorting_asc') {
+            } else if (a === 'sorting_asc') {
                 $scope.sortOptions = 'pha_product.product_name desc';
                 $scope.sortClass = 'sorting_desc';
             } else {
@@ -126,32 +126,62 @@ app.controller('stockController', ['$rootScope', '$scope', '$timeout', '$http', 
         }
 
 //          Batch details Index Page
-//        $scope.loadBatchList = function () {
-//            $scope.loadbar('show');
-//            $scope.isLoading = true;
-//            
-//            $scope.errorData = "";
-//            $scope.msg.successMessage = "";
-//            
-//            // pagination set up
-//            $scope.rowCollection = [];  // base collection
-//
-//            // Get data's from service
-//            $http.post($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/searchbycriteria?addtfields=batch_details')
-//                    .success(function (products) {
-//                        $scope.isLoading = false;
-//                        $scope.loadbar('hide');
+        $scope.loadBatchList = function () {
+            $scope.loadbar('show');
+
+            $scope.maxSize = 5; // Limit number for pagination display number.  
+            $scope.totalCount = 0; // Total number of items in all pages. initialize as a zero  
+            $scope.pageIndex = 1; // Current page number. First page is 1.-->  
+            $scope.pageSizeSelected = 10; // Maximum number of items per page.
+
+            $scope.isLoading = true;
+
+            $scope.errorData = "";
+            $scope.msg.successMessage = "";
+            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/getbatchlists?addtfields=viewlist')
+                    .success(function (response) {
+                        $scope.batch = response;
+                    })
+                    .error(function () {
+                        $scope.errorData = "An Error has occured while loading products!";
+                    });
+
+            // pagination set up
+            $scope.rowCollection = [];  // base collection
+            $scope.loadBatch();
+        };
+
+        $scope.loadBatch = function ()
+        {
+            var pageURL = $rootScope.IRISOrgServiceUrl + '/pharmacyproduct/getbatchdetails?addtfields=stock_details&pageIndex=' + $scope.pageIndex + '&pageSize=' + $scope.pageSizeSelected;
+            if (typeof $scope.form_filter != 'undefined' && $scope.form_filter != '') {
+                pageURL += '&s=' + $scope.form_filter;
+            }
+            if (typeof $scope.form_filter1 != 'undefined' && $scope.form_filter1 != '') {
+                pageURL += '&text=' + $scope.form_filter1;
+            }
+
+            // Get data's from service
+            $http.get(pageURL)
+                    .success(function (products) {
+                        $scope.isLoading = false;
+                        $scope.loadbar('hide');
 //                        angular.forEach(products.productLists, function (product, key) {
 //                            angular.extend(products.productLists[key], {full_name: product.product.full_name, description_name: product.product.description_name});
 //                        });
-//                        $scope.rowCollection = products.productLists;
-//                        //Avoid pagination problem, when come from other pages.
-//                        $scope.footable_redraw();
-//                    })
-//                    .error(function () {
-//                        $scope.errorData = "An Error has occured while loading products!";
-//                    });
-//        };
+                        $scope.rowCollection = products.productLists;
+                        $scope.totalCount = products.totalCount;
+                        //Avoid pagination problem, when come from other pages.
+                        $scope.footable_redraw();
+                    })
+                    .error(function () {
+                        $scope.errorData = "An Error has occured while loading products!";
+                    });
+        }
+        $scope.pageChanged = function () {
+            $scope.loadBatch();
+        };
+
 
         $scope.editBatchDetails = function (batch_id) {
             $scope.batchDetails = batch_id;
@@ -205,6 +235,13 @@ app.controller('stockController', ['$rootScope', '$scope', '$timeout', '$http', 
                         $scope.loadbar('hide');
                         if (response.success === true) {
                             $scope.msg.successMessage = 'Batch Details saved successfully';
+                            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/getbatchlists?addtfields=viewlist')
+                                    .success(function (response) {
+                                        $scope.batch = response;
+                                    })
+                                    .error(function () {
+                                        $scope.errorData = "An Error has occured while loading products!";
+                                    });
 //                            $scope.rowCollection[key].available_qty = response.batch.available_qty;
 //                            $scope.rowCollection[key].add_stock = 0;
                         } else {
