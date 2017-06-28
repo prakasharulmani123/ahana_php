@@ -20,22 +20,26 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
 
         $scope.loadView = function () {
             $timeout(function () {
-                $scope.mode = 'view';
-                $http.post($rootScope.IRISOrgServiceUrl + '/patient/getpatientbyguid', {guid: $state.params.id})
-                        .success(function (patient) {
-                            if (patient.success == false) {
-                                $state.go('configuration.organization');
-                                $scope.msg.errorMessage = "An Error has occured while loading patient!";
-                            } else {
-                                $scope.orgData = patient;
-                                $scope.setViewData(patient);
-                                $scope.setFormData(patient);
-                            }
-                        })
-                        .error(function () {
-                            $scope.msg.errorMessage = "An Error has occured while loading patient!";
-                        });
+                $scope.getPatientdetail();
             }, 3000);
+        }
+
+        $scope.getPatientdetail = function () {
+            $scope.mode = 'view';
+            $http.post($rootScope.IRISOrgServiceUrl + '/patient/getpatientbyguid', {guid: $state.params.id})
+                    .success(function (patient) {
+                        if (patient.success == false) {
+                            $state.go('configuration.organization');
+                            $scope.msg.errorMessage = "An Error has occured while loading patient!";
+                        } else {
+                            $scope.orgData = patient;
+                            $scope.setViewData(patient);
+                            $scope.setFormData(patient);
+                        }
+                    })
+                    .error(function () {
+                        $scope.msg.errorMessage = "An Error has occured while loading patient!";
+                    });
         }
 
         $scope.setViewData = function (patient) {
@@ -146,9 +150,9 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
             _that = this;
             angular.forEach($scope.states, function (value) {
                 if ((typeof _that.patdata !== 'undefined' && _that.patdata.PatPatientAddress != null) || (typeof _that.data !== 'undefined' && _that.data.PatPatientAddress != null)) {
-                    if(typeof _that.patdata !== 'undefined' && _that.patdata.PatPatientAddress != null){
+                    if (typeof _that.patdata !== 'undefined' && _that.patdata.PatPatientAddress != null) {
                         cId = _that.patdata.PatPatientAddress.addr_country_id;
-                    } else if(typeof _that.data !== 'undefined' && _that.data.PatPatientAddress != null) {
+                    } else if (typeof _that.data !== 'undefined' && _that.data.PatPatientAddress != null) {
                         cId = _that.data.PatPatientAddress.addr_country_id;
                     }
                     if (value.countryId == cId) {
@@ -168,9 +172,9 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
             _that = this;
             angular.forEach($scope.cities, function (value) {
                 if ((typeof _that.patdata !== 'undefined' && _that.patdata.PatPatientAddress != null) || (typeof _that.data !== 'undefined' && _that.data.PatPatientAddress != null)) {
-                    if(typeof _that.patdata !== 'undefined' && _that.patdata.PatPatientAddress != null){
+                    if (typeof _that.patdata !== 'undefined' && _that.patdata.PatPatientAddress != null) {
                         sId = _that.patdata.PatPatientAddress.addr_state_id;
-                    } else if(typeof _that.data !== 'undefined' && _that.data.PatPatientAddress != null) {
+                    } else if (typeof _that.data !== 'undefined' && _that.data.PatPatientAddress != null) {
                         sId = _that.data.PatPatientAddress.addr_state_id;
                     }
                     if (value.stateId == sId) {
@@ -191,9 +195,9 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
             _that = this;
             angular.forEach($scope.states, function (value) {
                 if ((typeof _that.patdata !== 'undefined' && _that.patdata.PatPatientAddress != null) || (typeof _that.data !== 'undefined' && _that.data.PatPatientAddress != null)) {
-                    if(typeof _that.patdata !== 'undefined' && _that.patdata.PatPatientAddress != null){
+                    if (typeof _that.patdata !== 'undefined' && _that.patdata.PatPatientAddress != null) {
                         cId = _that.patdata.PatPatientAddress.addr_perm_country_id;
-                    } else if(typeof _that.data !== 'undefined' && _that.data.PatPatientAddress != null) {
+                    } else if (typeof _that.data !== 'undefined' && _that.data.PatPatientAddress != null) {
                         cId = _that.data.PatPatientAddress.addr_perm_country_id;
                     }
                     if (value.countryId == cId) {
@@ -213,9 +217,9 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
             _that = this;
             angular.forEach($scope.cities, function (value) {
                 if ((typeof _that.patdata !== 'undefined' && _that.patdata.PatPatientAddress != null) || (typeof _that.data !== 'undefined' && _that.data.PatPatientAddress != null)) {
-                    if(typeof _that.patdata !== 'undefined' && _that.patdata.PatPatientAddress != null){
+                    if (typeof _that.patdata !== 'undefined' && _that.patdata.PatPatientAddress != null) {
                         sId = _that.patdata.PatPatientAddress.addr_perm_state_id;
-                    } else if(typeof _that.data !== 'undefined' && _that.data.PatPatientAddress != null) {
+                    } else if (typeof _that.data !== 'undefined' && _that.data.PatPatientAddress != null) {
                         sId = _that.data.PatPatientAddress.addr_perm_state_id;
                     }
                     if (value.stateId == sId) {
