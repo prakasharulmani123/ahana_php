@@ -87,7 +87,7 @@
                             </thead>
                             <tbody>
                                 <tr ng-repeat="(gKey, purchasereturnitem) in row.items | orderBy: purchasereturnitem">
-                                    <td>{{ purchasereturnitem.product.full_name}}</td>
+                                    <td>{{ purchasereturnitem.product}}</td>
                                     <td>{{ purchasereturnitem.batch.batch_no}}</td>
                                     <td>{{ purchasereturnitem.batch.expiry_date | moment:'MMM YYYY' || 'empty' }}</td>
                                     <td>{{ purchasereturnitem.quantity}}</td>

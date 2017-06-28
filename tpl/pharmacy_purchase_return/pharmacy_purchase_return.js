@@ -17,9 +17,10 @@ app.controller('PurchaseReturnController', ['$rootScope', '$scope', '$timeout', 
             $scope.rowCollection = [];  // base collection
             $scope.itemsByPage = 10; // No.of records per page
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
+            //var Fields = 'invoice_date,invoice_no';
 
             // Get data's from service
-            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacypurchasereturn')
+            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacypurchasereturn?addtfields=purchase_return')
                     .success(function (purchasereturnList) {
                         $scope.isLoading = false;
                         $scope.rowCollection = purchasereturnList;
