@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\models\query\PhaPurchaseReturnItemQuery;
+use Yii;
 use yii\db\ActiveQuery;
 
 /**
@@ -56,15 +57,15 @@ class PhaPurchaseReturnItem extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['product_id', 'quantity', 'mrp', 'purchase_ret_rate', 'purchase_ret_amount', 'package_name', 'vat_amount'], 'required'],
-            [['batch_no'], 'required', 'on' => 'saveform'],
-            [['tenant_id', 'purchase_ret_id', 'product_id', 'batch_id', 'quantity', 'free_quantity', 'created_by', 'modified_by'], 'integer'],
-            [['mrp', 'purchase_ret_rate', 'purchase_ret_amount', 'discount_percent', 'discount_amount', 'total_amount', 'vat_amount', 'vat_percent'], 'number'],
-            [['status'], 'string'],
-            [['created_at', 'modified_at', 'deleted_at', 'expiry_date', 'batch_no', 'package_unit', 'free_quantity_unit', 'purchase_item_id'], 'safe'],
-            [['package_name'], 'string', 'max' => 255],
-            ['purchase_ret_rate', 'validateProductRate'],
-            [['quantity', 'mrp', 'purchase_ret_rate', 'purchase_ret_amount', 'total_amount'], 'validateAmount'],
+                [['product_id', 'quantity', 'mrp', 'purchase_ret_rate', 'purchase_ret_amount', 'package_name', 'vat_amount'], 'required'],
+                [['batch_no'], 'required', 'on' => 'saveform'],
+                [['tenant_id', 'purchase_ret_id', 'product_id', 'batch_id', 'quantity', 'free_quantity', 'created_by', 'modified_by'], 'integer'],
+                [['mrp', 'purchase_ret_rate', 'purchase_ret_amount', 'discount_percent', 'discount_amount', 'total_amount', 'vat_amount', 'vat_percent'], 'number'],
+                [['status'], 'string'],
+                [['created_at', 'modified_at', 'deleted_at', 'expiry_date', 'batch_no', 'package_unit', 'free_quantity_unit', 'purchase_item_id'], 'safe'],
+                [['package_name'], 'string', 'max' => 255],
+                ['purchase_ret_rate', 'validateProductRate'],
+                [['quantity', 'mrp', 'purchase_ret_rate', 'purchase_ret_amount', 'total_amount'], 'validateAmount'],
         ];
     }
 
@@ -159,7 +160,7 @@ class PhaPurchaseReturnItem extends RActiveRecord {
     public function fields() {
         $extend = [
             'product' => function ($model) {
-                return (isset($model->product) ? $model->product : '-');
+                return (isset($model->product) ? $model->product->fullname : '-');
             },
             'purchase_quantity' => function ($model) {
                 return (isset($model->purchaseItem) ? $model->purchaseItem->quantity : '-');
@@ -171,8 +172,34 @@ class PhaPurchaseReturnItem extends RActiveRecord {
                 return $this->getTotalReturnedQuantity();
             }
         ];
-        $fields = array_merge(parent::fields(), $extend);
-        return $fields;
+
+        $parent_fields = parent::fields();
+        $addt_keys = $extFields = [];
+        if ($addtField = Yii::$app->request->get('addtfields')) {
+            switch ($addtField):
+                case 'purchase_return':
+                    $addt_keys = ['purchase_quantity','product','batch'];
+                    $parent_fields = [
+                        'quantity' => 'quantity',
+                        'free_quantity' => 'free_quantity',
+                        'free_quantity_unit' => 'free_quantity_unit',
+                        'mrp' => 'mrp',
+                        'purchase_ret_rate' => 'purchase_ret_rate',
+                        'purchase_ret_amount' => 'purchase_ret_amount',
+                        'discount_percent' => 'discount_percent',
+                        'discount_amount' => 'discount_amount',
+                        'vat_percent' => 'vat_percent',
+                        'vat_amount' => 'vat_amount',
+                        'package_name' => 'package_name',
+                        'total_amount' => 'total_amount',
+                    ];
+                    break;
+            endswitch;
+        }
+        if ($addt_keys !== false)
+            $extFields = ($addt_keys) ? array_intersect_key($extend, array_flip($addt_keys)) : $extend;
+
+        return array_merge($parent_fields, $extFields);
     }
 
     public function beforeSave($insert) {

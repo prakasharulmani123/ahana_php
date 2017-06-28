@@ -187,6 +187,10 @@ class PhaProductBatch extends RActiveRecord {
                     $pFields = ['batch_id', 'batch_no', 'available_qty', 'expiry_date'];
                     $parent_fields = array_combine($pFields, $pFields);
                     break;
+                case 'purchase_return':
+                    $addt_keys =['mrp'];
+                    $pFields = ['batch_no', 'expiry_date'];
+                    $parent_fields = array_combine($pFields, $pFields);
             endswitch;
         }
 

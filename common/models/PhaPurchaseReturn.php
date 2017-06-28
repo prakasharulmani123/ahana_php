@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\models\query\PhaPurchaseReturnQuery;
+use Yii;
 use yii\db\ActiveQuery;
 use yii\helpers\ArrayHelper;
 
@@ -37,36 +38,33 @@ use yii\helpers\ArrayHelper;
  * @property PhaPurchase $purchase
  * @property PhaPurchaseReturnItem[] $phaPurchaseReturnItems
  */
-class PhaPurchaseReturn extends RActiveRecord
-{
+class PhaPurchaseReturn extends RActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'pha_purchase_return';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            [['invoice_date', 'invoice_no', 'supplier_id'], 'required'],
-            [['tenant_id', 'supplier_id', 'created_by', 'modified_by'], 'integer'],
-            [['invoice_date', 'created_at', 'modified_at', 'deleted_at', 'purchase_id'], 'safe'],
-            [['total_item_purchase_ret_amount', 'total_item_vat_amount', 'total_item_discount_amount', 'before_disc_amount', 'discount_percent', 'discount_amount', 'after_disc_amount', 'roundoff_amount', 'net_amount'], 'number'],
-            [['status', 'total_item_purchase_ret_amount'], 'string'],
-            [['purchase_ret_code', 'invoice_no'], 'string', 'max' => 50]
+                [['invoice_date', 'invoice_no', 'supplier_id'], 'required'],
+                [['tenant_id', 'supplier_id', 'created_by', 'modified_by'], 'integer'],
+                [['invoice_date', 'created_at', 'modified_at', 'deleted_at', 'purchase_id'], 'safe'],
+                [['total_item_purchase_ret_amount', 'total_item_vat_amount', 'total_item_discount_amount', 'before_disc_amount', 'discount_percent', 'discount_amount', 'after_disc_amount', 'roundoff_amount', 'net_amount'], 'number'],
+                [['status', 'total_item_purchase_ret_amount'], 'string'],
+                [['purchase_ret_code', 'invoice_no'], 'string', 'max' => 50]
         ];
     }
 
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'purchase_ret_id' => 'Purchase Ret ID',
             'tenant_id' => 'Tenant ID',
@@ -95,46 +93,42 @@ class PhaPurchaseReturn extends RActiveRecord
     /**
      * @return ActiveQuery
      */
-    public function getSupplier()
-    {
+    public function getSupplier() {
         return $this->hasOne(PhaSupplier::className(), ['supplier_id' => 'supplier_id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getTenant()
-    {
+    public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getPhaPurchaseReturnItems()
-    {
+    public function getPhaPurchaseReturnItems() {
         return $this->hasMany(PhaPurchaseReturnItem::className(), ['purchase_ret_id' => 'purchase_ret_id']);
     }
-    
+
     /**
      * @return ActiveQuery
      */
-    public function getPurchase()
-    {
+    public function getPurchase() {
         return $this->hasOne(PhaPurchase::className(), ['purchase_id' => 'purchase_id']);
     }
-    
+
     public static function find() {
         return new PhaPurchaseReturnQuery(get_called_class());
     }
-    
+
     public function beforeSave($insert) {
-        if($insert){
+        if ($insert) {
             $this->purchase_ret_code = CoInternalCode::generateInternalCode('PR', 'common\models\PhaPurchaseReturn', 'purchase_ret_code');
         }
         return parent::beforeSave($insert);
     }
-    
+
     public function fields() {
         $extend = [
             'supplier' => function ($model) {
@@ -150,18 +144,44 @@ class PhaPurchaseReturn extends RActiveRecord
                 return (isset($model->phaPurchaseReturnItems) ? $model->phaPurchaseReturnItems : '-');
             },
         ];
-        $fields = array_merge(parent::fields(), $extend);
-        return $fields;
+            
+        $parent_fields = parent::fields();
+        $addt_keys = $extFields = [];
+        if ($addtField = Yii::$app->request->get('addtfields')) {
+            switch ($addtField):
+                case 'purchase_return':
+                    $addt_keys = ['supplier','items'];
+                    $parent_fields = [
+                        'invoice_no' => 'invoice_no',
+                        'invoice_date' => 'invoice_date',
+                        'purchase_ret_code' => 'purchase_ret_code',
+                        'total_item_purchase_ret_amount' => 'total_item_purchase_ret_amount',
+                        'total_item_vat_amount' => 'total_item_vat_amount',
+                        'total_item_discount_amount' => 'total_item_discount_amount',
+                        'discount_percent' => 'discount_percent',
+                        'discount_amount' => 'discount_amount',
+                        'roundoff_amount' => 'roundoff_amount',
+                        'net_amount' => 'net_amount',
+                        'purchase_ret_id' => 'purchase_ret_id',
+                    ];
+                    break;
+            endswitch;
+        }
+        if ($addt_keys !== false)
+            $extFields = ($addt_keys) ? array_intersect_key($extend, array_flip($addt_keys)) : $extend;
+
+        return array_merge($parent_fields, $extFields);
     }
-    
+
     public function afterSave($insert, $changedAttributes) {
         if ($insert) {
             CoInternalCode::increaseInternalCode("PR");
         }
         return parent::afterSave($insert, $changedAttributes);
     }
-    
+
     public function getProductItemIds() {
         return ArrayHelper::map($this->phaPurchaseReturnItems, 'purchase_ret_item_id', 'purchase_ret_item_id');
     }
+
 }
