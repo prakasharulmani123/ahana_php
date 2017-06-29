@@ -128,22 +128,36 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <div style="{{css.style}}">
+                        
+                        
                             <table class="table table-bordered table-hover table-condensed bg-white-only">
-                                <tr style="font-weight: bold">
-                                    <td><span>Product Name</span></td>
-                                    <td><span>Batch No</span></td>
-                                    <td><span>Exp Date</span></td>
-                                    <td><span>Qty</span></td>
-                                    <td><span>Unit</span></td>
-                                    <td><span>MRP</span></td>
-                                    <td><span>Line Total</span></td>
-                                    <td><span>Dis %</span></td>
-                                    <td><span>Dis Amt</span></td>
-                                    <td><span>Vat</span></td>
-                                    <td><span>Vat Amt</span></td>
-                                    <td><span>Total</span></td>
-                                    <td><span>Action</span></td>
+                            <thead class="sales-table-heading">
+                                <tr>
+                                    <th  rowspan="2"><span>Product Name</span></th>
+                                    <th  rowspan="2"><span>Batch No</span></th>
+                                    <th  rowspan="2"><span>Exp Date</span></th>
+                                    <th  rowspan="2"><span>Qty</span></th>
+                                    <th  rowspan="2"><span>Unit</span></th>
+                                    <th  rowspan="2"><span>MRP</span></th>
+                                    <th  rowspan="2"><span>Line Total</span></th>
+                                    <th  rowspan="2"><span>Dis %</span></th>
+                                    <th  rowspan="2"><span>Dis Amt</span></th>
+                               
+                                    <th  rowspan="2">Taxable
+value</th>
+                                    <th  colspan="2" align="center">CGST</th>
+                                    <th  colspan="2" align="center">SGST</th>
+                            <th  rowspan="2"><span>Total</span></th>
+                                    <th  rowspan="2"><span>Action</span></th>
                                 </tr>
+                                
+                                  <tr>
+    <th> Rate</th>
+    <th> Amount</th>
+     <th> Rate</th>
+    <th> Amount</th>
+  </tr>
+  </thead>
                                 <tr class="r-v-top" ng-repeat="(key, saleitem) in saleItems">
                                     <td>
                                         <div id="i_full_name_{{key}}">
@@ -274,8 +288,21 @@
                                     </td>
                                     <td>
                                         <span>
+                                            0
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span>
                                             {{saleitem.total_amount}}
                                         </span>
+                                    </td>
+                                    <td>
+                                        <span>
+                                            1
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {{saleitem.total_amount}}
                                     </td>
                                     <td>
                                         <a ng-click="removeSaleItem($index)" title="Delete">
@@ -283,6 +310,7 @@
                                         </a>
                                     </td>
                                 </tr>
+                                
                             </table>
                         </div>
                         <div class="btn-form">

@@ -15,16 +15,16 @@
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <div class="form-group">
-                                <label class="col-sm-3 control-label"> Health Organization </label>
-                                <div class="col-sm-9">
+                                <label class="col-sm-5 control-label"> Health Organization </label>
+                                <div class="col-sm-7">
                                     {{organization.tenant_name}}
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
                             
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">Role * </label>
-                                <div class="col-sm-9">
+                                <label class="col-sm-5 control-label">Role * </label>
+                                <div class="col-sm-7">
                                     <select class="form-control" ng-model="data.role_id" ng-options="role.role_id as role.description for role in roles | orderBy: description" ng-change="getSavedRights()">
                                         <option value="">Select Role</option>
                                     </select>
@@ -33,8 +33,8 @@
                             <div class="line line-dashed b-b line-lg "></div>
                             
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">Access Rights</label>
-                                <div class="col-sm-9">
+                                <label class="col-sm-5 control-label">Access Rights</label>
+                                <div class="col-sm-7">
                                     <div 
                                         ivh-treeview="modules"
                                         ivh-treeview-validate="true"

@@ -853,6 +853,7 @@ pati-thumb
 
 
 
+/*29-06-2017*/
 
 .prescription-plus
 {
@@ -860,6 +861,56 @@ pati-thumb
 }
 
 
+.form-horizontal .control-label {
+	text-align: left;
+}
 
 
 
+/*
+
+
+select.form-control {
+	padding: 6px 6px 6px 2px !important;
+}
+
+*/
+
+
+.form-control {
+	padding: 6px 6px 6px 6px !important;
+}
+
+
+
+.form-horizontal .control-label {
+	padding-top: 0px !important;
+}
+
+
+
+.gsd-nopad
+{
+	padding:0px !important;
+}
+
+
+.sales-gst-table
+{
+}
+
+.sales-gst-table th
+{
+	padding:5px;
+	background:#dddddd;
+}
+
+.sales-gst-table td
+{
+	padding:5px;
+}
+
+.sales-table-heading
+{
+	background:#dde5e6 !important;
+}
