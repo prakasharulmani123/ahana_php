@@ -648,7 +648,7 @@ class PharmacyproductController extends ActiveController {
 //        echo 'asdasa'; die;
     }
 
-    //Not used for data table model
+    //Not used for data table model - Testing
 //public function actionGetbatchdetails() {
 //        $requestData = $_REQUEST;
 //
