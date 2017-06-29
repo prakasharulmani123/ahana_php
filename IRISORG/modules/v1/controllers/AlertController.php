@@ -15,6 +15,7 @@ use yii\web\Response;
  * WardController implements the CRUD actions for CoTenant model.
  */
 class AlertController extends ActiveController {
+    
 
     public $modelClass = 'common\models\CoAlert';
 
