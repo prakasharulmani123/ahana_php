@@ -9,10 +9,12 @@ use common\models\PhaProductBatch;
 use common\models\PhaProductDescription;
 use Yii;
 use yii\data\ActiveDataProvider;
+use yii\db\mssql\PDO;
 use yii\db\BaseActiveRecord;
 use yii\filters\auth\QueryParamAuth;
 use yii\filters\ContentNegotiator;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\rest\ActiveController;
 use yii\web\Response;
 
@@ -648,7 +650,295 @@ class PharmacyproductController extends ActiveController {
 //        echo 'asdasa'; die;
     }
 
-    //Not used for data table model - Testing
+    public function actionImport() {
+        $get = Yii::$app->getRequest()->get();
+        $allowed = array('csv');
+        $filename = $_FILES['file']['name'];
+        $ext = pathinfo($filename, PATHINFO_EXTENSION);
+        if (!in_array($ext, $allowed)) {
+            return ['success' => false, 'message' => 'Unsupported File Format. CSV Files only accepted'];
+        }
+        $uploadPath = 'uploads/';
+        if (!file_exists($uploadPath)) {
+            mkdir($uploadPath, 0777, true);
+        }
+        $uploadFile = $uploadPath . $filename;
+        if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadFile)) {
+            $file = Url::to($uploadFile);
+            $result = $this->import($file, $get['tenant_id'], $get['import_log']);
+            return ['success' => true, 'message' => $result];
+        } else {
+            return ['success' => false, 'message' => 'Failed to import. Try again later'];
+        }
+    }
+
+    public function import($filename, $tenant_id, $log) {
+        $connection = Yii::$app->client;
+        $connection->open();
+
+        $row = 1;
+        if (($handle = fopen($filename, "r")) !== FALSE) {
+            while (($data = fgetcsv($handle)) !== FALSE) {
+                //skip header row 
+                if ($row++ == 1) {
+                    continue;
+                }
+
+                $product_name = $data[0];
+                $product_desc = $data[1];
+                $brand = $data[2];
+                $generic = $data[3];
+                $drug = $data[4];
+                $route = $data[5];
+                $purchase_unit = $data[6];
+                $sale_unit = $data[7];
+                $sale_tax = $data[8];
+                $purchase_tax = $data[9];
+
+                $sql = "INSERT INTO test_product_import(tenant_id, product_name, group_name, brand, generic_name, drug_class, route, purchase_unit, sale_unit, purchase_tax, sale_tax, import_log) VALUES('{$tenant_id}','{$product_name}', '{$product_desc}', '{$brand}', '{$generic}', '{$drug}', '{$route}', '{$purchase_unit}', '{$sale_unit}', '{$purchase_tax}', '{$sale_tax}', '{$log}')";
+                $command = $connection->createCommand($sql);
+                $command->execute();
+            }
+            // close the file
+            fclose($handle);
+            // return the messages
+            @unlink($filename);
+            $command = $connection->createCommand("SELECT COUNT(*) AS 'total_rows', (SELECT MIN(id) FROM test_product_import WHERE import_log = $log) AS id,
+                                            (SELECT MAX(id) FROM test_product_import WHERE import_log = $log) AS max_id
+                                            FROM test_product_import WHERE import_log = $log");
+            $result = $command->queryAll(PDO::FETCH_OBJ);
+            $connection->close();
+            return $result[0];
+        }
+    }
+
+    public function actionImportstart() {
+        $post = Yii::$app->getRequest()->post();
+        $id = $post['id'];
+        $import_log = $post['import_log'];
+        $max_id = $post['max_id'];
+
+        if ($id <= $max_id) {
+            $next_id = $id + 1;
+            $connection = Yii::$app->client;
+            $connection->open();
+            $command = $connection->createCommand("SELECT * FROM test_product_import WHERE id = {$id} AND import_log = $import_log");
+            $result = $command->queryAll(PDO::FETCH_OBJ);
+            if ($result) {
+                $result = $result[0];
+                if ($result->product_name != '') {
+                    $post_data = [];
+                    $post_data['formtype'] = 'add';
+                    $post_data['tenant_id'] = $result->tenant_id;
+                    $post_data['product_name'] = $result->product_name;
+                    $post_data['description_name'] = $result->group_name;
+                    $post_data['brand_name'] = $result->brand;
+                    $post_data['generic_name'] = $result->generic_name;
+                    $post_data['drug_name'] = $result->drug_class;
+                    $post_data['route_name'] = $result->route;
+                    $post_data['purchase_package'] = $result->purchase_unit;
+                    $post_data['sales_package'] = $result->sale_unit;
+                    $post_data['purchase_vat'] = $result->purchase_tax;
+                    $post_data['sales_vat'] = $result->sale_tax;
+                    $post_data['product_reorder'] = 50;
+                    $post_data['product_reorder_max'] = 50;
+                    $post_data['product_reorder_min'] = 0;
+
+                    //Check & Get Brand
+                    $brand_id = $this->getBrand($post_data['tenant_id'], $post_data['brand_name']);
+                    if ($brand_id) {
+                        //Check combination of Product and brand exists 
+                        if (!$this->productExists($post_data['tenant_id'], $brand_id, $post_data['product_name'])) {
+                            $product_description_id = $this->getDescription($post_data['tenant_id'], $post_data['description_name']);
+                            $generic_id = $this->getGeneric($post_data['tenant_id'], $post_data['generic_name']);
+                            $drug_class_id = $this->getDrugclass($post_data['tenant_id'], $post_data['drug_name']);
+                            $this->assignDrugGeneric($post_data['tenant_id'], $generic_id, $drug_class_id);
+                            $purchase_package_id = $this->getPackageUnit($post_data['tenant_id'], $post_data['purchase_package']);
+                            $sales_package_id = $this->getPackageUnit($post_data['tenant_id'], $post_data['sales_package']);
+                            $purchase_vat_id = $this->getVat($post_data['tenant_id'], $post_data['purchase_vat']);
+                            $sales_vat_id = $this->getVat($post_data['tenant_id'], $post_data['sales_vat']);
+
+                            $new_product = new PhaProduct();
+                            $new_product->product_name = $post_data['product_name'];
+                            $new_product->product_description_id = $product_description_id;
+                            $new_product->product_reorder_min = $post_data['product_reorder_min'];
+                            $new_product->product_reorder_max = $post_data['product_reorder_max'];
+                            $new_product->brand_id = $brand_id;
+                            $new_product->generic_id = $generic_id;
+                            $new_product->drug_class_id = $drug_class_id;
+                            $new_product->purchase_vat_id = $purchase_vat_id;
+                            $new_product->purchase_package_id = $purchase_package_id;
+                            $new_product->sales_vat_id = $sales_vat_id;
+                            $new_product->sales_package_id = $sales_package_id;
+                            $new_product->save(false);
+
+                            $return = ['success' => true, 'continue' => $next_id, 'message' => 'success'];
+                        } else {
+                            $return = ['success' => false, 'continue' => $next_id, 'message' => 'Product exists'];
+                        }
+                    }
+                } else {
+                    $return = ['success' => false, 'continue' => $next_id, 'message' => 'Product name not found'];
+                }
+            } else {
+                $return = ['success' => false, 'continue' => $next_id, 'message' => 'Import data not found'];
+            }
+        } else {
+            $return = ['success' => false, 'continue' => 0];
+        }
+
+        if ($return['continue']) {
+            $status = $return['success'] ? 1 : 0;
+            $message = $return['message'];
+//            $message = str_replace('<p>Please fix the following errors:</p>', '', $return['message']);
+            $sql = "UPDATE test_product_import SET `status` = '{$status}', response = '{$message}' WHERE id={$id}";
+            $command = $connection->createCommand($sql);
+            $command->execute();
+            $connection->close();
+        }
+        return $return;
+    }
+
+    private function getVat($tenant_id, $vat) {
+        $vat = (int) $vat;
+        $phavat = \common\models\PhaVat::find()
+                ->tenant($tenant_id)
+                ->andWhere(['vat' => $vat])
+                ->one();
+
+        if (!empty($phavat)) {
+            $vat_id = $phavat->vat_id;
+        } else {
+            $new_vat = new \common\models\PhaVat();
+            $new_vat->vat = $vat;
+            $new_vat->save(false);
+            $vat_id = $new_vat->vat_id;
+        }
+        return $vat_id;
+    }
+
+    private function getPackageUnit($tenant_id, $package_name) {
+        $package_unit = \common\models\PhaPackageUnit::find()
+                ->tenant($tenant_id)
+                ->andWhere(['package_name' => $package_name])
+                ->one();
+
+        if (!empty($package_unit)) {
+            $package_id = $package_unit->package_id;
+        } else {
+            $new_package_unit = new \common\models\PhaPackageUnit();
+            $new_package_unit->package_name = $package_name;
+            $new_package_unit->package_unit = $package_name;
+            $new_package_unit->save(false);
+            $package_id = $new_package_unit->package_id;
+        }
+        return $package_id;
+    }
+
+    private function assignDrugGeneric($tenant_id, $generic_id, $drug_class_id) {
+        $drugGeneric = PhaDrugGeneric::find()
+                ->tenant($tenant_id)
+                ->andWhere(['generic_id' => $generic_id])
+                ->one();
+        //Assign only empty
+        if (empty($drugGeneric)) {
+            $new_drug_generic = new PhaDrugGeneric();
+            $new_drug_generic->drug_class_id = $drug_class_id;
+            $new_drug_generic->generic_id = $generic_id;
+            $new_drug_generic->save(false);
+        }
+        return true;
+    }
+
+    private function getDrugclass($tenant_id, $drug_name) {
+        $drug = PhaDrugClass::find()
+                ->tenant($tenant_id)
+                ->andWhere(['drug_name' => $drug_name])
+                ->one();
+
+        if (!empty($drug)) {
+            $drug_class_id = $drug->drug_class_id;
+        } else {
+            $new_drug = new PhaDrugClass();
+            $new_drug->drug_name = $drug_name;
+            $new_drug->save(false);
+            $drug_class_id = $new_drug->drug_class_id;
+        }
+        return $drug_class_id;
+    }
+
+    private function getGeneric($tenant_id, $generic_name) {
+        $generic = \common\models\PhaGeneric::find()
+                ->tenant($tenant_id)
+                ->andWhere(['generic_name' => $generic_name])
+                ->one();
+
+        if (!empty($generic)) {
+            $generic_id = $generic->generic_id;
+        } else {
+            $new_generic = new \common\models\PhaGeneric();
+            $new_generic->generic_name = $generic_name;
+            $new_generic->save(false);
+            $generic_id = $new_generic->generic_id;
+        }
+        return $generic_id;
+    }
+
+    private function getDescription($tenant_id, $description_name) {
+        $description = PhaProductDescription::find()
+                ->tenant($tenant_id)
+                ->andWhere(['description_name' => $description_name])
+                ->one();
+
+        if (!empty($description)) {
+            $description_id = $description->description_id;
+        } else {
+            $new_description = new PhaProductDescription();
+            $new_description->description_name = $description_name;
+            $new_description->save(false);
+            $description_id = $new_description->description_id;
+        }
+        return $description_id;
+    }
+
+    private function getBrand($tenant_id, $brand_name) {
+        $brand = \common\models\PhaBrand::find()
+                ->tenant($tenant_id)
+                ->andWhere(['brand_name' => $brand_name])
+                ->one();
+        if (!empty($brand)) {
+            $brand_id = $brand->brand_id;
+        } else {
+            $new_brand = new \common\models\PhaBrand();
+            $new_brand->brand_name = $brand_name;
+            $new_brand->brand_code = "AH_" . substr($brand_name, 0, 2) . "_" . rand(10, 100);
+            $new_brand->save(false);
+            $brand_id = $new_brand->brand_id;
+        }
+        return $brand_id;
+    }
+
+    private function productExists($tenant_id, $brand_id, $product_name) {
+        $product = PhaProduct::find()
+                ->tenant($tenant_id)
+                ->andWhere([
+                    'brand_id' => $brand_id,
+                    'product_name' => $product_name
+                ])
+                ->one();
+
+        if (!empty($product)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private function productDescriptionRoute($tenant_id, $product_name) {
+        
+    }
+
+    //Not used for data table model
 //public function actionGetbatchdetails() {
 //        $requestData = $_REQUEST;
 //
