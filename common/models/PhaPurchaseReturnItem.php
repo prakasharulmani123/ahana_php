@@ -160,7 +160,7 @@ class PhaPurchaseReturnItem extends RActiveRecord {
     public function fields() {
         $extend = [
             'product' => function ($model) {
-                return (isset($model->product) ? $model->product->fullname : '-');
+                return (isset($model->product) ? $model->product : '-');
             },
             'purchase_quantity' => function ($model) {
                 return (isset($model->purchaseItem) ? $model->purchaseItem->quantity : '-');

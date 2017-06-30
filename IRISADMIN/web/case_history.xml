@@ -24,6 +24,14 @@
                     <PROPERTY name="placeholder">Patient Name</PROPERTY>
                 </PROPERTIES>
             </FIELD>
+            <FIELD id="uhid" type="TextBox" label="UHID" required="true">
+                    <PROPERTIES>
+                        <PROPERTY name="id">uhid</PROPERTY>
+                        <PROPERTY name="name">uhid</PROPERTY>
+                        <PROPERTY name="readonly">readonly</PROPERTY>
+                        <PROPERTY name="class">form-control</PROPERTY>
+                    </PROPERTIES>
+                    </FIELD>
 
             <FIELD id="age" type="TextBox" label="Age" required="true" Backtext=" Years">
                 <PROPERTIES>

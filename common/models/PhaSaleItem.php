@@ -58,9 +58,9 @@ class PhaSaleItem extends RActiveRecord {
             [['product_id', 'quantity', 'mrp'], 'required'],
             [['batch_no'], 'required', 'on' => 'saveform'],
             [['tenant_id', 'sale_id', 'product_id', 'batch_id', 'quantity', 'created_by', 'modified_by'], 'integer'],
-            [['mrp', 'item_amount', 'discount_percentage', 'discount_amount', 'total_amount', 'vat_amount', 'vat_percent'], 'number'],
+            [['mrp', 'item_amount', 'discount_percentage', 'discount_amount', 'total_amount', 'vat_amount', 'vat_percent','cgst_amount','cgst_percent','sgst_amount','sgst_percent','taxable_value'], 'number'],
             [['status'], 'string'],
-            [['created_at', 'modified_at', 'deleted_at', 'package_name', 'expiry_date', 'batch_no', 'oldAttributeQuantity'], 'safe'],
+            [['created_at', 'modified_at', 'deleted_at', 'package_name', 'expiry_date', 'batch_no','hsn_no','oldAttributeQuantity'], 'safe'],
             [['product_id'], 'validateStock'],
         ];
     }

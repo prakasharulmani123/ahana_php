@@ -5,6 +5,7 @@ namespace common\models;
 use common\models\query\PhaVatQuery;
 use yii\db\ActiveQuery;
 use Yii;
+
 /**
  * This is the model class for table "pha_vat".
  *
@@ -34,13 +35,13 @@ class PhaVat extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['vat'], 'required'],
-            [['tenant_id', 'created_by', 'modified_by'], 'integer'],
-            [['vat'], 'number'],
-            ['vat', 'compare', 'compareValue' => 99, 'operator' => '<='],
-            [['status'], 'string'],
-            [['created_at', 'modified_at', 'deleted_at'], 'safe'],
-            [['vat'], 'unique', 'targetAttribute' => ['tenant_id', 'vat', 'deleted_at'], 'message' => 'The combination has already been taken.']
+                [['vat'], 'required'],
+                [['tenant_id', 'created_by', 'modified_by'], 'integer'],
+                [['vat'], 'number'],
+                ['vat', 'compare', 'compareValue' => 99, 'operator' => '<='],
+                [['status'], 'string'],
+                [['created_at', 'modified_at', 'deleted_at'], 'safe'],
+                [['vat'], 'unique', 'targetAttribute' => ['tenant_id', 'vat', 'deleted_at'], 'message' => 'The combination has already been taken.']
         ];
     }
 
@@ -82,10 +83,20 @@ class PhaVat extends RActiveRecord {
     }
 
     public function fields() {
+        $extend = [
+            'cgst_percent' => function ($model) {
+                return 2.5;
+            },
+            'sgst_percent' => function ($model) {
+                return 2.5;
+            },
+            ];
         $parent_fields = parent::fields();
+        $addt_keys = $extFields = [];
         if ($addtField = Yii::$app->request->get('addtfields')) {
             switch ($addtField):
                 case 'pharm_sale_prod_json':
+                    $addt_keys = ['cgst_percent', 'sgst_percent'];
                     $parent_fields = [
                         'vat' => 'vat'
                     ];
@@ -98,7 +109,10 @@ class PhaVat extends RActiveRecord {
             endswitch;
         }
 
-        return $parent_fields;
+        if ($addt_keys !== false)
+            $extFields = ($addt_keys) ? array_intersect_key($extend, array_flip($addt_keys)) : $extend;
+
+        return array_merge($parent_fields, $extFields);
     }
 
 }

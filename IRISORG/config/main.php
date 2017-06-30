@@ -104,6 +104,7 @@ return [
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/myworkreports'], 'extraPatterns' => ['POST opdoctorpaymentreport' => 'opdoctorpaymentreport', 'POST ipbillstatus' => 'ipbillstatus', 'POST dischargedpatientbills' => 'dischargedpatientbills', 'POST ipdoctorspay' => 'ipdoctorspay']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/pharmacypurchasebilling'], 'extraPatterns' => ['POST makepayment' => 'makepayment']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/doctorinterval'], 'extraPatterns' => ['POST setintervaltime' => 'setintervaltime']],
+                ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/hsn']],
             ],
         ],
         'log' => [
