@@ -233,6 +233,79 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                 }
             });
             modalInstance.data = {import_log: $scope.import_log};
+        }       
+                
+        $scope.initProductImportParams = function () {
+            $scope.product_import_process_text = '';
+            $scope.progress_product_imported_rows = $scope.success_product_import_rows = $scope.failed_product_import_rows = $scope.total_product_import_rows = $scope.import_product_percent = 0;
+            $scope.product_import_error_log = false;
+        }
+        
+        $scope.importProducts = function () {
+            $scope.initProductImportParams();
+            $scope.loadbar('show');
+            $scope.product_import_process_text = 'Fetching the Excel Data. Please wait until the importing begins. This might take few mins';
+            $scope.import_log = Date.parse(moment().format());
+            var currentUser = AuthenticationService.getCurrentUser();
+            
+            fileUpload.uploadFileToUrl($scope.masterProducts, $rootScope.IRISOrgServiceUrl + '/pharmacyproduct/import?tenant_id=' + currentUser.credentials.logged_tenant_id + '&import_log=' + $scope.import_log).success(function (response) {
+                if (response.success) {
+                    $scope.total_product_import_rows = response.message.total_rows;
+                    $scope.product_import_process_text = 'Importing started';
+                    $scope.productImportStart(response.message.id, response.message.max_id);
+                } else {
+                    $scope.loadbar('hide');
+                    $scope.product_import_process_text = '';
+                    $scope.errorData = response.message;
+                }
+            }).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        }
+        
+        $scope.productImportStart = function (id, max) {
+            $scope.loadbar('show');
+            $http({
+                method: 'POST',
+                url: $rootScope.IRISOrgServiceUrl + '/pharmacyproduct/importstart',
+                data: {id: id, max_id: max, import_log: $scope.import_log},
+            }).success(
+                    function (response) {
+                        if (response.success) {
+                            $scope.success_product_import_rows++;
+                            $scope.progress_product_imported_rows++;
+                        } else if (response.continue) {
+                            $scope.failed_product_import_rows++;
+                            $scope.progress_product_imported_rows++;
+                        }
+
+                        $scope.product_import_process_text = 'Import progressing (' + $scope.progress_product_imported_rows + '/' + $scope.total_product_import_rows + ')';
+                        $scope.import_product_percent = ($scope.progress_product_imported_rows / $scope.total_product_import_rows) * 100;
+
+                        if (response.continue) {
+                            $scope.productImportStart(response.continue, max);
+                        } else {
+                            $scope.product_import_process_text = 'Import completed (' + $scope.progress_product_imported_rows + '/' + $scope.total_product_import_rows + ')';
+                            $scope.product_import_error_log = true;
+                        }
+                        $scope.loadbar('hide');
+                    }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        }
+        
+        //In-Progress
+        $scope.showProductImportErrorLog = function () {
+            
         }
     }]);
 
