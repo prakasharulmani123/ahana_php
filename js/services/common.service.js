@@ -52,6 +52,7 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
     service.GetPatientFrequency = GetPatientFrequency;
     service.GetPatientRoute = GetPatientRoute;
     service.GetPatientGroup = GetPatientGroup;
+    service.GetHsnCode = GetHsnCode;
 
     service.GetLabelFromValue = GetLabelFromValue;
     service.FoundVlaue = FoundVlaue;
@@ -596,6 +597,17 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
         var response;
 
         $http.get($rootScope.IRISOrgServiceUrl + '/patientgroup/getpatientgrouplist?status=' + sts + '&deleted=' + del_sts)
+                .success(function (response) {
+                    callback(response);
+                }, function (x) {
+                    response = {success: false, message: 'Server Error'};
+                    callback(response);
+                });
+    }
+    function GetHsnCode(sts, del_sts, callback) {
+        var response;
+
+        $http.get($rootScope.IRISOrgServiceUrl + '/hsn/gethsncodelist?status=' + sts + '&deleted=' + del_sts)
                 .success(function (response) {
                     callback(response);
                 }, function (x) {

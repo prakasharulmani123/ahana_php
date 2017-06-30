@@ -279,7 +279,7 @@ app.controller('PurchaseReturnController', ['$rootScope', '$scope', '$timeout', 
             _that = this;
             $scope.errorData = "";
             $http({
-                url: $rootScope.IRISOrgServiceUrl + "/pharmacypurchasereturns/" + $state.params.id,
+                url: $rootScope.IRISOrgServiceUrl + "/pharmacypurchasereturns/" + $state.params.id +"?addtfields=purchase_return",
                 method: "GET"
             }).success(
                     function (response) {
@@ -290,6 +290,7 @@ app.controller('PurchaseReturnController', ['$rootScope', '$scope', '$timeout', 
                         $scope.data.supplier_id = purchasereturn.supplier_id;
                         $scope.data.supplier_name = purchasereturn.supplier.supplier_name;
                         $scope.data.purchase_date = purchasereturn.invoice_date;
+                        $scope.data.purchase_invoice_no = purchasereturn.invoice_no;
 //                        $scope.data.purchase_id = purchasereturn.purchase_ret_id;
 
                         angular.forEach(purchasereturn.items, function (item, key) {

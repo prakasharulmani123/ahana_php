@@ -95,7 +95,37 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 templateUrl: 'tpl/page_401.html'
             })
 
-            //CONFIGURATION ROLES
+            //Pharmacy hsn
+            .state('pharmacy.hsn', {
+                url: '/hsn',
+                templateUrl: 'tpl/hsn/index.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('tpl/hsn/hsn.js?v=' + APP_VERSION);
+                        }]
+                }
+            })
+            .state('pharmacy.hsn_create', {
+                url: '/hsn_create',
+                templateUrl: 'tpl/hsn/create.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/hsn/hsn.js?v=' + APP_VERSION]);
+                        }]
+                }
+            })
+            .state('pharmacy.hsn_update', {
+                url: '/hsn_update/{id}',
+                templateUrl: 'tpl/hsn/update.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/hsn/hsn.js?v=' + APP_VERSION]);
+                        }]
+                }
+            })
             .state('configuration.roles', {
                 url: '/roles',
                 templateUrl: 'tpl/roles/index.html',

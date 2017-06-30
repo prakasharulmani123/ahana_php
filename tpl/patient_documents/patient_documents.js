@@ -248,15 +248,15 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
             _data.push({
                 name: 'name',
                 value: $scope.patientObj.fullname,
-            }, 
-            {
-                name: 'uhid',
-                value: $scope.patientObj.patient_global_int_code,
             },
-            {
-                name: 'age',
-                value: $scope.patientObj.patient_age,
-            }, {
+                    {
+                        name: 'uhid',
+                        value: $scope.patientObj.patient_global_int_code,
+                    },
+                    {
+                        name: 'age',
+                        value: $scope.patientObj.patient_age,
+                    }, {
                 name: 'gender',
                 value: $scope.app.patientDetail.patientSex,
             }, {
@@ -420,6 +420,74 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
         }
 
         $scope.checkTablerow = function () {
+            $("#printThisElement table tr").each(function () {
+
+                var ratingTdText = $(this).find('td.ribbon');
+                var nextTr = ratingTdText.closest('tr').next('tr');
+                nextTr.find('td').each(function () {
+                    if (nextTr.text().trim() == "Hiding text") {
+                        var newText = $(this).text().replace('Hiding text', "");
+                        $(this).text(newText);
+                    }
+
+                    if (nextTr.text().trim() == "") {
+                        nextTr.remove();
+                        ratingTdText.remove();
+                        //console.log(ratingTdText).text()
+                    }
+                });
+
+                var nextTr = ratingTdText.closest('tr').next('tr');
+                if ((nextTr.text().trim() == "Possession of thought") || (nextTr.text().trim() == "Hiding text")) {
+                    nextTr.remove();
+                    ratingTdText.remove();
+                }
+
+                var RadgridText = $(this).find('tr.pastmedical');
+                var radhtml = RadgridText.find('td > table > tbody');
+                if (radhtml.text().trim().length === 0) {
+                    var prevTr = RadgridText.closest('tr').prev('tr');
+                    prevTr.remove();
+                }
+                var therapyText = $(this).find('tr.phamacotherapy');
+                var therapyhtml = therapyText.find('td > table > tbody');
+                if (therapyhtml.text().trim().length === 0) {
+                    var prevTr = therapyText.closest('tr').prev('tr');
+                    prevTr.remove();
+                }
+                var altText = $(this).find('tr.alternative');
+                var althtml = altText.find('td > table > tbody');
+                if (althtml.text().trim().length === 0) {
+                    var altTr = altText.closest('tr').prev('tr');
+                    altTr.remove();
+                }
+                var subText = $(this).find('tr.sub');
+                var subhtml = subText.find('td > table > tbody');
+                if (subhtml.text().trim().length === 0) {
+                    var subTr = subText.closest('tr').prev('tr');
+                    subTr.remove();
+                }
+
+                $("#printThisElement table tbody tr td table tbody").each(function () {
+                    var head = $(this).find("tr");
+                    var heading = head.text();
+                    var success = heading.replace('Hiding text', '');
+                    if (success.trim().length === 0) {
+                        head.remove();
+                    }
+                });
+
+                //                Hide panel bar
+//                var panel = $(this).find('tr.PanelBar');
+//                var nextpanel = panel.closest('tr').next('tr').text;
+//                console.log(nextpanel); console.log('asd');
+//                
+//                if (nextpanel.text().trim().length === 0) {
+//                    panel.remove();
+//                }
+
+            });
+
             $(".classy-edit").each(function () {
                 $(this).removeClass("form-control");
                 $(this).html($(this).text());

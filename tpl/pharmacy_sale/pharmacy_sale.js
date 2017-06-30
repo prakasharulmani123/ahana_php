@@ -155,14 +155,14 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
             $scope.errorData = $scope.msg.successMessage = '';
             $scope.isLoading = true;
-            
+
 
             // pagination set up
             $scope.rowCollection = [];  // base collection
             //$scope.itemsByPage = 10; // No.of records per page
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
 
-               $scope.getSaleList(payment_type);
+            $scope.getSaleList(payment_type);
 
             //Consultant List - Index Print Bill Section 
             $rootScope.commonService.GetDoctorList('', '1', false, '1', function (response) {
@@ -214,7 +214,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                         $scope.errorData = "An Error has occured while loading saleList!";
                     });
         }
-        
+
         $scope.pageChanged = function () {
             $scope.getSaleList($scope.payment_type);
         };
@@ -261,6 +261,10 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             $rootScope.commonService.GetPatientGroup('1', false, function (response) {
                 $scope.patientgroups = response.patientgroupList;
                 $scope.show_group_loader = false;
+            });
+
+            $rootScope.commonService.GetHsnCode('1', false, function (response) {
+                $scope.hsncodes = response.hsncodeList;
             });
 
             $scope.productloader = '<i class="fa fa-spin fa-spinner"></i>';
@@ -570,6 +574,8 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 $scope.saleItems[key].package_name = selectedObj.salesPackageName;
                 $scope.saleItems[key].generic_id = selectedObj.generic_id;
                 $scope.saleItems[key].product_batches = selectedObj.product_batches;
+                $scope.saleItems[key].sgst_percent = selectedObj.salesVat.sgst_percent;
+                $scope.saleItems[key].cgst_percent = selectedObj.salesVat.cgst_percent;
 
                 $scope.getreadyBatch(selectedObj, key);
                 $scope.productInlineAlert(selectedObj, key);
@@ -710,6 +716,8 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             var mrp = parseFloat($scope.saleItems[key].mrp);
             var disc_perc = parseFloat($scope.saleItems[key].discount_percentage);
             var vat_perc = parseFloat($scope.saleItems[key].vat_percent);
+            var cgst_perc = parseFloat($scope.saleItems[key].cgst_percent);
+            var sgst_perc = parseFloat($scope.saleItems[key].sgst_percent);
 
             //Validate isNumer
             qty = !isNaN(qty) ? qty : 0;
@@ -721,12 +729,19 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             var total_amount = (item_amount - disc_amount).toFixed(2);
 
 //            var vat_amount = (item_amount * (vat_perc / 100)).toFixed(2); // Exculding vat
-            var vat_amount = ((total_amount * vat_perc) / (100 + vat_perc)).toFixed(2); // Including vat
+            var vat_amount = ((total_amount * vat_perc) / (100 + vat_perc)).toFixed(2);
+            var cgst_amount = ((total_amount * cgst_perc) / (100 + cgst_perc)).toFixed(2); // Including vat
+            var sgst_amount = ((total_amount * sgst_perc) / (100 + sgst_perc)).toFixed(2); // Including vat
 
             $scope.saleItems[key].item_amount = item_amount;
             $scope.saleItems[key].discount_amount = disc_amount;
             $scope.saleItems[key].total_amount = total_amount;
             $scope.saleItems[key].vat_amount = vat_amount;
+
+            $scope.saleItems[key].cgst_amount = cgst_amount;
+            $scope.saleItems[key].sgst_amount = sgst_amount;
+            $scope.saleItems[key].taxable_value = parseFloat(cgst_amount) + parseFloat(sgst_amount);
+
             $scope.updateSaleRate();
         }
 
@@ -737,7 +752,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             //Get Total Sale, VAT, Discount Amount
             var total_item_vat_amount = total_item_sale_amount = 0;
             angular.forEach($scope.saleItems, function (item) {
-                total_item_vat_amount = total_item_vat_amount + parseFloat(item.vat_amount);
+                total_item_vat_amount = total_item_vat_amount + parseFloat(item.taxable_value);
                 total_item_sale_amount = total_item_sale_amount + parseFloat(item.total_amount);
             });
 
@@ -1036,7 +1051,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         /*PRINT BILL*/
         $scope.printHeader = function () {
             return {
-                text:'',
+                text: '',
                 margin: 20,
                 alignment: 'center'
             };
@@ -1079,24 +1094,24 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 }
             };
         }
-        
+
         $scope.imgExport = function (imgID) {
-                var img = document.getElementById(imgID);
-                var canvas = document.createElement("canvas");
-                canvas.width = img.width;
-                canvas.height = img.height;
+            var img = document.getElementById(imgID);
+            var canvas = document.createElement("canvas");
+            canvas.width = img.width;
+            canvas.height = img.height;
 
-                // Copy the image contents to the canvas
-                var ctx = canvas.getContext("2d");
-                ctx.drawImage(img, 0, 0);
+            // Copy the image contents to the canvas
+            var ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0);
 
-                // Get the data-URL formatted image
-                // Firefox supports PNG and JPEG. You could check img.src to
-                // guess the original format, but be aware the using "image/jpg"
-                // will re-encode the image.
-                var dataURL = canvas.toDataURL("image/png");
-                return dataURL;
-            }
+            // Get the data-URL formatted image
+            // Firefox supports PNG and JPEG. You could check img.src to
+            // guess the original format, but be aware the using "image/jpg"
+            // will re-encode the image.
+            var dataURL = canvas.toDataURL("image/png");
+            return dataURL;
+        }
 
         $scope.printloader = '';
         $scope.printContent = function () {
@@ -1120,40 +1135,126 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             var perPageItems = [];
             perPageItems.push([
                 {
-                    border: [false, true, false, true],
+                    border: [false, true, false, false],
+                    rowspan :2,
+                    text: 'S.No',
+                    style: 'th'
+                },
+                {
+                    border: [false, true, false, false],
+                    rowspan :2,
                     text: 'Description',
                     style: 'th'
                 },
                 {
-                    border: [false, true, false, true],
+                    border: [false, true, false, false],
+                    rowspan :2,
+                    text: 'Hsn Code',
+                    style: 'th'
+                },
+                {
+                    border: [false, true, false, false],
+                    rowspan :2,
                     text: 'MFR',
                     style: 'th'
                 },
                 {
-                    border: [false, true, false, true],
+                    border: [false, true, false, false],
+                    rowspan :2,
                     text: 'Batch',
                     style: 'th'
                 },
                 {
-                    border: [false, true, false, true],
+                    border: [false, true, false, false],
+                    rowspan :2,
                     text: 'Expiry',
                     style: 'th'
                 },
                 {
-                    border: [false, true, false, true],
+                    border: [false, true, false, false],
+                    rowspan :2,
                     text: 'Qty',
                     style: 'th'
                 },
                 {
-                    border: [false, true, false, true],
+                    border: [false, true, false, false],
+                    rowspan :2,
                     text: 'Price',
                     style: 'th'
                 },
                 {
-                    border: [false, true, false, true],
-                    text: 'Amount',
+                    border: [false, true, false, false],
+                    rowspan :2,
+                    text: 'Taxable value',
                     style: 'th'
                 },
+                {
+                    border: [false, true, false, true],
+                    colSpan: 2,
+                    alignmanet: 'center',
+                    text: 'CGST',
+                    style: 'th'
+                }, {},
+                {
+                    border: [false, true, false, true],
+                    colSpan: 2,
+                    alignmanet: 'center',
+                    text: 'SGST',
+                    style: 'th'
+                }, {},
+                {
+                    border: [false, true, false, false],
+                    rowspan :2,
+                    text: 'Total',
+                    style: 'th'
+                },
+            ], [
+                {
+                    border: [false, false, false, true],
+                    text: ''
+                }, {
+                    border: [false, false, false, true],
+                    text: ''
+                }, {
+                    border: [false, false, false, true],
+                    text: ''
+                }, {
+                    border: [false, false, false, true],
+                    text: ''
+                }, {
+                    border: [false, false, false, true],
+                    text: ''
+                }, {
+                    border: [false, false, false, true],
+                    text: ''
+                }, {
+                    border: [false, false, false, true],
+                    text: ''
+                }, {
+                    border: [false, false, false, true],
+                    text: ''
+                }, {
+                    border: [false, false, false, true],
+                    text: ''
+                },
+                {
+                    border: [false, true, false, true],
+                    text: 'Rate %',
+                },
+                {
+                    border: [false, true, false, true],
+                    text: 'Amount',
+                },
+                {
+                    border: [false, true, false, true],
+                    text: 'Rate %',
+                },
+                {
+                    border: [false, false, false, true],
+                    text: 'Amount',
+                }, {
+                    border: [false, false, false, true],
+                    text: ''},
             ]);
 
 
@@ -1176,13 +1277,20 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 perPageItems.push([
                     {
                         border: border,
+                        text: index,
+                        fillColor: color,
+                        style: 'td',
+                        alignment: 'left',
+                    },
+                    {
+                        border: border,
                         text: particulars,
                         fillColor: color,
                         style: 'td'
                     },
                     {
                         border: border,
-                        text: row.product.brand_code,
+                        text: row.hsn_no,
                         fillColor: color,
                         style: 'td'
                     },
@@ -1217,8 +1325,50 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                         style: 'td',
                         alignment: 'right',
                     },
+                    {
+                        border: border,
+                        text: row.taxable_value,
+                        fillColor: color,
+                        style: 'td',
+                        alignment: 'right',
+                    },
+                    {
+                        border: border,
+                        text: row.cgst_percent,
+                        fillColor: color,
+                        style: 'td',
+                        alignment: 'right',
+                    },
+                    {
+                        border: border,
+                        text: row.cgst_amount,
+                        fillColor: color,
+                        style: 'td',
+                        alignment: 'right',
+                    },
+                    {
+                        border: border,
+                        text: row.sgst_percent,
+                        fillColor: color,
+                        style: 'td',
+                        alignment: 'right',
+                    },
+                    {
+                        border: border,
+                        text: row.sgst_amount,
+                        fillColor: color,
+                        style: 'td',
+                        alignment: 'right',
+                    },
+                    {
+                        border: border,
+                        text: row.total_amount,
+                        fillColor: color,
+                        style: 'td',
+                        alignment: 'right',
+                    },
                 ]);
-
+                index++;
                 loop_count++;
             });
             if (sale_info.payment_type == 'CA')
@@ -1251,42 +1401,42 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                         [
                                             {
                                                 image: $scope.imgExport('sale_logo'),
-                                                 height: 20, width: 100,
-                                                
+                                                height: 20, width: 100,
+
                                             }
                                         ],
                                         [
-                                            
+
                                             {
-                                                text : sale_info.branch_address,
+                                                text: sale_info.branch_address,
                                                 fontSize: 09,
                                             }
                                         ],
                                     ]
                                 },
                             },
-                            {}, {}, {},{},
+                            {}, {}, {}, {},
                             {
                                 layout: 'noBorders',
                                 table: {
                                     body: [
                                         [
                                             {
-                                                text : 'Cash on Delivery:'+[sale_info.branch_phone],
+                                                text: 'Cash on Delivery:' + [sale_info.branch_phone],
                                             }
                                         ],
                                     ]
                                 },
-                            }, 
+                            },
                             {
                                 layout: 'noBorders',
                                 table: {
                                     body: [
                                         [
                                             {
-                                                text : 'DL Nos. : MDU/5263/20,21',
+                                                text: 'DL Nos. : MDU/5263/20,21',
                                                 fontSize: 07,
-                                                alignment: 'center' 
+                                                alignment: 'center'
                                             }
                                         ],
                                         bar_img
@@ -1419,7 +1569,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                             },
                                             {
                                                 border: [false, false, false, false],
-                                                text: [sale_info.bill_no]+ '/'+[payment],
+                                                text: [sale_info.bill_no] + '/' + [payment],
                                                 style: 'normaltxt'
                                             }
                                         ],
@@ -1453,7 +1603,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                         },
                         table: {
                             headerRows: 1,
-                            widths: [150, 50, 50, 50, 50, 50, '*'],
+                            widths: ['auto', '*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
                             body: perPageItems,
                         },
                         pageBreak: (loop_count === result_count ? '' : 'after'),
@@ -1484,7 +1634,6 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                                 style: 'normaltxt'
                                             },
                                         ],
-                                        
                                     ]
                                 },
                             },
@@ -1493,6 +1642,21 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                 layout: 'noBorders',
                                 table: {
                                     body: [
+                                        [
+                                            {
+                                                text: 'Total Vat',
+                                                style: 'h2',
+                                                alignment: 'right'
+                                            },
+                                            {
+                                                text: ':',
+                                                style: 'h2'
+                                            },
+                                            {
+                                                text: sale_info.total_item_vat_amount,
+                                                alignment: 'right'
+                                            },
+                                        ],
                                         [
                                             {
                                                 text: 'Total Value',
@@ -1611,6 +1775,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
             $http.get($rootScope.IRISOrgServiceUrl + "/pharmacysales/" + sale_id + "?addtfields=sale_print")
                     .success(function (response) {
+                        console.log(response);
                         $scope.loadbar('hide');
                         $scope.data2 = response;
                         $scope.data2.patient_name = response.patient_name;
@@ -1628,6 +1793,11 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                 batch_details: item.batch.batch_details,
                                 expiry_date: item.batch.expiry_date,
                                 quantity: item.quantity,
+                                taxable_value: item.taxable_value,
+                                cgst_amount: item.cgst_amount,
+                                cgst_percent: item.cgst_percent,
+                                sgst_amount: item.sgst_amount,
+                                sgst_percent: item.sgst_percent,
                             });
                         });
                         deferred.resolve();

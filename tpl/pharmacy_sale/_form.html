@@ -13,7 +13,7 @@
                             <div class="panel-body">
                                 <div class="form-group">
                                     <label class="col-lg-4 control-label">
-                                        
+
                                         <div ng-hide="true" ng-if="data.patient.patient_int_code"> <io-barcode id="{{ data.patient.patient_int_code ||'-'}}" code="{{ data.patient.patient_int_code ||'-'}}" type="CODE128B" options="barcodeOptions"></io-barcode></div>
                                         <div ng-hide="true" ng-if="!data.patient.patient_int_code"> <io-barcode id="{{ patient_int_code || '-'}}" code="{{ patient_int_code || '-'}}" type="CODE128B" options="barcodeOptions"></io-barcode></div>
                                         Patient Name
@@ -44,7 +44,7 @@
                                         </span>
                                     </label>
                                     <div class="col-lg-8">
-                                        <select class="form-control selectpicker" data-live-search="true" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors | orderBy: 'name'" data-ng-change="changeGetConsultant()">
+                                        <select class="form-control selectpicker" data-live-search="true" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors| orderBy: 'name'" data-ng-change="changeGetConsultant()">
                                             <option value="">Select Consultant</option>
                                         </select>
                                     </div>
@@ -62,7 +62,7 @@
                                     <div class="col-lg-8">
                                         <select class="form-control selectpicker" data-live-search="true"
                                                 ng-model="data.encounter_id"
-                                                ng-options="encounter.encounter_id as encounter.encounter_id for encounter in encounters | orderBy: 'encounter_id'"
+                                                ng-options="encounter.encounter_id as encounter.encounter_id for encounter in encounters| orderBy: 'encounter_id'"
                                                 ng-change="getPrescription()"
                                                 >
                                             <option value="">Select Encounter</option>
@@ -106,7 +106,7 @@
                                         </span>
                                     </label>
                                     <div class="col-lg-8 col-sm-9">
-                                        <select class="form-control" name="Patientgroup" ng-model="data.patient_group_id" ng-options="patientgroup.patient_group_id as patientgroup.group_name for patientgroup in patientgroups | orderBy: 'group_name'" data-ng-change="updatePatientGroupname()">
+                                        <select class="form-control" name="Patientgroup" ng-model="data.patient_group_id" ng-options="patientgroup.patient_group_id as patientgroup.group_name for patientgroup in patientgroups| orderBy: 'group_name'" data-ng-change="updatePatientGroupname()">
                                             <option value="">Select Group</option>
                                         </select>
                                     </div>
@@ -118,7 +118,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-sm-12">
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -128,36 +128,35 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <div style="{{css.style}}">
-                        
-                        
+
+
                             <table class="table table-bordered table-hover table-condensed bg-white-only">
-                            <thead class="sales-table-heading">
-                                <tr>
-                                    <th  rowspan="2"><span>Product Name</span></th>
-                                    <th  rowspan="2"><span>Batch No</span></th>
-                                    <th  rowspan="2"><span>Exp Date</span></th>
-                                    <th  rowspan="2"><span>Qty</span></th>
-                                    <th  rowspan="2"><span>Unit</span></th>
-                                    <th  rowspan="2"><span>MRP</span></th>
-                                    <th  rowspan="2"><span>Line Total</span></th>
-                                    <th  rowspan="2"><span>Dis %</span></th>
-                                    <th  rowspan="2"><span>Dis Amt</span></th>
-                               
-                                    <th  rowspan="2">Taxable
-value</th>
-                                    <th  colspan="2" align="center">CGST</th>
-                                    <th  colspan="2" align="center">SGST</th>
-                            <th  rowspan="2"><span>Total</span></th>
-                                    <th  rowspan="2"><span>Action</span></th>
-                                </tr>
-                                
-                                  <tr>
-    <th> Rate</th>
-    <th> Amount</th>
-     <th> Rate</th>
-    <th> Amount</th>
-  </tr>
-  </thead>
+                                <thead class="sales-table-heading">
+                                    <tr>
+                                        <th  rowspan="2"><span>Product Name</span></th>
+                                        <th  rowspan="2"><span>Batch No</span></th>
+                                        <th  rowspan="2"><span>Exp Date</span></th>
+                                        <th  rowspan="2"><span>Qty</span></th>
+                                        <th  rowspan="2"><span>Unit</span></th>
+                                        <th  rowspan="2"><span>MRP</span></th>
+                                        <th  rowspan="2"><span>Hsn No</span></th>
+                                        <th  rowspan="2"><span>Dis %</span></th>
+                                        <th  rowspan="2"><span>Dis Amt</span></th>
+
+                                        <th  rowspan="2">Taxable value</th>
+                                        <th  colspan="2" align="center">CGST</th>
+                                        <th  colspan="2" align="center">SGST</th>
+                                        <th  rowspan="2"><span>Total</span></th>
+                                        <th  rowspan="2"><span>Action</span></th>
+                                    </tr>
+
+                                    <tr>
+                                        <th> Rate %</th>
+                                        <th> Amount</th>
+                                        <th> Rate %</th>
+                                        <th> Amount</th>
+                                    </tr>
+                                </thead>
                                 <tr class="r-v-top" ng-repeat="(key, saleitem) in saleItems">
                                     <td>
                                         <div id="i_full_name_{{key}}">
@@ -198,7 +197,7 @@ value</th>
                                                 e-ng-options="product as product.full_name for product in saleitem.alternateproducts | filter:$viewValue"
                                                 e-ng-change="updateAlternateProductRow($data, key, $index)"
                                                 >
-                                                {{ showAlternateProduct(saleitem) || 'empty' }}
+                                                {{ showAlternateProduct(saleitem) || 'empty'}}
                                             </span>
                                         </div>
                                     </td>
@@ -254,7 +253,22 @@ value</th>
                                             {{saleitem.mrp|| 0}}
                                         </span>
                                     </td>
-                                    <td><span>{{saleitem.item_amount}}</span></td>
+                                    <td>
+                                        <div id="i_hsn_no_{{key}}">
+                                            <span
+                                                editable-select="saleitem.hsn_no"
+                                                data-e-id="hsn_no"
+                                                e-form="tableform"
+                                                e-name="hsn_no"
+                                                onbeforesave="checkInput($data, key, $index)"
+                                                e-ng-options="s.hsn_no as s.hsn_no for s in hsncodes">
+                                                {{ saleitem.hsn_no || 'empty' }}
+                                            </span>
+                                        </div>
+                                        <span id="t_hsn_no_{{key}}" class="hide">
+                                            {{ saleitem.hsn_no || 'empty' }}
+                                        </span>
+                                    </td>
                                     <td>
                                         <span
                                             editable-text="saleitem.discount_percentage"
@@ -278,27 +292,27 @@ value</th>
                                     </td>
                                     <td>
                                         <span>
-                                            {{saleitem.vat_percent}}
+                                            {{saleitem.taxable_value}}
                                         </span>
                                     </td>
                                     <td>
                                         <span>
-                                            {{saleitem.vat_amount}}
+                                            {{saleitem.cgst_percent}}
                                         </span>
                                     </td>
                                     <td>
                                         <span>
-                                            0
+                                            {{saleitem.cgst_amount}}
                                         </span>
                                     </td>
                                     <td>
                                         <span>
-                                            {{saleitem.total_amount}}
+                                            {{saleitem.sgst_percent}}
                                         </span>
                                     </td>
                                     <td>
                                         <span>
-                                            1
+                                            {{saleitem.sgst_amount}}
                                         </span>
                                     </td>
                                     <td>
@@ -310,7 +324,7 @@ value</th>
                                         </a>
                                     </td>
                                 </tr>
-                                
+
                             </table>
                         </div>
                         <div class="btn-form">
