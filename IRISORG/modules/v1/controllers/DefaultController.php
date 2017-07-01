@@ -422,34 +422,36 @@ class DefaultController extends Controller {
                     if ($result['Add_Spec1'] != '' && $result['mrp'] != '') {
                         $package_unit = (int) $result['Add_Spec1'];
                         if ($package_unit) {
-                            $batch_exists = \common\models\PhaProductBatch::find()
-                                    ->andWhere([
-                                        'tenant_id' => $result['tenant_id'],
-                                        'product_id' => $product_exists->product_id,
-                                        'batch_no' => $result['Batch'],
-                                        'expiry_date' => date('Y-m', strtotime($result['ExpiryMy'])) . '-01',
-                                    ])
-                                    ->one();
-                            if (empty($batch_exists)) {
-                                $batch = new \common\models\PhaProductBatch();
-                                $batch->tenant_id = $result['tenant_id'];
-                                $batch->product_id = $product_exists->product_id;
-                                $batch->batch_no = $result['Batch'];
-                                $batch->expiry_date = $result['ExpiryMy'];
-                                $batch->package_unit = $package_unit;
-                                $batch->package_name = $result['Add_Spec1'];
-                                $batch->total_qty = $result['Total'];
-                                $batch->available_qty = $result['Total'];
-                                $batch->created_by = -1;
-                                $batch->save(false);
-
-                                $this->_updateBatchRate($result['tenant_id'], $batch->batch_id, $result['mrp'], $package_unit);
-                            } else {
-                                $reason = 'Duplicate batch entry';
-                                $datas = json_encode($result);
-                                $log = "INSERT INTO test_os_log (tenant_id, product_name, reason, datas) VALUES ({$result['tenant_id']}, '{$result['Name']}', '{$reason}', '{$datas}')";
-                                $command = $connection->createCommand($log);
-                                $command->execute();
+                            if ($result['Batch'] != '') {
+                                $batch_exists = \common\models\PhaProductBatch::find()
+                                        ->andWhere([
+                                            'tenant_id' => $result['tenant_id'],
+                                            'product_id' => $product_exists->product_id,
+                                            'batch_no' => $result['Batch'],
+                                            'expiry_date' => date('Y-m', strtotime($result['ExpiryMy'])) . '-01',
+                                        ])
+                                        ->one();
+                                if (empty($batch_exists)) {
+                                    $batch = new \common\models\PhaProductBatch();
+                                    $batch->tenant_id = $result['tenant_id'];
+                                    $batch->product_id = $product_exists->product_id;
+                                    $batch->batch_no = $result['Batch'];
+                                    $batch->expiry_date = $result['ExpiryMy'];
+                                    $batch->package_unit = $package_unit;
+                                    $batch->package_name = $result['Add_Spec1'];
+                                    $batch->total_qty = $result['Total'];
+                                    $batch->available_qty = $result['Total'];
+                                    $batch->created_by = -1;
+                                    $batch->save(false);
+                                    
+                                    $this->_updateBatchRate($result['tenant_id'], $batch->batch_id, $result['mrp'], $package_unit);
+                                } else {
+                                    $reason = 'Duplicate batch entry';
+                                    $datas = json_encode($result);
+                                    $log = "INSERT INTO test_os_log (tenant_id, product_name, reason, datas) VALUES ({$result['tenant_id']}, '{$result['Name']}', '{$reason}', '{$datas}')";
+                                    $command = $connection->createCommand($log);
+                                    $command->execute();
+                                }
                             }
                         } else {
                             $reason = 'Package unit is not integer';
