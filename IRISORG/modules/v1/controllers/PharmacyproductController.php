@@ -911,7 +911,7 @@ class PharmacyproductController extends ActiveController {
         } else {
             $new_brand = new \common\models\PhaBrand();
             $new_brand->brand_name = $brand_name;
-            $new_brand->brand_code = "AH_" . substr($brand_name, 0, 2) . "_" . rand(10, 100);
+            $new_brand->brand_code = "AH_" . time() . "_" . rand(10, 100);
             $new_brand->save(false);
             $brand_id = $new_brand->brand_id;
         }
