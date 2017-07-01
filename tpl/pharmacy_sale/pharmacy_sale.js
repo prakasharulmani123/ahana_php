@@ -1136,55 +1136,55 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             perPageItems.push([
                 {
                     border: [false, true, false, false],
-                    rowspan :2,
+                    rowspan: 2,
                     text: 'S.No',
                     style: 'th'
                 },
                 {
                     border: [false, true, false, false],
-                    rowspan :2,
+                    rowspan: 2,
                     text: 'Description',
                     style: 'th'
                 },
                 {
                     border: [false, true, false, false],
-                    rowspan :2,
-                    text: 'Hsn Code',
+                    rowspan: 2,
+                    text: 'HSN Code',
                     style: 'th'
                 },
                 {
                     border: [false, true, false, false],
-                    rowspan :2,
+                    rowspan: 2,
                     text: 'MFR',
                     style: 'th'
                 },
                 {
                     border: [false, true, false, false],
-                    rowspan :2,
+                    rowspan: 2,
                     text: 'Batch',
                     style: 'th'
                 },
                 {
                     border: [false, true, false, false],
-                    rowspan :2,
+                    rowspan: 2,
                     text: 'Expiry',
                     style: 'th'
                 },
                 {
                     border: [false, true, false, false],
-                    rowspan :2,
+                    rowspan: 2,
                     text: 'Qty',
                     style: 'th'
                 },
                 {
                     border: [false, true, false, false],
-                    rowspan :2,
+                    rowspan: 2,
                     text: 'Price',
                     style: 'th'
                 },
                 {
                     border: [false, true, false, false],
-                    rowspan :2,
+                    rowspan: 2,
                     text: 'Taxable value',
                     style: 'th'
                 },
@@ -1204,7 +1204,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 }, {},
                 {
                     border: [false, true, false, false],
-                    rowspan :2,
+                    rowspan: 2,
                     text: 'Total',
                     style: 'th'
                 },
@@ -1240,21 +1240,29 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 {
                     border: [false, true, false, true],
                     text: 'Rate %',
+                    fontSize: 05,
                 },
                 {
                     border: [false, true, false, true],
                     text: 'Amount',
+                    fontSize: 05,
+
                 },
                 {
                     border: [false, true, false, true],
                     text: 'Rate %',
+                    fontSize: 05,
                 },
                 {
                     border: [false, false, false, true],
                     text: 'Amount',
-                }, {
+                    fontSize: 05,
+
+                },
+                {
                     border: [false, false, false, true],
-                    text: ''},
+                    text: ''
+                },
             ]);
 
 
@@ -1290,7 +1298,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                     },
                     {
                         border: border,
-                        text: row.hsn_no,
+                        text: [row.hsn_no || '-'],
                         fillColor: color,
                         style: 'td'
                     },
@@ -1323,42 +1331,36 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                         text: row.total_amount,
                         fillColor: color,
                         style: 'td',
-                        alignment: 'right',
                     },
                     {
                         border: border,
-                        text: row.taxable_value,
+                        text: [row.taxable_value || '-'],
                         fillColor: color,
                         style: 'td',
-                        alignment: 'right',
                     },
                     {
                         border: border,
-                        text: row.cgst_percent,
+                        text: [row.cgst_percent || '-'],
                         fillColor: color,
                         style: 'td',
-                        alignment: 'right',
                     },
                     {
                         border: border,
-                        text: row.cgst_amount,
+                        text: [row.cgst_amount || '-'],
                         fillColor: color,
                         style: 'td',
-                        alignment: 'right',
                     },
                     {
                         border: border,
-                        text: row.sgst_percent,
+                        text: [row.sgst_percent || '-'],
                         fillColor: color,
                         style: 'td',
-                        alignment: 'right',
                     },
                     {
                         border: border,
-                        text: row.sgst_amount,
+                        text: [row.sgst_amount || '-'],
                         fillColor: color,
                         style: 'td',
-                        alignment: 'right',
                     },
                     {
                         border: border,
@@ -1394,7 +1396,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                     body: [
                         [
                             {
-                                colSpan: 5,
+                                colSpan: 6,
                                 layout: 'noBorders',
                                 table: {
                                     body: [
@@ -1406,7 +1408,12 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                             }
                                         ],
                                         [
-
+                                            {
+                                                text: 'GST No : 123456789',
+                                                fontSize: 07,
+                                            }
+                                        ],
+                                        [
                                             {
                                                 text: sale_info.branch_address,
                                                 fontSize: 09,
@@ -1415,19 +1422,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                     ]
                                 },
                             },
-                            {}, {}, {}, {},
-                            {
-                                layout: 'noBorders',
-                                table: {
-                                    body: [
-                                        [
-                                            {
-                                                text: 'Cash on Delivery:' + [sale_info.branch_phone],
-                                            }
-                                        ],
-                                    ]
-                                },
-                            },
+                            {}, {}, {}, {}, {},
                             {
                                 layout: 'noBorders',
                                 table: {
@@ -1435,6 +1430,13 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                         [
                                             {
                                                 text: 'DL Nos. : MDU/5263/20,21',
+                                                fontSize: 07,
+                                                alignment: 'center'
+                                            }
+                                        ],
+                                        [
+                                            {
+                                                text: 'Cash on Delivery : ' + [sale_info.branch_phone],
                                                 fontSize: 07,
                                                 alignment: 'center'
                                             }
