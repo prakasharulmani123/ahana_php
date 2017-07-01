@@ -38,7 +38,7 @@ class PhaHsn extends RActiveRecord {
                 [['tenant_id', 'hsn_no', 'created_by', 'modified_by'], 'integer'],
                 [['status'], 'string'],
                 [['created_at', 'modified_at', 'deleted_at'], 'safe'],
-                [['hsn_no'], 'unique', 'targetAttribute' => ['tenant_id', 'hsn_no', 'deleted_at'], 'message' => 'The combination of Tenant ID, Hsn No and Deleted At has already been taken.'],
+                [['hsn_no'], 'unique', 'targetAttribute' => ['hsn_no', 'deleted_at'], 'message' => 'The Hsn No has already been taken.'],
                 //[['tenant_id', 'hsn_no', 'deleted_at'], 'exist', 'skipOnError' => true, 'targetClass' => CoTenant::className(), 'targetAttribute' => ['tenant_id' => 'tenant_id', 'hsn_no' => '', 'deleted_at' => '']],
         ];
     }
