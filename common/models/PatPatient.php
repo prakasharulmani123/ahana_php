@@ -513,11 +513,20 @@ class PatPatient extends RActiveRecord {
             'fullcurrentaddress' => function ($model) {
                 return $model->fullcurrentaddress;
             },
+            'printpermanentaddress' => function ($model) {
+                if (isset($model->patPatientAddress)) {
+                    $result = '';
+                    if ($model->patPatientAddress->addr_perm_address != '') {
+                        $result .= preg_replace( "/\r|\n/", "", $model->patPatientAddress->addr_perm_address );
+                    }
+                    return $result;
+                }
+            },        
             'fullpermanentaddress' => function ($model) {
                 if (isset($model->patPatientAddress)) {
                     $result = '';
                     if ($model->patPatientAddress->addr_perm_address != '') {
-                        $result .= $model->patPatientAddress->addr_perm_address;
+                        $result .= preg_replace( "/\r|\n/", "", $model->patPatientAddress->addr_perm_address );
                     }
 
                     if ($model->patPatientAddress->addr_perm_city_id != '') {
