@@ -1052,7 +1052,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         $scope.printHeader = function () {
             return {
                 text: '',
-                margin: 20,
+                margin: 0,
                 alignment: 'center'
             };
         }
@@ -1060,7 +1060,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         $scope.printFooter = function () {
             return {
                 text: [{text: 'PHARMACY SERVICE - 24 HOURS'}],
-                margin: 5,
+                margin: 2,
                 alignment: 'center'
             };
         }
@@ -1125,7 +1125,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             var index = 1;
             var loop_count = 0;
 
-            var groupedArr = createGroupedArray($scope.saleItems2, 5); //Changed Description rows
+            var groupedArr = createGroupedArray($scope.saleItems2, 4); //Changed Description rows
             var sale_info = $scope.data2;
 
             angular.forEach(groupedArr, function (sales, key) {
@@ -1492,7 +1492,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                                 },
                                                 {
                                                     border: [false, false, false, false],
-                                                    text: [sale_info.patient_name || '-'],
+                                                    text: $scope.toTitleCase(sale_info.patient_name || '-'),
                                                     style: 'normaltxt'
                                                 }
                                             ],
@@ -1528,7 +1528,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                                 },
                                                 {
                                                     border: [false, false, false, false],
-                                                    text: [sale_info.patient.fullpermanentaddress || '-'],
+                                                    text: $scope.toTitleCase(sale_info.patient.printpermanentaddress || '-'),
                                                     style: 'normaltxt'
                                                 }
                                             ],
@@ -1756,7 +1756,8 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                         defaultStyle: {
                             fontSize: 10
                         },
-                        pageMargins: ($scope.deviceDetector.browser == 'firefox' ? 50 : 50),
+                        //pageMargins: ($scope.deviceDetector.browser == 'firefox' ? 50 : 50),
+                        pageMargins:[20,20,20,20] ,
                         pageSize: 'A5',
                         pageOrientation: 'landscape',
                     };
@@ -1815,6 +1816,13 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
             return deferred.promise;
         };
+        
+        $scope.toTitleCase = function (str)
+        {
+            return str.replace(/\w\S*/g, function (txt) {
+                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            });
+        }
 
         $scope.printSaleBill = function (sale_id) {
             $scope.saleDetail(sale_id).then(function () {
