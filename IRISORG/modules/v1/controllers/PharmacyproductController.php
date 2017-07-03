@@ -650,6 +650,182 @@ class PharmacyproductController extends ActiveController {
 //        echo 'asdasa'; die;
     }
 
+    public function actionStockbatchwiseimport() {
+        $get = Yii::$app->getRequest()->get();
+        $allowed = array('csv');
+        $filename = $_FILES['file']['name'];
+        $ext = pathinfo($filename, PATHINFO_EXTENSION);
+        if (!in_array($ext, $allowed)) {
+            return ['success' => false, 'message' => 'Unsupported File Format. CSV Files only accepted'];
+        }
+        $uploadPath = 'uploads/';
+        if (!file_exists($uploadPath)) {
+            mkdir($uploadPath, 0777, true);
+        }
+        $uploadFile = $uploadPath . $filename;
+        if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadFile)) {
+            $file = Url::to($uploadFile);
+            $result = $this->stockimport($file, $get['tenant_id'], $get['import_log']);
+            if(!empty($result)){
+                            return ['success' => true, 'message' => $result];
+
+            } else {
+                return ['success' => false, 'message' => 'Failed to import. Try again later'];
+            }
+        } else {
+            return ['success' => false, 'message' => 'Failed to import. Try again later'];
+        }
+    }
+
+    public function stockimport($filename, $tenant_id, $log) {
+        $connection = Yii::$app->client;
+        $connection->open();
+
+        $row = 1;
+        if (($handle = fopen($filename, "r")) !== FALSE) {
+            while (($data = fgetcsv($handle)) !== FALSE) {
+                //skip header row 
+                if ($row++ == 1) {
+                    continue;
+                }
+
+                $sql = "INSERT INTO test_os_batch_wise(tenant_id, Name, Add_Spec1, Batch, ExpiryMy, Total, SelfValCost, SelfValue, mrp, import_log) VALUES('{$tenant_id}', '{$data[0]}','{$data[1]}', '{$data[2]}', '{$data[3]}','{$data[4]}', '{$data[5]}', '{$data[6]}', '{$data[7]}', '{$log}')";
+
+                $command = $connection->createCommand($sql);
+                $command->execute();
+            }
+            // close the file
+            fclose($handle);
+            // return the messages
+            @unlink($filename);
+            $command = $connection->createCommand("SELECT COUNT(*) AS 'total_rows', (SELECT MIN(id) FROM test_os_batch_wise WHERE import_log = $log) AS id,
+                                            (SELECT MAX(id) FROM test_os_batch_wise WHERE import_log = $log) AS max_id
+                                            FROM test_os_batch_wise WHERE import_log = $log");
+            $result = $command->queryAll(PDO::FETCH_OBJ);
+            $connection->close();
+            return $result[0];
+        }
+    }
+
+    public function expiryDate($date) {
+        $expMY = $date;
+        $expDate = '01/' . $expMY;
+        $expArray = explode('/', $expDate);
+        if ($expArray[2]) {
+            $dt = date_create_from_format('y', $expArray[2]);
+            $expArray[2] = $dt->format('Y');
+            $date = implode('-', $expArray);
+            return $date = date('Y-m-d', strtotime($date));
+        }
+        return false;
+    }
+    
+    private function _updateBatchRate($tenant_id, $batch_id, $mrp, $package_unit) {
+        $batch_rate_exists = \common\models\PhaProductBatchRate::find()->andWhere([
+                    'tenant_id' => $tenant_id,
+                    'batch_id' => $batch_id])
+                ->one(); //, 'mrp' => $mrp
+        if (empty($batch_rate_exists)) {
+            $batch_rate = new \common\models\PhaProductBatchRate();
+            $batch_rate->mrp = $mrp;
+        } else {
+            $batch_rate = $batch_rate_exists;
+        }
+        //Per Unit Price
+        $per_unit_price = $mrp / $package_unit;
+        $batch_rate->tenant_id = $tenant_id;
+        $batch_rate->per_unit_price = $per_unit_price;
+        $batch_rate->batch_id = $batch_id;
+        $batch_rate->created_by = '-1';
+        $batch_rate->save(false);
+        return $batch_rate;
+    }
+
+    public function actionStockimportstart() {
+        $post = Yii::$app->getRequest()->post();
+        $id = $post['id'];
+        $import_log = $post['import_log'];
+        $max_id = $post['max_id'];
+
+        if ($id <= $max_id) {
+            $next_id = $id + 1;
+            $connection = Yii::$app->client;
+            $connection->open();
+            $command = $connection->createCommand("SELECT * FROM test_os_batch_wise WHERE id = {$id} AND import_log = $import_log");
+            $result = $command->queryAll(PDO::FETCH_OBJ);
+            if ($result) {
+                $result = $result[0];
+                $product_exists = \common\models\PhaProduct::find()->where([
+                            'tenant_id' => $result->tenant_id,
+                            'product_name' => $result->Name
+                        ])
+                        ->one();
+                if (!empty($product_exists)) {
+                    if ($result->Add_Spec1 != '' && $result->mrp != '') {
+                        $package_unit = (int) $result->Add_Spec1;
+                        if ($package_unit) {
+                            if ($result->Batch != '') {
+                                if ($expiry_date = $this->expiryDate($result->ExpiryMy)) {
+                                    $batch_exists = \common\models\PhaProductBatch::find()
+                                            ->andWhere([
+                                                'tenant_id' => $result->tenant_id,
+                                                'product_id' => $product_exists->product_id,
+                                                'batch_no' => $result->Batch,
+                                                'expiry_date' => $expiry_date,
+                                            ])
+                                            ->one();
+                                    if (empty($batch_exists)) {
+                                        $batch = new \common\models\PhaProductBatch();
+                                        $batch->tenant_id = $result->tenant_id;
+                                        $batch->product_id = $product_exists->product_id;
+                                        $batch->batch_no = $result->Batch;
+                                        $batch->expiry_date = $expiry_date;
+                                        $batch->package_unit = $package_unit;
+                                        $batch->package_name = $result->Add_Spec1;
+                                        $batch->total_qty = $result->Total;
+                                        $batch->available_qty = $result->Total;
+                                        $batch->created_by = -1;
+                                        $batch->save(false);
+
+                                        $this->_updateBatchRate($result->tenant_id, $batch->batch_id, $result->mrp, $package_unit);
+                                        $return = ['success' => true, 'continue' => $next_id, 'message' => 'success'];
+                                    } else {
+                                        $return = ['success' => false, 'continue' => $next_id, 'message' => 'Duplicate batch entry'];
+                                    }
+                                } else {
+                                    $return = ['success' => false, 'continue' => $next_id, 'message' => 'Expiry date format is invalid'];
+                                }
+                            } else {
+                                $return = ['success' => false, 'continue' => $next_id, 'message' => 'Batch is empty'];
+                            }
+                        } else {
+                            $return = ['success' => false, 'continue' => $next_id, 'message' => 'Package unit is not integer'];
+                        }
+                    } else {
+                        $return = ['success' => false, 'continue' => $next_id, 'message' => 'Package unit / MRP is empty'];
+                    }
+                } else {
+                    $return = ['success' => false, 'continue' => $next_id, 'message' => 'Product Not exists'];
+                }
+            } else {
+                $return = ['success' => false, 'continue' => $next_id, 'message' => 'Import data not found'];
+            }
+        } else {
+            $return = ['success' => false, 'continue' => 0];
+        }
+
+        if ($return['continue']) {
+            $status = $return['success'] ? 1 : 0;
+            $message = $return['message'];
+//            $message = str_replace('<p>Please fix the following errors:</p>', '', $return['message']);
+            $sql = "UPDATE test_os_batch_wise SET `status` = '{$status}', response = '{$message}' WHERE id={$id}";
+            $command = $connection->createCommand($sql);
+            $command->execute();
+            $connection->close();
+        }
+        return $return;
+    }
+
     public function actionImport() {
         $get = Yii::$app->getRequest()->get();
         $allowed = array('csv');
