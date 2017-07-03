@@ -1129,8 +1129,9 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
             var groupedArr = createGroupedArray($scope.saleItems2, 6); //Changed Description rows
             var sale_info = $scope.data2;
-
+            var group_total_count = Object.keys(groupedArr).length;
             angular.forEach(groupedArr, function (sales, key) {
+                var group_key = key + 1;
                 var perPageInfo = [];
                 var perImageInfo = [];
 
@@ -1612,8 +1613,25 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                 widths: ['auto', '*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
                                 body: perPageItems,
                             },
-                            pageBreak: (loop_count === result_count ? '' : 'after'),
-                        });
+
+                        }, {
+                    layout: 'noBorders',
+                    margin : [200,10,10,10],
+                    table: {
+                        body: [
+                            [
+                                {
+                                    text: (group_total_count === group_key ? '' : 'To Be Continue'),
+                                    bold:true,
+                                    alignment : 'center',
+                                    fontSize : 14,
+                                    style: 'normaltxt'
+                                },
+                            ],
+                        ]
+                    },
+                    pageBreak: (loop_count === result_count ? '' : 'after'),
+                });
 
 //                perPageInfo.push({
 //                    text: [
@@ -1623,9 +1641,14 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
 
                 content.push(perPageInfo);
+
                 if (index == result_count) {
                     $scope.printloader = '';
                 }
+//                perPageInfo.push({
+//                    text: [
+//                        {text: 'To be continue'},
+//                    ]});
             });
             var perPageInfo = [];
             perPageInfo.push({
@@ -1759,7 +1782,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                             fontSize: 10
                         },
                         //pageMargins: ($scope.deviceDetector.browser == 'firefox' ? 50 : 50),
-                        pageMargins:[20,20,20,48] ,
+                        pageMargins: [20, 20, 20, 48],
                         pageSize: 'A5',
                         pageOrientation: 'landscape',
                     };
@@ -1818,7 +1841,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
             return deferred.promise;
         };
-        
+
         $scope.toTitleCase = function (str)
         {
             return str.replace(/\w\S*/g, function (txt) {
