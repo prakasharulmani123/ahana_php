@@ -149,11 +149,11 @@ app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http
             $scope.msg.successMessage = "";
 
             if (mode == 'add') {
-                post_url = $rootScope.IRISOrgServiceUrl + '/pharmacyproducts';
+                post_url = $rootScope.IRISOrgServiceUrl + '/pharmacyproducts?addtfields=pha_product';
                 method = 'POST';
                 succ_msg = 'Product saved successfully';
             } else {
-                post_url = $rootScope.IRISOrgServiceUrl + '/pharmacyproducts/' + _that.data.product_id;
+                post_url = $rootScope.IRISOrgServiceUrl + '/pharmacyproducts/' + _that.data.product_id + '?addtfields=pha_product';
                 method = 'PUT';
                 succ_msg = 'Product updated successfully';
             }
@@ -188,7 +188,7 @@ app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http
             _that = this;
             $scope.errorData = "";
             $http({
-                url: $rootScope.IRISOrgServiceUrl + "/pharmacyproducts/" + $state.params.id,
+                url: $rootScope.IRISOrgServiceUrl + "/pharmacyproducts/" + $state.params.id + '?addtfields=pha_product',
                 method: "GET"
             }).success(
                     function (response) {
