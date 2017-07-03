@@ -325,6 +325,30 @@ class PhaProduct extends RActiveRecord {
         $addt_keys = $extFields = [];
         if ($addtField = Yii::$app->request->get('addtfields')) {
             switch ($addtField):
+                case 'pha_product':
+                    $addt_keys = ['drug_name'];
+                    $parent_fields = [
+                        'product_id' => 'product_id',
+                        'product_name' => 'product_name',
+                        'product_unit' => 'product_unit',
+                        'product_unit_count' => 'product_unit_count',
+                        'product_description_id' => 'product_description_id',
+                        'brand_id' => 'brand_id',
+                        'division_id' => 'division_id',
+                        'generic_id' => 'generic_id',
+                        'drug_class_id' => 'drug_class_id',
+                        'product_location' => 'product_location',
+                        'product_reorder_min' => 'product_reorder_min',
+                        'product_reorder_max' => 'product_reorder_max',
+                        'supplier_id_1' => 'supplier_id_1',
+                        'supplier_id_2' => 'supplier_id_2',
+                        'supplier_id_3' => 'supplier_id_3',
+                        'purchase_vat_id' => 'purchase_vat_id',
+                        'sales_vat_id' => 'sales_vat_id',
+                        'purchase_package_id' => 'purchase_package_id',
+                        'sales_package_id' => 'sales_package_id',
+                    ];
+                    break;
                 case 'pharm_sale_alternateprod':
                     $addt_keys = ['full_name', 'product_batches_count'];
                     $parent_fields = [
