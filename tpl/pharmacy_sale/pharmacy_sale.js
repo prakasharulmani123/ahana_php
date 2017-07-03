@@ -854,6 +854,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                             $scope.msg.successMessage = msg;
                             if ($scope.btnid == "print") {
                                 $scope.printSaleBill(response.saleId);
+                                $state.go($state.current, {}, {reload: true});
                             } else {
                                 $state.go($state.current, {}, {reload: true});
                             }
@@ -1060,7 +1061,8 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         $scope.printFooter = function () {
             return {
                 text: [{text: 'PHARMACY SERVICE - 24 HOURS'}],
-                margin: 2,
+                fontSize: 8,
+                margin: 0,
                 alignment: 'center'
             };
         }
@@ -1125,7 +1127,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             var index = 1;
             var loop_count = 0;
 
-            var groupedArr = createGroupedArray($scope.saleItems2, 4); //Changed Description rows
+            var groupedArr = createGroupedArray($scope.saleItems2, 6); //Changed Description rows
             var sale_info = $scope.data2;
 
             angular.forEach(groupedArr, function (sales, key) {
@@ -1757,7 +1759,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                             fontSize: 10
                         },
                         //pageMargins: ($scope.deviceDetector.browser == 'firefox' ? 50 : 50),
-                        pageMargins:[20,20,20,20] ,
+                        pageMargins:[20,20,20,48] ,
                         pageSize: 'A5',
                         pageOrientation: 'landscape',
                     };

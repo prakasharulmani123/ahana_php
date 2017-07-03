@@ -711,6 +711,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
 
                                 if ($scope.btnid == "print") {
                                     $scope.printPurchaseBill(response.purchaseId);
+                                    $state.go($state.current, {}, {reload: true});
                                 } else {
                                     $state.go($state.current, {}, {reload: true});
                                 }
