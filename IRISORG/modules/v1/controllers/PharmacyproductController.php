@@ -296,6 +296,9 @@ class PharmacyproductController extends ActiveController {
 
                 $rate = $model->phaProductBatchRate;
                 $rate->mrp = $post['mrp'];
+                //Per Unit Price
+                $per_unit_price = $rate->mrp / $model->package_unit;
+                $rate->per_unit_price = $per_unit_price;
 
                 $valid = $model->validate();
                 $valid = $rate->validate() && $valid;
@@ -666,9 +669,8 @@ class PharmacyproductController extends ActiveController {
         if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadFile)) {
             $file = Url::to($uploadFile);
             $result = $this->stockimport($file, $get['tenant_id'], $get['import_log']);
-            if(!empty($result)){
-                            return ['success' => true, 'message' => $result];
-
+            if (!empty($result)) {
+                return ['success' => true, 'message' => $result];
             } else {
                 return ['success' => false, 'message' => 'Failed to import. Try again later'];
             }
@@ -719,7 +721,7 @@ class PharmacyproductController extends ActiveController {
         }
         return false;
     }
-    
+
     private function _updateBatchRate($tenant_id, $batch_id, $mrp, $package_unit) {
         $batch_rate_exists = \common\models\PhaProductBatchRate::find()->andWhere([
                     'tenant_id' => $tenant_id,
