@@ -985,7 +985,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
             return $http({
                 method: 'POST',
-                url: $rootScope.IRISOrgServiceUrl + '/patient/getpatient?addtfields=salecreate&only=patients',
+                url: $rootScope.IRISOrgServiceUrl + '/patient/getpatient?addtfields=salecreate&only=patients&showall=yes',
                 data: {'search': patientName},
                 timeout: canceler.promise,
             }).then(
