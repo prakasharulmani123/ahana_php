@@ -92,7 +92,7 @@ class PatientController extends ActiveController {
                 if (!empty($patient)) {
                     $model = $patient;
 
-                    if (!empty($patient->patPatientAddress)){
+                    if (!empty($patient->patPatientAddress)) {
                         $addr_model = $patient->patPatientAddress;
                         $addr_model->setScenario('update');
                     }
@@ -153,11 +153,11 @@ class PatientController extends ActiveController {
                     ->joinWith('patGlobalPatient')
                     ->andFilterWhere([
                         'or',
-                        ['like', 'pat_global_patient.patient_firstname', $text],
-                        ['like', 'pat_global_patient.patient_lastname', $text],
-                        ['like', 'pat_global_patient.patient_mobile', $text],
-                        ['like', 'pat_global_patient.patient_global_int_code', $text],
-                        ['like', 'pat_global_patient.casesheetno', $text],
+                            ['like', 'pat_global_patient.patient_firstname', $text],
+                            ['like', 'pat_global_patient.patient_lastname', $text],
+                            ['like', 'pat_global_patient.patient_mobile', $text],
+                            ['like', 'pat_global_patient.patient_global_int_code', $text],
+                            ['like', 'pat_global_patient.casesheetno', $text],
                     ])
                     ->orWhere("pat_global_patient.parent_id = ''")
                     ->limit($limit)
@@ -178,11 +178,11 @@ class PatientController extends ActiveController {
                         ->andWhere("pat_patient.status = '1' AND pat_patient.tenant_id != {$tenant_id} AND pat_global_patient.parent_id IS NULL")
                         ->andFilterWhere([
                             'or',
-                            ['like', 'pat_global_patient.patient_firstname', $text],
-                            ['like', 'pat_global_patient.patient_lastname', $text],
-                            ['like', 'pat_global_patient.patient_mobile', $text],
-                            ['like', 'pat_global_patient.patient_global_int_code', $text],
-                            ['like', 'pat_global_patient.casesheetno', $text],
+                                ['like', 'pat_global_patient.patient_firstname', $text],
+                                ['like', 'pat_global_patient.patient_lastname', $text],
+                                ['like', 'pat_global_patient.patient_mobile', $text],
+                                ['like', 'pat_global_patient.patient_global_int_code', $text],
+                                ['like', 'pat_global_patient.casesheetno', $text],
                         ])
                         ->orWhere("pat_global_patient.parent_id = ''")
                         ->limit($limit)
@@ -202,9 +202,9 @@ class PatientController extends ActiveController {
                             ->andWhere("status = '1' AND tenant_id != {$tenant_id} AND (parent_id IS NULL OR parent_id = '')")
                             ->andFilterWhere([
                                 'or',
-                                ['like', 'patient_firstname', $text],
-                                ['like', 'patient_lastname', $text],
-                                ['like', 'patient_mobile', $text],
+                                    ['like', 'patient_firstname', $text],
+                                    ['like', 'patient_lastname', $text],
+                                    ['like', 'patient_mobile', $text],
 //                                ['like', 'patient_global_int_code', $text],
                                 ['like', 'casesheetno', $text],
                             ])
@@ -557,14 +557,36 @@ class PatientController extends ActiveController {
                     ->joinWith('patGlobalPatient')
                     ->andFilterWhere([
                         'or',
-                        ['like', 'pat_global_patient.patient_firstname', $text],
-                        ['like', 'pat_global_patient.patient_lastname', $text],
-                        ['like', 'pat_global_patient.patient_mobile', $text],
-                        ['like', 'pat_global_patient.patient_global_int_code', $text],
-                        ['like', 'pat_global_patient.casesheetno', $text],
+                            ['like', 'pat_global_patient.patient_firstname', $text],
+                            ['like', 'pat_global_patient.patient_lastname', $text],
+                            ['like', 'pat_global_patient.patient_mobile', $text],
+                            ['like', 'pat_global_patient.patient_global_int_code', $text],
+                            ['like', 'pat_global_patient.casesheetno', $text],
                     ])
                     ->limit($limit)
                     ->all();
+
+            $showall = Yii::$app->request->get('showall');
+            if (empty($lists) && isset($showall) && $showall == 'yes') {
+                $lists = PatPatient::find()
+                        ->andWhere([
+//                            'pat_patient.tenant_id' => $tenant_id,
+                            'pat_patient.deleted_at' => '0000-00-00 00:00:00',
+                            'pat_global_patient.parent_id' => NULL
+                        ])
+                        ->joinWith('patGlobalPatient')
+                        ->andFilterWhere([
+                            'or',
+                                ['like', 'pat_global_patient.patient_firstname', $text],
+                                ['like', 'pat_global_patient.patient_lastname', $text],
+                                ['like', 'pat_global_patient.patient_mobile', $text],
+                                ['like', 'pat_global_patient.patient_global_int_code', $text],
+                                ['like', 'pat_global_patient.casesheetno', $text],
+                        ])
+                        ->groupBy('pat_global_patient.patient_global_int_code')
+                        ->limit($limit)
+                        ->all();
+            }
 
             if ($only == 'patients') {
                 return ['patients' => $lists];
