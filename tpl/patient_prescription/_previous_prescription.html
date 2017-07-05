@@ -145,7 +145,7 @@
             </thead>
             <tbody>
                 <tr ng-repeat="(gKey, row) in prescriptionItems2">
-                    <td><p>{{row.product_name}}</p><i>(oxcarmaipine)</i></td>
+                    <td><p>{{row.product_name}}</p><i>({{row.generic_name}})</i></td>
                     <td class="txtCenter txtUpper" colspan="4" ng-if="row.freqType=='txt'">{{ getFrequencyExists(row.frequency_name, 0)}}</td>
                     
                     <td class="txtCenter" ng-if="row.freqType!='txt'">{{ getFrequencyExists(row.frequency_name, 0)}}</td>

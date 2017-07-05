@@ -408,6 +408,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     var doc_id = list;
                     $scope.getDocument(doc_id, function (pat_doc_response) {
                         $scope.created_at = pat_doc_response.result.created_at;
+                        $scope.modified_at = pat_doc_response.result.modified_at;
                         $scope.xml = pat_doc_response.result.document_xml;
                         $timeout(function () {
                             $scope.checkTablerow();
@@ -425,15 +426,14 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                 var ratingTdText = $(this).find('td.ribbon');
                 var nextTr = ratingTdText.closest('tr').next('tr');
                 nextTr.find('td').each(function () {
-                    if (nextTr.text().trim() == "Hiding text") {
-                        var newText = $(this).text().replace('Hiding text', "");
-                        $(this).text(newText);
-                    }
+//                    if (nextTr.text().trim() == "Hiding text") {
+//                        var newText = $(this).text().replace('Hiding text', "");
+//                        $(this).text(newText);
+//                    }
 
                     if (nextTr.text().trim() == "") {
                         nextTr.remove();
                         ratingTdText.remove();
-                        //console.log(ratingTdText).text()
                     }
                 });
 
@@ -467,24 +467,6 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     var subTr = subText.closest('tr').prev('tr');
                     subTr.remove();
                 }
-
-                $("#printThisElement table tbody tr td table tbody").each(function () {
-                    var head = $(this).find("tr");
-                    var heading = head.text();
-                    var success = heading.replace('Hiding text', '');
-                    if (success.trim().length === 0) {
-                        head.remove();
-                    }
-                });
-
-                //                Hide panel bar
-//                var panel = $(this).find('tr.PanelBar');
-//                var nextpanel = panel.closest('tr').next('tr').text;
-//                console.log(nextpanel); console.log('asd');
-//                
-//                if (nextpanel.text().trim().length === 0) {
-//                    panel.remove();
-//                }
 
             });
 
@@ -569,6 +551,14 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                 if (rowCount < 2) {
                     $(this).remove();
                 }
+                $("#printThisElement table tbody tr td table tbody").each(function () {
+                    var head = $(this).find("tr");
+                    var heading = head.text();
+                    var success = heading.replace('Hiding text', '');
+                    if (success.trim().length === 0) {
+                        head.remove();
+                    }
+                });
             });
 
             $(".document-content .panel-default").each(function () {
@@ -617,13 +607,13 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
         }
 
         $scope.printElement = function () {
-            var date = new Date();
-
+            var date = new Date($scope.modified_at);
             var month = date.getMonth() + 1;
             var day = date.getDate();
             var output = (('' + day).length < 2 ? '0' : '') + day + '/' +
                     (('' + month).length < 2 ? '0' : '') + month + '/' +
                     date.getFullYear();
+            
 
             var hours = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
             var am_pm = date.getHours() >= 12 ? "PM" : "AM";
@@ -631,7 +621,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
             var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
             //var seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
             time = hours + ":" + minutes + am_pm;
-
+            
             $timeout(function () {
                 $('#date_name').html(output);
                 $('#time').html(time);
