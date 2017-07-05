@@ -109,13 +109,13 @@
                                         <td>{{key + 1}}</td>
                                         <td>{{record.invoice_no}}</td>
                                         <td>{{record.supplier_name}}</td>
-                                        <td ng-init="purchase.purchase_amount = purchase.purchase_amount + parseFloat(record.total_item_purchase_amount);">
+                                        <td data-type="Number" ng-init="purchase.purchase_amount = purchase.purchase_amount + parseFloat(record.total_item_purchase_amount);">
                                             {{record.total_item_purchase_amount}}
                                         </td>
-                                        <td ng-init="purchase.vat_amount = purchase.vat_amount + parseFloat(record.total_item_vat_amount);">
+                                        <td data-type="Number" ng-init="purchase.vat_amount = purchase.vat_amount + parseFloat(record.total_item_vat_amount);">
                                             {{record.total_item_vat_amount}}
                                         </td>
-                                        <td ng-init="purchase.total_amount = purchase.total_amount + parseFloat(record.net_amount);">
+                                        <td data-type="Number" ng-init="purchase.total_amount = purchase.total_amount + parseFloat(record.net_amount);">
                                             {{record.net_amount}}
                                         </td>
                                     </tr>
@@ -125,9 +125,9 @@
                                         <td></td>
                                         <td></td>
                                         <th class="text-right"><b>Totals</b></th>
-                                        <th><b>{{purchase.purchase_amount| number:2}}</b></th>
-                                        <th><b>{{purchase.vat_amount| number:2}}</b></th>
-                                        <th><b>{{purchase.total_amount| number:2}}</b></th>
+                                        <th data-type="Number"><b>{{purchase.purchase_amount| number:2}}</b></th>
+                                        <th data-type="Number"><b>{{purchase.vat_amount| number:2}}</b></th>
+                                        <th data-type="Number"><b>{{purchase.total_amount| number:2}}</b></th>
                                     </tr>
                                 </tfoot>
                             </table>

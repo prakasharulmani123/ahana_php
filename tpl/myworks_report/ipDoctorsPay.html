@@ -144,7 +144,7 @@
                                         </thead>
                                         <tr ng-repeat="(branch_name, records) in details | groupBy: 'branch_name'" ng-init="branchwise_new = {}">
                                             <td>{{branch_name}}</td>
-                                            <td>
+                                            <td data-type="Number">
                                                 <span ng-repeat="(key, record) in records" ng-init="row_total_new = parseFloat(record.total_charge_amount);
                                                     branchwise_new.total = branchwise_new.total + row_total_new;">
                                                 </span>
@@ -153,7 +153,7 @@
                                         </tr>
                                         <tr>
                                             <td class="right"><b>Total</b></td>
-                                            <td>{{doctorwise.total| number:2}}</td>
+                                            <td data-type="Number">{{doctorwise.total| number:2}}</td>
                                         </tr>
                                     </table>
                                 </div>
@@ -187,7 +187,7 @@
                                                     <td>{{branch_name}}</td>
                                                     <td></td>
                                                     <th>Total amount</th>
-                                                    <td>{{branchwise.total| number:2}}</td>
+                                                    <td data-type="Number">{{branchwise.total| number:2}}</td>
                                                 </tr>
                                                 <tr>
                                                     <th id="work-base-grid_c0">S.No</th>
@@ -203,7 +203,7 @@
                                                     <td>{{record.patient_name}}</td>
                                                     <td>{{record.patient_global_int_code}}</td>
                                                     <td>{{record.total_visit}}</td>
-                                                    <td ng-init="row_total = parseFloat(record.total_charge_amount);
+                                                    <td data-type="Number" ng-init="row_total = parseFloat(record.total_charge_amount);
                                                         branchwise.total = branchwise.total + row_total;
                                                         doctorwise.total = doctorwise.total + row_total;">
                                                         {{row_total| number:2}}</td>

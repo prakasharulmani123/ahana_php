@@ -127,7 +127,7 @@
                                         <td>{{record.patient_uhid}}</td>
                                         <td>{{record.patient_group_name|| '-'}}</td>
                                         <td>{{salePaymentType(record.payment_type)}}</td>
-                                        <td ng-init="sale.total_amount = sale.total_amount + parseFloat(record.bill_amount);">
+                                        <td data-type="Number" ng-init="sale.total_amount = sale.total_amount + parseFloat(record.bill_amount);">
                                             {{record.bill_amount}}
                                         </td>
                                     </tr>
@@ -135,7 +135,7 @@
                                 <tfoot>
                                     <tr>
                                         <th colspan="6" class="text-right"><b>Total Sale Value</b></th>
-                                        <td><b>{{sale.total_amount| number:2}}</b></td>
+                                        <td data-type="Number"><b>{{sale.total_amount| number:2}}</b></td>
                                     </tr>
                                 </tfoot>
                             </table>

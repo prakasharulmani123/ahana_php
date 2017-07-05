@@ -107,7 +107,7 @@
                                         <td>{{key + 1}}</td>
                                         <td>{{record.invoice_no}}</td>
                                         <td>{{record.supplier_name}}</td>
-                                        <td ng-init="purchase.total_amount = purchase.total_amount + parseFloat(record.net_amount);">
+                                        <td data-type="Number" ng-init="purchase.total_amount = purchase.total_amount + parseFloat(record.net_amount);">
                                             {{record.net_amount}}
                                         </td>
                                     </tr>
@@ -117,7 +117,7 @@
                                         <th></th>
                                         <th></th>
                                         <th class="text-right">Total Purchase Value</td>
-                                        <th>{{purchase.total_amount| number:2}}</td>
+                                        <th data-type="Number">{{purchase.total_amount| number:2}}</td>
                                     </tr>
                                 </tfoot>
                             </table>

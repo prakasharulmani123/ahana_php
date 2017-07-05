@@ -867,6 +867,9 @@ angular.module('app')
 
                                             if (dataTagvalue === 'TH')
                                                 dataStyle = 'Bold';
+                                            
+                                            if (dataType == 'Number')
+                                                dataValue = parseFloat(dataValue.replace(',',''));
 
                                             var dataFormula = tables[i].rows[j].cells[k].getAttribute("data-formula");
                                             dataFormula = (dataFormula) ? dataFormula : (appname == 'Calc' && dataType == 'DateTime') ? dataValue : null;
