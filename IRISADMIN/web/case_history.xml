@@ -98,7 +98,7 @@
                     <LISTITEM value="High School" id="RBEducation3" Selected="False" onclick="  OThersvisible(this.id,'education_note_div');">High School</LISTITEM>
                     <LISTITEM value="Graduate" id="RBEducation4" Selected="False" onclick=" OThersvisible(this.id,'education_note_div');">Graduate</LISTITEM>
                     <LISTITEM value="Post Graduate" id="RBEducation5" Selected="False" onclick=" OThersvisible(this.id,'education_note_div');">Post Graduate</LISTITEM>
-                    <LISTITEM value="Other" id="RBEducation6" Selected="False" onclick="OThersvisible(this.id,'education_note_div');">Other</LISTITEM>
+                    <LISTITEM value="Others" id="RBEducation6" Selected="False" onclick="OThersvisible(this.id,'education_note_div');">Others</LISTITEM>
                 </LISTITEMS>
                 <FIELD id="educationnote" type="TextBox" label="Education Notes: ">
                     <PROPERTIES>
@@ -318,7 +318,19 @@
                         </PROPERTIES>
                     </FIELD>
                 </COLUMNS>
-            </FIELD>
+            <COLUMNS><FIELD id="txtComplaints3" type="TextBox">
+                                            <PROPERTIES>
+                                                <PROPERTY name="id">txtComplaints3</PROPERTY>
+                                                <PROPERTY name="name">txtComplaints3</PROPERTY>
+                                                <PROPERTY name="class">form-control</PROPERTY>
+                                            </PROPERTIES>
+                                        </FIELD></COLUMNS><COLUMNS><FIELD id="txtComplaints4" type="TextBox">
+                                            <PROPERTIES>
+                                                <PROPERTY name="id">txtComplaints4</PROPERTY>
+                                                <PROPERTY name="name">txtComplaints4</PROPERTY>
+                                                <PROPERTY name="class">form-control</PROPERTY>
+                                            </PROPERTIES>
+                                        </FIELD></COLUMNS></FIELD>
             
             <FIELD id="total_duration" type="TextBoxDDL" label="Total Duration" required="true">
                 <PROPERTIES>
@@ -394,7 +406,18 @@
                         <PROPERTY name="placeholder">Precipitating Factor Notes</PROPERTY>
                     </PROPERTIES>
                 </FIELD>
-            </FIELD>
+            </FIELD><FIELD id="DDLpredisposing_factor" header2Class="Occupational_History" type="DropDownList" label="Predisposing factor">
+                        <PROPERTIES>
+                            <PROPERTY name="id">DDLpredisposing_factor</PROPERTY>
+                            <PROPERTY name="name">DDLpredisposing_factor</PROPERTY>
+                            <PROPERTY name="class">form-control</PROPERTY>
+                        </PROPERTIES>
+                        <LISTITEMS>
+                            <LISTITEM value="" Selected="False"> --Select--</LISTITEM>
+                            <LISTITEM value="Genetic" Selected="False">Genetic</LISTITEM>
+                            <LISTITEM value="Personality" Selected="False">Personality</LISTITEM>
+                        </LISTITEMS>
+                    </FIELD>
             
             <FIELD id="nature" type="RadioButtonList" label="Nature" required="true">
                 <PROPERTIES>
@@ -417,7 +440,7 @@
             <VALUE>History Of Presenting Illness</VALUE>
         </PANELHEADER>
         <PANELBODY>
-            <FIELD id="history_presenting_illness" type="textareaFull" label="Notes">
+            <FIELD id="history_presenting_illness" type="textareaFull" label="">
                 <PROPERTIES>
                     <PROPERTY name="id">history_presenting_illness</PROPERTY>
                     <PROPERTY name="name">history_presenting_illness</PROPERTY>
@@ -857,7 +880,7 @@
                     </FIELD>
                 </FIELD>
                 
-                <FIELD type="Header2" label="Counselling/Psychotherapy" class="Counselling_Psychotherapy"/>
+                <FIELD type="Header2" label="Counselling / Psychotherapy" class="Counselling_Psychotherapy"/>
                 
                 <FIELD id="rb_pb_mostrecentepisode" header2Class="Counselling_Psychotherapy" type="RadioButtonList" label="Most recent episode">
                     <PROPERTIES>
@@ -888,22 +911,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="rb_pb_Response1" header2Class="Counselling_Psychotherapy" type="RadioButtonList" label="Response1" Backcontrols="hide" Backdivid="rb_pb_Response1_Div">
-                    <PROPERTIES>
-                        <PROPERTY name="name">rb_pb_Response1</PROPERTY>
-                    </PROPERTIES>
-                    <LISTITEMS>
-                        <LISTITEM value="Completed" id="rb_pb_Response11" Selected="False" onclick="OThersvisible(this.id,'rb_pb_Response1_Div','none');">Completed</LISTITEM>
-                        <LISTITEM value="Discontinued" id="rb_pb_Response12" Selected="False" onclick="OThersvisible(this.id,'rb_pb_Response1_Div','block');">Discontinued</LISTITEM>
-                    </LISTITEMS>
-                    <FIELD id="txt_pb_reason" type="TextBox" label="Reason: ">
-                        <PROPERTIES>
-                            <PROPERTY name="id">txt_pb_reason</PROPERTY>
-                            <PROPERTY name="name">txt_pb_reason</PROPERTY>
-                            <PROPERTY name="class">form-control</PROPERTY>
-                        </PROPERTIES>
-                    </FIELD>
-                </FIELD>
+                
                 
                 <FIELD type="Header2" label="Alternative Therapies" class="Alternative_Therapies"/>
                 
@@ -914,8 +922,8 @@
                     </PROPERTIES>
                     <HEADER>
                         <TH>Therapy</TH>
-                        <TH>Taken</TH>
                         <TH>Currently under treatment</TH>
+                        <TH>Response</TH>
                     </HEADER>
                     <COLUMNS>
                         <FIELD id="ddl_pb_therapy" type="DropDownList">
@@ -1291,7 +1299,7 @@
                                 <PROPERTY name="name">RBparentallackreason</PROPERTY>
                             </PROPERTIES>
                             <LISTITEMS>
-                                <LISTITEM value="Dead" id="RBparentallackreason1" Selected="False">Dead</LISTITEM>
+                                <LISTITEM value="Deceased" id="RBparentallackreason1" Selected="False">Deceased</LISTITEM>
                                 <LISTITEM value="Seperate" id="RBparentallackreason2" Selected="False">Seperate</LISTITEM>
                             </LISTITEMS>
                         </FIELD>
@@ -1474,7 +1482,7 @@
                             <LISTITEM value="38" Selected="False">38</LISTITEM>
                             <LISTITEM value="39" Selected="False">39</LISTITEM>
                             <LISTITEM value="40" Selected="False">40</LISTITEM>
-                        </LISTITEMS>
+                        </LISTITEMS> 
                     </FIELD>
                 
                     <FIELD id="RBpbworkrecord" header2Class="Occupational_History" type="RadioButtonList" label="Work Record" Backcontrols="hide" Backdivid="workrecordDiv" required="true">
@@ -1695,9 +1703,9 @@
                             <PROPERTY name="name">RBorientationSexual</PROPERTY>
                         </PROPERTIES>
                         <LISTITEMS>
-                            <LISTITEM value="Same Sex" id="RBorientationSexual1" Selected="False">Same Sex</LISTITEM>
+                            
                             <LISTITEM value="Opposite Sex" id="RBorientationSexual2" Selected="False">Opposite Sex</LISTITEM>
-                        </LISTITEMS>
+                        <LISTITEM value="Same Sex" id="RBorientationSexual1" Selected="False">Same Sex</LISTITEM></LISTITEMS>
                     </FIELD>
                 
                     <FIELD id="CBsexualfunctioning" header2Class="Sexual_History" type="CheckBoxList" label="Sexual Functioning">
@@ -1734,7 +1742,7 @@
                             <LISTITEM value="Transvestism" id="CBparaphilias8" Selected="False">Transvestism</LISTITEM>
                             <LISTITEM value="GID" id="CBparaphilias9" Selected="False">GID</LISTITEM>
                             <LISTITEM value="Bestiality" id="CBparaphilias10" Selected="False">Bestiality</LISTITEM>
-                            <LISTITEM value="Masochism" id="CBparaphilias11" Selected="False">Masochism</LISTITEM>
+                            
                         </LISTITEMS>
                     </FIELD>
                 
@@ -1898,7 +1906,7 @@
                             <LISTITEM value="Irritable" id="CBmood4" Selected="False">Irritable</LISTITEM>
                             <LISTITEM value="Submissive" id="CBmood5" Selected="False">Worrying</LISTITEM>
                             <LISTITEM value="Cheerful" id="CBmood6" Selected="False">Cheerful</LISTITEM>
-                            <LISTITEM value="Glomy" id="CBmood7" Selected="False">Glomy</LISTITEM>
+                            <LISTITEM value="Gloomy" id="CBmood7" Selected="False">Gloomy</LISTITEM>
                         </LISTITEMS>
                     </FIELD>
                 
@@ -2073,7 +2081,7 @@
                         <LISTITEM value="Exaggerated" id="CBPsychomotorActivity2" Selected="False">Increased</LISTITEM>
                         <LISTITEM value="Catatonic" id="CBPsychomotorActivity3" Selected="False">Decreased</LISTITEM>
                         <LISTITEM value="Negativism" id="CBPsychomotorActivity4" Selected="False">Tics</LISTITEM>
-                        <LISTITEM value="Waxy flexibility" id="CBPsychomotorActivity5" Selected="False">Echopraxia</LISTITEM>
+                        
                         <LISTITEM value="Echoproxia" id="CBPsychomotorActivity6" Selected="False">Echoproxia</LISTITEM>
                     </LISTITEMS>
                 </FIELD>
@@ -2577,14 +2585,7 @@
                     <PROPERTY name="class">form-control</PROPERTY>
                 </PROPERTIES>
             </FIELD>
-            <FIELD id="diagnosis_notes" type="TextArea" label="Notes">
-                <PROPERTIES>
-                    <PROPERTY name="id">diagnosis_notes</PROPERTY>
-                    <PROPERTY name="name">diagnosis_notes</PROPERTY>
-                    <PROPERTY name="class">form-control</PROPERTY>
-                    <PROPERTY name="placeholder">Notes</PROPERTY>
-                </PROPERTIES>
-            </FIELD>
+            
             
             <FIELD type="Header2" label="DSM -IV TR" class="DSM_IV_TR"/>
             
@@ -2621,6 +2622,13 @@
                     <PROPERTY name="id">txtAxis5</PROPERTY>
                     <PROPERTY name="name">txtAxis5</PROPERTY>
                     <PROPERTY name="class">form-control</PROPERTY>
+                </PROPERTIES>
+            </FIELD><FIELD id="diagnosis_notes" type="TextArea" label="Notes">
+                <PROPERTIES>
+                    <PROPERTY name="id">diagnosis_notes</PROPERTY>
+                    <PROPERTY name="name">diagnosis_notes</PROPERTY>
+                    <PROPERTY name="class">form-control</PROPERTY>
+                    <PROPERTY name="placeholder">Notes</PROPERTY>
                 </PROPERTIES>
             </FIELD>
         </PANELBODY>

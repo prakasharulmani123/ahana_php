@@ -44,12 +44,11 @@ class XmlController extends Controller {
         $all_files = \yii\helpers\ArrayHelper::merge($base_xml, $files);
         return $all_files;
     }
-    
-    private function getAllXmlXsltFiles()
-    {
+
+    private function getAllXmlXsltFiles() {
         $location = (dirname(__FILE__) . '/../../../../IRISADMIN/web/');
         $files = FileHelper::findFiles($location, [
-                    'only' => ['*.xml','*.xslt'],
+                    'only' => ['*.xml', '*.xslt'],
                     'recursive' => true,
         ]);
         return $files;
@@ -92,25 +91,15 @@ class XmlController extends Controller {
 
     public function actionInsertnewfield() {
         //$xpath = "/FIELDS/GROUP/PANELBODY/FIELD[@id='name']";
-        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD[@id='name']";
-//        $insert = '<FIELD id="TherapistName" type="TextBox">
-//                <PROPERTIES>
-//                    <PROPERTY name="id">TherapistName</PROPERTY>
-//                    <PROPERTY name="name">TherapistName</PROPERTY>
-//                    <PROPERTY name="class">form-control</PROPERTY>
-//                    <PROPERTY name="placeholder">Therapist Name</PROPERTY>
-//                </PROPERTIES>
-//            </FIELD>';
-        $insert = '<FIELD id="uhid" type="TextBox" label="UHID" required="true">
-                    <PROPERTIES>
-                        <PROPERTY name="id">uhid</PROPERTY>
-                        <PROPERTY name="name">uhid</PROPERTY>
-                        <PROPERTY name="readonly">readonly</PROPERTY>
-                        <PROPERTY name="class">form-control</PROPERTY>
-                    </PROPERTIES>
-                    </FIELD>';
-                    
-
+        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD[@id='txtAxis5']";
+        $insert = '<FIELD id="diagnosis_notes" header2Class="DSM_IV_TR" type="TextArea" label="Notes">
+                <PROPERTIES>
+                    <PROPERTY name="id">diagnosis_notes</PROPERTY>
+                    <PROPERTY name="name">diagnosis_notes</PROPERTY>
+                    <PROPERTY name="class">form-control</PROPERTY>
+                    <PROPERTY name="placeholder">Notes</PROPERTY>
+                </PROPERTIES>
+            </FIELD>';
         $all_files = $this->getAllFiles();
         $error_files = [];
         if (!empty($all_files)) {
@@ -126,14 +115,14 @@ class XmlController extends Controller {
                     $targets = $xml->xpath($xpath);
                     if (!empty($targets)) {
                         //print_r($targets[0]); die;
-                       // echo $files;
+                        // echo $files;
                         $this->simplexml_insert_after(simplexml_load_string($insert), $targets[0]);
 //                        foreach ($targets as $target) {
 //                            $this->simplexml_insert_after(simplexml_load_string($insert), $target);
 //                        }
                     }
                     $xml->asXML($files);
-                } //die;
+                } die;
             }
         }
         echo "<pre>";
@@ -144,14 +133,15 @@ class XmlController extends Controller {
     public function actionSetattrvalue() {
         $node = 'FIELD';
         $attr = 'label';
-        $find = 'Judgement';
-        $replace = 'Personal Judgement';
+        $find = 'Counselling/Psychotherapy';
+        $replace = 'Counselling / Psychotherapy';
 //        $node = 'LISTITEM';
 //        $attr = 'value';
 //        $find = 'RTA &amp; Surgery';
 //        $replace = 'RTA & Surgery';
         $xpath = "/FIELDS/GROUP/PANELBODY//{$node}[@{$attr}='{$find}']";
-        
+
+
         $all_files = $this->getAllFiles();
         $error_files = [];
         if (!empty($all_files)) {
@@ -372,7 +362,9 @@ class XmlController extends Controller {
     }
 
     public function actionChangetxtattrval() {
-        $xpath = "/FIELDS/GROUP/PANELBODY//LISTITEM[@id='RBnatureofdelusion2']";
+        //$xpath = "/FIELDS/GROUP/PANELBODY//LISTITEM[@id='RBnatureofdelusion2']";
+        //$xpath = "/FIELDS/GROUP/PANELBODY/FIELD/LISTITEMS/LISTITEM[@value='Other']";
+        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD/FIELD/LISTITEMS/LISTITEM[@id='CBmood7']";
 
         $all_files = $this->getAllFiles();
         $error_files = [];
@@ -389,8 +381,9 @@ class XmlController extends Controller {
                     $targets = $xml->xpath($xpath);
                     if (!empty($targets)) {
                         foreach ($targets as $target) {
-                            $target['value'] = 'Poorly systematized';
-                            $target[0] = 'Poorly systematized';
+
+                            $target['value'] = 'Gloomy';
+                            $target[0] = 'Gloomy';
                         }
                     }
                     $xml->asXML($files);
@@ -497,7 +490,8 @@ class XmlController extends Controller {
     }
 
     public function actionDeletefield() {
-        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@type='RadGrid' and @ADDButtonID='RGCompliantadd']//FIELD[@type='TextBoxDDL']";
+        //$xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@type='RadGrid' and @ADDButtonID='RGCompliantadd']//FIELD[@type='TextBoxDDL']";
+        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@id='diagnosis_notes']";
 
         $all_files = $this->getAllFiles();
         $error_files = [];
@@ -519,7 +513,7 @@ class XmlController extends Controller {
                         }
                     }
                     $xml->asXML($files);
-                }
+                } die;
             }
         }
         echo "<pre>";
@@ -560,7 +554,8 @@ class XmlController extends Controller {
     }
 
     public function actionDeleteli() {
-        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@id='martial_status']/LISTITEMS";
+        //$xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@id='martial_status']/LISTITEMS";
+        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD[@id='CBPsychomotorActivity']/LISTITEMS";
 
         $all_files = $this->getAllFiles();
         $error_files = [];
@@ -577,8 +572,9 @@ class XmlController extends Controller {
                     $targets = $xml->xpath($xpath);
                     if (!empty($targets)) {
                         foreach ($targets as $target) {
-                            if (isset($target->LISTITEM[0])) {
-                                unset($target->LISTITEM[0]);
+                            if (isset($target->LISTITEM[4])) {
+                                if ($target->LISTITEM[4] == 'Echopraxia')
+                                    unset($target->LISTITEM[4]);
                             }
                         }
                     }
@@ -590,41 +586,37 @@ class XmlController extends Controller {
         print_r($error_files);
         exit;
     }
-    
-    public function actionUpdatedb()
-    {
+
+    public function actionUpdatedb() {
         $all_files = $this->getAllXmlXsltFiles();
-        if(!empty($all_files))
-            {
-                foreach ($all_files as $key => $files)
-                {
-                    if (filesize($files) > 0) {
-                       
-                        $fileContent = file_get_contents($files);
-                        //PatDocumentTypes::updateAllCounters(["document_xml" => $fileContent]);
-                        $docModel = PatDocumentTypes::find()->all();
-                            foreach($docModel as $doc)
-                            {
-                                if(basename($files)=='case_history.xml') {
-                                    $doc->document_xml = $fileContent;
-                                    $doc->save(false);
-                                }
-                                if(basename($files)=='case_history.xslt') {
-                                    $doc->document_xslt = $fileContent;
-                                    $doc->save(false);
-                                }
-                                if(basename($files)=='case_history_out.xslt') {
-                                    $doc->document_out_xslt = $fileContent;
-                                    $doc->save(false);
-                                }
-                                if(basename($files)=='case_history_out_print.xslt') {
-                                    $doc->document_out_print_xslt = $fileContent;
-                                    $doc->save(false);
-                                }
-                            }
+        if (!empty($all_files)) {
+            foreach ($all_files as $key => $files) {
+                if (filesize($files) > 0) {
+
+                    $fileContent = file_get_contents($files);
+                    //PatDocumentTypes::updateAllCounters(["document_xml" => $fileContent]);
+                    $docModel = PatDocumentTypes::find()->all();
+                    foreach ($docModel as $doc) {
+                        if (basename($files) == 'case_history.xml') {
+                            $doc->document_xml = $fileContent;
+                            $doc->save(false);
+                        }
+                        if (basename($files) == 'case_history.xslt') {
+                            $doc->document_xslt = $fileContent;
+                            $doc->save(false);
+                        }
+                        if (basename($files) == 'case_history_out.xslt') {
+                            $doc->document_out_xslt = $fileContent;
+                            $doc->save(false);
+                        }
+                        if (basename($files) == 'case_history_out_print.xslt') {
+                            $doc->document_out_print_xslt = $fileContent;
+                            $doc->save(false);
+                        }
                     }
                 }
             }
+        }
         exit;
     }
 
@@ -643,15 +635,15 @@ class XmlController extends Controller {
                         $error_files[$key]['error'] = libxml_get_errors();
                         continue;
                     }
-                    
+
                     $targets = $xml->xpath($xpath);
                     $no_of_targets = count($targets);
-                    if ($no_of_targets >= 3) {
+                    if ($no_of_targets >= 5) {
                         continue;
                     }
 
                     if (!empty($targets)) {
-                        $max = 3;
+                        $max = 5;
                         for ($i = $no_of_targets; $i < $max; $i++) {
                             $insert = "<COLUMNS><FIELD id='txtComplaints{$i}' type='TextBox'>
                                             <PROPERTIES>
@@ -665,6 +657,153 @@ class XmlController extends Controller {
                     }
                     $xml->asXML($files);
                 }
+            }
+        }
+        echo "<pre>";
+        print_r($error_files);
+        exit;
+    }
+
+    public function actionMoveitems() {
+        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD/FIELD[@id='RBorientationSexual']/LISTITEMS";
+        $insert = "<LISTITEM value='Same Sex' id='RBorientationSexual1' Selected='False'>Same Sex</LISTITEM>";
+        $all_files = $this->getAllFiles();
+        $error_files = [];
+
+        if (!empty($all_files)) {
+            foreach ($all_files as $key => $files) {
+                if (!empty($all_files)) {
+                    foreach ($all_files as $key => $files) {
+                        if (filesize($files) > 0) {
+                            libxml_use_internal_errors(true);
+                            $xml = simplexml_load_file($files, null, LIBXML_NOERROR);
+                            if ($xml === false) {
+                                $error_files[$key]['name'] = $files;
+                                $error_files[$key]['error'] = libxml_get_errors();
+                                continue;
+                            }
+                            $targets = $xml->xpath($xpath);
+                            if (!empty($targets)) {
+                                foreach ($targets as $target) {
+                                    $this->simplexml_append_child(simplexml_load_string($insert), $target->LISTITEM[1]);
+                                    unset($target->LISTITEM[0]);
+                                }
+                            }
+                            $xml->asXML($files);
+                        }
+                    }
+                }
+                echo "<pre>";
+                print_r($error_files);
+                exit;
+            }
+        }
+    }
+
+    public function actionChangethvalue() {
+        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@type='RadGrid' and @ADDButtonID='RGaltadd']/HEADER";
+        $insert = 'Response';
+
+        $all_files = $this->getAllFiles();
+        $error_files = [];
+        if (!empty($all_files)) {
+            foreach ($all_files as $key => $files) {
+                if (filesize($files) > 0) {
+                    libxml_use_internal_errors(true);
+                    $xml = simplexml_load_file($files, null, LIBXML_NOERROR);
+                    if ($xml === false) {
+                        $error_files[$key]['name'] = $files;
+                        $error_files[$key]['error'] = libxml_get_errors();
+                        continue;
+                    }
+                    $targets = $xml->xpath($xpath);
+                    if (!empty($targets)) {
+                        foreach ($targets as $target) {
+                            //print_r($target);
+                            if ((isset($target->TH[1])) && (isset($target->TH[2]))) {
+                                $target->TH[1] = $target->TH[2];
+                                $target->TH[2] = $insert;
+                            }
+                        }
+                    } //print_r($target); die;
+                    $xml->asXML($files);
+                } //die;
+            }
+        }
+        echo "<pre>";
+        print_r($error_files);
+        exit;
+    }
+
+    public function actionChangefieldvalue() {
+        $insertpath = "/FIELDS/GROUP/PANELBODY/FIELD[@id='diagnosis_notes']";
+        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD[@id='txtAxis5']";
+        $all_files = $this->getAllFiles();
+        
+        $error_files = [];
+        if (!empty($all_files)) {
+            foreach ($all_files as $key => $files) {
+                if (filesize($files) > 0) {
+                    libxml_use_internal_errors(true);
+                    $xml = simplexml_load_file($files, null, LIBXML_NOERROR);
+                    if ($xml === false) {
+                        $error_files[$key]['name'] = $files;
+                        $error_files[$key]['error'] = libxml_get_errors();
+                        continue;
+                    }
+                    $inserts = $xml->xpath($insertpath);
+                    $targets = $xml->xpath($xpath);
+                    if (!empty($targets)) {
+                        foreach ($targets as $target) {
+                            foreach ($inserts as $insert) {
+                                $doc = new \DOMDocument();
+                                $doc->loadXML($insert->asXML());
+                                $insert_xml = $doc->saveXML();
+                                $insert_xml = preg_replace('/^.+\n/', '', $insert_xml);
+                                $this->simplexml_insert_after(simplexml_load_string($insert_xml), $targets[0]);
+                                //$dom = dom_import_simplexml($target);
+                                //$dom->parentNode->removeChild($dom);
+                            }
+                        }
+                    }
+                    $xml->asXML($files);
+                } //die;
+            }
+        }
+        echo "<pre>";
+        print_r($error_files);
+        exit;
+    }
+
+    public function actionRemoveduplicatefield() {
+        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@id='diagnosis_notes']";
+
+        $all_files = $this->getAllFiles();
+       
+        $error_files = [];
+        if (!empty($all_files)) {
+            foreach ($all_files as $key => $files) {
+                if (filesize($files) > 0) {
+                    libxml_use_internal_errors(true);
+                    $xml = simplexml_load_file($files, null, LIBXML_NOERROR);
+                    if ($xml === false) {
+                        $error_files[$key]['name'] = $files;
+                        $error_files[$key]['error'] = libxml_get_errors();
+                        continue;
+                    }
+                    $targets = $xml->xpath($xpath);
+                    if (!empty($targets)) {
+                        $first = true;
+                        foreach ($targets as $target) {
+                            if ($first) {
+                                $dom = dom_import_simplexml($target);
+                                $dom->parentNode->removeChild($dom);
+                            }
+                            $first = false;
+                        }
+                    }
+                    $xml->asXML($files);
+                } //die;
             }
         }
         echo "<pre>";
