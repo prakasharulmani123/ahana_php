@@ -194,11 +194,13 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
             $("#date_of_last_ect").datepicker({
                 changeMonth: true,
                 changeYear: true,
-                showButtonPanel: false,
-                dateFormat: 'yy-mm-dd',
-//                onClose: function(dateText, inst) { 
-//                    $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
-//                }
+                showButtonPanel: true,
+                dateFormat: 'MM yy',
+                onClose: function (dateText, inst) {
+                    var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+                    var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+                    $(this).datepicker('setDate', new Date(year, month, 1));
+                }
             });
         }
 
@@ -386,7 +388,9 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     $scope.printxslt = doc_type_response.result.document_out_print_xslt;
                     var doc_id = $state.params.doc_id;
                     $scope.getDocument(doc_id, function (pat_doc_response) {
+                        $scope.created_by = pat_doc_response.result.created_user;
                         $scope.created_at = pat_doc_response.result.created_at;
+                        $scope.modified_at = pat_doc_response.result.modified_at;
                         $scope.xml = pat_doc_response.result.document_xml;
                         $scope.isLoading = false;
                         $timeout(function () {
@@ -407,6 +411,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     $scope.printxslt = doc_type_response.result.document_out_print_xslt;
                     var doc_id = list;
                     $scope.getDocument(doc_id, function (pat_doc_response) {
+                        $scope.created_by = pat_doc_response.result.created_user;
                         $scope.created_at = pat_doc_response.result.created_at;
                         $scope.modified_at = pat_doc_response.result.modified_at;
                         $scope.xml = pat_doc_response.result.document_xml;
@@ -504,6 +509,11 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                         //$this.parents("div").remove();
                     }
                 });
+
+//                var te= $(this).find("td");
+//                if ($this.text().trim().length === 0) {
+//                    $(this).remove();
+//                }
 
                 //Header2
                 var header2_tr = $(this).find("tr.header2");
@@ -607,13 +617,20 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
         }
 
         $scope.printElement = function () {
+            var created_by = $scope.created_by;
             var date = new Date($scope.modified_at);
             var month = date.getMonth() + 1;
             var day = date.getDate();
             var output = (('' + day).length < 2 ? '0' : '') + day + '/' +
                     (('' + month).length < 2 ? '0' : '') + month + '/' +
                     date.getFullYear();
-            
+
+            var create_date = new Date($scope.created_at);
+            var create_month = create_date.getMonth() + 1;
+            var create_day = create_date.getDate();
+            var create_output = (('' + create_day).length < 2 ? '0' : '') + create_day + '/' +
+                    (('' + create_month).length < 2 ? '0' : '') + create_month + '/' +
+                    create_date.getFullYear();
 
             var hours = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
             var am_pm = date.getHours() >= 12 ? "PM" : "AM";
@@ -621,8 +638,10 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
             var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
             //var seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
             time = hours + ":" + minutes + am_pm;
-            
+
             $timeout(function () {
+                $('#created_name').html(created_by);
+                $('#created_date').html(create_output);
                 $('#date_name').html(output);
                 $('#time').html(time);
             }, 100);
