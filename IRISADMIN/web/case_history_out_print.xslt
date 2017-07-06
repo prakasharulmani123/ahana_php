@@ -9,7 +9,7 @@
                     <xsl:for-each select="PANELHEADER">
                         <tr>
                             <td colspan="2" class="ribbonhead" style="color:#FFFFFF;" >
-                                <h1>
+                                <h1 style="font-family:Arial, Helvetica, sans-serif;">
                                     <xsl:value-of select="VALUE" />
                                 </h1>
                             </td>
@@ -76,8 +76,9 @@
                                                                     <xsl:for-each select="FIELD">
                                                                         <xsl:choose>
                                                                             <xsl:when test="@type='TextBox'">
-                                                                                <br/>
-                                                                                <xsl:value-of select="@label" />&#160;
+                                                                                <!--                                                                                <br/>--> |
+                                                                                <!--                                                                                <xsl:value-of select="@label" />&#160;-->
+                                                                                Notes :
                                                                                 <xsl:for-each select="PROPERTIES/PROPERTY">
                                                                                     <xsl:if test="@name='value'">
                                                                                         <span id="sub_textbox">
@@ -126,6 +127,18 @@
                                 <xsl:for-each select="PANELBODY/FIELD[((@type='TextBox') or (@type='CheckBoxList')) and ((@id='TherapistName') or (@id='referral_details'))]">
                                     <xsl:choose>
                                         <xsl:when test="@type='TextBox'">
+                                            <tr>
+                                                <td>
+                                                    <span id="created_name"></span> 
+                                                    <span id='hide_span'>Hiding text</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <span id="created_date"></span> 
+                                                    <span id='hide_span'>Hiding text</span>
+                                                </td>
+                                            </tr>
                                             <xsl:if test="PROPERTIES/PROPERTY[@name = 'value' and string(.)]">
                                                 <tr>
                                                     <td>
@@ -135,8 +148,6 @@
                                                                     <xsl:value-of select="current()"></xsl:value-of>
                                                                     <xsl:value-of select="../../@Backtext"></xsl:value-of>
                                                                 </strong> 
-                                                                <!--                                                                <br/>
-                                                                <span id="date_name"></span> | <span id="time"></span> -->
                                                             </xsl:if>
                                                         </xsl:for-each>
                                                     </td>
@@ -215,7 +226,7 @@
                     <xsl:for-each select="PANELBODY/FIELD[@type='Header2' and @label='Informant']">
                         <tr>
                             <td colspan="2" align="left" valign="top" class="ribbon">
-                                <h2> 
+                                <h2 style="font-family:Arial, Helvetica, sans-serif;"> 
                                     <xsl:value-of select="@label" />
                                 </h2>
                             </td>
@@ -380,7 +391,7 @@
                                                                 <tr>
                                                                     <td align="left" valign="top" class="small-left-heading list">
                                                                         <xsl:choose>
-                                                                            <!-- Text Box -->
+                                                                                                                                                         Text Box 
                                                                             <xsl:when test="@type='TextBox'">
                                                                                 <xsl:if test="PROPERTIES/PROPERTY[@name = 'value' and string(.)]">
                                                                                     <xsl:for-each select="PROPERTIES/PROPERTY">
@@ -400,7 +411,10 @@
                                             </xsl:for-each>
                                         </table>
                                     </td>
-                                    <td align="left" valign="top" width="65%" class="nopadding">
+<!--                                    <td align="left" valign="top">
+                                        
+                                    </td>-->
+                                    <td align="left" valign="top" width="100%" class="nopadding">
                                         <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table-boder topborder">
                                             <xsl:for-each select="PANELBODY/FIELD[(@id='total_duration') or (@id='total_duration_notes') or (@id='mode_of_onset') or (@id='course_type') or (@id='precipitating_factor') or (@id='nature')]">
                                                 <xsl:choose>
@@ -551,7 +565,7 @@
                     <xsl:for-each select="PANELBODY/FIELD[@type='Header2' and @label='Associated Disturbances']">
                         <tr>
                             <td colspan="2" align="left" valign="top" class="ribbon">
-                                <h2>
+                                <h2 style="font-family:Arial, Helvetica, sans-serif;">
                                     <xsl:value-of select="@label" />
                                 </h2>
                             </td>
@@ -587,7 +601,7 @@
                                                             <xsl:choose>
                                                                 <xsl:when test="@type='RadioButtonList'">
                                                                     <span> |
-                                                                        <xsl:value-of select="@label" />
+                                                                        <!--                                                                        <xsl:value-of select="@label" />-->
                                                                         <xsl:for-each select="LISTITEMS/LISTITEM">
                                                                             <xsl:if test="@Selected = 'true'">
                                                                                 <strong>
@@ -622,7 +636,7 @@
                     <xsl:for-each select="PANELBODY/FIELD[@type='Header2' and @label='Past Psychiatric History']">
                         <tr>
                             <td colspan="2" align="left" valign="top" class="ribbon">
-                                <h2>
+                                <h2 style="font-family:Arial, Helvetica, sans-serif;">
                                     <xsl:value-of select="@label" />
                                 </h2>
                             </td>
@@ -703,7 +717,7 @@
                     <xsl:for-each select="PANELBODY/FIELD[@type='Header2' and @label='Past Medical History']">
                         <tr>
                             <td colspan="2" align="left" valign="top" class="ribbon">
-                                <h2>
+                                <h2 style="font-family:Arial, Helvetica, sans-serif;">
                                     <xsl:value-of select="@label" />
                                 </h2>
                             </td>
@@ -826,7 +840,7 @@
                     <xsl:for-each select="PANELBODY/FIELD[@type='PanelBar' and @label='Treatment History']">
                         <tr>
                             <td colspan="2" align="left" valign="top" class="ribbon" style="color:#ffffff;">
-                                <h1>
+                                <h1 style="font-family:Arial, Helvetica, sans-serif;">
                                     <xsl:value-of select="@label" />
                                 </h1>
                             </td>
@@ -839,7 +853,7 @@
                             <xsl:for-each select="PANELBODY/FIELD/FIELD[@type='Header2' and @label='Phamacotherapy']">
                                 <tr>
                                     <td align="left" valign="top" class="ribbon">
-                                        <h2>   
+                                        <h2 style="font-family:Arial, Helvetica, sans-serif;">   
                                             <xsl:value-of select="@label" />  
                                         </h2>
                                     </td>
@@ -1027,7 +1041,7 @@
                             <xsl:for-each select="PANELBODY/FIELD/FIELD[@type='Header2' and @label='Electro Convulsive therapy']">
                                 <tr>
                                     <td align="left" valign="top" class="ribbon">
-                                        <h2>   
+                                        <h2 style="font-family:Arial, Helvetica, sans-serif;">   
                                             <xsl:value-of select="@label" />  
                                         </h2>
                                     </td>
@@ -1115,7 +1129,7 @@
                             <xsl:for-each select="PANELBODY/FIELD/FIELD[@type='Header2' and @label='Counselling/Psychotherapy']">
                                 <tr>
                                     <td align="left" valign="top" class="ribbon">
-                                        <h2>   
+                                        <h2 style="font-family:Arial, Helvetica, sans-serif;">   
                                             <xsl:value-of select="@label" />  
                                         </h2>
                                     </td>
@@ -1210,7 +1224,7 @@
                             <xsl:for-each select="PANELBODY/FIELD/FIELD[@type='Header2' and @label='Alternative Therapies']">
                                 <tr>
                                     <td align="left" valign="top" class="ribbon">
-                                        <h2>   
+                                        <h2 style="font-family:Arial, Helvetica, sans-serif;">   
                                             <xsl:value-of select="@label" />  
                                         </h2>
                                     </td>
@@ -1331,7 +1345,7 @@
                     <xsl:for-each select="PANELBODY/FIELD[@type='PanelBar' and @label='Family History']">
                         <tr>
                             <td align="left" valign="top" class="ribbon">
-                                <h2>   
+                                <h2 style="font-family:Arial, Helvetica, sans-serif;">   
                                     <xsl:value-of select="@label" />  
                                 </h2>
                             </td>
@@ -1600,7 +1614,7 @@
                     <xsl:for-each select="PANELBODY/FIELD[@type='PanelBar' and @label='Personal History']">
                         <tr class="PanelBar">
                             <td align="left" valign="top" class="ribbon" style="color:#FFFFFF;">
-                                <h1>   
+                                <h1 style="font-family:Arial, Helvetica, sans-serif;">   
                                     <xsl:value-of select="@label" />  
                                 </h1>
                             </td>
@@ -1612,7 +1626,7 @@
                             <xsl:for-each select="PANELBODY/FIELD/FIELD[@type='PanelBar' and @label='Birth and Development']">
                                 <tr>
                                     <td align="left" valign="top" class="ribbon">
-                                        <h2>   
+                                        <h2 style="font-family:Arial, Helvetica, sans-serif;">   
                                             <xsl:value-of select="@label" />  
                                         </h2>
                                     </td>
@@ -1751,7 +1765,7 @@
                             <xsl:for-each select="PANELBODY/FIELD/FIELD[@type='PanelBar' and @label='Education History']">
                                 <tr>
                                     <td align="left" valign="top" class="ribbon">
-                                        <h2>   
+                                        <h2 style="font-family:Arial, Helvetica, sans-serif;">   
                                             <xsl:value-of select="@label" />  
                                         </h2>
                                     </td>
@@ -1842,7 +1856,7 @@
                             <xsl:for-each select="PANELBODY/FIELD/FIELD[@type='PanelBar' and @label='Occupational History']">
                                 <tr>
                                     <td align="left" valign="top" class="ribbon">
-                                        <h2>   
+                                        <h2 style="font-family:Arial, Helvetica, sans-serif;">   
                                             <xsl:value-of select="@label" />  
                                         </h2>
                                     </td>
@@ -1955,7 +1969,7 @@
                             <xsl:for-each select="PANELBODY/FIELD/FIELD[@type='PanelBar' and @label='Menstrual History']">
                                 <tr>
                                     <td align="left" valign="top" class="ribbon">
-                                        <h2>   
+                                        <h2 style="font-family:Arial, Helvetica, sans-serif;">   
                                             <xsl:value-of select="@label" />  
                                         </h2>
                                     </td>
@@ -2017,7 +2031,7 @@
                             <xsl:for-each select="PANELBODY/FIELD/FIELD[@type='PanelBar' and @label='Marital History']">
                                 <tr>
                                     <td align="left" valign="top" class="ribbon">
-                                        <h2>   
+                                        <h2 style="font-family:Arial, Helvetica, sans-serif;">   
                                             <xsl:value-of select="@label" />  
                                         </h2>
                                     </td>
@@ -2086,7 +2100,7 @@
                             <xsl:for-each select="PANELBODY/FIELD/FIELD[@type='PanelBar' and @label='Sexual History']">
                                 <tr>
                                     <td align="left" valign="top" class="ribbon">
-                                        <h2>   
+                                        <h2 style="font-family:Arial, Helvetica, sans-serif;">   
                                             <xsl:value-of select="@label" />  
                                         </h2>
                                     </td>
@@ -2189,7 +2203,7 @@
                             <xsl:for-each select="PANELBODY/FIELD/FIELD[@type='PanelBar' and @label='Substance History']">
                                 <tr>
                                     <td align="left" valign="top" class="ribbon">
-                                        <h2>   
+                                        <h2 style="font-family:Arial, Helvetica, sans-serif;">   
                                             <xsl:value-of select="@label" />  
                                         </h2>
                                     </td>
@@ -2319,7 +2333,7 @@
                             <xsl:for-each select="PANELBODY/FIELD/FIELD[@type='PanelBar' and @label='Premorbid Personality']">
                                 <tr>
                                     <td align="left" valign="top" class="ribbon">
-                                        <h2>   
+                                        <h2 style="font-family:Arial, Helvetica, sans-serif;">   
                                             <xsl:value-of select="@label" />  
                                         </h2>
                                     </td>
@@ -2372,7 +2386,7 @@
                     <xsl:for-each select="PANELBODY/FIELD[@type='PanelBar' and @label='Mental Status Examination']">
                         <tr>
                             <td align="left" valign="top" class="ribbon" style="color:#FFFFFF;">
-                                <h1>
+                                <h1 style="font-family:Arial, Helvetica, sans-serif;">
                                     <xsl:value-of select="@label" />
                                 </h1>
                             </td>
@@ -2385,7 +2399,7 @@
                             <xsl:for-each select="PANELBODY/FIELD/FIELD[@type='Header2' and @class='General_Appearance_Behaviour']">
                                 <tr>
                                     <td align="left" valign="top" class="ribbon">
-                                        <h2>
+                                        <h2 style="font-family:Arial, Helvetica, sans-serif;">
                                             <xsl:value-of select="@label" />
                                         </h2>
                                     </td>
@@ -2472,7 +2486,7 @@
                             <xsl:for-each select="PANELBODY/FIELD/FIELD[@type='Header2' and @label='Catatonic phenomena']">
                                 <tr>
                                     <td align="left" valign="top" class="ribbon">
-                                        <h3>
+                                        <h3 style="font-family:Arial, Helvetica, sans-serif;">
                                             <xsl:value-of select="@label" />
                                         </h3>
                                     </td>
@@ -2536,7 +2550,7 @@
                             <xsl:for-each select="PANELBODY/FIELD/FIELD[@type='Header2' and @label='Speech']">
                                 <tr>
                                     <td align="left" valign="top" class="ribbon">
-                                        <h2>
+                                        <h2 style="font-family:Arial, Helvetica, sans-serif;">
                                             <xsl:value-of select="@label" />
                                         </h2>
                                     </td>
@@ -2598,7 +2612,7 @@
                             <xsl:for-each select="PANELBODY/FIELD/FIELD[@type='Header2' and @label='Thought']">
                                 <tr>
                                     <td align="left" valign="top" class="ribbon">
-                                        <h2>
+                                        <h2 style="font-family:Arial, Helvetica, sans-serif;">
                                             <xsl:value-of select="@label" />
                                         </h2>
                                     </td>
@@ -2609,7 +2623,7 @@
                                 <xsl:if test="boolean(LISTITEMS/LISTITEM/@Selected = 'true')">
                                     <tr>
                                         <td align="left" valign="top" class="ribbon">
-                                            <h3>
+                                            <h3 style="font-family:Arial, Helvetica, sans-serif;">
                                                 <xsl:value-of select="@label" />
                                             </h3>
                                         </td>
@@ -2631,7 +2645,7 @@
                             <xsl:for-each select="PANELBODY/FIELD/FIELD[@type='Header2' and @label='Possession of thought']">
                                 <tr>
                                     <td align="left" valign="top" class="ribbon">
-                                        <h3>
+                                        <h3 style="font-family:Arial, Helvetica, sans-serif;">
                                             <xsl:value-of select="@label" />
                                         </h3>
                                     </td>
@@ -2732,7 +2746,7 @@
                             <xsl:for-each select="PANELBODY/FIELD/FIELD[@type='Header2' and @label='Thought Content']">
                                 <tr>
                                     <td align="left" valign="top" class="ribbon">
-                                        <h3>
+                                        <h3 style="font-family:Arial, Helvetica, sans-serif;">
                                             <xsl:value-of select="@label" />
                                         </h3>
                                     </td>
@@ -2822,7 +2836,7 @@
                             <xsl:for-each select="PANELBODY/FIELD/FIELD[@type='Header2' and @label='Mood']">
                                 <tr>
                                     <td align="left" valign="top" class="ribbon">
-                                        <h2>
+                                        <h2 style="font-family:Arial, Helvetica, sans-serif;">
                                             <xsl:value-of select="@label" />
                                         </h2>
                                     </td>
@@ -2881,7 +2895,7 @@
                             <xsl:for-each select="PANELBODY/FIELD/FIELD[@type='Header2' and @label='Affect']">
                                 <tr>
                                     <td align="left" valign="top" class="ribbon">
-                                        <h3>
+                                        <h3 style="font-family:Arial, Helvetica, sans-serif;">
                                             <xsl:value-of select="@label" />
                                         </h3>
                                     </td>
@@ -2937,7 +2951,7 @@
                             <xsl:for-each select="PANELBODY/FIELD/FIELD[@type='Header2' and @label='Perception']">
                                 <tr>
                                     <td align="left" valign="top" class="ribbon">
-                                        <h2>
+                                        <h2 style="font-family:Arial, Helvetica, sans-serif;">
                                             <xsl:value-of select="@label" />
                                         </h2>
                                     </td>
@@ -2997,7 +3011,7 @@
                             <xsl:for-each select="PANELBODY/FIELD/FIELD[@type='Header2' and @label='Higher Mental Functions']">
                                 <tr>
                                     <td align="left" valign="top" class="ribbon">
-                                        <h2>
+                                        <h2 style="font-family:Arial, Helvetica, sans-serif;">
                                             <xsl:value-of select="@label" />
                                         </h2>
                                     </td>
@@ -3065,7 +3079,7 @@
                             <xsl:for-each select="PANELBODY/FIELD/FIELD[@type='Header2' and @label='Memory']">
                                 <tr>
                                     <td align="left" valign="top" class="ribbon">
-                                        <h2>
+                                        <h2 style="font-family:Arial, Helvetica, sans-serif;">
                                             <xsl:value-of select="@label" />
                                         </h2>
                                     </td>
@@ -3104,7 +3118,7 @@
                             <xsl:for-each select="PANELBODY/FIELD/FIELD[@type='Header2' and @label='Personal Judgement']">
                                 <tr>
                                     <td align="left" valign="top" class="ribbon">
-                                        <h2>
+                                        <h2 style="font-family:Arial, Helvetica, sans-serif;">
                                             <xsl:value-of select="@label" />
                                         </h2>
                                     </td>
@@ -3210,7 +3224,7 @@
                     <xsl:for-each select="PANELBODY/FIELD[@type='Header2' and @label='DSM -IV TR']">
                         <tr>
                             <td align="left" valign="top" class="ribbon" style="color:#ffffff;">
-                                <h1>
+                                <h1 style="font-family:Arial, Helvetica, sans-serif;">
                                     <xsl:value-of select="@label" />
                                 </h1>
                             </td>

@@ -91,15 +91,30 @@ class XmlController extends Controller {
 
     public function actionInsertnewfield() {
         //$xpath = "/FIELDS/GROUP/PANELBODY/FIELD[@id='name']";
-        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD[@id='txtAxis5']";
-        $insert = '<FIELD id="diagnosis_notes" header2Class="DSM_IV_TR" type="TextArea" label="Notes">
-                <PROPERTIES>
-                    <PROPERTY name="id">diagnosis_notes</PROPERTY>
-                    <PROPERTY name="name">diagnosis_notes</PROPERTY>
-                    <PROPERTY name="class">form-control</PROPERTY>
-                    <PROPERTY name="placeholder">Notes</PROPERTY>
-                </PROPERTIES>
-            </FIELD>';
+        $memory = "'judgement_radio_div'";
+        $block = "'block'";
+        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD[@id='RBAbstraction']";
+        $insert = '<FIELD id="RBJudgement" header2Class="Memory" type="RadioButtonList" label="Judgement" Backcontrols="hide" Backdivid="judgement_radio_div">
+                    <PROPERTIES>
+                        <PROPERTY name="name">RBJudgement</PROPERTY>
+                    </PROPERTIES>
+                    <LISTITEMS>
+                    
+                        <LISTITEM value="Personal" id="RBJudgement1" Selected="False" onclick="OThersvisible(this.id, '.$memory.', '.$block.');">Personal</LISTITEM>
+                        <LISTITEM value="Social" id="RBJudgement2" Selected="False" onclick="OThersvisible(this.id, '.$memory.', '.$block.');">Social</LISTITEM>
+                        <LISTITEM value="Test" id="RBJudgement3" Selected="False" onclick="OThersvisible(this.id, '.$memory.', '.$block.');">Test</LISTITEM>
+
+                    </LISTITEMS>
+                    <FIELD id="judgement_radio" type="RadioButtonList" label=" ">
+                        <PROPERTIES>
+                            <PROPERTY name="name">judgement_radio</PROPERTY>
+                        </PROPERTIES>
+                        <LISTITEMS>
+                            <LISTITEM value="Intact" id="judgement_radio1" Selected="False">Intact</LISTITEM>
+                            <LISTITEM value="Impaired" id="judgement_radio2" Selected="False">Impaired</LISTITEM>
+                        </LISTITEMS>
+                    </FIELD>
+                </FIELD>';
         $all_files = $this->getAllFiles();
         $error_files = [];
         if (!empty($all_files)) {
@@ -114,7 +129,8 @@ class XmlController extends Controller {
                     }
                     $targets = $xml->xpath($xpath);
                     if (!empty($targets)) {
-                        //print_r($targets[0]); die;
+                        //print_r($targets[0]);
+                        //print_r($insert); die;
                         // echo $files;
                         $this->simplexml_insert_after(simplexml_load_string($insert), $targets[0]);
 //                        foreach ($targets as $target) {
@@ -122,7 +138,7 @@ class XmlController extends Controller {
 //                        }
                     }
                     $xml->asXML($files);
-                } die;
+                } //die;
             }
         }
         echo "<pre>";
@@ -132,19 +148,20 @@ class XmlController extends Controller {
 
     public function actionSetattrvalue() {
         $node = 'FIELD';
-        $attr = 'label';
-        $find = 'Counselling/Psychotherapy';
-        $replace = 'Counselling / Psychotherapy';
+        $attr = 'header2Class';
+        $find = 'Catatonic_phenomena';
+        $replace = 'General_Appearance_Behaviour';
 //        $node = 'LISTITEM';
 //        $attr = 'value';
 //        $find = 'RTA &amp; Surgery';
 //        $replace = 'RTA & Surgery';
-        $xpath = "/FIELDS/GROUP/PANELBODY//{$node}[@{$attr}='{$find}']";
-
+        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD/{$node}[@{$attr}='{$find}']";
+        //echo $xpath; die;
 
         $all_files = $this->getAllFiles();
         $error_files = [];
         if (!empty($all_files)) {
+            //echo 'ddad'; die;
             foreach ($all_files as $key => $files) {
                 if (filesize($files) > 0) {
                     libxml_use_internal_errors(true);
@@ -491,7 +508,7 @@ class XmlController extends Controller {
 
     public function actionDeletefield() {
         //$xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@type='RadGrid' and @ADDButtonID='RGCompliantadd']//FIELD[@type='TextBoxDDL']";
-        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@id='diagnosis_notes']";
+        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD/FIELD[@id='RBTest']";
 
         $all_files = $this->getAllFiles();
         $error_files = [];
@@ -513,7 +530,7 @@ class XmlController extends Controller {
                         }
                     }
                     $xml->asXML($files);
-                } die;
+                } //die;
             }
         }
         echo "<pre>";
@@ -736,8 +753,20 @@ class XmlController extends Controller {
     }
 
     public function actionChangefieldvalue() {
-        $insertpath = "/FIELDS/GROUP/PANELBODY/FIELD[@id='diagnosis_notes']";
-        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD[@id='txtAxis5']";
+//        $insertpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD[@id='diagnosis_notes']";
+//        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD[@id='txtAxis5']";
+        
+        $insertpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD[@id='RBrapport']";
+        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD[@id='RBeyetoeyecontact']";
+        
+//        $webroot = Yii::getAlias('@webroot');
+//        $files = FileHelper::findFiles($webroot . '/uploads', [
+//                    'only' => ['CH_8666_1499335581.xml'],
+//                    'recursive' => true,
+//        ]);
+//        $base_xml = [realpath(dirname(__FILE__) . '/../../../../IRISADMIN/web/case_history.xml')];
+//        $all_files = \yii\helpers\ArrayHelper::merge($base_xml, $files);
+        
         $all_files = $this->getAllFiles();
         
         $error_files = [];
@@ -756,10 +785,13 @@ class XmlController extends Controller {
                     if (!empty($targets)) {
                         foreach ($targets as $target) {
                             foreach ($inserts as $insert) {
+                                //print_r($target); print_r($insert);
                                 $doc = new \DOMDocument();
                                 $doc->loadXML($insert->asXML());
                                 $insert_xml = $doc->saveXML();
                                 $insert_xml = preg_replace('/^.+\n/', '', $insert_xml);
+                                //print_r($insert_xml);
+                                //print_r($targets[0]);
                                 $this->simplexml_insert_after(simplexml_load_string($insert_xml), $targets[0]);
                                 //$dom = dom_import_simplexml($target);
                                 //$dom->parentNode->removeChild($dom);
@@ -776,12 +808,20 @@ class XmlController extends Controller {
     }
 
     public function actionRemoveduplicatefield() {
-        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@id='diagnosis_notes']";
-
+        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD[@id='RBrapport']";
+        
+//        $webroot = Yii::getAlias('@webroot');
+//        $files = FileHelper::findFiles($webroot . '/uploads', [
+//                    'only' => ['CH_8666_1499335581.xml'],
+//                    'recursive' => true,
+//        ]);
+//        $base_xml = [realpath(dirname(__FILE__) . '/../../../../IRISADMIN/web/case_history.xml')];
+//        $all_files = \yii\helpers\ArrayHelper::merge($base_xml, $files);
         $all_files = $this->getAllFiles();
        
         $error_files = [];
         if (!empty($all_files)) {
+            //echo 'asda'; die;
             foreach ($all_files as $key => $files) {
                 if (filesize($files) > 0) {
                     libxml_use_internal_errors(true);
@@ -795,7 +835,8 @@ class XmlController extends Controller {
                     if (!empty($targets)) {
                         $first = true;
                         foreach ($targets as $target) {
-                            if ($first) {
+                            //print_r($target); die;
+                            if (!$first) {
                                 $dom = dom_import_simplexml($target);
                                 $dom->parentNode->removeChild($dom);
                             }

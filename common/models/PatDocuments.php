@@ -126,44 +126,44 @@ class PatDocuments extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['patient_id', 'doc_type_id', 'encounter_id'], 'required'],
-            [['name', 'age', 'gender', 'address', 'education', 'martial_status', 'relationship'], 'required', 'on' => 'CH'],
-            [['information', 'information_adequacy', 'total_duration', 'mode_of_onset', 'course_type', 'nature'], 'required', 'on' => 'CH'],
-            [['tenant_id', 'patient_id', 'doc_type_id', 'encounter_id', 'created_by', 'modified_by'], 'integer'],
-            [['document_xml', 'status', 'xml_path'], 'string'],
-            [['rb_pb_treatmenthistory'], 'required', 'when' => function($model) {
+                [['patient_id', 'doc_type_id', 'encounter_id'], 'required'],
+                [['name', 'age', 'gender', 'address', 'education', 'martial_status', 'relationship'], 'required', 'on' => 'CH'],
+                [['information', 'information_adequacy', 'total_duration', 'mode_of_onset', 'course_type', 'nature'], 'required', 'on' => 'CH'],
+                [['tenant_id', 'patient_id', 'doc_type_id', 'encounter_id', 'created_by', 'modified_by'], 'integer'],
+                [['document_xml', 'status', 'xml_path'], 'string'],
+                [['rb_pb_treatmenthistory'], 'required', 'when' => function($model) {
                     if ($model->treatment_history == '1' || $model->treatment_history == 'true')
                         return true;
                 }],
-            [['RBtypeoffamily', 'RBtypeofmarriage'], 'required', 'when' => function($model) {
+                [['RBtypeoffamily', 'RBtypeofmarriage'], 'required', 'when' => function($model) {
                     if ($model->family_history == '1' || $model->family_history == 'true')
                         return true;
                 }],
-            [['RBpbprenatal', 'RBpbperinatal', 'RBpbperinatal2', 'RBpbdevelopmentmilestone'], 'required', 'when' => function($model) {
+                [['RBpbprenatal', 'RBpbperinatal', 'RBpbperinatal2', 'RBpbdevelopmentmilestone'], 'required', 'when' => function($model) {
                     if ($model->birth_and_development == '1' || $model->birth_and_development == 'true')
                         return true;
                 }],
-            [['RBpbbreakstudy', 'RBpbfrechangeschool', 'RBpbacademicperfor', 'RBpbteacherrelation', 'RBpbstudentrelation'], 'required', 'when' => function($model) {
+                [['RBpbbreakstudy', 'RBpbfrechangeschool', 'RBpbacademicperfor', 'RBpbteacherrelation', 'RBpbstudentrelation'], 'required', 'when' => function($model) {
                     if ($model->education_history == '1' || $model->education_history == 'true')
                         return true;
                 }],
-            [['RBpbworkrecord', 'RBfreqchangeofjob'], 'required', 'when' => function($model) {
+                [['RBpbworkrecord', 'RBfreqchangeofjob'], 'required', 'when' => function($model) {
                     if ($model->occupational_history == '1' || $model->occupational_history == 'true')
                         return true;
                 }],
-            [['txtDurationofMarriage', 'txtAgeofMarriage', 'RBmaritalsexualsatisfac', 'RBknowledgeofspouse'], 'required', 'when' => function($model) {
+                [['txtDurationofMarriage', 'txtAgeofMarriage', 'RBmaritalsexualsatisfac', 'RBknowledgeofspouse'], 'required', 'when' => function($model) {
                     if ($model->marital_history == '1' || $model->marital_history == 'true')
                         return true;
                 }],
-            [['CBattitudetoself'], 'required', 'when' => function($model) {
+                [['CBattitudetoself'], 'required', 'when' => function($model) {
                     if ($model->premorbid_personality == '1' || $model->premorbid_personality == 'true')
                         return true;
                 }],
-            [['RBAppearance', 'RBlevelofgrooming', 'RBlevelofcleanliness', 'RBeyetoeyecontact', 'RBrapport', 'CBPsychomotorActivity', 'RBReactiontime', 'RBtempo', 'RBvolume', 'RBtone', 'CBstreamform', 'RBQuality', 'RBrangeandreactivity', 'txtSubjectively', 'txtObjectively', 'RBAttension', 'RBConcentration', 'RBOrientation', 'RBImmediate', 'RBRecent', 'RBRemote', 'RBIntelligence', 'RBAbstraction', 'RBPersonal', 'RBSocial', 'RBTest', 'DDLInsight', 'RBKnowledgeaboutmentalillness', 'RBAttitudeillness'], 'required', 'when' => function($model) {
+                [['RBAppearance', 'RBlevelofgrooming', 'RBlevelofcleanliness', 'RBeyetoeyecontact', 'RBrapport', 'CBPsychomotorActivity', 'RBReactiontime', 'RBtempo', 'RBvolume', 'RBtone', 'CBstreamform', 'RBQuality', 'RBrangeandreactivity', 'txtSubjectively', 'txtObjectively', 'RBAttension', 'RBConcentration', 'RBOrientation', 'RBIntelligence', 'RBAbstraction', 'DDLInsight', 'RBKnowledgeaboutmentalillness', 'RBAttitudeillness'], 'required', 'when' => function($model) {
                     if ($model->mental_status_examination == '1' || $model->mental_status_examination == 'true')
                         return true;
                 }],
-            [['created_at', 'modified_at', 'deleted_at', 'treatment_history', 'family_history', 'personal_history', 'birth_and_development', 'education_history', 'occupational_history', 'menstrual_history', 'marital_history', 'sexual_history', 'substance_history', 'premorbid_personality', 'mental_status_examination', 'rb_pb_treatmenthistory', 'RBtypeoffamily', 'RBtypeofmarriage', 'RBpbprenatal', 'RBpbperinatal', 'RBpbperinatal2', 'RBpbdevelopmentmilestone', 'RBpbparentallack', 'RBpbbreakstudy', 'RBpbfrechangeschool', 'RBpbacademicperfor', 'RBpbteacherrelation', 'RBpbstudentrelation', 'RBpbworkrecord', 'RBfreqchangeofjob', 'txtDurationofMarriage', 'txtAgeofMarriage', 'RBmaritalsexualsatisfac', 'RBknowledgeofspouse', 'CBattitudetoself', 'RBAppearance', 'RBlevelofgrooming', 'RBlevelofcleanliness', 'RBeyetoeyecontact', 'RBrapport', 'CBPsychomotorActivity', 'RBReactiontime', 'RBtempo', 'RBvolume', 'RBtone', 'CBstreamform', 'RBQuality', 'RBrangeandreactivity', 'txtSubjectively', 'txtObjectively', 'RBAttension', 'RBConcentration', 'RBOrientation', 'memory', 'RBImmediate', 'RBRecent', 'RBRemote', 'RBIntelligence', 'RBAbstraction', 'judgement', 'RBPersonal', 'RBSocial', 'RBTest', 'DDLInsight', 'RBKnowledgeaboutmentalillness', 'RBAttitudeillness', 'document_xml'], 'safe'],
+                [['created_at', 'modified_at', 'deleted_at', 'treatment_history', 'family_history', 'personal_history', 'birth_and_development', 'education_history', 'occupational_history', 'menstrual_history', 'marital_history', 'sexual_history', 'substance_history', 'premorbid_personality', 'mental_status_examination', 'rb_pb_treatmenthistory', 'RBtypeoffamily', 'RBtypeofmarriage', 'RBpbprenatal', 'RBpbperinatal', 'RBpbperinatal2', 'RBpbdevelopmentmilestone', 'RBpbparentallack', 'RBpbbreakstudy', 'RBpbfrechangeschool', 'RBpbacademicperfor', 'RBpbteacherrelation', 'RBpbstudentrelation', 'RBpbworkrecord', 'RBfreqchangeofjob', 'txtDurationofMarriage', 'txtAgeofMarriage', 'RBmaritalsexualsatisfac', 'RBknowledgeofspouse', 'CBattitudetoself', 'RBAppearance', 'RBlevelofgrooming', 'RBlevelofcleanliness', 'RBeyetoeyecontact', 'RBrapport', 'CBPsychomotorActivity', 'RBReactiontime', 'RBtempo', 'RBvolume', 'RBtone', 'CBstreamform', 'RBQuality', 'RBrangeandreactivity', 'txtSubjectively', 'txtObjectively', 'RBAttension', 'RBConcentration', 'RBOrientation', 'memory', 'RBImmediate', 'RBRecent', 'RBRemote', 'RBIntelligence', 'RBAbstraction', 'judgement', 'RBPersonal', 'RBSocial', 'RBTest', 'DDLInsight', 'RBKnowledgeaboutmentalillness', 'RBAttitudeillness', 'document_xml'], 'safe'],
         ];
     }
 
@@ -284,6 +284,9 @@ class PatDocuments extends RActiveRecord {
                     return file_get_contents($filename);
                 }
                 return '';
+            },
+            'created_user' => function ($model) {
+                return $model->createdUser->title_code . ' ' . $model->createdUser->name;
             }
         ];
         $fields = array_merge(parent::fields(), $extend);
@@ -301,18 +304,18 @@ class PatDocuments extends RActiveRecord {
     }
 
     public function beforeSave($insert) {
-        $this->xml_path = $this->createXMLFile(Yii::$app->user->identity->logged_tenant_id, $this->patient->patient_global_int_code, $this->encounter_id, $this->document_xml,$this->xml_path);
+        $this->xml_path = $this->createXMLFile(Yii::$app->user->identity->logged_tenant_id, $this->patient->patient_global_int_code, $this->encounter_id, $this->document_xml, $this->xml_path);
         return parent::beforeSave($insert);
     }
 
-    protected function createXMLFile($tenant_id, $patient_id, $encounter_id, $content,$file_name) {
+    protected function createXMLFile($tenant_id, $patient_id, $encounter_id, $content, $file_name) {
         $fpath = "uploads/{$tenant_id}/{$patient_id}";
         \yii\helpers\FileHelper::createDirectory($fpath, 0777);
-        if(!empty($file_name)) {
+        if (!empty($file_name)) {
             $splitFile = explode('/', $file_name);
             $file_name = end($splitFile);
         } else {
-            $file_name = "CH_{$encounter_id}_".time().".xml";
+            $file_name = "CH_{$encounter_id}_" . time() . ".xml";
         }
         $path = \yii::getAlias('@webroot') . '/' . $fpath . '/' . $file_name;
         $myfile = fopen($path, "w") or die("Unable to open file!");
