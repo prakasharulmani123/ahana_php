@@ -790,6 +790,20 @@ class PharmacyproductController extends ActiveController {
                                         $batch->save(false);
 
                                         $this->_updateBatchRate($result->tenant_id, $batch->batch_id, $result->mrp, $package_unit);
+                                        //Package Name not exists, then insert
+                                        $packageExist = \common\models\PhaPackageUnit::find()
+                                                ->andWhere([
+                                                    'tenant_id' => $result->tenant_id,
+                                                    'package_name' => $result->Add_Spec1
+                                                ])->one();
+                                        if(empty($packageExist)) {
+                                            $newPackageName = new \common\models\PhaPackageUnit();
+                                            $newPackageName->tenant_id = $result->tenant_id;
+                                            $newPackageName->package_name = $result->Add_Spec1;
+                                            $newPackageName->package_unit = $package_unit;
+                                            $newPackageName->save(false);
+                                        }
+                                        
                                         $return = ['success' => true, 'continue' => $next_id, 'message' => 'success'];
                                     } else {
                                         $return = ['success' => false, 'continue' => $next_id, 'message' => 'Duplicate batch entry'];

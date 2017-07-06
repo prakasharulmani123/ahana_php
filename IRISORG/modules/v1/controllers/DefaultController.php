@@ -404,4 +404,90 @@ class DefaultController extends Controller {
         }
     }
 
+    public function expiryDate($date) {
+        $expMY = $date;
+        $expDate = '01/' . $expMY;
+        $expArray = explode('/', $expDate);
+        if ($expArray[2]) {
+            $dt = date_create_from_format('y', $expArray[2]);
+            $expArray[2] = $dt->format('Y');
+            $date = implode('-', $expArray);
+            return $date = date('Y-m-d', strtotime($date));
+        }
+        return false;
+    }
+
+    public function actionOpeningstockadjustlog() {
+        $connection = Yii::$app->client;
+        $connection->open();
+
+        $sql = "SELECT *
+                FROM test_os_batch_wise a
+                  LEFT JOIN pha_product b
+                    ON b.product_name = a.Name
+                    AND b.tenant_id = a.tenant_id
+                WHERE a.`status` = 1
+                GROUP BY a.id";
+        $command = $connection->createCommand($sql);
+        $all = $command->queryAll();
+
+        foreach ($all as $result) {
+            $findBatch = "SELECT * FROM pha_product_batch WHERE tenant_id = :tenant_id AND product_id = :product_id AND batch_no = :batch_no AND expiry_date = :expiry_date";
+            $command = $connection->createCommand($findBatch);
+            $command->bindValues([
+                ':tenant_id' => $result['tenant_id'],
+                ':product_id' => $result['product_id'],
+                ':batch_no' => $result['Batch'],
+                ':expiry_date' => $this->expiryDate($result['ExpiryMy']),
+            ]);
+            $batch = $command->queryAll();
+            if (!empty($batch)) {
+                $batch = $batch[0];
+                $insert = "INSERT INTO pha_stock_adjust_log(tenant_id, batch_id, adjust_date_time, adjust_from, adjust_to, adjust_qty, created_by, created_at, modified_by, modified_at) VALUES ('{$batch['tenant_id']}', '{$batch['batch_id']}', '{$batch['created_at']}', '0', '{$result['Total']}' , '{$result['Total']}', '{$batch['created_by']}', '{$batch['created_at']}', '{$batch['created_by']}', '{$batch['created_at']}')";
+                $command = $connection->createCommand($insert);
+                $command->execute();
+            }
+        }
+
+        $connection->close();
+    }
+
+    public function actionUpdatewrongbatch() {
+        $connection = Yii::$app->client;
+        $connection->open();
+
+        $sql = "SELECT *
+                FROM batch_no_replace a
+                  LEFT JOIN pha_product b
+                    ON b.product_name = a.Name
+                    AND b.tenant_id = a.tenant_id                
+                GROUP BY a.id";
+        $command = $connection->createCommand($sql);
+        $all = $command->queryAll();
+$c = 1;
+        foreach ($all as $result) {
+            if ($result['product_id'] != '') {
+                $findBatch = "SELECT * FROM pha_product_batch WHERE tenant_id = :tenant_id AND product_id = :product_id AND batch_no = :batch_no AND expiry_date = :expiry_date";
+                $command = $connection->createCommand($findBatch);
+                $command->bindValues([
+                    ':tenant_id' => $result['tenant_id'],
+                    ':product_id' => $result['product_id'],
+                    ':batch_no' => $result['wrong_batch'],
+                    ':expiry_date' => $this->expiryDate($result['ExpiryMy']),
+                ]);
+                $batch = $command->queryAll();
+                if (!empty($batch)) {
+                    
+                    $batch = $batch[0];
+                    $update = "Update pha_product_batch set batch_no = '{$result['Batch']}' where batch_id = '{$batch['batch_id']}'";
+                    $command = $connection->createCommand($update);
+                    $command->execute();
+                    $c++;
+                }
+            }
+        }
+echo $c;
+        $connection->close();
+    }
+
 }
