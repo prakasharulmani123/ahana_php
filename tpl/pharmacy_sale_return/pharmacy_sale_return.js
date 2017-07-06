@@ -97,7 +97,14 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
                                 sale_item_id: item.sale_item_id,
                                 package_name: item.package_name,
                                 package_unit: item.package_unit,
-                                total_returned_quantity: item.total_returned_quantity
+                                total_returned_quantity: item.total_returned_quantity,
+                                
+                                hsn_no:item.hsn_no,
+                                cgst_amount:item.cgst_amount,
+                                cgst_percent:item.cgst_percent,
+                                sgst_amount:item.sgst_amount,
+                                sgst_percent:item.sgst_percent,
+                                taxable_value:item.taxable_value,
                             };
                             $scope.saleItems.push($scope.inserted);
 
@@ -278,6 +285,8 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
             var mrp = parseFloat($scope.saleItems[key].mrp);
             var disc_perc = parseFloat($scope.saleItems[key].discount_percentage);
             var vat_perc = parseFloat($scope.saleItems[key].vat_percent);
+            var cgst_perc = parseFloat($scope.saleItems[key].cgst_percent);
+            var sgst_perc = parseFloat($scope.saleItems[key].sgst_percent);
 
             //Validate isNumer
             qty = !isNaN(qty) ? qty : 0;
@@ -290,11 +299,18 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
 
 //            var vat_amount = (item_amount * (vat_perc / 100)).toFixed(2); // Exculding vat
             var vat_amount = ((total_amount * vat_perc) / (100 + vat_perc)).toFixed(2); // Including vat
+            var cgst_amount = ((total_amount * cgst_perc) / (100 + cgst_perc)).toFixed(2); // Including vat
+            var sgst_amount = ((total_amount * sgst_perc) / (100 + sgst_perc)).toFixed(2); // Including vat
 
             $scope.saleItems[key].item_amount = item_amount;
             $scope.saleItems[key].discount_amount = disc_amount;
             $scope.saleItems[key].total_amount = total_amount;
             $scope.saleItems[key].vat_amount = vat_amount;
+            
+            $scope.saleItems[key].cgst_amount = cgst_amount;
+            $scope.saleItems[key].sgst_amount = sgst_amount;
+            $scope.saleItems[key].taxable_value = parseFloat(cgst_amount) + parseFloat(sgst_amount);
+            
             $scope.updateSaleRate();
         }
 
@@ -305,7 +321,8 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
             //Get Total Sale, VAT, Discount Amount
             var total_item_vat_amount = total_item_sale_amount = 0;
             angular.forEach($scope.saleItems, function (item) {
-                total_item_vat_amount = total_item_vat_amount + parseFloat(item.vat_amount);
+//                total_item_vat_amount = total_item_vat_amount + parseFloat(item.vat_amount);
+                total_item_vat_amount = total_item_vat_amount + parseFloat(item.taxable_value);
                 total_item_sale_amount = total_item_sale_amount + parseFloat(item.total_amount);
             });
 

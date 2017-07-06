@@ -84,21 +84,33 @@
                     <div class="col-sm-12">
 
                         <table class="table table-bordered table-hover table-condensed bg-white-only">
-                            <tr style="font-weight: bold">
-                                <td><span>Product Name</span></td>
-                                <td><span>Batch No</span></td>
-                                <td><span>Exp Date</span></td>
-                                <td><span>Qty</span></td>
-                                <td><span>Return Qty</span></td>
-                                <td><span>MRP</span></td>
-                                <td><span>Line Total</span></td>
-                                <td><span>Disc %</span></td>
-                                <td><span>Disc. Amt</span></td>
-                                <td><span>Vat</span></td>
-                                <td><span>Vat Amt</span></td>
-                                <td><span>Total Amt</span></td>
-                                <!--<td><span>Action</span></td>-->
-                            </tr>
+                            <thead class="sales-table-heading">
+                                <tr style="font-weight: bold">
+                                    <td rowspan="2"><span>Product Name</span></td>
+                                    <td rowspan="2"><span>Batch No</span></td>
+                                    <td rowspan="2"><span>Exp Date</span></td>
+                                    <td rowspan="2"><span>Qty</span></td>
+                                    <td rowspan="2"><span>Return Qty</span></td>
+                                    <td rowspan="2"><span>MRP</span></td>
+                                    <td rowspan="2"><span>Hsn No</span></td>
+                                    <td rowspan="2"><span>Disc %</span></td>
+                                    <td rowspan="2"><span>Disc. Amt</span></td>
+                                    <td rowspan="2"><span>Taxable value</span></td>
+
+                                    <th colspan="2" align="center">CGST</th>
+                                    <th colspan="2" align="center">SGST</th>
+
+                                    <td rowspan="2"><span>Total Amt</span></td>
+                                    <!--<td><span>Action</span></td>-->
+                                </tr>
+                                <tr>
+                                    <th> Rate %</th>
+                                    <th> Amount</th>
+                                    <th> Rate %</th>
+                                    <th> Amount</th>
+                                </tr>
+                            </thead>
+
                             <tr ng-repeat="(key, saleitem) in saleItems">
                                 <td>
                                     {{ saleitem.full_name || 'empty' }}
@@ -132,7 +144,7 @@
                                         {{saleitem.mrp|| 0}}
                                     </span>
                                 </td>
-                                <td><span>{{saleitem.item_amount}}</span></td>
+                                <td><span>{{saleitem.hsn_no}}</span></td>
                                 <td>
                                     <span 
                                         editable-text="saleitem.discount_percentage" 
@@ -152,16 +164,33 @@
                                         {{saleitem.discount_amount|| 0}}
                                     </span>
                                 </td>
+
                                 <td>
                                     <span>
-                                        {{saleitem.vat_percent}}
+                                        {{saleitem.taxable_value}}
                                     </span>
                                 </td>
                                 <td>
                                     <span>
-                                        {{saleitem.vat_amount}}
+                                        {{saleitem.cgst_percent}}
                                     </span>
                                 </td>
+                                <td>
+                                    <span>
+                                        {{saleitem.cgst_amount}}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span>
+                                        {{saleitem.sgst_percent}}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span>
+                                        {{saleitem.sgst_amount}}
+                                    </span>
+                                </td>
+
                                 <td><span>{{saleitem.total_amount}}</span></td>
                                 <!--                                <td>
                                                                     <button type="button" ng-click="removeSaleItem($index)" class="btn btn-sm btn-danger pull-right">Delete</button>
