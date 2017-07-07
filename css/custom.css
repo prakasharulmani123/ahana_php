@@ -596,3 +596,12 @@ ul.dropdown-menu.curPrescFreq > li > a, .dropdown-submenu > ul > li > a {
 .input-sm {
     height: 31px !important;	
 }
+
+.check_box_list {
+    width: auto;
+    margin-right: 10px;
+    display:inline-flex;
+}
+.drop_down_list {
+    width: auto;
+}
