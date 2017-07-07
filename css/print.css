@@ -40,6 +40,7 @@
         font-size:13px;
         -webkit-print-color-adjust: exact;
         color-adjust: exact;
+        line-height: 22px;
     }
 
     .RadGrid table, .RadGrid table th, .RadGrid table td {
@@ -56,9 +57,14 @@
     .referl-details
     {
         background:#eeeeee;
-        padding:13pt;
         margin-top:25px;
         text-align:center;
+        margin: 10px 0px 10px 0px;
+        padding: 0px;
+    }
+    .referl-details td 
+    {
+        padding: 1px; 
     }
     .reason {
         font-size:7pt !important;
