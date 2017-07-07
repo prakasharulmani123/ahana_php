@@ -265,8 +265,7 @@
                                                                 <xsl:for-each select="FIELD">
                                                                     <xsl:choose>
                                                                         <xsl:when test="@type='TextBox'">
-                                                                            <br/>
-                                                                            <xsl:value-of select="@label" />&#160;
+                                                                            |
                                                                             <xsl:for-each select="PROPERTIES/PROPERTY">
                                                                                 <xsl:if test="@name='value'">
                                                                                     <span id="sub_textbox">
@@ -1873,7 +1872,7 @@
                                             <xsl:for-each select="PANELBODY/FIELD/FIELD/FIELD[((@type='DropDownList') or (@type='RadioButtonList')) and ((@id='DDLstartedworking') or (@id='RBpbworkrecord') or (@id='RBfreqchangeofjob') or (@id='RBRegularitysss'))]">
                                                 <xsl:choose>
                                                     <xsl:when test="@type='DropDownList'">
-                                                        <xsl:if test="PROPERTIES/PROPERTY[@name = 'value' and string(.)]">
+                                                        <xsl:if test="boolean(LISTITEMS/LISTITEM/@Selected = 'true')">
                                                             <td width="25%" align="left" valign="top" class="small-left-heading">
                                                                 <xsl:value-of select="@label" />
                                                                 <span class="colon"> : </span>
@@ -1882,8 +1881,8 @@
                                                                 <xsl:for-each select="LISTITEMS/LISTITEM">
                                                                     <xsl:if test="@Selected = 'true'">
                                                                         <xsl:value-of select="@value"></xsl:value-of>
-                                                                    </xsl:if>
-                                                                </xsl:for-each>
+                                                                    </xsl:if> 
+                                                                </xsl:for-each> Years
                                                             </td>
                                                             <xsl:variable name="i" select="position() mod 2 = 1"/>
                                                             <xsl:if test="$i=false">
