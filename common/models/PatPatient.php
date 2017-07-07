@@ -705,17 +705,17 @@ class PatPatient extends RActiveRecord {
                 $result .= $this->patPatientAddress->addr_current_address;
             }
 
-            if ($this->patPatientAddress->addr_city_id != '') {
-                $result .= ' ' . $this->patPatientAddress->addrCity->city_name;
-            }
-
-            if ($this->patPatientAddress->addr_state_id != '') {
-                $result .= ' ' . $this->patPatientAddress->addrState->state_name;
-            }
-
-            if ($this->patPatientAddress->addr_country_id != '') {
-                $result .= ' ' . $this->patPatientAddress->addrCountry->country_name;
-            }
+//            if ($this->patPatientAddress->addr_city_id != '') {
+//                $result .= ' ' . $this->patPatientAddress->addrCity->city_name;
+//            }
+//
+//            if ($this->patPatientAddress->addr_state_id != '') {
+//                $result .= ' ' . $this->patPatientAddress->addrState->state_name;
+//            }
+//
+//            if ($this->patPatientAddress->addr_country_id != '') {
+//                $result .= ' ' . $this->patPatientAddress->addrCountry->country_name;
+//            }
 
             return $result;
         }

@@ -149,8 +149,8 @@ class XmlController extends Controller {
     public function actionSetattrvalue() {
         $node = 'FIELD';
         $attr = 'header2Class';
-        $find = 'Catatonic_phenomena';
-        $replace = 'General_Appearance_Behaviour';
+        $find = 'Judgement';
+        $replace = 'Higher_Mental_Functions';
 //        $node = 'LISTITEM';
 //        $attr = 'value';
 //        $find = 'RTA &amp; Surgery';
@@ -173,10 +173,12 @@ class XmlController extends Controller {
                     }
                     $targets = $xml->xpath($xpath);
                     if (!empty($targets)) {
+                        //print_r($targets);
                         foreach ($targets as $target) {
                             $target[$attr] = $replace;
                         }
                     }
+                    //print_r($targets); die;
                     $xml->asXML($files);
                 }
             }
@@ -850,6 +852,34 @@ class XmlController extends Controller {
         echo "<pre>";
         print_r($error_files);
         exit;
+    }
+    
+    public function actionChangecapitalletter() {
+         $xpath = "/FIELDS/GROUP/PANELBODY//FIELD/LISTITEMS/LISTITEM";
+         $all_files = $this->getAllFiles();
+             $error_files = [];
+        if (!empty($all_files)) {
+            foreach ($all_files as $key => $files) {
+                if (filesize($files) > 0) {
+                    libxml_use_internal_errors(true);
+                    $xml = simplexml_load_file($files, null, LIBXML_NOERROR);
+                    if ($xml === false) {
+                        $error_files[$key]['name'] = $files;
+                        $error_files[$key]['error'] = libxml_get_errors();
+                        continue;
+                    }
+                    $targets = $xml->xpath($xpath);
+                    if (!empty($targets)) {
+                        foreach ($targets as $target) {
+                            $target['value'] = ucwords($target['value']);
+                            $target[0] = ucwords($target[0]);
+                        }
+                    }
+                    $xml->asXML($files);
+                }
+            } 
+            
+        }
     }
 
 }

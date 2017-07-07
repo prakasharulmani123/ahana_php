@@ -391,7 +391,7 @@
                                                                 <tr>
                                                                     <td align="left" valign="top" class="small-left-heading list">
                                                                         <xsl:choose>
-                                                                                                                                                         Text Box 
+<!--                                                                                                                                                         Text Box -->
                                                                             <xsl:when test="@type='TextBox'">
                                                                                 <xsl:if test="PROPERTIES/PROPERTY[@name = 'value' and string(.)]">
                                                                                     <xsl:for-each select="PROPERTIES/PROPERTY">

@@ -72,9 +72,9 @@
                     <LISTITEM value="Self" id="RBRefferals1" Selected="true" onclick="OThersvisible(this.id, 'referral_details_other_div', 'block');">Self</LISTITEM>
                     <LISTITEM value="General Practitioner" id="RBRefferals2" Selected="false" onclick="OThersvisible(this.id, 'referral_details_other_div', 'block');">General Practitioner</LISTITEM>
                     <LISTITEM value="Neighbours" id="RBRefferals3" Selected="false" onclick="OThersvisible(this.id, 'referral_details_other_div', 'block');">Neighbours</LISTITEM>
-                    <LISTITEM value="Traditional healer" id="RBRefferals4" Selected="false" onclick="OThersvisible(this.id, 'referral_details_other_div', 'block');">Traditional healer</LISTITEM>
-                    <LISTITEM value="Other patient" id="RBRefferals5" Selected="false" onclick="OThersvisible(this.id, 'referral_details_other_div', 'block');">Other patient</LISTITEM>
-                    <LISTITEM value="Other psychiatrist" id="RBRefferals6" Selected="false" onclick="OThersvisible(this.id, 'referral_details_other_div', 'block');">Other psychiatrist</LISTITEM>
+                    <LISTITEM value="Traditional Healer" id="RBRefferals4" Selected="false" onclick="OThersvisible(this.id, 'referral_details_other_div', 'block');">Traditional Healer</LISTITEM>
+                    <LISTITEM value="Other Patient" id="RBRefferals5" Selected="false" onclick="OThersvisible(this.id, 'referral_details_other_div', 'block');">Other Patient</LISTITEM>
+                    <LISTITEM value="Other Psychiatrist" id="RBRefferals6" Selected="false" onclick="OThersvisible(this.id, 'referral_details_other_div', 'block');">Other Psychiatrist</LISTITEM>
                     <LISTITEM value="Media" id="RBRefferals7" Selected="false" onclick="OThersvisible(this.id, 'referral_details_other_div', 'block');">Media</LISTITEM>
                     <LISTITEM value="Others" id="RBRefferals8" Selected="false" onclick="OThersvisible(this.id, 'referral_details_other_div', 'block');">Others</LISTITEM>
                 </LISTITEMS>
@@ -136,7 +136,7 @@
                 </PROPERTIES>
                 <LISTITEMS>
                     
-                    <LISTITEM value="Un married" id="RBMartial2" Selected="False">Un married</LISTITEM>
+                    <LISTITEM value="Un Married" id="RBMartial2" Selected="False">Un Married</LISTITEM>
                     <LISTITEM value="Married" id="RBMartial2" Selected="False">Married</LISTITEM>
                     <LISTITEM value="Separated" id="RBMartial3" Selected="False">Separated</LISTITEM>
                     <LISTITEM value="Divorced" id="RBMartial4" Selected="False">Divorced</LISTITEM>
@@ -397,11 +397,11 @@
                 </PROPERTIES>
                 <LISTITEMS>
                     <LISTITEM value="Bereavement" id="RBpresent1" Selected="False" onclick="OThersvisible(this.id, 'precipitating_factor_other_div', 'block');">Bereavement</LISTITEM>
-                    <LISTITEM value="Financial loss" id="RBpresent2" Selected="False" onclick="OThersvisible(this.id, 'precipitating_factor_other_div', 'block');">Financial loss</LISTITEM>
-                    <LISTITEM value="Family conflicts" id="RBpresent3" Selected="False" onclick="OThersvisible(this.id, 'precipitating_factor_other_div', 'block');">Family conflicts</LISTITEM>
-                    <LISTITEM value="Difficulty at work" id="RBpresent4" Selected="False" onclick="OThersvisible(this.id, 'precipitating_factor_other_div', 'block');">Difficulty at work</LISTITEM>
-                    <LISTITEM value="Physical ailment" id="RBpresent5" Selected="False" onclick="OThersvisible(this.id, 'precipitating_factor_other_div', 'block');">Physical ailment</LISTITEM>
-                    <LISTITEM value="Relationship problems" id="RBpresent6" Selected="False" onclick="OThersvisible(this.id, 'precipitating_factor_other_div', 'block');">Relationship problems</LISTITEM>
+                    <LISTITEM value="Financial Loss" id="RBpresent2" Selected="False" onclick="OThersvisible(this.id, 'precipitating_factor_other_div', 'block');">Financial Loss</LISTITEM>
+                    <LISTITEM value="Family Conflicts" id="RBpresent3" Selected="False" onclick="OThersvisible(this.id, 'precipitating_factor_other_div', 'block');">Family Conflicts</LISTITEM>
+                    <LISTITEM value="Difficulty At Work" id="RBpresent4" Selected="False" onclick="OThersvisible(this.id, 'precipitating_factor_other_div', 'block');">Difficulty At Work</LISTITEM>
+                    <LISTITEM value="Physical Ailment" id="RBpresent5" Selected="False" onclick="OThersvisible(this.id, 'precipitating_factor_other_div', 'block');">Physical Ailment</LISTITEM>
+                    <LISTITEM value="Relationship Problems" id="RBpresent6" Selected="False" onclick="OThersvisible(this.id, 'precipitating_factor_other_div', 'block');">Relationship Problems</LISTITEM>
                     <LISTITEM value="Others" id="RBpresent7" Selected="False" onclick="OThersvisible(this.id, 'precipitating_factor_other_div', 'block');">Others</LISTITEM>
                 </LISTITEMS>
                 <FIELD id="precipitating_factor_other" type="TextBox" label="Precipitating Factor Notes: ">
@@ -630,14 +630,14 @@
                             <LISTITEM value="Hepatitis" Selected="false">Hepatitis</LISTITEM>
                             <LISTITEM value="Asthma" Selected="false">Asthma</LISTITEM>
                             <LISTITEM value="Bronchitis" Selected="false">Bronchitis</LISTITEM>
-                            <LISTITEM value="Head injury/LOC" Selected="false">Head injury/LOC</LISTITEM>
+                            <LISTITEM value="Head Injury/LOC" Selected="false">Head Injury/LOC</LISTITEM>
                             <LISTITEM value="Seizures" Selected="false">Seizures</LISTITEM>
                             <LISTITEM value="Cerebrovascular Accidents" Selected="false">Cerebrovascular Accidents</LISTITEM>
-                            <LISTITEM value="Immuno compromised state" Selected="false">Immuno compromised state</LISTITEM>
+                            <LISTITEM value="Immuno Compromised State" Selected="false">Immuno Compromised State</LISTITEM>
                             <LISTITEM value="Mycocardial Infarction" Selected="false">Mycocardial Infarction</LISTITEM>
                             <LISTITEM value="Allergies" Selected="false">Allergies</LISTITEM>
                             <LISTITEM value="IHD" Selected="false">IHD</LISTITEM>
-                            <LISTITEM value="Thyroid dysfunction" Selected="false">Thyroid dysfunction</LISTITEM>
+                            <LISTITEM value="Thyroid Dysfunction" Selected="false">Thyroid Dysfunction</LISTITEM>
                             <LISTITEM value="RTA &amp; Surgery" Selected="False">RTA &amp; Surgery</LISTITEM>
                         </LISTITEMS>
                     </FIELD>
@@ -764,19 +764,19 @@
                                     <PROPERTY name="class">form-control</PROPERTY>
                                 </PROPERTIES>
                                 <LISTITEMS>
-                                    <LISTITEM value="slurred speech" Selected="False">slurred speech</LISTITEM>
-                                    <LISTITEM value="blurred vision" Selected="False">blurred vision</LISTITEM>
-                                    <LISTITEM value="drowsiness" Selected="False">drowsiness</LISTITEM>
-                                    <LISTITEM value="extra pyramidal symptoms" Selected="False">extra pyramidal symptoms</LISTITEM>
-                                    <LISTITEM value="increased salivation" Selected="False">increased salivation</LISTITEM>
-                                    <LISTITEM value="dysphagia" Selected="False">dysphagia</LISTITEM>
-                                    <LISTITEM value="obesity" Selected="False">obesity</LISTITEM>
-                                    <LISTITEM value="milk secretion" Selected="False">milk secretion</LISTITEM>
-                                    <LISTITEM value="constipation" Selected="False">constipation</LISTITEM>
-                                    <LISTITEM value="hand tremors" Selected="False">hand tremors</LISTITEM>
-                                    <LISTITEM value="sexual dysfunction" Selected="False">sexual dysfunction</LISTITEM>
-                                    <LISTITEM value="menstrual problems" Selected="False">menstrual problems</LISTITEM>
-                                    <LISTITEM value="motor restlessness" Selected="False">motor restlessness</LISTITEM>
+                                    <LISTITEM value="Slurred Speech" Selected="False">Slurred Speech</LISTITEM>
+                                    <LISTITEM value="Blurred Vision" Selected="False">Blurred Vision</LISTITEM>
+                                    <LISTITEM value="Drowsiness" Selected="False">Drowsiness</LISTITEM>
+                                    <LISTITEM value="Extra Pyramidal Symptoms" Selected="False">Extra Pyramidal Symptoms</LISTITEM>
+                                    <LISTITEM value="Increased Salivation" Selected="False">Increased Salivation</LISTITEM>
+                                    <LISTITEM value="Dysphagia" Selected="False">Dysphagia</LISTITEM>
+                                    <LISTITEM value="Obesity" Selected="False">Obesity</LISTITEM>
+                                    <LISTITEM value="Milk Secretion" Selected="False">Milk Secretion</LISTITEM>
+                                    <LISTITEM value="Constipation" Selected="False">Constipation</LISTITEM>
+                                    <LISTITEM value="Hand Tremors" Selected="False">Hand Tremors</LISTITEM>
+                                    <LISTITEM value="Sexual Dysfunction" Selected="False">Sexual Dysfunction</LISTITEM>
+                                    <LISTITEM value="Menstrual Problems" Selected="False">Menstrual Problems</LISTITEM>
+                                    <LISTITEM value="Motor Restlessness" Selected="False">Motor Restlessness</LISTITEM>
                                 </LISTITEMS>
                             </FIELD>
                         </FIELD>
@@ -1078,7 +1078,7 @@
                     <LISTITEMS>
                         <LISTITEM value="Consanguineous" id="RBexpressedemotion1" Selected="False">Hostility</LISTITEM>
                         <LISTITEM value="Criticality" id="RBexpressedemotion2" Selected="False">Criticality</LISTITEM>
-                        <LISTITEM value="Over involvement" id="RBexpressedemotion3" Selected="False">Over involvement</LISTITEM>
+                        <LISTITEM value="Over Involvement" id="RBexpressedemotion3" Selected="False">Over Involvement</LISTITEM>
                         <LISTITEM value="Warmth" id="RBexpressedemotion4" Selected="False">Warmth</LISTITEM>
                     </LISTITEMS>
                 </FIELD>
@@ -1121,7 +1121,7 @@
                         <LISTITEMS>
                             <LISTITEM value="Full Term" id="RBpbperinatal1" Selected="False">Full Term</LISTITEM>
                             <LISTITEM value="Premature" id="RBpbperinatal2" Selected="False">Premature</LISTITEM>
-                            <LISTITEM value="Post mature" id="RBpbperinatal3" Selected="False">Post mature</LISTITEM>
+                            <LISTITEM value="Post Mature" id="RBpbperinatal3" Selected="False">Post Mature</LISTITEM>
                             <LISTITEM value="Delayed" id="RBpbperinatal4" Selected="False">Delayed</LISTITEM>
                         </LISTITEMS>
                     </FIELD>
@@ -1216,14 +1216,14 @@
                             <LISTITEM value="Sleep Walking" id="CBpbemotionalbehaviour1" Selected="False">Sleep Walking</LISTITEM>
                             <LISTITEM value="Temper Tantrums" id="CBpbemotionalbehaviour2" Selected="False">Temper Tantrums</LISTITEM>
                             <LISTITEM value="Stammering" id="CBpbemotionalbehaviour3" Selected="False">Stammering</LISTITEM>
-                            <LISTITEM value="Nail biting" id="CBpbemotionalbehaviour4" Selected="False">Nail biting</LISTITEM>
+                            <LISTITEM value="Nail Biting" id="CBpbemotionalbehaviour4" Selected="False">Nail Biting</LISTITEM>
                             <LISTITEM value="Enuresis" id="CBpbemotionalbehaviour5" Selected="False">Enuresis</LISTITEM>
                             <LISTITEM value="Encopresis" id="CBpbemotionalbehaviour6" Selected="False">Encopresis</LISTITEM>
-                            <LISTITEM value="Thumb sucking" id="CBpbemotionalbehaviour7" Selected="False">Thumb sucking</LISTITEM>
-                            <LISTITEM value="Head banging" id="CBpbemotionalbehaviour8" Selected="False">Head banging</LISTITEM>
+                            <LISTITEM value="Thumb Sucking" id="CBpbemotionalbehaviour7" Selected="False">Thumb Sucking</LISTITEM>
+                            <LISTITEM value="Head Banging" id="CBpbemotionalbehaviour8" Selected="False">Head Banging</LISTITEM>
                             <LISTITEM value="Nightmares" id="CBpbemotionalbehaviour9" Selected="False">Nightmares</LISTITEM>
-                            <LISTITEM value="Seperation anxiety" id="CBpbemotionalbehaviour10" Selected="False">Seperation anxiety</LISTITEM>
-                            <LISTITEM value="Conduct problems" id="CBpbemotionalbehaviour11" Selected="False">Conduct problems</LISTITEM>
+                            <LISTITEM value="Seperation Anxiety" id="CBpbemotionalbehaviour10" Selected="False">Seperation Anxiety</LISTITEM>
+                            <LISTITEM value="Conduct Problems" id="CBpbemotionalbehaviour11" Selected="False">Conduct Problems</LISTITEM>
                             <LISTITEM value="Others" id="CBpbemotionalbehaviour12" Selected="False" onclick="OThersvisible(this.id,'TxtpbemotionalbehaviouDiv');">Others</LISTITEM>
                         </LISTITEMS>
                         <FIELD id="Txtpbemotionalbehaviou" type="TextBox" label="Notes: ">
@@ -1258,11 +1258,11 @@
                             <PROPERTY name="name">CBpbemotionalbehaviouradole[]</PROPERTY>
                         </PROPERTIES>
                         <LISTITEMS>
-                            <LISTITEM value="Mood disturbances" id="CBpbemotionalbehaviouradole1" Selected="False">Mood disturbances</LISTITEM>
-                            <LISTITEM value="Substance use" id="CBpbemotionalbehaviouradole2" Selected="False">Substance use</LISTITEM>
+                            <LISTITEM value="Mood Disturbances" id="CBpbemotionalbehaviouradole1" Selected="False">Mood Disturbances</LISTITEM>
+                            <LISTITEM value="Substance Use" id="CBpbemotionalbehaviouradole2" Selected="False">Substance Use</LISTITEM>
                             <LISTITEM value="Argumentative" id="CBpbemotionalbehaviouradole3" Selected="False">Argumentative</LISTITEM>
                             <LISTITEM value="Inferiority" id="CBpbemotionalbehaviouradole4" Selected="False">Inferiority</LISTITEM>
-                            <LISTITEM value="Conduct problems" id="CBpbemotionalbehaviouradole5" Selected="False">Conduct problems</LISTITEM>
+                            <LISTITEM value="Conduct Problems" id="CBpbemotionalbehaviouradole5" Selected="False">Conduct Problems</LISTITEM>
                             <LISTITEM value="Others" id="CBpbemotionalbehaviouradole6" Selected="False" onclick="OThersvisible(this.id,'TxtpbemotionalbehaviouradoleDiv');">Others</LISTITEM>
                         </LISTITEMS>
                         <FIELD id="Txtpbemotionalbehaviouradole" type="TextBox" label="Notes: ">
@@ -1369,7 +1369,7 @@
                             <LISTITEM value="Urban" id="RBpbtypeofschool1" Selected="False">Urban</LISTITEM>
                             <LISTITEM value="Rural" id="RBpbtypeofschool2" Selected="False">Rural</LISTITEM>
                             <LISTITEM value="Residental" id="RBpbtypeofschool3" Selected="False">Residential</LISTITEM>
-                            <LISTITEM value="Day scholar" id="RBpbtypeofschool4" Selected="False">Day scholar</LISTITEM>
+                            <LISTITEM value="Day Scholar" id="RBpbtypeofschool4" Selected="False">Day Scholar</LISTITEM>
                         </LISTITEMS>
                     </FIELD>
                 
@@ -1398,7 +1398,7 @@
                         <LISTITEMS>
                             <LISTITEM value="Good" id="RBpbacademicperfor1" Selected="False">Good</LISTITEM>
                             <LISTITEM value="Average" id="RBpbacademicperfor2" Selected="False">Average</LISTITEM>
-                            <LISTITEM value="Below average" id="RBpbacademicperfor3" Selected="False">Below average</LISTITEM>
+                            <LISTITEM value="Below Average" id="RBpbacademicperfor3" Selected="False">Below Average</LISTITEM>
                             <LISTITEM value="Poor" id="RBpbacademicperfor4" Selected="False">Poor</LISTITEM>
                         </LISTITEMS>
                     </FIELD>
@@ -1575,7 +1575,7 @@
                             </PROPERTIES>
                             <LISTITEMS>
                                 <LISTITEM value="Premenstrual Dysphoria" id="RBRegularity11" Selected="False">Premenstrual Dysphoria</LISTITEM>
-                                <LISTITEM value="Post menopausal Dysphoria" id="RBRegularity12" Selected="False">Post menopausal Dysphoria</LISTITEM>
+                                <LISTITEM value="Post Menopausal Dysphoria" id="RBRegularity12" Selected="False">Post Menopausal Dysphoria</LISTITEM>
                             </LISTITEMS>
                         </FIELD>
                     </FIELD>
@@ -1656,7 +1656,7 @@
                         </PROPERTIES>
                         <LISTITEMS>
                             <LISTITEM value="Arrange" id="RBtype1" Selected="False">Arranged</LISTITEM>
-                            <LISTITEM value="By choice" id="RBtype2" Selected="False">By choice</LISTITEM>
+                            <LISTITEM value="By Choice" id="RBtype2" Selected="False">By Choice</LISTITEM>
                         </LISTITEMS>
                     </FIELD>
                 
@@ -1665,7 +1665,7 @@
                             <PROPERTY name="name">RBmaritalsexualsatisfac</PROPERTY>
                         </PROPERTIES>
                         <LISTITEMS>
-                            <LISTITEM value="satisfactory" id="RBmaritalsexualsatisfac1" Selected="False">satisfactory</LISTITEM>
+                            <LISTITEM value="Satisfactory" id="RBmaritalsexualsatisfac1" Selected="False">Satisfactory</LISTITEM>
                             <LISTITEM value="Unsatisfactory" id="RBmaritalsexualsatisfac2" Selected="False">Unsatisfactory</LISTITEM>
                             <LISTITEM value="Neutral" id="RBmaritalsexualsatisfac3" Selected="False">Neutral</LISTITEM>
                         </LISTITEMS>
@@ -1721,15 +1721,15 @@
                             <PROPERTY name="name">CBsexualfunctioning[]</PROPERTY>
                         </PROPERTIES>
                         <LISTITEMS>
-                            <LISTITEM value="Premarital relationships" id="CBsexualfunctioning1" Selected="False">Premarital relationships</LISTITEM>
-                            <LISTITEM value="Extra marital relationships" id="CBsexualfunctioning2" Selected="False">Extra marital relationships</LISTITEM>
-                            <LISTITEM value="Hyper sexulaity" id="CBsexualfunctioning3" Selected="False">Hyper sexuality</LISTITEM>
-                            <LISTITEM value="Hypo sexuality" id="CBsexualfunctioning4" Selected="False">Hypo sexuality</LISTITEM>
+                            <LISTITEM value="Premarital Relationships" id="CBsexualfunctioning1" Selected="False">Premarital Relationships</LISTITEM>
+                            <LISTITEM value="Extra Marital Relationships" id="CBsexualfunctioning2" Selected="False">Extra Marital Relationships</LISTITEM>
+                            <LISTITEM value="Hyper Sexulaity" id="CBsexualfunctioning3" Selected="False">Hyper Sexuality</LISTITEM>
+                            <LISTITEM value="Hypo Sexuality" id="CBsexualfunctioning4" Selected="False">Hypo Sexuality</LISTITEM>
                             <LISTITEM value="Sexual Aversion" id="CBsexualfunctioning5" Selected="False">Sexual Aversion</LISTITEM>
-                            <LISTITEM value="Loss of libido" id="CBsexualfunctioning6" Selected="False">Loss of libido</LISTITEM>
-                            <LISTITEM value="Erectile dysfunction" id="CBsexualfunctioning7" Selected="False">Erectile dysfunction</LISTITEM>
-                            <LISTITEM value="Masturbation guilt" id="CBsexualfunctioning8" Selected="False">Masturbation guilt</LISTITEM>
-                            <LISTITEM value="Premature ejaculation" id="CBsexualfunctioning9" Selected="False">Premature ejaculation</LISTITEM>
+                            <LISTITEM value="Loss Of Libido" id="CBsexualfunctioning6" Selected="False">Loss Of Libido</LISTITEM>
+                            <LISTITEM value="Erectile Dysfunction" id="CBsexualfunctioning7" Selected="False">Erectile Dysfunction</LISTITEM>
+                            <LISTITEM value="Masturbation Guilt" id="CBsexualfunctioning8" Selected="False">Masturbation Guilt</LISTITEM>
+                            <LISTITEM value="Premature Ejaculation" id="CBsexualfunctioning9" Selected="False">Premature Ejaculation</LISTITEM>
                             <LISTITEM value="Dyspareunia" id="CBsexualfunctioning10" Selected="False">Dyspareunia</LISTITEM>
                             <LISTITEM value="Vaginismus" id="CBsexualfunctioning11" Selected="False">Vaginismus</LISTITEM>
                         </LISTITEMS>
@@ -1847,13 +1847,13 @@
                             <PROPERTY name="name">CBattitudetoself[]</PROPERTY>
                         </PROPERTIES>
                         <LISTITEMS>
-                            <LISTITEM value="Ego centric" id="CBattitudetoself1" Selected="False">Ego centric</LISTITEM>
+                            <LISTITEM value="Ego Centric" id="CBattitudetoself1" Selected="False">Ego Centric</LISTITEM>
                             <LISTITEM value="Selfish" id="CBattitudetoself2" Selected="False">Selfish</LISTITEM>
                             <LISTITEM value="Dramatizing" id="CBattitudetoself3" Selected="False">Dramatizing</LISTITEM>
                             <LISTITEM value="Critical" id="CBattitudetoself4" Selected="False">Critical</LISTITEM>
                             <LISTITEM value="Self-consicious" id="CBattitudetoself5" Selected="False">Self-conscious</LISTITEM>
                             <LISTITEM value="Satisfied" id="CBattitudetoself6" Selected="False">Satisfied</LISTITEM>
-                            <LISTITEM value="Over concerned" id="CBattitudetoself7" Selected="False">Over concerned</LISTITEM>
+                            <LISTITEM value="Over Concerned" id="CBattitudetoself7" Selected="False">Over Concerned</LISTITEM>
                         </LISTITEMS>
                     </FIELD>
                     <FIELD id="CBattitudetowork" header2Class="Premorbid_Personality" type="CheckBoxList" label="Attitude to work and responsibilities">
@@ -1879,10 +1879,10 @@
                             <PROPERTY name="name">CBmoralreligiousattitude[]</PROPERTY>
                         </PROPERTIES>
                         <LISTITEMS>
-                            <LISTITEM value="Evidence of rigidity" id="CBmoralreligiousattitude1" Selected="False">Evidence of rigidity</LISTITEM>
+                            <LISTITEM value="Evidence Of Rigidity" id="CBmoralreligiousattitude1" Selected="False">Evidence Of Rigidity</LISTITEM>
                             <LISTITEM value="Compliance" id="CBmoralreligiousattitude2" Selected="False">Compliance</LISTITEM>
                             <LISTITEM value="Permissiveness" id="CBmoralreligiousattitude3" Selected="False">Permissiveness</LISTITEM>
-                            <LISTITEM value="Over conscientiousness" id="CBmoralreligiousattitude4" Selected="False">Over conscientiousness</LISTITEM>
+                            <LISTITEM value="Over Conscientiousness" id="CBmoralreligiousattitude4" Selected="False">Over Conscientiousness</LISTITEM>
                             <LISTITEM value="Rebellious" id="CBmoralreligiousattitude5" Selected="False">Rebellious</LISTITEM>
                         </LISTITEMS>
                     </FIELD>
@@ -1909,7 +1909,7 @@
                         </PROPERTIES>
                         <LISTITEMS>
                             <LISTITEM value="Stable" id="CBmood1" Selected="False">Stable</LISTITEM>
-                            <LISTITEM value="Mood swings" id="CBmood2" Selected="False">Mood swings</LISTITEM>
+                            <LISTITEM value="Mood Swings" id="CBmood2" Selected="False">Mood Swings</LISTITEM>
                             <LISTITEM value="Anxious" id="CBmood3" Selected="False">Anxious</LISTITEM>
                             <LISTITEM value="Irritable" id="CBmood4" Selected="False">Irritable</LISTITEM>
                             <LISTITEM value="Submissive" id="CBmood5" Selected="False">Worrying</LISTITEM>
@@ -1924,8 +1924,8 @@
                         </PROPERTIES>
                         <LISTITEMS>
                             <LISTITEM value="Alone" id="CBleisuretimespent1" Selected="False">Alone</LISTITEM>
-                            <LISTITEM value="With friends" id="CBleisuretimespent2" Selected="False">With friends</LISTITEM>
-                            <LISTITEM value="With family" id="CBleisuretimespent3" Selected="False">With family</LISTITEM>
+                            <LISTITEM value="With Friends" id="CBleisuretimespent2" Selected="False">With Friends</LISTITEM>
+                            <LISTITEM value="With Family" id="CBleisuretimespent3" Selected="False">With Family</LISTITEM>
                         </LISTITEMS>
                     </FIELD>
                     <FIELD id="CBfantasies" header2Class="Premorbid_Personality" type="CheckBoxList" label="Fantasies and Dreams">
@@ -1936,9 +1936,9 @@
                             <LISTITEM value="Day Dreaming" id="CBfantasies1" Selected="False">Day Dreaming</LISTITEM>
                             <LISTITEM value="Recurrent Dreams" id="CBfantasies2" Selected="False">Recurrent Dreams</LISTITEM>
                             <LISTITEM value="Sexual Fantasies" id="CBfantasies3" Selected="False">Sexual Fantasies</LISTITEM>
-                            <LISTITEM value="Non sexual fantasies" id="CBfantasies4" Selected="False">Non sexual fantasies</LISTITEM>
+                            <LISTITEM value="Non Sexual Fantasies" id="CBfantasies4" Selected="False">Non Sexual Fantasies</LISTITEM>
                             <LISTITEM value="Unrealistic" id="CBfantasies5" Selected="False">Unrealistic</LISTITEM>
-                            <LISTITEM value="Goal oriented" id="CBfantasies6" Selected="False">Goal oriented</LISTITEM>
+                            <LISTITEM value="Goal Oriented" id="CBfantasies6" Selected="False">Goal Oriented</LISTITEM>
                         </LISTITEMS>
                     </FIELD>
                 
@@ -1961,7 +1961,7 @@
                         <PROPERTY name="name">RBAppearance</PROPERTY>
                     </PROPERTIES>
                     <LISTITEMS>
-                        <LISTITEM value="Looks ones age" id="RBAppearance1" Selected="False">Looks ones age</LISTITEM>
+                        <LISTITEM value="Looks Ones Age" id="RBAppearance1" Selected="False">Looks Ones Age</LISTITEM>
                         <LISTITEM value="Older" id="RBAppearance2" Selected="False">Older</LISTITEM>
                         <LISTITEM value="Younger" id="RBAppearance3" Selected="False">Younger</LISTITEM>
                     </LISTITEMS>
@@ -1995,8 +1995,8 @@
                         <PROPERTY name="name">RBmodeofentry</PROPERTY>
                     </PROPERTIES>
                     <LISTITEMS>
-                        <LISTITEM value="Came willingly" id="RBmodeofentry1" Selected="False">Came willingly</LISTITEM>
-                        <LISTITEM value="Persuaded by physical force" id="RBmodeofentry2" Selected="False">Persuaded by physical force</LISTITEM>
+                        <LISTITEM value="Came Willingly" id="RBmodeofentry1" Selected="False">Came Willingly</LISTITEM>
+                        <LISTITEM value="Persuaded By Physical Force" id="RBmodeofentry2" Selected="False">Persuaded By Physical Force</LISTITEM>
                     </LISTITEMS>
                 </FIELD>
                 
@@ -2051,7 +2051,7 @@
                         <LISTITEM value="Exaggerated" id="CBGesturingposturing2" Selected="False">Exaggerated</LISTITEM>
                         <LISTITEM value="Catatonic" id="CBGesturingposturing3" Selected="False">Catatonic</LISTITEM>
                         <LISTITEM value="Negativism" id="CBGesturingposturing4" Selected="False">Negativism</LISTITEM>
-                        <LISTITEM value="Waxy flexibility" id="CBGesturingposturing5" Selected="False">Waxy flexibility</LISTITEM>
+                        <LISTITEM value="Waxy Flexibility" id="CBGesturingposturing5" Selected="False">Waxy Flexibility</LISTITEM>
                         <LISTITEM value="Echopraxia" id="CBGesturingposturing6" Selected="False">Echopraxia</LISTITEM>
                         <LISTITEM value="Automatism" id="CBGesturingposturing7" Selected="False">Automatism</LISTITEM>
                         <LISTITEM value="Others" id="CBGesturingposturing8" Selected="False" onclick="OThersvisible(this.id,'txtGesturingposturingDiv');">Others</LISTITEM>
@@ -2176,17 +2176,17 @@
                         <PROPERTY name="name">CBstreamform[]</PROPERTY>
                     </PROPERTIES>
                     <LISTITEMS>
-                        <LISTITEM value="No formal thought disorder" id="CBstreamform1" Selected="False">No formal thought disorder</LISTITEM>
-                        <LISTITEM value="Flight of ideas" id="CBstreamform2" Selected="False">Flight of ideas</LISTITEM>
-                        <LISTITEM value="Retarded thinking" id="CBstreamform3" Selected="False">Retarded thinking</LISTITEM>
+                        <LISTITEM value="No Formal Thought Disorder" id="CBstreamform1" Selected="False">No Formal Thought Disorder</LISTITEM>
+                        <LISTITEM value="Flight Of Ideas" id="CBstreamform2" Selected="False">Flight Of Ideas</LISTITEM>
+                        <LISTITEM value="Retarded Thinking" id="CBstreamform3" Selected="False">Retarded Thinking</LISTITEM>
                         <LISTITEM value="Thought Block" id="CBstreamform4" Selected="False">Thought Block</LISTITEM>
                         <LISTITEM value="Circumstantial" id="CBstreamform5" Selected="False">Circumstantial</LISTITEM>
                         <LISTITEM value="Tangential" id="CBstreamform6" Selected="False">Tangential</LISTITEM>
-                        <LISTITEM value="Loosening of association" id="CBstreamform7" Selected="False">Loosening of association</LISTITEM>
+                        <LISTITEM value="Loosening Of Association" id="CBstreamform7" Selected="False">Loosening Of Association</LISTITEM>
                         <LISTITEM value="Derailment" id="CBstreamform8" Selected="False">Derailment</LISTITEM>
                         <LISTITEM value="Perseveration" id="CBstreamform9" Selected="False">Perseveration</LISTITEM>
                         <LISTITEM value="Neologisms" id="CBstreamform10" Selected="False">Neologisms</LISTITEM>
-                        <LISTITEM value="Word salad " id="CBstreamform11" Selected="False">Word salad</LISTITEM>
+                        <LISTITEM value="Word Salad " id="CBstreamform11" Selected="False">Word Salad</LISTITEM>
                         <LISTITEM value="Others" id="CBstreamform12" Selected="False">Others</LISTITEM>
                     </LISTITEMS>
                 </FIELD>
@@ -2241,10 +2241,10 @@
                     <LISTITEMS>
                         <LISTITEM value="Over Valued Ideas" id="CBIdeas1" Selected="False">Over Valued Ideas</LISTITEM>
                         <LISTITEM value="Suicidal Ideation" id="CBIdeas2" Selected="False">Suicidal Ideation</LISTITEM>
-                        <LISTITEM value="Ideas of worthlessness" id="CBIdeas3" Selected="False">Ideas of worthlessness</LISTITEM>
+                        <LISTITEM value="Ideas Of Worthlessness" id="CBIdeas3" Selected="False">Ideas Of Worthlessness</LISTITEM>
                         <LISTITEM value="Helplessness" id="CBIdeas4" Selected="False">Helplessness</LISTITEM>
                         <LISTITEM value="Hopelessness" id="CBIdeas5" Selected="False">Hopelessness</LISTITEM>
-                        <LISTITEM value="Guilt feelings" id="CBIdeas6" Selected="False">Guilt feelings</LISTITEM>
+                        <LISTITEM value="Guilt Feelings" id="CBIdeas6" Selected="False">Guilt Feelings</LISTITEM>
                         <LISTITEM value="Hypochondriacal Ideas" id="CBIdeas7" Selected="False">Hypochondriacal Ideas</LISTITEM>
                     </LISTITEMS>
                 </FIELD>
@@ -2269,8 +2269,8 @@
                             <PROPERTY name="name">RBnatureofdelusion</PROPERTY>
                         </PROPERTIES>
                         <LISTITEMS>
-                            <LISTITEM value="Well systematized" id="RBnatureofdelusion1" Selected="False">Well systematized</LISTITEM>
-                            <LISTITEM value="Poorly systematized" id="RBnatureofdelusion2" Selected="False">Poorly systematized</LISTITEM>
+                            <LISTITEM value="Well Systematized" id="RBnatureofdelusion1" Selected="False">Well Systematized</LISTITEM>
+                            <LISTITEM value="Poorly Systematized" id="RBnatureofdelusion2" Selected="False">Poorly Systematized</LISTITEM>
                             
                         </LISTITEMS>
                     </FIELD>
@@ -2309,8 +2309,8 @@
                         <LISTITEM value="Normal" id="RBrangeandreactivity1" Selected="False">Normal</LISTITEM>
                         <LISTITEM value="Increased" id="RBrangeandreactivity2" Selected="False">Increased</LISTITEM>
                         <LISTITEM value="Decreased" id="RBrangeandreactivity3" Selected="False">Decreased</LISTITEM>
-                        <LISTITEM value="Labile mood" id="RBrangeandreactivity4" Selected="False">Labile mood</LISTITEM>
-                        <LISTITEM value="Diurnal variation" id="RBrangeandreactivity5" Selected="False">Diurnal variation</LISTITEM>
+                        <LISTITEM value="Labile Mood" id="RBrangeandreactivity4" Selected="False">Labile Mood</LISTITEM>
+                        <LISTITEM value="Diurnal Variation" id="RBrangeandreactivity5" Selected="False">Diurnal Variation</LISTITEM>
                         <LISTITEM value="Incongruent" id="RBrangeandreactivity6" Selected="False">Incongruent</LISTITEM>
                     </LISTITEMS>
                 </FIELD>
@@ -2407,8 +2407,8 @@
                         <PROPERTY name="name">RBAttension</PROPERTY>
                     </PROPERTIES>
                     <LISTITEMS>
-                        <LISTITEM value="Normally aroused" id="RBAttension1" Selected="False">Normally aroused</LISTITEM>
-                        <LISTITEM value="Aroused with difficulty" id="RBAttension2" Selected="False">Aroused with difficulty</LISTITEM>
+                        <LISTITEM value="Normally Aroused" id="RBAttension1" Selected="False">Normally Aroused</LISTITEM>
+                        <LISTITEM value="Aroused With Difficulty" id="RBAttension2" Selected="False">Aroused With Difficulty</LISTITEM>
                     </LISTITEMS>
                 </FIELD>
                 
@@ -2417,8 +2417,8 @@
                         <PROPERTY name="name">RBConcentration</PROPERTY>
                     </PROPERTIES>
                     <LISTITEMS>
-                        <LISTITEM id="RBConcentration1" value="Normally sustained" Selected="False">Normally sustained</LISTITEM>
-                        <LISTITEM id="RBConcentration2" value="Sustained with difficulty" Selected="False">Sustained with difficulty</LISTITEM>
+                        <LISTITEM id="RBConcentration1" value="Normally Sustained" Selected="False">Normally Sustained</LISTITEM>
+                        <LISTITEM id="RBConcentration2" value="Sustained With Difficulty" Selected="False">Sustained With Difficulty</LISTITEM>
                         <LISTITEM id="RBConcentration3" value="Distracted" Selected="False">Distracted</LISTITEM>
                     </LISTITEMS>
                 </FIELD>
@@ -2470,18 +2470,18 @@
                 
                 
                 
-                <FIELD id="RBIntelligence" header2Class="Memory" type="RadioButtonList" label="Intelligence" required="true">
+                <FIELD id="RBIntelligence" header2Class="Higher_Mental_Functions" type="RadioButtonList" label="Intelligence" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">RBIntelligence</PROPERTY>
                     </PROPERTIES>
                     <LISTITEMS>
                         <LISTITEM value="Average" id="RBIntelligence1" Selected="False">Average</LISTITEM>
-                        <LISTITEM value="Above average" id="RBIntelligence2" Selected="False">Above average</LISTITEM>
-                        <LISTITEM value="Below average" id="RBIntelligence3" Selected="False">Below average</LISTITEM>
+                        <LISTITEM value="Above Average" id="RBIntelligence2" Selected="False">Above Average</LISTITEM>
+                        <LISTITEM value="Below Average" id="RBIntelligence3" Selected="False">Below Average</LISTITEM>
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="RBAbstraction" header2Class="Memory" type="RadioButtonList" label="Abstraction" required="true">
+                <FIELD id="RBAbstraction" header2Class="Higher_Mental_Functions" type="RadioButtonList" label="Abstraction" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">RBAbstraction</PROPERTY>
                     </PROPERTIES>
@@ -2489,7 +2489,7 @@
                         <LISTITEM value="Adequate" id="RBAbstraction1" Selected="False">Adequate</LISTITEM>
                         <LISTITEM value="Inadequate" id="RBAbstraction2" Selected="False">Inadequate</LISTITEM>
                     </LISTITEMS>
-                </FIELD><FIELD id="RBJudgement" header2Class="Memory" type="RadioButtonList" label="Judgement" Backcontrols="hide" Backdivid="judgement_radio_div">
+                </FIELD><FIELD id="RBJudgement" header2Class="Higher_Mental_Functions" type="RadioButtonList" label="Judgement" Backcontrols="hide" Backdivid="judgement_radio_div">
                     <PROPERTIES>
                         <PROPERTY name="name">RBJudgement</PROPERTY>
                     </PROPERTIES>
@@ -2520,7 +2520,7 @@
                 
                 
                 
-                <FIELD id="DDLInsight" header2Class="Judgement" type="DropDownList" label="Insight" required="true">
+                <FIELD id="DDLInsight" header2Class="Higher_Mental_Functions" type="DropDownList" label="Insight" required="true">
                     <PROPERTIES>
                         <PROPERTY name="id">DDLInsight</PROPERTY>
                         <PROPERTY name="name">DDLInsight</PROPERTY>
@@ -2528,16 +2528,16 @@
                     </PROPERTIES>
                     <LISTITEMS>
                         <LISTITEM id="DDLInsight1" value="" Selected="False">--Select--</LISTITEM>
-                        <LISTITEM id="DDLInsight2" value="Grade I - Complete denial" Selected="False">Grade I - Complete denial</LISTITEM>
-                        <LISTITEM id="DDLInsight3" value="Grade II - Slight awareness" Selected="False">Grade II - Slight awareness</LISTITEM>
-                        <LISTITEM id="DDLInsight4" value="Grade III - Awareness attributing to external factors" Selected="False">Grade III - Awareness attributing to external factors</LISTITEM>
-                        <LISTITEM id="DDLInsight5" value="Grade IV - Awareness unknown to himself" Selected="False">Grade IV - Awareness unknown to himself</LISTITEM>
-                        <LISTITEM id="DDLInsight6" value="Grade V - Intellactual insight" Selected="False">Grade V - Intellactual insight</LISTITEM>
-                        <LISTITEM id="DDLInsight7" value="Grade VI - Emotional insight" Selected="False">Grade VI - Emotional insight</LISTITEM>
+                        <LISTITEM id="DDLInsight2" value="Grade I - Complete Denial" Selected="False">Grade I - Complete Denial</LISTITEM>
+                        <LISTITEM id="DDLInsight3" value="Grade II - Slight Awareness" Selected="False">Grade II - Slight Awareness</LISTITEM>
+                        <LISTITEM id="DDLInsight4" value="Grade III - Awareness Attributing To External Factors" Selected="False">Grade III - Awareness Attributing To External Factors</LISTITEM>
+                        <LISTITEM id="DDLInsight5" value="Grade IV - Awareness Unknown To Himself" Selected="False">Grade IV - Awareness Unknown To Himself</LISTITEM>
+                        <LISTITEM id="DDLInsight6" value="Grade V - Intellactual Insight" Selected="False">Grade V - Intellactual Insight</LISTITEM>
+                        <LISTITEM id="DDLInsight7" value="Grade VI - Emotional Insight" Selected="False">Grade VI - Emotional Insight</LISTITEM>
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="RBKnowledgeaboutmentalillness" header2Class="Judgement" type="RadioButtonList" label="Knowledge about mental illness" required="true">
+                <FIELD id="RBKnowledgeaboutmentalillness" header2Class="Higher_Mental_Functions" type="RadioButtonList" label="Knowledge about mental illness" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">RBKnowledgeaboutmentalillness</PROPERTY>
                     </PROPERTIES>
@@ -2548,7 +2548,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="RBAttitudeillness" header2Class="Judgement" type="RadioButtonList" label="Attitude towards illness  &amp; treatment" required="true">
+                <FIELD id="RBAttitudeillness" header2Class="Higher_Mental_Functions" type="RadioButtonList" label="Attitude towards illness  &amp; treatment" required="true">
                     <PROPERTIES>
                         <PROPERTY name="name">RBAttitudeillness</PROPERTY>
                     </PROPERTIES>
@@ -2559,7 +2559,7 @@
                     </LISTITEMS>
                 </FIELD>
                 
-                <FIELD id="higher_mental_notes" header2Class="Judgement" type="TextArea" label="Notes">
+                <FIELD id="higher_mental_notes" header2Class="Higher_Mental_Functions" type="TextArea" label="Notes">
                     <PROPERTIES>
                         <PROPERTY name="id">higher_mental_notes</PROPERTY>
                         <PROPERTY name="name">higher_mental_notes</PROPERTY>
