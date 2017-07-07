@@ -804,6 +804,16 @@ class PharmacyproductController extends ActiveController {
                                             $newPackageName->save(false);
                                         }
                                         
+                                        //Stock adjust log For "stock report" purpose
+                                        $newStkadjustlog = new \common\models\PhaStockAdjustLog();
+                                        $newStkadjustlog->tenant_id = $result->tenant_id;
+                                        $newStkadjustlog->batch_id = $batch->batch_id;
+                                        $newStkadjustlog->adjust_date_time = $batch->created_at;
+                                        $newStkadjustlog->adjust_from = 0;
+                                        $newStkadjustlog->adjust_to = $result->Total;
+                                        $newStkadjustlog->adjust_qty = $result->Total;
+                                        $newStkadjustlog->save(false);
+                                        
                                         $return = ['success' => true, 'continue' => $next_id, 'message' => 'success'];
                                     } else {
                                         $return = ['success' => false, 'continue' => $next_id, 'message' => 'Duplicate batch entry'];
