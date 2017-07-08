@@ -1008,6 +1008,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
                         ids = [];
 //                        angular.forEach(prescriptionList.prescriptions, function (prescription) {
+                        if (prescriptionList.prescription) {
                             angular.forEach(prescriptionList.prescription.items, function (item) {
                                 $scope.inserted = {
                                     full_name: item.product.full_name,
@@ -1030,6 +1031,8 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                     ids.push(item.product_id);
                                 }
                             });
+                        }
+
 //                        });
 
 //                        $rootScope.commonService.GetBatchListByProduct(ids, function (response) {
@@ -1620,15 +1623,15 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
                         }, {
                     layout: 'noBorders',
-                    margin : [200,10,10,10],
+                    margin: [200, 10, 10, 10],
                     table: {
                         body: [
                             [
                                 {
                                     text: (group_total_count === group_key ? '' : 'To Be Continue'),
-                                    bold:true,
-                                    alignment : 'center',
-                                    fontSize : 14,
+                                    bold: true,
+                                    alignment: 'center',
+                                    fontSize: 14,
                                     style: 'normaltxt'
                                 },
                             ],
