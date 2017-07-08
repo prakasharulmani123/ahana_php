@@ -138,6 +138,29 @@ class PatientprescriptionController extends ActiveController {
             return ['success' => false, 'message' => 'Invalid Access'];
         }
     }
+    
+     public function actionGetsaleprescription() {
+        $get = Yii::$app->getRequest()->get();
+
+        if (isset($get['patient_id'])) {
+            $patient = PatPatient::getPatientByGuid($get['patient_id']);
+            if (isset($get['encounter_id'])) {
+                $encounter_id = $get['encounter_id'];
+                $data = PatPrescription::find()
+                        ->tenant()
+                        ->active()
+                        ->andWhere([
+                            'patient_id' => $patient->patient_id,
+                            'encounter_id' => $encounter_id
+                        ])
+                        ->orderBy(['created_at' => SORT_DESC])
+                        ->one();
+            }
+            return ['success' => true, 'prescription' => $data];
+        } else {
+            return ['success' => false, 'message' => 'Invalid Access'];
+        }
+    }
 
     /* pharmacy_prodesc.js */
 
