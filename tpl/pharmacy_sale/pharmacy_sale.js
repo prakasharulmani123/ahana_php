@@ -1001,14 +1001,14 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
         $scope.getPrescription = function () {
             $scope.loadbar('show');
-            $http.get($rootScope.IRISOrgServiceUrl + '/patientprescription/getpreviousprescription?patient_id=' + $scope.data.patient_guid + '&encounter_id=' + $scope.data.encounter_id)
+            $http.get($rootScope.IRISOrgServiceUrl + '/patientprescription/getsaleprescription?patient_id=' + $scope.data.patient_guid + '&encounter_id=' + $scope.data.encounter_id + '&addtfields=prev_presc')
                     .success(function (prescriptionList) {
                         $scope.loadbar('hide');
                         $scope.saleItems = [];
 
                         ids = [];
-                        angular.forEach(prescriptionList.prescriptions, function (prescription) {
-                            angular.forEach(prescription.items, function (item) {
+//                        angular.forEach(prescriptionList.prescriptions, function (prescription) {
+                            angular.forEach(prescriptionList.prescription.items, function (item) {
                                 $scope.inserted = {
                                     full_name: item.product.full_name,
                                     batch_details: '',
@@ -1030,7 +1030,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                     ids.push(item.product_id);
                                 }
                             });
-                        });
+//                        });
 
 //                        $rootScope.commonService.GetBatchListByProduct(ids, function (response) {
 //                            $scope.batches = response.batchList;
@@ -1038,6 +1038,10 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
                         if ($scope.saleItems.length == 0) {
                             $scope.addRow();
+                        } else {
+                            angular.forEach($scope.saleItems, function (item, key) {
+                                $scope.updateProductRow(item, '', '', key);
+                            });
                         }
 
                         $timeout(function () {
