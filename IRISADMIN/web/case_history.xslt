@@ -635,7 +635,7 @@
                                                                                 <div class="form-group">
                                                                                     <div class="col-sm-12">
                                                                                         <div class="form-group">
-                                                                                            <table>
+                                                                                            <table name="check_drop">
                                                                                                 <xsl:for-each select="PROPERTIES/PROPERTY">
                                                                                                     <xsl:attribute name="{@name}">
                                                                                                         <xsl:value-of select="current()"/>
@@ -1237,6 +1237,35 @@
                                                                                 <div class="line line-dashed b-b line-lg "/>
                                                                             </xsl:when>
                                                                             
+                                                                            <xsl:when test="@type='TextBoxDDLlabel'">
+                                                                                <div class="form-group">
+                                                                                    <label class="col-sm-3 control-label">
+                                                                                        <xsl:value-of select="@label"/>
+                                                                                        <xsl:if test="@required='true'">
+                                                                                            <span class="required"> *</span>
+                                                                                        </xsl:if>
+                                                                                    </label>
+                                                                                    <div class="col-sm-9">
+                                                                                        <div class="row">
+                                                                                            <div class="col-sm-6">
+                                                                                                <input type="text">
+                                                                                                    <xsl:for-each select="PROPERTIES/PROPERTY">
+                                                                                                        <xsl:attribute name="{@name}">
+                                                                                                            <xsl:value-of select="current()"/>
+                                                                                                        </xsl:attribute>
+                                                                                                    </xsl:for-each>
+                                                                                                </input>
+                                                                                            </div>
+                                                                                            <div class="col-sm-6">
+                                                                                               <xsl:value-of select="@Backtext"/>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                            
+                                                                                <div class="line line-dashed b-b line-lg "/>
+                                                                            </xsl:when>
+                                                                            
                                                                             <!-- Panel Bar Main Text Area-->
                                                                             <xsl:when test="@type='TextArea'">
                                                                                 <div class="form-group">
@@ -1427,6 +1456,31 @@
                                                                                                                                         <xsl:value-of select="current()"/>
                                                                                                                                     </xsl:attribute>
                                                                                                                                 </xsl:for-each>
+                                                                                                                                
+                                                                                                                                <xsl:for-each select="LISTITEMS/LISTITEM">
+                                                                                                                                    <option>
+                                                                                                                                        <xsl:attribute name="value">
+                                                                                                                                            <xsl:value-of select="@value"/>
+                                                                                                                                        </xsl:attribute>
+                                                                                                                                        <xsl:if test="@Selected = 'true'">
+                                                                                                                                            <xsl:attribute name="selected">
+                                                                                                                                                <xsl:text>selected</xsl:text>
+                                                                                                                                            </xsl:attribute>
+                                                                                                                                        </xsl:if>
+                                                                                                                                        <xsl:value-of select="@value"/>
+                                                                                                                                    </option>
+                                                                                                                                </xsl:for-each>
+                                                                                                                            </select>
+                                                                                                                        </xsl:when>
+                                                                                                                        
+                                                                                                                        <xsl:when test="@type='MultiDropDownList'">
+                                                                                                                            <select multiple='true'>
+                                                                                                                                <xsl:for-each select="PROPERTIES/PROPERTY">
+                                                                                                                                    <xsl:attribute name="{@name}">
+                                                                                                                                        <xsl:value-of select="current()"/>
+                                                                                                                                    </xsl:attribute>
+                                                                                                                                </xsl:for-each>
+                                                                                                                                
                                                                                                                                 <xsl:for-each select="LISTITEMS/LISTITEM">
                                                                                                                                     <option>
                                                                                                                                         <xsl:attribute name="value">

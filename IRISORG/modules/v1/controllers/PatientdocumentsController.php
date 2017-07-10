@@ -86,19 +86,19 @@ class PatientdocumentsController extends ActiveController {
         //print_r($get); die;
         if (isset($get['patient_id'])) {
             $patient = PatPatient::getPatientByGuid($get['patient_id']);
-            if(!empty($get['date'])) {
+            if (!empty($get['date'])) {
                 $condition = [
-                'patient_id' => $patient->patient_id,
-                'deleted_at' => '0000-00-00 00:00:00',
-                'DATE(date_time)'  => $get['date'], 
+                    'patient_id' => $patient->patient_id,
+                    'deleted_at' => '0000-00-00 00:00:00',
+                    'DATE(date_time)' => $get['date'],
                 ];
             } else {
                 $condition = [
-                'patient_id' => $patient->patient_id,
-                'deleted_at' => '0000-00-00 00:00:00',
+                    'patient_id' => $patient->patient_id,
+                    'deleted_at' => '0000-00-00 00:00:00',
                 ];
             }
-            
+
             $data = VDocuments::find()
                     ->where($condition)
                     ->groupBy('encounter_id')
@@ -140,26 +140,25 @@ class PatientdocumentsController extends ActiveController {
         }
 
         $patient = PatPatient::getPatientByGuid($post['patient_id']);
-        if(!isset($post['address'])){
+        if (!isset($post['address'])) {
             $post['address'] = $patient->getFullcurrentaddress();
-        } else if($post['address'] == '') {
+        } else if ($post['address'] == '') {
             $post['address'] = $patient->getFullcurrentaddress();
         }
-        
+
         $type = 'CH';
         $case_history_xml = PatDocumentTypes::getDocumentType($type);
 
-        $doc_exists ='';
-        if(!empty($post['doc_id']))
-        {
+        $doc_exists = '';
+        if (!empty($post['doc_id'])) {
             $doc_exists = PatDocuments::find()->tenant()->andWhere([
-                'patient_id' => $patient->patient_id,
-                'doc_type_id' => $case_history_xml->doc_type_id,
-                'encounter_id' => $post['encounter_id'],
-                'doc_id' => $post['doc_id'],
-            ])->one();
+                        'patient_id' => $patient->patient_id,
+                        'doc_type_id' => $case_history_xml->doc_type_id,
+                        'encounter_id' => $post['encounter_id'],
+                        'doc_id' => $post['doc_id'],
+                    ])->one();
         }
-        
+
         if (!empty($doc_exists)) {
             $patient_document = $doc_exists;
             $xml = $doc_exists->document_xml;
@@ -199,9 +198,9 @@ class PatientdocumentsController extends ActiveController {
                 $patient_document->status = $post['status'];
 
             $patient_document->document_xml = $result;
-            
+
             $patient_document->save(false);
-            return ['success' => true, 'xml' => $result,'doc_id'=>$patient_document->doc_id ];
+            return ['success' => true, 'xml' => $result, 'doc_id' => $patient_document->doc_id];
         } else {
             return ['success' => false, 'message' => Html::errorSummary([$patient_document])];
         }
@@ -218,7 +217,7 @@ class PatientdocumentsController extends ActiveController {
                 if ($x->attributes()->type == 'PanelBar') {
                     foreach ($x->FIELD as $pb) {
                         if ($pb->attributes()->type == 'RadGrid') {
-                            foreach ($pb->COLUMNS as $columns) {
+                            foreach ($pb->COLUMNS as $key=>$columns) {
                                 foreach ($columns->FIELD as $field) {
                                     //Child FIELD
                                     if (isset($field->FIELD)) {
@@ -226,7 +225,7 @@ class PatientdocumentsController extends ActiveController {
                                             foreach ($post as $key => $value) {
                                                 if ($key == $y->attributes()) {
                                                     $type = $y->attributes()->type;
-
+                                                    //print_r($y->attributes());
                                                     if ($type == 'CheckBoxList') {
                                                         $post_referral_details = $value; // Array
                                                         $list_referral_details = $y->LISTITEMS->LISTITEM;
@@ -237,7 +236,19 @@ class PatientdocumentsController extends ActiveController {
                                                                 $list_value->attributes()['Selected'] = 'false';
                                                             }
                                                         }
+                                                    } elseif ($type == 'MultiDropDownList') {
+                                                        //echo $type; print_r($list_referral_details); //die;
+                                                        $post_referral_details = $value; // Array
+                                                        $list_referral_details = $y->LISTITEMS->LISTITEM;
+                                                        foreach ($list_referral_details as $list_value) {
+                                                            if (in_array($list_value, $post_referral_details)) {
+                                                                $list_value->attributes()['Selected'] = 'true';
+                                                            } else {
+                                                                $list_value->attributes()['Selected'] = 'false';
+                                                            }
+                                                        }
                                                     } elseif ($type == 'DropDownList' || $type == 'RadioButtonList') {
+                                                        //echo $type; print_r($list_value); //die;
                                                         $post_referral_details = $value; // String
                                                         $list_referral_details = $y->LISTITEMS->LISTITEM;
                                                         foreach ($list_referral_details as $list_value) {
@@ -252,17 +263,35 @@ class PatientdocumentsController extends ActiveController {
                                                             unset($y->VALUE);
                                                         }
                                                         $y->addChild('VALUE');
-                                                        if($value != '')
+                                                        if ($value != '')
                                                             $this->addCData($value, $y->VALUE);
                                                     } else {
-                                                        foreach ($y->PROPERTIES->PROPERTY as $text_pro) {
-                                                            if ($text_pro['name'] == 'value') {
-                                                                $dom = dom_import_simplexml($text_pro);
-                                                                $dom->parentNode->removeChild($dom);
+                                                        //echo $y->attributes()->texttypeid[0];
+                                                        if (!empty($y->attributes()->texttypeid[0]) && ($y->attributes()->texttypeid[0] =='selectdropdown')) {
+                                                            //echo $y->attributes()->texttypeid[0];
+                                                            if (!empty($value)) {
+                                                                $list = $field->FIELD[1]->LISTITEMS->LISTITEM;
+                                                                foreach ($list as $listvalue) {
+                                                                    $lis[] = $listvalue['value'][0];
+                                                                }
+                                                                if (in_array($value, $lis)) {
+                                                                    
+                                                                } else {
+                                                                    $item = $field->FIELD[1]->LISTITEMS->addChild('LISTITEM', $value);
+                                                                    $item->addAttribute('value', $value);
+                                                                    $item->addAttribute('Selected', "true");
+                                                                }
                                                             }
+                                                        } else {
+                                                            foreach ($y->PROPERTIES->PROPERTY as $text_pro) {
+                                                                if ($text_pro['name'] == 'value') {
+                                                                    $dom = dom_import_simplexml($text_pro);
+                                                                    $dom->parentNode->removeChild($dom);
+                                                                }
+                                                            }
+                                                            $text_box_value = $y->PROPERTIES->addChild('PROPERTY', $value);
+                                                            $text_box_value->addAttribute('name', 'value');
                                                         }
-                                                        $text_box_value = $y->PROPERTIES->addChild('PROPERTY', $value);
-                                                        $text_box_value->addAttribute('name', 'value');
                                                     }
                                                 }
                                             }
@@ -273,6 +302,7 @@ class PatientdocumentsController extends ActiveController {
                                     foreach ($post as $key => $value) {
                                         if ($key == $field->attributes()) {
                                             $type = $field->attributes()->type;
+
                                             //Checkbox
                                             if ($type == 'CheckBoxList') {
                                                 $post_referral_details = $value;
@@ -309,7 +339,7 @@ class PatientdocumentsController extends ActiveController {
                                                     unset($field->VALUE);
                                                 }
                                                 $field->addChild('VALUE');
-                                                if($value != '')
+                                                if ($value != '')
                                                     $this->addCData($value, $field->VALUE);
                                             } else {
                                                 foreach ($field->PROPERTIES->PROPERTY as $text_pro) {
@@ -323,7 +353,7 @@ class PatientdocumentsController extends ActiveController {
                                             }
                                         }
                                     }
-                                }
+                                } //die;
                             }
                         }
 
@@ -373,7 +403,7 @@ class PatientdocumentsController extends ActiveController {
                                         unset($pb->VALUE);
                                     }
                                     $pb->addChild('VALUE');
-                                    if($value != '')
+                                    if ($value != '')
                                         $this->addCData($value, $pb->VALUE);
                                 } else {
                                     foreach ($pb->PROPERTIES->PROPERTY as $text_pro) {
@@ -420,7 +450,7 @@ class PatientdocumentsController extends ActiveController {
                                                 unset($pbchild->VALUE);
                                             }
                                             $pbchild->addChild('VALUE');
-                                            if($value != '')
+                                            if ($value != '')
                                                 $this->addCData($value, $pbchild->VALUE);
                                         } else {
                                             foreach ($pbchild->PROPERTIES->PROPERTY as $text_pro) {
@@ -475,7 +505,7 @@ class PatientdocumentsController extends ActiveController {
                                                                     unset($y->VALUE);
                                                                 }
                                                                 $y->addChild('VALUE');
-                                                                if($value != '')
+                                                                if ($value != '')
                                                                     $this->addCData($value, $y->VALUE);
                                                             } else {
                                                                 foreach ($y->PROPERTIES->PROPERTY as $text_pro) {
@@ -532,7 +562,7 @@ class PatientdocumentsController extends ActiveController {
                                                             unset($field->VALUE);
                                                         }
                                                         $field->addChild('VALUE');
-                                                        if($value != '')
+                                                        if ($value != '')
                                                             $this->addCData($value, $field->VALUE);
                                                     } else {
                                                         foreach ($field->PROPERTIES->PROPERTY as $text_pro) {
@@ -596,7 +626,7 @@ class PatientdocumentsController extends ActiveController {
                                                 unset($pbsub->VALUE);
                                             }
                                             $pbsub->addChild('VALUE');
-                                            if($value != '')
+                                            if ($value != '')
                                                 $this->addCData($value, $pbsub->VALUE);
                                         } else {
                                             foreach ($pbsub->PROPERTIES->PROPERTY as $text_pro) {
@@ -643,7 +673,7 @@ class PatientdocumentsController extends ActiveController {
                                                         unset($pbsubchild->VALUE);
                                                     }
                                                     $pbsubchild->addChild('VALUE');
-                                                    if($value != '')
+                                                    if ($value != '')
                                                         $this->addCData($value, $pbsubchild->VALUE);
                                                 } else {
                                                     foreach ($pbsubchild->PROPERTIES->PROPERTY as $text_pro) {
@@ -701,7 +731,7 @@ class PatientdocumentsController extends ActiveController {
                                                     unset($y->VALUE);
                                                 }
                                                 $y->addChild('VALUE');
-                                                if($value != '')
+                                                if ($value != '')
                                                     $this->addCData($value, $y->VALUE);
                                             } else {
                                                 foreach ($y->PROPERTIES->PROPERTY as $text_pro) {
@@ -757,7 +787,7 @@ class PatientdocumentsController extends ActiveController {
                                             unset($field->VALUE);
                                         }
                                         $field->addChild('VALUE');
-                                        if($value != '')
+                                        if ($value != '')
                                             $this->addCData($value, $field->VALUE);
                                     } else {
                                         foreach ($field->PROPERTIES->PROPERTY as $text_pro) {
@@ -821,7 +851,7 @@ class PatientdocumentsController extends ActiveController {
                                 unset($x->VALUE);
                             }
                             $x->addChild('VALUE');
-                            if($value != '')
+                            if ($value != '')
                                 $this->addCData($value, $x->VALUE);
                         } else {
                             if (isset($x->PROPERTIES->PROPERTY)) {
@@ -871,7 +901,7 @@ class PatientdocumentsController extends ActiveController {
                                         unset($y->VALUE);
                                     }
                                     $y->addChild('VALUE');
-                                    if($value != '')
+                                    if ($value != '')
                                         $this->addCData($value, $y->VALUE);
                                 } else {
                                     foreach ($y->PROPERTIES->PROPERTY as $text_pro) {
@@ -891,10 +921,9 @@ class PatientdocumentsController extends ActiveController {
         }
 
         $xml = $xmlLoad->asXML();
-
         return $xml;
     }
-    
+
     protected function addCData($cdata_text, \SimpleXMLElement $node) {
         $node = dom_import_simplexml($node);
         $no = $node->ownerDocument;
@@ -1075,7 +1104,7 @@ class PatientdocumentsController extends ActiveController {
                     $listitem15 = $listitems->addChild('LISTITEM', 'Thyroid dysfunction');
                     $listitem15->addAttribute('value', 'Thyroid dysfunction');
                     $listitem15->addAttribute('Selected', 'False');
-                    
+
                     $listitem16 = $listitems->addChild('LISTITEM', 'RTA &amp; Surgery');
                     $listitem16->addAttribute('value', 'RTA &amp; Surgery');
                     $listitem16->addAttribute('Selected', 'False');
@@ -1195,7 +1224,8 @@ class PatientdocumentsController extends ActiveController {
                         if ($x->attributes()->type == 'RadGrid' && $x->attributes()->AddButtonTableId == $table_id) {
                             $text_box = 'txtPhamacoDrugName' . $rowCount; //Textbox1 Name
                             $text_box2 = 'txtPhamacoDuration' . $rowCount; //Textbox2 Name
-                            $text_box3 = 'txtPhamacoSideEffects' . $rowCount; //Textbox2 Name
+                            $text_box3 = 'txtPhamacoSideEffects' . $rowCount; //Textbox3 Name
+                            $text_box4 = 'txtPhamacoSideEffectsTextbox' . $rowCount; //Textbox4 Name
                             $radio = 'radioPhamacoCurrentlyUnderTreatment' . $rowCount; //DDL Name
                             $dropdown = 'DDLPhamacoDuration' . $rowCount; //DDL Name
                             $radio1 = 'radioPhamacoSideeffect' . $rowCount;
@@ -1298,6 +1328,7 @@ class PatientdocumentsController extends ActiveController {
                             $listitem3->addAttribute('id', 'radioPhamacoCurrentlyUnderTreatment3' . $rowCount);
                             $listitem3->addAttribute('Selected', 'False');
 
+                            
                             //FIELD 4
                             $field4 = $columns->addChild('FIELD');
                             $field4->addAttribute('id', $radio1);
@@ -1323,23 +1354,42 @@ class PatientdocumentsController extends ActiveController {
                             $listitem2->addAttribute('id', 'radioPhamacoSideeffect1' . $rowCount);
                             $listitem2->addAttribute('Selected', 'False');
                             $listitem2->addAttribute('onclick', "OThersvisible(this.id, '$radio_back_div', 'none');");
+                            
+                             //Add TextBox
+                            //FIELD 1
+                            $field5 = $field4->addChild('FIELD');
+                            $field5->addAttribute('id', $text_box4);
+                            $field5->addAttribute('type', 'TextBox');
+                            $field5->addAttribute('texttypeid', 'selectdropdown');
 
+                            $properties15 = $field5->addChild('PROPERTIES');
+
+                            $property15 = $properties15->addChild('PROPERTY', $text_box4);
+                            $property15->addAttribute('name', 'id');
+
+                            $property25 = $properties15->addChild('PROPERTY', $text_box4);
+                            $property25->addAttribute('name', 'name');
+
+                            $property225 = $properties15->addChild('PROPERTY', 'form-control');
+                            $property225->addAttribute('name', 'class');
+
+                            
                             //SUB FIELD 1
                             $field4_sub = $field4->addChild('FIELD');
                             $field4_sub->addAttribute('id', 'txtPhamacoSideEffects' . $rowCount);
-                            $field4_sub->addAttribute('type', 'DropDownList');
+                            $field4_sub->addAttribute('type', 'MultiDropDownList');
 
                             $field4_properties = $field4_sub->addChild('PROPERTIES');
 
                             $property8 = $field4_properties->addChild('PROPERTY', 'txtPhamacoSideEffects' . $rowCount);
                             $property8->addAttribute('name', 'id');
 
-                            $property9 = $field4_properties->addChild('PROPERTY', 'txtPhamacoSideEffects' . $rowCount);
+                            $property9 = $field4_properties->addChild('PROPERTY', 'txtPhamacoSideEffects' . $rowCount.'[]');
                             $property9->addAttribute('name', 'name');
 
                             $property10 = $field4_properties->addChild('PROPERTY', 'form-control');
                             $property10->addAttribute('name', 'class');
-                            
+
                             $listitems3 = $field4_sub->addChild('LISTITEMS');
 
                             $listitem31 = $listitems3->addChild('LISTITEM', 'slurred speech');
@@ -1450,7 +1500,7 @@ class PatientdocumentsController extends ActiveController {
                             $listitem4 = $listitems->addChild('LISTITEM', 'Ayurveda');
                             $listitem4->addAttribute('value', 'Ayurveda');
                             $listitem4->addAttribute('Selected', 'False');
-                            
+
                             $listitem5 = $listitems->addChild('LISTITEM', 'Yoga/Naturopathy');
                             $listitem5->addAttribute('value', 'Yoga/Naturopathy');
                             $listitem5->addAttribute('Selected', 'False');

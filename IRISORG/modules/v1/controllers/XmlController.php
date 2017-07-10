@@ -69,12 +69,13 @@ class XmlController extends Controller {
 
     private function simplexml_insert_after($insert, $target) {
         $target_dom = dom_import_simplexml($target);
+        //print_r($target_dom); die;
         $insert_dom = $target_dom->ownerDocument->importNode(dom_import_simplexml($insert), true);
-        if ($target_dom->nextSibling) {
-            return $target_dom->parentNode->insertBefore($insert_dom, $target_dom->nextSibling);
-        } else {
-            return $target_dom->parentNode->appendChild($insert_dom);
-        }
+        //if ($target_dom->nextSibling) {
+        return $target_dom->parentNode->insertBefore($insert_dom, $target_dom->nextSibling);
+        //} else {
+        //return $target_dom->parentNode->appendChild($insert_dom);
+        //}
     }
 
     private function simplexml_insert_firstChild($insert, $target) {
@@ -91,33 +92,18 @@ class XmlController extends Controller {
 
     public function actionInsertnewfield() {
         //$xpath = "/FIELDS/GROUP/PANELBODY/FIELD[@id='name']";
-        $memory = "'judgement_radio_div'";
-        $block = "'block'";
-        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD[@id='RBAbstraction']";
-        $insert = '<FIELD id="RBJudgement" header2Class="Memory" type="RadioButtonList" label="Judgement" Backcontrols="hide" Backdivid="judgement_radio_div">
-                    <PROPERTIES>
-                        <PROPERTY name="name">RBJudgement</PROPERTY>
-                    </PROPERTIES>
-                    <LISTITEMS>
-                    
-                        <LISTITEM value="Personal" id="RBJudgement1" Selected="False" onclick="OThersvisible(this.id, '.$memory.', '.$block.');">Personal</LISTITEM>
-                        <LISTITEM value="Social" id="RBJudgement2" Selected="False" onclick="OThersvisible(this.id, '.$memory.', '.$block.');">Social</LISTITEM>
-                        <LISTITEM value="Test" id="RBJudgement3" Selected="False" onclick="OThersvisible(this.id, '.$memory.', '.$block.');">Test</LISTITEM>
-
-                    </LISTITEMS>
-                    <FIELD id="judgement_radio" type="RadioButtonList" label=" ">
-                        <PROPERTIES>
-                            <PROPERTY name="name">judgement_radio</PROPERTY>
-                        </PROPERTIES>
-                        <LISTITEMS>
-                            <LISTITEM value="Intact" id="judgement_radio1" Selected="False">Intact</LISTITEM>
-                            <LISTITEM value="Impaired" id="judgement_radio2" Selected="False">Impaired</LISTITEM>
-                        </LISTITEMS>
-                    </FIELD>
-                </FIELD>';
+        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD/COLUMNS/FIELD[@id='radioPhamacoSideeffect']";
+        $insert = '<FIELD id="txtPhamacoSideEffectsTextbox" type="TextBox" texttypeid="selectdropdown">
+                                <PROPERTIES>
+                                    <PROPERTY name="id">txtPhamacoSideEffectsTextbox</PROPERTY>
+                                    <PROPERTY name="name">txtPhamacoSideEffectsTextbox</PROPERTY>
+                                    <PROPERTY name="class">form-control</PROPERTY>
+                                </PROPERTIES>
+                            </FIELD>';
         $all_files = $this->getAllFiles();
         $error_files = [];
         if (!empty($all_files)) {
+            // echo 'dasd'; die;
             foreach ($all_files as $key => $files) {
                 if (filesize($files) > 0) {
                     libxml_use_internal_errors(true);
@@ -129,16 +115,10 @@ class XmlController extends Controller {
                     }
                     $targets = $xml->xpath($xpath);
                     if (!empty($targets)) {
-                        //print_r($targets[0]);
-                        //print_r($insert); die;
-                        // echo $files;
-                        $this->simplexml_insert_after(simplexml_load_string($insert), $targets[0]);
-//                        foreach ($targets as $target) {
-//                            $this->simplexml_insert_after(simplexml_load_string($insert), $target);
-//                        }
+                        $this->simplexml_insert_firstChild(simplexml_load_string($insert), $targets[0]);
                     }
                     $xml->asXML($files);
-                } //die;
+                }
             }
         }
         echo "<pre>";
@@ -148,9 +128,9 @@ class XmlController extends Controller {
 
     public function actionSetattrvalue() {
         $node = 'FIELD';
-        $attr = 'header2Class';
-        $find = 'Judgement';
-        $replace = 'Higher_Mental_Functions';
+        $attr = 'id';
+        $find = 'txtPhamacoSideEffects';
+        //$replace = 'Higher_Mental_Functions';
 //        $node = 'LISTITEM';
 //        $attr = 'value';
 //        $find = 'RTA &amp; Surgery';
@@ -173,13 +153,12 @@ class XmlController extends Controller {
                     }
                     $targets = $xml->xpath($xpath);
                     if (!empty($targets)) {
-                        //print_r($targets);
                         foreach ($targets as $target) {
-                            $target[$attr] = $replace;
+                            $target->PROPERTIES->PROPERTY[1] = $target->PROPERTIES->PROPERTY[1] . '[]';
+                            $target['type'] = 'MultiDropDownList';
                         }
                     }
-                    //print_r($targets); die;
-                    $xml->asXML($files);
+                    $xml->asXML($files); //die;
                 }
             }
         }
@@ -757,10 +736,10 @@ class XmlController extends Controller {
     public function actionChangefieldvalue() {
 //        $insertpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD[@id='diagnosis_notes']";
 //        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD[@id='txtAxis5']";
-        
+
         $insertpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD[@id='RBrapport']";
         $xpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD[@id='RBeyetoeyecontact']";
-        
+
 //        $webroot = Yii::getAlias('@webroot');
 //        $files = FileHelper::findFiles($webroot . '/uploads', [
 //                    'only' => ['CH_8666_1499335581.xml'],
@@ -768,9 +747,9 @@ class XmlController extends Controller {
 //        ]);
 //        $base_xml = [realpath(dirname(__FILE__) . '/../../../../IRISADMIN/web/case_history.xml')];
 //        $all_files = \yii\helpers\ArrayHelper::merge($base_xml, $files);
-        
+
         $all_files = $this->getAllFiles();
-        
+
         $error_files = [];
         if (!empty($all_files)) {
             foreach ($all_files as $key => $files) {
@@ -811,7 +790,7 @@ class XmlController extends Controller {
 
     public function actionRemoveduplicatefield() {
         $xpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD[@id='RBrapport']";
-        
+
 //        $webroot = Yii::getAlias('@webroot');
 //        $files = FileHelper::findFiles($webroot . '/uploads', [
 //                    'only' => ['CH_8666_1499335581.xml'],
@@ -820,7 +799,7 @@ class XmlController extends Controller {
 //        $base_xml = [realpath(dirname(__FILE__) . '/../../../../IRISADMIN/web/case_history.xml')];
 //        $all_files = \yii\helpers\ArrayHelper::merge($base_xml, $files);
         $all_files = $this->getAllFiles();
-       
+
         $error_files = [];
         if (!empty($all_files)) {
             //echo 'asda'; die;
@@ -853,11 +832,11 @@ class XmlController extends Controller {
         print_r($error_files);
         exit;
     }
-    
+
     public function actionChangecapitalletter() {
-         $xpath = "/FIELDS/GROUP/PANELBODY//FIELD/LISTITEMS/LISTITEM";
-         $all_files = $this->getAllFiles();
-             $error_files = [];
+        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD/LISTITEMS/LISTITEM";
+        $all_files = $this->getAllFiles();
+        $error_files = [];
         if (!empty($all_files)) {
             foreach ($all_files as $key => $files) {
                 if (filesize($files) > 0) {
@@ -877,9 +856,95 @@ class XmlController extends Controller {
                     }
                     $xml->asXML($files);
                 }
-            } 
-            
+            }
         }
+    }
+
+    public function actionRadgridcolumncount() {
+        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD/FIELD[@ADDButtonID='RGPhamacoadd']/COLUMNS";
+        $all_files = $this->getAllFiles();
+        $error_files = [];
+        if (!empty($all_files)) {
+            foreach ($all_files as $key => $files) {
+                if (filesize($files) > 0) {
+                    libxml_use_internal_errors(true);
+                    $xml = simplexml_load_file($files, null, LIBXML_NOERROR);
+                    if ($xml === false) {
+                        $error_files[$key]['name'] = $files;
+                        $error_files[$key]['error'] = libxml_get_errors();
+                        continue;
+                    }
+                    $targets = $xml->xpath($xpath);
+                    if (!empty($targets)) {
+                        $count = count($targets);
+                        if ($count > 1) {
+                            echo $files;
+                            echo '----';
+                            echo $count;
+                            echo "\n";
+                        }
+                    }
+                    //$xml->asXML($files);
+                }
+            }
+        }
+        echo "<pre>";
+        print_r($error_files);
+        exit;
+    }
+
+    public function actionRadgridcolumnupdate() {
+        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD/FIELD[@ADDButtonID='RGPhamacoadd']//COLUMNS/FIELD[4]";
+
+        $all_files = $this->getAllFiles();
+        $error_files = [];
+        if (!empty($all_files)) {
+            foreach ($all_files as $key => $files) {
+                if (filesize($files) > 0) {
+                    libxml_use_internal_errors(true);
+                    $xml = simplexml_load_file($files, null, LIBXML_NOERROR);
+                    if ($xml === false) {
+                        $error_files[$key]['name'] = $files;
+                        $error_files[$key]['error'] = libxml_get_errors();
+                        continue;
+                    }
+                    $targets = $xml->xpath($xpath);
+                    if (!empty($targets)) {
+                        foreach ($targets as $key => $value) {
+                            if ($key == '0') {
+                                $insert = '<FIELD id="txtPhamacoSideEffectsTextbox" type="TextBox" texttypeid="selectdropdown">
+                                <PROPERTIES>
+                                    <PROPERTY name="id">txtPhamacoSideEffectsTextbox</PROPERTY>
+                                    <PROPERTY name="name">txtPhamacoSideEffectsTextbox</PROPERTY>
+                                    <PROPERTY name="class">form-control</PROPERTY>
+                                </PROPERTIES>
+                            </FIELD>';
+                            } else {
+                                $insert = '<FIELD id="txtPhamacoSideEffectsTextbox' . $key . '" type="TextBox" texttypeid="selectdropdown">
+                                <PROPERTIES>
+                                    <PROPERTY name="id">txtPhamacoSideEffectsTextbox' . $key . '</PROPERTY>
+                                    <PROPERTY name="name">txtPhamacoSideEffectsTextbox' . $key . '</PROPERTY>
+                                    <PROPERTY name="class">form-control</PROPERTY>
+                                </PROPERTIES>
+                            </FIELD>';
+                            }
+                            $this->simplexml_insert_firstChild(simplexml_load_string($insert), $targets[$key]);
+                            if (!empty($value->FIELD[1]->PROPERTIES->PROPERTY[0])) {
+                                if ($value->FIELD[1]->PROPERTIES->PROPERTY[0] == 'txtPhamacoSideEffects' . $key . '') {
+                                    $value->FIELD[1]->PROPERTIES->PROPERTY[1] = $value->FIELD[1]->PROPERTIES->PROPERTY[1] . '[]';
+                                    $value->FIELD[1]['type'] = 'MultiDropDownList';
+                                }
+                            }
+                        }
+                    }
+                    $xml->asXML($files);
+                    //die;
+                }
+            }
+        }
+        echo "<pre>";
+        print_r($error_files);
+        exit;
     }
 
 }
