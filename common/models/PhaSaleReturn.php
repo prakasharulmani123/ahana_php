@@ -53,13 +53,13 @@ class PhaSaleReturn extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['sale_date'], 'required'],
-            [['tenant_id', 'patient_id', 'created_by', 'modified_by'], 'integer'],
-            [['sale_date', 'created_at', 'modified_at', 'deleted_at', 'sale_id', 'patient_name', 'total_item_vat_amount'], 'safe'],
-            [['total_item_sale_amount', 'total_item_discount_percent', 'total_item_discount_amount', 'total_item_amount', 'roundoff_amount', 'bill_amount', 'total_item_vat_amount'], 'number'],
-            [['status'], 'string'],
-            [['bill_no', 'mobile_no'], 'string', 'max' => 50],
-            [['noitem'], 'validateNoitem'],
+                [['sale_date'], 'required'],
+                [['tenant_id', 'patient_id', 'created_by', 'modified_by'], 'integer'],
+                [['sale_date', 'created_at', 'modified_at', 'deleted_at', 'sale_id', 'patient_name', 'total_item_vat_amount'], 'safe'],
+                [['total_item_sale_amount', 'total_item_discount_percent', 'total_item_discount_amount', 'total_item_amount', 'roundoff_amount', 'bill_amount', 'total_item_vat_amount'], 'number'],
+                [['status'], 'string'],
+                [['bill_no', 'mobile_no'], 'string', 'max' => 50],
+                [['noitem'], 'validateNoitem'],
         ];
     }
 
@@ -148,6 +148,12 @@ class PhaSaleReturn extends RActiveRecord {
             'patient' => function ($model) {
                 return (isset($model->patient) ? $model->patient : '-');
             },
+            'patient_uhid' => function ($model) {
+                return (isset($model->patient) ? $model->patient->patient_global_int_code : '-');
+            },
+            'patient_name' => function ($model) {
+                return (isset($model->patient) ? ucwords("{$model->patient->patient_title_code} {$model->patient->patient_firstname}") : '-');
+            },
             'items' => function ($model) {
                 return (isset($model->phaSaleReturnItems) ? $model->phaSaleReturnItems : '-');
             },
@@ -173,6 +179,14 @@ class PhaSaleReturn extends RActiveRecord {
                         'total_item_discount_amount' => 'total_item_discount_amount',
                         'roundoff_amount' => 'roundoff_amount',
                         'bill_amount' => 'bill_amount',
+                    ];
+                    break;
+                case 'salereturnreport':
+                    $addt_keys = ['patient_name', 'patient_uhid'];
+                    $parent_fields = [
+                        'bill_no' => 'bill_no',
+                        'bill_amount' => 'bill_amount',
+                        'sale_date' => 'sale_date',
                     ];
                     break;
             endswitch;

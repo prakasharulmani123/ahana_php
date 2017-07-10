@@ -66,6 +66,18 @@ class PharmacyreportController extends ActiveController {
 
         return ['report' => $reports];
     }
+    
+    //Sale Return Report
+    public function actionSalereturnreport() {
+        $post = Yii::$app->getRequest()->post();
+
+        $reports = \common\models\PhaSaleReturn::find()
+                ->tenant()
+                ->andWhere("pha_sale_return.sale_date between '{$post['from']}' AND '{$post['to']}'")
+                ->all();
+
+        return ['report' => $reports];
+    }
 
     //Prescriptionregister Report
     public function actionPrescriptionregisterreport() {
