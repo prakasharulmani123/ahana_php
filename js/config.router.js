@@ -2193,6 +2193,22 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
+            
+            //PHARMACY SALE RETURN REPORT
+            .state('pharmacy.saleReturnReport', {
+                url: '/saleReturnReport',
+                templateUrl: 'tpl/pharmacy_report/saleReturnReport.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/pharmacy_report/saleReturnReport.js?v=' + APP_VERSION);
+                                    }
+                            );
+                        }]
+                }
+            })
 
             //PHARMACY SALE VAT REPORT
             .state('pharmacy.saleVatReport', {
