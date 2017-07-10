@@ -713,6 +713,21 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
 
         $scope.ckeditorReplace = function () {
             CKEDITOR.replaceAll('classy-edit');
+            CKEDITOR.config.disableNativeSpellChecker=true,
+            CKEDITOR.config.scayt_autoStartup=true
+            CKEDITOR.config.toolbar = [
+                ['Styles', 'Format', 'Font', 'FontSize','spellchecker'],
+
+                ['Bold', 'Italic', 'Underline', 'StrikeThrough', '-', 'Undo', 'Redo', '-', 'Cut', 'Copy', 'Paste', 'Find', 'Replace', '-', 'Outdent', 'Indent', '-', 'Print'],
+
+                ['NumberedList', 'BulletedList', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+                ['-', 'Link', 'Flash', 'Smiley', 'TextColor', 'BGColor', 'Source','-','SpellChecker','Scayt']
+            ];
+            CKEDITOR.config.toolbarGroups = [
+
+		{ name: 'editing',     groups: [ 'find', 'selection', 'spellchecker' ] },
+		
+	];
         };
 
         $scope.printOtherdocument = function (list) {

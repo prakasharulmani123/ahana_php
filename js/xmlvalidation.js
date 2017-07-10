@@ -28,3 +28,16 @@ function isNumericKeyStroke(evt) {
     
     return returnValue;
 }
+
+function Checkvisible(a,e)
+{
+    if(a=='menstrual_history')
+    {
+         var radioValue = $("input[name='gender']:checked").val();
+        if (radioValue == 'Male')
+        {
+            e.stopPropagation();
+        }
+    }
+   
+}
