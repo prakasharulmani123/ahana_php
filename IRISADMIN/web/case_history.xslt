@@ -605,7 +605,7 @@
                                                             <div class="panel panel-default">
                                                                 <div class="panel-heading">
                                                                     <h4 class="panel-title">
-                                                                        <a class="accordion-toggle" data-toggle="collapse" data-target="#{@target_div}" href="javascript:void(0)">
+                                                                        <a class="accordion-toggle" data-toggle="collapse" onclick='Checkvisible("{@target_div}",event);' data-target="#{@target_div}" href="javascript:void(0)">
                                                                             <input type="checkbox"/>
                                                                             <span>
                                                                                 <xsl:value-of select="@label"/>
