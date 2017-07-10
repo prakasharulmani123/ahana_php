@@ -42,6 +42,7 @@
                                 <th data-toggle="true">Product Name</th>
                                 <th data-toggle="true">Batch No.</th>
                                 <th data-toggle="true">Expiry Date</th>
+                                <th data-toggle="true">Available Qty</th>
                                 <th data-toggle="true">MRP</th>
                                 <th data-toggle="true">Sales Unit</th>
                                 <th data-toggle="true">Sales VAT</th>
@@ -69,6 +70,7 @@
                                         {{ row.expiry_date | moment:'MMM YYYY' || 'empty' }}
                                     </span>
                                 </td>
+                                <td>{{row.available_qty}}</td>
                                 <td>
                                     <span editable-text="row.mrp" e-name="mrp" e-form="rowform" e-class="form-control" onbeforesave="checkInput($data)" e-number-mask e-limit-to="7" e-required>
                                         {{ row.mrp || 'empty' }}
