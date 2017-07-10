@@ -750,6 +750,13 @@
                         </FIELD>
                         
                         <FIELD id="radioPhamacoSideeffect" type="RadioButtonList" Backcontrols="hide" Backdivid="radioPhamacoSideeffectDiv">
+                            <FIELD id="txtPhamacoSideEffectsTextbox" type="TextBox" texttypeid="selectdropdown">
+                                <PROPERTIES>
+                                    <PROPERTY name="id">txtPhamacoSideEffectsTextbox</PROPERTY>
+                                    <PROPERTY name="name">txtPhamacoSideEffectsTextbox</PROPERTY>
+                                    <PROPERTY name="class">form-control</PROPERTY>
+                                </PROPERTIES>
+                            </FIELD>
                             <PROPERTIES>
                                 <PROPERTY name="name">radioPhamacoSideeffect</PROPERTY>
                             </PROPERTIES>
@@ -757,10 +764,12 @@
                                 <LISTITEM value="Yes" id="radioPhamacoSideeffect1" Selected="False" onclick="OThersvisible(this.id,'radioPhamacoSideeffectDiv','block');">Yes</LISTITEM>
                                 <LISTITEM value="No" id="radioPhamacoSideeffect2" Selected="False" onclick="OThersvisible(this.id,'radioPhamacoSideeffectDiv','none');">No</LISTITEM>
                             </LISTITEMS>
-                            <FIELD id="txtPhamacoSideEffects" type="DropDownList">
+                            
+                            <FIELD id="txtPhamacoSideEffects" type="MultiDropDownList">
+                                
                                 <PROPERTIES>
                                     <PROPERTY name="id">txtPhamacoSideEffects</PROPERTY>
-                                    <PROPERTY name="name">txtPhamacoSideEffects</PROPERTY>
+                                    <PROPERTY name="name">txtPhamacoSideEffects[]</PROPERTY>
                                     <PROPERTY name="class">form-control</PROPERTY>
                                 </PROPERTIES>
                                 <LISTITEMS>
@@ -1628,7 +1637,7 @@
                         </FIELD>
                     </FIELD>
                 
-                    <FIELD id="txtAgeofMarriage" header2Class="Marital_History" type="TextBoxDDL" label="Age of Marriage" required="true">
+                    <FIELD id="txtAgeofMarriage" header2Class="Marital_History" type="TextBoxDDLlabel" label="Age of Marriage" required="true" Backtext="Years">
                         <PROPERTIES>
                             <PROPERTY name="id">txtAgeofMarriage</PROPERTY>
                             <PROPERTY name="name">txtAgeofMarriage</PROPERTY>
@@ -2441,7 +2450,8 @@
                             <LISTITEM id="CBNatureofDelusion3" value="Person" Selected="false">Person</LISTITEM>
                         </LISTITEMS>
                     </FIELD>
-                </FIELD><FIELD id="RBMemory" header2Class="Higher_Mental_Functions" type="RadioButtonList" label="Memory" Backcontrols="hide" Backdivid="memory_radio_div">
+                </FIELD>
+                <FIELD id="RBMemory" header2Class="Higher_Mental_Functions" type="RadioButtonList" label="Memory" Backcontrols="hide" Backdivid="memory_radio_div">
                     <PROPERTIES>
                         <PROPERTY name="name">RBMemory</PROPERTY>
                     </PROPERTIES>
@@ -2489,7 +2499,8 @@
                         <LISTITEM value="Adequate" id="RBAbstraction1" Selected="False">Adequate</LISTITEM>
                         <LISTITEM value="Inadequate" id="RBAbstraction2" Selected="False">Inadequate</LISTITEM>
                     </LISTITEMS>
-                </FIELD><FIELD id="RBJudgement" header2Class="Higher_Mental_Functions" type="RadioButtonList" label="Judgement" Backcontrols="hide" Backdivid="judgement_radio_div">
+                </FIELD>
+                <FIELD id="RBJudgement" header2Class="Higher_Mental_Functions" type="RadioButtonList" label="Judgement" Backcontrols="hide" Backdivid="judgement_radio_div">
                     <PROPERTIES>
                         <PROPERTY name="name">RBJudgement</PROPERTY>
                     </PROPERTIES>
