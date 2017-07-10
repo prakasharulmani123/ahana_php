@@ -159,7 +159,7 @@ class PhaProductBatch extends RActiveRecord {
                     break;
                 case 'viewlist':
                     $addt_keys = ['batch_details'];
-                    $pFields = ['batch_no'];
+                    $pFields = ['batch_no', 'expiry_date'];
                     $parent_fields = array_combine($pFields, $pFields);
                     break;
                 case 'purchase_print':
