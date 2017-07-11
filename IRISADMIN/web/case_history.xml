@@ -2451,14 +2451,14 @@
                         </LISTITEMS>
                     </FIELD>
                 </FIELD>
-                <FIELD id="RBMemory" header2Class="Higher_Mental_Functions" type="RadioButtonList" label="Memory" Backcontrols="hide" Backdivid="memory_radio_div">
+                <FIELD id="RBMemory" header2Class="Higher_Mental_Functions" type="CheckBoxList" label="Memory" Backcontrols="hide" Backdivid="memory_radio_div">
                     <PROPERTIES>
-                        <PROPERTY name="name">RBMemory</PROPERTY>
+                        <PROPERTY name="name">RBMemory[]</PROPERTY>
                     </PROPERTIES>
                     <LISTITEMS>
                         <LISTITEM value="Immediate" id="RBMemory1" Selected="False" onclick="OThersvisible(this.id, 'memory_radio_div', 'block');">Immediate</LISTITEM>
-                        <LISTITEM value="Recent" id="RBMemory2" Selected="False" onclick="OThersvisible(this.id, 'memory_radio_div', 'block');">Recent</LISTITEM>
-                        <LISTITEM value="Remote" id="RBMemory3" Selected="False" onclick="OThersvisible(this.id, 'memory_radio_div', 'block');">Remote</LISTITEM>
+                        
+                        
                     </LISTITEMS>
                     <FIELD id="memory_radio" type="RadioButtonList" label=" ">
                         <PROPERTIES>
@@ -2469,16 +2469,39 @@
                             <LISTITEM value="Impaired" id="memory_radio2" Selected="False">Impaired</LISTITEM>
                         </LISTITEMS>
                     </FIELD>
+                </FIELD><FIELD id="RBMemoryRecent" header2Class="Higher_Mental_Functions" type="CheckBoxList" label=" " Backcontrols="hide" Backdivid="memory_recent_radio_div">
+                    <PROPERTIES>
+                        <PROPERTY name="name">RBMemoryRecent[]</PROPERTY>
+                    </PROPERTIES>
+                    <LISTITEMS>
+                        <LISTITEM value="Recent" id="RBMemoryRecent1" Selected="False" onclick="OThersvisible(this.id, 'memory_recent_radio_div', 'block');">Recent</LISTITEM>
+                    </LISTITEMS>
+                    <FIELD id="memory_recent_radio" type="RadioButtonList" label=" ">
+                        <PROPERTIES>
+                            <PROPERTY name="name">memory_recent_radio</PROPERTY>
+                        </PROPERTIES>
+                        <LISTITEMS>
+                            <LISTITEM value="Intact" id="memory_recent_radio1" Selected="False">Intact</LISTITEM>
+                            <LISTITEM value="Impaired" id="memory_recent_radio2" Selected="False">Impaired</LISTITEM>
+                        </LISTITEMS>
+                    </FIELD>
+                </FIELD><FIELD id="RBMemoryRemote" header2Class="Higher_Mental_Functions" type="CheckBoxList" label=" " Backcontrols="hide" Backdivid="memory_remote_radio_div">
+                    <PROPERTIES>
+                        <PROPERTY name="name">RBMemoryRemote[]</PROPERTY>
+                    </PROPERTIES>
+                    <LISTITEMS>
+                        <LISTITEM value="Remote" id="RBMemoryRemote1" Selected="False" onclick="OThersvisible(this.id, 'memory_remote_radio_div', 'block');">Remote</LISTITEM>
+                    </LISTITEMS>
+                    <FIELD id="memory_remote_radio" type="RadioButtonList" label=" ">
+                        <PROPERTIES>
+                            <PROPERTY name="name">memory_remote_radio</PROPERTY>
+                        </PROPERTIES>
+                        <LISTITEMS>
+                            <LISTITEM value="Intact" id="memory_remote_radio1" Selected="False">Intact</LISTITEM>
+                            <LISTITEM value="Impaired" id="memory_remote_radio2" Selected="False">Impaired</LISTITEM>
+                        </LISTITEMS>
+                    </FIELD>
                 </FIELD>
-                
-                
-                
-                
-                
-                
-                
-                
-                
                 
                 <FIELD id="RBIntelligence" header2Class="Higher_Mental_Functions" type="RadioButtonList" label="Intelligence" required="true">
                     <PROPERTIES>

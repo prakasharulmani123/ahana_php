@@ -92,45 +92,46 @@ class XmlController extends Controller {
 
     public function actionInsertnewfield() {
         //$xpath = "/FIELDS/GROUP/PANELBODY/FIELD[@id='name']";
-        $judgement = "'judgement_social_radio_div'";
+        $memory = "'memory_recent_radio_div'";
         $style = "'block'";
-        $test = "'judgement_test_radio_div'";
-//        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD[@id='RBJudgement']";
-//        $insert = '<FIELD id="RBJudgementsocial" header2Class="Higher_Mental_Functions" type="CheckBoxList" label="" Backcontrols="hide" Backdivid="judgement_social_radio_div">
+        $remote = "'memory_remote_radio_div'";
+        
+//        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD[@id='RBMemory']";
+//        $insert = '<FIELD id="RBMemoryRecent" header2Class="Higher_Mental_Functions" type="CheckBoxList" label=" " Backcontrols="hide" Backdivid="memory_recent_radio_div">
 //                    <PROPERTIES>
-//                        <PROPERTY name="name">RBJudgementsocial[]</PROPERTY>
+//                        <PROPERTY name="name">RBMemoryRecent[]</PROPERTY>
 //                    </PROPERTIES>
 //                    <LISTITEMS>
-//                        <LISTITEM value="Social" id="RBJudgementsocial1" Selected="False" onclick="OThersvisible(this.id, '.$judgement.', '.$style.');">Social</LISTITEM>
+//                        <LISTITEM value="Recent" id="RBMemoryRecent1" Selected="False" onclick="OThersvisible(this.id, '.$memory.', '.$style.');">Recent</LISTITEM>
 //                    </LISTITEMS>
-//                    <FIELD id="judgement_social_radio" type="RadioButtonList" label=" ">
+//                    <FIELD id="memory_recent_radio" type="RadioButtonList" label=" ">
 //                        <PROPERTIES>
-//                            <PROPERTY name="name">judgement_social_radio</PROPERTY>
+//                            <PROPERTY name="name">memory_recent_radio</PROPERTY>
 //                        </PROPERTIES>
 //                        <LISTITEMS>
-//                            <LISTITEM value="Intact" id="judgement_social_radio1" Selected="False">Intact</LISTITEM>
-//                            <LISTITEM value="Impaired" id="judgement_social_radio2" Selected="False">Impaired</LISTITEM>
+//                            <LISTITEM value="Intact" id="memory_recent_radio1" Selected="False">Intact</LISTITEM>
+//                            <LISTITEM value="Impaired" id="memory_recent_radio2" Selected="False">Impaired</LISTITEM>
 //                        </LISTITEMS>
 //                    </FIELD>
 //                </FIELD>';
-        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD[@id='RBJudgementsocial']";        
-        $insert ='<FIELD id="RBJudgementtest" header2Class="Higher_Mental_Functions" type="CheckBoxList" label="" Backcontrols="hide" Backdivid="judgement_test_radio_div">
+        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD[@id='RBMemoryRecent']";        
+        $insert ='<FIELD id="RBMemoryRemote" header2Class="Higher_Mental_Functions" type="CheckBoxList" label=" " Backcontrols="hide" Backdivid="memory_remote_radio_div">
                     <PROPERTIES>
-                        <PROPERTY name="name">RBJudgementtest[]</PROPERTY>
+                        <PROPERTY name="name">RBMemoryRemote[]</PROPERTY>
                     </PROPERTIES>
                     <LISTITEMS>
-                        <LISTITEM value="Test" id="RBJudgementtest3" Selected="False" onclick="OThersvisible(this.id,'.$test.' ,'.$style.' );">Test</LISTITEM>
+                        <LISTITEM value="Remote" id="RBMemoryRemote1" Selected="False" onclick="OThersvisible(this.id, '.$remote.', '.$style.');">Remote</LISTITEM>
                     </LISTITEMS>
-                    <FIELD id="judgement_test_radio" type="RadioButtonList" label=" ">
+                    <FIELD id="memory_remote_radio" type="RadioButtonList" label=" ">
                         <PROPERTIES>
-                            <PROPERTY name="name">judgement_test_radio</PROPERTY>
+                            <PROPERTY name="name">memory_remote_radio</PROPERTY>
                         </PROPERTIES>
                         <LISTITEMS>
-                            <LISTITEM value="Intact" id="judgement_test_radio1" Selected="False">Intact</LISTITEM>
-                            <LISTITEM value="Impaired" id="judgement_test_radio2" Selected="False">Impaired</LISTITEM>
+                            <LISTITEM value="Intact" id="memory_remote_radio1" Selected="False">Intact</LISTITEM>
+                            <LISTITEM value="Impaired" id="memory_remote_radio2" Selected="False">Impaired</LISTITEM>
                         </LISTITEMS>
                     </FIELD>
-              </FIELD>';
+                </FIELD>';
         $all_files = $this->getAllFiles();
         $error_files = [];
         if (!empty($all_files)) {
@@ -163,7 +164,7 @@ class XmlController extends Controller {
     public function actionSetattrvalue() {
         $node = 'FIELD';
         $attr = 'id';
-        $find = 'RBJudgement';
+        $find = 'RBMemory';
         //$replace = 'Higher_Mental_Functions';
 //        $node = 'LISTITEM';
 //        $attr = 'value';
@@ -192,7 +193,7 @@ class XmlController extends Controller {
                             $target['type'] = 'CheckBoxList';
                         }
                     }
-                    //print_r($target);
+                    //print_r($target); die;
                     $xml->asXML($files); 
                     //die;
                 }
@@ -589,7 +590,7 @@ class XmlController extends Controller {
 
     public function actionDeleteli() {
         //$xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@id='martial_status']/LISTITEMS";
-        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD[@id='RBJudgement']/LISTITEMS";
+        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD[@id='RBMemory']/LISTITEMS";
 
         $all_files = $this->getAllFiles();
         $error_files = [];
@@ -613,6 +614,7 @@ class XmlController extends Controller {
                         }
                     }
                     $xml->asXML($files);
+                    //print_r($targets); die;
                 }
             }
         }
