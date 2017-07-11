@@ -2500,16 +2500,15 @@
                         <LISTITEM value="Inadequate" id="RBAbstraction2" Selected="False">Inadequate</LISTITEM>
                     </LISTITEMS>
                 </FIELD>
-                <FIELD id="RBJudgement" header2Class="Higher_Mental_Functions" type="RadioButtonList" label="Judgement" Backcontrols="hide" Backdivid="judgement_radio_div">
+                
+                
+                
+                <FIELD id="RBJudgement" header2Class="Higher_Mental_Functions" type="CheckBoxList" label="Judgement" Backcontrols="hide" Backdivid="judgement_radio_div">
                     <PROPERTIES>
-                        <PROPERTY name="name">RBJudgement</PROPERTY>
+                        <PROPERTY name="name">RBJudgement[]</PROPERTY>
                     </PROPERTIES>
                     <LISTITEMS>
-                    
                         <LISTITEM value="Personal" id="RBJudgement1" Selected="False" onclick="OThersvisible(this.id, 'judgement_radio_div', 'block');">Personal</LISTITEM>
-                        <LISTITEM value="Social" id="RBJudgement2" Selected="False" onclick="OThersvisible(this.id, 'judgement_radio_div', 'block');">Social</LISTITEM>
-                        <LISTITEM value="Test" id="RBJudgement3" Selected="False" onclick="OThersvisible(this.id, 'judgement_radio_div', 'block');">Test</LISTITEM>
-
                     </LISTITEMS>
                     <FIELD id="judgement_radio" type="RadioButtonList" label=" ">
                         <PROPERTIES>
@@ -2521,12 +2520,40 @@
                         </LISTITEMS>
                     </FIELD>
                 </FIELD>
-
-                
-                
-                
-                
-                
+                <FIELD id="RBJudgementsocial" header2Class="Higher_Mental_Functions" type="CheckBoxList" label="" Backcontrols="hide" Backdivid="judgement_social_radio_div">
+                    <PROPERTIES>
+                        <PROPERTY name="name">RBJudgementsocial[]</PROPERTY>
+                    </PROPERTIES>
+                    <LISTITEMS>
+                        <LISTITEM value="Social" id="RBJudgementsocial1" Selected="False" onclick="OThersvisible(this.id, 'judgement_social_radio_div', 'block');">Social</LISTITEM>
+                    </LISTITEMS>
+                    <FIELD id="judgement_social_radio" type="RadioButtonList" label=" ">
+                        <PROPERTIES>
+                            <PROPERTY name="name">judgement_social_radio</PROPERTY>
+                        </PROPERTIES>
+                        <LISTITEMS>
+                            <LISTITEM value="Intact" id="judgement_social_radio1" Selected="False">Intact</LISTITEM>
+                            <LISTITEM value="Impaired" id="judgement_social_radio2" Selected="False">Impaired</LISTITEM>
+                        </LISTITEMS>
+                    </FIELD>
+                </FIELD>
+                <FIELD id="RBJudgementtest" header2Class="Higher_Mental_Functions" type="CheckBoxList" label="" Backcontrols="hide" Backdivid="judgement_test_radio_div">
+                    <PROPERTIES>
+                        <PROPERTY name="name">RBJudgementtest[]</PROPERTY>
+                    </PROPERTIES>
+                    <LISTITEMS>
+                        <LISTITEM value="Test" id="RBJudgementtest3" Selected="False" onclick="OThersvisible(this.id,'judgement_test_radio_div' ,'block' );">Test</LISTITEM>
+                    </LISTITEMS>
+                    <FIELD id="judgement_test_radio" type="RadioButtonList" label=" ">
+                        <PROPERTIES>
+                            <PROPERTY name="name">judgement_test_radio</PROPERTY>
+                        </PROPERTIES>
+                        <LISTITEMS>
+                            <LISTITEM value="Intact" id="judgement_test_radio1" Selected="False">Intact</LISTITEM>
+                            <LISTITEM value="Impaired" id="judgement_test_radio2" Selected="False">Impaired</LISTITEM>
+                        </LISTITEMS>
+                    </FIELD>
+                </FIELD>
                 
                 
                 

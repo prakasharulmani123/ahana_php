@@ -71,11 +71,11 @@ class XmlController extends Controller {
         $target_dom = dom_import_simplexml($target);
         //print_r($target_dom); die;
         $insert_dom = $target_dom->ownerDocument->importNode(dom_import_simplexml($insert), true);
-        //if ($target_dom->nextSibling) {
+        if ($target_dom->nextSibling) {
         return $target_dom->parentNode->insertBefore($insert_dom, $target_dom->nextSibling);
-        //} else {
-        //return $target_dom->parentNode->appendChild($insert_dom);
-        //}
+        } else {
+        return $target_dom->parentNode->appendChild($insert_dom);
+        }
     }
 
     private function simplexml_insert_firstChild($insert, $target) {
@@ -92,18 +92,49 @@ class XmlController extends Controller {
 
     public function actionInsertnewfield() {
         //$xpath = "/FIELDS/GROUP/PANELBODY/FIELD[@id='name']";
-        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD/COLUMNS/FIELD[@id='radioPhamacoSideeffect']";
-        $insert = '<FIELD id="txtPhamacoSideEffectsTextbox" type="TextBox" texttypeid="selectdropdown">
-                                <PROPERTIES>
-                                    <PROPERTY name="id">txtPhamacoSideEffectsTextbox</PROPERTY>
-                                    <PROPERTY name="name">txtPhamacoSideEffectsTextbox</PROPERTY>
-                                    <PROPERTY name="class">form-control</PROPERTY>
-                                </PROPERTIES>
-                            </FIELD>';
+        $judgement = "'judgement_social_radio_div'";
+        $style = "'block'";
+        $test = "'judgement_test_radio_div'";
+//        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD[@id='RBJudgement']";
+//        $insert = '<FIELD id="RBJudgementsocial" header2Class="Higher_Mental_Functions" type="CheckBoxList" label="" Backcontrols="hide" Backdivid="judgement_social_radio_div">
+//                    <PROPERTIES>
+//                        <PROPERTY name="name">RBJudgementsocial[]</PROPERTY>
+//                    </PROPERTIES>
+//                    <LISTITEMS>
+//                        <LISTITEM value="Social" id="RBJudgementsocial1" Selected="False" onclick="OThersvisible(this.id, '.$judgement.', '.$style.');">Social</LISTITEM>
+//                    </LISTITEMS>
+//                    <FIELD id="judgement_social_radio" type="RadioButtonList" label=" ">
+//                        <PROPERTIES>
+//                            <PROPERTY name="name">judgement_social_radio</PROPERTY>
+//                        </PROPERTIES>
+//                        <LISTITEMS>
+//                            <LISTITEM value="Intact" id="judgement_social_radio1" Selected="False">Intact</LISTITEM>
+//                            <LISTITEM value="Impaired" id="judgement_social_radio2" Selected="False">Impaired</LISTITEM>
+//                        </LISTITEMS>
+//                    </FIELD>
+//                </FIELD>';
+        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD[@id='RBJudgementsocial']";        
+        $insert ='<FIELD id="RBJudgementtest" header2Class="Higher_Mental_Functions" type="CheckBoxList" label="" Backcontrols="hide" Backdivid="judgement_test_radio_div">
+                    <PROPERTIES>
+                        <PROPERTY name="name">RBJudgementtest[]</PROPERTY>
+                    </PROPERTIES>
+                    <LISTITEMS>
+                        <LISTITEM value="Test" id="RBJudgementtest3" Selected="False" onclick="OThersvisible(this.id,'.$test.' ,'.$style.' );">Test</LISTITEM>
+                    </LISTITEMS>
+                    <FIELD id="judgement_test_radio" type="RadioButtonList" label=" ">
+                        <PROPERTIES>
+                            <PROPERTY name="name">judgement_test_radio</PROPERTY>
+                        </PROPERTIES>
+                        <LISTITEMS>
+                            <LISTITEM value="Intact" id="judgement_test_radio1" Selected="False">Intact</LISTITEM>
+                            <LISTITEM value="Impaired" id="judgement_test_radio2" Selected="False">Impaired</LISTITEM>
+                        </LISTITEMS>
+                    </FIELD>
+              </FIELD>';
         $all_files = $this->getAllFiles();
         $error_files = [];
         if (!empty($all_files)) {
-            // echo 'dasd'; die;
+            //echo 'dasd'; die;
             foreach ($all_files as $key => $files) {
                 if (filesize($files) > 0) {
                     libxml_use_internal_errors(true);
@@ -115,9 +146,12 @@ class XmlController extends Controller {
                     }
                     $targets = $xml->xpath($xpath);
                     if (!empty($targets)) {
-                        $this->simplexml_insert_firstChild(simplexml_load_string($insert), $targets[0]);
+                        //print_r($targets); echo $insert; die;
+                        $this->simplexml_insert_after(simplexml_load_string($insert), $targets[0]);
                     }
+                    //echo $files;
                     $xml->asXML($files);
+                    //die;
                 }
             }
         }
@@ -129,7 +163,7 @@ class XmlController extends Controller {
     public function actionSetattrvalue() {
         $node = 'FIELD';
         $attr = 'id';
-        $find = 'txtPhamacoSideEffects';
+        $find = 'RBJudgement';
         //$replace = 'Higher_Mental_Functions';
 //        $node = 'LISTITEM';
 //        $attr = 'value';
@@ -154,11 +188,13 @@ class XmlController extends Controller {
                     $targets = $xml->xpath($xpath);
                     if (!empty($targets)) {
                         foreach ($targets as $target) {
-                            $target->PROPERTIES->PROPERTY[1] = $target->PROPERTIES->PROPERTY[1] . '[]';
-                            $target['type'] = 'MultiDropDownList';
+                            $target->PROPERTIES->PROPERTY[0] = $target->PROPERTIES->PROPERTY[0] . '[]';
+                            $target['type'] = 'CheckBoxList';
                         }
                     }
-                    $xml->asXML($files); //die;
+                    //print_r($target);
+                    $xml->asXML($files); 
+                    //die;
                 }
             }
         }
@@ -489,7 +525,7 @@ class XmlController extends Controller {
 
     public function actionDeletefield() {
         //$xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@type='RadGrid' and @ADDButtonID='RGCompliantadd']//FIELD[@type='TextBoxDDL']";
-        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD/FIELD[@id='RBTest']";
+        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD/FIELD[@id='RBJudgementsocial']";
 
         $all_files = $this->getAllFiles();
         $error_files = [];
@@ -553,7 +589,7 @@ class XmlController extends Controller {
 
     public function actionDeleteli() {
         //$xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@id='martial_status']/LISTITEMS";
-        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD[@id='CBPsychomotorActivity']/LISTITEMS";
+        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD[@id='RBJudgement']/LISTITEMS";
 
         $all_files = $this->getAllFiles();
         $error_files = [];
@@ -570,9 +606,9 @@ class XmlController extends Controller {
                     $targets = $xml->xpath($xpath);
                     if (!empty($targets)) {
                         foreach ($targets as $target) {
-                            if (isset($target->LISTITEM[4])) {
-                                if ($target->LISTITEM[4] == 'Echopraxia')
-                                    unset($target->LISTITEM[4]);
+                            if (isset($target->LISTITEM[1])) {
+                                unset($target->LISTITEM[1]);
+                                unset($target->LISTITEM[2]);
                             }
                         }
                     }
