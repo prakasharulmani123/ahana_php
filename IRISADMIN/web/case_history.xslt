@@ -1257,7 +1257,7 @@
                                                                                                 </input>
                                                                                             </div>
                                                                                             <div class="col-sm-6">
-                                                                                               <xsl:value-of select="@Backtext"/>
+                                                                                                <xsl:value-of select="@Backtext"/>
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
@@ -1858,6 +1858,39 @@
                                                                                                 <xsl:value-of select="current()"/>
                                                                                             </label>  
                                                                                         </xsl:for-each>
+                                                                                    </xsl:when>
+                                                                                    
+                                                                                    <xsl:when test="@type='CheckBoxList'">
+                                                                                        <xsl:value-of select="@label"/>
+                                                                                        <div>
+                                                                                            <xsl:for-each select="LISTITEMS/LISTITEM">
+                                                                                                <input type="checkbox">
+                                                                                                    <xsl:attribute name="value">
+                                                                                                        <xsl:value-of select="@value"/>
+                                                                                                    </xsl:attribute>
+                                                                                                    <xsl:attribute name="id">
+                                                                                                        <xsl:value-of select="@id"/>
+                                                                                                    </xsl:attribute>
+                                                                                                    <xsl:if test="@Selected = 'true'">
+                                                                                                        <xsl:attribute name="checked">
+                                                                                                            <xsl:text>checked</xsl:text>
+                                                                                                        </xsl:attribute>
+                                                                                                    </xsl:if>
+                                                                                                    <xsl:attribute name="onclick">
+                                                                                                        <xsl:value-of select="@onclick"/>
+                                                                                                    </xsl:attribute>
+                                                                                                    <xsl:for-each select="../../PROPERTIES/PROPERTY">
+                                                                                                        <xsl:attribute name="{@name}">
+                                                                                                            <xsl:value-of select="current()"/>
+                                                                                                        </xsl:attribute>
+                                                                                                    </xsl:for-each>
+                                                                                                </input>
+                                                                                                 
+                                                                                                <label for="{@id}">
+                                                                                                    <xsl:value-of select="current()"/>
+                                                                                                </label>  
+                                                                                            </xsl:for-each>
+                                                                                        </div>
                                                                                     </xsl:when>
                                                                                 </xsl:choose>
                                                                             </xsl:for-each>

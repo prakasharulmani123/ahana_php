@@ -2051,19 +2051,29 @@
                 
                 
                 
-                <FIELD id="CBGesturingposturing" header2Class="General_Appearance_Behaviour" type="CheckBoxList" label="Gesturing and posturing" Backcontrols="hide" Backdivid="txtGesturingposturingDiv">
+                <FIELD id="CBGesturingposturing" header2Class="General_Appearance_Behaviour" type="CheckBoxList" label="Gesturing and posturing" Backcontrols="hide" Backdivid="txtGesturingposturingDiv"><FIELD id="checkGesturingposturing" type="CheckBoxList" label="">
+                        <PROPERTIES>
+                            <PROPERTY name="name">checkGesturingposturing[]</PROPERTY>
+                        </PROPERTIES>
+                        <LISTITEMS>
+                            <LISTITEM value="Negativism" id="checkGesturingposturing1" Selected="False">Negativism</LISTITEM>
+                            <LISTITEM value="Waxy Flexibility" id="checkGesturingposturing2" Selected="False">Waxy Flexibility</LISTITEM>
+                            <LISTITEM value="Echopraxia" id="checkGesturingposturing3" Selected="False">Echopraxia</LISTITEM>
+                            <LISTITEM value="Automatism" id="checkGesturingposturing4" Selected="False">Automatism</LISTITEM>
+                        </LISTITEMS>
+                    </FIELD>
                     <PROPERTIES>
                         <PROPERTY name="name">CBGesturingposturing[]</PROPERTY>
                     </PROPERTIES>
                     <LISTITEMS>
                         <LISTITEM value="Normal" id="CBGesturingposturing1" Selected="False">Normal</LISTITEM>
                         <LISTITEM value="Exaggerated" id="CBGesturingposturing2" Selected="False">Exaggerated</LISTITEM>
-                        <LISTITEM value="Catatonic" id="CBGesturingposturing3" Selected="False">Catatonic</LISTITEM>
-                        <LISTITEM value="Negativism" id="CBGesturingposturing4" Selected="False">Negativism</LISTITEM>
-                        <LISTITEM value="Waxy Flexibility" id="CBGesturingposturing5" Selected="False">Waxy Flexibility</LISTITEM>
-                        <LISTITEM value="Echopraxia" id="CBGesturingposturing6" Selected="False">Echopraxia</LISTITEM>
-                        <LISTITEM value="Automatism" id="CBGesturingposturing7" Selected="False">Automatism</LISTITEM>
-                        <LISTITEM value="Others" id="CBGesturingposturing8" Selected="False" onclick="OThersvisible(this.id,'txtGesturingposturingDiv');">Others</LISTITEM>
+                        <LISTITEM value="Catatonic" id="CBGesturingposturing3" Selected="False" onclick="OThersvisible(this.id,'txtGesturingposturingDiv');">Catatonic</LISTITEM>
+                        
+                        
+                        
+                        
+                        
                     </LISTITEMS>
                     <FIELD id="txtGesturingposturing" type="TextBox" label="Other: ">
                         <PROPERTIES>
@@ -2469,7 +2479,8 @@
                             <LISTITEM value="Impaired" id="memory_radio2" Selected="False">Impaired</LISTITEM>
                         </LISTITEMS>
                     </FIELD>
-                </FIELD><FIELD id="RBMemoryRecent" header2Class="Higher_Mental_Functions" type="CheckBoxList" label=" " Backcontrols="hide" Backdivid="memory_recent_radio_div">
+                </FIELD>
+                <FIELD id="RBMemoryRecent" header2Class="Higher_Mental_Functions" type="CheckBoxList" label=" " Backcontrols="hide" Backdivid="memory_recent_radio_div">
                     <PROPERTIES>
                         <PROPERTY name="name">RBMemoryRecent[]</PROPERTY>
                     </PROPERTIES>
@@ -2485,7 +2496,8 @@
                             <LISTITEM value="Impaired" id="memory_recent_radio2" Selected="False">Impaired</LISTITEM>
                         </LISTITEMS>
                     </FIELD>
-                </FIELD><FIELD id="RBMemoryRemote" header2Class="Higher_Mental_Functions" type="CheckBoxList" label=" " Backcontrols="hide" Backdivid="memory_remote_radio_div">
+                </FIELD>
+                <FIELD id="RBMemoryRemote" header2Class="Higher_Mental_Functions" type="CheckBoxList" label=" " Backcontrols="hide" Backdivid="memory_remote_radio_div">
                     <PROPERTIES>
                         <PROPERTY name="name">RBMemoryRemote[]</PROPERTY>
                     </PROPERTIES>

@@ -92,46 +92,20 @@ class XmlController extends Controller {
 
     public function actionInsertnewfield() {
         //$xpath = "/FIELDS/GROUP/PANELBODY/FIELD[@id='name']";
-        $memory = "'memory_recent_radio_div'";
-        $style = "'block'";
-        $remote = "'memory_remote_radio_div'";
-        
-//        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD[@id='RBMemory']";
-//        $insert = '<FIELD id="RBMemoryRecent" header2Class="Higher_Mental_Functions" type="CheckBoxList" label=" " Backcontrols="hide" Backdivid="memory_recent_radio_div">
-//                    <PROPERTIES>
-//                        <PROPERTY name="name">RBMemoryRecent[]</PROPERTY>
-//                    </PROPERTIES>
-//                    <LISTITEMS>
-//                        <LISTITEM value="Recent" id="RBMemoryRecent1" Selected="False" onclick="OThersvisible(this.id, '.$memory.', '.$style.');">Recent</LISTITEM>
-//                    </LISTITEMS>
-//                    <FIELD id="memory_recent_radio" type="RadioButtonList" label=" ">
-//                        <PROPERTIES>
-//                            <PROPERTY name="name">memory_recent_radio</PROPERTY>
-//                        </PROPERTIES>
-//                        <LISTITEMS>
-//                            <LISTITEM value="Intact" id="memory_recent_radio1" Selected="False">Intact</LISTITEM>
-//                            <LISTITEM value="Impaired" id="memory_recent_radio2" Selected="False">Impaired</LISTITEM>
-//                        </LISTITEMS>
-//                    </FIELD>
-//                </FIELD>';
-        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD[@id='RBMemoryRecent']";        
-        $insert ='<FIELD id="RBMemoryRemote" header2Class="Higher_Mental_Functions" type="CheckBoxList" label=" " Backcontrols="hide" Backdivid="memory_remote_radio_div">
-                    <PROPERTIES>
-                        <PROPERTY name="name">RBMemoryRemote[]</PROPERTY>
-                    </PROPERTIES>
-                    <LISTITEMS>
-                        <LISTITEM value="Remote" id="RBMemoryRemote1" Selected="False" onclick="OThersvisible(this.id, '.$remote.', '.$style.');">Remote</LISTITEM>
-                    </LISTITEMS>
-                    <FIELD id="memory_remote_radio" type="RadioButtonList" label=" ">
+        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD[@id='CBGesturingposturing']";
+        $insert = '<FIELD id="checkGesturingposturing" type="CheckBoxList" label="">
                         <PROPERTIES>
-                            <PROPERTY name="name">memory_remote_radio</PROPERTY>
+                            <PROPERTY name="name">checkGesturingposturing[]</PROPERTY>
                         </PROPERTIES>
                         <LISTITEMS>
-                            <LISTITEM value="Intact" id="memory_remote_radio1" Selected="False">Intact</LISTITEM>
-                            <LISTITEM value="Impaired" id="memory_remote_radio2" Selected="False">Impaired</LISTITEM>
+                            <LISTITEM value="Negativism" id="checkGesturingposturing1" Selected="False">Negativism</LISTITEM>
+                            <LISTITEM value="Waxy Flexibility" id="checkGesturingposturing2" Selected="False">Waxy Flexibility</LISTITEM>
+                            <LISTITEM value="Echopraxia" id="checkGesturingposturing3" Selected="False">Echopraxia</LISTITEM>
+                            <LISTITEM value="Automatism" id="checkGesturingposturing4" Selected="False">Automatism</LISTITEM>
                         </LISTITEMS>
-                    </FIELD>
-                </FIELD>';
+                    </FIELD>';
+        
+
         $all_files = $this->getAllFiles();
         $error_files = [];
         if (!empty($all_files)) {
@@ -148,8 +122,10 @@ class XmlController extends Controller {
                     $targets = $xml->xpath($xpath);
                     if (!empty($targets)) {
                         //print_r($targets); echo $insert; die;
-                        $this->simplexml_insert_after(simplexml_load_string($insert), $targets[0]);
+                        //$this->simplexml_insert_after(simplexml_load_string($insert), $targets[0]);
+                        $this->simplexml_insert_firstChild(simplexml_load_string($insert), $targets[0]);
                     }
+                    //print_r($targets); die;
                     //echo $files;
                     $xml->asXML($files);
                     //die;
@@ -399,7 +375,8 @@ class XmlController extends Controller {
     public function actionChangetxtattrval() {
         //$xpath = "/FIELDS/GROUP/PANELBODY//LISTITEM[@id='RBnatureofdelusion2']";
         //$xpath = "/FIELDS/GROUP/PANELBODY/FIELD/LISTITEMS/LISTITEM[@value='Other']";
-        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD/FIELD/LISTITEMS/LISTITEM[@id='CBmood7']";
+        //$xpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD/FIELD/LISTITEMS/LISTITEM[@id='CBmood7']";
+        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD/LISTITEMS/LISTITEM[@id='CBGesturingposturing3']";
 
         $all_files = $this->getAllFiles();
         $error_files = [];
@@ -416,12 +393,11 @@ class XmlController extends Controller {
                     $targets = $xml->xpath($xpath);
                     if (!empty($targets)) {
                         foreach ($targets as $target) {
-
-                            $target['value'] = 'Gloomy';
-                            $target[0] = 'Gloomy';
+                            if(empty($target['onclick']))
+                            $target->addAttribute('onclick',"OThersvisible(this.id,'txtGesturingposturingDiv');");
                         }
                     }
-                    $xml->asXML($files);
+                    $xml->asXML($files);//die;
                 }
             }
         }
@@ -590,7 +566,7 @@ class XmlController extends Controller {
 
     public function actionDeleteli() {
         //$xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@id='martial_status']/LISTITEMS";
-        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD[@id='RBMemory']/LISTITEMS";
+        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD[@id='CBGesturingposturing']/LISTITEMS";
 
         $all_files = $this->getAllFiles();
         $error_files = [];
@@ -607,13 +583,16 @@ class XmlController extends Controller {
                     $targets = $xml->xpath($xpath);
                     if (!empty($targets)) {
                         foreach ($targets as $target) {
-                            if (isset($target->LISTITEM[1])) {
-                                unset($target->LISTITEM[1]);
-                                unset($target->LISTITEM[2]);
-                            }
+                            //print_r($target);
+                            unset($target->LISTITEM[3]);
+                            unset($target->LISTITEM[4]);
+                            unset($target->LISTITEM[5]);
+                            unset($target->LISTITEM[6]);
+                            unset($target->LISTITEM[7]);
                         }
                     }
-                    $xml->asXML($files);
+                    //print_r($target);
+                    $xml->asXML($files); //die;
                     //print_r($targets); die;
                 }
             }
