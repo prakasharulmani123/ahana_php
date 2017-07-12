@@ -376,7 +376,7 @@ class XmlController extends Controller {
         //$xpath = "/FIELDS/GROUP/PANELBODY//LISTITEM[@id='RBnatureofdelusion2']";
         //$xpath = "/FIELDS/GROUP/PANELBODY/FIELD/LISTITEMS/LISTITEM[@value='Other']";
         //$xpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD/FIELD/LISTITEMS/LISTITEM[@id='CBmood7']";
-        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD/LISTITEMS/LISTITEM[@id='CBGesturingposturing3']";
+        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD/FIELD[@id='txtGesturingposturing']";
 
         $all_files = $this->getAllFiles();
         $error_files = [];
@@ -393,8 +393,7 @@ class XmlController extends Controller {
                     $targets = $xml->xpath($xpath);
                     if (!empty($targets)) {
                         foreach ($targets as $target) {
-                            if(empty($target['onclick']))
-                            $target->addAttribute('onclick',"OThersvisible(this.id,'txtGesturingposturingDiv');");
+                            $target['label']='';
                         }
                     }
                     $xml->asXML($files);//die;
@@ -566,7 +565,7 @@ class XmlController extends Controller {
 
     public function actionDeleteli() {
         //$xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@id='martial_status']/LISTITEMS";
-        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD[@id='CBGesturingposturing']/LISTITEMS";
+        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD/FIELD[@id='RBmaritalsexualsatisfac']/LISTITEMS";
 
         $all_files = $this->getAllFiles();
         $error_files = [];
@@ -583,17 +582,13 @@ class XmlController extends Controller {
                     $targets = $xml->xpath($xpath);
                     if (!empty($targets)) {
                         foreach ($targets as $target) {
-                            //print_r($target);
-                            unset($target->LISTITEM[3]);
-                            unset($target->LISTITEM[4]);
-                            unset($target->LISTITEM[5]);
-                            unset($target->LISTITEM[6]);
-                            unset($target->LISTITEM[7]);
+                            if(isset($target->LISTITEM[2]))
+                            {
+                                unset($target->LISTITEM[2]);
+                            }
                         }
                     }
-                    //print_r($target);
                     $xml->asXML($files); //die;
-                    //print_r($targets); die;
                 }
             }
         }
