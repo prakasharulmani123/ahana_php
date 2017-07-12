@@ -216,6 +216,9 @@ class PatProcedure extends RActiveRecord {
                     return $data[0]['doctors'];
                 }
             },
+            'encounter_status' => function ($model) {
+                return $model->encounter->isActiveEncounter();
+            },
         ];
 
         $parent_fields = parent::fields();
@@ -223,8 +226,10 @@ class PatProcedure extends RActiveRecord {
         if ($addtField = Yii::$app->request->get('addtfields')) {
             switch ($addtField):
                 case 'procedurelist':
-                    $addt_keys = ['procedure_name', 'doctors', 'encounter_id'];
+                    $addt_keys = ['procedure_name', 'doctors', 'encounter_id', 'encounter_status'];
                     $parent_fields = [
+                        'tenant_id' => 'tenant_id',
+                        'proc_id' => 'proc_id',
                         'proc_description' => 'proc_description',
                         'proc_date' => 'proc_date',
                         'encounter_id' => 'encounter_id'
