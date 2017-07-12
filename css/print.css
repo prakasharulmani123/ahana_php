@@ -13,6 +13,10 @@
 
 @media print
 {
+    table.print-friendly tr td, table.print-friendly tr th {
+        page-break-inside: avoid;
+    }
+    
     .bill-cont
     {
         width:800px !important;
@@ -40,7 +44,7 @@
         font-size:13px;
         -webkit-print-color-adjust: exact;
         color-adjust: exact;
-        line-height: 22px;
+        line-height: 26px;
     }
 
     .RadGrid table, .RadGrid table th, .RadGrid table td {
@@ -52,8 +56,8 @@
         page-break-after:auto
     }
     .hide {
-    display: none;
-}
+        display: none;
+    }
     .referl-details
     {
         background:#cccccc;
@@ -88,6 +92,7 @@
         border-top:#dddddd solid 1px;
         border-bottom:#dddddd solid 1px;
         padding-bottom:10px;
+        padding-left: 10px;
     }
     .ribbonhead h1 {
         font-size: 13pt;
@@ -195,6 +200,20 @@
     .table-boder .small-left-heading {
         padding-left:10px;
     }
+
+    /*    .table-bordered td {
+            background:#f5f5f5;
+            border-collapse:collapse;
+            padding-top:10px;
+            padding-bottom:10px;
+        }
+        .table-bordered tr:nth-child(odd) td {
+            background: #f5f5f5;
+        }
+        .table-bordered tr:nth-child(even) td {
+            background: #eeeeee;
+        }*/
+
     .list:before {
         content:"\25A0";
         font-family:Arial, Helvetica, sans-serif;
@@ -214,12 +233,12 @@
 
     .colon
     {
-        float:right;
+        /*        float:right;*/
         margin-right:15px;
     }
-/*    #printThis th, #printThis td {
-        padding: 10px;
-    }*/
+    /*    #printThis th, #printThis td {
+            padding: 10px;
+        }*/
 
 }
 
@@ -672,34 +691,34 @@
 
 
 .heading-label {
-	width:auto;
-	float:left;
-	background:url(../img/ribbon.jpg) #4e4e4e right no-repeat;
-	height:36px;
-	color:#ffffff;
-	padding-left:10px;
-	padding-right:25px;
-	line-height:12px;
-	margin-top:10px;
-        -webkit-print-color-adjust: exact; 
+    width:auto;
+    float:left;
+    background:url(../img/ribbon.jpg) #4e4e4e right no-repeat;
+    height:36px;
+    color:#ffffff;
+    padding-left:10px;
+    padding-right:25px;
+    line-height:12px;
+    margin-top:10px;
+    -webkit-print-color-adjust: exact; 
 }
 
 .reportpart1
 {
-	width:100%;
-	float:left;
-	margin-bottom:25px;
-	padding-bottom:25px;
-	border-bottom:#dddddd dashed 1px;
+    width:100%;
+    float:left;
+    margin-bottom:25px;
+    padding-bottom:25px;
+    border-bottom:#dddddd dashed 1px;
 }
 
 .grey-row
 {
-        background:#f5f5f5;
-        -webkit-print-color-adjust: exact;
-        padding-top:10px;
-	padding-bottom:10px;
-/*	display:block;*/
+    background:#f5f5f5;
+    -webkit-print-color-adjust: exact;
+    padding-top:10px;
+    padding-bottom:10px;
+    /*	display:block;*/
 }
 #hide_span
 {
@@ -715,40 +734,10 @@
 
 .spe-line
 {
-	border-bottom:#bbbbbb dashed 1px;
+    border-bottom:#bbbbbb dashed 1px;
 }
 @page
 {
     size: auto;
     margin: 150px 50px 150px 50px;
 }
-.invoice { width:1000px; margin:0 auto }
-table { width:100%; border-collapse:collapse }
-table td { vertical-align:middle }
-
-/* Invoice Style */
-.referenceId { padding:8px 0 }
-.patientInfo { padding:10px 0; border-top:1px solid #b0b0b0; border-bottom:1px solid #b0b0b0 }
-.patientInfo h2 { font-size:24px;      margin-top: 0px; font-weight: bold;
-     margin-bottom: 0px;  }
-.patientInfo td { padding:1px 0 }
-.greenBg { background:#595959; padding:5px; border-radius:50%; color:#fff; text-transform:uppercase; font-size:11px; letter-spacing:1px }
-.patientInfo .borderLeft { border-left:1px solid #b0b0b0; padding-left:2em }
-.prescriptionInfo { padding-top:1.5em }
-.prescriptionInfo thead { border-bottom:1px solid #222222 }
-.prescriptionInfo th, .prescriptionInfo td { text-align:left }
-.prescriptionInfo th span { border-bottom:3px solid #222222; display:inline-block; padding-bottom:8px; line-height:12px }
-.prescriptionInfo .txtCenter, .txtCenter { text-align:center }
-.prescriptionInfo tbody tr:nth-child(even) { background:#ebebeb }
-.prescriptionInfo tr td { padding:5px 0 }
-.prescriptionInfo tr td:first-child { padding-left:10px; }
-.prescriptionInfo tr:first-child td { padding-top :30px }
-
-.prescriptionInfo td i { text-transform:uppercase; color:#7d7d7d; font-size:16px }
-.txtUpper { text-transform:uppercase }
-.nextVisit td { padding-top:5em;margin-top: 50px; }
-.printBtn { background:#3ebb95; color:#fff; border:none; padding:5px 20px; border-radius:2px; font-weight:bold; letter-spacing:0.5px; font-size:15px; cursor:pointer }
-.logoTxt { position:relative }
-.logoTxt span { color:#b1b1b1 }
-.absoluteTxt { position:absolute; top:20px; left:20px }
-.lightColor { color:#6b6b6b }
