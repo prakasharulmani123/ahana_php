@@ -65,9 +65,11 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
                     });
                     $scope.encounters = response;
                     if (response != null) {
-                        $scope.enc.selected = $scope.encounters[0];
+                        var activeSelected = $filter('filter')($scope.encounters, {status: '1'});
+                        $scope.enc.selected = (activeSelected) ? activeSelected[0] : $scope.encounters[0];
+
                     }
-                },'encounter_details');
+                }, 'encounter_details');
             }
         }, true);
 
@@ -268,8 +270,7 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
                             if (response.data.success === true) {
                                 $scope.loadProceduresList();
                                 $scope.msg.successMessage = 'Procedure deleted successfully';
-                            }
-                            else {
+                            } else {
                                 $scope.errorData = response.data.message;
                             }
                         }
@@ -295,13 +296,13 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
         //For Datetimepicker
         $scope.beforeRender = function ($view, $dates, $leftDate, $upDate, $rightDate) {
             var today_date = new Date().valueOf();
-            
+
             angular.forEach($dates, function (date, key) {
                 if (today_date < date.localDateValue()) {
                     $dates[key].selectable = false;
                 }
             });
-            
+
             $scope.$watch('active_encounter_date', function (newValue, oldValue) {
                 if (newValue != '' && typeof newValue != 'undefined') {
                     var admission_date_format = moment($scope.active_encounter_date).format('MM/DD/YYYY');
@@ -316,10 +317,10 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
                         if (admission_date_value > date.localDateValue()) {
                             $dates[key].selectable = false;
                         }
-                        if($view == 'month' && admission_month_year == date.localDateValue()){
+                        if ($view == 'month' && admission_month_year == date.localDateValue()) {
                             $dates[key].selectable = true;
                         }
-                        if($view == 'year' && admission_year == date.localDateValue()){
+                        if ($view == 'year' && admission_year == date.localDateValue()) {
                             $dates[key].selectable = true;
                         }
                     });
