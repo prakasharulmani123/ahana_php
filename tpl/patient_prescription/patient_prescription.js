@@ -512,6 +512,11 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                             $scope.getRelatedProducts(prescription.generic_id).then(function () {
                                 qty_count = $scope.calculate_qty(prescription.frequency, 1, product.product_description_id);
                                 if (qty_count > 0) {
+                                    if(prescription.route) {
+                                        route = prescription.route;
+                                    } else {
+                                        route = (product.description_routes) ? product.description_routes[0].route_name : '';
+                                    }
                                     items = {
                                         'product_id': prescription.product_id,
                                         'product_name': product.full_name,
@@ -519,7 +524,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                         'generic_name': prescription.generic_name,
                                         'drug_class_id': prescription.drug_class_id,
                                         'drug_name': prescription.drug_name,
-                                        'route': prescription.route,
+                                        'route': route,
                                         'frequency': prescription.frequency,
                                         'number_of_days': 1,
                                         'is_favourite': prescription.is_favourite,
