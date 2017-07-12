@@ -97,7 +97,7 @@
                                     <span class="absoluteTxt">X</span>
                                 </td>
                                 <td width="48%" align="right">
-                        <io-barcode code="{{patientObj.patient_global_int_code}}" type="CODE128B" options="barcodeOptions" width="125px" height="50px"></io-barcode>
+                        <io-barcode code="{{patientObj.patient_global_int_code}}" type="CODE128B" options="barcodeOptions" width="220px" height="70px"></io-barcode>
                 </td>
             </tr>
         </tbody> 
@@ -146,18 +146,18 @@
             <tbody>
                 <tr ng-repeat="(gKey, row) in prescriptionItems2">
                     <td><p>{{row.product_name}}</p><i>({{row.generic_name}})</i></td>
-                    <td class="txtCenter txtUpper" colspan="4" ng-if="row.freqType=='txt'">{{ getFrequencyExists(row.frequency_name, 0)}}</td>
-                    
-                    <td class="txtCenter" ng-if="row.freqType!='txt'">{{ getFrequencyExists(row.frequency_name, 0)}}</td>
-                    <td class="txtCenter" ng-if="row.freqType!='txt'">{{ getFrequencyExists(row.frequency_name, 1)}}</td>
-                    
-                    <td class="txtCenter" ng-if="((row.freqType==3) && (row.freqType!='txt'))">-</td>
-                    <td class="txtCenter" ng-if="((row.freqType!=3) && (row.freqType!='txt'))">{{ getFrequencyExists(row.frequency_name, 2)}}</td>
-                    
-                    <td class="txtCenter" ng-if="((row.freqType==3) && (row.freqType!='txt'))">{{ getFrequencyExists(row.frequency_name, 2)}}</td>
-                    <td class="txtCenter" ng-if="((row.freqType!=3) && (row.freqType!='txt'))">{{ getFrequencyExists(row.frequency_name, 3)}}</td>
-                    
-                    
+                    <td class="txtCenter txtUpper" colspan="4" ng-if="row.freqType == 'txt'">{{ getFrequencyExists(row.frequency_name, 0)}}</td>
+
+                    <td class="txtCenter" ng-if="row.freqType != 'txt'">{{ getFrequencyExists(row.frequency_name, 0)}}</td>
+                    <td class="txtCenter" ng-if="row.freqType != 'txt'">{{ getFrequencyExists(row.frequency_name, 1)}}</td>
+
+                    <td class="txtCenter" ng-if="((row.freqType == 3) && (row.freqType != 'txt'))">-</td>
+                    <td class="txtCenter" ng-if="((row.freqType != 3) && (row.freqType != 'txt'))">{{ getFrequencyExists(row.frequency_name, 2)}}</td>
+
+                    <td class="txtCenter" ng-if="((row.freqType == 3) && (row.freqType != 'txt'))">{{ getFrequencyExists(row.frequency_name, 2)}}</td>
+                    <td class="txtCenter" ng-if="((row.freqType != 3) && (row.freqType != 'txt'))">{{ getFrequencyExists(row.frequency_name, 3)}}</td>
+
+
                     <td class="txtCenter">{{row.number_of_days}}</td>
                     <td>{{row.remarks||'-'}}</td>
                 </tr>
