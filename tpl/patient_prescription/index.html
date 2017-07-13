@@ -108,7 +108,7 @@
                                                                     <input autocomplete="off" 
                                                                            type="text" 
                                                                            name="masked" 
-                                                                           ui-mask="9-9-9-9" 
+                                                                           ui-mask="9-9-9" 
                                                                            ng-model="addData.frequency" 
                                                                            model-view-value="true" 
                                                                            class="form-control m-b"
@@ -203,7 +203,7 @@
                                                             </span>                                                            
                                                         </td>
                                                         <td> 
-                                                            <div id="freq_{{item.item_key}}_3" class="freq_div_{{item.item_key}} hide" style="width: 75%; float:left">
+                                                            <div id="freq_{{item.item_key}}_3" class="freq_div_{{item.item_key}}" style="width: 75%; float:left">
                                                                 <span editable-text="item.frequency"
                                                                       e-index ="{{item.item_key}}"
                                                                       e-tabindex="2{{item.item_key}}3"
@@ -221,7 +221,7 @@
                                                                     {{ item.frequency || 'empty' }}
                                                                 </span>
                                                             </div>
-                                                            <div id="freq_{{item.item_key}}_4" class="freq_div_{{item.item_key}}" style="width: 75%; float:left">
+                                                            <div id="freq_{{item.item_key}}_4" class="freq_div_{{item.item_key}} hide" style="width: 75%; float:left">
                                                                 <span editable-text="item.frequency"
                                                                       e-index ="{{item.item_key}}"
                                                                       e-tabindex="2{{item.item_key}}3"

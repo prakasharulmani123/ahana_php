@@ -397,7 +397,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                             'qty': qty_count,
                             'product_description_id': $scope.addData.product.product_description_id,
                             'in_stock': (parseInt($scope.addData.product.availableQuantity) > parseInt(qty_count)),
-                            'freqType': '4'
+                            'freqType': '3'
                         };
                         var fav = $filter('filter')($scope.child.favourites, {product_id: $scope.addData.product.product_id});
 
@@ -541,8 +541,14 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                         'qty': qty_count,
                                         'product_description_id': product.product_description_id,
                                         'in_stock': (parseInt(product.availableQuantity) > parseInt(qty_count)),
-                                        'freqType': '4'
+                                        'freqType': '3'
                                     };
+                                    
+                                    //Multiple entries created, Check duplicate once again 
+//                                    var chkDuplicate = $filter('filter')($scope.data.prescriptionItems, {product_id: items.product_id}, true);
+//                                    if (chkDuplicate.length == 0) {
+//                                        PrescriptionService.addPrescriptionItem(items);
+//                                    }
 
                                     PrescriptionService.addPrescriptionItem(items);
                                     $scope.data.prescriptionItems = PrescriptionService.getPrescriptionItems();
