@@ -545,12 +545,11 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                     };
                                     
                                     //Multiple entries created, Check duplicate once again 
-//                                    var chkDuplicate = $filter('filter')($scope.data.prescriptionItems, {product_id: items.product_id}, true);
-//                                    if (chkDuplicate.length == 0) {
-//                                        PrescriptionService.addPrescriptionItem(items);
-//                                    }
+                                    var chkDuplicate = $filter('filter')($scope.data.prescriptionItems, {product_id: items.product_id}, true);
+                                    if (chkDuplicate.length == 0) {
+                                        PrescriptionService.addPrescriptionItem(items);
+                                    }
 
-                                    PrescriptionService.addPrescriptionItem(items);
                                     $scope.data.prescriptionItems = PrescriptionService.getPrescriptionItems();
 
                                     $timeout(function () {
