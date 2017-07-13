@@ -430,17 +430,6 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
 
                 var ratingTdText = $(this).find('td.ribbon');
                 var nextTr = ratingTdText.closest('tr').next('tr');
-                nextTr.find('td').each(function () {
-//                    if (nextTr.text().trim() == "Hiding text") {
-//                        var newText = $(this).text().replace('Hiding text', "");
-//                        $(this).text(newText);
-//                    }
-
-                    if (nextTr.text().trim() == "") {
-                        nextTr.remove();
-                        ratingTdText.remove();
-                    }
-                });
 
                 var nextTr = ratingTdText.closest('tr').next('tr');
                 if ((nextTr.text().trim() == "Possession of thought") || (nextTr.text().trim() == "Hiding text")) {
@@ -472,6 +461,11 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     var subTr = subText.closest('tr').prev('tr');
                     subTr.remove();
                 }
+                var personalText = $(this).find('tr.personal_history');
+                if (personalText.text().trim().length === 0) {
+                    var personalTr = personalText.closest('tr').prev('tr');
+                    personalTr.remove();
+                }
 
             });
 
@@ -479,7 +473,6 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                 $(this).removeClass("form-control");
                 $(this).html($(this).text());
             });
-
 
             $("#printThisElement table").each(function () {
                 //RadGrid
@@ -510,11 +503,6 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     }
                 });
 
-//                var te= $(this).find("td");
-//                if ($this.text().trim().length === 0) {
-//                    $(this).remove();
-//                }
-
                 //Header2
                 var header2_tr = $(this).find("tr.header2");
                 $.each(header2_tr, function (n, e)
@@ -541,9 +529,16 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     $(this).remove();
                 }
 
+                var complaints = $("td#complaints");
+                if (complaints.text().length === 0)
+                {
+                    complaints.remove();
+                }
+
             });
 
             $("#printThisElement table").each(function () {
+
                 var PanelBar_tr = $(this).find("table tr.PanelBar");
                 if (PanelBar_tr.length > 0) {
                     $.each(PanelBar_tr, function () {
@@ -567,6 +562,24 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     var success = heading.replace('Hiding text', '');
                     if (success.trim().length === 0) {
                         head.remove();
+                    }
+                });
+
+                var ratingTdText = $(this).find('td.ribbon');
+                var nextTr = ratingTdText.closest('tr').next('tr');
+                nextTr.find('td').each(function () {
+                    if (nextTr.text().trim() == "") {
+                        nextTr.remove();
+                        ratingTdText.remove();
+                    }
+                });
+
+                var headingText = $(this).find('td.ribbonhead');
+                var headingnextTr = headingText.closest('tr').next('tr');
+                headingnextTr.find('td').each(function () {
+                    if (headingnextTr.text().trim() == "") {
+                        headingnextTr.remove();
+                        headingText.remove();
                     }
                 });
             });
@@ -613,6 +626,13 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     $this.parents("span").remove();
                 }
 
+            });
+
+            $('table#heading').each(function () {
+                //console.log($(this).find("tbody").text());
+                if ($(this).find("tbody").text().trim().length === 0) {
+                    $(this).remove();
+                }
             });
         }
 
@@ -713,21 +733,20 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
 
         $scope.ckeditorReplace = function () {
             CKEDITOR.replaceAll('classy-edit');
-            CKEDITOR.config.disableNativeSpellChecker=true,
-            CKEDITOR.config.scayt_autoStartup=true
+            CKEDITOR.config.disableNativeSpellChecker = true,
+                    CKEDITOR.config.scayt_autoStartup = true
             CKEDITOR.config.toolbar = [
-                ['Styles', 'Format', 'Font', 'FontSize','spellchecker'],
+                ['Styles', 'Format', 'Font', 'FontSize', 'spellchecker'],
 
                 ['Bold', 'Italic', 'Underline', 'StrikeThrough', '-', 'Undo', 'Redo', '-', 'Cut', 'Copy', 'Paste', 'Find', 'Replace', '-', 'Outdent', 'Indent', '-', 'Print'],
 
                 ['NumberedList', 'BulletedList', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
-                ['-', 'Link', 'Flash', 'Smiley', 'TextColor', 'BGColor', 'Source','-','SpellChecker','Scayt']
+                ['-', 'Link', 'Flash', 'Smiley', 'TextColor', 'BGColor', 'Source', '-', 'SpellChecker', 'Scayt']
             ];
             CKEDITOR.config.toolbarGroups = [
 
-		{ name: 'editing',     groups: [ 'find', 'selection', 'spellchecker' ] },
-		
-	];
+                {name: 'editing', groups: ['find', 'selection', 'spellchecker']},
+            ];
         };
 
         $scope.printOtherdocument = function (list) {
