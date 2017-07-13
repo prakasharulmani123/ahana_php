@@ -1676,7 +1676,7 @@
                         <LISTITEMS>
                             <LISTITEM value="Satisfactory" id="RBmaritalsexualsatisfac1" Selected="False">Satisfactory</LISTITEM>
                             <LISTITEM value="Unsatisfactory" id="RBmaritalsexualsatisfac2" Selected="False">Unsatisfactory</LISTITEM>
-                            <LISTITEM value="Neutral" id="RBmaritalsexualsatisfac3" Selected="False">Neutral</LISTITEM>
+                            
                         </LISTITEMS>
                     </FIELD>
                 
@@ -2075,7 +2075,7 @@
                         
                         
                     </LISTITEMS>
-                    <FIELD id="txtGesturingposturing" type="TextBox" label="Other: ">
+                    <FIELD id="txtGesturingposturing" type="TextBox" label="">
                         <PROPERTIES>
                             <PROPERTY name="id">txtGesturingposturing</PROPERTY>
                             <PROPERTY name="class">form-control</PROPERTY>
@@ -2698,7 +2698,7 @@
                     <PROPERTY name="class">form-control</PROPERTY>
                 </PROPERTIES>
             </FIELD>
-            <FIELD id="diagnosis_notes" type="TextArea" label="Notes">
+            <FIELD id="diagnosis_notes" type="TextArea" label="Comments">
                 <PROPERTIES>
                     <PROPERTY name="id">diagnosis_notes</PROPERTY>
                     <PROPERTY name="name">diagnosis_notes</PROPERTY>

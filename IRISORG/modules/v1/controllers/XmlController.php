@@ -376,7 +376,7 @@ class XmlController extends Controller {
         //$xpath = "/FIELDS/GROUP/PANELBODY//LISTITEM[@id='RBnatureofdelusion2']";
         //$xpath = "/FIELDS/GROUP/PANELBODY/FIELD/LISTITEMS/LISTITEM[@value='Other']";
         //$xpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD/FIELD/LISTITEMS/LISTITEM[@id='CBmood7']";
-        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD/FIELD[@id='txtGesturingposturing']";
+        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD[@id='diagnosis_notes']";
 
         $all_files = $this->getAllFiles();
         $error_files = [];
@@ -393,7 +393,7 @@ class XmlController extends Controller {
                     $targets = $xml->xpath($xpath);
                     if (!empty($targets)) {
                         foreach ($targets as $target) {
-                            $target['label']='';
+                            $target['label']='Comments';
                         }
                     }
                     $xml->asXML($files);//die;
