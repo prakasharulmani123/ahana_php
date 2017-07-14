@@ -20,7 +20,7 @@
                 <tbody>
                     <!-- 2nd row -->
                     <tr>
-                        <td valign="top" align="left">
+                        <td width="70%" valign="top" align="left">
                             <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                 <xsl:for-each select="PANELBODY">
                                     <xsl:for-each select="FIELD">
@@ -121,15 +121,15 @@
                                 </xsl:for-each>
                             </table>
                         </td>
-                        <td width="" align="right" valign="top">
+                        <td width="30%" align="right" valign="top">
                                 <xsl:for-each select="PANELBODY/FIELD[((@type='TextBox') or (@type='CheckBoxList')) and ((@id='TherapistName') or (@id='referral_details'))]">
                                     <xsl:choose>
                                         <xsl:when test="@type='TextBox'">
-                                            <table width="250" border="0" cellspacing="0" cellpadding="0" class="referl-details">
+                                            <table width="280" border="0" cellspacing="0" cellpadding="0" class="referl-details">
                                             <tr>
                                                 <td align="left" valign="top">
                                                     <strong>
-                                                        Add recorded by <span class="colon"> : </span>
+                                                        Recorded by <span class="colon"> : </span>
                                                     </strong> 
                                                 </td>
                                                 <td align="left" valign="top">
@@ -148,12 +148,12 @@
                                             </tr>
                                             
                                             </table>
-                                            <table width="250" border="0" cellspacing="0" cellpadding="0" class="referl-details">
+                                            <table width="280" border="0" cellspacing="0" cellpadding="0" class="referl-details">
                                             <xsl:if test="PROPERTIES/PROPERTY[@name = 'value' and string(.)]">
                                                 <tr>
                                                     <td align="left" valign="top">
                                                         <strong>
-                                                            Consultant Name <span class="colon"> : </span>
+                                                            Consultant <span class="colon"> : </span>
                                                         </strong>
                                                     </td>
                                                     <td align="left" valign="top">
@@ -191,7 +191,7 @@
                                             </table>
                                         </xsl:when>
                                         <xsl:when test="@type='CheckBoxList'">
-                                            <table width="250" border="0" cellspacing="0" cellpadding="0" class="referl-details">
+                                            <table width="280" border="0" cellspacing="0" cellpadding="0" class="referl-details">
                                             <tr>
                                                 <xsl:if test="boolean(LISTITEMS/LISTITEM/@Selected = 'true')">
                                                     <td align="left" valign="top">
@@ -827,12 +827,13 @@
                                                                                         <xsl:for-each select="FIELD">
                                                                                             <xsl:choose>
                                                                                                 <xsl:when test="@type='TextBox'">
-                                                                                                    [ <xsl:value-of select="@label" />&#160;
-                                                                                                    <xsl:for-each select="PROPERTIES/PROPERTY">
-                                                                                                        <xsl:if test="@name='value'">
-                                                                                                            <xsl:value-of select="current()"></xsl:value-of> ]
-                                                                                                        </xsl:if>
-                                                                                                    </xsl:for-each>
+                                                                                                    <xsl:if test="PROPERTIES/PROPERTY[@name = 'value' and string(.)]">
+                                                                                                        <xsl:for-each select="PROPERTIES/PROPERTY">
+                                                                                                            <xsl:if test="@name='value'">
+                                                                                                                [ <xsl:value-of select="current()"></xsl:value-of> ]
+                                                                                                            </xsl:if>
+                                                                                                        </xsl:for-each>
+                                                                                                    </xsl:if>
                                                                                                 </xsl:when>
                                                                                             </xsl:choose>
                                                                                         </xsl:for-each>
@@ -1131,19 +1132,21 @@
                                                                                                 </xsl:for-each>
                                                                                             </xsl:when>
                                                                                             <xsl:when test="@type='TextBox'">
-                                                                                                <xsl:for-each select="PROPERTIES/PROPERTY">
-                                                                                                    <xsl:if test="@name='value'">
-                                                                                                        <tr>
-                                                                                                            <td width="40%" align="left" valign="top" class="small-left-heading">
-                                                                                                                <xsl:value-of select="../../@label"/>
-                                                                                                            </td>
-                                                                                                            <td width="60%" align="left" valign="top">
-                                                                                                                <xsl:value-of select="current()"/>
-                                                                                                            </td>
-                                                                                                        </tr>
+                                                                                                <xsl:if test="PROPERTIES/PROPERTY[@name = 'value' and string(.)]">
+                                                                                                    <xsl:for-each select="PROPERTIES/PROPERTY">
+                                                                                                        <xsl:if test="@name='value'">
+                                                                                                            <tr>
+                                                                                                                <td width="40%" align="left" valign="top" class="small-left-heading">
+                                                                                                                    <xsl:value-of select="../../@label"/>
+                                                                                                                </td>
+                                                                                                                <td width="60%" align="left" valign="top">
+                                                                                                                    <xsl:value-of select="current()"/>
+                                                                                                                </td>
+                                                                                                            </tr>
                                                                                     
-                                                                                                    </xsl:if>
-                                                                                                </xsl:for-each>
+                                                                                                        </xsl:if>
+                                                                                                    </xsl:for-each>
+                                                                                                </xsl:if>
                                                                                             </xsl:when>
                                                                                         </xsl:choose>
                                                                                     </xsl:for-each>
@@ -1171,7 +1174,7 @@
                                 <td colspan="2" align="left" valign="top">
                                     <table width="100%" border="0" cellspacing="0" cellpadding="0" class="print-friendly">
                                         <!-- Counselling/psychotherapy heading-->
-                                        <xsl:for-each select="PANELBODY/FIELD/FIELD[@type='Header2' and @label='Counselling/Psychotherapy']">
+                                        <xsl:for-each select="PANELBODY/FIELD/FIELD[@type='Header2' and @label='Counselling / Psychotherapy']">
                                             <tr>
                                                 <td align="left" valign="top" class="ribbon">
                                                     <h2 style="font-family:Arial, Helvetica, sans-serif;">   
