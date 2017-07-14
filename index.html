@@ -193,23 +193,14 @@
                                                 presc_right.vital_error = false;">
                                 <div class="form-group">
                                     <div class="row">
-                                        <div class="col-sm-6">
-                                            <input type="text" maxlength="3" placeholder="Temperature" class="form-control" ng-model="presc_right.vitaldata.temperature">
-                                            <span class="text-danger" ng-show="presc_right.vital_error">Required</span>
+                                        <div class="text-danger col-sm-12" ng-show="presc_right.vital_error">
+                                            Fill the form
                                         </div>
                                         <div class="col-sm-6">
-                                            <input type="text" maxlength="3" placeholder="Pulse" class="form-control" ng-model="presc_right.vitaldata.pulse_rate">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <input type="text" maxlength="3" placeholder="BP Systolic" class="form-control" ng-model="presc_right.vitaldata.blood_pressure_systolic">
+                                            <input type="text" maxlength="5" placeholder="Temperature" class="form-control" ng-model="presc_right.vitaldata.temperature">
                                         </div>
                                         <div class="col-sm-6">
-                                            <input type="text" maxlength="3" placeholder="BP Diastolic" class="form-control" ng-model="presc_right.vitaldata.blood_pressure_diastolic">
+                                            <input type="text" maxlength="5" placeholder="Pulse" class="form-control" ng-model="presc_right.vitaldata.pulse_rate">
                                         </div>
                                     </div>
                                 </div>
@@ -217,7 +208,18 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-sm-6">
-                                            <input type="text" maxlength="3" placeholder="Weight" class="form-control" ng-model="presc_right.vitaldata.weight">
+                                            <input type="text" maxlength="5" placeholder="BP Systolic" class="form-control" ng-model="presc_right.vitaldata.blood_pressure_systolic">
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <input type="text" maxlength="5" placeholder="BP Diastolic" class="form-control" ng-model="presc_right.vitaldata.blood_pressure_diastolic">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <input type="text" maxlength="5" placeholder="Weight" class="form-control" ng-model="presc_right.vitaldata.weight">
                                         </div>
                                         <div class="col-sm-6">
                                             <span class="input-group-btn">

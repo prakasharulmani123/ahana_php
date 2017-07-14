@@ -391,6 +391,19 @@ angular.module('app')
                     if (jQuery.isEmptyObject($scope.presc_right.vitaldata)) {
                         $scope.presc_right.vital_error = true;
                         return;
+                    } else {
+                        //Check atleast any one field entered
+                        var keys = Object.keys($scope.presc_right.vitaldata);
+                        var len = keys.length;
+                        var emptylen = 0;
+                        angular.forEach($scope.presc_right.vitaldata, function (value, key) {
+                            if (value == '')
+                                emptylen += 1;
+                        });
+                        if (len == emptylen) {
+                            $scope.presc_right.vital_error = true;
+                            return;
+                        }
                     }
 
                     $scope.presc_right.vital_error = false;
@@ -867,9 +880,9 @@ angular.module('app')
 
                                             if (dataTagvalue === 'TH')
                                                 dataStyle = 'Bold';
-                                            
+
                                             if (dataType == 'Number')
-                                                dataValue = parseFloat(dataValue.replace(',',''));
+                                                dataValue = parseFloat(dataValue.replace(',', ''));
 
                                             var dataFormula = tables[i].rows[j].cells[k].getAttribute("data-formula");
                                             dataFormula = (dataFormula) ? dataFormula : (appname == 'Calc' && dataType == 'DateTime') ? dataValue : null;
