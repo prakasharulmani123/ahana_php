@@ -84,7 +84,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             if (typeof days != 'undefined') {
                 $scope.data.prescriptionItems[key].frequency = $('#freq_' + key + '_' + item.freqType + ' input').val();
                 $scope.data.prescriptionItems[key].number_of_days = days;
-                $scope.data.prescriptionItems[key].qty = $scope.calculate_qty($scope.data.prescriptionItems[key].frequency, days, item.product_description_id);
+                $scope.data.prescriptionItems[key].qty = $scope.calculate_qty($scope.data.prescriptionItems[key].frequency, days, item.product_description_id, item.description_name);
                 $scope.data.prescriptionItems[key].total = $scope.calculate_price($scope.data.prescriptionItems[key].qty, item.price);
                 $scope.data.prescriptionItems[key].in_stock = (parseInt(item.available_quantity) > parseInt($scope.data.prescriptionItems[key].qty));
             }
@@ -288,7 +288,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.setProductId = function ($data, key, tableform) {
             result = $filter('filter')($scope.data.prescriptionItems[key].all_products, {full_name: $data});
             if (result.length > 0) {
-                qty_count = $scope.calculate_qty($scope.data.prescriptionItems[key].frequency, $scope.data.prescriptionItems[key].number_of_days, result[0].product_description_id);
+                qty_count = $scope.calculate_qty($scope.data.prescriptionItems[key].frequency, $scope.data.prescriptionItems[key].number_of_days, result[0].product_description_id, result[0].description_name);
                 if (qty_count > 0) {
                     $scope.data.prescriptionItems[key].product_id = result[0].product_id;
                     $scope.data.prescriptionItems[key].description_routes = [];
@@ -297,6 +297,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     $scope.data.prescriptionItems[key].in_stock = (parseInt(result[0].availableQuantity) > parseInt(qty_count));
                     $scope.data.prescriptionItems[key].price = result[0].latest_price;
                     $scope.data.prescriptionItems[key].product_description_id = result[0].product_description_id;
+                    $scope.data.prescriptionItems[key].description_name = result[0].description_name;
                     $scope.data.prescriptionItems[key].qty = qty_count;
                     $scope.data.prescriptionItems[key].total = $scope.calculate_price(qty_count, result[0].latest_price);
 
@@ -371,7 +372,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     } else {
                         $scope.searchForm.DrugClass.$setValidity('required', true);
                     }
-                    qty_count = $scope.calculate_qty($scope.addData.frequency, $scope.addData.number_of_days, $scope.addData.product.product_description_id);
+                    qty_count = $scope.calculate_qty($scope.addData.frequency, $scope.addData.number_of_days, $scope.addData.product.product_description_id, $scope.addData.product.description_name);
                     if (qty_count > 0) {
                         items = {
                             'product_id': $scope.addData.product.product_id,
@@ -396,6 +397,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                             'all_products': $scope.products,
                             'qty': qty_count,
                             'product_description_id': $scope.addData.product.product_description_id,
+                            'description_name': $scope.addData.product.description_name,
                             'in_stock': (parseInt($scope.addData.product.availableQuantity) > parseInt(qty_count)),
                             'freqType': '3'
                         };
@@ -434,7 +436,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     var result = $filter('filter')($scope.data.prescriptionItems, {product_id: value.product_id, route_id: value.route_id});
                     if (result.length == 0) {
                         $scope.getRelatedProducts(value.generic_id).then(function () {
-                            qty_count = $scope.calculate_qty(value.frequency_name, value.number_of_days, value.product.product_description_id);
+                            qty_count = $scope.calculate_qty(value.frequency_name, value.number_of_days, value.product.product_description_id, value.product.description_name);
                             items = {
                                 'product_id': value.product_id,
                                 'product_name': value.product.full_name,
@@ -458,6 +460,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                 'all_products': $scope.products,
                                 'qty': qty_count,
                                 'product_description_id': value.product.product_description_id,
+                                'description_name': value.product.description_name,
                                 'in_stock': (parseInt(value.product.availableQuantity) > parseInt(qty_count)),
                                 'freqType': value.freqType
                             };
@@ -505,12 +508,12 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
                 var fiter = $filter('filter')($scope.all_products, {product_id: parseInt(prescription.product_id)}, true);
                 var product = fiter[0];
-                var Fields = 'full_name,description_routes,latest_price,availableQuantity,product_description_id';
+                var Fields = 'full_name,description_routes,latest_price,availableQuantity,product_description_id,description_name';
 //                + '&full_name_with_stock=1'
                 $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproducts/' + product.product_id + '?fields=' + Fields)
                         .success(function (product) {
                             $scope.getRelatedProducts(prescription.generic_id).then(function () {
-                                qty_count = $scope.calculate_qty(prescription.frequency, 1, product.product_description_id);
+                                qty_count = $scope.calculate_qty(prescription.frequency, 1, product.product_description_id, product.description_name);
                                 if (qty_count > 0) {
                                     if(prescription.route) {
                                         route = prescription.route;
@@ -540,6 +543,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                         'all_products': $scope.products,
                                         'qty': qty_count,
                                         'product_description_id': product.product_description_id,
+                                        'description_name': product.description_name,
                                         'in_stock': (parseInt(product.availableQuantity) > parseInt(qty_count)),
                                         'freqType': '3'
                                     };
@@ -695,7 +699,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     _that.data.prescriptionItems[key].product_name = '';
                 }
                 _that.data.prescriptionItems[key].frequency = $('#freq_' + key + '_' + _that.data.prescriptionItems[key].freqType + ' input').val();
-                qty_count = $scope.calculate_qty(_that.data.prescriptionItems[key].frequency, prescriptionItem.number_of_days, prescriptionItem.product_description_id);
+                qty_count = $scope.calculate_qty(_that.data.prescriptionItems[key].frequency, prescriptionItem.number_of_days, prescriptionItem.product_description_id, prescriptionItem.description_name);
                 _that.data.prescriptionItems[key].qty = qty_count;
                 _that.data.prescriptionItems[key].total = $scope.calculate_price(qty_count, prescriptionItem.price);
                 _that.data.prescriptionItems[key].in_stock = (parseInt(prescriptionItem.available_quantity) > parseInt(qty_count));
@@ -950,7 +954,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                                 var loop_start = 0;
                                                 angular.forEach($scope.rowCollection[0].items, function (item, k) {
                                                     $scope.getRelatedProducts(item.generic_id).then(function () {
-                                                        qty_count = $scope.calculate_qty(item.frequency_name, item.number_of_days, item.product.product_description_id);
+                                                        qty_count = $scope.calculate_qty(item.frequency_name, item.number_of_days, item.product.product_description_id, item.product.description_name);
                                                         items = {
                                                             'product_id': item.product_id,
                                                             'product_name': item.product.full_name,
@@ -974,6 +978,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                                             'all_products': $scope.products,
                                                             'qty': qty_count,
                                                             'product_description_id': item.product.product_description_id,
+                                                            'description_name': item.product.description_name,
                                                             'in_stock': (parseInt(item.product.availableQuantity) > parseInt(qty_count)),
                                                             'freqType': item.freqType
                                                         };
@@ -1030,13 +1035,15 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $scope.$broadcast('refreshDatepickers');
         };
 
-        $scope.calculate_qty = function (freq, days, product_description_id) {
+        $scope.calculate_qty = function (freq, days, product_description_id, description_name) {
             if (typeof freq != 'undefined') {
                 var freq_count = 0;
                 $.each(freq.split('-'), function (key, item) {
                     freq_count = freq_count + parseInt(item);
                 });
-                if (product_description_id == 1 && !isNaN(freq_count) && angular.isNumber(freq_count)) {
+                var qtyCalcDescNames = ["tablet", "capsule", "tablets", "capsules" ];
+                if ($.inArray(description_name.toLowerCase(), qtyCalcDescNames ) >= 0 && 
+                        !isNaN(freq_count) && angular.isNumber(freq_count)) {
                     //Tablets
                     return (parseFloat(days) * parseFloat(freq_count));
                 } else {
@@ -1378,7 +1385,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 $('#freq_' + key + '_' + ftype).removeClass('hide');
                 $scope.data.prescriptionItems[key].frequency = freq;
                 $scope.data.prescriptionItems[key].freqType = ftype;
-                $scope.data.prescriptionItems[key].qty = $scope.calculate_qty(freq, item.number_of_days, item.product_description_id);
+                $scope.data.prescriptionItems[key].qty = $scope.calculate_qty(freq, item.number_of_days, item.product_description_id, item.description_name);
                 $scope.data.prescriptionItems[key].total = $scope.calculate_price($scope.data.prescriptionItems[key].qty, item.price);
                 $scope.data.prescriptionItems[key].in_stock = (parseInt(item.available_quantity) > parseInt($scope.data.prescriptionItems[key].qty));
             }
