@@ -1864,6 +1864,29 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             });
         }
 
+        $scope.removeRow = function (sale_id) {
+            //console.log(sale_id);
+            var conf = confirm('Are you sure to delete ?');
+            if (conf)
+            {
+                $http({
+                    url: $rootScope.IRISOrgServiceUrl + "/pharmacysale/checkdelete",
+                    method: "POST",
+                    data: {id: sale_id}
+                }).then(
+                        function (response) {
+                            console.log(response);
+                            $scope.loadbar('hide');
+                            if (response.data.success === true) {
+                                $scope.loadSaleItemList('CA')
+                            } else {
+                                $scope.errorData = response.data.message;
+                            }
+                        }
+                )
+            }
+        }
+
 //        // Get Patient Name
 //        var changeTimer = false;
 //        $scope.$watch('data.patient_name', function (newValue, oldValue) {

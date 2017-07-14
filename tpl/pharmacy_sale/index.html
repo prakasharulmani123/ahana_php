@@ -64,7 +64,7 @@
                 </div>
             </div>
             <img ng-hide="true" id="sale_logo" src="img/ahanalogo.jpg"/>
-		<table class="table m-b-none default">
+            <table class="table m-b-none default">
                 <thead>
                     <tr>
                         <th style="width: 5%" data-sort-ignore="true">
@@ -122,7 +122,7 @@
                                     <tr ng-repeat="(gKey, saleitem) in row.items | orderBy: sale_id">
                                         <td ng-hide="true">
                                 <io-barcode id="{{saleitem.patient_uhid}}" code="{{saleitem.patient_uhid}}" type="CODE128B" options="barcodeOptions"></io-barcode>
-                                
+
                         </td>
                         <td>{{saleitem.bill_no}}</td>
                         <td>{{saleitem.sale_date}}</td>
@@ -141,6 +141,9 @@
                             <button tooltip="Print Bill"  class="label bg-primary dk" ng-click="printSaleBill(saleitem.sale_id)">
                                 <i class="fa fa-print"></i>
                             </button>
+                            <a data-button="pharmacy.delete_sale_bill" check-access-custom title="Delete Bill" ng-click="removeRow(saleitem.sale_id)" class="label bg-dark dk">
+                                <i class="fa fa-trash"></i>
+                            </a>
                         </td> 
                     </tr>
                 </tbody>

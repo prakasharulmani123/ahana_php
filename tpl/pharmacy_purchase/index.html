@@ -36,7 +36,7 @@
                         <button class="btn btn-sm btn-grey" ng-click="loadPurchaseItemList(purchase_payment_type)">
                             &nbsp; &nbsp; <i class="fa fa-search"></i> &nbsp; &nbsp;
                         </button>
-                        <button class="btn btn-sm btn-dark" title="clear filter" ng-click="form_filter='';form_filter1='';loadPurchaseItemList(purchase_payment_type)">
+                        <button class="btn btn-sm btn-dark" title="clear filter" ng-click="form_filter = '';form_filter1 = '';loadPurchaseItemList(purchase_payment_type)">
                             <i class="fa fa-times"></i>
                         </button>
                     </div>
@@ -99,6 +99,9 @@
                             <button tooltip="Print Bill"  class="label bg-primary dk" ng-click="printPurchaseBill(row.purchase_id)">
                                 <i class="fa fa-print"></i>
                             </button>
+                            <a data-button="pharmacy.deletepurchasebill" check-access-custom title="Delete Purchase" ng-click="removeRow(row.purchase_id)" class="label bg-dark dk">
+                                <i class="fa fa-trash"></i>
+                            </a>
                         </td>
                     </tr>
                     <tr ng-repeat-end ng-show="expanded">

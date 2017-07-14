@@ -1085,5 +1085,24 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
 //                changeTimer = false;
 //            }, 300);
         }
-
+        $scope.removeRow = function (purchase_id) {
+            var conf = confirm('Are you sure to delete ?');
+            if (conf)
+            {
+                $http({
+                    url: $rootScope.IRISOrgServiceUrl + "/pharmacypurchase/checkdelete",
+                    method: "POST",
+                    data: {id: purchase_id}
+                }).then(
+                        function (response) {
+                            $scope.loadbar('hide');
+                            if (response.data.success === true) {
+                                $scope.loadPurchaseItemList('CA');
+                            } else {
+                                $scope.errorData = response.data.message;
+                            }
+                        }
+                )
+            }
+        }
     }]);
