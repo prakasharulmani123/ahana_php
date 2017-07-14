@@ -127,22 +127,22 @@
                                         <xsl:when test="@type='TextBox'">
                                             <table width="280" border="0" cellspacing="0" cellpadding="0" class="referl-details">
                                             <tr>
-                                                <td align="left" valign="top">
+                                                <td width="100" align="left" valign="top">
                                                     <strong>
                                                         Recorded by <span class="colon"> : </span>
                                                     </strong> 
                                                 </td>
-                                                <td align="left" valign="top">
+                                                <td width="180" align="left" valign="top">
                                                         <span id="created_name"></span>
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td align="left" valign="top">
+                                                <td width="100" align="left" valign="top">
                                                     <strong>
                                                         Date <span class="colon"> : </span>
                                                     </strong>
                                                 </td>
-                                                <td align="left" valign="top">
+                                                <td width="180" align="left" valign="top">
                                                     <span id="created_date"></span>
                                                 </td>
                                             </tr>
@@ -151,12 +151,12 @@
                                             <table width="280" border="0" cellspacing="0" cellpadding="0" class="referl-details">
                                             <xsl:if test="PROPERTIES/PROPERTY[@name = 'value' and string(.)]">
                                                 <tr>
-                                                    <td align="left" valign="top">
+                                                    <td width="100" align="left" valign="top">
                                                         <strong>
                                                             Consultant <span class="colon"> : </span>
                                                         </strong>
                                                     </td>
-                                                    <td align="left" valign="top">
+                                                    <td width="180" align="left" valign="top">
                                                         <xsl:for-each select="PROPERTIES/PROPERTY">
                                                             <xsl:if test="@name='value'">
                                                                 <strong>
@@ -174,12 +174,12 @@
                                                 </tr>
                                             </xsl:if>
                                             <tr>
-                                                <td align="left" valign="top">
+                                                <td width="100" align="left" valign="top">
                                                     <strong>
                                                         Date <span class="colon"> : </span>
                                                     </strong>
                                                 </td>                                                
-                                                <td align="left" valign="top">
+                                                <td width="180" align="left" valign="top">
                                                     <span id="date_name"></span> | <span id="time"></span> 
                                                 </td>
                                             </tr>
@@ -194,12 +194,12 @@
                                             <table width="280" border="0" cellspacing="0" cellpadding="0" class="referl-details">
                                             <tr>
                                                 <xsl:if test="boolean(LISTITEMS/LISTITEM/@Selected = 'true')">
-                                                    <td align="left" valign="top">
+                                                    <td width="100" align="left" valign="top">
                                                         <strong>
                                                             <xsl:value-of select="@label" /> <span class="colon"> : </span>
                                                         </strong>
                                                     </td>
-                                                    <td align="left" valign="top">
+                                                    <td width="180" align="left" valign="top">
                                                         <xsl:for-each select="LISTITEMS/LISTITEM[@Selected = 'true']">
                                                             <xsl:value-of select="concat(' ' , @value)" />
                                                             <xsl:if test="not(position() = last())">,</xsl:if>
