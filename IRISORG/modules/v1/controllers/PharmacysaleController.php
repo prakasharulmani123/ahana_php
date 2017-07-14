@@ -4,6 +4,7 @@ namespace IRISORG\modules\v1\controllers;
 
 use common\models\PhaSale;
 use common\models\PhaSaleItem;
+use common\models\PhaSaleReturn;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -127,9 +128,9 @@ class PharmacysaleController extends ActiveController {
                 $data[$key] = $sale->attributes;
 
                 if (!empty($sale->encounter_id))
-                    $sale_item = PhaSale::find()->tenant()->andWhere(['encounter_id' => $sale->encounter_id, 'payment_type' => $get['payment_type']]);
+                    $sale_item = PhaSale::find()->tenant()->active()->andWhere(['encounter_id' => $sale->encounter_id, 'payment_type' => $get['payment_type']]);
                 else
-                    $sale_item = PhaSale::find()->tenant()->andWhere(['patient_name' => $sale->patient_name, 'payment_type' => $get['payment_type']]);
+                    $sale_item = PhaSale::find()->tenant()->active()->andWhere(['patient_name' => $sale->patient_name, 'payment_type' => $get['payment_type']]);
 
                 $sale_ids = \yii\helpers\ArrayHelper::map($sale_item->all(), 'sale_id', 'sale_id');
                 $sum_paid_amount = \common\models\PhaSaleBilling::find()->tenant()->andWhere(['sale_id' => $sale_ids])->sum('paid_amount');
@@ -204,6 +205,18 @@ class PharmacysaleController extends ActiveController {
             }
         } else {
             return ['success' => false, 'message' => 'Fill the Form'];
+        }
+    }
+
+    public function actionCheckdelete() {
+        $get = Yii::$app->getRequest()->post();
+        $return = PhaSaleReturn::find()->tenant()->andWhere(['sale_id' => $get['id']])->one();
+        if (empty($return)) {
+            $model = PhaSale::find()->tenant()->where(['sale_id' => $get['id']])->one();
+            $model->remove();
+            return ['success' => true];
+        } else {
+            return ['success' => false,'message'=>"Sorry, you can't delete this bill"];
         }
     }
 

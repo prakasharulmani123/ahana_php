@@ -8,6 +8,7 @@ use common\models\PhaPurchaseItem;
 use common\models\PhaReorderHistory;
 use common\models\PhaReorderHistoryItem;
 use common\models\PhaSupplier;
+use common\models\PhaPurchaseReturn;
 use PDO;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -84,11 +85,11 @@ class PharmacypurchaseController extends ActiveController {
                 $data->joinWith(['supplier', 'phaPurchaseItems.product', 'phaPurchaseItems.batch'])
                         ->andFilterWhere([
                             'or',
-                            ['like', 'pha_product.product_name', $text],
-                            ['like', 'pha_product_batch.batch_no', $text],
-                            ['like', 'pha_supplier.supplier_name', $text],
-                            ['like', 'invoice_no', $text],
-                            ['like', 'gr_num', $text],
+                                ['like', 'pha_product.product_name', $text],
+                                ['like', 'pha_product_batch.batch_no', $text],
+                                ['like', 'pha_supplier.supplier_name', $text],
+                                ['like', 'invoice_no', $text],
+                                ['like', 'gr_num', $text],
                 ]);
             }
 
@@ -131,7 +132,7 @@ class PharmacypurchaseController extends ActiveController {
                 ->active()
                 ->andFilterWhere([
                     'or',
-                    ['like', 'invoice_no', $text],
+                        ['like', 'invoice_no', $text],
                 ])
                 ->orderBy(['invoice_no' => SORT_ASC])
                 ->limit(100)
@@ -477,6 +478,18 @@ class PharmacypurchaseController extends ActiveController {
 
     public function clean($string) {
         return preg_replace("/[^ \w]+/", '', $string); // Removes special chars.
+    }
+
+    public function actionCheckdelete() {
+        $get = Yii::$app->getRequest()->post();
+        $return = PhaPurchaseReturn::find()->tenant()->andWhere(['purchase_id' => $get['id']])->one();
+        if (empty($return)) {
+            $model = PhaPurchase::find()->tenant()->where(['purchase_id' => $get['id']])->one();
+            $model->remove();
+            return ['success' => true];
+        } else {
+            return ['success' => false, 'message' => "Sorry, you can't delete this bill"];
+        }
     }
 
 }
