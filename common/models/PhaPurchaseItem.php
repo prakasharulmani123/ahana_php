@@ -207,7 +207,7 @@ class PhaPurchaseItem extends RActiveRecord {
                             'batch_no' => $this->batch_no,
                             'expiry_date' => $this->expiry_date,
                             'package_unit' => $this->package_unit,
-                            'package_name' => $this->package_name
+//                            'package_name' => $this->package_name
                         ])
                         ->one();
     }
