@@ -19,12 +19,14 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
 
         //Documents Index Page
         $scope.loadPatDocumentsList = function (date) {
-            $scope.$on('$locationChangeStart', function (event, next, current) {
-                // Here you can take the control and call your own functions:
-                //alert('Sorry ! Back Button is disabled');
-                // Prevent the browser default action (Going back):
-                event.preventDefault();
-            });
+
+//            Disable Back button
+//            $scope.$on('$locationChangeStart', function (event, next, current) {
+//                // Here you can take the control and call your own functions:
+//                //alert('Sorry ! Back Button is disabled');
+//                // Prevent the browser default action (Going back):
+//                event.preventDefault();
+//            });
             var filterDate = '';
             if (date)
                 filterDate = moment(date).format('YYYY-MM-DD');
@@ -60,6 +62,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
         $scope.switchAddDocument = function () {
             if ($scope.add_document) {
                 if ($scope.add_document == 'CH') {
+                    localStorage.setItem("add_case_document", "1");
                     $state.go('patient.addDocument', {id: $state.params.id, enc_id: $scope.add_doc_encounter_id});
                 } else if ($scope.add_document == 'SD') {
                     $state.go('patient.addScannedDocument', {id: $state.params.id, enc_id: $scope.add_doc_encounter_id});
@@ -207,6 +210,8 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
 // Initialize Create Form
         $scope.initForm = function () {
             $scope.isLoading = true;
+
+            var checking = localStorage.getItem("add_case_document");
 //            $scope.isPatientHaveActiveEncounter(function (response) {
 //                if (response.success == false) {
 //                    $scope.isLoading = false;
@@ -215,32 +220,37 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
 //                } else {
 //                    $scope.encounter = response.model;
             $scope.encounter = {encounter_id: $state.params.enc_id};
-            $scope.getDocumentType(function (doc_type_response) {
-                if (doc_type_response.success == false) {
-                    alert("Sorry, you can't create a document");
-                    $state.go("patient.document", {id: $state.params.id});
-                } else {
-                    $scope.xslt = doc_type_response.result.document_xslt;
-                    $scope.$watch('patientObj', function (newValue, oldValue) {
-                        if (Object.keys(newValue).length > 0) {
-                            $scope.initSaveDocument(function (auto_save_document) {
-                                $scope.xml = auto_save_document.data.xml;
-                                $scope.isLoading = false;
-                                $scope.doc_id = auto_save_document.data.doc_id; // Set Document id
+            if (checking == 1) {
+                $scope.getDocumentType(function (doc_type_response) {
+                    if (doc_type_response.success == false) {
+                        alert("Sorry, you can't create a document");
+                        $state.go("patient.document", {id: $state.params.id});
+                    } else {
+                        $scope.xslt = doc_type_response.result.document_xslt;
+                        $scope.$watch('patientObj', function (newValue, oldValue) {
+                            if (Object.keys(newValue).length > 0) {
+                                $scope.initSaveDocument(function (auto_save_document) {
+                                    $scope.xml = auto_save_document.data.xml;
+                                    $scope.isLoading = false;
+                                    $scope.doc_id = auto_save_document.data.doc_id; // Set Document id
 
-                                $timeout(function () {
-                                    $scope.diagnosisDsmiv();
-                                }, 2000);
+                                    $timeout(function () {
+                                        $scope.diagnosisDsmiv();
+                                    }, 2000);
 
-                                $timeout(function () {
-                                    $scope.ckeditorReplace();
-                                }, 500);
-                                $scope.startAutoSave(auto_save_document.data.doc_id);
-                            });
-                        }
-                    }, true);
-                }
-            });
+                                    $timeout(function () {
+                                        $scope.ckeditorReplace();
+                                    }, 500);
+                                    $scope.startAutoSave(auto_save_document.data.doc_id);
+                                });
+                            }
+                        }, true);
+                    }
+                    localStorage.setItem("add_case_document", "0");
+                });
+            } else {
+                $state.go("patient.document", {id: $state.params.id});
+            }
 //                }
 //            });
         }
@@ -402,6 +412,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
         }
 
         $scope.printCasedocument = function (list) {
+            $scope.printxslt = '';
             $scope.getDocumentType(function (doc_type_response) {
                 if (doc_type_response.success == false) {
                     $scope.isLoading = false;
@@ -463,8 +474,14 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                 }
                 var personalText = $(this).find('tr.personal_history');
                 if (personalText.text().trim().length === 0) {
+                    //console.log(personalText);
                     var personalTr = personalText.closest('tr').prev('tr');
                     personalTr.remove();
+                }
+                var statusText = $(this).find('tr.mental_status');
+                if (statusText.text().trim().length === 0) {
+                    var statusTr = statusText.closest('tr').prev('tr');
+                    statusTr.remove();
                 }
 
             });
@@ -582,6 +599,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                         headingText.remove();
                     }
                 });
+
             });
 
             $(".document-content .panel-default").each(function () {
