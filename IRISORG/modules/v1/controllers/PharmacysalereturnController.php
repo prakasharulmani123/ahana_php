@@ -137,5 +137,14 @@ class PharmacysalereturnController extends ActiveController {
             return ['success' => false, 'message' => 'Fill the Form'];
         }
     }
+    
+    public function actionGetsalereturn()
+    {
+        $get = Yii::$app->getRequest()->get();
+        $offset = abs($get['pageIndex'] - 1) * $get['pageSize'];
+        $result = PhaSaleReturn::find()->tenant()->active()->orderBy(['created_at' => SORT_DESC])->limit($get['pageSize'])->offset($offset)->all();
+        $totalCount = PhaSaleReturn::find()->tenant()->active()->count();
+        return ['success' => true, 'result' => $result, 'totalCount' => $totalCount];
+    }
 
 }

@@ -137,4 +137,12 @@ class PharmacypurchasereturnController extends ActiveController {
         }
     }
 
+    public function actionGetpurchasereturn() {
+        $get = Yii::$app->getRequest()->get();
+        $offset = abs($get['pageIndex'] - 1) * $get['pageSize'];
+        $result = PhaPurchaseReturn::find()->tenant()->active()->orderBy(['created_at' => SORT_DESC])->limit($get['pageSize'])->offset($offset)->all();
+        $totalCount = PhaPurchaseReturn::find()->tenant()->active()->count();
+        return ['success' => true, 'result' => $result, 'totalCount' => $totalCount];
+    }
+
 }
