@@ -603,7 +603,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             });
 
             var dropdownMenu;
-            $('.dropdown').on('show.bs.dropdown', function (e) {
+             $('body').on('show.bs.dropdown', '.dropdown', function (e) {
                 // grab the menu        
                 dropdownMenu = $(e.target).find('ul.dropdown-menu.curPrescFreq');
 
@@ -621,7 +621,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 });
             });
 
-            $('.dropdown').on('hide.bs.dropdown', function (e) {
+            $('body').on('hide.bs.dropdown', '.dropdown', function (e) {
                 $(e.target).append(dropdownMenu.detach());
                 dropdownMenu.hide();
             });
