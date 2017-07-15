@@ -501,7 +501,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         }
 
         $scope.addGlobalSearch = function (prescription) {
-            var result = $filter('filter')($scope.data.prescriptionItems, {product_id: prescription.product_id}, true);
+            var result = $filter('filter')($scope.data.prescriptionItems, {product_id: parseInt(prescription.product_id)}, true);
 
             if (result.length > 0) {
                 alert('This Product already added');
