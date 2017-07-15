@@ -13,25 +13,43 @@ app.controller('PurchaseReturnController', ['$rootScope', '$scope', '$timeout', 
         $scope.loadPurchaseReturnItemList = function () {
             $scope.errorData = $scope.msg.successMessage = '';
             $scope.isLoading = true;
+
+            $scope.maxSize = 5; // Limit number for pagination display number.  
+            $scope.totalCount = 0; // Total number of items in all pages. initialize as a zero  
+            $scope.pageIndex = 1; // Current page number. First page is 1.-->  
+            $scope.pageSizeSelected = 10; // Maximum number of items per page.
+            //
             // pagination set up
             $scope.rowCollection = [];  // base collection
-            $scope.itemsByPage = 10; // No.of records per page
+            //$scope.itemsByPage = 10; // No.of records per page
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
             //var Fields = 'invoice_date,invoice_no';
+            $scope.getPurchaseReturnItemList();
+        };
 
+        $scope.getPurchaseReturnItemList = function () {
             // Get data's from service
-            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacypurchasereturn?addtfields=purchase_return')
+            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacypurchasereturn/getpurchasereturn?addtfields=purchase_return&pageIndex=' + $scope.pageIndex + '&pageSize=' + $scope.pageSizeSelected)
                     .success(function (purchasereturnList) {
                         $scope.isLoading = false;
-                        $scope.rowCollection = purchasereturnList;
+                        $scope.rowCollection = purchasereturnList.result;
+                        $scope.totalCount = purchasereturnList.totalCount;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading purchasereturnList!";
                     });
-
-
         };
+
+        $scope.pageChanged = function () {
+            $scope.getPurchaseReturnItemList();
+        };
+        //This method is calling from dropDown  
+        $scope.changePageSize = function () {
+            $scope.pageIndex = 1;
+            $scope.getPurchaseReturnItemList();
+        };
+
 
         //For Form
         $scope.formtype = '';
@@ -70,7 +88,7 @@ app.controller('PurchaseReturnController', ['$rootScope', '$scope', '$timeout', 
             $scope.data.purchase_id = $item.purchase_id;
             $scope.purchasereturnitems = [];
             var purchase_id = $scope.data.purchase_id;
-            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacypurchase/getpurchase?purchase_id=' + purchase_id+ '&addtfields=purchase_update')
+            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacypurchase/getpurchase?purchase_id=' + purchase_id + '&addtfields=purchase_update')
                     .success(function (result) {
                         var purchase = result.purchase;
                         $scope.data.supplier_id = purchase.supplier_id;
@@ -121,7 +139,7 @@ app.controller('PurchaseReturnController', ['$rootScope', '$scope', '$timeout', 
                     purchase_quantity = $scope.purchasereturnitems[key].purchase_quantity; // Purchased quantities
                     total_returned_quantity = $scope.purchasereturnitems[key].total_returned_quantity; // Prior returned quantities
                     total = parseFloat(quantity) + parseFloat(total_returned_quantity);
-                    
+
                     stock = $scope.purchasereturnitems[key].available_qty; //Stock
                     package_unit = $scope.purchasereturnitems[key].package_unit;
                     current_qty = (quantity - old) * package_unit;
@@ -239,7 +257,7 @@ app.controller('PurchaseReturnController', ['$rootScope', '$scope', '$timeout', 
             $scope.data.invoice_date = moment($scope.data.invoice_date).format('YYYY-MM-DD');
 
             angular.extend(_that.data, {product_items: $scope.purchasereturnitems});
-            
+
             $scope.loadbar('show');
             $http({
                 method: 'POST',
@@ -279,7 +297,7 @@ app.controller('PurchaseReturnController', ['$rootScope', '$scope', '$timeout', 
             _that = this;
             $scope.errorData = "";
             $http({
-                url: $rootScope.IRISOrgServiceUrl + "/pharmacypurchasereturns/" + $state.params.id +"?addtfields=purchase_return",
+                url: $rootScope.IRISOrgServiceUrl + "/pharmacypurchasereturns/" + $state.params.id + "?addtfields=purchase_return",
                 method: "GET"
             }).success(
                     function (response) {

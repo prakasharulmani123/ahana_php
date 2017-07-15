@@ -32,7 +32,6 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
                             $state.go('configuration.organization');
                             $scope.msg.errorMessage = "An Error has occured while loading patient!";
                         } else {
-                            console.log(patient);
                             $scope.orgData = patient;
                             $scope.setViewData(patient);
                             $scope.setFormData(patient);

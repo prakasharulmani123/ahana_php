@@ -15,23 +15,40 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
             $scope.errorData = $scope.msg.successMessage = '';
             $scope.isLoading = true;
 
+            $scope.maxSize = 5; // Limit number for pagination display number.  
+            $scope.totalCount = 0; // Total number of items in all pages. initialize as a zero  
+            $scope.pageIndex = 1; // Current page number. First page is 1.-->  
+            $scope.pageSizeSelected = 10; // Maximum number of items per page.
+
             // pagination set up
             $scope.rowCollection = [];  // base collection
-            $scope.itemsByPage = 10; // No.of records per page
+            //$scope.itemsByPage = 10; // No.of records per page
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
 
-            // Get data's from service
-            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacysalereturn?addtfields=sale_return_list')
-                    .success(function (saleList) {
+            $scope.getSaleReturnList();
+        };
+
+        $scope.getSaleReturnList = function () {
+            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacysalereturn/getsalereturn?addtfields=sale_return_list&pageIndex=' + $scope.pageIndex + '&pageSize=' + $scope.pageSizeSelected)
+                    .success(function (saleReturnList) {
                         $scope.isLoading = false;
-                        $scope.rowCollection = saleList;
+                        $scope.rowCollection = saleReturnList.result;
+                        $scope.totalCount = saleReturnList.totalCount;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading saleList!";
                     });
-        };
+        }
 
+        $scope.pageChanged = function () {
+            $scope.getSaleReturnList();
+        };
+        //This method is calling from dropDown  
+        $scope.changePageSize = function () {
+            $scope.pageIndex = 1;
+            $scope.getSaleReturnList();
+        };
         //For Form
         $scope.formtype = '';
         $scope.initForm = function () {
@@ -98,13 +115,13 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
                                 package_name: item.package_name,
                                 package_unit: item.package_unit,
                                 total_returned_quantity: item.total_returned_quantity,
-                                
-                                hsn_no:item.hsn_no,
-                                cgst_amount:item.cgst_amount,
-                                cgst_percent:item.cgst_percent,
-                                sgst_amount:item.sgst_amount,
-                                sgst_percent:item.sgst_percent,
-                                taxable_value:item.taxable_value,
+
+                                hsn_no: item.hsn_no,
+                                cgst_amount: item.cgst_amount,
+                                cgst_percent: item.cgst_percent,
+                                sgst_amount: item.sgst_amount,
+                                sgst_percent: item.sgst_percent,
+                                taxable_value: item.taxable_value,
                             };
                             $scope.saleItems.push($scope.inserted);
 
@@ -306,11 +323,11 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
             $scope.saleItems[key].discount_amount = disc_amount;
             $scope.saleItems[key].total_amount = total_amount;
             $scope.saleItems[key].vat_amount = vat_amount;
-            
+
             $scope.saleItems[key].cgst_amount = cgst_amount;
             $scope.saleItems[key].sgst_amount = sgst_amount;
             $scope.saleItems[key].taxable_value = parseFloat(cgst_amount) + parseFloat(sgst_amount);
-            
+
             $scope.updateSaleRate();
         }
 

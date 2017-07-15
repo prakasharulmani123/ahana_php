@@ -7,13 +7,32 @@
     </div>
     <div class="panel panel-default">
         <div class="panel-body">
-            <button class="btn btn-sm btn-grey" ng-click="loadSaleReturnItemList()"> 
-                &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
-            </button>
-            <button check-access-button ng-click="$state.go('pharmacy.saleReturnCreate')" class="btn btn-sm btn-info pull-right">
-                <i class="fa fa-plus"></i> &nbsp; Add New Sale Return
-            </button>
+            <div class="row">
+                <div class="col-sm-8">
+                    <button class="btn btn-sm btn-grey" ng-click="loadSaleReturnItemList()"> 
+                        &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
+                    </button>
+                </div>
+                <div class="col-sm-4">
+                    <button check-access-button ng-click="$state.go('pharmacy.saleReturnCreate')" class="btn btn-sm btn-info pull-right">
+                        <i class="fa fa-plus"></i> &nbsp; Add New Sale Return
+                    </button>
+                    <div class="dataTables_length">
+                        <label>Show
+                            <select id="ddlPageSize" class=" "  
+                                    ng-model="pageSizeSelected"  
+                                    ng-change="changePageSize()">  
+                                <option value="10">10</option>  
+                                <option value="25">25</option>  
+                                <option value="50">50</option>
+                                <option value="100">100</option>  
+                            </select> entries
+                        </label>
+                    </div>
+                </div>
+            </div>
         </div>
+
         <table st-table="displayedCollection"  st-safe-src="rowCollection" class="table table-bordered table-striped">
             <thead>
                 <tr>
@@ -34,7 +53,7 @@
                     <th>Action</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody ng-if="isLoading == false">
                 <tr ng-repeat-start="(key, row) in displayedCollection">
                     <td style="width: 5%">
                         <button ng-click="expanded = !expanded" expand class="btn btn-sm btn-default">
@@ -91,6 +110,20 @@
                     </td>
                 </tr>
             </tbody>
+            <tbody ng-if="isLoading == true">
+                <tr>
+                    <td colspan="13" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>  
+                    <td align="center" colspan="10">  
+                        <div class="pull-right">  
+                            <pagination total-items="totalCount" ng-change="pageChanged()" items-per-page="pageSizeSelected" direction-links="true" ng-model="pageIndex" max-size="maxSize" class="pagination" boundary-links="true" rotate="false" num-pages="numPages"></pagination>  
+                        </div>  
+                    </td>  
+                </tr> 
+            </tfoot>
         </table>
     </div>
 </div>
