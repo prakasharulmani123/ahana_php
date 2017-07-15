@@ -92,9 +92,18 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             if (days == 0) {
                 $scope.data.prescriptionItems[key].available_quantity = 0;
             }
+            
+            //Number of days update in the editable form 
+            angular.forEach(tableform.$editables, function (editableValue, editableKey) {
+                if (editableValue.attrs.eIndex == key && editableValue.attrs.eName == 'number_of_days') {
+                    editableValue.scope.$data = $scope.data.prescriptionItems[key].number_of_days;
+                }
+            });
+            
+            //Qty update in the editable form 
             angular.forEach(tableform.$editables, function (editableValue, editableKey) {
                 if (editableValue.attrs.eIndex == key && editableValue.attrs.eName == 'qty') {
-                    editableValue.scope.$data = $scope.data.prescriptionItems[key].qty
+                    editableValue.scope.$data = $scope.data.prescriptionItems[key].qty;
                 }
             });
         };
@@ -515,7 +524,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                             $scope.getRelatedProducts(prescription.generic_id).then(function () {
                                 qty_count = $scope.calculate_qty(prescription.frequency, 1, product.product_description_id, product.description_name);
                                 if (qty_count > 0) {
-                                    if(prescription.route) {
+                                    if (prescription.route) {
                                         route = prescription.route;
                                     } else {
                                         route = (product.description_routes) ? product.description_routes[0].route_name : '';
@@ -547,7 +556,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                         'in_stock': (parseInt(product.availableQuantity) > parseInt(qty_count)),
                                         'freqType': '3'
                                     };
-                                    
+
                                     //Multiple entries created, Check duplicate once again 
                                     var chkDuplicate = $filter('filter')($scope.data.prescriptionItems, {product_id: items.product_id}, true);
                                     if (chkDuplicate.length == 0) {
@@ -824,6 +833,11 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                             $scope.data.next_visit = response.date;
                         }
                 );
+                
+                //Update all the No.of Days column in prescription form 
+                angular.forEach($scope.data.prescriptionItems, function (item, key) {
+                    $scope.numberDaysChange(newValue, item, key, $scope.tableform);
+                });
             }
         }
 
@@ -1041,8 +1055,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 $.each(freq.split('-'), function (key, item) {
                     freq_count = freq_count + parseInt(item);
                 });
-                var qtyCalcDescNames = ["tablet", "capsule", "tablets", "capsules" ];
-                if ($.inArray(description_name.toLowerCase(), qtyCalcDescNames ) >= 0 && 
+                var qtyCalcDescNames = ["tablet", "capsule", "tablets", "capsules"];
+                if ($.inArray(description_name.toLowerCase(), qtyCalcDescNames) >= 0 &&
                         !isNaN(freq_count) && angular.isNumber(freq_count)) {
                     //Tablets
                     return (parseFloat(days) * parseFloat(freq_count));
