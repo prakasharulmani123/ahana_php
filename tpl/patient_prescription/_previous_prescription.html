@@ -38,6 +38,9 @@
                 <button tooltip="Print Bill"  class="label bg-primary dk" ng-click="printPres(value.pres_id)">
                     <i class="fa fa-print"></i>
                 </button>
+                <a data-button="patient.prescriptionDelete" check-access-custom title="Delete Prescription" ng-click="removeRow(value.pres_id)" class="label bg-dark dk">
+                    <i class="fa fa-trash"></i>
+                </a>
             </td>
         </tr>
         <tr ng-repeat-end ng-show="expanded">

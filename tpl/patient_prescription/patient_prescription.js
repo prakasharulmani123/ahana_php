@@ -92,14 +92,14 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             if (days == 0) {
                 $scope.data.prescriptionItems[key].available_quantity = 0;
             }
-            
+
             //Number of days update in the editable form 
             angular.forEach(tableform.$editables, function (editableValue, editableKey) {
                 if (editableValue.attrs.eIndex == key && editableValue.attrs.eName == 'number_of_days') {
                     editableValue.scope.$data = $scope.data.prescriptionItems[key].number_of_days;
                 }
             });
-            
+
             //Qty update in the editable form 
             angular.forEach(tableform.$editables, function (editableValue, editableKey) {
                 if (editableValue.attrs.eIndex == key && editableValue.attrs.eName == 'qty') {
@@ -603,7 +603,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             });
 
             var dropdownMenu;
-             $('body').on('show.bs.dropdown', '.dropdown', function (e) {
+            $('body').on('show.bs.dropdown', '.dropdown', function (e) {
                 // grab the menu        
                 dropdownMenu = $(e.target).find('ul.dropdown-menu.curPrescFreq');
 
@@ -833,7 +833,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                             $scope.data.next_visit = response.date;
                         }
                 );
-                
+
                 //Update all the No.of Days column in prescription form 
                 angular.forEach($scope.data.prescriptionItems, function (item, key) {
                     $scope.numberDaysChange(newValue, item, key, $scope.tableform);
@@ -1488,6 +1488,31 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 if (maskCustomTxt.length == 0) {
                     $scope.currPresMaskTxt.unshift($scope.defaultMaskTxt);
                 }
+            }
+        }
+
+        $scope.removeRow = function (pres_id) {
+            //console.log(sale_id);
+            var conf = confirm('Are you sure to delete ?');
+            if (conf)
+            {
+                $http({
+                    url: $rootScope.IRISOrgServiceUrl + "/patientprescription/remove",
+                    method: "POST",
+                    data: {id: pres_id}
+                }).then(
+                        function (response) {
+                            $scope.loadbar('hide');
+                            if (response.data.success === true) {
+                                $scope.pres_status = 'prev';
+                                $("#prev_prescription").focus();
+                                $scope.filterdate = '';
+                                $scope.loadPrevPrescriptionsList();
+                            } else {
+                                $scope.errorData = response.data.message;
+                            }
+                        }
+                )
             }
         }
 
