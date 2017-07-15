@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\components\HelperComponent;
 use common\models\query\PatPatientQuery;
 use p2made\helpers\Uuid\UuidHelpers;
 use Yii;
@@ -110,35 +111,36 @@ class PatPatient extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['patient_title_code', 'patient_firstname', 'patient_gender', 'patient_reg_mode', 'patient_mobile', 'patient_dob'], 'required'],
-            [['patient_category_id'], 'required', 'message' => 'Category cannot be blank.', 'on' => 'registration'],
-            [['patient_dob'], 'validateDOB', 'on' => 'registration'],
-            [['patient_firstname'], 'string', 'min' => '2'],
-            [['casesheetno', 'tenant_id', 'patient_care_taker', 'patient_category_id', 'created_by', 'modified_by'], 'integer'],
-            [['patient_reg_date', 'patient_dob', 'created_at', 'modified_at', 'deleted_at', 'patient_mobile', 'patient_bill_type', 'patient_guid', 'patient_image', 'patient_global_guid', 'patient_global_int_code', 'patient_int_code', 'patient_secondary_contact', 'parent_id', 'migration_id', 'migration_details', 'migration_created_by'], 'safe'],
-            [['status'], 'string'],
-            [['patient_title_code'], 'string', 'max' => 10],
-            [['patient_firstname', 'patient_lastname', 'patient_relation_name', 'patient_care_taker_name', 'patient_occupation', 'patient_email', 'patient_ref_id'], 'string', 'max' => 50],
-            [['patient_relation_code', 'patient_gender', 'patient_marital_status', 'patient_reg_mode', 'patient_type'], 'string', 'max' => 2],
-            [['patient_blood_group'], 'string', 'max' => 5],
-            [['patient_ref_hospital', 'patient_ref_doctor'], 'string', 'max' => 255],
-            ['patient_mobile', 'match', 'pattern' => '/^[0-9]{10}$/', 'message' => 'Mobile must be 10 digits only'],
-            ['patient_mobile', 'match', 'pattern' => '/^[789]\d{9}$/', 'message' => 'Invalid mobile number'],
-            ['patient_secondary_contact', 'match', 'pattern' => '/^[0-9]{10}$/', 'message' => 'Secondary contact must be 10 digits only'],
-            ['patient_secondary_contact', 'match', 'pattern' => '/^[789]\d{9}$/', 'message' => 'Invalid secondary contact'],
-            ['patient_email', 'email'],
+                [['patient_title_code', 'patient_firstname', 'patient_gender', 'patient_reg_mode', 'patient_mobile', 'patient_dob'], 'required'],
+                [['patient_category_id'], 'required', 'message' => 'Category cannot be blank.', 'on' => 'registration'],
+                [['patient_dob'], 'validateDOB', 'on' => 'registration'],
+                [['patient_firstname'], 'string', 'min' => '2'],
+                [['casesheetno', 'tenant_id', 'patient_care_taker', 'patient_category_id', 'created_by', 'modified_by'], 'integer'],
+                [['patient_reg_date', 'patient_dob', 'created_at', 'modified_at', 'deleted_at', 'patient_mobile', 'patient_bill_type', 'patient_guid', 'patient_image', 'patient_global_guid', 'patient_global_int_code', 'patient_int_code', 'patient_secondary_contact', 'parent_id', 'migration_id', 'migration_details', 'migration_created_by'], 'safe'],
+                [['status'], 'string'],
+                [['patient_title_code'], 'string', 'max' => 10],
+                [['patient_firstname', 'patient_lastname', 'patient_relation_name', 'patient_care_taker_name', 'patient_occupation', 'patient_email', 'patient_ref_id'], 'string', 'max' => 50],
+                [['patient_relation_code', 'patient_gender', 'patient_marital_status', 'patient_reg_mode', 'patient_type'], 'string', 'max' => 2],
+                [['patient_blood_group'], 'string', 'max' => 5],
+                [['patient_ref_hospital', 'patient_ref_doctor'], 'string', 'max' => 255],
+                ['patient_mobile', 'match', 'pattern' => '/^[0-9]{10}$/', 'message' => 'Mobile must be 10 digits only'],
+                ['patient_mobile', 'match', 'pattern' => '/^[789]\d{9}$/', 'message' => 'Invalid mobile number'],
+                ['patient_secondary_contact', 'match', 'pattern' => '/^[0-9]{10}$/', 'message' => 'Secondary contact must be 10 digits only'],
+                ['patient_secondary_contact', 'match', 'pattern' => '/^[789]\d{9}$/', 'message' => 'Invalid secondary contact'],
+                ['patient_email', 'email'],
 //            ['patient_image', 'file', 'extensions'=> 'jpg, gif, png'],
             [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'casesheetno'], 'message' => 'The combination of Casesheetno has already been taken.', 'on' => 'casesheetunique'],
-            [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'patient_int_code'], 'message' => 'The combination of Patient Internal Code has already been taken.'],
+                [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'patient_int_code'], 'message' => 'The combination of Patient Internal Code has already been taken.'],
         ];
     }
 
     public function validateDOB($attribute, $params) {
         $patient_dob = date('Y-m-d', strtotime(str_replace("/", "-", $this->patient_dob)));
-        if(strtotime(date('Y-m-d')) < strtotime(date('Y-m-d', strtotime($patient_dob)))){
+        if (strtotime(date('Y-m-d')) < strtotime(date('Y-m-d', strtotime($patient_dob)))) {
             $this->addError($attribute, "Patient DOB must be lesser than Today");
         }
     }
+
     /**
      * @inheritdoc
      */
@@ -480,6 +482,12 @@ class PatPatient extends RActiveRecord {
             'patient_age' => function ($model) {
                 return $model->patient_age;
             },
+            'patient_age_year' => function ($model) {
+                return $model->patient_age_year;
+            },
+            'patient_age_month' => function ($model) {
+                return $model->patient_age_month;
+            },
             'patient_img_url' => function ($model) {
                 return $model->patient_img_url;
             },
@@ -519,16 +527,16 @@ class PatPatient extends RActiveRecord {
                 if (isset($model->patPatientAddress)) {
                     $result = '';
                     if ($model->patPatientAddress->addr_perm_address != '') {
-                        $result .= preg_replace( "/\r|\n/", "", $model->patPatientAddress->addr_perm_address );
+                        $result .= preg_replace("/\r|\n/", "", $model->patPatientAddress->addr_perm_address);
                     }
                     return $result;
                 }
-            },        
+            },
             'fullpermanentaddress' => function ($model) {
                 if (isset($model->patPatientAddress)) {
                     $result = '';
                     if ($model->patPatientAddress->addr_perm_address != '') {
-                        $result .= preg_replace( "/\r|\n/", "", $model->patPatientAddress->addr_perm_address );
+                        $result .= preg_replace("/\r|\n/", "", $model->patPatientAddress->addr_perm_address);
                     }
 
                     if ($model->patPatientAddress->addr_perm_city_id != '') {
@@ -648,7 +656,7 @@ class PatPatient extends RActiveRecord {
         if ($addtField = Yii::$app->request->get('addtfields')) {
             switch ($addtField):
                 case 'search':
-                    $addt_keys = ['patient_img_url', 'fullcurrentaddress', 'fullpermanentaddress', 'fullname', 'patient_guid', 'patient_age', 'patient_global_int_code', 'patient_mobile', 'org_name'];
+                    $addt_keys = ['patient_img_url', 'fullcurrentaddress', 'fullpermanentaddress', 'fullname', 'patient_guid', 'patient_age', 'patient_global_int_code', 'patient_mobile', 'org_name', 'patient_age_year', 'patient_age_month'];
                     break;
                 case 'salecreate':
                     $pFields = ['patient_id', 'patient_guid'];
@@ -730,9 +738,24 @@ class PatPatient extends RActiveRecord {
     public function getPatient_age() {
         $age = '';
         if ($this->patient_dob != '' && $this->patient_dob != "0000-00-00")
-            $age = self::getPatientAge($this->patient_dob);
+        //$age = self::getPatientAge($this->patient_dob);
+            $age = HelperComponent::getAgeWithMonth($this->patient_dob);
+        $patient_age = $age['years'] . '.' . $age['months'];
+        return $patient_age;
+    }
 
-        return $age;
+    public function getPatient_age_year() {
+        $age = '';
+        if ($this->patient_dob != '' && $this->patient_dob != "0000-00-00")
+            $age = HelperComponent::getAgeWithMonth($this->patient_dob);
+        return $age['years'];
+    }
+
+    public function getPatient_age_month() {
+        $age = '';
+        if ($this->patient_dob != '' && $this->patient_dob != "0000-00-00")
+            $age = HelperComponent::getAgeWithMonth($this->patient_dob);
+        return $age['months'];
     }
 
     public function getOrg_name() {
@@ -767,7 +790,7 @@ class PatPatient extends RActiveRecord {
     }
 
     public static function getPatientBirthdate($age, $months = 0) {
-        return date('Y-m-d', strtotime($age . ' years '.$months.' months ago'));
+        return date('Y-m-d', strtotime($age . ' years ' . $months . ' months ago'));
     }
 
     public static function getPatientlist($tenant = null, $status = '1', $deleted = false) {
