@@ -22,7 +22,7 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">Temperature * </label>
             <div class="col-sm-5">
-                <input type="text" class="form-control" placeholder="" ng-model="data.temperature" number-mask="" one-decimal-places>
+                <input type="text" maxlength="5" class="form-control" placeholder="" ng-model="data.temperature" number-mask="" one-decimal-places>
             </div>
             <div class="col-sm-4">
                 <div class="row"> °C </div>
@@ -33,7 +33,7 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">Blood Pressure Systolic</label>
             <div class="col-sm-5">
-                <input type="text" maxlength="3" class="form-control" placeholder="" ng-model="data.blood_pressure_systolic" number-mask="">
+                <input type="text" maxlength="5" class="form-control" placeholder="" ng-model="data.blood_pressure_systolic" number-mask="">
             </div>
             <div class="col-sm-4">
                 <div class="row"> <p> mmHg  </p></div>
@@ -44,7 +44,7 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">Blood Pressure Diastolic</label>
             <div class="col-sm-5">
-                <input type="text" maxlength="3" class="form-control" placeholder="" ng-model="data.blood_pressure_diastolic" number-mask="">
+                <input type="text" maxlength="5" class="form-control" placeholder="" ng-model="data.blood_pressure_diastolic" number-mask="">
             </div>
             <div class="col-sm-4">
                 <div class="row"> <p> mmHg  </p></div>
@@ -55,7 +55,7 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">Pulse </label>
             <div class="col-sm-5">
-                <input type="text" maxlength="3" class="form-control" placeholder="" ng-model="data.pulse_rate" number-mask="">
+                <input type="text" maxlength="5" class="form-control" placeholder="" ng-model="data.pulse_rate" number-mask="">
             </div>
             <div class="col-sm-4">
                 <div class="row"> <p> Beats</p> </div>
@@ -68,7 +68,7 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">Weight </label>
             <div class="col-sm-5">
-                <input type="text" class="form-control" placeholder="" ng-model="data.weight" number-mask="" two-decimal-places>
+                <input type="text" maxlength="5" class="form-control" placeholder="" ng-model="data.weight" number-mask="" two-decimal-places>
             </div>
             <div class="col-sm-4">
                 <div class="row"> Kg </div>

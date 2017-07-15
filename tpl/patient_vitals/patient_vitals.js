@@ -122,6 +122,13 @@ app.controller('VitalsController', ['$rootScope', '$scope', '$timeout', '$http',
 
             $scope.errorData = "";
             $scope.msg.successMessage = "";
+            $scope.msg.errorMessage = "";
+            
+            
+            if((typeof _that.data.temperature == 'undefined' || _that.data.temperature == '') && (typeof _that.data.blood_pressure_systolic == 'undefined' || _that.data.blood_pressure_systolic == '' ) && (typeof _that.data.blood_pressure_diastolic == 'undefined' || _that.data.blood_pressure_diastolic == '') && (typeof _that.data.pulse_rate == 'undefined' || _that.data.pulse_rate == '' ) && (typeof _that.data.weight == 'undefined' || _that.data.weight == '')) {
+                $scope.msg.errorMessage = "Cannot create blank entry";
+                return;
+            }
 
             if (mode == 'add') {
                 post_url = $rootScope.IRISOrgServiceUrl + '/patientvitals';
