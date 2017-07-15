@@ -32,6 +32,7 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
                             $state.go('configuration.organization');
                             $scope.msg.errorMessage = "An Error has occured while loading patient!";
                         } else {
+                            console.log(patient);
                             $scope.orgData = patient;
                             $scope.setViewData(patient);
                             $scope.setFormData(patient);
@@ -247,19 +248,22 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
         }
 
         $scope.setAgeEmpty = function () {
-            $scope.patdata.PatPatient.patient_age = '';
+            $scope.patdata.PatPatient.patient_age_year = '';
+            $scope.patdata.PatPatient.patient_age_month ='';
         }
 
         $scope.getDOB = function () {
-            var newValue = this.patdata.PatPatient.patient_age;
-            if (parseInt(newValue) && !isNaN(newValue)) {
+            var newValue = this.patdata.PatPatient.patient_age_year;
+            var newValue2 = this.patdata.PatPatient.patient_age_month;
+            if (!isNaN(newValue) && !isNaN(newValue)) {
                 $http({
                     method: 'POST',
                     url: $rootScope.IRISOrgServiceUrl + '/patient/getdatefromage',
-                    data: {'age': newValue},
+                    data: {'age': newValue, 'month': newValue2},
                 }).success(
                         function (response) {
-                            $scope.patdata.PatPatient.patient_dob = response.dob;
+                            var date_of_birth = moment(response.dob, 'YYYY-MM-DD').format('DD/MM/YYYY');
+                            $scope.patdata.PatPatient.patient_dob = date_of_birth;
                         }
                 );
             }
@@ -274,7 +278,8 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
                     data: {'date': newValue},
                 }).success(
                         function (response) {
-                            $scope.patdata.PatPatient.patient_age = response.age;
+                            $scope.patdata.PatPatient.patient_age_year = response.age;
+                            $scope.patdata.PatPatient.patient_age_month = response.month;
                         }
                 );
             }

@@ -11,7 +11,7 @@
                 <div class="col-sm-6" ng-show="view_data.childrens_global_ids != ''">
                     <div class="panel panel-default">
                         <div class="panel-body">
-                            <span ng-if="view_data.migration_created_by != '' ">
+                            <span ng-if="view_data.migration_created_by != ''">
                                 <b> Merged By :  </b> {{view_data.migration_created_by}}
                             </span>
                             <span>
@@ -71,7 +71,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label"> Age: </label>
                                     <div class="col-sm-9">
-                                        <p>  {{view_data.patient_age}}  </p>
+                                        <p>  {{view_data.patient_age}}  Years</p>
                                     </div>
                                 </div>
                                 <div class="line line-dashed b-b line-lg "></div>
@@ -296,7 +296,7 @@
                                     <div class="col-sm-9">
                                         <div class="form-inline">
                                             <div class="form-group">
-                                                <select class="form-control" ng-model="patdata.PatPatient.patient_title_code" ng-options="titleCode.value as titleCode.label for titleCode in titleCodes | orderBy: label">
+                                                <select class="form-control" ng-model="patdata.PatPatient.patient_title_code" ng-options="titleCode.value as titleCode.label for titleCode in titleCodes| orderBy: label">
                                                 </select>
                                             </div>
                                             <div class="form-group">
@@ -324,7 +324,7 @@
 
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">DOB *</label>
-                                    <div class="col-sm-5">
+                                    <div class="col-sm-3">
                                         <div class="input-group">
                                             <input type="text" name="dob" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="patdata.PatPatient.patient_dob" is-open="opened" datepicker-options="dateOptions" close-text="Close" max-date="maxDate" date-disabled="disabled(date, mode)" ng-change="setAgeEmpty();
                                                             getAge();" />
@@ -333,10 +333,18 @@
                                             </span>
                                         </div>
                                     </div>
-                                    <div class="col-sm-4">
+<!--                                    <div class="col-sm-4">
                                         <input type="text" ng-model="patdata.PatPatient.patient_age" class="form-control" placeholder="Age" only-digits="" onkeydown="" ng-change="setDateEmpty();
                                                         getDOB();">
+                                    </div>-->
+                                    <div class="col-sm-2">
+                                        <input type="text" ng-model="patdata.PatPatient.patient_age_year" class="form-control" placeholder="Age" only-digits="" onkeydown="" ng-change="setDateEmpty();getDOB();">
                                     </div>
+                                    <label style="float: left; padding-top: 5px;">(Yrs)</label>
+                                    <div class="col-sm-2">
+                                        <input type="text" ng-model="patdata.PatPatient.patient_age_month" class="form-control" placeholder="Months" only-digits="" onkeydown="" ng-change="setDateEmpty();getDOB();">
+                                    </div>
+                                    <label style="float: left; padding-top: 5px;">(Months)</label>
                                 </div>
                                 <div class="line line-dashed b-b line-lg "></div>
 
@@ -363,7 +371,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">Blood Group</label>
                                     <div class="col-sm-9">
-                                        <select ng-model="patdata.PatPatient.patient_blood_group" class="form-control" ng-options="blood.value as blood.label for blood in bloods | orderBy: label">
+                                        <select ng-model="patdata.PatPatient.patient_blood_group" class="form-control" ng-options="blood.value as blood.label for blood in bloods| orderBy: label">
                                             <option value="">Select Blood Group</option>
                                         </select>
                                     </div>
@@ -373,7 +381,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">Category *</label>
                                     <div class="col-sm-9">
-                                        <select ng-model="patdata.PatPatient.patient_category_id" class="form-control" ng-options="category.patient_cat_id as category.patient_cat_name for category in categories | orderBy: patient_cat_name">
+                                        <select ng-model="patdata.PatPatient.patient_category_id" class="form-control" ng-options="category.patient_cat_id as category.patient_cat_name for category in categories| orderBy: patient_cat_name">
                                             <option value="">Select Category</option>
                                         </select>
                                     </div>
@@ -391,7 +399,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">Care Taker</label>
                                     <div class="col-sm-9">
-                                        <select class="form-control" ng-model="patdata.PatPatient.patient_care_taker" ng-options="careTaker.value as careTaker.label for careTaker in careTakers | orderBy: label">
+                                        <select class="form-control" ng-model="patdata.PatPatient.patient_care_taker" ng-options="careTaker.value as careTaker.label for careTaker in careTakers| orderBy: label">
                                         </select>
                                     </div>
                                 </div>
@@ -408,7 +416,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">Marital Status    </label>
                                     <div class="col-sm-9">
-                                        <select ng-model="patdata.PatPatient.patient_marital_status" class="form-control" ng-options="maritalStatus.value as maritalStatus.label for maritalStatus in maritalStatuses | orderBy: label">
+                                        <select ng-model="patdata.PatPatient.patient_marital_status" class="form-control" ng-options="maritalStatus.value as maritalStatus.label for maritalStatus in maritalStatuses| orderBy: label">
                                             <option value="">Select Marital Status</option>
                                         </select>
                                     </div>
@@ -464,20 +472,20 @@
                                 <div class="form-group">
                                     <label class="col-sm-4 control-label">Place *</label>
                                     <div class="col-sm-2">
-                                        <select class="form-control" ng-model="patdata.PatPatientAddress.addr_country_id" ng-options="country.value as country.label for country in countries | orderBy: label" ng-change="updateState2();
-                                                        patdata.PatPatientAddress.addr_state_id = '';
-                                                        patdata.PatPatientAddress.addr_city_id = '';">
+                                        <select class="form-control" ng-model="patdata.PatPatientAddress.addr_country_id" ng-options="country.value as country.label for country in countries| orderBy: label" ng-change="updateState2();
+                                                            patdata.PatPatientAddress.addr_state_id = '';
+                                                            patdata.PatPatientAddress.addr_city_id = '';">
                                             <option value="">Select Country</option>
                                         </select>
                                     </div>
                                     <div class="col-sm-3">
-                                        <select class="form-control" name="State" ng-model="patdata.PatPatientAddress.addr_state_id" ng-options="state.value as state.label for state in availableStates2 | orderBy: label" ng-change="updateCity2();
-                                                        patdata.PatPatientAddress.addr_city_id = '';">
+                                        <select class="form-control" name="State" ng-model="patdata.PatPatientAddress.addr_state_id" ng-options="state.value as state.label for state in availableStates2| orderBy: label" ng-change="updateCity2();
+                                                            patdata.PatPatientAddress.addr_city_id = '';">
                                             <option value="">Select State</option>
                                         </select>
                                     </div>
                                     <div class="col-sm-3">
-                                        <select class="form-control" name="City" ng-model="patdata.PatPatientAddress.addr_city_id" ng-options="city.value as city.label for city in availableCities2 | orderBy: label">
+                                        <select class="form-control" name="City" ng-model="patdata.PatPatientAddress.addr_city_id" ng-options="city.value as city.label for city in availableCities2| orderBy: label">
                                             <option value="">Select City</option>
                                         </select>
                                     </div>
@@ -509,20 +517,20 @@
                                 <div class="form-group">
                                     <label class="col-sm-4 control-label">Place  </label>
                                     <div class="col-sm-2">
-                                        <select class="form-control" ng-model="patdata.PatPatientAddress.addr_perm_country_id" ng-options="country.value as country.label for country in countries | orderBy: label" ng-change="updateState();
-                                                        patdata.PatPatientAddress.addr_perm_state_id = '';
-                                                        patdata.PatPatientAddress.addr_perm_city_id = '';">
+                                        <select class="form-control" ng-model="patdata.PatPatientAddress.addr_perm_country_id" ng-options="country.value as country.label for country in countries| orderBy: label" ng-change="updateState();
+                                                            patdata.PatPatientAddress.addr_perm_state_id = '';
+                                                            patdata.PatPatientAddress.addr_perm_city_id = '';">
                                             <option value="">Select Country</option>
                                         </select>
                                     </div>
                                     <div class="col-sm-3">
-                                        <select class="form-control" name="State" ng-model="patdata.PatPatientAddress.addr_perm_state_id" ng-options="state.value as state.label for state in availableStates | orderBy: label" ng-change="updateCity();
-                                                        patdata.PatPatientAddress.addr_perm_city_id = '';">
+                                        <select class="form-control" name="State" ng-model="patdata.PatPatientAddress.addr_perm_state_id" ng-options="state.value as state.label for state in availableStates| orderBy: label" ng-change="updateCity();
+                                                            patdata.PatPatientAddress.addr_perm_city_id = '';">
                                             <option value="">Select State</option>
                                         </select>
                                     </div>
                                     <div class="col-sm-3">
-                                        <select class="form-control" name="City" ng-model="patdata.PatPatientAddress.addr_perm_city_id" ng-options="city.value as city.label for city in availableCities | orderBy: label">
+                                        <select class="form-control" name="City" ng-model="patdata.PatPatientAddress.addr_perm_city_id" ng-options="city.value as city.label for city in availableCities| orderBy: label">
                                             <option value="">Select City</option>
                                         </select>
                                     </div>
@@ -541,7 +549,7 @@
             </div>
             <footer class="panel-footer text-right bg-light lter">
                 <button class="btn m-b-xs  btn-success save-btn" ng-click="saveForm()">Save</button> &nbsp;
-<!--                <button class="btn m-b-xs  btn-dark " ng-click="mode = 'view'">Cancel</button> &nbsp;-->
+                <!--                <button class="btn m-b-xs  btn-dark " ng-click="mode = 'view'">Cancel</button> &nbsp;-->
                 <button class="btn m-b-xs  btn-dark " ng-click="getPatientdetail()">Cancel</button> &nbsp;
             </footer>
         </div>
