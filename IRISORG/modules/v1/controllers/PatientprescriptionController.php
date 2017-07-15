@@ -59,14 +59,15 @@ class PatientprescriptionController extends ActiveController {
     public function actionRemove() {
         $id = Yii::$app->getRequest()->post('id');
         if ($id) {
-            $model = PatPrescription::find()->where(['ward_id' => $id])->one();
+            $model = PatPrescription::find()->where(['pres_id' => $id])->one();
             $model->remove();
 
-            //Remove all related records
-            foreach ($model->room as $room) {
-                $room->remove();
-            }
-            //
+//            //Remove all related records
+//            foreach ($model->room as $room) {
+//                $room->remove();
+//            }
+//            //
+            
             return ['success' => true];
         }
     }
