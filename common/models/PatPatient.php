@@ -737,25 +737,28 @@ class PatPatient extends RActiveRecord {
 
     public function getPatient_age() {
         $age = '';
-        if ($this->patient_dob != '' && $this->patient_dob != "0000-00-00")
-        //$age = self::getPatientAge($this->patient_dob);
+        if ($this->patient_dob != '' && $this->patient_dob != "0000-00-00") {
+            //$age = self::getPatientAge($this->patient_dob);
             $age = HelperComponent::getAgeWithMonth($this->patient_dob);
-        $patient_age = $age['years'] . '.' . $age['months'];
-        return $patient_age;
+            $patient_age = $age['years'] . '.' . $age['months'];
+            return $patient_age;
+        }
     }
 
     public function getPatient_age_year() {
         $age = '';
-        if ($this->patient_dob != '' && $this->patient_dob != "0000-00-00")
+        if ($this->patient_dob != '' && $this->patient_dob != "0000-00-00") {
             $age = HelperComponent::getAgeWithMonth($this->patient_dob);
-        return $age['years'];
+            return $age['years'];
+        }
     }
 
     public function getPatient_age_month() {
         $age = '';
-        if ($this->patient_dob != '' && $this->patient_dob != "0000-00-00")
+        if ($this->patient_dob != '' && $this->patient_dob != "0000-00-00") {
             $age = HelperComponent::getAgeWithMonth($this->patient_dob);
-        return $age['months'];
+            return $age['months'];
+        }
     }
 
     public function getOrg_name() {

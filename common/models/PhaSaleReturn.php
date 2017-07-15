@@ -169,7 +169,7 @@ class PhaSaleReturn extends RActiveRecord {
         if ($addtField = Yii::$app->request->get('addtfields')) {
             switch ($addtField):
                 case 'sale_return_list':
-                    $addt_keys = ['patient', 'items'];
+                    $addt_keys = ['patient', 'items','sale_bill_no'];
                     $parent_fields = [
                         'sale_ret_id' => 'sale_ret_id',
                         'sale_id' => 'sale_id',
