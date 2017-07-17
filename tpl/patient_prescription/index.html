@@ -315,6 +315,7 @@
                                                                   e-id="number_of_days"
                                                                   e-ng-change="numberDaysChange($data, item, item.item_key, tableform)"
                                                                   e-number-mask=""
+                                                                  e-select-on-click=""
                                                                   e-required>
                                                                 {{ item.number_of_days || 'empty' }}
                                                             </span>
@@ -331,6 +332,7 @@
                                                                       e-id="qty_{{item.item_key}}"
                                                                       e-ng-change="qtyChange($data, item, item.item_key, tableform)"
                                                                       e-number-mask=""
+                                                                      e-select-on-click=""
                                                                       e-required>
                                                                     {{ item.qty || 'empty' }}
                                                                 </span>

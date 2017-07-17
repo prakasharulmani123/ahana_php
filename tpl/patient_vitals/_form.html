@@ -3,7 +3,7 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">Encounter #</label>
             <div class="col-sm-5" ng-if="all_encounters.length > 1">
-                <select class="form-control" ng-model="data.encounter_id" ng-options="all_encounter.encounter_id as all_encounter.encounter_id for all_encounter in all_encounters | orderBy: encounter_id">
+                <select class="form-control" ng-model="data.encounter_id" ng-options="all_encounter.encounter_id as all_encounter.encounter_id for all_encounter in all_encounters| orderBy: encounter_id">
                 </select>
             </div>
             <div class="col-sm-9" ng-if="all_encounters.length == 1">
@@ -18,7 +18,7 @@
             </div>
         </div>
         <div class="line line-dashed b-b line-lg "></div>
-        
+
         <div class="form-group">
             <label class="col-sm-3 control-label">Temperature * </label>
             <div class="col-sm-5">
@@ -31,23 +31,22 @@
         <div class="line line-dashed b-b line-lg "></div>
 
         <div class="form-group">
-            <label class="col-sm-3 control-label">Blood Pressure Systolic</label>
-            <div class="col-sm-5">
-                <input type="text" maxlength="5" class="form-control" placeholder="" ng-model="data.blood_pressure_systolic" number-mask="">
-            </div>
-            <div class="col-sm-4">
-                <div class="row"> <p> mmHg  </p></div>
-            </div>
-        </div>
-        <div class="line line-dashed b-b line-lg "></div>
-        
-        <div class="form-group">
-            <label class="col-sm-3 control-label">Blood Pressure Diastolic</label>
-            <div class="col-sm-5">
-                <input type="text" maxlength="5" class="form-control" placeholder="" ng-model="data.blood_pressure_diastolic" number-mask="">
-            </div>
-            <div class="col-sm-4">
-                <div class="row"> <p> mmHg  </p></div>
+            <label class="col-sm-3 control-label">Blood Pressure </label>
+            <div class="col-sm-9">
+                <div class="form-inline">
+                    <div class="form-group">
+                        <input type="text" maxlength="3" class="form-control" placeholder="Systolic" ng-model="data.blood_pressure_systolic" number-mask="">
+                    </div>
+                    <div class="form-group">
+                       /
+                    </div>
+                    <div class="form-group">
+                        <input type="text" maxlength="3" class="form-control" placeholder="Diastolic" ng-model="data.blood_pressure_diastolic" number-mask="">
+                    </div>
+                    <div class="form-group">
+                        mmHg
+                    </div>
+                </div>
             </div>
         </div>
         <div class="line line-dashed b-b line-lg "></div>
@@ -62,9 +61,7 @@
             </div>
         </div>
         <div class="line line-dashed b-b line-lg "></div>
-        
-        
-        
+
         <div class="form-group">
             <label class="col-sm-3 control-label">Weight </label>
             <div class="col-sm-5">

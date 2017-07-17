@@ -605,3 +605,14 @@ ul.dropdown-menu.curPrescFreq > li > a, .dropdown-submenu > ul > li > a {
 .drop_down_list {
     width: auto;
 }
+
+.vital_bp {
+    width: 43%;
+    float: left;
+}
+
+.vital_bp_slash {
+    float: left;
+    padding-top: 5px;
+    margin: 0px 12px;
+}

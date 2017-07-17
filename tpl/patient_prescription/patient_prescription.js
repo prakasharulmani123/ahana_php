@@ -812,6 +812,10 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 }).success(
                         function (response) {
                             $scope.data.number_of_days = response.days;
+                            //Update all the No.of Days column in prescription form 
+                            angular.forEach($scope.data.prescriptionItems, function (item, key) {
+                                $scope.numberDaysChange(response.days, item, key, $scope.tableform);
+                            });
                         }
                 );
             }

@@ -164,13 +164,12 @@
                                                     <th>Pulse</th>
                                                     <td>{{vital.pulse_rate}}</td>
                                                 </tr>
-                                                <tr ng-if="vital.blood_pressure_systolic">
-                                                    <th>BP Systolic</th>
-                                                    <td>{{vital.blood_pressure_systolic}}</td>
-                                                </tr>
-                                                <tr ng-if="vital.blood_pressure_diastolic">
-                                                    <th>BP Diastolic</th>
-                                                    <td>{{vital.blood_pressure_diastolic}}</td>
+                                                <tr ng-if="vital.blood_pressure_systolic || vital.blood_pressure_diastolic">
+                                                    <th>BP</th>
+                                                    <td>
+                                                        {{vital.blood_pressure_systolic || '-'}} 
+                                                        / {{vital.blood_pressure_diastolic || '-'}}
+                                                    </td>
                                                 </tr>
                                                 <tr ng-if="vital.temperature">
                                                     <th>Temperature</th>
@@ -207,12 +206,11 @@
 
                                 <div class="form-group">
                                     <div class="row">
-                                        <div class="col-sm-6">
-                                            <input type="text" maxlength="5" placeholder="BP Systolic" class="form-control" ng-model="presc_right.vitaldata.blood_pressure_systolic">
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <input type="text" maxlength="5" placeholder="BP Diastolic" class="form-control" ng-model="presc_right.vitaldata.blood_pressure_diastolic">
-                                        </div>
+                                        <div class="col-sm-12">
+                                            <input type="text" maxlength="3" placeholder="BP Systolic" class="form-control vital_bp" ng-model="presc_right.vitaldata.blood_pressure_systolic">
+                                            <label class="vital_bp_slash"> / </label>
+                                            <input type="text" maxlength="3" placeholder="BP Diastolic" class="form-control vital_bp" ng-model="presc_right.vitaldata.blood_pressure_diastolic">
+                                        </div>                                        
                                     </div>
                                 </div>
 
