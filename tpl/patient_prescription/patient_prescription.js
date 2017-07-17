@@ -1357,6 +1357,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     .success(function (response) {
                         $scope.loadbar('hide');
                         $scope.data2 = response;
+                        $scope.vital = response.encounter;
                         $scope.prescriptionItems2 = response.items;
                         angular.forEach($scope.prescriptionItems2, function (item, key) {
                             angular.extend($scope.prescriptionItems2[key], {

@@ -94,7 +94,7 @@
                     <table>
                         <tbody>
                             <tr>
-                                <td width="48%"><b>#{{data2.pres_id}} / </b>{{today| date: "dd-MMMM-y" }}</td>
+                                <td width="48%">{{today| date: "dd-MMMM-y" }}</td>
                                 <td width="4%" align="center" class="logoTxt">
                                     <span>R</span>
                                     <span class="absoluteTxt">X</span>
@@ -112,9 +112,9 @@
         <table>
             <tbody>
                 <tr>
-                    <td width="5%" rowspan="3"><io-barcode code="{{patientObj.patient_global_int_code}}" type="CODE128B" options="barcodeOptions" style='height:50px;-ms-transform: rotate(90deg);-webkit-transform: rotate(270deg); transform: rotate(270deg);'></io-barcode></td>
+                    <td width="5%" rowspan="4"><io-barcode code="{{patientObj.patient_global_int_code}}" type="CODE128B" options="barcodeOptions" style='height:50px;-ms-transform: rotate(90deg);-webkit-transform: rotate(270deg); transform: rotate(270deg);'></io-barcode></td>
     <td width="55%"><h2>{{patientObj.fullname}} / {{patientObj.patient_age}} Years</h2></td>
-    <td width="40%" class="borderLeft">Issued by : <span class="lightColor">{{app.username}}</span></td>
+    <td width="40%" class="borderLeft">Pulse : <span class="lightColor">{{vital.pulse_rate|| '-'}}</span></td>
 </tr>
 <tr>
     <td>{{patientObj.patient_global_int_code}} 
@@ -122,11 +122,15 @@
             {{patientObj.patient_category| uppercase}}
         </span>
     </td>
-    <td class="borderLeft">Issued at : <span class="lightColor">{{app.org_name}}</span></td>
+    <td class="borderLeft">Blood pressure : <span class="lightColor">{{vital.blood_pressure_systolic|| '-'}} / {{vital.blood_pressure_diastolic|| '-'}}</span></td>
 </tr>
 <tr>
     <td>Consultant : <span class="lightColor">{{data2.consultant_name}}</span></td>
-    <td class="borderLeft"><!--Collection at : <span class="lightColor">Ram Nagar</span>--></td>
+    <td class="borderLeft">Temperature : <span class="lightColor">{{vital.temperature|| '-'}} °C</span></td>
+</tr>
+<tr>
+    <td>&nbsp;</td>
+    <td class="borderLeft">Weight : <span class="lightColor">{{vital.weight|| '-'}} Kg</span></td>
 </tr>
 </tbody> 
 </table>
@@ -148,7 +152,7 @@
             </thead>
             <tbody>
                 <tr ng-repeat="(gKey, row) in prescriptionItems2">
-                    <td><p>{{row.product_name}}</p><i>({{row.generic_name}})</i></td>
+                    <td><p>&bull; {{row.product_name}}</p><i>({{row.generic_name}})</i></td>
                     <td class="txtCenter txtUpper" colspan="4" ng-if="row.freqType == 'txt'">{{ getFrequencyExists(row.frequency_name, 0)}}</td>
 
                     <td class="txtCenter" ng-if="row.freqType != 'txt'">{{ getFrequencyExists(row.frequency_name, 0)}}</td>
@@ -177,6 +181,9 @@
 </table>
 <div>    
     <div style="position: absolute; bottom: 5px;">
+        <p style="font-size: 25px;">Prescription id  : <span class="lightColor">{{data2.pres_id}}</span></p>
+        <p style="font-size: 25px;">Issued by : <span class="lightColor">{{app.username}}</span></p>
+        <p style="font-size: 25px;">Issued at : <span class="lightColor">{{app.org_name}}</span></p>
         <p class="txtCenter" style="font-size: 25px;">* Next Visit - {{data2.next_visit| date: "dd-MMMM-y" }}</p>
     </div>
 </div>
