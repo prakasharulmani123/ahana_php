@@ -221,7 +221,7 @@ class PhaProduct extends RActiveRecord {
     }
 
     public function getPhaProductBatchesAvailableQty() {
-        return $this->hasMany(PhaProductBatch::className(), ['product_id' => 'product_id'])->sum('available_qty');
+        return $this->hasMany(PhaProductBatch::className(), ['product_id' => 'product_id'])->andWhere("expiry_date >= '".date('Y-m-d')."'")->sum('available_qty');
     }
 
     /**
