@@ -15,7 +15,7 @@
                             </a>
                             <a tooltip="{{patient.Patient.fullcurrentaddress|| patient.Patient.fullpermanentaddress}}"  ng-if="patient.same_branch == false" ng-bind-html="patient.Patient.fullname | highlight:data.PatPatient.patient_firstname" href="javascript:void(0)">
                             </a>
-                            <b ng-if="patient.Patient.patient_age">({{patient.Patient.patient_age}}y) </b> <br/>
+                            <b ng-if="patient.Patient.patient_age_ym">({{patient.Patient.patient_age_ym}}) </b> <br/>
                             {{patient.Patient.patient_global_int_code}}
                             <p class="m-t" ng-if="patient.same_branch == false">
                                 <span>

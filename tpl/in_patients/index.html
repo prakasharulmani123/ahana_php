@@ -66,7 +66,7 @@
                                 <img width="30" height="30" class="pull-left patient-image" src="img/man-icon.png" ng-attr-lazy-img="{{ row.patient.patient_img_url ? row.patient.patient_img_url : ($even ? 'img/man-icon.png' : 'img/man-icon2.png') }}" />
                                 <a ui-sref="patient.view({id: row.patient.patient_guid})" tooltip="{{row.patient.fullcurrentaddress}}">
                                     {{row.patient.fullname}}
-                                </a>({{row.patient.patient_age}}y) <br/>
+                                </a>({{row.patient.patient_age_ym}}) <br/>
                                 {{row.patient.patient_global_int_code}}
                             </td>
                             <!--<td>{{row.patient.activeCasesheetno}}</td>-->

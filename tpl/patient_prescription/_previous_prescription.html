@@ -113,7 +113,7 @@
             <tbody>
                 <tr>
                     <td width="5%" rowspan="4"><io-barcode code="{{patientObj.patient_global_int_code}}" type="CODE128B" options="barcodeOptions" style='height:50px;-ms-transform: rotate(90deg);-webkit-transform: rotate(270deg); transform: rotate(270deg);'></io-barcode></td>
-    <td width="55%"><h2>{{patientObj.fullname}} / {{patientObj.patient_age}} Years</h2></td>
+    <td width="55%"><h2>{{patientObj.fullname}} / {{patientObj.patient_age_ym}}</h2></td>
     <td width="40%" class="borderLeft">Pulse : <span class="lightColor">{{vital.pulse_rate|| '-'}}</span></td>
 </tr>
 <tr>

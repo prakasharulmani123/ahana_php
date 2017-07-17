@@ -63,7 +63,7 @@ app.controller('PatientLabelController', ['scope', '$scope', function (scope, $s
                         text: [
                             //$scope.textDetail($scope.data.view_data.fullname,13),
                             $scope.toTitleCase($scope.data.view_data.fullname),
-                            '\n' + $scope.data.app.patientDetail.patientSex + '/' + $scope.data.view_data.patient_dob + ' (' + $scope.data.view_data.patient_age + ')',
+                            '\n' + $scope.data.app.patientDetail.patientSex + '/' + $scope.data.view_data.patient_dob + ' (' + $scope.data.view_data.patient_age_ym + ')',
                             '\n' + $scope.data.view_data.consultant_name + '\n',
                         ],
                         margin: [0, 3, 0, 10],

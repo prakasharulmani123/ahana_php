@@ -132,7 +132,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                             [{text: 'Patient Detail :', bold: true, colSpan: 3, decoration: 'underline'}, {}, {}],
                             [{text: 'Name', bold: true}, ':', $scope.patientObj.fullname],
                             [{text: 'Patient ID', bold: true}, ':', $scope.patientObj.patient_global_int_code],
-                            [{text: 'Age', bold: true}, ':', $scope.patientObj.patient_age.toString() + ' / ' + $scope.app.patientDetail.patientSex],
+                            [{text: 'Age', bold: true}, ':', $scope.patientObj.patient_age_ym.toString() + ' / ' + $scope.app.patientDetail.patientSex],
                             [{text: 'Encounter #', bold: true}, ':', $scope.enc.selected.encounter_id],
                             [{text: 'Branch Name', bold: true}, ':', $scope.app.org_name],
                         ]

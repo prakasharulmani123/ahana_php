@@ -33,7 +33,7 @@
                                                 <div class="row ng-binding">
                                                     <a tooltip="{{patient.Patient.fullcurrentaddress|| patient.Patient.fullpermanentaddress}}" ng-bind-html="patient.Patient.fullname | highlight:patient" href="javascript:void(0)" ng-click="displayPatient(patient.Patient.patient_global_guid)" class="ng-binding">
                                                     </a>
-                                                    <b ng-if="patient.Patient.patient_age">({{patient.Patient.patient_age}}y) </b>
+                                                    <b ng-if="patient.Patient.patient_age_ym">({{patient.Patient.patient_age_ym}}) </b>
                                                     <br>
                                                     <span class="pull-left" ng-bind-html="patient.Patient.patient_global_int_code | highlight:patient"></span> &nbsp; &nbsp;
                                                     <span ng-bind-html="patient.Patient.patient_mobile | highlight:patient"> </span>
@@ -120,7 +120,7 @@
                             <div class="form-group">
                                 <label class="col-sm-6 control-label"> Age: </label>
                                 <div class="col-sm-6">
-                                    <p>  {{selected_patient.Patient.patient_age}}  </p>
+                                    <p>  {{selected_patient.Patient.patient_age_ym}}  </p>
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg "></div>
