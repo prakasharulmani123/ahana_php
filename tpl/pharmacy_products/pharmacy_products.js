@@ -52,6 +52,7 @@ app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http
             DTColumnBuilder.newColumn('product_code').withTitle('Product Code'),
             DTColumnBuilder.newColumn('product_type').withTitle('Product Type'),
             DTColumnBuilder.newColumn('product_brand').withTitle('Product Brand'),
+            DTColumnBuilder.newColumn('product_generic').withTitle('Generic Name'),
             DTColumnBuilder.newColumn(null).withTitle('Actions').notSortable().renderWith(actionsHtml)
         ];
 
