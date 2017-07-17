@@ -276,6 +276,10 @@ class PatEncounter extends RActiveRecord {
         return $this->hasMany(PatPrescription::className(), ['encounter_id' => 'encounter_id'])->orderBy(['created_at' => SORT_DESC]);
     }
 
+    public function getPatVitals() {
+        return $this->hasOne(PatVitals::className(), ['encounter_id' => 'encounter_id'])->orderBy(['created_at' => SORT_DESC]);
+    }
+
     /**
      *
      * @return type
@@ -284,6 +288,9 @@ class PatEncounter extends RActiveRecord {
         $extend = [
             'branch_name' => function ($model) {
                 return (isset($model->tenant->tenant_name) ? $model->tenant->tenant_name : '-');
+            },
+            'vital' => function ($model) {
+                return (isset($model->patVitals) ? $model->patVitals : '-');
             },
             'patient' => function ($model) {
                 return (isset($model->patient) ? $model->patient : '-');

@@ -136,6 +136,9 @@ class PatPrescription extends RActiveRecord
             'consultant_name' => function ($model) {
                 return (isset($model->consultant) ? $model->consultant->title_code .  $model->consultant->name: '-');
             },
+            'encounter' => function ($model) {
+                return (isset($model->encounter) ? $model->encounter->patVitals : '-');
+            },
                     
         ];
         $fields = array_merge(parent::fields(), $extend);
