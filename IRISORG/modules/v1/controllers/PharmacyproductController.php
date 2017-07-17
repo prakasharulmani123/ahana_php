@@ -587,7 +587,7 @@ class PharmacyproductController extends ActiveController {
         if (!empty($requestData['search']['value'])) {
             $tenant_id = Yii::$app->user->identity->logged_tenant_id;
             $totalFiltered = $modelClass::find()
-                    ->joinWith(['productDescription', 'brand'])
+                    ->joinWith(['productDescription', 'brand', 'generic'])
                     ->andWhere([
                         'pha_product.tenant_id' => $tenant_id,
                         'pha_product.status' => '1',
@@ -597,11 +597,12 @@ class PharmacyproductController extends ActiveController {
                             ['like', 'pha_product.product_name', $requestData['search']['value']],
                             ['like', 'pha_product_description.description_name', $requestData['search']['value']],
                             ['like', 'pha_brand.brand_name', $requestData['search']['value']],
+                            ['like', 'pha_generic.generic_name', $requestData['search']['value']],
                     ])
                     ->count();
 
             $products = $modelClass::find()
-                    ->joinWith(['productDescription', 'brand'])
+                    ->joinWith(['productDescription', 'brand', 'generic'])
                     ->andWhere([
                         'pha_product.tenant_id' => $tenant_id,
                         'pha_product.status' => '1',
@@ -611,6 +612,7 @@ class PharmacyproductController extends ActiveController {
                             ['like', 'pha_product.product_name', $requestData['search']['value']],
                             ['like', 'pha_product_description.description_name', $requestData['search']['value']],
                             ['like', 'pha_brand.brand_name', $requestData['search']['value']],
+                            ['like', 'pha_generic.generic_name', $requestData['search']['value']],
                     ])
                     ->limit($requestData['length'])
                     ->offset($requestData['start'])
@@ -634,6 +636,10 @@ class PharmacyproductController extends ActiveController {
             $nestedData['product_code'] = $product->product_code;
             $nestedData['product_type'] = $product->productDescription->description_name;
             $nestedData['product_brand'] = $product->brand->brand_name;
+            if($product->generic_id)
+            {
+                $nestedData['product_generic'] = $product->generic->generic_name;
+            } else $nestedData['product_generic'] ='-';
             $data[] = $nestedData;
         }
 
