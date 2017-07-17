@@ -1421,7 +1421,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                             ],
                                             [
                                                 {
-                                                    text: 'GST No : 123456789',
+                                                    text: 'GST No : 33AAQFA999IEIZI',
                                                     fontSize: 07,
                                                 }
                                             ],
