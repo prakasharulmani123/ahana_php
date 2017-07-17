@@ -489,16 +489,7 @@ class PatPatient extends RActiveRecord {
                 return $model->patient_age_month;
             },
             'patient_age_ym' => function ($model) {
-                $age = '';
-                
-                if($model->patient_age_year > 0)
-                    $age .= $model->patient_age_year.'y';
-                if($model->patient_age_year > 0 && $model->patient_age_month > 0)
-                    $age .= ' ';
-                if($model->patient_age_month > 0)     
-                    $age .= $model->patient_age_month.'m';
-                
-                return $age;
+                return $model->patient_age_ym;
             },
             'patient_img_url' => function ($model) {
                 return $model->patient_img_url;
@@ -668,7 +659,7 @@ class PatPatient extends RActiveRecord {
         if ($addtField = Yii::$app->request->get('addtfields')) {
             switch ($addtField):
                 case 'search':
-                    $addt_keys = ['patient_img_url', 'fullcurrentaddress', 'fullpermanentaddress', 'fullname', 'patient_guid', 'patient_age', 'patient_global_int_code', 'patient_mobile', 'org_name', 'patient_age_year', 'patient_age_month'];
+                    $addt_keys = ['patient_img_url', 'fullcurrentaddress', 'fullpermanentaddress', 'fullname', 'patient_guid', 'patient_age', 'patient_global_int_code', 'patient_mobile', 'org_name', 'patient_age_year', 'patient_age_month', 'patient_age_ym'];
                     break;
                 case 'salecreate':
                     $pFields = ['patient_id', 'patient_guid'];
@@ -676,7 +667,7 @@ class PatPatient extends RActiveRecord {
                     $addt_keys = ['name_with_int_code', 'fullname', 'last_consultant_id', 'patient_global_int_code'];
                     break;
                 case 'merge_search':
-                    $addt_keys = ['patient_img_url', 'fullcurrentaddress', 'fullpermanentaddress', 'fullname', 'patient_guid', 'patient_age', 'patient_global_int_code', 'patient_mobile', 'org_name', 'childrens_count'];
+                    $addt_keys = ['patient_img_url', 'fullcurrentaddress', 'fullpermanentaddress', 'fullname', 'patient_guid', 'patient_age', 'patient_global_int_code', 'patient_mobile', 'org_name', 'childrens_count', 'patient_age_ym'];
                     break;
             endswitch;
         }
@@ -771,6 +762,19 @@ class PatPatient extends RActiveRecord {
             $age = HelperComponent::getAgeWithMonth($this->patient_dob);
             return $age['months'];
         }
+    }
+
+    public function getPatient_age_ym() {
+        $age = '';
+
+        if ($this->patient_age_year > 0)
+            $age .= $this->patient_age_year . 'y';
+        if ($this->patient_age_year > 0 && $this->patient_age_month > 0)
+            $age .= ' ';
+        if ($this->patient_age_month > 0)
+            $age .= $this->patient_age_month . 'm';
+
+        return $age;
     }
 
     public function getOrg_name() {
