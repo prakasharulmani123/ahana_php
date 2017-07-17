@@ -488,6 +488,18 @@ class PatPatient extends RActiveRecord {
             'patient_age_month' => function ($model) {
                 return $model->patient_age_month;
             },
+            'patient_age_ym' => function ($model) {
+                $age = '';
+                
+                if($model->patient_age_year > 0)
+                    $age .= $model->patient_age_year.'y';
+                if($model->patient_age_year > 0 && $model->patient_age_month > 0)
+                    $age .= ' ';
+                if($model->patient_age_month > 0)     
+                    $age .= $model->patient_age_month.'m';
+                
+                return $age;
+            },
             'patient_img_url' => function ($model) {
                 return $model->patient_img_url;
             },
