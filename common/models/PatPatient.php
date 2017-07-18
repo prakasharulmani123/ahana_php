@@ -664,7 +664,7 @@ class PatPatient extends RActiveRecord {
                 case 'salecreate':
                     $pFields = ['patient_id', 'patient_guid'];
                     $parent_fields = array_combine($pFields, $pFields);
-                    $addt_keys = ['name_with_int_code', 'fullname', 'last_consultant_id', 'patient_global_int_code'];
+                    $addt_keys = ['name_with_int_code', 'fullname', 'last_consultant_id', 'patient_global_int_code','consultant_name'];
                     break;
                 case 'merge_search':
                     $addt_keys = ['patient_img_url', 'fullcurrentaddress', 'fullpermanentaddress', 'fullname', 'patient_guid', 'patient_age', 'patient_global_int_code', 'patient_mobile', 'org_name', 'childrens_count', 'patient_age_ym'];

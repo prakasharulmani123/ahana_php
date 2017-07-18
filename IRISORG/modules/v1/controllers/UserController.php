@@ -792,4 +792,38 @@ class UserController extends ActiveController {
         }
     }
 
+    public function actionGetdoctor() {
+        $post = Yii::$app->getRequest()->post();
+        $doctors = [];
+        $limit = 10;
+        $only = Yii::$app->request->get('only');
+
+        if (isset($post['search']) && !empty($post['search']) && strlen($post['search']) >= 2) {
+            $text = $post['search'];
+            //$tenant_id = Yii::$app->user->identity->logged_tenant_id;
+
+            $lists = CoUser::find()
+                    ->andWhere([
+                        'co_user.deleted_at' => '0000-00-00 00:00:00',
+                        'co_user.status' => '1',
+                        'co_user.care_provider' => '1',
+                    ])
+                    ->andFilterWhere([
+                        'or',
+                            ['like', 'co_user.name', $text],
+                    ])
+                    ->limit($limit)
+                    ->all();
+
+            if ($only == 'doctors') {
+                return ['doctors' => $lists];
+            }
+
+//            foreach ($lists as $key => $doctor) {
+//                $doctors[$key]['Doctor'] = $doctor;
+//            }
+        }
+        return ['doctors' => $doctors];
+    }
+
 }

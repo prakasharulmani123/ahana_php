@@ -64,7 +64,7 @@ class PhaSale extends RActiveRecord {
         return [
             [['sale_date'], 'required'],
             [['tenant_id', 'patient_id', 'consultant_id', 'created_by', 'modified_by'], 'integer'],
-            [['sale_date', 'created_at', 'modified_at', 'deleted_at', 'encounter_id', 'patient_name', 'patient_group_id', 'patient_group_name'], 'safe'],
+            [['sale_date', 'created_at', 'modified_at', 'deleted_at', 'encounter_id', 'patient_name', 'patient_group_id', 'patient_group_name', 'consultant_name'], 'safe'],
             [['payment_type', 'payment_status', 'status'], 'string'],
             [['total_item_vat_amount', 'total_item_sale_amount', 'total_item_discount_percent', 'total_item_discount_amount', 'total_item_amount', 'welfare_amount', 'roundoff_amount', 'bill_amount', 'amount_received', 'balance'], 'number'],
             [['mobile_no'], 'string', 'max' => 50],
@@ -101,6 +101,7 @@ class PhaSale extends RActiveRecord {
             'roundoff_amount' => 'Roundoff Amount',
             'bill_amount' => 'Bill Amount',
             'payment_status' => 'Payment Status',
+            'consultant_name' => 'Consultant Name',
             'status' => 'Status',
             'created_by' => 'Created By',
             'created_at' => 'Created At',
@@ -212,7 +213,7 @@ class PhaSale extends RActiveRecord {
                 return (isset($model->patient) ? $model->patient->patient_global_int_code : '-');
             },
             'patient_name' => function ($model) {
-                return (isset($model->patient) ? ucwords("{$model->patient->patient_title_code} {$model->patient->patient_firstname}") : '-');
+                return (isset($model->patient) ? ucwords("{$model->patient->patient_title_code} {$model->patient->patient_firstname}") : isset($this->patient_name) ? $this->patient_name : '-');
             },
             'items' => function ($model) {
                 return (isset($model->phaSaleItems) ? $model->phaSaleItems : '-');
@@ -230,7 +231,7 @@ class PhaSale extends RActiveRecord {
                 return number_format($balance, '2');
             },
             'consultant_name' => function ($model) {
-                return (isset($model->consultant) ? $model->consultant->title_code . ucwords($model->consultant->name) : '-');
+                return (isset($model->consultant) ? $model->consultant->title_code . ucwords($model->consultant->name) : isset($this->consultant_name) ? $this->consultant_name : '-');
             },
             'branch_name' => function ($model) {
                 return (isset($model->tenant->tenant_name) ? $model->tenant->tenant_name : '-');
