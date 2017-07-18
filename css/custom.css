@@ -616,3 +616,7 @@ ul.dropdown-menu.curPrescFreq > li > a, .dropdown-submenu > ul > li > a {
     padding-top: 5px;
     margin: 0px 12px;
 }
+
+.word-wrap {
+    word-wrap: break-word;
+}
