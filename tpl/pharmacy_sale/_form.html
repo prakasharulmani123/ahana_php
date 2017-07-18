@@ -4,9 +4,9 @@
             <span class="">GST No :33AAQFA999IEIZI &nbsp;&nbsp;</span>
             <a check-access ui-sref="pharmacy.sales" class="btn btn-primary"> View List</a><br /><br />
         </div>
-        
-<!--        <a check-access ui-sref="pharmacy.sales" class="btn btn-primary pull-right"> View List</a>
-        <span class="pull-right">GST No :12345678 &nbsp;&nbsp;</span><br /><br />-->
+
+        <!--        <a check-access ui-sref="pharmacy.sales" class="btn btn-primary pull-right"> View List</a>
+                <span class="pull-right">GST No :12345678 &nbsp;&nbsp;</span><br /><br />-->
     </div>
     <img ng-hide="true" id="sale_logo" src="img/ahanalogo.jpg"/>
     <div class="col-sm-12">
@@ -50,9 +50,18 @@
                                         </span>
                                     </label>
                                     <div class="col-lg-8">
-                                        <select class="form-control selectpicker" data-live-search="true" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors| orderBy: 'name'" data-ng-change="changeGetConsultant()">
+                                        <input autocomplete="off"
+                                               placeholder="Doctor Name"
+                                               type="text"
+                                               class="form-control"
+                                               ng-model="data.consultant_name"
+                                               typeahead="doctor.user_id as doctor.fullname for doctor in getDoctors($viewValue) | filter:{name:$viewValue} | limitTo: 10"
+                                               typeahead-on-select="formatDoctor($item, $model, $label)"
+                                               typeahead-wait-ms="400"
+                                               />
+<!--                                        <select class="form-control selectpicker" data-live-search="true" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors| orderBy: 'name'" data-ng-change="changeGetConsultant()">
                                             <option value="">Select Consultant</option>
-                                        </select>
+                                        </select>-->
                                     </div>
                                 </div>
                                 <div class="line line-dashed b-b line-lg "></div>

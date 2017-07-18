@@ -291,10 +291,16 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             $scope.data.patient_guid = $item.patient_guid;
             $scope.data.patient_name = $item.fullname;
             $scope.data.consultant_id = $item.last_consultant_id;
+            $scope.data.consultant_name = $item.consultant_name;
             var patient_int_code = $item.patient_global_int_code;
             $scope.patient_int_code = patient_int_code;
             $scope.getEncounter($item.patient_id, 'add', '');
             $scope.getPatientGroupByPatient($item.patient_guid);
+        }
+
+        $scope.formatDoctor = function ($item, $model, $label) {
+            $scope.data.consultant_id = $item.user_id;
+            $scope.data.consultant_name = $item.fullname;
         }
 
         $scope.getEncounter = function (patient_id, mode, encounter_id) {
@@ -995,6 +1001,30 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                         $scope.loadbar('hide');
                         $scope.show_patient_loader = false;
                         return $scope.patients;
+                    }
+            );
+        };
+
+        var canceler1;
+        $scope.getDoctors = function (doctorName) {
+            if (canceler1)
+                canceler1.resolve();
+            canceler1 = $q.defer();
+
+            $scope.show_consultant_loader = true;
+
+            return $http({
+                method: 'POST',
+                url: $rootScope.IRISOrgServiceUrl + '/user/getdoctor?only=doctors&showall=yes',
+                data: {'search': doctorName},
+                timeout: canceler1.promise,
+            }).then(
+                    function (response) {
+                        $scope.doctors = [];
+                        $scope.doctors = response.data.doctors;
+                        $scope.loadbar('hide');
+                        $scope.show_consultant_loader = false;
+                        return $scope.doctors;
                     }
             );
         };
@@ -1814,7 +1844,6 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
             $http.get($rootScope.IRISOrgServiceUrl + "/pharmacysales/" + sale_id + "?addtfields=sale_print")
                     .success(function (response) {
-                        console.log(response);
                         $scope.loadbar('hide');
                         $scope.data2 = response;
                         $scope.data2.patient_name = response.patient_name;
