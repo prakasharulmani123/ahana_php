@@ -213,7 +213,19 @@ class PhaSale extends RActiveRecord {
                 return (isset($model->patient) ? $model->patient->patient_global_int_code : '-');
             },
             'patient_name' => function ($model) {
-                return (isset($model->patient) ? ucwords("{$model->patient->patient_title_code} {$model->patient->patient_firstname}") : isset($this->patient_name) ? $this->patient_name : '-');
+                if(isset($model->patient)) {
+                    return ucwords("{$model->patient->patient_title_code} {$model->patient->patient_firstname}");
+                }
+                else {
+                    if(isset($this->patient_name))
+                    {
+                        return $this->patient_name;
+                    }
+                    else {
+                        return '-';
+                    }
+                }
+                //return (isset($model->patient) ? ucwords("{$model->patient->patient_title_code} {$model->patient->patient_firstname}") : isset($this->patient_name) ? $this->patient_name : '-');
             },
             'items' => function ($model) {
                 return (isset($model->phaSaleItems) ? $model->phaSaleItems : '-');
@@ -231,7 +243,19 @@ class PhaSale extends RActiveRecord {
                 return number_format($balance, '2');
             },
             'consultant_name' => function ($model) {
-                return (isset($model->consultant) ? $model->consultant->title_code . ucwords($model->consultant->name) : isset($this->consultant_name) ? $this->consultant_name : '-');
+                if(isset($model->consultant)) {
+                    return $model->consultant->title_code . ucwords($model->consultant->name);
+                }
+                else {
+                    if(isset($this->consultant_name))
+                    {
+                        return $this->consultant_name;
+                    }
+                    else {
+                        return '-';
+                    }
+                }
+                //return (isset($model->consultant) ? $model->consultant->title_code . ucwords($model->consultant->name) : isset($this->consultant_name) ? $this->consultant_name : '-');
             },
             'branch_name' => function ($model) {
                 return (isset($model->tenant->tenant_name) ? $model->tenant->tenant_name : '-');
