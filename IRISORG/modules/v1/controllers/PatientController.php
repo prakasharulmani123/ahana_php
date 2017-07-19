@@ -625,7 +625,7 @@ class PatientController extends ActiveController {
                 PatGlobalPatient::updateAll(['parent_id' => $parent_id, 'migration_created_by' => $user_id], "patient_global_guid IN ('$children_ids')");
                 GlPatient::updateAll(['parent_id' => $parent_id], "patient_global_guid IN ('$children_ids')");
 
-                $merge_patients = PatPatient::find()->andWhere("patient_global_guid IN ('$children_ids')")->all();
+                $merge_patients = PatPatient::find()->andWhere("patient_global_guid IN ('$children_ids')")->active()->all();
 
                 $connection = Yii::$app->client;
                 foreach ($merge_patients as $merge_patient) {
