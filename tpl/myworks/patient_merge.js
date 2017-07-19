@@ -4,8 +4,8 @@ app.controller('PatientMergeController', ['$rootScope', '$scope', '$timeout', '$
         $scope.patient_search_result = [];
         $scope.selected_patients = [];
         $scope.show_loader = false;
-        var canceler;
 
+        var canceler;
         var changeTimer = false;
         $scope.$watch('patient', function (newValue, oldValue) {
             if (newValue != '') {
@@ -36,7 +36,8 @@ app.controller('PatientMergeController', ['$rootScope', '$scope', '$timeout', '$
 
         $scope.filterFn = function (item) {
 //            return !item.Patient.have_encounter && item.Patient.childrens_count == '0';
-            return item.Patient.childrens_count == '0';
+//            return item.Patient.childrens_count == '0';
+            return true;
         };
 
         $("#patient-search").keydown(function (e) {
@@ -84,9 +85,13 @@ app.controller('PatientMergeController', ['$rootScope', '$scope', '$timeout', '$
         $scope.displayPatient = function (id) {
             $(".merge-patientcont").hide();
             var filteredResult = $filter('filter')($scope.patient_search_result, {Patient: {patient_global_guid: id}});
+            var exists = $filter('filter')($scope.selected_patients, {Patient: {patient_global_guid: id}});
+
             if (filteredResult.length > 0) {
                 if (filteredResult[0].Patient.have_encounter) {
                     alert('This patient have an active encounter, so you can not merge now');
+                } else if (exists.length > 0) {
+                    alert('Patient already selected, Choose different patient');
                 } else {
                     if ($scope.selected_patients.length < 3) {
                         $scope.inserted = {
@@ -117,32 +122,37 @@ app.controller('PatientMergeController', ['$rootScope', '$scope', '$timeout', '$
         $scope.saveForm = function () {
             var conf = confirm('Are you sure to Merge these patients ?');
             if (conf) {
-                $scope.loadbar('show');
-                post_url = $rootScope.IRISOrgServiceUrl + '/patient/mergepatients';
-                method = 'POST';
-                $http({
-                    method: method,
-                    url: post_url,
-                    data: $scope.selected_patients,
-                }).success(
-                        function (response) {
-                            if (response.success) {
-                                $scope.msg.successMessage = response.message;
-                            } else {
-                                $scope.msg.errorMessage = response.message;
+                var primaryExists = $filter('filter')($scope.selected_patients, {is_primary: true});
+                if (primaryExists.length == 1) {
+                    $scope.loadbar('show');
+                    post_url = $rootScope.IRISOrgServiceUrl + '/patient/mergepatients';
+                    method = 'POST';
+                    $http({
+                        method: method,
+                        url: post_url,
+                        data: $scope.selected_patients,
+                    }).success(
+                            function (response) {
+                                if (response.success) {
+                                    $scope.msg.successMessage = response.message;
+                                } else {
+                                    $scope.msg.errorMessage = response.message;
+                                }
+                                $scope.loadbar('hide');
+                                $scope.patient_search_result = [];
+                                $scope.selected_patients = [];
+                                $scope.patient = '';
                             }
-                            $scope.loadbar('hide');
-                            $scope.patient_search_result = [];
-                            $scope.selected_patients = [];
-                            $scope.patient = '';
-                        }
-                ).error(function (data, status) {
-                    $scope.loadbar('hide');
-                    if (status == 422)
-                        $scope.errorData = $scope.errorSummary(data);
-                    else
-                        $scope.errorData = data.message;
-                });
+                    ).error(function (data, status) {
+                        $scope.loadbar('hide');
+                        if (status == 422)
+                            $scope.errorData = $scope.errorSummary(data);
+                        else
+                            $scope.errorData = data.message;
+                    });
+                } else {
+                    alert('Choose any one Primary patient');
+                }
             }
         }
 
