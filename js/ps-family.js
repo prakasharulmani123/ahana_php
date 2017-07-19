@@ -201,7 +201,12 @@
             } else {
                 classHTML = ' class="singel-member" ';
             }
-            var html = '<a href="javascript:void(0)" data-id="' + member.id + '" data-name="' + member.name + '" data-gender="' + member.gender + '" data-age="' + member.age + '" data-relation="' + member.relation + '" ' + classHTML + ' onclick="' + this.referenceVar + '.openMenu(this,event)"><span class="fa fa-close" onclick="' + this.referenceVar + '.removeMember(this)"></span><center><img id="member-picture-' + member.id + '" src="' + member.pic + '"><br><span>' + member.name + ' (' + member.gender + ')</span></center></a>';
+            if (member.gender == 'M' || member.gender == 'Male') {
+                genderClass = 'male-image';
+            } else {
+                genderClass = 'female-image';
+            }
+            var html = '<a href="javascript:void(0)" data-id="' + member.id + '" data-name="' + member.name + '" data-gender="' + member.gender + '" data-age="' + member.age + '" data-relation="' + member.relation + '" ' + classHTML + ' onclick="' + this.referenceVar + '.openMenu(this,event)"><span class="fa fa-close" onclick="' + this.referenceVar + '.removeMember(this)"></span><center><img id="member-picture-' + member.id + '" src="' + member.pic + '" class="' + genderClass + '"><br><span>' + member.name + ' (' + member.gender + ')</span></center></a>';
             return html;
         },
         readImage: function (input, memberId) {
@@ -218,10 +223,46 @@
             }
         },
         removeMember: function (person, member) {
+            if (this.family.length != 0) {
+                var family = this.family;
+                family = family.filter(function (el) {
+                    return el.id != person.id;
+                });
+                this.family = family;
+            }
             if ($(member).attr('data-relation') == 'sibling') {
+                for (var i = 0; i < this.family.length; i++) {
+                    if (this.family[i].child)
+                    {
+                        this.family[i].child = this.family[i].child.filter(function (el) {
+                            return el != person.id;
+                        });
+                    }
+                    if (this.family[i].father == person.id)
+                        this.family[i].father = '';
+                    if (this.family[i].mother == person.id)
+                        this.family[i].mother = '';
+                }
                 $(member).parent().remove();
             }
+
             if ($(member).attr('data-relation') == 'child') {
+                for (var i = 0; i < this.family.length; i++) {
+                    if (this.family[i].child)
+                    {
+                        this.family[i].child = this.family[i].child.filter(function (el) {
+                            return el != person.id;
+                        });
+                    }
+                    if (this.family[i].father == person.id)
+                        this.family[i].father = '';
+                    if (this.family[i].mother == person.id)
+                        this.family[i].mother = '';
+                    if (this.family[i].sibling == person.id)
+                        this.family[i].sibling = '';
+                    if (this.family[i].spouse == person.id)
+                        this.family[i].spouse = '';
+                }
                 var sibCount = $(member).parent().parent().children().length;
                 if (sibCount == 1) {
                     $(member).parent().parent().remove();
@@ -233,15 +274,95 @@
                         $(member).parent().remove();
                     }
                 }
-
             }
+
             if ($(member).attr('data-relation') == 'father') {
+                for (var i = 0; i < this.family.length; i++) {
+                    if (this.family[i].child)
+                    {
+                        this.family[i].child = this.family[i].child.filter(function (el) {
+                            return el != person.id;
+                        });
+            }
+                    if (this.family[i].father == person.id)
+                        this.family[i].father = '';
+                    if (this.family[i].mother == person.id)
+                        this.family[i].mother = '';
+                    if (this.family[i].sibling == person.id)
+                        this.family[i].sibling = '';
+                    if (this.family[i].spouse == person.id)
+                        this.family[i].spouse = '';
+                }
+//                for (var i = 0; i < this.family.length; i++) {
+//                    if (this.family[i].mother) {
+//                        if (this.family[i].spouse == person.id) {
+//                            this.family[i].spouse = '';
+//                            this.family[i].father = '';
+//                        }
+//                    } else {
+//                        if (this.family[i].sibling == person.id) {
+//                            this.family[i].sibling = '';
+//                            this.family[i].child = this.family[i].child.filter(function (el) {
+//                                return el != person.id;
+//                            });
+//                        }
+//                    }
+//                }
                 var child = $(member).children('ul');
                 var parent = $(member).parent().parent();
                 $(child).appendTo(parent);
                 $(member).remove();
             }
+            if ($(member).attr('data-relation') == 'mother') {
+//                for (var i = 0; i < this.family.length; i++) {
+//                    if (this.family[i].mother) {
+//                        if (this.family[i].spouse == person.id) {
+//                            this.family[i].spouse = '';
+//                            this.family[i].mother = '';
+//                        }
+//                    } else {
+//                        if (this.family[i].sibling == person.id) {
+//                            this.family[i].sibling = '';
+//                            this.family[i].child = this.family[i].child.filter(function (el) {
+//                                return el != person.id;
+//                            });
+//                        }
+//                    }
+//                }
+                for (var i = 0; i < this.family.length; i++) {
+                    if (this.family[i].child)
+                    {
+                        this.family[i].child = this.family[i].child.filter(function (el) {
+                            return el != person.id;
+                        });
+                    }
+                    if (this.family[i].father == person.id)
+                        this.family[i].father = '';
+                    if (this.family[i].mother == person.id)
+                        this.family[i].mother = '';
+                    if (this.family[i].sibling == person.id)
+                        this.family[i].sibling = '';
+                    if (this.family[i].spouse == person.id)
+                        this.family[i].spouse = '';
+                }
+                var child = $(member).children('ul');
+                var parent = $(member).parent().parent();
+                $(child).appendTo(parent);
+                $(member).remove();
+            }
+
             if ($(member).attr('data-relation') == 'spouse') {
+                for (var i = 0; i < this.family.length; i++) {
+                    if (this.family[i].spouse == person.id) {
+                        this.family[i].spouse = "";
+                    }
+                    if (this.family[i].child)
+                    {
+                        this.family[i].child = this.family[i].child.filter(function (el) {
+                            return el != person.id;
+                        });
+                    }
+                }
                 $(member).remove();
             }
         },
@@ -372,7 +493,7 @@
             this.selectedElement = element;
 
             $(this.options_menu).css('left', event.clientX);
-            $(this.options_menu).css('top', event.clientY);
+            //$(this.options_menu).css('top', event.clientY);
             $(this.options_menu).show();
         },
     }

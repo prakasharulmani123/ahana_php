@@ -29,8 +29,8 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
             $http.post($rootScope.IRISOrgServiceUrl + '/patient/getpatientbyguid', {guid: $state.params.id})
                     .success(function (patient) {
                         if (patient.success == false) {
-                            $state.go('configuration.organization');
-                            $scope.msg.errorMessage = "An Error has occured while loading patient!";
+                            $state.go('myworks.dashboard');
+                            $scope.msg.errorMessage = "An Error has occured while loading patientttt!";
                         } else {
                             $scope.orgData = patient;
                             $scope.setViewData(patient);
