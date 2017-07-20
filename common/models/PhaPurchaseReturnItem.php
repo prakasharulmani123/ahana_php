@@ -180,6 +180,8 @@ class PhaPurchaseReturnItem extends RActiveRecord {
                 case 'purchase_return':
                     $addt_keys = ['purchase_quantity','product','batch'];
                     $parent_fields = [
+                        'purchase_ret_item_id' => 'purchase_ret_item_id',
+                        'purchase_ret_id' => 'purchase_ret_id',
                         'quantity' => 'quantity',
                         'free_quantity' => 'free_quantity',
                         'free_quantity_unit' => 'free_quantity_unit',

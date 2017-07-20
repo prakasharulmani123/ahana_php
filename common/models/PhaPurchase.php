@@ -55,13 +55,13 @@ class PhaPurchase extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['invoice_date', 'invoice_no', 'supplier_id'], 'required'],
-            [['tenant_id', 'supplier_id', 'created_by', 'modified_by'], 'integer'],
-            [['invoice_date', 'created_at', 'modified_at', 'deleted_at', 'gr_num'], 'safe'],
-            [['payment_type', 'payment_status', 'status'], 'string'],
-            [['total_item_purchase_amount', 'total_item_vat_amount', 'total_item_discount_amount', 'discount_percent', 'discount_amount', 'roundoff_amount', 'net_amount', 'before_disc_amount', 'after_disc_amount'], 'number'],
-            [['purchase_code', 'invoice_no'], 'string', 'max' => 50],
-            [['invoice_no'], 'unique', 'targetAttribute' => ['invoice_no', 'tenant_id', 'gr_num'], 'message' => 'Invoice No / GR No has already been taken.']
+                [['invoice_date', 'invoice_no', 'supplier_id'], 'required'],
+                [['tenant_id', 'supplier_id', 'created_by', 'modified_by'], 'integer'],
+                [['invoice_date', 'created_at', 'modified_at', 'deleted_at', 'gr_num'], 'safe'],
+                [['payment_type', 'payment_status', 'status'], 'string'],
+                [['total_item_purchase_amount', 'total_item_vat_amount', 'total_item_discount_amount', 'discount_percent', 'discount_amount', 'roundoff_amount', 'net_amount', 'before_disc_amount', 'after_disc_amount'], 'number'],
+                [['purchase_code', 'invoice_no'], 'string', 'max' => 50],
+                [['invoice_no'], 'unique', 'targetAttribute' => ['invoice_no', 'tenant_id', 'gr_num'], 'message' => 'Invoice No / GR No has already been taken.']
         ];
     }
 
@@ -151,9 +151,9 @@ class PhaPurchase extends RActiveRecord {
                 return (isset($model->supplier) ? $model->supplier->supplier_name : '-');
             },
             'payment_type_name' => function ($model) {
-                if($model->payment_type == 'CA')
+                if ($model->payment_type == 'CA')
                     return "Cash";
-                elseif($model->payment_type == 'CR')
+                elseif ($model->payment_type == 'CR')
                     return "Credit";
             },
             'items' => function ($model) {
@@ -161,6 +161,14 @@ class PhaPurchase extends RActiveRecord {
             },
             'billings_total_paid_amount' => function ($model) {
                 return (isset($model->phaPurchaseBillingsTotalPaidAmount) ? $model->phaPurchaseBillingsTotalPaidAmount : '0');
+            },
+            'invoice_no_with_supplier' => function ($model) {
+                $invoice_no_with_supplier = $model->invoice_no;
+
+                if ($model->supplier != '')
+                    $invoice_no_with_supplier .= ' ' . '('.$model->supplier->supplier_name.')' . ' ';
+                
+                return $invoice_no_with_supplier;
             },
             'billings_total_balance_amount' => function ($model) {
                 $paid_amount = 0;
@@ -194,8 +202,8 @@ class PhaPurchase extends RActiveRecord {
                     ];
                     break;
                 case 'viewlist':
-                    $addt_keys = ['supplier_name','items'];
-                    $pFields = ['invoice_no','gr_num','invoice_date','total_item_purchase_amount','total_item_vat_amount','discount_percent','discount_amount','roundoff_amount','net_amount','purchase_id','payment_type','payment_status'];
+                    $addt_keys = ['supplier_name', 'items','billings_total_paid_amount','billings_total_balance_amount'];
+                    $pFields = ['invoice_no', 'gr_num', 'invoice_date', 'total_item_purchase_amount', 'total_item_vat_amount', 'discount_percent', 'discount_amount', 'roundoff_amount', 'net_amount', 'purchase_id', 'payment_type', 'payment_status'];
                     $parent_fields = array_combine($pFields, $pFields);
                     break;
                 case 'purchase_update':
@@ -204,7 +212,7 @@ class PhaPurchase extends RActiveRecord {
                     $parent_fields = array_combine($pFields, $pFields);
                     break;
                 case 'purchase_bill_search':
-                    $addt_keys = ['invoice_no'];
+                    $addt_keys = ['invoice_no_with_supplier'];
                     $parent_fields = [
                         'purchase_id' => 'purchase_id',
                         'invoice_no' => 'invoice_no',
