@@ -21,7 +21,7 @@
                                                type="text"
                                                class="form-control"
                                                ng-model="select_purchase_id"
-                                               typeahead="purchase as purchase.invoice_no for purchase in getPurchaseinvoices($viewValue) | orderBy: invoice_no"
+                                               typeahead="purchase as purchase.invoice_no_with_supplier for purchase in getPurchaseinvoices($viewValue) | orderBy: invoice_no"
                                                typeahead-on-select="getPurchaseReturnItems($item, $model, $label)"
                                                typeahead-wait-ms="400"
                                                />

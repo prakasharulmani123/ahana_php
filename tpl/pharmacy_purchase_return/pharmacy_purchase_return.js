@@ -313,7 +313,7 @@ app.controller('PurchaseReturnController', ['$rootScope', '$scope', '$timeout', 
 
                         angular.forEach(purchasereturn.items, function (item, key) {
                             $scope.inserted = {
-                                product_id: item.product_id,
+                                product_id: item.product.product_id,
                                 full_name: item.product.full_name,
                                 batch_details: item.batch.batch_details,
                                 batch_no: item.batch.batch_no,
