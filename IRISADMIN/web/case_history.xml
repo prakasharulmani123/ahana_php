@@ -1531,8 +1531,8 @@
                                 <PROPERTY name="name">CBreasonforchange[]</PROPERTY>
                             </PROPERTIES>
                             <LISTITEMS>
-                                <LISTITEM value="Better" id="CBreasonforchange1" Selected="False">Better</LISTITEM>
-                                <LISTITEM value="Opportunity" id="CBreasonforchange2" Selected="False">Opportunity</LISTITEM>
+                                <LISTITEM value="Better Opportunity" id="CBreasonforchange1" Selected="False">Better Opportunity</LISTITEM>
+                                
                                 <LISTITEM value="Better Income" id="CBreasonforchange3" Selected="False">Better Income</LISTITEM>
                                 <LISTITEM value="Termination" id="CBreasonforchange4" Selected="False">Termination</LISTITEM>
                                 <LISTITEM value="Illness" id="CBreasonforchange5" Selected="False">Illness</LISTITEM>

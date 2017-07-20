@@ -375,8 +375,8 @@ class XmlController extends Controller {
     public function actionChangetxtattrval() {
         //$xpath = "/FIELDS/GROUP/PANELBODY//LISTITEM[@id='RBnatureofdelusion2']";
         //$xpath = "/FIELDS/GROUP/PANELBODY/FIELD/LISTITEMS/LISTITEM[@value='Other']";
-        //$xpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD/FIELD/LISTITEMS/LISTITEM[@id='CBmood7']";
-        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD[@id='diagnosis_notes']";
+        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD/FIELD/FIELD/LISTITEMS/LISTITEM[@id='CBreasonforchange1']";
+        //$xpath = "/FIELDS/GROUP/PANELBODY/FIELD[@id='diagnosis_notes']";
 
         $all_files = $this->getAllFiles();
         $error_files = [];
@@ -393,10 +393,11 @@ class XmlController extends Controller {
                     $targets = $xml->xpath($xpath);
                     if (!empty($targets)) {
                         foreach ($targets as $target) {
-                            $target['label']='Comments';
+                            $target['value']='Better Opportunity';
+                            $target[0] = 'Better Opportunity';
                         }
                     }
-                    $xml->asXML($files);//die;
+                    $xml->asXML($files);
                 }
             }
         }
@@ -565,7 +566,7 @@ class XmlController extends Controller {
 
     public function actionDeleteli() {
         //$xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@id='martial_status']/LISTITEMS";
-        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD/FIELD[@id='RBmaritalsexualsatisfac']/LISTITEMS";
+        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD/FIELD/FIELD[@id='CBreasonforchange']/LISTITEMS";
 
         $all_files = $this->getAllFiles();
         $error_files = [];
@@ -582,9 +583,9 @@ class XmlController extends Controller {
                     $targets = $xml->xpath($xpath);
                     if (!empty($targets)) {
                         foreach ($targets as $target) {
-                            if(isset($target->LISTITEM[2]))
+                            if(isset($target->LISTITEM[1]))
                             {
-                                unset($target->LISTITEM[2]);
+                                unset($target->LISTITEM[1]);
                             }
                         }
                     }
