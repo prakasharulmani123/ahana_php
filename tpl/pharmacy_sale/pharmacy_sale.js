@@ -1164,10 +1164,15 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             var index = 1;
             var loop_count = 0;
 
+            var cgst_total = 0;
+            var sgst_total = 0;
+
             var groupedArr = createGroupedArray($scope.saleItems2, 6); //Changed Description rows
             var sale_info = $scope.data2;
             var group_total_count = Object.keys(groupedArr).length;
             angular.forEach(groupedArr, function (sales, key) {
+
+
                 var group_key = key + 1;
                 var perPageInfo = [];
                 var perImageInfo = [];
@@ -1316,6 +1321,9 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                         var particulars = row.product.full_name;
                     }
 
+                    cgst_total += parseFloat(row.cgst_amount);
+                    sgst_total += parseFloat(row.sgst_amount);
+
                     if (loop_count % 2 == 0)
                         var color = '';
                     else
@@ -1415,6 +1423,8 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                     index++;
                     loop_count++;
                 });
+
+
                 if (sale_info.payment_type == 'CA')
                     var payment = 'Cash';
                 if (sale_info.payment_type == 'CR')
@@ -1691,11 +1701,11 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             perPageInfo.push({
                 layout: 'noBorders',
                 table: {
-                    widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+                    widths: ['*', 'auto', 'auto', '*', 'auto', 'auto', 'auto'],
                     body: [
                         [
                             {
-                                colSpan: 6,
+                                colSpan: 3,
                                 layout: 'noBorders',
                                 table: {
                                     body: [
@@ -1715,15 +1725,51 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                         ],
                                     ]
                                 },
+                            },{},  {},
+                            {
+                                colSpan: 3,
+                                layout: 'noBorders',
+                                table: {
+                                    body: [
+                                        [
+                                            {
+                                                text: 'CGST',
+                                                style: 'h2'
+                                            },
+                                            {
+                                                text: ':',
+                                                style: 'h2'
+                                            },
+                                            {
+                                                text: cgst_total.toFixed(2),
+                                                style: 'normaltxt'
+                                            },
+                                        ],
+                                        [
+                                            {
+                                                text: 'SGST',
+                                                style: 'h2'
+                                            },
+                                            {
+                                                text: ':',
+                                                style: 'h2'
+                                            },
+                                            {
+                                                text: sgst_total.toFixed(2),
+                                                style: 'normaltxt'
+                                            },
+                                        ],
+                                    ]
+                                },
                             },
-                            {}, {}, {}, {}, {},
+                            {}, {}, 
                             {
                                 layout: 'noBorders',
                                 table: {
                                     body: [
                                         [
                                             {
-                                                text: 'Total Vat',
+                                                text: 'GST',
                                                 style: 'h2',
                                                 alignment: 'right'
                                             },
