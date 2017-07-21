@@ -93,23 +93,23 @@ class PharmacysalebillingController extends ActiveController {
                     $model->save(false);
                 }
                 
-                $search = ['encounter_id' => $post['encounter_id'], 'payment_type' => $post['payment_type'], 'patient_id' => $sales[0]->patient_id];
+                //$search = ['encounter_id' => $post['encounter_id'], 'payment_type' => $post['payment_type'], 'patient_id' => $sales[0]->patient_id];
                 
                 $data = [];
-                $sales = PhaSale::find()->tenant()->active()->andWhere($search)->groupBy(['encounter_id'])->all();
-                foreach ($sales as $key => $sale) {
-                    $data[$key] = $sale->attributes;
-
-                    $sale_item = PhaSale::find()->tenant()->andWhere($search);
-
-                    $sale_ids = ArrayHelper::map($sale_item->all(), 'sale_id', 'sale_id');
-                    $sum_paid_amount = PhaSaleBilling::find()->tenant()->andWhere(['sale_id' => $sale_ids])->sum('paid_amount');
-
-                    $data[$key]['items'] = $sale_item->all();
-                    $data[$key]['sum_bill_amount'] = $sale_item->sum('bill_amount');
-                    $data[$key]['sum_paid_amount'] = !is_null($sum_paid_amount) ? $sum_paid_amount : 0;
-                    $data[$key]['sum_balance_amount'] = $data[$key]['sum_bill_amount'] - $sum_paid_amount;
-                }
+                //$sales = PhaSale::find()->tenant()->active()->andWhere($search)->groupBy(['encounter_id'])->all();
+//                foreach ($sales as $key => $sale) {
+//                    $data[$key] = $sale->attributes;
+//
+//                    $sale_item = PhaSale::find()->tenant()->andWhere($search);
+//
+//                    $sale_ids = ArrayHelper::map($sale_item->all(), 'sale_id', 'sale_id');
+//                    $sum_paid_amount = PhaSaleBilling::find()->tenant()->andWhere(['sale_id' => $sale_ids])->sum('paid_amount');
+//
+//                    $data[$key]['items'] = $sale_item->all();
+//                    $data[$key]['sum_bill_amount'] = $sale_item->sum('bill_amount');
+//                    $data[$key]['sum_paid_amount'] = !is_null($sum_paid_amount) ? $sum_paid_amount : 0;
+//                    $data[$key]['sum_balance_amount'] = $data[$key]['sum_bill_amount'] - $sum_paid_amount;
+//                }
                 
                 return ['success' => true, 'sales' => $data];
             } else {

@@ -296,6 +296,8 @@ class PhaSale extends RActiveRecord {
                     $parent_fields = [
                         'sale_id' => 'sale_id',
                         'bill_no' => 'bill_no',
+                        'payment_type' => 'payment_type',
+                        'payment_status' => 'payment_status',
                         'sale_date' => 'sale_date',
                         'bill_amount' => 'bill_amount',
                         'encounter_id' => 'encounter_id',
