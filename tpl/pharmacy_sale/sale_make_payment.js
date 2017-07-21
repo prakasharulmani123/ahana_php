@@ -105,8 +105,8 @@ app.controller('SaleMakePaymentController', ['scope', '$scope', '$modalInstance'
                             scope.msg.successMessage = succ_msg;
                             $scope.data = {};
                             $timeout(function () {
-                                scope.updateDisplayCollection($scope.encounter_id, response.sales[0]);
-//                                scope.loadSaleItemList(sale_payment_type);
+                                //scope.updateDisplayCollection($scope.encounter_id, response.sales[0]);
+                                scope.loadSaleItemList('CR');
                                 $modalInstance.dismiss('cancel');
                                 
 //                                $state.go('pharmacy.sales');

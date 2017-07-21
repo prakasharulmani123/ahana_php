@@ -30,7 +30,7 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
                     .success(function (patient) {
                         if (patient.success == false) {
                             $state.go('myworks.dashboard');
-                            $scope.msg.errorMessage = "An Error has occured while loading patientttt!";
+                            $scope.msg.errorMessage = "An Error has occured while loading patient!";
                         } else {
                             $scope.orgData = patient;
                             $scope.setViewData(patient);
