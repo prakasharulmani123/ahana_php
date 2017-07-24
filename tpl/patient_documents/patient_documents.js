@@ -437,6 +437,8 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
         }
 
         $scope.checkTablerow = function () {
+            var treatment_text = [];
+            var mental_status_text = [];
             $("#printThisElement table tr").each(function () {
 
                 var ratingTdText = $(this).find('td.ribbon');
@@ -478,11 +480,12 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     var personalTr = personalText.closest('tr').prev('tr');
                     personalTr.remove();
                 }
-                var statusText = $(this).find('tr.mental_status');
-                if (statusText.text().trim().length === 0) {
-                    var statusTr = statusText.closest('tr').prev('tr');
-                    statusTr.remove();
-                }
+                
+//                var statusText = $(this).find('tr.mental_status');
+//                if (statusText.text().trim().length === 0) {
+//                    var statusTr = statusText.closest('tr').prev('tr');
+//                    statusTr.remove();
+//                }
 
             });
 
@@ -582,6 +585,20 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     }
                 });
 
+                var treatment = $(this).find("tr.treatment_history");
+                treatment.each(function () {
+                    if (treatment.text().trim() != "") {
+                        treatment_text.push(treatment.text().trim());
+                    }
+                });
+                
+                var mental_status = $(this).find("tr.mental_status_examination");
+                mental_status.each(function () {
+                    if (mental_status.text().trim() != "") {
+                        mental_status_text.push(mental_status.text().trim());
+                    }
+                });
+
                 var ratingTdText = $(this).find('td.ribbon');
                 var nextTr = ratingTdText.closest('tr').next('tr');
                 nextTr.find('td').each(function () {
@@ -647,11 +664,16 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
             });
 
             $('table#heading').each(function () {
-                //console.log($(this).find("tbody").text());
                 if ($(this).find("tbody").text().trim().length === 0) {
                     $(this).remove();
                 }
             });
+            if (treatment_text.length === 0) {
+                $('.treatment_history_head').remove();
+            }
+            if (mental_status_text.length === 0) {
+                $('.mental_status_examination_head').remove();
+            }
         }
 
         $scope.printElement = function () {
