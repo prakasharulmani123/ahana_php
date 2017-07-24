@@ -871,7 +871,7 @@
                 
                     <!-- Treatment History -->
                     <xsl:for-each select="PANELBODY/FIELD[@type='PanelBar' and @label='Treatment History']">
-                        <tr>
+                        <tr class="treatment_history_head">
                             <td colspan="2" align="left" valign="top" class="ribbon" style="color:#ffffff;">
                                 <h1 style="font-family:Arial, Helvetica, sans-serif;">
                                     <xsl:value-of select="@label" />
@@ -882,7 +882,7 @@
                 
                     <tr class="treatment">
                         <td>
-                            <tr>
+                            <tr class="treatment_history">
                                 <td colspan="2" align="left" valign="top">
                                     <table width="100%" border="0" cellspacing="0" cellpadding="0" class="print-friendly">
                                         <xsl:for-each select="PANELBODY/FIELD/FIELD[@type='Header2' and @label='Phamacotherapy']">
@@ -1016,7 +1016,7 @@
                                 </td>
                             </tr>
                 
-                            <tr>
+                            <tr class="treatment_history">
                                 <td align="left" valign="top">
                                     <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                         <tr>
@@ -1074,7 +1074,7 @@
                                 </td>
                             </tr>
                 
-                            <tr>
+                            <tr class="treatment_history">
                                 <td colspan="2" align="left" valign="top">
                                     <table width="100%" border="0" cellspacing="0" cellpadding="0" class="print-friendly">
                                         <!-- electro convulsive therapy -->
@@ -1170,7 +1170,7 @@
                                 </td>
                             </tr>
 
-                            <tr>
+                            <tr class="treatment_history">
                                 <td colspan="2" align="left" valign="top">
                                     <table width="100%" border="0" cellspacing="0" cellpadding="0" class="print-friendly">
                                         <!-- Counselling/psychotherapy heading-->
@@ -1271,7 +1271,7 @@
                                 </td>
                             </tr>
                             
-                            <tr>
+                            <tr class="treatment_history">
                                 <td colspan="2" align="left" valign="top">
                                     <table width="100%" border="0" cellspacing="0" cellpadding="0" class="print-friendly">
                                         <!--Alternative Therapies Heading-->
@@ -2474,7 +2474,7 @@
                                 
                     <!-- Mental status examination head -->
                     <xsl:for-each select="PANELBODY/FIELD[@type='PanelBar' and @label='Mental Status Examination']">
-                        <tr>
+                        <tr class="mental_status_examination_head">
                             <td align="left" valign="top" class="ribbon" style="color:#FFFFFF;">
                                 <h1 style="font-family:Arial, Helvetica, sans-serif;">
                                     <xsl:value-of select="@label" />
@@ -2485,7 +2485,7 @@
                     
                     <tr class='mental_status'> 
                         <td>
-                            <tr>
+                            <tr class="mental_status_examination">
                                 <td colspan="2" align="left" valign="top">
                                     <table width="100%" border="0" cellspacing="0" cellpadding="0" class="print-friendly">
                                         <!-- General appearance behaviour head-->
@@ -2576,8 +2576,7 @@
                                 </td>
                             </tr>
                             
-                            
-                            <tr>
+                            <tr class="mental_status_examination">
                                 <td colspan="2" align="left" valign="top">
                                     <table width="100%" border="0" cellspacing="0" cellpadding="0" class="print-friendly">
                                         <!-- Speech head-->
@@ -2645,8 +2644,7 @@
                                 </td>
                             </tr>
 
-                            
-                            <tr>
+                            <tr class="mental_status_examination">
                                 <td colspan="2" align="left" valign="top">
                                     <table width="100%" border="0" cellspacing="0" cellpadding="0" class="print-friendly">
                                         <!-- Thought head-->
@@ -2684,7 +2682,7 @@
                                 </td>
                             </tr>
 
-                            <tr>
+                            <tr class="mental_status_examination">
                                 <td colspan="2" align="left" valign="top">
                                     <table width="100%" border="0" cellspacing="0" cellpadding="0" class="print-friendly">
                                         <xsl:for-each select="PANELBODY/FIELD/FIELD[@type='Header2' and @label='Possession of thought']">
@@ -2788,9 +2786,8 @@
                                     </table>
                                 </td>
                             </tr>
-                
                             
-                            <tr>
+                            <tr class="mental_status_examination">
                                 <td colspan="2" align="left" valign="top">
                                     <table width="100%" border="0" cellspacing="0" cellpadding="0" class="print-friendly">
                                         <xsl:for-each select="PANELBODY/FIELD/FIELD[@type='Header2' and @label='Thought Content']">
@@ -2885,7 +2882,7 @@
                                 </td>
                             </tr>
                             
-                            <tr>
+                            <tr class="mental_status_examination">
                                 <td colspan="2" align="left" valign="top">
                                     <table width="100%" border="0" cellspacing="0" cellpadding="0" class="print-friendly">
                                         <xsl:for-each select="PANELBODY/FIELD/FIELD[@type='Header2' and @label='Mood']">
@@ -2948,7 +2945,7 @@
                                 </td>
                             </tr>
                             
-                            <tr>
+                            <tr class="mental_status_examination">
                                 <td colspan="2" align="left" valign="top">
                                     <table width="100%" border="0" cellspacing="0" cellpadding="0" class="print-friendly">
                                         <xsl:for-each select="PANELBODY/FIELD/FIELD[@type='Header2' and @label='Affect']">
@@ -3010,7 +3007,7 @@
                                 </td>
                             </tr>
 
-                            <tr>
+                            <tr class="mental_status_examination">
                                 <td colspan="2" align="left" valign="top">
                                     <table width="100%" border="0" cellspacing="0" cellpadding="0" class="print-friendly">
                                         <xsl:for-each select="PANELBODY/FIELD/FIELD[@type='Header2' and @label='Perception']">
@@ -3074,7 +3071,7 @@
                                 </td>
                             </tr>
 
-                            <tr>
+                            <tr class="mental_status_examination">
                                 <td colspan="2" align="left" valign="top">
                                     <table width="100%" border="0" cellspacing="0" cellpadding="0" class="print-friendly">
                                         <xsl:for-each select="PANELBODY/FIELD/FIELD[@type='Header2' and @label='Higher Mental Functions']">
@@ -3242,8 +3239,7 @@
                                 </td>
                             </tr>
 
-                
-                            <tr>
+                            <tr class="mental_status_examination">
                                 <td align="left" valign="top">
                                     <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                         <tr>
