@@ -152,9 +152,9 @@
                         <td>{{row.supplier.supplier_name}}</td>
                         <td>{{row.reorder_date}}</td>
                         <td>{{row.user.fullname}}</td>
-                        <td><label class="label label-{{row.status == '1' ? 'danger' : 'success'}}">{{row.status == '1' ? 'Not Reordered' : 'Reordered'}}</label></td>
+                        <td><label class="label label-{{row.status == '1' ? 'danger' : 'success'}}">{{row.status == '1' ? 'Reorder Success' : 'Updated Stock'}}</label></td>
                         <td>
-                            <a ng-if="row.status == '1'" class="btn btn-primary" ui-sref="pharmacy.reorderHistoryUpdate({id: row.reorder_id})">Add Stock</a>
+                            <a ng-if="row.status == '1'" class="label bg-primary dk" ui-sref="pharmacy.reorderHistoryUpdate({id: row.reorder_id})">Add Stock</a>
                             <button tooltip="Print"  class="label bg-primary dk" ng-click="printReorderHistory(row.reorder_id)">
                                 <i class="fa fa-print"></i>
                             </button>

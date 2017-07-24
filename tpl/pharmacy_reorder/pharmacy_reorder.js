@@ -207,7 +207,7 @@ app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http
             var index = 1;
             var content_info = [];
             var reorder_items = [];
-            
+
             reorder_items.push([
                 {text: 'S.No', style: 'header'},
                 {text: 'Product', style: 'header'},
@@ -591,15 +591,19 @@ app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http
                     $scope.purchaseitems[key].product_id = '';
                 }
 
-                if (angular.isObject(purchaseitem.batch_details)) {
-                    $scope.purchaseitems[key].batch_details = purchaseitem.batch_details.batch_details;
+                packing_details = $filter('filter')($scope.packings, {package_name: $scope.purchaseitems[key].package_name}, true);
+                if(!$.isEmptyObject(packing_details)) {
+                    $scope.purchaseitems[key].package_unit = packing_details[0].package_unit;
+                }
+
+                if (purchaseitem.batch_details) {
+                    $scope.purchaseitems[key].batch_no = purchaseitem.batch_details;
                 } else if (typeof purchaseitem.batch_details == 'undefined') {
                     $scope.purchaseitems[key].batch_no = '';
                 } else if ((purchaseitem.batch_no == '0' || purchaseitem.batch_no == '') && typeof purchaseitem.batch_details !== 'undefined') {
                     $scope.purchaseitems[key].batch_no = purchaseitem.batch_details;
                 }
             });
-
             $scope.data2 = _that.data;
             $scope.purchaseitems2 = $scope.purchaseitems;
 
@@ -626,7 +630,7 @@ app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http
                             $scope.loadbar('hide');
                             if (mode == 'add') {
                                 $scope.data = {};
-                                $scope.msg.successMessage = 'New Purchase bill generated  ' + response.model.invoice_no;
+                                $scope.msg.successMessage = 'New Purchase bill generated  ' + response.invoice_no;
                                 $timeout(function () {
                                     $state.go('pharmacy.reorder');
                                 }, 1000);
