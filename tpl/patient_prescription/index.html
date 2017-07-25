@@ -101,17 +101,35 @@
                                                                         <option value="">Select Product</option>
                                                                     </select>                                                                    
                                                                 </div>
-                                                                <div class="col-sm-3">
+                                                                <div class="col-sm-3 freq_3_times_adv_form">
                                                                     <label> Freq</label>
-                                                                    <!--Ui-mask & Typeahead Not working -->
-                                                                    <!--typeahead="frequency as frequency.freq_name for frequency in frequencies | filter:$viewValue"-->
+                                                                    <div class="clearfix"></div>
                                                                     <input autocomplete="off" 
                                                                            type="text" 
                                                                            name="masked" 
-                                                                           ui-mask="9-9-9" 
-                                                                           ng-model="addData.frequency" 
+                                                                           ng-model="addData.frequency_3_0" 
                                                                            model-view-value="true" 
                                                                            class="form-control m-b"
+                                                                           number-mask=""
+                                                                           maxlength="4"
+                                                                           required>
+                                                                    <input autocomplete="off" 
+                                                                           type="text" 
+                                                                           name="masked" 
+                                                                           ng-model="addData.frequency_3_1" 
+                                                                           model-view-value="true" 
+                                                                           class="form-control m-b"
+                                                                           number-mask=""
+                                                                           maxlength="4"
+                                                                           required>
+                                                                    <input autocomplete="off" 
+                                                                           type="text" 
+                                                                           name="masked" 
+                                                                           ng-model="addData.frequency_3_2" 
+                                                                           model-view-value="true" 
+                                                                           class="form-control m-b"
+                                                                           number-mask=""
+                                                                           maxlength="4"
                                                                            required>
                                                                 </div>
                                                                 <div class="col-sm-3">
@@ -203,40 +221,120 @@
                                                             </span>                                                            
                                                         </td>
                                                         <td> 
-                                                            <div id="freq_{{item.item_key}}_3" class="freq_div_{{item.item_key}}" style="width: 75%; float:left">
-                                                                <span editable-text="item.frequency"
+                                                            <div id="freq_{{item.item_key}}_3" class="freq_div_{{item.item_key}} freq_3_times" style="width: 75%; float:left">
+                                                                <span editable-text="item.frequency_3_0"
                                                                       e-index ="{{item.item_key}}"
                                                                       e-tabindex="2{{item.item_key}}3"
                                                                       e-class="form-control m-b frequency_{{item.item_key}} freq_editable"
                                                                       e-name="masked" 
-                                                                      e-ui-mask="9-9-9"
                                                                       e-model-view-value="true"
                                                                       e-form="tableform" 
                                                                       e-autocomplete="off"
-                                                                      e-id="frequency_{{item.item_key}}_3"
-                                                                      e-ng-change="freqChange($data, '3', item, item.item_key, tableform)"
+                                                                      e-id="frequency_{{item.item_key}}_3_0"
+                                                                      e-ng-change="freqChange($data, '3', item, item.item_key, tableform, '0')"
                                                                       e-select-on-click=""
-                                                                      onbeforesave="checkFrequency($data, item, item.item_key)"
+                                                                      e-maxlength="4"
+                                                                      onbeforesave="checkFrequency($data, item, item.item_key, '3', '0')"
                                                                       e-required>
-                                                                    {{ item.frequency || 'empty' }}
+                                                                    {{ selectFreq('3', '0', item, item.item_key) }}
+                                                                </span>
+                                                                <span editable-text="item.frequency_3_1"
+                                                                      e-index ="{{item.item_key}}"
+                                                                      e-tabindex="2{{item.item_key}}3"
+                                                                      e-class="form-control m-b frequency_{{item.item_key}} freq_editable"
+                                                                      e-name="masked" 
+                                                                      e-model-view-value="true"
+                                                                      e-form="tableform" 
+                                                                      e-autocomplete="off"
+                                                                      e-id="frequency_{{item.item_key}}_3_1"
+                                                                      e-ng-change="freqChange($data, '3', item, item.item_key, tableform, '1')"
+                                                                      e-select-on-click=""
+                                                                      e-maxlength="4"
+                                                                      onbeforesave="checkFrequency($data, item, item.item_key, '3', '1')"
+                                                                      e-required>
+                                                                    {{ selectFreq('3', '1', item, item.item_key) }}
+                                                                </span>
+                                                                <span editable-text="item.frequency_3_2"
+                                                                      e-index ="{{item.item_key}}"
+                                                                      e-tabindex="2{{item.item_key}}3"
+                                                                      e-class="form-control m-b frequency_{{item.item_key}} freq_editable"
+                                                                      e-name="masked" 
+                                                                      e-model-view-value="true"
+                                                                      e-form="tableform" 
+                                                                      e-autocomplete="off"
+                                                                      e-id="frequency_{{item.item_key}}_3_2"
+                                                                      e-ng-change="freqChange($data, '3', item, item.item_key, tableform, '2')"
+                                                                      e-select-on-click=""
+                                                                      e-maxlength="4"
+                                                                      onbeforesave="checkFrequency($data, item, item.item_key, '3', '2')"
+                                                                      e-required>
+                                                                    {{ selectFreq('3', '2', item, item.item_key) }}
                                                                 </span>
                                                             </div>
-                                                            <div id="freq_{{item.item_key}}_4" class="freq_div_{{item.item_key}} hide" style="width: 75%; float:left">
-                                                                <span editable-text="item.frequency"
+                                                            <div id="freq_{{item.item_key}}_4" class="freq_div_{{item.item_key}} hide freq_4_times" style="width: 75%; float:left">
+                                                                <span editable-text="item.frequency_4_0"
                                                                       e-index ="{{item.item_key}}"
                                                                       e-tabindex="2{{item.item_key}}3"
                                                                       e-class="form-control m-b frequency_{{item.item_key}} freq_editable"
                                                                       e-name="masked" 
-                                                                      e-ui-mask="9-9-9-9"
                                                                       e-model-view-value="true"
                                                                       e-form="tableform" 
                                                                       e-autocomplete="off"
-                                                                      e-id="frequency_{{item.item_key}}_4"
-                                                                      e-ng-change="freqChange($data, '4', item, item.item_key, tableform)"
+                                                                      e-id="frequency_{{item.item_key}}_4_0"
+                                                                      e-ng-change="freqChange($data, '4', item, item.item_key, tableform, 0)"
                                                                       e-select-on-click=""
-                                                                      onbeforesave="checkFrequency($data, item, item.item_key)"
+                                                                      e-maxlength="4"
+                                                                      onbeforesave="checkFrequency($data, item, item.item_key, '4', '0')"
                                                                       e-required>
-                                                                    {{ item.frequency || 'empty' }}
+                                                                    {{ selectFreq('4', '0', item, item.item_key) }}
+                                                                </span>
+                                                                <span editable-text="item.frequency_4_1"
+                                                                      e-index ="{{item.item_key}}"
+                                                                      e-tabindex="2{{item.item_key}}3"
+                                                                      e-class="form-control m-b frequency_{{item.item_key}} freq_editable"
+                                                                      e-name="masked" 
+                                                                      e-model-view-value="true"
+                                                                      e-form="tableform" 
+                                                                      e-autocomplete="off"
+                                                                      e-id="frequency_{{item.item_key}}_4_1"
+                                                                      e-ng-change="freqChange($data, '4', item, item.item_key, tableform, 1)"
+                                                                      e-select-on-click=""
+                                                                      e-maxlength="4"
+                                                                      onbeforesave="checkFrequency($data, item, item.item_key, '4', '1')"
+                                                                      e-required>
+                                                                    {{ selectFreq('4', '1', item, item.item_key) }}
+                                                                </span>
+                                                                <span editable-text="item.frequency_4_2"
+                                                                      e-index ="{{item.item_key}}"
+                                                                      e-tabindex="2{{item.item_key}}3"
+                                                                      e-class="form-control m-b frequency_{{item.item_key}} freq_editable"
+                                                                      e-name="masked" 
+                                                                      e-model-view-value="true"
+                                                                      e-form="tableform" 
+                                                                      e-autocomplete="off"
+                                                                      e-id="frequency_{{item.item_key}}_4_2"
+                                                                      e-ng-change="freqChange($data, '4', item, item.item_key, tableform, 2)"
+                                                                      e-select-on-click=""
+                                                                      e-maxlength="4"
+                                                                      onbeforesave="checkFrequency($data, item, item.item_key, '4', '2')"
+                                                                      e-required>
+                                                                    {{ selectFreq('4', '2', item, item.item_key) }}
+                                                                </span>
+                                                                <span editable-text="item.frequency_4_3"
+                                                                      e-index ="{{item.item_key}}"
+                                                                      e-tabindex="2{{item.item_key}}3"
+                                                                      e-class="form-control m-b frequency_{{item.item_key}} freq_editable"
+                                                                      e-name="masked" 
+                                                                      e-model-view-value="true"
+                                                                      e-form="tableform" 
+                                                                      e-autocomplete="off"
+                                                                      e-id="frequency_{{item.item_key}}_4_3"
+                                                                      e-ng-change="freqChange($data, '4', item, item.item_key, tableform, 3)"
+                                                                      e-select-on-click=""
+                                                                      e-maxlength="4"
+                                                                      onbeforesave="checkFrequency($data, item, item.item_key, '4', '3')"
+                                                                      e-required>
+                                                                    {{ selectFreq('4', '3', item, item.item_key) }}
                                                                 </span>
                                                             </div>
                                                             <div id="freq_{{item.item_key}}_txt" class="freq_div_{{item.item_key}} hide" style="width: 75%; float:left">
@@ -250,7 +348,7 @@
                                                                       e-id="frequency_{{item.item_key}}_txt"
                                                                       e-ng-change="curPrescFreqSele($data, 'txt', item, item.item_key, 'change')"
                                                                       e-select-on-click=""
-                                                                      onbeforesave="checkFrequency($data, item, item.item_key)"
+                                                                      onbeforesave="checkFrequency($data, item, item.item_key, 'txt')"
                                                                       e-required>
                                                                     {{ item.frequency || 'empty' }}
                                                                 </span>

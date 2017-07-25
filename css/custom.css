@@ -620,3 +620,22 @@ ul.dropdown-menu.curPrescFreq > li > a, .dropdown-submenu > ul > li > a {
 .word-wrap {
     word-wrap: break-word;
 }
+
+.freq_3_times > span, .freq_3_times_adv_form input {
+    width: 33.33% !important;
+    float: left;
+}
+
+.freq_4_times > span{
+    width: 25% !important;
+    float: left;
+}
+
+.freq_3_times input, .freq_4_times input{
+    width: 100% !important;
+    float: left;
+}
+
+.curPresForm .editable-error {
+    float: left;
+}
