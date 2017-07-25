@@ -124,6 +124,13 @@ class PatPrescription extends RActiveRecord
         return $this->hasOne(CoUser::className(), ['user_id' => 'consultant_id']);
     }
     
+    public function beforeSave($insert) {
+        if (!empty($this->number_of_days) && $insert) {
+            $this->next_visit = $this->patient->getPatientNextvisitDate($this->number_of_days);
+        }
+        return parent::beforeSave($insert);
+    }
+    
     public static function find() {
         return new PatPrescriptionQuery(get_called_class());
     }
