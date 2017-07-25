@@ -110,7 +110,8 @@
                 });
             });
             Webcam.on('error', function(error) {
-                console.error('WebcameJS directive ERROR: ', error);
+                //console.error('WebcameJS directive ERROR: ', error);
+                alert('WebcameJS directive ERROR: '+error);
             });
 
             /**
