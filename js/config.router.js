@@ -2007,7 +2007,15 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/pharmacy_products/pharmacy_products.js?v=' + APP_VERSION]);
+                            return uiLoad.load(['tpl/pharmacy_products/pharmacy_products.js?v=' + APP_VERSION,
+                                'tpl/modal_form/modal.description.js?v=' + APP_VERSION,
+                                'tpl/modal_form/modal.brand.js?v=' + APP_VERSION,
+                                'tpl/modal_form/modal.division.js?v=' + APP_VERSION,
+                                'tpl/modal_form/modal.generic.js?v=' + APP_VERSION,
+                                'tpl/modal_form/modal.vat.js?v=' + APP_VERSION,
+                                'tpl/modal_form/modal.package.js?v=' + APP_VERSION,
+                                'tpl/modal_form/modal.supplier.js?v=' + APP_VERSION,
+                            ]);
                         }]
                 }
             })
@@ -2193,7 +2201,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
-            
+
             //PHARMACY SALE RETURN REPORT
             .state('pharmacy.saleReturnReport', {
                 url: '/saleReturnReport',
@@ -2817,7 +2825,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
-            
+
             //Patient Billing History
             .state('patient.viewBillingHistory', {
                 url: '/viewBillingHistory/{id}/{enc_id}',
@@ -2831,7 +2839,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
-            
+
             //PHARMACY Stock Report
             .state('pharmacy.stockReport', {
                 url: '/stockReport',
@@ -2933,20 +2941,20 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
         var loggedIn = Boolean(currentUser);
         var page = toState.name.split('.');
         $rootScope.currentPage = page[0];
-        
-        if(toState.name == 'patient.inPatients') {
+
+        if (toState.name == 'patient.inPatients') {
             $rootScope.currentPage = 'IP';
-        } else if(toState.name == 'patient.outPatients') {
+        } else if (toState.name == 'patient.outPatients') {
             $rootScope.currentPage = 'OP';
         }
-        
+
         //In patients page remove double scrollbar.
-        if(toState.name == 'patient.inPatients') {
-            $("body").css({"overflow":"hidden"});
+        if (toState.name == 'patient.inPatients') {
+            $("body").css({"overflow": "hidden"});
         } else {
-            $("body").css({"overflow":""});
+            $("body").css({"overflow": ""});
         }
-        
+
         if (loggedIn) {
             var stateName = toState.name;
             if (stateName) {
