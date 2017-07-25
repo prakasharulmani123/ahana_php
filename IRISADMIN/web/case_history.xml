@@ -197,7 +197,7 @@
                     <LISTITEM value="Mother" id="RBRelation3" Selected="false">Mother</LISTITEM>
                     <LISTITEM value="Sibling" id="RBRelation4" Selected="false">Sibling</LISTITEM>
                     <LISTITEM value="Spouse" id="RBRelation5" Selected="false">Spouse</LISTITEM>
-                    <LISTITEM value="Children" id="RBRelation6" Selected="true">Children</LISTITEM>
+                    <LISTITEM value="Children" id="RBRelation6" Selected="false">Children</LISTITEM>
                     <LISTITEM value="Friend" id="RBRelation7" Selected="false">Friend</LISTITEM>
                     <LISTITEM value="Others" id="RBRelation8" Selected="false" onclick="OThersvisible(this.id, 'relationshipother_div');">Others</LISTITEM>
                 </LISTITEMS>
