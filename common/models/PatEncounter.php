@@ -509,7 +509,7 @@ class PatEncounter extends RActiveRecord {
         if ($addtField = Yii::$app->request->get('addtfields')) {
             switch ($addtField):
                 case 'oplist':
-                    $addt_keys = ['consultant_id', 'apptArrivalData', 'apptSeenData', 'apptPatientData', 'apptBookingData'];
+                    $addt_keys = ['consultant_id', 'apptArrivalData', 'apptSeenData', 'apptPatientData', 'apptBookingData','liveAppointmentArrival', 'liveAppointmentBooking','liveAppointmentConsultant'];
                     $parent_fields = [
                         'encounter_id' => 'encounter_id',
                         'patient_id' => 'patient_id',
@@ -716,7 +716,7 @@ class PatEncounter extends RActiveRecord {
             if ($this->encounter_type == 'IP')
                 CoInternalCode::increaseInternalCode("B");
         } else {
-            if ($changedAttributes['concession_amount'] != $this->concession_amount) {
+            if (isset($changedAttributes['concession_amount']) && $changedAttributes['concession_amount'] != $this->concession_amount) {
                 $amount = number_format($this->concession_amount, 2);
                 $activity = "Concession amount {$amount}";
                 if ($changedAttributes['concession_amount'] == '0.00')
