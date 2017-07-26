@@ -783,7 +783,15 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 {
                     return "-";
                 } else {
-                    return result[key];
+                    if (result[key] != Math.floor(result[key])) {
+                        var decimalFreq = result[key].split('.');
+                        if(decimalFreq[1] == '25')
+                            return decimalFreq[0] + ' 1/4';
+                        else if (decimalFreq[1] == '5')
+                            return decimalFreq[0] + ' 1/2';
+                    } else {
+                        return result[key];
+                    }
                 }
             }
 
@@ -876,15 +884,15 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     var freqVal = $('input#frequency_' + key + '_' + item.freqType).val();
                 else
                     var freqVal = $('input#frequency_' + key + '_' + item.freqType + '_' + freqPosition).val();
-                
+
                 if (typeof freqVal == 'undefined' || freqVal == '') {
                     return "Wrong";
-                } 
-                
+                }
+
                 if (freqType != 'txt' && data != Math.floor(data)) {
-                        var decimalFreq = data.split('.');
-                        if ($.inArray('0.' + decimalFreq[1], validFractionFreq) === -1)
-                            return "Wrong";
+                    var decimalFreq = data.split('.');
+                    if ($.inArray('0.' + decimalFreq[1], validFractionFreq) === -1)
+                        return "Wrong";
                 }
             }
         };
