@@ -1,10 +1,10 @@
 /* global Webcam */
-(function(angular) {
+(function (angular) {
     'use strict';
 
     angular
-        .module('app')
-        .directive('ngCamera', directive);
+            .module('app')
+            .directive('ngCamera', directive);
 
     directive.$inject = ['$q', '$timeout'];
 
@@ -53,23 +53,23 @@
             /**
              * Set dimensions
              */
-            if(scope.viewerHeight === undefined) {
+            if (scope.viewerHeight === undefined) {
                 scope.viewerHeight = 'auto';
             }
-            if(scope.viewerWidth === undefined) {
+            if (scope.viewerWidth === undefined) {
                 scope.viewerWidth = 'auto';
             }
-            if(scope.outputHeight === undefined) {
+            if (scope.outputHeight === undefined) {
                 scope.outputHeight = scope.viewerHeight;
             }
-            if(scope.outputWidth === undefined) {
+            if (scope.outputWidth === undefined) {
                 scope.outputWidth = scope.viewerWidth;
             }
 
             /**
              * Disable cropping if one or the two params are undefined
              */
-            if(scope.cropHeight === undefined || scope.cropWidth === undefined) {
+            if (scope.cropHeight === undefined || scope.cropWidth === undefined) {
                 scope.cropHeight = false;
                 scope.cropWith = false;
             }
@@ -89,7 +89,7 @@
                 jpeg_quality: scope.jpegQuality,
                 force_flash: false
             });
-            if(scope.flashFallbackUrl !== 'undefined') {
+            if (scope.flashFallbackUrl !== 'undefined') {
                 Webcam.setSWFLocation(scope.flashFallbackUrl);
             }
             Webcam.attach('#ng-camera-feed');
@@ -97,30 +97,35 @@
             /**
              * Register WebcamJS events
              */
-            Webcam.on('load', function() {
+            Webcam.on('load', function () {
                 console.info('library loaded');
-                scope.$apply(function() {
+                scope.$apply(function () {
                     scope.libraryLoaded = true;
                 });
             });
-            Webcam.on('live', function() {
+            Webcam.on('live', function () {
                 console.info('camera live');
-                scope.$apply(function() {
+                scope.$apply(function () {
                     scope.cameraLive = true;
                 });
             });
-            Webcam.on('error', function(error) {
-                //console.error('WebcameJS directive ERROR: ', error);
-                alert('WebcameJS directive ERROR: '+error);
+            Webcam.on('error', function (error) {
+                if (error == 'Webcam is not loaded yet')
+                {
+                    alert('WebcameJS directive ERROR: ' + error);
+                    error.preventDefault();
+                } else {
+                    console.error('WebcameJS directive ERROR: ', error);
+                }
             });
 
             /**
              * Preload the shutter sound
              */
-            if(scope.shutterUrl !== undefined) {
+            if (scope.shutterUrl !== undefined) {
                 scope.shutter = new Audio();
                 scope.shutter.autoplay = false;
-                if(navigator.userAgent.match(/Firefox/)) {
+                if (navigator.userAgent.match(/Firefox/)) {
                     scope.shutter.src = scope.shutterUrl.split('.')[0] + '.ogg';
                 } else {
                     scope.shutter.src = scope.shutterUrl;
@@ -130,22 +135,22 @@
             /**
              * Set countdown
              */
-            if(scope.countdown !== undefined) {
+            if (scope.countdown !== undefined) {
                 scope.countdownTime = parseInt(scope.countdown) * 1000;
                 scope.countdownText = parseInt(scope.countdown);
             }
-            scope.countdownStart = function() {
+            scope.countdownStart = function () {
                 scope.activeCountdown = true;
                 scope.countdownPromise = $q.defer();
-                scope.countdownTick = setInterval(function() {
-                    return scope.$apply(function() {
+                scope.countdownTick = setInterval(function () {
+                    return scope.$apply(function () {
                         var nextTick;
                         nextTick = parseInt(scope.countdownText) - 1;
-                        if(nextTick === 0) {
+                        if (nextTick === 0) {
                             scope.countdownText = scope.captureMessage != null ? scope.captureMessage : 'GO!';
                             clearInterval(scope.countdownTick);
                             scope.countdownPromise.resolve();
-                        }else{
+                        } else {
                             scope.countdownText = nextTick;
                         }
                     });
@@ -155,35 +160,35 @@
             /**
              * Get snapshot
              */
-            scope.getSnapshot = function() {
-                if(scope.countdown !== undefined) {
+            scope.getSnapshot = function () {
+                if (scope.countdown !== undefined) {
                     scope.countdownStart();
-                    scope.countdownPromise.promise.then(function() {
-                        $timeout(function() {
+                    scope.countdownPromise.promise.then(function () {
+                        $timeout(function () {
                             scope.activeCountdown = false;
                             scope.countdownText = parseInt(scope.countdown);
                         }, 2000);
 
-                        if(scope.shutterUrl !== undefined) {
+                        if (scope.shutterUrl !== undefined) {
                             scope.shutter.play();
                         }
 
-                        Webcam.snap(function(data_uri) {
+                        Webcam.snap(function (data_uri) {
                             scope.snapshot = data_uri;
                         });
                     });
                 } else {
-                    if(scope.shutterUrl !== undefined) {
+                    if (scope.shutterUrl !== undefined) {
                         scope.shutter.play();
                     }
 
-                    Webcam.snap(function(data_uri) {
+                    Webcam.snap(function (data_uri) {
                         scope.snapshot = data_uri;
                     });
                 }
             };
 
-            scope.$on('$destroy', function() {
+            scope.$on('$destroy', function () {
                 Webcam.reset();
             });
         }
