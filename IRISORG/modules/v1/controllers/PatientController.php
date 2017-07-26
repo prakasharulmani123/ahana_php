@@ -431,7 +431,7 @@ class PatientController extends ActiveController {
         if ($file) {
             $model = PatPatient::find()->tenant()->andWhere(['patient_guid' => $_GET['patient_id']])->one();
             if(empty($model)) {
-                return ['success' => true, 'file' => $file];
+                return ['success' => true, 'file' => $file, 'block' => 'register'];
             }
             $filename = $this->convertBlobToFile($file, $model);
             $model->patient_image = $filename;
