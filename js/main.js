@@ -1183,7 +1183,7 @@ angular.module('app').controller('PatientImageController', ['scope', '$scope', '
 
         $scope.$watch('picture', function (newValue, oldValue) {
             if (newValue != '') {
-                $scope.uploadPatientPicture(newValue, 'topbar');
+                $scope.uploadPatientPicture(newValue, $scope.block);
             }
         }, true);
 
@@ -1219,10 +1219,6 @@ angular.module('app').controller('PatientImageController', ['scope', '$scope', '
                                 scope.patientObj.patient_img_url = response.patient.patient_img_url + '?v=' + new Date().valueOf();
 
                             if (block == 'register') {
-                                scope.$broadcast('register_patient_img_url', response.file);
-                            }
-                            
-                            if (response.block == 'register') {
                                 scope.$broadcast('register_patient_img_url', response.file);
                             }
                             $scope.cancel();
