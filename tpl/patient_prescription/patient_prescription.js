@@ -877,7 +877,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 else
                     var freqVal = $('input#frequency_' + key + '_' + item.freqType + '_' + freqPosition).val();
                 
-                if (typeof freqVal == 'undefined' || freqVal == 0 || freqVal == '') {
+                if (typeof freqVal == 'undefined' || freqVal == '') {
                     return "Wrong";
                 } 
                 
