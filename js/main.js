@@ -1221,6 +1221,10 @@ angular.module('app').controller('PatientImageController', ['scope', '$scope', '
                             if (block == 'register') {
                                 scope.$broadcast('register_patient_img_url', response.file);
                             }
+                            
+                            if (response.block == 'register') {
+                                scope.$broadcast('register_patient_img_url', response.file);
+                            }
                             $scope.cancel();
                         } else {
                             $scope.errorData2 = response.message;
