@@ -72,9 +72,9 @@ class XmlController extends Controller {
         //print_r($target_dom); die;
         $insert_dom = $target_dom->ownerDocument->importNode(dom_import_simplexml($insert), true);
         if ($target_dom->nextSibling) {
-        return $target_dom->parentNode->insertBefore($insert_dom, $target_dom->nextSibling);
+            return $target_dom->parentNode->insertBefore($insert_dom, $target_dom->nextSibling);
         } else {
-        return $target_dom->parentNode->appendChild($insert_dom);
+            return $target_dom->parentNode->appendChild($insert_dom);
         }
     }
 
@@ -104,7 +104,7 @@ class XmlController extends Controller {
                             <LISTITEM value="Automatism" id="checkGesturingposturing4" Selected="False">Automatism</LISTITEM>
                         </LISTITEMS>
                     </FIELD>';
-        
+
 
         $all_files = $this->getAllFiles();
         $error_files = [];
@@ -170,7 +170,7 @@ class XmlController extends Controller {
                         }
                     }
                     //print_r($target); die;
-                    $xml->asXML($files); 
+                    $xml->asXML($files);
                     //die;
                 }
             }
@@ -393,7 +393,7 @@ class XmlController extends Controller {
                     $targets = $xml->xpath($xpath);
                     if (!empty($targets)) {
                         foreach ($targets as $target) {
-                            $target['value']='Better Opportunity';
+                            $target['value'] = 'Better Opportunity';
                             $target[0] = 'Better Opportunity';
                         }
                     }
@@ -583,8 +583,7 @@ class XmlController extends Controller {
                     $targets = $xml->xpath($xpath);
                     if (!empty($targets)) {
                         foreach ($targets as $target) {
-                            if(isset($target->LISTITEM[1]))
-                            {
+                            if (isset($target->LISTITEM[1])) {
                                 unset($target->LISTITEM[1]);
                             }
                         }
@@ -952,6 +951,24 @@ class XmlController extends Controller {
                     }
                     $xml->asXML($files);
                     //die;
+                }
+            }
+        }
+        echo "<pre>";
+        print_r($error_files);
+        exit;
+    }
+
+    public function actionCheckstring() {
+        $all_files = $this->getAllFiles();
+        $error_files = [];
+        if (!empty($all_files)) {
+            foreach ($all_files as $key => $files) {
+                if (strpos(file_get_contents($files), 'Currently on medication from Dr Krishnaram') !== false) {
+                    $error_files[$key]['name'] = $files;
+                }
+                else {
+                   $else_files[$key]['name'] = $files;
                 }
             }
         }
