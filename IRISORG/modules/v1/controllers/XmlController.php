@@ -964,7 +964,7 @@ class XmlController extends Controller {
         $error_files = [];
         if (!empty($all_files)) {
             foreach ($all_files as $key => $files) {
-                if (strpos(file_get_contents($files), 'Currently on medication from Dr Krishnaram') !== false) {
+                if (strpos(file_get_contents($files), 'Krishnaram') !== false) {
                     $error_files[$key]['name'] = $files;
                 }
                 else {

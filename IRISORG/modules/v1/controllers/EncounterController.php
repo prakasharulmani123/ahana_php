@@ -353,6 +353,23 @@ class EncounterController extends ActiveController {
         } else if (@$params['type'] == 'Future') {
             $dtop = '>';
         }
+        if (isset($params['month']) && (@$params['month'] != 'undefined') && isset($params['year']) && (@$params['year'] != 'undefined')) {
+            $date = $params['year'] . '-' . $params['month'];
+            $filterdate = date('m Y', strtotime($date));
+            $filterQuery = "AND DATE_FORMAT(d.encounter_date,'%m %Y') = '$filterdate'";
+            $filterQuery1 = "AND DATE_FORMAT(b.encounter_date,'%m %Y') = '$filterdate'";
+        } else {
+            if (@$params['type'] == 'Future') {
+                $filterdate = date('m Y');
+                $filterQuery = "AND DATE_FORMAT(d.encounter_date,'%m %Y') = '$filterdate'";
+                $filterQuery1 = "AND DATE_FORMAT(b.encounter_date,'%m %Y') = '$filterdate'";
+            }
+            else {
+                $filterQuery = "";
+                $filterQuery1 = "";
+            }
+        }
+
 
         $command = $connection->createCommand("SELECT a.consultant_id, CONCAT(c.title_code,c.name) as consultant_name,
                 (
@@ -364,6 +381,7 @@ class EncounterController extends ActiveController {
                     AND d.status = '1'
                     AND c.appt_status = 'B'
                     AND d.encounter_type = :ptype
+                    $filterQuery
                     AND DATE(d.encounter_date) {$dtop} :enc_date
                     AND c.consultant_id = a.consultant_id
                 ) AS booking,
@@ -396,12 +414,12 @@ class EncounterController extends ActiveController {
                 JOIN co_user c ON c.user_id = a.consultant_id
                 WHERE a.tenant_id = :tid
                 AND b.encounter_type = :ptype
+                $filterQuery1
                 AND b.status IN ($eStatus)
                 AND DATE(b.encounter_date) {$dtop} :enc_date
                 GROUP BY a.consultant_id", [':enc_date' => $params['date'], ':tid' => $params['tenant_id'], ':ptype' => 'OP']);
 
         $counts = $command->queryAll(\PDO::FETCH_OBJ);
-
         if ($counts) {
             foreach ($counts as $i => $v) {
                 $booked = $v->booking - $v->arrival;
@@ -434,6 +452,16 @@ class EncounterController extends ActiveController {
         } else if (@$params['seen'] == 'false') {
             $condition['pat_encounter.status'] = '1';
         }
+        if (isset($params['month']) && @$params['month'] != 'undefined' && @$params['year'] != 'undefined' && isset($params['year'])) {
+            $date = $params['year'] . '-' . $params['month'];
+            ///echo date('m Y', strtotime($date)); die;
+            $condition["DATE_FORMAT(pat_encounter.encounter_date,'%m %Y')"] = date('m Y', strtotime($date));
+        } else {
+            if (@$params['type'] == 'Future') {
+                $condition["DATE_FORMAT(pat_encounter.encounter_date,'%m %Y')"] = date('m Y');
+            }
+        }
+
 //        Check "View all doctors appointments".
         if ((is_numeric(@$params['cid']) && @$params['cid'] > 0) || (is_array($params['cid']) && !empty($params['cid']))) { //KEYWORD: COOKIE EXPAND
 //        if (is_numeric(@$params['cid']) && @$params['cid'] > 0) {

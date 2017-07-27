@@ -509,7 +509,7 @@ class PatEncounter extends RActiveRecord {
         if ($addtField = Yii::$app->request->get('addtfields')) {
             switch ($addtField):
                 case 'oplist':
-                    $addt_keys = ['consultant_id', 'apptArrivalData', 'apptSeenData', 'apptPatientData', 'apptBookingData','liveAppointmentArrival', 'liveAppointmentBooking','liveAppointmentConsultant'];
+                    $addt_keys = ['consultant_id', 'apptArrivalData', 'apptSeenData', 'apptPatientData', 'apptBookingData'];
                     $parent_fields = [
                         'encounter_id' => 'encounter_id',
                         'patient_id' => 'patient_id',
