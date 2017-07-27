@@ -452,42 +452,44 @@ class DefaultController extends Controller {
         $connection->close();
     }
 
-    public function actionUpdatewrongbatch() {
-        $connection = Yii::$app->client;
-        $connection->open();
-
-        $sql = "SELECT *
-                FROM batch_no_replace a
-                  LEFT JOIN pha_product b
-                    ON b.product_name = a.Name
-                    AND b.tenant_id = a.tenant_id                
-                GROUP BY a.id";
-        $command = $connection->createCommand($sql);
-        $all = $command->queryAll();
-$c = 1;
-        foreach ($all as $result) {
-            if ($result['product_id'] != '') {
-                $findBatch = "SELECT * FROM pha_product_batch WHERE tenant_id = :tenant_id AND product_id = :product_id AND batch_no = :batch_no AND expiry_date = :expiry_date";
-                $command = $connection->createCommand($findBatch);
-                $command->bindValues([
-                    ':tenant_id' => $result['tenant_id'],
-                    ':product_id' => $result['product_id'],
-                    ':batch_no' => $result['wrong_batch'],
-                    ':expiry_date' => $this->expiryDate($result['ExpiryMy']),
-                ]);
-                $batch = $command->queryAll();
-                if (!empty($batch)) {
-                    
-                    $batch = $batch[0];
-                    $update = "Update pha_product_batch set batch_no = '{$result['Batch']}' where batch_id = '{$batch['batch_id']}'";
-                    $command = $connection->createCommand($update);
-                    $command->execute();
-                    $c++;
-                }
-            }
-        }
-echo $c;
-        $connection->close();
-    }
+    //Below action not need, I removed the corresponding table from DB.
+    
+//    public function actionUpdatewrongbatch() {
+//        $connection = Yii::$app->client;
+//        $connection->open();
+//
+//        $sql = "SELECT *
+//                FROM batch_no_replace a
+//                  LEFT JOIN pha_product b
+//                    ON b.product_name = a.Name
+//                    AND b.tenant_id = a.tenant_id                
+//                GROUP BY a.id";
+//        $command = $connection->createCommand($sql);
+//        $all = $command->queryAll();
+//$c = 1;
+//        foreach ($all as $result) {
+//            if ($result['product_id'] != '') {
+//                $findBatch = "SELECT * FROM pha_product_batch WHERE tenant_id = :tenant_id AND product_id = :product_id AND batch_no = :batch_no AND expiry_date = :expiry_date";
+//                $command = $connection->createCommand($findBatch);
+//                $command->bindValues([
+//                    ':tenant_id' => $result['tenant_id'],
+//                    ':product_id' => $result['product_id'],
+//                    ':batch_no' => $result['wrong_batch'],
+//                    ':expiry_date' => $this->expiryDate($result['ExpiryMy']),
+//                ]);
+//                $batch = $command->queryAll();
+//                if (!empty($batch)) {
+//                    
+//                    $batch = $batch[0];
+//                    $update = "Update pha_product_batch set batch_no = '{$result['Batch']}' where batch_id = '{$batch['batch_id']}'";
+//                    $command = $connection->createCommand($update);
+//                    $command->execute();
+//                    $c++;
+//                }
+//            }
+//        }
+//echo $c;
+//        $connection->close();
+//    }
 
 }
