@@ -2548,6 +2548,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                                             'xeditable',
                                             'ui.calendar',
                                             'tpl/modal_form/modal.patient_appointment.js?v=' + APP_VERSION,
+                                            'tpl/modal_form/modal.patient_appointment_reschedule.js?v=' + APP_VERSION,
                                             'tpl/out_patients/out_patients.js?v=' + APP_VERSION
                                         ]);
                                     }

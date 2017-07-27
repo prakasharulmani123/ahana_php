@@ -27,11 +27,31 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
         //Index page height
         $scope.css = {'style': ''};
 
+        function dateCheck(month, year)
+        {
+            $scope.isLoading = true;
+            $scope.loadOutPatientsList('Future', '', month, year);
+        }
+        
+        $scope.resetDatepicker = function () {
+            $("#appointment").datepicker().datepicker("setDate", new Date());
+        }
+
         //Index Page
-        $scope.loadOutPatientsList = function (type, clearObj) {
+        $scope.loadOutPatientsList = function (type, clearObj, month, year) {
             if (typeof type == 'undefined') {
                 type = ($state.params.type) ? $state.params.type : 'current';
             }
+            $("#appointment").datepicker({
+                minDate: new Date(),
+                changeMonth: true,
+                changeYear: true,
+                showButtonPanel: true,
+                dateFormat: 'MM yy',
+                onChangeMonthYear: function (year, month, inst) {
+                    dateCheck(month, year);
+                },
+            });
 
             $scope.op_type = type;
 
@@ -51,7 +71,7 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
             }
 
             // Get data's from service
-            $http.get($rootScope.IRISOrgServiceUrl + '/encounter/outpatients?addtfields=oplist&type=' + type + '&cid=' + cid + '&seen=false')
+            $http.get($rootScope.IRISOrgServiceUrl + '/encounter/outpatients?addtfields=oplist&type=' + type + '&cid=' + cid + '&seen=false&month=' + month + '&year=' + year)
                     .success(function (OutPatients) {
                         var prepared_result = $scope.prepareCollection(OutPatients);
                         $scope.rowCollection = prepared_result;
@@ -407,6 +427,11 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
 
         $.cookie.json = true;
         $scope.setRowExpanded = function (cid, rowopen) {
+            if($scope.op_type == 'Future')
+            {
+                var month = parseInt($(".ui-datepicker-month").val())+1;
+                var year = $(".ui-datepicker-year").val();
+            }
             var opRowExpand = [];
             if (typeof $.cookie('opRowExp') !== 'undefined') {
                 opRowExpand = $.cookie('opRowExp');
@@ -425,7 +450,7 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
             if (rowopen) {
                 var docRow = $filter('filter')($scope.rowCollection, {consultant_id: cid})[0];
                 docRow.rowLoading = true;
-                $http.get($rootScope.IRISOrgServiceUrl + '/encounter/outpatients?addtfields=oplist&type=' + $scope.op_type + '&cid=' + cid + '&seen=false&only=results')
+                $http.get($rootScope.IRISOrgServiceUrl + '/encounter/outpatients?addtfields=oplist&type=' + $scope.op_type + '&cid=' + cid + '&seen=false&only=results&month=' + month + '&year=' + year)
                         .success(function (OutPatients) {
                             docRow.act_enc = OutPatients.result;
                             docRow.rowLoading = false;

@@ -1,4 +1,13 @@
 <div>
+    <style>
+        .ui-datepicker-calendar {
+            display: none;
+        }
+        .ui-datepicker .ui-datepicker-buttonpane
+        {
+            display: none;
+        }
+    </style>
     <div class="bg-light lter b-b wrapper-md">
         <h1 class="m-n h3">Scheduled Appointments</h1>
     </div>
@@ -35,20 +44,27 @@
     <div id="list_view" style="display: none" class="wrapper-md view_div" ng-controller="OutPatientsController" ng-init="loadOutPatientsList('Future')">
         <div class="panel panel-default">
             <div class="row wrapper">
-                <div class="col-sm-5 m-b-xs">
-                    <button class="btn btn-sm btn-grey" ng-click="loadOutPatientsList('Future')"> &nbsp; &nbsp; <i class="fa fa-refresh"></i>  &nbsp; &nbsp; </button>
-                    <span ng-show="currentAppointmentSelected > 0">
-                        <button ng-click="rescheduleAppointments()" class="btn btn-sm btn-primary">
-                            <i class="fa fa-retweet"></i> Reschedule Appointments
-                        </button>
-                        <button ng-click="cancelAppointments()" class="btn btn-sm btn-dark">
-                            <i class="fa fa-times"></i> Cancel Appointment
-                        </button>
-                    </span>
+                <div class="col-sm-9 m-b-xs">
+                    <div class="col-sm-1">
+                        <button class="btn btn-sm btn-grey" ng-click="loadOutPatientsList('Future'); resetDatepicker();"> &nbsp; &nbsp; <i class="fa fa-refresh"></i>  &nbsp; &nbsp; </button>
+                    </div>
+                    <div class="col-sm-3">
+                        <div id="appointment"></div>
+                    </div>
+                    <div class="col-sm-6">
+                        <span ng-show="currentAppointmentSelected > 0">
+                            <button ng-click="rescheduleAppointments()" class="btn btn-sm btn-primary">
+                                <i class="fa fa-retweet"></i> Reschedule Appointments
+                            </button>
+                            <button ng-click="cancelAppointments()" class="btn btn-sm btn-dark">
+                                <i class="fa fa-times"></i> Cancel Appointment
+                            </button>
+                        </span>
+                    </div>
                 </div>
                 <div class="col-sm-4"></div>
                 <div class="col-sm-3 pull-right text-right">
-                    <h4 class="label bg-primary"> <b> Census: {{census}} </b></h4>
+<!--                    <h4 class="label bg-primary"> <b> Census: {{census}} </b></h4>-->
                 </div>
             </div>
 
@@ -66,77 +82,78 @@
                             <th>Patient</th>
                             <th>Category</th>
                             <th>Contact#</th>
-                            <th>appointment<br />
-                                time</th>
-                            <th>consultant</th>
+                            <th>appointment time</th>
                             <th style="width:250px;"> Actions</th>
                         </tr>
                     </thead>
                     <tbody ng-hide="isLoading">
                         <tr ng-if="displayedCollection.length == 0">
-                            <td colspan="10" class="text-center">
+                            <td colspan="9" class="text-center">
                                 No O/P records
                             </td>
                         </tr>
-                        <tr ng-repeat-start="(op_key, value) in displayedCollection" ng-init="expanded = true;">
+                        <tr ng-repeat-start="(op_key, value) in displayedCollection">
                             <td align="center" style="width:60px;">
                                 <label class="i-checks">
                                     <input ng-model="row.selected" ng-true-value="'1'" ng-false-value="'0'" ng-checked="value.selected == '1'"  type="checkbox" name="checkall" class="oplistcheckbox oplistcheckbox_{{op_key}}" ng-click="updateCheckbox(row, op_key)">
                                     <i></i>
                                 </label>
                             </td>
-                            <td colspan="9">
-                                <button ng-click="expanded = !expanded" expand class="btn btn-sm btn-default hms-plus">
-                                    <i ng-if="!expanded" class="fa fa-plus text"></i>
-                                    <i ng-if="expanded" class="fa fa-minus text"></i>
+                            <td colspan="7">
+                                <button ng-click="value.expanded = !value.expanded;
+                                                    setRowExpanded(value.consultant_id, value.expanded)" expand class="btn btn-sm btn-default hms-plus">
+                                    <i ng-if="!value.expanded" class="fa fa-plus text"></i>
+                                    <i ng-if="value.expanded" class="fa fa-minus text"></i>
                                 </button>
                                 &nbsp; &nbsp;
                                 <b>
-                                    <span class="badge bg-primary">Consultant: {{value.data.liveAppointmentConsultant.fullname}}</span>&nbsp; &nbsp;
+                                    <span class="badge bg-primary">Consultant: {{value.consultant_name}}</span>&nbsp; &nbsp;
                                     <span class="badge bg-black">Booking: {{value.booking_count}}</span>&nbsp; &nbsp;
+                                    <i class="fa fa-spin fa-spinner" ng-if="value.rowLoading == true"></i>
                                 </b>
                             </td>
+
                         </tr>
 
-                        <tr ng-repeat-end ng-show="expanded" ng-repeat="(key, row) in value.all" class="tr_oplistcheckbox tr_oplistcheckbox_{{op_key}}">
+                        <tr ng-show="value.expanded" ng-repeat="(key, row) in value.act_enc" class="tr_oplistcheckbox tr_oplistcheckbox_{{op_key}}">
                             <td align="center">
-                                <label class="i-checks" ng-if="row.liveAppointmentArrival == '-'">
+                                <label class="i-checks" ng-if="row.apptArrivalData == '-'">
                                     <input ng-model="row.selected" ng-true-value="'1'" ng-false-value="'0'" ng-checked="row.selected == '1'" class="oplistcheckbox oplistcheckbox_{{op_key}}" id="oplist_{{op_key}}_{{key}}" type="checkbox" name="status" ng-click="moreOptions(op_key, key, row.liveAppointmentConsultant.user_id, row.liveAppointmentBooking.appt_id, row)">
                                     <i></i>
                                 </label>
                             </td>
                             <td align="center" valign="middle">
                                 <div style="margin-top: -10px; position: absolute;">
-                                    <img ng-if="(row.liveAppointmentArrival != '-' && row.liveAppointmentArrival.waiting_elapsed)" class="pull-left" src="img/elapsed-waiting-time.png"  alt="" tooltip="Elapsing Waiting Time" tooltip-trigger tooltip-animation="false" tooltip-placement="right"/>
-                                    <img ng-if="row.patient.hasalert" class="pull-left" src="img/symbol1.png"  alt="" tooltip="Has Alert" tooltip-trigger tooltip-animation="false" tooltip-placement="right"  />
-                                    <img ng-if="row.patient.incomplete_profile" class="pull-left" src="img/question.png"  alt="" tooltip="Incomplete Profile" tooltip-trigger tooltip-animation="false" tooltip-placement="right" />
+                                    <img ng-if="(row.apptArrivalData != '-' && row.apptArrivalData.waiting_elapsed)" class="pull-left" src="img/elapsed-waiting-time.png"  alt="" tooltip="Elapsing Waiting Time" tooltip-trigger tooltip-animation="false" tooltip-placement="right"/>
+                                    <img ng-if="row.apptPatientData.hasalert" class="pull-left" src="img/symbol1.png"  alt="" tooltip="Has Alert" tooltip-trigger tooltip-animation="false" tooltip-placement="right"  />
+                                    <img ng-if="row.apptPatientData.incomplete_profile" class="pull-left" src="img/question.png"  alt="" tooltip="Incomplete Profile" tooltip-trigger tooltip-animation="false" tooltip-placement="right" />
                                 </div>
                             </td>
                             <td>
-                                <img width="49" height="49" class="pull-left" src="img/man-icon.png" ng-attr-lazy-img="{{ row.patient.patient_img_url ? row.patient.patient_img_url : ($even ? 'img/man-icon.png' : 'img/man-icon2.png') }}" />
-                                <a ui-sref="patient.view({id: row.patient.patient_guid})" tooltip="{{row.patient.fullcurrentaddress}}">
-                                    {{row.patient.fullname}}
-                                </a>({{row.patient.patient_age_ym}}) <br/>
-                                {{row.patient.patient_global_int_code}}
+                                <img width="49" height="49" class="pull-left" src="img/man-icon.png" ng-attr-lazy-img="{{ row.apptPatientData.patient_img_url ? row.apptPatientData.patient_img_url : ($even ? 'img/man-icon.png' : 'img/man-icon2.png') }}" />
+                                <a ui-sref="patient.view({id: row.apptPatientData.patient_guid})" tooltip="{{row.apptPatientData.fullcurrentaddress}}">
+                                    {{row.apptPatientData.fullname}}
+                                </a>({{row.apptPatientData.patient_age_ym}}) <br/>
+                                {{row.apptPatientData.patient_global_int_code}}
                             </td>
                             <td valign="middle">
-                                <div ng-if="row.patient.patient_category" class="category_badge" tooltip="{{row.patient.patient_category_fullname}}" tooltip-trigger tooltip-animation="false" tooltip-placement="top" style="background-color: {{row.patient.patient_category_color}}">
-                                    {{row.patient.patient_category| uppercase}}
+                                <div ng-if="row.apptPatientData.patient_category" class="category_badge" tooltip="{{row.apptPatientData.patient_category_fullname}}" tooltip-trigger tooltip-animation="false" tooltip-placement="top" style="background-color: {{row.apptPatientData.patient_category_color}}">
+                                    {{row.apptPatientData.patient_category| uppercase}}
                                 </div>
                             </td>
                             <td>
-                                <a editable-text="row.patient.patient_mobile" e-number-mask="" onbeforesave="updatePatient(row.patient.patient_id, {'patient_mobile': $data}, $data)">
-                                    {{row.patient.patient_mobile}}
+                                <a editable-text="row.apptPatientData.patient_mobile" e-number-mask="" onbeforesave="updatePatient(row.apptPatientData.patient_id, {'patient_mobile': $data}, $data)">
+                                    {{row.apptPatientData.patient_mobile}}
                                 </a>
                             </td>
-                            <td>{{row.liveAppointmentBooking.status_datetime| moment:'hh:mm A'}}<br/>  <span class="text-muted"> {{row.liveAppointmentBooking.status_date}}</span></td>
-                            <td>{{row.liveAppointmentConsultant.title_code}} {{row.liveAppointmentConsultant.name}}</td>
+                            <td>{{row.apptBookingData.status_datetime| moment:'hh:mm A'}}<br/>  <span class="text-muted"> {{row.apptBookingData.status_date}}</span></td>
                             <td align="left">
                                 <div ng-include="'tpl/patient/patient_table_nav_bar.html'">
                                     {% include 'tpl/patient/patient_table_nav_bar.html' %}
                                 </div>
                             </td>
                         </tr>
+                        <tr ng-repeat-end><br></tr>
                     </tbody>
 
                     <tbody ng-show="isLoading">
