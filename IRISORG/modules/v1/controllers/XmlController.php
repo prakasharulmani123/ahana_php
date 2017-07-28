@@ -92,18 +92,15 @@ class XmlController extends Controller {
 
     public function actionInsertnewfield() {
         //$xpath = "/FIELDS/GROUP/PANELBODY/FIELD[@id='name']";
-        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD/FIELD[@id='CBGesturingposturing']";
-        $insert = '<FIELD id="checkGesturingposturing" type="CheckBoxList" label="">
-                        <PROPERTIES>
-                            <PROPERTY name="name">checkGesturingposturing[]</PROPERTY>
-                        </PROPERTIES>
-                        <LISTITEMS>
-                            <LISTITEM value="Negativism" id="checkGesturingposturing1" Selected="False">Negativism</LISTITEM>
-                            <LISTITEM value="Waxy Flexibility" id="checkGesturingposturing2" Selected="False">Waxy Flexibility</LISTITEM>
-                            <LISTITEM value="Echopraxia" id="checkGesturingposturing3" Selected="False">Echopraxia</LISTITEM>
-                            <LISTITEM value="Automatism" id="checkGesturingposturing4" Selected="False">Automatism</LISTITEM>
-                        </LISTITEMS>
-                    </FIELD>';
+        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD[@id='martial_status']";
+        $insert = '<FIELD id="maritalnote" type="TextBox" label="Marital Notes: ">
+                    <PROPERTIES>
+                        <PROPERTY name="id">maritalnote</PROPERTY>
+                        <PROPERTY name="name">maritalnote</PROPERTY>
+                        <PROPERTY name="class">form-control</PROPERTY>
+                        <PROPERTY name="placeholder">Marital Notes</PROPERTY>
+                    </PROPERTIES>
+                </FIELD>';
 
 
         $all_files = $this->getAllFiles();
@@ -121,12 +118,11 @@ class XmlController extends Controller {
                     }
                     $targets = $xml->xpath($xpath);
                     if (!empty($targets)) {
-                        //print_r($targets); echo $insert; die;
-                        //$this->simplexml_insert_after(simplexml_load_string($insert), $targets[0]);
+                        //print_r($targets); //echo $insert; die;
+                        //$movie = $targets[0]->addChild($insert);
+                        //$movie->addChild('title', 'PHP2: More Parser Stories');
                         $this->simplexml_insert_firstChild(simplexml_load_string($insert), $targets[0]);
                     }
-                    //print_r($targets); die;
-                    //echo $files;
                     $xml->asXML($files);
                     //die;
                 }
@@ -140,13 +136,13 @@ class XmlController extends Controller {
     public function actionSetattrvalue() {
         $node = 'FIELD';
         $attr = 'id';
-        $find = 'RBMemory';
+        $find = 'martial_status';
         //$replace = 'Higher_Mental_Functions';
 //        $node = 'LISTITEM';
 //        $attr = 'value';
 //        $find = 'RTA &amp; Surgery';
 //        $replace = 'RTA & Surgery';
-        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD/{$node}[@{$attr}='{$find}']";
+        $xpath = "/FIELDS/GROUP/PANELBODY//{$node}[@{$attr}='{$find}']";
         //echo $xpath; die;
 
         $all_files = $this->getAllFiles();
@@ -164,11 +160,16 @@ class XmlController extends Controller {
                     }
                     $targets = $xml->xpath($xpath);
                     if (!empty($targets)) {
+                        //print_r($targets);
                         foreach ($targets as $target) {
-                            $target->PROPERTIES->PROPERTY[0] = $target->PROPERTIES->PROPERTY[0] . '[]';
-                            $target['type'] = 'CheckBoxList';
+                            //print_r($target); die;
+                            $target->addAttribute('Backcontrols', "hide");
+                            $target->addAttribute('Backdivid', "maritalnote_div");
+                            //$target->PROPERTIES->PROPERTY[0] = $target->PROPERTIES->PROPERTY[0] . '[]';
+                            //$target['type'] = 'CheckBoxList';
                         }
                     }
+                    //print_r($targets); die;
                     //print_r($target); die;
                     $xml->asXML($files);
                     //die;
@@ -338,7 +339,7 @@ class XmlController extends Controller {
     }
 
     public function actionLiaddsetattr() {
-        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@id='precipitating_factor' and @type='CheckBoxList']";
+        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@id='martial_status' and @type='RadioButtonList']";
 
         $all_files = $this->getAllFiles();
         $error_files = [];
@@ -354,16 +355,25 @@ class XmlController extends Controller {
                     }
                     $targets = $xml->xpath($xpath);
                     if (!empty($targets)) {
+                        //print_r($targets);
                         foreach ($targets as $target) {
                             foreach ($target->LISTITEMS->LISTITEM as $list_item) {
                                 if (isset($list_item['onclick'])) {
                                     unset($list_item['onclick']);
                                 }
-                                $list_item->addAttribute('onclick', "OThersvisible(this.id, 'precipitating_factor_other_div', 'block');");
+                                if ($list_item['value'] == 'Un Married') {
+                                    $list_item['id'] = 'RBMartial1';
+                                }
+                                if ($list_item['value'] == 'Widow') {
+                                    $list_item['id'] = 'RBMartial5';
+                                }
+                                $list_item->addAttribute('onclick', "OThersvisible(this.id, 'maritalnote_div');");
                             }
                         }
+                       // print_r($targets);
                     }
                     $xml->asXML($files);
+                    //die;
                 }
             }
         }
@@ -966,9 +976,8 @@ class XmlController extends Controller {
             foreach ($all_files as $key => $files) {
                 if (strpos(file_get_contents($files), 'Krishnaram') !== false) {
                     $error_files[$key]['name'] = $files;
-                }
-                else {
-                   $else_files[$key]['name'] = $files;
+                } else {
+                    $else_files[$key]['name'] = $files;
                 }
             }
         }

@@ -130,17 +130,24 @@
                 </FIELD>
             </FIELD>
             
-            <FIELD id="martial_status" type="RadioButtonList" label="Marital Status" required="true">
+            <FIELD id="martial_status" type="RadioButtonList" label="Marital Status" required="true" Backcontrols="hide" Backdivid="maritalnote_div"><FIELD id="maritalnote" type="TextBox" label="Marital Notes: ">
+                    <PROPERTIES>
+                        <PROPERTY name="id">maritalnote</PROPERTY>
+                        <PROPERTY name="name">maritalnote</PROPERTY>
+                        <PROPERTY name="class">form-control</PROPERTY>
+                        <PROPERTY name="placeholder">Marital Notes</PROPERTY>
+                    </PROPERTIES>
+                </FIELD>
                 <PROPERTIES>
                     <PROPERTY name="name">martial_status</PROPERTY>
                 </PROPERTIES>
                 <LISTITEMS>
                     
-                    <LISTITEM value="Un Married" id="RBMartial2" Selected="False">Un Married</LISTITEM>
-                    <LISTITEM value="Married" id="RBMartial2" Selected="False">Married</LISTITEM>
-                    <LISTITEM value="Separated" id="RBMartial3" Selected="False">Separated</LISTITEM>
-                    <LISTITEM value="Divorced" id="RBMartial4" Selected="False">Divorced</LISTITEM>
-                    <LISTITEM value="Widow" id="RBMartial4" Selected="False">Widow</LISTITEM>
+                    <LISTITEM value="Un Married" id="RBMartial1" Selected="False" onclick="OThersvisible(this.id, 'maritalnote_div');">Un Married</LISTITEM>
+                    <LISTITEM value="Married" id="RBMartial2" Selected="False" onclick="OThersvisible(this.id, 'maritalnote_div');">Married</LISTITEM>
+                    <LISTITEM value="Separated" id="RBMartial3" Selected="False" onclick="OThersvisible(this.id, 'maritalnote_div');">Separated</LISTITEM>
+                    <LISTITEM value="Divorced" id="RBMartial4" Selected="False" onclick="OThersvisible(this.id, 'maritalnote_div');">Divorced</LISTITEM>
+                    <LISTITEM value="Widow" id="RBMartial5" Selected="False" onclick="OThersvisible(this.id, 'maritalnote_div');">Widow</LISTITEM>
                 </LISTITEMS>
             </FIELD>
             
