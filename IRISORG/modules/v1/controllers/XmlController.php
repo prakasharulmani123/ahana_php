@@ -136,13 +136,13 @@ class XmlController extends Controller {
     public function actionSetattrvalue() {
         $node = 'FIELD';
         $attr = 'id';
-        $find = 'primary_care_giver';
+        $find = 'RBdevlopmentmilestonesub';
         //$replace = 'Higher_Mental_Functions';
 //        $node = 'LISTITEM';
 //        $attr = 'value';
 //        $find = 'RTA &amp; Surgery';
 //        $replace = 'RTA & Surgery';
-        $xpath = "/FIELDS/GROUP/PANELBODY//{$node}[@{$attr}='{$find}']";
+        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD/FIELD/FIELD/{$node}[@{$attr}='{$find}']";
         //echo $xpath; die;
 
         $all_files = $this->getAllFiles();
@@ -162,8 +162,8 @@ class XmlController extends Controller {
                     if (!empty($targets)) {
                         //print_r($targets);
                         foreach ($targets as $target) {
-                            $target->PROPERTIES->PROPERTY[1] = $target->PROPERTIES->PROPERTY[1] . '[]';
-                            $target['type'] = 'MultiDropDownList';
+                            $target->PROPERTIES->PROPERTY[0] = $target->PROPERTIES->PROPERTY[0] . '[]';
+                            $target['type'] = 'CheckBoxList';
                         }
                     }
                     //print_r($targets); die;

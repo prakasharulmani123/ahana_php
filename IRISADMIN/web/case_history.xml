@@ -1194,9 +1194,9 @@
                             <LISTITEM value="Normal" id="RBpbdevelopmentmilestone1" Selected="False" onclick="OThersvisible(this.id,'developmentmilestoneDiv','none');">Normal</LISTITEM>
                             <LISTITEM value="Delayed" id="RBpbdevelopmentmilestone2" Selected="False" onclick="OThersvisible(this.id,'developmentmilestoneDiv','block');">Delayed</LISTITEM>
                         </LISTITEMS>
-                        <FIELD id="RBdevlopmentmilestonesub" type="RadioButtonList" label="Specify: ">
+                        <FIELD id="RBdevlopmentmilestonesub" type="CheckBoxList" label="Specify: ">
                             <PROPERTIES>
-                                <PROPERTY name="name">RBdevlopmentmilestonesub</PROPERTY>
+                                <PROPERTY name="name">RBdevlopmentmilestonesub[]</PROPERTY>
                             </PROPERTIES>
                             <LISTITEMS>
                                 <LISTITEM value="Motor" id="RBdevlopmentmilestonesub1" Selected="False">Motor</LISTITEM>
