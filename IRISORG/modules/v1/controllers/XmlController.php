@@ -136,7 +136,7 @@ class XmlController extends Controller {
     public function actionSetattrvalue() {
         $node = 'FIELD';
         $attr = 'id';
-        $find = 'martial_status';
+        $find = 'primary_care_giver';
         //$replace = 'Higher_Mental_Functions';
 //        $node = 'LISTITEM';
 //        $attr = 'value';
@@ -162,11 +162,8 @@ class XmlController extends Controller {
                     if (!empty($targets)) {
                         //print_r($targets);
                         foreach ($targets as $target) {
-                            //print_r($target); die;
-                            $target->addAttribute('Backcontrols', "hide");
-                            $target->addAttribute('Backdivid', "maritalnote_div");
-                            //$target->PROPERTIES->PROPERTY[0] = $target->PROPERTIES->PROPERTY[0] . '[]';
-                            //$target['type'] = 'CheckBoxList';
+                            $target->PROPERTIES->PROPERTY[1] = $target->PROPERTIES->PROPERTY[1] . '[]';
+                            $target['type'] = 'MultiDropDownList';
                         }
                     }
                     //print_r($targets); die;

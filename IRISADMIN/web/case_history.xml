@@ -218,10 +218,10 @@
                 </FIELD>
             </FIELD>
             
-            <FIELD id="primary_care_giver" header2Class="Informant" type="DropDownList" label="Primary Care giver" required="true">
+            <FIELD id="primary_care_giver" header2Class="Informant" type="MultiDropDownList" label="Primary Care giver" required="true">
                 <PROPERTIES>
                     <PROPERTY name="id">primary_care_giver</PROPERTY>
-                    <PROPERTY name="name">primary_care_giver</PROPERTY>
+                    <PROPERTY name="name">primary_care_giver[]</PROPERTY>
                     <PROPERTY name="class">form-control</PROPERTY>
                 </PROPERTIES>
                 <LISTITEMS>

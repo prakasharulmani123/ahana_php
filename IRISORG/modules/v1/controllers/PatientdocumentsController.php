@@ -810,7 +810,7 @@ class PatientdocumentsController extends ActiveController {
                     if ($key == $x->attributes()->id) {
                         $type = $x->attributes()->type;
                         //Checkbox
-                        if ($type == 'CheckBoxList') {
+                        if ($type == 'CheckBoxList' || $type == 'MultiDropDownList') {
                             $post_referral_details = $value;
                             $list_referral_details = $x->LISTITEMS->LISTITEM;
                             $x->attributes()['Backcontrols'] = 'hide';

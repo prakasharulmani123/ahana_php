@@ -264,11 +264,11 @@
                                             <!-- Main Checkbox -->
                                             <xsl:when test="@type='CheckBoxList'">
                                                 <xsl:if test="boolean(LISTITEMS/LISTITEM/@Selected = 'true')">
-                                                    <td width="25%" align="left" valign="top" class="small-left-heading">
+                                                    <td width="15%" align="left" valign="top" class="small-left-heading">
                                                         <xsl:value-of select="@label" /> 
                                                         <span class="colon"> : </span>
                                                     </td>
-                                                    <td width="25%" align="left" valign="top">
+                                                    <td width="35%" align="left" valign="top">
                                                         <xsl:for-each select="LISTITEMS/LISTITEM[@Selected = 'true']">
                                                             <xsl:value-of select="concat(' ' , @value)" />
                                                             <xsl:if test="not(position() = last())">,</xsl:if>
@@ -300,18 +300,17 @@
                                                     </td>
                                                 </xsl:if>
                                             </xsl:when>
-                                        
-                                            <xsl:when test="@type='DropDownList'">
-                                                <td width="25%" align="left" valign="top" class="small-left-heading">
+                                            
+                                            <xsl:when test="@type='MultiDropDownList'">
+                                                <td width="15%" align="left" valign="top" class="small-left-heading">
                                                     <xsl:value-of select="@label" /> 
                                                     <span class="colon"> : </span>
                                                 </td>
-                                                <td width="25%" align="left" valign="top">
-                                                    <xsl:for-each select="LISTITEMS/LISTITEM">
-                                                        <xsl:if test="@Selected = 'true'">
-                                                            <xsl:value-of select="@value"></xsl:value-of>
-                                                        </xsl:if>
-                                                    </xsl:for-each>
+                                                <td width="35%" align="left" valign="top">
+                                                        <xsl:for-each select="LISTITEMS/LISTITEM[@Selected = 'true']">
+                                                            <xsl:value-of select="concat(' ' , @value)" />
+                                                            <xsl:if test="not(position() = last())">,</xsl:if>
+                                                        </xsl:for-each>
                                                 </td>
                                             </xsl:when>
                                         </xsl:choose>
