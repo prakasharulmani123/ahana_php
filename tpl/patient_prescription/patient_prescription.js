@@ -776,25 +776,28 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $scope.btnid = btnid;
         }
 
-        $scope.getFrequencyExists = function (freq, key) {
+        $scope.getFrequencyExists = function (freq, key, freqType) {
             if (typeof freq != 'undefined') {
-                var result = freq.split('-');
-                if (result[key] == "0" || typeof result[key] == 'undefined')
-                {
-                    return "-";
+                if (freqType == 'txt') {
+                    return freq;
                 } else {
-                    if (result[key] != Math.floor(result[key])) {
-                        var decimalFreq = result[key].split('.');
-                        if(decimalFreq[1] == '25')
-                            return decimalFreq[0] + ' 1/4';
-                        else if (decimalFreq[1] == '5')
-                            return decimalFreq[0] + ' 1/2';
+                    var result = freq.split('-');
+                    if (result[key] == "0" || typeof result[key] == 'undefined')
+                    {
+                        return "-";
                     } else {
-                        return result[key];
+                        if (result[key] != Math.floor(result[key])) {
+                            var decimalFreq = result[key].split('.');
+                            if (decimalFreq[1] == '25')
+                                return decimalFreq[0] + ' 1/4';
+                            else if (decimalFreq[1] == '5')
+                                return decimalFreq[0] + ' 1/2';
+                        } else {
+                            return result[key];
+                        }
                     }
                 }
             }
-
         }
 
         $scope.removeItem = function (item) {
