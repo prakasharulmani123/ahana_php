@@ -788,10 +788,13 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     } else {
                         if (result[key] != Math.floor(result[key])) {
                             var decimalFreq = result[key].split('.');
+                            var wholeNumber = (decimalFreq[0] == '0' ? '' : decimalFreq[0]+' ')
                             if (decimalFreq[1] == '25')
-                                return decimalFreq[0] + ' 1/4';
+                                return wholeNumber + '1/4';
                             else if (decimalFreq[1] == '5')
-                                return decimalFreq[0] + ' 1/2';
+                                return wholeNumber + '1/2';
+                            else if (decimalFreq[1] == '75')
+                                return wholeNumber + '3/4';
                         } else {
                             return result[key];
                         }
@@ -881,7 +884,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         };
 
         $scope.checkFrequency = function (data, item, key, freqType, freqPosition) {
-            var validFractionFreq = ['0.5', '0.25'];
+            var validFractionFreq = ['0.75', '0.5', '0.25'];
             if (item.freqType == freqType) {
                 if (freqType == 'txt')
                     var freqVal = $('input#frequency_' + key + '_' + item.freqType).val();
