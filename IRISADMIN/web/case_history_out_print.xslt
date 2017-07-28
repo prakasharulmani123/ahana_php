@@ -561,7 +561,7 @@
                     <xsl:for-each select="PANELBODY/FIELD[@type='textareaFull' and @id='history_presenting_illness']">
                         <xsl:if test="VALUE and VALUE!=''">
                             <tr>
-                                <td colspan="2" align="left" valign="top">
+                                <td id="history_presenting" colspan="2" align="left" valign="top">
                                     <xsl:attribute name="class">
                                         <xsl:for-each select="PROPERTIES/PROPERTY">
                                             <xsl:if test="@name='class'">
