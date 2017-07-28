@@ -480,13 +480,6 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     var personalTr = personalText.closest('tr').prev('tr');
                     personalTr.remove();
                 }
-                
-//                var statusText = $(this).find('tr.mental_status');
-//                if (statusText.text().trim().length === 0) {
-//                    var statusTr = statusText.closest('tr').prev('tr');
-//                    statusTr.remove();
-//                }
-
             });
 
             $(".classy-edit").each(function () {
@@ -591,7 +584,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                         treatment_text.push(treatment.text().trim());
                     }
                 });
-                
+
                 var mental_status = $(this).find("tr.mental_status_examination");
                 mental_status.each(function () {
                     if (mental_status.text().trim() != "") {
@@ -607,6 +600,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                         ratingTdText.remove();
                     }
                 });
+
 
                 var headingText = $(this).find('td.ribbonhead');
                 var headingnextTr = headingText.closest('tr').next('tr');
@@ -673,6 +667,13 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
             }
             if (mental_status_text.length === 0) {
                 $('.mental_status_examination_head').remove();
+            }
+
+            if ($scope.deviceDetector.browser == 'firefox')
+            {
+                var history = $('#history_presenting').text();
+                var $log = $.parseHTML(history);
+                $('#history_presenting').html($log);
             }
         }
 
