@@ -165,6 +165,7 @@ class PharmacyproductController extends ActiveController {
                     ['like', 'pha_product_description.description_name', $get['text']],
                     ['like', 'pha_product.product_name', $get['text']],
                     ['like', 'pha_product.product_unit_count', $get['text']],
+                    ['like', 'pha_product_batch.package_name', $get['text']],
                     ['like', 'pha_product.product_unit', $get['text']],
                     ['like', 'pha_product_batch_rate.mrp', $get['text']],
                     ['like', 'pha_package_unit.package_name', $get['text']],
