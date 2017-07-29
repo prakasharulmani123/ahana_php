@@ -128,17 +128,22 @@
                         </div>
                         <div class="line line-dashed b-b line-lg "></div>   
                         <div class="form-group">
-                            <label class="col-sm-5 control-label">Re-Order Level (Min) * </label>
-                            <div class="col-sm-7">
+                            <label class="col-sm-5 control-label">Re-Order Level (Min) / (Max) * </label>
+                            <div class="col-sm-3">
                                 <input type="text" name="product_reorder_min" ng-model="data.product_reorder_min" maxlength="50" class="form-control" number-mask="" >
+                            </div>
+                            <div class="col-sm-3">
+                                <input type="text" name="product_reorder_max" ng-model="data.product_reorder_max" maxlength="50" class="form-control" number-mask="" >
                             </div>
                         </div>
                         <div class="line line-dashed b-b line-lg "></div>
 
                         <div class="form-group">
-                            <label class="col-sm-5 control-label">Re-Order Level (Max) * </label>
+                            <label class="col-sm-5 control-label">HSN Number </label>
                             <div class="col-sm-7">
-                                <input type="text" name="product_reorder_max" ng-model="data.product_reorder_max" maxlength="50" class="form-control" number-mask="" >
+                               <select class="form-control" ng-model="data.hsn_id" ng-options="hsn.hsn_id as hsn.hsn_no for hsn in hsncode| orderBy: hsn_no" >
+                                   <option value="">Select HSN</option>
+                               </select>
                             </div>
                         </div>
 
@@ -220,7 +225,7 @@
                                         </select>
                                     </div>
                                 </div>-->
-                
+
                 <div class="form-group">
                     <label class="col-sm-5 control-label">CGST </label>
                     <div class="col-sm-6">

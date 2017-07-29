@@ -273,15 +273,15 @@
                                             <span
                                                 editable-select="saleitem.hsn_no"
                                                 data-e-id="hsn_no"
+                                                onbeforesave="checkHsn($data, key, $index)"
                                                 e-form="tableform"
                                                 e-name="hsn_no"
-                                                onbeforesave="checkInput($data, key, $index)"
                                                 e-ng-options="s.hsn_no as s.hsn_no for s in hsncodes">
-                                                {{ saleitem.hsn_no || 'empty' }}
+                                                {{ saleitem.hsn_no }}
                                             </span>
                                         </div>
                                         <span id="t_hsn_no_{{key}}" class="hide">
-                                            {{ saleitem.hsn_no || 'empty' }}
+                                            {{ saleitem.temp_hsn_no}}
                                         </span>
                                     </td>
                                     <td>

@@ -443,6 +443,20 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             }
         };
 
+        $scope.checkHsn = function (data, key, index) {
+            item = $scope.saleItems[key];
+            if (typeof item != 'undefined') {
+                if (key > 0 && item.product_name == '' && item.batch_no == '' && item.quantity == 0) {
+
+                } else {
+                    if (!data && !item.hsn_no && !item.temp_hsn_no) {
+                       //console.log(item.hsn_no);console.log(item.thsn_no);
+                        return "Not empty";
+                    }
+                }
+            }
+        };
+
         $scope.checkAmount = function (data, key, index) {
             item = $scope.saleItems[key];
             if (typeof item != 'undefined') {
@@ -498,11 +512,14 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 $scope.saleItems[key].batch_details = '';
                 $scope.saleItems[key].batch_no = '';
                 $scope.saleItems[key].expiry_date = '';
+                $scope.saleItems[key].hsn_no = '';
+                $scope.saleItems[key].temp_hsn_no = '';
                 $scope.saleItems[key].mrp = 0;
                 $scope.saleItems[key].quantity = 0;
                 $scope.saleItems[key].discount_percentage = 0;
                 $scope.saleItems[key].generic_id = '';
                 $scope.saleItems[key].product_batches = [];
+                $scope.showOrHideRowEdit('show', key);
                 $scope.clearFormEditables(this.$form, key);
             }
         }
@@ -525,7 +542,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         $scope.productDetail = function (product_id, product_obj) {
             var deferred = $q.defer();
             deferred.notify();
-            var Fields = 'product_name,product_location,product_reorder_min,full_name,salesVat,salesPackageName,availableQuantity,generic_id,product_batches';
+            var Fields = 'product_name,product_location,product_reorder_min,full_name,salesVat,salesPackageName,availableQuantity,generic_id,product_batches,hsnCode';
 
             $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproducts/' + product_id + '?fields=' + Fields + '&addtfields=pharm_sale_prod_json')
                     .success(function (product) {
@@ -582,12 +599,28 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 $scope.saleItems[key].product_batches = selectedObj.product_batches;
                 $scope.saleItems[key].sgst_percent = selectedObj.salesVat.sgst_percent;
                 $scope.saleItems[key].cgst_percent = selectedObj.salesVat.cgst_percent;
+                $scope.saleItems[key].temp_hsn_no = selectedObj.hsnCode;
 
                 $scope.getreadyBatch(selectedObj, key);
                 $scope.productInlineAlert(selectedObj, key);
+                if (selectedObj.hsnCode)
+                    $scope.showOrHideRowEdit('hide', key);
 
                 $scope.updateRow(key);
             });
+        }
+
+        $scope.showOrHideRowEdit = function (mode, key) {
+            if (mode == 'hide') {
+                i_addclass = t_removeclass = 'hide';
+                i_removeclass = t_addclass = '';
+            } else {
+                i_addclass = t_removeclass = '';
+                i_removeclass = t_addclass = 'hide';
+            }
+            $('#i_hsn_no_' + key).addClass(i_addclass).removeClass(i_removeclass);
+
+            $('#t_hsn_no_' + key).addClass(t_addclass).removeClass(t_removeclass);
         }
 
         $scope.getreadyBatch = function (item, key) {
@@ -705,9 +738,11 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             }
             $('#i_full_name_' + key).addClass(i_addclass).removeClass(i_removeclass);
             $('#i_batch_details_' + key).addClass(i_addclass).removeClass(i_removeclass);
+            $('#i_hsn_no_' + key).addClass(i_addclass).removeClass(i_removeclass);
 
             $('#t_full_name_' + key).addClass(t_addclass).removeClass(t_removeclass);
             $('#t_batch_details_' + key).addClass(t_addclass).removeClass(t_removeclass);
+            $('#t_hsn_no_' + key).addClass(t_addclass).removeClass(t_removeclass);
         }
 
         $scope.updateColumn = function ($data, key, column) {
@@ -812,6 +847,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             }
             _that = this;
 
+
             $scope.errorData = "";
             $scope.msg.successMessage = "";
 
@@ -824,6 +860,10 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                     $scope.saleItems[key].full_name = saleitem.full_name.full_name;
                 } else if (typeof saleitem.full_name == 'undefined') {
                     $scope.saleItems[key].product_id = '';
+                }
+
+                if (saleitem.temp_hsn_no) {
+                    $scope.saleItems[key].hsn_no = saleitem.temp_hsn_no;
                 }
 
                 if (angular.isObject(saleitem.batch_details)) {
@@ -934,6 +974,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                         angular.forEach($scope.saleItems, function (item, key) {
                             angular.extend($scope.saleItems[key], {
                                 full_name: item.product.full_name,
+                                temp_hsn_no: item.hsn_no,
                                 batch_no: item.batch.batch_no,
                                 batch_details: item.batch.batch_details,
                                 expiry_date: item.batch.expiry_date,
@@ -1725,7 +1766,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                         ],
                                     ]
                                 },
-                            },{},  {},
+                            }, {}, {},
                             {
                                 colSpan: 3,
                                 layout: 'noBorders',
@@ -1762,7 +1803,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                     ]
                                 },
                             },
-                            {}, {}, 
+                            {}, {},
                             {
                                 layout: 'noBorders',
                                 table: {

@@ -135,6 +135,11 @@ app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http
             $rootScope.commonService.GetSupplierList('', '1', false, function (response) {
                 $scope.suppliers = response.supplierList;
             });
+            
+            $rootScope.commonService.GetHsnCode('1', false, function (response) {
+                $scope.hsncode = response.hsncodeList;
+            });
+            
 
             if ($scope.data.formtype == 'add') {
                 $scope.data.product_reorder_min = 0;
