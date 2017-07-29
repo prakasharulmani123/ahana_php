@@ -64,18 +64,18 @@ class PhaProduct extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['product_name', 'product_description_id', 'product_reorder_min', 'product_reorder_max', 'brand_id', 'purchase_vat_id'], 'required'],
-            [['tenant_id', 'product_description_id', 'product_reorder_min', 'product_reorder_max', 'brand_id', 'division_id', 'generic_id', 'drug_class_id', 'purchase_vat_id', 'purchase_package_id', 'sales_vat_id', 'sales_package_id', 'created_by', 'modified_by'], 'integer'],
-            [['product_price'], 'number'],
-            [['status'], 'string'],
-            [['product_reorder_max'], 'validateReorderchck'],
+                [['product_name', 'product_description_id', 'product_reorder_min', 'product_reorder_max', 'brand_id', 'purchase_vat_id'], 'required'],
+                [['tenant_id', 'product_description_id', 'product_reorder_min', 'product_reorder_max', 'brand_id', 'division_id', 'generic_id', 'drug_class_id', 'purchase_vat_id', 'purchase_package_id', 'sales_vat_id', 'hsn_id', 'sales_package_id', 'created_by', 'modified_by'], 'integer'],
+                [['product_price'], 'number'],
+                [['status'], 'string'],
+                [['product_reorder_max'], 'validateReorderchck'],
             //[['supplier_ids'], 'validateSupplieronetime'],
             [['supplier_id_1', 'supplier_id_2', 'supplier_id_3'], 'validateSupplieronetime'],
-            [['created_at', 'modified_at', 'deleted_at', 'supplier_id_1', 'supplier_id_2', 'supplier_id_3', 'supplier_ids'], 'safe'],
-            [['product_code'], 'string', 'max' => 50],
-            [['product_name', 'product_location'], 'string', 'max' => 255],
-            [['product_unit', 'product_unit_count'], 'string', 'max' => 25],
-            [['tenant_id', 'product_name', 'brand_id'], 'unique', 'targetAttribute' => ['tenant_id', 'product_name', 'brand_id'], 'message' => 'The combination of Tenant ID and Product Name and Brand Name has already been taken.']
+                [['created_at', 'modified_at', 'deleted_at', 'supplier_id_1', 'supplier_id_2', 'supplier_id_3', 'supplier_ids'], 'safe'],
+                [['product_code'], 'string', 'max' => 50],
+                [['product_name', 'product_location'], 'string', 'max' => 255],
+                [['product_unit', 'product_unit_count'], 'string', 'max' => 25],
+                [['tenant_id', 'product_name', 'brand_id'], 'unique', 'targetAttribute' => ['tenant_id', 'product_name', 'brand_id'], 'message' => 'The combination of Tenant ID and Product Name and Brand Name has already been taken.']
         ];
     }
 
@@ -221,7 +221,7 @@ class PhaProduct extends RActiveRecord {
     }
 
     public function getPhaProductBatchesAvailableQty() {
-        return $this->hasMany(PhaProductBatch::className(), ['product_id' => 'product_id'])->andWhere("expiry_date >= '".date('Y-m-d')."'")->sum('available_qty');
+        return $this->hasMany(PhaProductBatch::className(), ['product_id' => 'product_id'])->andWhere("expiry_date >= '" . date('Y-m-d') . "'")->sum('available_qty');
     }
 
     /**
@@ -229,6 +229,10 @@ class PhaProduct extends RActiveRecord {
      */
     public function getPhaPurchaseItems() {
         return $this->hasMany(PhaPurchaseItem::className(), ['product_id' => 'product_id']);
+    }
+
+    public function getPhaHsn() {
+        return $this->hasOne(PhaHsn::className(), ['hsn_id' => 'hsn_id']);
     }
 
     public function getFullName() {
@@ -262,7 +266,7 @@ class PhaProduct extends RActiveRecord {
         $extend = [
             'full_name' => function ($model) {
                 $fullname = $model->fullname;
-                if(Yii::$app->request->get('full_name_with_stock')){
+                if (Yii::$app->request->get('full_name_with_stock')) {
                     $avl = (isset($model->phaProductBatchesAvailableQty) ? $model->phaProductBatchesAvailableQty : 0);
                     $fullname .= " ({$avl})";
                 }
@@ -304,6 +308,9 @@ class PhaProduct extends RActiveRecord {
             'salesPackageName' => function ($model) {
                 return (isset($model->salesPackage) ? $model->salesPackage->package_name : '-');
             },
+            'hsnCode' => function ($model) {
+                return (isset($model->phaHsn) ? $model->phaHsn->hsn_no : '');
+            },
             'availableQuantity' => function ($model) {
                 return (isset($model->phaProductBatchesAvailableQty) ? $model->phaProductBatchesAvailableQty : 0);
             },
@@ -314,7 +321,7 @@ class PhaProduct extends RActiveRecord {
                 return (isset($model->phaLatestBatch) ? $model->phaLatestBatch->phaProductBatchRate->per_unit_price : 0);
             },
             'product_batches' => function ($model) {
-                return $model->getPhaProductBatches()->andWhere('available_qty > 0')->andWhere("expiry_date >= '".date('Y-m-d')."'")->all();
+                return $model->getPhaProductBatches()->andWhere('available_qty > 0')->andWhere("expiry_date >= '" . date('Y-m-d') . "'")->all();
             },
             'product_batches_count' => function ($model) {
                 return $model->getPhaProductBatches()->andWhere('available_qty > 0')->count();
@@ -345,6 +352,7 @@ class PhaProduct extends RActiveRecord {
                         'supplier_id_3' => 'supplier_id_3',
                         'purchase_vat_id' => 'purchase_vat_id',
                         'sales_vat_id' => 'sales_vat_id',
+                        'hsn_id' => 'hsn_id',
                         'purchase_package_id' => 'purchase_package_id',
                         'sales_package_id' => 'sales_package_id',
                     ];
@@ -355,13 +363,13 @@ class PhaProduct extends RActiveRecord {
                         'product_id' => 'product_id',
                     ];
                     break;
-                 case 'sale_update':
+                case 'sale_update':
                     $addt_keys = ['full_name'];
                     $parent_fields = [
                         'product_id' => 'product_id',
                     ];
                     break;
-                 case 'sale_print':
+                case 'sale_print':
                     $addt_keys = ['full_name', 'brand_name', 'brand_code'];
                     $parent_fields = [
                         'product_id' => 'product_id',
@@ -424,7 +432,7 @@ class PhaProduct extends RActiveRecord {
                     ];
                     break;
                 case 'stock_details':
-                    $addt_keys = ['full_name','salesPackageName','purchasePackageName','saleVatPercent','description_name'];
+                    $addt_keys = ['full_name', 'salesPackageName', 'purchasePackageName', 'saleVatPercent', 'description_name'];
                     $parent_fields = [
                         'product_id' => 'product_id',
                         'product_code' => 'product_code',
