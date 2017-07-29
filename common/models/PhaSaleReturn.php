@@ -175,6 +175,7 @@ class PhaSaleReturn extends RActiveRecord {
                         'sale_id' => 'sale_id',
                         'bill_no' => 'bill_no',
                         'sale_date' => 'sale_date',
+                        'created_at' => 'created_at',
                         'total_item_sale_amount' => 'total_item_sale_amount',
                         'total_item_discount_amount' => 'total_item_discount_amount',
                         'roundoff_amount' => 'roundoff_amount',
