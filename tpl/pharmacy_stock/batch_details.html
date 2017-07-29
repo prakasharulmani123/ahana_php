@@ -44,7 +44,7 @@
                                 <th data-toggle="true">Expiry Date</th>
                                 <th data-toggle="true">Available Qty</th>
                                 <th data-toggle="true">MRP</th>
-                                <th data-toggle="true">Sales Unit</th>
+                                <th data-toggle="true">Purchase Unit</th>
                                 <th data-toggle="true">Sales VAT</th>
                                 <th data-sort-ignore="true">
                                     Action
@@ -76,7 +76,8 @@
                                         {{ row.mrp || 'empty' }}
                                     </span>
                                 </td>
-                                <td>{{row.product.salesPackageName}}</td>
+<!--                                <td>{{row.product.salesPackageName}}</td>-->
+<td>{{row.package_name}}</td>
                                 <td>{{row.product.saleVatPercent}}</td>
                                 <td style="white-space: nowrap">
                                     <!--                                                         form -->
