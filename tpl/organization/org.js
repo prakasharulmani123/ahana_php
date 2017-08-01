@@ -380,6 +380,80 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
         $scope.showStockImportErrorLog = function () {
 
         }
+        
+        //Pha Masters Update
+        $scope.initPhaMastersParams = function () {
+            $scope.pha_master_import_process_text = '';
+            $scope.progress_pha_master_imported_rows = $scope.success_pha_master_import_rows = $scope.failed_pha_master_import_rows = $scope.total_pha_master_import_rows = $scope.import_pha_master_percent = 0;
+            $scope.pha_master_import_error_log = false;
+        }
+
+        $scope.importPhaMasters = function () {
+            $scope.initPhaMastersParams();
+            $scope.loadbar('show');
+            $scope.pha_master_import_process_text = 'Fetching the Excel Data. Please wait until the importing begins. This might take few mins';
+            $scope.import_log = Date.parse(moment().format());
+            var currentUser = AuthenticationService.getCurrentUser();
+
+            fileUpload.uploadFileToUrl($scope.phaMastersUpdate, $rootScope.IRISOrgServiceUrl + '/pharmacyproduct/phamastersupdate?tenant_id=' + currentUser.credentials.logged_tenant_id + '&import_log=' + $scope.import_log).success(function (response) {
+                if (response.success) {
+                    $scope.total_pha_master_import_rows = response.message.total_rows;
+                    $scope.pha_master_import_process_text = 'Importing started';
+                    $scope.phaMastersUpdateStart(response.message.id, response.message.max_id);
+                } else {
+                    $scope.loadbar('hide');
+                    $scope.pha_master_import_process_text = '';
+                    $scope.errorData = response.message;
+                }
+            }).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        }
+
+        $scope.phaMastersUpdateStart = function (id, max) {
+            $scope.loadbar('show');
+            $http({
+                method: 'POST',
+                url: $rootScope.IRISOrgServiceUrl + '/pharmacyproduct/phamastersupdatestart',
+                data: {id: id, max_id: max, import_log: $scope.import_log},
+            }).success(
+                    function (response) {
+                        if (response.success) {
+                            $scope.success_pha_master_import_rows++;
+                            $scope.progress_pha_master_imported_rows++;
+                        } else if (response.continue) {
+                            $scope.failed_pha_master_import_rows++;
+                            $scope.progress_pha_master_imported_rows++;
+                        }
+
+                        $scope.pha_master_import_process_text = 'Import progressing (' + $scope.progress_pha_master_imported_rows + '/' + $scope.total_pha_master_import_rows + ')';
+                        $scope.import_pha_master_percent = ($scope.progress_pha_master_imported_rows / $scope.total_pha_master_import_rows) * 100;
+
+                        if (response.continue) {
+                            $scope.phaMastersUpdateStart(response.continue, max);
+                        } else {
+                            $scope.pha_master_import_process_text = 'Import completed (' + $scope.progress_pha_master_imported_rows + '/' + $scope.total_pha_master_import_rows + ')';
+                            $scope.pha_master_import_error_log = true;
+                        }
+                        $scope.loadbar('hide');
+                    }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        }
+        
+        //In-Progress
+        $scope.showphaMastersUpdateErrorLog = function () {
+
+        }
     }]);
 
 // I provide a request-transformation method that is used to prepare the outgoing
