@@ -637,10 +637,10 @@ class PharmacyproductController extends ActiveController {
             $nestedData['product_code'] = $product->product_code;
             $nestedData['product_type'] = $product->productDescription->description_name;
             $nestedData['product_brand'] = $product->brand->brand_name;
-            if($product->generic_id)
-            {
+            if ($product->generic_id) {
                 $nestedData['product_generic'] = $product->generic->generic_name;
-            } else $nestedData['product_generic'] ='-';
+            } else
+                $nestedData['product_generic'] = '-';
             $data[] = $nestedData;
         }
 
@@ -658,6 +658,149 @@ class PharmacyproductController extends ActiveController {
         $list = PhaProductBatch::find()->status()->active()->select('batch_no')->distinct()->all();
         return $list;
 //        echo 'asdasa'; die;
+    }
+
+    public function actionPhamastersupdate() {
+        $get = Yii::$app->getRequest()->get();
+        $allowed = array('csv');
+        $filename = $_FILES['file']['name'];
+        $ext = pathinfo($filename, PATHINFO_EXTENSION);
+        if (!in_array($ext, $allowed)) {
+            return ['success' => false, 'message' => 'Unsupported File Format. CSV Files only accepted'];
+        }
+        $uploadPath = 'uploads/';
+        if (!file_exists($uploadPath)) {
+            mkdir($uploadPath, 0777, true);
+        }
+        $uploadFile = $uploadPath . $filename;
+        if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadFile)) {
+            $file = Url::to($uploadFile);
+            $result = $this->phamastersupdateimport($file, $get['tenant_id'], $get['import_log']);
+            if (!empty($result)) {
+                return ['success' => true, 'message' => $result];
+            } else {
+                return ['success' => false, 'message' => 'Failed to import. Try again later'];
+            }
+        } else {
+            return ['success' => false, 'message' => 'Failed to import. Try again later'];
+        }
+    }
+
+    public function phamastersupdateimport($filename, $tenant_id, $log) {
+        $connection = Yii::$app->client;
+        $connection->open();
+
+        $row = 1;
+        if (($handle = fopen($filename, "r")) !== FALSE) {
+            while (($data = fgetcsv($handle)) !== FALSE) {
+                //skip header row 
+                if ($row++ == 1) {
+                    continue;
+                }
+
+                $sql = "INSERT INTO test_pha_masters_update(tenant_id, product_id, product_name, generic_id, generic_name, drug_class_id, drug_class, batch_id, batch_no, expiry_date, mrp, quantity, packing_unit, import_log) VALUES('{$tenant_id}', '{$data[0]}','{$data[1]}', '{$data[2]}', '{$data[3]}','{$data[4]}', '{$data[5]}', '{$data[6]}', '{$data[7]}', '{$data[8]}', '{$data[9]}', '{$data[10]}', '{$data[11]}', '{$log}')";
+
+                $command = $connection->createCommand($sql);
+                $command->execute();
+            }
+            // close the file
+            fclose($handle);
+            // return the messages
+            @unlink($filename);
+            $command = $connection->createCommand("SELECT COUNT(*) AS 'total_rows', (SELECT MIN(id) FROM test_pha_masters_update WHERE import_log = $log) AS id, (SELECT MAX(id) FROM test_pha_masters_update WHERE import_log = $log) AS max_id FROM test_pha_masters_update WHERE import_log = $log");
+            $result = $command->queryAll(PDO::FETCH_OBJ);
+            $connection->close();
+            return $result[0];
+        }
+    }
+
+    public function actionPhamastersupdatestart() {
+        $post = Yii::$app->getRequest()->post();
+        $id = $post['id'];
+        $import_log = $post['import_log'];
+        $max_id = $post['max_id'];
+
+        if ($id <= $max_id) {
+            $next_id = $id + 1;
+            $connection = Yii::$app->client;
+            $connection->open();
+            $command = $connection->createCommand("SELECT * FROM test_pha_masters_update WHERE id = {$id} AND import_log = $import_log");
+            $result = $command->queryAll(PDO::FETCH_OBJ);
+            if ($result) {
+                $result = $result[0];
+                //Product Update
+                $product_exists = \common\models\PhaProduct::find()->where([
+                            'tenant_id' => $result->tenant_id,
+                            'product_id' => $result->product_id
+                        ])
+                        ->one();
+                if (!empty($product_exists)) {
+                    $product_exists->product_name = $result->product_name;
+                    $product_exists->save(false);
+                    
+                    // Generic Update
+                    $generic = \common\models\PhaGeneric::find()->where([
+                                'tenant_id' => $result->tenant_id,
+                                'generic_id' => $result->generic_id
+                            ])
+                            ->one();
+                    if (!empty($generic)) {
+                        $generic->generic_name = $result->generic_name;
+                        $generic->save(false);
+                        
+                        //Drug class Update
+                        $drug = \common\models\PhaDrugClass::find()->where([
+                                'tenant_id' => $result->tenant_id,
+                                'drug_class_id' => $result->drug_class_id
+                            ])
+                            ->one();
+                        if(!empty($drug)){
+                            $drug->drug_name = $result->drug_class;
+                            $drug->save(false);
+                            
+                            //Batch update
+                            $batch = PhaProductBatch::find()->where([
+                                'tenant_id' => $result->tenant_id,
+                                'batch_id' => $result->batch_id
+                            ])
+                            ->one();
+                            if(!empty($batch)) {
+//                                $batch->stock_adjust = true;
+                                $batch->batch_no = $result->batch_no;
+                                $batch->expiry_date = $result->expiry_date;
+//                                $batch->total_qty = $result->quantity;
+//                                $batch->available_qty = $result->quantity;
+                                $batch->save(false);
+                                $return = ['success' => true, 'continue' => $next_id, 'message' => 'success'];
+                            } else {
+                                $return = ['success' => false, 'continue' => $next_id, 'message' => 'Batch Not exists'];
+                            }
+                        } else {
+                            $return = ['success' => false, 'continue' => $next_id, 'message' => 'Drug Not exists'];
+                        }
+                    } else {
+                        $return = ['success' => false, 'continue' => $next_id, 'message' => 'Generic Not exists'];
+                    }
+                } else {
+                    $return = ['success' => false, 'continue' => $next_id, 'message' => 'Product Not exists'];
+                }
+            } else {
+                $return = ['success' => false, 'continue' => $next_id, 'message' => 'Import data not found'];
+            }
+        } else {
+            $return = ['success' => false, 'continue' => 0];
+        }
+
+        if ($return['continue']) {
+            $status = $return['success'] ? 1 : 0;
+            $message = $return['message'];
+//            $message = str_replace('<p>Please fix the following errors:</p>', '', $return['message']);
+            $sql = "UPDATE test_pha_masters_update SET `status` = '{$status}', response = '{$message}' WHERE id={$id}";
+            $command = $connection->createCommand($sql);
+            $command->execute();
+            $connection->close();
+        }
+        return $return;
     }
 
     public function actionStockbatchwiseimport() {
@@ -799,18 +942,18 @@ class PharmacyproductController extends ActiveController {
                                         $this->_updateBatchRate($result->tenant_id, $batch->batch_id, $result->mrp, $package_unit);
                                         //Package Name not exists, then insert
                                         $packageExist = \common\models\PhaPackageUnit::find()
-                                                ->andWhere([
-                                                    'tenant_id' => $result->tenant_id,
-                                                    'package_name' => $result->Add_Spec1
-                                                ])->one();
-                                        if(empty($packageExist)) {
+                                                        ->andWhere([
+                                                            'tenant_id' => $result->tenant_id,
+                                                            'package_name' => $result->Add_Spec1
+                                                        ])->one();
+                                        if (empty($packageExist)) {
                                             $newPackageName = new \common\models\PhaPackageUnit();
                                             $newPackageName->tenant_id = $result->tenant_id;
                                             $newPackageName->package_name = $result->Add_Spec1;
                                             $newPackageName->package_unit = $package_unit;
                                             $newPackageName->save(false);
                                         }
-                                        
+
                                         //Stock adjust log For "stock report" purpose
                                         $newStkadjustlog = new \common\models\PhaStockAdjustLog();
                                         $newStkadjustlog->tenant_id = $result->tenant_id;
@@ -820,7 +963,7 @@ class PharmacyproductController extends ActiveController {
                                         $newStkadjustlog->adjust_to = $result->Total;
                                         $newStkadjustlog->adjust_qty = $result->Total;
                                         $newStkadjustlog->save(false);
-                                        
+
                                         $return = ['success' => true, 'continue' => $next_id, 'message' => 'success'];
                                     } else {
                                         $return = ['success' => false, 'continue' => $next_id, 'message' => 'Duplicate batch entry'];
