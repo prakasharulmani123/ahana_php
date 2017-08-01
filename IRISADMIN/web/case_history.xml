@@ -69,7 +69,7 @@
                     <PROPERTY name="name">referral_details[]</PROPERTY>
                 </PROPERTIES>
                 <LISTITEMS>
-                    <LISTITEM value="Self" id="RBRefferals1" Selected="true" onclick="OThersvisible(this.id, 'referral_details_other_div', 'block');">Self</LISTITEM>
+                    <LISTITEM value="Self" id="RBRefferals1" Selected="false" onclick="OThersvisible(this.id, 'referral_details_other_div', 'block');">Self</LISTITEM>
                     <LISTITEM value="General Practitioner" id="RBRefferals2" Selected="false" onclick="OThersvisible(this.id, 'referral_details_other_div', 'block');">General Practitioner</LISTITEM>
                     <LISTITEM value="Neighbours" id="RBRefferals3" Selected="false" onclick="OThersvisible(this.id, 'referral_details_other_div', 'block');">Neighbours</LISTITEM>
                     <LISTITEM value="Traditional Healer" id="RBRefferals4" Selected="false" onclick="OThersvisible(this.id, 'referral_details_other_div', 'block');">Traditional Healer</LISTITEM>
