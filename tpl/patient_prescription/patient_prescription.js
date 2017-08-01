@@ -788,7 +788,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     } else {
                         if (result[key] != Math.floor(result[key])) {
                             var decimalFreq = result[key].split('.');
-                            var wholeNumber = (decimalFreq[0] == '0' ? '' : decimalFreq[0]+' ')
+                            var wholeNumber = (decimalFreq[0] == '0' ? '' : decimalFreq[0] + ' ')
                             if (decimalFreq[1] == '25')
                                 return wholeNumber + '1/4';
                             else if (decimalFreq[1] == '5')
@@ -886,10 +886,15 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.checkFrequency = function (data, item, key, freqType, freqPosition) {
             var validFractionFreq = ['0.75', '0.5', '0.25'];
             if (item.freqType == freqType) {
+//                if (freqType == 'txt')
+//                    var freqVal = $('input#frequency_' + key + '_' + item.freqType).val();
+//                else
+//                    var freqVal = $('input#frequency_' + key + '_' + item.freqType + '_' + freqPosition).val();
+
                 if (freqType == 'txt')
-                    var freqVal = $('input#frequency_' + key + '_' + item.freqType).val();
+                    var freqVal = $('div#freq_' + key + '_' + item.freqType + ' input:nth(0)').val();
                 else
-                    var freqVal = $('input#frequency_' + key + '_' + item.freqType + '_' + freqPosition).val();
+                    var freqVal = $('div#freq_' + key + '_' + item.freqType + ' input:nth(' + freqPosition + ')').val();
 
                 if (typeof freqVal == 'undefined' || freqVal == '') {
                     return "Wrong";
@@ -1408,11 +1413,11 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 //                            angular.extend($scope.prescriptionItems2[key], {
 //                                frequency: item.frequency_name,
 //                            });
-                       // });
-                       angular.forEach($scope.prescriptionItems2, function (item, key) {
-                           item.total_qty = $scope.calculate_qty(item.frequency_name, item.number_of_days, item.product.product_description_id, item.product.description_name);
-                           
-                       });
+                        // });
+                        angular.forEach($scope.prescriptionItems2, function (item, key) {
+                            item.total_qty = $scope.calculate_qty(item.frequency_name, item.number_of_days, item.product.product_description_id, item.product.description_name);
+
+                        });
                         deferred.resolve();
                     })
                     .error(function () {
