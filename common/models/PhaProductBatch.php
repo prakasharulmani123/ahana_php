@@ -107,6 +107,10 @@ class PhaProductBatch extends RActiveRecord {
     public function getPhaProductBatchRates() {
         return $this->hasMany(PhaProductBatchRate::className(), ['batch_id' => 'batch_id'])->orderBy(['created_at' => SORT_DESC]);
     }
+    
+    public function getPhaPurchaseItem() {
+        return $this->hasOne(PhaPurchaseItem::className(), ['batch_id' => 'batch_id'],['product_id' => 'product_id'])->orderBy(['created_at' => SORT_DESC]);
+    }
 
     public static function find() {
         return new PhaProductBatchQuery(get_called_class());
@@ -120,6 +124,9 @@ class PhaProductBatch extends RActiveRecord {
             'mrp' => function ($model) {
                 return isset($model->phaProductBatchRate) ? $model->phaProductBatchRate->mrp : 0;
             },
+            'purchase_rate' => function ($model) {
+                return isset($model->phaPurchaseItem) ? $model->phaPurchaseItem->purchase_rate : '-';
+            },        
             'per_unit_price' => function ($model) {
                 return isset($model->phaProductBatchRate) ? $model->phaProductBatchRate->per_unit_price : 0;
             },
@@ -183,7 +190,7 @@ class PhaProductBatch extends RActiveRecord {
                     $parent_fields = array_combine($pFields, $pFields);
                     break;
                 case 'stock_details':
-                    $addt_keys = ['batch_details', 'mrp', 'product'];
+                    $addt_keys = ['batch_details', 'mrp', 'product','purchase_rate'];
                     $pFields = ['batch_id', 'batch_no', 'available_qty', 'expiry_date','package_name'];
                     $parent_fields = array_combine($pFields, $pFields);
                     break;
