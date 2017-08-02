@@ -136,7 +136,7 @@ class XmlController extends Controller {
     public function actionSetattrvalue() {
         $node = 'FIELD';
         $attr = 'id';
-        $find = 'total_duration';
+        $find = 'duration_of_relationship';
         //$replace = 'Higher_Mental_Functions';
 //        $node = 'LISTITEM';
 //        $attr = 'value';
@@ -160,7 +160,6 @@ class XmlController extends Controller {
                     }
                     $targets = $xml->xpath($xpath);
                     if (!empty($targets)) {
-                        //print_r($targets); die;
                         foreach ($targets as $target) {
                             $target->PROPERTIES->PROPERTY[3] = 'return isNumericDotKeyStroke(event)';
                             //$target->PROPERTIES->PROPERTY[0] = $target->PROPERTIES->PROPERTY[0] . '[]';
