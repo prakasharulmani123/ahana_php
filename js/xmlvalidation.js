@@ -29,6 +29,18 @@ function isNumericKeyStroke(evt) {
     return returnValue;
 }
 
+function isNumericDotKeyStroke(evt) {
+    evt = (evt) ? evt : window.event;
+    var charCode = (evt.which) ? evt.which : evt.keyCode;
+    
+    var returnValue = false;
+    // 8 - Backspace, 13 - Carriage Return (Enter), 9 - Tab Key
+    if (((charCode >= 48) && (charCode <= 57)) || (charCode == 8) || (charCode == 13) || (charCode == 110) || (charCode == 9) || ((charCode >= 96) && (charCode <= 105)))
+        returnValue = true
+    
+    return returnValue;
+}
+
 function Checkvisible(a,e)
 {
     if(a=='menstrual_history')
