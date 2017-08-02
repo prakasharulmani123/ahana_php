@@ -350,7 +350,7 @@
                     <PROPERTY name="id">txtillduration</PROPERTY>
                     <PROPERTY name="class">form-control</PROPERTY>
                     <PROPERTY name="name">total_duration</PROPERTY>
-                    <PROPERTY name="onkeydown">return isNumericKeyStroke(event)</PROPERTY>
+                    <PROPERTY name="onkeydown">return isNumericDotKeyStroke(event)</PROPERTY>
                 </PROPERTIES>
                 <FIELD id="ddlillduration" type="DropDownList">
                     <PROPERTIES>

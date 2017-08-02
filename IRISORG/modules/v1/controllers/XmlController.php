@@ -136,13 +136,13 @@ class XmlController extends Controller {
     public function actionSetattrvalue() {
         $node = 'FIELD';
         $attr = 'id';
-        $find = 'RBdevlopmentmilestonesub';
+        $find = 'total_duration';
         //$replace = 'Higher_Mental_Functions';
 //        $node = 'LISTITEM';
 //        $attr = 'value';
 //        $find = 'RTA &amp; Surgery';
 //        $replace = 'RTA & Surgery';
-        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD/FIELD/FIELD/{$node}[@{$attr}='{$find}']";
+        $xpath = "/FIELDS/GROUP/PANELBODY//{$node}[@{$attr}='{$find}']";
         //echo $xpath; die;
 
         $all_files = $this->getAllFiles();
@@ -160,10 +160,11 @@ class XmlController extends Controller {
                     }
                     $targets = $xml->xpath($xpath);
                     if (!empty($targets)) {
-                        //print_r($targets);
+                        //print_r($targets); die;
                         foreach ($targets as $target) {
-                            $target->PROPERTIES->PROPERTY[0] = $target->PROPERTIES->PROPERTY[0] . '[]';
-                            $target['type'] = 'CheckBoxList';
+                            $target->PROPERTIES->PROPERTY[3] = 'return isNumericDotKeyStroke(event)';
+                            //$target->PROPERTIES->PROPERTY[0] = $target->PROPERTIES->PROPERTY[0] . '[]';
+                            //$target['type'] = 'CheckBoxList';
                         }
                     }
                     //print_r($targets); die;
