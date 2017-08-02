@@ -609,7 +609,7 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
                     {
                         text: [
                             {text: 'Invoice Date: ', bold: true},
-                            sale.sale_date
+                            moment(sale.created_at).format('YYYY-MM-DD'),
                         ],
                         margin: [0, 0, 0, 10]
                     }
