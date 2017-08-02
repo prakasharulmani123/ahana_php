@@ -165,6 +165,10 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             }
 
             $scope.loadbar('show');
+
+            $rootScope.commonService.GetVatList('', '1', false, function (response) {
+                $scope.vatList = response.vatList;
+            });
             $rootScope.commonService.GetPaymentType(function (response) {
                 $scope.paymentTypes = response;
 
@@ -411,7 +415,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                 $scope.purchaseitems[key].product_id = item.product_id;
                 $scope.purchaseitems[key].vat_percent = selectedObj.purchaseVat.vat;
                 $scope.purchaseitems[key].batches = selectedObj.product_batches;
-
+                
                 $scope.purchaseitems[key].batch_no = '0';
                 $scope.purchaseitems[key].batch_details = '';
                 $scope.purchaseitems[key].expiry_date = '';

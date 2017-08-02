@@ -47,7 +47,7 @@
                 <div class="form-group">
                     <label class=" col-sm-12 col-lg-4 text-left control-label">Supplier Name *</label>
                     <div class="col-sm-10 col-lg-">
-                        <select class="form-control selectpicker" data-live-search="true" ng-model="data.supplier_id" ng-options="supplier.supplier_id as supplier.supplier_name for supplier in suppliers | orderBy: supplier_name" ng-change="changeGetSupplier()">
+                        <select class="form-control selectpicker" data-live-search="true" ng-model="data.supplier_id" ng-options="supplier.supplier_id as supplier.supplier_name for supplier in suppliers| orderBy: supplier_name" ng-change="changeGetSupplier()">
                             <option value="">Select Supplier</option>
                         </select>
                     </div>
@@ -267,7 +267,19 @@
                                         </span>
                                     </td>
                                     <td><span>{{purchaseitem.discount_amount}}</span></td>
-                                    <td><span>{{purchaseitem.vat_percent}}</span></td>
+                                    <td ng-if="formtype=='add'">
+                                        <span
+                                            editable-select="purchaseitem.vat_percent"
+                                            e-form="tableform"
+                                            onbeforesave="checkInput($data)"
+                                            e-ng-options="vat.vat as vat.vat for vat in vatList"
+                                            e-name="purchaseitem.vat_percent" e-name="purchaseitem.vat_percent"
+                                            e-autocomplete="off">
+                                            {{ purchaseitem.vat_percent || 'empty' }}
+                                        </span>
+                                    </td>
+                                    <td ng-if="formtype=='update'"><span>{{purchaseitem.vat_percent}}</span></td>
+<!--                                    <td><span>{{purchaseitem.vat_percent}}</span></td>-->
                                     <td><span>{{purchaseitem.vat_amount}}</span></td>
                                     <td><span>{{purchaseitem.total_amount}}</span></td>
                                     <td align="center">
