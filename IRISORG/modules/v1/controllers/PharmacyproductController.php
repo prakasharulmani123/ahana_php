@@ -661,6 +661,7 @@ class PharmacyproductController extends ActiveController {
     }
 
     public function actionPhamastersupdate() {
+//        return ['success' => true, 'message' => ['total_rows' => '2996', 'id' => '47', 'max_id' => '2996']];
         $get = Yii::$app->getRequest()->get();
         $allowed = array('csv');
         $filename = $_FILES['file']['name'];
@@ -714,6 +715,57 @@ class PharmacyproductController extends ActiveController {
         }
     }
 
+    private $migrateTables;
+
+    private function _getMigrationTable($table_name, $field_name, $org_id, $update_id) {
+        $connection = Yii::$app->client;
+
+        $database = $connection->createCommand("SELECT DATABASE()")->queryScalar();
+
+        $command = $connection->createCommand("
+            SELECT DISTINCT TABLE_NAME
+            FROM INFORMATION_SCHEMA.COLUMNS
+            WHERE COLUMN_NAME IN ('{$field_name}')
+            AND TABLE_NAME NOT IN ('{$table_name}', 'test_pha_masters_update')
+            AND TABLE_SCHEMA= :db", [':db' => $database]);
+        $migrate_tables = \yii\helpers\ArrayHelper::map($command->queryAll(), 'TABLE_NAME', 'TABLE_NAME');
+
+        $command = $connection->createCommand("
+            SELECT DISTINCT TABLE_NAME
+            FROM information_schema.views
+            WHERE TABLE_SCHEMA= :db", [':db' => $database]);
+        $unset_tables = \yii\helpers\ArrayHelper::map($command->queryAll(), 'TABLE_NAME', 'TABLE_NAME');
+
+        $migrate_tables = array_diff($migrate_tables, $unset_tables);
+
+        $migrate_tables = array_map(function($a) {
+            $prefix = '\common\models\\';
+            return $prefix . \yii\helpers\BaseInflector::camelize($a);
+        }, $migrate_tables);
+
+        $merge_details = [];
+        foreach ($migrate_tables as $table => $modal) {
+            //pha_drug_generic table not need to update if generic_id will come, because already generic may assign 
+            if($table == 'pha_drug_generic' && $field_name == 'generic_id'){
+                continue;
+            }
+            $pk = $modal::primaryKey();
+            $merge_details[$table] = array_values(\yii\helpers\ArrayHelper::map($modal::find()->andWhere([$field_name => $org_id])->all(), $pk, $pk));
+
+            $command = $connection->createCommand("
+                UPDATE $table
+                SET $field_name = :update_id
+                WHERE $field_name = :org_id", [':update_id' => $update_id, 'org_id' => $org_id]);
+            $command->execute();
+        }
+
+        $connection->close();
+        return $merge_details;
+    }
+
+    // * Note 
+    //PhaProductBatch - After save Not working, so *PhaStockAdjustLog coding* is used. 
+    //When import, Just hide the After save in PhaProductBatch and then use this function.
     public function actionPhamastersupdatestart() {
         $post = Yii::$app->getRequest()->post();
         $id = $post['id'];
@@ -735,51 +787,105 @@ class PharmacyproductController extends ActiveController {
                         ])
                         ->one();
                 if (!empty($product_exists)) {
-                    $product_exists->product_name = $result->product_name;
-                    $product_exists->save(false);
-                    
-                    // Generic Update
-                    $generic = \common\models\PhaGeneric::find()->where([
+                    $product_duplicate = PhaProduct::find()->where([
                                 'tenant_id' => $result->tenant_id,
-                                'generic_id' => $result->generic_id
-                            ])
-                            ->one();
-                    if (!empty($generic)) {
-                        $generic->generic_name = $result->generic_name;
-                        $generic->save(false);
-                        
-                        //Drug class Update
-                        $drug = \common\models\PhaDrugClass::find()->where([
-                                'tenant_id' => $result->tenant_id,
-                                'drug_class_id' => $result->drug_class_id
-                            ])
-                            ->one();
-                        if(!empty($drug)){
-                            $drug->drug_name = $result->drug_class;
-                            $drug->save(false);
-                            
-                            //Batch update
-                            $batch = PhaProductBatch::find()->where([
-                                'tenant_id' => $result->tenant_id,
-                                'batch_id' => $result->batch_id
-                            ])
-                            ->one();
-                            if(!empty($batch)) {
-//                                $batch->stock_adjust = true;
-                                $batch->batch_no = $result->batch_no;
-                                $batch->expiry_date = $result->expiry_date;
-//                                $batch->total_qty = $result->quantity;
-//                                $batch->available_qty = $result->quantity;
-                                $batch->save(false);
-                                $return = ['success' => true, 'continue' => $next_id, 'message' => 'success'];
+                                'product_name' => $result->product_name,
+                                'brand_id' => $product_exists->brand_id
+                            ])->andWhere('product_id !=' . $result->product_id)->one();
+                    if (empty($product_duplicate)) {
+                        $product_exists->product_name = $result->product_name;
+                        $product_exists->save(false);
+
+                        // Generic Update
+                        $generic = \common\models\PhaGeneric::find()->where([
+                                    'tenant_id' => $result->tenant_id,
+                                    'generic_id' => $result->generic_id
+                                ])
+                                ->one();
+                        if (!empty($generic)) {
+                            $generic_duplicate = \common\models\PhaGeneric::find()->where([
+                                        'tenant_id' => $result->tenant_id,
+                                        'generic_name' => $result->generic_name,
+                                        'deleted_at' => '0000-00-00 00:00:00'
+                                    ])->andWhere('generic_id !=' . $result->generic_id)->one();
+                            if (empty($generic_duplicate)) {
+                                $generic->generic_name = $result->generic_name;
+                                $generic->save(false);
                             } else {
-                                $return = ['success' => false, 'continue' => $next_id, 'message' => 'Batch Not exists'];
+                                //Delete Orginal Record
+                                $generic->remove();
+                                $this->_getMigrationTable('pha_generic', 'generic_id', $generic->generic_id, $generic_duplicate->generic_id);
+                            }
+
+                            //Drug class Update
+                            $drug = \common\models\PhaDrugClass::find()->where([
+                                        'tenant_id' => $result->tenant_id,
+                                        'drug_class_id' => $result->drug_class_id
+                                    ])
+                                    ->one();
+                            if (!empty($drug)) {
+                                $drug_duplicate = \common\models\PhaDrugClass::find()->where([
+                                            'tenant_id' => $result->tenant_id,
+                                            'drug_name' => $result->drug_class,
+                                            'deleted_at' => '0000-00-00 00:00:00'
+                                        ])->andWhere('drug_class_id !=' . $result->drug_class_id)->one();
+
+                                if (empty($drug_duplicate)) {
+                                    $drug->drug_name = $result->drug_class;
+                                    $drug->save(false);
+                                } else {
+                                    //Delete Orginal Record
+                                    $drug->remove();
+                                    $this->_getMigrationTable('pha_drug_class', 'drug_class_id', $drug->drug_class_id, $drug_duplicate->drug_class_id);
+                                }
+
+                                //Batch update
+                                $batch = PhaProductBatch::find()->where([
+                                            'tenant_id' => $result->tenant_id,
+                                            'batch_id' => $result->batch_id
+                                        ])
+                                        ->one();
+                                if (!empty($batch)) {
+                                    $old_avail = $batch->available_qty;
+                                    $batch_duplicate = PhaProductBatch::find()->where([
+                                                'tenant_id' => $result->tenant_id,
+                                                'product_id' => $result->product_id,
+                                                'batch_no' => $result->batch_no,
+                                                'expiry_date' => $result->expiry_date,
+                                                'deleted_at' => '0000-00-00 00:00:00'
+                                            ])->andWhere('batch_id !=' . $result->batch_id)->one();
+
+                                    if (empty($batch_duplicate)) {
+                                        $batch->stock_adjust = true;
+                                        $batch->batch_no = $result->batch_no;
+                                        $batch->expiry_date = $result->expiry_date;
+                                        $batch->total_qty = $result->quantity;
+                                        $batch->available_qty = $result->quantity;
+                                        $batch->save(false);
+                                        /*PhaStockAdjustLog Coding*/
+                                        $adjust_log = new \common\models\PhaStockAdjustLog();
+                                        $adjust_log->batch_id = $batch->batch_id;
+                                        $adjust_log->adjust_date_time = $batch->modified_at;
+                                        $adjust_log->adjust_from = $old_avail;
+                                        $adjust_log->adjust_to = $batch->available_qty;
+                                        $adjust_log->adjust_qty = $adjust_log->adjust_to - $adjust_log->adjust_from;
+                                        $adjust_log->save(false);
+                                        /*PhaStockAdjustLog Coding*/
+                                        $return = ['success' => true, 'continue' => $next_id, 'message' => 'success'];
+                                    } else {
+                                        $return = ['success' => false, 'continue' => $next_id, 'message' => 'Duplicate Batch'];
+                                    }
+                                } else {
+                                    $return = ['success' => false, 'continue' => $next_id, 'message' => 'Batch Not exists'];
+                                }
+                            } else {
+                                $return = ['success' => false, 'continue' => $next_id, 'message' => 'Drug Not exists'];
                             }
                         } else {
-                            $return = ['success' => false, 'continue' => $next_id, 'message' => 'Drug Not exists'];
+                            $return = ['success' => false, 'continue' => $next_id, 'message' => 'Generic Not exists'];
                         }
                     } else {
-                        $return = ['success' => false, 'continue' => $next_id, 'message' => 'Generic Not exists'];
+                        $return = ['success' => false, 'continue' => $next_id, 'message' => 'Duplicate Product'];
                     }
                 } else {
                     $return = ['success' => false, 'continue' => $next_id, 'message' => 'Product Not exists'];
