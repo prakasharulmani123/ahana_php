@@ -193,6 +193,7 @@ class PhaPurchaseItem extends RActiveRecord {
         $batch_rate = $this->_updateBatchRate($batch->batch_id, $this->mrp, (int) $this->package_unit);
 
         $this->batch_id = $batch->batch_id;
+        $this->mrp = $batch_rate->mrp;
         $this->free_quantity = (!empty($this->free_quantity)) ? $this->free_quantity : 0;
         //$this->free_quantity_unit = (!empty($this->free_quantity_unit)) ? $this->free_quantity_unit : 0;
 
@@ -290,7 +291,7 @@ class PhaPurchaseItem extends RActiveRecord {
             $batch_rate = $batch_rate_exists;
         }
         //Per Unit Price
-        $per_unit_price = $mrp / $package_unit;
+        $per_unit_price = $batch_rate->mrp / $package_unit;
         $batch_rate->per_unit_price = $per_unit_price;
         $batch_rate->batch_id = $batch_id;
         $batch_rate->save(false);
