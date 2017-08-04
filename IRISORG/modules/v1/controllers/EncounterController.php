@@ -269,6 +269,7 @@ class EncounterController extends ActiveController {
                         } else {
                             $data[$k]['discharge_date'] = '-';
                         }
+                        $data[$k]['details'] = $e->encounter->patCurrentAdmission->getRoomdetails(); // Latest Room Details
                     }
                 }
             }
@@ -363,8 +364,7 @@ class EncounterController extends ActiveController {
                 $filterdate = date('m Y');
                 $filterQuery = "AND DATE_FORMAT(d.encounter_date,'%m %Y') = '$filterdate'";
                 $filterQuery1 = "AND DATE_FORMAT(b.encounter_date,'%m %Y') = '$filterdate'";
-            }
-            else {
+            } else {
                 $filterQuery = "";
                 $filterQuery1 = "";
             }
