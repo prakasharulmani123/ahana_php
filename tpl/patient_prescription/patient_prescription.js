@@ -533,6 +533,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                     } else {
                                         route = (product.description_routes) ? product.description_routes[0].route_name : '';
                                     }
+                                    if (typeof prescription.frequency == 'undefined')
+                                        prescription.frequency ='0-0-0';
                                     items = {
                                         'product_id': prescription.product_id,
                                         'product_name': product.full_name,
@@ -558,9 +560,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                         'product_description_id': product.product_description_id,
                                         'description_name': product.description_name,
                                         'in_stock': (parseInt(product.availableQuantity) > parseInt(qty_count)),
-                                        'freqType': '3'
+                                        'freqType': '3',
                                     };
-
                                     //Multiple entries created, Check duplicate once again 
                                     var chkDuplicate = $filter('filter')($scope.data.prescriptionItems, {product_id: items.product_id}, true);
                                     if (chkDuplicate.length == 0) {
