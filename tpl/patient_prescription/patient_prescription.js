@@ -534,7 +534,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                         route = (product.description_routes) ? product.description_routes[0].route_name : '';
                                     }
                                     if (typeof prescription.frequency == 'undefined')
-                                        prescription.frequency ='0-0-0';
+                                        prescription.frequency = '0-0-0';
                                     items = {
                                         'product_id': prescription.product_id,
                                         'product_name': product.full_name,
@@ -887,6 +887,20 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.checkFrequency = function (data, item, key, freqType, freqPosition) {
             var validFractionFreq = ['0.75', '0.5', '0.25'];
             if (item.freqType == freqType) {
+
+                if (parseFloat(data) == '0') {
+                    var empty_data = item.frequency.split('-');
+                    if (freqType == '3')
+                    {
+                        if ((parseFloat(empty_data[0]) == '0') && (parseFloat(empty_data[1]) == '0') && (parseFloat(empty_data[2]) == '0'))
+                            return "Wrong";
+                    }
+                    if (freqType == '4')
+                    {
+                        if ((parseFloat(empty_data[0]) == '0') && (parseFloat(empty_data[1]) == '0') && (parseFloat(empty_data[2]) == '0') && (parseFloat(empty_data[3]) == '0'))
+                            return "Wrong";
+                    }
+                }
 //                if (freqType == 'txt')
 //                    var freqVal = $('input#frequency_' + key + '_' + item.freqType).val();
 //                else
