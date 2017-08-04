@@ -319,7 +319,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                         $scope.data.encounter_id = encounter_id.toString();
                     }
                     $scope.show_encounter_loader = false;
-                }, 'sale_encounter_id');
+                }, 'sale_encounter_id','','old_encounter');
             }
 
         }
