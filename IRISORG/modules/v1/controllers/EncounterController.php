@@ -597,8 +597,12 @@ class EncounterController extends ActiveController {
         $encounter_type = 'IP,OP';
         if (isset($GET['encounter_type']))
             $encounter_type = $GET['encounter_type'];
+        
+        $oldencounter='';
+        if (isset($GET['old_encounter']))
+            $oldencounter = $GET['old_encounter'];
 
-        $model = PatEncounter::getEncounterListByPatient($tenant, $status, $deleted, $patient_id, $encounter_type);
+        $model = PatEncounter::getEncounterListByPatient($tenant, $status, $deleted, $patient_id, $encounter_type, $oldencounter);
 
         return $model;
     }
