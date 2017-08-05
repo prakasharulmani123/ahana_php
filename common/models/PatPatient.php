@@ -111,7 +111,7 @@ class PatPatient extends RActiveRecord {
      */
     public function rules() {
         return [
-                [['patient_title_code', 'patient_firstname', 'patient_gender', 'patient_reg_mode', 'patient_mobile', 'patient_dob'], 'required'],
+                [['patient_title_code', 'patient_firstname', 'patient_gender', 'patient_reg_mode', 'patient_mobile'], 'required'],
                 [['patient_category_id'], 'required', 'message' => 'Category cannot be blank.', 'on' => 'registration'],
                 [['patient_dob'], 'validateDOB', 'on' => 'registration'],
                 [['patient_firstname'], 'string', 'min' => '2'],
