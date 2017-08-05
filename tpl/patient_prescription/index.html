@@ -220,6 +220,9 @@
                                                         <td> 
                                                             <div id="freq_{{item.item_key}}_3" class="freq_div_{{item.item_key}} freq_3_times" style="width: 75%; float:left">
                                                                 <span editable-text="item.frequency_3_0"
+                                                                      e-typeahead-editable="true"
+                                                                      e-typeahead="consFreq.freq_name_0 for consFreq in currPresMask3 | filter:$viewValue | unique: 'freq_name_0'"
+                                                                      e-typeahead-on-select="freqChange($item.freq_name_0, '3', item, item.item_key, tableform, '0')"
                                                                       e-index ="{{item.item_key}}"
                                                                       e-tabindex="2{{item.item_key}}3"
                                                                       e-class="form-control m-b frequency_{{item.item_key}} freq_editable"
@@ -237,6 +240,9 @@
                                                                     {{ selectFreq('3', '0', item, item.item_key)}}
                                                                 </span>
                                                                 <span editable-text="item.frequency_3_1"
+                                                                      e-typeahead-editable="true"
+                                                                      e-typeahead="consFreq.freq_name_1 for consFreq in currPresMask3 | filter:$viewValue | unique: 'freq_name_1'"
+                                                                      e-typeahead-on-select="freqChange($item.freq_name_1, '3', item, item.item_key, tableform, '1')"
                                                                       e-index ="{{item.item_key}}"
                                                                       e-tabindex="2{{item.item_key}}3"
                                                                       e-class="form-control m-b frequency_{{item.item_key}} freq_editable"
@@ -254,6 +260,9 @@
                                                                     {{ selectFreq('3', '1', item, item.item_key)}}
                                                                 </span>
                                                                 <span editable-text="item.frequency_3_2"
+                                                                      e-typeahead-editable="true"
+                                                                      e-typeahead="consFreq.freq_name_2 for consFreq in currPresMask3 | filter:$viewValue | unique: 'freq_name_2'"
+                                                                      e-typeahead-on-select="freqChange($item.freq_name_2, '3', item, item.item_key, tableform, '2')"
                                                                       e-index ="{{item.item_key}}"
                                                                       e-tabindex="2{{item.item_key}}3"
                                                                       e-class="form-control m-b frequency_{{item.item_key}} freq_editable"
@@ -273,6 +282,9 @@
                                                             </div>
                                                             <div id="freq_{{item.item_key}}_4" class="freq_div_{{item.item_key}} hide freq_4_times" style="width: 75%; float:left">
                                                                 <span editable-text="item.frequency_4_0"
+                                                                      e-typeahead-editable="true"
+                                                                      e-typeahead="consFreq.freq_name_0 for consFreq in currPresMask4 | filter:$viewValue | unique: 'freq_name_0'"
+                                                                      e-typeahead-on-select="freqChange($item.freq_name_0, '4', item, item.item_key, tableform, '0')"
                                                                       e-index ="{{item.item_key}}"
                                                                       e-tabindex="2{{item.item_key}}3"
                                                                       e-class="form-control m-b frequency_{{item.item_key}} freq_editable"
@@ -290,6 +302,9 @@
                                                                     {{ selectFreq('4', '0', item, item.item_key)}}
                                                                 </span>
                                                                 <span editable-text="item.frequency_4_1"
+                                                                      e-typeahead-editable="true"
+                                                                      e-typeahead="consFreq.freq_name_1 for consFreq in currPresMask4 | filter:$viewValue | unique: 'freq_name_1'"
+                                                                      e-typeahead-on-select="freqChange($item.freq_name_1, '4', item, item.item_key, tableform, '1')"
                                                                       e-index ="{{item.item_key}}"
                                                                       e-tabindex="2{{item.item_key}}3"
                                                                       e-class="form-control m-b frequency_{{item.item_key}} freq_editable"
@@ -307,6 +322,9 @@
                                                                     {{ selectFreq('4', '1', item, item.item_key)}}
                                                                 </span>
                                                                 <span editable-text="item.frequency_4_2"
+                                                                      e-typeahead-editable="true"
+                                                                      e-typeahead="consFreq.freq_name_2 for consFreq in currPresMask4 | filter:$viewValue | unique: 'freq_name_2'"
+                                                                      e-typeahead-on-select="freqChange($item.freq_name_2, '4', item, item.item_key, tableform, '2')"
                                                                       e-index ="{{item.item_key}}"
                                                                       e-tabindex="2{{item.item_key}}3"
                                                                       e-class="form-control m-b frequency_{{item.item_key}} freq_editable"
@@ -324,6 +342,9 @@
                                                                     {{ selectFreq('4', '2', item, item.item_key)}}
                                                                 </span>
                                                                 <span editable-text="item.frequency_4_3"
+                                                                      e-typeahead-editable="true"
+                                                                      e-typeahead="consFreq.freq_name_3 for consFreq in currPresMask4 | filter:$viewValue | unique: 'freq_name_3'"
+                                                                      e-typeahead-on-select="freqChange($item.freq_name_3, '4', item, item.item_key, tableform, '3')"
                                                                       e-index ="{{item.item_key}}"
                                                                       e-tabindex="2{{item.item_key}}3"
                                                                       e-class="form-control m-b frequency_{{item.item_key}} freq_editable"

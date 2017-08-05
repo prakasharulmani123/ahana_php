@@ -1581,6 +1581,19 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     $scope.currPresMaskTxt.unshift($scope.defaultMaskTxt);
                 }
             }
+            //Freq Typeahead concept 
+            angular.forEach($scope.currPresMask3, function (value, key) {
+                var result = value.freq_name.split('-');
+                angular.forEach(result, function (item, item_key) {
+                    value['freq_name_' + item_key] = item;
+                });
+            });
+            angular.forEach($scope.currPresMask4, function (value, key) {
+                var result = value.freq_name.split('-');
+                angular.forEach(result, function (item, item_key) {
+                    value['freq_name_' + item_key] = item;
+                });
+            });
         }
 
         $scope.removeRow = function (pres_id) {
