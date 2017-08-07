@@ -1314,7 +1314,9 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
                 var a = $("#prescriptioncont-header .selected a");
                 if (a.length > 0) {
-                    $scope.lastSelected = $scope.prescription_lists[a.data('key')];
+                    $scope.$apply(function () {
+                        $scope.lastSelected = $scope.prescription_lists[a.data('key')];
+                    });
                     $(this).val($scope.lastSelected.prescription);
                 }
             }
@@ -1338,15 +1340,23 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $("body").on("mouseover", "#prescriptioncont-header li", function () {
             $("#prescriptioncont-header li").removeClass("selected");
             $(this).addClass("selected");
-            var Selected = $scope.prescription_lists[$(this).find("a").data('key')];
-            $('#prescription_global_search').val(Selected.prescription);
+            $scope.$apply(function () {
+                if (!jQuery.isEmptyObject($scope.prescription_lists)) {
+                    var Selected = $scope.prescription_lists[$(this).find("a").data('key')];
+                    if(typeof Selected != 'undefined'){
+                        $('#prescription_global_search').val(Selected.prescription);
+                    }
+                }
+            });
         });
 
         $scope.selectOption = function () {
             var link_tag = $("#prescriptioncont-header .selected").find("a");
 
-            var Selected = $scope.prescription_lists[link_tag.data('key')];
-            $('#prescription_global_search').val(Selected.prescription);
+            $scope.$apply(function () {
+                var Selected = $scope.prescription_lists[link_tag.data('key')];
+                $('#prescription_global_search').val(Selected.prescription);
+            });
 
             if (link_tag.length > 0) {
                 $(link_tag).trigger("click");
