@@ -3241,33 +3241,32 @@
                                     </table>
                                 </td>
                             </tr>
-
-                            <tr class="mental_status_examination">
-                                <td align="left" valign="top">
-                                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                                        <tr>
-                                            <xsl:for-each select="PANELBODY/FIELD[(@type='TextBox') and (@id='txtDiagnosis')]">
-                                                <xsl:if test="PROPERTIES/PROPERTY[@name = 'value' and string(.)]">
-                                                    <tr>
-                                                        <td width="20%" align="left" valign="top" class="small-left-heading">
-                                                            <xsl:value-of select="@label"/>
-                                                        </td>
-                                                        <td width="300" align="left" valign="top">
-                                                            <xsl:for-each select="PROPERTIES/PROPERTY">
-                                                                <xsl:if test="@name='value'">
-                                                                    <xsl:value-of select="current()"/>
-                                                                    <xsl:value-of select="../../@Backtext"/>
-                                                                </xsl:if>
-                                                            </xsl:for-each>
-                                                        </td>
-                                                    </tr>
-                                                </xsl:if>
-                                            </xsl:for-each>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
+                        </td>
+                    </tr>
                     
+                    <tr>
+                        <td align="left" valign="top">
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <xsl:for-each select="PANELBODY/FIELD[(@type='TextBox') and (@id='txtDiagnosis')]">
+                                        <xsl:if test="PROPERTIES/PROPERTY[@name = 'value' and string(.)]">
+                                            <tr>
+                                                <td width="20%" align="left" valign="top" class="small-left-heading">
+                                                    <xsl:value-of select="@label"/>
+                                                </td>
+                                                <td width="300" align="left" valign="top">
+                                                    <xsl:for-each select="PROPERTIES/PROPERTY">
+                                                        <xsl:if test="@name='value'">
+                                                            <xsl:value-of select="current()"/>
+                                                            <xsl:value-of select="../../@Backtext"/>
+                                                        </xsl:if>
+                                                    </xsl:for-each>
+                                                </td>
+                                            </tr>
+                                        </xsl:if>
+                                    </xsl:for-each>
+                                </tr>
+                            </table>
                         </td>
                     </tr>
                     
