@@ -4,8 +4,9 @@
     <xsl:template match="/">
         <xsl:for-each select="FIELDS/GROUP">
             <table id="heading" width="100%" border="0" cellspacing="0" cellpadding="0">
-                <!-- 1st row -->
-                <thead>
+                
+                <tbody>
+                    <!-- 1st row -->
                     <xsl:for-each select="PANELHEADER">
                         <tr>
                             <td colspan="2" class="ribbonhead" style="color:#FFFFFF;" >
@@ -15,9 +16,6 @@
                             </td>
                         </tr>
                     </xsl:for-each>
-                </thead>
-               
-                <tbody>
                     <!-- 2nd row -->
                     <tr>
                         <td width="70%" valign="top" align="left">
