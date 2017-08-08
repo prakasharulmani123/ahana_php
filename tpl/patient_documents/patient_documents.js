@@ -404,8 +404,11 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                         $scope.xml = pat_doc_response.result.document_xml;
                         $scope.isLoading = false;
                         $timeout(function () {
-                            $scope.checkTablerow();
+                            $scope.setRefferedBy();
                         }, 100);
+                        $timeout(function () {
+                            $scope.checkTablerow();
+                        }, 1000);
                     });
                 }
             });
@@ -427,13 +430,47 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                         $scope.modified_at = pat_doc_response.result.modified_at;
                         $scope.xml = pat_doc_response.result.document_xml;
                         $timeout(function () {
+                            $scope.setRefferedBy();
+                        }, 100);
+                        $timeout(function () {
                             $scope.checkTablerow();
                             $scope.printElement();
-                        }, 100);
+                        }, 1000);
                     });
 
                 }
             });
+        }
+
+        $scope.setRefferedBy = function () {
+            var created_by = $scope.created_by;
+            var date = new Date($scope.modified_at);
+            var month = date.getMonth() + 1;
+            var day = date.getDate();
+            var output = (('' + day).length < 2 ? '0' : '') + day + '/' +
+                    (('' + month).length < 2 ? '0' : '') + month + '/' +
+                    date.getFullYear();
+
+            var create_date = new Date($scope.created_at);
+            var create_month = create_date.getMonth() + 1;
+            var create_day = create_date.getDate();
+            var create_output = (('' + create_day).length < 2 ? '0' : '') + create_day + '/' +
+                    (('' + create_month).length < 2 ? '0' : '') + create_month + '/' +
+                    create_date.getFullYear();
+
+            var hours = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
+            var am_pm = date.getHours() >= 12 ? "PM" : "AM";
+            hours = hours < 10 ? "0" + hours : hours;
+            var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+            //var seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+            time = hours + ":" + minutes + am_pm;
+
+            $timeout(function () {
+                $('#created_name').html(created_by);
+                $('#created_date').html(create_output);
+                $('#date_name').html(output);
+                $('#time').html(time);
+            }, 100);
         }
 
         $scope.checkTablerow = function () {
@@ -615,7 +652,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                         tr.remove();
                     }
                 });
-                
+
                 // If ICD-10 Heading not need, then unhide the below codes
 //                if(headingText.find('h1').html() == 'ICD-10'){
 //                    if($(this).find('tr.icd10').length == 0){
@@ -678,7 +715,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     }
                 });
             }, 100);
-            
+
             if (treatment_text.length === 0) {
                 $('.treatment_history_head').remove();
             }
@@ -695,36 +732,6 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
         }
 
         $scope.printElement = function () {
-            var created_by = $scope.created_by;
-            var date = new Date($scope.modified_at);
-            var month = date.getMonth() + 1;
-            var day = date.getDate();
-            var output = (('' + day).length < 2 ? '0' : '') + day + '/' +
-                    (('' + month).length < 2 ? '0' : '') + month + '/' +
-                    date.getFullYear();
-
-            var create_date = new Date($scope.created_at);
-            var create_month = create_date.getMonth() + 1;
-            var create_day = create_date.getDate();
-            var create_output = (('' + create_day).length < 2 ? '0' : '') + create_day + '/' +
-                    (('' + create_month).length < 2 ? '0' : '') + create_month + '/' +
-                    create_date.getFullYear();
-
-            var hours = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
-            var am_pm = date.getHours() >= 12 ? "PM" : "AM";
-            hours = hours < 10 ? "0" + hours : hours;
-            var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
-            //var seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
-            time = hours + ":" + minutes + am_pm;
-
-            $timeout(function () {
-                $('#created_name').html(created_by);
-                $('#created_date').html(create_output);
-                $('#date_name').html(output);
-                $('#time').html(time);
-            }, 100);
-
-
             $('#printThisElement').printThis({
                 pageTitle: "",
                 debug: false,
