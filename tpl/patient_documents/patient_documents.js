@@ -428,8 +428,8 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                         $scope.xml = pat_doc_response.result.document_xml;
                         $timeout(function () {
                             $scope.checkTablerow();
+                            $scope.printElement();
                         }, 100);
-                        $scope.printElement();
                     });
 
                 }
@@ -603,14 +603,25 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
 
 
                 var headingText = $(this).find('td.ribbonhead');
-                var headingnextTr = headingText.closest('tr').next('tr');
-                headingnextTr.find('td').each(function () {
-                    if (headingnextTr.text().trim() == "") {
-                        headingnextTr.remove();
-                        headingText.remove();
+                var headingnextTr = headingText.closest('tr').nextAll('tr');
+                headingnextTr.each(function () {
+                    var tr = $(this);
+                    tr.find('td').each(function () {
+                        if ($(this).text().trim() == "") {
+                            $(this).remove();
+                        }
+                    });
+                    if (tr.text().trim() == "") {
+                        tr.remove();
                     }
                 });
-
+                
+                // If ICD-10 Heading not need, then unhide the below codes
+//                if(headingText.find('h1').html() == 'ICD-10'){
+//                    if($(this).find('tr.icd10').length == 0){
+//                        headingText.closest('tr').remove();
+//                    }
+//                }
             });
 
             $(".document-content .panel-default").each(function () {
@@ -657,11 +668,17 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
 
             });
 
-            $('table#heading').each(function () {
-                if ($(this).find("tbody").text().trim().length === 0) {
-                    $(this).remove();
-                }
-            });
+            $timeout(function () {
+                $('table#heading').each(function () {
+                    if ($(this).find('td.ribbonhead').closest('tr').nextAll('tr').length == 0) {
+                        $(this).find('td.ribbonhead').closest('tr').remove();
+                    }
+                    if ($(this).find("tbody").text().trim().length === 0) {
+                        $(this).remove();
+                    }
+                });
+            }, 100);
+            
             if (treatment_text.length === 0) {
                 $('.treatment_history_head').remove();
             }
