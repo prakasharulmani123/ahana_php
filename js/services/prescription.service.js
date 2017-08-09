@@ -30,11 +30,13 @@ function PrescriptionService($http, $cookieStore, $rootScope, $window, $localSto
                 angular.forEach(items, function (item) {
                     item.available_quantity = parseFloat(item.available_quantity);
                 });
+                
                 //Separate 0 qty products.
-                var zero_qty_products = $filter('filter')(items, {available_quantity: 0}, true);
+                var zero_qty_products = [];
                 //Remove 0 qty products in the array
                 for (var i = items.length - 1; i >= 0; i--) {
-                    if (items[i].available_quantity == 0) {
+                    if (items[i].available_quantity <= 0) {
+                        zero_qty_products.push(items[i]);
                         items.splice(i, 1);
                     }
                 }
@@ -51,7 +53,8 @@ function PrescriptionService($http, $cookieStore, $rootScope, $window, $localSto
             return items;
         },
         addPrescriptionItem: function (item) {
-            items.push(item);
+            //unshift - push at first position
+            items.unshift(item);
         },
         deletePrescriptionItem: function (item) {
             var index = items.indexOf(item);
