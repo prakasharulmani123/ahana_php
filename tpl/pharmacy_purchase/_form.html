@@ -283,7 +283,7 @@
                                     <td><span>{{purchaseitem.vat_amount}}</span></td>
                                     <td><span>{{purchaseitem.total_amount}}</span></td>
                                     <td align="center">
-                                        <a ng-click="removeSubcat($index, purchaseitem.full_name)" title="Delete">
+                                        <a ng-if="formtype=='add'" ng-click="removeSubcat($index, purchaseitem.full_name)" title="Delete">
                                             <i class="fa fa-trash"></i>
                                         </a>
                                     </td>

@@ -99,7 +99,8 @@
                             <button tooltip="Print Bill"  class="label bg-primary dk" ng-click="printPurchaseBill(row.purchase_id)">
                                 <i class="fa fa-print"></i>
                             </button>
-                            <a data-button="pharmacy.deletepurchasebill" check-access-custom title="Delete Purchase" ng-click="removeRow(row.purchase_id)" class="label bg-dark dk">
+                            <!--check-access-custom / hide-->
+                            <a data-button="pharmacy.deletepurchasebill"  title="Delete Purchase" ng-click="removeRow(row.purchase_id)" class="label bg-dark dk hide">
                                 <i class="fa fa-trash"></i>
                             </a>
                         </td>

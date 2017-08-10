@@ -334,7 +334,7 @@
                                         {{saleitem.total_amount}}
                                     </td>
                                     <td>
-                                        <a ng-click="removeSaleItem($index)" title="Delete">
+                                        <a ng-if="formtype=='add'" ng-click="removeSaleItem($index)" title="Delete">
                                             <i class="fa fa-trash"></i>
                                         </a>
                                     </td>
