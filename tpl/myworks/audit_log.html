@@ -1,0 +1,65 @@
+<div ng-controller="AuditController">
+    <div class="bg-light lter b-b wrapper-md">
+        <h1 class="m-n h3">Audit Log</h1>
+    </div>
+
+    <div class="wrapper-md" ng-init="loadAllauditlog();">
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-sm-9">
+                                <button class="btn btn-sm btn-grey" ng-click="loadAllauditlog()">
+                                    &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp;
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <table st-table="displayedCollection" st-safe-src="rowCollection" class="table m-b-none">
+                            <thead>
+                                <tr>
+                                    <th>Tenant</th>
+                                    <th>User</th>
+                                    <th>Action</th>
+                                    <th>Activity</th>
+                                    <th>IP Address</th>
+                                    <th>Date Time</th>
+                                </tr>
+                            </thead>
+                            <tbody ng-hide="isLoading">
+                                <tr ng-repeat="log in displayedCollection">
+                                    <td>{{log.tenant}}</td>
+                                    <td>{{log.user}}</td>
+                                    <td>{{log.action}}</td>
+                                    <td>{{log.activity}}</td>
+                                    <td>{{log.ip_address}}</td>
+                                    <td>{{log.created_at}}</td>
+                                </tr>
+                            </tbody>
+                            <tbody ng-show="isLoading">
+                                <tr>
+                                    <td colspan="6" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>  
+                                    <td align="center" colspan="6">  
+                                        <div class="pull-right">  
+                                            <pagination total-items="totalCount" ng-change="pageChanged()" items-per-page="pageSizeSelected" direction-links="true" ng-model="pageIndex" max-size="maxSize" class="pagination" boundary-links="true" rotate="false" num-pages="numPages"></pagination>  
+                                        </div>  
+                                    </td>  
+                                </tr> 
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
