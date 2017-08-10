@@ -82,7 +82,7 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
     function ChangeStatus(modelName, primaryKey, callback) {
         var response;
         $('.butterbar').removeClass('hide').addClass('active');
-        $http.post($rootScope.IRISOrgServiceUrl + '/default/change-status', {model: modelName, id: primaryKey})
+        $http.post($rootScope.IRISOrgServiceUrl + '/country/change-status', {model: modelName, id: primaryKey})
                 .success(function (response) {
                     $('.butterbar').removeClass('active').addClass('hide');
                     callback(response);

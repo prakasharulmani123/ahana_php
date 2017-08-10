@@ -305,6 +305,9 @@ app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http
         $scope.initForm = function () {
             $scope.loadbar('show');
             $scope.showform = false;
+            $rootScope.commonService.GetVatList('', '1', false, function (response) {
+                $scope.vatList = response.vatList;
+            });
             $rootScope.commonService.GetPaymentType(function (response) {
                 $scope.paymentTypes = response;
                 $rootScope.commonService.GetPackageUnitList('', '1', false, function (response) {
@@ -561,6 +564,14 @@ app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http
             }
         };
 
+        $scope.checkvatInput = function (data) {
+            if (typeof data == 'undefined') {
+                return "Invalid data";
+            } else if (!data) {
+                return "Not empty.";
+            }
+        };
+
         $scope.minDate = $scope.minDate ? null : new Date();
 
         //Save Both Add & Update Data
@@ -592,7 +603,7 @@ app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http
                 }
 
                 packing_details = $filter('filter')($scope.packings, {package_name: $scope.purchaseitems[key].package_name}, true);
-                if(!$.isEmptyObject(packing_details)) {
+                if (!$.isEmptyObject(packing_details)) {
                     $scope.purchaseitems[key].package_unit = packing_details[0].package_unit;
                 }
 

@@ -2827,6 +2827,22 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 }
             })
 
+            //MyWorks Audit log report
+            .state('myworks.audit_log', {
+                url: '/audit_log',
+                templateUrl: 'tpl/myworks/audit_log.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/myworks/audit_log.js?v=' + APP_VERSION);
+                                    }
+                            );
+                        }]
+                }
+            })
+
             //Patient Billing History
             .state('patient.viewBillingHistory', {
                 url: '/viewBillingHistory/{id}/{enc_id}',

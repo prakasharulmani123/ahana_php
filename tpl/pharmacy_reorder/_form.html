@@ -149,7 +149,15 @@
                                         <span editable-text="purchaseitem.discount_percent" e-number-mask="" e-form="tableform" onbeforesave="checkInput($data)" e-ng-keydown="updateColumn($data, key, 'discount_percent')"  e-ng-keyup="updateColumn($data, key, 'discount_percent')" e-autocomplete="off" e-limit-to="2" e-maxlength="5" e-number-mask="">{{purchaseitem.discount_percent|| 0}}</span>
                                     </td>
                                     <td><span>{{purchaseitem.discount_amount}}</span></td>
-                                    <td><span>{{purchaseitem.vat_percent}}</span></td>
+                                    <td><span
+                                            editable-select="purchaseitem.vat_percent"
+                                            e-form="tableform"
+                                            onbeforesave="checkvatInput($data)"
+                                            e-ng-options="vat.vat as vat.vat for vat in vatList"
+                                            e-name="purchaseitem.vat_percent"
+                                            e-autocomplete="off">
+                                            {{ purchaseitem.vat_percent}}
+                                        </span></td>
                                     <td><span>{{purchaseitem.vat_amount}}</span></td>
                                     <td>
                                         <div id="i_package_name_{{key}}">
@@ -166,8 +174,8 @@
                             </table>
                         </div>
                         <div class="btn-form mt-10">
-<!--                            <button type="button" ng-click="tableform.$show();
-                                addRow()" class="btn btn-default pull-left btn-primary">Add Product</button>-->
+                            <!--                            <button type="button" ng-click="tableform.$show();
+                                                            addRow()" class="btn btn-default pull-left btn-primary">Add Product</button>-->
                             <button type="button" ng-show="!tableform.$visible;" ng-click="tableform.$show();" class="btn btn-default pull-left btn-info">Edit Products</button>
                         </div>
                     </div>
