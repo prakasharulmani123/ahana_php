@@ -57,6 +57,8 @@ class PharmacypurchasereturnController extends ActiveController {
         if ($id) {
             $model = PhaPurchaseReturn::find()->where(['purchase_ret_id' => $id])->one();
             $model->remove();
+            $activity = 'Purchase Return Deleted Successfully (#'. $model->invoice_no.' )';
+            CoAuditLog::insertAuditLog(PhaPurchaseReturn::tableName(), $this->purchase_ret_id, $activity);
             return ['success' => true];
         }
     }

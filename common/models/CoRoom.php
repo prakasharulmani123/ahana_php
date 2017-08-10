@@ -5,6 +5,7 @@ namespace common\models;
 use common\models\query\CoRoomQuery;
 use cornernote\linkall\LinkAllBehavior;
 use yii\db\ActiveQuery;
+use Yii;
 
 /**
  * This is the model class for table "co_room".
@@ -39,13 +40,13 @@ class CoRoom extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['ward_id', 'bed_name'], 'required'],
-            [['tenant_id', 'ward_id', 'maintain_id', 'created_by', 'modified_by'], 'integer'],
-            [['occupied_status', 'status', 'notes'], 'string'],
-            [['created_at', 'modified_at', 'notes'], 'safe'],
-            [['bed_name'], 'string', 'max' => 50],
-            [['occupied_status'], 'validateNotes'],
-            [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'ward_id', 'bed_name', 'deleted_at'], 'message' => 'The combination of Ward Name has already been taken.']
+                [['ward_id', 'bed_name'], 'required'],
+                [['tenant_id', 'ward_id', 'maintain_id', 'created_by', 'modified_by'], 'integer'],
+                [['occupied_status', 'status', 'notes'], 'string'],
+                [['created_at', 'modified_at', 'notes'], 'safe'],
+                [['bed_name'], 'string', 'max' => 50],
+                [['occupied_status'], 'validateNotes'],
+                [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'ward_id', 'bed_name', 'deleted_at'], 'message' => 'The combination of Ward Name has already been taken.']
         ];
     }
 
@@ -159,6 +160,16 @@ class CoRoom extends RActiveRecord {
             $list = self::find()->tenant($tenant)->deleted()->occupiedStatus($occupied_status)->all();
 
         return $list;
+    }
+
+    public function afterSave($insert, $changedAttributes) {
+        if ($insert)
+            $activity = 'Room Added Successfully (#' . $this->bed_name . ' )';
+        else
+            $activity = 'Room Updated Successfully (#' . $this->bed_name . ' )';
+        print_r(Yii::$app->user); die;
+        CoAuditLog::insertAuditLog(CoRoom::tableName(), $this->room_id, $activity);
+        return parent::afterSave($insert, $changedAttributes);
     }
 
 }

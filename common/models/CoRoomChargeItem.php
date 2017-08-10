@@ -108,4 +108,13 @@ class CoRoomChargeItem extends RActiveRecord
         
         return $list;
     }
+    
+    public function afterSave($insert, $changedAttributes) {
+        if ($insert)
+            $activity = 'Room Charge Item Added Successfully (#' . $this->charge_item_name . ' )';
+        else
+            $activity = 'Room Charge Item Updated Successfully (#' . $this->charge_item_name . ' )';
+        CoAuditLog::insertAuditLog(CoRoomChargeItem::tableName(), $this->charge_item_id, $activity);
+        return parent::afterSave($insert, $changedAttributes);
+    }
 }

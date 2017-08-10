@@ -57,6 +57,8 @@ class PharmacysalereturnController extends ActiveController {
         if ($id) {
             $model = PhaSaleReturn::find()->where(['sale_ret_id' => $id])->one();
             $model->remove();
+            $activity = 'Sale Return Deleted Successfully (#'. $model->bill_no.' )';
+            CoAuditLog::insertAuditLog(PhaSaleReturn::tableName(), $get['id'], $activity);
             return ['success' => true];
         }
     }

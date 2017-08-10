@@ -55,6 +55,8 @@ class PharmacyrouteController extends ActiveController {
         if ($id) {
             $model = PatPrescriptionRoute::find()->where(['route_id' => $id])->one();
             $model->remove();
+            $activity = 'Route Name Deleted Successfully (#' . $model->route_name . ' )';
+            CoAuditLog::insertAuditLog(PatPrescriptionRoute::tableName(), $id, $activity);
             return ['success' => true];
         }
     }

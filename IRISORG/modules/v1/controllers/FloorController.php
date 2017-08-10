@@ -3,6 +3,7 @@
 namespace IRISORG\modules\v1\controllers;
 
 use common\models\CoFloor;
+use common\models\CoAuditLog;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -55,6 +56,8 @@ class FloorController extends ActiveController {
         if ($id) {
             $model = CoFloor::find()->where(['floor_id' => $id])->one();
             $model->remove();
+            $activity = 'Floor Deleted Successfully (#' . $model->floor_name . ' )';
+            CoAuditLog::insertAuditLog(CoFloor::tableName(), $id, $activity);
             
             //Remove all related records
             foreach ($model->coWards as $ward) {

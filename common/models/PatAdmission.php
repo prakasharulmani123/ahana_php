@@ -281,6 +281,21 @@ class PatAdmission extends RActiveRecord {
                 Yii::$app->hepler->cancelRecurring($this);
                 break;
         }
+        if($this->admission_status=='A')
+            $activity = 'Patient Admission Successfully (#' . $this->encounter_id . ' )';
+        else if($this->admission_status=='D')
+            $activity = 'Patient Discharge Successfully (#' . $this->encounter_id . ' )';
+        else if($this->admission_status=='TD')
+            $activity = 'Patient Transfer Doctor Successfully (#' . $this->encounter_id . ' )';
+        else if($this->admission_status=='TR')
+            $activity = 'Patient Transfer Room Successfully (#' . $this->encounter_id . ' )';
+        else if($this->admission_status=='C')
+            $activity = 'Patient Room Swapping  Cancelled Successfully (#' . $this->encounter_id . ' )';
+        else if($this->admission_status=='CD')
+            $activity = 'Patient Clinical Discharge Successfully (#' . $this->encounter_id . ' )';
+        else 
+            $activity = 'Patient Admission Cancelled Successfully (#' . $this->encounter_id . ' )';
+        CoAuditLog::insertAuditLog(PatConsultant::tableName(), $this->admn_id, $activity);
 
         return parent::afterSave($insert, $changedAttributes);
     }

@@ -5,6 +5,7 @@ namespace IRISORG\modules\v1\controllers;
 use common\models\PatDocuments;
 use common\models\PatDocumentTypes;
 use common\models\PatPatient;
+use common\models\CoAuditLog;
 use common\models\VDocuments;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -76,6 +77,8 @@ class PatientdocumentsController extends ActiveController {
         if ($id) {
             $model = PatDocuments::find()->where(['doc_id' => $id])->one();
             $model->delete();
+            $activity = 'Case history Deleted Successfully (#' . $model->encounter_id . ' )';
+            CoAuditLog::insertAuditLog(PatDocuments::tableName(), $id, $activity);
             return ['success' => true];
         }
     }
@@ -132,7 +135,7 @@ class PatientdocumentsController extends ActiveController {
                     $field_name = str_replace("[]", "", $value['name']);
                     $post[$field_name][] = str_replace("&nbsp;", "&#160;", $value['value']);
                 } else {
-                    $post[$value['name']] = str_replace(["&nbsp;", " & "], [ "&#160;", "&amp;"], $value['value']);
+                    $post[$value['name']] = str_replace(["&nbsp;", " & "], ["&#160;", "&amp;"], $value['value']);
                 }
             } else {
                 $post[$value['name']] = '';
@@ -217,7 +220,7 @@ class PatientdocumentsController extends ActiveController {
                 if ($x->attributes()->type == 'PanelBar') {
                     foreach ($x->FIELD as $pb) {
                         if ($pb->attributes()->type == 'RadGrid') {
-                            foreach ($pb->COLUMNS as $key=>$columns) {
+                            foreach ($pb->COLUMNS as $key => $columns) {
                                 foreach ($columns->FIELD as $field) {
                                     //Child FIELD
                                     if (isset($field->FIELD)) {
@@ -267,7 +270,7 @@ class PatientdocumentsController extends ActiveController {
                                                             $this->addCData($value, $y->VALUE);
                                                     } else {
                                                         //echo $y->attributes()->texttypeid[0];
-                                                        if (!empty($y->attributes()->texttypeid[0]) && ($y->attributes()->texttypeid[0] =='selectdropdown')) {
+                                                        if (!empty($y->attributes()->texttypeid[0]) && ($y->attributes()->texttypeid[0] == 'selectdropdown')) {
                                                             //echo $y->attributes()->texttypeid[0];
                                                             if (!empty($value)) {
                                                                 $list = $field->FIELD[1]->LISTITEMS->LISTITEM;
@@ -817,7 +820,7 @@ class PatientdocumentsController extends ActiveController {
                             foreach ($list_referral_details as $list_value) {
                                 if (in_array($list_value, $post_referral_details)) {
                                     $list_value->attributes()['Selected'] = 'true';
-                                    if ($list_value == 'Others' || $list_value == 'Personal' || $list_value == 'Social' || $list_value == 'Test'|| $list_value == 'Immediate' || $list_value == 'Recent' || $list_value == 'Remote' || $list_value == 'Catatonic') {
+                                    if ($list_value == 'Others' || $list_value == 'Personal' || $list_value == 'Social' || $list_value == 'Test' || $list_value == 'Immediate' || $list_value == 'Recent' || $list_value == 'Remote' || $list_value == 'Catatonic') {
                                         $x->attributes()['Backcontrols'] = 'show';
                                     }
                                 } else {
@@ -1328,7 +1331,7 @@ class PatientdocumentsController extends ActiveController {
                             $listitem3->addAttribute('id', 'radioPhamacoCurrentlyUnderTreatment3' . $rowCount);
                             $listitem3->addAttribute('Selected', 'False');
 
-                            
+
                             //FIELD 4
                             $field4 = $columns->addChild('FIELD');
                             $field4->addAttribute('id', $radio1);
@@ -1354,8 +1357,8 @@ class PatientdocumentsController extends ActiveController {
                             $listitem2->addAttribute('id', 'radioPhamacoSideeffect1' . $rowCount);
                             $listitem2->addAttribute('Selected', 'False');
                             $listitem2->addAttribute('onclick', "OThersvisible(this.id, '$radio_back_div', 'none');");
-                            
-                             //Add TextBox
+
+                            //Add TextBox
                             //FIELD 1
                             $field5 = $field4->addChild('FIELD');
                             $field5->addAttribute('id', $text_box4);
@@ -1373,7 +1376,7 @@ class PatientdocumentsController extends ActiveController {
                             $property225 = $properties15->addChild('PROPERTY', 'form-control');
                             $property225->addAttribute('name', 'class');
 
-                            
+
                             //SUB FIELD 1
                             $field4_sub = $field4->addChild('FIELD');
                             $field4_sub->addAttribute('id', 'txtPhamacoSideEffects' . $rowCount);
@@ -1384,7 +1387,7 @@ class PatientdocumentsController extends ActiveController {
                             $property8 = $field4_properties->addChild('PROPERTY', 'txtPhamacoSideEffects' . $rowCount);
                             $property8->addAttribute('name', 'id');
 
-                            $property9 = $field4_properties->addChild('PROPERTY', 'txtPhamacoSideEffects' . $rowCount.'[]');
+                            $property9 = $field4_properties->addChild('PROPERTY', 'txtPhamacoSideEffects' . $rowCount . '[]');
                             $property9->addAttribute('name', 'name');
 
                             $property10 = $field4_properties->addChild('PROPERTY', 'form-control');

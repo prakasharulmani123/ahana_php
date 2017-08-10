@@ -108,4 +108,13 @@ class CoPatientGroup extends RActiveRecord {
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
     }
+    
+    public function afterSave($insert, $changedAttributes) {
+        if ($insert)
+            $activity = 'Patient Group Added Successfully (#' . $this->group_name . ' )';
+        else
+            $activity = 'Patient Group Updated Successfully (#' . $this->group_name . ' )';
+        CoAuditLog::insertAuditLog(CoMasterCity::tableName(), $this->patient_group_id, $activity);
+        return parent::afterSave($insert, $changedAttributes);
+    }
 }

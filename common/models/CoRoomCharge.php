@@ -36,12 +36,12 @@ class CoRoomCharge extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['charge_item_id', 'room_type_id', 'charge'], 'required'],
-            [['tenant_id', 'charge_item_id', 'room_type_id', 'created_by', 'modified_by'], 'integer'],
-            [['charge'], 'number'],
-            [['status'], 'string'],
-            [['created_at', 'modified_at'], 'safe'],
-            [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'charge_item_id', 'room_type_id', 'deleted_at'], 'message' => 'The combination of has already been taken.']
+                [['charge_item_id', 'room_type_id', 'charge'], 'required'],
+                [['tenant_id', 'charge_item_id', 'room_type_id', 'created_by', 'modified_by'], 'integer'],
+                [['charge'], 'number'],
+                [['status'], 'string'],
+                [['created_at', 'modified_at'], 'safe'],
+                [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'charge_item_id', 'room_type_id', 'deleted_at'], 'message' => 'The combination of has already been taken.']
         ];
     }
 
@@ -103,6 +103,14 @@ class CoRoomCharge extends RActiveRecord {
 
     public function afterSave($insert, $changedAttributes) {
         $this->_updatePatientChargeHistory();
+
+        $charge = CoRoomChargeItem::find()->where(['charge_item_id' => $this->charge_item_id])->one();
+        $type = CoRoomType::find()->where(['room_type_id' => $this->room_type_id])->one();
+        if ($insert)
+            $activity = "Room Charges Added Successfully (#$charge->charge_item_name,$type->room_type_name,$this->charge)";
+        else
+            $activity = "Room Charges Updated Successfully (#$charge->charge_item_name,$type->room_type_name,$this->charge)";
+        CoAuditLog::insertAuditLog(CoRoomCharge::tableName(), $this->charge_id, $activity);
         return parent::afterSave($insert, $changedAttributes);
     }
 

@@ -5,6 +5,7 @@ namespace IRISORG\modules\v1\controllers;
 use common\components\HelperComponent;
 use common\models\PatPatient;
 use common\models\PatScannedDocuments;
+use common\models\CoAuditLog;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -59,6 +60,8 @@ class PatientscanneddocumentsController extends ActiveController {
         if ($id) {
             $model = PatScannedDocuments::find()->where(['scanned_doc_id' => $id])->one();
             $model->remove();
+            $activity = 'Scanned document Deleted Successfully (#' . $model->encounter_id . ' )';
+            CoAuditLog::insertAuditLog(PatScannedDocuments::tableName(), $id, $activity);
             return ['success' => true];
         }
     }

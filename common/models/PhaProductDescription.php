@@ -35,12 +35,12 @@ class PhaProductDescription extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['description_name'], 'required'],
-            [['tenant_id', 'created_by', 'modified_by'], 'integer'],
-            [['status'], 'string'],
-            [['created_at', 'modified_at', 'deleted_at'], 'safe'],
-            [['description_name'], 'string', 'max' => 255],
-            [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'description_name', 'deleted_at'], 'message' => 'Description has already been taken.']
+                [['description_name'], 'required'],
+                [['tenant_id', 'created_by', 'modified_by'], 'integer'],
+                [['status'], 'string'],
+                [['created_at', 'modified_at', 'deleted_at'], 'safe'],
+                [['description_name'], 'string', 'max' => 255],
+                [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'description_name', 'deleted_at'], 'message' => 'Description has already been taken.']
         ];
     }
 
@@ -103,7 +103,7 @@ class PhaProductDescription extends RActiveRecord {
     public function getRoutes() {
         return $this->hasMany(PatPrescriptionRoute::className(), ['route_id' => 'route_id'])->via('descriptionsRoutes');
     }
-    
+
     public function fields() {
         $extend = [
             'routes' => function ($model) {
@@ -112,6 +112,15 @@ class PhaProductDescription extends RActiveRecord {
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
+    }
+
+    public function afterSave($insert, $changedAttributes) {
+        if ($insert)
+            $activity = 'Product Type Added Successfully (#' . $this->description_name . ' )';
+        else
+            $activity = 'Product Type Updated Successfully (#' . $this->description_name . ' )';
+        CoAuditLog::insertAuditLog(PhaProductDescription::tableName(), $this->description_id, $activity);
+        return parent::afterSave($insert, $changedAttributes);
     }
 
 }

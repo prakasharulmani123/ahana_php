@@ -117,4 +117,13 @@ class CoRoomChargeCategory extends RActiveRecord {
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
     }
+    
+    public function afterSave($insert, $changedAttributes) {
+        if ($insert)
+            $activity = "Room Charges Category Added Successfully (#$this->charge_cat_name)";
+        else
+            $activity = "Room Charges Category Updated Successfully (#$this->charge_cat_name)";
+        CoAuditLog::insertAuditLog(CoRoomChargeCategory::tableName(), $this->charge_cat_id, $activity);
+        return parent::afterSave($insert, $changedAttributes);
+    }
 }

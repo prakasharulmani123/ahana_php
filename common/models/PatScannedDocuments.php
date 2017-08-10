@@ -94,5 +94,14 @@ class PatScannedDocuments extends RActiveRecord {
     public static function find() {
         return new PatScannedDocumentsQuery(get_called_class());
     }
+    
+    public function afterSave($insert, $changedAttributes) {
+        if ($insert)
+            $activity = 'Scanned Document Added Successfully (#' . $this->encounter_id . ' )';
+        else
+            $activity = 'Scanned Document Updated Successfully (#' . $this->encounter_id . ' )';
+        CoAuditLog::insertAuditLog(PatScannedDocuments::tableName(), $this->scanned_doc_id, $activity);
+        return parent::afterSave($insert, $changedAttributes);
+    }
 
 }

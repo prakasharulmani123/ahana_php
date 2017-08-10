@@ -3,6 +3,7 @@
 namespace IRISORG\modules\v1\controllers;
 
 use common\models\PatOtherDocuments;
+use common\models\CoAuditLog;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -56,6 +57,8 @@ class PatientotherdocumentsController extends ActiveController {
         if ($id) {
             $model = PatOtherDocuments::find()->where(['other_doc_id' => $id])->one();
             $model->remove();
+            $activity = 'Other Document Deleted Successfully (#' . $model->encounter_id . ' )';
+            CoAuditLog::insertAuditLog(PatOtherDocuments::tableName(), $id, $activity);
             return ['success' => true];
         }
     }

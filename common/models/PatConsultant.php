@@ -190,10 +190,13 @@ class PatConsultant extends RActiveRecord {
         $consultant = "Consultant : <b>{$this->consultant->title_code} {$this->consultant->name}</b>";
         if ($insert) {
             $message = $this->notes != '' ? "{$this->notes} <br /> $consultant" : $consultant;
+            $activity = 'Consultant Added Successfully (#' . $this->encounter_id . ' )';
         } else {
             $message = $this->notes != '' ? "Updated: {$this->notes} <br /> $consultant" : "Updated: $consultant";
+            $activity = 'Consultant Updated Successfully (#' . $this->encounter_id . ' )';
         }
         PatTimeline::insertTimeLine($this->patient_id, $this->consult_date, 'Consultation', '', $message, 'CONSULTANT', $this->encounter_id);
+        CoAuditLog::insertAuditLog(PatConsultant::tableName(), $this->pat_consult_id, $activity);
 
         return parent::afterSave($insert, $changedAttributes);
     }

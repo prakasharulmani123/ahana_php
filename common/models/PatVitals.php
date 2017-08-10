@@ -45,11 +45,11 @@ class PatVitals extends RActiveRecord {
     public function rules() {
         return [
 //            [['temperature'], 'required'],
-            [['tenant_id', 'encounter_id', 'patient_id', 'created_by', 'modified_by'], 'integer'],
-            [['vital_time', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
-            [['status'], 'string'],
-            [['temperature', 'blood_pressure_systolic', 'blood_pressure_diastolic', 'pulse_rate'], 'string', 'max' => 20],
-            [['weight'], 'string', 'max' => 10]
+                [['tenant_id', 'encounter_id', 'patient_id', 'created_by', 'modified_by'], 'integer'],
+                [['vital_time', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
+                [['status'], 'string'],
+                [['temperature', 'blood_pressure_systolic', 'blood_pressure_diastolic', 'pulse_rate'], 'string', 'max' => 20],
+                [['weight'], 'string', 'max' => 10]
         ];
     }
 
@@ -149,6 +149,15 @@ class PatVitals extends RActiveRecord {
         $extFields = ($addt_keys) ? array_intersect_key($extend, array_flip($addt_keys)) : $extend;
 
         return array_merge($parent_fields, $extFields);
+    }
+
+    public function afterSave($insert, $changedAttributes) {
+        if ($insert)
+            $activity = 'Vital Added Successfully (#' . $this->encounter_id . ' )';
+        else
+            $activity = 'Vital Updated Successfully (#' . $this->encounter_id . ' )';
+        CoAuditLog::insertAuditLog(PatVitals::tableName(), $this->vital_id, $activity);
+        return parent::afterSave($insert, $changedAttributes);
     }
 
 }

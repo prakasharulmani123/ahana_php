@@ -23,34 +23,32 @@ use yii\db\ActiveRecord;
  * @property CoRole $role
  * @property CoTenant $tenant
  */
-class CoUsersRoles extends ActiveRecord
-{
+class CoUsersRoles extends ActiveRecord {
+
     public $role_ids;
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'co_users_roles';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            [['tenant_id', 'user_id', 'role_ids'], 'required', 'on' => 'roleassign'],
-            [['tenant_id', 'user_id', 'role_id', 'created_by', 'modified_by'], 'integer'],
-            [['created_at', 'modified_at', 'role_ids'], 'safe']
+                [['tenant_id', 'user_id', 'role_ids'], 'required', 'on' => 'roleassign'],
+                [['tenant_id', 'user_id', 'role_id', 'created_by', 'modified_by'], 'integer'],
+                [['created_at', 'modified_at', 'role_ids'], 'safe']
         ];
     }
 
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'user_role_id' => 'User Role ID',
             'tenant_id' => 'Organization',
@@ -67,32 +65,40 @@ class CoUsersRoles extends ActiveRecord
     /**
      * @return ActiveQuery
      */
-    public function getUser()
-    {
+    public function getUser() {
         return $this->hasOne(CoUser::className(), ['user_id' => 'user_id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getRole()
-    {
+    public function getRole() {
         return $this->hasOne(CoRole::className(), ['role_id' => 'role_id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getTenant()
-    {
+    public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
-    
+
     public static function find() {
         return new CoUsersRolesQuery(get_called_class());
     }
-    
+
     public static function getDb() {
         return Yii::$app->client;
     }
+
+//    public function afterSave($insert, $changedAttributes) {
+//        $user = CoUser::find()->where(['user_id' => $this->user_id])->one();
+//        if ($insert)
+//            $activity = 'User Role assigned Successfully (#' . $user->name . ' )';
+//        else
+//            $activity = 'User Role Updated Successfully (#' . $user->name . ' )';
+//        CoAuditLog::insertAuditLog(CoUsersRoles::tableName(), $this->user_role_id, $activity);
+//        return parent::afterSave($insert, $changedAttributes);
+//    }
+
 }

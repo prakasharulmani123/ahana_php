@@ -59,6 +59,8 @@ class PharmacyprodescController extends ActiveController {
         if ($id) {
             $model = PhaProductDescription::find()->where(['description_id' => $id])->one();
             $model->remove();
+            $activity = 'Product Type Deleted Successfully (#' . $model->description_name . ' )';
+            CoAuditLog::insertAuditLog(PhaProductDescription::tableName(), $id, $activity);
             return ['success' => true];
         }
     }

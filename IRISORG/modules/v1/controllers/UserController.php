@@ -15,6 +15,7 @@ use common\models\PasswordResetRequestForm;
 use common\models\PatEncounter;
 use common\models\PatTimeline;
 use common\models\ResetPasswordForm;
+use common\models\CoAuditLog;
 use IRISORG\models\ContactForm;
 use Yii;
 use yii\base\InvalidParamException;
@@ -743,32 +744,39 @@ class UserController extends ActiveController {
                 if ($value > 0) {
                     $header = "Bill Finalize";
                     $message = "Bill Finalized By " . $full_name;
+                    $activity = "Bill Finalized Successfully(#$encounter->encounter_id)";
                 } else {
                     $header = "Bill Un Finalize";
                     $message = "Bill Un Finalized By " . $full_name;
+                    $activity = "Bill Un Finalized Successfully(#$encounter->encounter_id)";
                 }
                 break;
             case 'authorize':
                 if ($value > 0) {
                     $header = "Bill Authorize";
                     $message = "Bill Authorize By " . $full_name;
+                    $activity = "Bill Authorize Successfully(#$encounter->encounter_id)";
                 } else {
                     $header = "Bill Un Authorize";
                     $message = "Bill Un Authorize By " . $full_name;
+                    $activity = "Bill Un Authorize Successfully(#$encounter->encounter_id)";
                 }
                 break;
             case 'discharge':
                 if ($value > 0) {
                     $header = "Administrative Discharge";
                     $message = "Administrative Discharge By " . $full_name;
+                    $activity = "Administrative Discharge Successfully(#$encounter->encounter_id)";
                 } else {
                     $header = "Administrative Discharge Cancel";
                     $message = "Administrative Discharge Cancel By " . $full_name;
+                    $activity = "Administrative Discharge Cancel Successfully(#$encounter->encounter_id)";
                 }
                 break;
         }
         $date_time = date("Y-m-d H:i:s");
         PatTimeline::insertTimeLine($encounter->patient_id, $date_time, $header, $header_sub, $message, 'BILLING', $encounter->encounter_id);
+        CoAuditLog::insertAuditLog(PatEncounter::tableName(), $encounter->encounter_id, $activity);
     }
 
     public function actionChangepassword() {

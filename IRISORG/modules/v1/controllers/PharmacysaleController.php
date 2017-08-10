@@ -8,6 +8,7 @@ use common\models\PhaSaleReturn;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
+use common\models\CoAuditLog;
 use yii\filters\auth\QueryParamAuth;
 use yii\filters\ContentNegotiator;
 use yii\helpers\Html;
@@ -214,6 +215,8 @@ class PharmacysaleController extends ActiveController {
         if (empty($return)) {
             $model = PhaSale::find()->tenant()->where(['sale_id' => $get['id']])->one();
             $model->remove();
+            $activity = 'Sale Deleted Successfully (#'. $model->bill_no.' )';
+            CoAuditLog::insertAuditLog(PhaSale::tableName(), $get['id'], $activity);
             return ['success' => true];
         } else {
             return ['success' => false,'message'=>"Sorry, you can't delete this bill"];

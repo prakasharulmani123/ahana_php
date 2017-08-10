@@ -55,6 +55,8 @@ class PharmacypackingController extends ActiveController {
         if($id){
             $model = PhaPackageUnit::find()->where(['package_id' => $id])->one();
             $model->remove();
+            $activity = 'Package Unit Deleted Successfully (#' . $model->package_name . ' )';
+            CoAuditLog::insertAuditLog(PhaPackageUnit::tableName(), $id, $activity);
             return ['success' => true];
         }
     }

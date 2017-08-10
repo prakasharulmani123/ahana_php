@@ -96,4 +96,13 @@ class CoMasterState extends RActiveRecord
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
     }
+    
+    public function afterSave($insert, $changedAttributes) {
+        if ($insert)
+            $activity = 'State Added Successfully (#' . $this->state_name . ' )';
+        else
+            $activity = 'State Updated Successfully (#' . $this->state_name . ' )';
+        CoAuditLog::insertAuditLog(CoMasterCity::tableName(), $this->state_id, $activity);
+        return parent::afterSave($insert, $changedAttributes);
+    }
 }

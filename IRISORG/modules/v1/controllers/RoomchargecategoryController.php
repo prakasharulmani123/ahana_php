@@ -3,6 +3,7 @@
 namespace IRISORG\modules\v1\controllers;
 
 use common\models\CoRoomChargeCategory;
+use common\models\CoAuditLog;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -60,7 +61,8 @@ class RoomchargecategoryController extends ActiveController {
         if ($id) {
             $model = CoRoomChargeCategory::find()->where(['charge_cat_id' => $id])->one();
             $model->remove();
-            
+            $activity = 'Room Charge Category Deleted Successfully (#' . $model->charge_cat_name . ' )';
+            CoAuditLog::insertAuditLog(CoRoomChargeCategory::tableName(), $id, $activity);
             foreach ($model->roomchargesubcategory as $sub) {
                 $sub->remove();
             }

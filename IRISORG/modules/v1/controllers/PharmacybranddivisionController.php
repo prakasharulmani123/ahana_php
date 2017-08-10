@@ -55,6 +55,8 @@ class PharmacybranddivisionController extends ActiveController {
         if ($id) {
             $model = PhaBrandDivision::find()->where(['division_id' => $id])->one();
             $model->remove();
+            $activity = 'Brand Division Deleted Successfully (#' . $model->division_name . ' )';
+            CoAuditLog::insertAuditLog(PhaBrandDivision::tableName(), $id, $activity);
             return ['success' => true];
         }
     }

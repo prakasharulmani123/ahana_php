@@ -24,26 +24,24 @@ use yii\db\ActiveQuery;
  * @property PhaDrugClass $drug
  * @property CoTenant $tenant
  */
-class PhaDrugGeneric extends RActiveRecord
-{
+class PhaDrugGeneric extends RActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'pha_drug_generic';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            [[ 'drug_class_id', 'generic_id'], 'required'],
-            [['tenant_id', 'drug_class_id', 'generic_id', 'created_by', 'modified_by'], 'integer'],
-            [['status'], 'string'],
-            [['created_at', 'modified_at', 'deleted_at'], 'safe'],
+                [['drug_class_id', 'generic_id'], 'required'],
+                [['tenant_id', 'drug_class_id', 'generic_id', 'created_by', 'modified_by'], 'integer'],
+                [['status'], 'string'],
+                [['created_at', 'modified_at', 'deleted_at'], 'safe'],
 //            [['drug_class_id'], 'unique', 'targetAttribute' => ['tenant_id', 'drug_class_id', 'deleted_at']],
             [['generic_id'], 'unique', 'targetAttribute' => ['tenant_id', 'generic_id', 'deleted_at']],
 //            [['drug_class_id'], 'unique', 'targetAttribute' => ['tenant_id', 'drug_class_id', 'generic_id', 'deleted_at'], 'message' => 'The combination of Drug Class Name & Generic has already been taken.'],
@@ -53,8 +51,7 @@ class PhaDrugGeneric extends RActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'drug_generic_id' => 'Drug Generic ID',
             'tenant_id' => 'Tenant ID',
@@ -72,31 +69,28 @@ class PhaDrugGeneric extends RActiveRecord
     /**
      * @return ActiveQuery
      */
-    public function getGeneric()
-    {
+    public function getGeneric() {
         return $this->hasOne(PhaGeneric::className(), ['generic_id' => 'generic_id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getDrug()
-    {
+    public function getDrug() {
         return $this->hasOne(PhaDrugClass::className(), ['drug_class_id' => 'drug_class_id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getTenant()
-    {
+    public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
-    
+
     public static function find() {
         return new PhaDrugGenericQuery(get_called_class());
     }
-    
+
     public function fields() {
         $extend = [
             'drug_name' => function ($model) {
@@ -109,7 +103,7 @@ class PhaDrugGeneric extends RActiveRecord
                 return (isset($model->drug->generics) ? $model->drug->generics : '-');
             },
         ];
-            
+
         $parent_fields = parent::fields();
         $addt_keys = $extFields = [];
         if ($addtField = Yii::$app->request->get('addtfields')) {
@@ -122,7 +116,7 @@ class PhaDrugGeneric extends RActiveRecord
                     ];
                     break;
                 case 'drug_genericnames':
-                    $addt_keys = ['drug_name', 'generic_name','genericnames'];
+                    $addt_keys = ['drug_name', 'generic_name', 'genericnames'];
                     $parent_fields = [
                         'drug_class_id' => 'drug_class_id',
                         'generic_id' => 'generic_id',
@@ -136,4 +130,15 @@ class PhaDrugGeneric extends RActiveRecord
 
         return array_merge($parent_fields, $extFields);
     }
+
+    public function afterSave($insert, $changedAttributes) {
+        if ($insert) {
+            $drug = PhaDrugClass::find()->where(['drug_class_id' => $this->drug_class_id])->one();
+            $generic = PhaGeneric::find()->where(['generic_id' => $this->generic_id])->one();
+            $activity = "$drug->drug_name Added $generic->generic_name Successfully";
+            CoAuditLog::insertAuditLog(CoPatientGroupsPatients::tableName(), $this->drug_generic_id, $activity);
+        }
+        parent::afterSave($insert, $changedAttributes);
+    }
+
 }

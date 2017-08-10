@@ -23,13 +23,13 @@ class LoginForm extends Model {
     public function rules() {
         return [
             // username and password are both required
-            [['username', 'password', 'tenant_id'], 'required'],
+                [['username', 'password', 'tenant_id'], 'required'],
 //            [['username', 'password'], 'string', 'min' => 6],
             // rememberMe must be a boolean value
             //['rememberMe', 'boolean'],
             // password is validated by validatePassword()
             ['password', 'validatePassword'],
-            ['tenant_id', 'validateTenant'],
+                ['tenant_id', 'validateTenant'],
         ];
     }
 
@@ -60,7 +60,7 @@ class LoginForm extends Model {
                 //Account Not Activated
                 if (empty($login->activation_date) || $login->activation_date == '0000-00-00')
                     $this->addError($attribute, 'Your Account is not activated. Contact Admin');
-                
+
                 //Account Will be Activated
                 else if (strtotime($login->activation_date) > strtotime(date('Y-m-d')))
                     $this->addError($attribute, 'Your Account will be activated on ' . $login->activation_date);
@@ -69,10 +69,10 @@ class LoginForm extends Model {
                 if (!empty($login->Inactivation_date) && $login->Inactivation_date != '0000-00-00' && strtotime($login->Inactivation_date) < strtotime(date('Y-m-d')))
                     $this->addError($attribute, 'Your Account is inactivated on ' . $login->Inactivation_date);
             }
-            
+
             $tenant = CoTenant::findOne($this->tenant_id);
 
-            if(!empty($tenant)){
+            if (!empty($tenant)) {
                 //Tenant In-activated
                 if ($tenant->status == '0')
                     $this->addError($attribute, "This Branch ({$tenant->tenant_name}) is inactive");

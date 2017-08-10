@@ -285,7 +285,7 @@
             <PROPERTIES>
                 <PROPERTY name="class">panel-heading bg-default</PROPERTY>
             </PROPERTIES>
-            <VALUE>Presenting Compliants (In chronological order)</VALUE>
+            <VALUE>Presenting Complaints (In chronological order)</VALUE>
         </PANELHEADER>
         <PANELBODY>
             <FIELD type="RadGrid" ADDButton="True" ADDButtonID="RGCompliantadd" AddButtonTableId="RGCompliant">

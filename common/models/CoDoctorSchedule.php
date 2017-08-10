@@ -40,11 +40,11 @@ class CoDoctorSchedule extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['tenant_id', 'user_id'], 'required'],
-            [['custom_day', 'timings'], 'required', 'on' => 'create'],
-            [['tenant_id', 'user_id', 'created_by', 'modified_by'], 'integer'],
-            [['schedule_day'], 'string'],
-            [['schedule_time_in', 'schedule_time_out', 'created_at', 'modified_at', 'deleted_at', 'custom_day', 'timings'], 'safe']
+                [['tenant_id', 'user_id'], 'required'],
+                [['custom_day', 'timings'], 'required', 'on' => 'create'],
+                [['tenant_id', 'user_id', 'created_by', 'modified_by'], 'integer'],
+                [['schedule_day'], 'string'],
+                [['schedule_time_in', 'schedule_time_out', 'created_at', 'modified_at', 'deleted_at', 'custom_day', 'timings'], 'safe']
         ];
     }
 
@@ -80,7 +80,7 @@ class CoDoctorSchedule extends RActiveRecord {
     public function getUser() {
         return $this->hasOne(CoUser::className(), ['user_id' => 'user_id']);
     }
-    
+
     public static function find() {
         return new CoDoctorScheduleQuery(get_called_class());
     }
@@ -88,15 +88,15 @@ class CoDoctorSchedule extends RActiveRecord {
     public function fields() {
         $extend = [
             'doctor_name' => function ($model) {
-                return (isset($model->user) ? $model->user->title_code.$model->user->name : '-');
+                return (isset($model->user) ? $model->user->title_code . $model->user->name : '-');
             },
             'interval' => function ($model) {
                 return (isset($model->user->interval) ? $model->user->interval->interval : 5);
-            },        
+            },
             'available_day' => function ($model) {
                 if (isset($model->schedule_day)) {
                     return ($model->schedule_day != '-1') ? date('l', mktime(0, 0, 0, 8, $model->schedule_day, 2011)) : 'All Day';
-                }else{
+                } else {
                     return '-';
                 }
             },
@@ -113,12 +113,22 @@ class CoDoctorSchedule extends RActiveRecord {
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
     }
-    
+
     public function beforeSave($insert) {
         $this->schedule_time_in = date('H:i:s', strtotime($this->schedule_time_in));
         $this->schedule_time_out = date('H:i:s', strtotime($this->schedule_time_out));
-        
+
         return parent::beforeSave($insert);
+    }
+
+    public function afterSave($insert, $changedAttributes) {
+        $user = CoUser::find()->where(['user_id' => $this->user_id])->one();
+        if ($insert)
+            $activity = "Doctor Schedule Added Successfully (#$user->name)";
+        else
+            $activity = "Doctor Schedule updated Successfully (#$user->name)";
+        CoAuditLog::insertAuditLog(CoDoctorSchedule::tableName(), $this->schedule_id, $activity);
+        return parent::afterSave($insert, $changedAttributes);
     }
 
 }

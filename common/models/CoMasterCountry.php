@@ -34,12 +34,12 @@ class CoMasterCountry extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['country_name'], 'required'],
-            [['status'], 'string'],
-            [['created_by', 'modified_by', 'tenant_id'], 'integer'],
-            [['created_at', 'modified_at', 'tenant_id'], 'safe'],
-            [['country_name'], 'string', 'max' => 50],
-            [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'country_name', 'deleted_at'], 'message' => 'The combination has already been taken.']
+                [['country_name'], 'required'],
+                [['status'], 'string'],
+                [['created_by', 'modified_by', 'tenant_id'], 'integer'],
+                [['created_at', 'modified_at', 'tenant_id'], 'safe'],
+                [['country_name'], 'string', 'max' => 50],
+                [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'country_name', 'deleted_at'], 'message' => 'The combination has already been taken.']
         ];
     }
 
@@ -69,12 +69,22 @@ class CoMasterCountry extends RActiveRecord {
     public static function getCountrylist() {
         return ArrayHelper::map(self::find()->all(), 'country_id', 'country_name');
     }
-    
+
     public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
-    
+
     public static function find() {
         return new CoCountryQuery(get_called_class());
     }
+
+    public function afterSave($insert, $changedAttributes) {
+        if ($insert)
+            $activity = 'Country Added Successfully (#' . $this->country_name . ' )';
+        else
+            $activity = 'Country Updated Successfully (#' . $this->country_name . ' )';
+        CoAuditLog::insertAuditLog(CoCountry::tableName(), $this->country_id, $activity);
+        return parent::afterSave($insert, $changedAttributes);
+    }
+
 }

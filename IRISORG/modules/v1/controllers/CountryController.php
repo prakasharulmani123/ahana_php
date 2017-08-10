@@ -3,6 +3,7 @@
 namespace IRISORG\modules\v1\controllers;
 
 use common\models\CoMasterCountry;
+use common\models\CoAuditLog;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -50,13 +51,28 @@ class CountryController extends ActiveController {
         ]);
     }
     
+    public function actionChangeStatus() {
+        $post = Yii::$app->request->post();
+        if (!empty($post)) {
+            $modelName = $post['model'];
+            $primaryKey = $post['id'];
+            $modelClass = "common\\models\\$modelName";
+            $model = $modelClass::findOne($primaryKey);
+            $model->status = 1 - $model->status;
+            $model->save(false);
+            return ['success' => "ok", 'sts' => $model->status];
+        }
+    }
+
     public function actionRemove() {
         $id = Yii::$app->getRequest()->post('id');
-        if($id){
+        if ($id) {
             $model = CoMasterCountry::find()->where(['country_id' => $id])->one();
             $model->remove();
+            $activity = 'Country Deleted Successfully (#' . $model->country_name . ' )';
+            CoAuditLog::insertAuditLog(CoMasterCountry::tableName(), $id, $activity);
             return ['success' => true];
         }
     }
-    
+
 }

@@ -324,12 +324,14 @@ class PatPatient extends RActiveRecord {
             $header = "Patient Registration";
             $message = "{$this->fullname} Registered Successfully.";
             $date = $this->patient_reg_date;
+            $activity = 'Patient Added Successfully (#' . $this->fullname . ' )';
         } else {
             $header = "Patient Update";
             $message = "Patient Details Updated Successfully.";
             $date = date('Y-m-d H:i:s');
+            $activity = 'Patient Updated Successfully (#' . $this->fullname . ' )';
         }
-
+        CoAuditLog::insertAuditLog(PatPatient::tableName(), $this->patient_id, $activity);
         $this->savetoHms($insert);
 
         $encounter_id = !empty($this->patActiveEncounter) ? $this->patActiveEncounter->encounter_id : null;
@@ -664,7 +666,7 @@ class PatPatient extends RActiveRecord {
                 case 'salecreate':
                     $pFields = ['patient_id', 'patient_guid'];
                     $parent_fields = array_combine($pFields, $pFields);
-                    $addt_keys = ['name_with_int_code', 'fullname', 'last_consultant_id', 'patient_global_int_code','consultant_name'];
+                    $addt_keys = ['name_with_int_code', 'fullname', 'last_consultant_id', 'patient_global_int_code', 'consultant_name'];
                     break;
                 case 'merge_search':
                     $addt_keys = ['patient_img_url', 'fullcurrentaddress', 'fullpermanentaddress', 'fullname', 'patient_guid', 'patient_age', 'patient_global_int_code', 'patient_mobile', 'org_name', 'childrens_count', 'patient_age_ym'];

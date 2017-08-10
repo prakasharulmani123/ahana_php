@@ -33,12 +33,12 @@ class CoSpeciality extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['speciality_name'], 'required'],
-            [['tenant_id', 'created_by', 'modified_by'], 'integer'],
-            [['status'], 'string'],
-            [['created_at', 'modified_at'], 'safe'],
-            [['speciality_name'], 'string', 'max' => 50],
-            [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'speciality_name', 'deleted_at'], 'message' => 'The combination of Name has already been taken.']
+                [['speciality_name'], 'required'],
+                [['tenant_id', 'created_by', 'modified_by'], 'integer'],
+                [['status'], 'string'],
+                [['created_at', 'modified_at'], 'safe'],
+                [['speciality_name'], 'string', 'max' => 50],
+                [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'speciality_name', 'deleted_at'], 'message' => 'The combination of Name has already been taken.']
         ];
     }
 
@@ -76,6 +76,15 @@ class CoSpeciality extends RActiveRecord {
             $list = self::find()->tenant($tenant)->deleted()->all();
 
         return $list;
+    }
+
+    public function afterSave($insert, $changedAttributes) {
+        if ($insert)
+            $activity = 'Speciality Added Successfully (#' . $this->speciality_name . ' )';
+        else
+            $activity = 'Speciality Updated Successfully (#' . $this->speciality_name . ' )';
+        CoAuditLog::insertAuditLog(CoSpeciality::tableName(), $this->speciality_id, $activity);
+        return parent::afterSave($insert, $changedAttributes);
     }
 
 }

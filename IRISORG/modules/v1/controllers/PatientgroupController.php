@@ -6,6 +6,7 @@ use common\models\CoPatientGroup;
 use common\models\CoPatientGroupsPatients;
 use common\models\PatGlobalPatient;
 use common\models\PatPatient;
+use common\models\CoAuditLog;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -104,6 +105,8 @@ class PatientgroupController extends ActiveController {
             } else {
                 $model = CoPatientGroup::find()->where(['patient_group_id' => $id])->one();
                 $model->remove();
+                $activity = 'Patient Group Deleted Successfully (#' . $model->group_name . ' )';
+                CoAuditLog::insertAuditLog(CoPatientGroup::tableName(), $id, $activity);
                 return ['success' => true];
             }
         }

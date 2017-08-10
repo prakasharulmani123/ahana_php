@@ -105,6 +105,7 @@ return [
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/pharmacypurchasebilling'], 'extraPatterns' => ['POST makepayment' => 'makepayment']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/doctorinterval'], 'extraPatterns' => ['POST setintervaltime' => 'setintervaltime']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/hsn']],
+                ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/auditlog']],
             ],
         ],
         'log' => [

@@ -3,6 +3,7 @@
 namespace IRISORG\modules\v1\controllers;
 
 use common\models\PhaBrand;
+use common\models\CoAuditLog;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -55,6 +56,8 @@ class PharmacybrandController extends ActiveController {
         if ($id) {
             $model = PhaBrand::find()->where(['brand_id' => $id])->one();
             $model->remove();
+            $activity = 'Brand Deleted Successfully (#' . $model->brand_name . ' )';
+            CoAuditLog::insertAuditLog(PhaBrand::tableName(), $id, $activity);
             return ['success' => true];
         }
     }
@@ -84,8 +87,8 @@ class PharmacybrandController extends ActiveController {
                     ->active()
                     ->andFilterWhere([
                         'OR',
-                        ['like', 'pha_brand.brand_name', $requestData['search']['value']],
-                        ['like', 'pha_brand.brand_code', $requestData['search']['value']],
+                            ['like', 'pha_brand.brand_name', $requestData['search']['value']],
+                            ['like', 'pha_brand.brand_code', $requestData['search']['value']],
                     ])
                     ->count();
 
@@ -94,8 +97,8 @@ class PharmacybrandController extends ActiveController {
                     ->active()
                     ->andFilterWhere([
                         'OR',
-                        ['like', 'pha_brand.brand_name', $requestData['search']['value']],
-                        ['like', 'pha_brand.brand_code', $requestData['search']['value']],
+                            ['like', 'pha_brand.brand_name', $requestData['search']['value']],
+                            ['like', 'pha_brand.brand_code', $requestData['search']['value']],
                     ])
                     ->limit($requestData['length'])
                     ->offset($requestData['start'])

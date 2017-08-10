@@ -74,5 +74,14 @@ class CoDoctorInterval extends RActiveRecord {
     public static function find() {
         return new CoDoctorIntervalQuery(get_called_class());
     }
-
+    
+    public function afterSave($insert, $changedAttributes) {
+        $user = CoUser::find()->where(['user_id' => $this->user_id])->one();
+        if ($insert)
+            $activity = "Doctor Interval Added Successfully (#$user->name)";
+        else
+            $activity = "Doctor Interval updated Successfully (#$user->name)";
+        CoAuditLog::insertAuditLog(CoDoctorInterval::tableName(), $this->interval_id, $activity);
+        return parent::afterSave($insert, $changedAttributes);
+    }
 }

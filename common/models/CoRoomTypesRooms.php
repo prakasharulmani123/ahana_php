@@ -37,9 +37,9 @@ class CoRoomTypesRooms extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['tenant_id', 'room_id', 'room_type_ids'], 'required', 'on' => 'roomtypesassign'],
-            [['tenant_id', 'room_type_id', 'room_id', 'created_by', 'modified_by'], 'integer'],
-            [['created_at', 'modified_at', 'room_type_ids'], 'safe']
+                [['tenant_id', 'room_id', 'room_type_ids'], 'required', 'on' => 'roomtypesassign'],
+                [['tenant_id', 'room_type_id', 'room_id', 'created_by', 'modified_by'], 'integer'],
+                [['created_at', 'modified_at', 'room_type_ids'], 'safe']
         ];
     }
 
@@ -102,5 +102,15 @@ class CoRoomTypesRooms extends RActiveRecord {
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
     }
+
+//    public function afterSave($insert, $changedAttributes) {
+//        $room = CoRoom::find()->where(['room_id' => $this->room_id])->one();
+//        if ($insert)
+//            $activity = 'Bed Types Added Successfully (#' . $room->bed_name . ' )';
+//        else
+//            $activity = 'Bed Types Updated Successfully (#' . $room->bed_name . ' )';
+//        CoAuditLog::insertAuditLog(CoRoomTypesRooms::tableName(), $this->room_type_room_id, $activity);
+//        return parent::afterSave($insert, $changedAttributes);
+//    }
 
 }

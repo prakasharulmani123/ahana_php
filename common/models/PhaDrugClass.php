@@ -101,5 +101,14 @@ class PhaDrugClass extends RActiveRecord {
     public function getGenerics() {
         return $this->hasMany(PhaGeneric::className(), ['generic_id' => 'generic_id'])->via('drugsGenerics');
     }
+    
+    public function afterSave($insert, $changedAttributes) {
+        if ($insert)
+            $activity = 'Drug Class Added Successfully (#' . $this->drug_name . ' )';
+        else
+            $activity = 'Drug Class Updated Successfully (#' . $this->drug_name . ' )';
+        CoAuditLog::insertAuditLog(PhaDrugClass::tableName(), $this->drug_class_id, $activity);
+        return parent::afterSave($insert, $changedAttributes);
+    }
 
 }

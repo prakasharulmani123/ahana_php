@@ -34,12 +34,12 @@ class PhaBrandDivision extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['division_name'], 'required'],
-            [['tenant_id', 'created_by', 'modified_by'], 'integer'],
-            [['status'], 'string'],
-            [['created_at', 'modified_at', 'deleted_at'], 'safe'],
-            [['division_name'], 'string', 'max' => 255],
-            [['division_name'], 'unique', 'targetAttribute' => ['tenant_id', 'division_name', 'deleted_at'], 'comboNotUnique' => 'The combination of Division Name has already been taken.']
+                [['division_name'], 'required'],
+                [['tenant_id', 'created_by', 'modified_by'], 'integer'],
+                [['status'], 'string'],
+                [['created_at', 'modified_at', 'deleted_at'], 'safe'],
+                [['division_name'], 'string', 'max' => 255],
+                [['division_name'], 'unique', 'targetAttribute' => ['tenant_id', 'division_name', 'deleted_at'], 'comboNotUnique' => 'The combination of Division Name has already been taken.']
         ];
     }
 
@@ -69,6 +69,15 @@ class PhaBrandDivision extends RActiveRecord {
 
     public static function find() {
         return new PhaBrandDivisionQuery(get_called_class());
+    }
+
+    public function afterSave($insert, $changedAttributes) {
+        if ($insert)
+            $activity = 'Brand Divison Added Successfully (#' . $this->division_name . ' )';
+        else
+            $activity = 'Brand Divison Updated Successfully (#' . $this->division_name . ' )';
+        CoAuditLog::insertAuditLog(PhaBrandDivision::tableName(), $this->division_id, $activity);
+        return parent::afterSave($insert, $changedAttributes);
     }
 
 }

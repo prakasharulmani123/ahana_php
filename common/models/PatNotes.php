@@ -151,11 +151,14 @@ class PatNotes extends RActiveRecord {
     public function afterSave($insert, $changedAttributes) {
         if ($insert) {
             $message = $this->notes;
+            $activity = 'Patient Note Added Successfully (#' . $this->encounter_id . ' )';
         } else {
             $message = "Updated: {$this->notes}";
+            $activity = 'Patient Note Updated Successfully (#' . $this->encounter_id . ' )';
         }
         PatTimeline::insertTimeLine($this->patient_id, $this->created_at, 'Notes', '', $message, 'NOTES', $this->encounter_id);
-
+        CoAuditLog::insertAuditLog(PatNotes::tableName(), $this->pat_note_id, $activity);
+        
         return parent::afterSave($insert, $changedAttributes);
     }
 

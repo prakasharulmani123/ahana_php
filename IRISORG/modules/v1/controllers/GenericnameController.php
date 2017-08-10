@@ -55,6 +55,8 @@ class GenericnameController extends ActiveController {
         if ($id) {
             $model = PhaGeneric::find()->where(['generic_id' => $id])->one();
             $model->remove();
+            $activity = 'Generic Name Deleted Successfully (#' . $model->generic_name . ' )';
+            CoAuditLog::insertAuditLog(PhaGeneric::tableName(), $id, $activity);
             return ['success' => true];
         }
     }

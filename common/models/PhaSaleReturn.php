@@ -134,8 +134,11 @@ class PhaSaleReturn extends RActiveRecord {
     public function afterSave($insert, $changedAttributes) {
         if ($insert) {
             CoInternalCode::increaseInternalCode("B");
+            $activity = 'Sales Return Created Successfully (#' . $this->bill_no . ' )';
         }
-
+        else
+            $activity = 'Sales Return Updated Successfully (#' . $this->bill_no . ' )';
+        CoAuditLog::insertAuditLog(PhaSaleReturn::tableName(), $this->sale_ret_id, $activity);
         return parent::afterSave($insert, $changedAttributes);
     }
 
@@ -169,7 +172,7 @@ class PhaSaleReturn extends RActiveRecord {
         if ($addtField = Yii::$app->request->get('addtfields')) {
             switch ($addtField):
                 case 'sale_return_list':
-                    $addt_keys = ['patient', 'items','sale_bill_no'];
+                    $addt_keys = ['patient', 'items', 'sale_bill_no'];
                     $parent_fields = [
                         'sale_ret_id' => 'sale_ret_id',
                         'sale_id' => 'sale_id',

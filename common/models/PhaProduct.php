@@ -478,4 +478,13 @@ class PhaProduct extends RActiveRecord {
         return $final_rand;
     }
 
+    public function afterSave($insert, $changedAttributes) {
+        if ($insert)
+            $activity = 'Product Added Successfully (#' . $this->product_name . ' )';
+        else
+            $activity = 'Product Updated Successfully (#' . $this->product_name . ' )';
+        CoAuditLog::insertAuditLog(PhaProduct::tableName(), $this->product_id, $activity);
+        return parent::afterSave($insert, $changedAttributes);
+    }
+
 }

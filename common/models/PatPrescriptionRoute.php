@@ -35,11 +35,11 @@ class PatPrescriptionRoute extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['route_name'], 'required'],
-            [['tenant_id', 'created_by', 'modified_by'], 'integer'],
-            [['status'], 'string'],
-            [['created_at', 'modified_at', 'deleted_at'], 'safe'],
-            [['route_name'], 'string', 'max' => 50]
+                [['route_name'], 'required'],
+                [['tenant_id', 'created_by', 'modified_by'], 'integer'],
+                [['status'], 'string'],
+                [['created_at', 'modified_at', 'deleted_at'], 'safe'],
+                [['route_name'], 'string', 'max' => 50]
         ];
     }
 
@@ -85,6 +85,15 @@ class PatPrescriptionRoute extends RActiveRecord {
             $list = self::find()->tenant($tenant)->deleted()->all();
 
         return $list;
+    }
+
+    public function afterSave($insert, $changedAttributes) {
+        if ($insert)
+            $activity = 'Route name Added Successfully (#' . $this->route_name . ' )';
+        else
+            $activity = 'Route name Updated Successfully (#' . $this->route_name . ' )';
+        CoAuditLog::insertAuditLog(PatPrescriptionRoute::tableName(), $this->route_id, $activity);
+        return parent::afterSave($insert, $changedAttributes);
     }
 
 }

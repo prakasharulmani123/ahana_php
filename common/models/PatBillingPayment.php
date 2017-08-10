@@ -95,5 +95,13 @@ class PatBillingPayment extends RActiveRecord {
     public static function find() {
         return new PatBillingPaymentQuery(get_called_class());
     }
+    
+    public function afterSave($insert, $changedAttributes) {
+        if ($insert)
+            $activity = 'Billing Added Successfully (#' . $this->encounter_id . ' )';
+        else 
+            $activity = 'Billing Updated Successfully (#' . $this->encounter_id . ' )';
+        CoAuditLog::insertAuditLog(PatBillingPayment::tableName(), $this->payment_id, $activity);
+    }
 
 }

@@ -4,6 +4,8 @@ namespace IRISORG\modules\v1\controllers;
 
 use common\models\CoDoctorSchedule;
 use common\models\CoDoctorInterval;
+use common\models\CoAuditLog;
+use common\models\CoUser;
 use common\models\PatAppointment;
 use Yii;
 use yii\bootstrap\Html;
@@ -69,6 +71,9 @@ class DoctorscheduleController extends ActiveController {
         if ($id) {
             $model = CoDoctorSchedule::find()->where(['schedule_id' => $id])->one();
             $model->remove();
+            $user = CoUser::find()->where(['user_id' => $model->user_id])->one();
+            $activity = 'Doctor schedule Deleted Successfully (#' . $user->name . ' )';
+            CoAuditLog::insertAuditLog(CoDoctorSchedule::tableName(), $id, $activity);
             return ['success' => true];
         }
     }

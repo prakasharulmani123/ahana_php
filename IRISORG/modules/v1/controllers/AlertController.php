@@ -15,7 +15,6 @@ use yii\web\Response;
  * WardController implements the CRUD actions for CoTenant model.
  */
 class AlertController extends ActiveController {
-    
 
     public $modelClass = 'common\models\CoAlert';
 
@@ -56,6 +55,8 @@ class AlertController extends ActiveController {
         if ($id) {
             $model = CoAlert::find()->where(['alert_id' => $id])->one();
             $model->remove();
+            $activity = 'Alert Deleted Successfully (#' . $model->alert_name . ' )';
+            CoAuditLog::insertAuditLog(CoAlert::tableName(), $id, $activity);
             return ['success' => true];
         }
     }

@@ -90,7 +90,7 @@ class PhaVat extends RActiveRecord {
             'sgst_percent' => function ($model) {
                 return 2.5;
             },
-            ];
+        ];
         $parent_fields = parent::fields();
         $addt_keys = $extFields = [];
         if ($addtField = Yii::$app->request->get('addtfields')) {
@@ -113,6 +113,15 @@ class PhaVat extends RActiveRecord {
             $extFields = ($addt_keys) ? array_intersect_key($extend, array_flip($addt_keys)) : $extend;
 
         return array_merge($parent_fields, $extFields);
+    }
+
+    public function afterSave($insert, $changedAttributes) {
+        if ($insert)
+            $activity = 'Vat Added Successfully (#' . $this->vat . ' )';
+        else
+            $activity = 'Vat Updated Successfully (#' . $this->vat . ' )';
+        CoAuditLog::insertAuditLog(PhaVat::tableName(), $this->vat_id, $activity);
+        return parent::afterSave($insert, $changedAttributes);
     }
 
 }

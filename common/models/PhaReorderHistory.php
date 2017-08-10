@@ -39,10 +39,10 @@ class PhaReorderHistory extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['supplier_id', 'user_id'], 'required'],
-            [['tenant_id', 'supplier_id', 'user_id', 'created_by', 'modified_by'], 'integer'],
-            [['reorder_date', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
-            [['status'], 'string']
+                [['supplier_id', 'user_id'], 'required'],
+                [['tenant_id', 'supplier_id', 'user_id', 'created_by', 'modified_by'], 'integer'],
+                [['reorder_date', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
+                [['status'], 'string']
         ];
     }
 
@@ -111,5 +111,13 @@ class PhaReorderHistory extends RActiveRecord {
 
     public static function find() {
         return new PhaReorderHistoryQuery(get_called_class());
+    }
+
+    public function afterSave($insert, $changedAttributes) {
+        if ($insert) {
+            $activity = 'Reorder Created Successfully (#' . $this->reorder_id . ' )';
+            CoAuditLog::insertAuditLog(PhaReorderHistory::tableName(), $this->reorder_id, $activity);
+        }
+        return parent::afterSave($insert, $changedAttributes);
     }
 }

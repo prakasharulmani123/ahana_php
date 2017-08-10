@@ -74,5 +74,13 @@ class PhaBrand extends RActiveRecord {
     public static function find() {
         return new PhaBrandQuery(get_called_class());
     }
-
+    
+    public function afterSave($insert, $changedAttributes) {
+        if ($insert)
+            $activity = 'Brand Name Added Successfully (#' . $this->brand_name . ' )';
+        else
+            $activity = 'Brand Name Updated Successfully (#' . $this->brand_name . ' )';
+        CoAuditLog::insertAuditLog(PhaBrand::tableName(), $this->brand_id, $activity);
+        return parent::afterSave($insert, $changedAttributes);
+    }
 }

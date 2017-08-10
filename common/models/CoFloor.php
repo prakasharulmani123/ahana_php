@@ -36,13 +36,13 @@ class CoFloor extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['floor_name'], 'required'],
-            [['tenant_id', 'created_by', 'modified_by'], 'integer'],
-            [['status'], 'string'],
-            [['created_at', 'modified_at', 'deleted_at'], 'safe'],
-            [['floor_name'], 'string', 'max' => 50],
-            [['floor_code'], 'string', 'max' => 2],
-            [['tenant_id'], 'unique', 'targetAttribute' => ['floor_name', 'tenant_id', 'deleted_at'], 'message' => 'The combination of Floor Name has already been taken.']
+                [['floor_name'], 'required'],
+                [['tenant_id', 'created_by', 'modified_by'], 'integer'],
+                [['status'], 'string'],
+                [['created_at', 'modified_at', 'deleted_at'], 'safe'],
+                [['floor_name'], 'string', 'max' => 50],
+                [['floor_code'], 'string', 'max' => 2],
+                [['tenant_id'], 'unique', 'targetAttribute' => ['floor_name', 'tenant_id', 'deleted_at'], 'message' => 'The combination of Floor Name has already been taken.']
         ];
     }
 
@@ -82,11 +82,21 @@ class CoFloor extends RActiveRecord {
     }
 
     public static function getFloorList($tenant = null, $status = '1', $deleted = false) {
-        if(!$deleted)
+        if (!$deleted)
             $list = self::find()->tenant($tenant)->status($status)->active()->all();
         else
             $list = self::find()->tenant($tenant)->deleted()->all();
 
         return $list;
     }
+
+    public function afterSave($insert, $changedAttributes) {
+        if ($insert)
+            $activity = 'Floor Added Successfully (#' . $this->floor_name . ' )';
+        else
+            $activity = 'Floor Updated Successfully (#' . $this->floor_name . ' )';
+        CoAuditLog::insertAuditLog(CoFloor::tableName(), $this->floor_id, $activity);
+        return parent::afterSave($insert, $changedAttributes);
+    }
+
 }

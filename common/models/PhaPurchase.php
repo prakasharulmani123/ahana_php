@@ -166,8 +166,8 @@ class PhaPurchase extends RActiveRecord {
                 $invoice_no_with_supplier = $model->invoice_no;
 
                 if ($model->supplier != '')
-                    $invoice_no_with_supplier .= ' ' . '('.$model->supplier->supplier_name.')' . ' ';
-                
+                    $invoice_no_with_supplier .= ' ' . '(' . $model->supplier->supplier_name . ')' . ' ';
+
                 return $invoice_no_with_supplier;
             },
             'billings_total_balance_amount' => function ($model) {
@@ -202,7 +202,7 @@ class PhaPurchase extends RActiveRecord {
                     ];
                     break;
                 case 'viewlist':
-                    $addt_keys = ['supplier_name', 'items','billings_total_paid_amount','billings_total_balance_amount'];
+                    $addt_keys = ['supplier_name', 'items', 'billings_total_paid_amount', 'billings_total_balance_amount'];
                     $pFields = ['invoice_no', 'gr_num', 'invoice_date', 'total_item_purchase_amount', 'total_item_vat_amount', 'discount_percent', 'discount_amount', 'roundoff_amount', 'net_amount', 'purchase_id', 'payment_type', 'payment_status'];
                     $parent_fields = array_combine($pFields, $pFields);
                     break;
@@ -247,6 +247,11 @@ class PhaPurchase extends RActiveRecord {
                 $purchase_billing_model->paid_amount = $this->net_amount;
                 $purchase_billing_model->save(false);
             }
+            if ($insert)
+                $activity = 'Purchase Created Successfully (#' . $this->invoice_no . ' )';
+            else
+                $activity = 'Purchase Updated Successfully (#' . $this->invoice_no . ' )';
+            CoAuditLog::insertAuditLog(PhaPurchase::tableName(), $this->purchase_id, $activity);
         }
         return parent::afterSave($insert, $changedAttributes);
     }

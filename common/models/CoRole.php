@@ -35,12 +35,12 @@ class CoRole extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['description'], 'required'],
-            [['tenant_id', 'created_by', 'modified_by'], 'integer'],
-            [['status'], 'string'],
-            [['created_at', 'modified_at', 'deleted_at'], 'safe'],
-            [['description'], 'string', 'max' => 50],
-            [['tenant_id'], 'unique', 'targetAttribute' => ['description', 'tenant_id', 'deleted_at'], 'message' => 'The combination of Name has already been taken.']
+                [['description'], 'required'],
+                [['tenant_id', 'created_by', 'modified_by'], 'integer'],
+                [['status'], 'string'],
+                [['created_at', 'modified_at', 'deleted_at'], 'safe'],
+                [['description'], 'string', 'max' => 50],
+                [['tenant_id'], 'unique', 'targetAttribute' => ['description', 'tenant_id', 'deleted_at'], 'message' => 'The combination of Name has already been taken.']
         ];
     }
 
@@ -87,13 +87,18 @@ class CoRole extends RActiveRecord {
     public function getResources() {
         return $this->hasMany(CoResources::className(), ['resource_id' => 'resource_id'])->via('rolesResources');
     }
-    
-    public static function getTenantSuperRole($tenant_id){
+
+    public static function getTenantSuperRole($tenant_id) {
         $tenant_super_role = self::find()->tenant($tenant_id)->superRole()->one();
         return $tenant_super_role;
     }
-    
+
     public function afterSave($insert, $changedAttributes) {
+        if ($insert)
+            $activity = 'Role created Successfully (#' . $this->description . ' )';
+        else
+            $activity = 'Role updated Successfully (#' . $this->description . ' )';
+        CoAuditLog::insertAuditLog(CoRole::tableName(), $this->role_id, $activity);
         return parent::afterSave($insert, $changedAttributes);
     }
 

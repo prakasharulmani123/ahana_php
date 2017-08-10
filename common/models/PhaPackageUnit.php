@@ -21,37 +21,34 @@ use yii\db\ActiveQuery;
  *
  * @property CoTenant $tenant
  */
-class PhaPackageUnit extends RActiveRecord
-{
+class PhaPackageUnit extends RActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'pha_package_unit';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            [['package_name', 'package_unit'], 'required'],
-            [['tenant_id', 'created_by', 'modified_by'], 'integer'],
-            [['status'], 'string'],
-            [['created_at', 'modified_at', 'deleted_at'], 'safe'],
-            [['package_name'], 'string', 'max' => 255],
-            [['package_unit'], 'string', 'max' => 100],
-            [['package_name'], 'unique', 'targetAttribute' => ['tenant_id', 'package_name', 'package_unit', 'deleted_at'], 'message' => 'The combination has already been taken.']
+                [['package_name', 'package_unit'], 'required'],
+                [['tenant_id', 'created_by', 'modified_by'], 'integer'],
+                [['status'], 'string'],
+                [['created_at', 'modified_at', 'deleted_at'], 'safe'],
+                [['package_name'], 'string', 'max' => 255],
+                [['package_unit'], 'string', 'max' => 100],
+                [['package_name'], 'unique', 'targetAttribute' => ['tenant_id', 'package_name', 'package_unit', 'deleted_at'], 'message' => 'The combination has already been taken.']
         ];
     }
 
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'package_id' => 'Package ID',
             'tenant_id' => 'Tenant ID',
@@ -69,15 +66,14 @@ class PhaPackageUnit extends RActiveRecord
     /**
      * @return ActiveQuery
      */
-    public function getTenant()
-    {
+    public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
-    
+
     public static function find() {
         return new PhaPackageUnitQuery(get_called_class());
     }
-    
+
     public static function getPackinglist($tenant = null, $status = '1', $deleted = false) {
         if (!$deleted) {
             $list = self::find()->tenant($tenant)->status($status)->active()->all();
@@ -87,4 +83,14 @@ class PhaPackageUnit extends RActiveRecord
 
         return $list;
     }
+
+    public function afterSave($insert, $changedAttributes) {
+        if ($insert)
+            $activity = 'Package Unit Added Successfully (#' . $this->package_name . ' )';
+        else
+            $activity = 'Package Unit Updated Successfully (#' . $this->package_name . ' )';
+        CoAuditLog::insertAuditLog(PhaPackageUnit::tableName(), $this->package_id, $activity);
+        return parent::afterSave($insert, $changedAttributes);
+    }
+
 }

@@ -6,6 +6,7 @@ use common\models\CoUser;
 use common\models\PatNotes;
 use common\models\PatNotesUsers;
 use common\models\PatPatient;
+use common\models\CoAuditLog;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -64,7 +65,7 @@ class PatientnotesController extends ActiveController {
             $condition = [
                 'patient_id' => $patient->patient_id,
             ];
-            
+
             if (isset($get['date'])) {
                 $condition = [
                     'patient_id' => $patient->patient_id,
@@ -103,6 +104,8 @@ class PatientnotesController extends ActiveController {
         if ($id) {
             $model = PatNotes::find()->where(['pat_note_id' => $id])->one();
             $model->remove();
+            $activity = 'Patient Notes Deleted Successfully (#' . $model->encounter_id . ' )';
+            CoAuditLog::insertAuditLog(PatNotes::tableName(), $id, $activity);
             return ['success' => true];
         }
     }

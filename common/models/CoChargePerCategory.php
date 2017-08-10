@@ -36,11 +36,11 @@ class CoChargePerCategory extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['charge_code_id', 'charge_cat_id'], 'required'],
-            [['tenant_id', 'charge_cat_id', 'charge_code_id', 'created_by', 'modified_by'], 'integer'],
-            [['charge_cat_type'], 'string'],
-            [['created_at', 'modified_at', 'deleted_at'], 'safe'],
-            [['charge_default'], 'string', 'max' => 255],
+                [['charge_code_id', 'charge_cat_id'], 'required'],
+                [['tenant_id', 'charge_cat_id', 'charge_code_id', 'created_by', 'modified_by'], 'integer'],
+                [['charge_cat_type'], 'string'],
+                [['created_at', 'modified_at', 'deleted_at'], 'safe'],
+                [['charge_default'], 'string', 'max' => 255],
 //            [['charge_cat_id', 'charge_code_id', 'tenant_id'], 'unique', 'message' => 'The combination has already been taken.'],
             [['charge_cat_id'], 'unique', 'targetAttribute' => ['charge_cat_id', 'charge_code_id', 'tenant_id'], 'message' => 'The combination has already been taken.']
         ];
@@ -132,9 +132,9 @@ class CoChargePerCategory extends RActiveRecord {
             $response = self::find()->tenant()->chargeCatType($type)->chargeCatId($charge_cat_id)->andWhere(['charge_code_id' => $charge_code_id])->one();
             if (!empty($response)) {
                 $op = $response->opCoChargePerSubcategories;
-                if(!empty($response->charge_default))
+                if (!empty($response->charge_default))
                     $op[] = ["charge_id" => $response->charge_id, "charge_type" => "OP", "charge_amount" => $response->charge_default, "op_dept" => "Default", 'patient_cat_id' => 0];
-                
+
                 return $op;
             }
         }
@@ -143,37 +143,57 @@ class CoChargePerCategory extends RActiveRecord {
     // $charge_cat_id = 1 for Procedures
     // $charge_cat_id = 2 for Allied Charge
     // $charge_cat_id = -1 for Professional
-    
+
     public static function getChargeAmount($charge_cat_id, $type, $charge_code_id, $charge_type, $charge_link_id) {
         $amount = 0;
         if ($charge_code_id) {
             $response = self::find()->tenant()->chargeCatType($type)->chargeCatId($charge_cat_id)->andWhere(['charge_code_id' => $charge_code_id])->one();
-            
+
             if (!empty($response)) {
-                if($charge_type == 'IP')
+                if ($charge_type == 'IP')
                     $categories = $response->ipCoChargePerSubcategories;
                 else
                     $categories = $response->opCoChargePerSubcategories;
-                
-                if(!empty($categories))
+
+                if (!empty($categories))
                     $amount = self::_get_amount($categories, $charge_link_id);
-                
-                if(empty($amount) && $amount == 0)
+
+                if (empty($amount) && $amount == 0)
                     $amount = $response->charge_default;
             }
         }
         return $amount;
     }
-    
+
     private static function _get_amount($categories, $charge_link_id) {
         $amount = 0;
         foreach ($categories as $key => $category) {
-            if($category->charge_link_id == $charge_link_id){
+            if ($category->charge_link_id == $charge_link_id) {
                 $amount = $category->charge_amount;
                 break;
             }
         }
         return $amount;
+    }
+
+    public function afterSave($insert, $changedAttributes) {
+        if ($this->charge_cat_id != -1) {
+            $roomchargecategory = CoRoomChargeCategory::find()->where(['charge_cat_id' => $this->charge_cat_id])->one();
+            $roomchargesubcategory = CoRoomChargeSubcategory::find()->where(['charge_cat_id' => $this->charge_cat_id, 'charge_subcat_id' => $this->charge_code_id])->one();
+            if ($insert)
+                $activity = "Charge for Category Added Successfully (#$roomchargecategory->charge_cat_name,$roomchargesubcategory->charge_subcat_name)";
+            else
+                $activity = "Charge for Category Updated Successfully (#$roomchargecategory->charge_cat_name,$roomchargesubcategory->charge_subcat_name)";
+        }
+        if ($this->charge_cat_id == -1) {
+            $user = CoUser::find()->where(['user_id' => $this->charge_code_id])->one();
+            if ($insert)
+                $activity = "Charge for Category Added Successfully (#Professional Charges,$user->name)";
+            else
+                $activity = "Charge for Category Updated Successfully (#Professional Charges,$user->name)";
+        }
+        CoAuditLog::insertAuditLog(CoChargePerCategory::tableName(), $this->charge_id, $activity);
+        return parent::afterSave($insert, $changedAttributes);
     }
 
 }

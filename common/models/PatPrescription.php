@@ -151,4 +151,13 @@ class PatPrescription extends RActiveRecord
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
     }
+    
+    public function afterSave($insert, $changedAttributes) {
+        if ($insert)
+            $activity = 'Prescription Added Successfully (#' . $this->encounter_id . ' )';
+        else
+            $activity = 'Prescription Updated Successfully (#' . $this->encounter_id . ' )';
+        CoAuditLog::insertAuditLog(PhaBrand::tableName(), $this->pres_id, $activity);
+        return parent::afterSave($insert, $changedAttributes);
+    }
 }

@@ -144,13 +144,13 @@ class PhaPurchaseReturn extends RActiveRecord {
                 return (isset($model->phaPurchaseReturnItems) ? $model->phaPurchaseReturnItems : '-');
             },
         ];
-            
+
         $parent_fields = parent::fields();
         $addt_keys = $extFields = [];
         if ($addtField = Yii::$app->request->get('addtfields')) {
             switch ($addtField):
                 case 'purchase_return':
-                    $addt_keys = ['supplier','items'];
+                    $addt_keys = ['supplier', 'items'];
                     $parent_fields = [
                         'invoice_no' => 'invoice_no',
                         'invoice_date' => 'invoice_date',
@@ -176,7 +176,11 @@ class PhaPurchaseReturn extends RActiveRecord {
     public function afterSave($insert, $changedAttributes) {
         if ($insert) {
             CoInternalCode::increaseInternalCode("PR");
+            $activity = 'Purchase Return Created Successfully (#' . $this->invoice_no . ' )';
         }
+        else
+            $activity = 'Purchase Return Updated Successfully (#' . $this->invoice_no . ' )';
+        CoAuditLog::insertAuditLog(PhaPurchaseReturn::tableName(), $this->purchase_ret_id, $activity);
         return parent::afterSave($insert, $changedAttributes);
     }
 

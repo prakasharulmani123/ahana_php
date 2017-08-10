@@ -3,6 +3,7 @@
 namespace IRISORG\modules\v1\controllers;
 
 use common\models\CoRoomChargeItem;
+use common\models\CoAuditLog;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -55,6 +56,8 @@ class RoomchargeitemController extends ActiveController {
         if($id){
             $model = CoRoomChargeItem::find()->where(['charge_item_id' => $id])->one();
             $model->remove();
+            $activity = 'Room Charge Item Deleted Successfully (#' . $model->charge_item_name . ' )';
+            CoAuditLog::insertAuditLog(CoRoomChargeItem::tableName(), $id, $activity);
             return ['success' => true];
         }
     }

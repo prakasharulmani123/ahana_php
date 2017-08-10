@@ -86,5 +86,14 @@ class PatOtherDocuments extends RActiveRecord {
     public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
+    
+    public function afterSave($insert, $changedAttributes) {
+        if ($insert)
+            $activity = 'Other Document Added Successfully (#' . $this->encounter_id . ' )';
+        else
+            $activity = 'Other Document Updated Successfully (#' . $this->encounter_id . ' )';
+        CoAuditLog::insertAuditLog(PatOtherDocuments::tableName(), $this->other_doc_id, $activity);
+        return parent::afterSave($insert, $changedAttributes);
+    }
 
 }

@@ -55,6 +55,8 @@ class PharmacyvatController extends ActiveController {
         if ($id) {
             $model = PhaVat::find()->where(['vat_id' => $id])->one();
             $model->remove();
+            $activity = 'Vat Deleted Successfully (#' . $model->description_name . ' )';
+            CoAuditLog::insertAuditLog(PhaVat::tableName(), $id, $activity);
             return ['success' => true];
         }
     }

@@ -38,12 +38,12 @@ class PatPatientCasesheet extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['casesheet_no', 'patient_id'], 'required'],
-            [['tenant_id', 'patient_id', 'created_by', 'modified_by'], 'integer'],
-            [['start_date', 'end_date', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
-            [['status'], 'string'],
-            [['casesheet_no'], 'string', 'max' => 50],
-            [['casesheet_no'], 'unique', 'targetAttribute' => ['tenant_id', 'casesheet_no', 'deleted_at'], 'message' => 'This Casesheet No has already been taken.']
+                [['casesheet_no', 'patient_id'], 'required'],
+                [['tenant_id', 'patient_id', 'created_by', 'modified_by'], 'integer'],
+                [['start_date', 'end_date', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
+                [['status'], 'string'],
+                [['casesheet_no'], 'string', 'max' => 50],
+                [['casesheet_no'], 'unique', 'targetAttribute' => ['tenant_id', 'casesheet_no', 'deleted_at'], 'message' => 'This Casesheet No has already been taken.']
         ];
     }
 
@@ -86,13 +86,17 @@ class PatPatientCasesheet extends RActiveRecord {
     }
 
     public function afterSave($insert, $changedAttributes) {
+        $patient = PatPatient::find()->with('patGlobalPatient')->andWhere(['patient_id' => $this->patient_id])->one();
         if ($insert) {
             $encounter_id = !empty($this->patient->patActiveEncounter) ? $this->patient->patActiveEncounter->encounter_id : null;
             if (is_null($encounter_id)) {
                 $encounter_id = !empty($this->patient->patPreviousEncounter) ? $this->patient->patPreviousEncounter->encounter_id : null;
             }
             PatTimeline::insertTimeLine($this->patient_id, $this->created_at, 'Casesheet No.', 'Casesheet No', "Casesheet No.: {$this->casesheet_no} Added.", 'ENCOUNTER', $encounter_id);
-        }
+            $activity = 'Patient Casesheet Added Successfully (#' . $patient->patient_firstname . ' )';
+        } else
+            $activity = 'Patient Casesheet Updated Successfully (#' . $patient->patient_firstname . ' )';
+        CoAuditLog::insertAuditLog(PatPatientCasesheet::tableName(), $this->casesheet_id, $activity);
         return parent::afterSave($insert, $changedAttributes);
     }
 

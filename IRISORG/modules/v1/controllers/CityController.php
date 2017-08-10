@@ -3,6 +3,7 @@
 namespace IRISORG\modules\v1\controllers;
 
 use common\models\CoMasterCity;
+use common\models\CoAuditLog;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -55,6 +56,8 @@ class CityController extends ActiveController {
         if($id){
             $model = CoMasterCity::find()->where(['city_id' => $id])->one();
             $model->remove();
+            $activity = 'City Deleted Successfully (#' . $model->city_name . ' )';
+            CoAuditLog::insertAuditLog(CoMasterCity::tableName(), $id, $activity);
             return ['success' => true];
         }
     }

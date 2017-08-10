@@ -5,6 +5,7 @@ namespace IRISORG\modules\v1\controllers;
 use common\models\PatBillingLog;
 use common\models\PatBillingPayment;
 use common\models\PatPatient;
+use common\models\CoAuditLog;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -57,6 +58,8 @@ class PatientbillingpaymentController extends ActiveController {
         if ($id) {
             $model = PatBillingPayment::find()->where(['payment_id' => $id])->one();
             $model->remove();
+            $activity = 'Billing Deleted Successfully (#' . $model->encounter_id . ' )';
+            CoAuditLog::insertAuditLog(PatBillingPayment::tableName(), $id, $activity);
             return ['success' => true];
         }
     }

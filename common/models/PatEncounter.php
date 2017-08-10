@@ -680,11 +680,10 @@ class PatEncounter extends RActiveRecord {
         //echo $oldencounter; die;
         if (!$deleted) {
             $list = self::find()->tenant($tenant)->status($status)->active()->encounterType($encounter_type)->andWhere(['patient_id' => $patient_id]);
-            if ($oldencounter!='undefined')
-            {
+            if ($oldencounter != 'undefined') {
                 $list->andWhere(['<=', 'DATE(encounter_date)', date('Y-m-d')]);
             }
-                $list = $list->orderBy(['encounter_id' => SORT_DESC])->all();
+            $list = $list->orderBy(['encounter_id' => SORT_DESC])->all();
         } else
             $list = self::find()->tenant($tenant)->encounterType($encounter_type)->deleted()->andWhere(['patient_id' => $patient_id])->orderBy(['encounter_id' => SORT_DESC])->all();
 
@@ -721,16 +720,21 @@ class PatEncounter extends RActiveRecord {
         if ($insert) {
             if ($this->encounter_type == 'IP')
                 CoInternalCode::increaseInternalCode("B");
+            $activity = 'Encounter Added Successfully (#' . $this->encounter_id . ' )';
+            CoAuditLog::insertAuditLog(PatEncounter::tableName(), $this->encounter_id, $activity);
         } else {
             if (isset($changedAttributes['concession_amount']) && $changedAttributes['concession_amount'] != $this->concession_amount) {
                 $amount = number_format($this->concession_amount, 2);
                 $activity = "Concession amount {$amount}";
-                if ($changedAttributes['concession_amount'] == '0.00')
+                if ($changedAttributes['concession_amount'] == '0.00') {
                     $activity .= ' ( Add )';
-                else
+                    $message = 'Room Concession Added Successfully (#' . $this->encounter_id . ' )';
+                } else {
                     $activity .= ' ( Edit )';
-
+                    $message = 'Room Concession Updated Successfully (#' . $this->encounter_id . ' )';
+                }
                 PatBillingLog::insertBillingLog($this->patient_id, $this->encounter_id, $this->modified_at, 'R', 'Room Concession', $activity);
+                CoAuditLog::insertAuditLog(PatEncounter::tableName(), $this->encounter_id, $message);
             }
         }
 

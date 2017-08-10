@@ -62,4 +62,15 @@ class HsnController extends ActiveController {
         return ['hsncodeList' => PhaHsn::getHsnCodeList($status, $deleted)];
     }
 
+    public function actionRemove() {
+        $id = Yii::$app->getRequest()->post('id');
+        if ($id) {
+            $model = PhaHsn::find()->where(['hsn_id' => $id])->one();
+            $model->remove();
+            $activity = 'Hsn Deleted Successfully (#' . $model->hsn_no . ' )';
+            CoAuditLog::insertAuditLog(PhaHsn::tableName(), $id, $activity);
+            return ['success' => true];
+        }
+    }
+
 }

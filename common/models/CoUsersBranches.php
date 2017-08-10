@@ -95,5 +95,15 @@ class CoUsersBranches extends RActiveRecord {
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
     }
+    
+//    public function afterSave($insert, $changedAttributes) {
+//        $user = CoUser::find()->where(['user_id' => $this->user_id])->one();
+//        if ($insert)
+//            $activity = 'User Branches assigned Successfully (#' . $user->name . ' )';
+//        else
+//            $activity = 'User Branches Updated Successfully (#' . $user->name . ' )';
+//        CoAuditLog::insertAuditLog(CoUsersBranches::tableName(), $this->user_branch_id, $activity);
+//        return parent::afterSave($insert, $changedAttributes);
+//    }
 
 }

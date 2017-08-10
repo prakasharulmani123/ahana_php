@@ -6,6 +6,7 @@ use common\models\CoUser;
 use common\models\PatPatient;
 use common\models\PatVitals;
 use common\models\PatVitalsUsers;
+use common\models\CoAuditLog;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -59,6 +60,8 @@ class PatientvitalsController extends ActiveController {
         if ($id) {
             $model = PatVitals::find()->where(['vital_id' => $id])->one();
             $model->remove();
+            $activity = 'Vital Deleted Successfully (#' . $model->encounter_id . ' )';
+            CoAuditLog::insertAuditLog(PatVitals::tableName(), $id, $activity);
             return ['success' => true];
         }
     }

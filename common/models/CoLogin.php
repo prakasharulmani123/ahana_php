@@ -44,7 +44,7 @@ class CoLogin extends ActiveRecord implements IdentityInterface {
 
     public function behaviors() {
         return [
-            [
+                [
                 'class' => TimestampBehavior::className(),
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'modified_at'],
@@ -52,7 +52,7 @@ class CoLogin extends ActiveRecord implements IdentityInterface {
                 ],
                 'value' => new Expression('NOW()')
             ],
-            [
+                [
                 'class' => BlameableBehavior::className(),
                 'updatedByAttribute' => 'modified_by',
                 'value' => function ($event) {
@@ -68,19 +68,19 @@ class CoLogin extends ActiveRecord implements IdentityInterface {
      */
     public function rules() {
         return [
-            [['username'], 'required'],
-            [['password'], 'required', 'on' => 'create'],
-            [['username'], 'validateUsername'],
-            [['password'], 'validateUserpassword'],
-            [['old_password', 'new_password', 'confirm_password'], 'required', 'on' => 'change_password'],
-            [['new_password'], 'validateUserpassword'],
-            ['old_password', 'findPasswords', 'on' => 'change_password'],
-            ['confirm_password', 'compare', 'compareAttribute' => 'new_password', 'on' => 'change_password'],
+                [['username'], 'required'],
+                [['password'], 'required', 'on' => 'create'],
+                [['username'], 'validateUsername'],
+                [['password'], 'validateUserpassword'],
+                [['old_password', 'new_password', 'confirm_password'], 'required', 'on' => 'change_password'],
+                [['new_password'], 'validateUserpassword'],
+                ['old_password', 'findPasswords', 'on' => 'change_password'],
+                ['confirm_password', 'compare', 'compareAttribute' => 'new_password', 'on' => 'change_password'],
 //            [['username', 'password'], 'string', 'min' => 6],
             [['user_id', 'created_by', 'modified_by', 'logged_tenant_id', 'access_tenant_id'], 'integer'],
-            [['created_at', 'modified_at', 'activation_date', 'Inactivation_date', 'logged_tenant_id', 'access_tenant_id'], 'safe'],
-            [['username', 'password', 'password_reset_token', 'authtoken'], 'string', 'max' => 255],
-            ['username', 'unique'],
+                [['created_at', 'modified_at', 'activation_date', 'Inactivation_date', 'logged_tenant_id', 'access_tenant_id'], 'safe'],
+                [['username', 'password', 'password_reset_token', 'authtoken'], 'string', 'max' => 255],
+                ['username', 'unique'],
         ];
     }
 
@@ -252,6 +252,17 @@ class CoLogin extends ActiveRecord implements IdentityInterface {
 
     public static function getDb() {
         return Yii::$app->client;
+    }
+
+    public function afterSave($insert, $changedAttributes) {
+        $tenant = CoTenant::find()->where(['tenant_id' => $this->logged_tenant_id])->one();
+        if (empty(Yii::$app->user->identity))
+            $activity = $this->username . ' logged successfully(#' . $tenant->tenant_name . ')';
+        else{
+           echo $activity = $this->username . ' log out successfully(#' . $tenant->tenant_name . ')';  die;
+        }
+            
+        CoAuditLog::insertAuditLog('', '', $activity, $this->logged_tenant_id, $this->user_id);
     }
 
 }

@@ -9,6 +9,7 @@ use common\models\PhaReorderHistory;
 use common\models\PhaReorderHistoryItem;
 use common\models\PhaSupplier;
 use common\models\PhaPurchaseReturn;
+use common\models\CoAuditLog;
 use PDO;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -486,6 +487,8 @@ class PharmacypurchaseController extends ActiveController {
         if (empty($return)) {
             $model = PhaPurchase::find()->tenant()->where(['purchase_id' => $get['id']])->one();
             $model->remove();
+            $activity = 'Purchase Deleted Successfully (#'. $model->invoice_no.' )';
+            CoAuditLog::insertAuditLog(PhaPurchase::tableName(), $get['id'], $activity);
             return ['success' => true];
         } else {
             return ['success' => false, 'message' => "Sorry, you can't delete this bill"];

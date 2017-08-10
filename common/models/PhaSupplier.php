@@ -34,38 +34,35 @@ use yii\db\ActiveQuery;
  * @property CoMasterState $state
  * @property CoTenant $tenant
  */
-class PhaSupplier extends RActiveRecord
-{
+class PhaSupplier extends RActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'pha_supplier';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            [['supplier_name', 'supplier_mobile', 'cst_no', 'tin_no', 'supplier_address'], 'required'],
-            [['tenant_id', 'city_id', 'state_id', 'country_id', 'created_by', 'modified_by'], 'integer'],
-            [['supplier_address', 'status'], 'string'],
-            [['created_at', 'modified_at', 'deleted_at'], 'safe'],
-            [['supplier_name', 'cst_no', 'tin_no', 'drug_license'], 'string', 'max' => 100],
-            [['supplier_code', 'supplier_mobile', 'supplier_phone'], 'string', 'max' => 50],
-            [['zip'], 'string', 'max' => 30],
-            [['tenant_id', 'supplier_name', 'deleted_at'], 'unique', 'targetAttribute' => ['tenant_id', 'supplier_name', 'deleted_at'], 'message' => 'The combination of Tenant ID, Supplier Name and Deleted At has already been taken.']
+                [['supplier_name', 'supplier_mobile', 'cst_no', 'tin_no', 'supplier_address'], 'required'],
+                [['tenant_id', 'city_id', 'state_id', 'country_id', 'created_by', 'modified_by'], 'integer'],
+                [['supplier_address', 'status'], 'string'],
+                [['created_at', 'modified_at', 'deleted_at'], 'safe'],
+                [['supplier_name', 'cst_no', 'tin_no', 'drug_license'], 'string', 'max' => 100],
+                [['supplier_code', 'supplier_mobile', 'supplier_phone'], 'string', 'max' => 50],
+                [['zip'], 'string', 'max' => 30],
+                [['tenant_id', 'supplier_name', 'deleted_at'], 'unique', 'targetAttribute' => ['tenant_id', 'supplier_name', 'deleted_at'], 'message' => 'The combination of Tenant ID, Supplier Name and Deleted At has already been taken.']
         ];
     }
 
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'supplier_id' => 'Supplier ID',
             'tenant_id' => 'Tenant ID',
@@ -93,39 +90,35 @@ class PhaSupplier extends RActiveRecord
     /**
      * @return ActiveQuery
      */
-    public function getCity()
-    {
+    public function getCity() {
         return $this->hasOne(CoMasterCity::className(), ['city_id' => 'city_id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getCountry()
-    {
+    public function getCountry() {
         return $this->hasOne(CoMasterCountry::className(), ['country_id' => 'country_id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getState()
-    {
+    public function getState() {
         return $this->hasOne(CoMasterState::className(), ['state_id' => 'state_id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getTenant()
-    {
+    public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
-    
+
     public static function find() {
         return new PhaSupplierQuery(get_called_class());
     }
-    
+
     public static function getSupplierlist($tenant = null, $status = '1', $deleted = false) {
         if (!$deleted) {
             $list = self::find()->tenant($tenant)->status($status)->active()->all();
@@ -135,14 +128,24 @@ class PhaSupplier extends RActiveRecord
 
         return $list;
     }
-    
+
     public static function getSupplierid($name, $tenant = null) {
         $supplier = self::find()->tenant($tenant)->andWhere(['supplier_name' => $name])->one();
-        if(!$supplier){
+        if (!$supplier) {
             $supplier = new PhaSupplier;
             $supplier->supplier_name = $name;
             $supplier->save(false);
         }
         return $supplier->supplier_id;
     }
+
+    public function afterSave($insert, $changedAttributes) {
+        if ($insert)
+            $activity = 'Supplier Added Successfully (#' . $this->supplier_name . ' )';
+        else
+            $activity = 'Supplier Updated Successfully (#' . $this->supplier_name . ' )';
+        CoAuditLog::insertAuditLog(PhaSupplier::tableName(), $this->supplier_id, $activity);
+        return parent::afterSave($insert, $changedAttributes);
+    }
+
 }

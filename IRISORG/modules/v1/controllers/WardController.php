@@ -3,6 +3,7 @@
 namespace IRISORG\modules\v1\controllers;
 
 use common\models\CoWard;
+use common\models\CoAuditLog;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -55,6 +56,8 @@ class WardController extends ActiveController {
         if ($id) {
             $model = CoWard::find()->where(['ward_id' => $id])->one();
             $model->remove();
+            $activity = 'Ward Deleted Successfully (#' . $model->ward_name . ' )';
+            CoAuditLog::insertAuditLog(CoWard::tableName(), $id, $activity);
             
             //Remove all related records
             foreach ($model->room as $room) {

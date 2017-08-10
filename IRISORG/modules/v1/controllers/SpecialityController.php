@@ -3,6 +3,7 @@
 namespace IRISORG\modules\v1\controllers;
 
 use common\models\CoSpeciality;
+use common\models\CoAuditLog;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -55,6 +56,8 @@ class SpecialityController extends ActiveController {
         if ($id) {
             $model = CoSpeciality::find()->where(['speciality_id' => $id])->one();
             $model->remove();
+            $activity = 'Speciality Deleted Successfully (#' . $model->speciality_name . ' )';
+            CoAuditLog::insertAuditLog(CoSpeciality::tableName(), $id, $activity);
             return ['success' => true];
         }
     }

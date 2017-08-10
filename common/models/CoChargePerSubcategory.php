@@ -35,11 +35,11 @@ class CoChargePerSubcategory extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['charge_id', 'charge_type', 'charge_link_id', 'charge_amount'], 'required'],
-            [['charge_id', 'charge_link_id', 'created_by', 'modified_by'], 'integer'],
-            [['charge_type'], 'string'],
-            [['charge_amount'], 'number'],
-            [['created_at', 'modified_at', 'deleted_at'], 'safe']
+                [['charge_id', 'charge_type', 'charge_link_id', 'charge_amount'], 'required'],
+                [['charge_id', 'charge_link_id', 'created_by', 'modified_by'], 'integer'],
+                [['charge_type'], 'string'],
+                [['charge_amount'], 'number'],
+                [['created_at', 'modified_at', 'deleted_at'], 'safe']
         ];
     }
 
@@ -109,6 +109,25 @@ class CoChargePerSubcategory extends RActiveRecord {
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
+    }
+
+    public function afterSave($insert, $changedAttributes) {
+        if ($this->charge_type == 'OP') {
+            $patcategory = CoPatientCategory::find()->where(['patient_cat_id' => $this->charge_link_id])->one();
+            if ($insert)
+                $activity = "Charge for Category Added Successfully (#outpatient,$patcategory->patient_cat_name)";
+            else
+                $activity = "Charge for Category Updated Successfully (#outpatient,$patcategory->patient_cat_name)";
+        }
+        if ($this->charge_type == 'IP') {
+            $roomType = CoRoomType::find()->where()->one(['room_type_id' => $this->charge_link_id])->one();
+            if ($insert)
+                $activity = "Charge for Category Added Successfully (#Inpatient,$roomType->room_type_name)";
+            else
+                $activity = "Charge for Category Updated Successfully (#Inpatient,$roomType->room_type_name)";
+        }
+        CoAuditLog::insertAuditLog(CoChargePerSubcategory::tableName(), $this->sub_charge_id, $activity);
+        return parent::afterSave($insert, $changedAttributes);
     }
 
 }

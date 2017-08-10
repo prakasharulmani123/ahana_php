@@ -34,12 +34,12 @@ class CoWard extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['ward_name', 'floor_id'], 'required'],
-            [['tenant_id', 'created_by', 'modified_by', 'floor_id'], 'integer'],
-            [['status'], 'string'],
-            [['created_at', 'modified_at', 'deleted_at'], 'safe'],
-            [['ward_name'], 'string', 'max' => 50],
-            [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'floor_id', 'ward_name', 'deleted_at'], 'message' => 'The combination of Ward Name has already been taken.']
+                [['ward_name', 'floor_id'], 'required'],
+                [['tenant_id', 'created_by', 'modified_by', 'floor_id'], 'integer'],
+                [['status'], 'string'],
+                [['created_at', 'modified_at', 'deleted_at'], 'safe'],
+                [['ward_name'], 'string', 'max' => 50],
+                [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'floor_id', 'ward_name', 'deleted_at'], 'message' => 'The combination of Ward Name has already been taken.']
         ];
     }
 
@@ -85,7 +85,7 @@ class CoWard extends RActiveRecord {
     public static function find() {
         return new CoWardQuery(get_called_class());
     }
-    
+
     public function fields() {
         $extend = [
             'floor_name' => function ($model) {
@@ -95,13 +95,23 @@ class CoWard extends RActiveRecord {
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
     }
-    
+
     public static function getWardList($tenant = null, $status = '1', $deleted = false) {
-        if(!$deleted)
+        if (!$deleted)
             $list = self::find()->tenant($tenant)->status($status)->active()->all();
         else
             $list = self::find()->tenant($tenant)->deleted()->all();
 
         return $list;
     }
+
+    public function afterSave($insert, $changedAttributes) {
+        if ($insert)
+            $activity = 'Ward Added Successfully (#' . $this->ward_name . ' )';
+        else
+            $activity = 'Ward Updated Successfully (#' . $this->ward_name . ' )';
+        CoAuditLog::insertAuditLog(CoWard::tableName(), $this->ward_id, $activity);
+        return parent::afterSave($insert, $changedAttributes);
+    }
+
 }

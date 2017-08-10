@@ -5,6 +5,7 @@ namespace IRISORG\modules\v1\controllers;
 use common\models\CoUser;
 use common\models\PatPatient;
 use common\models\PatProcedure;
+use common\models\CoAuditLog;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -57,6 +58,8 @@ class ProcedureController extends ActiveController {
         if ($id) {
             $model = PatProcedure::find()->where(['proc_id' => $id])->one();
             $model->remove();
+            $activity = 'Procedure Deleted Successfully (#' . $model->encounter_id . ' )';
+            CoAuditLog::insertAuditLog(PatProcedure::tableName(), $id, $activity);
             return ['success' => true];
         }
     }
@@ -149,7 +152,8 @@ class ProcedureController extends ActiveController {
                 $pat_procedure->charge_subcat_id = $post['data']['charge_subcat_id'];
                 $pat_procedure->proc_date = $post['data']['proc_date'];
                 $pat_procedure->proc_consultant_ids = $post['data']['proc_consultant_ids'];
-                if(!empty($value['notes'])) $pat_procedure->proc_description = $value['notes'];
+                if (!empty($value['notes']))
+                    $pat_procedure->proc_description = $value['notes'];
                 $pat_procedure->save(false);
             }
             return ['success' => true];

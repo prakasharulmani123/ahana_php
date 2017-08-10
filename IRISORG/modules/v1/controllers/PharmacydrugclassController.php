@@ -56,6 +56,8 @@ class PharmacydrugclassController extends ActiveController {
         if ($id) {
             $model = PhaDrugClass::find()->where(['drug_class_id' => $id])->one();
             $model->remove();
+            $activity = 'Drug Class Deleted Successfully (#' . $model->drug_name . ' )';
+            CoAuditLog::insertAuditLog(PhaDrugClass::tableName(), $id, $activity);
             return ['success' => true];
         }
     }

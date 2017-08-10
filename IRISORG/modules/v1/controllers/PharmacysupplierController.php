@@ -55,6 +55,8 @@ class PharmacysupplierController extends ActiveController {
         if($id){
             $model = PhaSupplier::find()->where(['supplier_id' => $id])->one();
             $model->remove();
+            $activity = 'Supplier Deleted Successfully (#' . $model->supplier_name . ' )';
+            CoAuditLog::insertAuditLog(PhaSupplier::tableName(), $id, $activity);
             return ['success' => true];
         }
     }

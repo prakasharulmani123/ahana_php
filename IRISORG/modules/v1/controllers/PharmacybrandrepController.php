@@ -56,6 +56,8 @@ class PharmacybrandrepController extends ActiveController {
         if ($id) {
             $model = $modelClass::find()->where(['rep_id' => $id])->one();
             $model->remove();
+            $activity = 'Brand Representatives Deleted Successfully (#' . $model->rep_1_name . ' )';
+            CoAuditLog::insertAuditLog(PhaBrandRepresentative::tableName(), $id, $activity);
             return ['success' => true];
         }
     }

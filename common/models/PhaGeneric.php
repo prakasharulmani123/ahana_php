@@ -34,12 +34,12 @@ class PhaGeneric extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['generic_name'], 'required'],
-            [['tenant_id', 'created_by', 'modified_by'], 'integer'],
-            [['status'], 'string'],
-            [['created_at', 'modified_at', 'deleted_at'], 'safe'],
-            [['generic_name'], 'string', 'max' => 255],
-            [['tenant_id', 'generic_name', 'deleted_at'], 'unique', 'targetAttribute' => ['tenant_id', 'generic_name', 'deleted_at'], 'message' => 'The combination of Tenant ID, Generic Name and Deleted At has already been taken.']
+                [['generic_name'], 'required'],
+                [['tenant_id', 'created_by', 'modified_by'], 'integer'],
+                [['status'], 'string'],
+                [['created_at', 'modified_at', 'deleted_at'], 'safe'],
+                [['generic_name'], 'string', 'max' => 255],
+                [['tenant_id', 'generic_name', 'deleted_at'], 'unique', 'targetAttribute' => ['tenant_id', 'generic_name', 'deleted_at'], 'message' => 'The combination of Tenant ID, Generic Name and Deleted At has already been taken.']
         ];
     }
 
@@ -73,7 +73,7 @@ class PhaGeneric extends RActiveRecord {
 
     public static function getGenericlist($tenant = null, $status = '1', $deleted = false, $notUsed = false) {
         if (!$deleted) {
-            if($notUsed)
+            if ($notUsed)
                 $list = self::find()->tenant($tenant)->status($status)->active()->notUsed()->all();
             else
                 $list = self::find()->tenant($tenant)->status($status)->active()->all();
@@ -82,6 +82,15 @@ class PhaGeneric extends RActiveRecord {
         }
 
         return $list;
+    }
+
+    public function afterSave($insert, $changedAttributes) {
+        if ($insert)
+            $activity = 'Generic name Added Successfully (#' . $this->generic_name . ' )';
+        else
+            $activity = 'Generic name Updated Successfully (#' . $this->generic_name . ' )';
+        CoAuditLog::insertAuditLog(PhaGeneric::tableName(), $this->generic_id, $activity);
+        return parent::afterSave($insert, $changedAttributes);
     }
 
 }

@@ -4,6 +4,7 @@ namespace IRISORG\modules\v1\controllers;
 
 use common\models\CoRoomType;
 use common\models\CoRoomTypesRooms;
+use common\models\CoAuditLog;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -58,12 +59,14 @@ class RoomtypeController extends ActiveController {
         }
         return $attrs;
     }
-    
+
     public function actionRemove() {
         $id = Yii::$app->getRequest()->post('id');
-        if($id){
+        if ($id) {
             $model = CoRoomType::find()->where(['room_type_id' => $id])->one();
             $model->remove();
+            $activity = 'Bed Type Deleted Successfully (#' . $model->room_type_name . ' )';
+            CoAuditLog::insertAuditLog(CoRoomType::tableName(), $id, $activity);
             return ['success' => true];
         }
     }
@@ -82,7 +85,7 @@ class RoomtypeController extends ActiveController {
 
         return ['roomtypeList' => CoRoomType::getRoomTypelist($tenant, $status, $deleted)];
     }
-    
+
     public function actionGetroomtypesroomslist() {
         $get = Yii::$app->getRequest()->get();
 
@@ -91,4 +94,5 @@ class RoomtypeController extends ActiveController {
 
         return ['roomtypesroomsList' => CoRoomTypesRooms::getRoomTypesRoomslist($tenant)];
     }
+
 }

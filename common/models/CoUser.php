@@ -56,16 +56,16 @@ class CoUser extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['name'], 'required'],
-            [['email'], 'email', 'message' => 'Invalid Email Format'],
-            [['title_code', 'name', 'designation', 'mobile', 'email', 'address', 'country_id', 'state_id', 'city_id', 'zip'], 'required', 'on' => 'saveorg'],
-            [['tenant_id', 'city_id', 'state_id', 'country_id', 'speciality_id', 'created_by', 'modified_by'], 'integer'],
-            [['title_code', 'care_provider', 'status'], 'string'],
-            [['created_at', 'modified_at', 'deleted_at'], 'safe'],
-            [['name', 'contact1', 'contact2', 'mobile', 'email'], 'string', 'max' => 50],
-            [['designation'], 'string', 'max' => 25],
-            [['address'], 'string', 'max' => 100],
-            [['zip'], 'string', 'max' => 20]
+                [['name'], 'required'],
+                [['email'], 'email', 'message' => 'Invalid Email Format'],
+                [['title_code', 'name', 'designation', 'mobile', 'email', 'address', 'country_id', 'state_id', 'city_id', 'zip'], 'required', 'on' => 'saveorg'],
+                [['tenant_id', 'city_id', 'state_id', 'country_id', 'speciality_id', 'created_by', 'modified_by'], 'integer'],
+                [['title_code', 'care_provider', 'status'], 'string'],
+                [['created_at', 'modified_at', 'deleted_at'], 'safe'],
+                [['name', 'contact1', 'contact2', 'mobile', 'email'], 'string', 'max' => 50],
+                [['designation'], 'string', 'max' => 25],
+                [['address'], 'string', 'max' => 100],
+                [['zip'], 'string', 'max' => 20]
         ];
     }
 
@@ -133,10 +133,9 @@ class CoUser extends RActiveRecord {
      */
     public function getUsersRoles() {
 
-        if(isset(Yii::$app->user->identity->logged_tenant_id))
-        {
+        if (isset(Yii::$app->user->identity->logged_tenant_id)) {
             return $this->hasMany(CoUsersRoles::className(), ['user_id' => 'user_id'])->andWhere(['tenant_id' => Yii::$app->user->identity->logged_tenant_id]);
-        }else{
+        } else {
             return $this->hasMany(CoUsersRoles::className(), ['user_id' => 'user_id']);
         }
     }
@@ -196,7 +195,7 @@ class CoUser extends RActiveRecord {
     public function getSpeciality() {
         return $this->hasOne(CoSpeciality::className(), ['speciality_id' => 'speciality_id']);
     }
-    
+
     public function getInterval() {
         return $this->hasOne(CoDoctorInterval::className(), ['user_id' => 'user_id']);
     }
@@ -214,8 +213,8 @@ class CoUser extends RActiveRecord {
                 return $model->fullname;
             },
             'consult_speciality_name' => function ($model) {
-                $speciality_name = isset($model->speciality) ? " ( ".$model->speciality->speciality_name." )" : "";
-                return $model->title_code . ucfirst($model->name).$speciality_name;
+                $speciality_name = isset($model->speciality) ? " ( " . $model->speciality->speciality_name . " )" : "";
+                return $model->title_code . ucfirst($model->name) . $speciality_name;
             },
         ];
         $fields = array_merge(parent::fields(), $extend);
@@ -245,6 +244,15 @@ class CoUser extends RActiveRecord {
 
     public function getFirst_tenant_id() {
         return $this->organization->coTenants[0]->tenant_id;
+    }
+
+    public function afterSave($insert, $changedAttributes) {
+        if ($insert)
+            $activity = 'User Added Successfully (#' . $this->name . ' )';
+        else
+            $activity = 'User Updated Successfully (#' . $this->name . ' )';
+        CoAuditLog::insertAuditLog(CoUser::tableName(), $this->user_id, $activity);
+        return parent::afterSave($insert, $changedAttributes);
     }
 
 }

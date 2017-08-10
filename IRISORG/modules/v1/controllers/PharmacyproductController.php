@@ -68,6 +68,8 @@ class PharmacyproductController extends ActiveController {
         if ($id) {
             $model = PhaProduct::find()->where(['product_id' => $id])->one();
             $model->remove();
+            $activity = 'Product Deleted Successfully (#' . $model->product_name . ' )';
+            CoAuditLog::insertAuditLog(PhaProduct::tableName(), $id, $activity);
             return ['success' => true];
         }
     }
@@ -292,6 +294,7 @@ class PharmacyproductController extends ActiveController {
             $model = PhaProductBatch::find()->tenant()->andWhere(['batch_id' => $post['batch_id']])->one();
 
             if (!empty($model)) {
+                $model->batch_detail = true;
                 $model->expiry_date = $post['expiry_date'];
                 $model->batch_no = $post['batch_no'];
 
@@ -746,7 +749,7 @@ class PharmacyproductController extends ActiveController {
         $merge_details = [];
         foreach ($migrate_tables as $table => $modal) {
             //pha_drug_generic table not need to update if generic_id will come, because already generic may assign 
-            if($table == 'pha_drug_generic' && $field_name == 'generic_id'){
+            if ($table == 'pha_drug_generic' && $field_name == 'generic_id') {
                 continue;
             }
             $pk = $modal::primaryKey();
@@ -862,7 +865,7 @@ class PharmacyproductController extends ActiveController {
                                         $batch->total_qty = $result->quantity;
                                         $batch->available_qty = $result->quantity;
                                         $batch->save(false);
-                                        /*PhaStockAdjustLog Coding*/
+                                        /* PhaStockAdjustLog Coding */
                                         $adjust_log = new \common\models\PhaStockAdjustLog();
                                         $adjust_log->batch_id = $batch->batch_id;
                                         $adjust_log->adjust_date_time = $batch->modified_at;
@@ -870,7 +873,7 @@ class PharmacyproductController extends ActiveController {
                                         $adjust_log->adjust_to = $batch->available_qty;
                                         $adjust_log->adjust_qty = $adjust_log->adjust_to - $adjust_log->adjust_from;
                                         $adjust_log->save(false);
-                                        /*PhaStockAdjustLog Coding*/
+                                        /* PhaStockAdjustLog Coding */
                                         $return = ['success' => true, 'continue' => $next_id, 'message' => 'success'];
                                     } else {
                                         $return = ['success' => false, 'continue' => $next_id, 'message' => 'Duplicate Batch'];

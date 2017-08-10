@@ -76,19 +76,6 @@ class DefaultController extends Controller {
         return ['cityList' => $list];
     }
 
-    public function actionChangeStatus() {
-        $post = Yii::$app->request->post();
-        if (!empty($post)) {
-            $modelName = $post['model'];
-            $primaryKey = $post['id'];
-            $modelClass = "common\\models\\$modelName";
-            $model = $modelClass::findOne($primaryKey);
-            $model->status = 1 - $model->status;
-            $model->save(false);
-            return ['success' => "ok", 'sts' => $model->status];
-        }
-    }
-
     public function actionGetTenantList() {
         $org = CoOrganization::findOne(['org_domain' => DOMAIN_PATH]);
 

@@ -39,13 +39,13 @@ class CoInternalCode extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['code_prefix', 'code'], 'required'],
-            [['tenant_id', 'code', 'code_padding', 'created_by', 'modified_by'], 'integer'],
-            [['code_type'], 'string'],
-            [['created_at', 'modified_at', 'deleted_at'], 'safe'],
-            [['code_prefix', 'code_suffix'], 'string', 'max' => 10],
-            [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'code_type', 'deleted_at'], 'message' => 'The combination of Code Type has already been taken.'],
-            ['code_padding', 'number', 'min' => 1, 'max' => 9],
+                [['code_prefix', 'code'], 'required'],
+                [['tenant_id', 'code', 'code_padding', 'created_by', 'modified_by'], 'integer'],
+                [['code_type'], 'string'],
+                [['created_at', 'modified_at', 'deleted_at'], 'safe'],
+                [['code_prefix', 'code_suffix'], 'string', 'max' => 10],
+                [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'code_type', 'deleted_at'], 'message' => 'The combination of Code Type has already been taken.'],
+                ['code_padding', 'number', 'min' => 1, 'max' => 9],
         ];
     }
 
@@ -89,7 +89,7 @@ class CoInternalCode extends RActiveRecord {
             'next_fullcode' => function ($model) {
                 $prefix = $model->code_prefix;
                 $int_code = str_pad(($model->code + 1), $model->code_padding, '0', STR_PAD_LEFT);
-        //        $role_suffix = $this->Gen_Suffix;
+                //        $role_suffix = $this->Gen_Suffix;
                 return "{$prefix}{$int_code}";
             },
         ];
@@ -97,7 +97,6 @@ class CoInternalCode extends RActiveRecord {
         return $fields;
     }
 
-    
     public static function getInternalCode($tenant = null, $status = '1', $deleted = false, $code_type = 'B') {
         if (!$deleted)
             $list = self::find()->tenant($tenant)->status($status)->active()->codeType($code_type)->one();
@@ -119,22 +118,22 @@ class CoInternalCode extends RActiveRecord {
 
         return "{$prefix}{$int_code}";
     }
-    
-    public static function increaseInternalCode($code_type){
+
+    public static function increaseInternalCode($code_type) {
         $code = self::find()->tenant()->codeType($code_type)->one();
-        if($code){
+        if ($code) {
             $code->code = $code->code + 1;
             $code->save(false);
         }
     }
 
-    public static function generateInternalCode($code_type, $model, $column){
+    public static function generateInternalCode($code_type, $model, $column) {
         $internal_code = self::find()->tenant()->codeType($code_type)->one();
-        
-        if(empty($internal_code)){
+
+        if (empty($internal_code)) {
             $user = Yii::$app->user->identity->user;
             $tenant_name = CoTenant::find($user->tenant_id)->one()->tenant_name;
-            
+
             $internal_code = new CoInternalCode;
             $internal_code->tenant_id = $user->tenant_id;
             $internal_code->code_type = $code_type;
@@ -145,9 +144,9 @@ class CoInternalCode extends RActiveRecord {
             $internal_code->code_padding = '7';
             $internal_code->save(false);
         }
-        
+
         $code = $internal_code->Fullcode;
-        
+
         do {
             $exists = $model::find()->tenant()->andWhere([$column => $code])->one();
 
@@ -159,8 +158,17 @@ class CoInternalCode extends RActiveRecord {
                 break;
             }
         } while ($old_code != $code);
-        
+
         return $code;
     }
+
+//    public function afterSave($insert, $changedAttributes) {
+//        if ($insert)
+//            $activity = 'Internal Code Added Successfully';
+//        else
+//            $activity = 'Internal Code Updated Successfully';
+//        CoAuditLog::insertAuditLog(CoInternalCode::tableName(), $this->internal_code_id, $activity);
+//        return parent::afterSave($insert, $changedAttributes);
+//    }
 
 }

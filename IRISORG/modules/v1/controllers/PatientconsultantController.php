@@ -4,6 +4,7 @@ namespace IRISORG\modules\v1\controllers;
 
 use common\models\PatConsultant;
 use common\models\PatPatient;
+use common\models\CoAuditLog;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -56,6 +57,8 @@ class PatientconsultantController extends ActiveController {
         if ($id) {
             $model = PatConsultant::find()->where(['pat_consult_id' => $id])->one();
             $model->remove();
+            $activity = 'Consultant Deleted Successfully (#' . $model->encounter_id . ' )';
+            CoAuditLog::insertAuditLog(PatConsultant::tableName(), $id, $activity);
             return ['success' => true];
         }
     }

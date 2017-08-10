@@ -73,4 +73,13 @@ class PhaHsn extends RActiveRecord {
         return $list;
     }
 
+    public function afterSave($insert, $changedAttributes) {
+        if ($insert)
+            $activity = 'Hsn Added Successfully (#' . $this->hsn_no . ' )';
+        else
+            $activity = 'Hsn Updated Successfully (#' . $this->hsn_no . ' )';
+        CoAuditLog::insertAuditLog(PhaHsn::tableName(), $this->hsn_id, $activity);
+        return parent::afterSave($insert, $changedAttributes);
+    }
+
 }

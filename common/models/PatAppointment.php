@@ -56,20 +56,20 @@ class PatAppointment extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['status_date', 'status_time', 'consultant_id', 'appt_status', 'patient_id'], 'required'],
-            [['patient_cat_id', 'amount', 'payment_mode'], 'required', 'on' => 'seen_status'],
-            [['tenant_id', 'patient_id', 'encounter_id', 'consultant_id', 'created_by', 'modified_by'], 'integer'],
-            [['status_date', 'status_time', 'amount', 'notes', 'patient_cat_id', 'created_at', 'modified_at', 'deleted_at', 'patient_bill_type', 'card_type', 'card_number', 'bank_name', 'bank_number', 'bank_date'], 'safe'],
-            [['status', 'patient_bill_type'], 'string'],
-            [['appt_status'], 'string', 'max' => 1],
-            [['appt_status'], 'unique', 'targetAttribute' => ['tenant_id', 'patient_id', 'encounter_id', 'appt_status'], 'message' => 'The combination has already been taken.'],
-            [['payment_mode', 'status'], 'string'],
-            [['card_type', 'card_number'], 'required', 'when' => function($model) {
-            return ($model->payment_mode == 'CD' && $model->appt_status == 'S');
-        }],
-            [['bank_name', 'bank_number', 'bank_date'], 'required', 'when' => function($model) {
-            return ($model->payment_mode == 'CH' && $model->appt_status == 'S');
-        }],
+                [['status_date', 'status_time', 'consultant_id', 'appt_status', 'patient_id'], 'required'],
+                [['patient_cat_id', 'amount', 'payment_mode'], 'required', 'on' => 'seen_status'],
+                [['tenant_id', 'patient_id', 'encounter_id', 'consultant_id', 'created_by', 'modified_by'], 'integer'],
+                [['status_date', 'status_time', 'amount', 'notes', 'patient_cat_id', 'created_at', 'modified_at', 'deleted_at', 'patient_bill_type', 'card_type', 'card_number', 'bank_name', 'bank_number', 'bank_date'], 'safe'],
+                [['status', 'patient_bill_type'], 'string'],
+                [['appt_status'], 'string', 'max' => 1],
+                [['appt_status'], 'unique', 'targetAttribute' => ['tenant_id', 'patient_id', 'encounter_id', 'appt_status'], 'message' => 'The combination has already been taken.'],
+                [['payment_mode', 'status'], 'string'],
+                [['card_type', 'card_number'], 'required', 'when' => function($model) {
+                    return ($model->payment_mode == 'CD' && $model->appt_status == 'S');
+                }],
+                [['bank_name', 'bank_number', 'bank_date'], 'required', 'when' => function($model) {
+                    return ($model->payment_mode == 'CH' && $model->appt_status == 'S');
+                }],
         ];
     }
 
@@ -161,7 +161,20 @@ class PatAppointment extends RActiveRecord {
         }
 
         $this->_insertTimeline();
+        $this->_insertAuditlog();
         return parent::afterSave($insert, $changedAttributes);
+    }
+
+    private function _insertAuditlog() {
+        if ($this->appt_status == 'B')
+            $activity = 'Patient Booked Successfully (#' . $this->encounter_id . ' )';
+        else if ($this->appt_status == 'S')
+            $activity = 'Patient Seen Successfully (#' . $this->encounter_id . ' )';
+        else if ($this->appt_status == 'A')
+            $activity = 'Patient Arrived Successfully (#' . $this->encounter_id . ' )';
+        else
+            $activity = 'Patient Appointment Cancelled Successfully (#' . $this->encounter_id . ' )';
+        CoAuditLog::insertAuditLog(PatAppointment::tableName(), $this->appt_id, $activity);
     }
 
     private function _insertTimeline() {
@@ -308,6 +321,7 @@ class PatAppointment extends RActiveRecord {
         $is_available = self::find()->joinWith('encounter')->where(['status_date' => $schedule_date, 'status_time' => $schedule_time, 'consultant_id' => $consultant_id, 'appt_status' => 'B', 'pat_encounter.status' => '1'])->count();
         return ($is_available == 0 ? true : false);
     }
+
     //New Function instead of above one
     public static function checkBookedSlots($consultant_id, $schedule_date) {
         $booked_slots = self::find()->joinWith('encounter')->where(['status_date' => $schedule_date, 'consultant_id' => $consultant_id, 'appt_status' => 'B', 'pat_encounter.status' => '1'])->orderBy('status_time')->all();

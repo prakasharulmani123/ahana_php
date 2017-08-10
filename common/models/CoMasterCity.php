@@ -99,4 +99,13 @@ class CoMasterCity extends RActiveRecord
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
     }
+    
+    public function afterSave($insert, $changedAttributes) {
+        if ($insert)
+            $activity = 'City Added Successfully (#' . $this->city_name . ' )';
+        else
+            $activity = 'City Updated Successfully (#' . $this->city_name . ' )';
+        CoAuditLog::insertAuditLog(CoMasterCity::tableName(), $this->city_id, $activity);
+        return parent::afterSave($insert, $changedAttributes);
+    }
 }

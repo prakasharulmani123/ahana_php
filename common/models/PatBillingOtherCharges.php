@@ -110,5 +110,13 @@ class PatBillingOtherCharges extends RActiveRecord {
     public static function find() {
         return new PatBillingOtherChargesQuery(get_called_class());
     }
+    
+    public function afterSave($insert, $changedAttributes) {
+        if ($insert)
+            $activity = 'Other Charges Added Successfully (#' . $this->encounter_id . ' )';
+        else 
+            $activity = 'Other Charges Updated Successfully (#' . $this->encounter_id . ' )';
+        CoAuditLog::insertAuditLog(PatBillingOtherCharges::tableName(), $this->other_charge_id, $activity);
+    }
 
 }

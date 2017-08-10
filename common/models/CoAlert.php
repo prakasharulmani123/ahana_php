@@ -20,35 +20,32 @@ use yii\db\ActiveQuery;
  *
  * @property CoTenant $tenant
  */
-class CoAlert extends RActiveRecord
-{
+class CoAlert extends RActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'co_alert';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            [['alert_name'], 'required'],
-            [['tenant_id', 'created_by', 'modified_by'], 'integer'],
-            [['status'], 'string'],
-            [['created_at', 'modified_at', 'deleted_at'], 'safe'],
-            [['alert_name'], 'string', 'max' => 50]
+                [['alert_name'], 'required'],
+                [['tenant_id', 'created_by', 'modified_by'], 'integer'],
+                [['status'], 'string'],
+                [['created_at', 'modified_at', 'deleted_at'], 'safe'],
+                [['alert_name'], 'string', 'max' => 50]
         ];
     }
 
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'alert_id' => 'Alert ID',
             'tenant_id' => 'Tenant ID',
@@ -65,21 +62,30 @@ class CoAlert extends RActiveRecord
     /**
      * @return ActiveQuery
      */
-    public function getTenant()
-    {
+    public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
-    
+
     public static function find() {
         return new CoAlertQuery(get_called_class());
     }
-    
+
     public static function getAlertlist($tenant = null, $status = '1', $deleted = false) {
-        if(!$deleted)
+        if (!$deleted)
             $list = self::find()->tenant($tenant)->status($status)->active()->all();
         else
             $list = self::find()->tenant($tenant)->deleted()->all();
-        
+
         return $list;
     }
+
+    public function afterSave($insert, $changedAttributes) {
+        if ($insert)
+            $activity = 'Alert Added Successfully (#' . $this->alert_name . ' )';
+        else
+            $activity = 'Alert Updated Successfully (#' . $this->alert_name . ' )';
+        CoAuditLog::insertAuditLog(CoAlert::tableName(), $this->alert_id, $activity);
+        return parent::afterSave($insert, $changedAttributes);
+    }
+
 }

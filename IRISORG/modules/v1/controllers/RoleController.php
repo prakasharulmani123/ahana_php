@@ -3,6 +3,7 @@
 namespace IRISORG\modules\v1\controllers;
 
 use common\models\CoRole;
+use common\models\CoAuditLog;
 use common\models\CoUsersRoles;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -133,6 +134,8 @@ class RoleController extends ActiveController {
         if ($id) {
             $model = CoRole::find()->where(['role_id' => $id])->one();
             $model->remove();
+            $activity = "Roles Deleted Successfully (#$model->description)";
+            CoAuditLog::insertAuditLog(CoRole::tableName(), $id, $activity);
             return ['success' => true];
         }
     }

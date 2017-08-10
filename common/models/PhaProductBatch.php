@@ -40,6 +40,7 @@ class PhaProductBatch extends RActiveRecord {
     public $supplier_id_3;
     public $product_reorder_min;
     public $stock_adjust = false;
+    public $batch_detail = false;
 
     /**
      * @inheritdoc
@@ -223,7 +224,14 @@ class PhaProductBatch extends RActiveRecord {
                 $adjust_log->adjust_qty = $adjust_log->adjust_to - $adjust_log->adjust_from;
                 $adjust_log->save(false);
             }
+            $activity = 'Stock Adjust Updated Successfully (#' . $this->batch_no . ' )';
+            CoAuditLog::insertAuditLog(PhaProductBatch::tableName(), $this->batch_id, $activity);
         }
+        if ($this->batch_detail) {
+            $activity = 'Batch Details Updated Successfully (#' . $this->batch_no . ' )';
+            CoAuditLog::insertAuditLog(PhaProductBatch::tableName(), $this->batch_id, $activity);
+        }
+        
         return parent::afterSave($insert, $changedAttributes);
     }
 

@@ -36,14 +36,14 @@ class CoPatientCategory extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['patient_cat_name', 'patient_cat_color', 'patient_short_code'], 'required'],
-            [['tenant_id', 'created_by', 'modified_by'], 'integer'],
-            [['created_at', 'modified_at', 'deleted_at', 'patient_short_code'], 'safe'],
-            [['status'], 'string'],
-            [['patient_cat_name'], 'string', 'max' => 50],
-            [['patient_cat_color'], 'string', 'max' => 10],
-            [['patient_short_code'], 'string', 'max' => 2],
-            [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'patient_cat_name', 'deleted_at'], 'message' => 'The combination of Name has already been taken.']
+                [['patient_cat_name', 'patient_cat_color', 'patient_short_code'], 'required'],
+                [['tenant_id', 'created_by', 'modified_by'], 'integer'],
+                [['created_at', 'modified_at', 'deleted_at', 'patient_short_code'], 'safe'],
+                [['status'], 'string'],
+                [['patient_cat_name'], 'string', 'max' => 50],
+                [['patient_cat_color'], 'string', 'max' => 10],
+                [['patient_short_code'], 'string', 'max' => 2],
+                [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'patient_cat_name', 'deleted_at'], 'message' => 'The combination of Name has already been taken.']
         ];
     }
 
@@ -75,7 +75,7 @@ class CoPatientCategory extends RActiveRecord {
     public static function find() {
         return new CoPatientCategoryQuery(get_called_class());
     }
-    
+
     public static function getPatientCateogrylist($status = '1', $deleted = false) {
         if (!$deleted)
             $list = self::find()->status($status)->active()->all();
@@ -83,6 +83,15 @@ class CoPatientCategory extends RActiveRecord {
             $list = self::find()->deleted()->all();
 
         return $list;
+    }
+
+    public function afterSave($insert, $changedAttributes) {
+        if ($insert)
+            $activity = 'Patient Category Added Successfully (#' . $this->patient_cat_name . ' )';
+        else
+            $activity = 'Patient Category Updated Successfully (#' . $this->patient_cat_name . ' )';
+        CoAuditLog::insertAuditLog(CoPatientCategory::tableName(), $this->patient_cat_id, $activity);
+        return parent::afterSave($insert, $changedAttributes);
     }
 
 }

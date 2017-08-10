@@ -152,6 +152,12 @@ class PatProcedure extends RActiveRecord {
         PatTimeline::insertTimeLine($this->patient_id, $this->proc_date, 'Procedure', '', $message, 'PROCEDURE', $this->encounter_id);
         $this->_updateConsultant($insert);
 
+        if ($insert)
+            $activity = 'Procedure Added Successfully (#' . $this->encounter_id . ' )';
+        else
+            $activity = 'Procedure Updated Successfully (#' . $this->encounter_id . ' )';
+        CoAuditLog::insertAuditLog(PatProcedure::tableName(), $this->proc_id, $activity);
+
         return parent::afterSave($insert, $changedAttributes);
     }
 

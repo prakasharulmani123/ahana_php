@@ -3,6 +3,7 @@
 namespace IRISORG\modules\v1\controllers;
 
 use common\models\CoMasterState;
+use common\models\CoAuditLog;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -55,6 +56,8 @@ class StateController extends ActiveController {
         if($id){
             $model = CoMasterState::find()->where(['state_id' => $id])->one();
             $model->remove();
+            $activity = 'State Deleted Successfully (#' . $model->state_name . ' )';
+            CoAuditLog::insertAuditLog(CoMasterState::tableName(), $id, $activity);
             return ['success' => true];
         }
     }

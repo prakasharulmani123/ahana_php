@@ -62,17 +62,17 @@ class PhaSale extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['sale_date'], 'required'],
-            [['tenant_id', 'patient_id', 'consultant_id', 'created_by', 'modified_by'], 'integer'],
-            [['sale_date', 'created_at', 'modified_at', 'deleted_at', 'encounter_id', 'patient_name', 'patient_group_id', 'patient_group_name', 'consultant_name'], 'safe'],
-            [['payment_type', 'payment_status', 'status'], 'string'],
-            [['total_item_vat_amount', 'total_item_sale_amount', 'total_item_discount_percent', 'total_item_discount_amount', 'total_item_amount', 'welfare_amount', 'roundoff_amount', 'bill_amount', 'amount_received', 'balance'], 'number'],
-            [['mobile_no'], 'string', 'max' => 50],
-            [['amount_received'], 'compare', 'compareAttribute' => 'bill_amount', 'operator' => '>=', 'type' => 'number', 'when' => function($model) {
+                [['sale_date'], 'required'],
+                [['tenant_id', 'patient_id', 'consultant_id', 'created_by', 'modified_by'], 'integer'],
+                [['sale_date', 'created_at', 'modified_at', 'deleted_at', 'encounter_id', 'patient_name', 'patient_group_id', 'patient_group_name', 'consultant_name'], 'safe'],
+                [['payment_type', 'payment_status', 'status'], 'string'],
+                [['total_item_vat_amount', 'total_item_sale_amount', 'total_item_discount_percent', 'total_item_discount_amount', 'total_item_amount', 'welfare_amount', 'roundoff_amount', 'bill_amount', 'amount_received', 'balance'], 'number'],
+                [['mobile_no'], 'string', 'max' => 50],
+                [['amount_received'], 'compare', 'compareAttribute' => 'bill_amount', 'operator' => '>=', 'type' => 'number', 'when' => function($model) {
                     if ($model->payment_type == 'CA')
                         return true;
                 }],
-            [['balance'], 'compare', 'compareValue' => 0, 'operator' => '>=', 'type' => 'number', 'when' => function($model) {
+                [['balance'], 'compare', 'compareValue' => 0, 'operator' => '>=', 'type' => 'number', 'when' => function($model) {
                     if ($model->payment_type == 'CA')
                         return true;
                 }],
@@ -151,6 +151,11 @@ class PhaSale extends RActiveRecord {
                 $sale_billing_model->paid_amount = $this->bill_amount;
                 $sale_billing_model->save(false);
             }
+            if ($insert)
+                $activity = 'Sale Created Successfully (#' . $this->bill_no . ' )';
+            else
+                $activity = 'Sale Updated Successfully (#' . $this->bill_no . ' )';
+            CoAuditLog::insertAuditLog(PhaSale::tableName(), $this->sale_id, $activity);
         }
 
         return parent::afterSave($insert, $changedAttributes);
@@ -213,15 +218,12 @@ class PhaSale extends RActiveRecord {
                 return (isset($model->patient) ? $model->patient->patient_global_int_code : '-');
             },
             'patient_name' => function ($model) {
-                if(isset($model->patient)) {
+                if (isset($model->patient)) {
                     return ucwords("{$model->patient->patient_title_code} {$model->patient->patient_firstname}");
-                }
-                else {
-                    if(isset($this->patient_name))
-                    {
+                } else {
+                    if (isset($this->patient_name)) {
                         return $this->patient_name;
-                    }
-                    else {
+                    } else {
                         return '-';
                     }
                 }
@@ -243,15 +245,12 @@ class PhaSale extends RActiveRecord {
                 return number_format($balance, '2');
             },
             'consultant_name' => function ($model) {
-                if(isset($model->consultant)) {
+                if (isset($model->consultant)) {
                     return $model->consultant->title_code . ucwords($model->consultant->name);
-                }
-                else {
-                    if(isset($this->consultant_name))
-                    {
+                } else {
+                    if (isset($this->consultant_name)) {
                         return $this->consultant_name;
-                    }
-                    else {
+                    } else {
                         return '-';
                     }
                 }
@@ -266,7 +265,6 @@ class PhaSale extends RActiveRecord {
             'branch_phone' => function ($model) {
                 return (isset($model->tenant->tenant_contact1) ? $model->tenant->tenant_contact1 : '-');
             },
-                    
         ];
 
         $parent_fields = parent::fields();
@@ -292,7 +290,7 @@ class PhaSale extends RActiveRecord {
                     ];
                     break;
                 case 'sale_list':
-                    $addt_keys = ['patient_name', 'billings_total_paid_amount', 'billings_total_balance_amount','patient_uhid'];
+                    $addt_keys = ['patient_name', 'billings_total_paid_amount', 'billings_total_balance_amount', 'patient_uhid'];
                     $parent_fields = [
                         'sale_id' => 'sale_id',
                         'bill_no' => 'bill_no',
