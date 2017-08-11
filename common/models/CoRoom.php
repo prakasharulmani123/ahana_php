@@ -167,7 +167,6 @@ class CoRoom extends RActiveRecord {
             $activity = 'Room Added Successfully (#' . $this->bed_name . ' )';
         else
             $activity = 'Room Updated Successfully (#' . $this->bed_name . ' )';
-        print_r(Yii::$app->user); die;
         CoAuditLog::insertAuditLog(CoRoom::tableName(), $this->room_id, $activity);
         return parent::afterSave($insert, $changedAttributes);
     }
