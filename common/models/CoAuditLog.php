@@ -89,7 +89,7 @@ class CoAuditLog extends RActiveRecord {
                 return (isset($model->tenant) ? $model->tenant->tenant_name : '-');
             },
             'user' => function ($model) {
-                return (isset($model->user) ? $model->user->name : '-');
+                return (isset($model->user) ? $model->user->fullname : '-');
             },
         ];
         $fields = array_merge(parent::fields(), $extend);
