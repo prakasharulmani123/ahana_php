@@ -112,7 +112,7 @@ class PharmacysaleController extends ActiveController {
                 $result->andFilterWhere($searchCondition);
             }
             $result->groupBy(['patient_name', 'encounter_id']);
-            $result->limit($get['pageSize'])->offset($offset);
+            $result->limit($get['pageSize'])->offset($offset)->orderBy(['created_at' => SORT_DESC]);
             $sales = $result->all();
 
             $resultCount = PhaSale::find()
