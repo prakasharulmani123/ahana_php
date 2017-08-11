@@ -439,6 +439,7 @@
                                                                   e-ng-change="numberDaysChange($data, item, item.item_key, tableform)"
                                                                   e-number-mask=""
                                                                   e-select-on-click=""
+                                                                  e-drop-disable
                                                                   e-required>
                                                                 {{ item.number_of_days || 'empty' }}
                                                             </span>
@@ -456,6 +457,7 @@
                                                                       e-ng-change="qtyChange($data, item, item.item_key, tableform)"
                                                                       e-number-mask=""
                                                                       e-select-on-click=""
+                                                                      e-drop-disable
                                                                       e-required>
                                                                     {{ item.qty || 'empty' }}
                                                                 </span>
@@ -507,14 +509,14 @@
                                                             <div class="form-inline">
                                                                 <div class="form-group">
                                                                     <label for="exampleInputEmail2"><i class="fa fa-calendar"></i> <b> Next Vist </b></label> &nbsp; &nbsp;
-                                                                    <input type="text" class="form-control multimonthdatepicker" ng-model="data.next_visit" ng-click="open($event)" prevent-enter="true" ng-change="setDayEmpty();
+                                                                    <input type="text" class="form-control multimonthdatepicker" ng-model="data.next_visit" ng-click="open($event)" drop-disable prevent-enter="true" ng-change="setDayEmpty();
                                                                                     getDays();"/>    
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label for="exampleInputEmail2">
                                                                         &nbsp; &nbsp; <i class="fa fa-calendar-o"></i> <b> No.of.Days </b>
                                                                     </label> &nbsp;&nbsp;
-                                                                    <input autocomplete="off" type="text" ng-model="data.number_of_days" class="form-control m-b w-100" number-mask="" ng-change="setDateEmpty();
+                                                                    <input autocomplete="off" type="text" ng-model="data.number_of_days" class="form-control m-b w-100" drop-disable number-mask="" ng-change="setDateEmpty();
                                                                                     getVisit();">     
                                                                 </div>
                                                                 <div class="form-group prescription-btns">   
