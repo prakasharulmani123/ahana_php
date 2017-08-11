@@ -79,6 +79,10 @@ class CoAuditLog extends RActiveRecord {
         return $this->hasOne(CoUser::className(), ['user_id' => 'user_id']);
     }
     
+    public static function find() {
+        return new CoAuditLogQuery(get_called_class());
+    }
+    
     public function fields() {
         $extend = [
             'tenant' => function ($model) {

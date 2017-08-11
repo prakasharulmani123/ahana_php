@@ -49,12 +49,12 @@ class AuditlogController extends ActiveController {
     
     public function actionGetauditlog() {
         $offset = abs($_REQUEST['pageIndex'] - 1) * $_REQUEST['pageSize'];
-        $audit = CoAuditLog::find()
+        $audit = CoAuditLog::find()->tenant()
                 ->limit($_REQUEST['pageSize'])
                 ->offset($offset)
                 ->orderBy(['created_at' => SORT_DESC])
                 ->all();
-        $totalCount = CoAuditLog::find()->count();
+        $totalCount = CoAuditLog::find()->tenant()->count();
         return ['audit' => $audit, 'totalCount' => $totalCount];
     }
 

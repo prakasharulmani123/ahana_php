@@ -258,9 +258,9 @@ class CoLogin extends ActiveRecord implements IdentityInterface {
         $tenant = CoTenant::find()->where(['tenant_id' => $this->logged_tenant_id])->one();
         if (empty(Yii::$app->user->identity))
             $activity = $this->username . ' logged successfully(#' . $tenant->tenant_name . ')';
-        else{
-           echo $activity = $this->username . ' log out successfully(#' . $tenant->tenant_name . ')';
-        }
+//        else{
+//            $activity = $this->username . ' log out successfully(#' . $tenant->tenant_name . ')';
+//        }
             
         CoAuditLog::insertAuditLog('', '', $activity, $this->logged_tenant_id, $this->user_id);
     }
