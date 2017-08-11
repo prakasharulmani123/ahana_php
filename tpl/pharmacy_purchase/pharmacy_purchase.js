@@ -381,7 +381,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
 
                     if (current_qty > stock) {
                         return 'No stock';
-                    } else if (total_returned_quantity > data) {
+                    } else if (total_returned_quantity > parseFloat(data)) {
                         return 'Qty Mismatch';
                     }
                 }
