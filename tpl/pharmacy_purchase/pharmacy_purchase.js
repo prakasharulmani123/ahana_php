@@ -261,6 +261,10 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                 alert('Can\'t Delete. Purchase Item must be atleast one.');
                 return false;
             }
+            $scope.removePurchase(index);
+        };
+
+        $scope.removePurchase = function (index) {
             $scope.purchaseitems.splice(index, 1);
             $scope.updatePurchaseRate();
             $timeout(function () {
@@ -273,6 +277,26 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                 };
             }
         };
+
+        $scope.removeUpdateSubcat = function (index, purchase_item_id) {
+            if ($scope.purchaseitems.length == 1) {
+                alert('Can\'t Delete. Purchase Item must be atleast one.');
+                return false;
+            }
+            $http({
+                url: $rootScope.IRISOrgServiceUrl + "/pharmacypurchase/checkitemdelete",
+                method: "POST",
+                data: {id: purchase_item_id}
+            }).then(
+                    function (response) {
+                        if (response.data.success === true) {
+                            $scope.removePurchase(index);
+                        } else {
+                            $scope.errorData = response.data.message;
+                        }
+                    }
+            )
+        }
 
         //Editable Form Validation
         $scope.checkInput = function (data) {
@@ -415,7 +439,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                 $scope.purchaseitems[key].product_id = item.product_id;
                 $scope.purchaseitems[key].vat_percent = selectedObj.purchaseVat.vat;
                 $scope.purchaseitems[key].batches = selectedObj.product_batches;
-                
+
                 $scope.purchaseitems[key].batch_no = '0';
                 $scope.purchaseitems[key].batch_details = '';
                 $scope.purchaseitems[key].expiry_date = '';

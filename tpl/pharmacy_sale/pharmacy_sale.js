@@ -319,7 +319,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                         $scope.data.encounter_id = encounter_id.toString();
                     }
                     $scope.show_encounter_loader = false;
-                }, 'sale_encounter_id','','old_encounter');
+                }, 'sale_encounter_id', '', 'old_encounter');
             }
 
         }
@@ -411,6 +411,10 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 alert('Can\'t Delete. Sale Item must be atleast one.');
                 return false;
             }
+            $scope.removeSaleRow(index);
+        };
+        
+        $scope.removeSaleRow = function (index) {
             $scope.saleItems.splice(index, 1);
             $scope.updateSaleRate();
             $timeout(function () {
@@ -423,6 +427,27 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 };
             }
         };
+
+        //Update Page Remove Sale Item
+        $scope.updateremoveSaleItem = function (index,sale_item_id) {
+            if ($scope.saleItems.length == 1) {
+                alert('Can\'t Delete. Sale Item must be atleast one.');
+                return false;
+            }
+            $http({
+                url: $rootScope.IRISOrgServiceUrl + "/pharmacysale/checkitemdelete",
+                method: "POST",
+                data: {id: sale_item_id}
+            }).then(
+                    function (response) {
+                        if (response.data.success === true) {
+                            $scope.removeSaleRow(index);
+                        } else {
+                            $scope.errorData = response.data.message;
+                        }
+                    }
+            )
+        }
 
         //Set cursor to first input box
         $scope.setFocus = function (id, index) {
@@ -450,7 +475,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
                 } else {
                     if (!data && !item.hsn_no && !item.temp_hsn_no) {
-                       //console.log(item.hsn_no);console.log(item.thsn_no);
+                        //console.log(item.hsn_no);console.log(item.thsn_no);
                         return "Not empty";
                     }
                 }

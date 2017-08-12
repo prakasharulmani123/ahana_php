@@ -337,6 +337,9 @@
                                         <a ng-if="formtype=='add'" ng-click="removeSaleItem($index)" title="Delete">
                                             <i class="fa fa-trash"></i>
                                         </a>
+                                        <a ng-if="formtype=='update'" ng-click="updateremoveSaleItem($index,saleitem.sale_item_id)" title="Delete">
+                                            <i class="fa fa-trash"></i>
+                                        </a>
                                     </td>
                                 </tr>
 
