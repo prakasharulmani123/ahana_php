@@ -274,8 +274,8 @@ class PhaPurchaseItem extends RActiveRecord {
     private function _deleteBatch() {
         $batch = PhaProductBatch::find()->tenant()->andWhere(['batch_id' => $this->batch_id])->one();
         if (!empty($batch)) {
-            $batch->total_qty = $batch->total_qty - $this->quantity;
-            $batch->available_qty = $batch->available_qty - $this->quantity;
+            $batch->total_qty = $batch->total_qty - (($this->quantity * $this->package_unit) + ($this->free_quantity * $this->free_quantity_package_unit));
+            $batch->available_qty = $batch->available_qty - (($this->quantity * $this->package_unit) + ($this->free_quantity * $this->free_quantity_package_unit));
             $batch->save(false);
         }
         return;

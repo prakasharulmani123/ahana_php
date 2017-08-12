@@ -5,6 +5,7 @@ namespace IRISORG\modules\v1\controllers;
 use common\models\PhaSale;
 use common\models\PhaSaleItem;
 use common\models\PhaSaleReturn;
+use common\models\PhaSaleReturnItem;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -215,11 +216,21 @@ class PharmacysaleController extends ActiveController {
         if (empty($return)) {
             $model = PhaSale::find()->tenant()->where(['sale_id' => $get['id']])->one();
             $model->remove();
-            $activity = 'Sale Deleted Successfully (#'. $model->bill_no.' )';
+            $activity = 'Sale Deleted Successfully (#' . $model->bill_no . ' )';
             CoAuditLog::insertAuditLog(PhaSale::tableName(), $get['id'], $activity);
             return ['success' => true];
         } else {
-            return ['success' => false,'message'=>"Sorry, you can't delete this bill"];
+            return ['success' => false, 'message' => "Sorry, you can't delete this bill"];
+        }
+    }
+
+    public function actionCheckitemdelete() {
+        $get = Yii::$app->getRequest()->post();
+        $saleItem = PhaSaleReturnItem::find()->tenant()->andWhere(['sale_item_id' => $get['id']])->one();
+        if (empty($saleItem)) {
+            return ['success' => true];
+        } else {
+            return ['success' => false, 'message' => "Sorry, you can't delete this item"];
         }
     }
 

@@ -9,6 +9,8 @@ use common\models\PhaReorderHistory;
 use common\models\PhaReorderHistoryItem;
 use common\models\PhaSupplier;
 use common\models\PhaPurchaseReturn;
+use common\models\PhaPurchaseReturnItem;
+use common\models\PhaSaleItem;
 use common\models\CoAuditLog;
 use PDO;
 use Yii;
@@ -487,11 +489,36 @@ class PharmacypurchaseController extends ActiveController {
         if (empty($return)) {
             $model = PhaPurchase::find()->tenant()->where(['purchase_id' => $get['id']])->one();
             $model->remove();
-            $activity = 'Purchase Deleted Successfully (#'. $model->invoice_no.' )';
+            $activity = 'Purchase Deleted Successfully (#' . $model->invoice_no . ' )';
             CoAuditLog::insertAuditLog(PhaPurchase::tableName(), $get['id'], $activity);
             return ['success' => true];
         } else {
             return ['success' => false, 'message' => "Sorry, you can't delete this bill"];
+        }
+    }
+
+    public function actionCheckitemdelete() {
+        $get = Yii::$app->getRequest()->post();
+        $purchaseItem = PhaPurchaseReturnItem::find()->tenant()->andWhere(['purchase_item_id' => $get['id']])->one();
+
+        if (empty($purchaseItem)) {
+            $model = PhaPurchaseItem::find()->tenant()->andWhere(['purchase_item_id' => $get['id']])->one();
+            $batchAvailableQuantity = $model->batch->available_qty;
+            $purchaseQuantity = ($model->quantity * $model->package_unit) + ($model->free_quantity * $model->free_quantity_package_unit);
+
+            if ($purchaseQuantity > $batchAvailableQuantity) {
+                return ['success' => false, 'message' => "Sorry, you can't delete this purchase item"];
+            } if ($purchaseQuantity = $batchAvailableQuantity) {
+                $sale = PhaSaleItem::find()->andWhere(['batch_id'=>$model->batch->batch_id])->one();
+                if(empty($sale))
+                    return ['success' => true];
+                else
+                    return ['success' => false, 'message' => "Sorry, you can't delete this purchase item. Already sale this item"];
+            }
+            else
+                return ['success' => true];
+        } else {
+            return ['success' => false, 'message' => "Sorry, you can't delete this purchase item"];
         }
     }
 
