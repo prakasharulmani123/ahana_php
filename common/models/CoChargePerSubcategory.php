@@ -120,7 +120,7 @@ class CoChargePerSubcategory extends RActiveRecord {
                 $activity = "Charge for Category Updated Successfully (#outpatient,$patcategory->patient_cat_name)";
         }
         if ($this->charge_type == 'IP') {
-            $roomType = CoRoomType::find()->where()->one(['room_type_id' => $this->charge_link_id])->one();
+            $roomType = CoRoomType::find()->where(['room_type_id' => $this->charge_link_id])->one();
             if ($insert)
                 $activity = "Charge for Category Added Successfully (#Inpatient,$roomType->room_type_name)";
             else
