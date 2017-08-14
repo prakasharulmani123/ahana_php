@@ -197,7 +197,7 @@ class PhaSale extends RActiveRecord {
      * @return ActiveQuery
      */
     public function getPhaSaleItems() {
-        return $this->hasMany(PhaSaleItem::className(), ['sale_id' => 'sale_id']);
+        return $this->hasMany(PhaSaleItem::className(), ['sale_id' => 'sale_id'])->andWhere("deleted_at = '0000-00-00 00:00:00'");
     }
 
     public static function find() {

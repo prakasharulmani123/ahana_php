@@ -6,6 +6,7 @@ use common\models\PhaSale;
 use common\models\PhaSaleItem;
 use common\models\PhaSaleReturn;
 use common\models\PhaSaleReturnItem;
+use common\models\PhaProductBatch;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -198,7 +199,10 @@ class PharmacysaleController extends ActiveController {
 
                     foreach ($delete_ids as $delete_id) {
                         $item = PhaSaleItem::find()->tenant()->andWhere(['sale_item_id' => $delete_id])->one();
-                        $item->delete();
+                        $item->remove();
+                        PhaSaleItem::Updatebatchqty($item);
+                        $activity = 'Sale Item Deleted Successfully (#' . $model->bill_no . ' )';
+                        CoAuditLog::insertAuditLog(PhaSaleItem::tableName(), $delete_id, $activity);
                     }
                 }
                 return ['success' => true, 'bill_no' => $model->bill_no, 'saleId' => $model->sale_id];
@@ -214,6 +218,17 @@ class PharmacysaleController extends ActiveController {
         $get = Yii::$app->getRequest()->post();
         $return = PhaSaleReturn::find()->tenant()->andWhere(['sale_id' => $get['id']])->one();
         if (empty($return)) {
+
+            $saleItem = PhaSaleItem::find()->tenant()->andWhere(['sale_id' => $get['id']])->all();
+
+            foreach ($saleItem as $sale) {
+                $batch = PhaProductBatch::find()->tenant()->andWhere(['batch_id' => $sale['batch_id']])->one();
+                if (!empty($batch)) {
+                    $batch->available_qty = $batch->available_qty + $sale['quantity'];
+                    $batch->save(false);
+                }
+            }
+
             $model = PhaSale::find()->tenant()->where(['sale_id' => $get['id']])->one();
             $model->remove();
             $activity = 'Sale Deleted Successfully (#' . $model->bill_no . ' )';

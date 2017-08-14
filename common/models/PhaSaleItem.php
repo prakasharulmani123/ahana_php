@@ -55,13 +55,13 @@ class PhaSaleItem extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['product_id', 'quantity', 'mrp'], 'required'],
-            [['batch_no'], 'required', 'on' => 'saveform'],
-            [['tenant_id', 'sale_id', 'product_id', 'batch_id', 'quantity', 'created_by', 'modified_by'], 'integer'],
-            [['mrp', 'item_amount', 'discount_percentage', 'discount_amount', 'total_amount', 'vat_amount', 'vat_percent','cgst_amount','cgst_percent','sgst_amount','sgst_percent','taxable_value'], 'number'],
-            [['status'], 'string'],
-            [['created_at', 'modified_at', 'deleted_at', 'package_name', 'expiry_date', 'batch_no','hsn_no','oldAttributeQuantity'], 'safe'],
-            [['product_id'], 'validateStock'],
+                [['product_id', 'quantity', 'mrp'], 'required'],
+                [['batch_no'], 'required', 'on' => 'saveform'],
+                [['tenant_id', 'sale_id', 'product_id', 'batch_id', 'quantity', 'created_by', 'modified_by'], 'integer'],
+                [['mrp', 'item_amount', 'discount_percentage', 'discount_amount', 'total_amount', 'vat_amount', 'vat_percent', 'cgst_amount', 'cgst_percent', 'sgst_amount', 'sgst_percent', 'taxable_value'], 'number'],
+                [['status'], 'string'],
+                [['created_at', 'modified_at', 'deleted_at', 'package_name', 'expiry_date', 'batch_no', 'hsn_no', 'oldAttributeQuantity'], 'safe'],
+                [['product_id'], 'validateStock'],
         ];
     }
 
@@ -210,8 +210,8 @@ class PhaSaleItem extends RActiveRecord {
         return $batch;
     }
 
-    private function _deleteBatch() {
-        $batch = PhaProductBatch::find()->tenant()->andWhere(['batch_id' => $this->batch_id])->one();
+    private function _deleteBatch($item) {
+        $batch = PhaProductBatch::find()->tenant()->andWhere(['batch_id' => $item->batch_id])->one();
         if (!empty($batch)) {
             $batch->available_qty = $batch->available_qty + $this->quantity;
             $batch->save(false);
@@ -219,9 +219,18 @@ class PhaSaleItem extends RActiveRecord {
         return;
     }
 
-    public function afterDelete() {
-        $this->_deleteBatch();
-        return parent::afterDelete();
+//    public function afterDelete() {
+//        $this->_deleteBatch();
+//        return parent::afterDelete();
+//    }
+
+    public function Updatebatchqty($item) {
+        $batch = PhaProductBatch::find()->tenant()->andWhere(['batch_id' => $item->batch_id])->one();
+        if (!empty($batch)) {
+            $batch->available_qty = $batch->available_qty + $item->quantity;
+            $batch->save(false);
+        }
+        return;
     }
 
 }
