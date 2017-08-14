@@ -218,18 +218,12 @@ class PharmacysaleController extends ActiveController {
         $get = Yii::$app->getRequest()->post();
         $return = PhaSaleReturn::find()->tenant()->andWhere(['sale_id' => $get['id']])->one();
         if (empty($return)) {
-
-            $saleItem = PhaSaleItem::find()->tenant()->andWhere(['sale_id' => $get['id']])->all();
-
-            foreach ($saleItem as $sale) {
-                $batch = PhaProductBatch::find()->tenant()->andWhere(['batch_id' => $sale['batch_id']])->one();
-                if (!empty($batch)) {
-                    $batch->available_qty = $batch->available_qty + $sale['quantity'];
-                    $batch->save(false);
-                }
+            $model = PhaSale::find()->active()->tenant()->andWhere(['sale_id' => $get['id']])->one();
+            foreach($model->phaSaleItems as $sale)
+            {
+                $sale->remove();
+                PhaSaleItem::Updatebatchqty($sale);
             }
-
-            $model = PhaSale::find()->tenant()->where(['sale_id' => $get['id']])->one();
             $model->remove();
             $activity = 'Sale Deleted Successfully (#' . $model->bill_no . ' )';
             CoAuditLog::insertAuditLog(PhaSale::tableName(), $get['id'], $activity);
