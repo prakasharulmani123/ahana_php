@@ -2016,7 +2016,6 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                     data: {id: sale_id}
                 }).then(
                         function (response) {
-                            console.log(response);
                             $scope.loadbar('hide');
                             if (response.data.success === true) {
                                 $scope.loadSaleItemList('CA')
