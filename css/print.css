@@ -11,8 +11,8 @@
 }
 
 
-/*@media print
-{*/
+@media print
+{
 table.print-friendly tr td, table.print-friendly tr th {
     page-break-inside: avoid;
 }
@@ -246,7 +246,7 @@ body > table:nth-last-of-type(1){
         padding: 10px;
     }*/
 
-/*}*/
+}
 
 
 .voucher-table
