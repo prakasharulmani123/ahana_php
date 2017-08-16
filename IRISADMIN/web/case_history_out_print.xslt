@@ -414,7 +414,7 @@
                                                         <xsl:for-each select="COLUMNS">
                                                             <xsl:for-each select="FIELD">
                                                                 <tr>
-                                                                    <td align="left" valign="top" class="small-left-heading list">
+                                                                    <td align="left" valign="top" class="small-left-heading list complaints">
                                                                         <xsl:choose>
 <!--                                                                                                                                                         Text Box -->
                                                                             <xsl:when test="@type='TextBox'">
