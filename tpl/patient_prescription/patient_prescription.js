@@ -1123,7 +1123,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 if ($.inArray(description_name.toLowerCase(), qtyCalcDescNames) >= 0 &&
                         !isNaN(freq_count) && angular.isNumber(freq_count)) {
                     //Tablets
-                    return (parseFloat(days) * parseFloat(freq_count));
+                    return Math.round(parseFloat(days) * parseFloat(freq_count));
                 } else {
                     return 1;
                 }
