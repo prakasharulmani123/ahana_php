@@ -113,6 +113,7 @@ class PatDocuments extends RActiveRecord {
     public $RBAttitudeillness;
     //Virtual field for store xml content
     public $document_xml;
+    public $audit_log = false;
 
     /**
      * @inheritdoc
@@ -326,11 +327,15 @@ class PatDocuments extends RActiveRecord {
     }
 
     public function afterSave($insert, $changedAttributes) {
-        if ($insert)
+        if ($insert) {
             $activity = 'Case history Added Successfully (#' . $this->encounter_id . ' )';
-        else
-            $activity = 'Case history Updated Successfully (#' . $this->encounter_id . ' )';
-        CoAuditLog::insertAuditLog(PatDocuments::tableName(), $this->doc_id, $activity);
+            CoAuditLog::insertAuditLog(PatDocuments::tableName(), $this->doc_id, $activity);
+        } else {
+            if (isset($this->audit_log) && ($this->audit_log)) {
+                $activity = 'Case history Updated Successfully (#' . $this->encounter_id . ' )';
+                CoAuditLog::insertAuditLog(PatDocuments::tableName(), $this->doc_id, $activity);
+            }
+        }
         return parent::afterSave($insert, $changedAttributes);
     }
 

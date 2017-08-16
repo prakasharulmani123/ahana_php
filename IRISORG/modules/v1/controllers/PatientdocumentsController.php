@@ -141,7 +141,6 @@ class PatientdocumentsController extends ActiveController {
                 $post[$value['name']] = '';
             }
         }
-
         $patient = PatPatient::getPatientByGuid($post['patient_id']);
         if (!isset($post['address'])) {
             $post['address'] = $patient->getFullcurrentaddress();
@@ -199,7 +198,10 @@ class PatientdocumentsController extends ActiveController {
             }
             if (isset($post['status']))
                 $patient_document->status = $post['status'];
-
+            
+            if(isset($post['audit_log']))
+                $patient_document->audit_log = $post['audit_log'];
+                
             $patient_document->document_xml = $result;
 
             $patient_document->save(false);
