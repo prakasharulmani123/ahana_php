@@ -1096,6 +1096,26 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             };
         }
 
+        $scope.beforeRender = function ($view, $dates, $leftDate, $upDate, $rightDate) {
+            var d = new Date();
+            var n = d.getDate();
+            var m = d.getMonth();
+            var y = d.getFullYear();
+            var today_date = (new Date(y, m, n)).valueOf();
+            if (!$scope.checkAccess('pharmacy.backdatepurchase')) {
+                angular.forEach($dates, function (date, key) {
+                    var calender = new Date(date.localDateValue());
+                    var calender_n = calender.getDate();
+                    var calender_m = calender.getMonth();
+                    var calender_y = calender.getFullYear();
+                    var calender_date = (new Date(calender_y, calender_m, calender_n)).valueOf();
+                    if (today_date > calender_date) {
+                        $dates[key].selectable = false;
+                    }
+                });
+            }
+        }
+
         var changeTimer = false;
 
         $scope.getProduct = function (purchaseitem) {

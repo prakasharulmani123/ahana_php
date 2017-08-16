@@ -14,8 +14,21 @@
                 <div class="line line-dashed b-b line-lg "></div>
                 <div class="form-group">
                     <label class="col-lg-4 control-label">Invoice Date *</label>
+                    <!--                    <div class="col-lg-8">
+                                            <input type="text" placeholder="Invoice Date" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="data.invoice_date" is-open="$parent.opened1" datepicker-options="dateOptions" close-text="Close"  min-date="minDate" ng-click="open($event, 'opened1')" ng-focus="open($event, 'opened1')" prevent-enter="true"/>
+                                        </div>-->
                     <div class="col-lg-8">
-                        <input type="text" placeholder="Invoice Date" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="data.invoice_date" is-open="$parent.opened1" datepicker-options="dateOptions" close-text="Close"  min-date="minDate" ng-click="open($event, 'opened1')" ng-focus="open($event, 'opened1')" prevent-enter="true"/>
+                        <div class="input-group">
+                            <a class="dropdown-toggle" id="dropdown2" role="button" data-toggle="dropdown" data-target="#" href="javascript:void(0)">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" data-ng-model="data.invoice_date" data-date-time-input="YYYY-MM-DD" />
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                </div>
+                            </a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                <datetimepicker data-ng-model="data.invoice_date" data-datetimepicker-config="{ dropdownSelector: '#dropdown2',startView:'day', minView:'day' }" data-before-render="beforeRender($view, $dates, $leftDate, $upDate, $rightDate)" prevent-enter="true" />
+                            </ul>
+                        </div>
                     </div>
                 </div>
                 <div class="line line-dashed b-b line-lg "></div>
@@ -267,7 +280,7 @@
                                         </span>
                                     </td>
                                     <td><span>{{purchaseitem.discount_amount}}</span></td>
-                                    <td ng-if="formtype=='add'">
+                                    <td ng-if="formtype == 'add'">
                                         <span
                                             editable-select="purchaseitem.vat_percent"
                                             e-form="tableform"
@@ -278,15 +291,15 @@
                                             {{ purchaseitem.vat_percent || 'empty' }}
                                         </span>
                                     </td>
-                                    <td ng-if="formtype=='update'"><span>{{purchaseitem.vat_percent}}</span></td>
-<!--                                    <td><span>{{purchaseitem.vat_percent}}</span></td>-->
+                                    <td ng-if="formtype == 'update'"><span>{{purchaseitem.vat_percent}}</span></td>
+                                    <!--                                    <td><span>{{purchaseitem.vat_percent}}</span></td>-->
                                     <td><span>{{purchaseitem.vat_amount}}</span></td>
                                     <td><span>{{purchaseitem.total_amount}}</span></td>
                                     <td align="center">
-                                        <a ng-if="formtype=='add'" ng-click="removeSubcat($index, purchaseitem.full_name)" title="Delete">
+                                        <a ng-if="formtype == 'add'" ng-click="removeSubcat($index, purchaseitem.full_name)" title="Delete">
                                             <i class="fa fa-trash"></i>
                                         </a>
-                                        <a ng-if="formtype=='update'" ng-click="removeUpdateSubcat($index,purchaseitem.purchase_item_id)" title="Delete">
+                                        <a ng-if="formtype == 'update'" ng-click="removeUpdateSubcat($index, purchaseitem.purchase_item_id)" title="Delete">
                                             <i class="fa fa-trash"></i>
                                         </a>
                                     </td>
