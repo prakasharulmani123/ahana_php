@@ -198,7 +198,10 @@ class PharmacypurchaseController extends ActiveController {
 
                     foreach ($delete_ids as $delete_id) {
                         $item = PhaPurchaseItem::find()->tenant()->andWhere(['purchase_item_id' => $delete_id])->one();
-                        $item->delete();
+                        $item->remove();
+                        PhaPurchaseItem::Updatebatchqty($item);
+                        $activity = 'Purchase Item Deleted Successfully (#' . $model->invoice_no . ' )';
+                        CoAuditLog::insertAuditLog(PhaPurchaseItem::tableName(), $delete_id, $activity);
                     }
                 }
 
@@ -487,13 +490,33 @@ class PharmacypurchaseController extends ActiveController {
         $get = Yii::$app->getRequest()->post();
         $return = PhaPurchaseReturn::find()->tenant()->andWhere(['purchase_id' => $get['id']])->one();
         if (empty($return)) {
-            $model = PhaPurchase::find()->tenant()->where(['purchase_id' => $get['id']])->one();
-            $model->remove();
-            $activity = 'Purchase Deleted Successfully (#' . $model->invoice_no . ' )';
-            CoAuditLog::insertAuditLog(PhaPurchase::tableName(), $get['id'], $activity);
-            return ['success' => true];
+            $purchase_delete = true;
+            $model = PhaPurchase::find()->tenant()->andWhere(['purchase_id' => $get['id']])->one();
+            foreach ($model->phaPurchaseItems as $purchase) {
+                $batchAvailableQuantity = $purchase->batch->available_qty;
+                $purchaseQuantity = ($purchase->quantity * $purchase->package_unit) + ($purchase->free_quantity * $purchase->free_quantity_package_unit);
+
+                if ($purchaseQuantity > $batchAvailableQuantity) {
+                    $purchase_notdelete_item = $purchase->purchase_item_id;
+                    $purchase_delete = false;
+                }
+                if(!$purchase_delete) break;
+                
+            }
+            if ($purchase_delete) {
+                foreach ($model->phaPurchaseItems as $purchase) {
+                    $purchase->remove();
+                    PhaPurchaseItem::Updatebatchqty($purchase);
+                }
+                $model->remove();
+                $activity = 'Purchase Deleted Successfully (#' . $model->invoice_no . ' )';
+                CoAuditLog::insertAuditLog(PhaPurchase::tableName(), $get['id'], $activity);
+                return ['success' => true];
+            } else {
+                return ['success' => false, 'message' => "Sorry, you can't delete this purchase", 'not_deleted_item' => $purchase_notdelete_item];
+            }
         } else {
-            return ['success' => false, 'message' => "Sorry, you can't delete this bill"];
+            return ['success' => false, 'message' => "Sorry, you can't delete this purchase"];
         }
     }
 
@@ -508,14 +531,7 @@ class PharmacypurchaseController extends ActiveController {
 
             if ($purchaseQuantity > $batchAvailableQuantity) {
                 return ['success' => false, 'message' => "Sorry, you can't delete this purchase item"];
-            } if ($purchaseQuantity = $batchAvailableQuantity) {
-                $sale = PhaSaleItem::find()->andWhere(['batch_id'=>$model->batch->batch_id])->one();
-                if(empty($sale))
-                    return ['success' => true];
-                else
-                    return ['success' => false, 'message' => "Sorry, you can't delete this purchase item. Already sale this item"];
-            }
-            else
+            } else
                 return ['success' => true];
         } else {
             return ['success' => false, 'message' => "Sorry, you can't delete this purchase item"];

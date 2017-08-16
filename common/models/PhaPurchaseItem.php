@@ -57,17 +57,17 @@ class PhaPurchaseItem extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['product_id', 'quantity', 'mrp', 'purchase_rate', 'purchase_amount', 'package_name', 'vat_amount'], 'required'],
-            [['batch_no'], 'required', 'on' => 'saveform'],
-            [['tenant_id', 'purchase_id', 'product_id', 'quantity', 'free_quantity', 'created_by', 'modified_by'], 'integer'],
-            [['mrp', 'purchase_rate', 'purchase_amount', 'discount_percent', 'discount_amount', 'total_amount', 'vat_amount', 'vat_percent'], 'number'],
-            [['status'], 'string'],
-            [['created_at', 'modified_at', 'deleted_at', 'vat_percent', 'batch_id', 'expiry_date', 'free_quantity_unit', 'batch_no', 'package_unit', 'free_quantity_package_unit'], 'safe'],
-            [['package_name'], 'string', 'max' => 255],
-            ['purchase_rate', 'validateProductRate'],
-            [['mrp', 'purchase_rate'], 'validateAmount'],
-            [['quantity'], 'validateQuantity'],
-            [['package_name'], 'validateBatch'],
+                [['product_id', 'quantity', 'mrp', 'purchase_rate', 'purchase_amount', 'package_name', 'vat_amount'], 'required'],
+                [['batch_no'], 'required', 'on' => 'saveform'],
+                [['tenant_id', 'purchase_id', 'product_id', 'quantity', 'free_quantity', 'created_by', 'modified_by'], 'integer'],
+                [['mrp', 'purchase_rate', 'purchase_amount', 'discount_percent', 'discount_amount', 'total_amount', 'vat_amount', 'vat_percent'], 'number'],
+                [['status'], 'string'],
+                [['created_at', 'modified_at', 'deleted_at', 'vat_percent', 'batch_id', 'expiry_date', 'free_quantity_unit', 'batch_no', 'package_unit', 'free_quantity_package_unit'], 'safe'],
+                [['package_name'], 'string', 'max' => 255],
+                ['purchase_rate', 'validateProductRate'],
+                [['mrp', 'purchase_rate'], 'validateAmount'],
+                [['quantity'], 'validateQuantity'],
+                [['package_name'], 'validateBatch'],
         ];
     }
 
@@ -156,14 +156,14 @@ class PhaPurchaseItem extends RActiveRecord {
     public function getBatch() {
         return $this->hasOne(PhaProductBatch::className(), ['batch_id' => 'batch_id']);
     }
-    
+
     /**
      * @return ActiveQuery
      */
     public function getPhaPurchaseReturnItems() {
         return $this->hasMany(PhaPurchaseReturnItem::className(), ['purchase_item_id' => 'purchase_item_id']);
     }
-    
+
     public function getPhaPurchaseReturnItemsTotal() {
         return $this->hasMany(PhaPurchaseReturnItem::className(), ['purchase_item_id' => 'purchase_item_id'])->sum('quantity');
     }
@@ -301,6 +301,16 @@ class PhaPurchaseItem extends RActiveRecord {
     public function afterDelete() {
         $this->_deleteBatch($this->batch_id);
         return parent::afterDelete();
+    }
+
+    public function Updatebatchqty($item) {
+        $batch = PhaProductBatch::find()->tenant()->andWhere(['batch_id' => $item->batch_id])->one();
+        if (!empty($batch)) {
+            $batch->total_qty = $batch->total_qty - (($item->quantity * $item->package_unit) + ($item->free_quantity * $item->free_quantity_package_unit));
+            $batch->available_qty = $batch->available_qty - (($item->quantity * $item->package_unit) + ($item->free_quantity * $item->free_quantity_package_unit));
+            $batch->save(false);
+        }
+        return;
     }
 
 }

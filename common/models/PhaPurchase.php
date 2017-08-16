@@ -112,7 +112,7 @@ class PhaPurchase extends RActiveRecord {
      * @return ActiveQuery
      */
     public function getPhaPurchaseItems() {
-        return $this->hasMany(PhaPurchaseItem::className(), ['purchase_id' => 'purchase_id']);
+        return $this->hasMany(PhaPurchaseItem::className(), ['purchase_id' => 'purchase_id'])->andWhere("deleted_at = '0000-00-00 00:00:00'");
     }
 
     /**
