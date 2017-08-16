@@ -760,6 +760,9 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
             }, {
                 name: 'doc_id',
                 value: doc_id,
+            }, {
+                name: 'audit_log',
+                value: true,
             });
 
             if ($scope.panel_bars.length > 0) {
