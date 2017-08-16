@@ -547,7 +547,7 @@ class UserController extends ActiveController {
     public function actionGetmybranches() {
         $id = Yii::$app->request->get('id');
         if (!empty($id)) {
-            $branches = CoUsersBranches::find()->tenant()->andWhere(['user_id' => $id])->all();
+            $branches = CoUsersBranches::find()->andWhere(['user_id' => $id])->all();
             $user_detail = CoUser::find()->where(['user_id' => $id])->one();
             return ['success' => true, 'branches' => $branches, 'default_branch' => $user_detail->tenant_id];
         } else {
