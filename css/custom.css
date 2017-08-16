@@ -639,3 +639,9 @@ ul.dropdown-menu.curPrescFreq > li > a, .dropdown-submenu > ul > li > a {
 .curPresForm .editable-error {
     float: left;
 }
+
+#RGCompliant > tbody > tr > td > input
+{
+    margin-bottom: 0px;
+    height: 30px;
+}
