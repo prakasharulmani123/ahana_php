@@ -435,6 +435,10 @@
                                                         </td>
                                                         <td align="center">
                                                             <span editable-text="item.number_of_days"
+                                                                  e-typeahead-editable="true"
+                                                                  e-typeahead="consNoofdays.number_of_days for consNoofdays in consultantNoofdays | unique: 'number_of_days' | limitTo:10"
+                                                                  e-typeahead-on-select="numberDaysChange($item.number_of_days, item, item.item_key, tableform)"
+                                                                  e-typeahead-focus=""
                                                                   e-index ="{{item.item_key}}"
                                                                   e-tabindex="2{{item.item_key}}4"
                                                                   e-class="form-control"

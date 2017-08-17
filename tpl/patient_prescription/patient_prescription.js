@@ -1343,7 +1343,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $scope.$apply(function () {
                 if (!jQuery.isEmptyObject($scope.prescription_lists)) {
                     var Selected = $scope.prescription_lists[$(this).find("a").data('key')];
-                    if(typeof Selected != 'undefined'){
+                    if (typeof Selected != 'undefined') {
                         $('#prescription_global_search').val(Selected.prescription);
                     }
                 }
@@ -1548,6 +1548,21 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                             $scope.consultantFreq.push($scope.defaultMaskTxt);
                         }
                         $scope.prepareCurrPresFreq();
+                    }, function (x) {
+                        response = {success: false, message: 'Server Error'};
+                    });
+            //Consultant wise no of days record
+            $scope.getConsultantNoofdays();
+        }
+
+        //Consultant wise no of days 
+        $scope.consultantNoofdays = [];
+        $scope.getConsultantNoofdays = function () {
+            $scope.consultantNoofdays = [];
+            $http.get($rootScope.IRISOrgServiceUrl + '/patientprescription/getconsultantnoofdays?consultant_id=' + $scope.data.consultant_id)
+                    .success(function (response) {
+                        if (response.noofdays.length > 0)
+                            $scope.consultantNoofdays = response.noofdays;
                     }, function (x) {
                         response = {success: false, message: 'Server Error'};
                     });
