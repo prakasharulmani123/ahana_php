@@ -11,6 +11,7 @@ use common\models\PhaDescriptionsRoutes;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
+use yii\db\Query;
 use yii\filters\auth\QueryParamAuth;
 use yii\filters\ContentNegotiator;
 use yii\helpers\Html;
@@ -67,7 +68,7 @@ class PatientprescriptionController extends ActiveController {
 //                $room->remove();
 //            }
 //            //
-            
+
             return ['success' => true];
         }
     }
@@ -102,12 +103,12 @@ class PatientprescriptionController extends ActiveController {
                     $item_model->setRouteId();
                     $item_model->save(false);
                 }
-                
+
                 $consult_name = '';
-                if(isset($model->consultant)){
-                    $consult_name = $model->consultant->title_code .  $model->consultant->name;
+                if (isset($model->consultant)) {
+                    $consult_name = $model->consultant->title_code . $model->consultant->name;
                 }
-                return ['success' => true, 'pres_id' =>$model->pres_id, 'date' => date('d-M-Y H:i'), 'model' => ['consultant_name' => $consult_name, 'consultant_id' => $model->consultant_id]];
+                return ['success' => true, 'pres_id' => $model->pres_id, 'date' => date('d-M-Y H:i'), 'model' => ['consultant_name' => $consult_name, 'consultant_id' => $model->consultant_id]];
             } else {
                 return ['success' => false, 'message' => Html::errorSummary([$model, $item_model])];
             }
@@ -126,11 +127,11 @@ class PatientprescriptionController extends ActiveController {
                 $encounter_id = $get['encounter_id'];
                 $data = PatPrescription::find()->tenant()->active()->andWhere(['patient_id' => $patient->patient_id, 'encounter_id' => $encounter_id])->orderBy(['created_at' => SORT_DESC])->all();
             } else {
-                
-                if (isset($get['date']) && $get['date']!="") {
+
+                if (isset($get['date']) && $get['date'] != "") {
                     $pres_date = $get['date'];
-                    $data = PatPrescription::find()->tenant()->active()->andWhere(['patient_id' => $patient->patient_id,'DATE(pres_date)'=>$pres_date])->orderBy(['created_at' => SORT_DESC])->all();
-                }else{
+                    $data = PatPrescription::find()->tenant()->active()->andWhere(['patient_id' => $patient->patient_id, 'DATE(pres_date)' => $pres_date])->orderBy(['created_at' => SORT_DESC])->all();
+                } else {
                     $data = PatPrescription::find()->tenant()->active()->andWhere(['patient_id' => $patient->patient_id])->orderBy(['created_at' => SORT_DESC])->all();
                 }
             }
@@ -139,8 +140,8 @@ class PatientprescriptionController extends ActiveController {
             return ['success' => false, 'message' => 'Invalid Access'];
         }
     }
-    
-     public function actionGetsaleprescription() {
+
+    public function actionGetsaleprescription() {
         $get = Yii::$app->getRequest()->get();
 
         if (isset($get['patient_id'])) {
@@ -179,7 +180,7 @@ class PatientprescriptionController extends ActiveController {
             return ['success' => false, 'message' => 'Invalid Access'];
         }
     }
-    
+
     public function actionGetconsultantfreq() {
         $get = Yii::$app->request->get();
         if (!empty($get)) {
@@ -188,9 +189,23 @@ class PatientprescriptionController extends ActiveController {
                     ->status()
                     ->active()
                     ->andWhere(['consultant_id' => $get['consultant_id']])
-                    ->orderBy(['created_at'  => SORT_DESC])
+                    ->orderBy(['created_at' => SORT_DESC])
                     ->all();
             return ['success' => true, 'freq' => $freq];
+        } else {
+            return ['success' => false, 'message' => 'Invalid Access'];
+        }
+    }
+
+    public function actionGetconsultantnoofdays() {
+        $get = Yii::$app->request->get();
+        if (!empty($get)) {
+            $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+            $connection = Yii::$app->client;
+            $command = $connection->createCommand("SELECT pat_prescription_items.number_of_days FROM pat_prescription LEFT JOIN pat_prescription_items ON pat_prescription_items.pres_id = pat_prescription.pres_id WHERE (pat_prescription.tenant_id=:tenant_id) AND (pat_prescription.deleted_at=:deleted_at) AND (pat_prescription.status=:status) AND (pat_prescription.consultant_id=:consultant_id) ORDER BY pat_prescription.created_at DESC ", [':tenant_id' => $tenant_id, ':deleted_at' => '0000-00-00 00:00:00', ':status' => '1', ':consultant_id' => $get['consultant_id']]);
+            $result = $command->queryAll();
+            $connection->close();
+            return ['success' => true, 'noofdays' => $result];
         } else {
             return ['success' => false, 'message' => 'Invalid Access'];
         }
