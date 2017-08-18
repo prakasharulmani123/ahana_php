@@ -112,7 +112,11 @@
             Webcam.on('error', function (error) {
                 if (error == 'Webcam is not loaded yet')
                 {
-                    alert('WebcameJS directive ERROR: ' + error);
+                    if (location.protocol === 'http:') {
+                        alert('WebcameJS ERROR: Could not access webcam: Permission Denied Error: Only secure origins are allowed (see: https://goo.gl/Y0ZkNV)');
+                    } else {
+                        alert('WebcameJS directive ERROR: ' + error);
+                    }
                     error.preventDefault();
                 } else {
                     console.error('WebcameJS directive ERROR: ', error);
