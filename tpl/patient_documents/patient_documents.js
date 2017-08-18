@@ -486,34 +486,46 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     nextTr.remove();
                     ratingTdText.remove();
                 }
-
+                //Removed post medical history title and thead
                 var RadgridText = $(this).find('tr.pastmedical');
                 var radhtml = RadgridText.find('td > table > tbody');
                 if (radhtml.text().trim().length === 0) {
                     var prevTr = RadgridText.closest('tr').prev('tr');
                     prevTr.remove();
+                    RadgridText.find('td > table > thead').remove();
                 }
+                //Removed Phamaco therapy title and thead
                 var therapyText = $(this).find('tr.phamacotherapy');
                 var therapyhtml = therapyText.find('td > table > tbody');
                 if (therapyhtml.text().trim().length === 0) {
                     var prevTr = therapyText.closest('tr').prev('tr');
                     prevTr.remove();
+                    therapyText.find('td > table > thead').remove();
                 }
+                //Removed Alternative Therapies title and thead
                 var altText = $(this).find('tr.alternative');
                 var althtml = altText.find('td > table > tbody');
                 if (althtml.text().trim().length === 0) {
                     var altTr = altText.closest('tr').prev('tr');
                     altTr.remove();
+                    altText.find('td > table > thead').remove();
                 }
+                //Removed Substance History title and thead
                 var subText = $(this).find('tr.sub');
                 var subhtml = subText.find('td > table > tbody');
                 if (subhtml.text().trim().length === 0) {
                     var subTr = subText.closest('tr').prev('tr');
                     subTr.remove();
+                    subText.find('td > table > thead').remove();
                 }
+
+                var family = $('#RGfamily > tbody');
+                if (family.text().trim().length === 0) {
+                    $('#RGfamily > thead').remove();
+                }
+
                 var personalText = $(this).find('tr.personal_history');
                 if (personalText.text().trim().length === 0) {
-                    //console.log(personalText);
                     var personalTr = personalText.closest('tr').prev('tr');
                     personalTr.remove();
                 }
@@ -574,10 +586,10 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     }
                 });
 
-                var rowCount = $(this).find("tr").length;
-                if (rowCount < 2) {
-                    $(this).remove();
-                }
+//                var rowCount = $(this).find("tr").length;
+//                if (rowCount < 2) {
+//                    $(this).remove();
+//                }
 
                 var complaints = $("td#complaints");
                 if (complaints.text().length === 0)
@@ -602,10 +614,11 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                 }
 
 
-                var rowCount = $(this).find("tr").length;
-                if (rowCount < 2) {
-                    $(this).remove();
-                }
+//                var rowCount = $(this).find("table").length;
+//                if (rowCount < 2) {
+//                    $(this).remove();
+//                }
+
                 $("#printThisElement table tbody tr td table tbody").each(function () {
                     var head = $(this).find("tr");
                     var heading = head.text();
@@ -615,19 +628,19 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     }
                 });
 
-                var treatment = $(this).find("tr.treatment_history");
-                treatment.each(function () {
-                    if (treatment.text().trim() != "") {
-                        treatment_text.push(treatment.text().trim());
-                    }
-                });
-
-                var mental_status = $(this).find("tr.mental_status_examination");
-                mental_status.each(function () {
-                    if (mental_status.text().trim() != "") {
-                        mental_status_text.push(mental_status.text().trim());
-                    }
-                });
+//                var treatment = $(this).find("tr.treatment_history");
+//                treatment.each(function () {
+//                    if (treatment.text().trim() != "") {
+//                        treatment_text.push(treatment.text().trim());
+//                    }
+//                });
+//
+//                var mental_status = $(this).find("tr.mental_status_examination");
+//                mental_status.each(function () {
+//                    if (mental_status.text().trim() != "") {
+//                        mental_status_text.push(mental_status.text().trim());
+//                    }
+//                });
 
                 var ratingTdText = $(this).find('td.ribbon');
                 var nextTr = ratingTdText.closest('tr').next('tr');
@@ -648,10 +661,12 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                             $(this).remove();
                         }
                     });
+
                     if (tr.text().trim() == "") {
                         tr.remove();
                     }
                 });
+
 
                 // If ICD-10 Heading not need, then unhide the below codes
 //                if(headingText.find('h1').html() == 'ICD-10'){
@@ -706,7 +721,16 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
             });
 
             $timeout(function () {
+                if (treatment_text.length === 0) {
+                    $('.treatment_history_head').remove();
+                }
+                if (mental_status_text.length === 0) {
+                    $('.mental_status_examination_head').remove();
+                }
+
                 $('table#heading').each(function () {
+                    $("table#heading td:empty").remove();
+                    $("table#heading tr:empty").remove();
                     if ($(this).find('td.ribbonhead').closest('tr').nextAll('tr').length == 0) {
                         $(this).find('td.ribbonhead').closest('tr').remove();
                     }
@@ -716,12 +740,49 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                 });
             }, 100);
 
-            if (treatment_text.length === 0) {
-                $('.treatment_history_head').remove();
-            }
-            if (mental_status_text.length === 0) {
-                $('.mental_status_examination_head').remove();
-            }
+            $timeout(function () {
+
+                $("#printThisElement table").each(function () {
+                    var treatment = $(this).find("tr.treatment_history");
+                    treatment.each(function () {
+                        if (treatment.text().trim() != "") {
+                            treatment_text.push(treatment.text().trim());
+                        }
+                    });
+
+                    var mental_status = $(this).find("tr.mental_status_examination");
+                    mental_status.each(function () {
+                        if (mental_status.text().trim() != "") {
+                            mental_status_text.push(mental_status.text().trim());
+                        }
+                    });
+                });
+
+                $('table#heading tbody').each(function () {
+                    var table_text = $(this).find('tr td table');
+                    if (table_text.text().trim().length === 0)
+                    {
+                        var prevTr = table_text.closest('tr').prev('tr');
+                        prevTr.remove();
+                        table_text.remove();
+                    }
+                });
+
+            }, 50);
+
+            $('table').each(function () {
+                if ($(this).find('td.ribbon').closest('tr').nextAll('tr').length == 0) {
+                    $(this).find('td.ribbon').closest('tr').remove();
+                    $(this).find('td.ribbon').closest('table').remove();
+                }
+            });
+
+//            if (treatment_text.length === 0) {
+//                $('.treatment_history_head').remove();
+//            }
+//            if (mental_status_text.length === 0) {
+//                $('.mental_status_examination_head').remove();
+//            }
 
             if ($scope.deviceDetector.browser == 'firefox')
             {
