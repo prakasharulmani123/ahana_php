@@ -44,6 +44,8 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                             resp.encounter_id = resp.encounter_id.toString();
                         });
                         $scope.encounters_list = response;
+                        if (response != '')
+                            $scope.add_doc_encounter_id = response[0].encounter_id;
                     }, 'sale_encounter_id');
                 }
             }, true);
