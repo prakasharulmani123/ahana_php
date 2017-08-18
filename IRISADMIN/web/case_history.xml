@@ -2099,7 +2099,7 @@
                     <LISTITEMS>
                         <LISTITEM value="Spontaneous" id="RBgaitdisurbances1" Selected="False">Normal</LISTITEM>
                         <LISTITEM value="March" id="RBgaitdisurbances2" Selected="False">March</LISTITEM>
-                        <LISTITEM value="Limb" id="RBgaitdisurbances3" Selected="False">Limb</LISTITEM>
+                        <LISTITEM value="Limp" id="RBgaitdisurbances3" Selected="False">Limp</LISTITEM>
                         <LISTITEM value="Assisted" id="RBgaitdisurbances4" Selected="False">Assisted</LISTITEM>
                         <LISTITEM value="Shuffling" id="RBgaitdisurbances5" Selected="False">Shuffling</LISTITEM>
                     </LISTITEMS>
