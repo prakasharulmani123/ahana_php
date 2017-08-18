@@ -189,6 +189,7 @@
                                                             <button type="button" class="label bg-info" ng-click="removeItem(item)"><i class=" fa fa-trash"></i></button>
                                                         </td>
                                                         <td>
+                                                            <!--e-ng-options="product.full_name as product.full_name for product in item.all_products | filter:$viewValue | filter:{generic_id : item.generic_id} : true"--> 
                                                             <span editable-select="item.product_name"
                                                                   e-index ="{{item.item_key}}"
                                                                   e-tabindex="2{{item.item_key}}1"
@@ -197,7 +198,8 @@
                                                                   e-form="tableform" 
                                                                   onbeforesave="checkInput($data)" 
                                                                   e-ng-change="setProductId($data, item.item_key, tableform)" 
-                                                                  e-ng-options="product.full_name as product.full_name for product in item.all_products | filter:$viewValue | filter:{generic_id : item.generic_id} : true" 
+                                                                  e-ng-options="product.full_name as product.full_name for product in item.all_products" 
+                                                                  e-options-class="{ 'in-stock' : availableQuantity, 'out-of-stock': !availableQuantity }"
                                                                   e-required>
                                                                 {{ showProduct(item)}}
                                                             </span>                                                            

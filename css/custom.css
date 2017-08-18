@@ -431,6 +431,10 @@ out-patient-table .table > thead > tr > th label.i-checks {
     color: #f05050 !important;
 }
 
+.out-of-stock {
+    color: red;
+}
+
 
 
 

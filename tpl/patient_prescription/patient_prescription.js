@@ -301,7 +301,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             result = $filter('filter')($scope.data.prescriptionItems[key].all_products, {full_name: $data});
             if (result.length > 0) {
                 qty_count = $scope.calculate_qty($scope.data.prescriptionItems[key].frequency, $scope.data.prescriptionItems[key].number_of_days, result[0].product_description_id, result[0].description_name);
-                if (qty_count > 0) {
+                //hide by nad
+//                if (qty_count > 0) {
                     $scope.data.prescriptionItems[key].product_id = result[0].product_id;
                     $scope.data.prescriptionItems[key].description_routes = [];
                     $scope.data.prescriptionItems[key].description_routes = result[0].description_routes;
@@ -318,7 +319,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                             editableValue.scope.$data = $scope.data.prescriptionItems[key].qty;
                         }
                     });
-                }
+//                }
             }
         }
 
