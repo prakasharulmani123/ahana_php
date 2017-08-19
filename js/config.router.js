@@ -2169,8 +2169,8 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
-            
-            //PHARMACY PURCHASE REPORT
+
+            //Patient Pending REPORT
             .state('pharmacy.patientoutstandingReport', {
                 url: '/patientoutstandingReport',
                 templateUrl: 'tpl/pharmacy_report/patientoutstandingReport.html',
@@ -2180,6 +2180,22 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                             return $ocLazyLoad.load(['smart-table']).then(
                                     function () {
                                         return $ocLazyLoad.load('tpl/pharmacy_report/patientoutstandingReport.js?v=' + APP_VERSION);
+                                    }
+                            );
+                        }]
+                }
+            })
+
+            //Short Expire Drug
+            .state('pharmacy.shortexpiryDrug', {
+                url: '/shortexpiryDrug',
+                templateUrl: 'tpl/pharmacy_report/shortexpiryDrug.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/pharmacy_report/shortexpiryDrug.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
