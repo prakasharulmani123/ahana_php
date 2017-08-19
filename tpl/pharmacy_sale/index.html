@@ -90,7 +90,7 @@
                                 <i ng-if="expanded" class="fa fa-minus text"></i>
                             </button>
                         </td>
-                        <td data-value="{{row.all_dates}}">{{row.patient_name|| 'UnKnown Person'}}</td>
+                        <td data-value="{{row.all_dates}}">{{row.patient_name|| 'UnKnown Person'}} <span ng-if="row.items[0].patient_uhid">({{row.items[0].patient_uhid}})</span></td>
                         <!--<td>{{row.mobile_no}}</td>-->
                         <td data-value="{{row.all_dates}}">{{row.encounter_id}}</td>
                         <td data-value="{{row.all_dates}}">{{row.sum_bill_amount| number:2}}</td>
