@@ -2169,6 +2169,22 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
+            
+            //PHARMACY PURCHASE REPORT
+            .state('pharmacy.patientoutstandingReport', {
+                url: '/patientoutstandingReport',
+                templateUrl: 'tpl/pharmacy_report/patientoutstandingReport.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/pharmacy_report/patientoutstandingReport.js?v=' + APP_VERSION);
+                                    }
+                            );
+                        }]
+                }
+            })
 
             //PHARMACY PURCHASE VAT REPORT
             .state('pharmacy.purchaseVatReport', {
