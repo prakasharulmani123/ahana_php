@@ -65,4 +65,12 @@ class PharmacyproductbatchController extends ActiveController {
 
         return ['batchList' => PhaProductBatch::find()->tenant()->andWhere(['product_id' => $product_id])->andWhere('available_qty > 0')->orderBy(['expiry_date' => SORT_ASC])->all()];
     }
+    
+    public function actionShortexpiry() {
+        $reports = PhaProductBatch::find()->tenant()
+                ->andWhere("pha_product_batch.expiry_date between CURDATE() AND CURDATE()+ INTERVAL 6 MONTH")
+                ->orderBy(['expiry_date' => SORT_ASC])
+                ->all();
+        return ['report' => $reports];        
+    }
 }

@@ -108,9 +108,9 @@ class PhaProductBatch extends RActiveRecord {
     public function getPhaProductBatchRates() {
         return $this->hasMany(PhaProductBatchRate::className(), ['batch_id' => 'batch_id'])->orderBy(['created_at' => SORT_DESC]);
     }
-    
+
     public function getPhaPurchaseItem() {
-        return $this->hasOne(PhaPurchaseItem::className(), ['batch_id' => 'batch_id'],['product_id' => 'product_id'])->orderBy(['created_at' => SORT_DESC]);
+        return $this->hasOne(PhaPurchaseItem::className(), ['batch_id' => 'batch_id'], ['product_id' => 'product_id'])->orderBy(['created_at' => SORT_DESC]);
     }
 
     public static function find() {
@@ -127,12 +127,15 @@ class PhaProductBatch extends RActiveRecord {
             },
             'purchase_rate' => function ($model) {
                 return isset($model->phaPurchaseItem) ? $model->phaPurchaseItem->purchase_rate : '-';
-            },        
+            },
             'per_unit_price' => function ($model) {
                 return isset($model->phaProductBatchRate) ? $model->phaProductBatchRate->per_unit_price : 0;
             },
             'product' => function ($model) {
                 return isset($model->product) ? $model->product : '';
+            },
+            'product_name' => function ($model) {
+                return isset($model->product) ? $model->product->product_name : '';
             },
         ];
         $parent_fields = parent::fields();
@@ -191,12 +194,17 @@ class PhaProductBatch extends RActiveRecord {
                     $parent_fields = array_combine($pFields, $pFields);
                     break;
                 case 'stock_details':
-                    $addt_keys = ['batch_details', 'mrp', 'product','purchase_rate'];
-                    $pFields = ['batch_id', 'batch_no', 'available_qty', 'expiry_date','package_name'];
+                    $addt_keys = ['batch_details', 'mrp', 'product', 'purchase_rate'];
+                    $pFields = ['batch_id', 'batch_no', 'available_qty', 'expiry_date', 'package_name'];
+                    $parent_fields = array_combine($pFields, $pFields);
+                    break;
+                case 'expiry_report':
+                    $addt_keys = ['product_name'];
+                    $pFields = ['batch_id', 'batch_no', 'expiry_date'];
                     $parent_fields = array_combine($pFields, $pFields);
                     break;
                 case 'purchase_return':
-                    $addt_keys =['batch_details'];
+                    $addt_keys = ['batch_details'];
                     $pFields = ['batch_id', 'batch_no', 'expiry_date', 'available_qty', 'expiry_date'];
                     $parent_fields = array_combine($pFields, $pFields);
             endswitch;
@@ -231,7 +239,7 @@ class PhaProductBatch extends RActiveRecord {
             $activity = 'Batch Details Updated Successfully (#' . $this->batch_no . ' )';
             CoAuditLog::insertAuditLog(PhaProductBatch::tableName(), $this->batch_id, $activity);
         }
-        
+
         return parent::afterSave($insert, $changedAttributes);
     }
 
