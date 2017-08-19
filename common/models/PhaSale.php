@@ -215,7 +215,7 @@ class PhaSale extends RActiveRecord {
                 return (isset($model->patient) ? $model->patient : '-');
             },
             'patient_uhid' => function ($model) {
-                return (isset($model->patient) ? $model->patient->patient_global_int_code : '-');
+                return (isset($model->patient) ? $model->patient->patient_global_int_code : '');
             },
             'patient_name' => function ($model) {
                 if (isset($model->patient)) {

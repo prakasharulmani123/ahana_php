@@ -103,7 +103,9 @@ class PharmacysaleController extends ActiveController {
                 $searchCondition = [
                     'or',
                         ['like', 'patient_name', $text],
-                        ['like', 'encounter_id', $text],];
+                        ['like', 'encounter_id', $text],
+                        ['like', 'pat_global_patient.patient_global_int_code', $text],
+                    ];
             }
 
             $result = PhaSale::find()
@@ -111,6 +113,7 @@ class PharmacysaleController extends ActiveController {
                     ->active()
                     ->andWhere($condition);
             if ($searchCondition) {
+                $result->joinWith(['patient.patGlobalPatient']);
                 $result->andFilterWhere($searchCondition);
             }
             $result->groupBy(['patient_name', 'encounter_id']);
@@ -122,6 +125,7 @@ class PharmacysaleController extends ActiveController {
                     ->active()
                     ->andWhere($condition);
             if ($searchCondition) {
+                $resultCount->joinWith(['patient.patGlobalPatient']);
                 $resultCount->andFilterWhere($searchCondition);
             }
             $resultCount->groupBy(['patient_name', 'encounter_id']);
