@@ -105,7 +105,7 @@ class PharmacysaleController extends ActiveController {
                         ['like', 'patient_name', $text],
                         ['like', 'encounter_id', $text],
                         ['like', 'pat_global_patient.patient_global_int_code', $text],
-                    ];
+                ];
             }
 
             $result = PhaSale::find()
@@ -223,8 +223,7 @@ class PharmacysaleController extends ActiveController {
         $return = PhaSaleReturn::find()->tenant()->andWhere(['sale_id' => $get['id']])->one();
         if (empty($return)) {
             $model = PhaSale::find()->active()->tenant()->andWhere(['sale_id' => $get['id']])->one();
-            foreach($model->phaSaleItems as $sale)
-            {
+            foreach ($model->phaSaleItems as $sale) {
                 $sale->remove();
                 PhaSaleItem::Updatebatchqty($sale);
             }
@@ -245,6 +244,18 @@ class PharmacysaleController extends ActiveController {
         } else {
             return ['success' => false, 'message' => "Sorry, you can't delete this item"];
         }
+    }
+
+    public function actionOutstandingreport() {
+        $post = Yii::$app->getRequest()->post();
+        
+        $reports = PhaSale::find()
+                ->tenant()
+                ->andWhere("pha_sale.sale_date between '{$post['from']}' AND '{$post['to']}'")
+                ->andWhere("pha_sale.payment_status!='C'")
+                ->all();
+
+        return ['report' => $reports];
     }
 
 }

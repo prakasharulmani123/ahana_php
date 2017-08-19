@@ -265,6 +265,15 @@ class PhaSale extends RActiveRecord {
             'branch_phone' => function ($model) {
                 return (isset($model->tenant->tenant_contact1) ? $model->tenant->tenant_contact1 : '-');
             },
+            'bill_payment' => function ($model) {
+                if ($model->payment_type == 'CA') {
+                    return 'Cash';
+                } else if ($model->payment_type == 'CR') {
+                    return 'Credit';
+                } else {
+                    return 'Cash On Delivery';
+                }
+            }
         ];
 
         $parent_fields = parent::fields();
@@ -314,6 +323,16 @@ class PhaSale extends RActiveRecord {
                     $parent_fields = [
                         'sale_id' => 'sale_id',
                         'bill_no' => 'bill_no',
+                    ];
+                    break;
+                case 'patient_report':
+                    $addt_keys = ['patient_name', 'billings_total_balance_amount', 'billings_total_paid_amount','bill_payment'];
+                    $parent_fields = [
+                        'sale_id' => 'sale_id',
+                        'bill_no' => 'bill_no',
+                        'payment_status' => 'payment_status',
+                        'payment_type' => 'payment_type',
+                        'bill_amount' => 'bill_amount',
                     ];
                     break;
             endswitch;
