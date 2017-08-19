@@ -6,7 +6,7 @@
                 <div class="col-sm-3 m-b-xs">  
                     <h1 class="m-n h3">Prescription</h1>                    
                 </div>
-                <div class="col-sm-6 m-b-xs">  
+                <div class="col-sm-5 m-b-xs">  
                     <table>
                         <tbody>
                             <tr>
@@ -20,13 +20,13 @@
                         </tbody>
                     </table>               
                 </div>
-                <div class="col-sm-3 m-b-xs pull-right right" ng-if="all_encounters.length > 1">
+                <div class="col-sm-4 m-b-xs pull-right right" ng-if="all_encounters.length > 1">
                     <b> Encounter Id : </b>&nbsp;&nbsp;&nbsp;
                     <select style="width: 50%" class="form-control pull-right" ng-model="data.encounter_id" ng-options="all_encounter.encounter_id as all_encounter.encounter_id for all_encounter in all_encounters| orderBy: encounter_id">
                     </select>
                 </div>
-                <div class="col-sm-3 m-b-xs pull-right right" ng-if="all_encounters.length == 1">
-                    <b> Encounter Id : </b> {{enc.selected.encounter_id}}
+                <div class="col-sm-4 m-b-xs pull-right right" ng-if="all_encounters.length == 1">
+                    <b> Encounter Id : </b> {{enc.selected.encounter_id}} <b> Encounter Date : </b> {{enc.selected.encounter_date}}
                 </div>
             </div>
             <div class="wrapper-md p-b">
