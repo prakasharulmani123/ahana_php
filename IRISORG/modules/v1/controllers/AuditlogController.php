@@ -57,5 +57,14 @@ class AuditlogController extends ActiveController {
         $totalCount = CoAuditLog::find()->tenant()->count();
         return ['audit' => $audit, 'totalCount' => $totalCount];
     }
+    
+    public function actionGetreport() {
+        $records = CoAuditLog::find()
+                ->tenant()
+                ->where(["Date(created_at)" => $_REQUEST['date']])
+                ->orderBy(['created_at' => SORT_DESC])
+                ->all();
+        return ['records' => $records];
+    }
 
 }
