@@ -21,12 +21,12 @@
                     </table>               
                 </div>
                 <div class="col-sm-4 m-b-xs pull-right right" ng-if="all_encounters.length > 1">
-                    <b> Encounter Id : </b>&nbsp;&nbsp;&nbsp;
+                    <b> Encounter ID : </b>&nbsp;&nbsp;&nbsp;
                     <select style="width: 50%" class="form-control pull-right" ng-model="data.encounter_id" ng-options="all_encounter.encounter_id as all_encounter.encounter_id for all_encounter in all_encounters| orderBy: encounter_id">
                     </select>
                 </div>
                 <div class="col-sm-4 m-b-xs pull-right right" ng-if="all_encounters.length == 1">
-                    <b> Encounter Id : </b> {{enc.selected.encounter_id}} <b> Encounter Date : </b> {{enc.selected.encounter_date}}
+                    <b> Encounter ID : </b> {{enc.selected.encounter_id}} <b> Encounter Date : </b> {{enc.selected.encounter_date}}
                 </div>
             </div>
             <div class="wrapper-md p-b">
