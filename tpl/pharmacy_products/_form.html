@@ -140,10 +140,18 @@
 
                         <div class="form-group">
                             <label class="col-sm-5 control-label">HSN Number </label>
-                            <div class="col-sm-7">
-                               <select class="form-control" ng-model="data.hsn_id" ng-options="hsn.hsn_id as hsn.hsn_no for hsn in hsncode| orderBy: hsn_no" >
-                                   <option value="">Select HSN</option>
-                               </select>
+                            <div class="col-sm-6">
+                                <select class="form-control" ng-model="data.hsn_id" ng-options="hsn.hsn_id as hsn.hsn_no for hsn in hsncode| orderBy: hsn_no" >
+                                    <option value="">Select HSN</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-0">
+                                <script type="text/ng-template" id="HsnModalContent.html">
+                                    <div ng-include="'tpl/modal_form/modal.hsn.html'"></div>
+                                </script>
+                                <button type="button" class="btn btn-primary" ng-click="open('lg', 'HsnModalInstanceCtrl', 'HsnModalContent.html', '')">
+                                    <i class="fa fa-plus text ng-scope"></i>
+                                </button>
                             </div>
                         </div>
 

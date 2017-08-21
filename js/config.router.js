@@ -1996,6 +1996,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                                 'tpl/modal_form/modal.vat.js?v=' + APP_VERSION,
                                 'tpl/modal_form/modal.package.js?v=' + APP_VERSION,
                                 'tpl/modal_form/modal.supplier.js?v=' + APP_VERSION,
+                                'tpl/modal_form/modal.hsn.js?v=' + APP_VERSION,
                             ]);
                         }]
                 }
