@@ -139,6 +139,9 @@ class PatNotes extends RActiveRecord {
             'encounter_status' => function ($model) {
                 return $model->encounter->isActiveEncounter();
             },
+            'created_date' => function ($model) {
+                return date('Y-m-d',strtotime($model->created_at));
+            },
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
