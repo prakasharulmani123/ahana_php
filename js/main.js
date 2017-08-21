@@ -338,6 +338,7 @@ angular.module('app')
 
                         angular.extend(response, {
                             created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
+                            created_date: moment().format('YYYY-MM-DD'),
                         });
 
                         if (mode == "update")
@@ -363,6 +364,31 @@ angular.module('app')
                                 else
                                     $scope.errorData = data.message;
                             });
+                }
+
+                $scope.check_date = function (note_date) {
+                    var spandate = new Date(note_date);
+                    var today = new Date();
+                    var yesterday = getYesterday(new Date());
+
+                    var checkdate = makeYMD(spandate);
+                    today = makeYMD(today);
+                    yesterday = makeYMD(yesterday);
+
+                    if (today ==  checkdate) {
+                        return "Today";
+                    } else if (yesterday ==  checkdate) {
+                        return "Yesterday";
+                    } else {
+                        return spandate.getDate() + '/' + (spandate.getMonth() + 1) + '/' +  spandate.getFullYear();
+                    }
+                }
+
+                function makeYMD(d) {
+                    return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+                }
+                function getYesterday(d) {
+                    return new Date(d.setDate(d.getDate() - 1));
                 }
 
                 $scope.presc_right = {};

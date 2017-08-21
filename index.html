@@ -103,17 +103,24 @@
                             <div class="cell">
                                 <div class="cell-inner padder">
                                     <!-- notes list -->
-                                    <div ng-repeat="note in child.notes| orderBy: 'pat_note_id'" class="bg-grey-only r r-2x m-b-xs wrapper-xs b-l b-2x b-{{note.seen_by == 0 ? 'danger' : 'info'}} word-wrap">
+                                    <div ng-repeat="(date, allNote) in child.notes | orderBy:'pat_note_id' | groupBy:'created_date'" >
                                         <!--                                        <p><b>Encounter: {{note.encounter_id}}</b></p>-->
-                                        <a ng-if="note.encounter_status == '1'" check-access-custom3 class="label bg-dark" title="Edit" data-url='patient.noteUpdate' ng-click="GetNote('{{$state.params.id}}','{{note.pat_note_id}}')">
-                                            <i class="fa fa-pencil"></i>
-                                        </a> &nbsp;&nbsp;
-                                        {{note.notes}}
-                                        <div class="text-xs text-muted ng-binding">
-                                            {{note.created_at| moment:'DD/MM/YYYY hh:mm A'}}
-                                            <span class="notes_writer pull-right">
-                                                -{{note.created_by_short_name}}
-                                            </span>
+                                        <div class="vitals-cont-date">
+                                        <div class="label bg-info">{{check_date(date)}}</div>
+                                        </div>
+                                        <div class="vitals-table">
+                                        <div ng-repeat="note in allNote" class="bg-grey-only r r-2x m-b-xs wrapper-xs b-l b-2x b-{{note.seen_by == 0 ? 'danger' : 'info'}} word-wrap">
+                                            <a ng-if="note.encounter_status == '1'" check-access-custom3 class="label bg-dark" title="Edit" data-url='patient.noteUpdate' ng-click="GetNote('{{$state.params.id}}','{{note.pat_note_id}}')">
+                                                <i class="fa fa-pencil"></i>
+                                            </a> &nbsp;&nbsp;
+                                            {{note.notes}}
+                                            <div class="text-xs text-muted ng-binding">
+                                                {{note.created_at| moment:'hh:mm A'}}
+                                                <span class="notes_writer pull-right">
+                                                    -{{note.created_by_short_name}}
+                                                </span>
+                                            </div>
+                                        </div>
                                         </div>
                                     </div>
                                     <!-- / notes list -->
