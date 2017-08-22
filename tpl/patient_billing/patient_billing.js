@@ -209,6 +209,7 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
             if (newValue != '' && typeof newValue != 'undefined') {
                 $scope.loadBillingCharges(newValue);
                 $scope.loadRoomConcession(newValue);
+                $scope.loadPharmacybill(newValue);
             }
         }, true);
 
@@ -367,6 +368,23 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
             }).success(
                     function (response) {
                         $scope.charge_alerts = response.history;
+                    }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        }
+
+        $scope.loadPharmacybill = function (enc_id) {
+            $http({
+                method: 'GET',
+                url: $rootScope.IRISOrgServiceUrl + '/pharmacysale/getsalebilling?addtfields=patient_report&encounter_id=' + enc_id,
+            }).success(
+                    function (response) {
+                        $scope.pharmacy_charge = response.sale;
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');
