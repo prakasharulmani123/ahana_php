@@ -303,22 +303,22 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 qty_count = $scope.calculate_qty($scope.data.prescriptionItems[key].frequency, $scope.data.prescriptionItems[key].number_of_days, result[0].product_description_id, result[0].description_name);
                 //hide by nad
 //                if (qty_count > 0) {
-                    $scope.data.prescriptionItems[key].product_id = result[0].product_id;
-                    $scope.data.prescriptionItems[key].description_routes = [];
-                    $scope.data.prescriptionItems[key].description_routes = result[0].description_routes;
-                    $scope.data.prescriptionItems[key].available_quantity = result[0].availableQuantity;
-                    $scope.data.prescriptionItems[key].in_stock = (parseInt(result[0].availableQuantity) > parseInt(qty_count));
-                    $scope.data.prescriptionItems[key].price = result[0].latest_price;
-                    $scope.data.prescriptionItems[key].product_description_id = result[0].product_description_id;
-                    $scope.data.prescriptionItems[key].description_name = result[0].description_name;
-                    $scope.data.prescriptionItems[key].qty = qty_count;
-                    $scope.data.prescriptionItems[key].total = $scope.calculate_price(qty_count, result[0].latest_price);
+                $scope.data.prescriptionItems[key].product_id = result[0].product_id;
+                $scope.data.prescriptionItems[key].description_routes = [];
+                $scope.data.prescriptionItems[key].description_routes = result[0].description_routes;
+                $scope.data.prescriptionItems[key].available_quantity = result[0].availableQuantity;
+                $scope.data.prescriptionItems[key].in_stock = (parseInt(result[0].availableQuantity) > parseInt(qty_count));
+                $scope.data.prescriptionItems[key].price = result[0].latest_price;
+                $scope.data.prescriptionItems[key].product_description_id = result[0].product_description_id;
+                $scope.data.prescriptionItems[key].description_name = result[0].description_name;
+                $scope.data.prescriptionItems[key].qty = qty_count;
+                $scope.data.prescriptionItems[key].total = $scope.calculate_price(qty_count, result[0].latest_price);
 
-                    angular.forEach(tableform.$editables, function (editableValue, editableKey) {
-                        if (editableValue.attrs.eIndex == key && editableValue.attrs.eName == 'qty') {
-                            editableValue.scope.$data = $scope.data.prescriptionItems[key].qty;
-                        }
-                    });
+                angular.forEach(tableform.$editables, function (editableValue, editableKey) {
+                    if (editableValue.attrs.eIndex == key && editableValue.attrs.eName == 'qty') {
+                        editableValue.scope.$data = $scope.data.prescriptionItems[key].qty;
+                    }
+                });
 //                }
             }
         }
@@ -874,7 +874,9 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
                 //Update all the No.of Days column in prescription form 
                 angular.forEach($scope.data.prescriptionItems, function (item, key) {
-                    $scope.numberDaysChange(newValue, item, key, $scope.tableform);
+                    if (!item.number_of_days || item.number_of_days =='0') {
+                        $scope.numberDaysChange(newValue, item, key, $scope.tableform);
+                    }
                 });
             }
         }
