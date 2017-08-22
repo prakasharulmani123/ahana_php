@@ -1,4 +1,4 @@
-app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll', '$http', '$state', '$filter', '$modal', '$log', '$timeout', 'IO_BARCODE_TYPES', 'toaster', 'PrescriptionService', '$q', function ($rootScope, $scope, $anchorScroll, $http, $state, $filter, $modal, $log, $timeout, IO_BARCODE_TYPES, toaster, PrescriptionService, $q) {
+app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll', '$http', '$state', '$filter', '$modal', '$location', '$log', '$timeout', 'IO_BARCODE_TYPES', 'toaster', 'PrescriptionService', '$q', function ($rootScope, $scope, $anchorScroll, $http, $state, $filter, $modal, $location, $log, $timeout, IO_BARCODE_TYPES, toaster, PrescriptionService, $q) {
 
         $scope.app.settings.patientTopBar = true;
         $scope.app.settings.patientSideMenu = true;
@@ -14,6 +14,42 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.frequencies = {};
         //Stop Init
 
+        $scope.$on('HK_SAVE_PRINT', function (e) {
+            var location_url = $location.path().split('/');
+            var url = location_url[1] + '/' + location_url[2];
+            var allowedPages = $.inArray(url, ['patient/prescription']) > -1;
+            if (allowedPages) {
+                $timeout(function () {
+                    angular.element("#save_print").trigger('click');
+                }, 100);
+            }
+            e.preventDefault();
+        });
+
+        $scope.$on('HK_SAVE', function (e) {
+            var location_url = $location.path().split('/');
+            var url = location_url[1] + '/' + location_url[2];
+            var allowedPages = $.inArray(url, ['patient/prescription']) > -1;
+            if (allowedPages) {
+                $timeout(function () {
+                    angular.element("#save").trigger('click');
+                }, 100);
+            }
+            e.preventDefault();
+        });
+        
+        $scope.$on('HK_CANCEL', function (e) {
+            var location_url = $location.path().split('/');
+            var url = location_url[1] + '/' + location_url[2];
+            var allowedPages = $.inArray(url, ['patient/prescription']) > -1;
+            if (allowedPages) {
+                $timeout(function () {
+                    angular.element("#clear").trigger('click');
+                }, 100);
+            }
+            e.preventDefault();
+        });
+        
         //Start Watch Functions
         $scope.$watch('patientObj.patient_id', function (newValue, oldValue) {
             $scope.spinnerbar('show');
@@ -874,7 +910,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
                 //Update all the No.of Days column in prescription form 
                 angular.forEach($scope.data.prescriptionItems, function (item, key) {
-                    if (!item.number_of_days || item.number_of_days =='0') {
+                    if (!item.number_of_days || item.number_of_days == '0') {
                         $scope.numberDaysChange(newValue, item, key, $scope.tableform);
                     }
                 });

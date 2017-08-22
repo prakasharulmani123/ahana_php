@@ -608,6 +608,15 @@ angular.module('app')
 //                        $window.history.forward();
 //                    }
 //                });
+                
+                 hotkeys.add({
+                    combo: 'ctrl+p',
+                    description: 'Save and Print',
+                    callback: function (event) {
+                        $scope.$broadcast('HK_SAVE_PRINT');
+                        event.preventDefault();
+                    }
+                });
 
                 $rootScope.$on('unauthorized', function () {
                     toaster.clear();
