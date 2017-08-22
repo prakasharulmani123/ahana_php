@@ -248,7 +248,7 @@ class PharmacysaleController extends ActiveController {
 
     public function actionOutstandingreport() {
         $post = Yii::$app->getRequest()->post();
-        
+
         $reports = PhaSale::find()
                 ->tenant()
                 ->andWhere("pha_sale.sale_date between '{$post['from']}' AND '{$post['to']}'")
@@ -256,6 +256,17 @@ class PharmacysaleController extends ActiveController {
                 ->all();
 
         return ['report' => $reports];
+    }
+
+    public function actionGetsalebilling() {
+        $get = Yii::$app->getRequest()->get();
+        $sale = PhaSale::find()
+                ->where(['encounter_id' => $get['encounter_id'],
+                        'payment_type' => 'CR'])
+                ->andWhere(['!=', 'payment_status', 'C'])
+                ->orderBy(['sale_id' => SORT_DESC])
+                ->all();
+        return ['sale' => $sale];
     }
 
 }

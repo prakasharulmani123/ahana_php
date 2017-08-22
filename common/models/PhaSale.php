@@ -333,6 +333,7 @@ class PhaSale extends RActiveRecord {
                         'payment_status' => 'payment_status',
                         'payment_type' => 'payment_type',
                         'bill_amount' => 'bill_amount',
+                        'sale_date' => 'sale_date',
                     ];
                     break;
             endswitch;
