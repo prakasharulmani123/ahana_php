@@ -37,7 +37,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             }
             e.preventDefault();
         });
-        
+
         $scope.$on('HK_CANCEL', function (e) {
             var location_url = $location.path().split('/');
             var url = location_url[1] + '/' + location_url[2];
@@ -49,7 +49,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             }
             e.preventDefault();
         });
-        
+
         //Start Watch Functions
         $scope.$watch('patientObj.patient_id', function (newValue, oldValue) {
             $scope.spinnerbar('show');
@@ -155,6 +155,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         };
 
         $scope.loadSideMenu = function () {
+            $scope.presc_right.notedata = {};
+            $scope.presc_right.vitaldata = {};
             //Get Notes
             $http.get($rootScope.IRISOrgServiceUrl + '/patientnotes/getpatientnotes?patient_id=' + $state.params.id)
                     .success(function (notes) {
@@ -766,6 +768,21 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 _that.data.prescriptionItems[key].total = $scope.calculate_price(qty_count, prescriptionItem.price);
                 _that.data.prescriptionItems[key].in_stock = (parseInt(prescriptionItem.available_quantity) > parseInt(qty_count));
             });
+
+            var valueArr = _that.data.prescriptionItems.map(function (item) {
+                return item.product_name
+            });
+            var isDuplicate = valueArr.some(function (item, idx) {
+                return valueArr.indexOf(item) != idx
+            });
+            if (isDuplicate)
+            {
+                $scope.duplicateErrormessage = 'Duplicate product is exits';
+                return false;
+            } else {
+                $scope.duplicateErrormessage = '';
+            }
+
 
             /* For print bill */
             $scope.data2 = _that.data;
