@@ -128,9 +128,9 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 $scope.data.prescriptionItems[key].number_of_days = '';
             }
 
-            if (days == 0) {
-                $scope.data.prescriptionItems[key].available_quantity = 0;
-            }
+//            if (days == 0) {
+//                $scope.data.prescriptionItems[key].available_quantity = 0;
+//            }
 
             //Number of days update in the editable form 
             angular.forEach(tableform.$editables, function (editableValue, editableKey) {
