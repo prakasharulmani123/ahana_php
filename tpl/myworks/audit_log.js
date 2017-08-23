@@ -1,7 +1,10 @@
 app.controller('AuditController', ['$rootScope', '$scope', '$timeout', '$http', '$state', function ($rootScope, $scope, $timeout, $http, $state) {
 
         $scope.loadAllauditlog = function () {
-            $scope.report_menu =false;
+            $rootScope.commonService.GetDoctorList('', '1', false, '1', function (response) {
+                $scope.doctors = response.doctorsList;
+            });
+            $scope.report_menu = false;
             $scope.log_status = 'grid';
             $scope.date = '';
             $scope.isLoading = true;
@@ -50,7 +53,11 @@ app.controller('AuditController', ['$rootScope', '$scope', '$timeout', '$http', 
             $scope.isLoading = true;
             $scope.loadbar('show');
             $scope.log_status = 'report';
-            $http.post($rootScope.IRISOrgServiceUrl + '/auditlog/getreport?date=' + moment($scope.date).format('YYYY-MM-DD'))
+            var pageURL = $rootScope.IRISOrgServiceUrl + '/auditlog/getreport?date=' + moment($scope.date).format('YYYY-MM-DD');
+            if (typeof $scope.user_id != 'undefined' && $scope.user_id != '') {
+                pageURL += '&user_id=' + $scope.user_id;
+            }
+            $http.get(pageURL)
                     .success(function (log) {
                         $scope.isLoading = false;
                         $scope.loadbar('hide');
@@ -63,15 +70,16 @@ app.controller('AuditController', ['$rootScope', '$scope', '$timeout', '$http', 
         };
 
         $scope.clearReport = function () {
-             $scope.report_menu = false;
+            $scope.report_menu = false;
             $scope.log_status = 'grid';
             $scope.date = '';
+            $scope.user_id = '';
             $scope.getAuditlist();
         };
-        
+
         $scope.$watch('date', function (newValue, oldValue) {
             if (newValue != '' && typeof newValue != 'undefined') {
-                $scope.report_menu=true;
+                $scope.report_menu = true;
             }
         }, true);
     }]);

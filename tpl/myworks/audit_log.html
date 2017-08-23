@@ -21,7 +21,9 @@
                                 <button type="button" class="btn btn-sm btn-default" ng-click="open($event, 'opened')">
                                     <i class="glyphicon glyphicon-calendar"></i>
                                 </button>
-
+                                <select class="selectpicker" data-live-search="true" ng-model="user_id" ng-options="user.user_id as user.fullname for user in doctors| orderBy: name">
+                                    <option value="">Select User</option>
+                                </select>
                                 <button ng-show="report_menu" ng-click="getReport()" class="btn btn-sm btn-info">
                                     Get Report
                                 </button>
@@ -68,7 +70,7 @@
                         </table>
                     </div>
                     <div ng-show="log_status == 'report'">
-                        
+
                         <div class="panel panel-default">
                             <div class="panel-body">
                                 <div class="col-sm-4 m-b-xs">
@@ -94,7 +96,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div id="audit_log_report">
                             <table style="display: none;" class="table table-bordered">
                                 <tr>
@@ -112,7 +114,10 @@
                                 <tr>
                                 </tr>
                             </table>
-                            <div class="panel panel-default">
+                            <div class="panel panel-default" ng-if='records.length == 0'>
+                                <div class="panel-body">No Records Found</div>
+                            </div>
+                            <div class="panel panel-default" ng-if='records.length > 0'>
                                 <div class="panel-heading font-bold">
                                     {{app.org_name}}
                                 </div>
