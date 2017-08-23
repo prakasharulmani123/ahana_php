@@ -21,7 +21,7 @@
                                 <button type="button" class="btn btn-sm btn-default" ng-click="open($event, 'opened')">
                                     <i class="glyphicon glyphicon-calendar"></i>
                                 </button>
-                                <select class="selectpicker" data-live-search="true" ng-model="user_id" ng-options="user.user_id as user.fullname for user in doctors| orderBy: name">
+                                <select class="selectpicker" data-live-search="true" ng-model="user_id" ng-options="user.user_id as user.fullname for user in users| orderBy: name">
                                     <option value="">Select User</option>
                                 </select>
                                 <button ng-show="report_menu" ng-click="getReport()" class="btn btn-sm btn-info">

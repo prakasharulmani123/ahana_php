@@ -1,9 +1,17 @@
 app.controller('AuditController', ['$rootScope', '$scope', '$timeout', '$http', '$state', function ($rootScope, $scope, $timeout, $http, $state) {
 
         $scope.loadAllauditlog = function () {
-            $rootScope.commonService.GetDoctorList('', '1', false, '1', function (response) {
-                $scope.doctors = response.doctorsList;
-            });
+            //Get Organization Users
+            $http({
+                url: $rootScope.IRISOrgServiceUrl + '/user/getuserslistbyuser',
+                method: "GET"
+            }).then(
+                    function (response) {
+                        $scope.users = {};
+                        $scope.users = response.data.userList;
+                    }
+            );
+            
             $scope.report_menu = false;
             $scope.log_status = 'grid';
             $scope.date = '';
