@@ -46,7 +46,7 @@ class AuditlogController extends ActiveController {
             'pagination' => false,
         ]);
     }
-    
+
     public function actionGetauditlog() {
         $offset = abs($_REQUEST['pageIndex'] - 1) * $_REQUEST['pageSize'];
         $audit = CoAuditLog::find()->tenant()
@@ -57,14 +57,17 @@ class AuditlogController extends ActiveController {
         $totalCount = CoAuditLog::find()->tenant()->count();
         return ['audit' => $audit, 'totalCount' => $totalCount];
     }
-    
+
     public function actionGetreport() {
         $records = CoAuditLog::find()
                 ->tenant()
-                ->where(["Date(created_at)" => $_REQUEST['date']])
-                ->orderBy(['created_at' => SORT_DESC])
+                ->where(["Date(created_at)" => $_REQUEST['date']]);
+        if (isset($_REQUEST['user_id']) && !empty($_REQUEST['user_id'])) {
+            $records->andFilterWhere(["=", "user_id", $_REQUEST['user_id']]);
+        }
+        $logs = $records->orderBy(['created_at' => SORT_DESC])
                 ->all();
-        return ['records' => $records];
+        return ['records' => $logs];
     }
 
 }
