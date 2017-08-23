@@ -413,7 +413,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             }
             $scope.removeSaleRow(index);
         };
-        
+
         $scope.removeSaleRow = function (index) {
             $scope.saleItems.splice(index, 1);
             $scope.updateSaleRate();
@@ -429,24 +429,29 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         };
 
         //Update Page Remove Sale Item
-        $scope.updateremoveSaleItem = function (index,sale_item_id) {
+        $scope.updateremoveSaleItem = function (index, sale_item_id) {
             if ($scope.saleItems.length == 1) {
                 alert('Can\'t Delete. Sale Item must be atleast one.');
                 return false;
             }
-            $http({
-                url: $rootScope.IRISOrgServiceUrl + "/pharmacysale/checkitemdelete",
-                method: "POST",
-                data: {id: sale_item_id}
-            }).then(
-                    function (response) {
-                        if (response.data.success === true) {
-                            $scope.removeSaleRow(index);
-                        } else {
-                            $scope.errorData = response.data.message;
+            if (sale_item_id)
+            {
+                $http({
+                    url: $rootScope.IRISOrgServiceUrl + "/pharmacysale/checkitemdelete",
+                    method: "POST",
+                    data: {id: sale_item_id}
+                }).then(
+                        function (response) {
+                            if (response.data.success === true) {
+                                $scope.removeSaleRow(index);
+                            } else {
+                                $scope.errorData = response.data.message;
+                            }
                         }
-                    }
-            )
+                )
+            } else {
+                $scope.removeSaleRow(index);
+            }
         }
 
         //Set cursor to first input box

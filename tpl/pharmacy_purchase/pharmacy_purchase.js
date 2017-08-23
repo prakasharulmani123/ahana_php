@@ -283,19 +283,25 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                 alert('Can\'t Delete. Purchase Item must be atleast one.');
                 return false;
             }
-            $http({
-                url: $rootScope.IRISOrgServiceUrl + "/pharmacypurchase/checkitemdelete",
-                method: "POST",
-                data: {id: purchase_item_id}
-            }).then(
-                    function (response) {
-                        if (response.data.success === true) {
-                            $scope.removePurchase(index);
-                        } else {
-                            $scope.errorData = response.data.message;
+            if (purchase_item_id)
+            {
+                $http({
+                    url: $rootScope.IRISOrgServiceUrl + "/pharmacypurchase/checkitemdelete",
+                    method: "POST",
+                    data: {id: purchase_item_id}
+                }).then(
+                        function (response) {
+                            if (response.data.success === true) {
+                                $scope.removePurchase(index);
+                            } else {
+                                $scope.errorData = response.data.message;
+                            }
                         }
-                    }
-            )
+                )
+            } else {
+                $scope.removePurchase(index);
+            }
+
         }
 
         //Editable Form Validation

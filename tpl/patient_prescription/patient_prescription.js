@@ -763,7 +763,9 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 }
 
                 _that.data.prescriptionItems[key].frequency = $scope.concatFrequency(prescriptionItem, _that.data.prescriptionItems[key].freqType);
-                qty_count = $scope.calculate_qty(_that.data.prescriptionItems[key].frequency, prescriptionItem.number_of_days, prescriptionItem.product_description_id, prescriptionItem.description_name);
+
+                //qty_count = $scope.calculate_qty(_that.data.prescriptionItems[key].frequency, prescriptionItem.number_of_days, prescriptionItem.product_description_id, prescriptionItem.description_name);
+                qty_count = prescriptionItem.qty;
                 _that.data.prescriptionItems[key].quantity = qty_count;
                 _that.data.prescriptionItems[key].total = $scope.calculate_price(qty_count, prescriptionItem.price);
                 _that.data.prescriptionItems[key].in_stock = (parseInt(prescriptionItem.available_quantity) > parseInt(qty_count));
@@ -787,7 +789,6 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             /* For print bill */
             $scope.data2 = _that.data;
             $scope.prescriptionItems2 = $scope.data.prescriptionItems;
-
             $scope.loadbar('show');
             $http({
                 method: method,
@@ -1496,7 +1497,13 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 //                            });
                         // });
                         angular.forEach($scope.prescriptionItems2, function (item, key) {
-                            item.total_qty = $scope.calculate_qty(item.frequency_name, item.number_of_days, item.product.product_description_id, item.product.description_name);
+                            if (item.quantity)
+                            {
+                                item.total_qty = item.quantity;
+                            } else
+                            {
+                                item.total_qty = $scope.calculate_qty(item.frequency_name, item.number_of_days, item.product.product_description_id, item.product.description_name);
+                            }
 
                         });
                         deferred.resolve();
