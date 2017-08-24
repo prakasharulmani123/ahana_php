@@ -68,7 +68,7 @@ class ChargepersubcategoryController extends ActiveController {
         $tenant_id = Yii::$app->user->identity->logged_tenant_id;
         foreach ($lists as $key => $list) {
             if($list->charge->tenant_id == $tenant_id)
-                $ret[$list->charge_type][$list->charge->charge_code_id][$list->charge_link_id] = array('id' => $list->sub_charge_id, 'amount' => $list->charge_amount);
+                $ret[$list->charge_type][$list->charge->charge_cat_type][$list->charge->charge_code_id][$list->charge_link_id] = array('id' => $list->sub_charge_id, 'amount' => $list->charge_amount);
         }
         return $ret;
     }
