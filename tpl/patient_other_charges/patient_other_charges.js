@@ -24,21 +24,42 @@ app.controller('BillingOtherChargeController', ['$rootScope', '$scope', '$timeou
                     $scope.encounter = response.model;
                     $scope.data = {};
                     $scope.data.formtype = 'add';
-                    $scope.data.charge_cat_id = '2'; // Allied charges primary id - co_room_charge_category
+                    //$scope.data.charge_cat_id = '2'; // Allied charges primary id - co_room_charge_category
                 }
             });
         }
 
+        $scope.category = function () {
+            $http({
+                url: $rootScope.IRISOrgServiceUrl + '/roomchargecategory/getcategory',
+                method: "GET"
+            }).then(
+                    function (response) {
+                        $scope.chargecategory = response.data.category;
+                    }
+            );
+        }
+
+        $scope.subCategorylist = function () {
+            $http({
+                url: $rootScope.IRISOrgServiceUrl + '/roomchargesubcategory/getcategory',
+                method: "GET"
+            }).then(
+                    function (response) {
+                        $scope.subCategory = response.data.subCategory;
+                        $scope.updateSubcategory();
+                    }
+            );
+        }
         $scope.initForm = function () {
-            $rootScope.commonService.GetChargeCategoryList('', '1', false, 'ALC', function (response) {
-                $scope.alliedCharges = response.categoryList;
-            });
+            $scope.category();
+            $scope.subCategorylist();
         }
 
         //Save Both Add & Update Data
         $scope.saveForm = function (mode) {
             _that = this;
-            
+
             $scope.errorData = "";
             $scope.msg.successMessage = "";
 
@@ -93,6 +114,8 @@ app.controller('BillingOtherChargeController', ['$rootScope', '$scope', '$timeou
                     function (response) {
                         $scope.loadbar('hide');
                         $scope.data = response;
+                        $scope.category();
+                        $scope.subCategorylist();
                         $scope.encounter = {encounter_id: response.encounter_id};
                     }
             ).error(function (data, status) {
@@ -102,6 +125,7 @@ app.controller('BillingOtherChargeController', ['$rootScope', '$scope', '$timeou
                 else
                     $scope.errorData = data.message;
             });
+            
         };
 
         //Delete
@@ -122,13 +146,32 @@ app.controller('BillingOtherChargeController', ['$rootScope', '$scope', '$timeou
                                     $scope.displayedCollection.splice(index, 1);
                                     $scope.loadPatNotesList();
                                     $scope.msg.successMessage = 'Patient Note Deleted Successfully';
-                                }
-                                else {
+                                } else {
                                     $scope.errorData = response.data.message;
                                 }
                             }
                     )
                 }
             }
+        };
+
+        $scope.updateSubcategory = function () {
+            $scope.availableSubcategory = [];
+            _that = this;
+            angular.forEach($scope.subCategory, function (value) {
+                if (_that.data.charge_cat_id == 'undefined' || _that.data.charge_cat_id == null)
+                {
+                    catId = data.charge_cat_id;
+                } else {
+                    catId = _that.data.charge_cat_id;
+                }
+                if (value.charge_cat_id == catId) {
+                    var obj = {
+                        value: value.charge_subcat_id,
+                        label: value.charge_subcat_name
+                    };
+                    $scope.availableSubcategory.push(obj);
+                }
+            });
         };
     }]);

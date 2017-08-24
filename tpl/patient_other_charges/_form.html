@@ -7,17 +7,29 @@
             </div>
         </div>
         <div class="line line-dashed b-b line-lg "></div>
-        
+
         <div class="form-group">
-            <label class="col-lg-3 control-label">Allied Charges *</label>
+            <label class="col-lg-3 control-label">Charge Category*</label>
             <div class="col-lg-6">
-                <select class="form-control" ng-model="data.charge_subcat_id" ng-options="alliedCharge.charge_subcat_id as alliedCharge.charge_subcat_name for alliedCharge in alliedCharges | orderBy: charge_subcat_name">
+                <select class="form-control" ng-model="data.charge_cat_id" ng-options="Category.value as Category.label for Category in chargecategory| orderBy: label" ng-change="updateSubcategory();">
+                    <option value="">Select Charge Category</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="line line-dashed b-b line-lg "></div>
+
+        <div class="form-group">
+            <label class="col-lg-3 control-label">Charge Subcategory*</label>
+            <div class="col-lg-6">
+                <select class="form-control" ng-model="data.charge_subcat_id" ng-options="subCategory.value as subCategory.label for subCategory in availableSubcategory| orderBy: charge_subcat_name">
                     <option value="">Select Charge Type</option>
                 </select>
             </div>
         </div>
+
         <div class="line line-dashed b-b line-lg "></div>
-        
+
         <div class="form-group">
             <label class="col-sm-3 control-label">Charge * </label>
             <div class="col-sm-9">
