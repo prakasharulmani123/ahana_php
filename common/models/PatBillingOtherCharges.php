@@ -42,7 +42,7 @@ class PatBillingOtherCharges extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['charge_cat_id', 'charge_subcat_id', 'charge_amount'], 'required'],
+            [['charge_cat_id', 'charge_subcat_id', 'charge_cat_id', 'charge_amount'], 'required'],
             [['tenant_id', 'encounter_id', 'patient_id', 'charge_cat_id', 'charge_subcat_id', 'created_by', 'modified_by'], 'integer'],
             [['charge_amount'], 'number'],
             [['status'], 'string'],

@@ -99,10 +99,18 @@ class RoomchargecategoryController extends ActiveController {
 
         if (isset($get['code']))
             $code = $get['code'];
-        
+
         $category = CoRoomChargeCategory::find()->where(['charge_cat_code' => $code])->one();
-        
+
         return ['categoryList' => CoRoomChargeCategory::getChargeListByCode($tenant, $status, $deleted, $code), 'category' => $category];
+    }
+
+    public function actionGetcategory() {
+        $category = CoRoomChargeCategory::find()->tenant()->orWhere(['charge_cat_code'=>'ALC'])->all();
+        foreach ($category as $value) {
+            $list[] = array('value' => $value['charge_cat_id'], 'label' => $value['charge_cat_name']);
+        }
+        return ['category' => $list];
     }
 
 }
