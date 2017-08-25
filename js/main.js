@@ -507,25 +507,25 @@ angular.module('app')
                 }
 
                 //Hot Keys
-                hotkeys.add({
-                    combo: 'f5',
-                    description: 'Create',
-                    allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
-                    callback: function (event) {
-                        $scope.$broadcast('HK_CREATE');
-                        event.preventDefault();
-                    }
-                });
-
-                hotkeys.add({
-                    combo: 'f6',
-                    description: 'Save',
-                    allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
-                    callback: function (event) {
-                        $scope.$broadcast('HK_SAVE');
-                        event.preventDefault();
-                    }
-                });
+//                hotkeys.add({
+//                    combo: 'f5',
+//                    description: 'Create',
+//                    allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
+//                    callback: function (event) {
+//                        $scope.$broadcast('HK_CREATE');
+//                        event.preventDefault();
+//                    }
+//                });
+//
+//                hotkeys.add({
+//                    combo: 'f6',
+//                    description: 'Save',
+//                    allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
+//                    callback: function (event) {
+//                        $scope.$broadcast('HK_SAVE');
+//                        event.preventDefault();
+//                    }
+//                });
 
 //                hotkeys.add({
 //                    combo: 'f7',
@@ -536,44 +536,44 @@ angular.module('app')
 //                    }
 //                });
 
-                hotkeys.add({
-                    combo: 'f8',
-                    description: 'Cancel',
-                    callback: function (event) {
-                        $scope.$broadcast('HK_CANCEL');
-                        event.preventDefault();
-                    }
-                });
-
-                hotkeys.add({
-                    combo: 'f9',
-                    description: 'List',
-                    allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
-                    callback: function (event) {
-                        $scope.$broadcast('HK_LIST');
-                        event.preventDefault();
-                    }
-                });
-
-                hotkeys.add({
-                    combo: 'f10',
-                    description: 'Print',
-                    allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
-                    callback: function (event) {
-                        $scope.$broadcast('HK_PRINT');
-                        event.preventDefault();
-                    }
-                });
-
-                hotkeys.add({
-                    combo: 'f11',
-                    description: 'View',
-                    allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
-                    callback: function (event) {
-                        $scope.$broadcast('HK_VIEW');
-                        event.preventDefault();
-                    }
-                });
+//                hotkeys.add({
+//                    combo: 'f8',
+//                    description: 'Cancel',
+//                    callback: function (event) {
+//                        $scope.$broadcast('HK_CANCEL');
+//                        event.preventDefault();
+//                    }
+//                });
+//
+//                hotkeys.add({
+//                    combo: 'f9',
+//                    description: 'List',
+//                    allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
+//                    callback: function (event) {
+//                        $scope.$broadcast('HK_LIST');
+//                        event.preventDefault();
+//                    }
+//                });
+//
+//                hotkeys.add({
+//                    combo: 'f10',
+//                    description: 'Print',
+//                    allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
+//                    callback: function (event) {
+//                        $scope.$broadcast('HK_PRINT');
+//                        event.preventDefault();
+//                    }
+//                });
+//
+//                hotkeys.add({
+//                    combo: 'f11',
+//                    description: 'View',
+//                    allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
+//                    callback: function (event) {
+//                        $scope.$broadcast('HK_VIEW');
+//                        event.preventDefault();
+//                    }
+//                });
 
 //                hotkeys.add({
 //                    combo: 'f12',
@@ -584,14 +584,14 @@ angular.module('app')
 //                    }
 //                });
 
-                hotkeys.add({
-                    combo: 's',
-                    description: 'Search',
-                    callback: function (event) {
-                        $scope.$broadcast('HK_SEARCH');
-                        event.preventDefault();
-                    }
-                });
+//                hotkeys.add({
+//                    combo: 's',
+//                    description: 'Search',
+//                    callback: function (event) {
+//                        $scope.$broadcast('HK_SEARCH');
+//                        event.preventDefault();
+//                    }
+//                });
 //
 //                hotkeys.add({
 //                    combo: 'ctrl+left',
@@ -609,14 +609,14 @@ angular.module('app')
 //                    }
 //                });
                 
-                 hotkeys.add({
-                    combo: 'ctrl+p',
-                    description: 'Save and Print',
-                    callback: function (event) {
-                        $scope.$broadcast('HK_SAVE_PRINT');
-                        event.preventDefault();
-                    }
-                });
+//                 hotkeys.add({
+//                    combo: 'ctrl+p',
+//                    description: 'Save and Print',
+//                    callback: function (event) {
+//                        $scope.$broadcast('HK_SAVE_PRINT');
+//                        event.preventDefault();
+//                    }
+//                });
 
                 $rootScope.$on('unauthorized', function () {
                     toaster.clear();

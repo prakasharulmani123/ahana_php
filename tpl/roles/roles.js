@@ -1,17 +1,43 @@
-app.controller('RolesController', ['$rootScope', '$scope', '$timeout', '$http', '$state', function ($rootScope, $scope, $timeout, $http, $state) {
+app.controller('RolesController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'hotkeys', function ($rootScope, $scope, $timeout, $http, $state, hotkeys) {
 
-
-        $scope.$on('HK_CREATE', function (e) {
-            $state.go('configuration.role_create');
-        });
-        $scope.$on('HK_SAVE', function (e) {
-            submitted = true;
-            $scope.saveForm($scope.data.formrole);
-            e.preventDefault();
-        });
-        $scope.$on('HK_SEARCH', function (e) {
-            $('#filter').focus();
-        });
+        // when you bind it to the controller's scope, it will automatically unbind
+        // the hotkey when the scope is destroyed (due to ng-if or something that changes the DOM)
+        hotkeys.bindTo($scope)
+                .add({
+                    combo: 's',
+                    description: 'Search',
+                    callback: function (e) {
+                        $('#filter').focus();
+                        e.preventDefault();
+                    }
+                })
+                .add({
+                    combo: 'f5',
+                    description: 'Create',
+                    allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
+                    callback: function () {
+                        $state.go('configuration.role_create');
+                    }
+                })
+                .add({
+                    combo: 'f6',
+                    description: 'Save',
+                    allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
+                    callback: function (e) {
+                        submitted = true;
+                        $scope.saveForm($scope.data.formrole);
+                        e.preventDefault();
+                    }
+                })
+                .add({
+                    combo: 'f9',
+                    description: 'List',
+                    allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
+                    callback: function (event) {
+                        $state.go('configuration.roles')
+                        event.preventDefault();
+                    }
+                });
 
         //For Form
         $scope.initForm = function () {
@@ -22,21 +48,21 @@ app.controller('RolesController', ['$rootScope', '$scope', '$timeout', '$http', 
 
         //Index Page
         $scope.loadRolesList = function () {
-        $scope.isLoading = true;
-        $scope.rowCollection = [];
+            $scope.isLoading = true;
+            $scope.rowCollection = [];
 
-        // Get data's from service
-        $http.get($rootScope.IRISOrgServiceUrl + '/role')
-                .success(function (roles) {
-                    $scope.isLoading = false;
-                    $scope.rowCollection = roles;
+            // Get data's from service
+            $http.get($rootScope.IRISOrgServiceUrl + '/role')
+                    .success(function (roles) {
+                        $scope.isLoading = false;
+                        $scope.rowCollection = roles;
 
-                    //Avoid pagination problem, when come from other pages.
-                    $scope.footable_redraw();
-                })
-                .error(function () {
-                    $scope.errorData = "An Error has occured while loading roles!";
-                });
+                        //Avoid pagination problem, when come from other pages.
+                        $scope.footable_redraw();
+                    })
+                    .error(function () {
+                        $scope.errorData = "An Error has occured while loading roles!";
+                    });
         };
 
         //Save Both Add & Update Data
@@ -67,16 +93,14 @@ app.controller('RolesController', ['$rootScope', '$scope', '$timeout', '$http', 
                                 $timeout(function () {
                                     $state.go('configuration.roles');
                                 }, 1000)
-                            }
-                            else {
+                            } else {
                                 $scope.msg.successMessage = "Role saved successfully";
                                 $timeout(function () {
                                     $scope.data = {};
                                     $state.go('configuration.roles');
                                 }, 1000)
                             }
-                        }
-                        else {
+                        } else {
                             $scope.errorData = response.data.message;
                         }
                     }
@@ -94,8 +118,7 @@ app.controller('RolesController', ['$rootScope', '$scope', '$timeout', '$http', 
                     function (response) {
                         if (response.data.success === true) {
                             $scope.data = response.data.return;
-                        }
-                        else {
+                        } else {
                             $scope.errorData = response.data.message;
                         }
                     }
@@ -120,8 +143,7 @@ app.controller('RolesController', ['$rootScope', '$scope', '$timeout', '$http', 
                                     $scope.msg.successMessage = row.description + " deleted successfully";
                                     $scope.rowCollection.splice(index, 1);
                                     $scope.loadRolesList();
-                                }
-                                else {
+                                } else {
                                     $scope.errorData = response.data.message;
                                 }
                             }
