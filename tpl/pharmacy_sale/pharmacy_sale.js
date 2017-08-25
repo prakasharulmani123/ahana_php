@@ -78,8 +78,67 @@ function capitalise(string) {
 
 window.toWords = toWords;
 
-app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$anchorScroll', '$filter', '$timeout', '$modal', '$location', '$q', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $anchorScroll, $filter, $timeout, $modal, $location, $q) {
+app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$anchorScroll', '$filter', '$timeout', '$modal', '$location', '$q', 'hotkeys', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $anchorScroll, $filter, $timeout, $modal, $location, $q, hotkeys) {
 
+        hotkeys.bindTo($scope)
+                .add({
+                    combo: 'f5',
+                    description: 'Create',
+                    allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
+                    callback: function () {
+                        $state.go('pharmacy.saleCreate', {}, {reload: true});
+                    }
+                })
+                .add({
+                    combo: 'f8',
+                    description: 'Cancel',
+                    callback: function (e) {
+                        if (confirm('Are you sure want to leave?')) {
+                            $state.go('pharmacy.sales', {}, {reload: true});
+                            e.preventDefault();
+                        }
+                    }
+                })
+                .add({
+                    combo: 'f6',
+                    description: 'Save',
+                    allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
+                    callback: function (e) {
+                        submitted = true;
+                        $timeout(function () {
+                            angular.element("#save_print").trigger('click');
+                        }, 100);
+                        e.preventDefault();
+                    }
+                })
+                .add({
+                    combo: 'ctrl+p',
+                    description: 'Save and Print',
+                    callback: function (e) {
+                        submitted = true;
+                        $timeout(function () {
+                            angular.element("#save_print").trigger('click');
+                        }, 100);
+                        e.preventDefault();
+                    }
+                })
+                .add({
+                    combo: 's',
+                    description: 'Search',
+                    callback: function (e) {
+                        $('#filter').focus();
+                        e.preventDefault();
+                    }
+                })
+                .add({
+                    combo: 'f9',
+                    description: 'List',
+                    allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
+                    callback: function (event) {
+                        $state.go('pharmacy.sales')
+                        event.preventDefault();
+                    }
+                });
         editableThemes.bs3.inputClass = 'input-sm';
         editableThemes.bs3.buttonsClass = 'btn-sm';
         editableOptions.theme = 'bs3';
@@ -88,52 +147,6 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         $scope.show_consultant_loader = false;
         $scope.show_encounter_loader = false;
         $scope.show_group_loader = false;
-
-        $scope.$on('HK_CREATE', function (e) {
-            if ($location.path() == '/pharmacy/sales') {
-                $scope.loadbar('show');
-                $state.go('pharmacy.saleCreate', {}, {reload: true});
-            }
-        });
-
-        $scope.$on('HK_CANCEL', function (e) {
-            if (confirm('Are you sure want to leave?')) {
-                $scope.loadbar('show');
-                $state.go('pharmacy.sales');
-            }
-        });
-
-        $scope.$on('HK_SAVE', function (e) {
-            var location_url = $location.path().split('/');
-            var url = location_url[1] + '/' + location_url[2];
-            var allowedPages = $.inArray(url, ['pharmacy/saleCreate', 'pharmacy/saleUpdate']) > -1;
-            if (allowedPages) {
-                $timeout(function () {
-                    angular.element("#save").trigger('click');
-                }, 100);
-            }
-            e.preventDefault();
-        });
-
-        $scope.$on('HK_PRINT', function (e) {
-            var location_url = $location.path().split('/');
-            var url = location_url[1] + '/' + location_url[2];
-            var allowedPages = $.inArray(url, ['pharmacy/saleCreate', 'pharmacy/saleUpdate']) > -1;
-            if (allowedPages) {
-                $timeout(function () {
-                    angular.element("#save_print").trigger('click');
-                }, 100);
-            }
-            e.preventDefault();
-        });
-
-        $scope.$on('HK_LIST', function (e) {
-            $state.go('pharmacy.sales');
-        });
-
-        $scope.$on('HK_SEARCH', function (e) {
-            $('#filter').focus();
-        });
 
         //Expand table in Index page
         $scope.ctrl = {};

@@ -1,30 +1,45 @@
-app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$modal', '$log', '$filter', '$location', '$localStorage', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', function ($rootScope, $scope, $timeout, $http, $state, $modal, $log, $filter, $location, $localStorage, DTOptionsBuilder, DTColumnBuilder, $compile) {
+app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$modal', '$log', '$filter', '$location', '$localStorage', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', 'hotkeys', function ($rootScope, $scope, $timeout, $http, $state, $modal, $log, $filter, $location, $localStorage, DTOptionsBuilder, DTColumnBuilder, $compile, hotkeys) {
 
-        $scope.$on('HK_CREATE', function (e) {
-            if ($location.path() == '/pharmacy/products') {
-                $state.go('pharmacy.productAdd');
-            }
-        });
-
-        $scope.$on('HK_SAVE', function (e) {
-            var location_url = $location.path().split('/');
-            var url = location_url[1] + '/' + location_url[2];
-            var allowedPages = $.inArray(url, ['pharmacy/productAdd', 'pharmacy/productEdit']) > -1;
-            if (allowedPages) {
-                $timeout(function () {
-                    angular.element("#save").trigger('click');
-                }, 100);
-            }
-            e.preventDefault();
-        });
-
-        $scope.$on('HK_LIST', function (e) {
-            $state.go('pharmacy.products');
-        });
-
-        $scope.$on('HK_SEARCH', function (e) {
-            $('#filter').focus();
-        });
+        hotkeys.bindTo($scope)
+                .add({
+                    combo: 'f5',
+                    description: 'Create',
+                    allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
+                    callback: function () {
+                        $state.go('pharmacy.productAdd', {}, {reload: true});
+                    }
+                })
+                .add({
+                    combo: 'f8',
+                    description: 'Cancel',
+                    callback: function (e) {
+                        if (confirm('Are you sure want to leave?')) {
+                            $state.go('pharmacy.products', {}, {reload: true});
+                            e.preventDefault();
+                        }
+                    }
+                })
+                .add({
+                    combo: 'f6',
+                    description: 'Save',
+                    allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
+                    callback: function (e) {
+                        submitted = true;
+                        $timeout(function () {
+                            angular.element("#save").trigger('click');
+                        }, 100);
+                        e.preventDefault();
+                    }
+                })
+                .add({
+                    combo: 'f9',
+                    description: 'List',
+                    allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
+                    callback: function (event) {
+                        $state.go('pharmacy.products')
+                        event.preventDefault();
+                    }
+                });
 
         var vm = this;
         var token = $localStorage.user.access_token;
@@ -135,11 +150,11 @@ app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http
             $rootScope.commonService.GetSupplierList('', '1', false, function (response) {
                 $scope.suppliers = response.supplierList;
             });
-            
+
             $rootScope.commonService.GetHsnCode('1', false, function (response) {
                 $scope.hsncode = response.hsncodeList;
             });
-            
+
 
             if ($scope.data.formtype == 'add') {
                 $scope.data.product_reorder_min = 0;

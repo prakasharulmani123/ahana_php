@@ -1,5 +1,36 @@
-app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll', '$http', '$state', '$filter', '$modal', '$location', '$log', '$timeout', 'IO_BARCODE_TYPES', 'toaster', 'PrescriptionService', '$q', function ($rootScope, $scope, $anchorScroll, $http, $state, $filter, $modal, $location, $log, $timeout, IO_BARCODE_TYPES, toaster, PrescriptionService, $q) {
+app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll', '$http', '$state', '$filter', '$modal', '$location', '$log', '$timeout', 'IO_BARCODE_TYPES', 'toaster', 'PrescriptionService', '$q', 'hotkeys', function ($rootScope, $scope, $anchorScroll, $http, $state, $filter, $modal, $location, $log, $timeout, IO_BARCODE_TYPES, toaster, PrescriptionService, $q, hotkeys) {
 
+        hotkeys.bindTo($scope)
+                .add({
+                    combo: 'f6',
+                    description: 'Save',
+                    callback: function (e) {
+                        submitted = true;
+                        angular.element("#save").trigger('click');
+                        e.preventDefault();
+                    }
+                })
+                .add({
+                    combo: 'ctrl+p',
+                    description: 'Save and Print',
+                    callback: function (e) {
+                        submitted = true;
+                        $timeout(function () {
+                            angular.element("#save_print").trigger('click');
+                        }, 100);
+                        e.preventDefault();
+                    }
+                })
+                .add({
+                    combo: 'f8',
+                    description: 'Cancel',
+                    callback: function (e) {
+                        $timeout(function () {
+                            angular.element("#clear").trigger('click');
+                        }, 100);
+                        e.preventDefault();
+                    }
+                })
         $scope.app.settings.patientTopBar = true;
         $scope.app.settings.patientSideMenu = true;
         $scope.app.settings.patientContentClass = 'app-content patient_content ';
@@ -12,43 +43,6 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.drugs = {};
         $scope.routes = {};
         $scope.frequencies = {};
-        //Stop Init
-
-        $scope.$on('HK_SAVE_PRINT', function (e) {
-            var location_url = $location.path().split('/');
-            var url = location_url[1] + '/' + location_url[2];
-            var allowedPages = $.inArray(url, ['patient/prescription']) > -1;
-            if (allowedPages) {
-                $timeout(function () {
-                    angular.element("#save_print").trigger('click');
-                }, 100);
-            }
-            e.preventDefault();
-        });
-
-        $scope.$on('HK_SAVE', function (e) {
-            var location_url = $location.path().split('/');
-            var url = location_url[1] + '/' + location_url[2];
-            var allowedPages = $.inArray(url, ['patient/prescription']) > -1;
-            if (allowedPages) {
-                $timeout(function () {
-                    angular.element("#save").trigger('click');
-                }, 100);
-            }
-            e.preventDefault();
-        });
-
-        $scope.$on('HK_CANCEL', function (e) {
-            var location_url = $location.path().split('/');
-            var url = location_url[1] + '/' + location_url[2];
-            var allowedPages = $.inArray(url, ['patient/prescription']) > -1;
-            if (allowedPages) {
-                $timeout(function () {
-                    angular.element("#clear").trigger('click');
-                }, 100);
-            }
-            e.preventDefault();
-        });
 
         //Start Watch Functions
         $scope.$watch('patientObj.patient_id', function (newValue, oldValue) {
