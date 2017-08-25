@@ -135,7 +135,12 @@ class PatientdocumentsController extends ActiveController {
                     $field_name = str_replace("[]", "", $value['name']);
                     $post[$field_name][] = str_replace("&nbsp;", "&#160;", $value['value']);
                 } else {
-                    $post[$value['name']] = str_replace(["&nbsp;", " & "], ["&#160;", "&amp;"], $value['value']);
+                    if($value['name'] != 'history_presenting_illness') {
+                        $post[$value['name']] = str_replace(["&nbsp;", "&"], ["&#160;", "&amp;"], $value['value']);
+                    }
+                    else {
+                        $post[$value['name']] = $value['value'];
+                    }
                 }
             } else {
                 $post[$value['name']] = '';
