@@ -156,4 +156,18 @@ class PatientvitalsController extends ActiveController {
         return ['success' => true];
     }
 
+    public function actionBulkinsert() {
+        $post = Yii::$app->request->post();
+        if (!empty($post)) {
+            foreach ($post['patientdata'] as $value) {
+                $model = new PatVitals();
+                $model->attributes = $post;
+                $model->encounter_id = $value['encounter_id'];
+                $model->patient_id = $value['patient_id'];
+                $model->save(false);
+            }
+            return ['success' => true];
+        }
+    }
+
 }

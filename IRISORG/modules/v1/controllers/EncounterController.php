@@ -597,8 +597,8 @@ class EncounterController extends ActiveController {
         $encounter_type = 'IP,OP';
         if (isset($GET['encounter_type']))
             $encounter_type = $GET['encounter_type'];
-        
-        $oldencounter='';
+
+        $oldencounter = '';
         if (isset($GET['old_encounter']))
             $oldencounter = $GET['old_encounter'];
 
@@ -846,6 +846,21 @@ class EncounterController extends ActiveController {
         } else {
             return ['success' => false, 'message' => 'Please enter notes'];
         }
+    }
+
+    public function actionPatientlist() {
+        $GET = Yii::$app->getRequest()->get();
+        $model = PatEncounter::find()
+                ->tenant()
+                ->status()
+                ->encounterType($GET['type']);
+        if ($GET['type'] == 'OP') {
+            $model->andFilterWhere(['DATE(encounter_date)' => date('Y-m-d')]);
+        }
+        $patient = $model->orderBy([
+                    'encounter_date' => SORT_DESC,
+                ])->all();
+        return $patient;
     }
 
 }
