@@ -60,10 +60,18 @@ class AuditlogController extends ActiveController {
 
     public function actionGetreport() {
         $records = CoAuditLog::find()
-                ->tenant()
-                ->andwhere(["Date(created_at)" => $_REQUEST['date']]);
-        if (isset($_REQUEST['user_id']) && !empty($_REQUEST['user_id'])) {
+                ->tenant();
+        if ($_REQUEST['date'] != 'Invalid date') {
+            $records->andwhere(["Date(created_at)" => $_REQUEST['date']]);
+        }
+        if (isset($_REQUEST['user_id']) && !empty($_REQUEST['user_id']) && $_REQUEST['user_id']!='null') {
             $records->andFilterWhere(["=", "user_id", $_REQUEST['user_id']]);
+        }
+        if (isset($_REQUEST['form_filter']) && !empty($_REQUEST['form_filter'])) {
+            $records->andFilterWhere(["like", "action", $_REQUEST['form_filter']]);
+        }
+        if ($_REQUEST['date'] == 'Invalid date') {
+            $records->limit(1000);
         }
         $logs = $records->orderBy(['created_at' => SORT_DESC])
                 ->all();
