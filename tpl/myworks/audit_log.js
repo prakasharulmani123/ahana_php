@@ -11,7 +11,7 @@ app.controller('AuditController', ['$rootScope', '$scope', '$timeout', '$http', 
                         $scope.users = response.data.userList;
                     }
             );
-            
+
             $scope.report_menu = false;
             $scope.log_status = 'grid';
             $scope.date = '';
@@ -65,6 +65,9 @@ app.controller('AuditController', ['$rootScope', '$scope', '$timeout', '$http', 
             if (typeof $scope.user_id != 'undefined' && $scope.user_id != '') {
                 pageURL += '&user_id=' + $scope.user_id;
             }
+            if (typeof $scope.form_filter != 'undefined' && $scope.form_filter != '') {
+                pageURL += '&form_filter=' + $scope.form_filter;
+            }
             $http.get(pageURL)
                     .success(function (log) {
                         $scope.isLoading = false;
@@ -82,10 +85,21 @@ app.controller('AuditController', ['$rootScope', '$scope', '$timeout', '$http', 
             $scope.log_status = 'grid';
             $scope.date = '';
             $scope.user_id = '';
+            $scope.form_filter = '';
             $scope.getAuditlist();
         };
 
         $scope.$watch('date', function (newValue, oldValue) {
+            if (newValue != '' && typeof newValue != 'undefined') {
+                $scope.report_menu = true;
+            }
+        }, true);
+        $scope.$watch('form_filter', function (newValue, oldValue) {
+            if (newValue != '' && typeof newValue != 'undefined') {
+                $scope.report_menu = true;
+            }
+        }, true);
+        $scope.$watch('user_id', function (newValue, oldValue) {
             if (newValue != '' && typeof newValue != 'undefined') {
                 $scope.report_menu = true;
             }

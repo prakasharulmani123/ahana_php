@@ -8,6 +8,17 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="panel panel-default">
+                    <div class="panel-body p-b">
+                        <div class="form-group">
+                            <ul>
+                                <li>If Date not selected, report will be generated only for recent 1000 activity.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="panel panel-default">
                     <div class="panel-heading">
 
                     </div>
@@ -24,6 +35,7 @@
                                 <select class="selectpicker" data-live-search="true" ng-model="user_id" ng-options="user.user_id as user.fullname for user in users| orderBy: name">
                                     <option value="">Select User</option>
                                 </select>
+                                <input id="filter" type="text" placeholder="Search" class="form-control input-sm w-sm inline" ng-model="form_filter"/>
                                 <button ng-show="report_menu" ng-click="getReport()" class="btn btn-sm btn-info">
                                     Get Report
                                 </button>
