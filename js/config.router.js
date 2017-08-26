@@ -460,6 +460,83 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
+
+            //Shortcut for myworks other charges
+            .state('myworks.addother_charges', {
+                url: '/addother_charges',
+                templateUrl: 'tpl/myshortcut/otherCharges.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('xeditable').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/myshortcut/otherCharges.js?v=' + APP_VERSION);
+                                    }
+                            );
+                        }]
+                }
+            })
+            //Shortcut for myworks consultation visit
+            .state('myworks.addconsultation_visit', {
+                url: '/addconsultation_visit',
+                templateUrl: 'tpl/myshortcut/addConsultation_visit.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('xeditable').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/myshortcut/addConsultation_visit.js?v=' + APP_VERSION);
+                                    }
+                            );
+                        }]
+                }
+            })
+            //Shortcut for myworks procedure
+            .state('myworks.addprocedure', {
+                url: '/addprocedure',
+                templateUrl: 'tpl/myshortcut/addProcedure.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table', 'ui.select']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/myshortcut/addProcedure.js?v=' + APP_VERSION);
+                                    }
+                            );
+                        }]
+                }
+            })
+            //Shortcut for myworks notes
+            .state('myworks.addnotes', {
+                url: '/addnotes',
+                templateUrl: 'tpl/myshortcut/addNote.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('xeditable').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/myshortcut/addNote.js?v=' + APP_VERSION);
+                                    }
+                            );
+                        }]
+                }
+            })
+            //Shortcut for myworks notes
+            .state('myworks.addvitals', {
+                url: '/addvitals',
+                templateUrl: 'tpl/myshortcut/addVital.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('xeditable').then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/myshortcut/addVital.js?v=' + APP_VERSION);
+                                    }
+                            );
+                        }]
+                }
+            })
+
             //CONFIGURATION PROCEDURE CHARGE
             .state('configuration.procedure', {
                 url: '/procedure',
