@@ -677,6 +677,7 @@
 
 <script>
     $(document).ready(function () {
+        var site_url = $('[ng-controller="PrescriptionController"]').scope().IRISOrgUrl;
         $('#search-form').on('click', function (e) {
             e.stopPropagation();
         });
@@ -692,6 +693,9 @@
             $('#sb-site').css('transition', 'none');
         });
         $(".multimonthdatepicker").datepicker({
+            showOn: "button",
+            buttonImage: site_url + "/img/calendar.gif",
+            buttonText: "Select date",
             numberOfMonths: 2,
             showButtonPanel: true,
             dateFormat: 'yy-mm-dd',
