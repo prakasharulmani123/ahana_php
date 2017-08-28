@@ -6,7 +6,7 @@
                 <div class="col-sm-3 m-b-xs">  
                     <h1 class="m-n h3">Prescription</h1>                    
                 </div>
-                <div class="col-sm-5 m-b-xs">  
+                <div class="col-sm-6 col-sm-offset-3 m-b-xs">  
                     <table>
                         <tbody>
                             <tr>
@@ -20,13 +20,22 @@
                         </tbody>
                     </table>               
                 </div>
-                <div class="col-sm-4 m-b-xs pull-right right" ng-if="all_encounters.length > 1">
-                    <b> Encounter ID : </b>&nbsp;&nbsp;&nbsp;
-                    <select style="width: 50%" class="form-control pull-right" ng-model="data.encounter_id" ng-options="all_encounter.encounter_id as all_encounter.encounter_id for all_encounter in all_encounters| orderBy: encounter_id">
+            </div>
+            <div class="wrapper-md presc-heading presc-sub-heading">
+                <div class="col-sm-6 m-b-xs" ng-if="all_encounters.length > 1">
+                    <b style="float: left; margin-right: 10px"> Encounter ID : </b>
+                    <select style="width: 20%; float: left; margin-right: 10px" class="form-control" ng-model="data.encounter_id" ng-options="all_encounter.encounter_id as all_encounter.encounter_id for all_encounter in all_encounters| orderBy: encounter_id">
                     </select>
+                    <b style="float: left;"> Date : </b> {{enc.selected.encounter_date}}
                 </div>
-                <div class="col-sm-4 m-b-xs pull-right right" ng-if="all_encounters.length == 1">
-                    <b> Encounter ID : </b> {{enc.selected.encounter_id}} <b> Encounter Date : </b> {{enc.selected.encounter_date}}
+                <div class="col-sm-6 m-b-xs" ng-if="all_encounters.length == 1">
+                    <b> Encounter ID : </b> {{enc.selected.encounter_id}} 
+                    <b> Date : </b> {{enc.selected.encounter_date}}
+                </div>
+                <div class="col-sm-6 pull-right">
+                    <select class="form-control" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors| orderBy: name" ng-change="getConsultantFreq()">
+                        <option value="">Select Consultant</option>
+                    </select>
                 </div>
             </div>
             <div class="wrapper-md p-b">
@@ -158,11 +167,7 @@
                                         <!-- Advance Search END-->
                                     </div>
                                 </div>
-                                <div class="col-sm-4">
-                                    <select class="form-control" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors| orderBy: name" ng-change="getConsultantFreq()">
-                                        <option value="">Select Consultant</option>
-                                    </select>
-                                </div>
+
                             </div>
                             <form editable-form name="tableform" name="prescForm" class="form-horizontal form-validation curPresForm" novalidate="" shown="true" onaftersave="saveForm()">
                                 <div class="table-responsive">
@@ -515,7 +520,7 @@
                                 <footer class="panel-footer">
                                     <div class="row">
                                         <div class="table-responsive">
-                                            <div class="text-center" style="color:#a94442" ng-if="duplicateErrormessage!=''">{{duplicateErrormessage}}</div>
+                                            <div class="text-center" style="color:#a94442" ng-if="duplicateErrormessage != ''">{{duplicateErrormessage}}</div>
                                             <table class="table noborder">
                                                 <tr>
                                                     <td width="785"  align="left">

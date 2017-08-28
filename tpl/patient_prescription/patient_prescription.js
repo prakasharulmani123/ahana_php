@@ -1093,7 +1093,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                                             'drug_name': item.drug_name,
                                                             'route': item.route_name,
                                                             'frequency': item.frequency_name,
-                                                            'number_of_days': item.number_of_days,
+                                                            'number_of_days': 0,
                                                             'is_favourite': 0,
                                                             'route_id': item.route_id,
                                                             'description_routes': item.product.description_routes,

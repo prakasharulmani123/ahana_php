@@ -543,6 +543,11 @@ out-patient-table .table > thead > tr > th label.i-checks {
     margin-bottom: 15px;
 }
 
+.presc-sub-heading {
+    margin-bottom: 0px;
+    padding-top: 0px;
+}
+
 .w-100 {
     width: 100px !important;
 }
@@ -628,6 +633,17 @@ ul.dropdown-menu.curPrescFreq > li > a, .dropdown-submenu > ul > li > a {
 .freq_3_times > span, .freq_3_times_adv_form input {
     width: 33.33% !important;
     float: left;
+}
+
+.freq_3_times_adv_form1 input {
+    width: 28.33% !important;
+    float: left;
+}
+
+.freq_3_times_adv_form1 .dropdown-toggle{
+    background: none;
+    border: none;
+    box-shadow: none;
 }
 
 .freq_4_times > span{
