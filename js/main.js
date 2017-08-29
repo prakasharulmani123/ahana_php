@@ -482,7 +482,6 @@ angular.module('app')
                                 $scope.child.vitals.splice($scope.child.vitals.indexOf(vital_exists[0]), 1);
                             }
                         }
-                        console.log(response);
                         $scope.child.vitals.push(response);
 
                         $scope.loadbar('hide');
