@@ -15,6 +15,7 @@ use common\models\PatPatientCasesheet;
 use common\models\PatPrescriptionFrequency;
 use common\models\PatPrescriptionRoute;
 use common\models\PatTimeline;
+use common\models\PatEncounter;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -706,6 +707,42 @@ class PatientController extends ActiveController {
         $connection->close();
 
         return $merge_details;
+    }
+
+    public function actionGetpreviousnextpatient() {
+        $post = Yii::$app->getRequest()->post();
+        $next = '';
+        $prev = '';
+        $allencounterlist = '';
+        $model = PatEncounter::find()->tenant()->status();
+        if ($post['encounter_type'] == 'IP') {
+            $model->joinWith(['patient'])
+                    ->andWhere(['encounter_type' => $post['encounter_type']])
+                    ->orderBy(['encounter_date' => SORT_DESC]);
+        }
+        if ($post['encounter_type'] == 'OP') {
+            $model->joinWith(['patient', 'patAppointments'])
+                    ->andFilterWhere(['DATE(encounter_date)' => date('Y-m-d')])
+                    ->orderBy(['pat_appointment.appt_status' => SORT_ASC,
+                        'pat_appointment.status_time' => SORT_ASC,]);
+        }
+
+        $encounter = $model->all();
+
+        if (count($encounter) != 1) {
+            foreach ($encounter as $index => $enc) {
+                if ($enc['patient']['patient_guid'] == $post['guid'])
+                    $location_array = $index;
+            }
+            if ($location_array < (count($encounter) - 1)) {
+                $next = $encounter[$location_array + 1]['patient']['patient_guid'];
+            }
+            if (($location_array != 0)) {
+                $prev = $encounter[$location_array - 1]['patient']['patient_guid'];
+            }
+            $allencounterlist = $encounter;
+        }
+        return ['next' => $next, 'prev' => $prev, 'allencounterlist' => $allencounterlist];
     }
 
 }
