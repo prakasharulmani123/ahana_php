@@ -121,6 +121,9 @@ class PatVitals extends RActiveRecord {
             'encounter_status' => function ($model) {
                 return $model->encounter->isActiveEncounter();
             },
+            'created_date' => function ($model) {
+                return date('Y-m-d', strtotime($model->created_at));
+            },
         ];
 
         $parent_fields = parent::fields();
@@ -139,9 +142,10 @@ class PatVitals extends RActiveRecord {
                         'blood_pressure_diastolic' => 'blood_pressure_diastolic',
                         'pulse_rate' => 'pulse_rate',
                         'weight' => 'weight',
-                        'status' => 'status'
+                        'status' => 'status',
+                        'created_at' => 'created_at',
                     ];
-                    $addt_keys = ['encounter_status'];
+                    $addt_keys = ['encounter_status','created_date'];
                     break;
             endswitch;
         }
