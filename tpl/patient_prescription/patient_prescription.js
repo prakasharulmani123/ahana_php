@@ -1079,6 +1079,10 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                         if (typeof date == 'undefined') {
                                             var typed_prescription = PrescriptionService.getPrescriptionItems();
                                             if (typed_prescription.length > 0) {
+                                                angular.forEach(typed_prescription, function (item){
+                                                    item.number_of_days = 0;
+                                                    item.qty = 0;
+                                                });
                                                 $scope.data.prescriptionItems = typed_prescription;
                                             } else {
                                                 var loop_total = $scope.rowCollection[0].items.length;
