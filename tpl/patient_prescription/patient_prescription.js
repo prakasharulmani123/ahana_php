@@ -110,6 +110,13 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             return total;
         }
 
+        $scope.checkTextboxAction = function (days, item, key, tableform) {
+            if ((typeof days != '') && (days != 0)) {
+                $scope.data.prescriptionItems[key].manual_textbox = true;
+            } else
+                $scope.data.prescriptionItems[key].manual_textbox = false;
+        }
+
         $scope.numberDaysChange = function (days, item, key, tableform) {
             if (typeof days != 'undefined') {
 //                $scope.data.prescriptionItems[key].frequency = $('#freq_' + key + '_' + item.freqType + ' input').val();
@@ -427,6 +434,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                             'generic_name': $scope.addData.generic.generic_name,
                             'drug_class_id': $scope.addData.drug_class.drug_class_id,
                             'drug_name': $scope.addData.drug_class.drug_name,
+                            'manual_textbox': false,
                             'route_id': $scope.addData.route.route_id,
                             'route': $scope.addData.route.route_name,
                             'frequency': $scope.addData.frequency,
@@ -491,6 +499,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                 'generic_name': value.generic_name,
                                 'drug_class_id': value.drug_class_id,
                                 'drug_name': value.drug_name,
+                                'manual_textbox': false,
                                 'route': value.route_name,
                                 'frequency': value.frequency_name,
                                 'number_of_days': no_of_days,
@@ -576,6 +585,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                         'generic_name': prescription.generic_name,
                                         'drug_class_id': prescription.drug_class_id,
                                         'drug_name': prescription.drug_name,
+                                        'manual_textbox': false,
                                         'route': route,
                                         'frequency': prescription.frequency,
                                         'number_of_days': no_of_days,
@@ -680,6 +690,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         'generic_name': args.generic_name,
                         'drug_class_id': args.drug_class_id,
                         'drug_name': args.drug_name,
+                        'manual_textbox': false,
                         'route_id': '',
                         'route': '',
                         'frequency': '',
@@ -897,9 +908,11 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                             $scope.data.number_of_days = response.days;
                             //Update all the No.of Days column in prescription form 
                             angular.forEach($scope.data.prescriptionItems, function (item, key) {
-                                if (!item.number_of_days || item.number_of_days == '0') {
-                                    $scope.numberDaysChange(response.days, item, key, $scope.tableform);
-                                }
+//                                if (!item.number_of_days || item.number_of_days == '0') {
+//                                    $scope.numberDaysChange(response.days, item, key, $scope.tableform);
+//                                }
+                                if (!item.manual_textbox)
+                                    $scope.numberDaysChange(newValue, item, key, $scope.tableform);
                             });
                         }
                 );
@@ -925,9 +938,11 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
                 //Update all the No.of Days column in prescription form 
                 angular.forEach($scope.data.prescriptionItems, function (item, key) {
-                    if (!item.number_of_days || item.number_of_days == '0') {
+//                    if (!item.number_of_days || item.number_of_days == '0') {
+//                        $scope.numberDaysChange(newValue, item, key, $scope.tableform);
+//                    }
+                    if (!item.manual_textbox)
                         $scope.numberDaysChange(newValue, item, key, $scope.tableform);
-                    }
                 });
             }
         }
@@ -1080,7 +1095,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                         if (typeof date == 'undefined') {
                                             var typed_prescription = PrescriptionService.getPrescriptionItems();
                                             if (typed_prescription.length > 0) {
-                                                angular.forEach(typed_prescription, function (item){
+                                                angular.forEach(typed_prescription, function (item) {
                                                     item.number_of_days = 0;
                                                     item.qty = 0;
                                                 });
@@ -1098,6 +1113,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                                             'generic_name': item.generic_name,
                                                             'drug_class_id': item.drug_class_id,
                                                             'drug_name': item.drug_name,
+                                                            'manual_textbox': false,
                                                             'route': item.route_name,
                                                             'frequency': item.frequency_name,
                                                             'number_of_days': 0,
