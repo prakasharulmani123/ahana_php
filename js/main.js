@@ -470,6 +470,7 @@ angular.module('app')
                     }).success(function (response) {
                         $scope.presc_right.vitaldata = {};
                         angular.extend(response, {
+                            created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
                             created_date: moment().format('YYYY-MM-DD'),
                         });
 
@@ -481,7 +482,7 @@ angular.module('app')
                                 $scope.child.vitals.splice($scope.child.vitals.indexOf(vital_exists[0]), 1);
                             }
                         }
-
+                        console.log(response);
                         $scope.child.vitals.push(response);
 
                         $scope.loadbar('hide');
