@@ -202,6 +202,14 @@ angular.module('app')
                                         $scope.msg.errorMessage = "An Error has occured while loading patient!";
                                     } else {
                                         $scope.patientObj = patient;
+                                        if ($scope.patientObj.have_encounter) {
+                                            $http.post($rootScope.IRISOrgServiceUrl + '/patient/getpreviousnextpatient?addtfields=shortcut', {guid: $state.params.id, encounter_type: patient.encounter_type})
+                                                    .success(function (patientlist) {
+                                                        $scope.patientObj.nextPatient = patientlist.next;
+                                                        $scope.patientObj.prevPatient = patientlist.prev;
+                                                        $scope.patientObj.allEncounter = patientlist.allencounterlist;
+                                                    })
+                                        }
                                         $rootScope.currentPage = patient.encounter_type;
                                         $scope.setPatientAleratHtml(patient);
 
@@ -375,12 +383,12 @@ angular.module('app')
                     today = makeYMD(today);
                     yesterday = makeYMD(yesterday);
 
-                    if (today ==  checkdate) {
+                    if (today == checkdate) {
                         return "Today";
-                    } else if (yesterday ==  checkdate) {
+                    } else if (yesterday == checkdate) {
                         return "Yesterday";
                     } else {
-                        return spandate.getDate() + '/' + (spandate.getMonth() + 1) + '/' +  spandate.getFullYear();
+                        return spandate.getDate() + '/' + (spandate.getMonth() + 1) + '/' + spandate.getFullYear();
                     }
                 }
 
@@ -440,7 +448,7 @@ angular.module('app')
                     angular.extend($scope.presc_right.vitaldata, {
                         patient_id: $scope.patientObj.patient_id,
                         encounter_id: $scope.encounter_id,
-                        vital_time: moment().format('YYYY-MM-DD HH:mm:ss')
+                        vital_time: moment().format('YYYY-MM-DD HH:mm:ss'),
                     });
 
                     if ($scope.presc_right.vitaldata.vital_id == null) {
@@ -461,6 +469,9 @@ angular.module('app')
                         data: $scope.presc_right.vitaldata,
                     }).success(function (response) {
                         $scope.presc_right.vitaldata = {};
+                        angular.extend(response, {
+                            created_date: moment().format('YYYY-MM-DD'),
+                        });
 
                         if (mode == "update")
                         {
@@ -608,7 +619,7 @@ angular.module('app')
 //                        $window.history.forward();
 //                    }
 //                });
-                
+
 //                 hotkeys.add({
 //                    combo: 'ctrl+p',
 //                    description: 'Save and Print',

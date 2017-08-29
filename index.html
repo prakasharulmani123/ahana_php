@@ -157,38 +157,46 @@
                             <div class="cell">
                                 <div class="cell-inner padder">
                                     <!-- vitals list -->
-                                    <div ng-repeat="vital in child.vitals" class="vitals-cont">
+                                    <div ng-repeat="(date, allVital) in child.vitals | orderBy:'created_at' | groupBy:'created_date'" class="vitals-cont">
                                         <div class="vitals-cont-date">
-                                            <a ng-if="vital.encounter_status == '1'" check-access-custom3 class="label bg-dark" title="Edit" data-url='patient.vitalUpdate' ng-click="GetVital('{{$state.params.id}}','{{vital.vital_id}}')">
-                                                <i class="fa fa-pencil"></i>
-                                            </a> &nbsp;&nbsp;
-                                            <span class="label bg-{{vital.seen_by == 0 ? 'danger' : 'info'}} ng-binding ng-scope">
-                                                {{vital.vital_time| moment:'DD/MM/YYYY hh:mm A'}}
-                                            </span>
+                                            <div class="label bg-info">{{check_date(date)}}</div>
                                         </div>
-                                        <div class="vitals-table">
-                                            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table table-bordered" >
-                                                <tr ng-if="vital.pulse_rate">
-                                                    <th>Pulse</th>
-                                                    <td>{{vital.pulse_rate}}</td>
-                                                </tr>
-                                                <tr ng-if="vital.blood_pressure_systolic || vital.blood_pressure_diastolic">
-                                                    <th>BP</th>
-                                                    <td>
-                                                        {{vital.blood_pressure_systolic || '-'}} 
-                                                        / {{vital.blood_pressure_diastolic || '-'}}
-                                                    </td>
-                                                </tr>
-                                                <tr ng-if="vital.temperature">
-                                                    <th>Temperature</th>
-                                                    <td>{{vital.temperature}} °C</td>
-                                                </tr>
-                                                <tr ng-if="vital.weight">
-                                                    <th>Weight</th>
-                                                    <td>{{vital.weight}} Kg </td>
-                                                </tr>
-                                            </table>
+                                        
+                                        <div ng-repeat="vital in allVital">
+                                            <div class="vitals-cont-date">
+                                                <a ng-if="vital.encounter_status == '1'" check-access-custom3 class="label bg-dark" title="Edit" data-url='patient.vitalUpdate' ng-click="GetVital('{{$state.params.id}}','{{vital.vital_id}}')">
+                                                    <i class="fa fa-pencil"></i>
+                                                </a> &nbsp;&nbsp;
+                                                <span class="label bg-{{vital.seen_by == 0 ? 'danger' : 'dark'}} ng-binding ng-scope">
+                                                    {{vital.created_at| moment:'hh:mm A'}}
+                                                </span>
+                                            </div>
+                                            <div class="vitals-table">
+                                                <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table table-bordered" >
+                                                    <tr ng-if="vital.pulse_rate">
+                                                        <th>Pulse</th>
+                                                        <td>{{vital.pulse_rate}}</td>
+                                                    </tr>
+                                                    <tr ng-if="vital.blood_pressure_systolic || vital.blood_pressure_diastolic">
+                                                        <th>BP</th>
+                                                        <td>
+                                                            {{vital.blood_pressure_systolic || '-'}} 
+                                                            / {{vital.blood_pressure_diastolic || '-'}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr ng-if="vital.temperature">
+                                                        <th>Temperature</th>
+                                                        <td>{{vital.temperature}} °C</td>
+                                                    </tr>
+                                                    <tr ng-if="vital.weight">
+                                                        <th>Weight</th>
+                                                        <td>{{vital.weight}} Kg </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
                                         </div>
+                                        
+                                        
                                     </div>
                                     <!-- / vitals list -->
                                 </div>
