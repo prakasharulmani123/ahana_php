@@ -369,8 +369,8 @@ class PharmacyproductController extends ActiveController {
                     CONCAT(
                         IF(b.generic_name IS NOT NULL, b.generic_name, ''),
                         IF(a.product_name IS NOT NULL, CONCAT(' // ', a.product_name), ''),
-                        IF(a.product_unit_count IS NOT NULL, CONCAT(' | ', a.product_unit_count), ''),
-                        IF(a.product_unit IS NOT NULL, CONCAT(' | ', a.product_unit), '')
+                        IF(a.product_unit_count IS NOT NULL, CONCAT(' ', a.product_unit_count), ''),
+                        IF(a.product_unit IS NOT NULL, CONCAT('', a.product_unit), '')
                     ) AS prescription, '' as selected, a.product_description_id,
                     (
                         SELECT IF(SUM(d.available_qty) IS NOT NULL, SUM(d.available_qty), 0)
@@ -396,8 +396,8 @@ class PharmacyproductController extends ActiveController {
                     CONCAT(
                         IF(b.generic_name IS NOT NULL, b.generic_name, ''),
                         IF(a.product_name IS NOT NULL, CONCAT(' // ', a.product_name), ''),
-                        IF(a.product_unit_count IS NOT NULL, CONCAT(' | ', a.product_unit_count), ''),
-                        IF(a.product_unit IS NOT NULL, CONCAT(' | ', a.product_unit), '')
+                        IF(a.product_unit_count IS NOT NULL, CONCAT(' ', a.product_unit_count), ''),
+                        IF(a.product_unit IS NOT NULL, CONCAT('', a.product_unit), '')
                     ) AS prescription, '' as selected, a.product_description_id,
                     (
                         SELECT IF(SUM(d.available_qty) IS NOT NULL, SUM(d.available_qty), 0)
@@ -427,8 +427,8 @@ class PharmacyproductController extends ActiveController {
                     CONCAT(
                         IF(b.generic_name IS NOT NULL, b.generic_name, ''),
                         IF(a.product_name IS NOT NULL, CONCAT(' // ', a.product_name), ''),
-                        IF(a.product_unit_count IS NOT NULL, CONCAT(' | ', a.product_unit_count), ''),
-                        IF(a.product_unit IS NOT NULL, CONCAT(' | ', a.product_unit), '')
+                        IF(a.product_unit_count IS NOT NULL, CONCAT(' ', a.product_unit_count), ''),
+                        IF(a.product_unit IS NOT NULL, CONCAT('', a.product_unit), '')
                     ) AS prescription, '' as selected, a.product_description_id,
                     (
                         SELECT IF(SUM(d.available_qty) IS NOT NULL, SUM(d.available_qty), 0)
