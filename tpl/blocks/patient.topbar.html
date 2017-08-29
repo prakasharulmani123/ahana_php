@@ -28,6 +28,32 @@
                     <i aria-hidden="true" class="fa fa-ban" ng-show="false"></i>
                     <b ng-show="false"> Allergies : </b>
                     <!--                    <div class="pati-cate" ng-show="patientObj.have_encounter">{{patientObj.encounter_type}}</div>-->
+                    <span ng-if="patientObj.have_encounter == true">
+                        <a ng-disabled="patientObj.prevPatient == ''" ui-sref="patient.view({id: patientObj.prevPatient})" class="btn btn-default"> <span class="fa fa-chevron-left"></span> </a>
+                        <a ng-disabled="patientObj.nextPatient == ''" ui-sref="patient.view({id: patientObj.nextPatient})" class="btn btn-default"> <span class="fa fa-chevron-right"></span> </a>
+                        <div class="btn-group dropdown" dropdown="">
+                            <button ng-disabled="patientObj.allEncounter == ''" class="btn btn-default" dropdown-toggle="" aria-haspopup="true" aria-expanded="false"><span class="fa fa-chevron-down"></span></button>
+                            <ul class="dropdown-menu">
+                                <li ng-repeat="(key, patient) in patientObj.allEncounter">
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-2 col-md-2">
+                                            <img class="patient-image" src="img/man-icon.png" ng-attr-lazy-img="{{ patient.apptPatientData.patient_img_url ? patient.apptPatientData.patient_img_url : ($even ? 'img/man-icon.png' : 'img/man-icon2.png') }}" />
+                                        </div>
+                                        <div class="col-xs-12 col-sm-5 col-md-6">
+                                            <div class="row ng-binding">
+                                                <a tooltip="{{patient.apptPatientData.fullcurrentaddress|| patient.apptPatientData.fullpermanentaddress}}" ng-bind-html="patient.apptPatientData.fullname | highlight:patient" ui-sref="patient.view({id: patient.apptPatientData.patient_guid})" class="ng-binding">
+                                                </a>
+                                                <b ng-if="patient.apptPatientData.patient_age_ym">({{patient.apptPatientData.patient_age_ym}}) </b>
+                                                <br>
+                                                <span class="pull-left" ng-bind-html="patient.apptPatientData.patient_global_int_code | highlight:patient"></span> &nbsp; &nbsp;
+                                                <span ng-bind-html="patient.apptPatientData.patient_mobile | highlight:patient"> </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </span>
                 </div>
                 <div class="headerbg2">
                     <div class="patient-details-part patinet-id" ng-if="patientObj.activeCasesheetno">
@@ -77,5 +103,5 @@
                 }, 1000);
             });
         }
-    });    
+    });
 </script>

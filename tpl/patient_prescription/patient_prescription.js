@@ -912,7 +912,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 //                                    $scope.numberDaysChange(response.days, item, key, $scope.tableform);
 //                                }
                                 if (!item.manual_textbox)
-                                    $scope.numberDaysChange(newValue, item, key, $scope.tableform);
+                                    $scope.numberDaysChange(response.days, item, key, $scope.tableform);
                             });
                         }
                 );
