@@ -241,9 +241,9 @@ class PhaProduct extends RActiveRecord {
         if ($this->product_name)
             $fullname .= $this->product_name;
         if ($this->product_unit_count)
-            $fullname .= ' | ' . $this->product_unit_count;
+            $fullname .= ' ' . $this->product_unit_count;
         if ($this->product_unit)
-            $fullname .= ' | ' . $this->product_unit;
+            $fullname .= $this->product_unit;
 
         return $fullname;
     }
