@@ -483,6 +483,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     if (result.length == 0) {
                         $scope.getRelatedProducts(value.generic_id).then(function () {
                             qty_count = $scope.calculate_qty(value.frequency_name, value.number_of_days, value.product.product_description_id, value.product.description_name);
+                            var no_of_days = $scope.data.number_of_days;
                             items = {
                                 'product_id': value.product_id,
                                 'product_name': value.product.full_name,
@@ -492,7 +493,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                 'drug_name': value.drug_name,
                                 'route': value.route_name,
                                 'frequency': value.frequency_name,
-                                'number_of_days': 0,
+                                'number_of_days': no_of_days,
                                 'is_favourite': 0,
                                 'route_id': value.route_id,
                                 'description_routes': value.product.description_routes,
@@ -539,7 +540,6 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
         $scope.addGlobalSearch = function (prescription) {
             var result = $filter('filter')($scope.data.prescriptionItems, {product_id: parseInt(prescription.product_id)}, true);
-
             if (result.length > 0) {
                 alert('This Product already added');
                 $scope.prescription_lists = {};
@@ -561,6 +561,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                             $scope.getRelatedProducts(prescription.generic_id).then(function () {
                                 qty_count = $scope.calculate_qty(prescription.frequency, 1, product.product_description_id, product.description_name);
                                 if (qty_count > 0) {
+                                    var no_of_days = $scope.data.number_of_days;
                                     if (prescription.route) {
                                         route = prescription.route;
                                     } else {
@@ -577,7 +578,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                         'drug_name': prescription.drug_name,
                                         'route': route,
                                         'frequency': prescription.frequency,
-                                        'number_of_days': 0,
+                                        'number_of_days': no_of_days,
                                         'is_favourite': prescription.is_favourite,
                                         'route_id': prescription.route_id,
                                         'description_routes': product.description_routes,
