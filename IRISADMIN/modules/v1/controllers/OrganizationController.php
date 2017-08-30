@@ -96,7 +96,7 @@ class OrganizationController extends ActiveController {
             //Execute DB Structure to client DB Connection
             $structure = file_get_contents(Url::base(true) . '/structure.sql');
             $data = file_get_contents(Url::base(true) . '/data.sql');
-            $sql = $structure . $data;
+            $sql = $structure ;
 
             $connection = new Connection([
                 'dsn' => "mysql:host={$post['org_db_host']};dbname={$post['org_database']}",
@@ -105,6 +105,9 @@ class OrganizationController extends ActiveController {
             ]);
             $connection->open();
             $command = $connection->createCommand($sql);
+            $command->execute();
+            
+            $command = $connection->createCommand($data);
             $command->execute();
             $connection->close();
             //End
@@ -141,18 +144,21 @@ class OrganizationController extends ActiveController {
                 $role_model = new CoRole();
                 $role_model->description = 'Super Admin';
                 $role_model->tenant_id = $tenant->tenant_id;
+                $role_model->update_log = false;
                 $role_model->save(false);
 
                 $user_model = new CoUser();
                 $user_model->tenant_id = 0;
                 $user_model->org_id = $model->org_id;
                 $user_model->attributes = Yii::$app->request->post('User');
+                $user_model->update_log = false;
                 $user_model->save(false);
 
                 $login_model = new CoLogin();
                 $login_model->user_id = $user_model->user_id;
                 $login_model->attributes = Yii::$app->request->post('Login');
                 $login_model->setPassword($login_model->password);
+                $login_model->update_log = false;
                 $login_model->save(false);
 
                 $user = $user_model;

@@ -23,6 +23,8 @@ use yii\db\ActiveQuery;
  */
 class CoRole extends RActiveRecord {
 
+    public $update_log = true; //This should be false when you create roles from CRM 
+
     /**
      * @inheritdoc
      */
@@ -94,11 +96,14 @@ class CoRole extends RActiveRecord {
     }
 
     public function afterSave($insert, $changedAttributes) {
-        if ($insert)
-            $activity = 'Role created Successfully (#' . $this->description . ' )';
-        else
-            $activity = 'Role updated Successfully (#' . $this->description . ' )';
-        CoAuditLog::insertAuditLog(CoRole::tableName(), $this->role_id, $activity);
+        if ($this->update_log) {
+            if ($insert)
+                $activity = 'Role created Successfully (#' . $this->description . ' )';
+            else
+                $activity = 'Role updated Successfully (#' . $this->description . ' )';
+            CoAuditLog::insertAuditLog(CoRole::tableName(), $this->role_id, $activity);
+        }
+
         return parent::afterSave($insert, $changedAttributes);
     }
 

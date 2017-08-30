@@ -39,6 +39,8 @@ use yii\helpers\ArrayHelper;
  */
 class CoUser extends RActiveRecord {
 
+    public $update_log = true;//This should be false when you create user from CRM 
+
 //    public $logged_tenant_id = null;
 
     const STATUS_ACTIVE = '1';
@@ -247,11 +249,13 @@ class CoUser extends RActiveRecord {
     }
 
     public function afterSave($insert, $changedAttributes) {
-        if ($insert)
-            $activity = 'User Added Successfully (#' . $this->name . ' )';
-        else
-            $activity = 'User Updated Successfully (#' . $this->name . ' )';
-        CoAuditLog::insertAuditLog(CoUser::tableName(), $this->user_id, $activity);
+        if ($this->update_log) {
+            if ($insert)
+                $activity = 'User Added Successfully (#' . $this->name . ' )';
+            else
+                $activity = 'User Updated Successfully (#' . $this->name . ' )';
+            CoAuditLog::insertAuditLog(CoUser::tableName(), $this->user_id, $activity);
+        }
         return parent::afterSave($insert, $changedAttributes);
     }
 
