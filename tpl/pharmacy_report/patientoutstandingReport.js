@@ -15,6 +15,12 @@ app.controller('patientReportController', ['$rootScope', '$scope', '$timeout', '
             }
         };
 
+        //Expand table in Index page
+        $scope.ctrl = {};
+        $scope.ctrl.expandAll = function (expanded) {
+            $scope.$broadcast('onExpandAll', {expanded: expanded});
+        };
+
         $scope.clearReport = function () {
             $scope.showTable = false;
             $scope.data = {};
@@ -105,7 +111,7 @@ app.controller('patientReportController', ['$rootScope', '$scope', '$timeout', '
 
             var reports = [];
             reports.push([
-                {text: branch_name, style: 'header', colSpan: 7}, "", "","", "", "",""
+                {text: branch_name, style: 'header', colSpan: 7}, "", "", "", "", "", ""
             ]);
             reports.push([
                 {text: 'S.No', style: 'header'},
@@ -143,7 +149,7 @@ app.controller('patientReportController', ['$rootScope', '$scope', '$timeout', '
                     style: 'header',
                     alignment: 'right',
                     colSpan: 6
-                },"", "", "", "", "",
+                }, "", "", "", "", "",
                 {
                     text: total.toString(),
                     style: 'header',
@@ -190,7 +196,7 @@ app.controller('patientReportController', ['$rootScope', '$scope', '$timeout', '
                 style: 'demoTable',
                 table: {
                     headerRows: 1,
-                    widths: ['auto', 'auto', '*','auto', 'auto', 'auto', 'auto'],
+                    widths: ['auto', 'auto', '*', 'auto', 'auto', 'auto', 'auto'],
                     body: reports,
                     dontBreakRows: true,
                 },
@@ -224,5 +230,43 @@ app.controller('patientReportController', ['$rootScope', '$scope', '$timeout', '
                     }
                 }
             }, 1000);
+        }
+
+        $scope.$watch('data.to', function (newValue, oldValue) {
+            if (newValue != '' && typeof newValue != 'undefined') {
+                $scope.fromMaxDate = new Date($scope.data.to);
+                var from = moment($scope.data.from);
+                var to = moment($scope.data.to);
+                var difference = to.diff(from, 'days') + 1;
+
+                if (difference > 31) {
+                    $scope.data.from = moment($scope.data.to).add(-30, 'days').format('YYYY-MM-DD');
+                }
+            }
+        }, true);
+        
+        $scope.$watch('data.from', function (newValue, oldValue) {
+            if (newValue != '' && typeof newValue != 'undefined') {
+                $scope.toMinDate = new Date($scope.data.from);
+                var from = moment($scope.data.from);
+                var to = moment($scope.data.to);
+                var difference = to.diff(from, 'days') + 1;
+
+                if (difference > 31) {
+                    $scope.data.to = moment($scope.data.from).add(+30, 'days').format('YYYY-MM-DD');
+                }
+            }
+        }, true);
+
+
+
+        $scope.total_pending = function (a, b) {
+            if (a == undefined)
+                return b;
+            if (a != undefined)
+            {
+                var total = parseFloat(a.replace(',', '')) + parseFloat(b.replace(',', ''));
+                return total.toFixed(2);
+            }
         }
     }]);

@@ -71,7 +71,70 @@
             </div>
 
             <div class="col-sm-12" ng-show='showTable && records.length > 0'>
-                <div id="patient_report">
+                <div class="panel panel-default">
+                    <div class="panel-heading font-bold">
+                        {{app.org_name}}
+                    </div>
+                    <div class="panel-body">
+                        <table class="table m-b-none default" ng-init="pending = {}">
+                            <thead>
+                                <tr>
+                                    <th style="width: 5%" data-sort-ignore="true">
+                                        <button class="btn btn-sm btn-default hms-plus" type="button" ng-click="ctrl.expandAll(allExpanded = !allExpanded)">
+                                            <i ng-if="!allExpanded" class="fa fa-plus text"></i>
+                                            <i ng-if="allExpanded" class="fa fa-minus text"></i>
+                                        </button>
+                                    </th>
+                                    <th>Patient Name</th>
+                                    <th>Patient UHID</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat-start="(patientName, record) in records |orderBy:'patient_name' | groupBy:'patient_name'">
+                                    <td style="width: 5%" data-sort-ignore="true" data-value="{{row.all_dates}}">
+                                        <button ng-click="expanded = !expanded" expand class="btn btn-sm btn-default hms-plus">
+                                            <i ng-if="!expanded" class="fa fa-plus text"></i>
+                                            <i ng-if="expanded" class="fa fa-minus text"></i>
+                                        </button>
+                                    </td>
+                                    <td>{{patientName}}</td>
+                                    <td>{{record[0].patient_uhid}}</td>
+                                    <td>{{pending.pending_amount }}</td>
+                                </tr>
+                                <tr ng-repeat-end ng-show="expanded">
+                                    <td colspan="4">
+                                        <table class="table table-condensed table-bordered" ng-init="pending = {}">
+                                            <thead>
+                                                <tr>
+                                                    <th>S.No</th>
+                                                    <th>Bill No</th>
+                                                    <th>Payment Type</th>
+                                                    <th>Total Amount</th>
+                                                    <th>Paid Amount</th>
+                                                    <th>Pending Amount</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="(Key, report) in record">
+                                                    <td>{{Key+1}}</td>
+                                                    <td>{{report.bill_no}}</td>
+                                                    <td>{{report.bill_payment}}</td>
+                                                    <td>{{report.bill_amount}}</td>
+                                                    <td>{{report.billings_total_paid_amount}}</td>
+                                                    <td data-type="Number" ng-init="pending.pending_amount = total_pending(pending.pending_amount,report.billings_total_balance_amount);">
+                                                        {{report.billings_total_balance_amount}}
+                                                    </td>
+                                                </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div ng-hide='true' id="patient_report">
                     <table style="display: none;" class="table table-bordered">
                         <tr>
                             <th>Report Name</th>
