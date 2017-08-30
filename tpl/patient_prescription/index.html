@@ -400,13 +400,23 @@
                                                                     <ul class="dropdown-menu curPrescFreq">
                                                                         <!-- Mask 3 -->
                                                                         <li ng-repeat="consFreq in currPresMask3| limitTo:3">
-                                                                            <a href ng-click="curPrescFreqSele(consFreq.freq_name, consFreq.freq_type, item, item.item_key, 'select')">{{consFreq.freq_name}}</a>
+                                                                            <div class="row">
+                                                                                <div class="col-sm-12">
+                                                                                    <a href ng-click="curPrescFreqSele(consFreq.freq_name, consFreq.freq_type, item, item.item_key, 'select')" class="col-sm-9">{{consFreq.freq_name}}</a>
+                                                                                    <a class="col-sm-3" ng-click="clearCache()">x</a>
+                                                                                </div>
+                                                                            </div>
                                                                         </li>
                                                                         <li class="dropdown-submenu" ng-if="currPresMask3.length > 3">
                                                                             <a tabindex="-1" href="#">More</a>
                                                                             <ul class="dropdown-menu">
                                                                                 <li ng-repeat="consFreq in currPresMask3| limitTo:(3 - currPresMask3.length)">
-                                                                                    <a href ng-click="curPrescFreqSele(consFreq.freq_name, consFreq.freq_type, item, item.item_key, 'select')">{{consFreq.freq_name}}</a>
+                                                                                    <div class="row">
+                                                                                        <div class="col-sm-12">
+                                                                                            <a href ng-click="curPrescFreqSele(consFreq.freq_name, consFreq.freq_type, item, item.item_key, 'select')" class="col-sm-9">{{consFreq.freq_name}}</a>
+                                                                                            <a class="col-sm-3" ng-click="clearCache()">x</a>
+                                                                                        </div>
+                                                                                    </div>
                                                                                 </li>
                                                                             </ul>
                                                                         </li>
