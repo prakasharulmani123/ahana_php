@@ -493,7 +493,6 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
                 } else {
                     if (!data && !item.hsn_no && !item.temp_hsn_no) {
-                        //console.log(item.hsn_no);console.log(item.thsn_no);
                         return "Not empty";
                     }
                 }
@@ -512,6 +511,15 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 }
             }
         };
+        
+        $scope.checkTotalpercentage = function (data, key, index) {
+            item = $scope.saleItems[key];
+            if (typeof item != 'undefined') {
+                if(item.discount_percentage > 100) {
+                    return "Discount percentage less than 100";
+                }
+            }
+        }
 
         $scope.checkQuantity = function (data, key) {
             if ($scope.formtype == 'update') {
@@ -788,17 +796,18 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             $('#t_hsn_no_' + key).addClass(t_addclass).removeClass(t_removeclass);
         }
 
-        $scope.updateColumn = function ($data, key, column) {
+        $scope.updateColumn = function ($data, key, column, tableform) {
             $scope.saleItems[key][column] = $data;
-            $scope.updateRow(key);
+            $scope.updateRow(key, column, tableform);
         }
 
         //Update other informations in the row
-        $scope.updateRow = function (key) {
+        $scope.updateRow = function (key, column, tableform) {
             //Get Data
             var qty = parseFloat($scope.saleItems[key].quantity);
             var mrp = parseFloat($scope.saleItems[key].mrp);
             var disc_perc = parseFloat($scope.saleItems[key].discount_percentage);
+            var disc_amount = parseFloat($scope.saleItems[key].discount_amount);
             var vat_perc = parseFloat($scope.saleItems[key].vat_percent);
             var cgst_perc = parseFloat($scope.saleItems[key].cgst_percent);
             var sgst_perc = parseFloat($scope.saleItems[key].sgst_percent);
@@ -806,18 +815,22 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             //Validate isNumer
             qty = !isNaN(qty) ? qty : 0;
             disc_perc = !isNaN(disc_perc) ? disc_perc : 0;
+            disc_amount = !isNaN(disc_amount) ? disc_amount : 0;
             vat_perc = !isNaN(vat_perc) ? vat_perc : 0;
 
             var item_amount = (qty * mrp).toFixed(2);
-            var disc_amount = disc_perc > 0 ? (item_amount * (disc_perc / 100)).toFixed(2) : 0;
+            if (column && column == 'discount_amount')
+                var disc_perc = disc_amount > 0 ? ((disc_amount / item_amount) * 100).toFixed(2) : 0;
+            if (column && column == 'discount_percentage')
+                var disc_amount = disc_perc > 0 ? (item_amount * (disc_perc / 100)).toFixed(2) : 0;
             var total_amount = (item_amount - disc_amount).toFixed(2);
-
 //            var vat_amount = (item_amount * (vat_perc / 100)).toFixed(2); // Exculding vat
             var vat_amount = ((total_amount * vat_perc) / (100 + vat_perc)).toFixed(2);
             var cgst_amount = ((total_amount * cgst_perc) / (100 + cgst_perc)).toFixed(2); // Including vat
             var sgst_amount = ((total_amount * sgst_perc) / (100 + sgst_perc)).toFixed(2); // Including vat
 
             $scope.saleItems[key].item_amount = item_amount;
+            $scope.saleItems[key].discount_percentage = disc_perc;
             $scope.saleItems[key].discount_amount = disc_amount;
             $scope.saleItems[key].total_amount = total_amount;
             $scope.saleItems[key].vat_amount = vat_amount;
@@ -826,6 +839,19 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             $scope.saleItems[key].sgst_amount = sgst_amount;
             $scope.saleItems[key].taxable_value = parseFloat(cgst_amount) + parseFloat(sgst_amount);
 
+            if (tableform) {
+                angular.forEach(tableform.$editables, function (editableValue, editableKey) {
+                    if (editableValue.attrs.eIndex == key && editableValue.attrs.eName == 'discount_percentage') {
+                        editableValue.scope.$data = $scope.saleItems[key].discount_percentage;
+                    }
+                });
+
+                angular.forEach(tableform.$editables, function (editableValue, editableKey) {
+                    if (editableValue.attrs.eIndex == key && editableValue.attrs.eName == 'discount_amount') {
+                        editableValue.scope.$data = $scope.saleItems[key].discount_amount;
+                    }
+                });
+            }
             $scope.updateSaleRate();
         }
 

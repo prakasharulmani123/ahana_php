@@ -288,21 +288,30 @@
                                         <span
                                             editable-text="saleitem.discount_percentage"
                                             e-name="discount_percentage"
+                                            e-index ="{{saleitem.key}}"
                                             e-number-mask=""
                                             e-form="tableform"
-                                            onbeforesave="checkInput($data, key, $index)"
-                                            e-ng-keydown="updateColumn($data, key, 'discount_percentage')"
-                                            e-ng-keyup="updateColumn($data, key, 'discount_percentage')"
+                                            onbeforesave="checkInput($data, key, $index); checkTotalpercentage($data, key, $index);"
+                                            e-ng-keydown="updateColumn($data, key, 'discount_percentage',tableform)"
+                                            e-ng-keyup="updateColumn($data, key, 'discount_percentage',tableform)"
                                             e-autocomplete="off"
-                                            e-limit-to="2"
                                             e-maxlength="5"
                                             >
                                             {{saleitem.discount_percentage|| 0}}
                                         </span>
                                     </td>
                                     <td>
-                                        <span>
-                                            {{saleitem.discount_amount}}
+                                        <span
+                                            editable-text="saleitem.discount_amount"
+                                            e-name="discount_amount"
+                                            e-index ="{{saleitem.key}}"
+                                            e-number-mask=""
+                                            e-form="tableform"
+                                            e-ng-keydown="updateColumn($data, key, 'discount_amount',tableform)"
+                                            e-ng-keyup="updateColumn($data, key, 'discount_amount',tableform)"
+                                            e-autocomplete="off"
+                                            e-maxlength="5">
+                                            {{saleitem.discount_amount|| 0}}
                                         </span>
                                     </td>
                                     <td>
