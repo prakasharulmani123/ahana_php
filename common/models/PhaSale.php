@@ -326,7 +326,7 @@ class PhaSale extends RActiveRecord {
                     ];
                     break;
                 case 'patient_report':
-                    $addt_keys = ['patient_name', 'billings_total_balance_amount', 'billings_total_paid_amount','bill_payment'];
+                    $addt_keys = ['patient_name', 'billings_total_balance_amount', 'billings_total_paid_amount','bill_payment','patient_uhid'];
                     $parent_fields = [
                         'sale_id' => 'sale_id',
                         'bill_no' => 'bill_no',

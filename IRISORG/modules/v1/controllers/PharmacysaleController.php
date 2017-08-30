@@ -253,6 +253,7 @@ class PharmacysaleController extends ActiveController {
                 ->tenant()
                 ->andWhere("pha_sale.sale_date between '{$post['from']}' AND '{$post['to']}'")
                 ->andWhere("pha_sale.payment_status!='C'")
+                ->orderBy(['patient_name' => SORT_ASC])
                 ->all();
 
         return ['report' => $reports];
@@ -262,7 +263,7 @@ class PharmacysaleController extends ActiveController {
         $get = Yii::$app->getRequest()->get();
         $sale = PhaSale::find()
                 ->where(['encounter_id' => $get['encounter_id'],
-                        'payment_type' => 'CR'])
+                    'payment_type' => 'CR'])
                 ->andWhere(['!=', 'payment_status', 'C'])
                 ->orderBy(['sale_id' => SORT_DESC])
                 ->all();
