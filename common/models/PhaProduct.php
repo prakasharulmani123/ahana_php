@@ -75,7 +75,7 @@ class PhaProduct extends RActiveRecord {
                 [['product_code'], 'string', 'max' => 50],
                 [['product_name', 'product_location'], 'string', 'max' => 255],
                 [['product_unit', 'product_unit_count'], 'string', 'max' => 25],
-                [['tenant_id', 'product_name', 'brand_id'], 'unique', 'targetAttribute' => ['tenant_id', 'product_name', 'brand_id'], 'message' => 'The combination of Tenant ID and Product Name and Brand Name has already been taken.']
+                [['product_name'], 'unique', 'targetAttribute' => ['tenant_id', 'product_name', 'brand_id', 'product_unit', 'product_unit_count'], 'message' => 'The combination of Product Name and Brand Name has already been taken.']
         ];
     }
 
