@@ -56,12 +56,12 @@ class PatPrescriptionItems extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['product_id', 'product_name', 'generic_id', 'generic_name', 'drug_class_id', 'drug_name', 'number_of_days'], 'required'],
-            [['route', 'frequency'], 'required', 'on' => 'saveform'],
-            [['tenant_id', 'pres_id', 'product_id', 'generic_id', 'drug_class_id', 'route_id', 'freq_id', 'number_of_days', 'created_by', 'modified_by'], 'integer'],
-            [['status'], 'string'],
-            [['created_at', 'modified_at', 'deleted_at', 'route', 'frequency', 'is_favourite', 'remarks', 'consultant_id', 'freqType','quantity'], 'safe'],
-            [['product_name', 'generic_name', 'drug_name'], 'string', 'max' => 255]
+                [['product_id', 'product_name', 'generic_id', 'generic_name', 'drug_class_id', 'drug_name', 'number_of_days'], 'required'],
+                [['route', 'frequency'], 'required', 'on' => 'saveform'],
+                [['tenant_id', 'pres_id', 'product_id', 'generic_id', 'drug_class_id', 'route_id', 'freq_id', 'number_of_days', 'created_by', 'modified_by'], 'integer'],
+                [['status'], 'string'],
+                [['created_at', 'modified_at', 'deleted_at', 'route', 'frequency', 'is_favourite', 'remarks', 'consultant_id', 'freqType', 'quantity'], 'safe'],
+                [['product_name', 'generic_name', 'drug_name'], 'string', 'max' => 255]
         ];
     }
 
@@ -149,7 +149,7 @@ class PatPrescriptionItems extends RActiveRecord {
         $model = PatPrescriptionFrequency::find()
                 ->tenant()
                 ->andWhere(['freq_name' => $this->frequency, 'consultant_id' => $this->consultant_id])
-                ->status()
+                //->status()
                 ->active()
                 ->one();
 
@@ -158,6 +158,9 @@ class PatPrescriptionItems extends RActiveRecord {
             $model->freq_name = $this->frequency;
             $model->freq_type = $this->freqType;
             $model->consultant_id = $this->consultant_id;
+            $model->save(false);
+        } else {
+            $model->status = 1;
             $model->save(false);
         }
         $this->freq_id = $model->freq_id;

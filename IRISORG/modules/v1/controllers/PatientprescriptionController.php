@@ -211,4 +211,16 @@ class PatientprescriptionController extends ActiveController {
         }
     }
 
+    public function actionFrequencyremove() {
+        $post = Yii::$app->request->post();
+        if (!empty($post)) {
+            $frequency = PatPrescriptionFrequency::find()->tenant()->andWhere(['freq_id' => $post['id'],'consultant_id' => $post['consultant_id']])->one();
+            $frequency->status = 0;
+            $frequency->save(false);
+            return ['success' => true];
+        } else {
+            return ['success' => false, 'message' => 'Invalid Access'];
+        }
+    }
+
 }
