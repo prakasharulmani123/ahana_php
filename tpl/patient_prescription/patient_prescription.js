@@ -1731,6 +1731,22 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             return result[freqPosition];
         }
 
+        $scope.clearCache = function (freq_id) {
+            $http({
+                url: $rootScope.IRISOrgServiceUrl + "/patientprescription/frequencyremove",
+                method: "POST",
+                data: {id: freq_id, consultant_id :$scope.data.consultant_id }
+            }).then(
+                    function (response) {
+                        if (response.data.success === false) {
+                            $scope.errorData = response.data.message;
+                        } else {
+                            $scope.getConsultantFreq();
+                        }
+                    }
+            )
+        }
+
 
 
         //Not Used

@@ -403,7 +403,7 @@
                                                                             <div class="row">
                                                                                 <div class="col-sm-12">
                                                                                     <a href ng-click="curPrescFreqSele(consFreq.freq_name, consFreq.freq_type, item, item.item_key, 'select')" class="col-sm-9">{{consFreq.freq_name}}</a>
-                                                                                    <a class="col-sm-3" ng-click="clearCache()">x</a>
+                                                                                    <a class="col-sm-3" title='Clear' ng-click="clearCache(consFreq.freq_id)"><i class="fa fa-times"></i></a>
                                                                                 </div>
                                                                             </div>
                                                                         </li>
@@ -414,7 +414,7 @@
                                                                                     <div class="row">
                                                                                         <div class="col-sm-12">
                                                                                             <a href ng-click="curPrescFreqSele(consFreq.freq_name, consFreq.freq_type, item, item.item_key, 'select')" class="col-sm-9">{{consFreq.freq_name}}</a>
-                                                                                            <a class="col-sm-3" ng-click="clearCache()">x</a>
+                                                                                            <a class="col-sm-3" title='Clear' ng-click="clearCache(consFreq.freq_id)"><i class="fa fa-times"></i></a>
                                                                                         </div>
                                                                                     </div>
                                                                                 </li>
@@ -423,26 +423,46 @@
                                                                         <li class="divider"></li>
                                                                         <!-- Mask 4 -->
                                                                         <li ng-repeat="consFreq in currPresMask4| limitTo:3">
-                                                                            <a href ng-click="curPrescFreqSele(consFreq.freq_name, consFreq.freq_type, item, item.item_key, 'select')">{{consFreq.freq_name}}</a>
+                                                                            <div class="row">
+                                                                                <div class="col-sm-12">
+                                                                                    <a href ng-click="curPrescFreqSele(consFreq.freq_name, consFreq.freq_type, item, item.item_key, 'select')" class="col-sm-9">{{consFreq.freq_name}}</a>
+                                                                                    <a class="col-sm-3" title='Clear' ng-click="clearCache(consFreq.freq_id)"><i class="fa fa-times"></i></a>
+                                                                                </div>
+                                                                            </div>
                                                                         </li>
                                                                         <li class="dropdown-submenu" ng-if="currPresMask4.length > 3">
                                                                             <a tabindex="-1" href="#">More</a>
                                                                             <ul class="dropdown-menu">
                                                                                 <li ng-repeat="consFreq in currPresMask4| limitTo:(3 - currPresMask4.length)">
-                                                                                    <a href ng-click="curPrescFreqSele(consFreq.freq_name, consFreq.freq_type, item, item.item_key, 'select')">{{consFreq.freq_name}}</a>
+                                                                                    <div class="row">
+                                                                                        <div class="col-sm-12">
+                                                                                            <a href ng-click="curPrescFreqSele(consFreq.freq_name, consFreq.freq_type, item, item.item_key, 'select')" class="col-sm-9">{{consFreq.freq_name}}</a>
+                                                                                            <a class="col-sm-3" title='Clear' ng-click="clearCache(consFreq.freq_id)"><i class="fa fa-times"></i></a>
+                                                                                        </div>
+                                                                                    </div>
                                                                                 </li>
                                                                             </ul>
                                                                         </li>
                                                                         <li class="divider"></li>
                                                                         <!-- Mask Txt -->
                                                                         <li ng-repeat="consFreq in currPresMaskTxt| limitTo:3">
-                                                                            <a href ng-click="curPrescFreqSele(consFreq.freq_name, consFreq.freq_type, item, item.item_key, 'select')">{{consFreq.freq_name}}</a>
+                                                                            <div class="row">
+                                                                                <div class="col-sm-12">
+                                                                                    <a href ng-click="curPrescFreqSele(consFreq.freq_name, consFreq.freq_type, item, item.item_key, 'select')" class="col-sm-9">{{consFreq.freq_name}}</a>
+                                                                                    <a class="col-sm-3" title='Clear' ng-click="clearCache(consFreq.freq_id)"><i class="fa fa-times"></i></a>
+                                                                                </div>
+                                                                            </div>
                                                                         </li>
                                                                         <li class="dropdown-submenu" ng-if="currPresMaskTxt.length > 3">
                                                                             <a tabindex="-1" href="#">More</a>
                                                                             <ul class="dropdown-menu">
                                                                                 <li ng-repeat="consFreq in currPresMaskTxt| limitTo:(3 - currPresMaskTxt.length)">
-                                                                                    <a href ng-click="curPrescFreqSele(consFreq.freq_name, consFreq.freq_type, item, item.item_key, 'select')">{{consFreq.freq_name}}</a>
+                                                                                    <div class="row">
+                                                                                        <div class="col-sm-12">
+                                                                                            <a href ng-click="curPrescFreqSele(consFreq.freq_name, consFreq.freq_type, item, item.item_key, 'select')" class="col-sm-9">{{consFreq.freq_name}}</a>
+                                                                                            <a class="col-sm-3" title='Clear' ng-click="clearCache(consFreq.freq_id)"><i class="fa fa-times"></i></a>
+                                                                                        </div>
+                                                                                    </div>
                                                                                 </li>
                                                                             </ul>
                                                                         </li>
