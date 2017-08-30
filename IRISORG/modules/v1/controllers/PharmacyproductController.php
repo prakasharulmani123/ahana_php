@@ -636,7 +636,7 @@ class PharmacyproductController extends ActiveController {
         foreach ($products as $product) {
             $nestedData = array();
             $nestedData['product_id'] = $product->product_id;
-            $nestedData['product_name'] = $product->product_name;
+            $nestedData['product_name'] = $product->product_name.' '.$product->product_unit_count.''.$product->product_unit;
             $nestedData['product_code'] = $product->product_code;
             $nestedData['product_type'] = $product->productDescription->description_name;
             $nestedData['product_brand'] = $product->brand->brand_name;
