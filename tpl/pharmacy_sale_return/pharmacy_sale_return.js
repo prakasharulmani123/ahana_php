@@ -69,7 +69,7 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
                 $scope.loadForm();
             } else {
                 $scope.data.sale_id = '';
-                $scope.data.sale_date = moment().format('YYYY-MM-DD');
+                $scope.data.sale_return_date = moment().format('YYYY-MM-DD');
                 $scope.addRow();
                 $scope.formtype = 'add';
             }
@@ -376,6 +376,7 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
             $scope.msg.successMessage = "";
 
             $scope.data.sale_date = moment($scope.data.sale_date).format('YYYY-MM-DD');
+            $scope.data.sale_return_date = moment($scope.data.sale_return_date).format('YYYY-MM-DD');
 
             angular.forEach($scope.saleItems, function (saleitem, key) {
                 $scope.saleItems[key].expiry_date = moment(saleitem.expiry_date).format('YYYY-MM-DD');
