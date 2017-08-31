@@ -256,7 +256,7 @@ class DefaultController extends Controller {
         $list = array();
         $data = PatDiagnosis::find()->all();
         foreach ($data as $key => $value) {
-            $list[] = array('label' => $value->diag_name . '-' . $value->diag_description);
+            $list[] = array('label' => $value->diag_name . '-' . $value->diag_description,'value' => $value->diag_id);
         }
         return ['diagnosisList' => $list];
     }

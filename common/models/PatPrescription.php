@@ -48,7 +48,7 @@ class PatPrescription extends RActiveRecord
         return [
             [['encounter_id', 'patient_id', 'pres_date', 'consultant_id'], 'required'],
             [['tenant_id', 'encounter_id', 'patient_id', 'consultant_id', 'number_of_days', 'created_by', 'modified_by'], 'integer'],
-            [['pres_date', 'next_visit', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
+            [['pres_date', 'next_visit', 'created_at', 'modified_at', 'deleted_at', 'diag_id'], 'safe'],
             [['notes', 'status'], 'string']
         ];
     }
@@ -65,6 +65,7 @@ class PatPrescription extends RActiveRecord
             'patient_id' => 'Patient',
             'pres_date' => 'Pres Date',
             'consultant_id' => 'Consultant',
+            'diag_id' => 'Diag',
             'number_of_days' => 'Number Of Days',
             'notes' => 'Notes',
             'next_visit' => 'Next Visit',
@@ -99,6 +100,14 @@ class PatPrescription extends RActiveRecord
     public function getTenant()
     {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
+    }
+    
+    /**
+     * @return ActiveQuery
+     */
+    public function getDiagnosis()
+    {
+        return $this->hasOne(PatDiagnosis::className(), ['diag_id' => 'diag_id']);
     }
 
     /**
@@ -146,7 +155,9 @@ class PatPrescription extends RActiveRecord
             'encounter' => function ($model) {
                 return (isset($model->encounter) ? $model->encounter->patVitals : '-');
             },
-                    
+            'diag_name' => function ($model) {
+                return (isset($model->diagnosis) ? $model->diagnosis->diag_name.'-'.$model->diagnosis->diag_description : '-');
+            }
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
