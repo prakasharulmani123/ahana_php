@@ -511,11 +511,11 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 }
             }
         };
-        
+
         $scope.checkTotalpercentage = function (data, key, index) {
             item = $scope.saleItems[key];
             if (typeof item != 'undefined') {
-                if(item.discount_percentage > 100) {
+                if (item.discount_percentage > 100) {
                     return "Discount percentage less than 100";
                 }
             }
@@ -948,9 +948,21 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 delete saleitem.alternateproducts;
 //                delete saleitem.product_batches; // Need product batches if form success false.
             });
-
-            /* For print bill */
             angular.extend(_that.data, {product_items: $scope.saleItems});
+            var valueArr = $scope.saleItems.map(function (item) {
+                return item.product_name
+            });
+            var isDuplicate = valueArr.some(function (item, idx) {
+                return valueArr.indexOf(item) != idx
+            });
+            if (isDuplicate)
+            {
+                $scope.duplicateErrormessage = 'Duplicate product is exits';
+                return false;
+            } else {
+                $scope.duplicateErrormessage = '';
+            }
+            /* For print bill */
             $scope.loadbar('show');
             $http({
                 method: 'POST',

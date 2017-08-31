@@ -431,6 +431,7 @@
 
 <div class="row">
     <footer class="panel-footer text-right bg-light lter">
+        <div class="col-sm-6" style="color:#a94442" ng-if="duplicateErrormessage != ''">{{duplicateErrormessage}}</div>
         <button class="btn m-b-xs  btn-primary save-print-bill" id="save_print" ng-click="getBtnId('print')">
             <i class="fa fa-print"></i> Save and Print Bill
         </button>
