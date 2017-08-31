@@ -73,7 +73,7 @@ class PharmacyreportController extends ActiveController {
 
         $reports = \common\models\PhaSaleReturn::find()
                 ->tenant()
-                ->andWhere("pha_sale_return.sale_date between '{$post['from']}' AND '{$post['to']}'")
+                ->andWhere("pha_sale_return.sale_return_date between '{$post['from']}' AND '{$post['to']}'")
                 ->all();
 
         return ['report' => $reports];

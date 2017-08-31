@@ -18,6 +18,7 @@ use yii\helpers\ArrayHelper;
  * @property string $patient_name
  * @property string $mobile_no
  * @property string $sale_date
+ * @property string $sale_return_date
  * @property string $total_item_vat_amount
  * @property string $total_item_sale_amount
  * @property string $total_item_discount_percent
@@ -53,9 +54,9 @@ class PhaSaleReturn extends RActiveRecord {
      */
     public function rules() {
         return [
-                [['sale_date'], 'required'],
+                [['sale_return_date'], 'required'],
                 [['tenant_id', 'patient_id', 'created_by', 'modified_by'], 'integer'],
-                [['sale_date', 'created_at', 'modified_at', 'deleted_at', 'sale_id', 'patient_name', 'total_item_vat_amount'], 'safe'],
+                [['sale_date', 'sale_return_date', 'created_at', 'modified_at', 'deleted_at', 'sale_id', 'patient_name', 'total_item_vat_amount'], 'safe'],
                 [['total_item_sale_amount', 'total_item_discount_percent', 'total_item_discount_amount', 'total_item_amount', 'roundoff_amount', 'bill_amount', 'total_item_vat_amount'], 'number'],
                 [['status'], 'string'],
                 [['bill_no', 'mobile_no'], 'string', 'max' => 50],
@@ -79,6 +80,7 @@ class PhaSaleReturn extends RActiveRecord {
             'patient_id' => 'Patient ID',
             'mobile_no' => 'Mobile No',
             'sale_date' => 'Sale Date',
+            'sale_return_date' => 'Sale Return Date',
             'total_item_vat_amount' => 'Total Item VAT Amount',
             'total_item_sale_amount' => 'Total Item Sale Amount',
             'total_item_discount_percent' => 'Total Item Discount Percent',
@@ -178,6 +180,7 @@ class PhaSaleReturn extends RActiveRecord {
                         'sale_id' => 'sale_id',
                         'bill_no' => 'bill_no',
                         'sale_date' => 'sale_date',
+                        'sale_return_date' => 'sale_return_date',
                         'created_at' => 'created_at',
                         'total_item_sale_amount' => 'total_item_sale_amount',
                         'total_item_discount_amount' => 'total_item_discount_amount',
@@ -191,6 +194,7 @@ class PhaSaleReturn extends RActiveRecord {
                         'bill_no' => 'bill_no',
                         'bill_amount' => 'bill_amount',
                         'sale_date' => 'sale_date',
+                        'sale_return_date' => 'sale_return_date',
                     ];
                     break;
             endswitch;
