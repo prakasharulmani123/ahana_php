@@ -254,6 +254,10 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $rootScope.commonService.GetDoctorList('', '1', false, '1', function (response) {
                 $scope.doctors = response.doctorsList;
             });
+
+            $rootScope.commonService.GetDiagnosisList(function (response) {
+                  $scope.diagnosis =response.diagnosisList
+            });
 //            $rootScope.commonService.GetPatientRoute('', '1', false, function (response) {
 //                $scope.routes = response.routelist;
 //            });
@@ -1735,7 +1739,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $http({
                 url: $rootScope.IRISOrgServiceUrl + "/patientprescription/frequencyremove",
                 method: "POST",
-                data: {id: freq_id, consultant_id :$scope.data.consultant_id }
+                data: {id: freq_id, consultant_id: $scope.data.consultant_id}
             }).then(
                     function (response) {
                         if (response.data.success === false) {

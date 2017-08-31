@@ -11,6 +11,7 @@
             <th>Prescription Date</th>
             <th>Consultant Name</th>
             <th>Next Visit</th>
+            <th>Diagnosis</th>
             <th>No of days</th>
             <th>Action</th>
         </tr>
@@ -33,6 +34,7 @@
             <td>{{value.pres_date}}</td>
             <td>{{value.consultant_name}}</td>
             <td>{{value.next_visit}}</td>
+            <td>{{value.diag_name}}</td>
             <td>{{value.number_of_days}}</td>
             <td>
                 <button tooltip="Print Bill"  class="label bg-primary dk" ng-click="printPres(value.pres_id)">
