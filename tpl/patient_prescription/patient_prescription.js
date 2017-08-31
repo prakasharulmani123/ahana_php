@@ -255,9 +255,9 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 $scope.doctors = response.doctorsList;
             });
 
-            $rootScope.commonService.GetDiagnosisList(function (response) {
-                  $scope.diagnosis =response.diagnosisList
-            });
+//            $rootScope.commonService.GetDiagnosisList(function (response) {
+//                  $scope.diagnosis =response.diagnosisList
+//            });
 //            $rootScope.commonService.GetPatientRoute('', '1', false, function (response) {
 //                $scope.routes = response.routelist;
 //            });
