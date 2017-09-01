@@ -139,6 +139,12 @@
 </td>
 </tr>
 <tr>
+    <td ng-if="data2.allergies" colspan="3" style="padding: 8px;font-size: 20px;"><b>Allergies :</b> {{data2.allergies}}</td>
+</tr>
+<tr>
+    <td ng-if="data2.diag_name" colspan="3" style="padding: 8px;font-size: 20px;"><b>Diagnosis :</b> {{data2.diag_name}}</td>
+</tr>
+<tr>
     <td class="prescriptionInfo">
         <table>
             <thead>
@@ -183,12 +189,19 @@
     </tr>
 </tfoot>-->
 </table>
-<div>    
-    <div style="position: absolute; bottom: 5px;">
-        <p style="font-size: 25px;">Prescription ID  : <span class="lightColor">{{data2.pres_id}}</span></p>
-        <p style="font-size: 25px;">Issued by : <span class="lightColor">{{app.username}}</span></p>
-        <p style="font-size: 25px;">Issued at : <span class="lightColor">{{app.org_name}}</span></p>
-        <p ng-if="data2.next_visit!='0000-00-00'" style="font-size: 25px;"><b>* Next Visit - {{data2.next_visit| date: "dd-MMMM-y" }}</b></p>
-    </div>
+<div>
+    <table style="position: absolute; bottom: 5px;">
+        <tr>
+            <td>
+                <p style="font-size: 15px;">Prescription ID  : <span class="lightColor">{{data2.pres_id}}</span></p>
+                <p style="font-size: 15px;">Issued by : <span class="lightColor">{{app.username}}</span></p>
+                <p style="font-size: 15px;">Issued at : <span class="lightColor">{{app.org_name}}</span></p>
+                <p ng-if="data2.next_visit != '0000-00-00'" style="font-size: 25px;"><b>* Next Visit - {{data2.next_visit| date: "dd-MMMM-y" }}</b></p>
+            </td>
+            <td>
+                <p style="font-size: 25px"><b>{{data2.consultant_name}}</b></p>
+            </td>
+        </tr>
+    </table>
 </div>
 </div>

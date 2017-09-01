@@ -167,11 +167,22 @@
                                         <!-- Advance Search END-->
                                     </div>
                                 </div>
-<!--                                <div class="col-sm-4 pull-right">
-                                    <select class="form-control selectpicker" data-live-search="true" ng-model="data.diag_id" ng-options="diag.value as diag.label for diag in diagnosis| orderBy: name">
+                               <div class="col-sm-4 pull-right">
+                                   <!--  <select class="form-control selectpicker" data-live-search="true" ng-model="data.diag_id" ng-options="diag.value as diag.label for diag in diagnosis| orderBy: name">
                                         <option value="">Select Diagnosis</option>
-                                    </select>
-                                </div>-->
+                                    </select>-->
+<input autocomplete="off"
+                                               placeholder="Diagnosis"
+                                               type="text"
+                                               class="form-control"
+                                               id="diagnosis"
+                                               ng-model="diagnosis"
+                                               typeahead="Diag as diagname_desc(Diag) for Diag in getdiagnosis($viewValue) | orderBy: bill_no"
+                                               typeahead-on-select="setDiagid($item)"
+                                               typeahead-wait-ms="400"
+                                               />
+                                    <span style="color:#a94442" ng-if="errorMessage != ''">{{errorMessage}}</span>
+                                </div>
 
                             </div>
                             <form editable-form name="tableform" name="prescForm" class="form-horizontal form-validation curPresForm" novalidate="" shown="true" onaftersave="saveForm()">

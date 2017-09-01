@@ -271,6 +271,51 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $("#current_prescription").focus();
         }
 
+        var canceler;
+        $scope.getdiagnosis = function (diagonsis) {
+            if (canceler)
+                canceler.resolve();
+            canceler = $q.defer();
+
+            $scope.show_patient_loader = true;
+
+            return $http({
+                method: 'GET',
+                url: $rootScope.IRISOrgServiceUrl + '/patientprescription/getdiagnosis?diag_description=' + diagonsis,
+                timeout: canceler.promise,
+            }).then(
+                    function (response) {
+                        $scope.data.diag_id = '';
+                        $scope.Diag = [];
+                        $scope.Diag = response.data;
+                        $scope.loadbar('hide');
+                        $scope.show_patient_loader = false;
+                        return $scope.Diag;
+                    }
+            );
+        }
+
+        $scope.setDiagid = function ($item) {
+            $scope.data.diag_id = $item.diag_id;
+        }
+
+        $('#save_print, #save').click(function () {
+            var diag = $('#diagnosis').val();
+            if (diag) {
+                if ($scope.data.diag_id == null || $scope.data.diag_id=='') {
+                    $scope.errorMessage = 'Invalid Select Diagnosis';
+                } else 
+                    $scope.errorMessage = '';
+            }
+        });
+        
+        $scope.diagname_desc = function (Diag) {
+            if (Diag == null || Diag == undefined)
+                 return;
+             var label = Diag.diag_name + " " + Diag.diag_description;
+             return label;
+        }
+
         $scope.generics = [];
         $scope.products = [];
         $scope.getGeneric = function ($item, $model, $label) {
@@ -749,7 +794,9 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
         $scope.saveForm = function () {
             _that = this;
-
+            if($scope.errorMessage)
+                return false;
+            
             $scope.errorData = "";
             $scope.msg.successMessage = "";
 
@@ -816,6 +863,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                             $scope.data.encounter_id = $scope.default_encounter_id;
                             $scope.data.consultant_id = response.model.consultant_id;
                             $scope.consultant_name = response.model.consultant_name;
+                            $('#diagnosis').val("");
                             $scope.getConsultantFreq();
 
                             $timeout(function () {
