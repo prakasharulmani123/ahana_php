@@ -8,6 +8,7 @@ use common\models\PatPrescriptionFrequency;
 use common\models\PatPrescriptionItems;
 use common\models\PatPrescriptionRoute;
 use common\models\PhaDescriptionsRoutes;
+use common\models\PatDiagnosis;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -221,6 +222,20 @@ class PatientprescriptionController extends ActiveController {
         } else {
             return ['success' => false, 'message' => 'Invalid Access'];
         }
+    }
+    
+    public function actionGetdiagnosis() {
+        $get = Yii::$app->getRequest()->get();
+        $text = $get['diag_description'];
+        $Diag = PatDiagnosis::find()
+                ->andFilterWhere([
+                    'or',
+                        ['like', 'diag_name', $text],
+                        ['like', 'diag_description', $text],
+                ])
+                ->limit(25)
+                ->all();
+        return $Diag;
     }
 
 }

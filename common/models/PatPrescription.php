@@ -85,7 +85,11 @@ class PatPrescription extends RActiveRecord
     {
         return $this->hasOne(PatEncounter::className(), ['encounter_id' => 'encounter_id']);
     }
-
+    
+    public function getAllergies()
+    {
+        return $this->hasOne(PatAllergies::className(), ['encounter_id' => 'encounter_id'])->status()->active()->orderBy(['created_at' => SORT_DESC])->limit(1);
+    }
     /**
      * @return ActiveQuery
      */
@@ -157,6 +161,9 @@ class PatPrescription extends RActiveRecord
             },
             'diag_name' => function ($model) {
                 return (isset($model->diagnosis) ? $model->diagnosis->diag_name.'-'.$model->diagnosis->diag_description : '-');
+            },
+            'allergies' => function ($model) {
+                return (isset($model->allergies) ? $model->allergies->notes : '');
             }
         ];
         $fields = array_merge(parent::fields(), $extend);
