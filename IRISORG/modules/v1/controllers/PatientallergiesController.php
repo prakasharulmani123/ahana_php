@@ -5,6 +5,7 @@ namespace IRISORG\modules\v1\controllers;
 use common\models\PatPatient;
 use Yii;
 use yii\data\ActiveDataProvider;
+use common\models\CoAuditLog;
 use yii\db\BaseActiveRecord;
 use yii\filters\auth\QueryParamAuth;
 use yii\filters\ContentNegotiator;
@@ -77,6 +78,8 @@ class PatientallergiesController extends ActiveController {
         if ($id) {
             $model = PatAllergies::find()->where(['pat_allergies_id' => $id])->one();
             $model->remove();
+            $activity = 'Allergies Deleted Successfully (#' . $model->encounter_id . ' )';
+            CoAuditLog::insertAuditLog(PatAllergies::tableName(), $id, $activity);
             return ['success' => true];
         }
     }

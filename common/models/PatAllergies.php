@@ -20,37 +20,34 @@ use yii\db\ActiveQuery;
  * @property string $modified_at
  * @property string $deleted_at
  */
-class PatAllergies extends RActiveRecord
-{
+class PatAllergies extends RActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'pat_allergies';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            [['tenant_id', 'encounter_id', 'patient_id', 'notes'], 'required'],
-            [['tenant_id', 'encounter_id', 'patient_id', 'created_by', 'modified_by'], 'integer'],
-            [['notes', 'status'], 'string'],
-            [['created_at', 'modified_at', 'deleted_at'], 'safe'],
-            [['encounter_id'], 'exist', 'skipOnError' => true, 'targetClass' => PatEncounter::className(), 'targetAttribute' => ['encounter_id' => 'encounter_id']],
-            [['patient_id'], 'exist', 'skipOnError' => true, 'targetClass' => PatPatient::className(), 'targetAttribute' => ['patient_id' => 'patient_id']],
-            [['tenant_id'], 'exist', 'skipOnError' => true, 'targetClass' => CoTenant::className(), 'targetAttribute' => ['tenant_id' => 'tenant_id']],
+                [['tenant_id', 'encounter_id', 'patient_id', 'notes'], 'required'],
+                [['tenant_id', 'encounter_id', 'patient_id', 'created_by', 'modified_by'], 'integer'],
+                [['notes', 'status'], 'string'],
+                [['created_at', 'modified_at', 'deleted_at'], 'safe'],
+                [['encounter_id'], 'exist', 'skipOnError' => true, 'targetClass' => PatEncounter::className(), 'targetAttribute' => ['encounter_id' => 'encounter_id']],
+                [['patient_id'], 'exist', 'skipOnError' => true, 'targetClass' => PatPatient::className(), 'targetAttribute' => ['patient_id' => 'patient_id']],
+                [['tenant_id'], 'exist', 'skipOnError' => true, 'targetClass' => CoTenant::className(), 'targetAttribute' => ['tenant_id' => 'tenant_id']],
         ];
     }
 
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'pat_allergies_id' => 'Pat Allergies ID',
             'tenant_id' => 'Tenant ID',
@@ -65,8 +62,19 @@ class PatAllergies extends RActiveRecord
             'deleted_at' => 'Deleted At',
         ];
     }
-    
+
     public static function find() {
         return new PatAllergiesQuery(get_called_class());
     }
+
+    public function afterSave($insert, $changedAttributes) {
+        if ($insert) {
+            $activity = 'Allergies Added Successfully (#' . $this->encounter_id . ' )';
+        } else {
+            $activity = 'Allergies Updated Successfully (#' . $this->encounter_id . ' )';
+        }
+        CoAuditLog::insertAuditLog(PatAllergies::tableName(), $this->pat_allergies_id, $activity);
+        return parent::afterSave($insert, $changedAttributes);
+    }
+
 }
