@@ -9,6 +9,7 @@ use Yii;
 use yii\db\ActiveQuery;
 use yii\db\Connection;
 use yii\helpers\ArrayHelper;
+use common\models\PatAllergies;
 
 /**
  * This is the model class for table "pat_patient".
@@ -198,6 +199,10 @@ class PatPatient extends RActiveRecord {
 
     public function getActivePatientAlert() {
         return $this->hasMany(PatAlert::className(), ['patient_id' => 'patient_id'])->status()->active()->orderBy(['created_at' => SORT_DESC]);
+    }
+
+    public function getActivePatientAllergies() {
+        return $this->hasMany(PatAllergies::className(), ['patient_id' => 'patient_id'])->status()->active()->orderBy(['created_at' => SORT_DESC]);
     }
 
     /**
@@ -515,9 +520,17 @@ class PatPatient extends RActiveRecord {
             'hasalert' => function () {
                 return $this->hasalert;
             },
+            'hasallergies' => function () {
+                return $this->hasallergies;
+            },
             'alert' => function ($model) {
                 if (!empty($this->activePatientAlert)) {
                     return $this->activePatientAlert[0]->alert_description;
+                }
+            },
+            'allergies' => function ($model) {
+                if (!empty($this->activePatientAllergies)) {
+                    return $this->activePatientAllergies[0]->notes;
                 }
             },
             'billing_type' => function ($model) {
@@ -680,6 +693,9 @@ class PatPatient extends RActiveRecord {
 
     public function getHasalert() {
         return (!empty($this->activePatientAlert)) ? true : false;
+    }
+    public function getHasallergies() {
+        return (!empty($this->activePatientAllergies)) ? true : false;
     }
 
     public function getIncomplete_profile() {

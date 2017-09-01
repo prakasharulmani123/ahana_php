@@ -106,6 +106,7 @@ return [
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/doctorinterval'], 'extraPatterns' => ['POST setintervaltime' => 'setintervaltime']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/hsn']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/auditlog']],
+                ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/patientallergies']],
             ],
         ],
         'log' => [
