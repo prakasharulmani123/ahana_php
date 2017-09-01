@@ -15,6 +15,16 @@ app.controller('PatientAlertsController', ['$rootScope', '$scope', '$timeout', '
             }
         };
 
+        $scope.initTab = function () {
+            type = ($state.params.type) ? $state.params.type : 'alert';
+            $scope.changeTab(type);
+        }
+        $scope.changeTab = function (type) {
+            $('.op-btn-group button, .op-btn-group a').removeClass('active');
+            $('.op-btn-group button.' + type + '-tab').addClass('active');
+            $scope.current_tab = type;
+        }
+
         selected = [];
         $scope.showStatus = function (row) {
             selected = [];
@@ -187,4 +197,148 @@ app.controller('PatientAlertsController', ['$rootScope', '$scope', '$timeout', '
                 );
             });
         };
+
+        //Check encounter_id
+        $scope.isPatientHaveActiveEncounter = function (callback) {
+            $http.post($rootScope.IRISOrgServiceUrl + '/encounter/patienthaveactiveencounter', {patient_id: $state.params.id})
+                    .success(function (response) {
+                        callback(response);
+                    }, function (x) {
+                        response = {success: false, message: 'Server Error'};
+                        callback(response);
+                    });
+        }
+        $scope.initAllergiesForm = function () {
+            $scope.allergies_data = {};
+            $scope.allergies_data.formtype = 'add';
+            $scope.initCanCreateNote();
+            $scope.loadPatientAllergiesList();
+            $scope.allergies_data.status = '1';
+        }
+
+        $scope.initCanCreateNote = function () {
+            $scope.isPatientHaveActiveEncounter(function (response) {
+                if (response.success == false) {
+                    alert("Sorry, you can't create a Allergies");
+                } else {
+                    if (!$scope.encounter)
+                        $scope.encounter = response.model;
+
+                    $scope.all_encounters = response.encounters;
+                    if (!$scope.allergies_data.encounter_id)
+                        $scope.allergies_data.encounter_id = $scope.encounter.encounter_id;
+                }
+            });
+        }
+        $scope.allergiesSave = function (mode) {
+            _that = this;
+
+            if (mode == 'add') {
+                post_url = $rootScope.IRISOrgServiceUrl + '/patientallergies';
+                method = 'POST';
+                succ_msg = 'Allergies saved successfully';
+                angular.extend(_that.allergies_data, {patient_id: $scope.patientObj.patient_id});
+            }
+            $scope.loadbar('show');
+            $http({
+                method: method,
+                url: post_url,
+                data: _that.allergies_data,
+            }).success(
+                    function (response) {
+                        $scope.loadbar('hide');
+                        $scope.msg.successMessage = succ_msg;
+                        $scope.allergies_data = {};
+                        $scope.allergies_data.formtype = 'add';
+                        $scope.$emit('patient_allergies', {hasallergies: true, alert: response.notes});
+                        $timeout(function () {
+                            $scope.loadPatientAllergiesList();
+                            $anchorScroll();
+                        }, 1000)
+
+                    }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        }
+
+        $scope.loadPatientAllergiesList = function () {
+            $http.get($rootScope.IRISOrgServiceUrl + '/patientallergies/getpatientallergie?patient_id=' + $state.params.id)
+                    .success(function (list) {
+                        $scope.isLoading = false;
+                        $scope.allergiesCollection = list.result;
+                        if ($scope.allergiesCollection.length == 0) {
+                            $scope.$emit('patient_allergies', {hasallergies: false, alert: ''});
+                        } else {
+                            active = $filter('filter')($scope.allergiesCollection, {status: '1'}, true);
+                            if (active.length > 0) {
+                                $scope.$emit('patient_allergies', {hasallergies: true, alert: active[0].notes});
+                            } else {
+                                $scope.$emit('patient_allergies', {hasallergies: false, alert: ''});
+                            }
+                        }
+                    })
+                    .error(function () {
+                        $scope.errorData = "An Error has occured while loading patientalert!";
+                    });
+        }
+
+        $scope.updateAllergies = function ($data, pat_allergies_id) {
+            $scope.errorData = "";
+            $scope.msg.successMessage = "";
+
+            $scope.loadbar('show');
+            $http({
+                method: 'PUT',
+                url: $rootScope.IRISOrgServiceUrl + '/patientallergies/' + pat_allergies_id,
+                data: $data,
+            }).success(
+                    function (response) {
+                        $scope.loadbar('hide');
+                        $scope.msg.successMessage = 'Allergies updated successfully';
+                        $timeout(function () {
+                            $scope.loadPatientAllergiesList();
+                            $anchorScroll();
+                        }, 1000)
+                    }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        }
+
+        $scope.removeAllergies = function (row) {
+            var modalOptions = {
+                closeButtonText: 'No',
+                actionButtonText: 'Yes',
+                headerText: 'Delete Allergies?',
+                bodyText: 'Are you sure you want to delete this Allergy?'
+            };
+
+            modalService.showModal({}, modalOptions).then(function (result) {
+                $http({
+                    url: $rootScope.IRISOrgServiceUrl + "/patientallergies/remove",
+                    method: "POST",
+                    data: {id: row.pat_allergies_id}
+                }).then(
+                        function (response) {
+                            $scope.loadbar('hide');
+                            if (response.data.success === true) {
+                                $scope.loadPatientAllergiesList();
+                            } else {
+                                $scope.errorData = response.data.message;
+                            }
+                        }
+                )
+            });
+
+        }
+
     }]);

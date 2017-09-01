@@ -29,7 +29,7 @@
     </li>
     <li ui-sref-active="active"> <a check-access ui-sref="patient.view({id: $state.params.id})">  <img src="img/icon1.png"  alt="" /> <br/> Details </a>  </li>
     <li ui-sref-active="active"> <a check-access ui-sref="patient.allbilling({id: $state.params.id})"  class="{{patientObj.have_atleast_encounter ? '' : 'linkDisabled'}}">  <img src="img/icon11.png"  alt="" /> <br/> Billing </a>  </li>
-    <li ui-sref-active="active"> <a check-access ui-sref="patient.alert({id: $state.params.id})" class="{{patientObj.have_atleast_encounter ? '' : 'linkDisabled'}}">  <img src="img/icon9.png"  alt="" /> <br/> alerts  </a>   </li>
+    <li ui-sref-active="active"> <a check-access ui-sref="patient.alert({id: $state.params.id,type:'alert'})" class="{{patientObj.have_atleast_encounter ? '' : 'linkDisabled'}}">  <img src="img/icon9.png"  alt="" /> <br/> alerts & allergies </a>   </li>
     <li ui-sref-active="active"> <a check-access ui-sref="patient.assignShare({id: $state.params.id})" class="{{patientObj.have_atleast_encounter ? '' : 'linkDisabled'}}">  <img src="img/icon2.png"  alt="" /> <br/> Share </a>   </li>
 </ul>
 <!-- / list -->

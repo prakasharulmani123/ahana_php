@@ -58,6 +58,14 @@ $(document).bind('click', function (e) {
     if ($clicked.hasClass('alert-read-more')) {
         $('.trigger-close').trigger('click');
     }
+    if ($clicked.hasClass('allergies-read-more')) {
+        $('.trigger-allergies-close').trigger('click');
+    }
+    if ($clicked.closest('.patient-details-part').find('.trigger-allergies-close').length == 0) {
+        if ($('.patient-details-part .trigger-allergies-close').next('.popover').is(':visible'))
+            $('.trigger-allergies-close').trigger('click');
+    }
+    
 });
 
 function chunk(str, n) {

@@ -1367,7 +1367,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
 
             //Patient Alert
             .state('patient.alert', {
-                url: '/alert/{id}',
+                url: '/alert/{id}/:type',
                 templateUrl: 'tpl/patient_alert/index.html',
                 controller: 'PatientLeftSideNotificationCtrl',
                 resolve: {
