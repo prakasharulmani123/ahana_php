@@ -950,7 +950,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             });
             angular.extend(_that.data, {product_items: $scope.saleItems});
             var valueArr = $scope.saleItems.map(function (item) {
-                return item.product_name
+                return item.full_name
             });
             var isDuplicate = valueArr.some(function (item, idx) {
                 return valueArr.indexOf(item) != idx
