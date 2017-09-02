@@ -335,7 +335,7 @@ class PharmacyproductController extends ActiveController {
             $limit = 10;
 
 //            $text_search = str_replace([' ', '(', ')'], ['* ', '', ''], $text);
-            $text_search = "+" . str_replace([' ', '(', ')'], [' +', '', ''], $text);
+            $text_search = "+" . str_replace([' ', '(', ')'], [' +', '', ''], $text) . "*";
 
             //Get Products
             $products = $this->_getProducts($text_search, $tenant_id, $limit);
@@ -414,7 +414,7 @@ class PharmacyproductController extends ActiveController {
                     AND (b.tenant_id = :tenant_id AND MATCH(b.generic_name) AGAINST(:search_text IN BOOLEAN MODE))
                     OR (c.tenant_id = :tenant_id AND MATCH(c.drug_name) AGAINST(:search_text IN BOOLEAN MODE))
                     ORDER BY score DESC, a.product_name
-                    LIMIT 0,:limit", [':search_text' => $text_search . '*', ':limit' => $limit, ':tenant_id' => $tenant_id]
+                    LIMIT 0,:limit", [':search_text' => $text_search, ':limit' => $limit, ':tenant_id' => $tenant_id]
             );
         }
         $products = $command->queryAll();
@@ -445,7 +445,7 @@ class PharmacyproductController extends ActiveController {
                     OR (b.tenant_id = :tenant_id AND MATCH(b.generic_name) AGAINST(:search_text IN BOOLEAN MODE))
                     OR (c.tenant_id = :tenant_id AND MATCH(c.drug_name) AGAINST(:search_text IN BOOLEAN MODE))
                     ORDER BY a.product_name
-                    LIMIT 0,:limit", [':search_text' => $text_search . '*', ':limit' => $limit, ':tenant_id' => $tenant_id]
+                    LIMIT 0,:limit", [':search_text' => $text_search, ':limit' => $limit, ':tenant_id' => $tenant_id]
             );
             $products = $command->queryAll();
         }
@@ -504,7 +504,7 @@ class PharmacyproductController extends ActiveController {
                     AND a.tenant_id = :tenant_id
                     GROUP BY a.route_name
                     ORDER BY a.route_name
-                    LIMIT 0,:limit", [':search_text' => $text_search . '*', ':limit' => $limit, ':tenant_id' => $tenant_id]
+                    LIMIT 0,:limit", [':search_text' => $text_search, ':limit' => $limit, ':tenant_id' => $tenant_id]
             );
             $routes = $command->queryAll();
         }
