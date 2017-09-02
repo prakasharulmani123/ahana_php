@@ -1841,7 +1841,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                                 style: 'h2'
                                             },
                                             {
-                                                text: generated_by,
+                                                text: sale_info.billed_by,
                                                 style: 'normaltxt'
                                             },
                                         ],
