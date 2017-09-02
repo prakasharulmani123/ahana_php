@@ -855,7 +855,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             $scope.updateSaleRate();
         }
 
-        $scope.updateSaleRate = function () {
+        $scope.updateSaleRate = function (column) {
 
             var roundoff_amount = bill_amount = total_item_discount_amount = total_item_amount = 0;
 
@@ -873,12 +873,20 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 //            var before_discount_total = (total_item_sale_amount + total_item_vat_amount).toFixed(2); // Exculding vat
             var before_discount_total = (total_item_sale_amount).toFixed(2); // Inculding vat
 
-            //Get Discount Amount
-            var disc_perc = parseFloat($scope.data.total_item_discount_percent);
-            disc_perc = !isNaN(disc_perc) ? (disc_perc).toFixed(2) : 0;
+            if (column && column == 'amount')
+            {
+                var disc_amount = parseFloat($scope.data.total_item_discount_amount);
+                disc_amount = !isNaN(disc_amount) ? (disc_amount).toFixed(2) : 0;
+                
+                var disc_perc = disc_amount > 0 ? ((disc_amount / before_discount_total ) * 100).toFixed(2) : 0;
+                $scope.data.total_item_discount_percent = disc_perc;
+            } else {
+                var disc_perc = parseFloat($scope.data.total_item_discount_percent);
+                disc_perc = !isNaN(disc_perc) ? (disc_perc).toFixed(2) : 0;
 
-            var disc_amount = disc_perc > 0 ? (total_item_sale_amount * (disc_perc / 100)).toFixed(2) : 0;
-            $scope.data.total_item_discount_amount = disc_amount;
+                var disc_amount = disc_perc > 0 ? (total_item_sale_amount * (disc_perc / 100)).toFixed(2) : 0;
+                $scope.data.total_item_discount_amount = disc_amount;
+            }
 
             var after_discount_item_amount = (parseFloat(before_discount_total) - parseFloat(disc_amount));
             $scope.data.total_item_amount = after_discount_item_amount.toFixed(2);
@@ -902,6 +910,14 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
         $scope.updateBalance = function () {
             $scope.data.balance = $scope.data.amount_received - $scope.data.bill_amount;
+        }
+        
+        $scope.checkTotalpercent = function () {
+            if($scope.data.total_item_discount_percent > 100)
+            {
+                $scope.percentageErrormessage = "Discount percentage less than 100";
+                return false;
+            }
         }
 
         $scope.getBtnId = function (btnid)

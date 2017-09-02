@@ -383,10 +383,11 @@
                 <div class="form-group">
                     <label class="col-lg-3 control-label">Disc %</label>
                     <div class="col-lg-2">
-                        <input type="text" class="form-control text-right" ng-model="data.total_item_discount_percent" ng-change="updateSaleRate()" maxlength="5" number-mask="">
+                        <input type="text" class="form-control text-right" ng-model="data.total_item_discount_percent" ng-change="updateSaleRate('percentage')" maxlength="2" number-mask="">
                     </div>
                     <div class="col-lg-7">
-                        <input type="text" class="form-control text-right" ng-value="data.total_item_discount_amount" readonly="" tabindex="-1">
+                        <input type="text" class="form-control text-right" ng-model="data.total_item_discount_amount" ng-change="updateSaleRate('amount')" tabindex="-1">
+                        <span style="color:#a94442" ng-if="percentageErrormessage">{{percentageErrormessage}}</span>
                     </div>
                 </div>
                 <div class="form-group">

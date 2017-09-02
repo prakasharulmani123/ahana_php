@@ -12,6 +12,7 @@
                     editable-form 
                     name="tableform" 
                     class="form-horizontal form-validation" 
+                    onbeforesave="checkTotalpercent()"
                     onaftersave="saveForm('update'); tableform.$show();" 
                     novalidate="" 
                     oncancel="cancel()" 
