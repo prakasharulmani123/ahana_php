@@ -273,6 +273,9 @@ class PhaSale extends RActiveRecord {
                 } else {
                     return 'Cash On Delivery';
                 }
+            },
+            'billed_by' => function ($model) {
+                return $model->createdUser->title_code . ' ' . $model->createdUser->name;
             }
         ];
 
@@ -326,7 +329,7 @@ class PhaSale extends RActiveRecord {
                     ];
                     break;
                 case 'patient_report':
-                    $addt_keys = ['patient_name', 'billings_total_balance_amount', 'billings_total_paid_amount','bill_payment','patient_uhid'];
+                    $addt_keys = ['patient_name', 'billings_total_balance_amount', 'billings_total_paid_amount', 'bill_payment', 'patient_uhid'];
                     $parent_fields = [
                         'sale_id' => 'sale_id',
                         'bill_no' => 'bill_no',
