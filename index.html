@@ -104,10 +104,10 @@
                             <div class="cell">
                                 <div class="cell-inner padder">
                                     <!-- notes list -->
-                                    <div ng-repeat="(date, allNote) in child.notes | orderBy:'pat_note_id' | groupBy:'created_date'" >
+                                    <div ng-repeat="(date,allNote) in child.notes | groupBy:'created_date' | toArray:true ">
                                         <!--                                        <p><b>Encounter: {{note.encounter_id}}</b></p>-->
                                         <div class="vitals-cont-date">
-                                        <div class="label bg-info">{{check_date(date)}}</div>
+                                        <div class="label bg-info">{{check_date(allNote.$key)}}</div>
                                         </div>
                                         <div class="vitals-table">
                                         <div ng-repeat="note in allNote" class="bg-grey-only r r-2x m-b-xs wrapper-xs b-l b-2x b-{{note.seen_by == 0 ? 'danger' : 'info'}} word-wrap">

@@ -231,14 +231,14 @@ angular.module('app')
 
                 $scope.setPatientAleratHtml = function (patient) {
                     if (patient.alert) {
-                        var alert_link = '#/patient/alert/' + patient.patient_guid+'/alert';
+                        var alert_link = '#/patient/alert/' + patient.patient_guid + '/alert';
                         $scope.patient_alert_html = '<div>' + patient.alert + '<br><a class="text-info alert-read-more" ui-sref="patient.alert({id: $scope.patientObj.patient_guid,type:alert})" href="' + alert_link + '">ReadMore</a><div>';
                     }
                 }
-                
+
                 $scope.setPatientAllergiesHtml = function (patient) {
                     if (patient.allergies) {
-                        var alert_link = '#/patient/alert/' + patient.patient_guid +'/allergies';
+                        var alert_link = '#/patient/alert/' + patient.patient_guid + '/allergies';
                         $scope.patient_allergies_html = '<div>' + patient.allergies + '<br><a class="text-info allergies-read-more" ui-sref="patient.alert({id: $scope.patientObj.patient_guid,type:allergies})" href="' + alert_link + '">ReadMore</a><div>';
                     }
                 }
@@ -352,10 +352,10 @@ angular.module('app')
                     }).success(function (response) {
                         $scope.presc_right.notedata = {};
 
-                        angular.extend(response, {
+                        angular.extend(response, {  
                             created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
                             created_date: moment().format('YYYY-MM-DD'),
-                        });
+                            });
 
                         if (mode == "update")
                         {
@@ -365,12 +365,11 @@ angular.module('app')
                                 $scope.child.notes.splice($scope.child.notes.indexOf(notes_exists[0]), 1);
                             }
                         }
-
-                        $scope.child.notes.push(response);
-
+                        
+                        $scope.child.notes.unshift(response);
                         $scope.loadbar('hide');
 
-                        $(".vbox .row-row .cell:visible").animate({scrollTop: $('.vbox .row-row .cell:visible').prop("scrollHeight")}, 1000);
+                        //$(".vbox .row-row .cell:visible").animate({scrollTop: $('.vbox .row-row .cell:visible').prop("scrollHeight")}, 1000);
 //                                $scope.msg.successMessage = 'Note saved successfully';
                     })
                             .error(function (data, status) {
@@ -441,8 +440,11 @@ angular.module('app')
                         var textString = 0;
                         angular.forEach($scope.presc_right.vitaldata, function (value, key) {
                             var regex = /^[0-9.]+$/;
-                            if (!regex.test(value))
+                            if (((value != null) && (value != ''))&& (!regex.test(value)) && ((key=='temperature') || (key=='blood_pressure_systolic') || (key=='blood_pressure_diastolic')|| (key=='pulse_rate')|| (key=='weight')))
+                            {
                                 textString += 1;
+                            }
+                                
                             if (value == '')
                                 emptylen += 1;
                         });
@@ -451,7 +453,7 @@ angular.module('app')
                             $scope.presc_right.vital_error = true;
                             return;
                         }
-                        if(textString != 0) {
+                        if (textString != 0) {
                             $scope.presc_right.vital_error = false;
                             $scope.presc_right.vital_number_error = true;
                             return;
@@ -672,7 +674,7 @@ angular.module('app')
                     $scope.patientObj.alert = data.alert;
                     $scope.setPatientAleratHtml($scope.patientObj);
                 });
-                
+
                 $scope.$on('patient_allergies', function (event, data) {
                     $scope.patientObj.hasallergies = data.hasallergies;
                     $scope.patientObj.allergies = data.alert;
