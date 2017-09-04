@@ -90,7 +90,8 @@ class PatientvitalsController extends ActiveController {
                         ->status()
                         ->andWhere($condition)
 //                    ->groupBy('encounter_id')
-                        ->orderBy(['encounter_id' => SORT_DESC])
+                        //->orderBy(['encounter_id' => SORT_DESC])
+                        ->orderBy(['vital_id' => SORT_DESC])
                         ->all();
 
                 $result = array_values(\yii\helpers\ArrayHelper::index($data, null, ['encounter_id', function($element) {
