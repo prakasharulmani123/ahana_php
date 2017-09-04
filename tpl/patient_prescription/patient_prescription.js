@@ -302,18 +302,18 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $('#save_print, #save').click(function () {
             var diag = $('#diagnosis').val();
             if (diag) {
-                if ($scope.data.diag_id == null || $scope.data.diag_id=='') {
+                if ($scope.data.diag_id == null || $scope.data.diag_id == '') {
                     $scope.errorMessage = 'Invalid Select Diagnosis';
-                } else 
+                } else
                     $scope.errorMessage = '';
             }
         });
-        
+
         $scope.diagname_desc = function (Diag) {
             if (Diag == null || Diag == undefined)
-                 return;
-             var label = Diag.diag_name + " " + Diag.diag_description;
-             return label;
+                return;
+            var label = Diag.diag_name + " " + Diag.diag_description;
+            return label;
         }
 
         $scope.generics = [];
@@ -377,6 +377,34 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $scope.generics = [];
             $scope.products = [];
             $scope.routes = {};
+        }
+
+        $scope.afterdrugAdded = function (drug, generic, product) {
+            $scope.pres_drug = [];
+            $scope.generics = [];
+            $scope.products = [];
+            $scope.addData = {};
+            $scope.addData.drug_class = drug;
+            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/getgenericlistbydrugclass?drug_class_id=' + drug.drug_class_id + '&addtfields=presc_search')
+                    .success(function (response) {
+                        $scope.generics = response.genericList;
+                        //Set generic_id in dropdown list
+                        selected = $filter('filter')($scope.generics, {generic_id:generic});
+                        var index = $scope.generics.indexOf(selected[0]);
+                        $scope.addData.generic = $scope.generics[index];
+                        
+                        //Set product_id in dropdown list
+                        $scope.products = $scope.allproducts = response.productList;
+                        selectedProduct = $filter('filter')($scope.products, {product_id:product});
+                        var index = $scope.products.indexOf(selectedProduct[0]);
+                        $scope.addData.product = $scope.products[index];
+                        $scope.setGeneric();
+                        $scope.getRoutes(false, null, null);
+                        $("#search_presc_dropdown").trigger("click");
+                        angular.element(document.querySelectorAll("#frequency_3_0")).focus();
+                    }, function (x) {
+                        $scope.errorData = "An Error has occured while loading generic!";
+                    });
         }
 
         $scope.setGeneric = function () {
@@ -794,9 +822,9 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
         $scope.saveForm = function () {
             _that = this;
-            if($scope.errorMessage)
+            if ($scope.errorMessage)
                 return false;
-            
+
             $scope.errorData = "";
             $scope.msg.successMessage = "";
 
@@ -1798,6 +1826,28 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     }
             )
         }
+
+        $scope.openModel = function (size, ctrlr, tmpl, update_col) {
+            var modalInstance = $modal.open({
+                templateUrl: tmpl,
+                controller: ctrlr,
+                size: size,
+                resolve: {
+                    scope: function () {
+                        return $scope;
+                    },
+                    column: function () {
+                        return update_col;
+                    },
+                }
+            });
+
+            modalInstance.result.then(function (selectedItem) {
+                $scope.selected = selectedItem;
+            }, function () {
+                $log.info('Modal dismissed at: ' + new Date());
+            });
+        };
 
 
 

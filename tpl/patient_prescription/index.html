@@ -64,7 +64,7 @@
 
                                         <!-- Advance Search -->
                                         <div class="input-group-btn dropdown" id="search-form-div">
-                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                            <button type="button" id="search_presc_dropdown" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                                                 <span class="caret"></span>
                                             </button>
 
@@ -116,6 +116,7 @@
                                                                     <input autocomplete="off" 
                                                                            type="text" 
                                                                            name="masked" 
+                                                                           id='frequency_3_0'
                                                                            ng-model="addData.frequency_3_0" 
                                                                            model-view-value="true" 
                                                                            class="form-control m-b"
@@ -157,7 +158,14 @@
                                                                     <button class="btn m-b-xs  btn-success save-btn" ng-click="addForm()"><i class="fa fa-plus"></i> Add</button>
                                                                     &nbsp;
                                                                     <button class="btn m-b-xs  btn-dark" ng-click="reset()"> <i class="fa fa-repeat"></i> Reset</button>
-                                                                    &nbsp; </div>
+                                                                    &nbsp;
+                                                                    <script type="text/ng-template" id="ProductModalContent.html">
+                                                                        <div ng-include="'tpl/modal_form/modal.product.html'"></div>
+                                                                    </script>
+                                                                    <button type="button" class="btn m-b-xs btn-primary" ng-click="openModel('lg', 'ProductModalInstanceCtrl', 'ProductModalContent.html', '')">
+                                                                        <i class="fa fa-plus text ng-scope"></i> Add Medicine
+                                                                    </button>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -167,20 +175,20 @@
                                         <!-- Advance Search END-->
                                     </div>
                                 </div>
-                               <div class="col-sm-4 pull-right">
-                                   <!--  <select class="form-control selectpicker" data-live-search="true" ng-model="data.diag_id" ng-options="diag.value as diag.label for diag in diagnosis| orderBy: name">
-                                        <option value="">Select Diagnosis</option>
-                                    </select>-->
-<input autocomplete="off"
-                                               placeholder="Diagnosis"
-                                               type="text"
-                                               class="form-control"
-                                               id="diagnosis"
-                                               ng-model="diagnosis"
-                                               typeahead="Diag as diagname_desc(Diag) for Diag in getdiagnosis($viewValue) | orderBy: bill_no"
-                                               typeahead-on-select="setDiagid($item)"
-                                               typeahead-wait-ms="400"
-                                               />
+                                <div class="col-sm-4 pull-right">
+                                    <!--  <select class="form-control selectpicker" data-live-search="true" ng-model="data.diag_id" ng-options="diag.value as diag.label for diag in diagnosis| orderBy: name">
+                                         <option value="">Select Diagnosis</option>
+                                     </select>-->
+                                    <input autocomplete="off"
+                                           placeholder="Diagnosis"
+                                           type="text"
+                                           class="form-control"
+                                           id="diagnosis"
+                                           ng-model="diagnosis"
+                                           typeahead="Diag as diagname_desc(Diag) for Diag in getdiagnosis($viewValue) | orderBy: bill_no"
+                                           typeahead-on-select="setDiagid($item)"
+                                           typeahead-wait-ms="400"
+                                           />
                                     <span style="color:#a94442" ng-if="errorMessage != ''">{{errorMessage}}</span>
                                 </div>
 

@@ -2557,7 +2557,8 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                             return $ocLazyLoad.load(['smart-table', 'ui.select', 'xeditable']).then(
                                     function () {
                                         return $ocLazyLoad.load([
-                                            'tpl/patient_prescription/patient_prescription.js?v=' + APP_VERSION
+                                            'tpl/patient_prescription/patient_prescription.js?v=' + APP_VERSION,
+                                            'tpl/modal_form/modal.product.js?v=' + APP_VERSION,
                                         ]);
                                     }
                             );
