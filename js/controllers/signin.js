@@ -54,15 +54,21 @@ function SignInForm($scope, $state, AuthenticationService, $http, $rootScope, $l
             if (response.success) {
                 AuthenticationService.setCurrentUser(response, $scope.user.stay_logged_in);
                 $localStorage.system_tenant = $scope.user.tenant_id;
-                $localStorage.system_username = $scope.user.username;
                 $localStorage.system_stay_logged_in = $scope.user.stay_logged_in;
-
-                if (typeof $localStorage.system_state_params != 'undefined' && Object.keys($localStorage.system_state_params).length > 0) {
-                    $state.go($localStorage.system_state_name, $localStorage.system_state_params);
-                } else if(typeof $localStorage.system_state_name != 'undefined') {
-                    $state.go($localStorage.system_state_name);
+                
+                var previous_login_username = $localStorage.system_username;
+                var current_login_username = $scope.user.username;
+                
+                if (previous_login_username == current_login_username) {
+                    $localStorage.system_username = $scope.user.username;
+                    if (typeof $localStorage.system_state_params != 'undefined' && Object.keys($localStorage.system_state_params).length > 0) {
+                        $state.go($localStorage.system_state_name, $localStorage.system_state_params);
+                    } else if (typeof $localStorage.system_state_name != 'undefined') {
+                        $state.go($localStorage.system_state_name);
+                    }
                 } else {
-                    $state.go('configuration.roles');
+                    $localStorage.system_username = $scope.user.username;
+                    $state.go('myworks.dashboard');
                 }
             } else {
                 $('#login_btn').button('reset');
