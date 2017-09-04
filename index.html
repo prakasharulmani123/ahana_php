@@ -157,12 +157,21 @@
                             <div class="cell">
                                 <div class="cell-inner padder">
                                     <!-- vitals list -->
-                                    <div ng-repeat="(date, allVital) in child.vitals | orderBy:'created_at' | groupBy:'created_date'" class="vitals-cont">
+                                    <!--<div ng-repeat="(date, allVital) in child.vitals | orderBy:'created_at' | groupBy:'created_date'" class="vitals-cont">
                                         <div class="vitals-cont-date">
                                             <div class="label bg-info">{{check_date(date)}}</div>
-                                        </div>
+                                        </div>-->
                                         
-                                        <div ng-repeat="vital in allVital">
+                                        <div ng-repeat="vital in child.vitals ">
+                                            <div class="vitals-cont-date">
+                                                <a ng-if="vital.encounter_status == '1'" class="label bg-dark" check-access-custom3 title="Edit" data-url='patient.vitalUpdate' ng-click="GetVital('{{$state.params.id}}','{{vital.vital_id}}')">
+                                                        <i class="fa fa-pencil"></i>
+                                                    </a> &nbsp;&nbsp;
+                                                <div class="label bg-info">{{check_date(vital.created_date)}}</div>
+                                                <span class="label {{vital.seen_by == 0 ? 'bg-danger' : 'bg-dark'}}">
+                                                        {{vital.created_at| moment:'hh:mm A'}}
+                                                </span>
+                                            </div>
                                             <div class="vitals-table">
                                                 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table table-bordered" >
                                                     <tr ng-if="vital.pulse_rate">
@@ -185,19 +194,11 @@
                                                         <td>{{vital.weight}} Kg </td>
                                                     </tr>
                                                 </table>
-                                                <div class="text-xs text-muted ng-binding">
-                                                    <a ng-if="vital.encounter_status == '1'" check-access-custom3 style="color: #363f44;" title="Edit" data-url='patient.vitalUpdate' ng-click="GetVital('{{$state.params.id}}','{{vital.vital_id}}')">
-                                                        <i class="fa fa-pencil"></i>
-                                                    </a> &nbsp;&nbsp;
-                                                   <span class="{{vital.seen_by == 0 ? 'bg-danger' : ''}}">
-                                                        {{vital.created_at| moment:'hh:mm A'}}
-                                                    </span>
-                                                </div>
                                             </div>
                                         </div>
                                         
                                         
-                                    </div>
+                                    <!--</div>-->
                                     <!-- / vitals list -->
                                 </div>
                             </div>
@@ -205,11 +206,14 @@
 
                         <div class="wrapper m-t b-t b-light">
                             <form class="m-b-none ng-pristine ng-valid ng-submitted" ng-submit="addVital()" ng-init="presc_right.vitaldata = {};
-                                                presc_right.vital_error = false;">
+                                                presc_right.vital_error = false;presc_right.vital_number_error=false;">
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="text-danger col-sm-12" ng-show="presc_right.vital_error">
                                             Cannot create blank entry
+                                        </div>
+                                        <div class="text-danger col-sm-12" ng-show="presc_right.vital_number_error">
+                                            Accept Only number and dot.
                                         </div>
                                         <div class="col-sm-6">
                                             <input type="text" maxlength="5" placeholder="Temperature" class="form-control" ng-model="presc_right.vitaldata.temperature">

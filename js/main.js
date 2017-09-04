@@ -438,21 +438,31 @@ angular.module('app')
                         var keys = Object.keys($scope.presc_right.vitaldata);
                         var len = keys.length;
                         var emptylen = 0;
+                        var textString = 0;
                         angular.forEach($scope.presc_right.vitaldata, function (value, key) {
+                            var regex = /^[0-9.]+$/;
+                            if (!regex.test(value))
+                                textString += 1;
                             if (value == '')
                                 emptylen += 1;
                         });
                         if (len == emptylen) {
+                            $scope.presc_right.vital_number_error = false;
                             $scope.presc_right.vital_error = true;
+                            return;
+                        }
+                        if(textString != 0) {
+                            $scope.presc_right.vital_error = false;
+                            $scope.presc_right.vital_number_error = true;
                             return;
                         }
                     }
 
                     $scope.presc_right.vital_error = false;
+                    $scope.presc_right.vital_number_error = false;
 
                     $scope.errorData = "";
                     $scope.msg.successMessage = "";
-
                     angular.extend($scope.presc_right.vitaldata, {
                         patient_id: $scope.patientObj.patient_id,
                         encounter_id: $scope.encounter_id,
@@ -490,13 +500,13 @@ angular.module('app')
                                 $scope.child.vitals.splice($scope.child.vitals.indexOf(vital_exists[0]), 1);
                             }
                         }
-                        $scope.child.vitals.push(response);
+                        $scope.child.vitals.unshift(response);
 
                         $scope.loadbar('hide');
 
-                        $(".vbox .row-row .cell:visible").animate({
-                            scrollTop: $('.vbox .row-row .cell:visible').prop("scrollHeight")
-                        }, 1000);
+//                        $(".vbox .row-row .cell:visible").animate({
+//                            scrollTop: $('.vbox .row-row .cell:visible').prop("scrollHeight")
+//                        }, 1000);
                     })
                             .error(function (data, status) {
                                 $scope.loadbar('hide');
