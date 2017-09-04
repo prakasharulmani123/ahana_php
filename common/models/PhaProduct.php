@@ -65,6 +65,7 @@ class PhaProduct extends RActiveRecord {
     public function rules() {
         return [
                 [['product_name', 'product_description_id', 'product_reorder_min', 'product_reorder_max', 'brand_id', 'purchase_vat_id'], 'required'],
+                [['product_name', 'product_unit', 'product_unit_count', 'product_description_id', 'product_reorder_min', 'product_reorder_max', 'brand_id', 'division_id', 'generic_id' ,'purchase_vat_id'], 'required', 'on' => 'savepresproduct'],
                 [['tenant_id', 'product_description_id', 'product_reorder_min', 'product_reorder_max', 'brand_id', 'division_id', 'generic_id', 'drug_class_id', 'purchase_vat_id', 'purchase_package_id', 'sales_vat_id', 'hsn_id', 'sales_package_id', 'created_by', 'modified_by'], 'integer'],
                 [['product_price'], 'number'],
                 [['status'], 'string'],

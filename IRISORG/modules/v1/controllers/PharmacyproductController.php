@@ -636,7 +636,7 @@ class PharmacyproductController extends ActiveController {
         foreach ($products as $product) {
             $nestedData = array();
             $nestedData['product_id'] = $product->product_id;
-            $nestedData['product_name'] = $product->product_name.' '.$product->product_unit_count.''.$product->product_unit;
+            $nestedData['product_name'] = $product->product_name . ' ' . $product->product_unit_count . '' . $product->product_unit;
             $nestedData['product_code'] = $product->product_code;
             $nestedData['product_type'] = $product->productDescription->description_name;
             $nestedData['product_brand'] = $product->brand->brand_name;
@@ -1258,6 +1258,27 @@ class PharmacyproductController extends ActiveController {
             $connection->close();
         }
         return $return;
+    }
+
+    public function actionSaveprescriptionproduct() {
+        $post = Yii::$app->request->post();
+        if (!empty($post)) {
+            $model = new PhaProduct();
+            $model->scenario = 'savepresproduct';
+            $model->attributes = $post;
+            $model->product_reorder_min = 1;
+            $model->product_reorder_max = 50;
+            $valid = $model->validate();
+            if ($valid) {
+                $model->save(false);
+                $drug = PhaDrugClass::find()
+                        ->andWhere(['drug_class_id'=>$model->drug_class_id])
+                        ->one();
+                return ['success' => true,'drug'=>$drug,'generic_id'=>$model->generic_id,'product_id'=>$model->product_id];
+            } else {
+                return ['success' => false, 'message' => Html::errorSummary([$model])];
+            }
+        }
     }
 
     private function getVat($tenant_id, $vat) {
