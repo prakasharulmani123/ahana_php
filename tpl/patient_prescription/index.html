@@ -57,7 +57,7 @@
                                         <div class="patient-search-result" ng-if="prescription != '' && prescription_lists" >
                                             <ul class="search-patientcont-header" id='prescriptioncont-header' ng-show="prescription_lists.length > 0">
                                                 <li ng-repeat="(key, prescription_list) in prescription_lists" class="{{prescription_list.selected}}" ng-click="addGlobalSearch(prescription_list)">
-                                                    <a data-key="{{key}}" ng-bind-html="prescription_list.prescription | highlight:prescription" href="javascript:void(0)" class="ng-binding {{(prescription_list.available_quantity <= 0) ? 'text-danger' : ''}}"></a>
+                                                    <a data-key="{{key}}" ng-bind-html="prescription_list.prescription | highlight:prescription" href="javascript:void(0)" class="ng-binding {{(prescription_list.available_quantity <= 0 && presc_stock_status==1) ? 'text-danger' : ''}}"></a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -213,7 +213,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody ng-hide="isLoading">                                                   
-                                                    <tr class="{{(item.available_quantity == 0|| !item.in_stock) ? 'out_of_stock' : ''}}" ng-repeat="item in data.prescriptionItems" ng-init="key = item.item_key">
+                                                    <tr class="{{((item.available_quantity == 0 || !item.in_stock) && presc_stock_status==1) ? 'out_of_stock' : ''}}" ng-repeat="item in data.prescriptionItems" ng-init="key = item.item_key">
                                                         <td align="center">                                                         
                                                             <button type="button" class="label bg-info" ng-click="removeItem(item)"><i class=" fa fa-trash"></i></button>
                                                         </td>

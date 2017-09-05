@@ -104,8 +104,12 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
         $scope.updateSetting = function ($data, config_id) {
             $scope.errorData = "";
             $scope.msg.successMessage = "";
-
+            
             $scope.loadbar('show');
+            if(($data == 1) ||($data == 0)) {
+                $data = {value: $data}
+            }
+            
             $http({
                 method: 'PUT',
                 url: $rootScope.IRISOrgServiceUrl + '/appconfigurations/' + config_id,
@@ -375,12 +379,12 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                     $scope.errorData = data.message;
             });
         }
-        
+
         //In-Progress
         $scope.showStockImportErrorLog = function () {
 
         }
-        
+
         //Pha Masters Update
         $scope.initPhaMastersParams = function () {
             $scope.pha_master_import_process_text = '';
@@ -450,7 +454,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                     $scope.errorData = data.message;
             });
         }
-        
+
         //In-Progress
         $scope.showphaMastersUpdateErrorLog = function () {
 

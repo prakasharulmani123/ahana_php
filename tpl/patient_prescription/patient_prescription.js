@@ -242,6 +242,11 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading drugclass!";
                     });
+                    
+            $http.get($rootScope.IRISOrgServiceUrl + '/appconfiguration/getpresstatus?key=CHECK_STK_PRESC')
+                .success(function (response) {
+                    $scope.presc_stock_status = response.value;
+            })
 
             $http.get($rootScope.IRISOrgServiceUrl + '/genericname')
                     .success(function (response) {

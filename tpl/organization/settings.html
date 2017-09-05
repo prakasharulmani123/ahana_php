@@ -33,7 +33,16 @@
                                         <td>
                                             {{row.key}}
                                         </td>
-                                        <td class="v-middle">
+                                        <td ng-if="row.code == 'CSP'" class="v-middle">
+                                            <label class="i-checks "> 
+                                                <input type="checkbox" checked="" ng-true-value="'1'" ng-false-value="'0'" name="status" ng-model="row.value" ng-change='updateSetting(row.value, row.config_id)'> 
+                                                <i></i>
+                                            </label>
+                                            <span>
+                                                {{ row.notes || 'empty' }}
+                                            </span>
+                                        </td>
+                                        <td ng-if="row.code == 'ET'" class="v-middle">
                                             <span editable-text="row.value" e-name="value" e-form="rowform" onbeforesave="checkValue($data)" e-required>
                                                 {{ row.value || 'empty' }}
                                             </span>
@@ -41,7 +50,7 @@
                                                 {{ row.notes || 'empty' }}
                                             </span>
                                         </td>
-                                        <td style="white-space: nowrap">
+                                        <td ng-show="row.code == 'ET'" style="white-space: nowrap">
                                             <!-- form -->
                                             <form editable-form name="rowform" onbeforesave="updateSetting($data, row.config_id)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == row">
                                                 <button type="submit" ng-disabled="rowform.$waiting" class="btn m-b-xs btn-info save-btn">
@@ -187,7 +196,7 @@
                             </form>
                         </div>
                     </div>
-                    
+
                     <!-- START -->
                     <div class="panel panel-default col-sm-12">
                         <div class="panel-body">
@@ -226,7 +235,7 @@
                         </div>
                     </div>
                     <!-- END -->
-                    
+
                 </div>
             </div>
             <div class="col-sm-6">
