@@ -2,6 +2,7 @@
 
 namespace IRISORG\modules\v1\controllers;
 
+use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
 use yii\filters\auth\QueryParamAuth;
@@ -46,5 +47,11 @@ class AppconfigurationController extends ActiveController {
             'query' => $modelClass::find()->tenant()->active()->orderBy(['created_at' => SORT_DESC]),
             'pagination' => false,
         ]);
+    }
+    
+    public function actionGetpresstatus() {
+        $modelClass = $this->modelClass;
+        $get = Yii::$app->getRequest()->get();
+        return $modelClass::getConfigurationByKey($get['key']);
     }
 }
