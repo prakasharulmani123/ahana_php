@@ -602,8 +602,9 @@
                                                                         drop-disable 
                                                                         number-mask="" 
                                                                         select-on-click="" 
-                                                                        ng-blur="setDateEmpty();
-                                                                                        getVisit();">     
+                                                                        ng-blur="setDateEmpty();getVisit();"
+                                                                        ng-keypress="$event.keyCode == 13 && getVisit() && setDateEmpty()"
+                                                                        >     
                                                                 </div>
                                                                 <div class="form-group prescription-btns">   
                                                                     &nbsp; 
