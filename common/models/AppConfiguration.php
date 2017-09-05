@@ -109,6 +109,11 @@ class AppConfiguration extends RActiveRecord {
                 'value' => '1',
                 'notes' => 'Share Basic Data',
             ],
+            'CHECK_STK_PRESC' => [
+                'code' => 'CSP',
+                'value' => '1',
+                'notes' => 'Prescribe medicine in Prescription screen, Provision to check stock or not',
+            ],
         );
     }
     
