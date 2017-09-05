@@ -294,7 +294,8 @@ angular.module('app')
                     }, 100);
                 }
 
-                $scope.child = {}
+                $scope.child = {};
+                $scope.grouped = {};
 
                 $scope.GetNote = function (id, note_id) {
 
@@ -352,10 +353,10 @@ angular.module('app')
                     }).success(function (response) {
                         $scope.presc_right.notedata = {};
 
-                        angular.extend(response, {  
+                        angular.extend(response, {
                             created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
                             created_date: moment().format('YYYY-MM-DD'),
-                            });
+                        });
 
                         if (mode == "update")
                         {
@@ -365,9 +366,17 @@ angular.module('app')
                                 $scope.child.notes.splice($scope.child.notes.indexOf(notes_exists[0]), 1);
                             }
                         }
-                        
+
                         $scope.child.notes.unshift(response);
                         $scope.loadbar('hide');
+
+                        //groupBy for reverse order keep - Nad
+                        $scope.grouped.notes = [];
+                        $scope.grouped.notes = $filter('groupBy')($scope.child.notes, 'created_date');
+                        $scope.grouped.notes = Object.keys($scope.grouped.notes)
+                                .map(function (key) {
+                                    return $scope.grouped.notes[key];
+                                });
 
                         //$(".vbox .row-row .cell:visible").animate({scrollTop: $('.vbox .row-row .cell:visible').prop("scrollHeight")}, 1000);
 //                                $scope.msg.successMessage = 'Note saved successfully';
@@ -440,11 +449,11 @@ angular.module('app')
                         var textString = 0;
                         angular.forEach($scope.presc_right.vitaldata, function (value, key) {
                             var regex = /^[0-9.]+$/;
-                            if (((value != null) && (value != ''))&& (!regex.test(value)) && ((key=='temperature') || (key=='blood_pressure_systolic') || (key=='blood_pressure_diastolic')|| (key=='pulse_rate')|| (key=='weight')))
+                            if (((value != null) && (value != '')) && (!regex.test(value)) && ((key == 'temperature') || (key == 'blood_pressure_systolic') || (key == 'blood_pressure_diastolic') || (key == 'pulse_rate') || (key == 'weight')))
                             {
                                 textString += 1;
                             }
-                                
+
                             if (value == '')
                                 emptylen += 1;
                         });

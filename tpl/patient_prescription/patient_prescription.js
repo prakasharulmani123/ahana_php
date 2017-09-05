@@ -185,6 +185,14 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                 seen_filter_note[0].seen_by = 0;
                             }
                         });
+                        
+                        //groupBy for reverse order keep - Nad
+                        $scope.grouped.notes = [];
+                        $scope.grouped.notes = $filter('groupBy')($scope.child.notes, 'created_date');
+                        $scope.grouped.notes = Object.keys($scope.grouped.notes)
+                                .map(function (key) {
+                                    return $scope.grouped.notes[key];
+                                });
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading patientnote!";
