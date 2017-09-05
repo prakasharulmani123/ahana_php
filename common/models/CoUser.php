@@ -224,7 +224,7 @@ class CoUser extends RActiveRecord {
     }
 
     public function getFullname() {
-        return $this->title_code . ucfirst($this->name);
+        return $this->title_code . ' '.ucfirst($this->name);
     }
 
     public static function getMyUserlist() {
