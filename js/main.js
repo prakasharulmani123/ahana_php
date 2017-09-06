@@ -295,7 +295,7 @@ angular.module('app')
                 }
 
                 $scope.child = {};
-                $scope.grouped = {};
+//                $scope.grouped = {};
 
                 $scope.GetNote = function (id, note_id) {
 
@@ -370,15 +370,15 @@ angular.module('app')
                         $scope.child.notes.unshift(response);
                         $scope.loadbar('hide');
 
-                        //groupBy for reverse order keep - Nad
-                        $scope.grouped.notes = [];
-                        $scope.grouped.notes = $filter('groupBy')($scope.child.notes, 'created_date');
-                        $scope.grouped.notes = Object.keys($scope.grouped.notes)
-                                .map(function (key) {
-                                    return $scope.grouped.notes[key];
-                                });
+//                        //groupBy for reverse order keep - Nad
+//                        $scope.grouped.notes = [];
+//                        $scope.grouped.notes = $filter('groupBy')($scope.child.notes, 'created_date');
+//                        $scope.grouped.notes = Object.keys($scope.grouped.notes)
+//                                .map(function (key) {
+//                                    return $scope.grouped.notes[key];
+//                                });
 
-                        //$(".vbox .row-row .cell:visible").animate({scrollTop: $('.vbox .row-row .cell:visible').prop("scrollHeight")}, 1000);
+                        $(".vbox .row-row .cell:visible").animate({scrollTop: $('.vbox .row-row .cell:visible').prop("scrollHeight")}, 1000);
 //                                $scope.msg.successMessage = 'Note saved successfully';
                     })
                             .error(function (data, status) {
@@ -515,9 +515,9 @@ angular.module('app')
 
                         $scope.loadbar('hide');
 
-//                        $(".vbox .row-row .cell:visible").animate({
-//                            scrollTop: $('.vbox .row-row .cell:visible').prop("scrollHeight")
-//                        }, 1000);
+                        $(".vbox .row-row .cell:visible").animate({
+                            scrollTop: $('.vbox .row-row .cell:visible').prop("scrollHeight")
+                        }, 1000);
                     })
                             .error(function (data, status) {
                                 $scope.loadbar('hide');

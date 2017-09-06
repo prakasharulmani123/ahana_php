@@ -185,14 +185,14 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                 seen_filter_note[0].seen_by = 0;
                             }
                         });
-                        
-                        //groupBy for reverse order keep - Nad
-                        $scope.grouped.notes = [];
-                        $scope.grouped.notes = $filter('groupBy')($scope.child.notes, 'created_date');
-                        $scope.grouped.notes = Object.keys($scope.grouped.notes)
-                                .map(function (key) {
-                                    return $scope.grouped.notes[key];
-                                });
+
+//                        //groupBy for reverse order keep - Nad
+//                        $scope.grouped.notes = [];
+//                        $scope.grouped.notes = $filter('groupBy')($scope.child.notes, 'created_date');
+//                        $scope.grouped.notes = Object.keys($scope.grouped.notes)
+//                                .map(function (key) {
+//                                    return $scope.grouped.notes[key];
+//                                });
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading patientnote!";
@@ -250,11 +250,11 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading drugclass!";
                     });
-                    
+
             $http.get($rootScope.IRISOrgServiceUrl + '/appconfiguration/getpresstatus?key=CHECK_STK_PRESC')
-                .success(function (response) {
-                    $scope.presc_stock_status = response.value;
-            })
+                    .success(function (response) {
+                        $scope.presc_stock_status = response.value;
+                    })
 
             $http.get($rootScope.IRISOrgServiceUrl + '/genericname')
                     .success(function (response) {
@@ -402,13 +402,13 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     .success(function (response) {
                         $scope.generics = response.genericList;
                         //Set generic_id in dropdown list
-                        selected = $filter('filter')($scope.generics, {generic_id:generic});
+                        selected = $filter('filter')($scope.generics, {generic_id: generic});
                         var index = $scope.generics.indexOf(selected[0]);
                         $scope.addData.generic = $scope.generics[index];
-                        
+
                         //Set product_id in dropdown list
                         $scope.products = $scope.allproducts = response.productList;
-                        selectedProduct = $filter('filter')($scope.products, {product_id:product});
+                        selectedProduct = $filter('filter')($scope.products, {product_id: product});
                         var index = $scope.products.indexOf(selectedProduct[0]);
                         $scope.addData.product = $scope.products[index];
                         $scope.setGeneric();
@@ -1332,7 +1332,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         }
 
         $scope.seen_vitals = function () {
-//            $scope.scrollBottom();
+            $scope.scrollBottom();
             if ($scope.unseen_vitals_count > 0) {
                 unseen_filter_vital = $filter('filter')($scope.child.vitals, {seen_by: 0});
                 vital_ids = [];
@@ -1358,10 +1358,12 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         }
 
         $scope.scrollBottom = function () {
-            if ($(".vbox .row-row .cell").is(':visible')) {
-                elem = $(".vbox .row-row .cell:visible");
-                elem.animate({scrollTop: elem.prop("scrollHeight")}, 1000);
-            }
+            $timeout(function () {
+                if ($(".vbox .row-row .cell").is(':visible')) {
+                    elem = $(".vbox .row-row .cell:visible");
+                    elem.animate({scrollTop: elem.prop("scrollHeight")}, 1000);
+                }
+            }, 500);
         }
 
         $scope.types = IO_BARCODE_TYPES;
