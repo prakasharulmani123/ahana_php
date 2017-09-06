@@ -216,6 +216,10 @@ app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http
                         $scope.loadbar('hide');
                         $scope.data = response;
                         $scope.setPackageUnit();
+                        //If Drug Class is empty then give option to choose new drug class.
+                        if(!$scope.data.drug_class_id){
+                            $scope.showDrugDropdown = true;
+                        }
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');

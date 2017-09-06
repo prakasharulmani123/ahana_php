@@ -91,7 +91,7 @@
                             </div>
                         </div>
                         <div class="line line-dashed b-b line-lg "></div>
-                        <div ng-show="data.drug_name">
+                        <div ng-show="data.drug_name != '' && data.drug_name != '-' && data.drug_class_id">
                             <div class="form-group" >
                                 <label class="col-sm-5 control-label">Drug Class </label>
                                 <div class="col-sm-7">
@@ -103,7 +103,7 @@
                             <div class="form-group">
                                 <label class="col-sm-5 control-label">Drug Class </label>
                                 <div class="col-sm-7">
-                                    <select class="form-control" ng-model="data.drug_class_id" ng-options="drugClass.drug_class_id as drugClass.drug_name for drugClass in drugClasses| orderBy: drug_name"">
+                                    <select class="form-control" ng-model="data.drug_class_id" ng-options="drugClass.drug_class_id as drugClass.drug_name for drugClass in drugClasses| orderBy: drug_name">
                                         <option value="">Select Drug Class</option>
                                     </select>
                                 </div>
