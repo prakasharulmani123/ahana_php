@@ -327,7 +327,17 @@ class HelperComponent extends Component {
     }
 
     public function getRoomChargeItems($tenant_id, $room_type_id) {
-        return CoRoomCharge::find()->tenant($tenant_id)->status()->active()->andWhere(['room_type_id' => $room_type_id])->all();
+        //Left Join - Get status enabled room charge item.
+        return CoRoomCharge::find()
+                        ->leftJoin('co_room_charge_item', 'co_room_charge_item.charge_item_id = co_room_charge.charge_item_id')
+                        ->tenant($tenant_id)
+                        ->status()
+                        ->active()
+                        ->andWhere([
+                            'room_type_id' => $room_type_id,
+                            'co_room_charge_item.status' => '1',
+                        ])
+                        ->all();
     }
 
     private function _getDayDiff($from_date, $to_date) {
@@ -361,8 +371,7 @@ class HelperComponent extends Component {
         return !empty($bill_recurring) ? $bill_recurring->charge_amount : $charge->charge;
     }
 
-    public static function getAgeWithMonth($dob)
-    {
+    public static function getAgeWithMonth($dob) {
         $dob = date('d-m-Y', strtotime($dob));
         $localtime = getdate();
         $today = $localtime['mday'] . "-" . $localtime['mon'] . "-" . $localtime['year'];
@@ -403,6 +412,7 @@ class HelperComponent extends Component {
             'months' => ($years < 0) ? 0 : $months
         ];
     }
+
 }
 
 ?>
