@@ -121,6 +121,11 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                 var discharge_date = moment($scope.enc.selected.discharge_date).format('DD/MM/YYYY - hh:mm A');
             else
                 var discharge_date = '-';
+            
+            if ($scope.enc.selected.bill_no)
+                var bill_no = $scope.enc.selected.bill_no;
+            else
+                var bill_no = '-';
 
             return [
                 {
@@ -130,6 +135,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                         widths: ['auto', 10, 'auto'],
                         body: [
                             [{text: 'Patient Detail :', bold: true, colSpan: 3, decoration: 'underline'}, {}, {}],
+                            [{text: 'Bill No', bold: true}, ':', bill_no],
                             [{text: 'Name', bold: true}, ':', $scope.patientObj.fullname],
                             [{text: 'Patient ID', bold: true}, ':', $scope.patientObj.patient_global_int_code],
                             [{text: 'Age', bold: true}, ':', $scope.patientObj.patient_age_ym.toString() + ' / ' + $scope.app.patientDetail.patientSex],
