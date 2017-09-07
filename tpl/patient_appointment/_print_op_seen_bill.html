@@ -36,27 +36,30 @@
     <table width="100%" border="0" cellspacing="0" cellpadding="0" class="purchase-list-tab">
         <tr>
             <th>S.No</th>
-            <th>Consultant Name</th>
-            <!--<th>Billing</th>-->
-            <!--<th>Patient Category</th>-->
+            <th>Category</th>
+            <th>Headers</th>
             <th>Amount</th>         
         </tr>
         <tr>
             <td>1</td>
-            <!--<td>Seen</td>-->
+            <td>Professional Charges</td>
             <td>{{printBillData.doctor}}</td>
-            <!--<td>{{printBillData.patient_bill_type}}</td>-->
-            <!--<td>{{printBillData.patient_cat_name}}</td>-->
             <td align="right">{{ (printBillData.op_amount > 0) ? printBillData.op_amount : "-"}}</td>
-        </tr> 
+        </tr>
+        <tr ng-repeat="(key, proce) in printBillData.procedure">
+            <td>{{key + 2}}</td>
+            <td>Procedure Charges</td>
+            <td>{{proce.procedure_name}}</td>
+            <td align="right">{{ (proce.charge_amount > 0) ? proce.charge_amount : "-"}}</td>
+        </tr>
         <tr>
-            <td colspan="3" align="right">
-                <b>Bill Total:</b> {{ (printBillData.op_amount > 0) ? printBillData.op_amount : "-"}}
+            <td colspan="4" align="right">
+                <b>Bill Total:</b> {{printBillData.op_bill_total | number:2}}
             </td>
         </tr>
         <tr>
-            <td colspan="3" align="right">
-                Amount paid: {{ (printBillData.op_amount > 0) ? printBillData.op_amount : "-"}}
+            <td colspan="4" align="right">
+                Amount paid: {{printBillData.op_bill_total | number:2}}
             </td>
         </tr>
     </table>
@@ -67,9 +70,8 @@
         <table width="100%" border="0" align="right" cellpadding="0" cellspacing="0" class="purchase-list-tab purchase-list-tab2 ">
             <tr>
                 <td>
-                    <p ng-if="printBillData.op_amount > 0">Pay Mode &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Cash <strong> ( {{printBillData.op_amount}} )</strong> </p>     
-                    <p ng-if="printBillData.op_amount > 0"><strong> {{printBillData.op_amount_inwords}}.</strong></p>  
-<!--                    <p>Bill prepared on {{printBillData.date}}</p>-->
+                    <p ng-if="printBillData.op_bill_total > 0">Pay Mode &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Cash <strong> ( {{printBillData.op_bill_total | number:2}} )</strong> </p>     
+                    <p ng-if="printBillData.op_bill_total > 0"><strong> {{printBillData.op_bill_total | words}} Rupees Only.</strong></p>  
                 </td>
             </tr>   
         </table>

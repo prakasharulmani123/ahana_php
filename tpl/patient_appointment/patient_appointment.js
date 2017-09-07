@@ -389,7 +389,7 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
                             if (mode == 'seen_future') {
                                 $scope.add_appointment();
                             } else if (mode == 'seen_print') {
-                                $scope.save_success(_that.data.PatAppointment.status_date, _that.data.PatAppointment.amount, response.amount_in_words, response.bill_no);
+                                $scope.save_success(_that.data.PatAppointment.status_date, _that.data.PatAppointment.amount, response.amount_in_words, response.bill_no,$state.params.enc_id);
                             } else {
                                 $scope.data = {};
                                 $timeout(function () {
@@ -415,7 +415,7 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
         };
 
         $scope.printBillData = {};
-        $scope.save_success = function (date, amount, amount_in_words, bill_no) {
+        $scope.save_success = function (date, amount, amount_in_words, bill_no, encounter_id) {
             $scope.printBillData.doctor = $scope.patientObj.consultant_name;
             $scope.printBillData.op_amount = amount;
             $scope.printBillData.op_amount_inwords = amount_in_words;
@@ -424,6 +424,16 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
             $scope.printBillData.patient_bill_type = $scope.bill_type_taken;
             $scope.printBillData.patient_cat_name = $scope.cat_name_taken;
             $scope.printBillData.bill_no = bill_no;
+            $http.post($rootScope.IRISOrgServiceUrl + '/procedure/getprocedureencounter?addtfields=billing', {enc_id: encounter_id})
+                    .success(function (billresponse) {
+                        $scope.printBillData.procedure = billresponse.procedure;
+                        var total = 0.00;
+                        angular.forEach(billresponse.procedure, function (bill_amount) {
+                            if (bill_amount.charge_amount)
+                                total = total + parseFloat(bill_amount.charge_amount);
+                        });
+                        $scope.printBillData.op_bill_total = total + parseFloat($scope.printBillData.op_amount);
+                    })
 
             var popupWindow = window.open('', '_blank', 'width=800,height=800,scrollbars=yes,menubar=no,toolbar=no,location=no,status=no,titlebar=no');
             $timeout(function () {
