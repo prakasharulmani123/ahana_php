@@ -57,6 +57,7 @@ app.controller('SaleMakePaymentController', ['scope', '$scope', '$modalInstance'
         });
         $scope.paid_amount = amt;
         $scope.data.paid_amount = amt;
+        $scope.total_select_bill_amount = amt;
         
         $scope.updatePaid = function(saleitem){
             $scope.paid_amount = 0;
@@ -74,6 +75,7 @@ app.controller('SaleMakePaymentController', ['scope', '$scope', '$modalInstance'
             
             $scope.paid_amount = amt;
             $scope.data.paid_amount = amt;
+            $scope.total_select_bill_amount = amt;
         }
 
         $scope.saveForm = function () {
@@ -86,7 +88,7 @@ app.controller('SaleMakePaymentController', ['scope', '$scope', '$modalInstance'
             method = 'POST';
             succ_msg = 'Payment added successfully';
 
-            angular.extend(_that.data, {sale_ids: $scope.bills, encounter_id: $scope.encounter_id, payment_type: $scope.sale_payment_type});
+            angular.extend(_that.data, {sale_ids: $scope.bills, encounter_id: $scope.encounter_id, payment_type: $scope.sale_payment_type, total_select_bill_amount:$scope.total_select_bill_amount});
             scope.loadbar('show');
             $http({
                 method: method,
