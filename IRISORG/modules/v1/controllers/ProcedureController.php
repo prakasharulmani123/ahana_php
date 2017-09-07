@@ -160,4 +160,18 @@ class ProcedureController extends ActiveController {
         }
     }
 
+    public function actionGetprocedureencounter() {
+        $post = Yii::$app->getRequest()->post();
+        if (!empty($post)) {
+            $procedure = PatProcedure::find()
+                    ->tenant()
+                    ->active()
+                    ->status()
+                    ->andWhere(['encounter_id' => $post['enc_id']])
+                    ->orderBy(['proc_date' => SORT_DESC])
+                    ->all();
+            return ['procedure'=> $procedure];
+        }
+    }
+
 }

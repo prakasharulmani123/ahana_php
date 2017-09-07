@@ -82,6 +82,7 @@ class PatProcedure extends RActiveRecord {
             'proc_date' => 'Date',
             'proc_consultant_ids' => 'Consultant',
             'proc_description' => 'Description',
+            'charge_amount' => 'Charge Amount',
             'status' => 'Status',
             'created_by' => 'Created By',
             'created_at' => 'Created At',
@@ -239,6 +240,13 @@ class PatProcedure extends RActiveRecord {
                         'proc_description' => 'proc_description',
                         'proc_date' => 'proc_date',
                         'encounter_id' => 'encounter_id'
+                    ];
+                    break;
+                case 'billing':
+                    $addt_keys = ['procedure_name'];
+                    $parent_fields = [
+                        'proc_id' => 'proc_id',
+                        'charge_amount' => 'charge_amount',
                     ];
                     break;
             endswitch;
