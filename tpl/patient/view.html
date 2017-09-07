@@ -79,7 +79,9 @@
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label"> DOB: </label>
                                     <div class="col-sm-9">
-                                        <p>  {{view_data.patient_dob}}  </p>
+                                        <p ng-show="view_data.patient_dob">  
+                                            {{view_data.patient_dob | moment:'DD/MM/YYYY'}}  
+                                        </p>
                                     </div>
                                 </div>
                                 <div class="line line-dashed b-b line-lg "></div>
