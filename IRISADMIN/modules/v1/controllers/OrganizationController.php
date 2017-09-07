@@ -96,7 +96,15 @@ class OrganizationController extends ActiveController {
             //Execute DB Structure to client DB Connection
             $structure = file_get_contents(Url::base(true) . '/structure.sql');
             $data = file_get_contents(Url::base(true) . '/data.sql');
-            $sql = $structure ;
+            $functions = file_get_contents(Url::base(true) . '/functions.sql');
+            $sp = file_get_contents(Url::base(true) . '/sp.sql');
+            $v_billing_advance_charges = file_get_contents(Url::base(true) . '/v_billing_advance_charges.sql');
+            $v_billing_other_charges = file_get_contents(Url::base(true) . '/v_billing_other_charges.sql');
+            $v_billing_procedures = file_get_contents(Url::base(true) . '/v_billing_procedures.sql');
+            $v_billing_professionals = file_get_contents(Url::base(true) . '/v_billing_professionals.sql');
+            $v_billing_recurring = file_get_contents(Url::base(true) . '/v_billing_recurring.sql');
+            $v_documents = file_get_contents(Url::base(true) . '/v_documents.sql');
+            $v_encounter = file_get_contents(Url::base(true) . '/v_encounter.sql');
 
             $connection = new Connection([
                 'dsn' => "mysql:host={$post['org_db_host']};dbname={$post['org_database']}",
@@ -104,11 +112,40 @@ class OrganizationController extends ActiveController {
                 'password' => isset($post['org_db_password']) ? $post['org_db_password'] : '',
             ]);
             $connection->open();
-            $command = $connection->createCommand($sql);
+            
+            $command = $connection->createCommand($structure);
             $command->execute();
             
             $command = $connection->createCommand($data);
             $command->execute();
+            
+            $command = $connection->createCommand($functions);
+            $command->execute();
+            
+            $command = $connection->createCommand($sp);
+            $command->execute();
+            
+            $command = $connection->createCommand($v_billing_advance_charges);
+            $command->execute();
+            
+            $command = $connection->createCommand($v_billing_other_charges);
+            $command->execute();
+            
+            $command = $connection->createCommand($v_billing_procedures);
+            $command->execute();
+            
+            $command = $connection->createCommand($v_billing_professionals);
+            $command->execute();
+            
+            $command = $connection->createCommand($v_billing_recurring);
+            $command->execute();
+            
+            $command = $connection->createCommand($v_documents);
+            $command->execute();
+            
+            $command = $connection->createCommand($v_encounter);
+            $command->execute();
+            
             $connection->close();
             //End
         }
