@@ -114,6 +114,16 @@ class AppConfiguration extends RActiveRecord {
                 'value' => '1',
                 'notes' => 'Prescribe medicine in Prescription screen, Provision to check stock or not',
             ],
+            'ALLERGIES' => [
+                'code' => 'SA',
+                'value' => '1',
+                'notes' => 'Show Allergies',
+            ],
+            'DIAGNOSIS' => [
+                'code' => 'SD',
+                'value' => '1',
+                'notes' => 'Show Diagnosis',
+            ],
         );
     }
     
