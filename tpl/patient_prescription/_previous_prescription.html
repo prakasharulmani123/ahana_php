@@ -139,10 +139,10 @@
 </td>
 </tr>
 <tr>
-    <td ng-if="data2.allergies" colspan="3" style="padding: 8px;font-size: 20px;"><b>Allergies :</b> {{data2.allergies}}</td>
+    <td ng-if="print_allergies==1" colspan="3" style="padding: 8px;font-size: 20px;"><b>Allergies :</b> {{data2.allergies||'-'}}</td>
 </tr>
 <tr>
-    <td ng-if="data2.diag_name" colspan="3" style="padding: 8px;font-size: 20px;"><b>Diagnosis :</b> {{data2.diag_name}}</td>
+    <td ng-if="print_diagnosis==1" colspan="3" style="padding: 8px;font-size: 20px;"><b>Diagnosis :</b> {{data2.diag_name}}</td>
 </tr>
 <tr>
     <td class="prescriptionInfo">

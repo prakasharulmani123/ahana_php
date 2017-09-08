@@ -2642,6 +2642,25 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
+            
+            //App Configuration
+            .state('configuration.appsetting', {
+                url: '/appsetting',
+                templateUrl: 'tpl/organization/app_settings.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['xeditable', 'smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load([
+                                            'tpl/organization/app_setting.js?v=' + APP_VERSION,
+                                            'tpl/modal_form/modal.pharmacy_purchase_import_errorlog.js?v=' + APP_VERSION
+                                        ]);
+                                    }
+                            );
+                        }]
+                }
+            })
 
             // fullCalendar - Future Appointments
             .state('patient.futureAppointment', {

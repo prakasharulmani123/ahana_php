@@ -256,6 +256,16 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         $scope.presc_stock_status = response.value;
                     })
 
+            $http.get($rootScope.IRISOrgServiceUrl + '/appconfiguration/getpresstatus?key=ALLERGIES')
+                    .success(function (response) {
+                        $scope.print_allergies = response.value;
+                    })
+
+            $http.get($rootScope.IRISOrgServiceUrl + '/appconfiguration/getpresstatus?key=DIAGNOSIS')
+                    .success(function (response) {
+                        $scope.print_diagnosis = response.value;
+                    })
+
             $http.get($rootScope.IRISOrgServiceUrl + '/genericname')
                     .success(function (response) {
                         $scope.allgenerics = response;
