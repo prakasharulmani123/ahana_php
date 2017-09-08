@@ -214,8 +214,8 @@ app.controller('opdoctorpayController', ['$rootScope', '$scope', '$timeout', '$h
             var index = 1;
             angular.forEach(consultant_wise, function (details, doctor_name) {
                 var content_info = [];
-                var date_rage = moment($scope.data.from).format('YYYY-MM-DD') + " - " + moment($scope.data.to).format('YYYY-MM-DD');
-                var generated_on = $scope.generated_on;
+                var date_rage = moment($scope.data.from).format('DD-MM-YYYY') + " - " + moment($scope.data.to).format('DD-MM-YYYY');
+                var generated_on = moment($scope.generated_on).format('DD-MM-YYYY hh:mm A');
                 var generated_by = $scope.app.username;
                 var consultant_wise_total = 0;
                 //Branchwise
@@ -312,14 +312,16 @@ app.controller('opdoctorpayController', ['$rootScope', '$scope', '$timeout', '$h
                     ]);
                     var items_serial_no = 1;
                     var total = 0;
+                    branch = $filter('orderBy')(branch, ['-new_op', 'op_seen_date_time']);
                     angular.forEach(branch, function (record, key) {
                         var s_no_string = items_serial_no.toString();
+                        var seen_date_time = moment(record.op_seen_date_time).format('DD-MM-YYYY hh:mm A');
                         items.push([
                             s_no_string,
                             record.patient_name,
                             record.patient_global_int_code,
                             record.patient_mobile,
-                            record.op_seen_date_time,
+                            seen_date_time,
                             record.payment_amount
                         ]);
                         total += parseFloat(record.payment_amount);
