@@ -613,7 +613,14 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
                             moment(sale.created_at).format('YYYY-MM-DD'),
                         ],
                         margin: [0, 0, 0, 10]
-                    }
+                    },
+                    {
+                        text: [
+                            {text: 'Sale Type: ', bold: true},
+                            sale.sale_payment_type,
+                        ],
+                        margin: [0, 0, 0, 10]
+                    },
                 ]
             }, {
                 style: 'demoTable',
