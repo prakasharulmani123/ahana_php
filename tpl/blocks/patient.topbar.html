@@ -28,7 +28,9 @@
                     <i aria-hidden="true" class="fa fa-ban" ng-show="false"></i>
                     <b ng-show="false"> Allergies : </b>
                     <!--                    <div class="pati-cate" ng-show="patientObj.have_encounter">{{patientObj.encounter_type}}</div>-->
-                    <span ng-if="patientObj.have_encounter == true">
+                    
+                    <!-- topbar next and previous options start-->
+<!--                    <span ng-if="patientObj.have_encounter == true">
                         <a ng-disabled="patientObj.prevPatient == ''" ui-sref="patient.view({id: patientObj.prevPatient})" class="btn btn-default"> <span class="fa fa-chevron-left"></span> </a>
                         <a ng-disabled="patientObj.nextPatient == ''" ui-sref="patient.view({id: patientObj.nextPatient})" class="btn btn-default"> <span class="fa fa-chevron-right"></span> </a>
                         <div class="btn-group dropdown" dropdown="">
@@ -53,7 +55,10 @@
                                 </li>
                             </ul>
                         </div>
-                    </span>
+                    </span>-->
+                    <!-- topbar next and previous options end-->
+                    
+                    
                 </div>
                 <div class="headerbg2">
                     <div class="patient-details-part patinet-id" ng-if="patientObj.activeCasesheetno">
