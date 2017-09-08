@@ -137,8 +137,7 @@ class PhaSaleReturn extends RActiveRecord {
         if ($insert) {
             CoInternalCode::increaseInternalCode("B");
             $activity = 'Sales Return Created Successfully (#' . $this->bill_no . ' )';
-        }
-        else
+        } else
             $activity = 'Sales Return Updated Successfully (#' . $this->bill_no . ' )';
         CoAuditLog::insertAuditLog(PhaSaleReturn::tableName(), $this->sale_ret_id, $activity);
         return parent::afterSave($insert, $changedAttributes);
@@ -168,13 +167,25 @@ class PhaSaleReturn extends RActiveRecord {
             'sale_bill_no' => function ($model) {
                 return (isset($model->sale) ? $model->sale->bill_no : '-');
             },
+            'sale_payment_type' => function ($model) {
+                if (isset($model->sale)) {
+                    if ($model->sale->payment_type == 'CA')
+                        return 'Cash';
+                    if ($model->sale->payment_type == 'CR')
+                        return 'Credit';
+                    else
+                        return 'Cash On Delivery';
+                } else {
+                    return '-';
+                }
+            }
         ];
         $parent_fields = parent::fields();
         $addt_keys = [];
         if ($addtField = Yii::$app->request->get('addtfields')) {
             switch ($addtField):
                 case 'sale_return_list':
-                    $addt_keys = ['patient', 'items', 'sale_bill_no'];
+                    $addt_keys = ['patient', 'items', 'sale_bill_no', 'sale_payment_type'];
                     $parent_fields = [
                         'sale_ret_id' => 'sale_ret_id',
                         'sale_id' => 'sale_id',
