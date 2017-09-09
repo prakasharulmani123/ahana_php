@@ -197,27 +197,27 @@ class PatientController extends ActiveController {
                 }
 
                 //Search from HMS Database
-                if (empty($patients)) {
-
-                    $lists = GlPatient::find()
-                            ->andWhere("status = '1' AND tenant_id != {$tenant_id} AND (parent_id IS NULL OR parent_id = '')")
-                            ->andFilterWhere([
-                                'or',
-                                    ['like', 'patient_firstname', $text],
-                                    ['like', 'patient_lastname', $text],
-                                    ['like', 'patient_mobile', $text],
-//                                ['like', 'patient_global_int_code', $text],
-                                ['like', 'casesheetno', $text],
-                            ])
-                            ->limit($limit)
-                            ->all();
-
-                    foreach ($lists as $key => $patient) {
-                        $patients[$key]['Patient'] = $patient;
-                        $patients[$key]['same_branch'] = false;
-                        $patients[$key]['same_org'] = false;
-                    }
-                }
+//                if (empty($patients)) {
+//
+//                    $lists = GlPatient::find()
+//                            ->andWhere("status = '1' AND tenant_id != {$tenant_id} AND (parent_id IS NULL OR parent_id = '')")
+//                            ->andFilterWhere([
+//                                'or',
+//                                    ['like', 'patient_firstname', $text],
+//                                    ['like', 'patient_lastname', $text],
+//                                    ['like', 'patient_mobile', $text],
+////                                ['like', 'patient_global_int_code', $text],
+//                                ['like', 'casesheetno', $text],
+//                            ])
+//                            ->limit($limit)
+//                            ->all();
+//
+//                    foreach ($lists as $key => $patient) {
+//                        $patients[$key]['Patient'] = $patient;
+//                        $patients[$key]['same_branch'] = false;
+//                        $patients[$key]['same_org'] = false;
+//                    }
+//                }
             }
         }
         return ['patients' => $patients];

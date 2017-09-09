@@ -154,7 +154,7 @@ class PatPrescription extends RActiveRecord
                 return (isset($model->patPrescriptionItems) ? $model->patPrescriptionItems : '-');
             },
             'consultant_name' => function ($model) {
-                return (isset($model->consultant) ? $model->consultant->title_code .  $model->consultant->name: '-');
+                return (isset($model->consultant) ? $model->consultant->title_code .  ucwords($model->consultant->name): '-');
             },
             'encounter' => function ($model) {
                 return (isset($model->encounter) ? $model->encounter->patVitals : '-');
