@@ -110,7 +110,17 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label">Register Mode</label>
                 <div class="col-sm-9">
-                    <label class="i-checks" ng-repeat="mode in registerModes">
+                    <label ng-if="checkAccess('patient.inPatients') && checkAccess('patient.outPatients')" class="i-checks" ng-repeat="mode in registerModes">
+                        <input type="radio" checked="" value="{{mode.value}}" name="c" ng-model="data.PatPatient.patient_reg_mode">
+                        <i></i>
+                        {{mode.label}}&nbsp; &nbsp;
+                    </label>
+                    <label ng-if="checkAccess('patient.inPatients') && !checkAccess('patient.outPatients')" class="i-checks" ng-repeat="mode in registerModes | filter: { value: 'IP' }">
+                        <input type="radio" checked="" value="{{mode.value}}" name="c" ng-model="data.PatPatient.patient_reg_mode">
+                        <i></i>
+                        {{mode.label}}&nbsp; &nbsp;
+                    </label>
+                    <label ng-if="!checkAccess('patient.inPatients') && checkAccess('patient.outPatients')" class="i-checks" ng-repeat="mode in registerModes | filter: { value: 'OP' }">
                         <input type="radio" checked="" value="{{mode.value}}" name="c" ng-model="data.PatPatient.patient_reg_mode">
                         <i></i>
                         {{mode.label}}&nbsp; &nbsp;
