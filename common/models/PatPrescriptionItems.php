@@ -60,7 +60,7 @@ class PatPrescriptionItems extends RActiveRecord {
                 [['route', 'frequency'], 'required', 'on' => 'saveform'],
                 [['tenant_id', 'pres_id', 'product_id', 'generic_id', 'drug_class_id', 'route_id', 'freq_id', 'number_of_days', 'created_by', 'modified_by'], 'integer'],
                 [['status'], 'string'],
-                [['created_at', 'modified_at', 'deleted_at', 'route', 'frequency', 'is_favourite', 'remarks', 'consultant_id', 'freqType', 'quantity'], 'safe'],
+                [['created_at', 'modified_at', 'deleted_at', 'route', 'frequency', 'is_favourite', 'remarks', 'consultant_id', 'freqType', 'quantity', 'food_type'], 'safe'],
                 [['product_name', 'generic_name', 'drug_name'], 'string', 'max' => 255]
         ];
     }
@@ -83,6 +83,7 @@ class PatPrescriptionItems extends RActiveRecord {
             'freq_id' => 'Freq ID',
             'quantity' => 'Quantity',
             'number_of_days' => 'Number Of Days',
+            'food_type' => 'Food Type',
             'status' => 'Status',
             'created_by' => 'Created By',
             'created_at' => 'Created At',
