@@ -6,7 +6,7 @@ app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http
                     description: 'Create',
                     allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
                     callback: function () {
-                        $state.go('pharmacy.productAdd', {}, {reload: true});
+                        $state.go('configuration.productAdd', {}, {reload: true});
                     }
                 })
                 .add({
@@ -14,7 +14,7 @@ app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http
                     description: 'Cancel',
                     callback: function (e) {
                         if (confirm('Are you sure want to leave?')) {
-                            $state.go('pharmacy.products', {}, {reload: true});
+                            $state.go('configuration.products', {}, {reload: true});
                             e.preventDefault();
                         }
                     }
@@ -36,7 +36,7 @@ app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http
                     description: 'List',
                     allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
                     callback: function (event) {
-                        $state.go('pharmacy.products')
+                        $state.go('configuration.products')
                         event.preventDefault();
                     }
                 });
@@ -77,7 +77,7 @@ app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http
         }
 
         function actionsHtml(data, type, full, meta) {
-            return '<a class="label bg-dark" title="Edit" check-access  ui-sref="pharmacy.productEdit({id: ' + data.product_id + '})">' +
+            return '<a class="label bg-dark" title="Edit" check-access  ui-sref="configuration.productEdit({id: ' + data.product_id + '})">' +
                     '   <i class="fa fa-pencil"></i>' +
                     '</a>&nbsp;&nbsp;&nbsp;' +
                     '<a class="hide" title="Delete" ng-click="removeRow(row)">' +
@@ -190,7 +190,7 @@ app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http
                         $scope.msg.successMessage = succ_msg;
                         $scope.data = {};
                         $timeout(function () {
-                            $state.go('pharmacy.products');
+                            $state.go('configuration.products');
                         }, 1000)
 
                     }

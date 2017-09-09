@@ -73,7 +73,7 @@ app.controller('GenericNameController', ['$rootScope', '$scope', '$timeout', '$h
 
 
         function actionsHtml(data, type, full, meta) {
-            return '<a class="label bg-dark" title="Edit" check-access  ui-sref="pharmacy.genericNameUpdate({id: ' + data.generic_id + '})">' +
+            return '<a class="label bg-dark" title="Edit" check-access  ui-sref="configuration.genericNameUpdate({id: ' + data.generic_id + '})">' +
                     '   <i class="fa fa-pencil"></i>' +
                     '</a>&nbsp;&nbsp;&nbsp;' +
                     '<a class="hide" title="Delete" ng-click="removeRow(row)">' +
@@ -111,7 +111,7 @@ app.controller('GenericNameController', ['$rootScope', '$scope', '$timeout', '$h
                         $scope.msg.successMessage = succ_msg;
                         $scope.data = {};
                         $timeout(function () {
-                            $state.go('pharmacy.genericName');
+                            $state.go('configuration.genericName');
                         }, 1000)
 
                     }

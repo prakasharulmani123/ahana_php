@@ -113,7 +113,7 @@ app.controller('ProDescController', ['$rootScope', '$scope', '$timeout', '$http'
                             $scope.msg.successMessage = succ_msg;
                             $scope.data = {};
                             $timeout(function () {
-                                $state.go('pharmacy.prodesc');
+                                $state.go('configuration.prodesc');
                             }, 1000)
                         }
                         else {

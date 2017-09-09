@@ -226,7 +226,7 @@ app.controller('drugGenericController', ['$rootScope', '$scope', '$timeout', '$h
                             $scope.msg.successMessage = 'Drug class assigned successfully';
                             $scope.data = {};
                             $timeout(function () {
-                                $state.go('pharmacy.drugGeneric');
+                                $state.go('configuration.drugGeneric');
                             }, 1000)
                         } else {
                             $scope.loadbar('hide');

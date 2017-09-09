@@ -96,7 +96,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             })
 
             //Pharmacy hsn
-            .state('pharmacy.hsn', {
+            .state('configuration.hsn', {
                 url: '/hsn',
                 templateUrl: 'tpl/hsn/index.html',
                 resolve: {
@@ -106,7 +106,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
-            .state('pharmacy.hsn_create', {
+            .state('configuration.hsn_create', {
                 url: '/hsn_create',
                 templateUrl: 'tpl/hsn/create.html',
                 resolve: {
@@ -116,7 +116,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
-            .state('pharmacy.hsn_update', {
+            .state('configuration.hsn_update', {
                 url: '/hsn_update/{id}',
                 templateUrl: 'tpl/hsn/update.html',
                 resolve: {
@@ -1507,7 +1507,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 templateUrl: 'tpl/pharmacy.html'
             })
             //PHARMACY BRAND
-            .state('pharmacy.brand', {
+            .state('configuration.brand', {
                 url: '/brand',
                 templateUrl: 'tpl/pharmacy_brand/index.html',
                 resolve: {
@@ -1522,7 +1522,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 }
             })
             //PHARMACY BRAND CREATE
-            .state('pharmacy.brandCreate', {
+            .state('configuration.brandCreate', {
                 url: '/brandCreate',
                 templateUrl: 'tpl/pharmacy_brand/create.html',
                 resolve: {
@@ -1534,7 +1534,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             })
 
             //PHARMACY BRAND UPDATE
-            .state('pharmacy.brandUpdate', {
+            .state('configuration.brandUpdate', {
                 url: '/brandUpdate/{id}',
                 templateUrl: 'tpl/pharmacy_brand/update.html',
                 resolve: {
@@ -1546,7 +1546,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             })
 
             //PHARMACY BRAND REP
-            .state('pharmacy.brandrep', {
+            .state('configuration.brandrep', {
                 url: '/brandrep',
                 templateUrl: 'tpl/pharmacy_brandrep/index.html',
                 resolve: {
@@ -1562,7 +1562,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             })
 
             //PHARMACY BRAND REP CREATE
-            .state('pharmacy.brandrepCreate', {
+            .state('configuration.brandrepCreate', {
                 url: '/brandrepCreate',
                 templateUrl: 'tpl/pharmacy_brandrep/create.html',
                 resolve: {
@@ -1574,7 +1574,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             })
 
             //PHARMACY BRAND REP UPDATE
-            .state('pharmacy.brandrepUpdate', {
+            .state('configuration.brandrepUpdate', {
                 url: '/brandrepUpdate/{id}',
                 templateUrl: 'tpl/pharmacy_brandrep/update.html',
                 resolve: {
@@ -1585,7 +1585,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 }
             })
             //PHARMACY BRAND Division
-            .state('pharmacy.brandDivision', {
+            .state('configuration.brandDivision', {
                 url: '/brandDivision',
                 templateUrl: 'tpl/pharmacy_brand_division/index.html',
                 resolve: {
@@ -1600,7 +1600,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 }
             })
             //PHARMACY BRAND Division CREATE
-            .state('pharmacy.brandDivisionCreate', {
+            .state('configuration.brandDivisionCreate', {
                 url: '/brandDivisionCreate',
                 templateUrl: 'tpl/pharmacy_brand_division/create.html',
                 resolve: {
@@ -1612,7 +1612,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             })
 
             //PHARMACY BRAND Division UPDATE
-            .state('pharmacy.brandDivisionUpdate', {
+            .state('configuration.brandDivisionUpdate', {
                 url: '/brandDivisionUpdate/{id}',
                 templateUrl: 'tpl/pharmacy_brand_division/update.html',
                 resolve: {
@@ -1624,7 +1624,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             })
 
             //PHARMACY DRUG CLASS
-            .state('pharmacy.drugclass', {
+            .state('configuration.drugclass', {
                 url: '/drugclass',
                 templateUrl: 'tpl/pharmacy_drugclass/index.html',
                 resolve: {
@@ -1639,7 +1639,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 }
             })
             //PHARMACY DRUG CLASS CREATE
-            .state('pharmacy.drugclassCreate', {
+            .state('configuration.drugclassCreate', {
                 url: '/drugclassCreate',
                 templateUrl: 'tpl/pharmacy_drugclass/create.html',
                 resolve: {
@@ -1651,7 +1651,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             })
 
             //PHARMACY DRUG CLASS UPDATE
-            .state('pharmacy.drugclassUpdate', {
+            .state('configuration.drugclassUpdate', {
                 url: '/drugclassUpdate/{id}',
                 templateUrl: 'tpl/pharmacy_drugclass/update.html',
                 resolve: {
@@ -1663,7 +1663,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             })
 
             //PHARMACY GENERICNAME
-            .state('pharmacy.genericName', {
+            .state('configuration.genericName', {
                 url: '/genericName',
                 templateUrl: 'tpl/pharmacy_generic_name/index.html',
                 resolve: {
@@ -1679,7 +1679,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             })
 
             //PHARMACY GENERICNAME CREATE
-            .state('pharmacy.genericNameCreate', {
+            .state('configuration.genericNameCreate', {
                 url: '/genericNameCreate',
                 templateUrl: 'tpl/pharmacy_generic_name/create.html',
                 resolve: {
@@ -1691,7 +1691,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             })
 
             //PHARMACY GENERICNAME UPDATE
-            .state('pharmacy.genericNameUpdate', {
+            .state('configuration.genericNameUpdate', {
                 url: '/genericNameUpdate/{id}',
                 templateUrl: 'tpl/pharmacy_generic_name/update.html',
                 resolve: {
@@ -1703,7 +1703,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             })
 
             //PHARMACY Routes
-            .state('pharmacy.routes', {
+            .state('configuration.routes', {
                 url: '/routes',
                 templateUrl: 'tpl/pharmacy_routes/index.html',
                 resolve: {
@@ -1718,7 +1718,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 }
             })
             //PHARMACY Routes CREATE
-            .state('pharmacy.routesCreate', {
+            .state('configuration.routesCreate', {
                 url: '/routesCreate',
                 templateUrl: 'tpl/pharmacy_routes/create.html',
                 resolve: {
@@ -1729,7 +1729,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 }
             })
             //PHARMACY Routes UPDATE
-            .state('pharmacy.routesUpdate', {
+            .state('configuration.routesUpdate', {
                 url: '/routesUpdate/{id}',
                 templateUrl: 'tpl/pharmacy_routes/update.html',
                 resolve: {
@@ -1741,7 +1741,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             })
 
             //PHARMACY Product Description
-            .state('pharmacy.prodesc', {
+            .state('configuration.prodesc', {
                 url: '/prodesc',
                 templateUrl: 'tpl/pharmacy_prodesc/index.html',
                 resolve: {
@@ -1756,7 +1756,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 }
             })
             //PHARMACY Product Description CREATE
-            .state('pharmacy.prodescCreate', {
+            .state('configuration.prodescCreate', {
                 url: '/prodescCreate',
                 templateUrl: 'tpl/pharmacy_prodesc/create.html',
                 resolve: {
@@ -1768,7 +1768,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             })
 
             //PHARMACY Product Description UPDATE
-            .state('pharmacy.prodescUpdate', {
+            .state('configuration.prodescUpdate', {
                 url: '/prodescUpdate/{id}',
                 templateUrl: 'tpl/pharmacy_prodesc/update.html',
                 resolve: {
@@ -1779,7 +1779,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 }
             })
             //PHARMACY PACKING UNIT
-            .state('pharmacy.packingUnit', {
+            .state('configuration.packingUnit', {
                 url: '/packingUnit',
                 templateUrl: 'tpl/pharmacy_packing_unit/index.html',
                 resolve: {
@@ -1795,7 +1795,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             })
 
             //PHARMACY PACKING UNIT CREATE
-            .state('pharmacy.packingUnitCreate', {
+            .state('configuration.packingUnitCreate', {
                 url: '/packingUnitCreate',
                 templateUrl: 'tpl/pharmacy_packing_unit/create.html',
                 resolve: {
@@ -1807,7 +1807,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             })
 
             //PHARMACY PACKING UNIT UPDATE
-            .state('pharmacy.packingUnitUpdate', {
+            .state('configuration.packingUnitUpdate', {
                 url: '/packingUnitUpdate/{id}',
                 templateUrl: 'tpl/pharmacy_packing_unit/update.html',
                 resolve: {
@@ -1819,7 +1819,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             })
 
             //PHARMACY SUPPLIER
-            .state('pharmacy.supplier', {
+            .state('configuration.supplier', {
                 url: '/supplier',
                 templateUrl: 'tpl/pharmacy_supplier/index.html',
                 resolve: {
@@ -1835,7 +1835,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             })
 
             //PHARMACY SUPPLIER CREATE
-            .state('pharmacy.supplierCreate', {
+            .state('configuration.supplierCreate', {
                 url: '/supplierCreate',
                 templateUrl: 'tpl/pharmacy_supplier/create.html',
                 resolve: {
@@ -1847,7 +1847,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             })
 
             //PHARMACY SUPPLIER UPDATE
-            .state('pharmacy.supplierUpdate', {
+            .state('configuration.supplierUpdate', {
                 url: '/supplierUpdate/{id}',
                 templateUrl: 'tpl/pharmacy_supplier/update.html',
                 resolve: {
@@ -1859,7 +1859,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             })
 
             //PHARMACY VAT
-            .state('pharmacy.vat', {
+            .state('configuration.vat', {
                 url: '/vat',
                 templateUrl: 'tpl/pharmacy_vat/index.html',
                 resolve: {
@@ -1874,7 +1874,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 }
             })
             //PHARMACY BRAND CREATE
-            .state('pharmacy.vatCreate', {
+            .state('configuration.vatCreate', {
                 url: '/vatCreate',
                 templateUrl: 'tpl/pharmacy_vat/create.html',
                 resolve: {
@@ -1886,7 +1886,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             })
 
             //PHARMACY BRAND UPDATE
-            .state('pharmacy.vatUpdate', {
+            .state('configuration.vatUpdate', {
                 url: '/vatUpdate/{id}',
                 templateUrl: 'tpl/pharmacy_vat/update.html',
                 resolve: {
@@ -1898,7 +1898,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             })
 
             //PHARMACY DRUG & GENERIC
-            .state('pharmacy.drugGeneric', {
+            .state('configuration.drugGeneric', {
                 url: '/drugGeneric',
                 templateUrl: 'tpl/pharmacy_drug_generic/index.html',
                 resolve: {
@@ -1913,7 +1913,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 }
             })
             //PHARMACY DRUG & GENERIC CREATE
-            .state('pharmacy.drugGenericCreate', {
+            .state('configuration.drugGenericCreate', {
                 url: '/drugGenericCreate',
                 templateUrl: 'tpl/pharmacy_drug_generic/create.html',
                 resolve: {
@@ -1929,7 +1929,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             })
 
             //PHARMACY DRUG & GENERIC UPDATE
-            .state('pharmacy.drugGenericUpdate', {
+            .state('configuration.drugGenericUpdate', {
                 url: '/drugGenericUpdate/{id}',
                 templateUrl: 'tpl/pharmacy_drug_generic/update.html',
                 resolve: {
@@ -2047,7 +2047,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             })
 
             //PHARMACY PRODUCTS
-            .state('pharmacy.products', {
+            .state('configuration.products', {
                 url: '/products',
                 templateUrl: 'tpl/pharmacy_products/index.html',
                 resolve: {
@@ -2058,7 +2058,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 }
             })
             //PHARMACY PRODUCT ADD
-            .state('pharmacy.productAdd', {
+            .state('configuration.productAdd', {
                 url: '/productAdd',
                 templateUrl: 'tpl/pharmacy_products/create.html',
                 resolve: {
@@ -2079,7 +2079,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 }
             })
             //PHARMACY PRODUCT EDIT
-            .state('pharmacy.productEdit', {
+            .state('configuration.productEdit', {
                 url: '/productEdit/{id}',
                 templateUrl: 'tpl/pharmacy_products/update.html',
                 resolve: {
@@ -2361,7 +2361,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             })
 
             //PHARMACY PATIENT GROUP
-            .state('pharmacy.patientgroup', {
+            .state('configuration.patientgroupassign', {
                 url: '/patientgroup',
                 templateUrl: 'tpl/patient_groups/pharmacy_patient_list.html',
                 resolve: {

@@ -55,7 +55,7 @@ app.controller('BrandDivisionsController', ['$rootScope', '$scope', '$timeout', 
                         $scope.msg.successMessage = succ_msg;
                         $scope.data = {};
                         $timeout(function () {
-                            $state.go('pharmacy.brandDivision');
+                            $state.go('configuration.brandDivision');
                         }, 1000)
                     }
             ).error(function (data, status) {

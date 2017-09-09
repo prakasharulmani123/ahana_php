@@ -70,7 +70,7 @@ app.controller('DrugClassController', ['$rootScope', '$scope', '$timeout', '$htt
 
 
         function actionsHtml(data, type, full, meta) {
-            return '<a class="label bg-dark" title="Edit" check-access  ui-sref="pharmacy.drugclassUpdate({id: ' + data.drug_class_id + '})">' +
+            return '<a class="label bg-dark" title="Edit" check-access  ui-sref="configuration.drugclassUpdate({id: ' + data.drug_class_id + '})">' +
                     '   <i class="fa fa-pencil"></i>' +
                     '</a>&nbsp;&nbsp;&nbsp;' +
                     '<a class="hide" title="Delete" ng-click="removeRow(row)">' +
@@ -114,7 +114,7 @@ app.controller('DrugClassController', ['$rootScope', '$scope', '$timeout', '$htt
                         $scope.msg.successMessage = succ_msg;
                         $scope.data = {};
                         $timeout(function () {
-                            $state.go('pharmacy.drugclass');
+                            $state.go('configuration.drugclass');
                         }, 1000)
 
                     }

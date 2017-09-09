@@ -73,7 +73,7 @@ app.controller('SuppliersController', ['$rootScope', '$scope', '$timeout', '$htt
         pb.brands = {};
         function actionsHtml(data, type, full, meta) {
             pb.brands[data.supplier_id] = data;
-            return '<a class="label bg-dark" title="Edit" check-access  ui-sref="pharmacy.supplierUpdate({id: ' + data.supplier_id + '})">' +
+            return '<a class="label bg-dark" title="Edit" check-access  ui-sref="configuration.supplierUpdate({id: ' + data.supplier_id + '})">' +
                     '   <i class="fa fa-pencil"></i>' +
                     '</a>&nbsp;&nbsp;&nbsp;' +
                     '<a class="hide" title="Delete" ng-click="removeRow(row)">' +
@@ -160,7 +160,7 @@ app.controller('SuppliersController', ['$rootScope', '$scope', '$timeout', '$htt
                         $scope.msg.successMessage = succ_msg;
                         $scope.data = {};
                         $timeout(function () {
-                            $state.go('pharmacy.supplier');
+                            $state.go('configuration.supplier');
                         }, 1000)
 
                     }

@@ -53,7 +53,7 @@ app.controller('HsnController', ['$rootScope', '$scope', '$timeout', '$http', '$
                         $scope.msg.successMessage = succ_msg;
                         $scope.data = {};
                         $timeout(function () {
-                            $state.go('pharmacy.hsn');
+                            $state.go('configuration.hsn');
                         }, 1000)
 
                     }

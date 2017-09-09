@@ -48,7 +48,7 @@ app.controller('BrandsController', ['$rootScope', '$scope', '$timeout', '$http',
         pb.brands = {};
         function actionsHtml(data, type, full, meta) {
             pb.brands[data.brand_id] = data;
-            return '<a class="label bg-dark" title="Edit" check-access  ui-sref="pharmacy.brandUpdate({id: ' + data.brand_id + '})">' +
+            return '<a class="label bg-dark" title="Edit" check-access  ui-sref="configuration.brandUpdate({id: ' + data.brand_id + '})">' +
                     '   <i class="fa fa-pencil"></i>' +
                     '</a>&nbsp;&nbsp;&nbsp;' +
                     '<a class="hide" title="Delete" ng-click="removeRow(row)">' +
@@ -91,7 +91,7 @@ app.controller('BrandsController', ['$rootScope', '$scope', '$timeout', '$http',
                         $scope.msg.successMessage = succ_msg;
                         $scope.data = {};
                         $timeout(function () {
-                            $state.go('pharmacy.brand');
+                            $state.go('configuration.brand');
                         }, 1000)
                     }
             ).error(function (data, status) {

@@ -51,7 +51,7 @@ app.controller('VatController', ['$rootScope', '$scope', '$timeout', '$http', '$
                         $scope.msg.successMessage = succ_msg;
                         $scope.data = {};
                         $timeout(function () {
-                            $state.go('pharmacy.vat');
+                            $state.go('configuration.vat');
                         }, 1000)
 
                     }

@@ -13,7 +13,7 @@
                 </div>
                 <div class="panel-body b-b b-light">                   
                     <input id="filter" type="text" class="form-control input-sm w-sm inline m-r" placeholder="Search"/>                   
-                    <button check-access-button ng-click="$state.go('pharmacy.brandDivisionCreate')" class="btn btn-sm btn-info pull-right">
+                    <button check-access-button ng-click="$state.go('configuration.brandDivisionCreate')" class="btn btn-sm btn-info pull-right">
                         <i class="fa fa-plus"></i> &nbsp; Add new Brand Division
                     </button>
                 </div>
@@ -46,7 +46,7 @@
                                 </td>
                                 <td>
                                     <div ng-if="row.tenant_id != null">
-                                        <a class=" label bg-dark" title="Edit" check-access  ui-sref="pharmacy.brandDivisionUpdate({id: row.division_id})">
+                                        <a class=" label bg-dark" title="Edit" check-access  ui-sref="configuration.brandDivisionUpdate({id: row.division_id})">
                                             <i class="fa fa-pencil"></i>
                                         </a>&nbsp;&nbsp;&nbsp;
                                         <a class="hide" title="Delete" ng-click="removeRow(row)">

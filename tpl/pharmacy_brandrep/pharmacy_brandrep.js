@@ -64,7 +64,7 @@ app.controller('BrandRepsController', ['$rootScope', '$scope', '$timeout', '$htt
                         $scope.msg.successMessage = succ_msg;
                         $scope.data = {};
                         $timeout(function () {
-                            $state.go('pharmacy.brandrep');
+                            $state.go('configuration.brandrep');
                         }, 1000);
                     }
             ).error(function (data, status) {

@@ -52,7 +52,7 @@ app.controller('RoutesController', ['$rootScope', '$scope', '$timeout', '$http',
                         $scope.msg.successMessage = succ_msg;
                         $scope.data = {};
                         $timeout(function () {
-                            $state.go('pharmacy.routes');
+                            $state.go('configuration.routes');
                         }, 1000)
 
                     }

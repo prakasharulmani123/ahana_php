@@ -14,7 +14,7 @@
                 &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
             </button>
             <input id="filter" type="text" class="form-control input-sm w-sm inline m-r" placeholder="Search"/>-->
-            <button check-access-button ng-click="$state.go('pharmacy.supplierCreate')" class="btn btn-sm btn-info pull-right">
+            <button check-access-button ng-click="$state.go('configuration.supplierCreate')" class="btn btn-sm btn-info pull-right">
                 <i class="fa fa-plus"></i> &nbsp; Add new Supplier
             </button>
         </div>
@@ -64,7 +64,7 @@
                         </td>
                         <td>
                             <div ng-if="row.tenant_id != null">
-                                <a class="btn btn-dark" title="Edit" check-access  ui-sref="pharmacy.supplierUpdate({id: row.supplier_id})">
+                                <a class="btn btn-dark" title="Edit" check-access  ui-sref="configuration.supplierUpdate({id: row.supplier_id})">
                                     <i class="fa fa-pencil"></i>
                                 </a>&nbsp;&nbsp;&nbsp;
                                 <a class="hide" title="Delete" ng-click="removeRow(row)">

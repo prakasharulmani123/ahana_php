@@ -117,7 +117,7 @@ app.controller('stockController', ['$rootScope', '$scope', '$timeout', '$http', 
         }
 
         function actionsHtml(data, type, full, meta) {
-            //return '<a class="label bg-dark" title="Edit" check-access  ui-sref="pharmacy.brandUpdate({id: ' + data.batch_id + '})">' +
+            //return '<a class="label bg-dark" title="Edit" check-access  ui-sref="configuration.brandUpdate({id: ' + data.batch_id + '})">' +
             //        '   <i class="fa fa-pencil"></i>' +
             //        '</a>';
             return '<a ng-click="editBatchDetails({id: ' + data.batch_id + '})" title="Edit" class="label bg-dark">' +

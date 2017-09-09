@@ -58,7 +58,7 @@ app.controller('PackingsController', ['$rootScope', '$scope', '$timeout', '$http
                         $scope.msg.successMessage = succ_msg;
                         $scope.data = {};
                         $timeout(function () {
-                            $state.go('pharmacy.packingUnit');
+                            $state.go('configuration.packingUnit');
                         }, 1000)
 
                     }
