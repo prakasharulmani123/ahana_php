@@ -17,7 +17,7 @@
             </li>
         </ul>
     </li>
-    <li class="ng-scope">
+    <li class="ng-scope" ng-show="checkAccess('myworks.ipBillStatus') || checkAccess('myworks.dischargedPatientBills') || checkAccess('myworks.ipDoctorsPay')">
         <a class="auto" href="">
             <span class="pull-right text-muted">
                 <i class="fa fa-fw fa-angle-right text"></i>
@@ -50,7 +50,7 @@
             <span>Audit Log</span>
         </a>
     </li>
-    <li class="ng-scope">
+    <li class="ng-scope" ng-show="checkAccess('myworks.addconsultation_visit') || checkAccess('myworks.addprocedure') || checkAccess('myworks.addother_charges') || checkAccess('myworks.addnotes') || checkAccess('myworks.addvitals')">
         <a class="auto" href="">
             <span class="pull-right text-muted">
                 <i class="fa fa-fw fa-angle-right text"></i>
