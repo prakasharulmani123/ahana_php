@@ -207,13 +207,14 @@
                                                         <th width="70" align="center">No.of Days</th>
                                                         <th width="25" align="center">Qty</th>
                                                         <!--<th width="50" align="center">Cost</th>-->
+                                                        <th width="100" align="center">Food Type</th>
                                                         <th width="45" align="center">Remarks</th>
                                                         <th width="20" align="center">Fav</th>
                                                         <th width="35" align="right" class="text-right prescription-total-b-l">Total</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody ng-hide="isLoading">                                                   
-                                                    <tr class="{{((item.available_quantity == 0 || !item.in_stock) && presc_stock_status==1) ? 'out_of_stock' : ''}}" ng-repeat="item in data.prescriptionItems" ng-init="key = item.item_key">
+                                                    <tr class="{{((item.available_quantity == 0 || !item.in_stock) && presc_stock_status == 1) ? 'out_of_stock' : ''}}" ng-repeat="item in data.prescriptionItems" ng-init="key = item.item_key">
                                                         <td align="center">                                                         
                                                             <button type="button" class="label bg-info" ng-click="removeItem(item)"><i class=" fa fa-trash"></i></button>
                                                         </td>
@@ -539,6 +540,31 @@
                                                         <!--                                                        <td>
                                                                                                                     {{ item.price}}
                                                                                                                 </td>-->
+                                                        <td>
+<!--                                                            <div class="m-t m-b">
+                                                                <div class="btn-group">
+                                                                    <span editable-radiolist="item.food_type" 
+                                                                          e-index ="{{item.item_key}}"
+                                                                          e-name="food_type"
+                                                                          e-class="btn btn-success"
+                                                                          ng-model='food_type'
+                                                                          e-form="tableform"
+                                                                          e-id="food_type"
+                                                                          e-ng-options="food.value as food.label for food in Foodtypes"
+                                                                          btn-radio="Foodtypes"
+                                                                          >
+                                                                        {{ item.food_type || 'empty' }}    
+                                                                    </span>
+                                                                </div>
+                                                            </div>-->
+                                                            <div class="m-b" ng-init="item.food_type = 'NA'">
+                                                                <div class="btn-group">
+                                                                    <label class="btn btn-success" name="food_type_{{item.item_key}}" id="food_type_{{item.item_key}}" ng-model="item.food_type" btn-radio="'AF'">AF</label>
+                                                                    <label class="btn btn-success" name="food_type_{{item.item_key}}" id="food_type_{{item.item_key}}" ng-model="item.food_type" btn-radio="'NA'">NA</label>
+                                                                    <label class="btn btn-success" name="food_type_{{item.item_key}}" id="food_type_{{item.item_key}}" ng-model="item.food_type" btn-radio="'BF'">BF</label>
+                                                                </div>
+                                                            </div>
+                                                        </td>
                                                         <td align="center">
                                                             <span editable-text="item.remarks"
                                                                   e-index ="{{item.item_key}}"

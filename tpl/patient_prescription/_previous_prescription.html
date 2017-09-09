@@ -58,6 +58,7 @@
                             <th>Route</th>
                             <th>Frequency</th>
                             <th>No of days</th>
+                            <th>Food Type</th>
                             <th>Remarks</th>
                         </tr>
                     </thead>
@@ -75,6 +76,7 @@
                             <td>{{ row.route_name}}</td>
                             <td>{{ row.frequency_name}}</td>
                             <td>{{ row.number_of_days}}</td>
+                            <td>{{ row.food_type}}</td>
                             <td>{{ row.remarks || '-'}}</td>
                         </tr>
                     </tbody>
@@ -154,8 +156,9 @@
                     <th width="5%" class="txtCenter"><span><img src="{{IRISOrgUrl}}/img/brightness.png" alt="Afternoon" /></span></th>
                     <th width="5%" class="txtCenter"><span><img src="{{IRISOrgUrl}}/img/sun-shining.png" alt="Evening" /></span></th>
                     <th width="5%" class="txtCenter"><span><img src="{{IRISOrgUrl}}/img/moon.png" alt="Night" /></span></th>
-                    <th width="10%" class="txtCenter"><span>Days</span></th>
-                    <th width="10%" class="txtCenter"><span>Qty</span></th>
+                    <th width="8%" class="txtCenter"><span>Days</span></th>
+                    <th width="8%" class="txtCenter"><span>Qty</span></th>
+                    <th width="5%" class="txtCenter"><span><img src="{{IRISOrgUrl}}/img/food_type.png" alt="Night" /></span></th>
                     <th><span>Remarks</span></th>
                 </tr>
             </thead>
@@ -176,6 +179,7 @@
 
                     <td class="txtCenter">{{row.number_of_days}}</td>
                     <td class="txtCenter">{{row.total_qty}}</td>
+                    <td class="txtCenter">{{row.food_type}}</td>
                     <td>{{row.remarks||'-'}}</td>
                 </tr>
             </tbody>
