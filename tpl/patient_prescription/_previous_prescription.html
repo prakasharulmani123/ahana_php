@@ -11,7 +11,7 @@
             <th>Prescription Date</th>
             <th>Consultant Name</th>
             <th>Next Visit</th>
-            <th>Diagnosis</th>
+            <th style="width: 20%">Diagnosis</th>
             <th>No of days</th>
             <th>Action</th>
         </tr>
@@ -76,7 +76,7 @@
                             <td>{{ row.route_name}}</td>
                             <td>{{ row.frequency_name}}</td>
                             <td>{{ row.number_of_days}}</td>
-                            <td>{{ row.food_type}}</td>
+                            <td>{{ row.food_type || '-'}}</td>
                             <td>{{ row.remarks || '-'}}</td>
                         </tr>
                     </tbody>
@@ -179,7 +179,7 @@
 
                     <td class="txtCenter">{{row.number_of_days}}</td>
                     <td class="txtCenter">{{row.total_qty}}</td>
-                    <td class="txtCenter">{{row.food_type}}</td>
+                    <td class="txtCenter">{{row.food_type||'-'}}</td>
                     <td>{{row.remarks||'-'}}</td>
                 </tr>
             </tbody>
