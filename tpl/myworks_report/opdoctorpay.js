@@ -65,18 +65,22 @@ app.controller('opdoctorpayController', ['$rootScope', '$scope', '$timeout', '$h
                 $scope.toMinDate = new Date($scope.data.from);
 
                 if (angular.isDefined($scope.data.consultant_id)) {
-                    if ($scope.data.consultant_id.length == $scope.doctors.length) {
-                        $scope.data.to = moment($scope.data.from).add(+1, 'days').format('YYYY-MM-DD');
-                    } else if ($scope.data.consultant_id.length > 2 && (angular.isUndefined($scope.data.tenant_id) || $scope.data.tenant_id.length != Object.keys($scope.tenants).length)) {
-                        $scope.data.to = moment($scope.data.from).add(+6, 'days').format('YYYY-MM-DD');
+                    if ($scope.data.consultant_id.length != 1) {
+                        if ($scope.data.consultant_id.length == $scope.doctors.length) {
+                            $scope.data.to = moment($scope.data.from).add(+1, 'days').format('YYYY-MM-DD');
+                        } else if ($scope.data.consultant_id.length > 2 && (angular.isUndefined($scope.data.tenant_id) || $scope.data.tenant_id.length != Object.keys($scope.tenants).length)) {
+                            $scope.data.to = moment($scope.data.from).add(+6, 'days').format('YYYY-MM-DD');
+                        }
                     }
                 }
 
                 if (angular.isDefined($scope.data.tenant_id)) {
-                    if ($scope.data.tenant_id.length == Object.keys($scope.tenants).length) {
-                        $scope.data.to = moment($scope.data.from).add(+1, 'days').format('YYYY-MM-DD');
-                    } else if ($scope.data.tenant_id.length > 2 && (angular.isUndefined($scope.data.consultant_id) || $scope.data.consultant_id.length != $scope.doctors.length)) {
-                        $scope.data.to = moment($scope.data.from).add(+6, 'days').format('YYYY-MM-DD');
+                    if ($scope.data.tenant_id.length != 1) {
+                        if ($scope.data.tenant_id.length == Object.keys($scope.tenants).length) {
+                            $scope.data.to = moment($scope.data.from).add(+1, 'days').format('YYYY-MM-DD');
+                        } else if ($scope.data.tenant_id.length > 2 && (angular.isUndefined($scope.data.consultant_id) || $scope.data.consultant_id.length != $scope.doctors.length)) {
+                            $scope.data.to = moment($scope.data.from).add(+6, 'days').format('YYYY-MM-DD');
+                        }
                     }
                 }
             }
@@ -86,18 +90,22 @@ app.controller('opdoctorpayController', ['$rootScope', '$scope', '$timeout', '$h
                 $scope.fromMaxDate = new Date($scope.data.to);
 
                 if (angular.isDefined($scope.data.consultant_id)) {
-                    if ($scope.data.consultant_id.length == $scope.doctors.length) {
-                        $scope.data.from = moment($scope.data.to).add(-1, 'days').format('YYYY-MM-DD');
-                    } else if ($scope.data.consultant_id.length > 2 && (angular.isUndefined($scope.data.tenant_id) || $scope.data.tenant_id.length != Object.keys($scope.tenants).length)) {
-                        $scope.data.from = moment($scope.data.to).add(-6, 'days').format('YYYY-MM-DD');
+                    if ($scope.data.consultant_id.length != 1) {
+                        if ($scope.data.consultant_id.length == $scope.doctors.length) {
+                            $scope.data.from = moment($scope.data.to).add(-1, 'days').format('YYYY-MM-DD');
+                        } else if ($scope.data.consultant_id.length > 2 && (angular.isUndefined($scope.data.tenant_id) || $scope.data.tenant_id.length != Object.keys($scope.tenants).length)) {
+                            $scope.data.from = moment($scope.data.to).add(-6, 'days').format('YYYY-MM-DD');
+                        }
                     }
                 }
 
                 if (angular.isDefined($scope.data.tenant_id)) {
-                    if ($scope.data.tenant_id.length == Object.keys($scope.tenants).length) {
-                        $scope.data.from = moment($scope.data.to).add(-1, 'days').format('YYYY-MM-DD');
-                    } else if ($scope.data.tenant_id.length > 2 && (angular.isUndefined($scope.data.consultant_id) || $scope.data.consultant_id.length != $scope.doctors.length)) {
-                        $scope.data.from = moment($scope.data.to).add(-6, 'days').format('YYYY-MM-DD');
+                    if ($scope.data.tenant_id.length != 1) {
+                        if ($scope.data.tenant_id.length == Object.keys($scope.tenants).length) {
+                            $scope.data.from = moment($scope.data.to).add(-1, 'days').format('YYYY-MM-DD');
+                        } else if ($scope.data.tenant_id.length > 2 && (angular.isUndefined($scope.data.consultant_id) || $scope.data.consultant_id.length != $scope.doctors.length)) {
+                            $scope.data.from = moment($scope.data.to).add(-6, 'days').format('YYYY-MM-DD');
+                        }
                     }
                 }
             }

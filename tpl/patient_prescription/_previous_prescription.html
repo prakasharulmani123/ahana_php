@@ -20,7 +20,7 @@
 
         <tr ng-repeat-start="(pres_key, value) in displayedCollection">
             <td style="width: 5%">
-                <button ng-click="ctrl.expandAll(allExpanded = !allExpanded)" class="btn btn-sm btn-default hms-plus" type="button">
+                <button ng-click="ctrl.expandAll(allExpanded = !allExpanded)" expand class="btn btn-sm btn-default hms-plus" type="button">
                     <i ng-if="!expanded" class="fa fa-plus text"></i>
                     <i ng-if="expanded" class="fa fa-minus text"></i>
                 </button>
