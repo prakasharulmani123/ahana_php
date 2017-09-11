@@ -44,6 +44,12 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.routes = {};
         $scope.frequencies = {};
 
+        //Expand table in Index page
+        $scope.ctrl = {};
+        $scope.ctrl.expandAll = function (expanded) {
+            $scope.$broadcast('onExpandAll', {expanded: expanded});
+        };
+
         //Start Watch Functions
         $scope.$watch('patientObj.patient_id', function (newValue, oldValue) {
             $scope.spinnerbar('show');
