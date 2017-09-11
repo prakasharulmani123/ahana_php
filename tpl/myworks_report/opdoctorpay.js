@@ -104,25 +104,29 @@ app.controller('opdoctorpayController', ['$rootScope', '$scope', '$timeout', '$h
         }, true);
         $scope.$watch('data.consultant_id', function (newValue, oldValue) {
             if (newValue != '' && typeof newValue != 'undefined') {
-                if ($scope.data.consultant_id.length == $scope.doctors.length) {
-                    $timeout(function () {
-                        $scope.deselectAll('branch_wise');
-                        $scope.data.from = moment($scope.data.to).add(-1, 'days').format('YYYY-MM-DD');
-                    });
-                } else if ($scope.data.consultant_id.length > 2 && (angular.isUndefined($scope.data.tenant_id) || $scope.data.tenant_id.length != Object.keys($scope.tenants).length)) {
-                    $scope.data.from = moment($scope.data.to).add(-6, 'days').format('YYYY-MM-DD');
+                if ($scope.data.consultant_id.length != 1) {
+                    if ($scope.data.consultant_id.length == $scope.doctors.length) {
+                        $timeout(function () {
+                            $scope.deselectAll('branch_wise');
+                            $scope.data.from = moment($scope.data.to).add(-1, 'days').format('YYYY-MM-DD');
+                        });
+                    } else if ($scope.data.consultant_id.length > 2 && (angular.isUndefined($scope.data.tenant_id) || $scope.data.tenant_id.length != Object.keys($scope.tenants).length)) {
+                        $scope.data.from = moment($scope.data.to).add(-6, 'days').format('YYYY-MM-DD');
+                    }
                 }
             }
         }, true);
         $scope.$watch('data.tenant_id', function (newValue, oldValue) {
             if (newValue != '' && typeof newValue != 'undefined') {
-                if ($scope.data.tenant_id.length == Object.keys($scope.tenants).length) {
-                    $timeout(function () {
-                        $scope.deselectAll('consultant_wise');
-                        $scope.data.from = moment($scope.data.to).add(-1, 'days').format('YYYY-MM-DD');
-                    });
-                } else if ($scope.data.tenant_id.length > 2 && (angular.isUndefined($scope.data.consultant_id) || $scope.data.consultant_id.length != $scope.doctors.length)) {
-                    $scope.data.from = moment($scope.data.to).add(-6, 'days').format('YYYY-MM-DD');
+                if ($scope.data.tenant_id.length != 1) {
+                    if ($scope.data.tenant_id.length == Object.keys($scope.tenants).length) {
+                        $timeout(function () {
+                            $scope.deselectAll('consultant_wise');
+                            $scope.data.from = moment($scope.data.to).add(-1, 'days').format('YYYY-MM-DD');
+                        });
+                    } else if ($scope.data.tenant_id.length > 2 && (angular.isUndefined($scope.data.consultant_id) || $scope.data.consultant_id.length != $scope.doctors.length)) {
+                        $scope.data.from = moment($scope.data.to).add(-6, 'days').format('YYYY-MM-DD');
+                    }
                 }
             }
         }, true);
