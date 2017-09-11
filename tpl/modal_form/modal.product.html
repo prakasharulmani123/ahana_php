@@ -37,6 +37,22 @@
                                             <option value="">Select Product Type</option>
                                         </select>
                                     </div>
+                                    <div class="col-sm-0">
+                                        <button type="button" class="btn btn-primary" ng-click="openProducttype()">
+                                            <i class="fa fa-plus text ng-scope"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- hidden textbox for product description -->
+                                <div class="form-group" ng-show='product_type'>
+                                    <label class="col-sm-4 control-label">&nbsp;</label>
+                                    <div class="col-sm-4">
+                                        <input class="form-control" ng-model='popupdata.textdescription_name' id='product_type_textbox' type="text" placeholder="Product Type">
+                                    </div>
+                                    <button class="btn m-b-xs  btn-success save-btn" ng-disabled="!popupdata.textdescription_name" ng-click="addProduct()">Save</button>
+                                    &nbsp;
+                                    <button class="btn m-b-xs  btn-dark" ng-click="productCancel()"><i class="fa fa-times"></i> Cancel</button>
                                 </div>
 
                                 <div class="line line-dashed b-b line-lg "></div>
@@ -47,7 +63,33 @@
                                             <option value="">Select Brand Name</option>
                                         </select>
                                     </div>
+                                    <div class="col-sm-0">
+                                        <button type="button" class="btn btn-primary" ng-click="openBrandtextbox()">
+                                            <i class="fa fa-plus text ng-scope"></i>
+                                        </button>
+                                    </div>
                                 </div>
+                                
+                                <!-- hidden textbox for brand name -->
+                                <div ng-show='addBrandname'>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">&nbsp;</label>
+                                        <div class="col-sm-4">
+                                            <input class="form-control" ng-model='popupdata.textbrand_name' id='brand_name_textbox' type="text" placeholder="Brand Name">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" >
+                                        <label class="col-sm-4 control-label">&nbsp;</label>
+                                        <div class="col-sm-4">
+                                            <input class="form-control" ng-model='popupdata.brand_code' id='brand_code_textbox' type="text" placeholder="Brand Code">
+                                        </div>
+                                        <button class="btn m-b-xs  btn-success save-btn" ng-disabled="!popupdata.textbrand_name || !popupdata.brand_code" ng-click="addBrand()">Save</button>
+                                        &nbsp;
+                                        <button class="btn m-b-xs  btn-dark" ng-click="brandCancel()"><i class="fa fa-times"></i> Cancel</button>
+                                    </div>
+                                </div>
+
 
                                 <div class="line line-dashed b-b line-lg "></div>
                                 <div class="form-group">
@@ -57,7 +99,22 @@
                                             <option value="">Select Brand Division</option>
                                         </select>
                                     </div>
+                                    <div class="col-sm-0">
+                                        <button type="button" class="btn btn-primary" ng-click="openDivisiontextbox()">
+                                            <i class="fa fa-plus text ng-scope"></i>
+                                        </button>
+                                    </div>
                                 </div>
+                                <div class="form-group" ng-show='adddivision'>
+                                    <label class="col-sm-4 control-label">&nbsp;</label>
+                                    <div class="col-sm-4">
+                                        <input class="form-control" ng-model='popupdata.textdivision_name' id='division_name_textbox' type="text" placeholder="Division Name">
+                                    </div>
+                                    <button class="btn m-b-xs  btn-success save-btn" ng-disabled="!popupdata.textdivision_name" ng-click="addDivision()">Save</button>
+                                    &nbsp;
+                                    <button class="btn m-b-xs  btn-dark" ng-click="divisionCancel()"><i class="fa fa-times"></i> Cancel</button>
+                                </div>
+
 
                                 <div class="line line-dashed b-b line-lg "></div>
                                 <div class="form-group">
@@ -67,6 +124,21 @@
                                             <option value="">Select Generic Name</option>
                                         </select>
                                     </div>
+                                    <div class="col-sm-0">
+                                        <button type="button" class="btn btn-primary" ng-click="openGenerictextbox()">
+                                            <i class="fa fa-plus text ng-scope"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="form-group" ng-show='addgeneric'>
+                                    <label class="col-sm-4 control-label">&nbsp;</label>
+                                    <div class="col-sm-4">
+                                        <input class="form-control" ng-model='popupdata.textgeneric_name' id='generic_name_textbox' type="text" placeholder="Generic Name">
+                                    </div>
+                                    <button class="btn m-b-xs  btn-success save-btn" ng-disabled="!popupdata.textgeneric_name" ng-click="addGeneric()">Save</button>
+                                    &nbsp;
+                                    <button class="btn m-b-xs  btn-dark" ng-click="genericCancel()"><i class="fa fa-times"></i> Cancel</button>
                                 </div>
 
                                 <div class="line line-dashed b-b line-lg "></div>
@@ -86,7 +158,21 @@
                                                 <option value="">Select Drug Class</option>
                                             </select>
                                         </div>
+                                        <div class="col-sm-0">
+                                            <button type="button" class="btn btn-primary" ng-click="openDrugtextbox()">
+                                                <i class="fa fa-plus text ng-scope"></i>
+                                            </button>
+                                        </div>
                                     </div>
+                                </div>
+                                <div class="form-group" ng-show='adddrug'>
+                                    <label class="col-sm-4 control-label">&nbsp;</label>
+                                    <div class="col-sm-4">
+                                        <input class="form-control" ng-model='popupdata.textdrug_name' id='drug_name_textbox' type="text" placeholder="Drug Name">
+                                    </div>
+                                    <button class="btn m-b-xs  btn-success save-btn" ng-disabled="!popupdata.textdrug_name" ng-click="addDrug()">Save</button>
+                                    &nbsp;
+                                    <button class="btn m-b-xs  btn-dark" ng-click="drugCancel()"><i class="fa fa-times"></i> Cancel</button>
                                 </div>
 
 
