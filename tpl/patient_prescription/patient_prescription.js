@@ -960,12 +960,22 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         if (result[key] != Math.floor(result[key])) {
                             var decimalFreq = result[key].split('.');
                             var wholeNumber = (decimalFreq[0] == '0' ? '' : decimalFreq[0] + ' ')
-                            if (decimalFreq[1] == '25')
-                                return wholeNumber + '1/4';
-                            else if (decimalFreq[1] == '5')
-                                return wholeNumber + '1/2';
-                            else if (decimalFreq[1] == '75')
-                                return wholeNumber + '3/4';
+                            if (wholeNumber) {
+                                if (decimalFreq[1] == '25')
+                                    return wholeNumber + '<i>1/4</i>';
+                                else if (decimalFreq[1] == '5')
+                                    return wholeNumber + '<i>1/2</i>';
+                                else if (decimalFreq[1] == '75')
+                                    return wholeNumber + '<i>3/4</i>';
+                            } else {
+                                if (decimalFreq[1] == '25')
+                                    return wholeNumber + '1/4';
+                                else if (decimalFreq[1] == '5')
+                                    return wholeNumber + '1/2';
+                                else if (decimalFreq[1] == '75')
+                                    return wholeNumber + '3/4';
+                            }
+
                         } else {
                             return result[key];
                         }

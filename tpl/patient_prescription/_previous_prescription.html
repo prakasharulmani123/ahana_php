@@ -20,7 +20,7 @@
 
         <tr ng-repeat-start="(pres_key, value) in displayedCollection">
             <td style="width: 5%">
-                <button ng-click="ctrl.expandAll(allExpanded = !allExpanded)" expand class="btn btn-sm btn-default hms-plus" type="button">
+                <button ng-click="expanded = !expanded" expand class="btn btn-sm btn-default hms-plus" >
                     <i ng-if="!expanded" class="fa fa-plus text"></i>
                     <i ng-if="expanded" class="fa fa-minus text"></i>
                 </button>
@@ -90,7 +90,7 @@
         </tr>
     </tbody>
 </table>
-<div id='print_previous_pres' ng-hide="true">
+<div id='print_previous_pres' ng-hide='true'>
     <table class="invoice" align="center">
         <tbody>
             <tr>
@@ -165,22 +165,32 @@
             <tbody>
                 <tr ng-repeat="(gKey, row) in prescriptionItems2">
                     <td><p>&bull; {{row.product_name}}</p><i>({{row.generic_name}})</i></td>
-                    <td style="padding: 8px" class="txtCenter txtUpper" colspan="4" ng-if="row.freqType == 'txt'">{{ getFrequencyExists(row.frequency_name, 0, row.freqType)}}</td>
+                    <td class="txtCenter txtUpper" colspan="4" ng-if="row.freqType == 'txt'">{{ getFrequencyExists(row.frequency_name, 0, row.freqType)}}</td>
 
-                    <td style="padding: 0px 12px" class="txtCenter" ng-if="row.freqType != 'txt'">{{ getFrequencyExists(row.frequency_name, 0, row.freqType)}}</td>
-                    <td style="padding: 0px 12px" class="txtCenter" ng-if="row.freqType != 'txt'">{{ getFrequencyExists(row.frequency_name, 1, row.freqType)}}</td>
+                    <td class="txtCenter" ng-if="row.freqType != 'txt'">
+                        <span ng-bind-html="getFrequencyExists(row.frequency_name, 0, row.freqType)"></span>
+                    </td>
+                    <td class="txtCenter" ng-if="row.freqType != 'txt'">
+                        <span ng-bind-html="getFrequencyExists(row.frequency_name, 1, row.freqType)"></span>
+                    </td>
 
-                    <td style="padding: 0px 12px" class="txtCenter" ng-if="((row.freqType == 3) && (row.freqType != 'txt'))">-</td>
-                    <td style="padding: 0px 12px" class="txtCenter" ng-if="((row.freqType != 3) && (row.freqType != 'txt'))">{{ getFrequencyExists(row.frequency_name, 2, row.freqType)}}</td>
+                    <td class="txtCenter" ng-if="((row.freqType == 3) && (row.freqType != 'txt'))">-</td>
+                    <td class="txtCenter" ng-if="((row.freqType != 3) && (row.freqType != 'txt'))">
+                        <span ng-bind-html="getFrequencyExists(row.frequency_name, 2, row.freqType)"></span>
+                    </td>
 
-                    <td style="padding: 0px 12px" class="txtCenter" ng-if="((row.freqType == 3) && (row.freqType != 'txt'))">{{ getFrequencyExists(row.frequency_name, 2, row.freqType)}}</td>
-                    <td style="padding: 0px 12px" class="txtCenter" ng-if="((row.freqType != 3) && (row.freqType != 'txt'))">{{ getFrequencyExists(row.frequency_name, 3, row.freqType)}}</td>
+                    <td class="txtCenter" ng-if="((row.freqType == 3) && (row.freqType != 'txt'))">
+                        <span ng-bind-html="getFrequencyExists(row.frequency_name, 2, row.freqType)"></span>
+                    </td>
+                    <td class="txtCenter" ng-if="((row.freqType != 3) && (row.freqType != 'txt'))">
+                        <span ng-bind-html="getFrequencyExists(row.frequency_name, 3, row.freqType)"></span>
+                    </td>
 
 
                     <td class="txtCenter">{{row.number_of_days}}</td>
                     <td class="txtCenter">{{row.total_qty}}</td>
                     <td class="txtCenter">{{row.food_type||'-'}}</td>
-                    <td>{{row.remarks||'-'}}</td>
+                    <td >{{row.remarks||'-'}}</td>
                 </tr>
             </tbody>
         </table>
