@@ -816,7 +816,7 @@ pati-thumb
 .header-new {
 	width:100%;
 	float:left;
-	margin-bottom:20px;
+	/*margin-bottom:20px;*/
 }
 .headerbg2 i {
 	margin-left: 0px;

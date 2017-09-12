@@ -212,7 +212,7 @@ angular.module('app')
                                         }
                                         $rootScope.currentPage = patient.encounter_type;
                                         $scope.setPatientAleratHtml(patient);
-                                        $scope.setPatientAllergiesHtml(patient);
+                                        //$scope.setPatientAllergiesHtml(patient);
 
                                         $rootScope.commonService.GetLabelFromValue(patient.patient_gender, 'GetGenderList', function (response) {
                                             $scope.app.patientDetail.patientSex = response;
@@ -236,12 +236,12 @@ angular.module('app')
                     }
                 }
 
-                $scope.setPatientAllergiesHtml = function (patient) {
-                    if (patient.allergies) {
-                        var alert_link = '#/patient/alert/' + patient.patient_guid + '/allergies';
-                        $scope.patient_allergies_html = '<div>' + patient.allergies + '<br><a class="text-info allergies-read-more" ui-sref="patient.alert({id: $scope.patientObj.patient_guid,type:allergies})" href="' + alert_link + '">ReadMore</a><div>';
-                    }
-                }
+//                $scope.setPatientAllergiesHtml = function (patient) {
+//                    if (patient.allergies) {
+//                        var alert_link = '#/patient/alert/' + patient.patient_guid + '/allergies';
+//                        $scope.patient_allergies_html = '<div>' + patient.allergies + '<br><a class="text-info allergies-read-more" ui-sref="patient.alert({id: $scope.patientObj.patient_guid,type:allergies})" href="' + alert_link + '">ReadMore</a><div>';
+//                    }
+//                }
 
                 $scope.loadUserCredentials = function () {
                     var user = AuthenticationService.getCurrentUser();
@@ -687,7 +687,7 @@ angular.module('app')
                 $scope.$on('patient_allergies', function (event, data) {
                     $scope.patientObj.hasallergies = data.hasallergies;
                     $scope.patientObj.allergies = data.alert;
-                    $scope.setPatientAllergiesHtml($scope.patientObj);
+                    //$scope.setPatientAllergiesHtml($scope.patientObj);
                 });
 
                 $scope.openUploadForm = function (block) {

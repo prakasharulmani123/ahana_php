@@ -14,52 +14,32 @@
                     <i aria-hidden="true" class="fa fa-user"></i>
                     <b class="patient-name">{{patientObj.fullname}}</b>
                     ({{patientObj.patient_global_int_code}})
-                    <span ng-if="patientObj.patient_category" style="background-color: {{patientObj.patient_category_color}}" class="category_badge header-badge category_icon" tooltip="{{patientObj.patient_category_fullname}}" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom">
-                        {{patientObj.patient_category| uppercase}}
-                    </span>
-                    <span ng-show="patientObj.patActiveIp">
-                        <i class="fa fa-calendar"></i>
-                        {{patientObj.doa}}
-                    </span>
+
                     <i class="fa fa-venus-mars"></i>
                     {{app.patientDetail.patientSex}}
                     <span ng-if="patientObj.patient_age_ym">({{patientObj.patient_age_ym}})</span>
-                    <i class="fa fa-phone"></i>  {{patientObj.patient_mobile}}
-                    <i aria-hidden="true" class="fa fa-ban" ng-show="false"></i>
+
+                    <i aria-hidden="true"></i>
+                    <span ng-if="patientObj.hasallergies"><b>Allergies : </b> {{patientObj.allergies}}</span>
                     <b ng-show="false"> Allergies : </b>
+
+                    <i aria-hidden="true" class="fa fa-ban" ng-show="false"></i>
                     <!--                    <div class="pati-cate" ng-show="patientObj.have_encounter">{{patientObj.encounter_type}}</div>-->
-                    
-                    <!-- topbar next and previous options start-->
-<!--                    <span ng-if="patientObj.have_encounter == true">
-                        <a ng-disabled="patientObj.prevPatient == ''" ui-sref="patient.view({id: patientObj.prevPatient})" class="btn btn-default"> <span class="fa fa-chevron-left"></span> </a>
-                        <a ng-disabled="patientObj.nextPatient == ''" ui-sref="patient.view({id: patientObj.nextPatient})" class="btn btn-default"> <span class="fa fa-chevron-right"></span> </a>
-                        <div class="btn-group dropdown" dropdown="">
-                            <button ng-disabled="patientObj.allEncounter == ''" class="btn btn-default" dropdown-toggle="" aria-haspopup="true" aria-expanded="false"><span class="fa fa-chevron-down"></span></button>
-                            <ul class="dropdown-menu">
-                                <li ng-repeat="(key, patient) in patientObj.allEncounter">
-                                    <div class="row">
-                                        <div class="col-xs-12 col-sm-2 col-md-2">
-                                            <img class="patient-image" src="img/man-icon.png" ng-attr-lazy-img="{{ patient.apptPatientData.patient_img_url ? patient.apptPatientData.patient_img_url : ($even ? 'img/man-icon.png' : 'img/man-icon2.png') }}" />
-                                        </div>
-                                        <div class="col-xs-12 col-sm-5 col-md-6">
-                                            <div class="row ng-binding">
-                                                <a tooltip="{{patient.apptPatientData.fullcurrentaddress|| patient.apptPatientData.fullpermanentaddress}}" ng-bind-html="patient.apptPatientData.fullname | highlight:patient" ui-sref="patient.view({id: patient.apptPatientData.patient_guid})" class="ng-binding">
-                                                </a>
-                                                <b ng-if="patient.apptPatientData.patient_age_ym">({{patient.apptPatientData.patient_age_ym}}) </b>
-                                                <br>
-                                                <span class="pull-left" ng-bind-html="patient.apptPatientData.patient_global_int_code | highlight:patient"></span> &nbsp; &nbsp;
-                                                <span ng-bind-html="patient.apptPatientData.patient_mobile | highlight:patient"> </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </span>-->
-                    <!-- topbar next and previous options end-->
-                    
-                    
                 </div>
+
+                <br/>
+
+                <span ng-if="patientObj.patient_category" style="background-color: {{patientObj.patient_category_color}}" class="category_badge header-badge category_icon" tooltip="{{patientObj.patient_category_fullname}}" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom">
+                    {{patientObj.patient_category| uppercase}}
+                </span>
+
+                <span ng-show="patientObj.patActiveIp">
+                    <i class="fa fa-calendar"></i>
+                    {{patientObj.doa}}
+                </span>
+
+                <i class="fa fa-phone"></i>  {{patientObj.patient_mobile}}
+
                 <div class="headerbg2">
                     <div class="patient-details-part patinet-id" ng-if="patientObj.activeCasesheetno">
                         <b> Casesheet No : </b> {{patientObj.activeCasesheetno}}
@@ -84,16 +64,49 @@
                                                 {{patientObj.patient_category| uppercase}}
                                             </div>
                                         </div>-->
-                    <div class="patient-details-part b-n" ng-show="patientObj.hasalert">
+                    <!-- pateint alleriges alert readmore start-->
+                    <!--                    <div class="patient-details-part b-n" ng-show="patientObj.hasallergies">
+                                            <div style="cursor: pointer" class="alert_badge header-badge trigger-allergies-close" popover="{{patient_allergies_html}}" popover-trigger="click" popover-placement="bottom">
+                                                <i class="fa fa-warning"></i>
+                                            </div>
+                                        </div>-->
+                    <!-- pateint alleriges alert readmore end-->
+
+                    <div class="patient-details-part" style="padding :0px 10px" ng-show="patientObj.hasalert">
                         <div style="cursor: pointer" class="alert_badge header-badge trigger-close" popover="{{patient_alert_html}}" popover-trigger="click" popover-placement="bottom">
                             <i class="fa fa-warning"></i>
                         </div>
                     </div>
-                    <div class="patient-details-part b-n" ng-show="patientObj.hasallergies">
-                    <div style="cursor: pointer" class="alert_badge header-badge trigger-allergies-close" popover="{{patient_allergies_html}}" popover-trigger="click" popover-placement="bottom">
-                        <i class="fa fa-warning"></i>
+
+                    <!-- topbar next and previous options start-->
+                    <div class="patient-details-part b-n" ng-show="patientObj.have_encounter == true">
+                        <a ng-disabled="patientObj.prevPatient == ''" ui-sref="patient.view({id: patientObj.prevPatient})" class="btn btn-default"> <span class="fa fa-chevron-left"></span> </a>
+                        <a ng-disabled="patientObj.nextPatient == ''" ui-sref="patient.view({id: patientObj.nextPatient})" class="btn btn-default"> <span class="fa fa-chevron-right"></span> </a>
+                        <!--                        <div class="btn-group dropdown" dropdown="">
+                                                    <button ng-disabled="patientObj.allEncounter == ''" class="btn btn-default" dropdown-toggle="" aria-haspopup="true" aria-expanded="false"><span class="fa fa-chevron-down"></span></button>
+                                                    <ul class="dropdown-menu">
+                                                        <li ng-repeat="(key, patient) in patientObj.allEncounter">
+                                                            <div class="row">
+                                                                <div class="col-xs-12 col-sm-2 col-md-2">
+                                                                    <img class="patient-image" src="img/man-icon.png" ng-attr-lazy-img="{{ patient.apptPatientData.patient_img_url ? patient.apptPatientData.patient_img_url : ($even ? 'img/man-icon.png' : 'img/man-icon2.png') }}" />
+                                                                </div>
+                                                                <div class="col-xs-12 col-sm-5 col-md-6">
+                                                                    <div class="row ng-binding">
+                                                                        <a tooltip="{{patient.apptPatientData.fullcurrentaddress|| patient.apptPatientData.fullpermanentaddress}}" ng-bind-html="patient.apptPatientData.fullname | highlight:patient" ui-sref="patient.view({id: patient.apptPatientData.patient_guid})" class="ng-binding">
+                                                                        </a>
+                                                                        <b ng-if="patient.apptPatientData.patient_age_ym">({{patient.apptPatientData.patient_age_ym}}) </b>
+                                                                        <br>
+                                                                        <span class="pull-left" ng-bind-html="patient.apptPatientData.patient_global_int_code | highlight:patient"></span> &nbsp; &nbsp;
+                                                                        <span ng-bind-html="patient.apptPatientData.patient_mobile | highlight:patient"> </span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>-->
                     </div>
-                </div>
+                    <!-- topbar next and previous options end-->
+
                 </div>
             </div>
         </div>
