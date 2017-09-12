@@ -328,16 +328,6 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $scope.data.diag_id = $item.diag_id;
         }
 
-        $('#save_print, #save').click(function () {
-            var diag = $('#diagnosis').val();
-            if (diag) {
-                if ($scope.data.diag_id == null || $scope.data.diag_id == '') {
-                    $scope.errorMessage = 'Invalid Select Diagnosis';
-                } else
-                    $scope.errorMessage = '';
-            }
-        });
-
         $scope.diagname_desc = function (Diag) {
             if (Diag == null || Diag == undefined)
                 return;
@@ -880,8 +870,6 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
         $scope.saveForm = function () {
             _that = this;
-            if ($scope.errorMessage)
-                return false;
 
             $scope.errorData = "";
             $scope.msg.successMessage = "";
@@ -891,6 +879,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             succ_msg = 'Prescription saved successfully';
 
             $scope.data.next_visit = moment($scope.data.next_visit).format('YYYY-MM-DD');
+            if(!$scope.data.diag_id)
+                $scope.data.diag_text = $scope.diagnosis;
 
             angular.extend($scope.data, {
 //                encounter_id: $scope.enc.selected.encounter_id,
