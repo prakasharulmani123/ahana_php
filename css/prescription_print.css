@@ -35,7 +35,7 @@
     .prescriptionInfo tr td  p { font-weight:bold; font-size:20px  }
     .prescriptionInfo tr td:first-child { padding-left:10px }
     .prescriptionInfo tr:first-child td { padding-top :30px }
-    .prescriptionInfo td i { text-transform:uppercase; color:#7d7d7d; font-size:14px }
+    .prescriptionInfo td i { text-transform:uppercase; color:#7d7d7d; font-size:16px }
     .txtUpper { text-transform:uppercase }
     .prescriptionInfo p { margin: 0;     font-size: 20px; }
     /*.nextVisit td { padding-top:5em; margin-top: 50px; }*/

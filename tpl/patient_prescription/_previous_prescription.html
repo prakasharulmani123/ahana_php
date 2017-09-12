@@ -164,7 +164,7 @@
             </thead>
             <tbody>
                 <tr ng-repeat="(gKey, row) in prescriptionItems2">
-                    <td><p>&bull; {{row.product_name}}</p><i>({{row.generic_name}})</i></td>
+                    <td><p><span style="font-weight: normal">{{gKey+1}}.</span> {{row.product_name}}</p><i>(<b>{{row.generic_name}}</b>)</i></td>
                     <td class="txtCenter txtUpper" colspan="4" ng-if="row.freqType == 'txt'">{{ getFrequencyExists(row.frequency_name, 0, row.freqType)}}</td>
 
                     <td class="txtCenter" ng-if="row.freqType != 'txt'">
