@@ -588,6 +588,46 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             }
         }
 
+        $scope.addToPrescriptionList = function (value) {
+            $scope.getRelatedProducts(value.generic_id).then(function () {
+                qty_count = $scope.calculate_qty(value.frequency_name, value.number_of_days, value.product.product_description_id, value.product.description_name);
+                var no_of_days = $scope.data.number_of_days;
+                items = {
+                    'product_id': value.product_id,
+                    'product_name': value.product.full_name,
+                    'generic_id': value.generic_id,
+                    'generic_name': value.generic_name,
+                    'drug_class_id': value.drug_class_id,
+                    'drug_name': value.drug_name,
+                    'manual_textbox': false,
+                    'route': value.route_name,
+                    'frequency': value.frequency_name,
+                    'number_of_days': no_of_days,
+                    'is_favourite': 0,
+                    'route_id': value.route_id,
+                    'description_routes': value.product.description_routes,
+                    'presc_date': moment().format('YYYY-MM-DD HH:mm:ss'),
+                    'price': value.product.latest_price,
+                    'total': $scope.calculate_price(qty_count, value.product.latest_price),
+                    'freqMask': '9-9-9-9',
+                    'freqMaskCount': 4,
+                    'available_quantity': value.product.availableQuantity,
+                    'item_key': $scope.data.prescriptionItems.length,
+                    'all_products': $scope.products,
+                    'qty': qty_count,
+                    'product_description_id': value.product.product_description_id,
+                    'description_name': value.product.description_name,
+                    'in_stock': (parseInt(value.product.availableQuantity) > parseInt(qty_count)),
+                    'freqType': value.freqType
+                };
+                var fav = $filter('filter')($scope.child.favourites, {product_id: value.product_id});
+
+                if (fav.length > 0) {
+                    angular.extend(items, {is_favourite: 1});
+                }
+                PrescriptionService.addPrescriptionItem(items);
+            });
+        }
         $scope.addToCurrentPrescription = function () {
             if ($scope.previousPresSelected > 0) {
                 var loop_total = $scope.previousPresSelectedItems.length;
@@ -595,44 +635,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 angular.forEach($scope.previousPresSelectedItems, function (value, key) {
                     var result = $filter('filter')($scope.data.prescriptionItems, {product_id: value.product_id, route_id: value.route_id});
                     if (result.length == 0) {
-                        $scope.getRelatedProducts(value.generic_id).then(function () {
-                            qty_count = $scope.calculate_qty(value.frequency_name, value.number_of_days, value.product.product_description_id, value.product.description_name);
-                            var no_of_days = $scope.data.number_of_days;
-                            items = {
-                                'product_id': value.product_id,
-                                'product_name': value.product.full_name,
-                                'generic_id': value.generic_id,
-                                'generic_name': value.generic_name,
-                                'drug_class_id': value.drug_class_id,
-                                'drug_name': value.drug_name,
-                                'manual_textbox': false,
-                                'route': value.route_name,
-                                'frequency': value.frequency_name,
-                                'number_of_days': no_of_days,
-                                'is_favourite': 0,
-                                'route_id': value.route_id,
-                                'description_routes': value.product.description_routes,
-                                'presc_date': moment().format('YYYY-MM-DD HH:mm:ss'),
-                                'price': value.product.latest_price,
-                                'total': $scope.calculate_price(qty_count, value.product.latest_price),
-                                'freqMask': '9-9-9-9',
-                                'freqMaskCount': 4,
-                                'available_quantity': value.product.availableQuantity,
-                                'item_key': $scope.data.prescriptionItems.length,
-                                'all_products': $scope.products,
-                                'qty': qty_count,
-                                'product_description_id': value.product.product_description_id,
-                                'description_name': value.product.description_name,
-                                'in_stock': (parseInt(value.product.availableQuantity) > parseInt(qty_count)),
-                                'freqType': value.freqType
-                            };
-                            var fav = $filter('filter')($scope.child.favourites, {product_id: value.product_id});
-
-                            if (fav.length > 0) {
-                                angular.extend(items, {is_favourite: 1});
-                            }
-                            PrescriptionService.addPrescriptionItem(items);
-                        });
+                        $scope.addToPrescriptionList(value);
                     }
 
                     loop_start = parseFloat(loop_start) + parseFloat(1);
@@ -650,6 +653,32 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 $("#current_prescription").focus();
                 toaster.clear();
                 toaster.pop('success', '', 'Medicine has been added to the current prescription');
+            }
+        }
+
+        $scope.addToReprescribe = function () {
+            PrescriptionService.deleteAllPrescriptionItem();
+            if ($scope.represcribeSelected > 0) {
+                var loop_total = $scope.represcribeSelectedItems.length;
+                var loop_start = 0;
+                angular.forEach($scope.represcribeSelectedItems, function (value, key) {
+                    $scope.addToPrescriptionList(value);
+
+                    loop_start = parseFloat(loop_start) + parseFloat(1);
+                    if (loop_total == loop_start) {
+                        $timeout(function () {
+                            $scope.data.prescriptionItems = PrescriptionService.getPrescriptionItems();
+                        }, 1000);
+                        $timeout(function () {
+                            $scope.showOrhideFrequency();
+                        }, 2000);
+                    }
+                });
+
+                $scope.pres_status = 'current';
+                $("#current_prescription").focus();
+                toaster.clear();
+                toaster.pop('success', '', 'Medicine has been added to the represcribe');
             }
         }
 
@@ -1165,6 +1194,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.checkboxes = {'checked': false, items: []};
         $scope.previousPresSelectedItems = [];
         $scope.previousPresSelected = 0;
+        $scope.represcribeSelectedItems = [];
+        $scope.represcribeSelected = 0;
 
         $scope.enabled_dates = [];
         $scope.loadPrevPrescriptionsList = function (date) {
@@ -1425,6 +1456,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 angular.forEach($scope.displayedCollection, function (value, pres_key) {
                     angular.forEach(value.items, function (row, key) {
                         $scope.moreOptions(pres_key, key, row);
+                        $scope.prepareMainPrescrption();
                     });
                 });
             }, 1000);
@@ -1472,6 +1504,14 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 $scope.previousPresSelectedItems.push(item.row);
             });
             $scope.previousPresSelected = $scope.previousPresSelectedItems.length;
+        }
+
+        $scope.prepareMainPrescrption = function () {
+            $scope.represcribeSelectedItems = [];
+            angular.forEach($scope.checkboxes.items, function (item) {
+                $scope.represcribeSelectedItems.push(item.row);
+            });
+            $scope.represcribeSelected = $scope.represcribeSelectedItems.length;
         }
 
         $scope.lastSelected = {};

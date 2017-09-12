@@ -673,9 +673,14 @@
                 <div class="panel panel-default">
                     <div class="row wrapper pb-sm">
                         <div class="col-sm-9">
-                            <span ng-show="previousPresSelected > 0">
+                            <span ng-show="(previousPresSelected > 0 && represcribeSelected==0)">
                                 <button ng-click="addToCurrentPrescription()" class="btn btn-sm btn-primary">
-                                    <i class="fa fa-retweet"></i> Add to current prescription
+                                    <i class="fa fa-retweet"></i> Add to prescription
+                                </button>
+                            </span>
+                            <span ng-show="represcribeSelected > 0">
+                                <button ng-click="addToReprescribe()" class="btn btn-sm btn-primary">
+                                    <i class="fa fa-retweet"></i> Represcribe
                                 </button>
                             </span>
                         </div>
