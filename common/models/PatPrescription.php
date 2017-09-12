@@ -30,34 +30,31 @@ use yii\db\ActiveQuery;
  * @property PatPrescriptionFavourite[] $patPrescriptionFavourites
  * @property PatPrescriptionItems[] $patPrescriptionItems
  */
-class PatPrescription extends RActiveRecord
-{
+class PatPrescription extends RActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'pat_prescription';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            [['encounter_id', 'patient_id', 'pres_date', 'consultant_id'], 'required'],
-            [['tenant_id', 'encounter_id', 'patient_id', 'consultant_id', 'number_of_days', 'created_by', 'modified_by'], 'integer'],
-            [['pres_date', 'next_visit', 'created_at', 'modified_at', 'deleted_at', 'diag_id'], 'safe'],
-            [['notes', 'status'], 'string']
+                [['encounter_id', 'patient_id', 'pres_date', 'consultant_id'], 'required'],
+                [['tenant_id', 'encounter_id', 'patient_id', 'consultant_id', 'number_of_days', 'created_by', 'modified_by'], 'integer'],
+                [['pres_date', 'next_visit', 'created_at', 'modified_at', 'deleted_at', 'diag_id'], 'safe'],
+                [['notes', 'status'], 'string']
         ];
     }
 
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'pres_id' => 'Pres ID',
             'tenant_id' => 'Tenant ID',
@@ -81,86 +78,89 @@ class PatPrescription extends RActiveRecord
     /**
      * @return ActiveQuery
      */
-    public function getEncounter()
-    {
+    public function getEncounter() {
         return $this->hasOne(PatEncounter::className(), ['encounter_id' => 'encounter_id']);
     }
-    
-    public function getAllergies()
-    {
+
+    public function getAllergies() {
         return $this->hasOne(PatAllergies::className(), ['encounter_id' => 'encounter_id'])->status()->active()->orderBy(['created_at' => SORT_DESC])->limit(1);
     }
+
     /**
      * @return ActiveQuery
      */
-    public function getPatient()
-    {
+    public function getPatient() {
         return $this->hasOne(PatPatient::className(), ['patient_id' => 'patient_id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getTenant()
-    {
+    public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
-    
+
     /**
      * @return ActiveQuery
      */
-    public function getDiagnosis()
-    {
+    public function getDiagnosis() {
         return $this->hasOne(PatDiagnosis::className(), ['diag_id' => 'diag_id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getPatPrescriptionFavourites()
-    {
+    public function getPatPrescriptionFavourites() {
         return $this->hasMany(PatPrescriptionFavourite::className(), ['pres_id' => 'pres_id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getPatPrescriptionItems()
-    {
+    public function getPatPrescriptionItems() {
         return $this->hasMany(PatPrescriptionItems::className(), ['pres_id' => 'pres_id']);
     }
-    
+
     /**
      * @return ActiveQuery
      */
     public function getConsultant() {
         return $this->hasOne(CoUser::className(), ['user_id' => 'consultant_id']);
     }
-    
+
     public function beforeSave($insert) {
         if (!empty($this->number_of_days) && $insert) {
             $this->next_visit = $this->patient->getPatientNextvisitDate($this->number_of_days);
         }
         return parent::beforeSave($insert);
     }
-    
+
     public static function find() {
         return new PatPrescriptionQuery(get_called_class());
     }
-    
+
     public function fields() {
         $extend = [
             'items' => function ($model) {
                 return (isset($model->patPrescriptionItems) ? $model->patPrescriptionItems : '-');
             },
             'consultant_name' => function ($model) {
-                return (isset($model->consultant) ? $model->consultant->title_code .  ucwords($model->consultant->name): '-');
+                return (isset($model->consultant) ? $model->consultant->title_code . ucwords($model->consultant->name) : '-');
             },
             'encounter' => function ($model) {
                 return (isset($model->encounter) ? $model->encounter->patVitals : '-');
             },
             'diag_name' => function ($model) {
-                return (isset($model->diagnosis) ? $model->diagnosis->diag_name.'-'.$model->diagnosis->diag_description : '-');
+                if (isset($model->diagnosis)) {
+                    $result = '';
+                    if ($model->diagnosis->diag_name != '') {
+                        $result .= $model->diagnosis->diag_name.' - ';
+                    }
+                    if ($model->diagnosis->diag_description != '') {
+                        $result .= $model->diagnosis->diag_description;
+                    }
+                    return $result;
+                }
             },
             'allergies' => function ($model) {
                 return (isset($model->allergies) ? $model->allergies->notes : '');
@@ -169,7 +169,7 @@ class PatPrescription extends RActiveRecord
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
     }
-    
+
     public function afterSave($insert, $changedAttributes) {
         if ($insert)
             $activity = 'Prescription Added Successfully (#' . $this->encounter_id . ' )';
@@ -178,4 +178,5 @@ class PatPrescription extends RActiveRecord
         CoAuditLog::insertAuditLog(PhaBrand::tableName(), $this->pres_id, $activity);
         return parent::afterSave($insert, $changedAttributes);
     }
+
 }

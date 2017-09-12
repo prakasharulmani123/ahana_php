@@ -80,7 +80,12 @@ class PatientprescriptionController extends ActiveController {
         if (!empty($post) && !empty($post['prescriptionItems'])) {
             $model = new PatPrescription;
             $model->attributes = $post;
-
+            if (!empty($post['diag_text']) && empty($model->diag_id)) {
+                $diag_model = new PatDiagnosis();
+                $diag_model->diag_description = $post['diag_text'];
+                $diag_model->save(false);
+                $model->diag_id = $diag_model->diag_id;
+            }
             $valid = $model->validate();
 
             foreach ($post['prescriptionItems'] as $key => $item) {
@@ -215,7 +220,7 @@ class PatientprescriptionController extends ActiveController {
     public function actionFrequencyremove() {
         $post = Yii::$app->request->post();
         if (!empty($post)) {
-            $frequency = PatPrescriptionFrequency::find()->tenant()->andWhere(['freq_id' => $post['id'],'consultant_id' => $post['consultant_id']])->one();
+            $frequency = PatPrescriptionFrequency::find()->tenant()->andWhere(['freq_id' => $post['id'], 'consultant_id' => $post['consultant_id']])->one();
             $frequency->status = 0;
             $frequency->save(false);
             return ['success' => true];
@@ -223,7 +228,7 @@ class PatientprescriptionController extends ActiveController {
             return ['success' => false, 'message' => 'Invalid Access'];
         }
     }
-    
+
     public function actionGetdiagnosis() {
         $get = Yii::$app->getRequest()->get();
         $text = $get['diag_description'];
