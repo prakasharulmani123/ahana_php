@@ -608,7 +608,7 @@
                                                             <div class="form-inline">
                                                                 <div class="form-group">
                                                                     <label for="exampleInputEmail2"><i class="fa fa-calendar"></i> <b> Next Vist </b></label> &nbsp; &nbsp;
-                                                                    <input type="text" class="form-control multimonthdatepicker" ng-model="data.next_visit" ng-click="open($event)" drop-disable prevent-enter="true" ng-change="setDayEmpty();
+                                                                    <input type="text" id="next_visit_date_picker" class="form-control multimonthdatepicker" ng-model="data.next_visit" ng-click="open($event)" drop-disable prevent-enter="true" ng-change="setDayEmpty();
                                                                                     getDays();"/>    
                                                                 </div>
                                                                 <div class="form-group">
@@ -763,7 +763,7 @@
 
 <script>
     $(document).ready(function () {
-        var site_url = $('[ng-controller="PrescriptionController"]').scope().IRISOrgUrl;
+        //var site_url = $('[ng-controller="PrescriptionController"]').scope().IRISOrgUrl;
         $('#search-form').on('click', function (e) {
             e.stopPropagation();
         });
@@ -779,9 +779,9 @@
             $('#sb-site').css('transition', 'none');
         });
         $(".multimonthdatepicker").datepicker({
-            showOn: "button",
-            buttonImage: site_url + "/img/calendar.gif",
-            buttonText: "Select date",
+//            showOn: "button",
+//            buttonImage: site_url + "/img/calendar.gif",
+//            buttonText: "Select date",
             numberOfMonths: 2,
             showButtonPanel: true,
             dateFormat: 'yy-mm-dd',

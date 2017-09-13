@@ -1070,6 +1070,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     data: {'days': newValue},
                 }).success(
                         function (response) {
+                            $('#next_visit_date_picker').datepicker('setDate', response.date);
                             $scope.data.next_visit = response.date;
                         }
                 );
