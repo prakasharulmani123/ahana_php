@@ -1146,17 +1146,19 @@ class PharmacyproductController extends ActiveController {
                 }
 
                 $product_name = $data[0];
-                $product_desc = $data[1];
-                $brand = $data[2];
-                $generic = $data[3];
-                $drug = $data[4];
-                $route = $data[5];
-                $purchase_unit = $data[6];
-                $sale_unit = $data[7];
-                $sale_tax = $data[8];
-                $purchase_tax = $data[9];
+                $product_unit = $data[1];
+                $product_unit_count = $data[2];
+                $product_desc = $data[3];
+                $brand = $data[4];
+                $generic = $data[5];
+                $drug = $data[6];
+                $route = $data[7];
+                $purchase_unit = $data[8];
+                $sale_unit = $data[9];
+                $sale_tax = $data[10];
+                $purchase_tax = $data[11];
 
-                $sql = "INSERT INTO test_product_import(tenant_id, product_name, group_name, brand, generic_name, drug_class, route, purchase_unit, sale_unit, purchase_tax, sale_tax, import_log) VALUES('{$tenant_id}','{$product_name}', '{$product_desc}', '{$brand}', '{$generic}', '{$drug}', '{$route}', '{$purchase_unit}', '{$sale_unit}', '{$purchase_tax}', '{$sale_tax}', '{$log}')";
+                $sql = "INSERT INTO test_product_import(tenant_id, product_name, product_unit, product_unit_count, group_name, brand, generic_name, drug_class, route, purchase_unit, sale_unit, purchase_tax, sale_tax, import_log) VALUES('{$tenant_id}','{$product_name}', '{$product_unit}', '{$product_unit_count}', '{$product_desc}', '{$brand}', '{$generic}', '{$drug}', '{$route}', '{$purchase_unit}', '{$sale_unit}', '{$purchase_tax}', '{$sale_tax}', '{$log}')";
                 $command = $connection->createCommand($sql);
                 $command->execute();
             }
@@ -1192,6 +1194,8 @@ class PharmacyproductController extends ActiveController {
                     $post_data['formtype'] = 'add';
                     $post_data['tenant_id'] = $result->tenant_id;
                     $post_data['product_name'] = $result->product_name;
+                    $post_data['product_unit'] = $result->product_unit;
+                    $post_data['product_unit_count'] = $result->product_unit_count;
                     $post_data['description_name'] = $result->group_name;
                     $post_data['brand_name'] = $result->brand;
                     $post_data['generic_name'] = $result->generic_name;
@@ -1209,8 +1213,11 @@ class PharmacyproductController extends ActiveController {
                     $brand_id = $this->getBrand($post_data['tenant_id'], $post_data['brand_name']);
                     if ($brand_id) {
                         //Check combination of Product and brand exists 
-                        if (!$this->productExists($post_data['tenant_id'], $brand_id, $post_data['product_name'])) {
+                        if (!$this->productExists($post_data['tenant_id'], $brand_id, $post_data['product_name'], $post_data['product_unit'], $post_data['product_unit_count'])) {
                             $product_description_id = $this->getDescription($post_data['tenant_id'], $post_data['description_name']);
+                            $route_id = $this->getPrescRoute($post_data['tenant_id'], $post_data['route_name']);
+                            $this->assignDescriptionRoute($post_data['tenant_id'], $product_description_id, $route_id);
+
                             $generic_id = $this->getGeneric($post_data['tenant_id'], $post_data['generic_name']);
                             $drug_class_id = $this->getDrugclass($post_data['tenant_id'], $post_data['drug_name']);
                             $this->assignDrugGeneric($post_data['tenant_id'], $generic_id, $drug_class_id);
@@ -1221,6 +1228,8 @@ class PharmacyproductController extends ActiveController {
 
                             $new_product = new PhaProduct();
                             $new_product->product_name = $post_data['product_name'];
+                            $new_product->product_unit = $post_data['product_unit'];
+                            $new_product->product_unit_count = $post_data['product_unit_count'];
                             $new_product->product_description_id = $product_description_id;
                             $new_product->product_reorder_min = $post_data['product_reorder_min'];
                             $new_product->product_reorder_max = $post_data['product_reorder_max'];
@@ -1272,9 +1281,9 @@ class PharmacyproductController extends ActiveController {
             if ($valid) {
                 $model->save(false);
                 $drug = PhaDrugClass::find()
-                        ->andWhere(['drug_class_id'=>$model->drug_class_id])
+                        ->andWhere(['drug_class_id' => $model->drug_class_id])
                         ->one();
-                return ['success' => true,'drug'=>$drug,'generic_id'=>$model->generic_id,'product_id'=>$model->product_id];
+                return ['success' => true, 'drug' => $drug, 'generic_id' => $model->generic_id, 'product_id' => $model->product_id];
             } else {
                 return ['success' => false, 'message' => Html::errorSummary([$model])];
             }
@@ -1332,6 +1341,24 @@ class PharmacyproductController extends ActiveController {
         return true;
     }
 
+    private function assignDescriptionRoute($tenant_id, $product_description_id, $route_id) {
+        $descroute = \common\models\PhaDescriptionsRoutes::find()
+                ->tenant($tenant_id)
+                ->andWhere([
+                    'description_id' => $product_description_id,
+                    'route_id' => $route_id
+                ])
+                ->one();
+        //Assign only empty
+        if (empty($descroute)) {
+            $new_desc_route = new \common\models\PhaDescriptionsRoutes();
+            $new_desc_route->description_id = $product_description_id;
+            $new_desc_route->route_id = $route_id;
+            $new_desc_route->save(false);
+        }
+        return true;
+    }
+
     private function getDrugclass($tenant_id, $drug_name) {
         $drug = PhaDrugClass::find()
                 ->tenant($tenant_id)
@@ -1383,6 +1410,23 @@ class PharmacyproductController extends ActiveController {
         return $description_id;
     }
 
+    private function getPrescRoute($tenant_id, $route_name) {
+        $route = \common\models\PatPrescriptionRoute::find()
+                ->tenant($tenant_id)
+                ->andWhere(['route_name' => $route_name])
+                ->one();
+
+        if (!empty($route)) {
+            $route_id = $route->route_id;
+        } else {
+            $new_route = new \common\models\PatPrescriptionRoute();
+            $new_route->route_name = $route_name;
+            $new_route->save(false);
+            $route_id = $new_route->route_id;
+        }
+        return $route_id;
+    }
+
     private function getBrand($tenant_id, $brand_name) {
         $brand = \common\models\PhaBrand::find()
                 ->tenant($tenant_id)
@@ -1393,19 +1437,21 @@ class PharmacyproductController extends ActiveController {
         } else {
             $new_brand = new \common\models\PhaBrand();
             $new_brand->brand_name = $brand_name;
-            $new_brand->brand_code = "AH_" . time() . "_" . rand(10, 100);
+            $new_brand->brand_code = "AH_" . time() . "_" . rand(10, 1000);
             $new_brand->save(false);
             $brand_id = $new_brand->brand_id;
         }
         return $brand_id;
     }
 
-    private function productExists($tenant_id, $brand_id, $product_name) {
+    private function productExists($tenant_id, $brand_id, $product_name, $unit, $unit_count) {
         $product = PhaProduct::find()
                 ->tenant($tenant_id)
                 ->andWhere([
                     'brand_id' => $brand_id,
-                    'product_name' => $product_name
+                    'product_name' => $product_name,
+                    'product_unit' => $unit,
+                    'product_unit_count' => $unit_count,
                 ])
                 ->one();
 
