@@ -678,3 +678,9 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
     margin-bottom: 0px;
     height: 30px;
 }
+.dropdown-menu a {
+    max-width:100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
