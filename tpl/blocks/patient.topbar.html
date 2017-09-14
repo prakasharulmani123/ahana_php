@@ -72,14 +72,14 @@
                                         </div>-->
                     <!-- pateint alleriges alert readmore end-->
 
-                    <div class="patient-details-part" style="padding :0px 10px" ng-show="patientObj.hasalert">
+                    <div class="patient-details-part b-n" style="padding :0px 10px" ng-show="patientObj.hasalert">
                         <div style="cursor: pointer" class="alert_badge header-badge trigger-close" popover="{{patient_alert_html}}" popover-trigger="click" popover-placement="bottom">
                             <i class="fa fa-warning"></i>
                         </div>
                     </div>
 
                     <!-- topbar next and previous options start-->
-                    <div class="patient-details-part b-n" ng-show="patientObj.have_encounter == true">
+                    <div style="float:right;" class="patient-details-part b-n" ng-show="patientObj.have_encounter == true">
                         <a ng-disabled="patientObj.prevPatient == ''" ui-sref="patient.view({id: patientObj.prevPatient})" class="btn btn-default"> <span class="fa fa-chevron-left"></span> </a>
                         <a ng-disabled="patientObj.nextPatient == ''" ui-sref="patient.view({id: patientObj.nextPatient})" class="btn btn-default"> <span class="fa fa-chevron-right"></span> </a>
                         <!--                        <div class="btn-group dropdown" dropdown="">

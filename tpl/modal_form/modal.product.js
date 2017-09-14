@@ -259,6 +259,8 @@ app.controller('ProductModalInstanceCtrl', ['scope', '$scope', '$modalInstance',
                         $timeout(function () {
                             $scope.generics.push(response);
                             $scope.data.generic_id = response.generic_id;
+                            $scope.data.drug_name = '';
+                            $scope.data.drug_class_id = '';
                             $scope.showDrugDropdown = true;
                         }, 100)
 
