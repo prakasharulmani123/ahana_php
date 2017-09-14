@@ -5,6 +5,7 @@ namespace IRISORG\modules\v1\controllers;
 use common\models\PatBillingLog;
 use common\models\PatBillingPayment;
 use common\models\PatPatient;
+use common\models\PhaSale;
 use common\models\CoAuditLog;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -83,6 +84,24 @@ class PatientbillingpaymentController extends ActiveController {
 
             return ['success' => true, 'result' => $data];
         }
+    }
+
+    public function actionSavesettlementbill() {
+        $post = Yii::$app->getRequest()->post();
+        if (in_array("purchase", $post['bills'])  && $post['pharmacy_paid_amount']!=0)
+            PhaSale::billpayment($post['pharmacy_sale_id'], $post['pharmacy_paid_amount'], $post['payment_date']);
+        if (in_array("billing", $post['bills']) && $post['billing_paid_amount']!=0) {
+            $model = new PatBillingPayment;
+            $model->attributes = [
+                'encounter_id' => $post['encounter_id'],
+                'patient_id' => $post['patient_id'],
+                'payment_date' => $post['payment_date'],
+                'payment_mode' => $post['payment_mode'],
+                'payment_amount' => $post['billing_paid_amount'],
+            ];
+            $model->save();
+        }
+        return ['success' => true];
     }
 
 }

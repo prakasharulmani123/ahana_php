@@ -73,31 +73,7 @@ class PharmacysalebillingController extends ActiveController {
                 return ['success' => false, 'message' => 'Kindly check amount'];
 
             if ($valid) {
-                $sales = PhaSale::find()->tenant()->andWhere(['sale_id' => $post['sale_ids']])->all();
-                $paid_amount = $post['paid_amount'];
-
-                foreach ($sales as $key => $sale) {
-                    if ($paid_amount > 0) {
-                        $model = new PhaSaleBilling;
-
-                        $total_bill_amount = $sale->bill_amount - $sale->PhaSaleBillingsTotalPaidAmount;
-
-                        if ($paid_amount >= $total_bill_amount) {
-                            $paid = $total_bill_amount;
-                        } else if ($paid_amount < $total_bill_amount) {
-                            $paid = $paid_amount;
-                        }
-
-                        $model->attributes = [
-                            'paid_date' => $post['paid_date'],
-                            'sale_id' => $sale->sale_id,
-                            'paid_amount' => $paid,
-                        ];
-                        $paid_amount = $paid_amount - $paid;
-
-                        $model->save(false);
-                    }
-                }
+                PhaSale::billpayment($post['sale_ids'],$post['paid_amount'],$post['paid_date']);
 
                 //$search = ['encounter_id' => $post['encounter_id'], 'payment_type' => $post['payment_type'], 'patient_id' => $sales[0]->patient_id];
 

@@ -350,4 +350,32 @@ class PhaSale extends RActiveRecord {
         return ArrayHelper::map($this->phaSaleItems, 'sale_item_id', 'sale_item_id');
     }
 
+    public static function billpayment($sale_id,$paid,$date) {
+        $sales = PhaSale::find()->tenant()->andWhere(['sale_id' => $sale_id ])->all();
+        $paid_amount = $paid;
+
+        foreach ($sales as $key => $sale) {
+            if ($paid_amount > 0) {
+                $model = new PhaSaleBilling;
+
+                $total_bill_amount = $sale->bill_amount - $sale->PhaSaleBillingsTotalPaidAmount;
+
+                if ($paid_amount >= $total_bill_amount) {
+                    $paid = $total_bill_amount;
+                } else if ($paid_amount < $total_bill_amount) {
+                    $paid = $paid_amount;
+                }
+
+                $model->attributes = [
+                    'paid_date' => $date,
+                    'sale_id' => $sale->sale_id,
+                    'paid_amount' => $paid,
+                ];
+                $paid_amount = $paid_amount - $paid;
+
+                $model->save(false);
+            }
+        }
+    }
+
 }

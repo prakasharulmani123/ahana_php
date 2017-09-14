@@ -862,5 +862,18 @@ class EncounterController extends ActiveController {
                 ])->all();
         return $patient;
     }
+    
+    public function actionGetpendingamount() {
+        $get = Yii::$app->getRequest()->get();
+        $encounters = VEncounter::find()
+                    ->where(['encounter_id'=>$get['encounter_id']])
+                    ->groupBy('encounter_id')
+                    ->orderBy(['encounter_id' => SORT_DESC])
+                    ->all();
+        foreach ($encounters as $k => $e) {
+            $calculation = $e->encounter->viewChargeCalculation;
+        }
+        return $calculation;
+    }
 
 }
