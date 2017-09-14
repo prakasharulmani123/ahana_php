@@ -1075,7 +1075,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
         $scope.getVisit = function () {
             var newValue = this.data.number_of_days;
-            if (newValue >= 0 && !isNaN(newValue)) {
+            if (newValue && newValue >= 0 && !isNaN(newValue)) {
                 $http({
                     method: 'POST',
                     url: $rootScope.IRISOrgServiceUrl + '/patient/getdatefromdays',
