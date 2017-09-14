@@ -497,7 +497,7 @@
                                                         <td align="center">
                                                             <span editable-text="item.number_of_days"
                                                                   e-typeahead-editable="true"
-                                                                  e-typeahead="consNoofdays.number_of_days for consNoofdays in consultantNoofdays | unique: 'number_of_days' | limitTo:10"
+                                                                  e-typeahead="consNoofdays.number_of_days for consNoofdays in consultantNoofdays | unique: 'number_of_days' | limitTo:10 | filter:$viewValue:stateComparator"
                                                                   e-typeahead-on-select="numberDaysChange($item.number_of_days, item, item.item_key, tableform)"
                                                                   e-typeahead-focus=""
                                                                   e-index ="{{item.item_key}}"
@@ -617,7 +617,7 @@
                                                                     </label> &nbsp;&nbsp;
                                                                     <input 
                                                                         typeahead-editable="true"
-                                                                        typeahead="consNoofdays.number_of_days for consNoofdays in consultantNoofdays | unique: 'number_of_days' | limitTo:10 | filter:$viewValue"
+                                                                        typeahead="consNoofdays.number_of_days for consNoofdays in consultantNoofdays | unique: 'number_of_days' | limitTo:10 | filter:$viewValue:stateComparator"
                                                                         typeahead-on-select="setDateEmpty(); getVisit();"
                                                                         typeahead-focus=""
                                                                         autocomplete="off" 

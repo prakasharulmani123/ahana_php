@@ -43,6 +43,10 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.drugs = {};
         $scope.routes = {};
         $scope.frequencies = {};
+        var secretEmptyKey = '[$empty$]'
+        $scope.stateComparator = function (state, viewValue) {
+            return viewValue === secretEmptyKey || ('' + state).toLowerCase().indexOf(('' + viewValue).toLowerCase()) > -1;
+        };
 
         //Expand table in Index page
         $scope.ctrl = {};
@@ -536,7 +540,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                             'frequency': $scope.addData.frequency,
                             'number_of_days': $scope.addData.number_of_days,
                             'is_favourite': 0,
-                            'food_type':'NA',
+                            'food_type': 'NA',
                             'description_routes': $scope.addData.product.description_routes,
                             'presc_date': moment().format('YYYY-MM-DD HH:mm:ss'),
                             'price': $scope.addData.product.latest_price,
@@ -583,7 +587,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $scope.getRelatedProducts(value.generic_id).then(function () {
                 qty_count = $scope.calculate_qty(value.frequency_name, value.number_of_days, value.product.product_description_id, value.product.description_name);
                 var no_of_days = $scope.data.number_of_days;
-                if( value.food_type ) {
+                if (value.food_type) {
                     var food_type = value.food_type;
                 } else {
                     var food_type = 'NA';
@@ -600,7 +604,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     'frequency': value.frequency_name,
                     'number_of_days': no_of_days,
                     'is_favourite': 0,
-                    'food_type':food_type,
+                    'food_type': food_type,
                     'route_id': value.route_id,
                     'description_routes': value.product.description_routes,
                     'presc_date': moment().format('YYYY-MM-DD HH:mm:ss'),
@@ -721,7 +725,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                         'route': route,
                                         'frequency': prescription.frequency,
                                         'number_of_days': no_of_days,
-                                        'food_type':'NA',
+                                        'food_type': 'NA',
                                         'is_favourite': prescription.is_favourite,
                                         'route_id': prescription.route_id,
                                         'description_routes': product.description_routes,
@@ -887,7 +891,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             succ_msg = 'Prescription saved successfully';
 
             $scope.data.next_visit = moment($scope.data.next_visit).format('YYYY-MM-DD');
-            if(!$scope.data.diag_id)
+            if (!$scope.data.diag_id)
                 $scope.data.diag_text = $scope.diagnosis;
 
             angular.extend($scope.data, {
@@ -1071,7 +1075,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
         $scope.getVisit = function () {
             var newValue = this.data.number_of_days;
-            if (parseInt(newValue) && !isNaN(newValue)) {
+            if (newValue >= 0 && !isNaN(newValue)) {
                 $http({
                     method: 'POST',
                     url: $rootScope.IRISOrgServiceUrl + '/patient/getdatefromdays',
@@ -1266,7 +1270,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                                             'route': item.route_name,
                                                             'frequency': item.frequency_name,
                                                             'number_of_days': 0,
-                                                            'food_type':item.food_type,
+                                                            'food_type': item.food_type,
                                                             'is_favourite': 0,
                                                             'route_id': item.route_id,
                                                             'description_routes': item.product.description_routes,
