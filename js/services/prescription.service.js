@@ -6,6 +6,7 @@ PrescriptionService.$inject = ['$http', '$cookieStore', '$rootScope', '$window',
 function PrescriptionService($http, $cookieStore, $rootScope, $window, $localStorage, $filter) {
     var prescription_patient_id;
     var items = [];
+    var mainitems = [];
 
     return {
         setPatientId: function (id) {
@@ -58,5 +59,11 @@ function PrescriptionService($http, $cookieStore, $rootScope, $window, $localSto
         deleteAllPrescriptionItem: function () {
             items = [];
         },
+        addPrescriptionmainItem: function (item) {
+            mainitems.unshift(item);
+        },
+        getPrescriptionmainItem: function () {
+            return mainitems;
+        }
     };
 }

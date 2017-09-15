@@ -93,6 +93,26 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             }
         }, true);
 
+        $timeout(function () {
+            $scope.$watchGroup(['data.number_of_days', 'data.next_visit', 'data.consultant_id'], function (newValue, oldValue) {
+                if (newValue != '' && typeof newValue != 'undefined' && newValue != oldValue) {
+                    mainprescriptionItems = {
+                        numberofdays: $scope.data.number_of_days,
+                        nextVisit: $scope.data.next_visit,
+                        consultantId: $scope.data.consultant_id
+                    };
+                    PrescriptionService.addPrescriptionmainItem(mainprescriptionItems);
+                }
+            }, true);
+        }, 7000);
+        
+        $scope.$watch('data.number_of_days', function (newValue, oldValue) {
+            if (newValue != '' && typeof newValue != 'undefined' && newValue != oldValue) {
+                $scope.getVisit();
+            }
+        },true);
+
+
         //Always Form visible
         $scope.$watch('tableform.$visible', function () {
             $scope.tableform.$show();
@@ -1075,7 +1095,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
         $scope.getVisit = function () {
             var newValue = this.data.number_of_days;
-            if (parseInt(newValue) >=0 && !isNaN(newValue)) {
+            if (parseInt(newValue) >= 0 && !isNaN(newValue)) {
                 $http({
                     method: 'POST',
                     url: $rootScope.IRISOrgServiceUrl + '/patient/getdatefromdays',
@@ -1327,6 +1347,14 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                     $scope.previousPresSelectedItems = [];
                                     $scope.previousPresSelected = 0;
 
+                                    var main_prescription = PrescriptionService.getPrescriptionmainItem();
+                                    if(main_prescription[0]['numberofdays'])
+                                        $scope.data.number_of_days = main_prescription[0]['numberofdays'];
+                                    if(main_prescription[0]['nextVisit'])
+                                        $scope.data.next_visit = main_prescription[0]['nextVisit'];
+                                    if(main_prescription[0]['consultantId'])
+                                        $scope.data.consultant_id = main_prescription[0]['consultantId'];
+                                    
                                     $scope.$broadcast('refreshDatepickers');
 
                                 })
