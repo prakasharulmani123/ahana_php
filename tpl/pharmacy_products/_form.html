@@ -23,7 +23,7 @@
                         <div class="form-group">
                             <label class="col-sm-5 control-label">Product Type * </label>
                             <div class="col-sm-6">
-                                <select class="form-control" ng-model="data.product_description_id" ng-options="productDescription.description_id as productDescription.description_name for productDescription in productDescriptions| orderBy: description_name"">
+                                <select class="form-control" ng-model="data.product_description_id" ng-options="productDescription.description_id as productDescription.description_name for productDescription in productDescriptions| orderBy: 'description_name'">
                                     <option value="">Select Product Type</option>
                                 </select>
                             </div>
@@ -41,7 +41,7 @@
                         <div class="form-group">
                             <label class="col-sm-5 control-label">Brand Name * </label>
                             <div class="col-sm-6">
-                                <select class="form-control" ng-model="data.brand_id" ng-options="brand.brand_id as brand.brand_name for brand in brands| orderBy: brand_name"">
+                                <select class="form-control" ng-model="data.brand_id" ng-options="brand.brand_id as brand.brand_name for brand in brands| orderBy: 'brand_name'">
                                     <option value="">Select Brand Name</option>
                                 </select>
                             </div>
@@ -59,7 +59,7 @@
                         <div class="form-group">
                             <label class="col-sm-5 control-label">Brand Division * </label>
                             <div class="col-sm-6">
-                                <select class="form-control" ng-model="data.division_id" ng-options="division.division_id as division.division_name for division in divisions| orderBy: division_name"">
+                                <select class="form-control" ng-model="data.division_id" ng-options="division.division_id as division.division_name for division in divisions| orderBy: 'division_name'">
                                     <option value="">Select Brand Division</option>
                                 </select>
                             </div>
@@ -77,7 +77,7 @@
                         <div class="form-group">
                             <label class="col-sm-5 control-label">Generic Name * </label>
                             <div class="col-sm-6">
-                                <select class="form-control" ng-model="data.generic_id" ng-options="generic.generic_id as generic.generic_name for generic in generics| orderBy: generic_name"" ng-change="getDrugByGeneric()">
+                                <select class="form-control" ng-model="data.generic_id" ng-options="generic.generic_id as generic.generic_name for generic in generics| orderBy: 'generic_name'" ng-change="getDrugByGeneric()">
                                     <option value="">Select Generic Name</option>
                                 </select>
                             </div>
@@ -103,7 +103,7 @@
                             <div class="form-group">
                                 <label class="col-sm-5 control-label">Drug Class </label>
                                 <div class="col-sm-7">
-                                    <select class="form-control" ng-model="data.drug_class_id" ng-options="drugClass.drug_class_id as drugClass.drug_name for drugClass in drugClasses| orderBy: drug_name">
+                                    <select class="form-control" ng-model="data.drug_class_id" ng-options="drugClass.drug_class_id as drugClass.drug_name for drugClass in drugClasses| orderBy: 'drug_name'">
                                         <option value="">Select Drug Class</option>
                                     </select>
                                 </div>
@@ -141,7 +141,7 @@
                         <div class="form-group">
                             <label class="col-sm-5 control-label">HSN Number </label>
                             <div class="col-sm-6">
-                                <select class="form-control" ng-model="data.hsn_id" ng-options="hsn.hsn_id as hsn.hsn_no for hsn in hsncode| orderBy: hsn_no" >
+                                <select class="form-control" ng-model="data.hsn_id" ng-options="hsn.hsn_id as hsn.hsn_no for hsn in hsncode| orderBy: 'hsn_no'" >
                                     <option value="">Select HSN</option>
                                 </select>
                             </div>
@@ -159,7 +159,7 @@
                         <div class="form-group">
                             <label class="col-lg-5 control-label">Supplier Name1 </label>
                             <div class="col-lg-6">
-                                <select class="form-control" ng-model="data.supplier_id_1" ng-options="supplier.supplier_id as supplier.supplier_name for supplier in suppliers| orderBy: supplier_name">
+                                <select class="form-control" ng-model="data.supplier_id_1" ng-options="supplier.supplier_id as supplier.supplier_name for supplier in suppliers| orderBy: 'supplier_name'">
                                     <option value="">Select Supplier1</option>
                                 </select>
                             </div>
@@ -177,7 +177,7 @@
                         <div class="form-group">
                             <label class="col-lg-5 control-label">Supplier Name2 </label>
                             <div class="col-lg-6">
-                                <select class="form-control" ng-model="data.supplier_id_2" ng-options="supplier.supplier_id as supplier.supplier_name for supplier in suppliers| orderBy: supplier_name">
+                                <select class="form-control" ng-model="data.supplier_id_2" ng-options="supplier.supplier_id as supplier.supplier_name for supplier in suppliers| orderBy: 'supplier_name'">
                                     <option value="">Select Supplier2</option>
                                 </select>
                             </div>
@@ -187,7 +187,7 @@
                         <div class="form-group">
                             <label class="col-lg-5 control-label">Supplier Name3 </label>
                             <div class="col-lg-6">
-                                <select class="form-control" ng-model="data.supplier_id_3" ng-options="supplier.supplier_id as supplier.supplier_name for supplier in suppliers| orderBy: supplier_name">
+                                <select class="form-control" ng-model="data.supplier_id_3" ng-options="supplier.supplier_id as supplier.supplier_name for supplier in suppliers| orderBy: 'supplier_name'">
                                     <option value="">Select Supplier3</option>
                                 </select>
                             </div>
