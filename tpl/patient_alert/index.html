@@ -75,6 +75,7 @@
                                 <th>Alert Type</th>
                                 <th>Alert </th>
                                 <th>Created At</th>
+                                <th>Created By</th>
                                 <th>Status</th>
                                 <th>Actions</th>
                             </tr>
@@ -94,6 +95,9 @@
                                 <td class="v-middle">
                                     {{row.created_at| moment:'DD/MM/YYYY'}} &nbsp;
                                     <span class="label bg-light dk">{{row.created_at| moment:'hh:mm A'}}</span>
+                                </td>
+                                <td class="v-middle">
+                                    {{row.created_by}}
                                 </td>
                                 <td>
                                     <label class="i-checks "> 
@@ -198,6 +202,7 @@
                                 <th>Encounter ID</th>
                                 <th>Note</th>
                                 <th>Created At</th>
+                                <th>Created By</th>
                                 <th>Status</th>
                                 <th>Actions</th>
                             </tr>
@@ -215,6 +220,9 @@
                                 <td class="v-middle">
                                     {{row.created_at| moment:'DD/MM/YYYY'}} &nbsp;
                                     <span class="label bg-light dk">{{row.created_at| moment:'hh:mm A'}}</span>
+                                </td>
+                                <td>
+                                    {{row.created_by}}
                                 </td>
                                 <td>
                                     <label class="i-checks "> 

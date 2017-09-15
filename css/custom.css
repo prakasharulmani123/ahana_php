@@ -463,7 +463,7 @@ out-patient-table .table > thead > tr > th label.i-checks {
 }
 
 .label, .badge {
-    color: #ffffff !important;
+    /*color: #ffffff !important;*/
     font-size: 14px;
     display: inline-block;
     margin-bottom: 5px;
