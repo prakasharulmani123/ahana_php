@@ -298,8 +298,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 $scope.frequencies = response.frequencylist;
             });
 
-            $scope.data.next_visit = moment().format('YYYY-MM-DD');
-            $scope.getDays();
+            //$scope.data.next_visit = moment().format('YYYY-MM-DD');
+            //$scope.getDays();
 
             $("#current_prescription").focus();
         }
@@ -1075,7 +1075,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
         $scope.getVisit = function () {
             var newValue = this.data.number_of_days;
-            if (newValue && newValue >= 0 && !isNaN(newValue)) {
+            if (parseInt(newValue) >=0 && !isNaN(newValue)) {
                 $http({
                     method: 'POST',
                     url: $rootScope.IRISOrgServiceUrl + '/patient/getdatefromdays',
