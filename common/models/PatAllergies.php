@@ -62,6 +62,16 @@ class PatAllergies extends RActiveRecord {
             'deleted_at' => 'Deleted At',
         ];
     }
+    
+    public function fields() {
+        $extend = [
+            'created_by' => function ($model) {
+                return $model->createdUser->name;
+            }
+        ];
+        $fields = array_merge(parent::fields(), $extend);
+        return $fields;
+    }
 
     public static function find() {
         return new PatAllergiesQuery(get_called_class());

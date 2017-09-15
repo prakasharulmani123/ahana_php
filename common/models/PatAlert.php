@@ -38,10 +38,10 @@ class PatAlert extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['alert_id', 'patient_id', 'alert_description'], 'required'],
-            [['tenant_id', 'alert_id', 'patient_id', 'created_by', 'modified_by'], 'integer'],
-            [['alert_description', 'status'], 'string'],
-            [['created_at', 'modified_at', 'deleted_at'], 'safe'],
+                [['alert_id', 'patient_id', 'alert_description'], 'required'],
+                [['tenant_id', 'alert_id', 'patient_id', 'created_by', 'modified_by'], 'integer'],
+                [['alert_description', 'status'], 'string'],
+                [['created_at', 'modified_at', 'deleted_at'], 'safe'],
 //            [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'patient_id', 'alert_id', 'deleted_at'], 'message' => 'The combination of alert has already been taken.'],
         ];
     }
@@ -95,6 +95,9 @@ class PatAlert extends RActiveRecord {
             'alert_type' => function ($model) {
                 return (isset($model->alert->alert_name)) ? $model->alert->alert_name : '-';
             },
+            'created_by' => function ($model) {
+                return $model->createdUser->name;
+            }
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
@@ -103,17 +106,17 @@ class PatAlert extends RActiveRecord {
     public function afterSave($insert, $changedAttributes) {
         if ($insert) {
             $message = "Patient Alert ({$this->alert_description}) added.";
-        }else{
+        } else {
             $message = "Patient Alert ({$this->alert_description}) updated.";
         }
-        
+
         $encounter_id = !empty($this->patient->patActiveEncounter) ? $this->patient->patActiveEncounter->encounter_id : null;
-        if(is_null($encounter_id)){
+        if (is_null($encounter_id)) {
             $encounter_id = !empty($this->patient->patPreviousEncounter) ? $this->patient->patPreviousEncounter->encounter_id : null;
         }
-        
+
         PatTimeline::insertTimeLine($this->patient_id, $this->created_at, 'Patient Alert', '', $message, 'ALERT', $encounter_id);
-        
+
         return parent::afterSave($insert, $changedAttributes);
     }
 
