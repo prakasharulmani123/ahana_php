@@ -137,6 +137,9 @@ class PhaProductBatch extends RActiveRecord {
             'product_name' => function ($model) {
                 return isset($model->product) ? $model->product->product_name : '';
             },
+            'originalQuantity' => function ($model) {
+                return isset($model->available_qty) ? $model->available_qty : '';
+            }
         ];
         $parent_fields = parent::fields();
         $addt_keys = $extFields = [];
@@ -144,7 +147,7 @@ class PhaProductBatch extends RActiveRecord {
             switch ($addtField):
                 case 'sale_batch_by_product':
                 case 'pharm_sale_prod_json':
-                    $addt_keys = ['batch_details', 'per_unit_price'];
+                    $addt_keys = ['batch_details', 'per_unit_price', 'originalQuantity'];
                     $pFields = ['batch_no', 'available_qty', 'product_id', 'expiry_date'];
                     $parent_fields = array_combine($pFields, $pFields);
                     break;
