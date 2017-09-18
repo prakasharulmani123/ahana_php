@@ -3023,6 +3023,10 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
         serviceUrl = 'http://apollo.local/api/IRISORG/web/v1'
         orgUrl = 'http://apollo.local/client';
         clientURL = 'http://apollo.local';
+    } else if ($location.host() == 'medclinic.ark') {
+        serviceUrl = 'http://medclinic.ark/api/IRISORG/web/v1'
+        orgUrl = 'http://medclinic.ark/client';
+        clientURL = 'http://medclinic.ark';
     } else {
         clientURL = orgUrl = $location.absUrl().split('#')[0].slice(0, -1);
 //        clientURL = orgUrl = $location.protocol() + '://' + $location.host();

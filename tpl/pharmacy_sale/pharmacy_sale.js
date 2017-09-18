@@ -428,6 +428,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         };
 
         $scope.removeSaleRow = function (index) {
+            $scope.updateBatch('delete');
             $scope.saleItems.splice(index, 1);
             $scope.updateSaleRate();
             $timeout(function () {
@@ -593,13 +594,14 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         $scope.productDetail = function (product_id, product_obj) {
             var deferred = $q.defer();
             deferred.notify();
-            var Fields = 'product_name,product_location,product_reorder_min,full_name,salesVat,salesPackageName,availableQuantity,generic_id,product_batches,hsnCode';
+            var Fields = 'product_name,product_location,product_reorder_min,full_name,salesVat,salesPackageName,availableQuantity,generic_id,product_batches,hsnCode,originalQuantity';
 
-            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproducts/' + product_id + '?fields=' + Fields + '&addtfields=pharm_sale_prod_json')
+            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproducts/' + product_id + '?fields=' + Fields + '&addtfields=pharm_sale_prod_json&full_name_with_stock=1')
                     .success(function (product) {
                         Fields.split(",").forEach(function (item) {
                             product_obj[item] = product[item];
                         });
+
                         deferred.resolve();
                     })
                     .error(function () {
@@ -877,8 +879,8 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             {
                 var disc_amount = parseFloat($scope.data.total_item_discount_amount);
                 disc_amount = !isNaN(disc_amount) ? (disc_amount).toFixed(2) : 0;
-                
-                var disc_perc = disc_amount > 0 ? ((disc_amount / before_discount_total ) * 100).toFixed(2) : 0;
+
+                var disc_perc = disc_amount > 0 ? ((disc_amount / before_discount_total) * 100).toFixed(2) : 0;
                 $scope.data.total_item_discount_percent = disc_perc;
             } else {
                 var disc_perc = parseFloat($scope.data.total_item_discount_percent);
@@ -906,14 +908,48 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             $scope.data.bill_amount = bill_amount.toFixed(2);
             $scope.data.amount_received = bill_amount;
             $scope.updateBalance();
+            $scope.updateBatch('update');
+        }
+
+        $scope.updateBatch = function (action) {
+            angular.forEach($scope.saleItems, function (item, key) {
+                var item_product_id = item.product_id;
+                var item_expiry_date = item.expiry_date;
+                var item_batch_no = item.batch_no;
+                var item_batch_details = item.batch_details;
+                var item_quantity = item.quantity;
+
+                angular.forEach($scope.saleItems, function (item1, key1) {
+                    if (key != key1) {
+                        if (item_product_id == item1.product_id) {
+                            angular.forEach(item1.product_batches, function (batch) {
+                                if ((batch.batch_no == item_batch_no) && (batch.expiry_date == item_expiry_date)) {
+                                    if (action == 'update') {
+                                        batch.available_qty = batch.originalQuantity - item_quantity;
+                                        var batch_qty = batch.batch_details.split(" / ");
+                                        batch_qty[1] = batch.originalQuantity - item_quantity;
+                                        batch.batch_details = batch_qty[0] + ' / ' + batch_qty[1];
+                                    } else {
+                                        batch.available_qty = batch.originalQuantity;
+                                        var batch_qty = batch.batch_details.split(" / ");
+                                        batch_qty[1] = batch.originalQuantity;
+                                        batch.batch_details = batch_qty[0] + ' / ' + batch_qty[1];
+                                    }
+
+                                }
+                            });
+                        }
+                    }
+                });
+            });
         }
 
         $scope.updateBalance = function () {
             $scope.data.balance = $scope.data.amount_received - $scope.data.bill_amount;
         }
-        
+
         $scope.checkTotalpercent = function () {
-            if($scope.data.total_item_discount_percent > 100)
+            if ($scope.data.total_item_discount_percent > 100)
             {
                 $scope.percentageErrormessage = "Discount percentage less than 100";
                 return false;
@@ -966,7 +1002,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             });
             angular.extend(_that.data, {product_items: $scope.saleItems});
             var valueArr = $scope.saleItems.map(function (item) {
-                return item.full_name +'-'+ item.batch_no
+                return item.full_name + '-' + item.batch_no
             });
             var isDuplicate = valueArr.some(function (item, idx) {
                 return valueArr.indexOf(item) != idx
