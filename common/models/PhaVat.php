@@ -96,7 +96,7 @@ class PhaVat extends RActiveRecord {
         if ($addtField = Yii::$app->request->get('addtfields')) {
             switch ($addtField):
                 case 'pharm_sale_prod_json':
-                    $addt_keys = ['cgst_percent', 'sgst_percent'];
+                    //$addt_keys = ['cgst_percent', 'sgst_percent'];
                     $parent_fields = [
                         'vat' => 'vat'
                     ];

@@ -64,8 +64,8 @@ class PhaProduct extends RActiveRecord {
      */
     public function rules() {
         return [
-                [['product_name', 'product_description_id', 'product_reorder_min', 'product_reorder_max', 'brand_id', 'purchase_vat_id'], 'required'],
-                [['product_name', 'product_unit', 'product_unit_count', 'product_description_id', 'product_reorder_min', 'product_reorder_max', 'brand_id', 'division_id', 'generic_id' ,'purchase_vat_id'], 'required', 'on' => 'savepresproduct'],
+                [['product_name', 'product_description_id', 'product_reorder_min', 'product_reorder_max', 'brand_id', 'purchase_vat_id', 'sales_gst_id'], 'required'],
+                [['product_name', 'product_unit', 'product_unit_count', 'product_description_id', 'product_reorder_min', 'product_reorder_max', 'brand_id', 'division_id', 'generic_id' ,'purchase_vat_id', 'sales_gst_id'], 'required', 'on' => 'savepresproduct'],
                 [['tenant_id', 'product_description_id', 'product_reorder_min', 'product_reorder_max', 'brand_id', 'division_id', 'generic_id', 'drug_class_id', 'purchase_vat_id', 'purchase_package_id', 'sales_vat_id', 'hsn_id', 'sales_package_id', 'created_by', 'modified_by'], 'integer'],
                 [['product_price'], 'number'],
                 [['status'], 'string'],
@@ -127,6 +127,7 @@ class PhaProduct extends RActiveRecord {
             'purchase_vat_id' => 'Purchase Vat',
             'purchase_package_id' => 'Purchase Package Unit',
             'sales_vat_id' => 'Sales Vat',
+            'sales_gst_id' => 'Sales Gst',
             'sales_package_id' => 'Sales Package Unit',
             'status' => 'Status',
             'created_by' => 'Created By',
@@ -235,6 +236,10 @@ class PhaProduct extends RActiveRecord {
     public function getPhaHsn() {
         return $this->hasOne(PhaHsn::className(), ['hsn_id' => 'hsn_id']);
     }
+    
+    public function getPhaGst() {
+        return $this->hasOne(PhaGst::className(), ['gst_id' => 'sales_gst_id']);
+    }
 
     public function getFullName() {
         $fullname = '';
@@ -278,6 +283,9 @@ class PhaProduct extends RActiveRecord {
             },
             'salesVat' => function ($model) {
                 return (isset($model->salesVat) ? $model->salesVat : '-');
+            },
+            'gst' => function ($model) {
+                return (isset($model->phaGst) ? $model->phaGst->gst : '-');
             },
             'description_name' => function ($model) {
                 return (isset($model->productDescription) ? $model->productDescription->description_name : '-');
@@ -356,6 +364,7 @@ class PhaProduct extends RActiveRecord {
                         'supplier_id_3' => 'supplier_id_3',
                         'purchase_vat_id' => 'purchase_vat_id',
                         'sales_vat_id' => 'sales_vat_id',
+                        'sales_gst_id' => 'sales_gst_id',
                         'hsn_id' => 'hsn_id',
                         'purchase_package_id' => 'purchase_package_id',
                         'sales_package_id' => 'sales_package_id',
