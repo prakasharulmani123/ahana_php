@@ -235,6 +235,16 @@
                                 </div>-->
 
                 <div class="form-group">
+                    <label class="col-sm-5 control-label">GST * </label>
+                    <div class="col-sm-6">
+                        <select class="form-control" ng-model="data.sales_gst_id" ng-options="sale_gst.gst_id as sale_gst.gst for sale_gst in gstlist| orderBy: gst" ng-change="setGst(data.sales_gst_id)">
+                            <option value="">Select GST</option>
+                        </select>
+                        <span ng-if="cgst"> <b>CGST :</b> {{cgst}} % <b> &nbsp;SGST :</b> {{cgst}} %</span>
+                    </div>
+                </div>
+
+<!--                <div class="form-group">
                     <label class="col-sm-5 control-label">CGST </label>
                     <div class="col-sm-6">
                         2.5 %
@@ -247,7 +257,7 @@
                     <div class="col-sm-6">
                         2.5 %
                     </div>
-                </div>
+                </div>-->
             </div>
         </div>
     </div>

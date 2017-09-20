@@ -53,6 +53,7 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
     service.GetPatientRoute = GetPatientRoute;
     service.GetPatientGroup = GetPatientGroup;
     service.GetHsnCode = GetHsnCode;
+    service.GetGstCode = GetGstCode;
 
     service.GetLabelFromValue = GetLabelFromValue;
     service.FoundVlaue = FoundVlaue;
@@ -679,7 +680,19 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
                     callback(response);
                 });
     }
+    
+    function GetGstCode(tenant, sts, del_sts, callback) {
+        var response;
 
+        $http.get($rootScope.IRISOrgServiceUrl + '/pharmacygst/getgstlist?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts)
+                .success(function (response) {
+                    callback(response);
+                }, function (x) {
+                    response = {success: false, message: 'Server Error'};
+                    callback(response);
+                });
+    }
+    
     function GetPatientFrequency(tenant, sts, del_sts, callback) {
         var response;
 

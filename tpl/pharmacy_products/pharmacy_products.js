@@ -155,6 +155,10 @@ app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http
                 $scope.hsncode = response.hsncodeList;
             });
 
+            $rootScope.commonService.GetGstCode('', '1', false, function (response) {
+                $scope.gstlist = response.gstList;
+            });
+
 
             if ($scope.data.formtype == 'add') {
                 $scope.data.product_reorder_min = 0;
@@ -215,9 +219,10 @@ app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http
                     function (response) {
                         $scope.loadbar('hide');
                         $scope.data = response;
+                        $scope.setGst();
                         $scope.setPackageUnit();
                         //If Drug Class is empty then give option to choose new drug class.
-                        if(!$scope.data.drug_class_id){
+                        if (!$scope.data.drug_class_id) {
                             $scope.showDrugDropdown = true;
                         }
                     }
@@ -229,6 +234,17 @@ app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http
                     $scope.errorData = data.message;
             });
         };
+
+        $scope.cgst = '';
+        $scope.setGst = function () {
+            gstPackage = $filter('filter')($scope.gstlist, {gst_id: $scope.data.sales_gst_id});
+            if (gstPackage.length > 0) {
+                sgst = gstPackage[0].gst;
+                $scope.cgst = (parseFloat(sgst) / 2).toFixed(2);
+            } else {
+                $scope.cgst = '';
+            }
+        }
 
         $scope.showDrugDropdown = false;
         $scope.getDrugByGeneric = function () {

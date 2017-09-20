@@ -1896,7 +1896,46 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
+            
+            //PHARMACY GST
+            .state('configuration.gst', {
+                url: '/gst',
+                templateUrl: 'tpl/pharmacy_gst/index.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/pharmacy_gst/pharmacy_gst.js?v=' + APP_VERSION);
+                                    }
+                            );
+                        }]
+                }
+            })
+            //PHARMACY GST CREATE
+            .state('configuration.gstCreate', {
+                url: '/gstCreate',
+                templateUrl: 'tpl/pharmacy_gst/create.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/pharmacy_gst/pharmacy_gst.js?v=' + APP_VERSION]);
+                        }]
+                }
+            })
 
+            //PHARMACY GST UPDATE
+            .state('configuration.gstUpdate', {
+                url: '/gstUpdate/{id}',
+                templateUrl: 'tpl/pharmacy_gst/update.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/pharmacy_gst/pharmacy_gst.js?v=' + APP_VERSION]);
+                        }]
+                }
+            })
+            
             //PHARMACY DRUG & GENERIC
             .state('configuration.drugGeneric', {
                 url: '/drugGeneric',

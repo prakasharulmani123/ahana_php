@@ -594,7 +594,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         $scope.productDetail = function (product_id, product_obj) {
             var deferred = $q.defer();
             deferred.notify();
-            var Fields = 'product_name,product_location,product_reorder_min,full_name,salesVat,salesPackageName,availableQuantity,generic_id,product_batches,hsnCode,originalQuantity';
+            var Fields = 'product_name,product_location,product_reorder_min,full_name,salesVat,salesPackageName,availableQuantity,generic_id,product_batches,hsnCode,originalQuantity,gst';
 
             $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproducts/' + product_id + '?fields=' + Fields + '&addtfields=pharm_sale_prod_json&full_name_with_stock=1')
                     .success(function (product) {
@@ -650,8 +650,13 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 $scope.saleItems[key].package_name = selectedObj.salesPackageName;
                 $scope.saleItems[key].generic_id = selectedObj.generic_id;
                 $scope.saleItems[key].product_batches = selectedObj.product_batches;
-                $scope.saleItems[key].sgst_percent = selectedObj.salesVat.sgst_percent;
-                $scope.saleItems[key].cgst_percent = selectedObj.salesVat.cgst_percent;
+                if (selectedObj.gst != '-') {
+                    $scope.saleItems[key].sgst_percent = (parseFloat(selectedObj.gst) / 2).toFixed(2);
+                    $scope.saleItems[key].cgst_percent = (parseFloat(selectedObj.gst) / 2).toFixed(2);
+                } else {
+                    $scope.saleItems[key].sgst_percent = 2.5;
+                    $scope.saleItems[key].cgst_percent = 2.5;
+                }
                 $scope.saleItems[key].temp_hsn_no = selectedObj.hsnCode;
 
                 $scope.getreadyBatch(selectedObj, key);
