@@ -133,6 +133,12 @@ class DefaultController extends Controller {
         }
     }
 
+//    //This is only for testing CRON functionality.
+//    public function actionCronchecking() {
+//        $sql = "INSERT INTO co_city (state_id, city_name, status, created_by, created_at) VALUES ('2', 'Test Cron', '0', '1', NOW())";
+//        \Yii::$app->db->createCommand($sql)->execute();
+//    }
+
     public function actionDailycron() {
         $organizations = CoOrganization::find()->andWhere(['status' => '1'])->all();
 
@@ -256,7 +262,7 @@ class DefaultController extends Controller {
         $list = array();
         $data = PatDiagnosis::find()->all();
         foreach ($data as $key => $value) {
-            $list[] = array('label' => $value->diag_name . '-' . $value->diag_description,'value' => $value->diag_id);
+            $list[] = array('label' => $value->diag_name . '-' . $value->diag_description, 'value' => $value->diag_id);
         }
         return ['diagnosisList' => $list];
     }
@@ -440,7 +446,6 @@ class DefaultController extends Controller {
     }
 
     //Below action not need, I removed the corresponding table from DB.
-    
 //    public function actionUpdatewrongbatch() {
 //        $connection = Yii::$app->client;
 //        $connection->open();
@@ -478,5 +483,4 @@ class DefaultController extends Controller {
 //echo $c;
 //        $connection->close();
 //    }
-
 }
