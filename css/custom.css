@@ -684,3 +684,6 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
     overflow: hidden;
     text-overflow: ellipsis;
 }
+.other_document_summary colgroup {
+  display: none;
+}

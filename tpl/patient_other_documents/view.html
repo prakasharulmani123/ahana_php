@@ -21,8 +21,7 @@
                 {% include 'tpl/blocks/alert.html' %}
             </div>
             <div class="row">
-                <div class="col-sm-8">
-                    <form class="form-horizontal form-validation ng-pristine ng-valid" name="formValidate">
+                                    <form class="form-horizontal form-validation ng-pristine ng-valid" name="formValidate">
                         <div class="panel panel-default">
                             <div class="panel-body">  
                                 <div class="form-group">
@@ -43,14 +42,13 @@
 
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">Description:</label>
-                                    <div class="col-sm-9">
+                                    <div class="col-sm-12 other_document_summary">
                                         <p ng-bind-html="other_document.other_doc_content | sanitize"></p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </form>
-                </div>
             </div>
         </div>
     </div>
