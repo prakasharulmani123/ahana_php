@@ -30,9 +30,9 @@ class AppConfiguration extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['value'], 'required'],
-            [['tenant_id'], 'integer'],
-            [['key', 'value', 'notes'], 'string']
+                [['value'], 'required'],
+                [['tenant_id'], 'integer'],
+                [['key', 'value', 'notes'], 'string']
         ];
     }
 
@@ -124,14 +124,84 @@ class AppConfiguration extends RActiveRecord {
                 'value' => '1',
                 'notes' => 'Show Diagnosis',
             ],
+            'IP_V_BP' => [
+                'code' => 'BP',
+                'value' => '1',
+                'notes' => 'Show Bp field in vital form',
+            ],
+            'IP_V_P' => [
+                'code' => 'Pulse',
+                'value' => '1',
+                'notes' => 'Show Pulse field in vital form',
+            ],
+            'IP_V_T' => [
+                'code' => 'Temperature',
+                'value' => '1',
+                'notes' => 'Show Temperature field in vital form',
+            ],
+            'IP_V_H' => [
+                'code' => 'Height',
+                'value' => '1',
+                'notes' => 'Show Height field in vital form',
+            ],
+            'IP_V_W' => [
+                'code' => 'Weight',
+                'value' => '1',
+                'notes' => 'Show Weight field in vital form',
+            ],
+            'IP_V_S' => [
+                'code' => 'SP02',
+                'value' => '1',
+                'notes' => 'Show Sp02 field in vital form',
+            ],
+            'IP_V_PS' => [
+                'code' => 'Pain Score',
+                'value' => '1',
+                'notes' => 'Show Pain Score field in vital form',
+            ],
+            'OP_V_BP' => [
+                'code' => 'BP',
+                'value' => '1',
+                'notes' => 'Show Bp field in vital form',
+            ],
+            'OP_V_P' => [
+                'code' => 'Pulse',
+                'value' => '1',
+                'notes' => 'Show Pulse field in vital form',
+            ],
+            'OP_V_T' => [
+                'code' => 'Temperature',
+                'value' => '1',
+                'notes' => 'Show Temperature field in vital form',
+            ],
+            'OP_V_H' => [
+                'code' => 'Height',
+                'value' => '1',
+                'notes' => 'Show Height field in vital form',
+            ],
+            'OP_V_W' => [
+                'code' => 'Weight',
+                'value' => '1',
+                'notes' => 'Show Weight field in vital form',
+            ],
+            'OP_V_S' => [
+                'code' => 'SP02',
+                'value' => '1',
+                'notes' => 'Show Sp02 field in vital form',
+            ],
+            'OP_V_PS' => [
+                'code' => 'Pain Score',
+                'value' => '1',
+                'notes' => 'Show Pain Score field in vital form',
+            ],
         );
     }
-    
+
     public static function find() {
         return new AppConfigurationQuery(get_called_class());
     }
-    
-    public static function getConfigurationByKey($key){
+
+    public static function getConfigurationByKey($key) {
         $result = self::find()->tenant()->active()->andWhere(['key' => $key])->one();
         return $result;
     }

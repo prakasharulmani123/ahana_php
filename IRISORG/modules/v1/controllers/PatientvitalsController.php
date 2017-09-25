@@ -7,6 +7,7 @@ use common\models\PatPatient;
 use common\models\PatVitals;
 use common\models\PatVitalsUsers;
 use common\models\CoAuditLog;
+use common\models\AppConfiguration;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -169,6 +170,18 @@ class PatientvitalsController extends ActiveController {
             }
             return ['success' => true];
         }
+    }
+    
+    public function actionCheckvitalaccess() {
+        $get = Yii::$app->request->get();
+        if(isset($get['patient_type'])) {
+            $pat_share_attr = [
+                'like', 'key', $get['patient_type'].'_V_',
+            ];
+          $vitals = AppConfiguration::find()->tenant()->andWhere($pat_share_attr)->all();
+          return $vitals;
+        }
+        return '';
     }
 
 }
