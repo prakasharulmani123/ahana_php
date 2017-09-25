@@ -310,6 +310,15 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             $scope.getEncounter($item.patient_id, 'add', '');
             $scope.getPatientGroupByPatient($item.patient_guid);
         }
+        $scope.changePatient = function () {
+            $scope.data.patient_id = '';
+            $scope.data.patient_guid = '';
+            $scope.data.consultant_id = '';
+            $scope.data.consultant_name = '';
+            $scope.data.patient_group_id = '';
+            $scope.data.patient_group_name = '';
+            $scope.data.encounter_id = '';
+        }
 
         $scope.formatDoctor = function ($item, $model, $label) {
             $scope.data.consultant_id = $item.user_id;

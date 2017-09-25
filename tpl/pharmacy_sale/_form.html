@@ -27,7 +27,7 @@
                                             <i class="fa fa-spin fa-refresh"></i>
                                         </span>
                                     </label>
-                                    <div class="col-lg-8">
+                                    <div class="col-lg-8" ng-show="(formtype=='add')">
                                         <input autocomplete="off"
                                                placeholder="Patient Name"
                                                type="text"
@@ -36,7 +36,11 @@
                                                typeahead="patient as patient.name_with_int_code for patient in getPatients($viewValue) | filter:{name_with_int_code:$viewValue} | limitTo: 10"
                                                typeahead-on-select="formatPatient($item, $model, $label)"
                                                typeahead-wait-ms="400"
+                                               ng-change="changePatient()"
                                                />
+                                    </div>
+                                    <div class="col-lg-8" ng-show="(formtype=='update')">
+                                        <label>{{data.patient_name}}</label>
                                     </div>
                                 </div>
                                 <div class="line line-dashed b-b line-lg "></div>
