@@ -86,6 +86,8 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                             var string = conf.key;
                             var code = conf.code;
                             substring = "SHARE";
+                            op_substring = "OP_V_";
+                            ip_substring = "IP_V_";
 
                             if (code == 'SA' || code == 'SD')
                             {
@@ -93,7 +95,9 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                             } else
                             {
                                 if (string.indexOf(substring) > -1 == false) {
-                                    $scope.config_data.push(conf);
+                                    if ((string.indexOf(op_substring) > -1 == false) && (string.indexOf(ip_substring) > -1 == false)) {
+                                        $scope.config_data.push(conf);
+                                    }
                                 } else {
                                     $scope.config_share_data.push(conf);
                                 }

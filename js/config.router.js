@@ -1896,7 +1896,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
-            
+
             //PHARMACY GST
             .state('configuration.gst', {
                 url: '/gst',
@@ -1935,7 +1935,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
-            
+
             //PHARMACY DRUG & GENERIC
             .state('configuration.drugGeneric', {
                 url: '/drugGeneric',
@@ -2681,7 +2681,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
-            
+
             //App Configuration
             .state('configuration.appsetting', {
                 url: '/appsetting',
@@ -2694,6 +2694,23 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                                         return $ocLazyLoad.load([
                                             'tpl/organization/app_setting.js?v=' + APP_VERSION,
                                             'tpl/modal_form/modal.pharmacy_purchase_import_errorlog.js?v=' + APP_VERSION
+                                        ]);
+                                    }
+                            );
+                        }]
+                }
+            })
+            //Check Inpatient & Outpatient vitals menu
+            .state('configuration.vital_management', {
+                url: '/vital_management',
+                templateUrl: 'tpl/patient_vitals/vital_management.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['xeditable', 'smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load([
+                                            'tpl/patient_vitals/vital_management.js?v=' + APP_VERSION,
                                         ]);
                                     }
                             );

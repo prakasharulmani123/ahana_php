@@ -4,6 +4,8 @@ app.controller('VitalsController', ['$rootScope', '$scope', '$timeout', '$http',
         $scope.app.settings.patientSideMenu = true;
         $scope.app.settings.patientContentClass = 'app-content patient_content ';
         $scope.app.settings.patientFooterClass = 'app-footer';
+        $scope.vitalcong = {};
+
 
         $scope.open = function ($event) {
             $event.preventDefault();
@@ -62,6 +64,17 @@ app.controller('VitalsController', ['$rootScope', '$scope', '$timeout', '$http',
 //            }
 //        }, true);
 
+
+        $scope.$watch('patientObj.encounter_type', function (newValue, oldValue) {
+            if (newValue != '') {
+                if (newValue) {
+                    $scope.checkVitalaccess();
+                }
+            }
+        }, true);
+
+
+
         //Index Page
         $scope.enabled_dates = [];
         $scope.HaveActEnc = false;
@@ -116,6 +129,25 @@ app.controller('VitalsController', ['$rootScope', '$scope', '$timeout', '$http',
             $scope.data.vital_time = moment().format('YYYY-MM-DD HH:mm:ss');
         }
 
+        $scope.checkVitalaccess = function () {
+            $scope.vital_enable_count = true;
+            patient_type = $scope.patientObj.encounter_type;
+            url = $rootScope.IRISOrgServiceUrl + '/patientvitals/checkvitalaccess?patient_type=' + patient_type;
+            $http.get(url)
+                    .success(function (vitals) {
+                        angular.forEach(vitals, function (row) {
+                            var listName = row.code;
+                            listName = listName.replace(/ /g, "_");
+                            $scope.vitalcong[listName] = row.value;
+                            if (row.value == 1)
+                                $scope.vital_enable_count = false;
+                        });
+                    })
+                    .error(function () {
+                        $scope.errorData = "An Error has occured while loading patientvital!";
+                    });
+        }
+
         //Save Both Add & Update Data
         $scope.saveForm = function (mode) {
             _that = this;
@@ -123,9 +155,16 @@ app.controller('VitalsController', ['$rootScope', '$scope', '$timeout', '$http',
             $scope.errorData = "";
             $scope.msg.successMessage = "";
             $scope.msg.errorMessage = "";
-            
-            
-            if((typeof _that.data.temperature == 'undefined' || _that.data.temperature == '') && (typeof _that.data.blood_pressure_systolic == 'undefined' || _that.data.blood_pressure_systolic == '' ) && (typeof _that.data.blood_pressure_diastolic == 'undefined' || _that.data.blood_pressure_diastolic == '') && (typeof _that.data.pulse_rate == 'undefined' || _that.data.pulse_rate == '' ) && (typeof _that.data.weight == 'undefined' || _that.data.weight == '')) {
+
+
+            if ((typeof _that.data.temperature == 'undefined' || _that.data.temperature == '') &&
+                    (typeof _that.data.blood_pressure_systolic == 'undefined' || _that.data.blood_pressure_systolic == '') &&
+                    (typeof _that.data.blood_pressure_diastolic == 'undefined' || _that.data.blood_pressure_diastolic == '') &&
+                    (typeof _that.data.pulse_rate == 'undefined' || _that.data.pulse_rate == '') &&
+                    (typeof _that.data.weight == 'undefined' || _that.data.weight == '') &&
+                    (typeof _that.data.height == 'undefined' || _that.data.height == '') &&
+                    (typeof _that.data.sp02 == 'undefined' || _that.data.sp02 == '') &&
+                    (typeof _that.data.pain_score == 'undefined' || _that.data.pain_score == '')) {
                 $scope.msg.errorMessage = "Cannot create blank entry";
                 return;
             }
@@ -214,8 +253,7 @@ app.controller('VitalsController', ['$rootScope', '$scope', '$timeout', '$http',
                             if (response.data.success === true) {
                                 $scope.loadPatVitalsList();
                                 $scope.msg.successMessage = 'Patient Vital Deleted Successfully';
-                            }
-                            else {
+                            } else {
                                 $scope.errorData = response.data.message;
                             }
                         }
