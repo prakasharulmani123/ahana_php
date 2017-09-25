@@ -70,7 +70,7 @@
         <table width="100%" border="0" align="right" cellpadding="0" cellspacing="0" class="purchase-list-tab purchase-list-tab2 ">
             <tr>
                 <td>
-                    <p ng-if="printBillData.op_bill_total > 0">Pay Mode &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Cash <strong> ( {{printBillData.op_bill_total | number:2}} )</strong> </p>     
+                    <p ng-if="printBillData.op_bill_total > 0">Pay Mode &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{printBillData.payment_mode}} <strong> ( {{printBillData.op_bill_total | number:2}} )</strong> </p>     
                     <p ng-if="printBillData.op_bill_total > 0"><strong> {{printBillData.op_bill_total | words}} Rupees Only.</strong></p>  
                 </td>
             </tr>   

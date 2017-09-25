@@ -389,7 +389,7 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
                             if (mode == 'seen_future') {
                                 $scope.add_appointment();
                             } else if (mode == 'seen_print') {
-                                $scope.save_success(_that.data.PatAppointment.status_date, _that.data.PatAppointment.amount, response.amount_in_words, response.bill_no,$state.params.enc_id);
+                                $scope.save_success(_that.data.PatAppointment.status_date, _that.data.PatAppointment.amount, response.amount_in_words, response.bill_no, $state.params.enc_id, _that.data.PatAppointment.payment_mode);
                             } else {
                                 $scope.data = {};
                                 $timeout(function () {
@@ -415,7 +415,7 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
         };
 
         $scope.printBillData = {};
-        $scope.save_success = function (date, amount, amount_in_words, bill_no, encounter_id) {
+        $scope.save_success = function (date, amount, amount_in_words, bill_no, encounter_id, payment_mode) {
             $scope.printBillData.doctor = $scope.patientObj.consultant_name;
             $scope.printBillData.op_amount = amount;
             $scope.printBillData.op_amount_inwords = amount_in_words;
@@ -424,6 +424,14 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
             $scope.printBillData.patient_bill_type = $scope.bill_type_taken;
             $scope.printBillData.patient_cat_name = $scope.cat_name_taken;
             $scope.printBillData.bill_no = bill_no;
+            if (payment_mode == "CA")
+                $scope.printBillData.payment_mode = 'Cash';
+            else if (payment_mode == "CD")
+                $scope.printBillData.payment_mode = 'Card';
+            else if (payment_mode == "CH")
+                $scope.printBillData.payment_mode = 'Cheque';
+            else
+                $scope.printBillData.payment_mode = 'Online';
             $http.post($rootScope.IRISOrgServiceUrl + '/procedure/getprocedureencounter?addtfields=billing', {enc_id: encounter_id})
                     .success(function (billresponse) {
                         $scope.printBillData.procedure = billresponse.procedure;

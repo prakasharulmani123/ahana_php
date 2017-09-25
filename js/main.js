@@ -901,13 +901,22 @@ angular.module('app')
                                 $scope.printBillData.op_amount = response.model.appointmentSeen.amount;
                                 $scope.printBillData.op_amount_inwords = response.model.appointmentSeen_amt_inwords;
                                 $scope.printBillData.bill_no = response.model.bill_no;
+                                if (response.model.appointmentSeen.payment_mode == "CA")
+                                    $scope.printBillData.payment_mode = 'Cash';
+                                else if (response.model.appointmentSeen.payment_mode == "CD")
+                                    $scope.printBillData.payment_mode = 'Card';
+                                else if (response.model.appointmentSeen.payment_mode == "CH")
+                                    $scope.printBillData.payment_mode = 'Cheque';
+                                else
+                                    $scope.printBillData.payment_mode = 'Online';
+
                                 $http.post($rootScope.IRISOrgServiceUrl + '/procedure/getprocedureencounter?addtfields=billing', {enc_id: item.encounter_id})
                                         .success(function (billresponse) {
                                             $scope.printBillData.procedure = billresponse.procedure;
                                             var total = 0.00;
                                             angular.forEach(billresponse.procedure, function (bill_amount) {
-                                                if(bill_amount.charge_amount)
-                                                    total = total+parseFloat(bill_amount.charge_amount);
+                                                if (bill_amount.charge_amount)
+                                                    total = total + parseFloat(bill_amount.charge_amount);
                                             });
                                             $scope.printBillData.op_bill_total = total + parseFloat($scope.printBillData.op_amount);
                                         })
@@ -1086,19 +1095,19 @@ angular.module('app').filter('moment', function () {
     };
 });
 
-angular.module('app').filter('words', ['$rootScope',function ($rootScope) {
-    return function (value) {
-        var value1 = parseInt(value);
-        if (value1 && isInteger(value1))
-            return  $rootScope.commonService.GettoWords(value1);
+angular.module('app').filter('words', ['$rootScope', function ($rootScope) {
+        return function (value) {
+            var value1 = parseInt(value);
+            if (value1 && isInteger(value1))
+                return  $rootScope.commonService.GettoWords(value1);
 
-        return value;
-    };
+            return value;
+        };
 
-    function isInteger(x) {
-        return x % 1 === 0;
-    }
-}]);
+        function isInteger(x) {
+            return x % 1 === 0;
+        }
+    }]);
 //Form Upload with file data
 angular.module('app').factory('fileUpload', ['$http', function ($http) {
         return {
