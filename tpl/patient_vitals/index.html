@@ -44,6 +44,9 @@
                         <th>Blood Pressure</th>
                         <th>Pulse Rate</th>
                         <th>Weight</th>
+                        <th>Height</th>
+                        <th>SP02</th>
+                        <th>Pain Score</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -65,10 +68,13 @@
                         <td> {{vital.vital_time| moment:'DD/MM/YYYY'}} &nbsp;
                             <span class="label bg-light dk">{{vital.vital_time| moment:'hh:mm A'}}</span>
                         </td>
-                        <td> {{vital.temperature}} </td>
+                        <td> {{vital.temperature || '-'}} </td>
                         <td> {{vital.blood_pressure_systolic || '-'}} / {{vital.blood_pressure_diastolic || '-'}}</td>
                         <td> {{vital.pulse_rate || '-'}} </td>
                         <td> {{vital.weight || '-'}} </td>
+                        <td> {{vital.height || '-'}} </td>
+                        <td> {{vital.sp02 || '-'}} </td>
+                        <td> {{vital.pain_score || '-'}} </td>
                         <td>
                             <div ng-if="vital.tenant_id != null && vital.encounter_status">
                                 <a class="label bg-info dk" title="Edit" check-access  ui-sref="patient.vitalUpdate({id: '{{$state.params.id}}', vital_id: '{{vital.vital_id}}'})">
@@ -84,15 +90,15 @@
 
                 <tbody ng-show="isLoading">
                     <tr>
-                        <td colspan="7" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
+                        <td colspan="10" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
                     </tr>
                 </tbody>
 
                 <tfoot>
                     <tr>
-                        <td colspan="7" class="text-center">
+                        <td colspan="10" class="text-center">
                             <!--<div st-items-by-page="itemsByPage" st-pagination="" st-template="tpl/patient/pagination.custom.html"></div>-->
-                            <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7"></div>
+                            <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="10"></div>
                         </td>
                     </tr>
                 </tfoot>
