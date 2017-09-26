@@ -446,7 +446,7 @@ out-patient-table .table > thead > tr > th label.i-checks {
 
 
 .paitent-details2 {
-    margin-top: 14px;
+    margin-top: 6px;
     padding-left:0px;
 }
 
@@ -686,4 +686,12 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
 }
 .other_document_summary colgroup {
   display: none;
+}
+
+.other-doc .panel-body {
+    font-family:arial !important;
+}
+
+.other-doc p{
+     font-family:arial !important; 
 }
