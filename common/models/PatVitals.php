@@ -48,8 +48,16 @@ class PatVitals extends RActiveRecord {
                 [['tenant_id', 'encounter_id', 'patient_id', 'created_by', 'modified_by'], 'integer'],
                 [['vital_time', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
                 [['status'], 'string'],
-                [['temperature', 'blood_pressure_systolic', 'blood_pressure_diastolic', 'pulse_rate'], 'string', 'max' => 20],
-                [['weight', 'height', 'sp02', 'pain_score'], 'string', 'max' => 10]
+                //[['temperature', 'blood_pressure_systolic', 'blood_pressure_diastolic', 'pulse_rate'], 'string', 'max' => 20],
+                //[['weight', 'height', 'sp02'], 'string', 'max' => 10],
+                //[['pain_score'], 'number', 'min' => 0, 'max' => 10,'numberPattern' => '/(^\d+\.\d+$)|(^\d+$)/', 'message' => 'Invalid Pain Score'],
+                [['pain_score'], 'number', 'min' => 0, 'max' => 10],
+                [['sp02'], 'number', 'min' => 0, 'max' => 100],
+                [['height'], 'number', 'min' => 30, 'max' => 245],
+                [['weight'], 'number', 'min' => 0, 'max' => 250],
+                [['pulse_rate'], 'number', 'min' => 15, 'max' => 250],
+                [['blood_pressure_systolic','blood_pressure_diastolic'], 'number', 'min' => 0, 'max' => 300],
+                [['temperature'], 'number', 'min' => 80, 'max' => 120]
         ];
     }
 
@@ -145,6 +153,9 @@ class PatVitals extends RActiveRecord {
                         'blood_pressure_diastolic' => 'blood_pressure_diastolic',
                         'pulse_rate' => 'pulse_rate',
                         'weight' => 'weight',
+                        'height' => 'height',
+                        'sp02' => 'sp02',
+                        'pain_score' => 'pain_score',
                         'status' => 'status',
                         'created_at' => 'created_at',
                     ];
