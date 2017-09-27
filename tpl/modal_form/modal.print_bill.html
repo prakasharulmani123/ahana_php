@@ -114,10 +114,10 @@
                                                     </span>
                                                 </td>
                                             </tr>
-                                            <tr ng-if="!enc.selected.discharge_date">
+                                            <tr ng-if="enc.selected.authorize==0">
                                                 <td colspan="3" rowspan="2"> 
                                                     <br>
-                                                    <h2 class="not_yet_discharge">NOT YET <br> DISCHARGED</h2>
+                                                    <h2 class="not_yet_discharge">NOT<br> DISCHARGED</h2>
                                                 </td>
                                             </tr>
                                         </table>
@@ -329,10 +329,10 @@
                                                     </span>
                                                 </td>
                                             </tr>
-                                            <tr ng-if="!enc.selected.discharge_date">
+                                            <tr ng-if="enc.selected.authorize==0">
                                                 <td colspan="3" rowspan="2"> 
                                                     <br>
-                                                    <h2 class="not_yet_discharge">NOT YET <br> DISCHARGED</h2>
+                                                    <h2 class="not_yet_discharge">NOT<br> DISCHARGED</h2>
                                                 </td>
                                             </tr>
                                         </table>
