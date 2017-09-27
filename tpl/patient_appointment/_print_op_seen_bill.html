@@ -1,14 +1,14 @@
 <div id="Getprintval" ng-hide="1">
-    <div style="text-align: center"><b>CASH BILL</b></div>
+    <div style="text-align: center"><b>OP BILL</b></div>
     <div class="invoice-details3">
         <table width="100%" border="0" align="right" cellpadding="0" cellspacing="0" class="purchase-list-tab purchase-list-tab2 ">
             <tr>
                 <th align="left">Patient Name :</th>
-                <td align="left"> {{patientObj.fullname}} ({{patientObj.patient_global_int_code}})</td>
+                <td align="left">{{patientObj.fullname}}</td>
             </tr>
             <tr>
-                <th align="left">Casesheet No :</th>
-                <td align="left">{{patientObj.activeCasesheetno}}</td>
+                <th align="left">UHID :</th>
+                <td align="left">{{patientObj.patient_global_int_code}}</td>
             </tr>
             <tr>
                 <th align="left">Age / Sex :</th>
@@ -36,8 +36,8 @@
     <table width="100%" border="0" cellspacing="0" cellpadding="0" class="purchase-list-tab">
         <tr>
             <th>S.No</th>
-            <th>Category</th>
-            <th>Headers</th>
+            <th>Service</th>
+            <th>Description</th>
             <th>Amount</th>         
         </tr>
         <tr>
@@ -70,7 +70,7 @@
         <table width="100%" border="0" align="right" cellpadding="0" cellspacing="0" class="purchase-list-tab purchase-list-tab2 ">
             <tr>
                 <td>
-                    <p ng-if="printBillData.op_bill_total > 0">Pay Mode &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{printBillData.payment_mode}} <strong> ( {{printBillData.op_bill_total | number:2}} )</strong> </p>     
+                    <p ng-if="printBillData.op_bill_total > 0">Payment Mode : {{printBillData.payment_mode}} <strong> ( {{printBillData.op_bill_total | number:2}} )</strong> </p>     
                     <p ng-if="printBillData.op_bill_total > 0"><strong> {{printBillData.op_bill_total | words}} Rupees Only.</strong></p>  
                 </td>
             </tr>   
