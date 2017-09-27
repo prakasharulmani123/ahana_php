@@ -1852,7 +1852,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $scope.currPresMask3 = [];
             $scope.currPresMask4 = [];
             $scope.currPresMaskTxt = [];
-            if (frequency.length > 0) {
+            //if (frequency.length > 0) {
                 //check mask3 is exist, otherswise push default set
                 var mask3 = $filter('filter')(frequency, {freq_type: '3'});
                 if (mask3.length == 0) {
@@ -1882,7 +1882,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 if (maskCustomTxt.length == 0) {
                     $scope.currPresMaskTxt.unshift($scope.defaultMaskTxt);
                 }
-            }
+            //}
             //Freq Typeahead concept 
             angular.forEach($scope.currPresMask3, function (value, key) {
                 var result = value.freq_name.split('-');
