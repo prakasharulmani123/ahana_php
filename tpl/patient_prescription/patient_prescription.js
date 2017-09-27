@@ -105,12 +105,12 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 }
             }, true);
         }, 7000);
-        
+
         $scope.$watch('data.number_of_days', function (newValue, oldValue) {
             if (newValue != '' && typeof newValue != 'undefined' && newValue != oldValue) {
                 $scope.getVisit();
             }
-        },true);
+        }, true);
 
 
         //Always Form visible
@@ -1348,13 +1348,13 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                     $scope.previousPresSelected = 0;
 
                                     var main_prescription = PrescriptionService.getPrescriptionmainItem();
-                                    if(main_prescription[0]['numberofdays'])
+                                    if (main_prescription[0]['numberofdays'])
                                         $scope.data.number_of_days = main_prescription[0]['numberofdays'];
-                                    if(main_prescription[0]['nextVisit'])
+                                    if (main_prescription[0]['nextVisit'])
                                         $scope.data.next_visit = main_prescription[0]['nextVisit'];
-                                    if(main_prescription[0]['consultantId'])
+                                    if (main_prescription[0]['consultantId'])
                                         $scope.data.consultant_id = main_prescription[0]['consultantId'];
-                                    
+
                                     $scope.$broadcast('refreshDatepickers');
 
                                 })
@@ -1845,12 +1845,16 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.currPresMask4 = [];
         $scope.currPresMaskTxt = [];
         $scope.prepareCurrPresFreq = function () {
+            $scope.commonFrequency($scope.consultantFreq);
+        }
+
+        $scope.commonFrequency = function (frequency) {
             $scope.currPresMask3 = [];
             $scope.currPresMask4 = [];
             $scope.currPresMaskTxt = [];
-            if ($scope.consultantFreq.length > 0) {
+            if (frequency.length > 0) {
                 //check mask3 is exist, otherswise push default set
-                var mask3 = $filter('filter')($scope.consultantFreq, {freq_type: '3'});
+                var mask3 = $filter('filter')(frequency, {freq_type: '3'});
                 if (mask3.length == 0) {
                     $scope.currPresMask3.push($scope.defaultMask3);
                 } else {
@@ -1858,7 +1862,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 }
 
                 //check mask4 is exist, otherswise push default set
-                var mask4 = $filter('filter')($scope.consultantFreq, {freq_type: '4'});
+                var mask4 = $filter('filter')(frequency, {freq_type: '4'});
                 if (mask4.length == 0) {
                     $scope.currPresMask4.push($scope.defaultMask4);
                 } else {
@@ -1866,7 +1870,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 }
 
                 //check maskTxt is exist, otherswise push default set
-                var maskTxt = $filter('filter')($scope.consultantFreq, {freq_type: 'txt'});
+                var maskTxt = $filter('filter')(frequency, {freq_type: 'txt'});
                 if (maskTxt.length == 0) {
                     $scope.currPresMaskTxt.push($scope.defaultMaskTxt);
                 } else {
@@ -1892,6 +1896,17 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     value['freq_name_' + item_key] = item;
                 });
             });
+        }
+
+
+        $scope.checkProducttype = function (type) {
+            var product_freq = '';
+            if (type == 'SYRUP') {
+                product_freq = $filter('filter')($scope.consultantFreq, {product_type: 'SYRUP'});
+            } else {
+                product_freq = $filter('filter')($scope.consultantFreq, {product_type: '!SYRUP'});
+            }
+            $scope.commonFrequency(product_freq);
         }
 
         $scope.removeRow = function (pres_id) {

@@ -202,7 +202,8 @@
                                                         <th width="30" align="left">Actions</th>
                                                         <th width="165" align="left">Product</th>
                                                         <th width="65" align="left">Route</th>
-                                                        <th width="90" align="left">Frequency</th>
+                                                        <th width="75" align="left">Frequency</th>
+                                                        <th width="5"></th>
                                                         <th width="70" align="center">No.of Days</th>
                                                         <th width="25" align="center">Qty</th>
                                                         <!--<th width="50" align="center">Cost</th>-->
@@ -418,7 +419,7 @@
                                                             </div>
                                                             <div style="width: 20px; float:left">
                                                                 <div class="input-group-btn dropdown">
-                                                                    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                                                                    <button class="btn btn-default dropdown-toggle" ng-click="checkProducttype(item.description_name)" type="button" data-toggle="dropdown">
                                                                         <span class="fa fa-ellipsis-v"></span>
                                                                     </button>
                                                                     <ul class="dropdown-menu curPrescFreq">
@@ -494,6 +495,7 @@
                                                                 </div>
                                                             </div>
                                                         </td>
+                                                        <td>{{(item.description_name | uppercase) == 'SYRUP' ? "ML" : "" }}</td>
                                                         <td align="center">
                                                             <span editable-text="item.number_of_days"
                                                                   e-typeahead-editable="true"

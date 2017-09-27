@@ -156,6 +156,7 @@
                     <th width="5%" class="txtCenter"><span><img src="{{IRISOrgUrl}}/img/brightness.png" alt="Afternoon" /></span></th>
                     <th width="5%" class="txtCenter"><span><img src="{{IRISOrgUrl}}/img/sun-shining.png" alt="Evening" /></span></th>
                     <th width="5%" class="txtCenter"><span><img src="{{IRISOrgUrl}}/img/moon.png" alt="Night" /></span></th>
+                    <th></th>
                     <th width="8%" class="txtCenter"><span>Days</span></th>
                     <th width="8%" class="txtCenter"><span>Qty</span></th>
                     <th width="5%" class="txtCenter"><span><img src="{{IRISOrgUrl}}/img/food_type.png" alt="Night" /></span></th>
@@ -185,7 +186,9 @@
                     <td class="txtCenter" ng-if="((row.freqType != 3) && (row.freqType != 'txt'))">
                         <span ng-bind-html="getFrequencyExists(row.frequency_name, 3, row.freqType)"></span>
                     </td>
-
+                    <td>
+                        {{(row.product.description_name | uppercase) == 'SYRUP' ? "ML" : "" }}
+                    </td>
 
                     <td class="txtCenter">{{row.number_of_days}}</td>
                     <td class="txtCenter">{{row.total_qty}}</td>
