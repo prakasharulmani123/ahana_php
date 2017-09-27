@@ -146,19 +146,19 @@ class PatPrescriptionItems extends RActiveRecord {
         return new PatPrescriptionItemsQuery(get_called_class());
     }
 
-    public function setFrequencyId() {
+    public function setFrequencyId($item) {
         $model = PatPrescriptionFrequency::find()
                 ->tenant()
                 ->andWhere(['freq_name' => $this->frequency, 'consultant_id' => $this->consultant_id])
                 //->status()
                 ->active()
                 ->one();
-
         if (empty($model)) {
             $model = new PatPrescriptionFrequency;
             $model->freq_name = $this->frequency;
             $model->freq_type = $this->freqType;
             $model->consultant_id = $this->consultant_id;
+            $model->product_type = $item['description_name'];
             $model->save(false);
         } else {
             $model->status = 1;

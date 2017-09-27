@@ -105,7 +105,7 @@ class PatientprescriptionController extends ActiveController {
                     $item_model->pres_id = $model->pres_id;
                     $item_model->consultant_id = $model->consultant_id;
                     $item_model->attributes = $item;
-                    $item_model->setFrequencyId();
+                    $item_model->setFrequencyId($item);
                     $item_model->setRouteId();
                     $item_model->save(false);
                 }

@@ -41,7 +41,7 @@ class PatPrescriptionFrequency extends RActiveRecord
         return [
             [['freq_name'], 'required'],
             [['tenant_id', 'created_by', 'modified_by'], 'integer'],
-            [['status'], 'string'],
+            [['status', 'product_type'], 'string'],
             [['created_at', 'modified_at', 'deleted_at'], 'safe'],
             [['freq_name'], 'string', 'max' => 20]
         ];
@@ -56,6 +56,7 @@ class PatPrescriptionFrequency extends RActiveRecord
             'freq_id' => 'Freq ID',
             'tenant_id' => 'Tenant ID',
             'freq_name' => 'Freq Name',
+            'product_type' => 'Product Type',
             'status' => 'Status',
             'created_by' => 'Created By',
             'created_at' => 'Created At',
