@@ -121,6 +121,11 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                 var discharge_date = moment($scope.enc.selected.discharge_date).format('DD/MM/YYYY - hh:mm A');
             else
                 var discharge_date = '-';
+            if($scope.enc.selected.authorize == 0)
+                var not_discharged = 'NOT DISCHARGED';
+            else
+                var not_discharged = ''
+                
             
             if ($scope.enc.selected.bill_no)
                 var bill_no = $scope.enc.selected.bill_no;
@@ -157,6 +162,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                             [{text: 'Ward No', bold: true}, ':', $scope.enc.selected.currentAdmission.room_details],
                             [{text: 'No.ofDays', bold: true}, ':', $scope.enc.selected.stay_duration.toString()],
                             [{text: 'Consultant Name', bold: true}, ':', $scope.enc.selected.currentAdmission.consultant_name],
+                            [{text: ''}, '', {text: not_discharged, bold: true}],
                         ]
                     }
                 },
