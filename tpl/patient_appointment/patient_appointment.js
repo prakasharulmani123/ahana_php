@@ -441,23 +441,25 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
                                 total = total + parseFloat(bill_amount.charge_amount);
                         });
                         $scope.printBillData.op_bill_total = total + parseFloat($scope.printBillData.op_amount);
+                        $scope.opBillPrint($scope.printBillData);
+                        $state.go("patient.encounter", {id: $state.params.id});
                     })
 
-            var popupWindow = window.open('', '_blank', 'width=800,height=800,scrollbars=yes,menubar=no,toolbar=no,location=no,status=no,titlebar=no');
-            $timeout(function () {
-                if (!popupWindow || popupWindow.outerHeight === 0) {
-                    //First Checking Condition Works For IE & Firefox
-                    //Second Checking Condition Works For Chrome
-                    alert("Popup Blocker is enabled! Please add this site to your exception list.");
-                } else {
-                    var innerContents = document.getElementById("Getprintval").innerHTML;
-                    popupWindow.document.open();
-                    popupWindow.document.write('<html><head><link href="css/print.css" rel="stylesheet" type="text/css" /></head><body onload="window.print()">' + innerContents + '</html>');
-                    popupWindow.document.close();
-                }
-                $scope.data = {};
-                $state.go("patient.encounter", {id: $state.params.id});
-            }, 250);
+//            var popupWindow = window.open('', '_blank', 'width=800,height=800,scrollbars=yes,menubar=no,toolbar=no,location=no,status=no,titlebar=no');
+//            $timeout(function () {
+//                if (!popupWindow || popupWindow.outerHeight === 0) {
+//                    //First Checking Condition Works For IE & Firefox
+//                    //Second Checking Condition Works For Chrome
+//                    alert("Popup Blocker is enabled! Please add this site to your exception list.");
+//                } else {
+//                    var innerContents = document.getElementById("Getprintval").innerHTML;
+//                    popupWindow.document.open();
+//                    popupWindow.document.write('<html><head><link href="css/print.css" rel="stylesheet" type="text/css" /></head><body onload="window.print()">' + innerContents + '</html>');
+//                    popupWindow.document.close();
+//                }
+//                $scope.data = {};
+//                $state.go("patient.encounter", {id: $state.params.id});
+//            }, 250);
         }
 
         $scope.cancelAppointment = function () {

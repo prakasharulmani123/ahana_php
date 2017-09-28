@@ -919,20 +919,456 @@ angular.module('app')
                                                     total = total + parseFloat(bill_amount.charge_amount);
                                             });
                                             $scope.printBillData.op_bill_total = total + parseFloat($scope.printBillData.op_amount);
+                                            $scope.opBillPrint($scope.printBillData);
                                         })
 
-                                $timeout(function () {
-                                    var innerContents = document.getElementById('Getprintval').innerHTML;
-                                    var popupWinindow = window.open('', '_blank', 'width=800,height=800,scrollbars=yes,menubar=no,toolbar=no,location=no,status=no,titlebar=no');
-                                    popupWinindow.document.open();
-                                    popupWinindow.document.write('<html><head><link href="css/print.css" rel="stylesheet" type="text/css" /></head><body onload="window.print()">' + innerContents + '</html>');
-                                    popupWinindow.document.close();
-                                }, 1000);
+//                                $timeout(function () {
+//                                    var innerContents = document.getElementById('Getprintval').innerHTML;
+//                                    var popupWinindow = window.open('', '_blank', 'width=800,height=800,scrollbars=yes,menubar=no,toolbar=no,location=no,status=no,titlebar=no');
+//                                    popupWinindow.document.open();
+//                                    popupWinindow.document.write('<html><head><link href="css/print.css" rel="stylesheet" type="text/css" /></head><body onload="window.print()">' + innerContents + '</html>');
+//                                    popupWinindow.document.close();
+//                                }, 1000);
                             }, function (x) {
                                 response = {success: false, message: 'Server Error'};
                             });
                 }
+                $scope.imgExport = function (imgID) {
+                    var img = document.getElementById(imgID);
+                    var canvas = document.createElement("canvas");
+                    canvas.width = img.width;
+                    canvas.height = img.height;
 
+                    // Copy the image contents to the canvas
+                    var ctx = canvas.getContext("2d");
+                    ctx.drawImage(img, 0, 0);
+
+                    var dataURL = canvas.toDataURL("image/png");
+                    return dataURL;
+                }
+                $scope.opBillPrint = function (printData) {
+                    $scope.printloader = '<i class="fa fa-spin fa-spinner"></i>';
+                    var print_content = $scope.printContent(printData);
+                    if (print_content.length > 0) {
+                        var docDefinition = {
+                            header: $scope.printHeader(),
+                            footer: $scope.printFooter(),
+                            styles: $scope.printStyle(),
+                            content: print_content,
+                            defaultStyle: {
+                                fontSize: 10
+                            },
+                            //pageMargins: ($scope.deviceDetector.browser == 'firefox' ? 50 : 50),
+                            pageMargins: [20, 20, 20, 48],
+                            pageSize: 'A5',
+                            pageOrientation: 'landscape',
+                        };
+                        var pdf_document = pdfMake.createPdf(docDefinition);
+                        var doc_content_length = Object.keys(pdf_document).length;
+                        if (doc_content_length > 0) {
+                            pdf_document.print();
+                        }
+                    }
+                }
+                /*PRINT BILL*/
+                $scope.printHeader = function () {
+                    return {
+                        text: '',
+                        margin: 0,
+                        alignment: 'center'
+                    };
+                }
+
+                $scope.printFooter = function () {
+                    return {
+                        //text: [{text: 'PHARMACY SERVICE - 24 HOURS'}],
+                        //fontSize: 8,
+                        //margin: 0,
+                        //alignment: 'center'
+                    };
+                }
+                $scope.printStyle = function () {
+                    return {
+                        h1: {
+                            fontSize: 11,
+                            bold: true,
+                        },
+                        h2: {
+                            fontSize: 9,
+                            bold: true,
+                        },
+                        th: {
+                            fontSize: 9,
+                            bold: true,
+                            margin: [0, 3, 0, 3]
+                        },
+                        td: {
+                            fontSize: 8,
+                            margin: [0, 3, 0, 3]
+                        },
+                        normaltxt: {
+                            fontSize: 9,
+                        },
+                        grandtotal: {
+                            fontSize: 15,
+                            bold: true,
+                            margin: [5, 3, 5, 3]
+                        },
+                        tableExample: {
+                            margin: [0, 5, 0, 15]
+                        },
+                    };
+                }
+
+                $scope.printContent = function (printData) {
+                    var content = [];
+                    var perPageInfo = [];
+                    var perPageItems = [];
+                    //var groupedArr = createGroupedArray($scope.printBillData.procedure, 2); //Changed Description rows
+                    var index = 1;
+                    //var group_total_count = Object.keys(groupedArr).length;
+                    printData.procedure.unshift({
+                        charges: 'Professional Charges',
+                        procedure_name: printData.doctor,
+                        charge_amount: printData.op_amount
+                    });
+
+                    //angular.forEach(groupedArr, function (sales, key) {
+                    //var group_key = key + 1;
+                    var perPageItems = [];
+                    perPageItems.push([
+                        {
+                            text: 'S.No',
+                            style: 'th'
+                        },
+                        {
+                            text: 'Service',
+                            style: 'th'
+                        },
+                        {
+                            text: 'Description',
+                            style: 'th'
+                        },
+                        {
+                            text: 'Amount',
+                            style: 'th'
+                        },
+                    ]);
+                    angular.forEach(printData.procedure, function (row, key) {
+                        if (row.charges)
+                            var charges = row.charges;
+                        else
+                            var charges = 'Procedure Charges';
+                        perPageItems.push([
+                            {
+                                text: index,
+                                alignment: 'left',
+                            },
+                            {
+                                text: charges,
+                                alignment: 'left',
+                            },
+                            {
+                                text: row.procedure_name,
+                                alignment: 'left',
+                            },
+                            {
+                                text: row.charge_amount,
+                                alignment: 'left',
+                            },
+                        ]);
+                        index++;
+                    });
+                    perPageItems.push([{
+                            colSpan: 4,
+                            text: 'Bill Total : ' + printData.op_bill_total.toFixed(2),
+                            alignment: 'right'
+                        }, {}, {}, {}], [{
+                            colSpan: 4,
+                            text: 'Amount Paid : ' + printData.op_bill_total.toFixed(2),
+                            alignment: 'right'
+                        }, {}, {}, {}]);
+                    //});
+                    perPageInfo.push(
+                            {
+                                layout: 'noBorders',
+                                table: {
+                                    widths: ['*', 'auto', 'auto', '*', 'auto', 'auto', 'auto'],
+                                    body: [
+                                        [
+                                            {
+                                                colSpan: 3,
+                                                layout: 'noBorders',
+                                                table: {
+                                                    body: [
+                                                        [
+                                                            {
+                                                                image: $scope.imgExport('ahana_print_logo'),
+                                                                height: 20, width: 100,
+                                                            },
+                                                        ],
+                                                    ]
+                                                },
+                                            }, {}, {},
+                                            {
+                                                colSpan: 3,
+                                                layout: 'noBorders',
+                                                table: {
+                                                    body: [
+                                                        [
+                                                            {
+                                                                text: 'OP BILL',
+                                                                style: 'h2'
+                                                            },
+                                                        ],
+                                                    ]
+                                                },
+                                            },
+                                            {}, {},
+                                            {
+                                                layout: 'noBorders',
+                                                table: {
+                                                    body: [
+                                                        [
+                                                            {
+                                                                margin: [0, 0, 0, 0],
+                                                                text: $scope.patientObj.org_name,
+                                                                fontSize: 8,
+                                                                alignment: 'right'
+                                                            },
+                                                        ],
+                                                    ]
+                                                },
+                                            }
+                                        ],
+                                    ]
+                                },
+                            });
+
+                    perPageInfo.push({
+                        layout: 'Borders',
+                        table: {
+                            widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+                            body: [
+                                [
+                                    {
+                                        border: [false, true, false, false],
+                                        colSpan: 6,
+                                        layout: {
+                                            paddingLeft: function (i, node) {
+                                                return 0;
+                                            },
+                                            paddingRight: function (i, node) {
+                                                return 2;
+                                            },
+                                            paddingTop: function (i, node) {
+                                                return 0;
+                                            },
+                                            paddingBottom: function (i, node) {
+                                                return 0;
+                                            },
+                                        },
+                                        table: {
+                                            body: [
+                                                [
+                                                    {
+                                                        border: [false, false, false, false],
+                                                        text: 'Patient Name',
+                                                        style: 'h2',
+                                                        margin: [-5, 0, 0, 0],
+                                                    },
+                                                    {
+                                                        text: ':',
+                                                        border: [false, false, false, false],
+                                                        style: 'h2'
+                                                    },
+                                                    {
+                                                        border: [false, false, false, false],
+                                                        text: $scope.patientObj.fullname,
+                                                        style: 'normaltxt'
+                                                    }
+                                                ],
+                                                [
+                                                    {
+                                                        border: [false, false, false, false],
+                                                        text: 'UHID',
+                                                        style: 'h2',
+                                                        margin: [-5, 0, 0, 0],
+                                                    },
+                                                    {
+                                                        text: ':',
+                                                        border: [false, false, false, false],
+                                                        style: 'h2'
+                                                    },
+                                                    {
+                                                        border: [false, false, false, false],
+                                                        text: $scope.patientObj.patient_global_int_code,
+                                                        style: 'normaltxt'
+                                                    }
+                                                ],
+                                                [
+                                                    {
+                                                        border: [false, false, false, false],
+                                                        text: 'Age / Sex',
+                                                        style: 'h2',
+                                                        margin: [-5, 0, 0, 0],
+                                                    },
+                                                    {
+                                                        text: ':',
+                                                        border: [false, false, false, false],
+                                                        style: 'h2'
+                                                    },
+                                                    {
+                                                        border: [false, false, false, false],
+                                                        text: $scope.patientObj.patient_age_ym + '/' + $scope.app.patientDetail.patientSex,
+                                                        style: 'normaltxt'
+                                                    }
+                                                ],
+                                            ]
+                                        },
+                                    },
+                                    {}, {}, {}, {}, {},
+                                    {
+                                        border: [false, true, false, false],
+                                        layout: 'noBorders',
+                                        table: {
+                                            body: [
+                                                [
+                                                    {
+                                                        border: [false, false, false, false],
+                                                        text: 'Bill No',
+                                                        style: 'h2',
+                                                        margin: [-7, 0, 0, 0],
+                                                    },
+                                                    {
+                                                        text: ':',
+                                                        border: [false, false, false, false],
+                                                        style: 'h2'
+                                                    },
+                                                    {
+                                                        border: [false, false, false, false],
+                                                        text: $scope.printBillData.bill_no,
+                                                        style: 'normaltxt'
+                                                    }
+                                                ],
+                                                [
+                                                    {
+                                                        text: 'Bill Date',
+                                                        style: 'h2',
+                                                        margin: [-7, 0, 0, 0],
+                                                    },
+                                                    {
+                                                        text: ':',
+                                                        style: 'h2'
+                                                    },
+                                                    {
+                                                        text: $scope.printBillData.date,
+                                                        style: 'normaltxt'
+                                                    }
+                                                ],
+                                            ]
+                                        },
+                                    }
+                                ],
+                            ]
+                        },
+                    }, {
+                        table: {
+                            widths: ['auto', 150, '*', 'auto'],
+                            body: perPageItems,
+                        },
+                        layout: {
+                            hLineColor: function (i, node) {
+                                return (i === 0 || i === node.table.body.length) ? 'gray' : 'gray';
+                            },
+                            vLineColor: function (i, node) {
+                                return (i === 0 || i === node.table.widths.length) ? 'gray' : 'gray';
+                            },
+                        }
+                    });
+                    perPageInfo.push({
+                        style: 'tableExample',
+                        layout: 'noBorders',
+                        table: {
+                            widths: ['*', 'auto', 'auto', '*', 'auto', 'auto', 'auto'],
+                            body: [
+                                [
+                                    {
+                                        colSpan: 6,
+                                        layout: 'noBorders',
+                                        table: {
+                                            body: [
+                                                [
+                                                    {
+                                                        text: 'Payment Mode',
+                                                        style: 'h2'
+                                                    },
+                                                    {
+                                                        text: ':',
+                                                        style: 'h2'
+                                                    },
+                                                    {
+                                                        text: printData.payment_mode + '(' + printData.op_bill_total.toFixed(2) + ')',
+                                                        style: 'normaltxt'
+                                                    },
+                                                ],
+                                                [
+                                                    {
+                                                        colSpan: 3,
+                                                        text: [
+                                                            $filter('words')(printData.op_bill_total),
+                                                            {text: 'Rupees Only'},
+                                                        ]
+                                                    },
+                                                    {}, {},
+                                                ],
+                                            ]
+                                        },
+                                    }, {}, {}, {}, {}, {},
+                                    {
+                                        layout: 'noBorders',
+                                        table: {
+                                            body: [
+                                                [
+                                                    {
+                                                        text: 'For ' + $scope.patientObj.org_name,
+                                                        style: 'h2'
+                                                    },
+                                                    {
+                                                        text: '',
+                                                        style: 'h2'
+                                                    },
+                                                    {
+                                                        text: '',
+                                                        style: 'normaltxt'
+                                                    },
+                                                ],
+                                                [
+                                                    {
+                                                        colSpan: 3,
+                                                        text: 'Authorized Signatory',
+                                                        style: 'h2',
+                                                        margin: [0, 15, 0, 0],
+                                                    },
+                                                    {}, {},
+                                                ],
+                                            ]
+                                        },
+                                    }
+                                ],
+                            ]
+                        },
+                    });
+                    content.push(perPageInfo);
+                    return content;
+                }
+                var createGroupedArray = function (arr, chunkSize) {
+                    var groups = [], i;
+                    for (i = 0; i < arr.length; i += chunkSize) {
+                        groups.push(arr.slice(i, i + chunkSize));
+                    }
+                    return groups;
+                }
                 //Excel Export
                 $scope.tablesToExcel = (function () {
                     var uri = 'data:application/vnd.ms-excel;base64,'
