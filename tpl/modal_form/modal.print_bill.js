@@ -121,17 +121,22 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                 var discharge_date = moment($scope.enc.selected.discharge_date).format('DD/MM/YYYY - hh:mm A');
             else
                 var discharge_date = '-';
-            if($scope.enc.selected.authorize == 0)
-                var not_discharged = 'NOT DISCHARGED';
-            else
-                var not_discharged = ''
-                
             
             if ($scope.enc.selected.bill_no)
                 var bill_no = $scope.enc.selected.bill_no;
             else
                 var bill_no = '-';
-
+            
+            var patient_details_right = [];
+            patient_details_right.push([{text: 'Admission Date', bold: true}, ':', admission_date]);
+            patient_details_right.push([{text: 'Discharge Date', bold: true}, ':', discharge_date]);
+            patient_details_right.push([{text: 'Ward No', bold: true}, ':', $scope.enc.selected.currentAdmission.room_details]);
+            patient_details_right.push([{text: 'No.ofDays', bold: true}, ':', $scope.enc.selected.stay_duration.toString()]);
+            patient_details_right.push([{text: 'Consultant Name', bold: true}, ':', $scope.enc.selected.currentAdmission.consultant_name]);
+            if($scope.enc.selected.authorize == 0){
+                patient_details_right.push([{text: ''}, '', {text: 'NOT DISCHARGED', bold: true}]);
+            }
+            
             return [
                 {
                     colSpan: 3,
@@ -156,14 +161,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                     layout: 'noBorders',
                     table: {
                         widths: ['auto', 10, 'auto'],
-                        body: [
-                            [{text: 'Admission Date', bold: true}, ':', admission_date],
-                            [{text: 'Discharge Date', bold: true}, ':', discharge_date],
-                            [{text: 'Ward No', bold: true}, ':', $scope.enc.selected.currentAdmission.room_details],
-                            [{text: 'No.ofDays', bold: true}, ':', $scope.enc.selected.stay_duration.toString()],
-                            [{text: 'Consultant Name', bold: true}, ':', $scope.enc.selected.currentAdmission.consultant_name],
-                            [{text: ''}, '', {text: not_discharged, bold: true}],
-                        ]
+                        body: patient_details_right
                     }
                 },
                 {},
