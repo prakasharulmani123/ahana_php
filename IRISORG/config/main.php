@@ -108,6 +108,7 @@ return [
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/auditlog']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/patientallergies']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/pharmacygst']],
+                ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/pharmacyproductunit']],
             ],
         ],
         'log' => [
