@@ -71,6 +71,8 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
             $scope.patdata.PatPatient = patient;
             $scope.patdata.PatPatientAddress = patient.address;
             $scope.patdata.is_permanent = false;
+            if (patient.patient_dob)
+                $scope.patdata.PatPatient.patient_dob = moment(patient.patient_dob, 'YYYY-MM-DD').format('DD/MM/YYYY');
 
             if ((patient.address != null) &&
                     (patient.address.addr_current_address == patient.address.addr_perm_address) &&
@@ -248,7 +250,7 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
 
         $scope.setAgeEmpty = function () {
             $scope.patdata.PatPatient.patient_age_year = '';
-            $scope.patdata.PatPatient.patient_age_month ='';
+            $scope.patdata.PatPatient.patient_age_month = '';
         }
 
         $scope.getDOB = function () {
@@ -271,16 +273,19 @@ app.controller('PatientController', ['$rootScope', '$scope', '$timeout', '$http'
         $scope.getAge = function () {
             var newValue = this.patdata.PatPatient.patient_dob;
             if (newValue != '') {
-                $http({
-                    method: 'POST',
-                    url: $rootScope.IRISOrgServiceUrl + '/patient/getagefromdate',
-                    data: {'date': newValue},
-                }).success(
-                        function (response) {
-                            $scope.patdata.PatPatient.patient_age_year = response.age;
-                            $scope.patdata.PatPatient.patient_age_month = response.month;
-                        }
-                );
+                var date_of_birth = moment(newValue, 'DD/MM/YYYY').format('YYYY-MM-DD');
+                if (date_of_birth != "Invalid date") {
+                    $http({
+                        method: 'POST',
+                        url: $rootScope.IRISOrgServiceUrl + '/patient/getagefromdate',
+                        data: {'date': date_of_birth},
+                    }).success(
+                            function (response) {
+                                $scope.patdata.PatPatient.patient_age_year = response.age;
+                                $scope.patdata.PatPatient.patient_age_month = response.month;
+                            }
+                    );
+                }
             }
         }
 

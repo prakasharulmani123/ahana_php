@@ -79,9 +79,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label"> DOB: </label>
                                     <div class="col-sm-9">
-                                        <p ng-show="view_data.patient_dob">  
-                                            {{view_data.patient_dob | moment:'DD/MM/YYYY'}}  
-                                        </p>
+                                        <p>{{view_data.patient_dob}}</p>
                                     </div>
                                 </div>
                                 <div class="line line-dashed b-b line-lg "></div>
@@ -328,11 +326,12 @@
                                     <label class="col-sm-3 control-label">DOB </label>
                                     <div class="col-sm-3">
                                         <div class="input-group">
-                                            <input type="text" name="dob" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="patdata.PatPatient.patient_dob" is-open="opened" datepicker-options="dateOptions" close-text="Close" max-date="maxDate" date-disabled="disabled(date, mode)" ng-change="setAgeEmpty();
+<!--                                            <input type="text" name="dob" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="patdata.PatPatient.patient_dob" is-open="opened" datepicker-options="dateOptions" close-text="Close" max-date="maxDate" date-disabled="disabled(date, mode)" ng-change="setAgeEmpty();
                                                             getAge();" />
                                             <span class="input-group-btn">
                                                 <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
-                                            </span>
+                                            </span>-->
+                                            <input type="text" name="dob" class="form-control" ng-blur="setAgeEmpty();getAge();" ng-model="patdata.PatPatient.patient_dob" my-date/>
                                         </div>
                                     </div>
 <!--                                    <div class="col-sm-4">
