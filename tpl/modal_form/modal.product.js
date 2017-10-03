@@ -2,14 +2,15 @@ app.controller('ProductModalInstanceCtrl', ['scope', '$scope', '$modalInstance',
         $scope.data = {};
         $scope.popupdata = {};
         $scope.product_type = false;
+        $scope.product_unit = false;
         $scope.addBrandname = false;
         $scope.adddivision = false;
         //$scope.countries = scope.countries;
 
         //$scope.data.country_id = country_id;
 
-        $rootScope.commonService.GetProductUnitsList(function (response) {
-            $scope.productUnits = response;
+        $rootScope.commonService.GetProductUnitsList('1', false, function (response) {
+            $scope.productUnits = response.productunitlist;
         });
 
         // Product Description list
@@ -110,6 +111,48 @@ app.controller('ProductModalInstanceCtrl', ['scope', '$scope', '$modalInstance',
         $scope.cancel = function () {
             $modalInstance.dismiss('cancel');
         };
+
+        $scope.openProductunit = function () {
+            $scope.product_unit = true;
+        }
+
+        $scope.productunitCancel = function () {
+            $scope.product_unit = false;
+        }
+
+        $scope.addProductunit = function () {
+            description = {
+                status: '1',
+                product_unit: $scope.popupdata.product_unit
+            };
+            post_url = $rootScope.IRISOrgServiceUrl + '/pharmacyproductunits';
+            method = 'POST';
+            succ_msg = 'Product Unit saved successfully';
+
+            $http({
+                method: method,
+                url: post_url,
+                data: description,
+            }).success(
+                    function (response) {
+                        scope.msg.successMessage = succ_msg;
+                        $scope.popupdata = {};
+                        $timeout(function () {
+                            $scope.productUnits.push(response);
+                            $scope.data.product_unit = response.product_unit;
+                        }, 100)
+
+                    }
+            ).error(function (data, status) {
+                scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+
+            $scope.product_unit = false;
+        }
 
         $scope.openProducttype = function () {
             $scope.product_type = true;

@@ -680,7 +680,7 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
                     callback(response);
                 });
     }
-    
+
     function GetGstCode(tenant, sts, del_sts, callback) {
         var response;
 
@@ -692,7 +692,7 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
                     callback(response);
                 });
     }
-    
+
     function GetPatientFrequency(tenant, sts, del_sts, callback) {
         var response;
 
@@ -795,13 +795,21 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
                 });
     }
 
-    function GetProductUnitsList(callback) {
-        var response = [
-            {value: 'MG', label: 'MG'},
-            {value: 'ML', label: 'ML'},
-            {value: 'G', label: 'G'}
-        ];
-        callback(response);
+    function GetProductUnitsList(sts, del_sts, callback) {
+        var response;
+//        var response = [
+//            {value: 'MG', label: 'MG'},
+//            {value: 'ML', label: 'ML'},
+//            {value: 'G', label: 'G'}
+//        ];
+        $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproductunit/getproductunitlist?status=' + sts + '&deleted=' + del_sts)
+                .success(function (response) {
+                    callback(response);
+                }, function (x) {
+                    response = {success: false, message: 'Server Error'};
+                    callback(response);
+                });
+        //callback(response);
     }
 
     function GetProductDescriptionList(tenant, sts, del_sts, callback) {

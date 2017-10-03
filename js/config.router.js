@@ -2113,6 +2113,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                                 'tpl/modal_form/modal.package.js?v=' + APP_VERSION,
                                 'tpl/modal_form/modal.supplier.js?v=' + APP_VERSION,
                                 'tpl/modal_form/modal.hsn.js?v=' + APP_VERSION,
+                                'tpl/modal_form/modal.productunit.js?v=' + APP_VERSION,
                             ]);
                         }]
                 }
@@ -2132,6 +2133,8 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                                 'tpl/modal_form/modal.vat.js?v=' + APP_VERSION,
                                 'tpl/modal_form/modal.package.js?v=' + APP_VERSION,
                                 'tpl/modal_form/modal.supplier.js?v=' + APP_VERSION,
+                                'tpl/modal_form/modal.hsn.js?v=' + APP_VERSION,
+                                'tpl/modal_form/modal.productunit.js?v=' + APP_VERSION,
                             ]);
                         }]
                 }
@@ -2598,6 +2601,25 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                                         return $ocLazyLoad.load([
                                             'tpl/patient_prescription/patient_prescription.js?v=' + APP_VERSION,
                                             'tpl/modal_form/modal.product.js?v=' + APP_VERSION,
+                                        ]);
+                                    }
+                            );
+                        }]
+                }
+            })
+
+            //Patient New Prescription Design
+            .state('patient.newprescription', {
+                url: '/newprescription/{id}',
+                templateUrl: 'tpl/patient_prescription/prescription_new.html',
+                controller: 'PatientLeftSideNotificationCtrl',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table', 'ui.select', 'xeditable']).then(
+                                    function () {
+                                        return $ocLazyLoad.load([
+                                            'tpl/patient_prescription/prescription_new.js?v=' + APP_VERSION,
                                         ]);
                                     }
                             );

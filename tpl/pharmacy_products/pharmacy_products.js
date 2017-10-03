@@ -108,8 +108,8 @@ app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http
         //For Form
         $scope.initForm = function () {
             // Product Units list
-            $rootScope.commonService.GetProductUnitsList(function (response) {
-                $scope.productUnits = response;
+            $rootScope.commonService.GetProductUnitsList('1', false, function (response) {
+                $scope.productUnits = response.productunitlist;
             });
 
             // Product Description list

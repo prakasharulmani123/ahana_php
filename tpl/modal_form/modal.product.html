@@ -21,12 +21,28 @@
                                         <div class="col-sm-2">
                                             <input type="text" name="product_unit_count" ng-model="data.product_unit_count" class="form-control" placeholder="Unit">
                                         </div>
-                                        <div class="col-sm-3">
-                                            <select class="form-control" ng-model="data.product_unit" ng-options="productUnit.value as productUnit.label for productUnit in productUnits| orderBy: label">
+                                        <div class="col-sm-2">
+                                            <select class="form-control" ng-model="data.product_unit" ng-options="productUnit.product_unit as productUnit.product_unit for productUnit in productUnits| orderBy: label">
                                                 <option value="">Select</option>
                                             </select>
                                         </div>
+                                        <div class="col-sm-0">
+                                            <button type="button" class="btn btn-primary" ng-click="openProductunit()">
+                                                <i class="fa fa-plus text ng-scope"></i>
+                                            </button>
+                                        </div>
                                     </div>
+                                </div>
+
+                                <!-- hidden textbox for product description -->
+                                <div class="form-group" ng-show='product_unit'>
+                                    <label class="col-sm-4 control-label">&nbsp;</label>
+                                    <div class="col-sm-4">
+                                        <input class="form-control" ng-model='popupdata.product_unit' id='product_type_textbox' type="text" placeholder="Product Unit">
+                                    </div>
+                                    <button class="btn m-b-xs  btn-success save-btn" ng-disabled="!popupdata.product_unit" ng-click="addProductunit()">Save</button>
+                                    &nbsp;
+                                    <button class="btn m-b-xs  btn-dark" ng-click="productunitCancel()"><i class="fa fa-times"></i> Cancel</button>
                                 </div>
 
                                 <div class="line line-dashed b-b line-lg "></div>
@@ -43,7 +59,7 @@
                                         </button>
                                     </div>
                                 </div>
-                                
+
                                 <!-- hidden textbox for product description -->
                                 <div class="form-group" ng-show='product_type'>
                                     <label class="col-sm-4 control-label">&nbsp;</label>
@@ -69,7 +85,7 @@
                                         </button>
                                     </div>
                                 </div>
-                                
+
                                 <!-- hidden textbox for brand name -->
                                 <div ng-show='addBrandname'>
                                     <div class="form-group">
