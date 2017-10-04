@@ -201,14 +201,15 @@ class DefaultController extends Controller {
         }
     }
 
+    //Update Billing Manually Through Postman Tool.
     public function actionUpdatebillingmanually() {
         $post = Yii::$app->request->post();
         if (!empty($post)) {
-            $status = 1;
+            $status = '1';
             if (isset($post['enc_status']) && $post['enc_status'] != '') {
                 $status = $post['enc_status'];
             }
-            $active_encounters = PatEncounter::find()->tenant($post['tenant_id'])->status($status)->active();
+            $active_encounters = PatEncounter::find()->tenant($post['tenant_id'])->status($status)->unfinalized()->active();
             if (isset($post['encounter_id']) && $post['encounter_id'] != '') {
                 $active_encounters->andWhere(['encounter_id' => $post['encounter_id']]);
             }
@@ -219,7 +220,9 @@ class DefaultController extends Controller {
                 $recurr_date = $post['recurr_date'];
             }
 
+            $counting = 0;
             foreach ($active_encounters as $key => $active_encounter) {
+                $counting++;
                 $nearest_admission = \common\models\PatAdmission::find()
                         ->andWhere(['encounter_id' => $active_encounter->encounter_id])
                         ->andWhere("DATE(status_date) <='" . $recurr_date . "'")
@@ -229,6 +232,7 @@ class DefaultController extends Controller {
 
                 Yii::$app->hepler->updateRecurring($nearest_admission, $recurr_date);
             }
+            return 'Recurring Charges Updated ' . $counting . ' Encounters ';
         }
     }
 
