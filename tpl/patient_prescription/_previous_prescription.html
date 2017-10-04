@@ -90,7 +90,7 @@
         </tr>
     </tbody>
 </table>
-<div id='print_previous_pres' ng-hide='true'>
+<div id='print_previous_pres' ng-hide="true">
     <table class="invoice" align="center">
         <tbody>
             <tr>
@@ -117,10 +117,32 @@
             <tbody>
                 <tr>
                     <td width="5%" rowspan="4"><io-barcode code="{{patientObj.patient_global_int_code}}" type="CODE128B" options="barcodeOptions" style='height:50px;-ms-transform: rotate(90deg);-webkit-transform: rotate(270deg); transform: rotate(270deg);'></io-barcode></td>
-    <td width="55%"><h2>{{patientObj.fullname}} / {{patientObj.patient_age_ym}}</h2></td>
-    <td width="40%" class="borderLeft">Pulse : <span class="lightColor">{{vital.pulse_rate|| '-'}}</span></td>
+    <!--    <td width="55%"><h2>{{patientObj.fullname}} / {{patientObj.patient_age_ym}}</h2></td>
+        <td width="40%" class="borderLeft">Pulse : <span class="lightColor">{{vital.pulse_rate|| '-'}}</span></td>-->
+    <td width="55%">
+        <table>
+            <tr><td><h2>{{patientObj.fullname}} / {{patientObj.patient_age_ym}}</h2></td></tr>
+            <tr><td>{{patientObj.patient_global_int_code}} 
+                    <span ng-if="patientObj.patient_category" style="background-color: {{patientObj.patient_category_color}}" class="greenBg">
+                        {{patientObj.patient_category| uppercase}}
+                    </span></td></tr>
+            <tr><td>Consultant : <span class="lightColor">{{data2.consultant_name}}</span></td></tr>
+            <tr><td>&nbsp;</td></tr>
+        </table>
+    </td>
+    <td width="40%" class="borderLeft">
+        <table>
+            <tr ng-if="(vitalcong.BP == 1)"><td>Blood pressure : <span class="lightColor">{{vital.blood_pressure_systolic|| '-'}} / {{vital.blood_pressure_diastolic|| '-'}} mmHg</span></td></tr>
+            <tr ng-if="(vitalcong.Temperature == 1)"><td>Temperature : <span class="lightColor">{{vital.temperature|| '-'}} °C</td></tr>
+            <tr ng-if="(vitalcong.Pulse == 1)"><td>Weight : <span class="lightColor">{{vital.weight|| '-'}} Kg</span></td></tr>
+            <tr ng-if="(vitalcong.Weight == 1)"><td>Pulse : <span class="lightColor">{{vital.pulse|| '-'}} Beats</span></td></tr>
+            <tr ng-if="(vitalcong.Height == 1)"><td>Height  : <span class="lightColor">{{vital.height|| '-'}} CM</span></td></tr>
+            <tr ng-if="(vitalcong.SP02 == 1)"><td>Sp02 : <span class="lightColor">{{vital.sp02|| '-'}}</span></td></tr>
+            <tr ng-if="(vitalcong.Pain_Score == 1)"><td>Pain Score : <span class="lightColor">{{vital.sp02|| '-'}}</span></td></tr>
+        </table>
+    </td>
 </tr>
-<tr>
+<!--<tr>
     <td>{{patientObj.patient_global_int_code}} 
         <span ng-if="patientObj.patient_category" style="background-color: {{patientObj.patient_category_color}}" class="greenBg">
             {{patientObj.patient_category| uppercase}}
@@ -135,16 +157,16 @@
 <tr>
     <td>&nbsp;</td>
     <td class="borderLeft">Weight : <span class="lightColor">{{vital.weight|| '-'}} Kg</span></td>
-</tr>
+</tr>-->
 </tbody> 
 </table>
 </td>
 </tr>
 <tr>
-    <td ng-if="print_allergies==1" colspan="3" style="padding: 8px;font-size: 20px;"><b>Allergies :</b> {{data2.allergies||'-'}}</td>
+    <td ng-if="print_allergies == 1" colspan="3" style="padding: 8px;font-size: 20px;"><b>Allergies :</b> {{data2.allergies||'-'}}</td>
 </tr>
 <tr>
-    <td ng-if="print_diagnosis==1" colspan="3" style="padding: 8px;font-size: 20px;"><b>Diagnosis :</b> {{data2.diag_name}}</td>
+    <td ng-if="print_diagnosis == 1" colspan="3" style="padding: 8px;font-size: 20px;"><b>Diagnosis :</b> {{data2.diag_name}}</td>
 </tr>
 <tr>
     <td class="prescriptionInfo">
@@ -165,7 +187,7 @@
             </thead>
             <tbody>
                 <tr ng-repeat="(gKey, row) in prescriptionItems2">
-                    <td><p><span style="font-weight: normal">{{gKey+1}}.</span> {{row.product_name}}</p><i>(<b>{{row.generic_name}}</b>)</i></td>
+                    <td><p><span style="font-weight: normal">{{gKey + 1}}.</span> {{row.product_name}}</p><i>(<b>{{row.generic_name}}</b>)</i></td>
                     <td class="txtCenter txtUpper" colspan="4" ng-if="row.freqType == 'txt'">{{ getFrequencyExists(row.frequency_name, 0, row.freqType)}}</td>
 
                     <td class="txtCenter" ng-if="row.freqType != 'txt'">
@@ -187,7 +209,7 @@
                         <span ng-bind-html="getFrequencyExists(row.frequency_name, 3, row.freqType)"></span>
                     </td>
                     <td>
-                        {{(row.product.description_name | uppercase) == 'SYRUP' ? "ml" : "" }}
+                        {{(row.product.description_name| uppercase) == 'SYRUP' ? "ml" : "" }}
                     </td>
 
                     <td class="txtCenter">{{row.number_of_days}}</td>
@@ -210,9 +232,11 @@
     <table style="position: absolute; bottom: 5px;">
         <tr>
             <td>
-                <p style="font-size: 15px;">Prescription ID  : <span class="lightColor">{{data2.pres_id}}</span></p>
-                <p style="font-size: 15px;">Issued by : <span class="lightColor">{{app.username}}</span></p>
-                <p style="font-size: 15px;">Issued at : <span class="lightColor">{{app.org_name}}</span></p>
+                <div ng-if="print_prescription_footer == 1">
+                    <p style="font-size: 15px;">Prescription ID  : <span class="lightColor">{{data2.pres_id}}</span></p>
+                    <p style="font-size: 15px;">Issued by : <span class="lightColor">{{app.username}}</span></p>
+                    <p style="font-size: 15px;">Issued at : <span class="lightColor">{{app.org_name}}</span></p>
+                </div>
                 <p ng-if="data2.next_visit != '0000-00-00'" style="font-size: 25px;"><b>* Next Visit - {{data2.next_visit| date: "dd-MMMM-y" }}</b></p>
             </td>
             <td>

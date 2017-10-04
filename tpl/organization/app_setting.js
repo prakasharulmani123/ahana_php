@@ -89,7 +89,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                             op_substring = "OP_V_";
                             ip_substring = "IP_V_";
 
-                            if (code == 'SA' || code == 'SD')
+                            if (code == 'SA' || code == 'SD' || code == 'SPF')
                             {
                                 $scope.config_print_data.push(conf);
                             } else

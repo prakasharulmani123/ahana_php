@@ -36,6 +36,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.app.settings.patientContentClass = 'app-content patient_content ';
         $scope.app.settings.patientFooterClass = 'app-footer';
         $scope.today = new Date();
+        $scope.vitalcong = {};
 
         //Start Init Variables, Objects, Arrays
         $scope.pres_status = 'current';
@@ -77,6 +78,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         $scope.all_encounters = actEnc;
                         $scope.data.encounter_id = $scope.enc.selected.encounter_id;
                         $scope.default_encounter_id = $scope.data.encounter_id;
+                        $scope.checkVitalaccess();
                     }
                 }, 'prescription');
             }
@@ -124,6 +126,25 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $event.stopPropagation();
             $scope.opened = true;
         };
+
+        $scope.checkVitalaccess = function () {
+            $scope.vital_enable_count = true;
+            patient_type = $scope.patientObj.encounter_type;
+            url = $rootScope.IRISOrgServiceUrl + '/patientvitals/checkvitalaccess?patient_type=' + patient_type;
+            $http.get(url)
+                    .success(function (vitals) {
+                        angular.forEach(vitals, function (row) {
+                            var listName = row.code;
+                            listName = listName.replace(/ /g, "_");  //Space replace to '_' like pain score convert to pain_score
+                            $scope.vitalcong[listName] = row.value;
+                            if (row.value == 1)
+                                $scope.vital_enable_count = false;
+                        });
+                    })
+                    .error(function () {
+                        $scope.errorData = "An Error has occured while loading patientvital!";
+                    });
+        }
 
         $scope.clearPrescription = function () {
 //            $scope.data.consultant_id = '';
@@ -289,6 +310,11 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $http.get($rootScope.IRISOrgServiceUrl + '/appconfiguration/getpresstatus?key=ALLERGIES')
                     .success(function (response) {
                         $scope.print_allergies = response.value;
+                    })
+
+            $http.get($rootScope.IRISOrgServiceUrl + '/appconfiguration/getpresstatus?key=Prescription Footer')
+                    .success(function (response) {
+                        $scope.print_prescription_footer = response.value;
                     })
 
             $http.get($rootScope.IRISOrgServiceUrl + '/appconfiguration/getpresstatus?key=DIAGNOSIS')
@@ -1853,35 +1879,35 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $scope.currPresMask4 = [];
             $scope.currPresMaskTxt = [];
             //if (frequency.length > 0) {
-                //check mask3 is exist, otherswise push default set
-                var mask3 = $filter('filter')(frequency, {freq_type: '3'});
-                if (mask3.length == 0) {
-                    $scope.currPresMask3.push($scope.defaultMask3);
-                } else {
-                    $scope.currPresMask3 = mask3;
-                }
+            //check mask3 is exist, otherswise push default set
+            var mask3 = $filter('filter')(frequency, {freq_type: '3'});
+            if (mask3.length == 0) {
+                $scope.currPresMask3.push($scope.defaultMask3);
+            } else {
+                $scope.currPresMask3 = mask3;
+            }
 
-                //check mask4 is exist, otherswise push default set
-                var mask4 = $filter('filter')(frequency, {freq_type: '4'});
-                if (mask4.length == 0) {
-                    $scope.currPresMask4.push($scope.defaultMask4);
-                } else {
-                    $scope.currPresMask4 = mask4;
-                }
+            //check mask4 is exist, otherswise push default set
+            var mask4 = $filter('filter')(frequency, {freq_type: '4'});
+            if (mask4.length == 0) {
+                $scope.currPresMask4.push($scope.defaultMask4);
+            } else {
+                $scope.currPresMask4 = mask4;
+            }
 
-                //check maskTxt is exist, otherswise push default set
-                var maskTxt = $filter('filter')(frequency, {freq_type: 'txt'});
-                if (maskTxt.length == 0) {
-                    $scope.currPresMaskTxt.push($scope.defaultMaskTxt);
-                } else {
-                    $scope.currPresMaskTxt = maskTxt;
-                }
+            //check maskTxt is exist, otherswise push default set
+            var maskTxt = $filter('filter')(frequency, {freq_type: 'txt'});
+            if (maskTxt.length == 0) {
+                $scope.currPresMaskTxt.push($scope.defaultMaskTxt);
+            } else {
+                $scope.currPresMaskTxt = maskTxt;
+            }
 
-                //Make "Custom" is a first option in the array. 
-                var maskCustomTxt = $filter('filter')($scope.currPresMaskTxt, {freq_name: 'Custom'});
-                if (maskCustomTxt.length == 0) {
-                    $scope.currPresMaskTxt.unshift($scope.defaultMaskTxt);
-                }
+            //Make "Custom" is a first option in the array. 
+            var maskCustomTxt = $filter('filter')($scope.currPresMaskTxt, {freq_name: 'Custom'});
+            if (maskCustomTxt.length == 0) {
+                $scope.currPresMaskTxt.unshift($scope.defaultMaskTxt);
+            }
             //}
             //Freq Typeahead concept 
             angular.forEach($scope.currPresMask3, function (value, key) {

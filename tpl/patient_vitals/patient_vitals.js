@@ -137,7 +137,7 @@ app.controller('VitalsController', ['$rootScope', '$scope', '$timeout', '$http',
                     .success(function (vitals) {
                         angular.forEach(vitals, function (row) {
                             var listName = row.code;
-                            listName = listName.replace(/ /g, "_");
+                            listName = listName.replace(/ /g, "_"); //Space replace to '_' like pain score convert to pain_score
                             $scope.vitalcong[listName] = row.value;
                             if (row.value == 1)
                                 $scope.vital_enable_count = false;
