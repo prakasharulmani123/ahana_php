@@ -1,4 +1,4 @@
-app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$anchorScroll', '$modal', '$log', '$q', function ($rootScope, $scope, $timeout, $http, $state, $anchorScroll, $modal, $log, $q) {
+app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$filter', '$anchorScroll', '$modal', '$log', '$q', function ($rootScope, $scope, $timeout, $http, $state, $filter, $anchorScroll, $modal, $log, $q) {
 
         $scope.app.settings.patientTopBar = false;
         $scope.app.settings.patientSideMenu = false;
@@ -31,6 +31,7 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
         };
 
         $scope.initForm = function () {
+            $scope.data = {};
             $scope.errorData = "";
             $scope.msg.successMessage = "";
 
@@ -76,7 +77,12 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
 
             $rootScope.commonService.GetPatientCateogryList('1', false, function (response) {
                 $scope.categories = response.patientcategoryList;
+                var result = $filter('filter')($scope.categories, {patient_short_code: 'SD'});
+                if (result.length > 0)
+                    $scope.data.PatPatient.patient_category_id = result[0].patient_cat_id;
             });
+
+
 
             $rootScope.commonService.GetCareTaker(function (response) {
                 $scope.careTakers = response;
@@ -246,10 +252,10 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
                     url: $rootScope.IRISOrgServiceUrl + '/patient/getdatefromage',
                     data: {'age': newValue, 'month': newValue2},
                 }).success(
-                    function (response) {
-                        var date_of_birth = moment(response.dob, 'YYYY-MM-DD').format('DD/MM/YYYY');
-                        $scope.data.PatPatient.patient_dob = date_of_birth;
-                    }
+                        function (response) {
+                            var date_of_birth = moment(response.dob, 'YYYY-MM-DD').format('DD/MM/YYYY');
+                            $scope.data.PatPatient.patient_dob = date_of_birth;
+                        }
                 );
             }
         }
@@ -365,8 +371,7 @@ app.controller('PatientRegisterController', ['$rootScope', '$scope', '$timeout',
                                 if (response.data.success === true) {
                                     $scope.displayedCollection.splice(index, 1);
                                     $scope.loadPatientsList();
-                                }
-                                else {
+                                } else {
                                     $scope.errorData = response.data.message;
                                 }
                             }
