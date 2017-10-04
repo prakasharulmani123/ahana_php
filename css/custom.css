@@ -533,6 +533,33 @@ out-patient-table .table > thead > tr > th label.i-checks {
     .hidden-md {
         display: none !important;
     }
+
+    .out-patient-table th
+    {
+        font-family: 'Roboto Condensed', sans-serif;
+        font-weight: 400;
+
+    }
+
+    .prescription-1 .pres-inner
+    {
+        width: 1200px;
+    }
+    .outpatient-2 .th-inner
+    {
+        width: 100px !important;
+        padding: 0px !important;
+    }
+
+    .outpatient-2 .th-inner .box{
+        padding: 0px !important; 
+    }
+
+    .outpatient-3 .th-inner
+    {
+        width: 100px !important;
+        padding: 0px !important;
+    }
 }
 
 .presc-heading {
@@ -685,7 +712,7 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
     text-overflow: ellipsis;
 }
 .other_document_summary colgroup {
-  display: none;
+    display: none;
 }
 
 .other-doc .panel-body {
@@ -693,5 +720,5 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
 }
 
 .other-doc p{
-     font-family:arial !important; 
+    font-family:arial !important; 
 }
