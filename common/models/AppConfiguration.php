@@ -194,6 +194,11 @@ class AppConfiguration extends RActiveRecord {
                 'value' => '1',
                 'notes' => 'Show Pain Score field in vital form',
             ],
+            'Prescription Footer' => [
+                'code' => 'SPF',
+                'value' => '1',
+                'notes' => 'Show prescription footer',
+            ],
         );
     }
 

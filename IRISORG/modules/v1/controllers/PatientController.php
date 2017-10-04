@@ -734,10 +734,10 @@ class PatientController extends ActiveController {
                 if ($enc['patient']['patient_guid'] == $post['guid'])
                     $location_array = $index;
             }
-            if ($location_array < (count($encounter) - 1)) {
+            if (isset($location_array) && $location_array < (count($encounter) - 1)) {
                 $next = $encounter[$location_array + 1]['patient']['patient_guid'];
             }
-            if (($location_array != 0)) {
+            if (isset($location_array) && ($location_array != 0)) {
                 $prev = $encounter[$location_array - 1]['patient']['patient_guid'];
             }
             $allencounterlist = $encounter;
