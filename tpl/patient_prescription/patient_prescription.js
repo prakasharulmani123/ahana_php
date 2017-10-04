@@ -935,8 +935,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             post_url = $rootScope.IRISOrgServiceUrl + '/patientprescription/saveprescription';
             method = 'POST';
             succ_msg = 'Prescription saved successfully';
-
-            $scope.data.next_visit = moment($scope.data.next_visit).format('YYYY-MM-DD');
+            if($scope.data.next_visit)
+                $scope.data.next_visit = moment($scope.data.next_visit).format('YYYY-MM-DD');
             if (!$scope.data.diag_id)
                 $scope.data.diag_text = $scope.diagnosis;
 
