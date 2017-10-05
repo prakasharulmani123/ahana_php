@@ -146,7 +146,7 @@ app.controller('saleReportController', ['$rootScope', '$scope', '$timeout', '$ht
 
             var reports = [];
             reports.push([
-                {text: branch_name, style: 'header', colSpan: 7}, "", "", "", "", "", ""
+                {text: branch_name, style: 'header', colSpan: 8}, "", "", "", "", "", "",""
             ]);
             reports.push([
                 {text: 'S.No', style: 'header'},
@@ -154,6 +154,7 @@ app.controller('saleReportController', ['$rootScope', '$scope', '$timeout', '$ht
                 {text: 'Patient Name', style: 'header'},
                 {text: 'UHID', style: 'header'},
                 {text: 'Group', style: 'header'},
+                {text: 'Sale Date', style: 'header'},
                 {text: 'Payment Type', style: 'header'},
                 {text: 'Sale Value', style: 'header'},
             ]);
@@ -171,6 +172,7 @@ app.controller('saleReportController', ['$rootScope', '$scope', '$timeout', '$ht
                     record.patient_name,
                     record.patient_uhid,
                     patient_group_name,
+                    record.sale_date,
                     sale_payment_type,
                     record.bill_amount,
                 ]);
@@ -187,6 +189,7 @@ app.controller('saleReportController', ['$rootScope', '$scope', '$timeout', '$ht
                     alignment: 'right',
                     colSpan: 6
                 },
+                "",
                 "",
                 "",
                 "",
@@ -238,7 +241,7 @@ app.controller('saleReportController', ['$rootScope', '$scope', '$timeout', '$ht
                 style: 'demoTable',
                 table: {
                     headerRows: 2,
-                    widths: ['auto', 'auto', '*', '*', '*', '*', '*'],
+                    widths: ['auto', 'auto', 'auto', 'auto','auto', 'auto', 'auto', '*'],
                     body: reports,
                     dontBreakRows: true,
                 },
