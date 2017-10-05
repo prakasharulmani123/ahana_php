@@ -90,7 +90,7 @@
         </tr>
     </tbody>
 </table>
-<div id='print_previous_pres' ng-hide="true">
+<div id='print_previous_pres'>
     <table class="invoice" align="center">
         <tbody>
             <tr>
@@ -98,13 +98,17 @@
                     <table>
                         <tbody>
                             <tr>
-                                <td width="48%"><span style="font-size: 20px; font-weight: bold">{{today| date: "dd-MMMM-y" }}</span></td>
+                                <td width="48%"></td>
                                 <td width="4%" align="center" class="logoTxt">
-                                    <span>R</span>
-                                    <span class="absoluteTxt">X</span>
+                                    <span style="font-weight: bold">R</span>
+                                    <span style="font-weight: bold" class="absoluteTxt">X</span>
                                 </td>
                                 <td width="48%" align="right">
-                        <io-barcode code="{{patientObj.patient_global_int_code}}" type="CODE128B" options="barcodeOptions" width="220px" height="70px"></io-barcode>
+                                    <table>
+                                        <tr align="right"><td><span style="font-size: 20px; margin-right: 37px;padding-bottom: 5px">{{today| date: "dd-MMMM-y" }}</span></td></tr>
+                                        <tr><td>&nbsp;</td></tr>
+                                        <tr align="right"><td><io-barcode code="{{patientObj.patient_global_int_code}}" type="CODE128B" options="barcodeOptions" width="220px" height="70px"></io-barcode></td></tr>
+                                    </table>
                 </td>
             </tr>
         </tbody> 
@@ -229,7 +233,7 @@
 </tfoot>-->
 </table>
 <div>
-    <table style="position: absolute; bottom: 5px;">
+    <table style="position: absolute; bottom: 30px;">
         <tr>
             <td>
                 <div ng-if="print_prescription_footer == 1">

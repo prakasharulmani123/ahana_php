@@ -4,7 +4,7 @@
         size: auto;   /* auto is the initial value */
 
         /* this affects the margin in the printer settings */
-        margin-top: 53mm;
+        margin-top: 46mm;
         margin-bottom: 20mm; 
     } /* try 0 */
     
@@ -42,7 +42,7 @@
     .printBtn { background:#3ebb95; color:#fff; border:none; padding:5px 20px; border-radius:2px; font-weight:bold; letter-spacing:0.5px; font-size:15px; cursor:pointer }
     .logoTxt { position:relative }
     .logoTxt span { color:#b1b1b1 }
-    .absoluteTxt { position:absolute; top:35px; left:20px }
+    .absoluteTxt { position:absolute; top:55px; left:20px }
     /*.lightColor { color:#6b6b6b }*/
     .nextVisit {font-size:15px; bottom: 5px;}
     /*prescription part End*/
