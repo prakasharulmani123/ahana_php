@@ -136,13 +136,13 @@
     </td>
     <td width="40%" class="borderLeft">
         <table>
-            <tr ng-if="(vitalcong.BP == 1)"><td>Blood pressure : <span class="lightColor">{{vital.blood_pressure_systolic|| '-'}} / {{vital.blood_pressure_diastolic|| '-'}} mmHg</span></td></tr>
-            <tr ng-if="(vitalcong.Temperature == 1)"><td>Temperature : <span class="lightColor">{{vital.temperature|| '-'}} °C</td></tr>
-            <tr ng-if="(vitalcong.Pulse == 1)"><td>Weight : <span class="lightColor">{{vital.weight|| '-'}} Kg</span></td></tr>
-            <tr ng-if="(vitalcong.Weight == 1)"><td>Pulse : <span class="lightColor">{{vital.pulse|| '-'}} Beats</span></td></tr>
-            <tr ng-if="(vitalcong.Height == 1)"><td>Height  : <span class="lightColor">{{vital.height|| '-'}} CM</span></td></tr>
-            <tr ng-if="(vitalcong.SP02 == 1)"><td>Sp02 : <span class="lightColor">{{vital.sp02|| '-'}}</span></td></tr>
-            <tr ng-if="(vitalcong.Pain_Score == 1)"><td>Pain Score : <span class="lightColor">{{vital.sp02|| '-'}}</span></td></tr>
+            <tr ng-if="((vitalcong.BP == 1) && ((vital.blood_pressure_systolic) || (vital.blood_pressure_diastolic)))"><td>Blood pressure : <span class="lightColor">{{vital.blood_pressure_systolic|| '-'}} / {{vital.blood_pressure_diastolic|| '-'}} mmHg</span></td></tr>
+            <tr ng-if="((vitalcong.Temperature == 1) && (vital.temperature))"><td>Temperature : <span class="lightColor">{{vital.temperature|| '-'}} °C</td></tr>
+            <tr ng-if="((vitalcong.Pulse == 1) && (vital.pulse))"><td>Pulse : <span class="lightColor">{{vital.pulse|| '-'}} Beats</span></td></tr>
+            <tr ng-if="((vitalcong.Weight == 1) && (vital.weight))"><td>Weight : <span class="lightColor">{{vital.weight|| '-'}} Kg</span></td></tr>
+            <tr ng-if="((vitalcong.Height == 1) && (vital.height))"><td>Height  : <span class="lightColor">{{vital.height|| '-'}} CM</span></td></tr>
+            <tr ng-if="((vitalcong.SP02 == 1) && (vital.sp02))"><td>Sp02 : <span class="lightColor">{{vital.sp02|| '-'}}</span></td></tr>
+            <tr ng-if="((vitalcong.Pain_Score == 1) && (vital.pain_score))"><td>Temperature : <span class="lightColor">{{vital.pain_score|| '-'}}</td></tr>
         </table>
     </td>
 </tr>
