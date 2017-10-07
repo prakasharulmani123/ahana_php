@@ -269,7 +269,7 @@ class PatAppointment extends RActiveRecord {
 //                $since_start = $start_date->diff(new DateTime(date('Y-m-d H:i:s')));
 
         $default_elapsed_time = 3600; //One Hour
-        $get_elapsed_time = AppConfiguration::getConfigurationByKey('ELAPSED_TIME');
+        $get_elapsed_time = AppConfiguration::getConfigurationByCode('ET');
         if (isset($get_elapsed_time))
             $default_elapsed_time = $get_elapsed_time->value;
 
@@ -287,7 +287,7 @@ class PatAppointment extends RActiveRecord {
 //                $since_start = $start_date->diff(new DateTime(date('Y-m-d H:i:s')));
 
         $default_elapsed_time = 3600; //One Hour
-        $get_elapsed_time = AppConfiguration::getConfigurationByKey('ELAPSED_TIME');
+        $get_elapsed_time = AppConfiguration::getConfigurationByCode('ET');
         if (isset($get_elapsed_time))
             $default_elapsed_time = $get_elapsed_time->value;
 

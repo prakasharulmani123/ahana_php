@@ -54,4 +54,10 @@ class AppconfigurationController extends ActiveController {
         $get = Yii::$app->getRequest()->get();
         return $modelClass::getConfigurationByKey($get['key']);
     }
+    
+    public function actionGetpresstatusbycode() {
+        $modelClass = $this->modelClass;
+        $get = Yii::$app->getRequest()->get();
+        return $modelClass::getConfigurationBycode($get['code']);
+    }
 }

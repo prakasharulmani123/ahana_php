@@ -210,5 +210,9 @@ class AppConfiguration extends RActiveRecord {
         $result = self::find()->tenant()->active()->andWhere(['key' => $key])->one();
         return $result;
     }
-
+    
+    public static function getConfigurationByCode($code) {
+        $result = self::find()->tenant()->active()->andWhere(['code' => $code])->one();
+        return $result;
+    }
 }
