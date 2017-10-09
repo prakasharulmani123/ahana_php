@@ -101,7 +101,7 @@ class PatEncounter extends RActiveRecord {
                     ])
                     ->encounterType($this->encounter_type)
                     ->andWhere("DATE(pat_encounter.encounter_date) <= '{$date}'")
-                    ->andWhere("DATE(pat_admission.status_date) >= '{$date}'")
+                    ->andWhere("pat_admission.status_date >= '{$this->encounter_date}'")
                     ->one();
 
             if (!empty($result))
