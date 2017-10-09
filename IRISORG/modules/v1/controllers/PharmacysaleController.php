@@ -116,7 +116,7 @@ class PharmacysaleController extends ActiveController {
                 $result->joinWith(['patient.patGlobalPatient']);
                 $result->andFilterWhere($searchCondition);
             }
-            $result->groupBy(['patient_name', 'encounter_id']);
+            $result->groupBy(['patient_name', 'patient_id', 'encounter_id']);
             $result->limit($get['pageSize'])->offset($offset)->orderBy(['created_at' => SORT_DESC]);
             $sales = $result->all();
 
@@ -128,7 +128,7 @@ class PharmacysaleController extends ActiveController {
                 $resultCount->joinWith(['patient.patGlobalPatient']);
                 $resultCount->andFilterWhere($searchCondition);
             }
-            $resultCount->groupBy(['patient_name', 'encounter_id']);
+            $resultCount->groupBy(['patient_name', 'patient_id', 'encounter_id']);
             $totalCount = $resultCount->count();
 
             foreach ($sales as $key => $sale) {
@@ -136,6 +136,8 @@ class PharmacysaleController extends ActiveController {
 
                 if (!empty($sale->encounter_id))
                     $sale_item = PhaSale::find()->tenant()->active()->andWhere(['encounter_id' => $sale->encounter_id, 'payment_type' => $get['payment_type']]);
+                else if(!empty($sale->patient_id))
+                    $sale_item = PhaSale::find()->tenant()->active()->andWhere(['patient_id' => $sale->patient_id, 'payment_type' => $get['payment_type']]);
                 else
                     $sale_item = PhaSale::find()->tenant()->active()->andWhere(['patient_name' => $sale->patient_name, 'payment_type' => $get['payment_type']]);
 
