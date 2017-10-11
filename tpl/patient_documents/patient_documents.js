@@ -886,7 +886,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                         $scope.other_document = other_document;
                         //$timeout(function () {
                         $('#printThis').printThis({
-                            pageTitle: "Ahana",
+                            pageTitle: $scope.app.org_name,
                             debug: false,
                             importCSS: false,
                             importStyle: false,
