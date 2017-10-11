@@ -1756,7 +1756,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $scope.presDetail(pres_id).then(function () {
                 delete $scope.data2.items;
                 $('#print_previous_pres').printThis({
-                    pageTitle: "Ahana",
+                    pageTitle: $scope.app.org_name,
                     debug: false,
                     importCSS: false,
                     importStyle: false,
