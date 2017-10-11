@@ -136,7 +136,7 @@ class XmlController extends Controller {
     public function actionSetattrvalue() {
         $node = 'FIELD';
         $attr = 'id';
-        $find = 'duration_of_relationship';
+        $find = 'txtLMP';
         //$replace = 'Higher_Mental_Functions';
 //        $node = 'LISTITEM';
 //        $attr = 'value';
@@ -161,7 +161,8 @@ class XmlController extends Controller {
                     $targets = $xml->xpath($xpath);
                     if (!empty($targets)) {
                         foreach ($targets as $target) {
-                            $target->PROPERTIES->PROPERTY[3] = 'return isNumericDotKeyStroke(event)';
+                            $target->PROPERTIES->PROPERTY[4] = 10;
+                            $target->PROPERTIES->PROPERTY[3] = 'return isNumericDateStroke(event)';
                             //$target->PROPERTIES->PROPERTY[0] = $target->PROPERTIES->PROPERTY[0] . '[]';
                             //$target['type'] = 'CheckBoxList';
                         }
