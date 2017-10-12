@@ -37,6 +37,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.app.settings.patientFooterClass = 'app-footer';
         $scope.today = new Date();
         $scope.vitalcong = {};
+        $scope.prescription_print = {};
 
         //Start Init Variables, Objects, Arrays
         $scope.pres_status = 'current';
@@ -306,21 +307,29 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     .success(function (response) {
                         $scope.presc_stock_status = response.value;
                     })
-
-            $http.get($rootScope.IRISOrgServiceUrl + '/appconfiguration/getpresstatus?key=ALLERGIES')
+                    
+            $http.get($rootScope.IRISOrgServiceUrl + '/appconfiguration/getpresstatusbygroup?group=prescription_print')
                     .success(function (response) {
-                        $scope.print_allergies = response.value;
+                        angular.forEach(response, function (row) {
+                            var listName = row.code;
+                            $scope.prescription_print[listName] = row.value;
+                        });
                     })
 
-            $http.get($rootScope.IRISOrgServiceUrl + '/appconfiguration/getpresstatus?key=Prescription Footer')
-                    .success(function (response) {
-                        $scope.print_prescription_footer = response.value;
-                    })
-
-            $http.get($rootScope.IRISOrgServiceUrl + '/appconfiguration/getpresstatus?key=DIAGNOSIS')
-                    .success(function (response) {
-                        $scope.print_diagnosis = response.value;
-                    })
+//            $http.get($rootScope.IRISOrgServiceUrl + '/appconfiguration/getpresstatus?key=ALLERGIES')
+//                    .success(function (response) {
+//                        $scope.print_allergies = response.value;
+//                    })
+//
+//            $http.get($rootScope.IRISOrgServiceUrl + '/appconfiguration/getpresstatus?key=Prescription Footer')
+//                    .success(function (response) {
+//                        $scope.print_prescription_footer = response.value;
+//                    })
+//
+//            $http.get($rootScope.IRISOrgServiceUrl + '/appconfiguration/getpresstatus?key=DIAGNOSIS')
+//                    .success(function (response) {
+//                        $scope.print_diagnosis = response.value;
+//                    })
 
             $http.get($rootScope.IRISOrgServiceUrl + '/genericname')
                     .success(function (response) {
