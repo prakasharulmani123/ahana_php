@@ -135,10 +135,9 @@ class PatientdocumentsController extends ActiveController {
                     $field_name = str_replace("[]", "", $value['name']);
                     $post[$field_name][] = str_replace("&nbsp;", "&#160;", $value['value']);
                 } else {
-                    if($value['name'] != 'history_presenting_illness') {
+                    if ($value['name'] != 'history_presenting_illness') {
                         $post[$value['name']] = str_replace(["&nbsp;", "&"], ["&#160;", "&amp;"], $value['value']);
-                    }
-                    else {
+                    } else {
                         $post[$value['name']] = $value['value'];
                     }
                 }
@@ -203,10 +202,10 @@ class PatientdocumentsController extends ActiveController {
             }
             if (isset($post['status']))
                 $patient_document->status = $post['status'];
-            
-            if(isset($post['audit_log']))
+
+            if (isset($post['audit_log']))
                 $patient_document->audit_log = $post['audit_log'];
-                
+
             $patient_document->document_xml = $result;
 
             $patient_document->save(false);
@@ -547,10 +546,10 @@ class PatientdocumentsController extends ActiveController {
                                                                 $list_value->attributes()['Selected'] = 'false';
                                                             }
                                                         }
-                                                    } elseif ($type == 'DropDownList' || $type == 'RadioButtonList') {
+                                                    } elseif ($type == 'DropDownList' || $type == 'RadioButtonList' || $type == 'DropDowntextbox') {
                                                         $field->attributes()['Backcontrols'] = 'hide';
 //                                                $radio_field_id = ['radio_pb_illnesstype'];
-                                                        $list_values_array = ['Other Illness'];
+                                                        $list_values_array = ['Other Illness', 'Others'];
 
                                                         $post_referral_details = $value;
                                                         $list_referral_details = $field->LISTITEMS->LISTITEM;
@@ -1722,16 +1721,39 @@ class PatientdocumentsController extends ActiveController {
                                 if ($x->attributes()->type == 'RadGrid' && $x->attributes()->AddButtonTableId == $table_id) {
 
                                     $text_box = 'txtPBDuration' . $rowCount; //Textbox1 Name
+                                    $text_box1 = 'substance_other' . $rowCount; //Textbox1 Name
                                     $dropdown = 'ddl_pb_substance' . $rowCount; //DDL Name
                                     $dropdown2 = 'DDLPBDuration' . $rowCount; //DDL Name
                                     $checkbox = 'CBPBpattern' . $rowCount; //DDL Name
+                                    $back_div = 'subtextboxDiv' . $rowCount;
 
                                     $columns = $x->addChild('COLUMNS');
 
                                     //FIELD 1
                                     $field1 = $columns->addChild('FIELD');
                                     $field1->addAttribute('id', $dropdown);
-                                    $field1->addAttribute('type', 'DropDownList');
+                                    $field1->addAttribute('type', 'DropDowntextbox');
+                                    $field1->addAttribute('Backcontrols', 'hide');
+                                    $field1->addAttribute('Backdivid', $back_div);
+                                    
+                                    $subfield = $field1->addChild('FIELD');
+                                    $subfield->addAttribute('id', $text_box1);
+                                    $subfield->addAttribute('type', 'TextBox');
+                                    $subfield->addAttribute('label', '');
+
+                                    $subproperty = $subfield->addChild('PROPERTIES');
+                                    $subproperty1 = $subproperty->addChild('PROPERTY', $text_box1);
+                                    $subproperty1->addAttribute('name', 'id');
+
+                                    $subproperty2 = $subproperty->addChild('PROPERTY', $text_box1);
+                                    $subproperty2->addAttribute('name', 'name');
+
+                                    $subproperty3 = $subproperty->addChild('PROPERTY', 'form-control');
+                                    $subproperty3->addAttribute('name', 'class');
+
+                                    $subproperty4 = $subproperty->addChild('PROPERTY', 'Substance Notes');
+                                    $subproperty4->addAttribute('name', 'placeholder');
+
 
                                     $properties1 = $field1->addChild('PROPERTIES');
 
@@ -1743,6 +1765,9 @@ class PatientdocumentsController extends ActiveController {
 
                                     $property22 = $properties1->addChild('PROPERTY', 'form-control');
                                     $property22->addAttribute('name', 'class');
+
+                                    $property22 = $properties1->addChild('PROPERTY', "OThersDDtextvisible(this.id,this.value,'$back_div','block')");
+                                    $property22->addAttribute('name', 'onchange');
 
                                     $listitems = $field1->addChild('LISTITEMS');
 

@@ -130,7 +130,8 @@
                 </FIELD>
             </FIELD>
             
-            <FIELD id="martial_status" type="RadioButtonList" label="Marital Status" required="true" Backcontrols="hide" Backdivid="maritalnote_div"><FIELD id="maritalnote" type="TextBox" label="Marital Notes: ">
+            <FIELD id="martial_status" type="RadioButtonList" label="Marital Status" required="true" Backcontrols="hide" Backdivid="maritalnote_div">
+                <FIELD id="maritalnote" type="TextBox" label="Marital Notes: ">
                     <PROPERTIES>
                         <PROPERTY name="id">maritalnote</PROPERTY>
                         <PROPERTY name="name">maritalnote</PROPERTY>
@@ -1794,12 +1795,20 @@
                             <TH>Pattern</TH>
                         </HEADER>
                         <COLUMNS>
-                            <FIELD id="ddl_pb_substance" type="DropDownList">
+                            <FIELD id="ddl_pb_substance" type="DropDowntextbox" Backcontrols="hide" Backdivid="subtextboxDiv"><FIELD id="substance_other" type="TextBox" label="">
+                                    <PROPERTIES>
+                                        <PROPERTY name="id">substance_other</PROPERTY>
+                                        <PROPERTY name="name">substance_other</PROPERTY>
+                                        <PROPERTY name="class">form-control</PROPERTY>
+                                        <PROPERTY name="placeholder">Substance Notes</PROPERTY>
+                                    </PROPERTIES>
+                                </FIELD>
                                 <PROPERTIES>
                                     <PROPERTY name="id">ddl_pb_substance</PROPERTY>
                                     <PROPERTY name="name">ddl_pb_substance</PROPERTY>
                                     <PROPERTY name="class">form-control</PROPERTY>
-                                </PROPERTIES>
+                                
+                                <PROPERTY name="onchange">OThersDDtextvisible(this.id,this.value,'subtextboxDiv','block')</PROPERTY></PROPERTIES>
                                 <LISTITEMS>
                                     <LISTITEM value="" Selected="False">--Select--</LISTITEM>
                                     <LISTITEM value="Smoking" Selected="False">Smoking</LISTITEM>
@@ -2058,7 +2067,8 @@
                 
                 
                 
-                <FIELD id="CBGesturingposturing" header2Class="General_Appearance_Behaviour" type="CheckBoxList" label="Gesturing and posturing" Backcontrols="hide" Backdivid="txtGesturingposturingDiv"><FIELD id="checkGesturingposturing" type="CheckBoxList" label="">
+                <FIELD id="CBGesturingposturing" header2Class="General_Appearance_Behaviour" type="CheckBoxList" label="Gesturing and posturing" Backcontrols="hide" Backdivid="txtGesturingposturingDiv">
+                    <FIELD id="checkGesturingposturing" type="CheckBoxList" label="">
                         <PROPERTIES>
                             <PROPERTY name="name">checkGesturingposturing[]</PROPERTY>
                         </PROPERTIES>

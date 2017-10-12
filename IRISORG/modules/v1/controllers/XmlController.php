@@ -92,15 +92,15 @@ class XmlController extends Controller {
 
     public function actionInsertnewfield() {
         //$xpath = "/FIELDS/GROUP/PANELBODY/FIELD[@id='name']";
-        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD[@id='martial_status']";
-        $insert = '<FIELD id="maritalnote" type="TextBox" label="Marital Notes: ">
-                    <PROPERTIES>
-                        <PROPERTY name="id">maritalnote</PROPERTY>
-                        <PROPERTY name="name">maritalnote</PROPERTY>
-                        <PROPERTY name="class">form-control</PROPERTY>
-                        <PROPERTY name="placeholder">Marital Notes</PROPERTY>
-                    </PROPERTIES>
-                </FIELD>';
+        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@id='ddl_pb_substance']";
+        $insert = '<FIELD id="substance_other" type="TextBox" label="">
+                                    <PROPERTIES>
+                                        <PROPERTY name="id">substance_other</PROPERTY>
+                                        <PROPERTY name="name">substance_other</PROPERTY>
+                                        <PROPERTY name="class">form-control</PROPERTY>
+                                        <PROPERTY name="placeholder">Substance Notes</PROPERTY>
+                                    </PROPERTIES>
+                                </FIELD>';
 
 
         $all_files = $this->getAllFiles();
@@ -136,7 +136,7 @@ class XmlController extends Controller {
     public function actionSetattrvalue() {
         $node = 'FIELD';
         $attr = 'id';
-        $find = 'txtMenopause';
+        $find = 'ddl_pb_substance';
         //$replace = 'Higher_Mental_Functions';
 //        $node = 'LISTITEM';
 //        $attr = 'value';
@@ -161,16 +161,15 @@ class XmlController extends Controller {
                     $targets = $xml->xpath($xpath);
                     if (!empty($targets)) {
                         foreach ($targets as $target) {
-                            $target->PROPERTIES->PROPERTY[4] = 10;
-                            $target->PROPERTIES->PROPERTY[3] = 'return isNumericDateStroke(event)';
-                            //$target->PROPERTIES->PROPERTY[0] = $target->PROPERTIES->PROPERTY[0] . '[]';
-                            //$target['type'] = 'CheckBoxList';
+                            $target['type'] = 'DropDowntextbox';
+                            $target->addAttribute('Backcontrols', 'hide');
+                            $target->addAttribute('Backdivid', 'subtextboxDiv');
+                            $property22 = $target->PROPERTIES->addChild('PROPERTY', "OThersDDtextvisible(this.id,this.value,'subtextboxDiv','block')");
+                            $property22->addAttribute('name', 'onchange');
+                            
                         }
                     }
-                    //print_r($targets); die;
-                    //print_r($target); die;
                     $xml->asXML($files);
-                    //die;
                 }
             }
         }
@@ -235,7 +234,7 @@ class XmlController extends Controller {
         $replace = 'Presenting Complaints (In chronological order)';
         //$xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@type='RadGrid' and @ADDButtonID='RGPhamacoadd']/HEADER/TH[3]";
         $xpath = "/FIELDS/GROUP/PANELHEADER";
-        
+
         $all_files = $this->getAllFiles();
         $error_files = [];
         if (!empty($all_files)) {
@@ -369,7 +368,7 @@ class XmlController extends Controller {
                                 $list_item->addAttribute('onclick', "OThersvisible(this.id, 'maritalnote_div');");
                             }
                         }
-                       // print_r($targets);
+                        // print_r($targets);
                     }
                     $xml->asXML($files);
                     //die;
@@ -406,7 +405,7 @@ class XmlController extends Controller {
                             $target[0] = 'Limp';
                         }
                     }
-                    $xml->asXML($files);//die;
+                    $xml->asXML($files); //die;
                 }
             }
         }
