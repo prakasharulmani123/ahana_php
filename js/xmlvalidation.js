@@ -17,6 +17,16 @@ function OThersvisible(current_id, target_id, status) {
     }
 }
 
+function OThersDDtextvisible(current_id, current_value, target_id, status) {
+    if (current_value == 'Others') {
+        $("#" + target_id).removeClass('hide');
+        $("#" + target_id).addClass('show');
+    } else {
+        $("#" + target_id).removeClass('show');
+        $("#" + target_id).addClass('hide');
+    }
+}
+
 function isNumericKeyStroke(evt) {
     evt = (evt) ? evt : window.event;
     var charCode = (evt.which) ? evt.which : evt.keyCode;
