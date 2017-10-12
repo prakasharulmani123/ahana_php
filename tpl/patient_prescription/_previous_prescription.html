@@ -167,10 +167,10 @@
 </td>
 </tr>
 <tr>
-    <td ng-if="print_allergies == 1" colspan="3" style="padding: 8px;font-size: 20px;"><b>Allergies :</b> {{data2.allergies||'-'}}</td>
+    <td ng-if="prescription_print.SA == 1" colspan="3" style="padding: 8px;font-size: 20px;"><b>Allergies :</b> {{data2.allergies||'-'}}</td>
 </tr>
 <tr>
-    <td ng-if="print_diagnosis == 1" colspan="3" style="padding: 8px;font-size: 20px;"><b>Diagnosis :</b> {{data2.diag_name}}</td>
+    <td ng-if="prescription_print.SD == 1" colspan="3" style="padding: 8px;font-size: 20px;"><b>Diagnosis :</b> {{data2.diag_name}}</td>
 </tr>
 <tr>
     <td class="prescriptionInfo">
@@ -239,10 +239,10 @@
     <table style="position: absolute; bottom: 30px;">
         <tr>
             <td>
-                <div ng-if="print_prescription_footer == 1">
-                    <p style="font-size: 15px;">Prescription ID  : <span class="lightColor">{{data2.pres_id}}</span></p>
-                    <p style="font-size: 15px;">Issued by : <span class="lightColor">{{app.username}}</span></p>
-                    <p style="font-size: 15px;">Issued at : <span class="lightColor">{{app.org_name}}</span></p>
+                <div>
+                    <p ng-if="prescription_print.PID == 1" style="font-size: 15px;">Prescription ID  : <span class="lightColor">{{data2.pres_id}}</span></p>
+                    <p ng-if="prescription_print.PIB == 1" style="font-size: 15px;">Issued by : <span class="lightColor">{{app.username}}</span></p>
+                    <p ng-if="prescription_print.PIA == 1" style="font-size: 15px;">Issued at : <span class="lightColor">{{app.org_name}}</span></p>
                 </div>
                 <p style="font-size: 25px;"><b>* Next Visit : {{(data2.next_visit| date: "dd-MMMM-y") || "-" }}</b></p>
             </td>

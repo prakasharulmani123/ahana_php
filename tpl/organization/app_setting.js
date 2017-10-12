@@ -89,19 +89,34 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                             op_substring = "OP_V_";
                             ip_substring = "IP_V_";
 
-                            if (code == 'SA' || code == 'SD' || code == 'SPF')
-                            {
+                            if (conf.group == 'prescription_print') {
                                 $scope.config_print_data.push(conf);
-                            } else
-                            {
-                                if (string.indexOf(substring) > -1 == false) {
-                                    if ((string.indexOf(op_substring) > -1 == false) && (string.indexOf(ip_substring) > -1 == false)) {
-                                        $scope.config_data.push(conf);
+                            } else {
+                                if (!conf.group) {
+                                    if (string.indexOf(substring) > -1 == false) {
+                                        if ((string.indexOf(op_substring) > -1 == false) && (string.indexOf(ip_substring) > -1 == false)) {
+                                            $scope.config_data.push(conf);
+                                        }
+                                    } else {
+                                        $scope.config_share_data.push(conf);
                                     }
-                                } else {
-                                    $scope.config_share_data.push(conf);
                                 }
+
                             }
+
+//                            if (code == 'SA' || code == 'SD' || code == 'SPF')
+//                            {
+//                                $scope.config_print_data.push(conf);
+//                            } else
+//                            {
+//                                if (string.indexOf(substring) > -1 == false) {
+//                                    if ((string.indexOf(op_substring) > -1 == false) && (string.indexOf(ip_substring) > -1 == false)) {
+//                                        $scope.config_data.push(conf);
+//                                    }
+//                                } else {
+//                                    $scope.config_share_data.push(conf);
+//                                }
+//                            }
                         });
 
                         $scope.isLoading = false;
