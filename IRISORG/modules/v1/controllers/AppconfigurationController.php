@@ -60,4 +60,10 @@ class AppconfigurationController extends ActiveController {
         $get = Yii::$app->getRequest()->get();
         return $modelClass::getConfigurationBycode($get['code']);
     }
+    
+    public function actionGetpresstatusbygroup() {
+        $modelClass = $this->modelClass;
+        $get = Yii::$app->getRequest()->get();
+        return $modelClass::getConfigurationBygroup($get['group']);
+    }
 }

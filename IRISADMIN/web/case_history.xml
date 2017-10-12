@@ -1612,8 +1612,8 @@
                             <PROPERTY name="id">txtMenopause</PROPERTY>
                             <PROPERTY name="name">txtMenopause</PROPERTY>
                             <PROPERTY name="class">form-control</PROPERTY>
-                            <PROPERTY name="onkeydown">return isNumericKeyStroke(event)</PROPERTY>
-                            <PROPERTY name="maxlength">3</PROPERTY>
+                            <PROPERTY name="onkeydown">return isNumericDateStroke(event)</PROPERTY>
+                            <PROPERTY name="maxlength">10</PROPERTY>
                             <PROPERTY name="title">Type only numbers</PROPERTY>
                         </PROPERTIES>
                     </FIELD>

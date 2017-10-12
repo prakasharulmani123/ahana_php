@@ -32,7 +32,7 @@ class AppConfiguration extends RActiveRecord {
         return [
                 [['value'], 'required'],
                 [['tenant_id'], 'integer'],
-                [['key', 'value', 'notes'], 'string']
+                [['key', 'value', 'notes', 'group'], 'string']
         ];
     }
 
@@ -45,6 +45,7 @@ class AppConfiguration extends RActiveRecord {
             'tenant_id' => 'Tenant ID',
             'key' => 'Key',
             'value' => 'Value',
+            'group' => 'Group'
         ];
     }
 
@@ -116,11 +117,13 @@ class AppConfiguration extends RActiveRecord {
             ],
             'ALLERGIES' => [
                 'code' => 'SA',
+                'group' => 'prescription_footer',
                 'value' => '1',
                 'notes' => 'Show Allergies',
             ],
             'DIAGNOSIS' => [
                 'code' => 'SD',
+                'group' => 'prescription_footer',
                 'value' => '1',
                 'notes' => 'Show Diagnosis',
             ],
@@ -194,10 +197,23 @@ class AppConfiguration extends RActiveRecord {
                 'value' => '1',
                 'notes' => 'Show Pain Score field in vital form',
             ],
-            'Prescription Footer' => [
-                'code' => 'SPF',
+            'Prescription ID' => [
+                'group'=>'prescription_print',
+                'code' => 'PID',
                 'value' => '1',
-                'notes' => 'Show prescription footer',
+                'notes' => 'Show prescription id',
+            ],
+            'Issued By' => [
+                'group'=>'prescription_print',
+                'code' => 'PIB',
+                'value' => '1',
+                'notes' => 'Show issued by',
+            ],
+            'Issued At' => [
+                'group'=>'prescription_print',
+                'code' => 'PIA',
+                'value' => '1',
+                'notes' => 'Show issued at',
             ],
         );
     }
@@ -210,9 +226,15 @@ class AppConfiguration extends RActiveRecord {
         $result = self::find()->tenant()->active()->andWhere(['key' => $key])->one();
         return $result;
     }
-    
+
     public static function getConfigurationByCode($code) {
         $result = self::find()->tenant()->active()->andWhere(['code' => $code])->one();
         return $result;
     }
+
+    public static function getConfigurationByGroup($group) {
+        $result = self::find()->tenant()->active()->andWhere(['group' => $group])->all();
+        return $result;
+    }
+
 }
