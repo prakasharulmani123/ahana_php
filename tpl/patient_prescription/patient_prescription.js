@@ -307,7 +307,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     .success(function (response) {
                         $scope.presc_stock_status = response.value;
                     })
-                    
+
             $http.get($rootScope.IRISOrgServiceUrl + '/appconfiguration/getpresstatusbygroup?group=prescription_print')
                     .success(function (response) {
                         angular.forEach(response, function (row) {
@@ -463,6 +463,11 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $scope.products = [];
             $scope.addData = {};
             $scope.addData.drug_class = drug;
+            //reupdate master products
+            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct?fields=product_id,full_name,generic_id')
+                    .success(function (products) {
+                        $scope.all_products = products;
+                    });
             $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/getgenericlistbydrugclass?drug_class_id=' + drug.drug_class_id + '&addtfields=presc_search')
                     .success(function (response) {
                         $scope.generics = response.genericList;
@@ -762,10 +767,12 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                 qty_count = $scope.calculate_qty(prescription.frequency, 1, product.product_description_id, product.description_name);
                                 if (qty_count > 0) {
                                     var no_of_days = $scope.data.number_of_days;
-                                    if (prescription.route) {
+                                    if (typeof prescription.route != 'undefined' && prescription.route != '') {
                                         route = prescription.route;
                                     } else {
-                                        route = (product.description_routes) ? product.description_routes[0].route_name : '';
+                                        route = '';
+                                        if (product.description_routes.length > 0)
+                                            route = product.description_routes[0].route_name;
                                     }
                                     if (typeof prescription.frequency == 'undefined')
                                         prescription.frequency = '0-0-0';
@@ -944,7 +951,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             post_url = $rootScope.IRISOrgServiceUrl + '/patientprescription/saveprescription';
             method = 'POST';
             succ_msg = 'Prescription saved successfully';
-            if($scope.data.next_visit)
+            if ($scope.data.next_visit)
                 $scope.data.next_visit = moment($scope.data.next_visit).format('YYYY-MM-DD');
             if (!$scope.data.diag_id)
                 $scope.data.diag_text = $scope.diagnosis;
