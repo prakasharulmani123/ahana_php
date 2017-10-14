@@ -647,6 +647,9 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $scope.getRelatedProducts(value.generic_id).then(function () {
                 qty_count = $scope.calculate_qty(value.frequency_name, value.number_of_days, value.product.product_description_id, value.product.description_name);
                 var no_of_days = $scope.data.number_of_days;
+                if(!no_of_days){
+                    no_of_days = '0';
+                }
                 if (value.food_type) {
                     var food_type = value.food_type;
                 } else {
@@ -767,6 +770,9 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                 qty_count = $scope.calculate_qty(prescription.frequency, 1, product.product_description_id, product.description_name);
                                 if (qty_count > 0) {
                                     var no_of_days = $scope.data.number_of_days;
+                                    if (!no_of_days) {
+                                        var no_of_days = 0;
+                                    }
                                     if (typeof prescription.route != 'undefined' && prescription.route != '') {
                                         route = prescription.route;
                                     } else {
