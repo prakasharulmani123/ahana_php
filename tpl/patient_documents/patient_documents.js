@@ -301,7 +301,11 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                         $scope.loadbar('hide');
                         if (response.data.success == true) {
                             callback(response);
+                        } else {
+                            alert("Sorry, you can't create a document");
+                            $state.go("patient.document", {id: $state.params.id});
                         }
+
                     }
             );
         };
