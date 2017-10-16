@@ -7,6 +7,7 @@ use common\models\PatDocumentTypes;
 use common\models\PatPatient;
 use common\models\CoAuditLog;
 use common\models\VDocuments;
+use common\models\PatEncounter;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -181,6 +182,11 @@ class PatientdocumentsController extends ActiveController {
         ];
         $attr = array_merge($post, $attr);
         $patient_document->attributes = $attr;
+        
+        $encounter = PatEncounter::findOne(['encounter_id' => $post['encounter_id']]);
+        if($encounter->patient_id != $patient->patient_id) {
+            return ['success' => false];
+        }
 
         if ($patient_document->validate() || $post['novalidate'] == 'true' || $post['novalidate'] == '1') {
             $result = $this->prepareXml($xml, $post);
