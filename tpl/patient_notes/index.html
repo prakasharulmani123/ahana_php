@@ -24,14 +24,14 @@
 
                     <div class="col-sm-3">
                         <button ng-click="filterdate = '';
-                                    loadPatNotesList()" class="btn m-b-xs  btn-dark">  
+                                                    loadPatNotesList()" class="btn m-b-xs  btn-dark">  
                             <i class="fa fa-times"></i> 
                         </button>
                     </div>
                 </div>
             </div>
         </div>
-        
+
         <div class="table-responsive in-patient-table">
             <table st-table="displayedCollection"  st-safe-src="rowCollection"  class="table table-striped b-t b-light">
                 <thead>
@@ -71,17 +71,15 @@
                         <td valign="middle"> {{note.created_at| moment:'DD/MM/YYYY'}} </td>
                         <td valign="middle"> {{note.short_notes}} </td>
                         <td valign="middle">
-                            <div ng-if="note.encounter_status">
                             <a class="label bg-dark" title="View" check-access  ui-sref="patient.noteView({id: '{{$state.params.id}}', note_id: '{{note.pat_note_id}}'})">
                                 <i class="fa fa-eye"></i>
                             </a>&nbsp;&nbsp;&nbsp;
-                            <a class="label bg-dark" title="Edit" check-access  ui-sref="patient.noteUpdate({id: '{{$state.params.id}}', note_id: '{{note.pat_note_id}}'})">
+                            <a ng-if="note.encounter_status" class="label bg-dark" title="Edit" check-access  ui-sref="patient.noteUpdate({id: '{{$state.params.id}}', note_id: '{{note.pat_note_id}}'})">
                                 <i class="fa fa-pencil"></i>
                             </a>&nbsp;&nbsp;&nbsp;
-                            <a data-button="patient.noteDelete" check-access-custom class="label bg-dark" title="Delete" ng-click="removeRow(note.pat_note_id)">
+                            <a ng-if="note.encounter_status" data-button="patient.noteDelete" check-access-custom class="label bg-dark" title="Delete" ng-click="removeRow(note.pat_note_id)">
                                 <i class="fa fa-trash"></i>
                             </a>
-                            </div>
                         </td>
                     </tr>
                 </tbody>

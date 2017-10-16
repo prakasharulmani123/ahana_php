@@ -148,7 +148,8 @@ app.controller('NotesController', ['$rootScope', '$scope', '$timeout', '$http', 
                     function (response) {
                         $scope.loadbar('hide');
                         $scope.data = response;
-                        $scope.initCanCreateNote();
+                        if($scope.data.formtype=='update') {
+                            $scope.initCanCreateNote(); }
                         $scope.encounter = {encounter_id: response.encounter_id};
                     }
             ).error(function (data, status) {
