@@ -192,9 +192,4 @@ app.controller('NotesController', ['$rootScope', '$scope', '$timeout', '$http', 
             });
         };
 
-        $scope.checkShiftenter = function () {
-            if ($scope.data.checkenter == 1)
-                $scope.saveForm($scope.data.formtype);
-        }
-
     }]);

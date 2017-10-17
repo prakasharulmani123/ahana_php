@@ -14,19 +14,10 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">Nurse's Notes * </label>
             <div class="col-sm-9">
-                <textarea placeholder="Notes" class="form-control" ng-model="data.notes" ng-keyup="(($event.keyCode == 13) && (!$event.shiftKey)) ? checkShiftenter() : null"></textarea>
+                <textarea placeholder="Notes" class="form-control" ng-model="data.notes"></textarea>
             </div>
         </div>
-        <div class="line line-dashed b-b line-lg "></div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label">SHIFT+ENTER FOR NEXT LINE</label>
-            <div class="col-sm-9">
-                <label class="i-checks "> 
-                    <input type="checkbox" name="checkenter" ng-true-value="'1'" ng-false-value="'0'" ng-model="data.checkenter"> 
-                    <i></i> 
-                </label> &nbsp; &nbsp;
-            </div>
-        </div>
+        
         <div class="form-group" ng-show="data.pat_note_id != null">
             <label class="col-sm-3 control-label">Last Modified</label>
             <div class="col-sm-9">{{ data.modified_at}}
