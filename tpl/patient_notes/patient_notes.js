@@ -29,17 +29,18 @@ app.controller('NotesController', ['$rootScope', '$scope', '$timeout', '$http', 
         $scope.initForm = function () {
             $scope.data = {};
             $scope.data.formtype = 'add';
+            $scope.data.checkenter = 0;
         }
-        
+
         $scope.initCanCreateNote = function () {
             $scope.isPatientHaveActiveEncounter(function (response) {
                 if (response.success == false) {
                     alert("Sorry, you can't create a note");
                     $state.go("patient.view", {id: $state.params.id});
                 } else {
-                    if(!$scope.encounter)
+                    if (!$scope.encounter)
                         $scope.encounter = response.model;
-                    
+
                     $scope.all_encounters = response.encounters;
                     if (!$scope.data.encounter_id)
                         $scope.data.encounter_id = $scope.encounter.encounter_id;
@@ -148,8 +149,9 @@ app.controller('NotesController', ['$rootScope', '$scope', '$timeout', '$http', 
                     function (response) {
                         $scope.loadbar('hide');
                         $scope.data = response;
-                        if($scope.data.formtype=='update') {
-                            $scope.initCanCreateNote(); }
+                        if ($scope.data.formtype == 'update') {
+                            $scope.initCanCreateNote();
+                        }
                         $scope.encounter = {encounter_id: response.encounter_id};
                     }
             ).error(function (data, status) {
@@ -182,13 +184,17 @@ app.controller('NotesController', ['$rootScope', '$scope', '$timeout', '$http', 
                             if (response.data.success === true) {
                                 $scope.loadPatNotesList();
                                 $scope.msg.successMessage = 'Patient Note Deleted Successfully';
-                            }
-                            else {
+                            } else {
                                 $scope.errorData = response.data.message;
                             }
                         }
                 );
             });
         };
+
+        $scope.checkShiftenter = function () {
+            if ($scope.data.checkenter == 1)
+                $scope.saveForm($scope.data.formtype);
+        }
 
     }]);
