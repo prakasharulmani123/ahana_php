@@ -102,6 +102,11 @@ class PatientconsultantController extends ActiveController {
                     ->active()
                     ->status()
                     ->andWhere($condition)
+                    ->andWhere(['or',
+                            ['=', 'consultant_id', Yii::$app->user->identity->user_id],
+                            ['=', 'created_by', Yii::$app->user->identity->user_id],
+                            ['privacy' => '0'],
+                    ])
                     ->groupBy('encounter_id')
                     ->orderBy(['encounter_id' => SORT_DESC])
                     ->all();
@@ -111,8 +116,13 @@ class PatientconsultantController extends ActiveController {
                         ->tenant()
                         ->active()
                         ->status()
-                        ->andWhere($condition)
                         ->andWhere(['encounter_id' => $value->encounter_id])
+                        ->andWhere($condition)
+                        ->andWhere(['or',
+                                ['=', 'consultant_id', Yii::$app->user->identity->user_id],
+                                ['=', 'created_by', Yii::$app->user->identity->user_id],
+                                ['privacy' => '0'],
+                        ])
                         ->orderBy(['consult_date' => SORT_DESC])
                         ->all();
 
@@ -128,13 +138,15 @@ class PatientconsultantController extends ActiveController {
         if (!empty($post)) {
             foreach ($post['consultant_visit'] as $key => $value) {
                 $pat_consultant = new PatConsultant;
-                
+
                 $pat_consultant->encounter_id = $value['encounter_id'];
                 $pat_consultant->patient_id = $value['patient_id'];
                 $pat_consultant->consultant_id = $post['data']['consultant_id'];
                 $pat_consultant->consult_date = $post['data']['consult_date'];
-                if(isset($value['notes']) && !empty($value['notes'])) $pat_consultant->notes = $value['notes'];
-                if(isset($post['data']['notes']) && !empty($post['data']['notes'])) $pat_consultant->notes = $post['data']['notes'];
+                if (isset($value['notes']) && !empty($value['notes']))
+                    $pat_consultant->notes = $value['notes'];
+                if (isset($post['data']['notes']) && !empty($post['data']['notes']))
+                    $pat_consultant->notes = $post['data']['notes'];
                 $pat_consultant->save(false);
             }
             return ['success' => true];

@@ -53,7 +53,7 @@ class PatConsultant extends RActiveRecord {
     public function rules() {
         return [
                 [['encounter_id', 'patient_id', 'consultant_id'], 'required'],
-                [['tenant_id', 'encounter_id', 'patient_id', 'consultant_id', 'created_by', 'modified_by'], 'integer'],
+                [['tenant_id', 'encounter_id', 'patient_id', 'consultant_id', 'created_by', 'modified_by', 'privacy'], 'integer'],
                 [['consult_date', 'created_at', 'modified_at', 'deleted_at', 'proc_id', 'charge_amount'], 'safe'],
                 [['notes', 'status'], 'string'],
                 [['consult_date'], 'validateConsultant'],
@@ -108,6 +108,7 @@ class PatConsultant extends RActiveRecord {
             'consultant_id' => 'Consultant',
             'consult_date' => 'Consult Date',
             'notes' => 'Notes',
+            'privacy' => 'Privacy',
             'status' => 'Status',
             'created_by' => 'Created By',
             'created_at' => 'Created At',

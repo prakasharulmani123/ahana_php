@@ -2,6 +2,7 @@
 
 namespace IRISORG\modules\v1\controllers;
 
+use common\models\AppConfiguration;
 use common\models\PatPatient;
 use common\models\PatPrescription;
 use common\models\PatPrescriptionFrequency;
@@ -241,6 +242,21 @@ class PatientprescriptionController extends ActiveController {
                 ->limit(25)
                 ->all();
         return $Diag;
+    }
+
+    public function actionUpdatetabsetting() {
+        $post = Yii::$app->getRequest()->post();
+        $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+        $unset_configs = AppConfiguration::updateAll(['value' => '0'], "tenant_id = {$tenant_id} AND `code` IN ('PTV','PTR','PTN')");
+        if (!empty($post)) {
+            foreach ($post as $value) {
+                $tab_name = $value['name'];
+                $tab_array[] = "'$tab_name'";
+            }
+            $tab = implode(',', $tab_array);
+            $config = AppConfiguration::updateAll(['value' => '1'], "tenant_id = {$tenant_id} AND `key` IN ($tab)");
+        }
+        return ['success' => true];
     }
 
 }

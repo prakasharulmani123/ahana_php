@@ -171,17 +171,31 @@ class PatientvitalsController extends ActiveController {
             return ['success' => true];
         }
     }
-    
+
     public function actionCheckvitalaccess() {
         $get = Yii::$app->request->get();
-        if(isset($get['patient_type'])) {
+        if (isset($get['patient_type'])) {
             $pat_share_attr = [
-                'like', 'key', $get['patient_type'].'_V_',
+                'like', 'key', $get['patient_type'] . '_V_',
             ];
-          $vitals = AppConfiguration::find()->tenant()->andWhere($pat_share_attr)->all();
-          return $vitals;
+            $vitals = AppConfiguration::find()->tenant()->andWhere($pat_share_attr)->all();
+            return $vitals;
         }
         return '';
+    }
+
+    public function actionGetvitalsgraph() {
+        $get = Yii::$app->request->get();
+        $patient = PatPatient::getPatientByGuid($get['patient_id']);
+        $patient_id = $patient->patient_id;
+        $data = PatVitals::find()
+                ->tenant()
+                ->active()
+                ->status()
+                ->andWhere(['patient_id' => $patient_id])
+                ->orderBy(['vital_id' => SORT_DESC])
+                ->all();
+        return ['success' => true,'data' => $data];
     }
 
 }
