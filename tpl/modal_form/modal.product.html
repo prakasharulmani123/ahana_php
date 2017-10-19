@@ -49,7 +49,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-4 control-label">Product Type * </label>
                                     <div class="col-sm-6">
-                                        <select class="form-control" ng-model="data.product_description_id" ng-options="productDescription.description_id as productDescription.description_name for productDescription in productDescriptions| orderBy: description_name"">
+                                        <select class="selectpicker" data-live-search="true" ng-model="data.product_description_id" ng-options="productDescription.description_id as productDescription.description_name for productDescription in productDescriptions| orderBy: description_name"">
                                             <option value="">Select Product Type</option>
                                         </select>
                                     </div>
@@ -75,7 +75,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-4 control-label">Brand Name * </label>
                                     <div class="col-sm-6">
-                                        <select class="form-control" ng-model="data.brand_id" ng-options="brand.brand_id as brand.brand_name for brand in brands| orderBy: brand_name"">
+                                        <select class="selectpicker" data-live-search="true" ng-model="data.brand_id" ng-options="brand.brand_id as brand.brand_name for brand in brands| orderBy: brand_name"">
                                             <option value="">Select Brand Name</option>
                                         </select>
                                     </div>
@@ -111,7 +111,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-4 control-label">Brand Division * </label>
                                     <div class="col-sm-6">
-                                        <select class="form-control" ng-model="data.division_id" ng-options="division.division_id as division.division_name for division in divisions| orderBy: division_name"">
+                                        <select class="selectpicker" data-live-search="true" ng-model="data.division_id" ng-options="division.division_id as division.division_name for division in divisions| orderBy: division_name"">
                                             <option value="">Select Brand Division</option>
                                         </select>
                                     </div>
@@ -136,7 +136,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-4 control-label">Generic Name * </label>
                                     <div class="col-sm-6">
-                                        <select class="form-control" ng-model="data.generic_id" ng-options="generic.generic_id as generic.generic_name for generic in generics| orderBy: generic_name"" ng-change="getDrugByGeneric()">
+                                        <select class="selectpicker" data-live-search="true" ng-model="data.generic_id" ng-options="generic.generic_id as generic.generic_name for generic in generics| orderBy: generic_name"" ng-change="getDrugByGeneric()">
                                             <option value="">Select Generic Name</option>
                                         </select>
                                     </div>
@@ -170,7 +170,7 @@
                                     <div class="form-group">
                                         <label class="col-sm-4 control-label">Drug Class </label>
                                         <div class="col-sm-6">
-                                            <select class="form-control" ng-model="data.drug_class_id" ng-options="drugClass.drug_class_id as drugClass.drug_name for drugClass in drugClasses| orderBy: drug_name"">
+                                            <select class="selectpicker" data-live-search="true" ng-model="data.drug_class_id" ng-options="drugClass.drug_class_id as drugClass.drug_name for drugClass in drugClasses| orderBy: drug_name"">
                                                 <option value="">Select Drug Class</option>
                                             </select>
                                         </div>

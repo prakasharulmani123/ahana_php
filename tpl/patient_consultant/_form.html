@@ -3,7 +3,7 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">Encounter #</label>
             <div class="col-sm-5" ng-if="all_encounters.length > 1">
-                <select class="form-control" ng-model="data.encounter_id" ng-options="all_encounter.encounter_id as all_encounter.encounter_id for all_encounter in all_encounters | orderBy: encounter_id">
+                <select class="form-control" ng-model="data.encounter_id" ng-options="all_encounter.encounter_id as all_encounter.encounter_id for all_encounter in all_encounters| orderBy: encounter_id">
                 </select>
             </div>
             <div class="col-sm-9" ng-if="all_encounters.length == 1">
@@ -31,7 +31,7 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">Consultant * </label>
             <div class="col-sm-9">
-                <select class="form-control selectpicker" data-live-search="true" ng-model="data.consultant_id" ng-options="doctor.user_id  as doctor.consult_speciality_name for doctor in doctors | orderBy: name" >
+                <select class="form-control selectpicker" data-live-search="true" ng-model="data.consultant_id" ng-options="doctor.user_id  as doctor.consult_speciality_name for doctor in doctors| orderBy: name" >
                     <option value="">Select Consultant</option>
                 </select>
             </div>
@@ -41,6 +41,17 @@
             <label class="col-sm-3 control-label">Description  </label>
             <div class="col-sm-9">
                 <textarea placeholder="Description" class="form-control" ng-model="data.notes"></textarea>
+            </div>
+        </div>
+        
+        <div class="line line-dashed b-b line-lg "></div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Privacy</label>
+            <div class="col-sm-9">
+                <label class="i-checks "> 
+                    <input type="checkbox" name="status" ng-true-value="'1'" ng-false-value="'0'" ng-model="data.privacy"> 
+                    <i></i> 
+                </label> &nbsp; &nbsp;
             </div>
         </div>
     </div>

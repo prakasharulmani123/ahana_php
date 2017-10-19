@@ -1,4 +1,4 @@
-app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll', '$http', '$state', '$filter', '$modal', '$location', '$log', '$timeout', 'IO_BARCODE_TYPES', 'toaster', 'PrescriptionService', '$q', 'hotkeys', function ($rootScope, $scope, $anchorScroll, $http, $state, $filter, $modal, $location, $log, $timeout, IO_BARCODE_TYPES, toaster, PrescriptionService, $q, hotkeys) {
+app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll', '$http', '$state', '$filter', '$modal', '$location', '$log', '$timeout', 'IO_BARCODE_TYPES', 'toaster', 'PrescriptionService', '$q', 'hotkeys', 'modalService', function ($rootScope, $scope, $anchorScroll, $http, $state, $filter, $modal, $location, $log, $timeout, IO_BARCODE_TYPES, toaster, PrescriptionService, $q, hotkeys, modalService) {
 
         hotkeys.bindTo($scope)
                 .add({
@@ -36,6 +36,10 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.app.settings.patientContentClass = 'app-content patient_content ';
         $scope.app.settings.patientFooterClass = 'app-footer';
         $scope.today = new Date();
+        $scope.globalData = {};
+        $scope.prescription_tab = {};
+        $scope.prescription_print = {};
+
         $scope.vitalcong = {};
         $scope.prescription_print = {};
 
@@ -54,6 +58,28 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.ctrl = {};
         $scope.ctrl.expandAll = function (expanded) {
             $scope.$broadcast('onExpandAll', {expanded: expanded});
+        };
+
+        $scope.openTabsetting = function (size, ctrlr, tmpl, update_col) {
+            var modalInstance = $modal.open({
+                templateUrl: tmpl,
+                controller: ctrlr,
+                size: size,
+                resolve: {
+                    scope: function () {
+                        return $scope;
+                    },
+                    column: function () {
+                        return update_col;
+                    },
+                }
+            });
+
+            modalInstance.result.then(function (selectedItem) {
+                $scope.selected = selectedItem;
+            }, function () {
+                $log.info('Modal dismissed at: ' + new Date());
+            });
         };
 
         //Start Watch Functions
@@ -308,6 +334,14 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         $scope.presc_stock_status = response.value;
                     })
 
+            $http.get($rootScope.IRISOrgServiceUrl + '/appconfiguration/getpresstatusbygroup?group=prescription_tab')
+                    .success(function (response) {
+                        angular.forEach(response, function (row) {
+                            var listName = row.code;
+                            $scope.prescription_tab[listName] = row.value;
+                        });
+                    })
+
             $http.get($rootScope.IRISOrgServiceUrl + '/appconfiguration/getpresstatusbygroup?group=prescription_print')
                     .success(function (response) {
                         angular.forEach(response, function (row) {
@@ -355,7 +389,9 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
             //$scope.data.next_visit = moment().format('YYYY-MM-DD');
             //$scope.getDays();
-
+            $scope.globalData.frequency_3_0 = '';
+            $scope.globalData.frequency_3_1 = '';
+            $scope.globalData.frequency_3_2 = '';
             $("#current_prescription").focus();
         }
 
@@ -647,8 +683,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $scope.getRelatedProducts(value.generic_id).then(function () {
                 qty_count = $scope.calculate_qty(value.frequency_name, value.number_of_days, value.product.product_description_id, value.product.description_name);
                 var no_of_days = $scope.data.number_of_days;
-                if(!no_of_days){
-                    no_of_days = '0';
+                if (!$scope.data.number_of_days) {
+                    var no_of_days = 0;
                 }
                 if (value.food_type) {
                     var food_type = value.food_type;
@@ -770,7 +806,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                 qty_count = $scope.calculate_qty(prescription.frequency, 1, product.product_description_id, product.description_name);
                                 if (qty_count > 0) {
                                     var no_of_days = $scope.data.number_of_days;
-                                    if (!no_of_days) {
+                                    if (!$scope.data.number_of_days) {
                                         var no_of_days = 0;
                                     }
                                     if (typeof prescription.route != 'undefined' && prescription.route != '') {
@@ -1396,12 +1432,15 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                     $scope.previousPresSelected = 0;
 
                                     var main_prescription = PrescriptionService.getPrescriptionmainItem();
-                                    if (main_prescription[0]['numberofdays'])
-                                        $scope.data.number_of_days = main_prescription[0]['numberofdays'];
-                                    if (main_prescription[0]['nextVisit'])
-                                        $scope.data.next_visit = main_prescription[0]['nextVisit'];
-                                    if (main_prescription[0]['consultantId'])
-                                        $scope.data.consultant_id = main_prescription[0]['consultantId'];
+                                    if (main_prescription.length > 0) {
+                                        if (main_prescription[0]['numberofdays'])
+                                            $scope.data.number_of_days = main_prescription[0]['numberofdays'];
+                                        if (main_prescription[0]['nextVisit'])
+                                            $scope.data.next_visit = main_prescription[0]['nextVisit'];
+                                        if (main_prescription[0]['consultantId'])
+                                            $scope.data.consultant_id = main_prescription[0]['consultantId'];
+                                    }
+
 
                                     $scope.$broadcast('refreshDatepickers');
 
@@ -1809,6 +1848,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 $scope.data.prescriptionItems[key].total = $scope.calculate_price($scope.data.prescriptionItems[key].qty, item.price);
                 $scope.data.prescriptionItems[key].in_stock = (parseInt(item.available_quantity) > parseInt($scope.data.prescriptionItems[key].qty));
             }
+
             angular.forEach($scope.tableform.$editables, function (editableValue, editableKey) {
                 if (editableValue.attrs.eIndex == key && editableValue.attrs.eName == 'qty') {
                     editableValue.scope.$data = $scope.data.prescriptionItems[key].qty
@@ -1958,7 +1998,6 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         }
 
         $scope.removeRow = function (pres_id) {
-            //console.log(sale_id);
             var conf = confirm('Are you sure to delete ?');
             if (conf)
             {
@@ -2025,7 +2064,750 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             });
         };
 
+        //New prescription top add Form
+        $scope.addGlobalForm = function () {
+            globalPrescription = $scope.globalData.globalprescription;
+            if (!globalPrescription) {
+                $scope.errorData = 'Prescription cannot be empty';
+                return false;
+            }
+            if ((!$scope.globalData.frequency_3_0) && (!$scope.globalData.frequency_3_1) && (!$scope.globalData.frequency_3_2)) {
+                $scope.errorData = 'Frequency cannot be empty';
+                return false;
+            }
 
+            var result = $filter('filter')($scope.data.prescriptionItems, {product_id: parseInt(globalPrescription.product_id)}, true);
+            if (result.length > 0) {
+                alert('This Product already added');
+                $scope.prescription_lists = {};
+                $scope.lastSelected = {};
+                $scope.prescription = '';
+                $scope.globalData = {};
+            } else {
+                var fav = $filter('filter')($scope.child.favourites, {product_id: globalPrescription.product_id});
+
+                if (fav.length > 0) {
+                    angular.extend(globalPrescription, {is_favourite: 1});
+                }
+
+                var fiter = $filter('filter')($scope.all_products, {product_id: parseInt(globalPrescription.product_id)}, true);
+                var product = fiter[0];
+                var Fields = 'full_name,description_routes,latest_price,availableQuantity,product_description_id,description_name';
+                $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproducts/' + product.product_id + '?fields=' + Fields)
+                        .success(function (product) {
+                            $scope.getRelatedProducts(globalPrescription.generic_id).then(function () {
+                                globalPrescription.frequency = $scope.globalData.frequency_3_0 + '-' + $scope.globalData.frequency_3_1 + '-' + $scope.globalData.frequency_3_2;
+                                qty_count = $scope.calculate_qty(globalPrescription.frequency, 1, product.product_description_id, product.description_name);
+                                if (qty_count > 0) {
+                                    var no_of_days = $scope.data.number_of_days;
+                                    if (!$scope.data.number_of_days) {
+                                        var no_of_days = 0;
+                                    }
+                                    if (globalPrescription.route) {
+                                        route = globalPrescription.route;
+                                    } else {
+                                        route = (product.description_routes) ? product.description_routes[0].route_name : '';
+                                    }
+                                    items = {
+                                        'product_id': globalPrescription.product_id,
+                                        'product_name': product.full_name,
+                                        'generic_id': parseInt(globalPrescription.generic_id),
+                                        'generic_name': globalPrescription.generic_name,
+                                        'drug_class_id': globalPrescription.drug_class_id,
+                                        'drug_name': globalPrescription.drug_name,
+                                        'manual_textbox': false,
+                                        'route': route,
+                                        'frequency': globalPrescription.frequency,
+                                        'number_of_days': no_of_days,
+                                        'food_type': 'NA',
+                                        'is_favourite': globalPrescription.is_favourite,
+                                        'route_id': globalPrescription.route_id,
+                                        'description_routes': product.description_routes,
+                                        'presc_date': moment().format('YYYY-MM-DD HH:mm:ss'),
+                                        'price': product.latest_price,
+                                        'total': $scope.calculate_price(qty_count, product.latest_price),
+                                        'freqMask': '9-9-9-9',
+                                        'freqMaskCount': 4,
+                                        'available_quantity': product.availableQuantity,
+                                        'item_key': $scope.data.prescriptionItems.length,
+                                        'all_products': $scope.products,
+                                        'qty': $scope.globalData.quantity,
+                                        'product_description_id': product.product_description_id,
+                                        'description_name': product.description_name,
+                                        'in_stock': (parseInt(product.availableQuantity) > parseInt(qty_count)),
+                                        'freqType': '3',
+                                        'remarks': $scope.globalData.remarks,
+                                    };
+                                    //Multiple entries created, Check duplicate once again 
+                                    var chkDuplicate = $filter('filter')($scope.data.prescriptionItems, {product_id: items.product_id}, true);
+                                    if (chkDuplicate.length == 0) {
+                                        PrescriptionService.addPrescriptionItem(items);
+                                    }
+
+                                    $scope.data.prescriptionItems = PrescriptionService.getPrescriptionItems();
+
+                                    $timeout(function () {
+                                        $("#prescriptioncont-header.search-patientcont-header").hide();
+                                        if (!globalPrescription.hasOwnProperty('route')) {
+                                            $scope.setFocus('route', $scope.data.prescriptionItems.length - 1);
+                                        } else if (!globalPrescription.hasOwnProperty('frequency')) {
+                                            $scope.setFocus('frequency', $scope.data.prescriptionItems.length - 1);
+                                        } else {
+                                            $scope.setFocus('number_of_days', $scope.data.prescriptionItems.length - 1);
+                                        }
+
+                                        if (typeof globalPrescription.frequency != 'undefined')
+                                            $scope.showOrhideFrequency();
+                                    });
+                                    $scope.prescription_lists = {};
+                                    $scope.lastSelected = {};
+                                    $scope.prescription = '';
+                                    $scope.globalData = {};
+                                } else {
+                                    alert('Quantity is not available');
+                                    return false;
+                                }
+                            });
+                        });
+            }
+        }
+
+        //New prescription top form reset the value
+        $scope.resetGlobalForm = function () {
+            $scope.globalData = {};
+            $scope.prescription = '';
+            $scope.errorData = '';
+        }
+
+        //Set global search li value assign to variable
+        $scope.pick = function (e) {
+            $scope.prescription_lists = {};
+            $scope.lastSelected = {};
+            $scope.prescription = e.prescription;
+            $scope.globalData.globalprescription = e;
+        }
+
+        //Load tab all vital list
+        $scope.HaveActEnc = false;
+        $scope.loadVitals = function () {
+            $scope.isLoading = true;
+            $scope.vitalCollection = [];  // base collection
+            $scope.itemsByPage = 10; // No.of records per page
+            $scope.vitaldisplayedCollection = [].concat($scope.vitalCollection);  // displayed collection
+
+            if (typeof date == 'undefined') {
+                url = $rootScope.IRISOrgServiceUrl + '/patientvitals/getpatientvitals?addtfields=eprvitals&only=result,actenc&patient_id=' + $state.params.id;
+            } else {
+                date = moment(date).format('YYYY-MM-DD');
+                url = $rootScope.IRISOrgServiceUrl + '/patientvitals/getpatientvitals?addtfields=eprvitals&only=result,actenc&patient_id=' + $state.params.id + '&date=' + date;
+            }
+
+            $http.get(url)
+                    .success(function (vitals) {
+                        $scope.isLoading = false;
+                        $scope.vitalCollection = vitals.result;
+                        $scope.vitaldisplayedCollection = [].concat($scope.vitalCollection);
+                        $scope.HaveActEnc = vitals.HaveActEnc;
+                        $scope.setvitalgraph();
+                        $scope.$broadcast('refreshDatepickers');
+                    })
+                    .error(function () {
+                        $scope.errorData = "An Error has occured while loading patientvital!";
+                    });
+        }
+
+        //Set vitals graph value
+        $scope.setvitalgraph = function () {
+            url = $rootScope.IRISOrgServiceUrl + '/patientvitals/getvitalsgraph?addtfields=eprvitals&patient_id=' + $state.params.id;
+            $http.get(url)
+                    .success(function (vitals) {
+                        //Temperature variable
+                        $scope.tem_graph_data = [];
+                        $scope.tem_graph_tick = [];
+                        var tem_Going = true;
+                        var tem = 1;
+
+                        //Weight Variable
+                        $scope.weight_graph_data = [];
+                        $scope.weight_graph_tick = [];
+                        var weight_Going = true;
+                        var wht = 1;
+
+                        //Height Variable
+                        $scope.height_graph_data = [];
+                        $scope.height_graph_tick = [];
+                        var height_Going = true;
+                        var hgt = 1;
+
+                        //pulse Variable
+                        $scope.pulse_graph_data = [];
+                        $scope.pulse_graph_tick = [];
+                        var pulse_Going = true;
+                        var pul = 1;
+
+                        //sp02 Variable
+                        $scope.sp02_graph_data = [];
+                        $scope.sp02_graph_tick = [];
+                        var sp02_Going = true;
+                        var sp = 1;
+
+                        //pain_score Variable
+                        $scope.pain_graph_data = [];
+                        $scope.pain_graph_tick = [];
+                        var pain_Going = true;
+                        var pain = 1;
+
+                        //Blood pressure Variable
+                        $scope.bps_graph_data = [];
+                        $scope.bpd_graph_data = [];
+                        $scope.bp_graph_tick = [];
+                        var bp_Going = true;
+                        var bp = 1;
+
+                        angular.forEach(vitals.data, function (row) {
+                            if (tem_Going) {            //Set Temperature variable
+                                if (row.temperature) {
+                                    $scope.tem_graph_data.push([tem, row.temperature]);
+                                    $scope.tem_graph_tick.push([tem, row.vital_time]);
+                                    tem++;
+                                }
+                            }
+                            if ($scope.tem_graph_data.length == 5)
+                                tem_Going = false;
+
+                            if (bp_Going) {            //Set Blood Pressure variable
+                                if ((row.blood_pressure_systolic) || (row.blood_pressure_diastolic)) {
+                                    if (row.blood_pressure_systolic)
+                                        $scope.bps_graph_data.push([bp, row.blood_pressure_systolic]);
+                                    if (row.blood_pressure_diastolic)
+                                        $scope.bpd_graph_data.push([bp, row.blood_pressure_diastolic]);
+                                    $scope.bp_graph_tick.push([bp, row.vital_time]);
+                                    bp++;
+                                }
+                            }
+                            if (($scope.bps_graph_data.length == 5) || ($scope.bpd_graph_data.length == 5))
+                                bp_Going = false;
+
+                            if (weight_Going) {         //Set Weight variable
+                                if (row.weight) {
+                                    $scope.weight_graph_data.push([wht, row.weight]);
+                                    $scope.weight_graph_tick.push([wht, row.vital_time]);
+                                    wht++;
+                                }
+                            }
+                            if ($scope.weight_graph_data.length == 5)
+                                weight_Going = false;
+
+                            if (height_Going) {         //Set Height variable
+                                if (row.height) {
+                                    $scope.height_graph_data.push([hgt, row.height]);
+                                    $scope.height_graph_tick.push([hgt, row.vital_time]);
+                                    hgt++;
+                                }
+                            }
+                            if ($scope.height_graph_data.length == 5)
+                                height_Going = false;
+
+                            if (pulse_Going) {         //Set Pluse variable
+                                if (row.pulse_rate) {
+                                    $scope.pulse_graph_data.push([pul, row.pulse_rate]);
+                                    $scope.pulse_graph_tick.push([pul, row.vital_time]);
+                                    pul++;
+                                }
+                            }
+                            if ($scope.pulse_graph_data.length == 5)
+                                pulse_Going = false;
+
+                            if (pain_Going) {         //Set Pain score variable
+                                if (row.pain_score) {
+                                    $scope.pain_graph_data.push([pain, row.pain_score]);
+                                    $scope.pain_graph_tick.push([pain, row.vital_time]);
+                                    pain++;
+                                }
+                            }
+                            if ($scope.height_graph_data.length == 5)
+                                pain_Going = false;
+
+                            if (sp02_Going) {         //Set spo2 variable
+                                if (row.sp02) {
+                                    $scope.sp02_graph_data.push([sp, row.sp02]);
+                                    $scope.sp02_graph_tick.push([sp, row.vital_time]);
+                                    sp++;
+                                }
+                            }
+                            if ($scope.sp02_graph_data.length == 5)
+                                sp02_Going = false;
+                        });
+                    })
+        }
+
+        //Accordation menu open and close method
+        $scope.oneAtATime = true;
+        $scope.status = {
+            isFirstOpen: true,
+            isFirstDisabled: false
+        };
+
+        //Store vitals datas to form
+        $scope.savevitalForm = function (mode) {
+            $scope.errorData = "";
+            $scope.msg.successMessage = "";
+            $scope.msg.errorMessage = "";
+
+            vital_data = $scope.vitaldata;
+            if ((typeof vital_data.temperature == 'undefined' || vital_data.temperature == '') &&
+                    (typeof vital_data.blood_pressure_systolic == 'undefined' || vital_data.blood_pressure_systolic == '') &&
+                    (typeof vital_data.blood_pressure_diastolic == 'undefined' || vital_data.blood_pressure_diastolic == '') &&
+                    (typeof vital_data.pulse_rate == 'undefined' || vital_data.pulse_rate == '') &&
+                    (typeof vital_data.weight == 'undefined' || vital_data.weight == '') &&
+                    (typeof vital_data.height == 'undefined' || vital_data.height == '') &&
+                    (typeof vital_data.sp02 == 'undefined' || vital_data.sp02 == '') &&
+                    (typeof vital_data.pain_score == 'undefined' || vital_data.pain_score == '')) {
+                $scope.msg.errorMessage = "Cannot create blank entry";
+                return;
+            }
+
+            if (mode == 'add') {
+                post_url = $rootScope.IRISOrgServiceUrl + '/patientvitals';
+                method = 'POST';
+                succ_msg = 'Vital saved successfully';
+
+                angular.extend(vital_data, {
+                    patient_id: $scope.patientObj.patient_id,
+                    encounter_id: $scope.encounter_id,
+                    vital_time: moment().format('YYYY-MM-DD HH:mm:ss'),
+                });
+            } else {
+                post_url = $rootScope.IRISOrgServiceUrl + '/patientvitals/' + vital_data.vital_id;
+                method = 'PUT';
+                succ_msg = 'Vital updated successfully';
+            }
+            $scope.loadbar('show');
+            $http({
+                method: method,
+                url: post_url,
+                data: vital_data,
+            }).success(
+                    function (response) {
+                        $scope.loadbar('hide');
+                        $scope.msg.errorMessage = "";
+                        $scope.msg.successMessage = succ_msg;
+                        $scope.vitaldata = {};
+                        $timeout(function () {
+                            $scope.loadVitals();
+                        }, 100)
+
+                    }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        };
+        //Reset the tab vitals form
+        $scope.resetvitalForm = function () {
+            $scope.vitaldata = {};
+        }
+        //Remove vitals row
+        $scope.removevitalRow = function (row) {
+            var modalOptions = {
+                closeButtonText: 'No',
+                actionButtonText: 'Yes',
+                headerText: 'Delete Vital?',
+                bodyText: 'Are you sure you want to delete this vital?'
+            };
+
+            modalService.showModal({}, modalOptions).then(function (result) {
+                $scope.loadbar('show');
+                $http({
+                    method: 'POST',
+                    url: $rootScope.IRISOrgServiceUrl + "/patientvitals/remove",
+                    data: {id: row},
+                }).then(
+                        function (response) {
+                            $scope.loadbar('hide');
+                            if (response.data.success === true) {
+                                $scope.loadVitals();
+                                $scope.msg.successMessage = 'Patient Vital Deleted Successfully';
+                            } else {
+                                $scope.errorData = response.data.message;
+                            }
+                        }
+                );
+            });
+        };
+        //Update vitals form
+        $scope.updatevitalRow = function (vital_id) {
+            $scope.loadbar('show');
+            _that = this;
+            $scope.errorData = "";
+            $http({
+                url: $rootScope.IRISOrgServiceUrl + "/patientvitals/" + vital_id,
+                method: "GET"
+            }).success(
+                    function (response) {
+                        $scope.loadbar('hide');
+                        $scope.vitaldata = response;
+                        $scope.vitaldata.formtype = 'update';
+                    }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        };
+
+        $scope.initResultForm = function () {
+            $scope.resultdata = {};
+            $scope.resultdata.formtype = 'add';
+            $scope.loadResultbypatient();
+        }
+
+        $scope.saveresultForm = function (mode) {
+            $scope.errorData = "";
+            $scope.msg.successMessage = "";
+            $scope.msg.errorMessage = "";
+
+            result_data = $scope.resultdata;
+            if (mode == 'add') {
+                post_url = $rootScope.IRISOrgServiceUrl + '/patientresults';
+                method = 'POST';
+                succ_msg = 'Result saved successfully';
+
+                angular.extend(result_data, {
+                    patient_id: $scope.patientObj.patient_id,
+                    encounter_id: $scope.encounter_id,
+                    tenant_id: $scope.app.logged_tenant_id,
+                });
+            } else {
+                post_url = $rootScope.IRISOrgServiceUrl + '/patientresults/' + result_data.pat_result_id;
+                method = 'PUT';
+                succ_msg = 'Result updated successfully';
+            }
+            $scope.loadbar('show');
+            $http({
+                method: method,
+                url: post_url,
+                data: result_data,
+            }).success(
+                    function (response) {
+                        $scope.loadbar('hide');
+                        $scope.msg.errorMessage = "";
+                        $scope.msg.successMessage = succ_msg;
+                        $scope.resultdata = {};
+                        $scope.resultdata.formtype = 'add';
+                        $timeout(function () {
+                            $scope.loadResultbypatient();
+                        }, 100)
+                    }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        }
+
+        $scope.loadResultbypatient = function () {
+            $scope.isLoading = true;
+            $scope.resultCollection = [];  // base collection
+            $scope.itemsByPage = 10; // No.of records per page
+            $scope.resultdisplayedCollection = [].concat($scope.resultCollection);  // displayed collection
+
+            if (typeof date == 'undefined') {
+                url = $rootScope.IRISOrgServiceUrl + '/patientresults/getpatientresults?patient_id=' + $state.params.id;
+            } else {
+                date = moment(date).format('YYYY-MM-DD');
+                url = $rootScope.IRISOrgServiceUrl + '/patientresults/getpatientresults?patient_id=' + $state.params.id + '&date=' + date;
+            }
+            // Get data's from service
+            $http.get(url)
+                    .success(function (notes) {
+                        $scope.isLoading = false;
+                        $scope.resultCollection = notes.result;
+                        $scope.resultdisplayedCollection = [].concat($scope.resultCollection);
+                    })
+                    .error(function () {
+                        $scope.errorData = "An Error has occured while loading patientnote!";
+                    });
+        }
+        $scope.resetresultForm = function () {
+            $scope.resultdata = {};
+            $scope.resultdata.formtype = 'add';
+        }
+
+        $scope.updateResultFormRow = function (pat_result_id) {
+            $scope.loadbar('show');
+            _that = this;
+            $scope.errorData = "";
+            $http({
+                url: $rootScope.IRISOrgServiceUrl + "/patientresults/" + pat_result_id,
+                method: "GET"
+            }).success(
+                    function (response) {
+                        $scope.loadbar('hide');
+                        $scope.resultdata = response;
+                        $scope.resultdata.formtype = 'update';
+                    }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        }
+
+        $scope.removeresultRow = function (pat_result_id) {
+            var modalOptions = {
+                closeButtonText: 'No',
+                actionButtonText: 'Yes',
+                headerText: 'Delete Result?',
+                bodyText: 'Are you sure you want to delete this result?'
+            };
+
+            modalService.showModal({}, modalOptions).then(function () {
+                $scope.loadbar('show');
+                $http({
+                    method: 'POST',
+                    url: $rootScope.IRISOrgServiceUrl + "/patientresults/remove",
+                    data: {id: pat_result_id},
+                }).then(
+                        function (response) {
+                            $scope.loadbar('hide');
+                            if (response.data.success === true) {
+                                $scope.loadResultbypatient();
+                                $scope.msg.successMessage = 'Patient Result Deleted Successfully';
+                            } else {
+                                $scope.errorData = response.data.message;
+                            }
+                        }
+                );
+            });
+        };
+
+        $scope.loadConsultantsList = function (date) {
+            $scope.isLoading = true;
+            // pagination set up
+            $scope.consultantCollection = [];  // base collection
+            $scope.itemsByPage = 10; // No.of records per page
+            $scope.displayedconsultantCollection = [].concat($scope.consultantCollection);  // displayed collection
+
+            if (typeof date == 'undefined') {
+                url = $rootScope.IRISOrgServiceUrl + '/patientconsultant/getpatconsultantsbyencounter?patient_id=' + $state.params.id;
+            } else {
+                date = moment(date).format('YYYY-MM-DD');
+                url = $rootScope.IRISOrgServiceUrl + '/patientconsultant/getpatconsultantsbyencounter?patient_id=' + $state.params.id + '&date=' + date;
+            }
+
+            // Get data's from service
+            $http.get(url)
+                    .success(function (patientconsultants) {
+                        $scope.isLoading = false;
+                        $scope.consultantCollection = patientconsultants.result;
+                        $scope.displayedconsultantCollection = [].concat($scope.consultantCollection);
+                    })
+                    .error(function () {
+                        $scope.errorData = "An Error has occured while loading patient consultants!";
+                    });
+        };
+
+        $scope.initConsultantForm = function () {
+            $scope.consFormData = {};
+            $scope.consFormData.formtype = 'add';
+        };
+
+        $scope.saveConsultantForm = function (mode) {
+            consData = $scope.consFormData;
+
+            $scope.errorData = "";
+            $scope.msg.successMessage = "";
+
+            if (mode == 'add') {
+                post_url = $rootScope.IRISOrgServiceUrl + '/patientconsultants';
+                method = 'POST';
+                succ_msg = 'Consultant saved successfully';
+
+                angular.extend(consData, {
+                    encounter_id: $scope.enc.selected.encounter_id,
+                    patient_id: $scope.patientObj.patient_id,
+                });
+            } else {
+                post_url = $rootScope.IRISOrgServiceUrl + '/patientconsultants/' + consData.pat_consult_id;
+                method = 'PUT';
+                succ_msg = 'Consultant updated successfully';
+            }
+            consData.consult_date = moment(consData.consult_date).format('YYYY-MM-DD HH:mm:ss');
+
+            $scope.loadbar('show');
+            $http({
+                method: method,
+                url: post_url,
+                data: consData,
+            }).success(
+                    function (response) {
+                        $scope.loadbar('hide');
+                        $scope.msg.successMessage = succ_msg;
+                        $scope.consFormData = {};
+                        $scope.consFormData.formtype = 'add';
+                        $timeout(function () {
+                            $scope.loadConsultantsList();
+                        }, 1000)
+
+                    }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        };
+
+        //Get Data for update Form
+        $scope.updateconsulRow = function (id) {
+            $scope.loadbar('show');
+            _that = this;
+            $scope.errorData = "";
+            $http({
+                url: $rootScope.IRISOrgServiceUrl + "/patientconsultants/" + id,
+                method: "GET"
+            }).success(
+                    function (response) {
+                        $scope.loadbar('hide');
+                        $scope.consFormData = response;
+                        $scope.consFormData.formtype = 'update';
+                    }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        };
+
+        $scope.resetconsultantForm = function () {
+            $scope.consFormData = {};
+            $scope.consFormData.formtype = 'add';
+        }
+
+        $scope.removeconsultantRow = function (consult_id) {
+            var modalOptions = {
+                closeButtonText: 'No',
+                actionButtonText: 'Yes',
+                headerText: 'Delete Consultation Visit?',
+                bodyText: 'Are you sure you want to delete this consultation visit?'
+            };
+
+            modalService.showModal({}, modalOptions).then(function (result) {
+                $scope.loadbar('show');
+                $http({
+                    method: 'POST',
+                    url: $rootScope.IRISOrgServiceUrl + "/patientconsultants/remove",
+                    data: {id: consult_id},
+                }).then(
+                        function (response) {
+                            $scope.loadbar('hide');
+                            if (response.data.success === true) {
+                                $scope.loadConsultantsList();
+                                $scope.msg.successMessage = 'Patient Consultation Visit Deleted Successfully';
+                            } else {
+                                $scope.errorData = response.data.message;
+                            }
+                        }
+                );
+            });
+        };
+
+        //Pat Consultant update issues
+        $scope.beforeRender = function ($view, $dates, $leftDate, $upDate, $rightDate) {
+            var d = new Date();
+            var n = d.getDate();
+            var m = d.getMonth();
+            var y = d.getFullYear();
+            var today_date = (new Date(y, m, n)).valueOf(); //19
+
+            var upto_date = (d.setDate(d.getDate() - 3)).valueOf(); // 17
+
+            if ($scope.checkAccess('patient.backdateconsultant')) {
+                angular.forEach($dates, function (date, key) {
+                    var calender = new Date(date.localDateValue());
+                    var calender_n = calender.getDate();
+                    var calender_m = calender.getMonth();
+                    var calender_y = calender.getFullYear();
+                    var calender_date = (new Date(calender_y, calender_m, calender_n)).valueOf();
+                    if (today_date < calender_date) {
+                        $dates[key].selectable = false;
+                    }
+                });
+            } else {
+                angular.forEach($dates, function (date, key) {
+                    var calender = new Date(date.localDateValue());
+                    var calender_n = calender.getDate();
+                    var calender_m = calender.getMonth();
+                    var calender_y = calender.getFullYear();
+                    var calender_date = (new Date(calender_y, calender_m, calender_n)).valueOf();
+
+                    //Hide - Future and Past Dates
+                    if (today_date != calender_date) {
+                        $dates[key].selectable = false;
+                    }
+                });
+            }
+        }
+
+        $scope.initmedicalhistory = function () {
+            $scope.getDocumentType(function (doc_type_response) {
+                if (doc_type_response.success == false) {
+                    alert("Sorry, you can't create a document");
+                    $state.go("patient.prescription", {id: $state.params.id});
+                } else {
+                    $scope.xslt = doc_type_response.result.document_xslt;
+                    $scope.xml = doc_type_response.result.document_xml;
+                    console.log(doc_type_response);
+//                    $scope.$watch('patientObj', function (newValue, oldValue) {
+//                        if (Object.keys(newValue).length > 0) {
+//                            
+//                            $scope.xml = auto_save_document.data.xml;
+//                            $scope.isLoading = false;
+//                            $scope.doc_id = auto_save_document.data.doc_id; // Set Document id
+//
+//                            $timeout(function () {
+//                                $scope.diagnosisDsmiv();
+//                            }, 2000);
+//
+//                            $timeout(function () {
+//                                $scope.ckeditorReplace();
+//                            }, 500);
+//
+//                        }
+//                    }, true);
+                }
+                localStorage.setItem("add_case_document", "0");
+            });
+        }
+
+        $scope.getDocumentType = function (callback) {
+            $http.get($rootScope.IRISOrgServiceUrl + '/patientdocuments/getdocumenttype?doc_type=MCH')
+                    .success(function (response) {
+                        callback(response);
+                    }, function (x) {
+                        response = {success: false, message: 'Server Error'};
+                        callback(response);
+                    });
+        }
+        
+        $scope.savemedicalForm = function () {
+            _data = $('#xmlform').serializeArray();
+            console.log(_data);
+            return false;
+        }
 
         //Not Used
 //        $scope.changeFreqMask = function (key, freq) {
@@ -2220,4 +3002,10 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 //            return content;
 //        }
 
+    }]);
+// Filter HTML Code
+app.filter("sanitize", ['$sce', function ($sce) {
+        return function (htmlCode) {
+            return $sce.trustAsHtml(htmlCode);
+        }
     }]);

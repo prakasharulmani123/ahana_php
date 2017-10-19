@@ -4025,7 +4025,7 @@ a.text-#000000:hover {
 	float:right;
 }
 .in-patient-table .dropdown-menu {
-	left:-120px !important;
+	/*left:-120px !important;*/
 	position:absolute;
 	text-align:left;
 	margin-top:10px;

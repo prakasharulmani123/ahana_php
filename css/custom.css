@@ -722,3 +722,136 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
 .other-doc p{
     font-family:arial !important; 
 }
+
+/*03.10.2017 New prescription design*/
+.nav-tabs > li:hover > a, .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover {
+    border-color: #dee5e7;
+}
+
+.nav-tabs > li a {
+    border:#dee5e7 solid 1px;
+    background:#f6f8f8;
+    border-bottom:#dee5e7 solid 1px;
+}
+
+.prescription-new
+{
+}
+
+.prescription-new tab-heading .badge-sm 
+{
+    font-size:12px;
+    border-radius:2px;
+    color:#ffffff !important;
+    margin-bottom: 0px;
+}
+
+.prescription-new tab-heading
+{
+    font-size:15px;
+}
+.prescription-new li a
+{
+    margin-right:-1px;
+    margin-bottom: -1px;
+}
+
+.prescription-new li:last-child a
+{
+    padding:11px 4px 11px 4px
+}
+
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+    color: #222222;
+    cursor: default;
+}
+
+
+
+.create-vitals
+{
+    width:1005;
+    float:left;
+}
+
+.create-vitals .form-control
+{
+    border-radius:0px !important
+}
+
+
+.create-vitals label
+{
+    font-weight:bold;
+}
+
+.vitals-tab .accordion-toggle span
+{
+    font-size:20px;
+    font-weight:600;
+}
+
+.form-inline .form-group {
+    display: inline-block !important;
+    margin-bottom: 0;
+    vertical-align: middle;
+    width:auto;
+
+}
+
+
+.prescription-hightlight
+{
+    width:100%;
+    float:left;
+    background:#f4ad05;
+    padding:10px;
+    margin-bottom:10px;
+    padding-bottom:0px;
+}
+
+.prescrip-dropdown2
+{
+    width:480px !important;
+}
+
+.pre-freq-new1
+{
+    width:200px;
+}
+
+.pre-freq-new1 input
+{
+    width:28.6%;
+    float:left;
+}
+
+.prescription-hightlight table td
+{
+    background:none !important;
+}
+
+.prescription-hightlight table th
+{
+    border-top:#ffffff solid 1px !important;
+    border-bottom:#ffffff solid 1px !important;
+}
+
+
+.graph1{
+    margin-bottom: 30px;
+
+}
+
+.graph1 .panel-body
+{
+    padding-bottom: 50px;
+}
+
+
+.flot-x-axis div{
+    max-width: 52px !important;
+   
+        
+}
+
