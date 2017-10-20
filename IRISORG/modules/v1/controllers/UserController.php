@@ -462,6 +462,9 @@ class UserController extends ActiveController {
                 unset($post['password']);
 
             $model->attributes = $post;
+            if(!empty($model->Inactivation_date)){
+                $model->Inactivation_date = date("Y-m-d", strtotime($model->Inactivation_date));
+            }
 
             $valid = $model->validate();
 
