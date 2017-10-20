@@ -794,7 +794,7 @@ pati-thumb
 	margin-right:0px;
 }
 .pres-table th {
-	text-align:center;
+	/*text-align:center;*/
 }
 .txt-left {
 	text-align:left !important;

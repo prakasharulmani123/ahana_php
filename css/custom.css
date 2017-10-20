@@ -543,7 +543,7 @@ out-patient-table .table > thead > tr > th label.i-checks {
 
     .prescription-1 .pres-inner
     {
-        width: 1200px;
+      
     }
     .outpatient-2 .th-inner
     {
@@ -780,7 +780,7 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
 }
 
 
-.create-vitals label
+.create-vitals label, .tab-results-cont label
 {
     font-weight:bold;
 }
@@ -804,25 +804,25 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
 {
     width:100%;
     float:left;
-    background:#f4ad05;
-    padding:10px;
+    background:#dddddd;
+    padding:5px;
     margin-bottom:10px;
     padding-bottom:0px;
 }
 
 .prescrip-dropdown2
 {
-    width:480px !important;
+    width:585px !important;
 }
 
 .pre-freq-new1
 {
-    width:200px;
+
 }
 
 .pre-freq-new1 input
 {
-    width:28.6%;
+    width:33.3333%;
     float:left;
 }
 
@@ -833,8 +833,8 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
 
 .prescription-hightlight table th
 {
-    border-top:#ffffff solid 1px !important;
-    border-bottom:#ffffff solid 1px !important;
+    border-top:#dddddd solid 1px !important;
+    border-bottom:#dddddd solid 1px !important;
 }
 
 
@@ -855,3 +855,92 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
         
 }
 
+.top-product-search{
+    margin-top: -8px;
+}
+
+
+.top-prescription-buttons {
+
+	top: -3px;
+	position: relative;
+}
+
+.pres-tab-btn-cont{
+    width: 100%;
+    float: left;
+    text-align: right;
+    margin-bottom:10px; 
+}
+
+
+
+.graph1 .panel-heading
+{
+    background:#36C558;
+    color:#ffffff;
+}
+
+.graph2 .panel-heading
+{
+    background:#7266BA;
+}
+
+.graph3 .panel-heading
+{
+    background:#25B8E5  ;
+}
+
+.graph4 .panel-heading
+{
+    background:#666666;
+}
+
+.graph5 .panel-heading
+{
+    background:#7266BA;
+}
+
+.graph6 .panel-heading
+{
+    background:#F4AD05;
+}
+
+.graph7 .panel-heading
+{
+    background:#EC6363;
+}
+.pres-top-remarks {
+    width: 400px;
+    
+}
+.pres-top-qty {
+    width: 60px;
+}
+
+.pres-main-product{
+    width: 200px;
+}
+
+.pres-main-remarks{
+    width: 200px;
+}
+
+.freq_3_times, .freq_4_times, .freq_1_times
+{
+    width: 90% !important;
+}
+
+.freq_1_times > span
+{
+    width: 100% !important;
+}
+
+.pres-main-afbf{
+    width: 75px;
+}
+
+.pres-remarks-field > span
+{
+    width: 100% !important;
+}

@@ -2268,7 +2268,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                             if (tem_Going) {            //Set Temperature variable
                                 if (row.temperature) {
                                     $scope.tem_graph_data.push([tem, row.temperature]);
-                                    $scope.tem_graph_tick.push([tem, row.vital_time]);
+                                    $scope.tem_graph_tick.push([tem, moment(row.vital_time).format('DD-MM-YY')]);
                                     tem++;
                                 }
                             }
@@ -2281,7 +2281,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                         $scope.bps_graph_data.push([bp, row.blood_pressure_systolic]);
                                     if (row.blood_pressure_diastolic)
                                         $scope.bpd_graph_data.push([bp, row.blood_pressure_diastolic]);
-                                    $scope.bp_graph_tick.push([bp, row.vital_time]);
+                                    $scope.bp_graph_tick.push([bp, moment(row.vital_time).format('DD-MM-YY')]);
                                     bp++;
                                 }
                             }
@@ -2291,7 +2291,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                             if (weight_Going) {         //Set Weight variable
                                 if (row.weight) {
                                     $scope.weight_graph_data.push([wht, row.weight]);
-                                    $scope.weight_graph_tick.push([wht, row.vital_time]);
+                                    $scope.weight_graph_tick.push([wht, moment(row.vital_time).format('DD-MM-YY')]);
                                     wht++;
                                 }
                             }
@@ -2301,7 +2301,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                             if (height_Going) {         //Set Height variable
                                 if (row.height) {
                                     $scope.height_graph_data.push([hgt, row.height]);
-                                    $scope.height_graph_tick.push([hgt, row.vital_time]);
+                                    $scope.height_graph_tick.push([hgt, moment(row.vital_time).format('DD-MM-YY')]);
                                     hgt++;
                                 }
                             }
@@ -2311,7 +2311,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                             if (pulse_Going) {         //Set Pluse variable
                                 if (row.pulse_rate) {
                                     $scope.pulse_graph_data.push([pul, row.pulse_rate]);
-                                    $scope.pulse_graph_tick.push([pul, row.vital_time]);
+                                    $scope.pulse_graph_tick.push([pul, moment(row.vital_time).format('DD-MM-YY')]);
                                     pul++;
                                 }
                             }
@@ -2321,7 +2321,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                             if (pain_Going) {         //Set Pain score variable
                                 if (row.pain_score) {
                                     $scope.pain_graph_data.push([pain, row.pain_score]);
-                                    $scope.pain_graph_tick.push([pain, row.vital_time]);
+                                    $scope.pain_graph_tick.push([pain, moment(row.vital_time).format('DD-MM-YY')]);
                                     pain++;
                                 }
                             }
@@ -2331,7 +2331,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                             if (sp02_Going) {         //Set spo2 variable
                                 if (row.sp02) {
                                     $scope.sp02_graph_data.push([sp, row.sp02]);
-                                    $scope.sp02_graph_tick.push([sp, row.vital_time]);
+                                    $scope.sp02_graph_tick.push([sp, moment(row.vital_time).format('DD-MM-YY')]);
                                     sp++;
                                 }
                             }
