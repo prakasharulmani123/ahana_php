@@ -44,7 +44,7 @@ class AppconfigurationController extends ActiveController {
         $modelClass = $this->modelClass;
 
         return new ActiveDataProvider([
-            'query' => $modelClass::find()->tenant()->active()->orderBy(['created_at' => SORT_DESC]),
+            'query' => $modelClass::find()->tenant()->active()->orderBy(['config_id' => SORT_ASC]),
             'pagination' => false,
         ]);
     }

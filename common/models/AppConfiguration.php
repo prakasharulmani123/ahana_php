@@ -198,22 +198,52 @@ class AppConfiguration extends RActiveRecord {
                 'notes' => 'Show Pain Score field in vital form',
             ],
             'Prescription ID' => [
-                'group'=>'prescription_print',
+                'group' => 'prescription_print',
                 'code' => 'PID',
                 'value' => '1',
                 'notes' => 'Show prescription id',
             ],
             'Issued By' => [
-                'group'=>'prescription_print',
+                'group' => 'prescription_print',
                 'code' => 'PIB',
                 'value' => '1',
                 'notes' => 'Show issued by',
             ],
             'Issued At' => [
-                'group'=>'prescription_print',
+                'group' => 'prescription_print',
                 'code' => 'PIA',
                 'value' => '1',
                 'notes' => 'Show issued at',
+            ],
+            'Prescription' => [
+                'group' => 'prescription_tab',
+                'code' => 'PTP',
+                'value' => '1',
+                'notes' => 'Show prescription tab',
+            ],
+            'Medical history' => [
+                'group' => 'prescription_tab',
+                'code' => 'PTM',
+                'value' => '1',
+                'notes' => 'Show medical history tab',
+            ],
+            'Vitals' => [
+                'group' => 'prescription_tab',
+                'code' => 'PTV',
+                'value' => '1',
+                'notes' => 'Show vitals tab',
+            ],
+            'Results' => [
+                'group' => 'prescription_tab',
+                'code' => 'PTR',
+                'value' => '1',
+                'notes' => 'Show result tab',
+            ],
+            'Notes' => [
+                'group' => 'prescription_tab',
+                'code' => 'PTN',
+                'value' => '1',
+                'notes' => 'Show notes tab',
             ],
         );
     }
