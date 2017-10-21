@@ -277,7 +277,7 @@ class PatEncounter extends RActiveRecord {
     }
 
     public function getPatVitals() {
-        return $this->hasOne(PatVitals::className(), ['encounter_id' => 'encounter_id'])->orderBy(['created_at' => SORT_DESC]);
+        return $this->hasOne(PatVitals::className(), ['encounter_id' => 'encounter_id','patient_id' => 'patient_id'])->orderBy(['created_at' => SORT_DESC]);
     }
 
     /**
