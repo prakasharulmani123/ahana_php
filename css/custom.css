@@ -812,7 +812,7 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
 
 .prescrip-dropdown2
 {
-    width:510px !important;
+    width:585px !important;
 }
 
 .pre-freq-new1
@@ -917,9 +917,6 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
 .pres-top-qty {
     width: 60px;
 }
-.pres-top-freq {
-    width: 120px;
-}
 
 .pres-main-product{
     width: 200px;
@@ -931,7 +928,7 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
 
 .freq_3_times, .freq_4_times, .freq_1_times
 {
-    width: 80% !important;
+    width: 90% !important;
 }
 
 .freq_1_times > span
@@ -940,7 +937,7 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
 }
 
 .pres-main-afbf{
-    width: 77px;
+    width: 75px;
 }
 
 .pres-remarks-field > span
