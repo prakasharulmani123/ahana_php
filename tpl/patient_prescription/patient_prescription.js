@@ -2613,7 +2613,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         $scope.displayedconsultantCollection = [].concat($scope.consultantCollection);
                     })
                     .error(function () {
-                        $scope.errorData = "An Error has occured while loading patient consultants!";
+                        $scope.errorData = "An Error has occured while loading patient consultant notes!";
                     });
         };
 
