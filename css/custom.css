@@ -820,7 +820,7 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
     padding: 0px;
 }
 
-.pres-top-actions{  width: 80px;}
+.pres-top-actions{  width: 110px;}
 
 
 .pres-top-freq{
@@ -837,6 +837,7 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
     background:none;
     border:none;
     box-shadow: none;
+    padding: 6px 6px;
 }
 
 
@@ -847,7 +848,7 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
 
 .pre-freq-new1 input
 {
-    width:28.3333%;
+    width:28%;
     float:left;
 }
 
@@ -938,7 +939,7 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
     background:#EC6363;
 }
 .pres-top-remarks {
-    width: 380px;
+    width: 370px;
     
 }
 
