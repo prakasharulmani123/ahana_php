@@ -758,7 +758,7 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
 
 .prescription-new li:last-child a
 {
-    padding:11px 4px 11px 4px
+    padding:11px 5px 10px 5px
 }
 
 .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
