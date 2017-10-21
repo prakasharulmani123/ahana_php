@@ -97,7 +97,7 @@
                                                     <tbody>
                                                         <tr style="background:none;">
                                                             <td align="left" valign="top">
-                                                                <div class="top-product-search" style="width:480px;" >
+                                                                <div class="top-product-search" style="width:550px;" >
                                                                     <div class="input-group">
                                                                         <input type="text"
                                                                                id="prescription_global_search"
@@ -280,7 +280,85 @@
                                                                            class="form-control"
                                                                            number-mask=""
                                                                            maxlength="4">
+                                                                    <div style="width: 20px; float:left">
+                                                                        <div class="input-group-btn dropdown">
+                                                                            <button class="btn btn-default dropdown-toggle" ng-click="checkProducttype(item.description_name)" type="button" data-toggle="dropdown">
+                                                                                <span class="fa fa-ellipsis-v"></span>
+                                                                            </button>
+                                                                            <ul class="dropdown-menu curPrescFreq">
+                                                                                <!-- Mask 3 -->
+                                                                                <li ng-repeat="consFreq in currPresMask3| limitTo:3">
+                                                                                    <div class="row">
+                                                                                        <div class="col-sm-12">
+                                                                                            <a href ng-click="curPrescFreqSele(consFreq.freq_name, consFreq.freq_type, item, item.item_key, 'select')" class="col-sm-9">{{consFreq.freq_name}}</a>
+                                                                                            <a class="col-sm-3" title='Clear' ng-click="clearCache(consFreq.freq_id)">X</a>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </li>
+                                                                                <li class="dropdown-submenu" ng-if="currPresMask3.length > 3">
+                                                                                    <a tabindex="-1" href="#">More</a>
+                                                                                    <ul class="dropdown-menu">
+                                                                                        <li ng-repeat="consFreq in currPresMask3| limitTo:(3 - currPresMask3.length)">
+                                                                                            <div class="row">
+                                                                                                <div class="col-sm-12">
+                                                                                                    <a href ng-click="curPrescFreqSele(consFreq.freq_name, consFreq.freq_type, item, item.item_key, 'select')" class="col-sm-9">{{consFreq.freq_name}}</a>
+                                                                                                    <a class="col-sm-3" title='Clear' ng-click="clearCache(consFreq.freq_id)">X</a>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </li>
+                                                                                    </ul>
+                                                                                </li>
+                                                                                <li class="divider"></li>
+                                                                                <!-- Mask 4 -->
+                                                                                <li ng-repeat="consFreq in currPresMask4| limitTo:3">
+                                                                                    <div class="row">
+                                                                                        <div class="col-sm-12">
+                                                                                            <a href ng-click="curPrescFreqSele(consFreq.freq_name, consFreq.freq_type, item, item.item_key, 'select')" class="col-sm-9">{{consFreq.freq_name}}</a>
+                                                                                            <a class="col-sm-3" title='Clear' ng-click="clearCache(consFreq.freq_id)">X</a>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </li>
+                                                                                <li class="dropdown-submenu" ng-if="currPresMask4.length > 3">
+                                                                                    <a tabindex="-1" href="#">More</a>
+                                                                                    <ul class="dropdown-menu">
+                                                                                        <li ng-repeat="consFreq in currPresMask4| limitTo:(3 - currPresMask4.length)">
+                                                                                            <div class="row">
+                                                                                                <div class="col-sm-12">
+                                                                                                    <a href ng-click="curPrescFreqSele(consFreq.freq_name, consFreq.freq_type, item, item.item_key, 'select')" class="col-sm-9">{{consFreq.freq_name}}</a>
+                                                                                                    <a class="col-sm-3" title='Clear' ng-click="clearCache(consFreq.freq_id)">X</a>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </li>
+                                                                                    </ul>
+                                                                                </li>
+                                                                                <li class="divider"></li>
+                                                                                <!-- Mask Txt -->
+                                                                                <li ng-repeat="consFreq in currPresMaskTxt| limitTo:3">
+                                                                                    <div class="row">
+                                                                                        <div class="col-sm-12">
+                                                                                            <a href ng-click="curPrescFreqSele(consFreq.freq_name, consFreq.freq_type, item, item.item_key, 'select')" class="col-sm-9">{{consFreq.freq_name}}</a>
+                                                                                            <a class="col-sm-3" title='Clear' ng-click="clearCache(consFreq.freq_id)">X</a>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </li>
+                                                                                <li class="dropdown-submenu" ng-if="currPresMaskTxt.length > 3">
+                                                                                    <a tabindex="-1" href="#">More</a>
+                                                                                    <ul class="dropdown-menu">
+                                                                                        <li ng-repeat="consFreq in currPresMaskTxt| limitTo:(3 - currPresMaskTxt.length)">
+                                                                                            <div class="row">
+                                                                                                <div class="col-sm-12">
+                                                                                                    <a href ng-click="curPrescFreqSele(consFreq.freq_name, consFreq.freq_type, item, item.item_key, 'select')" class="col-sm-9">{{consFreq.freq_name}}</a>
+                                                                                                    <a class="col-sm-3" title='Clear' ng-click="clearCache(consFreq.freq_id)">X</a>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </li>
+                                                                                    </ul>
+                                                                                </li>
+                                                                            </ul>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
+
                                                             </td>
                                                             <td align="left" valign="top"><input name="" ng-keyup="$event.keyCode == 13 ? addGlobalForm() : null" ng-model="globalData.quantity" type="text"  class="form-control"></td>
                                                             <td align="left" valign="top"><input name="" ng-keyup="$event.keyCode == 13 ? addGlobalForm() : null" ng-model="globalData.remarks" type="text"  class="form-control"></td>
@@ -872,9 +950,9 @@
                                 </div>
 
                                 <div ng-show="tab == 3" class="vitals-tab">
-                                    <div class="row" ng-init="vitaldata     =     { };
+                                    <div class="row" ng-init="vitaldata         =         { };
                                         loadVitals();
-                                        vitaldata.formtype   =   'add'">
+                                        vitaldata.formtype     =     'add'">
                                         <div class="col-lg-12"> 
                                             <!-- accordion -->
                                             <accordion close-others="oneAtATime">
@@ -1418,7 +1496,7 @@
 
                                                             <div class="col-sm-3">
                                                                 <label> </label>
-                                                                
+
                                                                 <button class="btn m-b-xs  btn-success save-btn" ng-disabled="vital_enable_count" ng-click="saveConsultantForm(consFormData.formtype)">Save</button>
                                                                 &nbsp;
                                                                 <button class="btn m-b-xs  btn-dark" ng-click="resetconsultantForm()">

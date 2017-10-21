@@ -811,29 +811,47 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
 }
 
 .pres-top-pro{
-    width: 480px;
+    width: 35%;
 }
 
 .prescrip-dropdown2
 {
-    width:480px !important;
+    width:550px !important;
+    padding: 0px;
 }
 
 .pres-top-actions{  width: 80px;}
 
 
 .pres-top-freq{
-    width: 120px;
+    width: 180px;
 }
 .pre-freq-new1
 {
+    width: 100%;
 }
+
+
+
+.pre-freq-new1 .dropdown-toggle{
+    background:none;
+    border:none;
+    box-shadow: none;
+}
+
+
+.pre-freq-new1 .open .dropdown-toggle {
+    background: none !important;
+}
+
 
 .pre-freq-new1 input
 {
-    width:33.3333%;
+    width:28.3333%;
     float:left;
 }
+
+
 
 .prescription-hightlight table td
 {
@@ -920,8 +938,12 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
     background:#EC6363;
 }
 .pres-top-remarks {
-    width: 400px;
+    width: 380px;
     
+}
+
+.pres-main-freq{
+    width:135px;
 }
 .pres-top-qty {
     width: 60px;
@@ -931,8 +953,13 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
     width: 200px;
 }
 
+.pres-main-noofdays{
+    width: 65px;
+}
+
+.pres-main-route{   width: 125px;}
 .pres-main-remarks{
-    width: 200px;
+    width: 150px;
 }
 
 .freq_3_times, .freq_4_times, .freq_1_times
